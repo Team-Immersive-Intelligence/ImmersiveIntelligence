@@ -1,0 +1,33 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [{
+            "type": "forge:ore_dict",
+            "ore": "dustConstantan"
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustConstantan"
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustConstantan"
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustElectrum"
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustElectrum"
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustPlatinum"
+        }
+    ],
+    "result": {
+        "item": "immersiveintelligence:material",
+        "count": 2,
+        "data": 0
+    }
+}

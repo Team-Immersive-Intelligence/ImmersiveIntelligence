@@ -1,0 +1,74 @@
+package pl.pabilo8.immersiveintelligence.api.data;
+
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationMax;
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationMin;
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationPower;
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationRoot;
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationNAND;
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationNOR;
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationXNOR;
+import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationXOR;
+import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationAdd;
+import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationDivide;
+import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationMultiply;
+import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationSubtract;
+import pl.pabilo8.immersiveintelligence.api.data.operators.comparators.*;
+import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructInteger;
+import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructNull;
+import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructString;
+import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationAND;
+import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationNOT;
+import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationOR;
+import pl.pabilo8.immersiveintelligence.api.data.operators.text.DataOperationJoin;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by Pabilo8 on 05-07-2019.
+ */
+public class DataOperation
+{
+	public static final Map<String, Class> operations = new HashMap<>();
+
+	static
+	{
+		operations.put("add", DataOperationAdd.class);
+		operations.put("subtract", DataOperationSubtract.class);
+		operations.put("multiply", DataOperationMultiply.class);
+		operations.put("divide", DataOperationDivide.class);
+
+		operations.put("power", DataOperationPower.class);
+		operations.put("root", DataOperationRoot.class);
+		operations.put("max", DataOperationMax.class);
+		operations.put("min", DataOperationMin.class);
+
+		operations.put("greater", DataOperationGreater.class);
+		operations.put("less", DataOperationLess.class);
+		operations.put("greater_or_equal", DataOperationGreaterOrEqual.class);
+		operations.put("less_or_equal", DataOperationLessOrEqual.class);
+		operations.put("equal", DataOperationEqual.class);
+
+		operations.put("and", DataOperationAND.class);
+		operations.put("or", DataOperationOR.class);
+		operations.put("not", DataOperationNOT.class);
+
+		operations.put("nand", DataOperationNAND.class);
+		operations.put("nor", DataOperationNOR.class);
+		operations.put("xor", DataOperationXOR.class);
+		operations.put("xnor", DataOperationXNOR.class);
+
+		operations.put("join", DataOperationJoin.class);
+		//operations.put("longer",DataOperationLonger.class);
+		//operations.put("shorter",DataOperationShorter.class);
+		//operations.put("length_equal",DataOperationLengthEqual.class);
+		//operations.put("filter",DataOperationFilter.class);
+		//operations.put("format",DataOperationFormat.class);
+		operations.put("construct_null", DataOperationConditionalConstructNull.class);
+		operations.put("construct_boolean", DataOperationConditionalConstructBoolean.class);
+		operations.put("construct_integer", DataOperationConditionalConstructInteger.class);
+		operations.put("construct_string", DataOperationConditionalConstructString.class);
+	}
+
+}

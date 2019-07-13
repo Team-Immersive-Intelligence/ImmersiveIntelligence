@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "all": "immersiveintelligence:blocks/sheetmetal_platinum"
+    },
+    "model": "cube_all"
+  },
+  "variants": {
+    "inventory,type=platinum": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/sheetmetal_platinum"
+        }
+      }
+    ],
+    "type": {
+      "platinum": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/sheetmetal_platinum"
+        }
+      }
+    }
+  }
+}

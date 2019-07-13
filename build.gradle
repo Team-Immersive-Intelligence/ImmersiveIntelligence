@@ -1,0 +1,92 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+
+version = "1.1.8"
+group= "pl.pabilo8.immersiveintelligence"
+archivesBaseName = "immersiveintelligence"
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2768"
+    runDir = "run"
+
+    replace "@VERSION@", project.version
+    
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not always work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "snapshot_20170903"
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    useDepAts = true
+}
+
+repositories {
+    maven { // JEI & Tinkers
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
+    maven {
+        name 'jared maven'
+        url 'http://blamejared.com/maven'
+    }
+    maven {
+        name 'JEI'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
+    maven { // Albedo Lights
+        url 'https://repo.elytradev.com/'
+    }
+}
+
+dependencies {
+    deobfCompile "blusunrize:ImmersiveEngineering:0.12-89-+"
+    deobfCompile "mezz.jei:jei_1.12.2:4.8.5.133"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.9.289"
+    //deobfCompile "elucent:albedo:2.0-SNAPSHOT"
+    compileOnly "mezz.jei:jei_1.12:4.+"
+}
+
+jar {
+    archiveName = "${baseName}-1.12.2-${version}.jar"
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+        archiveName = "${baseName}-1.12.2-${version}-deobf.jar"
+    classifier = 'deobf'
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

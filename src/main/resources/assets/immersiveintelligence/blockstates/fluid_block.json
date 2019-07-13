@@ -1,0 +1,37 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "forge:fluid",
+        "transform": "forge:default-item"
+    },
+    "variants": {
+        "ink": [
+            {
+                "custom": {
+                    "fluid": "ink"
+                }
+            }
+        ],
+        "ink_cyan": [
+            {
+                "custom": {
+                    "fluid": "ink_cyan"
+                }
+            }
+        ],
+        "ink_magenta": [
+            {
+                "custom": {
+                    "fluid": "ink_magenta"
+                }
+            }
+        ],
+        "ink_yellow": [
+            {
+                "custom": {
+                    "fluid": "ink_yellow"
+                }
+            }
+        ]
+    }
+}

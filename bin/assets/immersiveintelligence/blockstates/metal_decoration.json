@@ -1,0 +1,51 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "immersiveengineering:ie_six_sides_overlay_all"
+    },
+    "variants": {
+        "inventory,type=coil_data": [{
+            "model": "immersiveengineering:ie_pillar",
+            "textures": {
+                "side": "immersiveintelligence:blocks/metal_decoration/coil_data_side",
+                "top": "immersiveintelligence:blocks/metal_decoration/coil_data_top",
+                "bottom": "immersiveintelligence:blocks/metal_decoration/coil_data_top"
+            }
+        }],
+        "inventory,type=electronic_engineering": [{
+            "textures": {
+                "block_all": "immersiveintelligence:blocks/metal_decoration/electronic_engineering",
+                "overlay_all": "immersiveintelligence:blocks/metal_decoration/iron_overlay"
+            }
+        }],
+        "inventory,type=advanced_electronic_engineering": [{
+            "textures": {
+                "block_all": "immersiveintelligence:blocks/metal_decoration/advanced_electronic_engineering",
+                "overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
+            }
+        }],
+        "type": {
+            "coil_data": {
+                "model": "immersiveengineering:ie_pillar",
+                "textures": {
+                    "side": "immersiveintelligence:blocks/metal_decoration/coil_data_side",
+                    "top": "immersiveintelligence:blocks/metal_decoration/coil_data_top",
+                    "bottom": "immersiveintelligence:blocks/metal_decoration/coil_data_top"
+                }
+            },
+            "electronic_engineering": {
+                "textures": {
+                    "block_all": "immersiveintelligence:blocks/metal_decoration/electronic_engineering_ctm",
+                    "overlay_all": "immersiveintelligence:blocks/metal_decoration/iron_overlay"
+                }
+            },
+            "advanced_electronic_engineering": {
+                "textures": {
+                    "block_all": "immersiveintelligence:blocks/metal_decoration/advanced_electronic_engineering_ctm",
+                    "overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
+                }
+            }
+        }
+    }
+}

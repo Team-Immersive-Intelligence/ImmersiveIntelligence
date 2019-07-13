@@ -1,0 +1,23 @@
+{
+  "siren": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:siren"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.siren"
+  },
+  "printing_press": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:printing_press"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.printing_press"
+  },
+  "paper_eject": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:paper_eject"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.paper_eject"
+  }
+}

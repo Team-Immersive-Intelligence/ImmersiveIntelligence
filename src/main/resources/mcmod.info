@@ -1,0 +1,15 @@
+[
+{
+  "modid": "immersiveintelligence",
+  "name": "Immersive Intelligence",
+  "description": "Adds new machines related with data, logistics, warfare and intelligence.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Pabilo8"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": []
+}
+]

@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "cube_all"
+  },
+  "variants": {
+    "type": {
+      "electronic_engineering": {
+        "model": "immersiveengineering:ctm/metal_decoration_electronic_engineering"
+      },
+      "advanced_electronic_engineering": {
+        "model": "immersiveengineering:ctm/metal_decoration_advanced_electronic_engineering"
+      }
+    }
+  }
+}

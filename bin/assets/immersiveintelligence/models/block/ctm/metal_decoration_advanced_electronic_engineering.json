@@ -1,0 +1,7 @@
+{
+	"parent": "immersiveengineering:block/ie_six_sides_overlay_all",
+	"textures": {
+		"block_all": "immersiveintelligence:blocks/metal_decoration/advanced_electronic_engineering_ctm",
+		"overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
+	}
+}

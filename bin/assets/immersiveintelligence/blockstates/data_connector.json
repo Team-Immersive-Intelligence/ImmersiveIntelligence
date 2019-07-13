@@ -1,0 +1,25 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "immersiveengineering:smartmodel/connector",
+        "textures": {}
+    },
+    "variants": {
+        "inventory,type=data_connector": [{
+            "model": "immersiveintelligence:connector/data_connector"
+        }],
+        "inventory,type=data_relay": [{
+            "model": "immersiveintelligence:connector/data_relay"
+        }],
+        "type": {
+            "data_connector": {
+                "model": "immersiveintelligence:connector/data_connector"
+            },
+            "data_relay": {
+                "model": "immersiveintelligence:connector/data_relay"
+            }
+        },
+        "facing": {}
+    }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "immersiveintelligence:items/material/metal_nugget_platinum"
+  }
+}
