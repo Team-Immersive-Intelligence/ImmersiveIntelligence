@@ -1,4 +1,4 @@
-**Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so most of the planned features are added. There are four main categories of the mod's content: 
+**Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so most of the planned features are not added. There are four main categories of the mod's content: 
 
  - Data and Electronics - alows the player to transmit signals on the data network via packets of variables, there will be many multiblock machines allowing to read, write, transmit and receive, allowing data to be an upgraded version of redstone
   
@@ -6,11 +6,11 @@
  
  - Warfare - weapons of all sorts - machineguns, autocannons, combat drones, howitzers, missiles and much more
  
- - Intelligence - espionage, stealth and sabotage - this category contains various devices which will allow you to spy on 
+ - Intelligence - espionage - stealth - sabotage - this category contains various devices which will allow you to spy on other players and monitor the world
 
 The mod authors, the developers:
 
-- @Pabilo8 - 
+- [@Pabilo8](https://github.com/Pabilo8/) - 
   - [Curseforge](https://www.curseforge.com/members/pabilo8/), 
   - [Twitter](https://twitter.com/PablosferaGames), 
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
