@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.tool.ITool;
 import blusunrize.immersiveengineering.common.IESaveData;
+import blusunrize.immersiveengineering.common.blocks.BlockIEBase;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -41,6 +42,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+
+import static blusunrize.immersiveengineering.api.Lib.TOOL_WIRECUTTER;
 
 /**
  * Created by Pabilo8 on 07-06-2019.
@@ -209,5 +212,21 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	public Set<String> getToolClasses(ItemStack stack)
 	{
 		return ImmutableSet.of(Lib.TOOL_WIRECUTTER);
+	}
+
+	@Override
+	public boolean canHarvestBlock(@Nonnull IBlockState state, ItemStack stack)
+	{
+		if(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electric_wirecutter_energy_per_use)
+		{
+			if(state.getBlock() instanceof BlockIEBase)
+			{
+				if(((BlockIEBase)state.getBlock()).allowWirecutterHarvest(state))
+					return true;
+			}
+			else if(state.getBlock().isToolEffective(TOOL_WIRECUTTER, state))
+				return true;
+		}
+		return false;
 	}
 }

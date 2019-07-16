@@ -237,6 +237,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 					update = true;
 					writeToNBT(tag);
+					this.markDirty();
+					this.markContainingBlockForUpdate(null);
 				}
 			}
 		}

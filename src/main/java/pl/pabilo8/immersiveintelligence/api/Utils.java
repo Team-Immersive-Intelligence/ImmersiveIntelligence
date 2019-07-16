@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -60,6 +61,11 @@ public class Utils
 	public static TargetPoint targetPointFromPos(BlockPos pos, World world, int range)
 	{
 		return new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range);
+	}
+
+	public static TargetPoint targetPointFromTile(TileEntity tile, int range)
+	{
+		return new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), range);
 	}
 
 	//https://stackoverflow.com/a/52284357/9876980

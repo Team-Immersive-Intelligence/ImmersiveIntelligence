@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.blocks.metal;
+package pl.pabilo8.immersiveintelligence.common.blocks.stone;
 
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
@@ -15,23 +15,20 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDevice>
+public class BlockIIStoneDecoration extends BlockIITileProvider<IIBlockTypes_StoneDecoration>
 {
-	public BlockIIMetalDevice()
+	public BlockIIStoneDecoration()
 	{
-		super("metal_device", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalDevice.class), ItemBlockIEBase.class, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE);
+		super("stone_decoration", Material.IRON, PropertyEnum.create("type", IIBlockTypes_StoneDecoration.class), ItemBlockIEBase.class, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
-
-		tesrMap.put(IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getName());
-		tesrMap.put(IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), IIBlockTypes_MetalDevice.TIMED_BUFFER.getName());
-		tesrMap.put(IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getName());
 	}
 
 	@Override
@@ -47,35 +44,8 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 	}
 
 	@Override
-	public TileEntity createBasicTE(World world, IIBlockTypes_MetalDevice type)
+	public TileEntity createBasicTE(World world, IIBlockTypes_StoneDecoration type)
 	{
-		switch(type)
-		{
-			case METAL_CRATE:
-			{
-				return new TileEntityMetalCrate();
-			}
-			case AMMUNITION_CRATE:
-			{
-				return new TileEntityAmmunitionCrate();
-			}
-			case TIMED_BUFFER:
-			{
-				return new TileEntityTimedBuffer();
-			}
-			case REDSTONE_BUFFER:
-			{
-				return new TileEntityRedstoneBuffer();
-			}
-			case DATA_PRINTER:
-			{
-				return new TileEntityDataPrinter();
-			}
-			case DATA_SENDER:
-			{
-				return new TileEntityDataSender();
-			}
-		}
 		return null;
 	}
 

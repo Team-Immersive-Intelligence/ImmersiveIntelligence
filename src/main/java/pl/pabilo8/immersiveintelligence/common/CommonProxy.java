@@ -39,9 +39,11 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.BlockII
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation.TileEntitySkyCrateStationParent;
+import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateReinforced;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateWooden;
@@ -92,6 +94,7 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIIPrintedPage item_printed_page;
 
 	public static BlockIIBase<IIBlockTypes_Ore> block_ore, block_sheetmetal, block_metal_storage;
+	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration;
 	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration;
 
 	public static BlockIIMetalDevice block_metal_device;
@@ -169,6 +172,9 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityMetalCrate.class);
 		registerTile(TileEntityAmmunitionCrate.class);
 		registerTile(TileEntityAlarmSiren.class);
+		registerTile(TileEntityInserter.class);
+		registerTile(TileEntityTimedBuffer.class);
+		registerTile(TileEntityRedstoneBuffer.class);
 
 		// Remove after testing
 		registerTile(TileEntityDataPrinter.class);
@@ -241,6 +247,8 @@ public class CommonProxy implements IGuiHandler
 		block_metal_decoration = (BlockIIBase)new BlockIIBase("metal_decoration", Material.IRON,
 				PropertyEnum.create("type", IIBlockTypes_MetalDecoration.class), ItemBlockIEBase.class, false)
 				.setBlockLayer(BlockRenderLayer.CUTOUT).setHardness(3.0F).setResistance(15.0F);
+
+		block_stone_decoration = new BlockIIStoneDecoration();
 
 		block_metal_device = new BlockIIMetalDevice();
 

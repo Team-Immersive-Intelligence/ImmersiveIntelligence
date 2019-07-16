@@ -55,10 +55,19 @@ tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Electronic Engineering Block
 tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Advanced Electronic Engineering Block
 
+tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
+
 tile.immersiveintelligence.metal_device.metal_crate.name=Steel Crate
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
-tile.immersiveintelligence.metal_device.item_inserter.name=Item Inserter
+tile.immersiveintelligence.metal_device.small_data_buffer.name=Small Data Buffer
+tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
+tile.immersiveintelligence.metal_device.item_buffer.name=Timed Buffer
+tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
+
+tile.immersiveintelligence.metal_device.inserter.name=Item Inserter
 tile.immersiveintelligence.metal_device.fluid_inserter.name=Fluid Inserter
+tile.immersiveintelligence.metal_device.advanced_inserter.name=Advanced Inserter
+tile.immersiveintelligence.metal_device.advanced_fluid_inserter.name=Advanced Fluid Inserter
 
 tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
 tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Input Machine - Storage
@@ -76,7 +85,6 @@ tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithm
 tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
 
 tile.immersiveintelligence.metal_multiblock.redstone_output_machine.name=Redstone Output Machine
-
 
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay

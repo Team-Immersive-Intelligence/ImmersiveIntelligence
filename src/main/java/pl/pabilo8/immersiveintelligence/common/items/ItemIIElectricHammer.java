@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.items;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.tool.ITool;
+import blusunrize.immersiveengineering.common.blocks.BlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IConfigurableSides;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
@@ -42,6 +43,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+
+import static blusunrize.immersiveengineering.api.Lib.TOOL_HAMMER;
 
 /**
  * Created by Pabilo8 on 2019-05-30.
@@ -253,5 +256,21 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public Set<String> getToolClasses(ItemStack stack)
 	{
 		return ImmutableSet.of(Lib.TOOL_HAMMER);
+	}
+
+	@Override
+	public boolean canHarvestBlock(@Nonnull IBlockState state, ItemStack stack)
+	{
+		if(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electric_hammer_energy_per_use)
+		{
+			if(state.getBlock() instanceof BlockIEBase)
+			{
+				if(((BlockIEBase)state.getBlock()).allowHammerHarvest(state))
+					return true;
+			}
+			else if(state.getBlock().isToolEffective(TOOL_HAMMER, state))
+				return true;
+		}
+		return false;
 	}
 }

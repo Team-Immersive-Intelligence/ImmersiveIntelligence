@@ -48,6 +48,15 @@ public class DataPacket
 		return false;
 	}
 
+	//If you really need to
+	public void removeAllVariables()
+	{
+		for(char c : varCharacters)
+		{
+			removeVariable(c);
+		}
+	}
+
 	public boolean removeVariable(Character c)
 	{
 		if(ArrayUtils.contains(varCharacters, c))
