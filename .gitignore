@@ -27,6 +27,7 @@ eclipse/
 *.launch
 *.txt
 run/
+bin/
 *.project
 *.classpath
 .settings/
