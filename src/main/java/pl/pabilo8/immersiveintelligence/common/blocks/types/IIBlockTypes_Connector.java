@@ -12,7 +12,11 @@ public enum IIBlockTypes_Connector implements IStringSerializable, BlockIEBase.I
 {
 	DATA_CONNECTOR,
 	DATA_RELAY,
-	ALARM_SIREN;
+	ALARM_SIREN,
+	INSERTER,
+	FLUID_INSERTER,
+	ADVANCED_INSERTER,
+	ADVANCED_FLUID_INSERTER;
 
 	@Override
 	public String getName()

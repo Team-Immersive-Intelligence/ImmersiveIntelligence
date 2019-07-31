@@ -19,11 +19,10 @@ public class IIPacketHandler
 
 	public static void preInit()
 	{
-		INSTANCE.registerMessage(MessageChestSync.Handler.class, MessageChestSync.class, 0, Side.CLIENT);
-		INSTANCE.registerMessage(MessageAlarmSirenSync.Handler.class, MessageAlarmSirenSync.class, 1, Side.CLIENT);
-		INSTANCE.registerMessage(MessageItemScrollableSwitch.Handler.class, MessageItemScrollableSwitch.class, 2, Side.SERVER);
-		INSTANCE.registerMessage(MessageBooleanAnimatedPartsSync.HandlerClient.class, MessageBooleanAnimatedPartsSync.class, 3, Side.CLIENT);
-		INSTANCE.registerMessage(MessageBooleanAnimatedPartsSync.HandlerServer.class, MessageBooleanAnimatedPartsSync.class, 4, Side.SERVER);
-		INSTANCE.registerMessage(MessageGuiNBT.HandlerServer.class, MessageGuiNBT.class, 6, Side.SERVER);
+		INSTANCE.registerMessage(MessageAlarmSirenSync.Handler.class, MessageAlarmSirenSync.class, 0, Side.CLIENT);
+		INSTANCE.registerMessage(MessageItemScrollableSwitch.Handler.class, MessageItemScrollableSwitch.class, 1, Side.SERVER);
+		INSTANCE.registerMessage(MessageBooleanAnimatedPartsSync.HandlerClient.class, MessageBooleanAnimatedPartsSync.class, 2, Side.CLIENT);
+		INSTANCE.registerMessage(MessageBooleanAnimatedPartsSync.HandlerServer.class, MessageBooleanAnimatedPartsSync.class, 3, Side.SERVER);
+		INSTANCE.registerMessage(MessageGuiNBT.HandlerServer.class, MessageGuiNBT.class, 4, Side.SERVER);
 	}
 }

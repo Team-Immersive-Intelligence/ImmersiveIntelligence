@@ -104,6 +104,8 @@ public class Config
 			public static ArtilleryHowitzer artilleryHowitzer;
 			@SubConfig
 			public static MissileSilo missileSilo;
+			@SubConfig
+			public static Inserter inserter;
 
 			public static class RadioStation
 			{
@@ -117,7 +119,7 @@ public class Config
 				public static int energyUsageIdle = 1024;
 
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
-				public static int radioRange = 72;
+				public static int radioRange = 36;
 
 				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 0 - full range, 0.5 - half range, 1 - no range, etc.)"})
 				public static float weatherHarshness = 0.5f;
@@ -179,6 +181,21 @@ public class Config
 				@Comment({"Energy capacity of the missile silo (per one block of height)."})
 				public static int energyCapacity = 2500000;
 			}
+
+			public static class Inserter
+			{
+				@Comment({"Energy capacity of the inserter."})
+				public static int energyCapacity = 2048;
+				@Comment({"Energy usage of the inserter per item taken."})
+				public static int energyUsage = 256;
+
+				@Comment({"How long does it take for the inserter to pick up an item (in ticks)"})
+				public static int grabTime = 25;
+
+				@Comment({"How long does it take for the inserter to rotate 90 degrees (in ticks)"})
+				public static int rotateTime = 10;
+
+			}
 		}
 
 		public static class Wires
@@ -187,7 +204,7 @@ public class Config
 			public static int dataWireColouration = 0xb3d1d6;
 
 			@Comment({"The maximum length of a single data wire."})
-			public static int dataWireLength = 32;
+			public static int dataWireLength = 24;
 		}
 	}
 }

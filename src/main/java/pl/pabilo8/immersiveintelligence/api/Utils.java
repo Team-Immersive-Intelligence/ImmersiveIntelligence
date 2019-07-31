@@ -89,4 +89,10 @@ public class Utils
 		return new int[]{Math.min(255-black, 255-cyan), Math.min(255-black, 255-magenta), Math.min(255-black, 255-yellow)};
 	}
 
+	//Copied from GUIContainer
+	public static boolean isPointInRectangle(double x, double y, double xx, double yy, double px, double py)
+	{
+		return px >= x&&px < xx&&py >= y&&py < yy;
+	}
+
 }

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal;
 
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.material.Material;
@@ -113,7 +112,7 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 			TileEntityRadioStation tile = (TileEntityRadioStation)tileEntity;
 			if(!tile.isDummy())
 			{
-				RadioNetwork.INSTANCE.removeDevice(new DimensionBlockPos(tile));
+				RadioNetwork.INSTANCE.removeDevice(tile);
 			}
 		}
 		super.breakBlock(world, pos, state);

@@ -208,6 +208,9 @@
       },
       "alarm_siren": {
         "model": "immersiveintelligence:smartmodel/conn_alarm_siren"
+      },
+      "inserter": {
+        "model": "immersiveintelligence:smartmodel/conn_inserter"
       }
     },
     "facing": {

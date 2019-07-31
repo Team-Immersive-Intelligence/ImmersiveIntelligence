@@ -42,6 +42,8 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 		tesrMap.put(IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), IIBlockTypes_Connector.DATA_CONNECTOR.getName());
 		tesrMap.put(IIBlockTypes_Connector.DATA_RELAY.getMeta(), IIBlockTypes_Connector.DATA_RELAY.getName());
 		tesrMap.put(IIBlockTypes_Connector.ALARM_SIREN.getMeta(), IIBlockTypes_Connector.ALARM_SIREN.getName());
+		tesrMap.put(IIBlockTypes_Connector.INSERTER.getMeta(), IIBlockTypes_Connector.INSERTER.getName());
+
 	}
 
 	@Override
@@ -125,6 +127,8 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 				return new TileEntityDataRelay();
 			case ALARM_SIREN:
 				return new TileEntityAlarmSiren();
+			case INSERTER:
+				return new TileEntityInserter();
 		}
 		return null;
 	}

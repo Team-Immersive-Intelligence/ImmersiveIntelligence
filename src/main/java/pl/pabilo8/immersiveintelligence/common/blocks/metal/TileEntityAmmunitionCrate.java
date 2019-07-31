@@ -34,9 +34,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageChestSync;
+import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +48,7 @@ import java.util.Random;
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer, IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile
+public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer, IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile, IBooleanAnimatedPartsBlock
 {
 	NonNullList<ItemStack> inventory = NonNullList.withSize(38, ItemStack.EMPTY);
 
@@ -295,7 +296,7 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 					player.inventoryContainer.detectAndSendChanges();
 					//player.sendMessage(new TextComponentString(player.getName()+""));
 					open = true;
-					IIPacketHandler.INSTANCE.sendToDimension(new MessageChestSync(open, this.getPos()), this.world.provider.getDimension());
+					IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
 					return true;
 				}
 			}
@@ -352,7 +353,7 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 
 					player.addItemStackToInventory(insertionHandler.extractItem(37, 1, false));
 					open = false;
-					IIPacketHandler.INSTANCE.sendToDimension(new MessageChestSync(open, this.getPos()), this.world.provider.getDimension());
+					IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
 					//player.sendMessage(new TextComponentString("Noone is using the Ammunition Crate now!"));
 					return true;
 				}
@@ -417,4 +418,15 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 		return !axis.getAxis().isVertical();
 	}
 
+	@Override
+	public void onAnimationChangeClient(boolean state, int part)
+	{
+		open = state;
+	}
+
+	@Override
+	public void onAnimationChangeServer(boolean state, int part)
+	{
+		open = state;
+	}
 }

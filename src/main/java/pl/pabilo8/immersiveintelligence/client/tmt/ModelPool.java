@@ -53,9 +53,6 @@ public class ModelPool
 
 	private static Map<String, ModelPoolEntry> modelMap = new HashMap<String, ModelPoolEntry>();
 	private static String[] resourceDir = new String[]{
-			"/resources/models/",
-			"/resources/mod/models/",
-			"/Flan/"
 	};
 	public static final Class OBJ = ModelPoolObjEntry.class;
 }

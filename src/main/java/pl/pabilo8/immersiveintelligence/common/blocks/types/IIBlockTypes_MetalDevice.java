@@ -16,12 +16,7 @@ public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase
 	ITEM_BUFFER,
 	TIMED_BUFFER,
 	REDSTONE_BUFFER,
-	INSERTER,
-	FLUID_INSERTER,
-	ADVANCED_INSERTER,
-	ADVANCED_FLUID_INSERTER,
-	DATA_SENDER,
-	DATA_PRINTER;
+	DATA_DEBUGGER;
 
 	@Override
 	public String getName()

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
+import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 /**
@@ -9,7 +10,7 @@ public interface IRadioDevice
 {
 	void onRadioSend(DataPacket packet);
 
-	void onRadioReceive(DataPacket packet);
+	boolean onRadioReceive(DataPacket packet);
 
 	int getFrequency();
 
@@ -20,4 +21,6 @@ public interface IRadioDevice
 	float getRange();
 
 	float getWeatherRangeDecrease();
+
+	DimensionBlockPos getDevicePosition();
 }

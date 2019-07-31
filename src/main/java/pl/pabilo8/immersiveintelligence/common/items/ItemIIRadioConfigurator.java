@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.items;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -72,25 +73,23 @@ public class ItemIIRadioConfigurator extends ItemIIBase implements IItemScrollab
 				if(device.isBasicRadio()&&ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency") <= IIConfig.radioBasicMaxFrequency)
 				{
 					device.setFrequency(ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency"));
-					tile.markDirty();
-					player.sendMessage(new TextComponentTranslation(CommonProxy.info_key+"frequency_set", device.getFrequency()));
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"frequency_set", device.getFrequency())), (EntityPlayerMP)player);
 					return EnumActionResult.SUCCESS;
 				}
 				else if(!device.isBasicRadio()&&ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency") <= IIConfig.radioAdvancedMaxFrequency)
 				{
 					device.setFrequency(ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency"));
-					tile.markDirty();
-					player.sendMessage(new TextComponentTranslation(CommonProxy.info_key+"frequency_set", device.getFrequency()));
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"frequency_set", device.getFrequency())), (EntityPlayerMP)player);
 					return EnumActionResult.SUCCESS;
 				}
 				else
 				{
-					player.sendMessage(new TextComponentTranslation(CommonProxy.info_key+"frequency_invalid", IIConfig.radioBasicMaxFrequency));
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"frequency_invalid", IIConfig.radioBasicMaxFrequency)), (EntityPlayerMP)player);
 				}
 			}
 			else
 			{
-				player.sendMessage(new TextComponentTranslation(CommonProxy.info_key+"current_frequency", String.valueOf(device.getFrequency())));
+				ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"current_frequency", String.valueOf(device.getFrequency()))), (EntityPlayerMP)player);
 			}
 			ImmersiveEngineering.packetHandler.sendToAll(new MessageTileSync((TileEntityIEBase)worldIn.getTileEntity(pos), worldIn.getTileEntity(pos).serializeNBT()));
 		}

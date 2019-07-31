@@ -756,17 +756,24 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	@Override
 	public void onEntityCollision(World world, Entity entity)
 	{
-		if(pos==3&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty())
+		ImmersiveIntelligence.logger.info("lolle");
+
+		if(pos==27&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty())
 		{
 			TileEntityPrintingPress master = master();
 			if(master==null)
 				return;
 			ItemStack stack = ((EntityItem)entity).getItem();
+
+			ImmersiveIntelligence.logger.info(stack.getCount());
+
 			if(stack.getItem() instanceof ItemIIPrintedPage&&stack.getMetadata()==0)
 			{
 				//Gib paper plox
 				stack = inventoryHandler.insertItem(0, stack, false);
-				if(stack.getCount() <= 0)
+
+				((EntityItem)entity).setItem(stack);
+				if(stack.getCount()==0)
 					entity.setDead();
 			}
 

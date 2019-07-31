@@ -32,20 +32,27 @@ import java.util.List;
  */
 public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice
 {
-	int frequency = 0;
-	int ticker = 0;
+	public NonNullList<ItemStack> inventory = NonNullList.withSize(0, ItemStack.EMPTY);
+	public int frequency;
 
 	public TileEntityRadioStation()
 	{
-		super(MultiblockRadioStation.instance, new int[]{8, 3, 3}, RadioStation.energyCapacity, false);
+		super(MultiblockRadioStation.instance, new int[]{8, 3, 3}, RadioStation.energyCapacity, true);
 	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		if(!isDummy()&&nbt.hasKey("Frequency"))
-			frequency = nbt.getInteger("Frequency");
+		if(!descPacket&&!isDummy())
+		{
+			inventory = blusunrize.immersiveengineering.common.util.Utils.readInventory(nbt.getTagList("inventory", 10), 0);
+			frequency = 0;
+			if(nbt.hasKey("frequency"))
+				frequency = nbt.getInteger("frequency");
+
+			ImmersiveIntelligence.logger.info(frequency);
+		}
 	}
 
 	@Override
@@ -58,21 +65,32 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
+		if(!isDummy())
+		{
+			if(!descPacket)
+				nbt.setTag("inventory", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventory));
+			nbt.setInteger("frequency", frequency);
+			RadioNetwork.INSTANCE.addDevice(this);
+		}
 	}
 
-	private boolean firstTime = true;
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		if(message.hasKey("frequency"))
+		{
+			frequency = message.getInteger("frequency");
+		}
+	}
 
 	@Override
-	public void update()
+	public void receiveMessageFromServer(NBTTagCompound message)
 	{
-		super.update();
-		if(firstTime)
+		super.receiveMessageFromServer(message);
+		if(message.hasKey("frequency"))
 		{
-			firstTime = false;
-			if(!isDummy())
-			{
-				RadioNetwork.INSTANCE.addDevice(new DimensionBlockPos(this));
-			}
+			frequency = message.getInteger("frequency");
 		}
 	}
 
@@ -81,7 +99,6 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	{
 		return new float[]{0, 0, 0, 0, 0, 0};
 	}
-
 
 	@Override
 	public int[] getEnergyPos()
@@ -139,7 +156,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public NonNullList<ItemStack> getInventory()
 	{
-		return NonNullList.withSize(0, ItemStack.EMPTY);
+		return inventory;
 	}
 
 	@Override
@@ -157,7 +174,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public int[] getOutputSlots()
 	{
-		return null;
+		return new int[]{1};
 	}
 
 	@Override
@@ -200,7 +217,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	public void doGraphicalUpdates(int slot)
 	{
 		this.markDirty();
-		this.markContainingBlockForUpdate(null);
+		//this.markContainingBlockForUpdate(null);
 	}
 
 	@Override
@@ -222,16 +239,19 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	}
 
 	@Override
-	public void onRadioReceive(DataPacket packet)
+	public boolean onRadioReceive(DataPacket packet)
 	{
-		//I don't know why, but when i get the facing of the tile, it always returns north
-		//So i made a way around it (literally)
-
-		IDataConnector conn = Utils.findConnectorAround(this.getPos(), this.world);
-		if(conn!=null)
+		//Added because of getting double (and fake (with pos -1 and facing north) tile entities) when using world.getTileEntity
+		if(this.pos!=-1&&!this.isDummy())
 		{
-			conn.sendPacket(packet);
+			IDataConnector conn = Utils.findConnectorAround(this.getPos(), this.world);
+			if(conn!=null)
+			{
+				conn.sendPacket(packet);
+			}
+			return true;
 		}
+		return false;
 	}
 
 	@Override
@@ -246,7 +266,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 		if(this.pos==9&&energyStorage.getEnergyStored() >= RadioStation.energyUsage)
 		{
 			energyStorage.extractEnergy(RadioStation.energyUsage, false);
-			RadioNetwork.INSTANCE.sendPacket(packet, new DimensionBlockPos(master()), master().world, new ArrayList<>());
+			RadioNetwork.INSTANCE.sendPacket(packet, this, new ArrayList<>());
 		}
 	}
 
@@ -261,7 +281,6 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	{
 		if(!isDummy())
 		{
-			markDirty();
 			return frequency;
 		}
 		else
@@ -273,9 +292,9 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	{
 		if(!isDummy())
 		{
-			ImmersiveIntelligence.logger.info(this.getPos());
 			this.frequency = value;
 			markDirty();
+			markContainingBlockForUpdate(null);
 		}
 		else
 			master().setFrequency(value);
@@ -290,14 +309,26 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public float getWeatherRangeDecrease()
 	{
-		return RadioStation.weatherHarshness;
+		return world.isRainingAt(getPos())?RadioStation.weatherHarshness: 1f;
+	}
+
+	@Override
+	public DimensionBlockPos getDevicePosition()
+	{
+		//Should exist, but who knows ¯\_(ツ)_/¯
+		if(getTileForPos(67)!=null)
+			return new DimensionBlockPos(getTileForPos(67));
+		else
+			return new DimensionBlockPos(this);
 	}
 
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
 		List list = new ArrayList<AxisAlignedBB>();
+
 		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+
 		return list;
 	}
 
@@ -310,7 +341,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public List<AxisAlignedBB> getAdvancedColisionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
 		return getAdvancedSelectionBounds();
 	}
+
 }

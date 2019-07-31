@@ -61,13 +61,9 @@ tile.immersiveintelligence.metal_device.metal_crate.name=Steel Crate
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.small_data_buffer.name=Small Data Buffer
 tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
-tile.immersiveintelligence.metal_device.item_buffer.name=Timed Buffer
+tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
 tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
-
-tile.immersiveintelligence.metal_device.inserter.name=Item Inserter
-tile.immersiveintelligence.metal_device.fluid_inserter.name=Fluid Inserter
-tile.immersiveintelligence.metal_device.advanced_inserter.name=Advanced Inserter
-tile.immersiveintelligence.metal_device.advanced_fluid_inserter.name=Advanced Fluid Inserter
+tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
 
 tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
 tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Input Machine - Storage
@@ -88,10 +84,13 @@ tile.immersiveintelligence.metal_multiblock.redstone_output_machine.name=Redston
 
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
+
 tile.immersiveintelligence.data_connector.alarm_siren.name=Alarm Siren
 
-tile.immersiveintelligence.metal_multiblock.timed_data_holder.name=Timed Data Holder
-tile.immersiveintelligence.metal_multiblock.timed_data_buffer.name=Timed Data Buffer
+tile.immersiveintelligence.data_connector.fluid_inserter.name=Fluid Inserter
+tile.immersiveintelligence.data_connector.advanced_inserter.name=Advanced Inserter
+tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced Fluid Inserter
+tile.immersiveintelligence.data_connector.inserter.name=Item Inserter
 
 //Fluids
 fluid.ink=Ink
@@ -146,6 +145,11 @@ desc.immersiveintelligence.variable=Variable:
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
 info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!
 info.immersiveintelligence.current_frequency=Current frequency: %s
+
+info.immersiveintelligence.debugger_mode=Debugger Mode: %s
+info.immersiveintelligence.debugger_mode.0=Transceiver
+info.immersiveintelligence.debugger_mode.1=Transmitter
+info.immersiveintelligence.debugger_mode.2=Receiver
 
 //Data System Descriptions
 datasystem.immersiveintelligence.function.add=Addition

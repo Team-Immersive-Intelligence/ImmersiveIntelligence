@@ -1,26 +1,30 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartContainer;
+import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.world.World;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
  */
-public class EntityMinecartCrateSteel extends EntityMinecartContainer
+public class EntityMinecartCrateSteel extends EntityMinecartContainer implements IMinecartBlockPickable
 {
 	public EntityMinecartCrateSteel(World worldIn)
 	{
@@ -44,18 +48,37 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer
 
 		if(!world.isRemote&&this.world.getGameRules().getBoolean("doEntityDrops"))
 		{
+			ItemStack cart = new ItemStack(Items.MINECART, 1);
 			Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
 			ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+			NBTTagCompound nbt = new NBTTagCompound();
 
-			IItemHandler cap = drop2.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			NBTTagList invList = new NBTTagList();
 
 			for(int i = 0; i < itemHandler.getSlots(); i++)
 			{
 				ItemStack stack = itemHandler.extractItem(i, itemHandler.getStackInSlot(i).getCount(), false);
-				cap.insertItem(i, stack, false);
+
+				if(!stack.isEmpty())
+				{
+					NBTTagCompound itemTag = new NBTTagCompound();
+					itemTag.setByte("Slot", (byte)i);
+					stack.writeToNBT(itemTag);
+					invList.appendTag(itemTag);
+				}
 			}
 
+			if(this.hasCustomName())
+			{
+				nbt.setString("name", getCustomNameTag());
+			}
+
+			nbt.setTag("inventory", invList);
+			drop2.setTagCompound(nbt);
+
 			entityDropItem(drop2, 1);
+			entityDropItem(cart, 1);
+			this.setDead();
 		}
 	}
 
@@ -103,5 +126,48 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer
 	public void setDead()
 	{
 		this.isDead = true;
+	}
+
+	@Override
+	public ItemStack getBlockForPickup()
+	{
+		Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
+		ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+		NBTTagCompound nbt = new NBTTagCompound();
+
+		NBTTagList invList = new NBTTagList();
+
+		for(int i = 0; i < itemHandler.getSlots(); i++)
+		{
+			ItemStack stack = itemHandler.extractItem(i, itemHandler.getStackInSlot(i).getCount(), false);
+
+			if(!stack.isEmpty())
+			{
+				NBTTagCompound itemTag = new NBTTagCompound();
+				itemTag.setByte("Slot", (byte)i);
+				stack.writeToNBT(itemTag);
+				invList.appendTag(itemTag);
+			}
+		}
+
+		if(this.hasCustomName())
+		{
+			nbt.setString("name", getCustomNameTag());
+		}
+
+		nbt.setTag("inventory", invList);
+		drop2.setTagCompound(nbt);
+
+		NBTTagCompound nbt2 = new NBTTagCompound();
+		this.writeEntityToNBT(nbt2);
+
+		this.setDead();
+
+		EntityMinecart ent = new EntityMinecartEmpty(this.world);
+		ent.readFromNBT(nbt2);
+		world.spawnEntity(ent);
+		ent.readFromNBT(nbt2);
+
+		return drop2;
 	}
 }

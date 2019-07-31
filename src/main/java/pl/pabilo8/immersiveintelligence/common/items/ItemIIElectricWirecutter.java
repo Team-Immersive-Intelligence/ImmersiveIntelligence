@@ -103,7 +103,7 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if(!world.isRemote&&tileEntity instanceof IImmersiveConnectable&&this.getEnergyStored(player.getHeldItem(hand)) >= Tools.electric_wirecutter_energy_per_use)
+		if(!world.isRemote&&tileEntity instanceof IImmersiveConnectable&&hasEnoughEnergy(player.getHeldItem(hand)))
 		{
 
 			TargetingInfo target = new TargetingInfo(side, hitX, hitY, hitZ);
@@ -162,7 +162,7 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState)
 	{
-		if(getToolClasses(stack).contains(toolClass)&&stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electric_wirecutter_energy_per_use)
+		if(hasEnoughEnergy(stack))
 			return 4;
 		else
 			return -1;
@@ -189,9 +189,12 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	@Override
 	public float getStrVsBlock(ItemStack stack, IBlockState state)
 	{
-		for(String type : this.getToolClasses(stack))
-			if(state.getBlock().isToolEffective(type, state))
-				return 16;
+		if(hasEnoughEnergy(stack))
+		{
+			for(String type : this.getToolClasses(stack))
+				if(state.getBlock().isToolEffective(type, state))
+					return 16;
+		}
 		return super.getStrVsBlock(stack, state);
 	}
 
@@ -217,7 +220,7 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	@Override
 	public boolean canHarvestBlock(@Nonnull IBlockState state, ItemStack stack)
 	{
-		if(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electric_wirecutter_energy_per_use)
+		if(hasEnoughEnergy(stack))
 		{
 			if(state.getBlock() instanceof BlockIEBase)
 			{
@@ -228,5 +231,10 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 				return true;
 		}
 		return false;
+	}
+
+	public boolean hasEnoughEnergy(ItemStack stack)
+	{
+		return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electric_wirecutter_energy_per_use;
 	}
 }

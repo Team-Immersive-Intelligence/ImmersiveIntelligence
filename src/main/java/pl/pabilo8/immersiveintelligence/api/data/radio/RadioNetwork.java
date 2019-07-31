@@ -1,14 +1,10 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Created by Pabilo8 on 23-06-2019.
@@ -17,9 +13,9 @@ public class RadioNetwork
 {
 	public static RadioNetwork INSTANCE = new RadioNetwork();
 
-	Set<DimensionBlockPos> devices = new HashSet<>();
+	ArrayList<IRadioDevice> devices = new ArrayList<>();
 
-	public boolean addDevice(DimensionBlockPos pos)
+	public boolean addDevice(IRadioDevice pos)
 	{
 		if(!devices.contains(pos))
 		{
@@ -29,7 +25,7 @@ public class RadioNetwork
 		return false;
 	}
 
-	public boolean removeDevice(DimensionBlockPos pos)
+	public boolean removeDevice(IRadioDevice pos)
 	{
 		if(devices.contains(pos))
 		{
@@ -45,59 +41,47 @@ public class RadioNetwork
 		devices.clear();
 	}
 
-	public Set<DimensionBlockPos> getDevices()
+	public ArrayList<IRadioDevice> getDevices()
 	{
 		return devices;
 	}
 
 
 	//Simulates radio transmission in a recursive way
-	public void sendPacket(DataPacket packet, DimensionBlockPos sender, World world, List<DimensionBlockPos> list)
+	public void sendPacket(DataPacket packet, IRadioDevice sender, ArrayList<IRadioDevice> list)
 	{
-		if(list.isEmpty())
+		if(!list.contains(sender))
 			list.add(sender);
-
-		if(world.provider.getDimension()!=sender.dimension||!world.isBlockLoaded(sender)||!(world.getTileEntity(sender) instanceof IRadioDevice))
-			return;
-
-		IRadioDevice dvc = (IRadioDevice)world.getTileEntity(sender);
-		dvc.onRadioSend(packet);
-
-		for(DimensionBlockPos device : devices)
+		for(IRadioDevice dev : getDevices())
 		{
-			if(device.dimension!=sender.dimension||!world.isBlockLoaded(device)||list.contains(device))
-				continue;
-
-			if(!(world.getTileEntity(device) instanceof IRadioDevice))
+			if(!list.contains(dev))
 			{
-				//Concurrent what?!
-				//removeDevice(device);
-				ImmersiveIntelligence.logger.info("A device is not a radio!");
-				continue;
+				if(dev.getFrequency()==sender.getFrequency()&&distanceCheck(sender, dev))
+				{
+					if(dev.onRadioReceive(packet))
+					{
+						list.add(dev);
+						ImmersiveIntelligence.logger.info(dev.getDevicePosition());
+						INSTANCE.sendPacket(packet, dev, list);
+					}
+				}
 			}
-
-			IRadioDevice dvc2 = (IRadioDevice)world.getTileEntity(device);
-
-			//ImmersiveIntelligence.logger.info(dvc2.getFrequency());
-			//Todo: Investigate why is the frequency not loading / why is the radio facing not saving sometimes
-
-			if(world.getTileEntity(sender).serializeNBT().getInteger("Frequency")!=world.getTileEntity(device).serializeNBT().getInteger("Frequency"))
-				continue;
-
-			if(Utils.getDistanceBetweenPos(sender, device, true) < (dvc.getRange()*(world.isRainingAt(sender)?dvc.getWeatherRangeDecrease(): 1f))+(dvc2.getRange())*(world.isRainingAt(device)?dvc2.getWeatherRangeDecrease(): 1f))
-			{
-				list.add(device);
-				dvc2.onRadioReceive(packet);
-				sendPacket(packet, device, world, list);
-			}
-
 		}
+
 	}
 
 	//TODO:Radio Item
 	public void sendPacketItem()
 	{
 
+	}
+
+	public boolean distanceCheck(IRadioDevice device1, IRadioDevice device2)
+	{
+		float range1 = device1.getRange()*device1.getWeatherRangeDecrease();
+		float range2 = device2.getRange()*device2.getWeatherRangeDecrease();
+
+		return Utils.getDistanceBetweenPos(device1.getDevicePosition(), device2.getDevicePosition(), true) <= (range1+range2)/2f;
 	}
 
 }

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.tmt;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -2214,6 +2215,16 @@ public class ModelRendererTurbo extends ModelRenderer
 		}
 		callDisplayList();
 		GL11.glPopMatrix();
+	}
+
+	public void addChild(ModelRendererTurbo renderer)
+	{
+		if(this.childModels==null)
+		{
+			this.childModels = Lists.<ModelRenderer>newArrayList();
+		}
+
+		this.childModels.add(renderer);
 	}
 
 	@Override

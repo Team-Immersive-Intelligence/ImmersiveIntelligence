@@ -20,9 +20,6 @@
         "textures": {
           "all": "immersiveintelligence:blocks/metal_device/steel_crate"
         }
-      },
-      "alarm_siren": {
-        "model": "immersiveintelligence:smartmodel/conn_alarm_siren"
       }
     },
     "facing": {
@@ -69,13 +66,18 @@
         }
       }
     },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    },
     "_0multiblockslave": {
       "false": {},
       "true": {
-        "model": "immersiveengineering:ie_empty",
-        "textures": {
-          "particle": "immersiveengineering:blocks/treated_wood_horizontal"
-        }
+        "model": "immersiveengineering:ie_empty"
       }
     }
   }
