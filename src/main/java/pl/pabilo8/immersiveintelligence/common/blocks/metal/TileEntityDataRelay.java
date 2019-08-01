@@ -130,7 +130,7 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 	{
 		EnumFacing side = facing.getOpposite();
 		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5+side.getFrontOffsetX()*(.375-conRadius), .5+side.getFrontOffsetY()*(.375-conRadius), .5+side.getFrontOffsetZ()*(.375-conRadius));
+		return new Vec3d(.5+side.getFrontOffsetX()*(.5-conRadius), 0.5+side.getFrontOffsetY()*(.5-conRadius), .5+side.getFrontOffsetZ()*(.5-conRadius));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -154,8 +154,8 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 	public float[] getBlockBounds()
 	{
 		float length = 1f;
-		float wMin = .3125f;
-		float wMax = .6875f;
+		float wMin = .25f;
+		float wMax = .75f;
 		switch(facing.getOpposite())
 		{
 			case UP:

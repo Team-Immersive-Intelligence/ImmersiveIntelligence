@@ -189,7 +189,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	{
 		EnumFacing side = facing.getOpposite();
 		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5-conRadius*side.getFrontOffsetX(), .5-conRadius*side.getFrontOffsetY(), .5-conRadius*side.getFrontOffsetZ());
+		return new Vec3d(.5+side.getFrontOffsetX()*(.25-conRadius), 0.5+side.getFrontOffsetY()*(.25-conRadius), .5+side.getFrontOffsetZ()*(.25-conRadius));
 	}
 
 	@Override
@@ -217,9 +217,9 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	@Override
 	public float[] getBlockBounds()
 	{
-		float length = .625f;
-		float wMin = .3125f;
-		float wMax = .6875f;
+		float length = .75f;
+		float wMin = .25f;
+		float wMax = .75f;
 		switch(facing.getOpposite())
 		{
 			case UP:

@@ -55,14 +55,14 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 	public static ItemStack conn_data, conn_mv;
 	public EnumFacing outputFacing = EnumFacing.NORTH;
 	public EnumFacing inputFacing = EnumFacing.SOUTH;
-	public int pickProgress = 0, armDirection = 0;
+	public int pickProgress = 100, armDirection = 0;
 	public int nextPickProgress = 0, nextDirection = 0;
 	protected Set<String> acceptablePowerWires = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	WireType secondCable;
 	//The held item
 	NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
-	IItemHandler insertionHandler = new IEInventoryHandler(1, this);
+	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
 	int itemsToTake = 0;
 	String itemTakeMode = "set";
 	private boolean refreshWireNetwork = false;
@@ -249,6 +249,9 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 		if(message.hasKey("inputFacing"))
 			inputFacing = EnumFacing.getFront(message.getInteger("inputFacing"));
 
+		if(message.hasKey("inventory"))
+			inventory = Utils.readInventory(message.getTagList("inventory", 10), 1);
+
 	}
 
 	@Override
@@ -387,6 +390,10 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 					pickProgress += 100f/Inserter.grabTime;
 				else if(pickProgress > nextPickProgress)
 					pickProgress -= 100f/Inserter.grabTime;
+
+				if(Math.round(pickProgress/10f)*10f==Math.round(nextPickProgress/10f)*10f)
+					pickProgress = nextPickProgress;
+
 			}
 			else if(energyStorage > Inserter.energyUsage&&armDirection!=nextDirection)
 			{
@@ -410,20 +417,28 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 					}
 					else
 					{
-						if(world.getTileEntity(getPos().offset(outputFacing))!=null&&world.getTileEntity(getPos().offset(outputFacing)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+						if(world.getTileEntity(getPos().offset(outputFacing, 2))!=null&&world.getTileEntity(getPos().offset(outputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 						{
 							if(nextPickProgress==0)
 							{
-								IItemHandler cap = world.getTileEntity(getPos().offset(outputFacing)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outputFacing.getOpposite());
+								IItemHandler cap = world.getTileEntity(getPos().offset(outputFacing, 2)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outputFacing.getOpposite());
 								ItemStack stack = insertionHandler.extractItem(0, 1, false);
 								for(int i = 0; i < cap.getSlots(); i += 1)
 								{
 									if(stack.isEmpty())
 										continue;
 									stack = cap.insertItem(i, stack, false);
-									itemsToTake -= 1;
-									nextPickProgress = 100;
-									nextDirection = Math.round(outputFacing.getHorizontalAngle());
+									if(stack.isEmpty())
+									{
+										itemsToTake -= 1;
+										nextPickProgress = 100;
+										nextDirection = Math.round(outputFacing.getHorizontalAngle());
+									}
+									else
+									{
+										nextPickProgress = 0;
+										pickProgress = 0;
+									}
 								}
 								energyStorage -= Inserter.energyUsage;
 							}
@@ -435,7 +450,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 						}
 					}
 				}
-				else if(world.getTileEntity(getPos().offset(inputFacing))!=null&&world.getTileEntity(getPos().offset(inputFacing)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+				else if(world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 				{
 					ImmersiveIntelligence.logger.info("Container at pos!");
 					ImmersiveIntelligence.logger.info(armDirection+" "+Math.round(inputFacing.getHorizontalAngle()));
@@ -446,11 +461,11 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 					}
 					else
 					{
-						if(world.getTileEntity(getPos().offset(inputFacing))!=null&&world.getTileEntity(getPos().offset(inputFacing)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inputFacing.getOpposite()))
+						if(world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inputFacing.getOpposite()))
 						{
 							if(nextPickProgress==0)
 							{
-								IItemHandler cap = world.getTileEntity(getPos().offset(inputFacing)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inputFacing.getOpposite());
+								IItemHandler cap = world.getTileEntity(getPos().offset(inputFacing, 2)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inputFacing.getOpposite());
 								boolean done = false;
 								for(int i = 0; i < cap.getSlots(); i += 1)
 								{
@@ -511,6 +526,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 				nbt.setInteger("armDirection", armDirection);
 				nbt.setInteger("pickProgress", pickProgress);
 				nbt.setInteger("energyStorage", energyStorage);
+				nbt.setTag("inventory", Utils.writeInventory(inventory));
 				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 24));
 			}
 		}

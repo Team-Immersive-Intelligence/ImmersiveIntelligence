@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -85,7 +86,7 @@ public class TileEntityDataDebugger extends TileEntityIEBase implements ITickabl
 	{
 		if(mode==0||mode==2)
 		{
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageNoSpamChatComponents(new TextComponentString(packet.toNBT().toString())), Utils.targetPointFromTile(this, 32));
+			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageNoSpamChatComponents(new TextComponentString(packet.toNBT().toString())), Utils.targetPointFromTile(this, 256));
 		}
 	}
 
@@ -101,7 +102,7 @@ public class TileEntityDataDebugger extends TileEntityIEBase implements ITickabl
 		mode += 1;
 		if(mode > 2)
 			mode = 0;
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageNoSpamChatComponents(new TextComponentTranslation(ImmersiveIntelligence.proxy.info_key+"debugger_mode", new TextComponentTranslation(ImmersiveIntelligence.proxy.info_key+"debugger_mode."+mode))), Utils.targetPointFromTile(this, 32));
+		ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(ImmersiveIntelligence.proxy.info_key+"debugger_mode", new TextComponentTranslation(ImmersiveIntelligence.proxy.info_key+"debugger_mode."+mode))), ((EntityPlayerMP)player));
 		return true;
 	}
 }

@@ -248,6 +248,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			if(conn!=null)
 			{
 				conn.sendPacket(packet);
+				ImmersiveIntelligence.logger.info(this.getPos()+" - Transmitted data to conns");
 			}
 			return true;
 		}

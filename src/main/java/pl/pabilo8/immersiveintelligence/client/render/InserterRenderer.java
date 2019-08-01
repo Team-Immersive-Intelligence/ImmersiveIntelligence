@@ -9,8 +9,10 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
+import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityInserter;
 
 /**
@@ -21,7 +23,6 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 {
 	static RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 	private static ModelInserter model = new ModelInserter();
-	private static ModelInserter model_normal = new ModelInserter();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/inserter.png";
 
@@ -101,7 +102,61 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 
 			model.render();
 
-			model.rotate(model.inserterBaseTurntable, te.pickProgress/100f, 0f, 0f);
+			float added = te.nextDirection > te.armDirection?(100f/Inserter.grabTime*(partialTicks/20)):
+					(te.nextDirection < te.armDirection?-(100f/Inserter.grabTime*(partialTicks/20)): 0);
+			float progress = 1f-(((float)te.pickProgress+(added))/100f);
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(0.5f, 0.375f, -0.5);
+			GlStateManager.rotate(te.armDirection, 0, 1, 0);
+
+			for(ModelRendererTurbo mod : model.inserterBaseTurntable)
+				mod.render(0.0625f);
+
+			GlStateManager.translate(0f, 0.125f, 0);
+			GlStateManager.rotate(15+55*progress, 1, 0, 0);
+
+			for(ModelRendererTurbo mod : model.inserterLowerArm)
+				mod.render(0.0625f);
+
+			GlStateManager.translate(0f, 0.875f, 0);
+			GlStateManager.rotate(135-(95f*progress), 1, 0, 0);
+			GlStateManager.translate(0f, 0.0625f, 0.03125f);
+
+			for(ModelRendererTurbo mod : model.inserterMidAxle)
+				mod.render(0.0625f);
+
+			for(ModelRendererTurbo mod : model.inserterUpperArm)
+				mod.render(0.0625f);
+
+			GlStateManager.translate(0f, 0.625f, 0.03125f);
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
+
+			GlStateManager.rotate(-45f*progress, 0f, 0f, 1f);
+
+			for(ModelRendererTurbo mod : model.inserterItemPicker1)
+				mod.render(0.0625f);
+
+			GlStateManager.popMatrix();
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(-0.125f, -0.03125f, -0.03125f);
+
+			GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
+
+			for(ModelRendererTurbo mod : model.inserterItemPicker2)
+				mod.render(0.0625f);
+
+			GlStateManager.popMatrix();
+
+			renderItem.renderItem(te.insertionHandler.getStackInSlot(0), TransformType.GROUND);
+
+			GlStateManager.popMatrix();
 
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
@@ -128,11 +183,61 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 
-			//model.copyModelAngles(model, model_normal);
-			//model.copyModelPositions(model, model_normal);
-
 			model.getBlockRotation(EnumFacing.NORTH, model);
 			model.render();
+
+			float progress = 0.15f;
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(0.5f, 0.375f, -0.5);
+			//GlStateManager.rotate(180,0,1,0);
+
+			for(ModelRendererTurbo mod : model.inserterBaseTurntable)
+				mod.render(0.0625f);
+
+			GlStateManager.translate(0f, 0.125f, 0);
+			GlStateManager.rotate(15+55*progress, 1, 0, 0);
+
+			for(ModelRendererTurbo mod : model.inserterLowerArm)
+				mod.render(0.0625f);
+
+			GlStateManager.translate(0f, 0.875f, 0);
+			GlStateManager.rotate(135-(95f*progress), 1, 0, 0);
+			GlStateManager.translate(0f, 0.0625f, 0.03125f);
+
+			for(ModelRendererTurbo mod : model.inserterMidAxle)
+				mod.render(0.0625f);
+
+			for(ModelRendererTurbo mod : model.inserterUpperArm)
+				mod.render(0.0625f);
+
+			GlStateManager.translate(0f, 0.625f, 0.03125f);
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
+
+			GlStateManager.rotate(-45f*progress, 0f, 0f, 1f);
+
+			for(ModelRendererTurbo mod : model.inserterItemPicker1)
+				mod.render(0.0625f);
+
+			GlStateManager.popMatrix();
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(-0.125f, -0.03125f, -0.03125f);
+
+			GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
+
+			for(ModelRendererTurbo mod : model.inserterItemPicker2)
+				mod.render(0.0625f);
+
+			GlStateManager.popMatrix();
+
+			GlStateManager.popMatrix();
+
 
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);

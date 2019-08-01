@@ -58,6 +58,7 @@ public class RadioNetwork
 			{
 				if(dev.getFrequency()==sender.getFrequency()&&distanceCheck(sender, dev))
 				{
+					ImmersiveIntelligence.logger.info(dev.getFrequency());
 					if(dev.onRadioReceive(packet))
 					{
 						list.add(dev);

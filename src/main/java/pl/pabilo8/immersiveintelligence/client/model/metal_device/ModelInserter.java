@@ -26,11 +26,8 @@ public class ModelInserter extends BaseBlockModel
 		baseModel[0].addBox(0F, 0F, 0F, 16, 3, 16, 0F); // BaseBox
 		baseModel[0].setRotationPoint(0F, -3F, 0F);
 
-		baseModel[1].addBox(-4F, -2F, -4F, 8, 1, 8, 0F); // BaseBoxTop
-		baseModel[1].setRotationPoint(8F, -3F, 8F);
-
-		baseModel[2].addBox(-8F, -4F, -8F, 0, 1, 0, 0F); // BaseBoxTopTopper
-		baseModel[2].setRotationPoint(8F, -3F, 8F);
+		baseModel[1].addBox(-4F, 0F, -4F, 8, 1, 8, 0F); // BaseBoxTop
+		baseModel[1].setRotationPoint(8F, -4F, 8F);
 
 		inserterBaseTurntable = new ModelRendererTurbo[4];
 		inserterBaseTurntable[0] = new ModelRendererTurbo(this, 24, 20, textureX, textureY); // BaseTurntable
@@ -76,30 +73,29 @@ public class ModelInserter extends BaseBlockModel
 		inserterLowerArm[10].addBox(0.5F, -12F, -0.5F, 1, 10, 1, 0F); // InserterArm1
 
 		inserterLowerArm[11].addShape3D(1.5F, 12F, 0.5F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(3, 1, 3, 1), new Coord2D(3, 2, 3, 2), new Coord2D(2, 3, 2, 3), new Coord2D(1, 3, 1, 3), new Coord2D(0, 2, 0, 2), new Coord2D(0, 1, 0, 1), new Coord2D(1, 0, 1, 0)}), 1, 3, 3, 12, 1, ModelRendererTurbo.MR_FRONT, new float[]{1, 2, 1, 2, 1, 2, 1, 2}); // Holder2
-		//inserterLowerArm[11].rotateAngleY = -4.71238898F;
+		inserterLowerArm[11].rotateAngleY = -4.71238898F;
 
 		inserterLowerArm[12].addShape3D(1.5F, 12F, -1.5F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(3, 1, 3, 1), new Coord2D(3, 2, 3, 2), new Coord2D(2, 3, 2, 3), new Coord2D(1, 3, 1, 3), new Coord2D(0, 2, 0, 2), new Coord2D(0, 1, 0, 1), new Coord2D(1, 0, 1, 0)}), 1, 3, 3, 12, 1, ModelRendererTurbo.MR_FRONT, new float[]{1, 2, 1, 2, 1, 2, 1, 2}); // Holder2
-		//inserterLowerArm[12].rotateAngleY = -4.71238898F;
+		inserterLowerArm[12].rotateAngleY = -4.71238898F;
 
 		inserterLowerArm[13].addBox(-3F, -11F, 0.5F, 6, 8, 1, 0F); // InserterArmBackplate
 		inserterLowerArm[14].addBox(-2.5F, -10.5F, 1F, 5, 3, 1, 0F); // InserterArmBackplateProcessor
 		inserterLowerArm[15].addBox(-2.5F, -7F, 1F, 5, 3, 1, 0F); // InserterArmBackplateProcessor
 
-
 		inserterMidAxle = new ModelRendererTurbo[1];
 		inserterMidAxle[0] = new ModelRendererTurbo(this, 34, 29, textureX, textureY); // InserterAxle2
 
-		inserterMidAxle[0].addBox(-2F, -14F, -0.5F, 4, 1, 1, 0F); // InserterAxle2
+		inserterMidAxle[0].addBox(-2F, 0F, -0.5F, 4, 1, 1, 0F); // InserterAxle2
 
 		inserterUpperArm = new ModelRendererTurbo[2];
 		inserterUpperArm[0] = new ModelRendererTurbo(this, 60, 19, textureX, textureY); // InserterArm2Top
 		inserterUpperArm[1] = new ModelRendererTurbo(this, 32, 27, textureX, textureY); // InserterArm2End
 
-		inserterUpperArm[0].addBox(-0.5F, -9.5F, -0.5F, 1, 9, 1, 0F); // InserterArm2Top
-		inserterUpperArm[0].setRotationPoint(8F, -21.5F, 8F);
+		inserterUpperArm[0].addBox(-0.5F, -9F, -0.5F, 1, 9, 1, 0F); // InserterArm2Top
+		//inserterUpperArm[0].setRotationPoint(8F, -21.5F, 8F);
 
-		inserterUpperArm[1].addFlexTrapezoid(-2.5F, -10.5F, -0.5F, 5, 1, 1, 0F, -1.00F, -1.00F, 0.00F, 0.00F, 0.00F, 0.00F, ModelRendererTurbo.MR_BOTTOM); // InserterArm2End
-		inserterUpperArm[1].setRotationPoint(8F, -21.5F, 8F);
+		inserterUpperArm[1].addFlexTrapezoid(-2.5F, -10F, -0.5F, 5, 1, 1, 0F, -1.00F, -1.00F, 0.00F, 0.00F, 0.00F, 0.00F, ModelRendererTurbo.MR_BOTTOM); // InserterArm2End
+		//inserterUpperArm[1].setRotationPoint(8F, -21.5F, 8F);
 
 		inserterItemPicker1 = new ModelRendererTurbo[1];
 		inserterItemPicker2 = new ModelRendererTurbo[1];
@@ -107,17 +103,16 @@ public class ModelInserter extends BaseBlockModel
 		inserterItemPicker2[0] = new ModelRendererTurbo(this, 25, 20, textureX, textureY); // InserterArm2End
 
 		inserterItemPicker1[0].addBox(-0.5F, -3.5F, -0.5F, 1, 3, 1, 0F); // InserterArm2End
-		inserterItemPicker1[0].setRotationPoint(6F, -31.5F, 8F);
+		//inserterItemPicker1[0].setRotationPoint(6F, -31.5F, 8F);
 
 		inserterItemPicker2[0].addBox(-0.5F, -3.5F, -0.5F, 1, 3, 1, 0F); // InserterArm2End
-		inserterItemPicker2[0].setRotationPoint(10F, -31.5F, 8F);
+		//inserterItemPicker2[0].setRotationPoint(10F, -31.5F, 8F);
 
 		inserterOutput = new ModelRendererTurbo[1];
 		inserterOutput[0] = new ModelRendererTurbo(this, 48, 7, textureX, textureY); // BaseOutputBox
 
 		inserterOutput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseOutputBox
 		inserterOutput[0].setRotationPoint(8F, -4F, 8F);
-
 
 		inserterInput = new ModelRendererTurbo[1];
 		inserterInput[0] = new ModelRendererTurbo(this, 40, 23, textureX, textureY); // BaseInputBox
@@ -126,11 +121,6 @@ public class ModelInserter extends BaseBlockModel
 		inserterInput[0].setRotationPoint(8F, -4F, 8F);
 
 		flipAll();
-
-		baseModel[2].addChild(inserterBaseTurntable[0]);
-		baseModel[2].addChild(inserterBaseTurntable[1]);
-		baseModel[2].addChild(inserterBaseTurntable[2]);
-		baseModel[2].addChild(inserterBaseTurntable[3]);
 
 	}
 

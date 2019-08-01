@@ -113,13 +113,13 @@ public class Config
 				public static int energyCapacity = 32000;
 
 				@Comment({"Energy usage when sending a signal."})
-				public static int energyUsage = 16000;
+				public static int energyUsage = 8192;
 
 				@Comment({"Energy usage when a radio station is working."})
-				public static int energyUsageIdle = 1024;
+				public static int energyUsageIdle = 512;
 
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
-				public static int radioRange = 36;
+				public static int radioRange = 48;
 
 				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 0 - full range, 0.5 - half range, 1 - no range, etc.)"})
 				public static float weatherHarshness = 0.5f;
@@ -190,7 +190,7 @@ public class Config
 				public static int energyUsage = 256;
 
 				@Comment({"How long does it take for the inserter to pick up an item (in ticks)"})
-				public static int grabTime = 25;
+				public static int grabTime = 20;
 
 				@Comment({"How long does it take for the inserter to rotate 90 degrees (in ticks)"})
 				public static int rotateTime = 10;
