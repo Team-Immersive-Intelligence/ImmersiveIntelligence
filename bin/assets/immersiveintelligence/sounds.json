@@ -1,9 +1,0 @@
-{
-	"siren": {
-		"category": "block",
-		"sounds": [
-			"immersiveintelligence:siren"
-		],
-		"subtitle": "subtitle.immersiveintelligence.siren"
-	}
-}
