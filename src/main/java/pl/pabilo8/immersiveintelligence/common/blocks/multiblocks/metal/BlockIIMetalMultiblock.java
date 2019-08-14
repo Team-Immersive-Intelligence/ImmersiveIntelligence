@@ -73,6 +73,10 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 			{
 				return new TileEntityPrintingPress();
 			}
+			case CHEMICAL_BATH:
+			{
+				return new TileEntityChemicalBath();
+			}
 		}
 		return null;
 	}

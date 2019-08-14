@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.1.8"
+version = "0.1.0"
 group= "pl.pabilo8.immersiveintelligence"
 archivesBaseName = "immersiveintelligence"
 
@@ -60,6 +60,8 @@ dependencies {
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.9.289"
     //deobfCompile "elucent:albedo:2.0-SNAPSHOT"
     compileOnly "mezz.jei:jei_1.12:4.+"
+    compile files('libs/immersivepetroleum-1.12.2-1.1.9-deobf.jar')
+    compile files('libs/combatica-api-1.12.2-1.2.0-sources.jar')
 }
 
 jar {
@@ -77,6 +79,9 @@ processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
+    //Exclude GIMP images
+	exclude '**/*.xcf'
+
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
@@ -85,8 +90,9 @@ processResources {
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
-    // copy everything else except the mcmod.info
+    // copy everything else except the mcmod.info and GIMP files
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+
     }
 }

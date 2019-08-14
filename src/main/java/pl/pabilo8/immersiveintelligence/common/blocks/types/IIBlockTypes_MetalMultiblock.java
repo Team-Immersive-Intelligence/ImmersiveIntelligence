@@ -13,7 +13,8 @@ public enum IIBlockTypes_MetalMultiblock implements IStringSerializable, BlockIE
 	RADIO_STATION,
 	PRINTING_PRESS,
 	DATA_INPUT_MACHINE,
-	ARITHMETIC_LOGIC_MACHINE;
+	ARITHMETIC_LOGIC_MACHINE,
+	CHEMICAL_BATH;
 
 	@Override
 	public String getName()

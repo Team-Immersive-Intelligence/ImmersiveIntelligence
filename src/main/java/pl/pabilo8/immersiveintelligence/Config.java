@@ -106,6 +106,8 @@ public class Config
 			public static MissileSilo missileSilo;
 			@SubConfig
 			public static Inserter inserter;
+			@SubConfig
+			public static SmallDataBuffer small_data_buffer;
 
 			public static class RadioStation
 			{
@@ -164,6 +166,15 @@ public class Config
 				public static int printInkUsage = 8;
 			}
 
+			public static class ChemicalBath
+			{
+				@Comment({"Energy capacity of the chemical bath."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Fluid capacity of the chemical bath."})
+				public static int fluidCapacity = 24000;
+			}
+
 			public static class RedstoneOutputMachine
 			{
 				@Comment({"Energy capacity of the data input machine."})
@@ -195,6 +206,12 @@ public class Config
 				@Comment({"How long does it take for the inserter to rotate 90 degrees (in ticks)"})
 				public static int rotateTime = 10;
 
+			}
+
+			public static class SmallDataBuffer
+			{
+				@Comment({"Amount of data packets the machine can store."})
+				public static int packetCapacity = 4;
 			}
 		}
 

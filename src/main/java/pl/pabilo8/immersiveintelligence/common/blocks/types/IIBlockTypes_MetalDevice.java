@@ -13,7 +13,6 @@ public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase
 	METAL_CRATE,
 	AMMUNITION_CRATE,
 	SMALL_DATA_BUFFER,
-	ITEM_BUFFER,
 	TIMED_BUFFER,
 	REDSTONE_BUFFER,
 	DATA_DEBUGGER;

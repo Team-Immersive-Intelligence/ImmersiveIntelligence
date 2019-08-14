@@ -39,8 +39,6 @@ public class ModelRendererTurbo extends ModelRenderer
 		vertices = new PositionTextureVertex[0];
 		faces = new TexturedPolygon[0];
 		forcedRecompile = false;
-		transformGroup = new HashMap<String, TransformGroup>();
-		transformGroup.put("0", new TransformGroupBone(new Bone(0, 0, 0, 0), 1D));
 		textureGroup = new HashMap<String, TextureGroup>();
 		textureGroup.put("0", new TextureGroup());
 		currentTextureGroup = textureGroup.get("0");
@@ -1803,42 +1801,6 @@ public class ModelRendererTurbo extends ModelRenderer
 	}
 
 	/**
-	 * Adds a Waveform .obj file as a model. Model files use the entire texture file.
-	 *
-	 * @param file the location of the .obj file. The location is relative to the base directories,
-	 *             which are either resources/models or resources/mods/models.
-	 */
-	public void addObj(String file)
-	{
-		addModel(file, ModelPool.OBJ);
-	}
-
-	/**
-	 * Adds model format support. Model files use the entire texture file.
-	 *
-	 * @param file        the location of the model file. The location is relative to the base directories,
-	 *                    which are either resources/models or resources/mods/models.
-	 * @param modelFormat the class of the model format interpreter
-	 */
-	public void addModel(String file, Class modelFormat)
-	{
-		ModelPoolEntry entry = ModelPool.addFile(file, modelFormat, transformGroup, textureGroup);
-		if(entry==null)
-			return;
-		PositionTextureVertex[] verts = Arrays.copyOf(entry.vertices, entry.vertices.length);
-		TexturedPolygon[] poly = Arrays.copyOf(entry.faces, entry.faces.length);
-		if(flip)
-		{
-			for(TexturedPolygon face : faces)
-			{
-				face.flipFace();
-			}
-		}
-
-		copyTo(verts, poly, false);
-	}
-
-	/**
 	 * Sets a new position for the texture offset.
 	 *
 	 * @param x the x-coordinate of the texture start
@@ -1922,7 +1884,6 @@ public class ModelRendererTurbo extends ModelRenderer
 		vertices = new PositionTextureVertex[0];
 		faces = new TexturedPolygon[0];
 		transformGroup.clear();
-		transformGroup.put("0", new TransformGroupBone(new Bone(0, 0, 0, 0), 1D));
 		currentGroup = transformGroup.get("0");
 	}
 
@@ -1975,34 +1936,6 @@ public class ModelRendererTurbo extends ModelRenderer
 		}
 
 		copyTo(verts, poly);
-	}
-
-	/**
-	 * Sets the current transformation group. The transformation group is used
-	 * to allow for vertex transformation. If a transformation group does not exist,
-	 * a new one will be created.
-	 *
-	 * @param groupName the name of the transformation group you want to switch to
-	 */
-	public void setGroup(String groupName)
-	{
-		setGroup(groupName, new Bone(0, 0, 0, 0), 1D);
-	}
-
-	/**
-	 * Sets the current transformation group. The transformation group is used
-	 * to allow for vertex transformation. If a transformation group does not exist,
-	 * a new one will be created.
-	 *
-	 * @param groupName the name of the transformation group you want to switch to
-	 * @param bone      the Bone this transformation group is attached to
-	 * @param weight    the weight of the transformation group
-	 */
-	public void setGroup(String groupName, Bone bone, double weight)
-	{
-		if(!transformGroup.containsKey(groupName))
-			transformGroup.put(groupName, new TransformGroupBone(bone, weight));
-		currentGroup = transformGroup.get(groupName);
 	}
 
 	/**

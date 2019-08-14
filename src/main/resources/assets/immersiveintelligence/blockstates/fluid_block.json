@@ -32,6 +32,13 @@
                     "fluid": "ink_yellow"
                 }
             }
+        ],
+      "etching_acid": [
+        {
+          "custom": {
+            "fluid": "etching_acid"
+          }
+        }
         ]
     }
 }

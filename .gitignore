@@ -28,6 +28,7 @@ eclipse/
 *.txt
 run/
 bin/
+libs/
 *.project
 *.classpath
 .settings/

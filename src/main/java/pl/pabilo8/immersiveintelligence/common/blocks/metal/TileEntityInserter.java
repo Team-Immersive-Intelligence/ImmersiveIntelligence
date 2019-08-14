@@ -51,18 +51,18 @@ import java.util.Set;
  */
 public class TileEntityInserter extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IRotationAcceptor, IDataConnector
 {
-	public int energyStorage = 0;
 	public static ItemStack conn_data, conn_mv;
+	public int energyStorage = 0;
 	public EnumFacing outputFacing = EnumFacing.NORTH;
 	public EnumFacing inputFacing = EnumFacing.SOUTH;
 	public int pickProgress = 100, armDirection = 0;
 	public int nextPickProgress = 0, nextDirection = 0;
+	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
 	protected Set<String> acceptablePowerWires = ImmutableSet.of(WireType.LV_CATEGORY, WireType.MV_CATEGORY);
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	WireType secondCable;
 	//The held item
 	NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
-	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
 	int itemsToTake = 0;
 	String itemTakeMode = "set";
 	private boolean refreshWireNetwork = false;
@@ -338,6 +338,11 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 	@Override
 	public void readOnPlacement(@Nullable EntityLivingBase placer, ItemStack stack)
 	{
+
+		if(stack.hasTagCompound())
+		{
+			receiveMessageFromServer(stack.getTagCompound());
+		}
 
 	}
 

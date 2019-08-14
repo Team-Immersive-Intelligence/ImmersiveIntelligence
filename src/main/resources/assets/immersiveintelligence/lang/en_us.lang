@@ -4,14 +4,24 @@ itemGroup.immersiveintelligence=Immersive Intelligence
 
 item.immersiveintelligence.material.advanced_plate_blend.name=Advanced Electronic Alloy Grit
 item.immersiveintelligence.material.advanced_plate.name=Advanced Electronic Alloy Plate
-item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
-item.immersiveintelligence.material.advanced_circuit_board_raw.name=Raw Advanced Circuit Board
-item.immersiveintelligence.material.advanced_circuit_board.name=Advanced Circuit Board
-item.immersiveintelligence.material.processor_circuit_board_raw.name=Raw Processor Circuit Board
-item.immersiveintelligence.material.processor_circuit_board.name=Processor Circuit Board
-item.immersiveintelligence.material.basic_circuit_board_raw.name=Raw Basic Circuit Board
-item.immersiveintelligence.material.punchtape_empty.name=Empty Punchtape
 
+item.immersiveintelligence.material.basic_circuit_board_raw.name=Raw Basic Circuit Board
+item.immersiveintelligence.material.basic_circuit_board_etched.name=Etched Basic Circuit Board
+item.immersiveintelligence.material.basic_electronic_element.name=Basic Electronic Component
+
+item.immersiveintelligence.material.advanced_circuit_board_raw.name=Advanced Circuit Board
+item.immersiveintelligence.material.advanced_circuit_board_etched.name=Etched Advanced Circuit Board
+item.immersiveintelligence.material.advanced_circuit_board.name=Advanced Circuit Board
+item.immersiveintelligence.material.advanced_electronic_element.name=Advanced Electronic Component
+
+item.immersiveintelligence.material.processor_circuit_board_raw.name=Raw Processor Circuit Board
+item.immersiveintelligence.material.processor_circuit_board_etched.name=Etched Processor Circuit Board
+item.immersiveintelligence.material.processor_circuit_board.name=Processor Circuit Board
+item.immersiveintelligence.material.processor_electronic_element.name=Processor
+
+item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
+
+item.immersiveintelligence.material.punchtape_empty.name=Empty Punchtape
 item.immersiveintelligence.punchtape.name=Punchtape
 
 item.immersiveintelligence.material.metal_ingot_platinum.name=Platinum Ingot
@@ -97,6 +107,7 @@ fluid.ink=Ink
 fluid.ink_cyan=Cyan Ink
 fluid.ink_magenta=Magenta Ink
 fluid.ink_yellow=Yellow Ink
+fluid.etching_acid=Etching Acid
 
 
 //Sounds
@@ -193,6 +204,12 @@ datasystem.immersiveintelligence.datatype.accessor=Accessor
 
 datasystem.immersiveintelligence.datatype.boolean.true=True
 datasystem.immersiveintelligence.datatype.boolean.false=False
+
+//Blueprints
+
+desc.immersiveengineering.info.blueprint.basic_circuits=Basic Circuits
+desc.immersiveengineering.info.blueprint.advanced_circuits=Advanced Circuits
+desc.immersiveengineering.info.blueprint.processors=Processors
 
 //Manual Categories
 

@@ -61,7 +61,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	@Override
 	public void update()
 	{
-		if(world.isRemote)
+		if(!world.isRemote)
 		{
 			if(toggle^world.isBlockPowered(this.getPos()))
 			{
@@ -84,10 +84,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	@Override
 	public float[] getBlockBounds()
 	{
-		if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
-			return new float[]{0f, 0, .25f, 1f, .58f, .75f};
-		else
-			return new float[]{.25f, 0, 0f, .75f, .58f, 1f};
+		return new float[]{0f, 0, 0f, 1f, .875f, 1f};
 	}
 
 	@Override

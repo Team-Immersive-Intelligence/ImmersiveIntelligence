@@ -41,6 +41,8 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		tesrMap.put(IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), IIBlockTypes_MetalDevice.TIMED_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getName());
+		tesrMap.put(IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getName());
+		tesrMap.put(IIBlockTypes_MetalDevice.DATA_DEBUGGER.getMeta(), IIBlockTypes_MetalDevice.DATA_DEBUGGER.getName());
 	}
 
 	@Override
@@ -80,6 +82,10 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 			case DATA_DEBUGGER:
 			{
 				return new TileEntityDataDebugger();
+			}
+			case SMALL_DATA_BUFFER:
+			{
+				return new TileEntitySmallDataBuffer();
 			}
 		}
 		return null;
