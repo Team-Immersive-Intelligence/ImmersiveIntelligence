@@ -24,7 +24,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -41,6 +40,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.arithmeticLogicMachine;
+
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
@@ -54,7 +55,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 
 	public TileEntityArithmeticLogicMachine()
 	{
-		super(MultiblockArithmeticLogicMachine.instance, new int[]{3, 3, 2}, ArithmeticLogicMachine.energyCapacity, false);
+		super(MultiblockArithmeticLogicMachine.instance, new int[]{3, 3, 2}, arithmeticLogicMachine.energyCapacity, false);
 	}
 
 	@Override
@@ -280,9 +281,9 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			master().onReceive(packet);
 		}
 
-		if(this.pos==8&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
+		if(this.pos==8&&energyStorage.getEnergyStored() >= arithmeticLogicMachine.energyUsage)
 		{
-			energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
+			energyStorage.extractEnergy(arithmeticLogicMachine.energyUsage, false);
 
 			boolean c1 = false, c2 = false, c3 = false, c4 = false;
 			DataPacket circuit1 = null, circuit2 = null, circuit3 = null, circuit4 = null;
@@ -324,7 +325,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 				}
 			}
 
-			if(c2&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
+			if(c2&&energyStorage.getEnergyStored() >= arithmeticLogicMachine.energyUsage)
 			{
 				for(char c : DataPacket.varCharacters)
 				{
@@ -338,10 +339,10 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 						}
 					}
 				}
-				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
+				energyStorage.extractEnergy(arithmeticLogicMachine.energyUsage, false);
 			}
 
-			if(c3&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
+			if(c3&&energyStorage.getEnergyStored() >= arithmeticLogicMachine.energyUsage)
 			{
 				for(char c : DataPacket.varCharacters)
 				{
@@ -355,10 +356,10 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 						}
 					}
 				}
-				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
+				energyStorage.extractEnergy(arithmeticLogicMachine.energyUsage, false);
 			}
 
-			if(c4&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
+			if(c4&&energyStorage.getEnergyStored() >= arithmeticLogicMachine.energyUsage)
 			{
 				for(char c : DataPacket.varCharacters)
 				{
@@ -372,7 +373,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 						}
 					}
 				}
-				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
+				energyStorage.extractEnergy(arithmeticLogicMachine.energyUsage, false);
 			}
 
 			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -7,20 +7,20 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
-import pl.pabilo8.immersiveintelligence.client.model.connector.ModelDataConnector;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataConnector;
+import pl.pabilo8.immersiveintelligence.client.model.connector.ModelDataRelay;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataRelay;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
  */
-public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityDataConnector>
+public class DataRelayRenderer extends TileEntitySpecialRenderer<TileEntityDataRelay>
 {
-	private static ModelDataConnector model = new ModelDataConnector();
+	private static ModelDataRelay model = new ModelDataRelay();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/data_connector.png";
 
 	@Override
-	public void render(TileEntityDataConnector te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(TileEntityDataRelay te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null)
 		{

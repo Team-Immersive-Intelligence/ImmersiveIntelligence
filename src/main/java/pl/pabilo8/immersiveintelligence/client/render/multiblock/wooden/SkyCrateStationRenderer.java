@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;

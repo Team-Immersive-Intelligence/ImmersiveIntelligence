@@ -178,7 +178,7 @@ public class MultiblockChemicalBath implements IMultiblock
 							{
 								if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta()))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}
@@ -186,7 +186,7 @@ public class MultiblockChemicalBath implements IMultiblock
 							{
 								if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}
@@ -195,7 +195,7 @@ public class MultiblockChemicalBath implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -208,7 +208,7 @@ public class MultiblockChemicalBath implements IMultiblock
 							{
 								if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}
@@ -216,7 +216,7 @@ public class MultiblockChemicalBath implements IMultiblock
 							{
 								if(!Utils.isBlockAt(world, pos, IEContent.blockSheetmetal, BlockTypes_MetalsAll.IRON.getMeta()))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}
@@ -227,7 +227,7 @@ public class MultiblockChemicalBath implements IMultiblock
 							{
 								if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta()))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}
@@ -235,7 +235,7 @@ public class MultiblockChemicalBath implements IMultiblock
 							{
 								if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta()))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}

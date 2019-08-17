@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
@@ -39,7 +39,6 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 				GlStateManager.translate(0f, 1f, 1f);
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
-
 
 			model.getBlockRotation(te.facing, model);
 			model.render();

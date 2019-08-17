@@ -35,7 +35,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -51,6 +50,8 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.printingPress;
 
 /**
  * Created by Pabilo8 on 28-06-2019.
@@ -72,7 +73,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 	public TileEntityPrintingPress()
 	{
-		super(MultiblockPrintingPress.instance, new int[]{3, 5, 3}, PrintingPress.energyCapacity, false);
+		super(MultiblockPrintingPress.instance, new int[]{3, 5, 3}, printingPress.energyCapacity, false);
 		renderStack0 = new ItemStack(ImmersiveIntelligence.proxy.item_printed_page, 1, 0);
 		renderStack1 = new ItemStack(ImmersiveIntelligence.proxy.item_printed_page, 1, 1);
 	}
@@ -167,12 +168,12 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 		if(pagesLeft > 0)
 		{
-			if(processTimeLeft%(PrintingPress.printTime/4)==0)
+			if(processTimeLeft%(printingPress.printTime/4)==0)
 				update = true;
 
-			if(processTimeLeft > 0&&energyStorage.getEnergyStored() >= PrintingPress.energyUsage)
+			if(processTimeLeft > 0&&energyStorage.getEnergyStored() >= printingPress.energyUsage)
 			{
-				energyStorage.extractEnergy(PrintingPress.energyUsage, false);
+				energyStorage.extractEnergy(printingPress.energyUsage, false);
 				processTimeLeft -= 1;
 
 				if(processTimeLeft%10==0)
@@ -191,7 +192,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 				active = true;
 				hasPaper = true;
 				inventoryHandler.extractItem(0, 1, false);
-				processTimeLeft = PrintingPress.printTime;
+				processTimeLeft = printingPress.printTime;
 				update = true;
 			}
 			else
@@ -326,24 +327,24 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 						{
 							black_cost.get(black_cost.size()-1);
 
-							if(black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage > black_amount)
+							if(black_cost.get(black_cost.size()-1)*printingPress.printInkUsage > black_amount)
 							{
-								black_cost.set(black_cost.size()-1, (float)black_amount/(float)PrintingPress.printInkUsage);
+								black_cost.set(black_cost.size()-1, (float)black_amount/(float)printingPress.printInkUsage);
 							}
 
-							if(cyan_cost.get(cyan_cost.size()-1)*PrintingPress.printInkUsage > cyan_amount)
+							if(cyan_cost.get(cyan_cost.size()-1)*printingPress.printInkUsage > cyan_amount)
 							{
-								cyan_cost.set(cyan_cost.size()-1, (float)cyan_amount/(float)PrintingPress.printInkUsage);
+								cyan_cost.set(cyan_cost.size()-1, (float)cyan_amount/(float)printingPress.printInkUsage);
 							}
 
-							if(magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage > magenta_amount)
+							if(magenta_cost.get(magenta_cost.size()-1)*printingPress.printInkUsage > magenta_amount)
 							{
-								magenta_cost.set(magenta_cost.size()-1, (float)magenta_amount/(float)PrintingPress.printInkUsage);
+								magenta_cost.set(magenta_cost.size()-1, (float)magenta_amount/(float)printingPress.printInkUsage);
 							}
 
-							if(yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage > yellow_amount)
+							if(yellow_cost.get(yellow_cost.size()-1)*printingPress.printInkUsage > yellow_amount)
 							{
-								yellow_cost.set(yellow_cost.size()-1, (float)yellow_amount/(float)PrintingPress.printInkUsage);
+								yellow_cost.set(yellow_cost.size()-1, (float)yellow_amount/(float)printingPress.printInkUsage);
 							}
 
 
@@ -383,16 +384,16 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 							printedChars += " ";
 							continue;
 						}
-						if(black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage <= black_amount&&
-								cyan_cost.get(cyan_cost.size()-1)*PrintingPress.printInkUsage <= cyan_amount&&
-								magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage <= magenta_amount&&
-								yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage <= yellow_amount)
+						if(black_cost.get(black_cost.size()-1)*printingPress.printInkUsage <= black_amount&&
+								cyan_cost.get(cyan_cost.size()-1)*printingPress.printInkUsage <= cyan_amount&&
+								magenta_cost.get(magenta_cost.size()-1)*printingPress.printInkUsage <= magenta_amount&&
+								yellow_cost.get(yellow_cost.size()-1)*printingPress.printInkUsage <= yellow_amount)
 						{
 							printedChars += c;
-							black_amount -= black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage;
-							cyan_amount -= cyan_cost.get(cyan_cost.size()-1)*PrintingPress.printInkUsage;
-							magenta_amount -= magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage;
-							yellow_amount -= yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage;
+							black_amount -= black_cost.get(black_cost.size()-1)*printingPress.printInkUsage;
+							cyan_amount -= cyan_cost.get(cyan_cost.size()-1)*printingPress.printInkUsage;
+							magenta_amount -= magenta_cost.get(magenta_cost.size()-1)*printingPress.printInkUsage;
+							yellow_amount -= yellow_cost.get(yellow_cost.size()-1)*printingPress.printInkUsage;
 
 							ImmersiveIntelligence.logger.info("CMYK color:"+black_cost.get(black_cost.size()-1)+" "+cyan_cost.get(cyan_cost.size()-1)+" "+magenta_cost.get(magenta_cost.size()-1)+" "+yellow_cost.get(yellow_cost.size()-1));
 
@@ -400,24 +401,24 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 						}
 						else
 						{
-							if(black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage > black_amount)
+							if(black_cost.get(black_cost.size()-1)*printingPress.printInkUsage > black_amount)
 							{
-								black_cost.set(black_cost.size()-1, (float)black_amount/(float)PrintingPress.printInkUsage);
+								black_cost.set(black_cost.size()-1, (float)black_amount/(float)printingPress.printInkUsage);
 							}
 
-							if(cyan_cost.get(cyan_cost.size()-1)*PrintingPress.printInkUsage > cyan_amount)
+							if(cyan_cost.get(cyan_cost.size()-1)*printingPress.printInkUsage > cyan_amount)
 							{
-								cyan_cost.set(cyan_cost.size()-1, (float)cyan_amount/(float)PrintingPress.printInkUsage);
+								cyan_cost.set(cyan_cost.size()-1, (float)cyan_amount/(float)printingPress.printInkUsage);
 							}
 
-							if(magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage > magenta_amount)
+							if(magenta_cost.get(magenta_cost.size()-1)*printingPress.printInkUsage > magenta_amount)
 							{
-								magenta_cost.set(magenta_cost.size()-1, (float)magenta_amount/(float)PrintingPress.printInkUsage);
+								magenta_cost.set(magenta_cost.size()-1, (float)magenta_amount/(float)printingPress.printInkUsage);
 							}
 
-							if(yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage > yellow_amount)
+							if(yellow_cost.get(yellow_cost.size()-1)*printingPress.printInkUsage > yellow_amount)
 							{
-								yellow_cost.set(yellow_cost.size()-1, (float)yellow_amount/(float)PrintingPress.printInkUsage);
+								yellow_cost.set(yellow_cost.size()-1, (float)yellow_amount/(float)printingPress.printInkUsage);
 							}
 
 							if(black_cost.get(black_cost.size()-1)==0&&cyan_cost.get(cyan_cost.size()-1)==0&&magenta_cost.get(magenta_cost.size()-1)==0&&yellow_cost.get(yellow_cost.size()-1)==0)
@@ -547,7 +548,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 		if(slot==0)
 			return Utils.compareToOreName(stack, "pageEmpty");
 		else if(slot==1)
-			return Utils.compareToOreName(stack, "pageWritten");
+			return Utils.compareToOreName(stack, "pageWritten")||Utils.compareToOreName(stack, "pageEmpty");
 		else
 			return stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 	}
@@ -644,9 +645,9 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			master().onReceive(packet);
 		}
 
-		if(!this.isDummy()&&energyStorage.getEnergyStored() >= PrintingPress.energyUsage)
+		if(!this.isDummy()&&energyStorage.getEnergyStored() >= printingPress.energyUsage)
 		{
-			energyStorage.extractEnergy(PrintingPress.energyUsage, false);
+			energyStorage.extractEnergy(printingPress.energyUsage, false);
 			this.pagesLeft = ((DataPacketTypeInteger)DataOperationAdd.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('c'), packet)).value;
 			this.newDataToPrint = packet;
 		}

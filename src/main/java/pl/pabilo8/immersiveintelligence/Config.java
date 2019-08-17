@@ -99,7 +99,11 @@ public class Config
 			@SubConfig
 			public static PrintingPress printingPress;
 			@SubConfig
-			public static RedstoneOutputMachine redstoneOutputMachine;
+			public static ChemicalBath chemicalBath;
+			@SubConfig
+			public static Electrolyzer electrolyzer;
+			@SubConfig
+			public static PrecissionAssembler precissionAssembler;
 			@SubConfig
 			public static ArtilleryHowitzer artilleryHowitzer;
 			@SubConfig
@@ -175,10 +179,22 @@ public class Config
 				public static int fluidCapacity = 24000;
 			}
 
-			public static class RedstoneOutputMachine
+			public static class Electrolyzer
 			{
-				@Comment({"Energy capacity of the data input machine."})
+				@Comment({"Energy capacity of the electrolyzer."})
 				public static int energyCapacity = 16000;
+
+				@Comment({"Fluid capacity of the electrolyzer."})
+				public static int fluidCapacity = 12000;
+			}
+
+			public static class PrecissionAssembler
+			{
+				@Comment({"Energy capacity of the chemical bath."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Fluid capacity of the chemical bath."})
+				public static int fluidCapacity = 24000;
 			}
 
 			public static class ArtilleryHowitzer

@@ -24,7 +24,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -38,6 +37,8 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPar
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.dataInputMachine;
 
 /**
  * Created by Pabilo8 on 28-06-2019.
@@ -53,7 +54,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 
 	public TileEntityDataInputMachine()
 	{
-		super(MultiblockDataInputMachine.instance, new int[]{3, 2, 2}, DataInputMachine.energyCapacity, true);
+		super(MultiblockDataInputMachine.instance, new int[]{3, 2, 2}, dataInputMachine.energyCapacity, true);
 	}
 
 	@Override
@@ -129,7 +130,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 				doorAngle = Math.max(doorAngle-5f, 0f);
 
 
-			if(this.productionProgress > 0&&energyStorage.getEnergyStored() > DataInputMachine.energyUsagePunchtape&&productionProgress < DataInputMachine.timePunchtapeProduction)
+			if(this.productionProgress > 0&&energyStorage.getEnergyStored() > dataInputMachine.energyUsagePunchtape&&productionProgress < dataInputMachine.timePunchtapeProduction)
 			{
 				this.productionProgress += 1;
 			}
@@ -145,9 +146,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 				{
 					this.onSend();
 					//Finally!
-					if(energyStorage.getEnergyStored() >= DataInputMachine.energyUsage)
+					if(energyStorage.getEnergyStored() >= dataInputMachine.energyUsage)
 					{
-						energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
+						energyStorage.extractEnergy(dataInputMachine.energyUsage, false);
 						IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);
 						if(conn!=null)
 						{
@@ -158,7 +159,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			}
 
 			if((Utils.compareToOreName(inventoryHandler.getStackInSlot(0), "punchtapeEmpty")||inventoryHandler.getStackInSlot(0).getItem() instanceof ItemIIPunchtape)
-					&&energyStorage.getEnergyStored() >= DataInputMachine.energyUsagePunchtape)
+					&&energyStorage.getEnergyStored() >= dataInputMachine.energyUsagePunchtape)
 			{
 				if(productionProgress==0||inventoryHandler.getStackInSlot(1).isEmpty())
 				{
@@ -169,10 +170,10 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 					if(!inventoryHandler.insertItem(1, test, true).isEmpty())
 						return;
 				}
-				energyStorage.extractEnergy(DataInputMachine.energyUsagePunchtape, false);
+				energyStorage.extractEnergy(dataInputMachine.energyUsagePunchtape, false);
 				productionProgress += 1;
 
-				if(productionProgress >= DataInputMachine.timePunchtapeProduction)
+				if(productionProgress >= dataInputMachine.timePunchtapeProduction)
 				{
 					productionProgress = 0f;
 					ItemStack input = inventoryHandler.extractItem(0, 1, false);
@@ -203,7 +204,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 
 				}
 
-				if(productionProgress==0||productionProgress==1||productionProgress==.5*DataInputMachine.energyUsagePunchtape)
+				if(productionProgress==0||productionProgress==1||productionProgress==.5*dataInputMachine.energyUsagePunchtape)
 				{
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setFloat("production_progress", productionProgress);

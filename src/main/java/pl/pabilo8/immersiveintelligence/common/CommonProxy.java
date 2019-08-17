@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
@@ -28,6 +29,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -37,6 +39,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
@@ -46,6 +49,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.Multibl
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation.TileEntitySkyCrateStationParent;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
+import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
@@ -54,10 +58,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateReinfor
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateWooden;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalBath;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerMetalCrate;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
+import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.*;
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachineVariables;
@@ -116,61 +117,39 @@ public class CommonProxy implements IGuiHandler
 	public static BlockIIFluid block_fluid_ink_yellow;
 	public static BlockIIFluid block_fluid_etching_acid;
 
+	public static BlockIIFluid block_fluid_brine;
+	public static BlockIIFluid block_gas_hydrogen;
+	public static BlockIIFluid block_gas_oxygen;
+	public static BlockIIFluid block_gas_chlorine;
+
 	public static Fluid fluid_ink_black;
 	public static Fluid fluid_ink_cyan;
 	public static Fluid fluid_ink_magenta;
 	public static Fluid fluid_ink_yellow;
+
 	public static Fluid fluid_etching_acid;
+
+	public static Fluid fluid_brine;
+	public static Fluid gas_hydrogen;
+	public static Fluid gas_oxygen;
+	public static Fluid gas_chlorine;
 
 	public void preInit()
 	{
 		IIWireType.init();
 		IIPacketHandler.preInit();
 
-		fluid_ink_black = new Fluid(
-				"ink",
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_flow")
-		).setDensity(1500).setViscosity(2250);
-		if(!FluidRegistry.registerFluid(fluid_ink_black))
-			fluid_ink_black = FluidRegistry.getFluid("ink");
-		FluidRegistry.addBucketForFluid(fluid_ink_black);
+		fluid_ink_black = makeFluid("ink", 1500, 2250);
+		fluid_ink_cyan = makeFluid("ink_cyan", 1500, 2250);
+		fluid_ink_magenta = makeFluid("ink_magenta", 1500, 2250);
+		fluid_ink_yellow = makeFluid("ink_yellow", 1500, 2250);
 
-		fluid_ink_cyan = new Fluid(
-				"ink_cyan",
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_cyan_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_cyan_flow")
-		).setDensity(1500).setViscosity(2250);
-		if(!FluidRegistry.registerFluid(fluid_ink_cyan))
-			fluid_ink_cyan = FluidRegistry.getFluid("ink_cyan");
-		FluidRegistry.addBucketForFluid(fluid_ink_cyan);
+		fluid_etching_acid = makeFluid("etching_acid", 1500, 2250);
 
-		fluid_ink_magenta = new Fluid(
-				"ink_magenta",
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_magenta_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_magenta_flow")
-		).setDensity(1500).setViscosity(2250);
-		if(!FluidRegistry.registerFluid(fluid_ink_magenta))
-			fluid_ink_magenta = FluidRegistry.getFluid("ink_magenta");
-		FluidRegistry.addBucketForFluid(fluid_ink_magenta);
-
-		fluid_ink_yellow = new Fluid(
-				"ink_yellow",
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_yellow_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/ink_yellow_flow")
-		).setDensity(1500).setViscosity(2250);
-		if(!FluidRegistry.registerFluid(fluid_ink_yellow))
-			fluid_ink_yellow = FluidRegistry.getFluid("ink_yellow");
-		FluidRegistry.addBucketForFluid(fluid_ink_yellow);
-
-		fluid_etching_acid = new Fluid(
-				"etching_acid",
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/etching_acid_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/etching_acid_flow")
-		).setDensity(1500).setViscosity(2250);
-		if(!FluidRegistry.registerFluid(fluid_etching_acid))
-			fluid_etching_acid = FluidRegistry.getFluid("etching_acid");
-		FluidRegistry.addBucketForFluid(fluid_etching_acid);
+		fluid_brine = makeFluid("brine", 1500, 2250);
+		gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
+		gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
+		gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
 
 	}
 
@@ -203,6 +182,8 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityDataConnector.class);
 		registerTile(TileEntityDataRelay.class);
 
+		registerTile(TileEntitySandbags.class);
+
 		registerTile(TileEntitySkyCrateStationParent.class);
 		registerTile(TileEntitySkyCrateStation.class);
 
@@ -211,6 +192,7 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityArithmeticLogicMachine.class);
 		registerTile(TileEntityPrintingPress.class);
 		registerTile(TileEntityChemicalBath.class);
+		registerTile(TileEntityElectrolyzer.class);
 
 		MultiblockHandler.registerMultiblock(MultiblockSkyCrateStation.instance);
 		MultiblockHandler.registerMultiblock(MultiblockRadioStation.instance);
@@ -218,6 +200,7 @@ public class CommonProxy implements IGuiHandler
 		MultiblockHandler.registerMultiblock(MultiblockArithmeticLogicMachine.instance);
 		MultiblockHandler.registerMultiblock(MultiblockPrintingPress.instance);
 		MultiblockHandler.registerMultiblock(MultiblockChemicalBath.instance);
+		MultiblockHandler.registerMultiblock(MultiblockElectrolyzer.instance);
 
 		int i = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
@@ -251,9 +234,17 @@ public class CommonProxy implements IGuiHandler
 		BlueprintCraftingRecipe.addRecipe("processors", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board_raw")), new IngredientStack("circuitAdvancedRaw", 4), new IngredientStack("plateAdvancedElectronicAlloy", 2));
 		//((IForgeRegistryModifiable)CraftingManager.REGISTRY).remove(new ResourceLocation(""));
 
-		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_circuit_board_etched")), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 360, 240);
-		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_circuit_board_etched")), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 360, 320);
-		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board_etched")), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 4000), 360, 520);
+		//It's cheap, believe me
+		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_circuit_board_etched")), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 15000, 360);
+		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_circuit_board_etched")), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 150000, 560);
+		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board_etched")), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 4000), 1500000, 720);
+
+		//Immersive Engineering can into space???
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 3000), FluidRegistry.getFluidStack("oxygen", 1000), FluidRegistry.getFluidStack("hydrogen", 2000), 640, 320);
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 3000), FluidRegistry.getFluidStack("chlorine", 1500), FluidRegistry.getFluidStack("hydrogen", 1500), 640, 320);
+
+		MixerRecipe.addRecipe(new FluidStack(fluid_etching_acid, 1000), new FluidStack(gas_chlorine, 500), new Object[]{"dustIron"}, 3200);
+
 	}
 
 	public void postInit()
@@ -302,6 +293,11 @@ public class CommonProxy implements IGuiHandler
 		block_fluid_ink_magenta = new BlockIIFluid("ink_magenta", fluid_ink_magenta, Material.WATER);
 		block_fluid_ink_yellow = new BlockIIFluid("ink_yellow", fluid_ink_yellow, Material.WATER);
 		block_fluid_etching_acid = new BlockIIFluid("etching_acid", fluid_etching_acid, Material.WATER);
+
+		block_fluid_brine = new BlockIIFluid("brine", fluid_brine, Material.WATER);
+		block_gas_hydrogen = new BlockIIFluid("hydrogen", gas_hydrogen, Material.WATER);
+		block_gas_oxygen = new BlockIIFluid("oxygen", gas_oxygen, Material.WATER);
+		block_gas_chlorine = new BlockIIFluid("chlorine", gas_chlorine, Material.WATER);
 
 		for(Block block : blocks)
 			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getUnlocalizedName())));
@@ -410,6 +406,8 @@ public class CommonProxy implements IGuiHandler
 				gui = new ContainerPrintingPress(player.inventory, (TileEntityPrintingPress)te);
 			else if(ID==IIGuiList.GUI_CHEMICAL_BATH&&te instanceof TileEntityChemicalBath)
 				gui = new ContainerChemicalBath(player.inventory, (TileEntityChemicalBath)te);
+			else if(ID==IIGuiList.GUI_ELECTROLYZER&&te instanceof TileEntityElectrolyzer)
+				gui = new ContainerElectrolyzer(player.inventory, (TileEntityElectrolyzer)te);
 
 			((IGuiTile)te).onGuiOpened(player, false);
 
@@ -524,5 +522,18 @@ public class CommonProxy implements IGuiHandler
 		{
 			openSpecificGuiForEvenMoreSpecificTile(player, (TileEntity & IGuiTile)te, gui);
 		}
+	}
+
+	public Fluid makeFluid(String name, int density, int viscosity)
+	{
+		Fluid fl = new Fluid(
+				name,
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_still"),
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_flow")
+		).setDensity(density).setViscosity(viscosity);
+		if(!FluidRegistry.registerFluid(fl))
+			fl = FluidRegistry.getFluid(name);
+		FluidRegistry.addBucketForFluid(fl);
+		return fl;
 	}
 }

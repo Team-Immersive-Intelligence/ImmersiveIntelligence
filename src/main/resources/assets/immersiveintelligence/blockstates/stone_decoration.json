@@ -1,0 +1,65 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {},
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "type": {},
+    "facing": {
+      "down": {},
+      "up": {
+        "transform": {
+          "rotation": {
+            "z": 180
+          }
+        }
+      },
+      "north": {
+        "transform": {
+          "rotation": {
+            "x": 90
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "x": -90
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "z": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "z": 90
+          }
+        }
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    }
+  }
+}

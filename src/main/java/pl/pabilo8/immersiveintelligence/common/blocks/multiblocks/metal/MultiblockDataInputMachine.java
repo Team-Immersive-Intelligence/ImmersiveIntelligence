@@ -154,7 +154,6 @@ public class MultiblockDataInputMachine implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockWoodenDecoration, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
 								return false;
 							}
 						}
@@ -162,7 +161,6 @@ public class MultiblockDataInputMachine implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockSheetmetal, BlockTypes_MetalsAll.STEEL.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
 								return false;
 							}
 						}
@@ -173,7 +171,6 @@ public class MultiblockDataInputMachine implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
 								return false;
 							}
 						}
@@ -181,7 +178,6 @@ public class MultiblockDataInputMachine implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
 								return false;
 							}
 						}
@@ -192,7 +188,6 @@ public class MultiblockDataInputMachine implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
 								return false;
 							}
 						}
@@ -201,7 +196,6 @@ public class MultiblockDataInputMachine implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, Blocks.AIR, 0))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
 								return false;
 							}
 						}

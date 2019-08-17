@@ -53,7 +53,11 @@ import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiA
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.render.*;
+import pl.pabilo8.immersiveintelligence.client.render.SandbagsRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCrateStationRenderer;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
@@ -62,8 +66,10 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation.TileEntitySkyCrateStationParent;
+import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIPrintedPage;
@@ -272,6 +278,8 @@ public class ClientProxy extends CommonProxy
 				gui = new GuiPrintingPress(player.inventory, (TileEntityPrintingPress)te);
 			else if(ID==IIGuiList.GUI_CHEMICAL_BATH&&te instanceof TileEntityChemicalBath)
 				gui = new GuiChemicalBath(player.inventory, (TileEntityChemicalBath)te);
+			else if(ID==IIGuiList.GUI_ELECTROLYZER&&te instanceof TileEntityElectrolyzer)
+				gui = new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer)te);
 
 			((IGuiTile)te).onGuiOpened(player, true);
 			return gui;
@@ -395,6 +403,9 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataConnector.class, new DataConnectorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataRelay.class, new DataRelayRenderer());
 
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySandbags.class, new SandbagsRenderer());
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_stone_decoration), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
+
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
@@ -410,6 +421,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArithmeticLogicMachine.class, new ArithmeticLogicMachineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrintingPress.class, new PrintingPressRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer());
 
 	}
 

@@ -77,6 +77,10 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 			{
 				return new TileEntityChemicalBath();
 			}
+			case ELECTROLYZER:
+			{
+				return new TileEntityElectrolyzer();
+			}
 		}
 		return null;
 	}

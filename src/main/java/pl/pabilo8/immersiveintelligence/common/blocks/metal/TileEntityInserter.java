@@ -33,7 +33,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
@@ -45,6 +44,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connect
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
+
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.inserter;
 
 /**
  * Created by Pabilo8 on 15-07-2019.
@@ -94,15 +95,15 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount > 0&&energyStorage < Inserter.energyCapacity)
+		if(amount > 0&&energyStorage < inserter.energyCapacity)
 		{
 			if(!simulate)
 			{
-				int rec = Math.min(Inserter.energyCapacity-energyStorage, Inserter.energyUsage);
+				int rec = Math.min(inserter.energyCapacity-energyStorage, inserter.energyUsage);
 				energyStorage += rec;
 				return rec;
 			}
-			return Math.min(Inserter.energyCapacity-energyStorage, Inserter.energyUsage);
+			return Math.min(inserter.energyCapacity-energyStorage, inserter.energyUsage);
 		}
 		return 0;
 	}
@@ -387,22 +388,22 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 		if(pickProgress < 1)
 			pickProgress = 0;
 
-		if(energyStorage > Inserter.energyUsage&&armDirection!=nextDirection||pickProgress!=nextPickProgress)
+		if(energyStorage > inserter.energyUsage&&armDirection!=nextDirection||pickProgress!=nextPickProgress)
 		{
 			if(pickProgress!=nextPickProgress)
 			{
 				if(pickProgress < nextPickProgress)
-					pickProgress += 100f/Inserter.grabTime;
+					pickProgress += 100f/inserter.grabTime;
 				else if(pickProgress > nextPickProgress)
-					pickProgress -= 100f/Inserter.grabTime;
+					pickProgress -= 100f/inserter.grabTime;
 
 				if(Math.round(pickProgress/10f)*10f==Math.round(nextPickProgress/10f)*10f)
 					pickProgress = nextPickProgress;
 
 			}
-			else if(energyStorage > Inserter.energyUsage&&armDirection!=nextDirection)
+			else if(energyStorage > inserter.energyUsage&&armDirection!=nextDirection)
 			{
-				armDirection += Math.round(90f/Inserter.rotateTime);
+				armDirection += Math.round(90f/inserter.rotateTime);
 				if(Math.round(armDirection/10f)*10f==Math.round(nextDirection/10f)*10f)
 					armDirection = nextDirection;
 			}
@@ -411,7 +412,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 		{
 			int prevDirection = nextDirection, prevPickProgress = nextPickProgress;
 
-			if(hasWorld()&&!world.isRemote&&itemsToTake > 0&&outputFacing!=EnumFacing.UP&&inputFacing!=EnumFacing.UP&&energyStorage >= Inserter.energyUsage)
+			if(hasWorld()&&!world.isRemote&&itemsToTake > 0&&outputFacing!=EnumFacing.UP&&inputFacing!=EnumFacing.UP&&energyStorage >= inserter.energyUsage)
 			{
 				if(!inventory.get(0).isEmpty())
 				{
@@ -445,7 +446,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 										pickProgress = 0;
 									}
 								}
-								energyStorage -= Inserter.energyUsage;
+								energyStorage -= inserter.energyUsage;
 							}
 							else
 							{
@@ -483,7 +484,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 									insertionHandler.insertItem(0, stack, false);
 									nextPickProgress = 100;
 									nextDirection = Math.round(inputFacing.getHorizontalAngle());
-									energyStorage -= Inserter.energyUsage;
+									energyStorage -= inserter.energyUsage;
 									done = true;
 								}
 							}

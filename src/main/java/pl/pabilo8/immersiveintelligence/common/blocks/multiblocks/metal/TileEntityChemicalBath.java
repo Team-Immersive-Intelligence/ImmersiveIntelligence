@@ -18,18 +18,19 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
 import java.util.List;
+
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.chemicalBath;
 
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
 public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntityChemicalBath, BathingRecipe> implements IGuiTile, ISoundTile
 {
-	public FluidTank[] tanks = {new FluidTank(ChemicalBath.fluidCapacity)};
+	public FluidTank[] tanks = {new FluidTank(chemicalBath.fluidCapacity)};
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 	public int processTime, processTimeMax;
 	public ItemStack effect;
@@ -38,7 +39,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 
 	public TileEntityChemicalBath()
 	{
-		super(MultiblockChemicalBath.instance, new int[]{2, 3, 5}, ChemicalBath.energyCapacity, true);
+		super(MultiblockChemicalBath.instance, new int[]{2, 3, 5}, chemicalBath.energyCapacity, true);
 	}
 
 	@Override

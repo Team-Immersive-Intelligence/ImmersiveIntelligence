@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
@@ -9,11 +9,12 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityInserter;
+
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.inserter;
 
 /**
  * Created by Pabilo8 on 2019-05-26.
@@ -102,8 +103,8 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 
 			model.render();
 
-			float added = te.nextDirection > te.armDirection?(100f/Inserter.grabTime*(partialTicks/20)):
-					(te.nextDirection < te.armDirection?-(100f/Inserter.grabTime*(partialTicks/20)): 0);
+			float added = te.nextDirection > te.armDirection?(100f/inserter.grabTime*(partialTicks/20)):
+					(te.nextDirection < te.armDirection?-(100f/inserter.grabTime*(partialTicks/20)): 0);
 			float progress = 1f-(((float)te.pickProgress+(added))/100f);
 
 			GlStateManager.pushMatrix();

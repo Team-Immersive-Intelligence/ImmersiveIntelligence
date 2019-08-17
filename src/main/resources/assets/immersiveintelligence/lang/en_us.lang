@@ -74,23 +74,17 @@ tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
 tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
 tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
 tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
+tile.immersiveintelligence.metal_device.redstone_output_device.name=Redstone Output Device
+tile.immersiveintelligence.metal_device.redstone_input_device.name=Redstone Input Device
 
-tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
 tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Input Machine - Storage
 tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data Input Machine - Programming
 tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Data Input Machine - Editing a Variable
 
-
-tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
-
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithmetic Logic Machine
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Arithmetic Logic Machine - Storage
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Arithmetic Logic Machine - Programming
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithmetic Logic Machine - Editing an Expression
 
-tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
-
-tile.immersiveintelligence.metal_multiblock.redstone_output_machine.name=Redstone Output Machine
 
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
@@ -102,12 +96,44 @@ tile.immersiveintelligence.data_connector.advanced_inserter.name=Advanced Insert
 tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced Fluid Inserter
 tile.immersiveintelligence.data_connector.inserter.name=Item Inserter
 
+//Multiblock names
+
+tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=SkyCrate Station
+tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithmetic Logic Machine
+tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
+tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
+tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Chemical Bath
+tile.immersiveintelligence.metal_multiblock.elecrolyzer.name=Electrolyzer
+tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Precission Assembler
+tile.immersiveintelligence.metal_multiblock.persicope.name=Periscope
+tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Artillery Howitzer
+tile.immersiveintelligence.metal_multiblock.missile_silo.name=Missile Silo
+tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Ammunition Factory
+
+desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
+desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
+desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Arithmetic Logic Machine
+desc.immersiveengineering.info.multiblock.II:RadioStation=Radio Station
+desc.immersiveengineering.info.multiblock.II:PrintingPress=Printing Press
+desc.immersiveengineering.info.multiblock.II:ChemicalBath=Chemical Bath
+desc.immersiveengineering.info.multiblock.II:Electrolyzer=Electrolyzer
+desc.immersiveengineering.info.multiblock.II:PrecissionAssembler=Precission Assembler
+desc.immersiveengineering.info.multiblock.II:Periscope=Periscope
+desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Artillery Howitzer
+desc.immersiveengineering.info.multiblock.II:MissileSilo=Missile Silo
+desc.immersiveengineering.info.multiblock.II:AmmunitionFactory=Ammunition Factory
+
 //Fluids
 fluid.ink=Ink
 fluid.ink_cyan=Cyan Ink
 fluid.ink_magenta=Magenta Ink
 fluid.ink_yellow=Yellow Ink
 fluid.etching_acid=Etching Acid
+fluid.oxygen=Oxygen
+fluid.hydrogen=Hydrogen
+fluid.chlorine=Chlorine
+fluid.brine=Brine
 
 
 //Sounds

@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by Pabilo8 on 08-08-2019.
  */
-@ZenClass("mods."+ImmersiveIntelligence.MODID+".Distillation")
+@ZenClass("mods."+ImmersiveIntelligence.MODID+".ChemicalBath")
 @ZenRegister
 public class BathingRecipeTweaker
 {

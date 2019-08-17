@@ -238,7 +238,7 @@ public class MultiblockRadioStation implements IMultiblock
 					{
 						if(!Utils.isBlockAt(world, pos, Blocks.AIR, 0))
 						{
-							System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 							return false;
 						}
 					}
@@ -246,7 +246,7 @@ public class MultiblockRadioStation implements IMultiblock
 					{
 						if(!Utils.isBlockAt(world, pos, Blocks.AIR, 0))
 						{
-							System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 							return false;
 						}
 					}
@@ -257,7 +257,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -265,7 +265,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockStoneDecoration, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -273,7 +273,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -281,7 +281,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.COIL_LV.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -289,7 +289,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockStoneDecoration, BlockTypes_StoneDecoration.CONCRETE.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -300,7 +300,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -308,7 +308,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isOreBlockAt(world, pos, "scaffoldingSteel"))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -319,7 +319,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isOreBlockAt(world, pos, "scaffoldingSteel"))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -330,7 +330,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isOreBlockAt(world, pos, "scaffoldingSteel"))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -341,7 +341,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isOreBlockAt(world, pos, "scaffoldingSteel"))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -352,7 +352,7 @@ public class MultiblockRadioStation implements IMultiblock
 						{
 							if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}

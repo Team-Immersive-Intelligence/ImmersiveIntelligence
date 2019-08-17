@@ -189,7 +189,7 @@ public class MultiblockPrintingPress implements IMultiblock
 							{
 								if(!Utils.isBlockAt(world, pos, IEContent.blockWoodenDecoration, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta()))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}
@@ -198,7 +198,7 @@ public class MultiblockPrintingPress implements IMultiblock
 								ImmersiveIntelligence.logger.info("lolle");
 								if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 								{
-									System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 									return false;
 								}
 							}
@@ -207,7 +207,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, ImmersiveIntelligence.proxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -215,7 +215,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -226,7 +226,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -234,7 +234,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -242,7 +242,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -250,7 +250,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDevice0, BlockTypes_MetalDevice0.BARREL.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}
@@ -261,7 +261,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.COIL_HV.getMeta()))
 							{
-								System.out.println("ERROR AT: h "+h+", l "+l+", w "+w);
+
 								return false;
 							}
 						}

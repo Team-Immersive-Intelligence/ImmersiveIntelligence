@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -7,21 +7,21 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelRedstoneBuffer;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityRedstoneBuffer;
 
 /**
  * Created by Pabilo8 on 2019-05-26.
  */
 @SideOnly(Side.CLIENT)
-public class AmmunitionCrateRenderer extends TileEntitySpecialRenderer<TileEntityAmmunitionCrate>
+public class RedstoneBufferRenderer extends TileEntitySpecialRenderer<TileEntityRedstoneBuffer>
 {
-	private static ModelAmmunitionCrate model = new ModelAmmunitionCrate();
+	private static ModelRedstoneBuffer model = new ModelRedstoneBuffer();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/ammunition_crate.png";
+	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/redstone_buffer.png";
 
 	@Override
-	public void render(TileEntityAmmunitionCrate te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(TileEntityRedstoneBuffer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null)
 		{
@@ -30,12 +30,8 @@ public class AmmunitionCrateRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.translate(x+1, y, z);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			float angle = Math.min(1.5f, Math.max(te.lidAngle+(te.open?0.2f*partialTicks: -0.3f*partialTicks), 0f));
 			model.getBlockRotation(te.facing, model);
-			model.rotate(model.lidModel, 0, 0, angle);
-			model.translate(model.lidModel, 0, angle/1.5f, 0);
 			model.render();
-			model.translate(model.lidModel, 0, -angle/1.5f, 0);
 
 			GlStateManager.popMatrix();
 			return;
@@ -53,7 +49,6 @@ public class AmmunitionCrateRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			model.getBlockRotation(EnumFacing.NORTH, model);
-			model.rotate(model.lidModel, 0, 0, 0);
 			model.render();
 
 			GlStateManager.popMatrix();

@@ -1,11 +1,19 @@
 package pl.pabilo8.immersiveintelligence.api;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 
 import javax.annotation.Nullable;
@@ -93,6 +101,49 @@ public class Utils
 	public static boolean isPointInRectangle(double x, double y, double xx, double yy, double px, double py)
 	{
 		return px >= x&&px < xx&&py >= y&&py < yy;
+	}
+
+	public static boolean handleBucketTankInteraction(FluidTank[] tanks, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, int tank)
+	{
+		if(inventory.get(bucketInputSlot).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)&&inventory.get(bucketInputSlot).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).getTankProperties()[0].getContents()!=null)
+		{
+
+			int amount_prev = tanks[tank].getFluidAmount();
+			ItemStack emptyContainer = blusunrize.immersiveengineering.common.util.Utils.drainFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+			if(amount_prev!=tanks[tank].getFluidAmount())
+			{
+				if(!inventory.get(bucketOutputSlot).isEmpty()&&OreDictionary.itemMatches(inventory.get(bucketOutputSlot), emptyContainer, true))
+					inventory.get(bucketOutputSlot).grow(emptyContainer.getCount());
+				else if(inventory.get(bucketOutputSlot).isEmpty())
+					inventory.set(bucketOutputSlot, emptyContainer.copy());
+				inventory.get(bucketInputSlot).shrink(1);
+				if(inventory.get(bucketInputSlot).getCount() <= 0)
+					inventory.set(bucketInputSlot, ItemStack.EMPTY);
+
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean outputFluidToTank(FluidTank tank, int amount, BlockPos pos, World world, EnumFacing side)
+	{
+		if(tank.getFluidAmount() > 0)
+		{
+			FluidStack out = blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(tank.getFluid(), Math.min(tank.getFluidAmount(), 80), false);
+			IFluidHandler output = FluidUtil.getFluidHandler(world, pos.offset(side), side);
+			if(output!=null)
+			{
+				int accepted = output.fill(out, false);
+				if(accepted > 0)
+				{
+					int drained = output.fill(blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(out, Math.min(out.amount, accepted), false), true);
+					tank.drain(drained, true);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

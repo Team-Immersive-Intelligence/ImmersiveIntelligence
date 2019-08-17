@@ -41,6 +41,10 @@ public class IIGuiList
 	//public static final int GUI_ARTILLERY_HOWITZER = 22;
 	//public static final int GUI_MISSILE_SILO = 23;
 	public static final int GUI_CHEMICAL_BATH = 24;
+	public static final int GUI_ELECTROLYZER = 25;
+	public static final int GUI_BALLISTIC_COMPUTER = 26;
+	public static final int GUI_PRECISSION_ASSEMBLER = 27;
+	public static final int GUI_PERISCOPE = 28;
 
 
 }

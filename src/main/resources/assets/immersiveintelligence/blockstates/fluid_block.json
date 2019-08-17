@@ -39,6 +39,34 @@
             "fluid": "etching_acid"
           }
         }
+      ],
+      "brine": [
+        {
+          "custom": {
+            "fluid": "brine"
+          }
+        }
+      ],
+      "hydrogen": [
+        {
+          "custom": {
+            "fluid": "hydrogen"
+          }
+        }
+      ],
+      "oxygen": [
+        {
+          "custom": {
+            "fluid": "oxygen"
+          }
+        }
+      ],
+      "chlorine": [
+        {
+          "custom": {
+            "fluid": "chlorine"
+          }
+        }
         ]
     }
 }

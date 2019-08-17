@@ -15,7 +15,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -27,6 +26,8 @@ import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import java.util.ArrayList;
 import java.util.List;
 
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.radioStation;
+
 /**
  * Created by Pabilo8 on 20-06-2019.
  */
@@ -37,7 +38,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 
 	public TileEntityRadioStation()
 	{
-		super(MultiblockRadioStation.instance, new int[]{8, 3, 3}, RadioStation.energyCapacity, true);
+		super(MultiblockRadioStation.instance, new int[]{8, 3, 3}, radioStation.energyCapacity, true);
 	}
 
 	@Override
@@ -264,9 +265,9 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public void onReceive(DataPacket packet)
 	{
-		if(this.pos==9&&energyStorage.getEnergyStored() >= RadioStation.energyUsage)
+		if(this.pos==9&&energyStorage.getEnergyStored() >= radioStation.energyUsage)
 		{
-			energyStorage.extractEnergy(RadioStation.energyUsage, false);
+			energyStorage.extractEnergy(radioStation.energyUsage, false);
 			RadioNetwork.INSTANCE.sendPacket(packet, this, new ArrayList<>());
 		}
 	}
@@ -304,13 +305,13 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public float getRange()
 	{
-		return RadioStation.radioRange;
+		return radioStation.radioRange;
 	}
 
 	@Override
 	public float getWeatherRangeDecrease()
 	{
-		return world.isRainingAt(getPos())?RadioStation.weatherHarshness: 1f;
+		return world.isRainingAt(getPos())?radioStation.weatherHarshness: 1f;
 	}
 
 	@Override

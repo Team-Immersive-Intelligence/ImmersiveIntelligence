@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.blocks.stone;
 
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
@@ -14,7 +15,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 
 /**
@@ -29,6 +29,9 @@ public class BlockIIStoneDecoration extends BlockIITileProvider<IIBlockTypes_Sto
 		setResistance(15.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
+
+		tesrMap.put(IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), IIBlockTypes_StoneDecoration.SANDBAGS.getName());
+
 	}
 
 	@Override
@@ -46,6 +49,8 @@ public class BlockIIStoneDecoration extends BlockIITileProvider<IIBlockTypes_Sto
 	@Override
 	public TileEntity createBasicTE(World world, IIBlockTypes_StoneDecoration type)
 	{
+		if(type==IIBlockTypes_StoneDecoration.SANDBAGS)
+			return new TileEntitySandbags();
 		return null;
 	}
 
@@ -68,19 +73,26 @@ public class BlockIIStoneDecoration extends BlockIITileProvider<IIBlockTypes_Sto
 		return true;
 	}
 
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
+	{
+		super.neighborChanged(state, world, pos, blockIn, fromPos);
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof TileEntitySandbags)
+		{
+			((TileEntitySandbags)te).cornerFacing = ((TileEntitySandbags)te).getCornerFacing();
+		}
+	}
+
 	@Deprecated
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		if(getMetaFromState(state)==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta())
-		{
-			return EnumBlockRenderType.MODEL;
-		}
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return getMetaFromState(state)!=IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta();
+		return false;
 	}
 }

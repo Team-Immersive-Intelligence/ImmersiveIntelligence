@@ -81,6 +81,8 @@ processResources {
 
     //Exclude GIMP images
 	exclude '**/*.xcf'
+    //Exclude batch
+    exclude '**/*.bat'
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
@@ -95,4 +97,5 @@ processResources {
         exclude 'mcmod.info'
 
     }
+
 }
