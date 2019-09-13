@@ -9,11 +9,11 @@
  - Intelligence - espionage - stealth - sabotage - this category contains various devices which will allow you to spy on other players and monitor the world
 
 The mod authors, the developers:
-- [@Pabilo8](https://github.com/Pabilo8/) - 
+- [@Pabilo8](https://github.com/Pabilo8/) - Main Developer, author - the programmer, graphic artist and modeller 
   - [Curseforge](https://www.curseforge.com/members/pabilo8/), 
   - [Twitter](https://twitter.com/PablosferaGames), 
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
-- @Choroman - 
+- [@Choroman](https://github.com/Choroman) - Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
   - [Curseforge](https://www.curseforge.com/members/choroman1/)
   
 Proudly powered by Turbo Model Thingy (TMT):
