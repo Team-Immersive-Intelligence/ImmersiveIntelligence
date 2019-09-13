@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct
 import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructInteger;
 import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructNull;
 import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructString;
+import pl.pabilo8.immersiveintelligence.api.data.operators.itemstack.*;
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationAND;
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationNOT;
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationOR;
@@ -60,15 +61,26 @@ public class DataOperation
 		operations.put("xnor", DataOperationXNOR.class);
 
 		operations.put("join", DataOperationJoin.class);
+
 		//operations.put("longer",DataOperationLonger.class);
 		//operations.put("shorter",DataOperationShorter.class);
 		//operations.put("length_equal",DataOperationLengthEqual.class);
 		//operations.put("filter",DataOperationFilter.class);
 		//operations.put("format",DataOperationFormat.class);
+
 		operations.put("construct_null", DataOperationConditionalConstructNull.class);
 		operations.put("construct_boolean", DataOperationConditionalConstructBoolean.class);
 		operations.put("construct_integer", DataOperationConditionalConstructInteger.class);
 		operations.put("construct_string", DataOperationConditionalConstructString.class);
+
+		operations.put("get_quantity", DataOperationGetQuantity.class);
+		operations.put("set_quantity", DataOperationSetQuantity.class);
+		operations.put("get_durability", DataOperationGetDurability.class);
+		operations.put("set_durability", DataOperationSetDurability.class);
+		operations.put("get_nbt", DataOperationGetNBT.class);
+		operations.put("set_nbt", DataOperationSetNBT.class);
+		operations.put("can_stack_with", DataOperationCanStackWith.class);
+		operations.put("matches_oredict", DataOperationMatchesOreDictionary.class);
 	}
 
 }

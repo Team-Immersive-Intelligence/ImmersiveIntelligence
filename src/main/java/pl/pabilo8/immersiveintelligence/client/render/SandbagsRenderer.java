@@ -76,6 +76,12 @@ public class SandbagsRenderer extends TileEntitySpecialRenderer<TileEntitySandba
 
 			model.render();
 
+			for(ModelRendererTurbo mod : model.rightModel)
+				mod.render(0.0625f);
+
+			for(ModelRendererTurbo mod : model.leftModel)
+				mod.render(0.0625f);
+
 			GlStateManager.popMatrix();
 			return;
 		}

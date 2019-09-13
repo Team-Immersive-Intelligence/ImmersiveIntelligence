@@ -20,8 +20,6 @@ import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IMinecartBlockPickable;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
@@ -49,8 +47,8 @@ public class EntityMinecartCrateWooden extends EntityMinecartContainer implement
 		if(!world.isRemote&&this.world.getGameRules().getBoolean("doEntityDrops"))
 		{
 			ItemStack cart = new ItemStack(Items.MINECART, 1);
-			Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
-			ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+			Item drop = Item.getItemFromBlock(IEContent.blockWoodenDevice0);
+			ItemStack drop2 = new ItemStack(drop, 1, BlockTypes_WoodenDevice0.CRATE.getMeta());
 			NBTTagCompound nbt = new NBTTagCompound();
 
 			NBTTagList invList = new NBTTagList();
@@ -131,8 +129,8 @@ public class EntityMinecartCrateWooden extends EntityMinecartContainer implement
 	@Override
 	public ItemStack getBlockForPickup()
 	{
-		Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
-		ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+		Item drop = Item.getItemFromBlock(IEContent.blockWoodenDevice0);
+		ItemStack drop2 = new ItemStack(drop, 1, BlockTypes_WoodenDevice0.CRATE.getMeta());
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		NBTTagList invList = new NBTTagList();

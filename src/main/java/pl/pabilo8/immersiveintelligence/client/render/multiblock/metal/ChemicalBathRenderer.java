@@ -248,10 +248,11 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 
 			GlStateManager.popMatrix();
 
-			GlStateManager.pushMatrix();
 
 			if(te.tanks[0].getFluidAmount() > 0)
 			{
+				GlStateManager.pushMatrix();
+
 				GlStateManager.rotate(90, 1f, 0f, 0f);
 				GlStateManager.translate(0.0625f, -4f-0.0625f+0.0625f+0.0625f, -0.3125f);
 				GlStateManager.scale(0.0625, 0.0625, 0.0625);
@@ -263,12 +264,17 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 
 				GlStateManager.enableAlpha();
 				GlStateManager.enableBlend();
-				GlStateManager.enableColorMaterial();
+				GlStateManager.disableColorMaterial();
+				GlStateManager.disableLighting();
+
 				//Draw fluid inside the tank
 				ClientUtils.drawRepeatedFluidSprite(te.tanks[0].getFluid(), hfluid < 1f?((1f-hfluid)*6f): 0f, 0f, 46-(hfluid < 1f?((1f-hfluid)*12f): 0f), 46f);
-			}
+				GlStateManager.disableBlend();
 
-			GlStateManager.popMatrix();
+
+				GlStateManager.popMatrix();
+
+			}
 
 
 			GlStateManager.popMatrix();

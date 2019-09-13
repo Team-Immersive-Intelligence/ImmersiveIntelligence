@@ -53,6 +53,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiA
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.render.BulletRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.SandbagsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
@@ -70,6 +71,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIPrintedPage;
@@ -103,7 +105,11 @@ public class ClientProxy extends CommonProxy
 		WireApi.registerConnectorForRender("conn_data", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		WireApi.registerConnectorForRender("rel_data", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		WireApi.registerConnectorForRender("alarm_siren", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+
 		WireApi.registerConnectorForRender("inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+		WireApi.registerConnectorForRender("advanced_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+		WireApi.registerConnectorForRender("fluid_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+		WireApi.registerConnectorForRender("advanced_fluid_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 
 		for(Block block : CommonProxy.blocks)
 		{
@@ -113,7 +119,6 @@ public class ClientProxy extends CommonProxy
 				throw new RuntimeException("ITEMBLOCK FOR "+loc+" : "+block+" IS NULL");
 			if(block instanceof BlockIIFluid)
 			{
-				ImmersiveIntelligence.logger.info("fluid model");
 				mapFluidState(block, ((BlockIIFluid)block).getFluid());
 			}
 			else if(block instanceof IIEMetaBlock)
@@ -132,7 +137,6 @@ public class ClientProxy extends CommonProxy
 				for(int meta = 0; meta < ieMetaBlock.getMetaEnums().length; meta++)
 				{
 					BlockIIBase b = (BlockIIBase)block;
-					ImmersiveIntelligence.logger.info(b.tesrMap);
 					if(!b.tesrMap.isEmpty()&&b.tesrMap.containsKey(Integer.valueOf(meta)))
 					{
 						ModelLoader.setCustomModelResourceLocation(blockItem, meta, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "itemblock/"+b.tesrMap.get(Integer.valueOf(meta))), "inventory"));
@@ -280,6 +284,8 @@ public class ClientProxy extends CommonProxy
 				gui = new GuiChemicalBath(player.inventory, (TileEntityChemicalBath)te);
 			else if(ID==IIGuiList.GUI_ELECTROLYZER&&te instanceof TileEntityElectrolyzer)
 				gui = new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer)te);
+			else if(ID==IIGuiList.GUI_PRECISSION_ASSEMBLER&&te instanceof TileEntityPrecissionAssembler)
+				gui = new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te);
 
 			((IGuiTile)te).onGuiOpened(player, true);
 			return gui;
@@ -305,6 +311,7 @@ public class ClientProxy extends CommonProxy
 		//And yes, I would like to have .obj models, really...
 		//But using TMT seems easier (and more weird).
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
 
 	}
 
@@ -321,6 +328,16 @@ public class ClientProxy extends CommonProxy
 		super.init();
 		TileEntityInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
+
+		TileEntityAdvancedInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityAdvancedInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
+
+		TileEntityFluidInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityFluidInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
+
+		//TODO: Inserter
+		//TileEntityInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		//TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 	}
 
 	@Override
@@ -387,7 +404,11 @@ public class ClientProxy extends CommonProxy
 
 		//Ammo Crate
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionCrate.class, new AmmunitionCrateRenderer());
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInserter.class, new InserterRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedInserter.class, new AdvancedInserterRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidInserter.class, new FluidInserterRenderer());
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTimedBuffer.class, new TimedBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneBuffer.class, new RedstoneBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallDataBuffer.class, new SmallDataBufferRenderer());
@@ -408,7 +429,11 @@ public class ClientProxy extends CommonProxy
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
+
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), TileEntityAdvancedInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
+		//ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
 
 		//Alarm Siren
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAlarmSiren.class, new AlarmSirenRenderer());
@@ -422,6 +447,9 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrintingPress.class, new PrintingPressRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer());
 
 	}
 

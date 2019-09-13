@@ -12,7 +12,12 @@ import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Pabilo8 on 2019-05-07.
@@ -36,17 +41,19 @@ public class IICreativeTab extends CreativeTabs
 		return new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.ordinal());
 	}
 
+	public static List<Fluid> fluidBucketMap = new ArrayList<>();
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void displayAllRelevantItems(NonNullList<ItemStack> list)
 	{
 		super.displayAllRelevantItems(list);
 
-		addFluidBucket(ImmersiveIntelligence.proxy.fluid_ink_black, list);
-		addFluidBucket(ImmersiveIntelligence.proxy.fluid_ink_cyan, list);
-		addFluidBucket(ImmersiveIntelligence.proxy.fluid_ink_magenta, list);
-		addFluidBucket(ImmersiveIntelligence.proxy.fluid_ink_yellow, list);
-		addFluidBucket(ImmersiveIntelligence.proxy.fluid_etching_acid, list);
+		addAssemblySchemes(list);
+		addExampleBullets(list);
+
+		for(Fluid fluid : fluidBucketMap)
+			addFluidBucket(fluid, list);
 	}
 
 	public void addFluidBucket(Fluid fluid, NonNullList list)
@@ -59,5 +66,20 @@ public class IICreativeTab extends CreativeTabs
 		{
 			list.add(fluidHandler.getContainer());
 		}
+	}
+
+	public void addAssemblySchemes(NonNullList list)
+	{
+		for(PrecissionAssemblerRecipe recipe : PrecissionAssemblerRecipe.recipeList)
+		{
+			list.add(ImmersiveIntelligence.proxy.item_assembly_scheme.getStackForRecipe(recipe));
+		}
+	}
+
+	public void addExampleBullets(NonNullList list)
+	{
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "TNT", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "RDX", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "HMX", "", 1f));
 	}
 }

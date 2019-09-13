@@ -3,7 +3,7 @@
   "defaults": {
     "transform": "forge:default-block",
     "textures": {
-      "all": "immersiveintelligence:blocks/ore_platinum"
+      "all": "immersiveintelligence:blocks/metal/ore_platinum"
     },
     "model": "cube_all"
   },
@@ -11,14 +11,50 @@
     "inventory,type=platinum": [
       {
         "textures": {
-          "all": "immersiveintelligence:blocks/ore_platinum"
+          "all": "immersiveintelligence:blocks/metal/ore_platinum"
+        }
+      }
+    ],
+    "inventory,type=zinc": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_zinc"
+        }
+      }
+    ],
+    "inventory,type=tungsten": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_tungsten"
+        }
+      }
+    ],
+    "inventory,type=salt": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_salt"
         }
       }
     ],
     "type": {
       "platinum": {
         "textures": {
-          "all": "immersiveintelligence:blocks/ore_platinum"
+          "all": "immersiveintelligence:blocks/metal/ore_platinum"
+        }
+      },
+      "zinc": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_zinc"
+        }
+      },
+      "tungsten": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_tungsten"
+        }
+      },
+      "salt": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_salt"
         }
       }
     }

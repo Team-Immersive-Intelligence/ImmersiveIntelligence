@@ -30,7 +30,7 @@ import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.LighterFuelHandler;
+import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;

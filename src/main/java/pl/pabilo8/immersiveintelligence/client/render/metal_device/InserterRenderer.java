@@ -41,6 +41,8 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 
 			model.getBlockRotation(EnumFacing.NORTH, model);
 
+			boolean renderOut = true, renderIn = true;
+
 			switch(te.outputFacing)
 			{
 				case SOUTH:
@@ -66,7 +68,8 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 				default:
 				{
 					//EnumFacing.UP
-					model.rotate(model.inserterOutput, 0f, 0, -1.57079633F);
+					renderOut = false;
+					//model.rotate(model.inserterOutput, 0f, 0, -1.57079633F);
 				}
 				break;
 			}
@@ -96,21 +99,39 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 				default:
 				{
 					//EnumFacing.UP
-					model.rotate(model.inserterInput, 0f, 0, -1.57079633F);
+					renderIn = false;
+					//model.rotate(model.inserterInput, 0f, 0, -1.57079633F);
 				}
 				break;
 			}
 
+			if(renderIn)
+			{
+				for(ModelRendererTurbo mod : model.inserterInput)
+					mod.render(f5);
+			}
+			if(renderOut)
+			{
+				for(ModelRendererTurbo mod : model.inserterOutput)
+					mod.render(f5);
+			}
+
 			model.render();
 
-			float added = te.nextDirection > te.armDirection?(100f/inserter.grabTime*(partialTicks/20)):
-					(te.nextDirection < te.armDirection?-(100f/inserter.grabTime*(partialTicks/20)): 0);
+			//TODO: fix rotation
+			float dir = te.armDirection, next_dir = te.nextDirection;
+
+
+			float added = next_dir > dir?(100f/inserter.grabTime*(partialTicks/20f)):
+					(next_dir < dir?-(100f/inserter.grabTime*(partialTicks/20f)): 0);
 			float progress = 1f-(((float)te.pickProgress+(added))/100f);
+
+			dir += added;
 
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0.5f, 0.375f, -0.5);
-			GlStateManager.rotate(te.armDirection, 0, 1, 0);
+			GlStateManager.rotate(dir, 0, 1, 0);
 
 			for(ModelRendererTurbo mod : model.inserterBaseTurntable)
 				mod.render(0.0625f);

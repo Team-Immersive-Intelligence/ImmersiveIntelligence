@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartContainer;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,8 +19,6 @@ import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IMinecartBlockPickable;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
@@ -49,8 +46,8 @@ public class EntityMinecartCrateReinforced extends EntityMinecartContainer imple
 		if(!world.isRemote&&this.world.getGameRules().getBoolean("doEntityDrops"))
 		{
 			ItemStack cart = new ItemStack(Items.MINECART, 1);
-			Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
-			ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+			Item drop = Item.getItemFromBlock(IEContent.blockWoodenDevice0);
+			ItemStack drop2 = new ItemStack(drop, 1, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta());
 			NBTTagCompound nbt = new NBTTagCompound();
 
 			NBTTagList invList = new NBTTagList();
@@ -131,8 +128,8 @@ public class EntityMinecartCrateReinforced extends EntityMinecartContainer imple
 	@Override
 	public ItemStack getBlockForPickup()
 	{
-		Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
-		ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+		Item drop = Item.getItemFromBlock(IEContent.blockWoodenDevice0);
+		ItemStack drop2 = new ItemStack(drop, 1, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta());
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		NBTTagList invList = new NBTTagList();
@@ -161,12 +158,13 @@ public class EntityMinecartCrateReinforced extends EntityMinecartContainer imple
 		NBTTagCompound nbt2 = new NBTTagCompound();
 		this.writeEntityToNBT(nbt2);
 
+		EntityMinecartEmpty ent = new EntityMinecartEmpty(this.world);
+		ent.setPosition(this.posX, this.posY, this.posZ);
+		ent.setCustomNameTag(this.getCustomNameTag());
+		world.spawnEntity(ent);
+
 		this.setDead();
 
-		EntityMinecart ent = new EntityMinecartEmpty(this.world);
-		ent.readFromNBT(nbt2);
-		world.spawnEntity(ent);
-		ent.readFromNBT(nbt2);
 
 		return drop2;
 	}

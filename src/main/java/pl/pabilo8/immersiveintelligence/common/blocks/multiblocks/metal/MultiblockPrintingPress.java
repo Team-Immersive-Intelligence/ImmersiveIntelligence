@@ -195,7 +195,6 @@ public class MultiblockPrintingPress implements IMultiblock
 							}
 							else
 							{
-								ImmersiveIntelligence.logger.info("lolle");
 								if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 								{
 

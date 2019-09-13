@@ -7,7 +7,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.LighterFuelHandler;
+import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 

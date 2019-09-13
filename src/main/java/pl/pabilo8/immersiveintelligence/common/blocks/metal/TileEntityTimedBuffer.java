@@ -15,7 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -84,7 +83,6 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 			timer += 1;
 			if(timer%5==0||timer==1)
 			{
-				ImmersiveIntelligence.logger.info("test");
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setInteger("timer", timer);
 				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 24));

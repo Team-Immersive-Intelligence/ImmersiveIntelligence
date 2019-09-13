@@ -128,7 +128,6 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 			break;
 			case "integer":
 			{
-				ImmersiveIntelligence.logger.info("A number field? Fancey!");
 				this.valueEdit = new GuiTextField(5, this.fontRenderer, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 121-fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), 20);
 				this.valueEdit.setFocused(true);
 				this.valueEdit.setText(dataType.valueToString());
@@ -136,7 +135,6 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 			break;
 			case "string":
 			{
-				ImmersiveIntelligence.logger.info("A text field? Even Better!");
 				this.valueEdit = new GuiTextField(5, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
 				this.valueEdit.setFocused(true);
 				this.valueEdit.setText(dataType.valueToString());

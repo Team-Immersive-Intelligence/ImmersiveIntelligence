@@ -10,7 +10,10 @@ import java.util.Locale;
  */
 public enum IIBlockTypes_Ore implements IStringSerializable, BlockIEBase.IBlockEnum
 {
-	PLATINUM;
+	PLATINUM,
+	ZINC,
+	TUNGSTEN,
+	SALT;
 
 	@Override
 	public String getName()

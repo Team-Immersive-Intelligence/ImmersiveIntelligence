@@ -35,7 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineEdit;
-import pl.pabilo8.immersiveintelligence.common.items.ItemFunctionalCircuit;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
@@ -81,7 +81,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 
 		this.page = page;
 		if(!handler.getStackInSlot(page).isEmpty())
-			this.list = ((ItemFunctionalCircuit)handler.getStackInSlot(page).getItem()).getStoredData(handler.getStackInSlot(page));
+			this.list = ((ItemIIFunctionalCircuit)handler.getStackInSlot(page).getItem()).getStoredData(handler.getStackInSlot(page));
 		else
 			this.list = new DataPacket();
 
@@ -103,7 +103,6 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		editingPage = 0;
 		currentlyEditeddataType = mainType;
 
-		//ImmersiveIntelligence.logger.info(page);
 	}
 
 	@Override
@@ -117,12 +116,6 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		Keyboard.enableRepeatEvents(true);
 		refreshStoredData();
 		this.buttonList.clear();
-
-		ImmersiveIntelligence.logger.info("initGui:");
-		ImmersiveIntelligence.logger.info(currentlyEditeddataType.getName());
-		ImmersiveIntelligence.logger.info(mainType.getName());
-		ImmersiveIntelligence.logger.info(type1.getName());
-		ImmersiveIntelligence.logger.info(type2.getName());
 
 		this.buttonList.add(new GuiButtonIE(0, guiLeft-28, guiTop+4, 28, 24, "", texture_storage, 204, 0));
 		if(!handler.getStackInSlot(0).isEmpty())
@@ -183,7 +176,6 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				break;
 				case "integer":
 				{
-					ImmersiveIntelligence.logger.info("A number field? Fancey!");
 					this.valueEdit = new GuiTextField(11, this.fontRenderer, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 121-fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), 20);
 					this.valueEdit.setFocused(true);
 					this.valueEdit.setText(currentlyEditeddataType.valueToString());
@@ -191,7 +183,6 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				break;
 				case "string":
 				{
-					ImmersiveIntelligence.logger.info("A text field? Even Better!");
 					this.valueEdit = new GuiTextField(11, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
 					this.valueEdit.setFocused(true);
 					this.valueEdit.setText(currentlyEditeddataType.valueToString());
@@ -252,8 +243,6 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 
 			}*/
 			changeDataTypePage(true);
-
-			ImmersiveIntelligence.logger.info("type:"+((DataPacketTypeExpression)mainType).getOperation().name);
 
 			list.setVariable(expressionToEdit, new DataPacketTypeExpression(type1, type2, ((DataPacketTypeExpression)mainType).getOperation()));
 
@@ -488,10 +477,9 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		{
 			this.mainType = list.getPacketVariable(expressionToEdit);
 
-			ImmersiveIntelligence.logger.info("o");
 			this.mainType = new DataOperationAdd().getVarInType(DataPacketTypeExpression.class, mainType, list);
 
-			ArrayList<String> ops = new ArrayList<>(((ItemFunctionalCircuit)handler.getStackInSlot(page).getItem()).getOperationsList(handler.getStackInSlot(page)));
+			ArrayList<String> ops = new ArrayList<>(((ItemIIFunctionalCircuit)handler.getStackInSlot(page).getItem()).getOperationsList(handler.getStackInSlot(page)));
 			try
 			{
 				((DataPacketTypeExpression)mainType).setOperation((DataOperator)(DataOperation.operations.get(ops.get(0))).newInstance());
@@ -531,12 +519,12 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			break;
 			case 1:
 			{
-				type1 = currentlyEditeddataType;
+				type2 = currentlyEditeddataType;
 			}
 			break;
 			case 2:
 			{
-				type2 = currentlyEditeddataType;
+				type1 = currentlyEditeddataType;
 			}
 			break;
 		}
@@ -554,20 +542,15 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			break;
 			case 1:
 			{
-				currentlyEditeddataType = type1;
+				currentlyEditeddataType = type2;
 			}
 			break;
 			case 2:
 			{
-				currentlyEditeddataType = type2;
+				currentlyEditeddataType = type1;
 			}
 			break;
 		}
-		ImmersiveIntelligence.logger.info("changeDataTypePage:");
-		ImmersiveIntelligence.logger.info(currentlyEditeddataType.getName());
-		ImmersiveIntelligence.logger.info(mainType.getName());
-		ImmersiveIntelligence.logger.info(type1.getName());
-		ImmersiveIntelligence.logger.info(type2.getName());
 
 		initGui();
 	}
@@ -617,7 +600,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 
 	void changeOperation(boolean forward)
 	{
-		ArrayList<String> ops = new ArrayList<>(((ItemFunctionalCircuit)handler.getStackInSlot(page).getItem()).getOperationsList(handler.getStackInSlot(page)));
+		ArrayList<String> ops = new ArrayList<>(((ItemIIFunctionalCircuit)handler.getStackInSlot(page).getItem()).getOperationsList(handler.getStackInSlot(page)));
 		int index = 0;
 
 		if(ops.contains(((DataPacketTypeExpression)mainType).getOperation().name))

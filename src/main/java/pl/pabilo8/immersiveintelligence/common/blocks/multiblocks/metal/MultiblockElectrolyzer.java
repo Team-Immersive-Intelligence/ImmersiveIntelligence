@@ -151,7 +151,6 @@ public class MultiblockElectrolyzer implements IMultiblock
 					{
 						if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDecoration0, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta()))
 						{
-							ImmersiveIntelligence.logger.info("1");
 							return false;
 						}
 					}
@@ -178,7 +177,6 @@ public class MultiblockElectrolyzer implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockMetalDevice0, BlockTypes_MetalDevice0.BARREL.getMeta()))
 							{
-								ImmersiveIntelligence.logger.info("4");
 								return false;
 							}
 						}

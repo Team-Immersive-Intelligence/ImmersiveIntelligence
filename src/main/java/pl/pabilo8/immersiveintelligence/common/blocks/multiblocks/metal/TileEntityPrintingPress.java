@@ -295,10 +295,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 					}
 				}
 
-				ImmersiveIntelligence.logger.info("cyan: "+cyan_amount);
-				ImmersiveIntelligence.logger.info("magenta: "+magenta_amount);
-				ImmersiveIntelligence.logger.info("yellow: "+yellow_amount);
-
 				int black_amount_start = black_amount, cyan_amount_start = cyan_amount, magenta_amount_start = magenta_amount, yellow_amount_start = yellow_amount;
 
 				ArrayList<Float> black_cost = new ArrayList<>(),
@@ -349,17 +345,13 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 
 							int color = Integer.parseInt(fragment.substring(8, 14), 16);
-							ImmersiveIntelligence.logger.info("(10)"+color+" = "+"(16)"+fragment.substring(8, 14));
 							Color col = new Color(color);
-							ImmersiveIntelligence.logger.info("new RGB: "+col.getRed()+" "+col.getGreen()+" "+col.getBlue());
 							int[] colors = pl.pabilo8.immersiveintelligence.api.Utils.rgbToCmyk(col.getRed(), col.getGreen(), col.getBlue());
-							ImmersiveIntelligence.logger.info("new CMYK: "+colors[0]/255f+" "+colors[1]/255f+" "+colors[2]/255f+" "+colors[3]/255f);
 							cyan_cost.add(((float)colors[0])/255f);
 							yellow_cost.add(((float)colors[1])/255f);
 							magenta_cost.add(((float)colors[2])/255f);
 							black_cost.add(((float)colors[3])/255f);
 
-							ImmersiveIntelligence.logger.info("new C: "+cyan_cost.get(cyan_cost.size()-1));
 
 
 							tag_endings_needed += 1;
@@ -395,7 +387,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 							magenta_amount -= magenta_cost.get(magenta_cost.size()-1)*printingPress.printInkUsage;
 							yellow_amount -= yellow_cost.get(yellow_cost.size()-1)*printingPress.printInkUsage;
 
-							ImmersiveIntelligence.logger.info("CMYK color:"+black_cost.get(black_cost.size()-1)+" "+cyan_cost.get(cyan_cost.size()-1)+" "+magenta_cost.get(magenta_cost.size()-1)+" "+yellow_cost.get(yellow_cost.size()-1));
 
 							continue;
 						}
@@ -431,9 +422,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 								printedChars += "> <hexcol=";
 								int[] colors = pl.pabilo8.immersiveintelligence.api.Utils.cmykToRgb(Math.round(cyan_cost.get(cyan_cost.size()-1)*255), Math.round(magenta_cost.get(magenta_cost.size()-1)*255), Math.round(yellow_cost.get(yellow_cost.size()-1)*255), Math.round(black_cost.get(black_cost.size()-1)*255));
 								printedChars += String.format("%02x%02x%02x:", Math.round(colors[0]), Math.round(colors[1]), Math.round(colors[2]));
-								//char randomchar = DataPacket.varCharacters[(int)Math.round(Math.random()*DataPacket.varCharacters.length)];
-								//ImmersiveIntelligence.logger.info("RandomChar: "+randomchar);
-								//printedChars += randomchar;
 							}
 
 						}
@@ -757,7 +745,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	@Override
 	public void onEntityCollision(World world, Entity entity)
 	{
-		ImmersiveIntelligence.logger.info("lolle");
 
 		if(pos==27&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty())
 		{
@@ -766,7 +753,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 				return;
 			ItemStack stack = ((EntityItem)entity).getItem();
 
-			ImmersiveIntelligence.logger.info(stack.getCount());
 
 			if(stack.getItem() instanceof ItemIIPrintedPage&&stack.getMetadata()==0)
 			{

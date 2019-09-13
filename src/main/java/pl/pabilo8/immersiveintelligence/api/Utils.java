@@ -33,6 +33,19 @@ public class Utils
 	}
 
 	@Nullable
+	public static IDataConnector findConnectorFacing(BlockPos pos, World world, EnumFacing facing)
+	{
+		BlockPos newpos = pos.offset(facing);
+		if(world.isBlockLoaded(newpos)&&world.getTileEntity(newpos) instanceof IDataConnector&&world.getTileEntity(newpos) instanceof IDirectionalTile)
+		{
+			IDirectionalTile t = (IDirectionalTile)world.getTileEntity(newpos);
+			if(t.getFacing()==facing.getOpposite())
+				return (IDataConnector)world.getTileEntity(newpos);
+		}
+		return null;
+	}
+
+	@Nullable
 	public static IDataConnector findConnectorAround(BlockPos pos, World world)
 	{
 		BlockPos newpos = pos.add(1, 0, 0);

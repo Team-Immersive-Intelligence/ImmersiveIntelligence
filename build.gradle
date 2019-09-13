@@ -61,7 +61,8 @@ dependencies {
     //deobfCompile "elucent:albedo:2.0-SNAPSHOT"
     compileOnly "mezz.jei:jei_1.12:4.+"
     compile files('libs/immersivepetroleum-1.12.2-1.1.9-deobf.jar')
-    compile files('libs/combatica-api-1.12.2-1.2.0-sources.jar')
+    //I wonder what will be first: combatica adding a new damage system or me making a mod for that...
+    //compile files('libs/combatica-api-1.12.2-1.2.0-sources.jar')
 }
 
 jar {

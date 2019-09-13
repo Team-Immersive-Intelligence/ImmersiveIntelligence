@@ -43,6 +43,10 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 		tesrMap.put(IIBlockTypes_Connector.DATA_RELAY.getMeta(), IIBlockTypes_Connector.DATA_RELAY.getName());
 		tesrMap.put(IIBlockTypes_Connector.ALARM_SIREN.getMeta(), IIBlockTypes_Connector.ALARM_SIREN.getName());
 		tesrMap.put(IIBlockTypes_Connector.INSERTER.getMeta(), IIBlockTypes_Connector.INSERTER.getName());
+		tesrMap.put(IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_INSERTER.getName());
+		tesrMap.put(IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_INSERTER.getName());
+		tesrMap.put(IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), IIBlockTypes_Connector.FLUID_INSERTER.getName());
+		//tesrMap.put(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getName());
 
 	}
 
@@ -129,6 +133,12 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 				return new TileEntityAlarmSiren();
 			case INSERTER:
 				return new TileEntityInserter();
+			case ADVANCED_INSERTER:
+				return new TileEntityAdvancedInserter();
+			case FLUID_INSERTER:
+				return new TileEntityFluidInserter();
+			//case ADVANCED_FLUID_INSERTER:
+			//	return new TileEntityAdvancedFluidInserter();
 		}
 		return null;
 	}

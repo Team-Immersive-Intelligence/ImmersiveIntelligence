@@ -42,7 +42,7 @@ public class ModelInserter extends BaseBlockModel
 		inserterBaseTurntable[3].addShape3D(1.5F, 0F, 2F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(3, 0, 3, 0), new Coord2D(3, 2, 3, 2), new Coord2D(2, 3, 2, 3), new Coord2D(1, 3, 1, 3), new Coord2D(0, 2, 0, 2)}), 1, 3, 3, 12, 1, ModelRendererTurbo.MR_FRONT, new float[]{2, 2, 1, 2, 2, 3}); // Holder2
 		inserterBaseTurntable[3].rotateAngleY = -4.71238898F;
 
-		inserterLowerArm = new ModelRendererTurbo[16];
+		inserterLowerArm = new ModelRendererTurbo[15];
 		inserterLowerArm[0] = new ModelRendererTurbo(this, 18, 29, textureX, textureY); // InserterAxle
 		inserterLowerArm[1] = new ModelRendererTurbo(this, 42, 23, textureX, textureY); // InserterArmBottom
 		inserterLowerArm[2] = new ModelRendererTurbo(this, 42, 23, textureX, textureY); // InserterArmBottom
@@ -58,7 +58,6 @@ public class ModelInserter extends BaseBlockModel
 		inserterLowerArm[12] = new ModelRendererTurbo(this, 12, 28, textureX, textureY); // Holder2
 		inserterLowerArm[13] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // InserterArmBackplate
 		inserterLowerArm[14] = new ModelRendererTurbo(this, 0, 9, textureX, textureY); // InserterArmBackplateProcessor
-		inserterLowerArm[15] = new ModelRendererTurbo(this, 0, 9, textureX, textureY); // InserterArmBackplateProcessor
 
 		inserterLowerArm[0].addBox(-3.5F, -0.5F, -0.5F, 7, 1, 1, 0F); // InserterAxle
 		inserterLowerArm[1].addBox(-1.5F, -1F, -1.5F, 1, 2, 1, 0F); // InserterArmBottom
@@ -79,8 +78,7 @@ public class ModelInserter extends BaseBlockModel
 		inserterLowerArm[12].rotateAngleY = -4.71238898F;
 
 		inserterLowerArm[13].addBox(-3F, -11F, 0.5F, 6, 8, 1, 0F); // InserterArmBackplate
-		inserterLowerArm[14].addBox(-2.5F, -10.5F, 1F, 5, 3, 1, 0F); // InserterArmBackplateProcessor
-		inserterLowerArm[15].addBox(-2.5F, -7F, 1F, 5, 3, 1, 0F); // InserterArmBackplateProcessor
+		inserterLowerArm[14].addBox(-2.5F, -9F, 1F, 5, 3, 1, 0F); // InserterArmBackplateProcessor
 
 		inserterMidAxle = new ModelRendererTurbo[1];
 		inserterMidAxle[0] = new ModelRendererTurbo(this, 34, 29, textureX, textureY); // InserterAxle2
@@ -168,11 +166,6 @@ public class ModelInserter extends BaseBlockModel
 	public void render()
 	{
 		super.render();
-		float f5 = 1F/16F;
-		for(ModelRendererTurbo model : inserterInput)
-			model.render(f5);
-		for(ModelRendererTurbo model : inserterOutput)
-			model.render(f5);
 		//for(ModelRendererTurbo model : inserterBaseTurntable)
 		//	model.render(f5);
 

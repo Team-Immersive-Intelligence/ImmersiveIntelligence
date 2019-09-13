@@ -116,10 +116,6 @@ public class DataPacketTypeExpression implements IDataType
 			type2 = new DataPacketTypeNull();
 		}
 
-		//type2.valueFromNBT(nbt.getCompoundTag("Value2"));
-
-		ImmersiveIntelligence.logger.info(nbt.getString("Operation"));
-
 		String type = nbt.getString("Operation");
 		if(DataOperation.operations.containsKey(type))
 		{
@@ -128,7 +124,6 @@ public class DataPacketTypeExpression implements IDataType
 			{
 				data = (DataOperator)DataOperation.operations.get(type).newInstance();
 				operation = data;
-				ImmersiveIntelligence.logger.info("Operation successfully loaded. Type: "+data.name);
 				return;
 			} catch(InstantiationException e)
 			{
@@ -151,8 +146,6 @@ public class DataPacketTypeExpression implements IDataType
 		nbt.setTag("Value2", type2.valueToNBT());
 
 		nbt.setString("Operation", operation.name);
-
-		ImmersiveIntelligence.logger.info("valToNBT:"+operation.name);
 
 		return nbt;
 	}

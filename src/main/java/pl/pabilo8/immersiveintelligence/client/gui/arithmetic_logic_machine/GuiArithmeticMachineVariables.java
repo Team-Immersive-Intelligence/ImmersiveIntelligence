@@ -32,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.Cont
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables1;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables2;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables3;
-import pl.pabilo8.immersiveintelligence.common.items.ItemFunctionalCircuit;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
@@ -78,7 +78,7 @@ public class GuiArithmeticMachineVariables extends GuiIEContainerBase implements
 
 		this.page = page;
 		if(!container.getInventory().get(0).isEmpty())
-			this.list = ((ItemFunctionalCircuit)container.getInventory().get(0).getItem()).getStoredData(container.getInventory().get(0));
+			this.list = ((ItemIIFunctionalCircuit)container.getInventory().get(0).getItem()).getStoredData(container.getInventory().get(0));
 		else
 			this.list = new DataPacket();
 
@@ -378,7 +378,7 @@ public class GuiArithmeticMachineVariables extends GuiIEContainerBase implements
 
 		tile = (TileEntityArithmeticLogicMachine)tile.getWorld().getTileEntity(tile.getPos());
 		if(!container.getInventory().get(0).isEmpty())
-			this.list = ((ItemFunctionalCircuit)container.getInventory().get(0).getItem()).getStoredData(container.getInventory().get(0));
+			this.list = ((ItemIIFunctionalCircuit)container.getInventory().get(0).getItem()).getStoredData(container.getInventory().get(0));
 		else
 			this.list = new DataPacket();
 

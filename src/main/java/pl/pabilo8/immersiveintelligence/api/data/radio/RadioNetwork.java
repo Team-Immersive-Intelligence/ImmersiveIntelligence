@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
@@ -58,11 +57,9 @@ public class RadioNetwork
 			{
 				if(dev.getFrequency()==sender.getFrequency()&&distanceCheck(sender, dev))
 				{
-					ImmersiveIntelligence.logger.info(dev.getFrequency());
 					if(dev.onRadioReceive(packet))
 					{
 						list.add(dev);
-						ImmersiveIntelligence.logger.info(dev.getDevicePosition());
 						INSTANCE.sendPacket(packet, dev, list);
 					}
 				}

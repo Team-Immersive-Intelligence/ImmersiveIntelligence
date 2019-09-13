@@ -78,11 +78,11 @@ public class ModelChemicalBath extends BaseBlockModel
 		baseModel[5].addBox(0F, 0F, 0F, 16, 26, 16, 0F); // EnergyBox
 		baseModel[5].setRotationPoint(0F, -30F, 0F);
 
-		baseModel[6].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 16, 0, 16), new Coord2D(48, 16, 48, 16), new Coord2D(48, 8, 48, 8), new Coord2D(42, 0, 42, 0), new Coord2D(6, 0, 6, 0), new Coord2D(0, 8, 0, 8)}), 1, 48, 16, 120, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 10, 36, 10, 8, 48}); // BathFront
+		baseModel[6].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 16, 0, 16), new Coord2D(48, 16, 48, 16), new Coord2D(48, 8, 48, 8), new Coord2D(42, 0, 42, 0), new Coord2D(6, 0, 6, 0), new Coord2D(0, 8, 0, 8)}), 1, 48, 16, 120, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 10, 36, 10, 8, 48}, true); // BathFront
 		baseModel[6].setRotationPoint(48F, -4F, 17F);
 		//baseModel[6].flip=true;
 
-		baseModel[7].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 16, 0, 16), new Coord2D(48, 16, 48, 16), new Coord2D(48, 8, 48, 8), new Coord2D(42, 0, 42, 0), new Coord2D(6, 0, 6, 0), new Coord2D(0, 8, 0, 8)}), 1, 48, 16, 120, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 10, 36, 10, 8, 48}); // BathBack
+		baseModel[7].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 16, 0, 16), new Coord2D(48, 16, 48, 16), new Coord2D(48, 8, 48, 8), new Coord2D(42, 0, 42, 0), new Coord2D(6, 0, 6, 0), new Coord2D(0, 8, 0, 8)}), 1, 48, 16, 120, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 10, 36, 10, 8, 48}, true); // BathBack
 		baseModel[7].setRotationPoint(48F, -4F, 64F);
 		//baseModel[7].flip=true;
 
@@ -263,8 +263,8 @@ public class ModelChemicalBath extends BaseBlockModel
 		flip(itemPickerLeftBottom);
 		flip(itemPickerRightBottom);
 
-		baseModel[6].doMirror(false, true, false);
-		baseModel[7].doMirror(false, true, false);
+		//baseModel[6].doMirror(false, true, false);
+		//baseModel[7].doMirror(false, true, false);
 	}
 
 	@Override

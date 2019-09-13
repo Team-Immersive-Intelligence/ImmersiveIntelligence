@@ -16,7 +16,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -144,7 +143,6 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 	@Override
 	public void onReceive(DataPacket packet)
 	{
-		ImmersiveIntelligence.logger.info(packet.toNBT().toString());
 		if(packets.size() < IIConfig.machines.small_data_buffer.packetCapacity)
 		{
 			DataPacket np = new DataPacket();

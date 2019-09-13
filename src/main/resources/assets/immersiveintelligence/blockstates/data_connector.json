@@ -211,6 +211,15 @@
       },
       "inserter": {
         "model": "immersiveintelligence:smartmodel/conn_inserter"
+      },
+      "advanced_inserter": {
+        "model": "immersiveintelligence:smartmodel/conn_advanced_inserter"
+      },
+      "fluid_inserter": {
+        "model": "immersiveintelligence:smartmodel/conn_fluid_inserter"
+      },
+      "advanced_fluid_inserter": {
+        "model": "immersiveintelligence:smartmodel/conn_advanced_fluid_inserter"
       }
     },
     "facing": {

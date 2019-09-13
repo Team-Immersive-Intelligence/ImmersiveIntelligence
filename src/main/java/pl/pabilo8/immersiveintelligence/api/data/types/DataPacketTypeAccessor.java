@@ -61,7 +61,7 @@ public class DataPacketTypeAccessor implements IDataType
 	@Override
 	public int getTypeColour()
 	{
-		return 0xe1c99a;
+		return 0x161c26;
 	}
 
 	@Override

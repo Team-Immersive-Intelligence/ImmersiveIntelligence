@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common;
+package pl.pabilo8.immersiveintelligence.api;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;

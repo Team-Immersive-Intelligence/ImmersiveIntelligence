@@ -33,7 +33,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -211,12 +210,10 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 	{
 		if(target.hitX < 1&&target.hitX > 0.75&&target.hitZ < 1&&target.hitZ > 0.75)
 		{
-			ImmersiveIntelligence.logger.info("Targeted connector: 0");
 			return 0;
 		}
 		else
 		{
-			ImmersiveIntelligence.logger.info("Targeted connector: 1");
 			return 1;
 		}
 	}
@@ -458,8 +455,6 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 				}
 				else if(world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 				{
-					ImmersiveIntelligence.logger.info("Container at pos!");
-					ImmersiveIntelligence.logger.info(armDirection+" "+Math.round(inputFacing.getHorizontalAngle()));
 					if(nextDirection!=armDirection&&armDirection!=Math.round(inputFacing.getHorizontalAngle()))
 					{
 						nextPickProgress = 100;
@@ -479,7 +474,6 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 										continue;
 									if(cap.getStackInSlot(i).isEmpty())
 										continue;
-									ImmersiveIntelligence.logger.info("otak2");
 									ItemStack stack = cap.extractItem(i, 1, false);
 									insertionHandler.insertItem(0, stack, false);
 									nextPickProgress = 100;
@@ -532,6 +526,8 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 				nbt.setInteger("armDirection", armDirection);
 				nbt.setInteger("pickProgress", pickProgress);
 				nbt.setInteger("energyStorage", energyStorage);
+				nbt.setInteger("outputFacing", outputFacing.ordinal());
+				nbt.setInteger("inputFacing", inputFacing.ordinal());
 				nbt.setTag("inventory", Utils.writeInventory(inventory));
 				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 24));
 			}

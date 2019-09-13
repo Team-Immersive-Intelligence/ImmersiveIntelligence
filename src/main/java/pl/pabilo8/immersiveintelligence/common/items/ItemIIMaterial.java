@@ -26,8 +26,23 @@ public class ItemIIMaterial extends ItemIIBase
 				"metal_dust_platinum",
 				"metal_plate_platinum",
 				"metal_nugget_platinum",
+				"metal_ingot_tungsten",
+				"metal_dust_tungsten",
+				"metal_plate_tungsten",
+				"metal_nugget_tungsten",
+				"metal_ingot_zinc",
+				"metal_dust_zinc",
+				"metal_plate_zinc",
+				"metal_nugget_zinc",
+				"metal_ingot_brass",
+				"metal_dust_brass",
+				"metal_plate_brass",
+				"metal_nugget_brass",
 				"skycrate_mount",
-				"punchtape_empty"
+				"punchtape_empty",
+				"dust_rdx",
+				"dust_hmx",
+				"dust_salt"
 		);
 	}
 }

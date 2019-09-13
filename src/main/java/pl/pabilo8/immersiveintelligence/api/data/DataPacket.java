@@ -25,6 +25,7 @@ public class DataPacket
 		varTypes.put("boolean", DataPacketTypeBoolean.class);
 		varTypes.put("accessor", DataPacketTypeAccessor.class);
 		varTypes.put("expression", DataPacketTypeExpression.class);
+		varTypes.put("itemstack", DataPacketTypeItemStack.class);
 	}
 
 	public IDataType getPacketVariable(Character name)

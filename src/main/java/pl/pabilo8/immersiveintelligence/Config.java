@@ -46,10 +46,40 @@ public class Config
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] ore_platinum = new int[]{4, 0, 10, 2, 35};
 
+			@Comment({"Generation config for Zinc Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] ore_zinc = new int[]{8, 60, 95, 2, 55};
+
+			@Comment({"Generation config for Tungsten Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] ore_tungsten = new int[]{6, 0, 35, 2, 45};
+
+			@Comment({"Generation config for Salt Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] ore_salt = new int[]{4, 55, 75, 1, 65};
+
 			@Comment({"Set this to true to allow retro-generation of Platinum Ore."})
 			@RequiresMcRestart
 			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
 			public static boolean retrogen_platinum = false;
+
+			@Comment({"Set this to true to allow retro-generation of Zinc Ore."})
+			@RequiresMcRestart
+			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
+			public static boolean retrogen_zinc = false;
+
+			@Comment({"Set this to true to allow retro-generation of Tungsten Ore."})
+			@RequiresMcRestart
+			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
+			public static boolean retrogen_tungsten = false;
+
+			@Comment({"Set this to true to allow retro-generation of Salt Ore."})
+			@RequiresMcRestart
+			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
+			public static boolean retrogen_salt = false;
 
 		}
 
@@ -65,7 +95,6 @@ public class Config
 			@Comment({"The capacity of the measuring cup (mB)."})
 			@RequiresMcRestart
 			public static int measuring_cup_capacity = 500;
-
 
 			@Comment({"The capacity of the electric hammer in RF... i mean IF... i mean FE... that thing o' powerin'!."})
 			@RequiresMcRestart
@@ -83,9 +112,58 @@ public class Config
 			@RequiresMcRestart
 			public static int electric_hammer_energy_per_use = 100;
 
+			//Durability
+			
 			@Comment({"The energy usage of the electric wirecutter (when cutting wires)."})
 			@RequiresMcRestart
 			public static int electric_wirecutter_energy_per_use = 100;
+
+			@Comment({"The durability (max number of uses) of the Precission Buzzsaw."})
+			@RequiresMcRestart
+			public static int precission_tool_buzzsaw_durability = 100;
+
+			@Comment({"The durability (max number of uses) of the Precission Drill."})
+			@RequiresMcRestart
+			public static int precission_tool_drill_durability = 100;
+
+			@Comment({"The durability (max number of uses) of the Precission Inserter."})
+			@RequiresMcRestart
+			public static int precission_tool_inserter_durability = 100;
+
+			@Comment({"The durability (max number of uses) of the Precission Solderer."})
+			@RequiresMcRestart
+			public static int precission_tool_solderer_durability = 100;
+
+			@Comment({"The durability (max number of uses) of the Precission Welder."})
+			@RequiresMcRestart
+			public static int precission_tool_welder_durability = 100;
+
+			//Usage Time
+
+			@Comment({"The usage time of the Precission Buzzsaw."})
+			@RequiresMcRestart
+			public static int precission_tool_buzzsaw_usage_time = 140;
+
+			@Comment({"The usage time of the Precission Drill."})
+			@RequiresMcRestart
+			public static int precission_tool_drill_usage_time = 140;
+
+			@Comment({"The usage time of the Precission Inserter."})
+			@RequiresMcRestart
+			public static int precission_tool_inserter_usage_time = 60;
+
+			@Comment({"The usage time of the Precission Solderer."})
+			@RequiresMcRestart
+			public static int precission_tool_solderer_usage_time = 80;
+
+			@Comment({"The usage time of the Precission Welder."})
+			@RequiresMcRestart
+			public static int precission_tool_welder_usage_time = 160;
+
+			//Default bullet damage
+			@Comment({"Basic bullet damage (for caliber 1)"})
+			public static float basic_bullet_damage = 2.0f;
+
 		}
 
 		public static class Machines
@@ -109,7 +187,15 @@ public class Config
 			@SubConfig
 			public static MissileSilo missileSilo;
 			@SubConfig
+			public static ConveyorScanner conveyor_scanner;
+			@SubConfig
 			public static Inserter inserter;
+			@SubConfig
+			public static AdvancedInserter advanced_inserter;
+			@SubConfig
+			public static FluidInserter fluid_inserter;
+			@SubConfig
+			public static AdvancedFluidInserter advanced_fluid_inserter;
 			@SubConfig
 			public static SmallDataBuffer small_data_buffer;
 
@@ -193,14 +279,42 @@ public class Config
 				@Comment({"Energy capacity of the chemical bath."})
 				public static int energyCapacity = 16000;
 
-				@Comment({"Fluid capacity of the chemical bath."})
-				public static int fluidCapacity = 24000;
+				@Comment({"Hatch opening (or closing) time (in ticks)"})
+				public static int hatchTime = 40;
+
 			}
 
 			public static class ArtilleryHowitzer
 			{
 				@Comment({"Energy capacity of the artillery howitzer."})
 				public static int energyCapacity = 1000000;
+
+				@Comment({"Energy usage when moving / rotating the platform."})
+				public static int energyUsagePlatform = 1620;
+
+				@Comment({"Energy usage when loading / unloading a shell."})
+				public static int energyUsageLoader = 3192;
+
+				@Comment({"Time needed for the platform to ascend/descend (in ticks."})
+				public static int platformTime = 240;
+
+				@Comment({"Time needed for the howitzer to fire (in ticks."})
+				public static int fireTime = 35;
+
+				@Comment({"How long does it take for the howitzer to rotate 90 degrees (in ticks)"})
+				public static int rotateTime = 160;
+
+				@Comment({"How long does it take for the howitzer to load a shell (in ticks)"})
+				public static int loadTime = 140;
+			}
+
+			public static class ConveyorScanner
+			{
+				@Comment({"Energy capacity of the scanning conveyor."})
+				public static int energyCapacity = 8000;
+
+				@Comment({"Energy usage when scanning an ItemStack."})
+				public static int energyUsage = 128;
 			}
 
 			public static class MissileSilo
@@ -214,13 +328,52 @@ public class Config
 				@Comment({"Energy capacity of the inserter."})
 				public static int energyCapacity = 2048;
 				@Comment({"Energy usage of the inserter per item taken."})
-				public static int energyUsage = 256;
+				public static int energyUsage = 128;
 
 				@Comment({"How long does it take for the inserter to pick up an item (in ticks)"})
 				public static int grabTime = 20;
 
 				@Comment({"How long does it take for the inserter to rotate 90 degrees (in ticks)"})
 				public static int rotateTime = 10;
+
+			}
+
+			public static class AdvancedInserter
+			{
+				@Comment({"Energy capacity of the inserter."})
+				public static int energyCapacity = 4096;
+				@Comment({"Energy usage of the inserter per item taken."})
+				public static int energyUsage = 256;
+
+				@Comment({"How long does it take for the inserter to pick up an item (in ticks)"})
+				public static int grabTime = 10;
+
+				@Comment({"How long does it take for the inserter to rotate 90 degrees (in ticks)"})
+				public static int rotateTime = 5;
+
+			}
+
+			public static class FluidInserter
+			{
+				@Comment({"Energy capacity of the inserter."})
+				public static int energyCapacity = 2048;
+				@Comment({"Energy usage of the inserter per item taken."})
+				public static int energyUsage = 128;
+
+				@Comment({"Max fluid output (in milibuckets per tick)"})
+				public static int maxOutput = 80;
+
+			}
+
+			public static class AdvancedFluidInserter
+			{
+				@Comment({"Energy capacity of the inserter."})
+				public static int energyCapacity = 4096;
+				@Comment({"Energy usage of the inserter per item taken."})
+				public static int energyUsage = 256;
+
+				@Comment({"Max fluid output (in milibuckets per tick)"})
+				public static int maxOutput = 240;
 
 			}
 

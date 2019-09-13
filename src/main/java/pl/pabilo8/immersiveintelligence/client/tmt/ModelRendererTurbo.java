@@ -1069,6 +1069,12 @@ public class ModelRendererTurbo extends ModelRenderer
 		addShape3D(x, y, z, shape, depth, shapeTextureWidth, shapeTextureHeight, sideTextureWidth, sideTextureHeight, rotX, rotY, rotZ, faceLengths);
 	}
 
+	public void addShape3D(float x, float y, float z, Shape2D shape, float depth, int shapeTextureWidth, int shapeTextureHeight, int sideTextureWidth, int sideTextureHeight, int direction, float[] faceLengths, boolean flip)
+	{
+		addShape3D(x, y, z, shape, depth, shapeTextureWidth, shapeTextureHeight, sideTextureWidth, sideTextureHeight, direction, faceLengths);
+		this.doMirror(false, true, false);
+	}
+
 	/**
 	 * Creates a shape from a 2D vector shape.
 	 *

@@ -8,7 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.common.items.ItemFunctionalCircuit;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
 
 /**
  * Created by Pabilo8 on 30-06-2019.
@@ -44,7 +44,7 @@ public class ContainerArithmeticLogicMachineStorage extends ContainerIEBase
 		@Override
 		public boolean isItemValid(ItemStack stack)
 		{
-			return stack.getItem() instanceof ItemFunctionalCircuit;
+			return stack.getItem() instanceof ItemIIFunctionalCircuit;
 		}
 	}
 }

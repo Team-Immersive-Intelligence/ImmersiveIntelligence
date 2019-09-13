@@ -8,7 +8,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
@@ -21,11 +20,11 @@ import java.util.List;
 /**
  * Created by Pabilo8 on 25-06-2019.
  */
-public class ItemFunctionalCircuit extends ItemIIBase implements IDataStorageItem
+public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageItem
 {
-	public ItemFunctionalCircuit()
+	public ItemIIFunctionalCircuit()
 	{
-		super("circuit_functional", 1, "arithmetic", "advanced_arithmetic", "logic", "comparator", "advanced_logic", "text", "conditional");
+		super("circuit_functional", 1, "arithmetic", "advanced_arithmetic", "logic", "comparator", "advanced_logic", "text", "conditional", "itemstack");
 	}
 
 	@Override
@@ -122,8 +121,8 @@ public class ItemFunctionalCircuit extends ItemIIBase implements IDataStorageIte
 			case 5:
 			{
 				ops.add("join");
-				ops.add("filter");
-				ops.add("format");
+				//ops.add("filter");
+				//ops.add("format");
 			}
 			break;
 			//Conditional Constructor
@@ -135,13 +134,25 @@ public class ItemFunctionalCircuit extends ItemIIBase implements IDataStorageIte
 				ops.add("construct_string");
 			}
 			break;
+			//ItemStack
+			case 7:
+			{
+				ops.add("get_quantity");
+				ops.add("set_quantity");
+				ops.add("get_durability");
+				ops.add("set_durability");
+				ops.add("get_nbt");
+				ops.add("set_nbt");
+				ops.add("can_stack_with");
+				ops.add("matches_oredict");
+			}
+			break;
 		}
 		return ops;
 	}
 
 	public String getTESRRenderTexture(ItemStack stack)
 	{
-		ImmersiveIntelligence.logger.info("otak");
 		switch(stack.getMetadata())
 		{
 			case 0:
@@ -156,6 +167,10 @@ public class ItemFunctionalCircuit extends ItemIIBase implements IDataStorageIte
 				return "advanced_circuits";
 			case 5:
 				return "electronic_circuits";
+			case 6:
+				return "electronic_circuits";
+			case 7:
+				return "advanced_circuits";
 		}
 		return "";
 	}

@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartContainer;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.player.EntityPlayer;
@@ -128,7 +127,6 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 		this.isDead = true;
 	}
 
-	@Override
 	public ItemStack getBlockForPickup()
 	{
 		Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
@@ -161,12 +159,13 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 		NBTTagCompound nbt2 = new NBTTagCompound();
 		this.writeEntityToNBT(nbt2);
 
+		EntityMinecartEmpty ent = new EntityMinecartEmpty(this.world);
+		ent.setPosition(this.posX, this.posY, this.posZ);
+		ent.setCustomNameTag(this.getCustomNameTag());
+		world.spawnEntity(ent);
+
 		this.setDead();
 
-		EntityMinecart ent = new EntityMinecartEmpty(this.world);
-		ent.readFromNBT(nbt2);
-		world.spawnEntity(ent);
-		ent.readFromNBT(nbt2);
 
 		return drop2;
 	}

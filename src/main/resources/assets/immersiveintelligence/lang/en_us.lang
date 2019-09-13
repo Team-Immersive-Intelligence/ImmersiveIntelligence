@@ -24,10 +24,32 @@ item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum 
 item.immersiveintelligence.material.punchtape_empty.name=Empty Punchtape
 item.immersiveintelligence.punchtape.name=Punchtape
 
+item.immersiveintelligence.assembly_scheme.name=Assembly Scheme
+
 item.immersiveintelligence.material.metal_ingot_platinum.name=Platinum Ingot
 item.immersiveintelligence.material.metal_dust_platinum.name=Platinum Grit
 item.immersiveintelligence.material.metal_plate_platinum.name=Platinum Plate
 item.immersiveintelligence.material.metal_nugget_platinum.name=Platinum Nugget
+
+item.immersiveintelligence.material.metal_ingot_zinc.name=Zinc Ingot
+item.immersiveintelligence.material.metal_dust_zinc.name=Zinc Grit
+item.immersiveintelligence.material.metal_plate_zinc.name=Zinc Plate
+item.immersiveintelligence.material.metal_nugget_zinc.name=Zinc Nugget
+
+item.immersiveintelligence.material.metal_ingot_tungsten.name=Tungsten Ingot
+item.immersiveintelligence.material.metal_dust_tungsten.name=Tungsten Grit
+item.immersiveintelligence.material.metal_plate_tungsten.name=Tungsten Plate
+item.immersiveintelligence.material.metal_nugget_tungsten.name=Tungsten Nugget
+
+item.immersiveintelligence.material.metal_ingot_brass.name=Brass Ingot
+item.immersiveintelligence.material.metal_dust_brass.name=Brass Grit
+item.immersiveintelligence.material.metal_plate_brass.name=Brass Plate
+item.immersiveintelligence.material.metal_nugget_brass.name=Brass Nugget
+
+item.immersiveintelligence.material.dust_rdx.name=RDX Dust
+item.immersiveintelligence.material.dust_hmx.name=HMX Dust
+
+item.immersiveintelligence.material.dust_salt.name=Salt Dust
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
@@ -35,6 +57,8 @@ item.immersiveintelligence.circuit_functional.logic.name=Logic Circuit
 item.immersiveintelligence.circuit_functional.comparator.name=Comparator Circuit
 item.immersiveintelligence.circuit_functional.advanced_logic.name=Advanced Logic Circuit
 item.immersiveintelligence.circuit_functional.text.name=Text Processor Circuit
+item.immersiveintelligence.circuit_functional.conditional_construct.name=Conditional Construction Circuit
+item.immersiveintelligence.circuit_functional.itemstack.name=ItemStack Operations Circuit
 
 item.immersiveintelligence.minecart.wooden_crate.name=Minecart with Wooden Crate
 item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforced Crate
@@ -55,11 +79,40 @@ item.immersiveintelligence.printed_page.text.name=Printed Text
 item.immersiveintelligence.printed_page.code.name=Printed Code
 item.immersiveintelligence.printed_page.blueprint.name=Printed Construction Scheme
 
+item.immersiveintelligence.precission_tool.precission_buzzsaw.name=Precission Buzzsaw
+item.immersiveintelligence.precission_tool.precission_drill.name=Precission Drill
+item.immersiveintelligence.precission_tool.precission_inserter.name=Precission Inserter
+item.immersiveintelligence.precission_tool.precission_solderer.name=Precission Solderer
+item.immersiveintelligence.precission_tool.precission_welder.name=Precission Welder
+
+item.immersiveintelligence.precission_tool.precission_welder.name=Precission Welder
+
+//bCal - Block-Caliber (1/16 Block = 1 bCal)
+item.immersiveintelligence.casing_artillery.name=Artillery Shell Casing (8 bCal)
+item.immersiveintelligence.bullet.artillery_8bCal.name=Artillery Shell (8 bCal)
+
+item.immersiveintelligence.bullet.bullet.component.TNT.name=TNT
+item.immersiveintelligence.bullet.bullet.component.RDX.name=RDX
+item.immersiveintelligence.bullet.bullet.component.HMX.name=HMX
+
 //Blocks
 
 tile.immersiveintelligence.ore.platinum.name=Platinum Ore
 tile.immersiveintelligence.sheetmetal.platinum.name=Platinum Sheetmetal
 tile.immersiveintelligence.storage.platinum.name=Platinum Block
+
+tile.immersiveintelligence.ore.zinc.name=Zinc Ore
+tile.immersiveintelligence.sheetmetal.zinc.name=Zinc Sheetmetal
+tile.immersiveintelligence.storage.zinc.name=Zinc Block
+
+tile.immersiveintelligence.ore.tungsten.name=Tungsten Ore
+tile.immersiveintelligence.sheetmetal.tungsten.name=Tungsten Sheetmetal
+tile.immersiveintelligence.storage.tungsten.name=Tungsten Block
+
+tile.immersiveintelligence.ore.salt.name=Salt Ore
+
+tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
+tile.immersiveintelligence.storage.brass.name=Brass Block
 
 tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Electronic Engineering Block
@@ -91,10 +144,10 @@ tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
 
 tile.immersiveintelligence.data_connector.alarm_siren.name=Alarm Siren
 
-tile.immersiveintelligence.data_connector.fluid_inserter.name=Fluid Inserter
-tile.immersiveintelligence.data_connector.advanced_inserter.name=Advanced Inserter
-tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced Fluid Inserter
 tile.immersiveintelligence.data_connector.inserter.name=Item Inserter
+tile.immersiveintelligence.data_connector.advanced_inserter.name=Advanced Inserter
+tile.immersiveintelligence.data_connector.fluid_inserter.name=Fluid Inserter
+tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced Fluid Inserter
 
 //Multiblock names
 
@@ -104,12 +157,13 @@ tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithm
 tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
 tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
 tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Chemical Bath
-tile.immersiveintelligence.metal_multiblock.elecrolyzer.name=Electrolyzer
+tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Electrolyzer
 tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Precission Assembler
 tile.immersiveintelligence.metal_multiblock.persicope.name=Periscope
 tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Artillery Howitzer
 tile.immersiveintelligence.metal_multiblock.missile_silo.name=Missile Silo
 tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Ammunition Factory
+tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Scanning Conveyor
 
 desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
@@ -123,6 +177,7 @@ desc.immersiveengineering.info.multiblock.II:Periscope=Periscope
 desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Artillery Howitzer
 desc.immersiveengineering.info.multiblock.II:MissileSilo=Missile Silo
 desc.immersiveengineering.info.multiblock.II:AmmunitionFactory=Ammunition Factory
+desc.immersiveengineering.info.multiblock.II:ConveyorScanner=Scanning Conveyor
 
 //Fluids
 fluid.ink=Ink
@@ -163,6 +218,19 @@ desc.immersiveintelligence.printed_page.code=A page containing some code written
 desc.immersiveintelligence.printed_page.blueprint=A page containing information on how to build a structure.
 
 
+desc.immersiveintelligence.assembly_scheme.used_to_create=Used to create: %s
+desc.immersiveintelligence.assembly_scheme.items_created=Items Created: %s
+
+desc.immersiveengineering.info.holdControl=§4Hold Control§r
+desc.immersiveengineering.info.holdControlForInfo=§cHold Control for more info§r
+
+
+desc.immersiveintelligence.assembly_scheme.info_hold1=§6Hold Shift§r - Materials Used
+desc.immersiveintelligence.assembly_scheme.info_hold2=§4Hold Control§r - Tools Used
+desc.immersiveintelligence.assembly_scheme.materials=Materials used:
+desc.immersiveintelligence.assembly_scheme.tools=Tools used:
+
+
 desc.immersiveintelligence.storage_module=Storage
 desc.immersiveintelligence.variables_module=Variables
 
@@ -177,6 +245,19 @@ desc.immersiveintelligence.variable_apply=Apply
 desc.immersiveintelligence.variable_value=Value:
 desc.immersiveintelligence.operation=Operation:
 desc.immersiveintelligence.variable=Variable:
+
+//Bullets
+
+desc.immersiveintelligence.bullet_type.shrapnel=Shrapnel
+desc.immersiveintelligence.bullet_type.piercing=Armor Piercing
+desc.immersiveintelligence.bullet_type.explosive=High Explosive
+desc.immersiveintelligence.bullet_type.tracer=Tracer
+desc.immersiveintelligence.bullet_type.flare=Flare
+desc.immersiveintelligence.bullet_type.chemical=Chemical
+desc.immersiveintelligence.bullet_type.special=Special Purpose
+
+desc.immersiveintelligence.bullets.mass=Mass: %s
+desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
 //Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
@@ -221,12 +302,22 @@ datasystem.immersiveintelligence.function.construct_boolean=Conditional Construc
 datasystem.immersiveintelligence.function.construct_integer=Conditional Construct - Integer
 datasystem.immersiveintelligence.function.construct_string=Conditional Construct - String
 
+datasystem.immersiveintelligence.function.get_quantity=Get Quantity
+datasystem.immersiveintelligence.function.set_quantity=Set Quantity
+datasystem.immersiveintelligence.function.get_durability=Get Durability
+datasystem.immersiveintelligence.function.set_durability=Set Durability
+datasystem.immersiveintelligence.function.get_nbt=Get NBT
+datasystem.immersiveintelligence.function.set_nbt=Set NBT
+datasystem.immersiveintelligence.function.can_stack_with=Can Stack With
+datasystem.immersiveintelligence.function.matches_oredict=Matches OreDictionary
+
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
 datasystem.immersiveintelligence.datatype.integer=Integer
 datasystem.immersiveintelligence.datatype.string=String
 datasystem.immersiveintelligence.datatype.expression=Expression
 datasystem.immersiveintelligence.datatype.accessor=Accessor
+datasystem.immersiveintelligence.datatype.itemstack=ItemStack
 
 datasystem.immersiveintelligence.datatype.boolean.true=True
 datasystem.immersiveintelligence.datatype.boolean.false=False

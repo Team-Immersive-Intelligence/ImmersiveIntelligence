@@ -15,7 +15,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -51,8 +50,6 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			frequency = 0;
 			if(nbt.hasKey("frequency"))
 				frequency = nbt.getInteger("frequency");
-
-			ImmersiveIntelligence.logger.info(frequency);
 		}
 	}
 
@@ -249,7 +246,6 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			if(conn!=null)
 			{
 				conn.sendPacket(packet);
-				ImmersiveIntelligence.logger.info(this.getPos()+" - Transmitted data to conns");
 			}
 			return true;
 		}

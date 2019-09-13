@@ -16,11 +16,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.chemicalBath;
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.electrolyzer;
 import static pl.pabilo8.immersiveintelligence.api.Utils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.api.Utils.outputFluidToTank;
 
@@ -29,7 +28,7 @@ import static pl.pabilo8.immersiveintelligence.api.Utils.outputFluidToTank;
  */
 public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntityElectrolyzer, ElectrolyzerRecipe> implements IGuiTile, ISoundTile
 {
-	public FluidTank[] tanks = {new FluidTank(chemicalBath.fluidCapacity), new FluidTank(chemicalBath.fluidCapacity), new FluidTank(chemicalBath.fluidCapacity)};
+	public FluidTank[] tanks = {new FluidTank(electrolyzer.fluidCapacity), new FluidTank(electrolyzer.fluidCapacity), new FluidTank(electrolyzer.fluidCapacity)};
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(6, ItemStack.EMPTY);
 	public int processTime, processTimeMax;
 	public boolean active = false;
@@ -37,7 +36,7 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 
 	public TileEntityElectrolyzer()
 	{
-		super(MultiblockChemicalBath.instance, new int[]{2, 3, 3}, ChemicalBath.energyCapacity, true);
+		super(MultiblockChemicalBath.instance, new int[]{2, 3, 3}, electrolyzer.energyCapacity, true);
 	}
 
 	@Override

@@ -81,6 +81,18 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 			{
 				return new TileEntityElectrolyzer();
 			}
+			case CONVEYOR_SCANNER:
+			{
+				return new TileEntityConveyorScanner();
+			}
+			case PRECISSION_ASSEMBLER:
+			{
+				return new TileEntityPrecissionAssembler();
+			}
+			case ARTILLERY_HOWITZER:
+			{
+				return new TileEntityArtilleryHowitzer();
+			}
 		}
 		return null;
 	}

@@ -24,7 +24,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -32,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.items.ItemFunctionalCircuit;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
@@ -52,6 +51,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	public float doorAngle = 0;
 	public String renderCircuit1 = "", renderCircuit2 = "", renderCircuit3 = "", renderCircuit4 = "";
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+	IItemHandler inventoryHandler = new IEInventoryHandler(4, this, 0, true, true);
 
 	public TileEntityArithmeticLogicMachine()
 	{
@@ -73,16 +73,14 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	public void receiveMessageFromClient(NBTTagCompound message)
 	{
 		super.receiveMessageFromClient(message);
-		ImmersiveIntelligence.logger.info("got it");
 		if(message.hasKey("expressions"))
 		{
-			ImmersiveIntelligence.logger.info("got it twice");
 			NBTTagCompound expressions = message.getCompoundTag("expressions");
 
 			ItemStack stack = inventoryHandler.extractItem(expressions.getInteger("page"), 1, false);
 			DataPacket packet = new DataPacket();
 			packet.fromNBT(expressions.getCompoundTag("list"));
-			((ItemFunctionalCircuit)stack.getItem()).writeDataToItem(packet, stack);
+			((ItemIIFunctionalCircuit)stack.getItem()).writeDataToItem(packet, stack);
 			inventoryHandler.insertItem(expressions.getInteger("page"), stack, false);
 
 		}
@@ -186,7 +184,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return stack.getItem() instanceof ItemFunctionalCircuit;
+		return stack.getItem() instanceof ItemIIFunctionalCircuit;
 	}
 
 	@Override
@@ -244,13 +242,13 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 		if(world.isRemote)
 		{
 			if(slot==0)
-				renderCircuit1 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
+				renderCircuit1 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
 			if(slot==1)
-				renderCircuit2 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
+				renderCircuit2 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
 			if(slot==2)
-				renderCircuit3 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
+				renderCircuit3 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
 			if(slot==3)
-				renderCircuit4 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
+				renderCircuit4 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
 
 		}
 	}
@@ -290,22 +288,22 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			if(!inventoryHandler.getStackInSlot(0).isEmpty())
 			{
 				c1 = true;
-				circuit1 = ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(0).getItem()).getStoredData(inventoryHandler.getStackInSlot(0));
+				circuit1 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(0).getItem()).getStoredData(inventoryHandler.getStackInSlot(0));
 			}
 			if(!inventoryHandler.getStackInSlot(1).isEmpty())
 			{
 				c2 = true;
-				circuit2 = ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(1).getItem()).getStoredData(inventoryHandler.getStackInSlot(1));
+				circuit2 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(1).getItem()).getStoredData(inventoryHandler.getStackInSlot(1));
 			}
 			if(!inventoryHandler.getStackInSlot(2).isEmpty())
 			{
 				c3 = true;
-				circuit3 = ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(2).getItem()).getStoredData(inventoryHandler.getStackInSlot(2));
+				circuit3 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(2).getItem()).getStoredData(inventoryHandler.getStackInSlot(2));
 			}
 			if(!inventoryHandler.getStackInSlot(3).isEmpty())
 			{
 				c4 = true;
-				circuit4 = ((ItemFunctionalCircuit)inventoryHandler.getStackInSlot(3).getItem()).getStoredData(inventoryHandler.getStackInSlot(3));
+				circuit4 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(3).getItem()).getStoredData(inventoryHandler.getStackInSlot(3));
 			}
 
 
@@ -313,14 +311,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			{
 				for(char c : DataPacket.varCharacters)
 				{
-					if(packet.variables.containsKey(c))
-					{
-						IDataType type = packet.getPacketVariable(c);
+					IDataType type = packet.getPacketVariable(c);
 
-						if(circuit1.variables.containsKey(c))
-						{
-							packet.setVariable(c, ((DataPacketTypeExpression)circuit1.getPacketVariable(c)).getValue(packet));
-						}
+					if(circuit1.variables.containsKey(c))
+					{
+						packet.setVariable(c, ((DataPacketTypeExpression)circuit1.getPacketVariable(c)).getValue(packet));
 					}
 				}
 			}
@@ -329,14 +324,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			{
 				for(char c : DataPacket.varCharacters)
 				{
-					if(packet.variables.containsKey(c))
-					{
-						IDataType type = packet.getPacketVariable(c);
+					IDataType type = packet.getPacketVariable(c);
 
-						if(circuit2.variables.containsKey(c))
-						{
-							packet.setVariable(c, ((DataPacketTypeExpression)circuit2.getPacketVariable(c)).getValue(packet));
-						}
+					if(circuit2.variables.containsKey(c))
+					{
+						packet.setVariable(c, ((DataPacketTypeExpression)circuit2.getPacketVariable(c)).getValue(packet));
 					}
 				}
 				energyStorage.extractEnergy(arithmeticLogicMachine.energyUsage, false);
@@ -346,14 +338,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			{
 				for(char c : DataPacket.varCharacters)
 				{
-					if(packet.variables.containsKey(c))
-					{
-						IDataType type = packet.getPacketVariable(c);
+					IDataType type = packet.getPacketVariable(c);
 
-						if(circuit3.variables.containsKey(c))
-						{
-							packet.setVariable(c, ((DataPacketTypeExpression)circuit3.getPacketVariable(c)).getValue(packet));
-						}
+					if(circuit3.variables.containsKey(c))
+					{
+						packet.setVariable(c, ((DataPacketTypeExpression)circuit3.getPacketVariable(c)).getValue(packet));
 					}
 				}
 				energyStorage.extractEnergy(arithmeticLogicMachine.energyUsage, false);
@@ -363,14 +352,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			{
 				for(char c : DataPacket.varCharacters)
 				{
-					if(packet.variables.containsKey(c))
-					{
-						IDataType type = packet.getPacketVariable(c);
+					IDataType type = packet.getPacketVariable(c);
 
-						if(circuit4.variables.containsKey(c))
-						{
-							packet.setVariable(c, ((DataPacketTypeExpression)circuit4.getPacketVariable(c)).getValue(packet));
-						}
+					if(circuit4.variables.containsKey(c))
+					{
+						packet.setVariable(c, ((DataPacketTypeExpression)circuit4.getPacketVariable(c)).getValue(packet));
 					}
 				}
 				energyStorage.extractEnergy(arithmeticLogicMachine.energyUsage, false);
@@ -434,8 +420,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 		return super.hasCapability(capability, facing);
 	}
 
-	IItemHandler inventoryHandler = new IEInventoryHandler(4, this, 0, true, true);
-
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
@@ -462,7 +446,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		ImmersiveIntelligence.logger.info(state);
 		if(part==0)
 			isDoorOpened = state;
 	}
