@@ -13,7 +13,7 @@ The mod authors, the developers:
   - [Curseforge](https://www.curseforge.com/members/pabilo8/), 
   - [Twitter](https://twitter.com/PablosferaGames), 
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
-- @Choroman - Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
+- [@Choroman](https://github.com/Choroman) - Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
   - [Curseforge](https://www.curseforge.com/members/choroman1/)
   
 Proudly powered by Turbo Model Thingy (TMT):
