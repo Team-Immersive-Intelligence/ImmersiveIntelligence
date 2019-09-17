@@ -643,13 +643,13 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		{
 			case WEST:
 			{
-				GlStateManager.translate(2f, 0f, 4f);
+				GlStateManager.translate(-2f, 0f, 12f);
 			}
 			break;
 			case EAST:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-3f, 0f, 1f);
+				GlStateManager.translate(-7f, 0f, 5f);
 
 			}
 			break;
@@ -663,7 +663,39 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 			case SOUTH:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-2f, 0f, 5f);
+				GlStateManager.translate(-8f, 0f, 11f);
+			}
+			break;
+		}
+	}
+
+	public void getModelCounterRotation(EnumFacing facing)
+	{
+		switch(facing)
+		{
+			case WEST:
+			{
+
+			}
+			break;
+			case EAST:
+			{
+				GlStateManager.rotate(-180F, 0F, 1F, 0F);
+				GlStateManager.translate(-9f, 0f, 9f);
+
+			}
+			break;
+			case NORTH:
+			{
+
+				GlStateManager.rotate(-270F, 0F, 1F, 0F);
+				GlStateManager.translate(0f, 0f, 9f);
+			}
+			break;
+			case SOUTH:
+			{
+				GlStateManager.rotate(-90F, 0F, 1F, 0F);
+				GlStateManager.translate(-9f, 0f, 0f);
 			}
 			break;
 		}

@@ -6,6 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -157,6 +159,25 @@ public class Utils
 			}
 		}
 		return false;
+	}
+
+
+	/**
+	 * @param offset Length
+	 * @param yaw    Yaw angle in radians
+	 * @param pitch  Pitch angle in radians
+	 * @return Transformed Position
+	 */
+	public static Vec3d offsetPosDirection(float offset, double yaw, double pitch)
+	{
+		double yy = (MathHelper.sin((float)pitch)*offset);
+		double true_offset = (MathHelper.cos((float)pitch)*offset);
+
+		double xx = (MathHelper.sin((float)yaw)*true_offset);
+		double zz = (MathHelper.cos((float)yaw)*true_offset);
+
+		Vec3d vec = new Vec3d(xx, yy, zz);
+		return vec;
 	}
 
 }

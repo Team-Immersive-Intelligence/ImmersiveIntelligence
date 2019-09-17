@@ -24,6 +24,9 @@ item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum 
 item.immersiveintelligence.material.punchtape_empty.name=Empty Punchtape
 item.immersiveintelligence.punchtape.name=Punchtape
 
+item.immersiveintelligence.binoculars.binoculars.name=Binoculars
+item.immersiveintelligence.binoculars.infrared_binoculars.name=Infrared Binoculars
+
 item.immersiveintelligence.assembly_scheme.name=Assembly Scheme
 
 item.immersiveintelligence.material.metal_ingot_platinum.name=Platinum Ingot
@@ -48,6 +51,10 @@ item.immersiveintelligence.material.metal_nugget_brass.name=Brass Nugget
 
 item.immersiveintelligence.material.dust_rdx.name=RDX Dust
 item.immersiveintelligence.material.dust_hmx.name=HMX Dust
+
+item.immersiveintelligence.material.bullet_core_steel.name=Steel Bullet Core
+item.immersiveintelligence.material.bullet_core_brass.name=Brass Bullet Core
+item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Core
 
 item.immersiveintelligence.material.dust_salt.name=Salt Dust
 
@@ -91,9 +98,13 @@ item.immersiveintelligence.precission_tool.precission_welder.name=Precission Wel
 item.immersiveintelligence.casing_artillery.name=Artillery Shell Casing (8 bCal)
 item.immersiveintelligence.bullet.artillery_8bCal.name=Artillery Shell (8 bCal)
 
-item.immersiveintelligence.bullet.bullet.component.TNT.name=TNT
-item.immersiveintelligence.bullet.bullet.component.RDX.name=RDX
-item.immersiveintelligence.bullet.bullet.component.HMX.name=HMX
+item.immersiveintelligence.bullet.component.TNT.name=TNT
+item.immersiveintelligence.bullet.component.RDX.name=RDX
+item.immersiveintelligence.bullet.component.HMX.name=HMX
+
+item.immersiveintelligence.bullet.component.CoreSteel.name=Steel Core
+item.immersiveintelligence.bullet.component.CoreBrass.name=Brass Core
+item.immersiveintelligence.bullet.component.CoreTungsten.name=Tungsten Core
 
 //Blocks
 
@@ -251,11 +262,13 @@ desc.immersiveintelligence.variable=Variable:
 desc.immersiveintelligence.bullet_type.shrapnel=Shrapnel
 desc.immersiveintelligence.bullet_type.piercing=Armor Piercing
 desc.immersiveintelligence.bullet_type.explosive=High Explosive
+desc.immersiveintelligence.bullet_type.incendiary=Incendiary
 desc.immersiveintelligence.bullet_type.tracer=Tracer
 desc.immersiveintelligence.bullet_type.flare=Flare
 desc.immersiveintelligence.bullet_type.chemical=Chemical
 desc.immersiveintelligence.bullet_type.special=Special Purpose
 
+desc.immersiveintelligence.bullets.core=Fitted with %s
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 

@@ -28,7 +28,7 @@ public class BulletComponentTNT implements IBulletComponent
 	@Override
 	public float getDensity()
 	{
-		return 1;
+		return 1f;
 	}
 
 	@Override

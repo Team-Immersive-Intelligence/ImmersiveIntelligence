@@ -22,7 +22,7 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.precissi
  */
 public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecissionAssembler>
 {
-	//Tool Models (if you want to add custom tools from your mod, you have to init them in you own class)
+	//Tool Models (if you want to add custom tools from your mod, you have to init them in your own class)
 	public static ModelPrecissionInserter modelInserter = new ModelPrecissionInserter();
 	public static ModelPrecissionDrill modelDrill = new ModelPrecissionDrill();
 	public static ModelPrecissionBuzzsaw modelBuzzsaw = new ModelPrecissionBuzzsaw();
@@ -262,25 +262,25 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 				GlStateManager.pushMatrix();
 				GlStateManager.scale(1.25f, 1.25f, 1.25f);
 				if(te.processTime < te.processTimeMax-precissionAssembler.hatchTime)
-					Minecraft.getMinecraft().getRenderItem().renderItem(te.inventory.get(4), TransformType.GROUND);
+					renderItem.renderItem(te.inventory.get(4), TransformType.GROUND);
 				else
-					Minecraft.getMinecraft().getRenderItem().renderItem(te.effect, TransformType.GROUND);
+					renderItem.renderItem(te.effect, TransformType.GROUND);
 				GlStateManager.popMatrix();
 
 				GlStateManager.translate(-.385f, -0.3125f, 0);
 
 				if(!te.inventory.get(5).isEmpty()&&te.stack1Visible)
-					Minecraft.getMinecraft().getRenderItem().renderItem(te.inventory.get(5), TransformType.GROUND);
+					renderItem.renderItem(te.inventory.get(5), TransformType.GROUND);
 
 				GlStateManager.translate(0, .25f, 0);
 
 				if(!te.inventory.get(6).isEmpty()&&te.stack2Visible)
-					Minecraft.getMinecraft().getRenderItem().renderItem(te.inventory.get(6), TransformType.GROUND);
+					renderItem.renderItem(te.inventory.get(6), TransformType.GROUND);
 
 				GlStateManager.translate(0, .25f, 0);
 
 				if(!te.inventory.get(7).isEmpty()&&te.stack3Visible)
-					Minecraft.getMinecraft().getRenderItem().renderItem(te.inventory.get(7), TransformType.GROUND);
+					renderItem.renderItem(te.inventory.get(7), TransformType.GROUND);
 
 			}
 

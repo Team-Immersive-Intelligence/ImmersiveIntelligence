@@ -11,30 +11,31 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
 /**
  * Created by Pabilo8 on 30-08-2019.
  */
-public class BulletComponentRDX implements IBulletComponent
+public class BulletComponentWhitePhosphorus implements IBulletComponent
 {
 	@Override
 	public String getName()
 	{
-		return "RDX";
+		return "white_phosphorus";
 	}
 
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("materialHexogen");
+		return new IngredientStack("dustWhitePhosphorus");
 	}
 
 	@Override
 	public float getDensity()
 	{
-		return 1.25f;
+		return 1f;
 	}
 
 	@Override
 	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
 	{
-		world.createExplosion(bullet, pos.getX(), pos.getY(), pos.getZ(), amount*16f, true);
+		//TODO: White Phosphorus
+		//world.createExplosion(bullet, pos.getX(), pos.getY(), pos.getZ(), amount*8f, true);
 	}
 
 	@Override
@@ -52,6 +53,6 @@ public class BulletComponentRDX implements IBulletComponent
 	@Override
 	public EnumComponentRole getRole()
 	{
-		return EnumComponentRole.EXPLOSIVE;
+		return EnumComponentRole.INCENDIARY;
 	}
 }

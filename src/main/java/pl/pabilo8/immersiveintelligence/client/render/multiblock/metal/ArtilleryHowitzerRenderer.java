@@ -58,9 +58,9 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 			ClientUtils.bindTexture("textures/atlas/blocks.png");
 			GlStateManager.translate(3f, 0f, -9f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing.getOpposite());
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
 			GlStateManager.translate(0f, 0f, 1f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing.getOpposite());
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
 			GlStateManager.rotate(180, 0, 1, 0);
 			GlStateManager.translate(-1f, 0f, -0.125f);
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.DOWN);
@@ -77,9 +77,9 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 			ClientUtils.bindTexture("textures/atlas/blocks.png");
 			GlStateManager.translate(5f, 0f, -9f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing);
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
 			GlStateManager.translate(0f, 0f, 1f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing);
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
 
 			GlStateManager.translate(0f, 0f, -0.875f);
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.UP);
@@ -123,9 +123,11 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 			GlStateManager.popMatrix();
 
+			model.getModelCounterRotation(te.facing);
+
 			GlStateManager.translate(72F/16f, platform_height, -72F/16f);
 
-			GlStateManager.rotate(-te.turretYaw, 0f, 1f, 0f);
+			GlStateManager.rotate(-(te.turretYaw+90), 0f, 1f, 0f);
 
 			for(ModelRendererTurbo mod : model.cannon_platform)
 				mod.render(0.0625f);

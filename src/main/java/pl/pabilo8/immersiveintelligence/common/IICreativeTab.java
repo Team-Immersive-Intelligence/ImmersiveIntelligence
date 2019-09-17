@@ -78,8 +78,8 @@ public class IICreativeTab extends CreativeTabs
 
 	public void addExampleBullets(NonNullList list)
 	{
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "TNT", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "RDX", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "HMX", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "TNT", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "RDX", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "HMX", "", 1f));
 	}
 }

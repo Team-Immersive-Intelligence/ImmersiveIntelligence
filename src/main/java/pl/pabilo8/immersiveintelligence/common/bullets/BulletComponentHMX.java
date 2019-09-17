@@ -28,7 +28,7 @@ public class BulletComponentHMX implements IBulletComponent
 	@Override
 	public float getDensity()
 	{
-		return 1;
+		return 1.75f;
 	}
 
 	@Override

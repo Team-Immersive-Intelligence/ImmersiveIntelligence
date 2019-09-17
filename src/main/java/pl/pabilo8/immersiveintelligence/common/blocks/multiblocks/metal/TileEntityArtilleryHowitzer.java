@@ -9,10 +9,12 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.entities.EntityRevolvershot;
+import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,8 +22,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -317,20 +323,31 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 						{
 							ImmersiveIntelligence.logger.info("Firing!");
 
+							double true_angle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
+							double true_angle2 = Math.toRadians(-(-90-turretPitch));
+
+							Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(3f, true_angle, true_angle2);
+							world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, 0, 0, 0);
+
 							if(!world.isRemote)
 							{
 								//TODO:Bullets!
+								//EntityTippedArrow a = new EntityTippedArrow(world,getGunPosition().x+gun_end.x,getGunPosition().y+gun_end.y,getGunPosition().z+gun_end.z);
+								EntityTNTPrimed a = new EntityTNTPrimed(world, getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, FakePlayerUtil.getFakePlayer((WorldServer)world));
+								//blocks per tick
+								float distance = 8f;
+								a.motionX = distance*(gun_end.x/3f);
+								a.motionY = distance*(gun_end.y/3f);
+								a.motionZ = distance*(gun_end.z/3f);
+								a.setFuse(2*(int)Math.round((a.motionX*20f)+(a.motionY*20f)+(a.motionZ*20f)));
+								a.setGlowing(true);
+								a.
+										world.spawnEntity(a);
+								a.rotationPitch = (float)-true_angle2;
+								a.rotationYaw = 45f;
+
 							}
 
-							double true_angle = Math.toRadians(turretYaw > 180?360f-turretYaw: turretYaw);
-							double true_angle2 = Math.toRadians(turretPitch > 180?360f-turretPitch: turretPitch);
-
-							double offset = 2.5d;
-							double gun_x = (MathHelper.cos((float)true_angle/180.0F*(float)Math.PI)*offset);
-							double gun_y = (MathHelper.cos((float)true_angle2/180.0F*(float)Math.PI/2f)*offset);
-							double gun_z = (MathHelper.sin((float)true_angle/180.0F*(float)Math.PI)*offset);
-
-							world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, getGunPosition().x+gun_x, getGunPosition().y+gun_y, getGunPosition().z+gun_z, 0, 0, 0);
 
 						}
 
@@ -354,7 +371,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 						animationTime += 1;
 					}
 
-					if(world.getTotalWorldTime()%8==0)
+					if(world.getTotalWorldTime()%40==0)
 						update = true;
 				}
 
@@ -575,7 +592,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 					//TODO:Remove
 					case "cheat":
 					{
-						master().bullet = ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "RDX", "", 1f);
+						master().bullet = ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "RDX", "", 1f);
 					}
 					break;
 				}
@@ -593,7 +610,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 				if(packet.getPacketVariable('p') instanceof DataPacketTypeInteger)
 				{
-					master().plannedPitch = -Math.abs((((DataPacketTypeInteger)packet.getPacketVariable('p')).value)%360);
+					master().plannedPitch = Math.min(Math.max(-Math.abs((((DataPacketTypeInteger)packet.getPacketVariable('p')).value)%360), -105), 0);
 				}
 			}
 
@@ -693,6 +710,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	protected Vec3d getGunPosition()
 	{
 		BlockPos shoot_pos = getBlockPosForPos(526).offset(EnumFacing.UP, 1);
-		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+.5, shoot_pos.getZ()+.5);
+		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+1, shoot_pos.getZ()+.5);
 	}
 }

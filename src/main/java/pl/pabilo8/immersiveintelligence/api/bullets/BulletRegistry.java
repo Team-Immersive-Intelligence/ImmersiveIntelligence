@@ -12,14 +12,25 @@ import java.util.Locale;
 public class BulletRegistry
 {
 	public static BulletRegistry INSTANCE = new BulletRegistry();
-	HashMap<String, IBulletComponent> registeredComponents = new HashMap<>();
-	HashMap<String, IBulletCasingType> registeredCasings = new HashMap<>();
+	public HashMap<String, IBulletComponent> registeredComponents = new HashMap<>();
+	public HashMap<String, IBulletCoreType> registeredBulletCores = new HashMap<>();
+	public HashMap<String, IBulletCasingType> registeredCasings = new HashMap<>();
 
 	public boolean registerComponent(IBulletComponent component, String name)
 	{
 		if(!registeredComponents.containsKey(name))
 		{
 			registeredComponents.put(name, component);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean registerBulletCore(IBulletCoreType core, String name)
+	{
+		if(!registeredBulletCores.containsKey(name))
+		{
+			registeredBulletCores.put(name, core);
 			return true;
 		}
 		return false;
@@ -47,11 +58,18 @@ public class BulletRegistry
 		return registeredCasings.get(name);
 	}
 
+	@Nullable
+	public IBulletCoreType getCore(String name)
+	{
+		return registeredBulletCores.get(name);
+	}
+
 	public static enum EnumComponentRole implements IStringSerializable
 	{
 		SHRAPNEL,
 		PIERCING,
 		EXPLOSIVE,
+		INCENDIARY,
 		TRACER,
 		FLARE,
 		CHEMICAL,

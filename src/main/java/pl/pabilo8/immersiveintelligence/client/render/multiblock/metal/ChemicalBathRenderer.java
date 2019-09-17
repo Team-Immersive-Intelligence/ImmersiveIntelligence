@@ -184,9 +184,7 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 
 			GlStateManager.pushMatrix();
 			ClientUtils.bindTexture("immersiveengineering:textures/blocks/wire.png");
-			//0x967e6d -
-			//FIXME: color is not working
-			GlStateManager.color(150, 126, 109);
+			GlStateManager.color(150f/255f, 126f/255f, 109f/255f);
 			GlStateManager.translate(1.3125f, 1.625f, -0.375f);
 			GlStateManager.rotate(180, 0f, 0f, 1f);
 			GlStateManager.translate(-0.0625f, 0f, 0f);
@@ -196,6 +194,8 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 			GlStateManager.translate(-0.03125f, 0f, 0.03125f);
 			ClientUtils.drawTexturedRect(0, 0, 0.0625f, 0.0625f+(0.6875f*pickUp), 0, 0f, 4/16f, 8/16f);
 			ClientUtils.drawTexturedRect(0.0625f, 0, -0.0625f, 0.0625f+(0.6875f*pickUp), 0, 0f, 4/16f, 8/16f);
+
+			GlStateManager.color(1f, 1f, 1f);
 
 			GlStateManager.popMatrix();
 			ClientUtils.bindTexture(texture);

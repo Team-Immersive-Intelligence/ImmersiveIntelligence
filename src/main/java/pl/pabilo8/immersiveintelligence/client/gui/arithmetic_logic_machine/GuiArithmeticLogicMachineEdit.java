@@ -471,8 +471,6 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 
 		tile = (TileEntityArithmeticLogicMachine)tile.getWorld().getTileEntity(tile.getPos());
 
-		//TODO: Since DataOperator is an abstract class, i should move this method to utils class
-
 		if(this.mainType==null||!Objects.equals(this.mainType.getName(), "expression"))
 		{
 			this.mainType = list.getPacketVariable(expressionToEdit);

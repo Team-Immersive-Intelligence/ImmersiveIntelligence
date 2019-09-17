@@ -42,6 +42,7 @@ public class ItemIIMaterial extends ItemIIBase
 				"punchtape_empty",
 				"dust_rdx",
 				"dust_hmx",
+				"white_phosphorous",
 				"dust_salt"
 		);
 	}

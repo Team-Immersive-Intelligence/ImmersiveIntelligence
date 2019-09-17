@@ -1,21 +1,27 @@
 package pl.pabilo8.immersiveintelligence.client;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.IECustomStateMapper;
+import blusunrize.immersiveengineering.client.IEDefaultColourHandlers;
+import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
+import blusunrize.immersiveengineering.client.models.ModelItemDynamicOverride;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
+import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -34,6 +40,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -46,6 +53,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
@@ -81,6 +90,7 @@ import pl.pabilo8.immersiveintelligence.common.util.SkyCrateSound;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by Pabilo8 on 2019-05-07.
@@ -305,6 +315,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(EvenMoreImmersiveModelRegistry.instance);
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
 		IEOBJLoader.instance.addDomain(ImmersiveIntelligence.MODID);
 		//None of your trickery is present here...
@@ -313,6 +324,27 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
 
+		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(item_bullet, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
+		{
+			@Override
+			public IBakedModel createBakedModel(IBakedModel existingModel)
+			{
+				return new ModelItemDynamicOverride(existingModel, null);
+			}
+		}, ImmersiveIntelligence.MODID);
+
+	}
+
+	@SubscribeEvent
+	public void textureStichPre(TextureStitchEvent.Pre event)
+	{
+		for(Map.Entry<String, IBulletCasingType> s : BulletRegistry.INSTANCE.registeredCasings.entrySet())
+		{
+			ImmersiveIntelligence.logger.info("registering sprite for bullet casing: "+s.getKey());
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_main");
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_core");
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_paint");
+		}
 	}
 
 	@Override
@@ -335,9 +367,13 @@ public class ClientProxy extends CommonProxy
 		TileEntityFluidInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityFluidInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
-		//TODO: Inserter
+		//TODO:Advanced Fluid Inserter
 		//TileEntityInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		//TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
+
+		for(Item item : items)
+			if(item instanceof IColouredItem&&((IColouredItem)item).hasCustomItemColours())
+				ClientUtils.mc().getItemColors().registerItemColorHandler(IEDefaultColourHandlers.INSTANCE, item);
 	}
 
 	@Override

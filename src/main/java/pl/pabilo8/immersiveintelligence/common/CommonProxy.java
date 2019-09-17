@@ -55,9 +55,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEnt
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
-import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentHMX;
-import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentRDX;
-import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentTNT;
+import pl.pabilo8.immersiveintelligence.common.bullets.*;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.*;
@@ -86,26 +84,25 @@ public class CommonProxy implements IGuiHandler
 	public static final String info_key = "info."+ImmersiveIntelligence.MODID+".";
 	public static final String data_key = "datasystem."+ImmersiveIntelligence.MODID+".";
 
-	public static final List<Item> creativetab_items = new ArrayList<>();
+	public static ItemIIMaterial item_material = new ItemIIMaterial();
+	public static ItemIIFunctionalCircuit item_circuit = new ItemIIFunctionalCircuit();
 
-	public static ItemIIMaterial item_material;
-	public static ItemIIFunctionalCircuit item_circuit;
+	public static ItemIILighter item_lighter = new ItemIILighter();
+	public static ItemIIElectricHammer item_hammer = new ItemIIElectricHammer();
+	public static ItemIIElectricWirecutter item_wirecutter = new ItemIIElectricWirecutter();
+	public static ItemIIDataWireCoil item_data_wire_coil = new ItemIIDataWireCoil();
+	public static ItemIIMinecart item_minecart = new ItemIIMinecart();
+	public static ItemIIRadioConfigurator item_radio_configurator = new ItemIIRadioConfigurator();
+	public static ItemIIMeasuringCup item_measuring_cup = new ItemIIMeasuringCup();
+	public static ItemIIPrecissionTool item_precission_tool = new ItemIIPrecissionTool();
+	public static ItemIIAssemblyScheme item_assembly_scheme = new ItemIIAssemblyScheme();
+	public static ItemIIBinoculars item_binoculars = new ItemIIBinoculars();
 
-	public static ItemIILighter item_lighter;
-	public static ItemIIElectricHammer item_hammer;
-	public static ItemIIElectricWirecutter item_wirecutter;
-	public static ItemIIDataWireCoil item_data_wire_coil;
-	public static ItemIIMinecart item_minecart;
-	public static ItemIIRadioConfigurator item_radio_configurator;
-	public static ItemIIMeasuringCup item_measuring_cup;
-	public static ItemIIPrecissionTool item_precission_tool;
-	public static ItemIIAssemblyScheme item_assembly_scheme;
+	public static ItemIIBullet item_bullet = new ItemIIBullet();
+	public static ItemIICasingArtillery item_casing_artillery = new ItemIICasingArtillery();
 
-	public static ItemIIBullet item_bullet;
-	public static ItemIICasingArtillery item_casing_artillery;
-
-	public static ItemIIPunchtape item_punchtape;
-	public static ItemIIPrintedPage item_printed_page;
+	public static ItemIIPunchtape item_punchtape = new ItemIIPunchtape();
+	public static ItemIIPrintedPage item_printed_page = new ItemIIPrintedPage();
 
 	public static BlockIIBase<IIBlockTypes_Ore> block_ore;
 	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal, block_metal_storage;
@@ -157,10 +154,10 @@ public class CommonProxy implements IGuiHandler
 				PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false).setOpaque(true)
 				.setHardness(4.0F).setResistance(5.0F);
 		block_sheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
-				PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false).setOpaque(true)
+				PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 				.setHardness(4.0F).setResistance(6.0F);
 		block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
-				PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false).setOpaque(true)
+				PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 				.setHardness(4.0F).setResistance(5.0F);
 
 		block_metal_decoration = (BlockIIBase)new BlockIIBase("metal_decoration", Material.IRON,
@@ -202,28 +199,6 @@ public class CommonProxy implements IGuiHandler
 	public static void registerItems(RegistryEvent.Register<Item> event)
 	{
 		ImmersiveIntelligence.logger.info("Registering Items");
-
-		item_material = new ItemIIMaterial();
-		item_circuit = new ItemIIFunctionalCircuit();
-
-		item_data_wire_coil = new ItemIIDataWireCoil();
-
-		item_minecart = new ItemIIMinecart();
-
-		item_hammer = new ItemIIElectricHammer();
-		item_wirecutter = new ItemIIElectricWirecutter();
-		item_lighter = new ItemIILighter();
-		item_radio_configurator = new ItemIIRadioConfigurator();
-		item_measuring_cup = new ItemIIMeasuringCup();
-
-		item_punchtape = new ItemIIPunchtape();
-		item_printed_page = new ItemIIPrintedPage();
-
-		item_precission_tool = new ItemIIPrecissionTool();
-		item_assembly_scheme = new ItemIIAssemblyScheme();
-
-		item_bullet = new ItemIIBullet();
-		item_casing_artillery = new ItemIICasingArtillery();
 
 		for(Item item : items)
 			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getUnlocalizedName())));
@@ -358,6 +333,9 @@ public class CommonProxy implements IGuiHandler
 		OreDictionary.registerOre("materialRDX", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_rdx")));
 		OreDictionary.registerOre("materialHMX", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_hmx")));
 
+		OreDictionary.registerOre("dustWhitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorous")));
+		OreDictionary.registerOre("whitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorous")));
+
 		OreDictionary.registerOre("dustSalt", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_salt")));
 		OreDictionary.registerOre("oreSalt", new ItemStack(block_ore, 1, IIBlockTypes_Ore.SALT.getMeta()));
 	}
@@ -390,6 +368,20 @@ public class CommonProxy implements IGuiHandler
 		gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
 		gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
 		gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
+
+		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
+		//Bullets
+
+		BulletRegistry.INSTANCE.registerCasing(this.item_casing_artillery, "artillery_8bCal");
+
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT(), "TNT");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX(), "RDX");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX(), "HMX");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus(), "white_phosphorous");
+
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreSteel(), "CoreSteel");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreTungsten(), "CoreTungsten");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreBrass(), "CoreBrass");
 
 	}
 
@@ -472,15 +464,6 @@ public class CommonProxy implements IGuiHandler
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "bullet"),
 				EntityBullet.class, "bullet", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
-
-
-		//Bullets
-
-		BulletRegistry.INSTANCE.registerCasing(new ItemIICasingArtillery(), "artillery_8bCal");
-
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT(), "TNT");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX(), "RDX");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX(), "HMX");
 
 		//Crafting
 
