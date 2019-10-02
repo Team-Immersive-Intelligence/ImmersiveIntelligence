@@ -9,6 +9,14 @@
  - **Warfare** - weapons of all sorts - machineguns, autocannons, combat drones, howitzers, missiles and much more
  
  - **Intelligence** - espionage - stealth - sabotage - this category contains various devices which will allow you to spy on other players and monitor the world
+ 
+Some GIFs / Screenshots on [Imgur](https://imgur.com/a/pDcBzSL)
+
+Short videos on Youtube:
+
+ - [Circuit Production](https://www.youtube.com/watch?v=jDmpZ4gAknE)
+
+ - [Artillery Howitzer Test](https://youtu.be/o3mt9exEfL0)
 
 The mod authors, the developers:
 - [@Pabilo8](https://github.com/Pabilo8/) - Main Developer, author - the programmer, graphic artist and modeller 
