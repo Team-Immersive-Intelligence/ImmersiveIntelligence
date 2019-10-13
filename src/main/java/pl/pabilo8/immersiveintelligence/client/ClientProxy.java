@@ -63,11 +63,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiA
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
 import pl.pabilo8.immersiveintelligence.client.render.BulletRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.SandbagsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.SmallCrateItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCrateStationRenderer;
@@ -263,6 +262,8 @@ public class ClientProxy extends CommonProxy
 				gui = new GuiMetalCrate(player.inventory, (TileEntityMetalCrate)te);
 			else if(ID==IIGuiList.GUI_AMMUNITION_CRATE&&te instanceof TileEntityAmmunitionCrate)
 				gui = new GuiAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te);
+			else if(ID==IIGuiList.GUI_SMALL_CRATE&&te instanceof TileEntitySmallCrate)
+				gui = new GuiSmallCrate(player.inventory, (TileEntitySmallCrate)te);
 
 			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE&&te instanceof TileEntityDataInputMachine)
 				gui = new GuiDataInputMachineStorage(player.inventory, (TileEntityDataInputMachine)te);
@@ -497,6 +498,10 @@ public class ClientProxy extends CommonProxy
 		//Alarm Siren
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAlarmSiren.class, new AlarmSirenRenderer());
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.ALARM_SIREN.getMeta(), TileEntityAlarmSiren.class);
+
+		//Small Crate
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallCrate.class, new SmallCrateRenderer());
+		Item.getItemFromBlock(block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
 		//Multiblocks
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStationParent.class, new SkyCrateStationRenderer());

@@ -47,5 +47,7 @@ public class IIGuiList
 	public static final int GUI_PERISCOPE = 28;
 	public static final int GUI_AMMUNITION_FACTORY = 29;
 
+	public static final int GUI_SMALL_CRATE = 30;
+
 
 }

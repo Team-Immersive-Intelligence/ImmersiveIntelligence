@@ -12,8 +12,6 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,8 +21,8 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -44,7 +42,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIPrintedPage;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -69,6 +66,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	public MultiFluidTank[] tanks = new MultiFluidTank[]{new MultiFluidTank(8000)};
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 	IItemHandler inventoryHandler = new IEInventoryHandler(4, this, 0, true, true);
+	IItemHandler insertionHandler = new IEInventoryHandler(1, this, 0, true, true);
 
 
 	public TileEntityPrintingPress()
@@ -164,6 +162,17 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			return;
 
 		boolean update = false;
+
+		if(world.getTotalWorldTime()%20==0)
+		{
+			BlockPos pos = getBlockPosForPos(2).offset(facing.getOpposite(), 1);
+			ItemStack output = inventory.get(1);
+			TileEntity inventoryTile = this.world.getTileEntity(pos);
+			if(inventoryTile!=null)
+				output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
+			inventory.set(1, output);
+			update = true;
+		}
 
 
 		if(pagesLeft > 0)
@@ -683,23 +692,22 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return master()!=null;
+		if(pos==27&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return true;
 		return super.hasCapability(capability, facing);
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==27)
 		{
 			TileEntityPrintingPress master = master();
-			if(master==null)
-				return null;
-			return (T)this.inventoryHandler;
+			return (T)master.insertionHandler;
 		}
+
 		return super.getCapability(capability, facing);
 	}
 
@@ -740,30 +748,5 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	public boolean shoudlPlaySound(String sound)
 	{
 		return active;
-	}
-
-	@Override
-	public void onEntityCollision(World world, Entity entity)
-	{
-
-		if(pos==27&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty())
-		{
-			TileEntityPrintingPress master = master();
-			if(master==null)
-				return;
-			ItemStack stack = ((EntityItem)entity).getItem();
-
-
-			if(stack.getItem() instanceof ItemIIPrintedPage&&stack.getMetadata()==0)
-			{
-				//Gib paper plox
-				stack = inventoryHandler.insertItem(0, stack, false);
-
-				((EntityItem)entity).setItem(stack);
-				if(stack.getCount()==0)
-					entity.setDead();
-			}
-
-		}
 	}
 }

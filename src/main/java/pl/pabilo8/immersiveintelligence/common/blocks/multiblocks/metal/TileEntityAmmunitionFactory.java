@@ -49,6 +49,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -536,9 +537,63 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 			if(!world.isRemote&&paintProgress >= ammunitionFactory.paintTime)
 			{
 				ItemStack stack = paintQueue.get(2).copy();
-				ItemNBTHelper.setInt(stack, "colour", paintColour);
 
-				ImmersiveIntelligence.logger.info(name);
+				Color col = new Color(paintColour);
+				int[] amounts = pl.pabilo8.immersiveintelligence.api.Utils.rgbToCmyk(col.getRed(), col.getGreen(), col.getBlue());
+				float c = 0, m = 0, y = 0, k = 0;
+				/*Iterator<FluidStack> iter = tanks[0].fluids.iterator();
+
+				while(iter.hasNext())
+				{
+					FluidStack fs = iter.next();
+					if(fs.getFluid().getName().equals("ink"))
+					{
+						c += fs.amount;
+					}
+					else if(fs.getFluid().getName().equals("ink_cyan"))
+					{
+						m += fs.amount;
+
+					}
+					else if(fs.getFluid().getName().equals("ink_magenta"))
+					{
+						y += fs.amount;
+					}
+					else if(fs.getFluid().getName().equals("ink_yellow"))
+					{
+						k += fs.amount;
+					}
+
+					c = Math.min(c, ammunitionFactory.paintUsage*(amounts[0]/255f));
+					m = Math.min(m, ammunitionFactory.paintUsage*(amounts[1]/255f));
+					y = Math.min(y, ammunitionFactory.paintUsage*(amounts[2]/255f));
+					k = Math.min(k, ammunitionFactory.paintUsage*(amounts[3]/255f));
+
+
+					if(c > 0)
+					{
+						c = tanks[0].drain(FluidRegistry.getFluidStack("ink", Math.round(c)), true).amount;
+					}
+					if(m > 0)
+					{
+						m = tanks[0].drain(FluidRegistry.getFluidStack("ink_cyan", Math.round(m)), true).amount;
+					}
+					if(y > 0)
+					{
+						y = tanks[0].drain(FluidRegistry.getFluidStack("ink_magenta", Math.round(y)), true).amount;
+					}
+					if(k > 0)
+					{
+						k = tanks[0].drain(FluidRegistry.getFluidStack("ink_yellow", Math.round(k)), true).amount;
+					}
+
+				}
+
+				int[] rgb = pl.pabilo8.immersiveintelligence.api.Utils.cmykToRgb(Math.round(c/ammunitionFactory.paintUsage*255f), Math.round(m/ammunitionFactory.paintUsage*255f), Math.round(y/ammunitionFactory.paintUsage*255f), Math.round(k/ammunitionFactory.paintUsage*255f));
+
+				ItemNBTHelper.setInt(stack, "colour", new Color(rgb[0], rgb[1], rgb[2]).getRGB());
+*/
+				ItemNBTHelper.setInt(stack, "colour", paintColour);
 				if(!name.isEmpty())
 				{
 					ImmersiveIntelligence.logger.info("onie");
@@ -551,6 +606,8 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 
 				paintProgress = 0;
 				shouldUpdate = true;
+
+
 			}
 			else
 			{

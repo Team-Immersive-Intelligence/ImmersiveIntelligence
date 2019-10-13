@@ -44,7 +44,6 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
@@ -84,6 +83,7 @@ public class CommonProxy implements IGuiHandler
 	public static final String description_key = "desc."+ImmersiveIntelligence.MODID+".";
 	public static final String info_key = "info."+ImmersiveIntelligence.MODID+".";
 	public static final String data_key = "datasystem."+ImmersiveIntelligence.MODID+".";
+	public static final String block_key = "tile."+ImmersiveIntelligence.MODID+".";
 
 	public static ItemIIMaterial item_material = new ItemIIMaterial();
 	public static ItemIIFunctionalCircuit item_circuit = new ItemIIFunctionalCircuit();
@@ -113,6 +113,7 @@ public class CommonProxy implements IGuiHandler
 
 	public static BlockIIMetalDevice block_metal_device;
 	public static BlockIIDataConnector block_data_connector;
+	public static BlockIISmallCrate block_small_crate;
 
 	public static BlockIIWoodenMultiblock block_wooden_multiblock;
 	public static BlockIIMetalMultiblock block_metal_multiblock;
@@ -171,6 +172,8 @@ public class CommonProxy implements IGuiHandler
 		block_metal_device = new BlockIIMetalDevice();
 
 		block_data_connector = new BlockIIDataConnector();
+
+		block_small_crate = new BlockIISmallCrate();
 
 		block_wooden_multiblock = new BlockIIWoodenMultiblock();
 
@@ -401,6 +404,8 @@ public class CommonProxy implements IGuiHandler
 			return OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 1), stack, true);
 		});
 
+		IEApi.forbiddenInCrates.add((stack) -> stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock() instanceof BlockIISmallCrate);
+
 		ImmersiveIntelligence.logger.info("Adding oregen");
 		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.PLATINUM.getMeta()), "platinum", Ores.ore_platinum);
 		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.ZINC.getMeta()), "zinc", Ores.ore_zinc);
@@ -410,6 +415,7 @@ public class CommonProxy implements IGuiHandler
 		ImmersiveIntelligence.logger.info("Adding TileEntities");
 		registerTile(TileEntityMetalCrate.class);
 		registerTile(TileEntityAmmunitionCrate.class);
+		registerTile(TileEntitySmallCrate.class);
 		registerTile(TileEntityAlarmSiren.class);
 
 		registerTile(TileEntityInserter.class);
@@ -541,7 +547,6 @@ public class CommonProxy implements IGuiHandler
 		//CrusherRecipe.addRecipe(ItemStack(item_material,1,item_material.getMetaBySubname("dust_salt")),new IngredientStack("oreSalt"),3200);
 
 
-
 	}
 
 	public void postInit()
@@ -565,6 +570,8 @@ public class CommonProxy implements IGuiHandler
 				gui = new ContainerMetalCrate(player.inventory, (TileEntityMetalCrate)te);
 			else if(ID==IIGuiList.GUI_AMMUNITION_CRATE&&te instanceof TileEntityAmmunitionCrate)
 				gui = new ContainerAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te);
+			else if(ID==IIGuiList.GUI_SMALL_CRATE&&te instanceof TileEntitySmallCrate)
+				gui = new ContainerSmallCrate(player.inventory, (TileEntitySmallCrate)te);
 
 			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE&&te instanceof TileEntityDataInputMachine)
 				gui = new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te);

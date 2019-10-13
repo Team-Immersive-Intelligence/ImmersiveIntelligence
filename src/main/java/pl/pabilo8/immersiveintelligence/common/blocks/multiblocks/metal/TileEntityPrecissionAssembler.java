@@ -1,10 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -15,11 +17,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
@@ -30,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.precissionAssembler;
@@ -55,6 +62,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	public boolean isDrawer1Opened = false, isDrawer2Opened = false;
 	public float drawer1Angle = 0, drawer2Angle = 0;
 
+	IItemHandler insertionHandler = new IEInventoryHandler(5, this, 4, true, false);
 
 	public TileEntityPrecissionAssembler()
 	{
@@ -202,6 +210,22 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 				beginning = true;
 			}
 		}
+
+		if(world.getTotalWorldTime()%20==0)
+		{
+			BlockPos pos = getBlockPosForPos(5).offset(facing.rotateYCCW(), 1);
+			ItemStack output = inventory.get(8);
+			TileEntity inventoryTile = this.world.getTileEntity(pos);
+			if(inventoryTile!=null)
+				output = Utils.insertStackIntoInventory(inventoryTile, output, facing.rotateY());
+			inventory.set(8, output);
+
+			output = inventory.get(9);
+			if(inventoryTile!=null)
+				output = Utils.insertStackIntoInventory(inventoryTile, output, facing.rotateY());
+			inventory.set(9, output);
+		}
+
 		active = shouldRenderAsActive();
 
 		if(wasActive!=active)
@@ -394,6 +418,16 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 			return stack.getItem() instanceof IPrecissionTool;
 		if(slot==3)
 			return stack.getItem() instanceof ItemIIAssemblyScheme;
+		if(slot >= 4&&slot <= 6)
+		{
+			if(inventory.get(3).getItem() instanceof ItemIIAssemblyScheme)
+			{
+				IngredientStack[] stacks = ImmersiveIntelligence.proxy.item_assembly_scheme.getRecipeForStack(inventory.get(3)).inputs;
+				return stacks.length > slot-4&&stacks[slot-4].matchesItemStack(stack);
+			}
+			else
+				return false;
+		}
 
 		return true;
 	}
@@ -505,5 +539,25 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawer1Opened, 0, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawer2Opened, 1, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
 
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(pos==9&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==9)
+		{
+			TileEntityPrecissionAssembler master = master();
+			return (T)master.insertionHandler;
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

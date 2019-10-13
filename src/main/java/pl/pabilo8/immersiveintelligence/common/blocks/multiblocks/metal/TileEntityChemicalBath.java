@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,15 +13,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.chemicalBath;
@@ -36,6 +41,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	public ItemStack effect;
 	public boolean active = false;
 
+	IItemHandler insertionHandler = new IEInventoryHandler(1, this, 0, true, false);
 
 	public TileEntityChemicalBath()
 	{
@@ -136,6 +142,16 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 			}
 		}
 
+		if(world.getTotalWorldTime()%20==0)
+		{
+			BlockPos pos = getBlockPosForPos(4).offset(facing.getOpposite(), 1);
+			ItemStack output = inventory.get(1);
+			TileEntity inventoryTile = this.world.getTileEntity(pos);
+			if(inventoryTile!=null)
+				output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
+			inventory.set(1, output);
+		}
+
 		if(update||wasActive!=active)
 		{
 			this.markDirty();
@@ -186,7 +202,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public void doProcessOutput(ItemStack output)
 	{
-		BlockPos pos = getPos().offset(facing, 2);
+		BlockPos pos = getBlockPosForPos(4).offset(facing.getOpposite(), 1);
 		TileEntity inventoryTile = this.world.getTileEntity(pos);
 		if(inventoryTile!=null)
 			output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
@@ -340,5 +356,25 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	public boolean shoudlPlaySound(String sound)
 	{
 		return false;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(pos==0&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==this.facing.getOpposite())
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==0)
+		{
+			TileEntityChemicalBath master = master();
+			return (T)master.insertionHandler;
+		}
+
+		return super.getCapability(capability, facing);
 	}
 }

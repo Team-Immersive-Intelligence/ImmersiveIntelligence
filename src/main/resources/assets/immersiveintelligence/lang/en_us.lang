@@ -147,6 +147,13 @@ tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
 tile.immersiveintelligence.metal_device.redstone_output_device.name=Redstone Output Device
 tile.immersiveintelligence.metal_device.redstone_input_device.name=Redstone Input Device
 
+tile.immersiveintelligence.small_crate.wooden_crate_box.name=Small Wooden Crate (Box)
+tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Small Wooden Crate (Cube)
+tile.immersiveintelligence.small_crate.wooden_crate_wide.name=Small Wooden Crate (Wide)
+tile.immersiveintelligence.small_crate.metal_crate_box.name=Small Metal Crate (Box)
+tile.immersiveintelligence.small_crate.metal_crate_cube.name=Small Metal Crate (Cube)
+tile.immersiveintelligence.small_crate.metal_crate_wide.name=Small Metal Crate (Wide)
+
 tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Input Machine - Storage
 tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data Input Machine - Programming
 tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Data Input Machine - Editing a Variable
