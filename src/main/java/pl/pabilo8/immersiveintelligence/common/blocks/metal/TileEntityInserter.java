@@ -243,9 +243,9 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 			energyStorage = message.getInteger("energyStorage");
 
 		if(message.hasKey("outputFacing"))
-			outputFacing = EnumFacing.getFront(message.getInteger("outputFacing"));
+			outputFacing = EnumFacing.byIndex(message.getInteger("outputFacing"));
 		if(message.hasKey("inputFacing"))
-			inputFacing = EnumFacing.getFront(message.getInteger("inputFacing"));
+			inputFacing = EnumFacing.byIndex(message.getInteger("inputFacing"));
 
 		if(message.hasKey("inventory"))
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), 1);
@@ -267,8 +267,8 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 		nextPickProgress = nbt.getInteger("nextPickProgress");
 		nextDirection = nbt.getInteger("nextDirection");
 
-		outputFacing = EnumFacing.getFront(nbt.getInteger("outputFacing"));
-		inputFacing = EnumFacing.getFront(nbt.getInteger("inputFacing"));
+		outputFacing = EnumFacing.byIndex(nbt.getInteger("outputFacing"));
+		inputFacing = EnumFacing.byIndex(nbt.getInteger("inputFacing"));
 		if(nbt.hasKey("secondCable"))
 			secondCable = ApiUtils.getWireTypeFromNBT(nbt, "secondCable");
 		else
@@ -413,10 +413,10 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 			{
 				if(!inventory.get(0).isEmpty())
 				{
-					if(nextDirection!=armDirection&&armDirection!=Math.round(outputFacing.getHorizontalAngle()))
+					if(nextDirection!=armDirection&&armDirection!=Math.round(inputFacing.getHorizontalAngle()))
 					{
 						nextPickProgress = 100;
-						nextDirection = Math.round(outputFacing.getHorizontalAngle());
+						nextDirection = Math.round(inputFacing.getHorizontalAngle());
 					}
 					else
 					{
@@ -435,7 +435,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 									{
 										itemsToTake -= 1;
 										nextPickProgress = 100;
-										nextDirection = Math.round(outputFacing.getHorizontalAngle());
+										nextDirection = Math.round(inputFacing.getHorizontalAngle());
 									}
 									else
 									{
@@ -455,10 +455,10 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 				}
 				else if(world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 				{
-					if(nextDirection!=armDirection&&armDirection!=Math.round(inputFacing.getHorizontalAngle()))
+					if(nextDirection!=armDirection&&armDirection!=Math.round(outputFacing.getHorizontalAngle()))
 					{
 						nextPickProgress = 100;
-						nextDirection = Math.round(inputFacing.getHorizontalAngle());
+						nextDirection = Math.round(outputFacing.getHorizontalAngle());
 					}
 					else
 					{
@@ -477,7 +477,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 									ItemStack stack = cap.extractItem(i, 1, false);
 									insertionHandler.insertItem(0, stack, false);
 									nextPickProgress = 100;
-									nextDirection = Math.round(inputFacing.getHorizontalAngle());
+									nextDirection = Math.round(outputFacing.getHorizontalAngle());
 									energyStorage -= inserter.energyUsage;
 									done = true;
 								}

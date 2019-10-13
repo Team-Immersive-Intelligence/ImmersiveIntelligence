@@ -56,7 +56,7 @@ public class ItemIILighter extends ItemIIBase implements ITool
 		FluidStack fs = FluidUtil.getFluidContained(stack);
 		if(fs!=null)
 		{
-			TextFormatting rarity = fs.getFluid().getRarity()==EnumRarity.COMMON?TextFormatting.GRAY: fs.getFluid().getRarity().rarityColor;
+			TextFormatting rarity = fs.getFluid().getRarity()==EnumRarity.COMMON?TextFormatting.GRAY: fs.getFluid().getRarity().getColor();
 			list.add(rarity+fs.getLocalizedName()+TextFormatting.GRAY+": "+fs.amount+"/"+Tools.lighter_capacity+"mB");
 		}
 		else

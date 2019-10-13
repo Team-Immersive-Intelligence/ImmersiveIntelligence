@@ -151,7 +151,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 
 	protected int getLocalRS()
 	{
-		int val = world.isBlockIndirectlyGettingPowered(pos);
+		int val = world.getStrongPower(pos);
 		if(val==0)
 		{
 			for(EnumFacing f : EnumFacing.HORIZONTALS)
@@ -224,7 +224,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		soundID = nbt.getString("sound");
 		soundVolume = nbt.getFloat("volume");
 
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 
 		redstoneChannel = nbt.getInteger("redstoneChannel");
 	}
@@ -270,7 +270,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		if(!hammer)
 			return null;
 		return new String[]{I18n.format(Lib.DESC_INFO+"redstoneChannel",
-				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getUnlocalizedName()))};
+				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getTranslationKey()))};
 	}
 
 	@Override

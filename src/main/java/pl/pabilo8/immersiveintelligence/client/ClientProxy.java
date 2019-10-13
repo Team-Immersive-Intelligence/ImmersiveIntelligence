@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -62,6 +63,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiA
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
 import pl.pabilo8.immersiveintelligence.client.render.BulletRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.SandbagsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
@@ -296,6 +299,8 @@ public class ClientProxy extends CommonProxy
 				gui = new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer)te);
 			else if(ID==IIGuiList.GUI_PRECISSION_ASSEMBLER&&te instanceof TileEntityPrecissionAssembler)
 				gui = new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te);
+			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
+				gui = new GuiAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
 
 			((IGuiTile)te).onGuiOpened(player, true);
 			return gui;
@@ -333,6 +338,15 @@ public class ClientProxy extends CommonProxy
 			}
 		}, ImmersiveIntelligence.MODID);
 
+		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(item_binoculars, 1, 1), new ImmersiveModelRegistry.ItemModelReplacement()
+		{
+			@Override
+			public IBakedModel createBakedModel(IBakedModel existingModel)
+			{
+				return new ModelItemDynamicOverride(existingModel, null);
+			}
+		}, ImmersiveIntelligence.MODID);
+
 	}
 
 	@SubscribeEvent
@@ -345,6 +359,9 @@ public class ClientProxy extends CommonProxy
 			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_core");
 			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_paint");
 		}
+
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_off");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
 	}
 
 	@Override
@@ -358,6 +375,12 @@ public class ClientProxy extends CommonProxy
 	public void init()
 	{
 		super.init();
+
+		ClientEventHandler handler = new ClientEventHandler();
+		MinecraftForge.EVENT_BUS.register(handler);
+		((IReloadableResourceManager)ClientUtils.mc().getResourceManager()).registerReloadListener(handler);
+
+
 		TileEntityInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
@@ -486,6 +509,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionFactory.class, new AmmunitionFactoryRenderer());
 
 	}
 

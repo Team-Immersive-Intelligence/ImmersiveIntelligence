@@ -32,7 +32,7 @@ public class TileEntityDataDebugger extends TileEntityIEBase implements ITickabl
 	public void update()
 	{
 		if(mode < 2)
-			if(!world.isRemote&&(world.isBlockIndirectlyGettingPowered(getPos()) > 0)&&!toggle)
+			if(!world.isRemote&&(world.getStrongPower(getPos()) > 0)&&!toggle)
 			{
 				toggle = !toggle;
 				DataPacket pack = new DataPacket();
@@ -45,7 +45,7 @@ public class TileEntityDataDebugger extends TileEntityIEBase implements ITickabl
 				}
 				ImmersiveIntelligence.logger.info("Sending Packet!");
 			}
-			else if(!world.isRemote&&(world.isBlockIndirectlyGettingPowered(getPos()) > 0)&&toggle)
+			else if(!world.isRemote&&(world.getStrongPower(getPos()) > 0)&&toggle)
 			{
 				toggle = !toggle;
 			}

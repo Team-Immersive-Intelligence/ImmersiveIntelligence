@@ -54,4 +54,10 @@ public class BulletComponentRDX implements IBulletComponent
 	{
 		return EnumComponentRole.EXPLOSIVE;
 	}
+
+	@Override
+	public int getColour()
+	{
+		return 0xd2c294;
+	}
 }

@@ -172,7 +172,7 @@ public class GuiDataInputMachineStorage extends GuiIEContainerBase
 		{
 			return;
 		}
-		if(!list.toNBT().hasNoTags())
+		if(!list.toNBT().isEmpty())
 		{
 			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
 		}

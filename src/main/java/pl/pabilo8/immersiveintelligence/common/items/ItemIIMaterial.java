@@ -22,6 +22,7 @@ public class ItemIIMaterial extends ItemIIBase
 				"processor_circuit_board_raw",
 				"processor_circuit_board_etched",
 				"processor_circuit_board",
+				"compact_electric_engine",
 				"metal_ingot_platinum",
 				"metal_dust_platinum",
 				"metal_plate_platinum",
@@ -42,7 +43,7 @@ public class ItemIIMaterial extends ItemIIBase
 				"punchtape_empty",
 				"dust_rdx",
 				"dust_hmx",
-				"white_phosphorous",
+				"white_phosphorus",
 				"dust_salt"
 		);
 	}

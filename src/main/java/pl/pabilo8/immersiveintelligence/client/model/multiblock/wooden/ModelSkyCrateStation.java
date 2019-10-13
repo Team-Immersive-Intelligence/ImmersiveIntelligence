@@ -87,32 +87,4 @@ public class ModelSkyCrateStation extends BaseBlockModel
 
 		flipAll();
 	}
-
-	@Override
-	public void getTranslation(EnumFacing facing, BaseBlockModel model)
-	{
-		switch(facing)
-		{
-			case NORTH:
-			{
-				model.translateAll(-8f, 0f, -8f);
-			}
-			break;
-			case SOUTH:
-			{
-				model.translateAll(-8f, 0f, 8f);
-			}
-			break;
-			case EAST:
-			{
-				model.translateAll(-16f, 0f, 0f);
-			}
-			break;
-			case WEST:
-			{
-				model.translateAll(0f, 0f, 0f);
-			}
-			break;
-		}
-	}
 }

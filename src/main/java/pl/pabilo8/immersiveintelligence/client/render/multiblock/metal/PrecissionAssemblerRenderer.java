@@ -75,7 +75,8 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 				hatchProgress = 135f*((te.processTime+(partialTicks/20f))/precissionAssembler.hatchTime);
 			else if(te.active&&te.processTime > te.processTimeMax-precissionAssembler.hatchTime)
 			{
-				hatchProgress = 135f-(135f*((te.processTime+(partialTicks/20f))/precissionAssembler.hatchTime));
+
+				hatchProgress = 135f*(te.processTimeMax-(te.processTime+(partialTicks/20f)))/(float)precissionAssembler.hatchTime;
 			}
 
 			GlStateManager.pushMatrix();

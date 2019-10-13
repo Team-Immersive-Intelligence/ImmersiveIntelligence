@@ -30,13 +30,7 @@ public class IICreativeTab extends CreativeTabs
 	}
 
 	@Override
-	public ItemStack getTabIconItem()
-	{
-		return null;
-	}
-
-	@Override
-	public ItemStack getIconItemStack()
+	public ItemStack createIcon()
 	{
 		return new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.ordinal());
 	}
@@ -81,5 +75,20 @@ public class IICreativeTab extends CreativeTabs
 		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "TNT", "", 1f));
 		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "RDX", "", 1f));
 		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "HMX", "", 1f));
+
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "TNT", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "RDX", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "HMX", "", 1f));
+
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "TNT", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "RDX", "", 1f));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "HMX", "", 1f));
+
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "HMX", "white_phosphorus", 0.5f).setStackDisplayName("Wurfgranate 39"));
+
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Stielhandgranate 38"));
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Stielhandgranate 39"));
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "RDX", "", 1f).setStackDisplayName("Stielhandgranate 42"));
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "HMX", "", 1f).setStackDisplayName("Stielhandgranate 46"));
 	}
 }

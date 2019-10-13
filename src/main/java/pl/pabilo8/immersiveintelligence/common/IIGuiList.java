@@ -45,6 +45,7 @@ public class IIGuiList
 	public static final int GUI_BALLISTIC_COMPUTER = 26;
 	public static final int GUI_PRECISSION_ASSEMBLER = 27;
 	public static final int GUI_PERISCOPE = 28;
+	public static final int GUI_AMMUNITION_FACTORY = 29;
 
 
 }

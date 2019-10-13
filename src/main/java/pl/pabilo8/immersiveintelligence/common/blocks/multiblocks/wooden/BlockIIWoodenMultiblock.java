@@ -56,7 +56,7 @@ public class BlockIIWoodenMultiblock extends BlockIITileProvider<IIBlockTypes_Wo
 	}
 
 	@Override
-	public CreativeTabs getCreativeTabToDisplayOn()
+	public CreativeTabs getCreativeTab()
 	{
 		return null;
 	}

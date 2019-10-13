@@ -36,7 +36,7 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 
 	public TileEntityElectrolyzer()
 	{
-		super(MultiblockChemicalBath.instance, new int[]{2, 3, 3}, electrolyzer.energyCapacity, true);
+		super(MultiblockElectrolyzer.instance, new int[]{2, 3, 3}, electrolyzer.energyCapacity, true);
 	}
 
 	@Override

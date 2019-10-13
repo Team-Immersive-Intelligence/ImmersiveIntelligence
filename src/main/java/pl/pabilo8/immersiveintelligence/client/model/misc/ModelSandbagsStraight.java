@@ -263,23 +263,10 @@ public class ModelSandbagsStraight extends BaseBlockModel
 		leftModel[11].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonLeft
 		leftModel[11].setRotationPoint(12F, -12F, 4F);
 
-		translateAll(0F, 0F, 0F);
+		parts.add(baseModel);
+		parts.add(rightModel);
+		parts.add(leftModel);
 		flipAll();
 	}
 
-	@Override
-	public void translateAll(float x, float y, float z)
-	{
-		super.translateAll(x, y, z);
-		translate(leftModel, x, y, z);
-		translate(rightModel, x, y, z);
-	}
-
-	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(leftModel);
-		flip(rightModel);
-	}
 }

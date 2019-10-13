@@ -4,12 +4,17 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.artilleryHowitzer;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
@@ -17,8 +22,10 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEnti
 public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEntityArtilleryHowitzer>
 {
 	private static ModelArtilleryHowitzer model = new ModelArtilleryHowitzer();
+	private static ModelBullet modelBullet = new ModelBullet();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/artillery_howitzer.png";
+	private static String textureBullet = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 
 	@Override
 	public void render(TileEntityArtilleryHowitzer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -46,18 +53,243 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 			{
 				case 1:
 				{
-					loadingProgress = te.animationTime/(float)te.animationTimeMax;
+					loadingProgress = Math.max((te.animationTime*0.8f)/((float)te.animationTimeMax*0.8f), 0f);
 				}
 				case 2:
 				{
-					loadingProgress = 1f-(te.animationTime/(float)te.animationTimeMax);
+					loadingProgress = 1f-Math.max((te.animationTime*0.8f)/((float)te.animationTimeMax*0.8f), 0f);
 				}
 			}
 
 			GlStateManager.pushMatrix();
+			if(te.animation==1||te.animation==2)
+			{
+				//loadingProgress
+				GlStateManager.translate(0f, 0, 2.5f*(loadingProgress < 0.5?loadingProgress/0.5f: 1f-((loadingProgress-0.5f)/0.5f)));
+				for(ModelRendererTurbo mod : model.ammo_door)
+					mod.render(0.0625f);
+
+				if((te.animation==1&&loadingProgress < 0.5)||(te.animation==2&&loadingProgress > 0.5))
+				{
+					//TODO: Finish
+					GlStateManager.translate(1f, -1f, -0.875f);
+					for(ModelRendererTurbo mod : modelBullet.baseModel)
+						mod.render(0.0625f);
+				}
+			}
+			GlStateManager.popMatrix();
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(3f, 0f, -9f);
+
+			ClientUtils.bindTexture(textureBullet);
+
+			GlStateManager.pushMatrix();
+			GlStateManager.rotate(90, 1f, 0f, 0f);
+			GlStateManager.rotate(90, 0f, 0f, 1f);
+			GlStateManager.translate(0f, -1f, 0f);
+
+
+			//te.shellLoadTime/(float)Machines.artilleryHowitzer.conveyorTime
+
+			GlStateManager.pushMatrix();
+
+			boolean[] shell_can_move = new boolean[]{te.inventoryHandler.getStackInSlot(0).isEmpty(), te.inventoryHandler.getStackInSlot(1).isEmpty(), te.inventoryHandler.getStackInSlot(2).isEmpty(), te.inventoryHandler.getStackInSlot(3).isEmpty(), te.inventoryHandler.getStackInSlot(4).isEmpty(), te.inventoryHandler.getStackInSlot(5).isEmpty(), te.inventoryHandler.getStackInSlot(6).isEmpty(), te.inventoryHandler.getStackInSlot(7).isEmpty(), te.inventoryHandler.getStackInSlot(8).isEmpty(), te.inventoryHandler.getStackInSlot(9).isEmpty(), te.inventoryHandler.getStackInSlot(10).isEmpty(), te.inventoryHandler.getStackInSlot(11).isEmpty()};
+			boolean is_moved = false;
+
+			GlStateManager.translate(0f, 0f, 1f);
+
+			float prgrs;
+			if(te.animation==1)
+				prgrs = Math.min((float)te.animationTime/((float)te.animationTimeMax*0.2f), 1f);
+			else
+				prgrs = te.shellLoadTime/(float)artilleryHowitzer.conveyorTime;
+
+			if(!shell_can_move[6])
+			{
+				GlStateManager.pushMatrix();
+				if(te.animation==2)
+				{
+					ImmersiveIntelligence.logger.info(prgrs);
+					GlStateManager.translate(0f, 1f-prgrs, 0f);
+					is_moved = true;
+				}
+				GlStateManager.translate(1f, -2f, -0.875f);
+				ItemStack stack = te.inventoryHandler.getStackInSlot(6);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[7])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[8])
+					is_moved = true;
+
+				GlStateManager.translate(1f-(0.5f*((is_moved)?prgrs: 0f)), -2f, -0.875f);
+
+				ItemStack stack = te.inventoryHandler.getStackInSlot(7);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[8])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[9])
+					is_moved = true;
+
+				GlStateManager.translate((0.5f*((is_moved)?1f-prgrs: 0f)), -2f, -0.875f);
+				ItemStack stack = te.inventoryHandler.getStackInSlot(8);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[9])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[10])
+					is_moved = true;
+
+				GlStateManager.translate(0f, -2f, -1.385+(0.5f*((is_moved)?1f-prgrs: 0f)));
+				ItemStack stack = te.inventoryHandler.getStackInSlot(9);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[10])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[11])
+					is_moved = true;
+
+				GlStateManager.translate(0f, -2f, -2.185+(0.5f*((is_moved)?1f-prgrs: 0f)));
+				ItemStack stack = te.inventoryHandler.getStackInSlot(10);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[11])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[1])
+					is_moved = true;
+
+				GlStateManager.translate(0f, -2f, -2.985-(1.5f*((is_moved)?prgrs: 0f)));
+				ItemStack stack = te.inventoryHandler.getStackInSlot(11);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			//
+
+			if(!shell_can_move[5])
+			{
+				GlStateManager.pushMatrix();
+				if(te.animation==1)
+				{
+					ImmersiveIntelligence.logger.info(prgrs);
+					GlStateManager.translate(0f, -prgrs, 0f);
+					is_moved = true;
+				}
+				//ImmersiveIntelligence.logger.info("abuyin ibn djadir ibn omar kalid ben hadji al sharidi");
+				GlStateManager.translate(1f, 0f, -0.875f);
+				ItemStack stack = te.inventoryHandler.getStackInSlot(5);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[4])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[5])
+					is_moved = true;
+
+				GlStateManager.translate(0.5f+(0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f);
+				ItemStack stack = te.inventoryHandler.getStackInSlot(4);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[3])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[4])
+					is_moved = true;
+
+				GlStateManager.translate((0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f);
+				ItemStack stack = te.inventoryHandler.getStackInSlot(3);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[2])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[3])
+					is_moved = true;
+
+				GlStateManager.translate(0f, 0f, -1.385+(0.5f*((is_moved)?prgrs: 0f)));
+				ItemStack stack = te.inventoryHandler.getStackInSlot(2);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[1])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[2])
+					is_moved = true;
+
+				GlStateManager.translate(0f, 0f, -2.185+(0.5f*((is_moved)?prgrs: 0f)));
+				ItemStack stack = te.inventoryHandler.getStackInSlot(1);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			if(!shell_can_move[0])
+			{
+				GlStateManager.pushMatrix();
+
+				if(shell_can_move[1])
+					is_moved = true;
+
+				GlStateManager.translate(0f, 0f, -2.985+(0.5f*((is_moved)?prgrs: 0f)));
+				ItemStack stack = te.inventoryHandler.getStackInSlot(0);
+				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+
+				GlStateManager.popMatrix();
+			}
+
+			GlStateManager.popMatrix();
+
+			//GlStateManager.translate(0f,0f,-0.6f);
+
+
+			GlStateManager.popMatrix();
 
 			ClientUtils.bindTexture("textures/atlas/blocks.png");
-			GlStateManager.translate(3f, 0f, -9f);
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
 			GlStateManager.translate(0f, 0f, 1f);
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
@@ -74,6 +306,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
+
 
 			ClientUtils.bindTexture("textures/atlas/blocks.png");
 			GlStateManager.translate(5f, 0f, -9f);
@@ -168,14 +401,6 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-
-			if(te.animation==1||te.animation==2)
-			{
-				//loadingProgress
-				for(ModelRendererTurbo mod : model.ammo_door)
-					mod.render(0.0625f);
-			}
-
 
 			GlStateManager.popMatrix();
 

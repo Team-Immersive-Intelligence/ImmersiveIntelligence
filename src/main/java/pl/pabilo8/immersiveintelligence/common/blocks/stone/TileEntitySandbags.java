@@ -28,7 +28,7 @@ public class TileEntitySandbags extends TileEntityIEBase implements IDirectional
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 	}
 
 	@Override

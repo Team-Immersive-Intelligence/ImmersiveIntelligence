@@ -1,5 +1,5 @@
 {
-  "parent": "item/handheld",
+  "parent": "immersiveengineering:item/ie_item_base",
   "textures": {
     "layer0": "immersiveintelligence:items/binoculars/binoculars"
   }

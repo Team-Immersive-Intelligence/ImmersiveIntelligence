@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -118,9 +119,8 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 
 			model.render();
 
-			//TODO: fix rotation
-			float dir = te.armDirection, next_dir = te.nextDirection;
-
+			//Fuck Minecraft direction system, really, fuck it
+			float dir = 180-te.armDirection, next_dir = 180-te.nextDirection;
 
 			float added = next_dir > dir?(100f/inserter.grabTime*(partialTicks/20f)):
 					(next_dir < dir?-(100f/inserter.grabTime*(partialTicks/20f)): 0);
@@ -189,7 +189,11 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 			if(te.conn_mv!=null)
 				renderItem.renderItem(te.conn_mv, TransformType.GROUND);
 
+			EntityRenderer.drawNameplate(this.getFontRenderer(), dir+" / "+te.armDirection+" / "+te.nextDirection, 0, 1, 0, 0, 0, 0, true, false);
+
 			GlStateManager.popMatrix();
+
+
 			return;
 
 		}

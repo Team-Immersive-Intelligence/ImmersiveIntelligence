@@ -44,6 +44,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
@@ -100,6 +101,7 @@ public class CommonProxy implements IGuiHandler
 
 	public static ItemIIBullet item_bullet = new ItemIIBullet();
 	public static ItemIICasingArtillery item_casing_artillery = new ItemIICasingArtillery();
+	public static ItemIICasingGrenade item_casing_grenade = new ItemIICasingGrenade();
 
 	public static ItemIIPunchtape item_punchtape = new ItemIIPunchtape();
 	public static ItemIIPrintedPage item_printed_page = new ItemIIPrintedPage();
@@ -186,7 +188,7 @@ public class CommonProxy implements IGuiHandler
 		block_gas_chlorine = new BlockIIFluid("chlorine", gas_chlorine, Material.WATER);
 
 		for(Block block : blocks)
-			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getUnlocalizedName())));
+			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getTranslationKey())));
 
 		registerFeedthroughForWiretype(IIWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/empty.obj"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/data_connector_feedtrough"), new float[]{0, 4, 8, 12},
@@ -201,7 +203,7 @@ public class CommonProxy implements IGuiHandler
 		ImmersiveIntelligence.logger.info("Registering Items");
 
 		for(Item item : items)
-			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getUnlocalizedName())));
+			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getTranslationKey())));
 
 		registerOreDict();
 	}
@@ -268,6 +270,9 @@ public class CommonProxy implements IGuiHandler
 		OreDictionary.registerOre("circuitElite", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board")));
 		OreDictionary.registerOre("chipElite", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_electronic_element")));
 
+		OreDictionary.registerOre("electricEngineSmall", new ItemStack(item_material, 1, item_material.getMetaBySubname("compact_electric_engine")));
+		OreDictionary.registerOre("electricEngineCompact", new ItemStack(item_material, 1, item_material.getMetaBySubname("compact_electric_engine")));
+
 		//Platinum
 		OreDictionary.registerOre("ingotPlatinum", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_ingot_platinum")));
 		OreDictionary.registerOre("dustPlatinum", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_dust_platinum")));
@@ -331,10 +336,11 @@ public class CommonProxy implements IGuiHandler
 
 		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT, 1, 0));
 		OreDictionary.registerOre("materialRDX", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_rdx")));
+		OreDictionary.registerOre("materialHexogen", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_rdx")));
 		OreDictionary.registerOre("materialHMX", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_hmx")));
 
-		OreDictionary.registerOre("dustWhitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorous")));
-		OreDictionary.registerOre("whitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorous")));
+		OreDictionary.registerOre("dustWhitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorus")));
+		OreDictionary.registerOre("whitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorus")));
 
 		OreDictionary.registerOre("dustSalt", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_salt")));
 		OreDictionary.registerOre("oreSalt", new ItemStack(block_ore, 1, IIBlockTypes_Ore.SALT.getMeta()));
@@ -373,11 +379,12 @@ public class CommonProxy implements IGuiHandler
 		//Bullets
 
 		BulletRegistry.INSTANCE.registerCasing(this.item_casing_artillery, "artillery_8bCal");
+		BulletRegistry.INSTANCE.registerCasing(this.item_casing_grenade, "grenade_4bCal");
 
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT(), "TNT");
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX(), "RDX");
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX(), "HMX");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus(), "white_phosphorous");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus(), "white_phosphorus");
 
 		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreSteel(), "CoreSteel");
 		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreTungsten(), "CoreTungsten");
@@ -433,6 +440,7 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityConveyorScanner.class);
 		registerTile(TileEntityPrecissionAssembler.class);
 		registerTile(TileEntityArtilleryHowitzer.class);
+		registerTile(TileEntityAmmunitionFactory.class);
 
 		MultiblockHandler.registerMultiblock(MultiblockSkyCrateStation.instance);
 		MultiblockHandler.registerMultiblock(MultiblockRadioStation.instance);
@@ -444,6 +452,7 @@ public class CommonProxy implements IGuiHandler
 		MultiblockHandler.registerMultiblock(MultiblockConveyorScanner.instance);
 		MultiblockHandler.registerMultiblock(MultiblockPrecissionAssembler.instance);
 		MultiblockHandler.registerMultiblock(MultiblockArtilleryHowitzer.instance);
+		MultiblockHandler.registerMultiblock(MultiblockAmmunitionFactory.instance);
 
 		int i = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
@@ -592,6 +601,8 @@ public class CommonProxy implements IGuiHandler
 				gui = new ContainerElectrolyzer(player.inventory, (TileEntityElectrolyzer)te);
 			else if(ID==IIGuiList.GUI_PRECISSION_ASSEMBLER&&te instanceof TileEntityPrecissionAssembler)
 				gui = new ContainerPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te);
+			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
+				gui = new ContainerAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
 
 			((IGuiTile)te).onGuiOpened(player, false);
 

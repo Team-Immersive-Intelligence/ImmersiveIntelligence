@@ -32,4 +32,7 @@ public interface IBulletComponent
 
 	//Gets the component role
 	EnumComponentRole getRole();
+
+	//Gets the component colour
+	int getColour();
 }

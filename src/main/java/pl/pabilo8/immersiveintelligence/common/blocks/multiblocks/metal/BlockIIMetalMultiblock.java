@@ -47,7 +47,7 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 	}
 
 	@Override
-	public CreativeTabs getCreativeTabToDisplayOn()
+	public CreativeTabs getCreativeTab()
 	{
 		return null;
 	}
@@ -92,6 +92,10 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 			case ARTILLERY_HOWITZER:
 			{
 				return new TileEntityArtilleryHowitzer();
+			}
+			case AMMUNITION_FACTORY:
+			{
+				return new TileEntityAmmunitionFactory();
 			}
 		}
 		return null;

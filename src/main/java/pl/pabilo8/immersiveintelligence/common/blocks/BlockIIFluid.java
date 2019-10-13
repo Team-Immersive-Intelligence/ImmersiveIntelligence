@@ -25,7 +25,7 @@ public class BlockIIFluid extends BlockFluidClassic
 	public BlockIIFluid(String name, Fluid fluid, Material material)
 	{
 		super(fluid, material);
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
+		this.setTranslationKey(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 		ImmersiveIntelligence.proxy.blocks.add(this);
 	}
@@ -63,7 +63,7 @@ public class BlockIIFluid extends BlockFluidClassic
 
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
+	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
 		if(potionEffects!=null&&entity instanceof EntityLivingBase)
 		{

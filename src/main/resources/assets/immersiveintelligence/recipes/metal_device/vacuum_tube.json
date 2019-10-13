@@ -1,0 +1,35 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:assembly_scheme",
+    "nbt": {
+      "recipeItem": {
+        "id": "immersiveengineering:material",
+        "Count": 2,
+        "Damage": 26
+      }
+    }
+  },
+  "pattern": [
+    "WBW",
+    "DDD",
+    "PPP"
+  ],
+  "key": {
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "wireCopper"
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  }
+}

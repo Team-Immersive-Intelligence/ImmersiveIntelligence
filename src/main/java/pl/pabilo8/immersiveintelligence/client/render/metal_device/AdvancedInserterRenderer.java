@@ -118,14 +118,19 @@ public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEnti
 
 			model.render();
 
-			float added = te.nextDirection > te.armDirection?(100f/inserter.grabTime*(partialTicks/20)):
-					(te.nextDirection < te.armDirection?-(100f/inserter.grabTime*(partialTicks/20)): 0);
+			//Fuck Minecraft direction system, really, fuck it
+			float dir = 180-te.armDirection, next_dir = 180-te.nextDirection;
+
+			float added = next_dir > dir?(100f/inserter.grabTime*(partialTicks/20f)):
+					(next_dir < dir?-(100f/inserter.grabTime*(partialTicks/20f)): 0);
 			float progress = 1f-(((float)te.pickProgress+(added))/100f);
+
+			dir += added;
 
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0.5f, 0.375f, -0.5);
-			GlStateManager.rotate(te.armDirection, 0, 1, 0);
+			GlStateManager.rotate(dir, 0, 1, 0);
 
 			for(ModelRendererTurbo mod : model.inserterBaseTurntable)
 				mod.render(0.0625f);
