@@ -43,7 +43,7 @@ repositories {
     }
     maven {
         name 'jared maven'
-        url 'http://blamejared.com/maven'
+        url 'https://maven.blamejared.com/'
     }
     maven {
         name 'JEI'
