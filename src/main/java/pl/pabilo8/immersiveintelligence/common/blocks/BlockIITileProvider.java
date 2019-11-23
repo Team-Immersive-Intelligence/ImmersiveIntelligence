@@ -49,6 +49,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -369,6 +370,8 @@ public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlock
 					extended = extended.withProperty(IEProperties.TILEENTITY_PASSTHROUGH, te);
 				if(te instanceof TileEntityImmersiveConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
 					extended = extended.withProperty(IEProperties.CONNECTIONS, ((TileEntityImmersiveConnectable)te).genConnBlockstate());
+				if(te instanceof TileEntityMultiblockConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
+					extended = extended.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable)te).genConnBlockstate());
 			}
 			state = extended;
 		}

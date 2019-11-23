@@ -3,12 +3,9 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 
 /**
  * Created by Pabilo8 on 07-06-2019.
@@ -38,8 +35,8 @@ public class ModelGrenade extends BaseBlockModel implements IBulletModel
 		coreModel[0].addShapeBox(0F, 0F, 0F, 4, 4, 6, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F); // Box 1
 		coreModel[0].setRotationPoint(-7.5F, -2F, -10F);
 
-		parts.add(baseModel);
-		parts.add(coreModel);
+		parts.put("base", baseModel);
+		parts.put("core", coreModel);
 		flipAll();
 	}
 

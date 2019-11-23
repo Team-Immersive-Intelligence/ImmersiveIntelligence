@@ -43,6 +43,7 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		tesrMap.put(IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.DATA_DEBUGGER.getMeta(), IIBlockTypes_MetalDevice.DATA_DEBUGGER.getName());
+		tesrMap.put(IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), IIBlockTypes_MetalDevice.DATA_MERGER.getName());
 	}
 
 	@Override
@@ -86,6 +87,14 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 			case SMALL_DATA_BUFFER:
 			{
 				return new TileEntitySmallDataBuffer();
+			}
+			case DATA_MERGER:
+			{
+				return new TileEntityDataMerger();
+			}
+			case DATA_ROUTER:
+			{
+				return new TileEntityDataRouter();
 			}
 		}
 		return null;
@@ -139,6 +148,10 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		if(getMetaFromState(state)==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta())
+		{
+			return EnumBlockRenderType.MODEL;
+		}
+		else if(getMetaFromState(state)==IIBlockTypes_MetalDevice.DATA_ROUTER.getMeta())
 		{
 			return EnumBlockRenderType.MODEL;
 		}

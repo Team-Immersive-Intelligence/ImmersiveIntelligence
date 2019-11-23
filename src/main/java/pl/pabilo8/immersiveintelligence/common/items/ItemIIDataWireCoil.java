@@ -61,8 +61,6 @@ public class ItemIIDataWireCoil extends ItemIIBase implements IWireCoil
 
 	public boolean canConnectCable(WireType wire, TileEntity targetEntity)
 	{
-		//We specifically only support whitelisted TEs here.
-		//Without this, you can connect the AF wire to any connectable block that doesn't specifically deny it.
 		return !(!(targetEntity instanceof TileEntityDataConnector)&&
 				!(targetEntity instanceof TileEntityDataRelay));
 	}

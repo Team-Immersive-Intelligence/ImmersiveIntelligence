@@ -5,41 +5,32 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation.TileEntitySkyCrateStationParent;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
  */
-public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCrateStationParent>
+public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCrateStation>
 {
 	private static ModelSkyCrateStation model = new ModelSkyCrateStation();
-	private static final ModelSkyCrateStation modelDefault = new ModelSkyCrateStation();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_station.png";
 
 	@Override
-	public void render(TileEntitySkyCrateStationParent te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(TileEntitySkyCrateStation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
-		if(te!=null)
+		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+1, (float)y, (float)z);
-			GlStateManager.rotate(180F, 0F, 0F, 1F);
+			GlStateManager.translate((float)x+1, (float)y-1, (float)z);
 			GlStateManager.disableLighting();
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			BaseBlockModel.copyModelAngles(model, modelDefault);
-			//TODO: update code
-			//BaseBlockModel.getBlockRotation(te.facing, model);
-			//model.getTranslation(te.facing, model);
-
+			model.getBlockRotation(te.facing, model);
 			model.render();
-
-			BaseBlockModel.copyModelPositions(model, modelDefault);
 
 			GlStateManager.popMatrix();
 

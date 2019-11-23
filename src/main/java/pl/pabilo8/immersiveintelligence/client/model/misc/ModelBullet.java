@@ -1,11 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
@@ -85,8 +81,8 @@ public class ModelBullet extends BaseBlockModel implements IBulletModel
 		coreModel[1].addBox(-3F, -12F, -3F, 6, 6, 6, 0F); // Core
 		coreModel[1].setRotationPoint(8F, 0F, 8F);
 
-		parts.add(baseModel);
-		parts.add(coreModel);
+		parts.put("base", baseModel);
+		parts.put("core", coreModel);
 		flipAll();
 	}
 
@@ -130,6 +126,6 @@ public class ModelBullet extends BaseBlockModel implements IBulletModel
 	@Override
 	public void getConveyorOffset()
 	{
-
+		GlStateManager.translate(0, 0.035, 0);
 	}
 }

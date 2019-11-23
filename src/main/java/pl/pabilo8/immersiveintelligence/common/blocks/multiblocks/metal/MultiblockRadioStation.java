@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
@@ -8,13 +9,17 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecor
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration1;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -126,6 +131,13 @@ public class MultiblockRadioStation implements IMultiblock
 	@Override
 	public boolean createStructure(World world, BlockPos pos, EnumFacing side, EntityPlayer player)
 	{
+		//Required by Advanced Structures!
+		if(!pl.pabilo8.immersiveintelligence.api.Utils.isAdvancedHammer(player.getHeldItem(EnumHand.MAIN_HAND))&&!pl.pabilo8.immersiveintelligence.api.Utils.isAdvancedHammer(player.getHeldItem(EnumHand.OFF_HAND)))
+		{
+			if(!world.isRemote)
+				ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"requires_advanced_hammer")), (EntityPlayerMP)player);
+			return false;
+		}
 
 		side = side.getOpposite();
 		if(side==EnumFacing.UP||side==EnumFacing.DOWN)

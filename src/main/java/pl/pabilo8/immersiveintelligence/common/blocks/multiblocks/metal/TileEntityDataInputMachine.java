@@ -152,7 +152,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 						IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);
 						if(conn!=null)
 						{
-							conn.sendPacket(storedData);
+							conn.sendPacket(storedData.clone());
 						}
 					}
 				}
@@ -367,7 +367,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		/*if (this.pos==3 && energyStorage.getEnergyStored()>=dataInputMachine.energyUsage)
 		{

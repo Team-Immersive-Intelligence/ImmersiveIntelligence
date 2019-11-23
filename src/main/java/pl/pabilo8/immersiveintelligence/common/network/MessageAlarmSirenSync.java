@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.network;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -56,15 +56,15 @@ public class MessageAlarmSirenSync implements IMessage
 		@Override
 		public IMessage onMessage(MessageAlarmSirenSync message, MessageContext ctx)
 		{
-			Minecraft.getMinecraft().addScheduledTask(() -> onMessageMain(message));
+			ClientUtils.mc().addScheduledTask(() -> onMessageMain(message));
 			return null;
 		}
 
 		private void onMessageMain(MessageAlarmSirenSync message)
 		{
-			if(Minecraft.getMinecraft().world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof TileEntityAlarmSiren)
+			if(ClientUtils.mc().world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof TileEntityAlarmSiren)
 			{
-				TileEntityAlarmSiren te = (TileEntityAlarmSiren)Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
+				TileEntityAlarmSiren te = (TileEntityAlarmSiren)ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
 				te.active = message.active;
 			}
 		}

@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -22,7 +21,7 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.inserter
 @SideOnly(Side.CLIENT)
 public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEntityAdvancedInserter>
 {
-	static RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelAdvancedInserter model = new ModelAdvancedInserter();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/advanced_inserter.png";

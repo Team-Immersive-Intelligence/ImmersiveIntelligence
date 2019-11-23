@@ -13,7 +13,7 @@ public class DataOperationNOR extends DataOperator
 {
 	public DataOperationNOR()
 	{
-		name = "NOR";
+		name = "nor";
 		sign = "!||";
 		allowedType1 = DataPacketTypeBoolean.class;
 		allowedType2 = DataPacketTypeBoolean.class;

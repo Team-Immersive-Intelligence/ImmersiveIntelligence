@@ -115,4 +115,12 @@ public class DataPacket
 			}
 		}
 	}
+
+	@Override
+	public DataPacket clone()
+	{
+		DataPacket packet = new DataPacket();
+		packet.fromNBT(this.toNBT());
+		return packet;
+	}
 }

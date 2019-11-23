@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.tmt;
 
-import net.minecraft.client.Minecraft;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -28,12 +28,12 @@ public class TextureGroup
 	{
 		if(!texture.equals(""))
 		{
-			TextureManager renderengine = Minecraft.getMinecraft().renderEngine;
+			TextureManager renderengine = ClientUtils.mc().renderEngine;
 			renderengine.bindTexture(new ResourceLocation("", texture)); //TODO : Check. Not sure about this one
 		}
 		else if(defaultTexture > -1)
 		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("", ""));
+			ClientUtils.mc().renderEngine.bindTexture(new ResourceLocation("", ""));
 		}
 	}
 

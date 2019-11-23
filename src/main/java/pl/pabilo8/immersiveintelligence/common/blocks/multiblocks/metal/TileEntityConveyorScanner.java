@@ -291,7 +291,7 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		/*if (this.pos==3 && energyStorage.getEnergyStored()>=dataInputMachine.energyUsage)
 		{

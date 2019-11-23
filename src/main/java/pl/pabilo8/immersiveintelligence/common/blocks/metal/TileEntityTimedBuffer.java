@@ -147,7 +147,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		this.packet = packet;
 		timer = 1;

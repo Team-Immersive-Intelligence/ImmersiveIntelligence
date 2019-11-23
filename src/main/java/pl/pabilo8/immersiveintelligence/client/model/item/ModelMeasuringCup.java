@@ -1,11 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.model.item;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -252,7 +252,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 					@Override
 					public TextureAtlasSprite apply(ResourceLocation location)
 					{
-						return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+						return ClientUtils.mc().getTextureMapBlocks().getAtlasSprite(location.toString());
 					}
 				};
 				IBakedModel bakedModel = parent.bake(new SimpleModelState(model.transforms), model.format,

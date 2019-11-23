@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -18,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEnti
  */
 public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityChemicalBath>
 {
-	static RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelChemicalBath model = new ModelChemicalBath();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_bath.png";
@@ -279,6 +278,35 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 
 			GlStateManager.popMatrix();
 
+		}
+		else if(te==null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x-0.35, y-0.25, z);
+			GlStateManager.rotate(-90, 0, 1, 0);
+			GlStateManager.rotate(7.5f, 0, 0, 1);
+			GlStateManager.rotate(7.5f, 1, 0, 0);
+			GlStateManager.scale(0.3, 0.3, 0.3);
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+			ClientUtils.bindTexture(texture);
+			for(ModelRendererTurbo mod : model.baseModel)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.slider)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.slider_lowering)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.itemPickerLeftTop)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.itemPickerLeftBottom)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.itemPickerRightTop)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.itemPickerRightBottom)
+				mod.render(0.0625f);
+
+			GlStateManager.popMatrix();
+			return;
 		}
 	}
 }

@@ -6,8 +6,7 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
@@ -19,13 +18,13 @@ public class BaseBlockModel extends ModelBase
 	//Base Model Part
 	public ModelRendererTurbo[] baseModel;
 	//List of parts for group flipping / translation / rotation
-	public List<ModelRendererTurbo[]> parts = new ArrayList<>();
+	public HashMap<String, ModelRendererTurbo[]> parts = new HashMap<>();
 
 	public void flipAll()
 	{
 		if(parts.isEmpty())
-			parts.add(baseModel);
-		for(ModelRendererTurbo[] mod : parts)
+			parts.put("base", baseModel);
+		for(ModelRendererTurbo[] mod : parts.values())
 			flip(mod);
 	}
 
@@ -40,20 +39,20 @@ public class BaseBlockModel extends ModelBase
 
 	public void translateAll(float x, float y, float z)
 	{
-		for(ModelRendererTurbo[] mod : parts)
+		for(ModelRendererTurbo[] mod : parts.values())
 			translate(mod, x, y, z);
 	}
 
 	public void rotateAll(float x, float y, float z)
 	{
-		for(ModelRendererTurbo[] mod : parts)
+		for(ModelRendererTurbo[] mod : parts.values())
 			rotate(mod, x, y, z);
 
 	}
 
 	public void rotateAddAll(float x, float y, float z)
 	{
-		for(ModelRendererTurbo[] mod : parts)
+		for(ModelRendererTurbo[] mod : parts.values())
 			addRotation(mod, x, y, z);
 	}
 

@@ -13,7 +13,7 @@ public class DataOperationNAND extends DataOperator
 {
 	public DataOperationNAND()
 	{
-		name = "NAND";
+		name = "nand";
 		sign = "!&";
 		allowedType1 = DataPacketTypeBoolean.class;
 		allowedType2 = DataPacketTypeBoolean.class;

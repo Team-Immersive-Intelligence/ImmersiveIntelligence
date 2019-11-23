@@ -108,7 +108,7 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		baseModel[1].rotateAngleY = -1.57079633F;
 
 		baseModel[2].addShape3D(72F, 56F, -24F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(32, 0, 32, 0), new Coord2D(48, 16, 48, 16), new Coord2D(48, 48, 48, 48), new Coord2D(0, 48, 0, 48)}), 64, 48, 48, 183, 64, ModelRendererTurbo.MR_FRONT, new float[]{48, 48, 32, 23, 32}); // Corner2
-		baseModel[2].setRotationPoint(0F, 0F, 48F);
+		baseModel[2].setRotationPoint(72F, -24F, 104F);
 		baseModel[2].rotateAngleX = -1.57079633F;
 		baseModel[2].rotateAngleY = 3.14159265F;
 
@@ -505,7 +505,7 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		ammo_door[1].rotateAngleZ = 3.14159265F;
 
 		ammo_door[2].addShape3D(-0.5F, -6.5F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(6, 0, 6, 0), new Coord2D(6, 5, 6, 5), new Coord2D(4, 5, 4, 5), new Coord2D(4, 2, 4, 2), new Coord2D(3, 1, 3, 1), new Coord2D(0, 1, 0, 1)}), 16, 6, 5, 22, 16, ModelRendererTurbo.MR_FRONT, new float[]{1, 3, 2, 3, 2, 5, 6}); // FlakAmmoLoader1
-		baseModel[2].setRotationPoint(72F, -24F, 103F);
+		ammo_door[2].setRotationPoint(72F, -24F, 103F);
 		ammo_door[2].rotateAngleX = -1.57079633F;
 		ammo_door[2].rotateAngleY = 1.57079633F;
 		ammo_door[2].rotateAngleZ = 3.14159265F;

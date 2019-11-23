@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,5 +91,19 @@ public class IICreativeTab extends CreativeTabs
 		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Stielhandgranate 39"));
 		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "RDX", "", 1f).setStackDisplayName("Stielhandgranate 42"));
 		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "HMX", "", 1f).setStackDisplayName("Stielhandgranate 46"));
+
+		ItemStack bullet1 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Sprengpatrone mk.1");
+		ItemStack bullet2 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreTungsten", "shrapnel_tungsten", "", 1f).setStackDisplayName("Wolframpatrone mk.1");
+		ItemStack bullet3 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreSteel", "", "", 1f).setStackDisplayName("Stahlpatrone mk.1");
+		ItemStack bullet4 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Wurfpatrone mk.1");
+		list.add(bullet1);
+		list.add(bullet2);
+		list.add(bullet3);
+		list.add(bullet4);
+		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet1, bullet2, bullet3, bullet4));
+
+		ItemStack bullet5 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreTungsten", "shrapnel_uranium", "", 1f).setStackDisplayName("Sonderpatrone mk.1");
+		list.add(bullet5);
+		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet5, bullet5, bullet5, bullet5));
 	}
 }

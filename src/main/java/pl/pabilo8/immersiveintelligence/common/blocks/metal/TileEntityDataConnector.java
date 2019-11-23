@@ -92,7 +92,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 		if(world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataDevice)
 		{
 			IDataDevice d = (IDataDevice)world.getTileEntity(this.pos.offset(facing));
-			d.onReceive(packet);
+			d.onReceive(packet, facing.getOpposite());
 		}
 	}
 

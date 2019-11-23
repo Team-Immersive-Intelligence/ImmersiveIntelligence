@@ -60,7 +60,7 @@ public class TexturedPolygon
 		if(nVertices==3)
 			tessellator.startDrawing(GL11.GL_TRIANGLES);
 		else if(nVertices==4)
-			tessellator.startDrawingQuads();
+			tessellator.startDrawing(GL11.GL_QUADS);
 		else
 			tessellator.startDrawing(GL11.GL_POLYGON);
 

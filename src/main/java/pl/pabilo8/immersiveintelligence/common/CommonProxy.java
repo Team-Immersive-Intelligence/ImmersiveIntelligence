@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
@@ -9,8 +10,11 @@ import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.world.IEWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -21,17 +25,21 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -40,6 +48,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
+import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
+import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
@@ -51,23 +61,35 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.BlockIIWoodenMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation.TileEntitySkyCrateStationParent;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
-import pl.pabilo8.immersiveintelligence.common.bullets.*;
+import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentFirework;
+import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentTracerPowder;
+import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentWhitePhosphorus;
+import pl.pabilo8.immersiveintelligence.common.bullets.cores.*;
+import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentHMX;
+import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentRDX;
+import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentTNT;
+import pl.pabilo8.immersiveintelligence.common.bullets.shrapnel.BulletComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.*;
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.common.items.*;
+import pl.pabilo8.immersiveintelligence.common.items.bullet_casings.*;
+import pl.pabilo8.immersiveintelligence.common.items.tools.*;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.wire.IIWireType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerFeedthroughForWiretype;
 
@@ -75,7 +97,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
  * Created by Pabilo8 on 2019-05-07.
  */
 @Mod.EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
-public class CommonProxy implements IGuiHandler
+public abstract class CommonProxy implements IGuiHandler
 {
 	public static final List<Block> blocks = new ArrayList<>();
 	public static final List<Item> items = new ArrayList<>();
@@ -90,6 +112,9 @@ public class CommonProxy implements IGuiHandler
 
 	public static ItemIILighter item_lighter = new ItemIILighter();
 	public static ItemIIElectricHammer item_hammer = new ItemIIElectricHammer();
+
+	public static List<Predicate<IBlockState>> hammer_blacklist = new ArrayList<>();
+
 	public static ItemIIElectricWirecutter item_wirecutter = new ItemIIElectricWirecutter();
 	public static ItemIIDataWireCoil item_data_wire_coil = new ItemIIDataWireCoil();
 	public static ItemIIMinecart item_minecart = new ItemIIMinecart();
@@ -99,24 +124,45 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIIAssemblyScheme item_assembly_scheme = new ItemIIAssemblyScheme();
 	public static ItemIIBinoculars item_binoculars = new ItemIIBinoculars();
 
+	public static ItemIIMachinegun item_machinegun = new ItemIIMachinegun();
+	public static ItemIIWeaponUpgrade item_machinegun_upgrade = new ItemIIWeaponUpgrade();
+
 	public static ItemIIBullet item_bullet = new ItemIIBullet();
 	public static ItemIICasingArtillery item_casing_artillery = new ItemIICasingArtillery();
 	public static ItemIICasingGrenade item_casing_grenade = new ItemIICasingGrenade();
 
+	public static ItemIICasingMachinegun item_casing_machinegun = new ItemIICasingMachinegun();
+	public static ItemIICasingSubmachinegun item_casing_submachinegun = new ItemIICasingSubmachinegun();
+	public static ItemIICasingRevolver item_casing_revolver = new ItemIICasingRevolver();
+
+	public static ItemIIBulletMagazine item_bullet_magazine = new ItemIIBulletMagazine();
+
 	public static ItemIIPunchtape item_punchtape = new ItemIIPunchtape();
 	public static ItemIIPrintedPage item_printed_page = new ItemIIPrintedPage();
+	public static ItemIITracerPowder item_tracer_powder = new ItemIITracerPowder();
 
-	public static BlockIIBase<IIBlockTypes_Ore> block_ore;
-	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal, block_metal_storage;
-	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration;
-	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration;
+	public static BlockIIBase<IIBlockTypes_Ore> block_ore = (BlockIIBase)new BlockIIBase("ore", Material.ROCK,
+			PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false).setOpaque(true)
+			.setHardness(4.0F).setResistance(5.0F);
+	;
+	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
+			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
+			.setHardness(4.0F).setResistance(6.0F), block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
+			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
+			.setHardness(4.0F).setResistance(5.0F);
+	;
+	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration = new BlockIIStoneDecoration();
+	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration = (BlockIIBase)new BlockIIBase("metal_decoration", Material.IRON,
+			PropertyEnum.create("type", IIBlockTypes_MetalDecoration.class), ItemBlockIEBase.class, false)
+			.setBlockLayer(BlockRenderLayer.CUTOUT).setHardness(3.0F).setResistance(15.0F);
+	;
 
-	public static BlockIIMetalDevice block_metal_device;
-	public static BlockIIDataConnector block_data_connector;
-	public static BlockIISmallCrate block_small_crate;
+	public static BlockIIMetalDevice block_metal_device = new BlockIIMetalDevice();
+	public static BlockIIDataConnector block_data_connector = new BlockIIDataConnector();
+	public static BlockIISmallCrate block_small_crate = new BlockIISmallCrate();
 
-	public static BlockIIWoodenMultiblock block_wooden_multiblock;
-	public static BlockIIMetalMultiblock block_metal_multiblock;
+	public static BlockIIWoodenMultiblock block_wooden_multiblock = new BlockIIWoodenMultiblock();
+	public static BlockIIMetalMultiblock block_metal_multiblock = new BlockIIMetalMultiblock();
 
 	public static BlockIIFluid block_fluid_ink_black;
 	public static BlockIIFluid block_fluid_ink_cyan;
@@ -151,34 +197,6 @@ public class CommonProxy implements IGuiHandler
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
-		// block_conn = new BlockConnector();
-
-		block_ore = (BlockIIBase)new BlockIIBase("ore", Material.ROCK,
-				PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false).setOpaque(true)
-				.setHardness(4.0F).setResistance(5.0F);
-		block_sheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
-				PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
-				.setHardness(4.0F).setResistance(6.0F);
-		block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
-				PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
-				.setHardness(4.0F).setResistance(5.0F);
-
-		block_metal_decoration = (BlockIIBase)new BlockIIBase("metal_decoration", Material.IRON,
-				PropertyEnum.create("type", IIBlockTypes_MetalDecoration.class), ItemBlockIEBase.class, false)
-				.setBlockLayer(BlockRenderLayer.CUTOUT).setHardness(3.0F).setResistance(15.0F);
-
-		block_stone_decoration = new BlockIIStoneDecoration();
-
-		block_metal_device = new BlockIIMetalDevice();
-
-		block_data_connector = new BlockIIDataConnector();
-
-		block_small_crate = new BlockIISmallCrate();
-
-		block_wooden_multiblock = new BlockIIWoodenMultiblock();
-
-		block_metal_multiblock = new BlockIIMetalMultiblock();
-
 		block_fluid_ink_black = new BlockIIFluid("ink", fluid_ink_black, Material.WATER);
 		block_fluid_ink_cyan = new BlockIIFluid("ink_cyan", fluid_ink_cyan, Material.WATER);
 		block_fluid_ink_magenta = new BlockIIFluid("ink_magenta", fluid_ink_magenta, Material.WATER);
@@ -361,130 +379,15 @@ public class CommonProxy implements IGuiHandler
 		IISaveData.setDirty(0);
 	}
 
-	public void preInit()
+	@SubscribeEvent
+	public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
-		IIWireType.init();
-		IIPacketHandler.preInit();
-
-		fluid_ink_black = makeFluid("ink", 1500, 2250);
-		fluid_ink_cyan = makeFluid("ink_cyan", 1500, 2250);
-		fluid_ink_magenta = makeFluid("ink_magenta", 1500, 2250);
-		fluid_ink_yellow = makeFluid("ink_yellow", 1500, 2250);
-
-		fluid_etching_acid = makeFluid("etching_acid", 1500, 2250);
-
-		fluid_brine = makeFluid("brine", 1500, 2250);
-		gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
-		gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
-		gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
-
-		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
-		//Bullets
-
-		BulletRegistry.INSTANCE.registerCasing(this.item_casing_artillery, "artillery_8bCal");
-		BulletRegistry.INSTANCE.registerCasing(this.item_casing_grenade, "grenade_4bCal");
-
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT(), "TNT");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX(), "RDX");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX(), "HMX");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus(), "white_phosphorus");
-
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreSteel(), "CoreSteel");
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreTungsten(), "CoreTungsten");
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreBrass(), "CoreBrass");
-
-	}
-
-	public void init()
-	{
-		IEApi.forbiddenInCrates.add((stack) ->
-		{
-			if(OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 0), stack, true))
-				return true;
-			return OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 1), stack, true);
-		});
-
-		IEApi.forbiddenInCrates.add((stack) -> stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock() instanceof BlockIISmallCrate);
-
-		ImmersiveIntelligence.logger.info("Adding oregen");
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.PLATINUM.getMeta()), "platinum", Ores.ore_platinum);
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.ZINC.getMeta()), "zinc", Ores.ore_zinc);
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.TUNGSTEN.getMeta()), "tungsten", Ores.ore_tungsten);
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.SALT.getMeta()), "salt", Ores.ore_salt);
-
-		ImmersiveIntelligence.logger.info("Adding TileEntities");
-		registerTile(TileEntityMetalCrate.class);
-		registerTile(TileEntityAmmunitionCrate.class);
-		registerTile(TileEntitySmallCrate.class);
-		registerTile(TileEntityAlarmSiren.class);
-
-		registerTile(TileEntityInserter.class);
-		registerTile(TileEntityAdvancedInserter.class);
-		registerTile(TileEntityFluidInserter.class);
-
-		registerTile(TileEntityTimedBuffer.class);
-		registerTile(TileEntityRedstoneBuffer.class);
-		registerTile(TileEntitySmallDataBuffer.class);
-
-		//Only for debug purposes
-		registerTile(TileEntityDataDebugger.class);
-
-		registerTile(TileEntityDataConnector.class);
-		registerTile(TileEntityDataRelay.class);
-
-		registerTile(TileEntitySandbags.class);
-
-		registerTile(TileEntitySkyCrateStationParent.class);
-		registerTile(TileEntitySkyCrateStation.class);
-
-		registerTile(TileEntityRadioStation.class);
-		registerTile(TileEntityDataInputMachine.class);
-		registerTile(TileEntityArithmeticLogicMachine.class);
-		registerTile(TileEntityPrintingPress.class);
-		registerTile(TileEntityChemicalBath.class);
-		registerTile(TileEntityElectrolyzer.class);
-		registerTile(TileEntityConveyorScanner.class);
-		registerTile(TileEntityPrecissionAssembler.class);
-		registerTile(TileEntityArtilleryHowitzer.class);
-		registerTile(TileEntityAmmunitionFactory.class);
-
-		MultiblockHandler.registerMultiblock(MultiblockSkyCrateStation.instance);
-		MultiblockHandler.registerMultiblock(MultiblockRadioStation.instance);
-		MultiblockHandler.registerMultiblock(MultiblockDataInputMachine.instance);
-		MultiblockHandler.registerMultiblock(MultiblockArithmeticLogicMachine.instance);
-		MultiblockHandler.registerMultiblock(MultiblockPrintingPress.instance);
-		MultiblockHandler.registerMultiblock(MultiblockChemicalBath.instance);
-		MultiblockHandler.registerMultiblock(MultiblockElectrolyzer.instance);
-		MultiblockHandler.registerMultiblock(MultiblockConveyorScanner.instance);
-		MultiblockHandler.registerMultiblock(MultiblockPrecissionAssembler.instance);
-		MultiblockHandler.registerMultiblock(MultiblockArtilleryHowitzer.instance);
-		MultiblockHandler.registerMultiblock(MultiblockAmmunitionFactory.instance);
-
-		int i = -1;
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
-				EntityMinecartCrateWooden.class, "minecart_wooden_crate", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
-				true);
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_reinforced_crate"),
-				EntityMinecartCrateReinforced.class, "minecart_reinforced_crate", i++, ImmersiveIntelligence.INSTANCE,
-				64, 1, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_steel_crate"),
-				EntityMinecartCrateSteel.class, "minecart_steel_crate", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
-				true);
-
-		//Entities
-
-		//TODO:Skycrates, maybe someday they will be a thing ^^
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "skycrate"),
-				EntitySkyCrate.class, "skycrate", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
-
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "bullet"),
-				EntityBullet.class, "bullet", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
-
-		//Crafting
-
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
 		// LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"),100);
+
+		final ItemStack powder = new ItemStack(item_tracer_powder, 1, 0);
+		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveEngineering.MODID, "tracer_powder_colour"));
 
 		ArcFurnaceRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_plate_blend")), "dustAdvancedPlate", ItemStack.EMPTY, 600, 640);
 
@@ -546,7 +449,173 @@ public class CommonProxy implements IGuiHandler
 
 		//CrusherRecipe.addRecipe(ItemStack(item_material,1,item_material.getMetaBySubname("dust_salt")),new IngredientStack("oreSalt"),3200);
 
+	}
 
+	public void preInit()
+	{
+		IIWireType.init();
+		IIPacketHandler.preInit();
+
+		fluid_ink_black = makeFluid("ink", 1500, 2250);
+		fluid_ink_cyan = makeFluid("ink_cyan", 1500, 2250);
+		fluid_ink_magenta = makeFluid("ink_magenta", 1500, 2250);
+		fluid_ink_yellow = makeFluid("ink_yellow", 1500, 2250);
+
+		fluid_etching_acid = makeFluid("etching_acid", 1500, 2250);
+
+		fluid_brine = makeFluid("brine", 1500, 2250);
+		gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
+		gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
+		gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
+
+		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
+		//Bullets
+
+		BulletRegistry.INSTANCE.registerCasing(this.item_casing_artillery, "artillery_8bCal");
+		BulletRegistry.INSTANCE.registerCasing(this.item_casing_grenade, "grenade_4bCal");
+
+		BulletRegistry.INSTANCE.registerCasing(this.item_casing_machinegun, "machinegun_2bCal");
+		BulletRegistry.INSTANCE.registerCasing(this.item_casing_submachinegun, "submachinegun_1bCal");
+		BulletRegistry.INSTANCE.registerCasing(this.item_casing_revolver, "revolver_1bCal");
+
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT(), "TNT");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX(), "RDX");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX(), "HMX");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus(), "white_phosphorus");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentFirework(), "firework");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTracerPowder(), "tracer_powder");
+
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreSteel(), "CoreSteel");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreTungsten(), "CoreTungsten");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreBrass(), "CoreBrass");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreLead(), "CoreLead");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreUranium(), "CoreUranium");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCorePabilium(), "CorePabilium");
+
+		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
+
+		ShrapnelHandler.addShrapnel("aluminum", 0xd9ecea, "immersiveengineering:textures/blocks/sheetmetal_aluminum", 1, 0.05f, 0f);
+		ShrapnelHandler.addShrapnel("zinc", 0xdee3dc, "immersiveintelligence:textures/blocks/metal/sheetmetal_zinc", 1, 0.15f, 0f);
+		ShrapnelHandler.addShrapnel("copper", 0xe37c26, "immersiveengineering:textures/blocks/sheetmetal_copper", 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("platinum", 0xd8e1e1, "immersiveintelligence:textures/blocks/metal/sheetmetal_platinum", 2, 0.05f, 0f);
+		ShrapnelHandler.addShrapnel("gold", 0xd1b039, "minecraft:textures/blocks/gold_block", 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("nickel", 0x838877, "immersiveengineering:textures/blocks/sheetmetal_nickel", 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("silver", 0xa7cac8, "immersiveengineering:textures/blocks/sheetmetal_silver", 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("electrum", 0xf6ad59, "immersiveengineering:textures/blocks/sheetmetal_electrum", 2, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("constantan", 0xf97456, "immersiveengineering:textures/blocks/sheetmetal_constantan", 3, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("iron", 0xc7c7c7, "minecraft:textures/blocks/iron_block", 4, 0.25f, 0f);
+		ShrapnelHandler.addShrapnel("lead", 0x3a3e44, "immersiveengineering:textures/blocks/sheetmetal_lead", 5, 0.75f, 0f);
+		ShrapnelHandler.addShrapnel("steel", 0x4d4d4d, "immersiveengineering:textures/blocks/sheetmetal_steel", 6, 0.35f, 0f);
+		ShrapnelHandler.addShrapnel("brass", 0x957743, "immersiveintelligence:textures/blocks/metal/sheetmetal_brass", 6, 0.35f, 0f);
+		ShrapnelHandler.addShrapnel("tungsten", 0x3b3e43, "immersiveintelligence:textures/blocks/metal/sheetmetal_tungsten", 8, 0.45f, 0f);
+		ShrapnelHandler.addShrapnel("HOPGraphite", 0x282828, "immersiveengineering:textures/blocks/stone_decoration_coke", 8, 0.45f, 0f);
+		ShrapnelHandler.addShrapnel("uranium", 0x659269, "immersiveengineering:textures/blocks/sheetmetal_uranium", 12, 0.45f, 8f);
+
+		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
+		{
+			BulletComponentShrapnel shrapnel = new BulletComponentShrapnel(s.getKey());
+			BulletRegistry.INSTANCE.registerComponent(shrapnel, shrapnel.getName());
+		}
+	}
+
+	public void init()
+	{
+		IEApi.forbiddenInCrates.add((stack) ->
+		{
+			if(OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 0), stack, true))
+				return true;
+			return OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 1), stack, true);
+		});
+
+		hammer_blacklist.add(
+				iBlockState -> (iBlockState.getBlock().equals(IEContent.blockMetalDevice1)&&iBlockState.getBlock().getMetaFromState(iBlockState)==BlockTypes_MetalDevice1.CHARGING_STATION.getMeta())
+		);
+
+		IEApi.forbiddenInCrates.add((stack) -> stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock() instanceof BlockIISmallCrate);
+
+		ImmersiveIntelligence.logger.info("Adding oregen");
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.PLATINUM.getMeta()), "platinum", Ores.ore_platinum);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.ZINC.getMeta()), "zinc", Ores.ore_zinc);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.TUNGSTEN.getMeta()), "tungsten", Ores.ore_tungsten);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.SALT.getMeta()), "salt", Ores.ore_salt);
+
+		ImmersiveIntelligence.logger.info("Adding TileEntities");
+		registerTile(TileEntityMetalCrate.class);
+		registerTile(TileEntityAmmunitionCrate.class);
+		registerTile(TileEntitySmallCrate.class);
+		registerTile(TileEntityAlarmSiren.class);
+
+		registerTile(TileEntityInserter.class);
+		registerTile(TileEntityAdvancedInserter.class);
+		registerTile(TileEntityFluidInserter.class);
+
+		registerTile(TileEntityTimedBuffer.class);
+		registerTile(TileEntityRedstoneBuffer.class);
+		registerTile(TileEntitySmallDataBuffer.class);
+		registerTile(TileEntityDataMerger.class);
+		registerTile(TileEntityDataRouter.class);
+		registerTile(TileEntityDataDebugger.class);
+
+		registerTile(TileEntityDataConnector.class);
+		registerTile(TileEntityDataRelay.class);
+
+		registerTile(TileEntitySandbags.class);
+
+		registerTile(TileEntitySkyCrateStation.class);
+
+		registerTile(TileEntityRadioStation.class);
+		registerTile(TileEntityDataInputMachine.class);
+		registerTile(TileEntityArithmeticLogicMachine.class);
+		registerTile(TileEntityPrintingPress.class);
+		registerTile(TileEntityChemicalBath.class);
+		registerTile(TileEntityElectrolyzer.class);
+		registerTile(TileEntityConveyorScanner.class);
+		registerTile(TileEntityPrecissionAssembler.class);
+		registerTile(TileEntityArtilleryHowitzer.class);
+		registerTile(TileEntityAmmunitionFactory.class);
+		registerTile(TileEntityBallisticComputer.class);
+
+		MultiblockHandler.registerMultiblock(MultiblockSkyCrateStation.instance);
+		MultiblockHandler.registerMultiblock(MultiblockRadioStation.instance);
+		MultiblockHandler.registerMultiblock(MultiblockDataInputMachine.instance);
+		MultiblockHandler.registerMultiblock(MultiblockArithmeticLogicMachine.instance);
+		MultiblockHandler.registerMultiblock(MultiblockPrintingPress.instance);
+		MultiblockHandler.registerMultiblock(MultiblockChemicalBath.instance);
+		MultiblockHandler.registerMultiblock(MultiblockElectrolyzer.instance);
+		MultiblockHandler.registerMultiblock(MultiblockConveyorScanner.instance);
+		MultiblockHandler.registerMultiblock(MultiblockPrecissionAssembler.instance);
+		MultiblockHandler.registerMultiblock(MultiblockArtilleryHowitzer.instance);
+		MultiblockHandler.registerMultiblock(MultiblockAmmunitionFactory.instance);
+		MultiblockHandler.registerMultiblock(MultiblockBallisticComputer.instance);
+
+		int i = -1;
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
+				EntityMinecartCrateWooden.class, "minecart_wooden_crate", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
+				true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_reinforced_crate"),
+				EntityMinecartCrateReinforced.class, "minecart_reinforced_crate", i++, ImmersiveIntelligence.INSTANCE,
+				64, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_steel_crate"),
+				EntityMinecartCrateSteel.class, "minecart_steel_crate", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
+				true);
+
+		//Entities
+
+		//TODO:Skycrates, maybe someday they will be a thing ^^
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "skycrate"),
+				EntitySkyCrate.class, "skycrate", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "bullet"),
+				EntityBullet.class, "bullet", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "shrapnel"),
+				EntityShrapnel.class, "shrapnel", i++, ImmersiveIntelligence.INSTANCE, 24, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "machinegun"),
+				EntityMachinegun.class, "machinegun", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "camera"),
+				EntityCamera.class, "camera", i++, ImmersiveIntelligence.INSTANCE, 1, 1, true);
 	}
 
 	public void postInit()
@@ -660,5 +729,42 @@ public class CommonProxy implements IGuiHandler
 		FluidRegistry.addBucketForFluid(fl);
 		ImmersiveIntelligence.creativeTab.fluidBucketMap.add(fl);
 		return fl;
+	}
+
+	//Cancel when using a machinegun
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onItemUse(PlayerInteractEvent.RightClickBlock event)
+	{
+		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
+		{
+			event.setResult(Result.DENY);
+			event.setCanceled(true);
+		}
+	}
+
+	//Cancel when using a machinegun
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onBlockUse(PlayerInteractEvent.RightClickItem event)
+	{
+		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
+		{
+			event.setResult(Result.DENY);
+			event.setCanceled(true);
+		}
+	}
+
+	//Shooting
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onEmptyRightclick(PlayerInteractEvent.RightClickEmpty event)
+	{
+		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
+		{
+			event.setResult(Result.DENY);
+		}
+	}
+
+	public void spawnGunfireFX(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	{
+
 	}
 }

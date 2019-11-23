@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.immersiveengineering.api.energy.wires.WireApi;
+import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.IECustomStateMapper;
 import blusunrize.immersiveengineering.client.IEDefaultColourHandlers;
@@ -20,6 +21,7 @@ import blusunrize.lib.manual.ManualPages;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -28,6 +30,7 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -45,6 +48,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -52,10 +56,14 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
+import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
@@ -63,10 +71,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiA
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.render.BulletRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.SandbagsRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.SmallCrateItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.*;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCrateStationRenderer;
@@ -77,22 +82,28 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation.TileEntitySkyCrateStationParent;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIPrintedPage;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemScrollableSwitch;
+import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
 import pl.pabilo8.immersiveintelligence.common.util.SkyCrateSound;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Created by Pabilo8 on 2019-05-07.
@@ -108,6 +119,8 @@ public class ClientProxy extends CommonProxy
 
 	public NBTTagCompound storedGuiData = new NBTTagCompound();
 
+	public static KeyBinding keybind_machinegunScope = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
+
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent evt)
 	{
@@ -122,6 +135,8 @@ public class ClientProxy extends CommonProxy
 		WireApi.registerConnectorForRender("advanced_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		WireApi.registerConnectorForRender("fluid_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		WireApi.registerConnectorForRender("advanced_fluid_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+
+		WireApi.registerConnectorForRender("skycrate_station", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 
 		for(Block block : CommonProxy.blocks)
 		{
@@ -329,8 +344,19 @@ public class ClientProxy extends CommonProxy
 		//But using TMT seems easier (and more weird).
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityShrapnel.class, ShrapnelRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityMachinegun.class, MachinegunRenderer::new);
 
 		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(item_bullet, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
+		{
+			@Override
+			public IBakedModel createBakedModel(IBakedModel existingModel)
+			{
+				return new ModelItemDynamicOverride(existingModel, null);
+			}
+		}, ImmersiveIntelligence.MODID);
+
+		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(item_bullet_magazine, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
 		{
 			@Override
 			public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -361,8 +387,31 @@ public class ClientProxy extends CommonProxy
 			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_paint");
 		}
 
+
+		for(String s : item_bullet_magazine.getSubNames())
+		{
+			ImmersiveIntelligence.logger.info("registering sprite for bullet magazine type: "+s);
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/main");
+
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/bullet0");
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/paint0");
+
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/bullet1");
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/paint1");
+
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/bullet2");
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/paint2");
+
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/bullet3");
+			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/paint3");
+
+		}
+
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_off");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
+
+		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
+			ApiUtils.getRegisterSprite(event.getMap(), s.getValue().texture.replace("textures/", ""));
 	}
 
 	@Override
@@ -381,6 +430,10 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(handler);
 		((IReloadableResourceManager)ClientUtils.mc().getResourceManager()).registerReloadListener(handler);
 
+		keybind_machinegunScope.setKeyConflictContext(KeyConflictContext.IN_GAME);
+		ClientRegistry.registerKeyBinding(keybind_machinegunScope);
+
+		ShaderUtil.init();
 
 		TileEntityInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
@@ -462,6 +515,10 @@ public class ClientProxy extends CommonProxy
 				new ManualPages.Text(ManualHelper.getManual(), "intel_main0")
 		);
 
+		//Weapons (Items)
+		item_machinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
+		ItemIIWeaponUpgrade.addUpgradesToRender();
+
 		//Ammo Crate
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionCrate.class, new AmmunitionCrateRenderer());
 
@@ -472,6 +529,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTimedBuffer.class, new TimedBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneBuffer.class, new RedstoneBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallDataBuffer.class, new SmallDataBufferRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataMerger.class, new DataMergerRenderer());
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), TileEntityAmmunitionCrate.class);
 
@@ -479,6 +537,7 @@ public class ClientProxy extends CommonProxy
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
 
 		//Data Connectors
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataConnector.class, new DataConnectorRenderer());
@@ -504,17 +563,27 @@ public class ClientProxy extends CommonProxy
 		Item.getItemFromBlock(block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
 		//Multiblocks
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStationParent.class, new SkyCrateStationRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataInputMachine.class, new DataInputMachineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArithmeticLogicMachine.class, new ArithmeticLogicMachineRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrintingPress.class, new PrintingPressRenderer());
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer());
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock), IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta(), TileEntityChemicalBath.class);
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer());
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock), IIBlockTypes_MetalMultiblock.ELECTROLYZER.getMeta(), TileEntityElectrolyzer.class);
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer());
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock), IIBlockTypes_MetalMultiblock.PRECISSION_ASSEMBLER.getMeta(), TileEntityPrecissionAssembler.class);
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionFactory.class, new AmmunitionFactoryRenderer());
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock), IIBlockTypes_MetalMultiblock.AMMUNITION_FACTORY.getMeta(), TileEntityAmmunitionFactory.class);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer());
 
 	}
 
@@ -529,7 +598,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void startSkyhookSound(EntitySkyCrate hook)
 	{
-		Minecraft.getMinecraft().getSoundHandler().playSound(new SkyCrateSound(hook,
+		ClientUtils.mc().getSoundHandler().playSound(new SkyCrateSound(hook,
 				new ResourceLocation(ImmersiveEngineering.MODID, "skyhook")));
 	}
 
@@ -539,16 +608,47 @@ public class ClientProxy extends CommonProxy
 		if(event.getDwheel()!=0)
 		{
 			EntityPlayer player = ClientUtils.mc().player;
-			if(!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&player.isSneaking())
+			if(!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()||player.getRidingEntity() instanceof EntityMachinegun)
 			{
 				ItemStack equipped = player.getHeldItem(EnumHand.MAIN_HAND);
 
-				if(equipped.getItem() instanceof IItemScrollable)
+				if(equipped.getItem() instanceof IItemScrollable&&player.isSneaking())
 				{
 					IIPacketHandler.INSTANCE.sendToServer(new MessageItemScrollableSwitch(event.getDwheel() > 0));
 					event.setCanceled(true);
 				}
+				if(player.getRidingEntity() instanceof EntityMachinegun&&ZoomHandler.isZooming&&EntityMachinegun.scope.canZoom(((EntityMachinegun)player.getRidingEntity()).gun, player))
+				{
+					float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
+					if(steps!=null&&steps.length > 0)
+					{
+						int curStep = -1;
+						float dist = 0;
+						for(int i = 0; i < steps.length; i++)
+							if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
+							{
+								curStep = i;
+								dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
+							}
+						if(curStep!=-1)
+						{
+							int newStep = curStep+(event.getDwheel() > 0?-1: 1);
+							if(newStep >= 0&&newStep < steps.length)
+								ZoomHandler.fovZoom = steps[newStep];
+							event.setCanceled(true);
+						}
+					}
+				}
 			}
+		}
+		//Rightclick
+		if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun&&event.getButton()==1)
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setBoolean("clientMessage", true);
+			tag.setBoolean("shoot", event.isButtonstate());
+			IIPacketHandler.INSTANCE.sendToServer(new MessageMachinegunSync(ClientUtils.mc().player.getRidingEntity(), tag));
+			ImmersiveIntelligence.logger.info(event.isButtonstate()?"shoot!": "dont!");
 		}
 	}
 
@@ -574,5 +674,12 @@ public class ClientProxy extends CommonProxy
 		{
 			return location;
 		}
+	}
+
+	@Override
+	public void spawnGunfireFX(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	{
+		Particle particle = new ParticleGunfire(world, x, y, z, mx, my, mz, size);
+		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 	}
 }

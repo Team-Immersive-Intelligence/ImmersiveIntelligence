@@ -3,9 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.SkylineHelper;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.nbt.NBTTagCompound;
@@ -452,7 +452,7 @@ public class EntitySkyCrate extends Entity
 		if(!world.isRemote)
 			ApiUtils.addFutureServerTask(world, () -> handleDismount(passenger));
 		else
-			ApiUtils.callFromOtherThread(Minecraft.getMinecraft()::addScheduledTask, () -> handleDismount(passenger));
+			ApiUtils.callFromOtherThread(ClientUtils.mc()::addScheduledTask, () -> handleDismount(passenger));
 	}
 
 	/**

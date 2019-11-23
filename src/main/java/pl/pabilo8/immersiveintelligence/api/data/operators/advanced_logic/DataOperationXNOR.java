@@ -14,7 +14,7 @@ public class DataOperationXNOR extends DataOperator
 	public DataOperationXNOR()
 	{
 		//A boolean version of the 'equals' operation
-		name = "XNOR";
+		name = "xnor";
 		sign = "!^";
 		allowedType1 = DataPacketTypeBoolean.class;
 		allowedType2 = DataPacketTypeBoolean.class;

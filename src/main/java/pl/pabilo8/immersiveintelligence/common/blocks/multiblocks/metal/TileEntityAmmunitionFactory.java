@@ -28,6 +28,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
@@ -51,6 +52,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -70,16 +72,17 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 	//core ->
 	public int coreProgress = 0, gunpowderProgress = 0, casingProgress = 0, paintProgress = 0;
 	public String ingredient1 = "", ingredient2 = "", name = "";
+	public NBTTagCompound ingredient1NBT, ingredient2NBT;
 	public float proportion = 1f;
 	public int paintColour = 0xffffff;
 	public int conveyorProgress = 0;
 
 	public List<String> plannedCoreList = new ArrayList<String>();
-	public NonNullList<ItemStack> gunpowderQueue = NonNullList.withSize(3, ItemStack.EMPTY);
-	public NonNullList<ItemStack> coreQueue = NonNullList.withSize(3, ItemStack.EMPTY);
-	public NonNullList<ItemStack> casingQueue = NonNullList.withSize(6, ItemStack.EMPTY);
-	public NonNullList<ItemStack> paintQueue = NonNullList.withSize(3, ItemStack.EMPTY);
-	public NonNullList<ItemStack> outputQueue = NonNullList.withSize(2, ItemStack.EMPTY);
+	public NonNullList<ItemStack> gunpowderQueue = NonNullList.withSize(2, ItemStack.EMPTY);
+	public NonNullList<ItemStack> coreQueue = NonNullList.withSize(2, ItemStack.EMPTY);
+	public NonNullList<ItemStack> casingQueue = NonNullList.withSize(3, ItemStack.EMPTY);
+	public NonNullList<ItemStack> paintQueue = NonNullList.withSize(2, ItemStack.EMPTY);
+	public NonNullList<ItemStack> outputQueue = NonNullList.withSize(1, ItemStack.EMPTY);
 
 	IItemHandler component1Handler = new IEInventoryHandler(1, this, 2, true, false);
 	IItemHandler gunpowderHandler = new IEInventoryHandler(1, this, 3, true, false);
@@ -102,11 +105,11 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 			if(!descPacket)
 			{
 				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 8);
-				gunpowderQueue = Utils.readInventory(nbt.getTagList("gunpowderQueue", 10), 3);
-				coreQueue = Utils.readInventory(nbt.getTagList("coreQueue", 10), 3);
-				casingQueue = Utils.readInventory(nbt.getTagList("casingQueue", 10), 6);
-				paintQueue = Utils.readInventory(nbt.getTagList("paintQueue", 10), 3);
-				outputQueue = Utils.readInventory(nbt.getTagList("outputQueue", 10), 2);
+				gunpowderQueue = Utils.readInventory(nbt.getTagList("gunpowderQueue", 10), 2);
+				coreQueue = Utils.readInventory(nbt.getTagList("coreQueue", 10), 2);
+				casingQueue = Utils.readInventory(nbt.getTagList("casingQueue", 10), 3);
+				paintQueue = Utils.readInventory(nbt.getTagList("paintQueue", 10), 2);
+				outputQueue = Utils.readInventory(nbt.getTagList("outputQueue", 10), 1);
 			}
 			tanks[0].readFromNBT(nbt.getCompoundTag("tank"));
 			active = nbt.getBoolean("active");
@@ -134,7 +137,11 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 			}
 
 			ingredient1 = nbt.getString("ingredient1");
+			if(nbt.hasKey("ingredient1NBT"))
+				ingredient1NBT = nbt.getCompoundTag("ingredient1NBT");
 			ingredient2 = nbt.getString("ingredient2");
+			if(nbt.hasKey("ingredient2NBT"))
+				ingredient2NBT = nbt.getCompoundTag("ingredient2NBT");
 			name = nbt.getString("name");
 		}
 	}
@@ -156,16 +163,16 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 
 		if(message.hasKey("gunpowderQueue"))
 		{
-			gunpowderQueue = Utils.readInventory(message.getTagList("gunpowderQueue", 10), 3);
+			gunpowderQueue = Utils.readInventory(message.getTagList("gunpowderQueue", 10), 2);
 		}
 		if(message.hasKey("coreQueue"))
-			coreQueue = Utils.readInventory(message.getTagList("coreQueue", 10), 3);
+			coreQueue = Utils.readInventory(message.getTagList("coreQueue", 10), 2);
 		if(message.hasKey("casingQueue"))
-			casingQueue = Utils.readInventory(message.getTagList("casingQueue", 10), 6);
+			casingQueue = Utils.readInventory(message.getTagList("casingQueue", 10), 3);
 		if(message.hasKey("paintQueue"))
-			paintQueue = Utils.readInventory(message.getTagList("paintQueue", 10), 3);
+			paintQueue = Utils.readInventory(message.getTagList("paintQueue", 10), 2);
 		if(message.hasKey("outputQueue"))
-			outputQueue = Utils.readInventory(message.getTagList("outputQueue", 10), 2);
+			outputQueue = Utils.readInventory(message.getTagList("outputQueue", 10), 1);
 
 		if(message.hasKey("ingredientCount1"))
 			ingredientCount1 = message.getInteger("ingredientCount1");
@@ -180,8 +187,12 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 
 		if(message.hasKey("ingredient1"))
 			ingredient1 = message.getString("ingredient1");
+		if(message.hasKey("ingredient1NBT"))
+			ingredient1NBT = message.getCompoundTag("ingredient1NBT");
 		if(message.hasKey("ingredient2"))
 			ingredient2 = message.getString("ingredient2");
+		if(message.hasKey("ingredient2NBT"))
+			ingredient2NBT = message.getCompoundTag("ingredient2NBT");
 		if(message.hasKey("name"))
 			name = message.getString("name");
 
@@ -233,7 +244,11 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 			nbt.setBoolean("active", active);
 
 			nbt.setString("ingredient1", ingredient1);
+			if(ingredient1NBT!=null)
+				nbt.setTag("ingredient1NBT", ingredient1NBT);
 			nbt.setString("ingredient2", ingredient2);
+			if(ingredient2NBT!=null)
+				nbt.setTag("ingredient2NBT", ingredient2NBT);
 			nbt.setString("name", name);
 
 			nbt.setInteger("ingredientCount1", ingredientCount1);
@@ -300,7 +315,10 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 		if(world.getTotalWorldTime()%20==0)
 		{
 			if(ingredientCount1 <= 0)
+			{
 				ingredient1 = "";
+				ingredient1NBT = null;
+			}
 
 			if(ingredientCount1 < ammunitionFactory.componentCapacity)
 			{
@@ -314,13 +332,15 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 							int to_shrink = Math.max(Math.min(count, Math.min(ammunitionFactory.componentCapacity-ingredientCount1, ammunitionFactory.componentIntake)), 0);
 							inventory.get(2).shrink(to_shrink);
 							ingredient1 = b.getKey();
+							if(inventory.get(2).hasTagCompound())
+								ingredient1NBT = ItemNBTHelper.getTag(inventory.get(2));
 							ingredientCount1 += to_shrink;
 							update = true;
 							break;
 						}
 					}
 				}
-				else if(BulletRegistry.INSTANCE.getComponent(ingredient1).getMaterial().matchesItemStackIgnoringSize(inventory.get(2)))
+				else if(BulletRegistry.INSTANCE.getComponent(ingredient1).getMaterial().matchesItemStackIgnoringSize(inventory.get(2))&&(ingredient1NBT==null||ingredient1NBT.toString().equals(ItemNBTHelper.getTag(inventory.get(2)).toString())))
 				{
 					int count = inventory.get(2).getCount();
 					int to_shrink = Math.max(Math.min(count, Math.min(ammunitionFactory.componentCapacity-ingredientCount1, ammunitionFactory.componentIntake)), 0);
@@ -332,7 +352,10 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 			}
 
 			if(ingredientCount2 <= 0)
+			{
 				ingredient2 = "";
+				ingredient2NBT = null;
+			}
 
 			if(ingredientCount2 < ammunitionFactory.componentCapacity)
 			{
@@ -347,12 +370,14 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 							inventory.get(4).shrink(to_shrink);
 							ingredient2 = b.getKey();
 							ingredientCount2 += to_shrink;
+							if(inventory.get(4).hasTagCompound())
+								ingredient2NBT = ItemNBTHelper.getTag(inventory.get(4));
 							update = true;
 							break;
 						}
 					}
 				}
-				else if(BulletRegistry.INSTANCE.getComponent(ingredient2).getMaterial().matchesItemStackIgnoringSize(inventory.get(4)))
+				else if(BulletRegistry.INSTANCE.getComponent(ingredient2).getMaterial().matchesItemStackIgnoringSize(inventory.get(4))&&(ingredient2NBT==null||ingredient2NBT.toString().equals(ItemNBTHelper.getTag(inventory.get(4)).toString())))
 				{
 					int count = inventory.get(4).getCount();
 					int to_shrink = Math.max(Math.min(count, Math.min(ammunitionFactory.componentCapacity-ingredientCount2, ammunitionFactory.componentIntake)), 0);
@@ -397,41 +422,40 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 		{
 			if(!world.isRemote)
 			{
-				moveItemToConveyorSlot(gunpowderQueue, 1, 2);
 				moveItemToConveyorSlot(gunpowderQueue, 0, 1);
+				check:
 				if(gunpowderQueue.get(0).isEmpty()&&!inventory.get(7).isEmpty()&&inventory.get(7).getCount()==inventory.get(7).getMaxStackSize())
 				{
 					ItemStack stack = inventory.get(7).copy();
+					if(!(stack.getItem() instanceof IBulletCasingType))
+					{
+						Utils.dropStackAtPos(world, getBlockPosForPos(25).offset(facing.getOpposite()), stack, facing.getOpposite());
+						inventory.set(7, ItemStack.EMPTY);
+						break check;
+					}
 					plannedCoreList.add(((IBulletCasingType)stack.getItem()).getName());
 					gunpowderQueue.set(0, stack.copy());
 					inventory.set(7, ItemStack.EMPTY);
 				}
 
-				moveItemToConveyorSlot(casingQueue, 4, 5);
-				moveItemToConveyorSlot(casingQueue, 3, 4);
-				moveItemToConveyorSlot(casingQueue, 2, 3);
 				moveItemToConveyorSlot(casingQueue, 1, 2);
 				moveItemToConveyorSlot(casingQueue, 0, 1);
 
-				moveItemToConveyorSlot(coreQueue, 1, 2);
 				moveItemToConveyorSlot(coreQueue, 0, 1);
 
-				moveItemToConveyorSlot(paintQueue, 1, 2);
 				moveItemToConveyorSlot(paintQueue, 0, 1);
 
-				moveItemToConveyorSlot(outputQueue, 0, 1);
-
-				ItemStack output = outputQueue.get(1);
+				ItemStack output = outputQueue.get(0);
 				TileEntity te = world.getTileEntity(getBlockPosForPos(25).offset(facing.getOpposite()));
 				if(te!=null)
 				{
 					output = Utils.insertStackIntoInventory(te, output, facing.getOpposite());
-					outputQueue.set(1, output);
+					outputQueue.set(0, output);
 				}
 				if(!output.isEmpty())
 				{
 					Utils.dropStackAtPos(world, getBlockPosForPos(25).offset(facing.getOpposite()), output, facing.getOpposite());
-					outputQueue.set(1, ItemStack.EMPTY);
+					outputQueue.set(0, ItemStack.EMPTY);
 				}
 
 
@@ -447,16 +471,16 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 
 		//Gunpowder
 
-		if(!gunpowderQueue.get(2).isEmpty()&&gunpowderCount >= ImmersiveIntelligence.proxy.item_bullet.getCasing(gunpowderQueue.get(2)).getGunpowderNeeded())
+		if(!gunpowderQueue.get(1).isEmpty()&&gunpowderCount >= ImmersiveIntelligence.proxy.item_bullet.getCasing(gunpowderQueue.get(1)).getGunpowderNeeded())
 		{
 			if(!world.isRemote&&gunpowderProgress >= ammunitionFactory.gunpowderTime)
 			{
 				if(casingQueue.get(0).isEmpty())
 				{
-					gunpowderCount -= ImmersiveIntelligence.proxy.item_bullet.getCasing(gunpowderQueue.get(2)).getGunpowderNeeded();
-					ItemStack stack = gunpowderQueue.get(2).copy();
+					gunpowderCount -= ImmersiveIntelligence.proxy.item_bullet.getCasing(gunpowderQueue.get(1)).getGunpowderNeeded();
+					ItemStack stack = gunpowderQueue.get(1).copy();
 					casingQueue.set(0, stack);
-					gunpowderQueue.set(2, ItemStack.EMPTY);
+					gunpowderQueue.set(1, ItemStack.EMPTY);
 					gunpowderProgress = 0;
 					shouldUpdate = true;
 				}
@@ -495,7 +519,12 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 					ingredientCount1 -= Math.round(stack1_usage*2f);
 					ingredientCount2 -= Math.round(stack2_usage*2f);
 
-					ItemStack stack = new ItemIIBullet().getAmmoStack(1, plannedCoreList.get(0), core_material, ingredient1, ingredient2, proportion, stack1_usage, stack2_usage);
+					ItemStack stack = new ItemIIBullet().getAmmoStack(BulletRegistry.INSTANCE.getCasing(plannedCoreList.get(0)).getStackSize(), plannedCoreList.get(0), core_material, ingredient1, ingredient2, proportion, stack1_usage, stack2_usage);
+
+					if(ingredient1NBT!=null)
+						ItemIIBullet.getFirstComponentNBT(stack).merge(ingredient1NBT);
+					if(ingredient2NBT!=null)
+						ItemIIBullet.getSecondComponentNBT(stack).merge(ingredient2NBT);
 
 					coreQueue.set(0, stack);
 					plannedCoreList.remove(0);
@@ -508,19 +537,20 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 		//Casings
 
 
-		if(!casingQueue.get(5).isEmpty()&&!coreQueue.get(2).isEmpty())
+		if(!casingQueue.get(2).isEmpty()&&!coreQueue.get(1).isEmpty())
 		{
 			if(!world.isRemote&&casingProgress >= ammunitionFactory.casingTime)
 			{
 				if(paintQueue.get(0).isEmpty())
 				{
-					String casing_name = ((IBulletCasingType)casingQueue.get(5).getItem()).getName();
-					ItemStack stack = coreQueue.get(2).copy();
+					String casing_name = ((IBulletCasingType)casingQueue.get(2).getItem()).getName();
+					ItemStack stack = coreQueue.get(1).copy();
 					ItemNBTHelper.setString(stack, "casing", casing_name);
+					stack.setCount(casingQueue.get(2).getCount());
 					paintQueue.set(0, stack);
 
-					casingQueue.set(5, ItemStack.EMPTY);
-					coreQueue.set(2, ItemStack.EMPTY);
+					casingQueue.set(2, ItemStack.EMPTY);
+					coreQueue.set(1, ItemStack.EMPTY);
 
 					casingProgress = 0;
 					shouldUpdate = true;
@@ -532,68 +562,72 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 		else
 			casingProgress = 0;
 
-		if(!paintQueue.get(2).isEmpty())
+		if(!paintQueue.get(1).isEmpty())
 		{
 			if(!world.isRemote&&paintProgress >= ammunitionFactory.paintTime)
 			{
-				ItemStack stack = paintQueue.get(2).copy();
+				ItemStack stack = paintQueue.get(1).copy();
 
 				Color col = new Color(paintColour);
 				int[] amounts = pl.pabilo8.immersiveintelligence.api.Utils.rgbToCmyk(col.getRed(), col.getGreen(), col.getBlue());
 				float c = 0, m = 0, y = 0, k = 0;
-				/*Iterator<FluidStack> iter = tanks[0].fluids.iterator();
+				Iterator<FluidStack> iter = tanks[0].fluids.iterator();
 
 				while(iter.hasNext())
 				{
 					FluidStack fs = iter.next();
-					if(fs.getFluid().getName().equals("ink"))
+					if(fs.getFluid().getName().equals("ink_cyan"))
 					{
 						c += fs.amount;
 					}
-					else if(fs.getFluid().getName().equals("ink_cyan"))
+					else if(fs.getFluid().getName().equals("ink_magenta"))
 					{
 						m += fs.amount;
 
 					}
-					else if(fs.getFluid().getName().equals("ink_magenta"))
+					else if(fs.getFluid().getName().equals("ink_yellow"))
 					{
 						y += fs.amount;
 					}
-					else if(fs.getFluid().getName().equals("ink_yellow"))
+					else if(fs.getFluid().getName().equals("ink"))
 					{
 						k += fs.amount;
 					}
-
-					c = Math.min(c, ammunitionFactory.paintUsage*(amounts[0]/255f));
-					m = Math.min(m, ammunitionFactory.paintUsage*(amounts[1]/255f));
-					y = Math.min(y, ammunitionFactory.paintUsage*(amounts[2]/255f));
-					k = Math.min(k, ammunitionFactory.paintUsage*(amounts[3]/255f));
-
-
-					if(c > 0)
-					{
-						c = tanks[0].drain(FluidRegistry.getFluidStack("ink", Math.round(c)), true).amount;
-					}
-					if(m > 0)
-					{
-						m = tanks[0].drain(FluidRegistry.getFluidStack("ink_cyan", Math.round(m)), true).amount;
-					}
-					if(y > 0)
-					{
-						y = tanks[0].drain(FluidRegistry.getFluidStack("ink_magenta", Math.round(y)), true).amount;
-					}
-					if(k > 0)
-					{
-						k = tanks[0].drain(FluidRegistry.getFluidStack("ink_yellow", Math.round(k)), true).amount;
-					}
-
 				}
+
+				c = Math.min(c, ammunitionFactory.paintUsage*(amounts[0]/255f));
+				m = Math.min(m, ammunitionFactory.paintUsage*(amounts[1]/255f));
+				y = Math.min(y, ammunitionFactory.paintUsage*(amounts[2]/255f));
+				k = Math.min(k, ammunitionFactory.paintUsage*(amounts[3]/255f));
+
+				if(c > 0)
+				{
+					c = tanks[0].drain(FluidRegistry.getFluidStack("ink_cyan", Math.round(c)), true).amount;
+				}
+				else
+					c = 0;
+				if(m > 0)
+				{
+					m = tanks[0].drain(FluidRegistry.getFluidStack("ink_magenta", Math.round(m)), true).amount;
+				}
+				else
+					m = 0;
+				if(y > 0)
+				{
+					y = tanks[0].drain(FluidRegistry.getFluidStack("ink_yellow", Math.round(y)), true).amount;
+				}
+				else
+					y = 0;
+				if(k > 0)
+				{
+					k = tanks[0].drain(FluidRegistry.getFluidStack("ink", Math.round(k)), true).amount;
+				}
+				else
+					k = 0;
 
 				int[] rgb = pl.pabilo8.immersiveintelligence.api.Utils.cmykToRgb(Math.round(c/ammunitionFactory.paintUsage*255f), Math.round(m/ammunitionFactory.paintUsage*255f), Math.round(y/ammunitionFactory.paintUsage*255f), Math.round(k/ammunitionFactory.paintUsage*255f));
 
 				ItemNBTHelper.setInt(stack, "colour", new Color(rgb[0], rgb[1], rgb[2]).getRGB());
-*/
-				ItemNBTHelper.setInt(stack, "colour", paintColour);
 				if(!name.isEmpty())
 				{
 					ImmersiveIntelligence.logger.info("onie");
@@ -601,7 +635,7 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 				}
 
 				outputQueue.set(0, stack);
-				paintQueue.set(2, ItemStack.EMPTY);
+				paintQueue.set(1, ItemStack.EMPTY);
 
 
 				paintProgress = 0;
@@ -789,7 +823,7 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(pos==40)
 		{
@@ -806,7 +840,14 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 			}
 			else if(packet.getPacketVariable('c') instanceof DataPacketTypeString)
 			{
-				master().paintColour = Integer.decode("0x"+packet.getPacketVariable('c').valueToString());
+				try
+				{
+					master().paintColour = Integer.decode(packet.getPacketVariable('c').valueToString());
+				} catch(NumberFormatException e)
+				{
+					ImmersiveIntelligence.logger.info("Not a Number!");
+				}
+
 			}
 
 			if(packet.getPacketVariable('n') instanceof DataPacketTypeString)

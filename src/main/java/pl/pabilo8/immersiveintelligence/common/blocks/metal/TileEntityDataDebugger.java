@@ -82,7 +82,7 @@ public class TileEntityDataDebugger extends TileEntityIEBase implements ITickabl
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(mode==0||mode==2)
 		{

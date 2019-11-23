@@ -263,9 +263,9 @@ public class ModelSandbagsStraight extends BaseBlockModel
 		leftModel[11].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonLeft
 		leftModel[11].setRotationPoint(12F, -12F, 4F);
 
-		parts.add(baseModel);
-		parts.add(rightModel);
-		parts.add(leftModel);
+		parts.put("base", baseModel);
+		parts.put("right", rightModel);
+		parts.put("left", leftModel);
 		flipAll();
 	}
 

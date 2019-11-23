@@ -13,7 +13,7 @@ public class DataOperationNOT extends DataOperator
 {
 	public DataOperationNOT()
 	{
-		name = "NOT";
+		name = "not";
 		sign = "!";
 		allowedType1 = DataPacketTypeBoolean.class;
 		allowedType2 = DataPacketTypeBoolean.class;

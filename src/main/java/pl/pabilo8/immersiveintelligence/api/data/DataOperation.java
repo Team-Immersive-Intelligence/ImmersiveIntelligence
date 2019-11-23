@@ -13,10 +13,6 @@ import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperat
 import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationMultiply;
 import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationSubtract;
 import pl.pabilo8.immersiveintelligence.api.data.operators.comparators.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructInteger;
-import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructNull;
-import pl.pabilo8.immersiveintelligence.api.data.operators.conditional_construct.DataOperationConditionalConstructString;
 import pl.pabilo8.immersiveintelligence.api.data.operators.itemstack.*;
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationAND;
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationNOT;
@@ -67,11 +63,6 @@ public class DataOperation
 		//operations.put("length_equal",DataOperationLengthEqual.class);
 		//operations.put("filter",DataOperationFilter.class);
 		//operations.put("format",DataOperationFormat.class);
-
-		operations.put("construct_null", DataOperationConditionalConstructNull.class);
-		operations.put("construct_boolean", DataOperationConditionalConstructBoolean.class);
-		operations.put("construct_integer", DataOperationConditionalConstructInteger.class);
-		operations.put("construct_string", DataOperationConditionalConstructString.class);
 
 		operations.put("get_quantity", DataOperationGetQuantity.class);
 		operations.put("set_quantity", DataOperationSetQuantity.class);

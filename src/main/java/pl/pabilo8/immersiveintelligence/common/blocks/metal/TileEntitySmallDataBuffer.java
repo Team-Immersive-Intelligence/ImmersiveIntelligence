@@ -141,7 +141,7 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(packets.size() < IIConfig.machines.small_data_buffer.packetCapacity)
 		{

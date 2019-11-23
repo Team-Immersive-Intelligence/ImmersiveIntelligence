@@ -35,4 +35,19 @@ public interface IBulletComponent
 
 	//Gets the component colour
 	int getColour();
+
+	default int getNBTColour(NBTTagCompound nbt)
+	{
+		return getColour();
+	}
+
+	default boolean hasTrail()
+	{
+		return false;
+	}
+
+	default int getTrailColour(NBTTagCompound nbt)
+	{
+		return -1;
+	}
 }

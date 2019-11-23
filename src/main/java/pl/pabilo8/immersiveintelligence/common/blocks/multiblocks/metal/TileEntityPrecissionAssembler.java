@@ -418,7 +418,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 			return stack.getItem() instanceof IPrecissionTool;
 		if(slot==3)
 			return stack.getItem() instanceof ItemIIAssemblyScheme;
-		if(slot >= 4&&slot <= 6)
+		if(slot >= 4&&slot <= 7)
 		{
 			if(inventory.get(3).getItem() instanceof ItemIIAssemblyScheme)
 			{
@@ -429,7 +429,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 				return false;
 		}
 
-		return true;
+		return slot < 8;
 	}
 
 	@Override

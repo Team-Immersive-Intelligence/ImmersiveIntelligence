@@ -74,15 +74,22 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 			this.name = nbt.getString("name");
 		if(nbt.hasKey("enchantments"))
 			this.enchantments = nbt.getTagList("enchantments", 10);
+		if(nbt.hasKey("open"))
+			open = nbt.getBoolean("open");
 		if(!descPacket)
 		{
 			if(nbt.hasKey("lootTable", 8))
 				this.lootTable = new ResourceLocation(nbt.getString("lootTable"));
 			else
 				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 38);
+
+			open = !insertionHandler.getStackInSlot(37).isEmpty();
 		}
-		open = !insertionHandler.getStackInSlot(37).isEmpty();
+
 		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+
+		if(facing==EnumFacing.UP||facing==EnumFacing.DOWN)
+			facing = EnumFacing.NORTH;
 	}
 
 	@Override
@@ -100,6 +107,7 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 				writeInv(nbt, false);
 		}
 		nbt.setInteger("facing", facing.ordinal());
+		nbt.setBoolean("open", open);
 	}
 
 	public void writeInv(NBTTagCompound nbt, boolean toItem)

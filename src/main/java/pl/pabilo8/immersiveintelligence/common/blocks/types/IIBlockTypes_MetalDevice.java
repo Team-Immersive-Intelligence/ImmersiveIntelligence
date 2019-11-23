@@ -15,7 +15,9 @@ public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase
 	SMALL_DATA_BUFFER,
 	TIMED_BUFFER,
 	REDSTONE_BUFFER,
-	DATA_DEBUGGER;
+	DATA_DEBUGGER,
+	DATA_ROUTER,
+	DATA_MERGER;
 
 	@Override
 	public String getName()

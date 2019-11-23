@@ -137,6 +137,7 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 			{
 				this.valueEdit = new GuiTextField(5, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
 				this.valueEdit.setFocused(true);
+				this.valueEdit.setMaxStringLength(512);
 				this.valueEdit.setText(dataType.valueToString());
 			}
 			break;

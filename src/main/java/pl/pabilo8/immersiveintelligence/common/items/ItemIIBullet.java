@@ -1,21 +1,21 @@
 package pl.pabilo8.immersiveintelligence.common.items;
 
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
-import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -194,8 +194,6 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 	{
 		super.onCreated(stack, worldIn, playerIn);
 		makeDefault(stack);
-		//TODO: TEISR
-		//setTileEntityItemStackRenderer();
 	}
 
 	@Override
@@ -300,6 +298,21 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 			break;
 		}
 		return 0xffffffff;
+	}
+
+	public static int getTrailColour(ItemStack stack)
+	{
+		int col1 = -1, col2 = -1;
+		if(hasFirstComponent(stack)&&getFirstComponent(stack).hasTrail())
+		{
+			col1 = getFirstComponent(stack).getTrailColour(getFirstComponentNBT(stack));
+		}
+		if(hasSecondComponent(stack)&&getSecondComponent(stack).hasTrail())
+		{
+			col2 = getSecondComponent(stack).getTrailColour(getSecondComponentNBT(stack));
+		}
+
+		return col1!=-1?col1: col2;
 	}
 
 	public boolean isGrenade(ItemStack stack)

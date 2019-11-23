@@ -13,7 +13,7 @@ public class DataOperationXOR extends DataOperator
 {
 	public DataOperationXOR()
 	{
-		name = "XOR";
+		name = "xor";
 		sign = "^";
 		allowedType1 = DataPacketTypeBoolean.class;
 		allowedType2 = DataPacketTypeBoolean.class;

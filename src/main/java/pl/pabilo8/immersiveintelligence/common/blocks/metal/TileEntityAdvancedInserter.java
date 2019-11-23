@@ -36,7 +36,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
@@ -450,7 +449,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 					}
 					else
 					{
-						if(world.getTileEntity(getPos().offset(outputFacing, 2))!=null&&world.getTileEntity(getPos().offset(outputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+						if(world.isAirBlock(getPos().offset(outputFacing))&&world.getTileEntity(getPos().offset(outputFacing, 2))!=null&&world.getTileEntity(getPos().offset(outputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 						{
 							if(nextPickProgress==0)
 							{
@@ -483,9 +482,8 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 						}
 					}
 				}
-				else if(!world.getEntitiesWithinAABB(EntityMinecart.class, getRenderBoundingBox().offset(new BlockPos(0, 0, 0).offset(inputFacing, 2))).isEmpty())
+				else if(world.isAirBlock(getPos().offset(inputFacing))&&!world.getEntitiesWithinAABB(EntityMinecart.class, getRenderBoundingBox().offset(new BlockPos(0, 0, 0).offset(inputFacing, 2))).isEmpty())
 				{
-					ImmersiveIntelligence.logger.info("otak!");
 					if(nextDirection!=armDirection&&armDirection!=Math.round(outputFacing.getHorizontalAngle()))
 					{
 						nextPickProgress = 100;
@@ -524,7 +522,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 						}
 					}
 				}
-				else if(world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inputFacing.getOpposite()))
+				else if(world.isAirBlock(getPos().offset(inputFacing))&&world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inputFacing.getOpposite()))
 				{
 					if(nextPickProgress==0)
 					{

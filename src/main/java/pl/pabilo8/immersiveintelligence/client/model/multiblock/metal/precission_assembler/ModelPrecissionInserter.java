@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
@@ -230,7 +229,7 @@ public class ModelPrecissionInserter extends BaseBlockModel
 		GlStateManager.popMatrix();
 
 		if(stack!=null&&!stack.isEmpty())
-			Minecraft.getMinecraft().getRenderItem().renderItem(stack, TransformType.GROUND);
+			ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.GROUND);
 
 		GlStateManager.popMatrix();
 	}

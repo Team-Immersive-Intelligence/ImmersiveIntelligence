@@ -34,7 +34,10 @@ public class Config
 		@SubConfig
 		public static Tools tools;
 		@SubConfig
+		public static Weapons weapons;
+		@SubConfig
 		public static Wires wires;
+
 
 		@Comment({"The maximum frequency for basic radios."})
 		public static int radioBasicMaxFrequency = 32;
@@ -112,9 +115,13 @@ public class Config
 			@RequiresMcRestart
 			public static int electric_multitool_capacity = 100000;
 
-			@Comment({"The energy usage of the electric hammer (when mining, rotating or single tick when building advanced multiblocks)."})
+			@Comment({"The energy usage of the electric hammer (when mining, rotating, etc. )."})
 			@RequiresMcRestart
 			public static int electric_hammer_energy_per_use = 100;
+
+			@Comment({"The energy usage of the electric hammer when building advanced multiblocks (per tick)."})
+			@RequiresMcRestart
+			public static int electric_hammer_energy_per_use_construction = 4096;
 
 			@Comment({"The energy usage of the electric wirecutter (when cutting wires)."})
 			@RequiresMcRestart
@@ -210,6 +217,8 @@ public class Config
 			@SubConfig
 			public static AmmunitionFactory ammunitionFactory;
 			@SubConfig
+			public static BallisticComputer ballisticComputer;
+			@SubConfig
 			public static MissileSilo missileSilo;
 			@SubConfig
 			public static ConveyorScanner conveyor_scanner;
@@ -236,7 +245,7 @@ public class Config
 				public static int energyUsageIdle = 512;
 
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
-				public static int radioRange = 48;
+				public static int radioRange = 64;
 
 				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 0 - full range, 0.5 - half range, 1 - no range, etc.)"})
 				public static float weatherHarshness = 0.5f;
@@ -336,6 +345,15 @@ public class Config
 				public static int conveyorTime = 40;
 			}
 
+			public static class BallisticComputer
+			{
+				@Comment({"Energy capacity of the ballistic computer."})
+				public static int energyCapacity = 24000;
+
+				@Comment({"Energy capacity of the ballistic computer."})
+				public static int energyUsage = 16000;
+			}
+
 			public static class ConveyorScanner
 			{
 				@Comment({"Energy capacity of the scanning conveyor."})
@@ -369,19 +387,19 @@ public class Config
 				public static int paintUsage = 120;
 
 				@Comment({"How long does it take to move a bullet to the next slot (in ticks)."})
-				public static int conveyorTime = 35;
+				public static int conveyorTime = 50;
 
 				@Comment({"Duration of filling a casing with gunpowder (in ticks)."})
-				public static int gunpowderTime = 80;
+				public static int gunpowderTime = 120;
 
 				@Comment({"Duration of filling a core with components (in ticks)."})
-				public static int coreTime = 100;
+				public static int coreTime = 160;
 
 				@Comment({"Duration of one bullet making process (in ticks)."})
-				public static int casingTime = 40;
+				public static int casingTime = 120;
 
 				@Comment({"Duration of the bullet painting process (in ticks)."})
-				public static int paintTime = 60;
+				public static int paintTime = 180;
 
 
 			}
@@ -444,6 +462,71 @@ public class Config
 			{
 				@Comment({"Amount of data packets the machine can store."})
 				public static int packetCapacity = 4;
+			}
+		}
+
+		public static class Weapons
+		{
+			@SubConfig
+			public static Machinegun machinegun;
+
+			public static class Machinegun
+			{
+				@Comment({"Time required to reload a clip in MG."})
+				public static int clipReloadTime = 35;
+
+				@Comment({"Time required to fire a single bullet in MG."})
+				public static int bulletFireTime = 4;
+
+				@Comment({"Time required to set up the MG (in ticks)."})
+				public static int setupTime = 100;
+
+				@Comment({"Max amount of heat, higher values will force the player to wait until the gun cools down."})
+				public static int maxOverheat = 100;
+
+				@Comment({"Amount of horizontal recoil after taking a shot."})
+				public static float recoilHorizontal = 4f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilVertical = 4f;
+
+				@Comment({"Fire rate multiplier when heavy barrel is mouted on mg."})
+				public static float heavyBarrelFireRateMultiplier = 0.25f;
+
+				@Comment({"Horizontal recoil after taking a shot with heavy barrel mounted."})
+				public static float recoilHBHorizontal = 1.75f;
+
+				@Comment({"Vertical recoil after taking a shot with heavy barrel mounted."})
+				public static float recoilHBVertical = 1.75f;
+
+				@Comment({"Water usage when water cooling upgrade is mounted on mg (in mB)."})
+				public static int waterCoolingFluidUsage = 40;
+
+				@Comment({"Fire rate multiplier when water cooling upgrade is mouted on mg."})
+				public static float waterCoolingFireRateMultiplier = 1.5f;
+
+				@Comment({"Setup time multiplier when the precise bipod is mouted on mg."})
+				public static float preciseBipodSetupTimeMultiplier = 2f;
+
+				@Comment({"Recoil multiplier when the precise bipod is mouted on mg."})
+				public static float preciseBipodRecoilMultiplier = 0.25f;
+
+				@Comment({"Setup time multiplier when the hasty bipod is mouted on mg."})
+				public static float hastyBipodSetupTimeMultiplier = 0.5f;
+
+				@Comment({"Recoil multiplier when the hasty bipod is mouted on mg."})
+				public static float hastyBipodRecoilMultiplier = 2.0f;
+
+				@Comment({"Horizontal recoil multiplier when the double magazine upgrade is mouted on mg."})
+				public static float recoilSecondMagazine = 1.65f;
+
+				@Comment({"Setup time multiplier when the belt fed loader upgrade is mouted on mg."})
+				public static float beltFedLoaderSetupTimeMultiplier = 0.5f;
+
+				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
+				@RequiresMcRestart
+				@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+				public static float[] machinegun_scope_max_zoom = new float[]{0.05f, 0.0833f, 0.15f};
 			}
 		}
 

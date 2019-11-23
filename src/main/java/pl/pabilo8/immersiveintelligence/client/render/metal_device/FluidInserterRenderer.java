@@ -154,6 +154,18 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 
 			model.render();
 
+			GlStateManager.pushMatrix();
+			model.rotate(model.inserterOutput, 0f, -1.57079633F, 0f);
+			for(ModelRendererTurbo mod : model.inserterInput)
+				mod.render(1f/16f);
+
+
+			model.rotate(model.inserterOutput, 0f, -1.57079633F, 0f);
+			for(ModelRendererTurbo mod : model.inserterOutput)
+				mod.render(1f/16f);
+
+			GlStateManager.popMatrix();
+
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
 			if(te.conn_data!=null)

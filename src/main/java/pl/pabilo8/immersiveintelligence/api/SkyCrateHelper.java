@@ -6,11 +6,13 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 
@@ -63,5 +65,11 @@ public class SkyCrateHelper
 				player.world.spawnEntity(hook);
 			}
 		}
+	}
+
+	public void spawnSkycrate(World world, IImmersiveConnectable start, Connection connection, EnumHand hand, IBlockState block)
+	{
+		EntitySkyCrate hook = new EntitySkyCrate(world, connection, 0f, block);
+		world.spawnEntity(hook);
 	}
 }

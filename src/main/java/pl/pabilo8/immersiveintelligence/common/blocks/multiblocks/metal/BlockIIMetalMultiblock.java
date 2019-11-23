@@ -14,7 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock;
@@ -26,11 +25,17 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 {
 	public BlockIIMetalMultiblock()
 	{
-		super("metal_multiblock", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalMultiblock.class), ItemBlockIEBase.class, false, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0], Properties.AnimationProperty);
+		super("metal_multiblock", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalMultiblock.class), ItemBlockIEBase.class, false, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0]);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
+
+		tesrMap.put(IIBlockTypes_MetalMultiblock.AMMUNITION_FACTORY.getMeta(), IIBlockTypes_MetalMultiblock.AMMUNITION_FACTORY.getName());
+		tesrMap.put(IIBlockTypes_MetalMultiblock.ELECTROLYZER.getMeta(), IIBlockTypes_MetalMultiblock.ELECTROLYZER.getName());
+		tesrMap.put(IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta(), IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getName());
+		tesrMap.put(IIBlockTypes_MetalMultiblock.PRECISSION_ASSEMBLER.getMeta(), IIBlockTypes_MetalMultiblock.PRECISSION_ASSEMBLER.getName());
+
 
 	}
 
@@ -96,6 +101,10 @@ public class BlockIIMetalMultiblock extends BlockIIMultiblock<IIBlockTypes_Metal
 			case AMMUNITION_FACTORY:
 			{
 				return new TileEntityAmmunitionFactory();
+			}
+			case BALLISTIC_COMPUTER:
+			{
+				return new TileEntityBallisticComputer();
 			}
 		}
 		return null;

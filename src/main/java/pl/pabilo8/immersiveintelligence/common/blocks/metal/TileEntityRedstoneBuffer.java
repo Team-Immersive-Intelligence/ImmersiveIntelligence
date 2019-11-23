@@ -124,7 +124,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		this.packet = packet;
 	}
