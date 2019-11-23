@@ -33,9 +33,9 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			BaseBlockModel.copyModelAngles(model, modelDefault);
-			BaseBlockModel.getCommonMultiblockRotation(te.facing, model);
-
-			model.getTranslation(te.facing, model);
+			//TODO: update code
+			//BaseBlockModel.getBlockRotation(te.facing, model);
+			//model.getTranslation(te.facing, model);
 
 			model.render();
 

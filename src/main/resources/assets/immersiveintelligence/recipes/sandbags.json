@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bsb",
+    "sbs"
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "sand"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "fabricHemp"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:stone_decoration",
+    "count": 3
+  }
+}

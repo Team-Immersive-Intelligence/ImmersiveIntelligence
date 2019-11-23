@@ -187,7 +187,7 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	}
 
 	@Override
-	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	public float getDestroySpeed(ItemStack stack, IBlockState state)
 	{
 		if(hasEnoughEnergy(stack))
 		{
@@ -195,7 +195,7 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 				if(state.getBlock().isToolEffective(type, state))
 					return 16;
 		}
-		return super.getStrVsBlock(stack, state);
+		return super.getDestroySpeed(stack, state);
 	}
 
 	@Override

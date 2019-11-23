@@ -41,7 +41,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 		timer = nbt.getInteger("timer");
 		maxtimer = nbt.getInteger("maxtimer");
 		packet = new DataPacket();

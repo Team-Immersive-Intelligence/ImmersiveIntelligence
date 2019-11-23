@@ -6,8 +6,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrintingPress;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
@@ -171,11 +169,9 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 			GlStateManager.rotate(90f, 0f, 0f, 1f);
 			GlStateManager.rotate(-45f, 0f, 1f, 0f);
 
-			IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-			for(int i = inv.getStackInSlot(1).getCount(); i > 0; i--)
+			for(int i = te.inventory.get(1).getCount(); i > 0; i--)
 			{
-				renderItem.renderItem(inv.getStackInSlot(1), TransformType.GROUND);
+				renderItem.renderItem(te.inventory.get(1), TransformType.GROUND);
 				GlStateManager.translate(0.03125f, 0f, 0.03125f);
 			}
 			GlStateManager.popMatrix();

@@ -82,7 +82,7 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 38);
 		}
 		open = !insertionHandler.getStackInSlot(37).isEmpty();
-		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 		NBTTagCompound tag = new NBTTagCompound();
 		writeInv(tag, true);
-		if(!tag.hasNoTags())
+		if(!tag.isEmpty())
 			stack.setTagCompound(tag);
 		if(this.name!=null)
 			stack.setStackDisplayName(this.name);

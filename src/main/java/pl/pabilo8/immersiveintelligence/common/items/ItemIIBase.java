@@ -38,7 +38,7 @@ public class ItemIIBase extends ItemIEBase
 		if(rItem!=item) throw new IllegalStateException("fixupItem was not called at the appropriate time");
 
 		//Now, reconfigure the block to match our mod.
-		item.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+item.itemName);
+		item.setTranslationKey(ImmersiveIntelligence.MODID+"."+item.itemName);
 		item.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.

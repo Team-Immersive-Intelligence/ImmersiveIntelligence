@@ -54,4 +54,10 @@ public class BulletComponentHMX implements IBulletComponent
 	{
 		return EnumComponentRole.EXPLOSIVE;
 	}
+
+	@Override
+	public int getColour()
+	{
+		return 0xfbfbfb;
+	}
 }

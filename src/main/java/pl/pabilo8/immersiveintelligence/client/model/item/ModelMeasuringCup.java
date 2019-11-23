@@ -199,7 +199,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 		@Override
 		public boolean accepts(ResourceLocation modelLocation)
 		{
-			return modelLocation.getResourceDomain().equals(ImmersiveIntelligence.MODID)&&modelLocation.getResourcePath().contains("measuring_cup");
+			return modelLocation.getNamespace().equals(ImmersiveIntelligence.MODID)&&modelLocation.getPath().contains("measuring_cup");
 		}
 
 		@Override

@@ -1,6 +1,9 @@
 package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import net.minecraft.util.IStringSerializable;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -15,6 +18,8 @@ public class BulletRegistry
 	public HashMap<String, IBulletComponent> registeredComponents = new HashMap<>();
 	public HashMap<String, IBulletCoreType> registeredBulletCores = new HashMap<>();
 	public HashMap<String, IBulletCasingType> registeredCasings = new HashMap<>();
+
+	public HashMap<String, IBulletModel> registeredModels = new HashMap<>();
 
 	public boolean registerComponent(IBulletComponent component, String name)
 	{
@@ -41,6 +46,20 @@ public class BulletRegistry
 		if(!registeredCasings.containsKey(name))
 		{
 			registeredCasings.put(name, casing);
+
+			if(FMLCommonHandler.instance().getSide().isClient())
+			{
+				try
+				{
+					registeredModels.put(casing.getName(), casing.getModel().newInstance());
+				} catch(InstantiationException e)
+				{
+					e.printStackTrace();
+				} catch(IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+			}
 			return true;
 		}
 		return false;

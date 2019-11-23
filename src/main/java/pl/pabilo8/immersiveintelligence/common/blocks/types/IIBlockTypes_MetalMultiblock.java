@@ -20,7 +20,8 @@ public enum IIBlockTypes_MetalMultiblock implements IStringSerializable, BlockIE
 	BALLISTIC_COMPUTER,
 	ARTILLERY_HOWITZER,
 	PERISCOPE,
-	CONVEYOR_SCANNER;
+	CONVEYOR_SCANNER,
+	AMMUNITION_FACTORY;
 
 	@Override
 	public String getName()

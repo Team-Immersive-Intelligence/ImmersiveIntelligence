@@ -1,15 +1,21 @@
 package pl.pabilo8.immersiveintelligence.common.items;
 
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
+import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -17,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCoreType;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -42,11 +49,11 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 		if(!ItemNBTHelper.hasKey(stack, "firstComponent"))
 			ItemNBTHelper.setString(stack, "firstComponent", "empty");
 		if(!ItemNBTHelper.hasKey(stack, "firstComponentQuantity"))
-			ItemNBTHelper.setString(stack, "firstComponentQuantity", "0");
+			ItemNBTHelper.setFloat(stack, "firstComponentQuantity", 0);
 		if(!ItemNBTHelper.hasKey(stack, "secondComponent"))
 			ItemNBTHelper.setString(stack, "secondComponent", "empty");
 		if(!ItemNBTHelper.hasKey(stack, "secondComponentQuantity"))
-			ItemNBTHelper.setString(stack, "secondComponentQuantity", "0");
+			ItemNBTHelper.setFloat(stack, "secondComponentQuantity", 0);
 		if(!ItemNBTHelper.hasKey(stack, "firstComponentNBT"))
 			ItemNBTHelper.setTagCompound(stack, "firstComponentNBT", new NBTTagCompound());
 		if(!ItemNBTHelper.hasKey(stack, "secondComponentNBT"))
@@ -140,11 +147,11 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 	{
 		return getCasing(stack).getInitialMass()+
 				(getCore(stack)!=null?getCore(stack).getDensity()*getCasing(stack).getInitialMass(): 0)+
-				(getFirstComponent(stack)!=null?(getFirstComponent(stack).getDensity()*getFirstComponentQuantity(stack)): 0)+
-				(getSecondComponent(stack)!=null?(getSecondComponent(stack).getDensity()*getSecondComponentQuantity(stack)): 0);
+				(getFirstComponent(stack)!=null?getCasing(stack).getComponentCapacity()*(getFirstComponent(stack).getDensity()*getFirstComponentQuantity(stack)): 0)+
+				(getSecondComponent(stack)!=null?getCasing(stack).getComponentCapacity()*(getSecondComponent(stack).getDensity()*getSecondComponentQuantity(stack)): 0);
 	}
 
-	public static ItemStack getAmmoStack(int amount, String casing, String core, String component1, String component2, float proportion)
+	public static ItemStack getAmmoStack(int amount, String casing, String core, String component1, String component2, float proportion, float amount1, float amount2)
 	{
 		proportion = Math.min(Math.max(proportion, 0f), 1f);
 		ItemStack stack = new ItemStack(ImmersiveIntelligence.proxy.item_bullet, amount);
@@ -164,17 +171,22 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 		if(!component1.equals("empty"))
 		{
 			ItemNBTHelper.setString(stack, "firstComponent", component1);
-			ItemNBTHelper.setFloat(stack, "firstComponentQuantity", proportion);
+			ItemNBTHelper.setFloat(stack, "firstComponentQuantity", proportion*amount1);
 		}
 		if(!component2.equals("empty"))
 		{
 			ItemNBTHelper.setString(stack, "secondComponent", component2);
-			ItemNBTHelper.setFloat(stack, "secondComponentQuantity", 1f-proportion);
+			ItemNBTHelper.setFloat(stack, "secondComponentQuantity", (1f-proportion)*amount2);
 		}
 
 		ItemNBTHelper.setInt(stack, "colour", Color.HSBtoRGB((float)Math.random(), 0.9f, 0.45f));
 
 		return stack;
+	}
+
+	public static ItemStack getAmmoStack(int amount, String casing, String core, String component1, String component2, float proportion)
+	{
+		return getAmmoStack(amount, casing, core, component1, component2, proportion, 1f, 1f);
 	}
 
 	@Override
@@ -254,7 +266,6 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
-		ImmersiveIntelligence.logger.info("otak1");
 		return Arrays.asList(
 				new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/bullet_"+key+"_main"),
 				new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/bullet_"+key+"_core"),
@@ -289,5 +300,61 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 			break;
 		}
 		return 0xffffffff;
+	}
+
+	public boolean isGrenade(ItemStack stack)
+	{
+		return getCasing(stack).isThrowable();
+	}
+
+	@Override
+	public EnumAction getItemUseAction(ItemStack stack)
+	{
+		return isGrenade(stack)?EnumAction.BOW: EnumAction.NONE;
+	}
+
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack)
+	{
+		return Math.round(60f*getMass(stack));
+	}
+
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
+	{
+		if(isGrenade(player.getHeldItem(hand)))
+		{
+			ItemStack itemstack = player.getHeldItem(hand);
+			player.setActiveHand(hand);
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+		}
+		ImmersiveIntelligence.logger.info("fail!");
+		return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(hand));
+	}
+
+	@Override
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entityLiving, int timeLeft)
+	{
+		if(!world.isRemote)
+		{
+			double true_angle = Math.toRadians(360f-entityLiving.rotationYawHead);
+			double true_angle2 = Math.toRadians(-(entityLiving.rotationPitch));
+
+			Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(1f, true_angle, true_angle2);
+
+			EntityBullet a = new EntityBullet(world, entityLiving.posX+gun_end.x, entityLiving.posY+entityLiving.getEyeHeight()+gun_end.y, entityLiving.posZ+gun_end.z, entityLiving, stack);
+			//blocks per tick
+			float distance = 0.65f*(((float)this.getMaxItemUseDuration(stack)-timeLeft)/(float)this.getMaxItemUseDuration(stack));
+			a.motionX = distance*(gun_end.x);
+			a.motionY = distance*(gun_end.y);
+			a.motionZ = distance*(gun_end.z);
+			ImmersiveIntelligence.logger.info(entityLiving.rotationPitch);
+			a.world.spawnEntity(a);
+
+			if(!(entityLiving instanceof EntityPlayer)||!((EntityPlayer)entityLiving).capabilities.isCreativeMode)
+			{
+				stack.shrink(1);
+			}
+		}
 	}
 }

@@ -1,6 +1,6 @@
 {
-  "parent": "item/handheld",
+  "parent": "immersiveengineering:item/ie_item_base",
   "textures": {
-    "layer0": "immersiveintelligence:items/binoculars/infrared_binoculars"
+    "layer0": "immersiveintelligence:items/binoculars/infrared_binoculars_off"
   }
 }

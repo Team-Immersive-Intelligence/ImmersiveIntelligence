@@ -3,13 +3,9 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
-import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Pabilo8 on 08-08-2019.

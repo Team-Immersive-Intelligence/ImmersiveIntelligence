@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " fs",
+    "pbp",
+    "ppp"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:bucket",
+      "data": 0
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "ingotSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateBrass"
+    },
+    "f": {
+      "item": "minecraft:flint",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:lighter",
+    "count": 1
+  }
+}

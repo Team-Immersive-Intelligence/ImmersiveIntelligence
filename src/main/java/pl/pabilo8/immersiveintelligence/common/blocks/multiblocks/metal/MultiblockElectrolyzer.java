@@ -57,7 +57,9 @@ public class MultiblockElectrolyzer implements IMultiblock
 								structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta());
 							}
 							else
+							{
 								structure[h][l][w] = new ItemStack(IEContent.blockStorage, 1, BlockTypes_MetalsIE.STEEL.getMeta());
+							}
 						}
 						else if(l < 2)
 						{

@@ -22,7 +22,7 @@ public class BulletCoreBrass implements IBulletCoreType
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("bulletCoreBrass");
+		return new IngredientStack("plateBrass");
 	}
 
 	@Override

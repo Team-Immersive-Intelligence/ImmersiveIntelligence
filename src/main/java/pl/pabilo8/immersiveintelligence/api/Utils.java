@@ -180,4 +180,13 @@ public class Utils
 		return vec;
 	}
 
+	//Based on https://stackoverflow.com/a/2262117/9876980
+	public static float[] rgbIntToRGB(int rgb)
+	{
+		float r = (rgb/256/256%256)/255f;
+		float g = (rgb/256%256)/255f;
+		float b = (rgb%256)/255f;
+		return new float[]{r, g, b};
+	}
+
 }

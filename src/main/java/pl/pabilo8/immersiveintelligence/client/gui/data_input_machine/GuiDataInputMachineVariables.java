@@ -323,7 +323,7 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 		{
 			return;
 		}
-		if(!list.toNBT().hasNoTags())
+		if(!list.toNBT().isEmpty())
 		{
 			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
 		}

@@ -6,6 +6,9 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Pabilo8 on 2019-06-01.
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
@@ -13,11 +16,17 @@ import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
  */
 public class BaseBlockModel extends ModelBase
 {
+	//Base Model Part
 	public ModelRendererTurbo[] baseModel;
+	//List of parts for group flipping / translation / rotation
+	public List<ModelRendererTurbo[]> parts = new ArrayList<>();
 
 	public void flipAll()
 	{
-		flip(baseModel);
+		if(parts.isEmpty())
+			parts.add(baseModel);
+		for(ModelRendererTurbo[] mod : parts)
+			flip(mod);
 	}
 
 	public void flip(ModelRendererTurbo[] model)
@@ -31,17 +40,21 @@ public class BaseBlockModel extends ModelBase
 
 	public void translateAll(float x, float y, float z)
 	{
-		translate(baseModel, x, y, z);
+		for(ModelRendererTurbo[] mod : parts)
+			translate(mod, x, y, z);
 	}
 
 	public void rotateAll(float x, float y, float z)
 	{
-		rotate(baseModel, x, y, z);
+		for(ModelRendererTurbo[] mod : parts)
+			rotate(mod, x, y, z);
+
 	}
 
 	public void rotateAddAll(float x, float y, float z)
 	{
-		addRotation(baseModel, x, y, z);
+		for(ModelRendererTurbo[] mod : parts)
+			addRotation(mod, x, y, z);
 	}
 
 	public void translate(ModelRendererTurbo[] model, float x, float y, float z)
@@ -143,33 +156,6 @@ public class BaseBlockModel extends ModelBase
 		}
 	}
 
-	public static void getCommonMultiblockRotation(EnumFacing facing, BaseBlockModel model)
-	{
-		switch(facing)
-		{
-			case NORTH:
-			{
-				model.rotateAddAll(0f, TmtUtil.AngleToTMT(90), 0f);
-			}
-			break;
-			case SOUTH:
-			{
-				model.rotateAddAll(0f, TmtUtil.AngleToTMT(270), 0f);
-			}
-			break;
-			case EAST:
-			{
-				model.rotateAddAll(0f, TmtUtil.AngleToTMT(180), 0f);
-			}
-			break;
-			case WEST:
-			{
-				model.rotateAddAll(0f, 0f, 0f);
-			}
-			break;
-		}
-	}
-
 	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
 	{
 		switch(facing)
@@ -200,10 +186,5 @@ public class BaseBlockModel extends ModelBase
 			}
 			break;
 		}
-	}
-
-	public void getTranslation(EnumFacing facing, BaseBlockModel model)
-	{
-		//It's fine, everything's fine!
 	}
 }

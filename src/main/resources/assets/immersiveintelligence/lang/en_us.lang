@@ -19,6 +19,8 @@ item.immersiveintelligence.material.processor_circuit_board_etched.name=Etched P
 item.immersiveintelligence.material.processor_circuit_board.name=Processor Circuit Board
 item.immersiveintelligence.material.processor_electronic_element.name=Processor
 
+item.immersiveintelligence.material.compact_electric_engine.name=Compact Electric Engine
+
 item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
 
 item.immersiveintelligence.material.punchtape_empty.name=Empty Punchtape
@@ -51,6 +53,7 @@ item.immersiveintelligence.material.metal_nugget_brass.name=Brass Nugget
 
 item.immersiveintelligence.material.dust_rdx.name=RDX Dust
 item.immersiveintelligence.material.dust_hmx.name=HMX Dust
+item.immersiveintelligence.material.white_phosphorus.name=White Phosphorus
 
 item.immersiveintelligence.material.bullet_core_steel.name=Steel Bullet Core
 item.immersiveintelligence.material.bullet_core_brass.name=Brass Bullet Core
@@ -95,8 +98,11 @@ item.immersiveintelligence.precission_tool.precission_welder.name=Precission Wel
 item.immersiveintelligence.precission_tool.precission_welder.name=Precission Welder
 
 //bCal - Block-Caliber (1/16 Block = 1 bCal)
-item.immersiveintelligence.casing_artillery.name=Artillery Shell Casing (8 bCal)
-item.immersiveintelligence.bullet.artillery_8bCal.name=Artillery Shell (8 bCal)
+item.immersiveintelligence.casing_artillery.name=Artillery Shell Casing
+item.immersiveintelligence.bullet.artillery_8bCal.name=Artillery Shell
+
+item.immersiveintelligence.casing_grenade.name=Grenade Casing
+item.immersiveintelligence.bullet.grenade_4bCal.name=Grenade
 
 item.immersiveintelligence.bullet.component.TNT.name=TNT
 item.immersiveintelligence.bullet.component.RDX.name=RDX
@@ -140,6 +146,13 @@ tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
 tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
 tile.immersiveintelligence.metal_device.redstone_output_device.name=Redstone Output Device
 tile.immersiveintelligence.metal_device.redstone_input_device.name=Redstone Input Device
+
+tile.immersiveintelligence.small_crate.wooden_crate_box.name=Small Wooden Crate (Box)
+tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Small Wooden Crate (Cube)
+tile.immersiveintelligence.small_crate.wooden_crate_wide.name=Small Wooden Crate (Wide)
+tile.immersiveintelligence.small_crate.metal_crate_box.name=Small Metal Crate (Box)
+tile.immersiveintelligence.small_crate.metal_crate_cube.name=Small Metal Crate (Cube)
+tile.immersiveintelligence.small_crate.metal_crate_wide.name=Small Metal Crate (Wide)
 
 tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Input Machine - Storage
 tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data Input Machine - Programming
@@ -228,6 +241,8 @@ desc.immersiveintelligence.printed_page.text=A page containing some text.
 desc.immersiveintelligence.printed_page.code=A page containing some code written in a programming language.
 desc.immersiveintelligence.printed_page.blueprint=A page containing information on how to build a structure.
 
+desc.immersiveintelligence.infrared_enabled=§4Infrared§r Vision Active!
+desc.immersiveintelligence.infrared_disabled=§cInfrared§r Vision Disabled!
 
 desc.immersiveintelligence.assembly_scheme.used_to_create=Used to create: %s
 desc.immersiveintelligence.assembly_scheme.items_created=Items Created: %s
@@ -276,6 +291,8 @@ desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
 info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!
 info.immersiveintelligence.current_frequency=Current frequency: %s
+
+info.immersiveintelligence.yaw=Yaw: %s
 
 info.immersiveintelligence.debugger_mode=Debugger Mode: %s
 info.immersiveintelligence.debugger_mode.0=Transceiver

@@ -21,6 +21,9 @@ public class Config
 	public static HashMap<String, Double> manual_double = new HashMap<String, Double>();
 	public static HashMap<String, double[]> manual_doubleA = new HashMap<String, double[]>();
 
+	public static HashMap<String, Double> manual_float = new HashMap<String, Double>();
+	public static HashMap<String, double[]> manual_floatA = new HashMap<String, double[]>();
+
 	@net.minecraftforge.common.config.Config(modid = ImmersiveIntelligence.MODID)
 	public static class IIConfig
 	{
@@ -96,15 +99,16 @@ public class Config
 			@RequiresMcRestart
 			public static int measuring_cup_capacity = 500;
 
-			@Comment({"The capacity of the electric hammer in RF... i mean IF... i mean FE... that thing o' powerin'!."})
+			@Comment({"The energy capacity of the electric hammer in RF... i mean IF... i mean FE... that thing o' powerin'!."})
 			@RequiresMcRestart
 			public static int electric_hammer_capacity = 24000;
 
-			@Comment({"The capacity of the electric wirecutter."})
+			@Comment({"The energy capacity of the electric wirecutter."})
 			@RequiresMcRestart
 			public static int electric_wirecutter_capacity = 24000;
 
-			@Comment({"The capacity of the electric multitool."})
+			//Soon?
+			@Comment({"The energy capacity of the electric multitool. (when it will be added)"})
 			@RequiresMcRestart
 			public static int electric_multitool_capacity = 100000;
 
@@ -112,11 +116,30 @@ public class Config
 			@RequiresMcRestart
 			public static int electric_hammer_energy_per_use = 100;
 
-			//Durability
-			
 			@Comment({"The energy usage of the electric wirecutter (when cutting wires)."})
 			@RequiresMcRestart
 			public static int electric_wirecutter_energy_per_use = 100;
+
+			@Comment({"Max zoom of the binoculars (in Blu's unit of distance measurement™)."})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float[] binoculars_max_zoom = new float[]{0.1f, 0.125f, 0.167f, 0.25f, 0.5f};
+
+			@Comment({"Max zoom of the advanced binoculars (in Blu's Unit of Distance Measurement™)."})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float[] advanced_binoculars_max_zoom = new float[]{0.05f, 0.0625f, 0.0833f, 0.1f, 0.25f};
+
+			@Comment({"The energy capacity of advanced binoculars (when using Infrared Sight)."})
+			@RequiresMcRestart
+			public static int advanced_binoculars_energy_capacity = 4000;
+
+			@Comment({"The energy usage of advanced binoculars (when using Infrared Sight)."})
+			@RequiresMcRestart
+			public static int advanced_binoculars_energy_usage = 150;
+
+			//Durability
+			
 
 			@Comment({"The durability (max number of uses) of the Precission Buzzsaw."})
 			@RequiresMcRestart
@@ -184,6 +207,8 @@ public class Config
 			public static PrecissionAssembler precissionAssembler;
 			@SubConfig
 			public static ArtilleryHowitzer artilleryHowitzer;
+			@SubConfig
+			public static AmmunitionFactory ammunitionFactory;
 			@SubConfig
 			public static MissileSilo missileSilo;
 			@SubConfig
@@ -306,6 +331,9 @@ public class Config
 
 				@Comment({"How long does it take for the howitzer to load a shell (in ticks)"})
 				public static int loadTime = 140;
+
+				@Comment({"How long does it take for the howitzer to move the shell by one item slot using conveyor (in ticks)"})
+				public static int conveyorTime = 40;
 			}
 
 			public static class ConveyorScanner
@@ -321,6 +349,41 @@ public class Config
 			{
 				@Comment({"Energy capacity of the missile silo (per one block of height)."})
 				public static int energyCapacity = 2500000;
+			}
+
+			public static class AmmunitionFactory
+			{
+				@Comment({"Energy capacity of the ammunition factory (in IF)."})
+				public static int energyCapacity = 32000;
+
+				@Comment({"Energy usage per one bullet making process (in IF)."})
+				public static int energyUsage = 8000;
+
+				@Comment({"Component capacity of the ammunition factory (in Pabilo8's Unit of Measurement™)."})
+				public static int componentCapacity = 48;
+
+				@Comment({"Max intake of the component per 20 ticks (in Pabilo8's Unit of Measurement™)."})
+				public static int componentIntake = 6;
+
+				@Comment({"Paint usage per one bullet making process (in mB)."})
+				public static int paintUsage = 120;
+
+				@Comment({"How long does it take to move a bullet to the next slot (in ticks)."})
+				public static int conveyorTime = 35;
+
+				@Comment({"Duration of filling a casing with gunpowder (in ticks)."})
+				public static int gunpowderTime = 80;
+
+				@Comment({"Duration of filling a core with components (in ticks)."})
+				public static int coreTime = 100;
+
+				@Comment({"Duration of one bullet making process (in ticks)."})
+				public static int casingTime = 40;
+
+				@Comment({"Duration of the bullet painting process (in ticks)."})
+				public static int paintTime = 60;
+
+
 			}
 
 			public static class Inserter

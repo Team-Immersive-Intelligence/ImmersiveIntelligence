@@ -231,7 +231,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	}
 
 	@Override
-	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	public float getDestroySpeed(ItemStack stack, IBlockState state)
 	{
 		if(hasEnoughEnergy(stack))
 		{
@@ -239,7 +239,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				if(state.getBlock().isToolEffective(type, state))
 					return 16;
 		}
-		return super.getStrVsBlock(stack, state);
+		return super.getDestroySpeed(stack, state);
 	}
 
 	@Override

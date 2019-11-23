@@ -22,7 +22,7 @@ public class BulletCoreTungsten implements IBulletCoreType
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("bulletCoreTungsten");
+		return new IngredientStack("plateTungsten");
 	}
 
 	@Override

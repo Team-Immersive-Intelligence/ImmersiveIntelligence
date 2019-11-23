@@ -54,4 +54,10 @@ public class BulletComponentTNT implements IBulletComponent
 	{
 		return EnumComponentRole.EXPLOSIVE;
 	}
+
+	@Override
+	public int getColour()
+	{
+		return 0x282828;
+	}
 }

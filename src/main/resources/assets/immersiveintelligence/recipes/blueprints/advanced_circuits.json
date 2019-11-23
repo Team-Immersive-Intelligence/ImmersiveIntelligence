@@ -1,0 +1,31 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveengineering:blueprint",
+    "nbt": {
+      "blueprint": "advanced_circuits"
+    }
+  },
+  "pattern": [
+    "WBW",
+    "DDD",
+    "PPP"
+  ],
+  "key": {
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "chipAdvanced"
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "circuitAdvancedEtched"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  }
+}
