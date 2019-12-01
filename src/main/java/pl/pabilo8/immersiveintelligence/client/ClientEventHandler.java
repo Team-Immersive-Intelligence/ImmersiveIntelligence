@@ -119,7 +119,7 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 				Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
 				Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
 
-				CameraHandler.INSTANCE.setCameraPos(px+0.5+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4875+(0.85*(gun_end.y+gun_height.y)), pz+0.5+(0.85*(gun_end.z+gun_height.z)));
+				CameraHandler.INSTANCE.setCameraPos(px+0.5+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+0.5+(0.85*(gun_end.z+gun_height.z)));
 				CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
 				CameraHandler.INSTANCE.setEnabled(true);
 			}

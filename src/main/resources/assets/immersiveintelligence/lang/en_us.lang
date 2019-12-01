@@ -92,6 +92,8 @@ item.immersiveintelligence.weapon_upgrade.hasty_bipod.name=Field Bipod
 item.immersiveintelligence.weapon_upgrade.scope.name=Scope
 item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Infrared Scope
 
+item.immersiveintelligence.tracer_powder.name=Tracer Dust
+
 desc.immersiveintelligence.toolupgrade.water_cooling=Uses water to cool down the MG. Increases the max amount of heat the MG can take.
 desc.immersiveintelligence.toolupgrade.heavy_barrel=Dramatically increases fire rate, has higher recoil and overheats faster.
 desc.immersiveintelligence.toolupgrade.second_magazine=Allows to use ammunition from two magazines, needs to be reloaded separately.
@@ -329,6 +331,10 @@ desc.immersiveintelligence.bullet_type.special=Special Purpose
 desc.immersiveintelligence.bullets.core=Fitted with %s
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
+
+desc.immersiveintelligence.data_merger.0=Both
+desc.immersiveintelligence.data_merger.1=Left
+desc.immersiveintelligence.data_merger.2=Right
 
 //Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s

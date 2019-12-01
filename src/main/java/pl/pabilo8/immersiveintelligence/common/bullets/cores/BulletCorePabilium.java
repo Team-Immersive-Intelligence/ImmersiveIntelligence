@@ -70,8 +70,12 @@ public class BulletCorePabilium implements IBulletCoreType
 	{
 		//Weird stuff here
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT)
-			return MathHelper.hsvToRGB(127f/255f, Minecraft.getMinecraft().world.getTotalWorldTime()%40/40, 0.88f);
+		{
+			float add = (Minecraft.getMinecraft().world.getTotalWorldTime()%60f)/60f;
+			add = add > 0.5?1f-((add-0.5f)*2f): add*2f;
+			return MathHelper.hsvToRGB(121f/255f, 0.75f*add, (0.5f+(add*0.5f)));
+		}
 		else
-			return MathHelper.hsvToRGB(127f/255f, 1f, 0.88f);
+			return MathHelper.hsvToRGB(121f/255f, 0.75f, 0.88f);
 	}
 }

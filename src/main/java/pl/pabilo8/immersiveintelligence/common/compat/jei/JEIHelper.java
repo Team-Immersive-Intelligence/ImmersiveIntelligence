@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.GuiChemicalBath;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiElectrolyzer;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer.ElectrolyzerRecipeCategory;
@@ -88,7 +89,9 @@ public class JEIHelper implements IModPlugin
 
 
 		//FIXME: WHAT THE FUCK?!?!?! I can't set a catalyst because of the itemstack (it doesn't even spit an error out)
-		// /registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock,1,IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta()), "ii.bathing");
+		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta()), "ii.bathing");
+		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.ELECTROLYZER.getMeta()), "ii.electrolyzer");
+		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.PRECISSION_ASSEMBLER.getMeta()), "ii.precissionassembler");
 
 		//This works tho
 		registryIn.addRecipeCatalyst(new ItemStack(Blocks.CACTUS), VanillaRecipeCategoryUid.CRAFTING, "ii.bathing", "ii.electrolyzer", "ii.precissionassembler");

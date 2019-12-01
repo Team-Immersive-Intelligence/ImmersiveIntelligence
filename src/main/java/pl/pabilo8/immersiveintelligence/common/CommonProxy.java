@@ -144,18 +144,15 @@ public abstract class CommonProxy implements IGuiHandler
 	public static BlockIIBase<IIBlockTypes_Ore> block_ore = (BlockIIBase)new BlockIIBase("ore", Material.ROCK,
 			PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(4.0F).setResistance(5.0F);
-	;
 	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(4.0F).setResistance(6.0F), block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(4.0F).setResistance(5.0F);
-	;
 	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration = new BlockIIStoneDecoration();
 	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration = (BlockIIBase)new BlockIIBase("metal_decoration", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_MetalDecoration.class), ItemBlockIEBase.class, false)
 			.setBlockLayer(BlockRenderLayer.CUTOUT).setHardness(3.0F).setResistance(15.0F);
-	;
 
 	public static BlockIIMetalDevice block_metal_device = new BlockIIMetalDevice();
 	public static BlockIIDataConnector block_data_connector = new BlockIIDataConnector();
@@ -213,7 +210,7 @@ public abstract class CommonProxy implements IGuiHandler
 
 		registerFeedthroughForWiretype(IIWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/empty.obj"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/data_connector_feedtrough"), new float[]{0, 4, 8, 12},
-				0.09375, ImmersiveIntelligence.proxy.block_data_connector.getStateFromMeta(IIBlockTypes_Connector.DATA_RELAY.getMeta()),
+				0.09375, block_data_connector.getStateFromMeta(IIBlockTypes_Connector.DATA_RELAY.getMeta()),
 				0, 0, (f) -> f);
 
 	}
@@ -260,7 +257,7 @@ public abstract class CommonProxy implements IGuiHandler
 	{
 		String s = tile.getSimpleName();
 		s = s.substring(s.indexOf("TileEntity")+"TileEntity".length());
-		GameRegistry.registerTileEntity(tile, ImmersiveIntelligence.MODID+":"+s);
+		GameRegistry.registerTileEntity(tile, new ResourceLocation(ImmersiveIntelligence.MODID+":"+s));
 	}
 
 	public static void registerOreDict()
@@ -471,12 +468,12 @@ public abstract class CommonProxy implements IGuiHandler
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
 
-		BulletRegistry.INSTANCE.registerCasing(this.item_casing_artillery, "artillery_8bCal");
-		BulletRegistry.INSTANCE.registerCasing(this.item_casing_grenade, "grenade_4bCal");
+		BulletRegistry.INSTANCE.registerCasing(item_casing_artillery, "artillery_8bCal");
+		BulletRegistry.INSTANCE.registerCasing(item_casing_grenade, "grenade_4bCal");
 
-		BulletRegistry.INSTANCE.registerCasing(this.item_casing_machinegun, "machinegun_2bCal");
-		BulletRegistry.INSTANCE.registerCasing(this.item_casing_submachinegun, "submachinegun_1bCal");
-		BulletRegistry.INSTANCE.registerCasing(this.item_casing_revolver, "revolver_1bCal");
+		BulletRegistry.INSTANCE.registerCasing(item_casing_machinegun, "machinegun_2bCal");
+		BulletRegistry.INSTANCE.registerCasing(item_casing_submachinegun, "submachinegun_1bCal");
+		BulletRegistry.INSTANCE.registerCasing(item_casing_revolver, "revolver_1bCal");
 
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT(), "TNT");
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX(), "RDX");
@@ -680,6 +677,9 @@ public abstract class CommonProxy implements IGuiHandler
 			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
 				gui = new ContainerAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
 
+			else if(ID==IIGuiList.GUI_DATA_MERGER&&te instanceof TileEntityDataMerger)
+				gui = new ContainerDataMerger(player.inventory, (TileEntityDataMerger)te);
+
 			((IGuiTile)te).onGuiOpened(player, false);
 
 			ImmersiveIntelligence.logger.info(world.isRemote+" / "+gui);
@@ -727,7 +727,7 @@ public abstract class CommonProxy implements IGuiHandler
 		if(!FluidRegistry.registerFluid(fl))
 			fl = FluidRegistry.getFluid(name);
 		FluidRegistry.addBucketForFluid(fl);
-		ImmersiveIntelligence.creativeTab.fluidBucketMap.add(fl);
+		IICreativeTab.fluidBucketMap.add(fl);
 		return fl;
 	}
 

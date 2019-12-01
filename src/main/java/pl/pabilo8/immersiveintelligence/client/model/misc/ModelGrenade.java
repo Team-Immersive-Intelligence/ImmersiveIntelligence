@@ -14,12 +14,10 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ModelGrenade extends BaseBlockModel implements IBulletModel
 {
+	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/grenade.png";
 	int textureX = 32;
 	int textureY = 32;
-
 	ModelRendererTurbo[] coreModel;
-
-	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/grenade.png";
 
 	public ModelGrenade() //Same as Filename
 	{
@@ -76,5 +74,6 @@ public class ModelGrenade extends BaseBlockModel implements IBulletModel
 		GlStateManager.translate(0f, 0.125f, 0f);
 		GlStateManager.translate(0.5f, 0f, 1f);
 		GlStateManager.rotate(-45, 0f, 1f, 0f);
+		GlStateManager.translate(0f, 0f, -0.45f);
 	}
 }

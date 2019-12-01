@@ -494,10 +494,10 @@ public class Config
 				public static float heavyBarrelFireRateMultiplier = 0.25f;
 
 				@Comment({"Horizontal recoil after taking a shot with heavy barrel mounted."})
-				public static float recoilHBHorizontal = 1.75f;
+				public static float recoilHBHorizontal = 1.25f;
 
 				@Comment({"Vertical recoil after taking a shot with heavy barrel mounted."})
-				public static float recoilHBVertical = 1.75f;
+				public static float recoilHBVertical = 1.25f;
 
 				@Comment({"Water usage when water cooling upgrade is mounted on mg (in mB)."})
 				public static int waterCoolingFluidUsage = 40;
@@ -515,7 +515,7 @@ public class Config
 				public static float hastyBipodSetupTimeMultiplier = 0.5f;
 
 				@Comment({"Recoil multiplier when the hasty bipod is mouted on mg."})
-				public static float hastyBipodRecoilMultiplier = 2.0f;
+				public static float hastyBipodRecoilMultiplier = 1.5f;
 
 				@Comment({"Horizontal recoil multiplier when the double magazine upgrade is mouted on mg."})
 				public static float recoilSecondMagazine = 1.65f;

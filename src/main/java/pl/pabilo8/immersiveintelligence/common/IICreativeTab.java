@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
@@ -25,6 +24,8 @@ import java.util.List;
  */
 public class IICreativeTab extends CreativeTabs
 {
+	public static List<Fluid> fluidBucketMap = new ArrayList<>();
+
 	public IICreativeTab(String name)
 	{
 		super(name);
@@ -35,8 +36,6 @@ public class IICreativeTab extends CreativeTabs
 	{
 		return new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.ordinal());
 	}
-
-	public static List<Fluid> fluidBucketMap = new ArrayList<>();
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -67,7 +66,7 @@ public class IICreativeTab extends CreativeTabs
 	{
 		for(PrecissionAssemblerRecipe recipe : PrecissionAssemblerRecipe.recipeList)
 		{
-			list.add(ImmersiveIntelligence.proxy.item_assembly_scheme.getStackForRecipe(recipe));
+			list.add(CommonProxy.item_assembly_scheme.getStackForRecipe(recipe));
 		}
 	}
 
@@ -103,7 +102,9 @@ public class IICreativeTab extends CreativeTabs
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet1, bullet2, bullet3, bullet4));
 
 		ItemStack bullet5 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreTungsten", "shrapnel_uranium", "", 1f).setStackDisplayName("Sonderpatrone mk.1");
+		ItemStack bullet6 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CorePabilium", "shrapnel_uranium", "white_phosphorus", 0.5f).setStackDisplayName("Pabiliumpatrone mk. 1");
 		list.add(bullet5);
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet5, bullet5, bullet5, bullet5));
+		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet6, bullet6, bullet6, bullet6));
 	}
 }

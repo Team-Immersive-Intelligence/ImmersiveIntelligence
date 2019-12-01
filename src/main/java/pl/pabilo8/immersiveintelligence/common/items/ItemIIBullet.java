@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCoreType;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
 
 import javax.annotation.Nullable;
@@ -154,7 +155,7 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 	public static ItemStack getAmmoStack(int amount, String casing, String core, String component1, String component2, float proportion, float amount1, float amount2)
 	{
 		proportion = Math.min(Math.max(proportion, 0f), 1f);
-		ItemStack stack = new ItemStack(ImmersiveIntelligence.proxy.item_bullet, amount);
+		ItemStack stack = new ItemStack(CommonProxy.item_bullet, amount);
 		makeDefault(stack);
 
 		if(BulletRegistry.INSTANCE.getCasing(casing)!=null)
@@ -189,6 +190,21 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 		return getAmmoStack(amount, casing, core, component1, component2, proportion, 1f, 1f);
 	}
 
+	public static int getTrailColour(ItemStack stack)
+	{
+		int col1 = -1, col2 = -1;
+		if(hasFirstComponent(stack)&&getFirstComponent(stack).hasTrail())
+		{
+			col1 = getFirstComponent(stack).getTrailColour(getFirstComponentNBT(stack));
+		}
+		if(hasSecondComponent(stack)&&getSecondComponent(stack).hasTrail())
+		{
+			col2 = getSecondComponent(stack).getTrailColour(getSecondComponentNBT(stack));
+		}
+
+		return col1!=-1?col1: col2;
+	}
+
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
@@ -212,27 +228,27 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 
 			if(getCore(stack)!=null)
 			{
-				core_name = I18n.format(ImmersiveIntelligence.proxy.description_key+"bullet_type."+getCore(stack).getRole().getName());
-				tooltip.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"bullets.core", I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+getCore(stack).getName()+".name")));
+				core_name = I18n.format(CommonProxy.description_key+"bullet_type."+getCore(stack).getRole().getName());
+				tooltip.add(I18n.format(CommonProxy.description_key+"bullets.core", I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+getCore(stack).getName()+".name")));
 			}
 			if(getFirstComponent(stack)!=null)
 			{
-				comp1_name = I18n.format(ImmersiveIntelligence.proxy.description_key+"bullet_type."+getFirstComponent(stack).getRole().getName());
+				comp1_name = I18n.format(CommonProxy.description_key+"bullet_type."+getFirstComponent(stack).getRole().getName());
 			}
 			if(getSecondComponent(stack)!=null)
 			{
-				comp2_name = I18n.format(ImmersiveIntelligence.proxy.description_key+"bullet_type."+getSecondComponent(stack).getRole().getName());
+				comp2_name = I18n.format(CommonProxy.description_key+"bullet_type."+getSecondComponent(stack).getRole().getName());
 			}
 
 			tooltip.add(core_name+(!comp1_name.isEmpty()&&!comp1_name.equals(core_name)?" - "+comp1_name: "")+(!comp2_name.isEmpty()&&!comp2_name.equals(core_name)&&!comp2_name.equals(comp1_name)?" - "+comp2_name: ""));
 
-			tooltip.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"bullets.mass", getMass(stack)));
+			tooltip.add(I18n.format(CommonProxy.description_key+"bullets.mass", getMass(stack)));
 
 		}
 
 		if(getCasing(stack)!=null)
 		{
-			tooltip.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"bullets.caliber", getCasing(stack).getSize()*8f));
+			tooltip.add(I18n.format(CommonProxy.description_key+"bullets.caliber", getCasing(stack).getSize()*16f));
 		}
 	}
 
@@ -298,21 +314,6 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 			break;
 		}
 		return 0xffffffff;
-	}
-
-	public static int getTrailColour(ItemStack stack)
-	{
-		int col1 = -1, col2 = -1;
-		if(hasFirstComponent(stack)&&getFirstComponent(stack).hasTrail())
-		{
-			col1 = getFirstComponent(stack).getTrailColour(getFirstComponentNBT(stack));
-		}
-		if(hasSecondComponent(stack)&&getSecondComponent(stack).hasTrail())
-		{
-			col2 = getSecondComponent(stack).getTrailColour(getSecondComponentNBT(stack));
-		}
-
-		return col1!=-1?col1: col2;
 	}
 
 	public boolean isGrenade(ItemStack stack)

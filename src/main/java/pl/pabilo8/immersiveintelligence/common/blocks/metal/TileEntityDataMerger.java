@@ -3,32 +3,40 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile, IDataDevice
+public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile, IDataDevice, IGuiTile, IIEInventory
 {
 	public EnumFacing facing = EnumFacing.NORTH;
-	DataPacket packet = new DataPacket();
+	public DataPacket packet = new DataPacket();
+	//0 - both, 1 - left only, 2 - right only
+	public byte mode = 0;
 	DataPacket packetLeft = new DataPacket();
 	DataPacket packetRight = new DataPacket();
-	//0 - both, 1 - left only, 2 - right only
-	byte mode = 0;
 
 	@Override
 	public void inputRotation(double rotation, @Nonnull EnumFacing side)
@@ -76,6 +84,19 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	public void receiveMessageFromServer(NBTTagCompound message)
 	{
 		super.receiveMessageFromServer(message);
+	}
+
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		if(message.hasKey("mode"))
+		{
+			mode = message.getByte("mode");
+			ImmersiveIntelligence.logger.info(mode);
+		}
+		if(message.hasKey("packet"))
+			packet.fromNBT(message.getCompoundTag("packet"));
 	}
 
 	@Override
@@ -129,91 +150,125 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		DataPacket newpacket = new DataPacket();
+		DataPacket newpacket = packet.clone();
 		boolean send = false;
 
-		//Right
-		if(side==facing.rotateY())
-		{
-			packetRight = packet;
-			if(mode==0||mode==2)
-			{
-				for(char c : packet.variables.keySet())
-				{
-					if(this.packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
-					{
-						int m = ((DataPacketTypeInteger)this.packet.getPacketVariable(c)).value;
-						switch(m)
-						{
-							case 0:
-							{
-								newpacket.setVariable(c, packet.getPacketVariable(c));
-							}
-							break;
-							case 1:
-							{
-								newpacket.setVariable(c, packetLeft.getPacketVariable(c));
-							}
-							break;
-							case 2:
-							{
-								newpacket.setVariable(c, packetRight.getPacketVariable(c));
-							}
-							break;
-						}
-					}
-				}
-				send = true;
-			}
-		}
-		//Left
+		ImmersiveIntelligence.logger.info(side.getName());
+
+		//Left -2 -1 (1)
 		if(side==facing.rotateYCCW())
 		{
-			packetLeft = packet;
-			if(mode==0||mode==1)
-			{
-				for(char c : packet.variables.keySet())
-				{
-					if(this.packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
-					{
-						int m = ((DataPacketTypeInteger)this.packet.getPacketVariable(c)).value;
-						switch(m)
-						{
-							case 0:
-							{
-								newpacket.setVariable(c, packet.getPacketVariable(c));
-							}
-							break;
-							case 1:
-							{
-								newpacket.setVariable(c, packetLeft.getPacketVariable(c));
-							}
-							break;
-							case 2:
-							{
-								newpacket.setVariable(c, packetRight.getPacketVariable(c));
-							}
-							break;
-						}
-					}
-				}
-			}
-			send = true;
+			packetLeft = packet.clone();
 		}
 
-		if(send)
+		//Right 1 2 (2)
+		if(side==facing.rotateY())
 		{
-			if(world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataDevice)
+			packetRight = packet.clone();
+		}
+
+		for(char c : DataPacket.varCharacters)
+		{
+			if(this.packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
 			{
-				IDataDevice d = (IDataDevice)world.getTileEntity(this.pos.offset(facing));
-				d.onReceive(packet, facing);
+				switch(((DataPacketTypeInteger)this.packet.getPacketVariable(c)).value)
+				{
+					case 0:
+					{
+					}
+					break;
+					case 2:
+					{
+						if(packetLeft.variables.containsKey(c))
+						{
+							newpacket.setVariable(c, packetLeft.getPacketVariable(c));
+						}
+						else
+							newpacket.removeVariable(c);
+					}
+					break;
+					case 1:
+					{
+						if(packetLeft.variables.containsKey(c))
+						{
+							newpacket.setVariable(c, packetLeft.getPacketVariable(c));
+						}
+					}
+					break;
+					case -2:
+					{
+						if(packetRight.variables.containsKey(c))
+						{
+							newpacket.setVariable(c, packetRight.getPacketVariable(c));
+						}
+						else
+							newpacket.removeVariable(c);
+					}
+					break;
+					case -1:
+					{
+						if(packetRight.variables.containsKey(c))
+						{
+							newpacket.setVariable(c, packetRight.getPacketVariable(c));
+						}
+					}
+					break;
+				}
 			}
 		}
+		if(world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataConnector)
+			{
+				IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(facing));
+				d.sendPacket(newpacket);
+			}
 
 	}
 
 	@Override
 	public void onSend()
+	{
+
+	}
+
+	@Override
+	public boolean canOpenGui()
+	{
+		return true;
+	}
+
+	@Override
+	public int getGuiID()
+	{
+		return IIGuiList.GUI_DATA_MERGER;
+	}
+
+	@Nullable
+	@Override
+	public TileEntity getGuiMaster()
+	{
+		return this;
+	}
+
+	@Override
+	public NonNullList<ItemStack> getInventory()
+	{
+		return NonNullList.withSize(0, ItemStack.EMPTY);
+	}
+
+	@Override
+	public boolean isStackValid(int slot, ItemStack stack)
+	{
+		return false;
+	}
+
+	@Override
+	public int getSlotLimit(int slot)
+	{
+		return 0;
+	}
+
+	@Override
+	public void doGraphicalUpdates(int slot)
 	{
 
 	}

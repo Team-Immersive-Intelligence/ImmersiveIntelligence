@@ -116,10 +116,8 @@ public class ClientProxy extends CommonProxy
 	public static final String CAT_WARFARE = "ii_warfare";
 	public static final String CAT_LOGISTICS = "ii_logi";
 	public static final String CAT_INTELLIGENCE = "ii_intel";
-
-	public NBTTagCompound storedGuiData = new NBTTagCompound();
-
 	public static KeyBinding keybind_machinegunScope = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
+	public NBTTagCompound storedGuiData = new NBTTagCompound();
 
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent evt)
@@ -317,6 +315,9 @@ public class ClientProxy extends CommonProxy
 				gui = new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te);
 			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
 				gui = new GuiAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
+
+			else if(ID==IIGuiList.GUI_DATA_MERGER&&te instanceof TileEntityDataMerger)
+				gui = new GuiDataMerger(player.inventory, (TileEntityDataMerger)te);
 
 			((IGuiTile)te).onGuiOpened(player, true);
 			return gui;
@@ -652,6 +653,13 @@ public class ClientProxy extends CommonProxy
 		}
 	}
 
+	@Override
+	public void spawnGunfireFX(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	{
+		Particle particle = new ParticleGunfire(world, x, y, z, mx, my, mz, size);
+		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+	}
+
 	static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition
 	{
 		public final ModelResourceLocation location;
@@ -674,12 +682,5 @@ public class ClientProxy extends CommonProxy
 		{
 			return location;
 		}
-	}
-
-	@Override
-	public void spawnGunfireFX(World world, double x, double y, double z, double mx, double my, double mz, float size)
-	{
-		Particle particle = new ParticleGunfire(world, x, y, z, mx, my, mz, size);
-		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 	}
 }
