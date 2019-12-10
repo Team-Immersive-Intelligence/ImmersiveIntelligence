@@ -38,9 +38,9 @@ public class ModelSmallCrates extends BaseBlockModel
 		wideCrateModel[0].addBox(0F, 0F, 0F, 14, 5, 10, 0F); // BoxWooden1
 		wideCrateModel[0].setRotationPoint(1F, -5F, 3F);
 
-		parts.add(boxCrateModel);
-		parts.add(wideCrateModel);
-		parts.add(cubeCrateModel);
+		parts.put("box_crate", boxCrateModel);
+		parts.put("wide_crate", wideCrateModel);
+		parts.put("cube_crate", cubeCrateModel);
 		flipAll();
 	}
 }

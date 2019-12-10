@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -16,10 +16,12 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.util.vector.Vector3f;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+
+import java.util.List;
 
 /**
  * Created by Pabilo8 on 30-08-2019.
@@ -33,7 +35,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 	public EntityLivingBase owner;
 	public ItemStack stack;
 	public String name;
-	public int colorCore = 0, colorPaint = 0;
+	public int colourCore = 0, colourPaint = 0, colourTrail = -1;
 	private float size = 0f, penetrationPower = 0f, mass = 0f;
 	@SideOnly(Side.CLIENT)
 	private boolean playedFlybySound;
@@ -52,6 +54,14 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		this.stack = stack.copy();
 		setPosition(x, y, z);
 		setParams();
+		ItemIIBullet.getCasing(stack).doPuff(this);
+		setEntityInvulnerable(false);
+	}
+
+
+	public float getSize()
+	{
+		return size;
 	}
 
 	public void setFuse(int fuse)
@@ -83,8 +93,9 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			penetrationPower *= ItemIIBullet.getCasing(stack).getPenetration();
 			size = ItemIIBullet.getCasing(stack).getSize();
 			name = ItemIIBullet.getCasing(stack).getName();
-			colorCore = ItemIIBullet.getCore(stack).getColour();
-			colorPaint = ItemIIBullet.getColour(stack);
+			colourCore = ItemIIBullet.getCore(stack).getColour();
+			colourPaint = ItemIIBullet.getColour(stack);
+			colourTrail = ItemIIBullet.getTrailColour(stack);
 			this.setSize(.625f*size, .625f*size);
 		}
 	}
@@ -126,9 +137,6 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		if(world.isRemote)
 			onUpdateClient();
 
-		Vector3f origin = new Vector3f((float)posX, (float)posY, (float)posZ);
-		Vector3f motion = new Vector3f((float)motionX, (float)motionY, (float)motionZ);
-
 		boolean canMove = true;
 
 
@@ -136,10 +144,40 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
 		RayTraceResult mop = this.world.rayTraceBlocks(currentPos, nextPos, false, true, false);
 
+		if(mop==null||mop.entityHit==null)
+		{
+			Entity entity = null;
+			List list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1), (e) -> e.canBeCollidedWith());
+			double d0 = 0.0D;
+			for(int i = 0; i < list.size(); ++i)
+			{
+				Entity entity1 = (Entity)list.get(i);
+				if(entity1.canBeCollidedWith()&&(this.ticksExisted > 1))
+				{
+					float f = 0.3F;
+					AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow((double)f, (double)f, (double)f);
+					RayTraceResult movingobjectposition1 = axisalignedbb.calculateIntercept(currentPos, nextPos);
+
+					if(movingobjectposition1!=null)
+					{
+						double d1 = currentPos.distanceTo(movingobjectposition1.hitVec);
+						if(d1 < d0||d0==0.0D)
+						{
+							entity = entity1;
+							d0 = d1;
+						}
+					}
+				}
+			}
+			if(entity!=null)
+				mop = new RayTraceResult(entity);
+		}
+
 		if(mop!=null)
 		{
+
 			canMove = false;
-			ImmersiveIntelligence.logger.info("NIIIEE");
+			ImmersiveIntelligence.logger.info(mop.typeOfHit==Type.ENTITY);
 			if(onImpact(mop))
 			{
 				setDead();
@@ -165,6 +203,12 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		motionZ *= drag;
 		motionY -= gravity_part*this.mass;
 
+		if(colourTrail!=-1)
+		{
+			float[] colors = Utils.rgbIntToRGB(colourTrail);
+			ImmersiveEngineering.proxy.spawnRedstoneFX(world, posX, posY, posZ, 0, 0, 0, size*4, colors[0], colors[1], colors[2]);
+		}
+
 		// Apply motion
 		if(canMove)
 		{
@@ -172,6 +216,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			posY += motionY;
 			posZ += motionZ;
 		}
+
 		setPosition(posX, posY, posZ);
 
 		// Recalculate the angles from the new motion
@@ -190,7 +235,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 	@SideOnly(Side.CLIENT)
 	private void onUpdateClient()
 	{
-		if(getDistanceSq(Minecraft.getMinecraft().player.getPosition()) < size*15&&!playedFlybySound)
+		if(getDistanceSq(ClientUtils.mc().player.getPosition()) < size*15&&!playedFlybySound)
 		{
 			playedFlybySound = true;
 			//TODO: Play flyby sound
@@ -206,8 +251,8 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		else
 			tag.setString("owner", owner.getName());
 		tag.setString("name", name);
-		tag.setInteger("colorCore", colorCore);
-		tag.setInteger("colorPaint", colorPaint);
+		tag.setInteger("colourCore", colourCore);
+		tag.setInteger("colourPaint", colourPaint);
 	}
 
 	@Override
@@ -219,8 +264,8 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		if(ownerName!=null&&!ownerName.equals("null"))
 			owner = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(ownerName);
 		name = tag.getString("name");
-		colorCore = tag.getInteger("colorCore");
-		colorPaint = tag.getInteger("colorPaint");
+		colourCore = tag.getInteger("colourCore");
+		colourPaint = tag.getInteger("colourPaint");
 	}
 
 	@Override
@@ -237,8 +282,8 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			ByteBufUtils.writeUTF8String(data, owner.getName());
 
 		ByteBufUtils.writeUTF8String(data, name);
-		data.writeInt(colorCore);
-		data.writeInt(colorPaint);
+		data.writeInt(colourCore);
+		data.writeInt(colourPaint);
 	}
 
 	@Override
@@ -260,8 +305,8 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 				}
 			}
 			this.name = ByteBufUtils.readUTF8String(data);
-			colorCore = data.readInt();
-			colorPaint = data.readInt();
+			colourCore = data.readInt();
+			colourPaint = data.readInt();
 			ImmersiveIntelligence.logger.info("Read bullet data on "+(world.isRemote?"Client": "Server")+", name: "+name);
 		} catch(Exception e)
 		{
@@ -288,8 +333,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		if(!this.world.isRemote&&!stack.isEmpty()&&stack.getItem() instanceof ItemIIBullet)
 		{
 			//Simulate the penetration
-
-			float damage = ItemIIBullet.getCasing(stack).getDamage();
+			float damage = ItemIIBullet.getCasing(stack).getDamage()*(ItemIIBullet.hasCore(stack)?ItemIIBullet.getCore(stack).getDamageModifier(null): 1f);
 			float first_dmg = ItemIIBullet.hasFirstComponent(stack)?ItemIIBullet.getFirstComponent(stack).getDamageModifier(ItemIIBullet.getFirstComponentNBT(stack)): 0f;
 			float second_dmg = ItemIIBullet.hasSecondComponent(stack)?ItemIIBullet.getSecondComponent(stack).getDamageModifier(ItemIIBullet.getSecondComponentNBT(stack)): 0f;
 			damage += first_dmg+second_dmg;
@@ -301,11 +345,27 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 					BlockPos pos = mop.getBlockPos();
 					float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
 
-					if(hardness > 0&&!world.getBlockState(pos).getMaterial().isLiquid()&&penetrationPower >= hardness)
+					ImmersiveIntelligence.logger.info("hardness: "+hardness);
+					ImmersiveIntelligence.logger.info("penetration: "+penetrationPower);
+
+					//Ricochet
+					if(penetrationPower!=0&&hardness > 0&&!world.getBlockState(pos).getMaterial().isLiquid()&&hardness/4 >= penetrationPower*4)
+					{
+						ImmersiveIntelligence.logger.info("Ricochet!");
+						penetrationPower /= 4;
+						if(penetrationPower < 0.5f)
+							penetrationPower = 0;
+						motionX *= -0.65f;
+						motionY *= -0.65f;
+						motionZ *= -0.65f;
+					}
+					//Penetration
+					else if(hardness > 0&&!world.getBlockState(pos).getMaterial().isLiquid()&&penetrationPower >= hardness)
 					{
 						world.destroyBlock(pos, false);
 						penetrationPower = Math.max(0f, penetrationPower-hardness);
 					}
+					//Non-penetrating hit
 					else
 					{
 						this.penetrationPower = 0f;
@@ -315,7 +375,9 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 
 				if(mop.entityHit!=null)
 				{
-					mop.entityHit.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.owner), damage);
+					ImmersiveIntelligence.logger.info("Damage the mob!");
+					if(mop.entityHit.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.owner), damage))
+						mop.entityHit.hurtResistantTime = 0;
 					Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
 					penetrationPower = Math.max(0f, penetrationPower-damage/3f);
 					moveToBlockPosAndAngles(new BlockPos(nextPos), rotationYaw, rotationPitch);

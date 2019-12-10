@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -16,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEnti
  */
 public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntityConveyorScanner>
 {
-	static RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelConveyorScanner model = new ModelConveyorScanner();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/conveyor_scanner.png";

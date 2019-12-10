@@ -24,7 +24,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 {
 	public ItemIIFunctionalCircuit()
 	{
-		super("circuit_functional", 1, "arithmetic", "advanced_arithmetic", "logic", "comparator", "advanced_logic", "text", "conditional", "itemstack");
+		super("circuit_functional", 1, "arithmetic", "advanced_arithmetic", "logic", "comparator", "advanced_logic", "text", "itemstack");
 	}
 
 	@Override
@@ -125,17 +125,8 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 				//ops.add("format");
 			}
 			break;
-			//Conditional Constructor
-			case 6:
-			{
-				ops.add("construct_null");
-				ops.add("construct_boolean");
-				ops.add("construct_integer");
-				ops.add("construct_string");
-			}
-			break;
 			//ItemStack
-			case 7:
+			case 6:
 			{
 				ops.add("get_quantity");
 				ops.add("set_quantity");
@@ -168,8 +159,6 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 			case 5:
 				return "electronic_circuits";
 			case 6:
-				return "electronic_circuits";
-			case 7:
 				return "advanced_circuits";
 		}
 		return "";

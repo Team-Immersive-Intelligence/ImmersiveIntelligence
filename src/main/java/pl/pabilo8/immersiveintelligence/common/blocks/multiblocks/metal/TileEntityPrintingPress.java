@@ -353,17 +353,22 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 							}
 
 
-							int color = Integer.parseInt(fragment.substring(8, 14), 16);
-							Color col = new Color(color);
-							int[] colors = pl.pabilo8.immersiveintelligence.api.Utils.rgbToCmyk(col.getRed(), col.getGreen(), col.getBlue());
-							cyan_cost.add(((float)colors[0])/255f);
-							yellow_cost.add(((float)colors[1])/255f);
-							magenta_cost.add(((float)colors[2])/255f);
-							black_cost.add(((float)colors[3])/255f);
+							try
+							{
+								int color = Integer.parseInt(fragment.substring(8, 14), 16);
+								Color col = new Color(color);
+								int[] colors = pl.pabilo8.immersiveintelligence.api.Utils.rgbToCmyk(col.getRed(), col.getGreen(), col.getBlue());
+								cyan_cost.add(((float)colors[0])/255f);
+								yellow_cost.add(((float)colors[1])/255f);
+								magenta_cost.add(((float)colors[2])/255f);
+								black_cost.add(((float)colors[3])/255f);
+								tag_endings_needed += 1;
 
+							} catch(NumberFormatException n)
+							{
 
+							}
 
-							tag_endings_needed += 1;
 							shouldstartfrom = charnum+15;
 							printedChars += "<hexcol="+fragment.substring(8, 14)+":";
 
@@ -635,18 +640,18 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(pos==6)
 		{
-			master().onReceive(packet);
+			master().onReceive(packet, side);
 		}
 
 		if(!this.isDummy()&&energyStorage.getEnergyStored() >= printingPress.energyUsage)
 		{
 			energyStorage.extractEnergy(printingPress.energyUsage, false);
 			this.pagesLeft = ((DataPacketTypeInteger)DataOperationAdd.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('c'), packet)).value;
-			this.newDataToPrint = packet;
+			this.newDataToPrint = packet.clone();
 		}
 	}
 

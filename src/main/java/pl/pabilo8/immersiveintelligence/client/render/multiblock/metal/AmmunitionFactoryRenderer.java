@@ -11,11 +11,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
@@ -28,18 +28,14 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 import java.util.List;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ammunitionFactory;
-
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
 public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEntityAmmunitionFactory>
 {
+	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelAmmunitionFactory model = new ModelAmmunitionFactory();
 	private static ModelInserter modelInserter = new ModelInserter();
-
-	static RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/ammunition_factory.png";
 	private static String textureInserter = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/inserter.png";
 
@@ -48,6 +44,7 @@ public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEnt
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			ClientUtils.setLightmapDisabled(false);
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+1, (float)y-2, (float)z+2);
@@ -116,19 +113,72 @@ public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEnt
 			GlStateManager.pushMatrix();
 			ClientUtils.bindTexture(textureInserter);
 
-			//
 			GlStateManager.pushMatrix();
 
 			float dir = 0, progress = 0.5f;
-			ItemStack picked_stack = te.inventory.get(0);
+			ItemStack picked_stack = te.coreQueue.get(1).copy();
+
+			float ip_conv = 0, ip_base = 0, ip_st = 0, ip_current = 0;
+			int ip_done = 0, ip_all = te.casingQueue.get(2).getCount(), ip_done_up = 0;
+			if(te.casingProgress > 0)
+			{
+				float size = ((IBulletCasingType)te.casingQueue.get(2).getItem()).getSize();
+				int ip_total = (int)(AmmunitionFactory.casingTime*size*ip_all)+AmmunitionFactory.conveyorTime;
+				ip_conv = 0;
+				ip_base = ip_total-AmmunitionFactory.conveyorTime;
+
+				ip_st = ip_base/ip_all;
+				ip_done = (int)Math.floor(te.casingProgress/ip_st);
+				ip_done_up = (int)Math.ceil(te.casingProgress/ip_st);
+				ip_current = (te.casingProgress-(ip_done*ip_st))/ip_st;
+				picked_stack.setCount(0);
+
+				if(ip_current > 0.5)
+				{
+					ip_done = Math.max(0, ip_done+1);
+					ip_done_up = Math.min(ip_all, ip_done_up+1);
+					picked_stack.setCount(1);
+				}
+
+				if(te.casingProgress >= ip_base)
+				{
+					ip_done = ip_all;
+					ip_done_up = ip_all;
+					ip_current = 0;
+					ip_conv = te.casingProgress-ip_base;
+					picked_stack.setCount(0);
+				}
+			}
+
+			ImmersiveIntelligence.logger.info(ip_current);
+
+
+			if(ip_current < 0.5)
+			{
+				dir = Math.min((ip_current/0.5f)*90, 90);
+				if(ip_current >= 0.5f)
+					progress = ip_current/0.5f;
+				else
+					progress = 0;
+			}
+			else
+			{
+				float prgrs = (ip_current-0.5f)/0.5f;
+				dir = Math.max(90-(prgrs/0.5f)*90, 0);
+				if(prgrs >= 0.5)
+					progress = (prgrs-0.5f)/0.5f;
+				else
+					progress = 1;
+			}
+
+			progress *= 0.5;
 
 			GlStateManager.translate(1f, 1f, -3f);
-			GlStateManager.rotate(dir, 0f, 1, 0);
-
 			modelInserter.baseModel[1].render(0.0625f);
 			modelInserter.baseModel[2].render(0.0625f);
-
 			GlStateManager.translate(0.5f, .375f, -0.5f);
+
+			GlStateManager.rotate(dir, 0f, 1, 0);
 
 			for(ModelRendererTurbo mod : modelInserter.inserterBaseTurntable)
 				mod.render(0.0625f);
@@ -173,7 +223,10 @@ public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEnt
 
 			GlStateManager.popMatrix();
 
-			renderItem.renderItem(picked_stack, TransformType.GROUND);
+			GlStateManager.translate(-0.25f, 1f, 0f);
+			GlStateManager.rotate(180, 1, 0, 0);
+
+			renderBulletOnConveyor(picked_stack, 0f, true, 1);
 
 			GlStateManager.popMatrix();
 			//
@@ -182,228 +235,148 @@ public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEnt
 
 			GlStateManager.pushMatrix();
 
-			boolean[] core_can_move = new boolean[]{te.coreQueue.get(0).isEmpty(), te.coreQueue.get(1).isEmpty(), te.coreQueue.get(2).isEmpty()};
-			boolean[] gunpowder_can_move = new boolean[]{te.gunpowderQueue.get(0).isEmpty(), te.gunpowderQueue.get(1).isEmpty(), te.gunpowderQueue.get(2).isEmpty()};
-			boolean[] casing_can_move = new boolean[]{te.casingQueue.get(0).isEmpty(), te.casingQueue.get(1).isEmpty(), te.casingQueue.get(2).isEmpty(), te.casingQueue.get(3).isEmpty(), te.casingQueue.get(4).isEmpty(), te.casingQueue.get(5).isEmpty()};
-			boolean[] paint_can_move = new boolean[]{te.paintQueue.get(0).isEmpty(), te.paintQueue.get(1).isEmpty(), te.paintQueue.get(2).isEmpty()};
-			boolean[] output_can_move = new boolean[]{te.outputQueue.get(0).isEmpty(), te.outputQueue.get(1).isEmpty()};
+			boolean[] gunpowder_can_move = new boolean[]{te.gunpowderQueue.get(0).isEmpty(), te.gunpowderQueue.get(1).isEmpty()};
+			boolean[] core_can_move = new boolean[]{te.coreQueue.get(0).isEmpty(), te.coreQueue.get(1).isEmpty()};
+			boolean[] casing_can_move = new boolean[]{te.casingQueue.get(0).isEmpty(), te.casingQueue.get(1).isEmpty(), te.casingQueue.get(2).isEmpty()};
+			boolean[] paint_can_move = new boolean[]{te.paintQueue.get(0).isEmpty(), te.paintQueue.get(1).isEmpty()};
+			boolean[] output_can_move = new boolean[]{te.outputQueue.get(0).isEmpty()};
 
-			GlStateManager.translate(1.0f, 1f, -2f);
+			GlStateManager.translate(0f, 1f, 0f);
 
-			//TODO: Gunpowder filling
-			float gp = (float)te.gunpowderProgress/(float)ammunitionFactory.gunpowderTime;
-			float cp = Math.min((float)te.conveyorProgress/(float)ammunitionFactory.conveyorTime, 1);
+			float gp = (float)te.gunpowderProgress/(float)AmmunitionFactory.gunpowderTime;
+			float cgp = Math.min((float)te.conveyorGunpowderProgress/(float)AmmunitionFactory.conveyorTime, 1);
+			float ccop = Math.min((float)te.conveyorCoreProgress/(float)AmmunitionFactory.conveyorTime, 1);
+			float ccp = Math.min((float)te.conveyorCasingProgress/(float)AmmunitionFactory.conveyorTime, 1);
+			float cpp = Math.min((float)te.conveyorPaintProgress/(float)AmmunitionFactory.conveyorTime, 1);
+			float cop = Math.min((float)te.conveyorOutputProgress/(float)AmmunitionFactory.conveyorTime, 1);
 			boolean is_moved = false;
 
-			//Casings
-			boolean casing_being_picked = false;
-
 			GlStateManager.pushMatrix();
-			if(!casing_being_picked&&!casing_can_move[5]&&te.casingQueue.get(5).getItem() instanceof IBulletCasingType)
+			if(!te.outputQueue.get(0).isEmpty())
 			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.casingQueue.get(5).getItem()).getName());
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 1f);
+				GlStateManager.pushMatrix();
+
+				GlStateManager.translate(0f, 0f, cop);
+
+				renderBulletOnConveyor(te.outputQueue.get(0), 1f, false, -1);
+				GlStateManager.popMatrix();
 			}
-			GlStateManager.popMatrix();
-
-			//ende!
-
-			GlStateManager.translate(0.5f, 0f, 0f);
-
-			GlStateManager.pushMatrix();
-			if(!casing_can_move[4]&&te.casingQueue.get(4).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.casingQueue.get(4).getItem()).getName());
-
-				if(casing_can_move[5])
-					is_moved = true;
-
-				if(is_moved)
-					GlStateManager.translate(-cp*0.5f, 0f, 0f);
-
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 1f);
-			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0.5f, 0f, 0f);
-
-			GlStateManager.pushMatrix();
-			if(!casing_can_move[3]&&te.casingQueue.get(3).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.casingQueue.get(3).getItem()).getName());
-				if(casing_can_move[4])
-					is_moved = true;
-				if(is_moved)
-					GlStateManager.translate(-cp*0.5f, 0f, 0f);
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 1f);
-			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0.5f, 0f, 0f);
-
-			GlStateManager.pushMatrix();
-			if(!casing_can_move[2]&&te.casingQueue.get(2).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.casingQueue.get(2).getItem()).getName());
-				if(casing_can_move[3])
-					is_moved = true;
-				if(is_moved)
-					GlStateManager.translate(-cp*0.5f, 0f, 0f);
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 1f);
-			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0.5f, 0f, 0f);
-
-			GlStateManager.pushMatrix();
-			if(!casing_can_move[1]&&te.casingQueue.get(1).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.casingQueue.get(1).getItem()).getName());
-				if(casing_can_move[2])
-					is_moved = true;
-				if(is_moved)
-					GlStateManager.translate(-cp*0.5f, 0f, 0f);
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 1f);
-			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0f, 0f, 0.5f);
-
-			GlStateManager.pushMatrix();
-			if(!casing_can_move[0]&&te.casingQueue.get(0).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.casingQueue.get(0).getItem()).getName());
-				if(casing_can_move[1])
-					is_moved = true;
-				if(is_moved)
-					GlStateManager.translate(0f, 0f, -cp*0.5f);
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 1f);
-			}
-			GlStateManager.popMatrix();
-
-
-			GlStateManager.translate(0f, 0f, 0.75f);
-
-			//Core
-
-			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0f, 0f, -1f);
 
-			GlStateManager.pushMatrix();
-			if(!core_can_move[2]&&te.coreQueue.get(2).getItem() instanceof IBulletCasingType)
+			if(!te.paintQueue.get(1).isEmpty())
 			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.coreQueue.get(2).getItem()).getName());
-				m.getConveyorOffset();
-				m.renderCore(ImmersiveIntelligence.proxy.item_bullet.getCore(te.coreQueue.get(2)).getColour());
-			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0f, 0f, 0.5f);
-
-			GlStateManager.pushMatrix();
-			if(!core_can_move[1]&&te.coreQueue.get(1).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.coreQueue.get(1).getItem()).getName());
-				if(core_can_move[2])
+				GlStateManager.pushMatrix();
+				if(output_can_move[0])
 					is_moved = true;
-				if(is_moved)
-					GlStateManager.translate(0f, 0f, -cp*0.5f);
-				m.getConveyorOffset();
-				m.renderCore(ImmersiveIntelligence.proxy.item_bullet.getCore(te.coreQueue.get(1)).getColour());
-			}
-			GlStateManager.popMatrix();
 
-			GlStateManager.translate(0f, 0f, 0.5f);
+				if(is_moved)
+					GlStateManager.translate(0f, 0f, cpp);
+
+				renderBulletOnConveyor(te.paintQueue.get(1), 1f, false, -1);
+				GlStateManager.popMatrix();
+			}
+
+			GlStateManager.translate(0f, 0f, -1f);
+
+			if(!te.paintQueue.get(0).isEmpty())
+			{
+				GlStateManager.pushMatrix();
+				if(paint_can_move[1])
+					is_moved = true;
+
+				if(is_moved)
+					GlStateManager.translate(0f, 0f, cpp);
+				renderBulletOnConveyor(te.paintQueue.get(0), 1f, false, -1);
+				GlStateManager.popMatrix();
+			}
+
+			GlStateManager.translate(1f, 0f, 0f);
 
 			is_moved = false;
 
-			if(te.coreProgress > 0)
-			{
-				//TODO: Bullet rendering from list
-			}
-			else
+			if(!te.casingQueue.get(2).isEmpty())
 			{
 				GlStateManager.pushMatrix();
-				if(!core_can_move[0]&&te.coreQueue.get(0).getItem() instanceof ItemIIBullet)
-				{
-					ImmersiveIntelligence.logger.info("otak!");
-					IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(ItemIIBullet.getCasing(te.coreQueue.get(0)));
-					if(core_can_move[1])
-						is_moved = true;
-					if(is_moved)
-						GlStateManager.translate(0f, 0f, -cp*0.5f);
-					if(m!=null)
-					{
-						m.getConveyorOffset();
-						m.renderCore(ItemIIBullet.getCore(te.coreQueue.get(0)).getColour());
-					}
-					else
-						ImmersiveIntelligence.logger.info("Model is NULL!");
-				}
+				if(ip_conv > 0)
+					GlStateManager.translate(-ip_conv/AmmunitionFactory.conveyorTime, 0f, 0f);
+
+				renderBulletOnConveyor(te.coreQueue.get(1), 1f, false, ip_done_up);
+				GlStateManager.popMatrix();
+			}
+
+			GlStateManager.translate(1f, 0f, 0f);
+
+			if(!te.casingQueue.get(1).isEmpty())
+			{
+				GlStateManager.pushMatrix();
+				if(casing_can_move[2])
+					is_moved = true;
+
+				if(is_moved)
+					GlStateManager.translate(-ccp, 0f, 0f);
+				renderBulletOnConveyor(te.casingQueue.get(1), 1f, false, -1);
+				GlStateManager.popMatrix();
+			}
+
+			GlStateManager.translate(1f, 0f, 0f);
+
+			if(!te.casingQueue.get(0).isEmpty())
+			{
+				GlStateManager.pushMatrix();
+				if(casing_can_move[1])
+					is_moved = true;
+
+				if(is_moved)
+					GlStateManager.translate(-ccp, 0f, 0f);
+				renderBulletOnConveyor(te.casingQueue.get(0), 1f, false, -1);
+				GlStateManager.popMatrix();
+			}
+
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(-1f, 0f, -1f);
+
+			if(!te.coreQueue.get(1).isEmpty())
+			{
+				renderBulletOnConveyor(te.coreQueue.get(1), 0f, true, ip_all-ip_done);
+			}
+
+			GlStateManager.translate(1f, 0f, 0f);
+
+			if(!te.coreQueue.get(0).isEmpty())
+			{
+				GlStateManager.pushMatrix();
+
+				if(core_can_move[1])
+					GlStateManager.translate(-ccop, 0f, 0f);
+
+				renderBulletOnConveyor(te.coreQueue.get(0), 0f, true, -1);
 				GlStateManager.popMatrix();
 			}
 
 			GlStateManager.popMatrix();
 
+			GlStateManager.translate(0f, 0f, 1f);
 
-			//Gunpowder
-
-			is_moved = false;
-
-
-			GlStateManager.pushMatrix();
-			if(!gunpowder_can_move[2]&&te.gunpowderQueue.get(2).getItem() instanceof IBulletCasingType)
+			if(!gunpowder_can_move[1]&&!(te.gunpowderQueue.get(1).isEmpty()))
 			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.gunpowderQueue.get(2).getItem()).getName());
-				m.getConveyorOffset();
+				if(casing_can_move[0]&&gp > 0.5)
+					GlStateManager.translate(0f, 0f, -Math.min((gp-0.5)/0.5f, 1f));
+				renderBulletOnConveyor(te.gunpowderQueue.get(1), Math.min(gp/0.5f, 1f), false, -1);
+			}
+
+			GlStateManager.translate(0f, 0f, 1f);
+
+			if(!gunpowder_can_move[0]&&!(te.gunpowderQueue.get(0).isEmpty()))
+			{
 				GlStateManager.pushMatrix();
-				if(gp > 0.5f&&casing_can_move[0])
-				{
-					is_moved = true;
-					GlStateManager.translate(0f, 0f, -1f*((gp-0.5f)/(gp*0.5f)));
-				}
-				m.renderCasing(false, 0, Math.min(gp/0.5f, 1f));
+
+				if(gunpowder_can_move[1]||gp > 0.5)
+					GlStateManager.translate(0f, 0f, -cgp);
+				renderBulletOnConveyor(te.gunpowderQueue.get(0), 0f, false, -1);
 				GlStateManager.popMatrix();
 			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0f, 0f, 0.5f);
-
-			GlStateManager.pushMatrix();
-			if(!gunpowder_can_move[1]&&te.gunpowderQueue.get(1).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.gunpowderQueue.get(1).getItem()).getName());
-				if(gunpowder_can_move[2])
-					is_moved = true;
-				if(is_moved)
-					GlStateManager.translate(0f, 0f, -cp*0.5f);
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 0f);
-			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0f, 0f, 0.5f);
-
-			GlStateManager.pushMatrix();
-			if(!gunpowder_can_move[0]&&te.gunpowderQueue.get(0).getItem() instanceof IBulletCasingType)
-			{
-				IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(((IBulletCasingType)te.gunpowderQueue.get(0).getItem()).getName());
-				if(gunpowder_can_move[1])
-					is_moved = true;
-				if(is_moved)
-					GlStateManager.translate(0f, 0f, -cp*0.5f);
-				m.getConveyorOffset();
-				m.renderCasing(false, 0, 0f);
-			}
-			GlStateManager.popMatrix();
-
 
 			GlStateManager.popMatrix();
 
@@ -412,6 +385,57 @@ public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEnt
 
 			GlStateManager.popMatrix();
 
+			GlStateManager.popMatrix();
+
 		}
+	}
+
+	void renderBulletOnConveyor(ItemStack stack, float gunpowderPercentage, boolean coreOnly, int cores)
+	{
+		ItemStack casing;
+		boolean has_core = false;
+		int core_colour = 0;
+
+		if(stack.getItem() instanceof ItemIIBullet)
+		{
+			casing = ItemIIBullet.getCasing(stack).getStack(stack.getCount());
+			if(ItemIIBullet.hasCore(stack))
+			{
+				has_core = true;
+				core_colour = ItemIIBullet.getCore(stack).getColour();
+			}
+		}
+		else if(stack.getItem() instanceof IBulletCasingType)
+		{
+			casing = stack;
+		}
+		else
+			return;
+
+		IBulletCasingType ctype = (IBulletCasingType)casing.getItem();
+
+		IBulletModel m = BulletRegistry.INSTANCE.registeredModels.get(ctype.getName());
+		float size = ctype.getSize();
+		int bullets = casing.getCount();
+
+		int row = (int)Math.ceil(Math.sqrt(bullets));
+
+		GlStateManager.pushMatrix();
+		m.getConveyorOffset();
+		GlStateManager.scale(0.95f, 0.95f, 0.95f);
+		for(int i = 0; i < bullets; i += 1)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(i%row*(1f/row), 0, -Math.floor(i/row)*(1f/row));
+			GlStateManager.scale(size*2, size*2, size*2);
+
+			if(coreOnly&&(cores==-1||i < cores))
+				m.renderCore(core_colour);
+			else if(!coreOnly)
+				m.renderCasing(cores==-1?has_core: i <= cores, core_colour, gunpowderPercentage);
+
+			GlStateManager.popMatrix();
+		}
+		GlStateManager.popMatrix();
 	}
 }

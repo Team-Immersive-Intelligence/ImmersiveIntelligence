@@ -10,8 +10,7 @@ import java.util.Locale;
  */
 public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockIEBase.IBlockEnum
 {
-	SKYCRATE_STATION,
-	SKYCRATE_STATION_PARENT;
+	SKYCRATE_STATION;
 
 	@Override
 	public String getName()

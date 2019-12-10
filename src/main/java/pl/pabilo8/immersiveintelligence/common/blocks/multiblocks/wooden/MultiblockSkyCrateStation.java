@@ -17,7 +17,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation.TileEntitySkyCrateStationParent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenMultiblock;
 
 /**
@@ -81,7 +80,7 @@ public class MultiblockSkyCrateStation implements IMultiblock
 	{
 		if(te==null)
 		{
-			te = new TileEntitySkyCrateStationParent();
+			te = new TileEntitySkyCrateStation();
 			te.facing = EnumFacing.SOUTH;
 		}
 
@@ -127,15 +126,7 @@ public class MultiblockSkyCrateStation implements IMultiblock
 
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), w).add(0, h, 0);
 
-					if(l==0&&h==-1)
-					{
-						world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCRATE_STATION_PARENT.getMeta()));
-					}
-					else
-					{
-						world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCRATE_STATION.getMeta()));
-					}
-
+					world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCRATE_STATION.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 
 					if(curr instanceof TileEntitySkyCrateStation)
@@ -145,7 +136,8 @@ public class MultiblockSkyCrateStation implements IMultiblock
 						tile.formed = true;
 						//02.06 Trying to figure that out... really Blu, give us the Addon makers some documentation on things pls!
 						//05.06 Haha, it was tricky but I think it's the structure's w and l
-						tile.pos = (h+1)*2+(l)*3+(w);
+						//17.10 Rewriting all of this, I think I made some good progress since then...
+						tile.pos = (h+1)*2+l+w;
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
 						world.addBlockEvent(pos2, CommonProxy.block_wooden_multiblock, 255, 0);

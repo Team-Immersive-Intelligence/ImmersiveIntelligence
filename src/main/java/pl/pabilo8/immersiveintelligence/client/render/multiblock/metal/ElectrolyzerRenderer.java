@@ -42,5 +42,21 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 			GlStateManager.popMatrix();
 
 		}
+		else if(te==null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x-0.35, y-1.1, z-0.35);
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.rotate(-7.5f, 0, 0, 1);
+			GlStateManager.rotate(-7.5f, 1, 0, 0);
+			GlStateManager.scale(0.4, 0.4, 0.4);
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+			ClientUtils.bindTexture(texture);
+			model.render();
+
+			GlStateManager.popMatrix();
+			return;
+		}
 	}
 }

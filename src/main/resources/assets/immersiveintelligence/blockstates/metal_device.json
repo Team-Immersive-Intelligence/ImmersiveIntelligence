@@ -12,6 +12,13 @@
         }
       }
     ],
+    "inventory,type=data_router": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal_device/data_router"
+        }
+      }
+    ],
     "inventory,type=ammunition_crate": [
       {}
     ],
@@ -19,6 +26,11 @@
       "metal_crate": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal_device/steel_crate"
+        }
+      },
+      "data_router": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal_device/data_router"
         }
       }
     },

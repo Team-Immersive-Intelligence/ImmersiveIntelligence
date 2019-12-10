@@ -1,10 +1,12 @@
 package pl.pabilo8.immersiveintelligence.api;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -16,8 +18,12 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -84,6 +90,11 @@ public class Utils
 	public static TargetPoint targetPointFromPos(BlockPos pos, World world, int range)
 	{
 		return new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range);
+	}
+
+	public static TargetPoint targetPointFromEntity(Entity entity, int range)
+	{
+		return new TargetPoint(entity.world.provider.getDimension(), entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), range);
 	}
 
 	public static TargetPoint targetPointFromTile(TileEntity tile, int range)
@@ -189,4 +200,108 @@ public class Utils
 		return new float[]{r, g, b};
 	}
 
+	public static char cycleDataPacketChars(char current, boolean forward, boolean hasEmpty)
+	{
+		if(hasEmpty)
+		{
+			if(current==' ')
+			{
+				if(forward)
+					current = DataPacket.varCharacters[0];
+				else
+					current = DataPacket.varCharacters[DataPacket.varCharacters.length-1];
+			}
+			else
+			{
+				int current_char;
+
+				current_char = ArrayUtils.indexOf(DataPacket.varCharacters, current);
+				current_char += forward?1: -1;
+
+				if(current_char >= DataPacket.varCharacters.length||current_char < 0)
+					current = ' ';
+				else
+					current = DataPacket.varCharacters[current_char];
+			}
+		}
+		else
+		{
+			int current_char;
+
+			current_char = ArrayUtils.indexOf(DataPacket.varCharacters, current);
+			current_char += forward?1: -1;
+
+			if(current_char >= DataPacket.varCharacters.length)
+				current = DataPacket.varCharacters[0];
+			else if(current_char < 0)
+				current = DataPacket.varCharacters[DataPacket.varCharacters.length-1];
+			else
+				current = DataPacket.varCharacters[current_char];
+		}
+		return current;
+	}
+
+	//Pitch calculation for artillery stolen from Pneumaticcraft (https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java)
+	//Huge thanks to desht and MineMaarten for this amazing code!
+	public static float calculateBallisticAngle(double distance, double height, float force, double gravity, double drag)
+	{
+		double bestAngle = 0;
+		double bestDistance = Float.MAX_VALUE;
+		if(gravity==0D)
+		{
+			return 90F-(float)(Math.atan(height/distance)*180F/Math.PI);
+		}
+		// simulate the trajectory for angles from 45 to 90 degrees,
+		// returning the angle which lands the projectile closest to the target distance
+//        for (double i = Math.PI * 0.25D; i < Math.PI * 0.50D; i += 0.001D) {
+		for(double i = Math.PI*0.01D; i < Math.PI*0.5D; i += 0.01D)
+		{
+			double motionX = MathHelper.cos((float)i)*force;// calculate the x component of the vector
+			double motionY = MathHelper.sin((float)i)*force;// calculate the y component of the vector
+			double posX = 0;
+			double posY = 0;
+			while(posY > height||motionY > 0)
+			{ // simulate movement, until we reach the y-level required
+				posX += motionX;
+				posY += motionY;
+				motionY -= gravity;
+				motionX *= drag;
+				motionY *= drag;
+			}
+			double distanceToTarget = Math.abs(distance-posX);
+			if(distanceToTarget < bestDistance)
+			{
+				bestDistance = distanceToTarget;
+				bestAngle = i;
+			}
+		}
+		return 90F-(float)(bestAngle*180D/Math.PI);
+	}
+
+	public static boolean isAdvancedHammer(ItemStack stack)
+	{
+		if(stack.isEmpty())
+			return false;
+		return stack.getItem().getToolClasses(stack).contains("II_ADVANCED_HAMMER");
+	}
+
+	public static boolean isAABBContained(@Nonnull AxisAlignedBB compared, @Nonnull AxisAlignedBB comparedTo)
+	{
+		Vec3d c0, c1, c2, c3, c4, c5, c6, c7;
+		c0 = new Vec3d(compared.minX, compared.minY, compared.minZ);
+		c1 = new Vec3d(compared.maxX, compared.minY, compared.minZ);
+		c2 = new Vec3d(compared.minX, compared.maxY, compared.minZ);
+		c3 = new Vec3d(compared.maxX, compared.maxY, compared.minZ);
+		c4 = new Vec3d(compared.minX, compared.minY, compared.maxZ);
+		c5 = new Vec3d(compared.maxX, compared.minY, compared.maxZ);
+		c6 = new Vec3d(compared.minX, compared.maxY, compared.maxZ);
+		c7 = new Vec3d(compared.maxX, compared.maxY, compared.maxZ);
+
+		AxisAlignedBB comp2 = comparedTo.grow(0.1f);
+		ImmersiveIntelligence.logger.info(""+comp2.contains(c0)+comp2.contains(c1)+comp2.contains(c2)+comp2.contains(c3)+comp2.contains(c4)+comp2.contains(c5)+comp2.contains(c6)+comp2.contains(c7));
+		ImmersiveIntelligence.logger.info(""+comp2.minX+" "+comp2.maxX);
+
+		return comp2.contains(c0)&&comp2.contains(c1)&&comp2.contains(c2)&&comp2.contains(c3)
+				&&comp2.contains(c4)&&comp2.contains(c5)&&comp2.contains(c6)&&comp2.contains(c7);
+	}
 }

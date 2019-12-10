@@ -420,7 +420,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 					}
 					else
 					{
-						if(world.getTileEntity(getPos().offset(outputFacing, 2))!=null&&world.getTileEntity(getPos().offset(outputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+						if(world.isAirBlock(getPos().offset(outputFacing))&&world.getTileEntity(getPos().offset(outputFacing, 2))!=null&&world.getTileEntity(getPos().offset(outputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 						{
 							if(nextPickProgress==0)
 							{
@@ -453,7 +453,7 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 						}
 					}
 				}
-				else if(world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+				else if(world.isAirBlock(getPos().offset(inputFacing))&&world.getTileEntity(getPos().offset(inputFacing, 2))!=null&&world.getTileEntity(getPos().offset(inputFacing, 2)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 				{
 					if(nextDirection!=armDirection&&armDirection!=Math.round(outputFacing.getHorizontalAngle()))
 					{
@@ -616,13 +616,13 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 	{
 		if(packet.getPacketVariable('m').getName().equals("string"))
 		{
-			itemTakeMode = ((DataPacketTypeString)packet.getPacketVariable('m')).value;
+			this.itemTakeMode = ((DataPacketTypeString)packet.getPacketVariable('m')).value;
 		}
 
 		if(packet.getPacketVariable('c').getName().equals("integer"))
 		{
 			int items = ((DataPacketTypeInteger)packet.getPacketVariable('c')).value;
-			itemsToTake = (itemTakeMode.equals("add"))?itemsToTake+items: items;
+			this.itemsToTake = (itemTakeMode.equals("add"))?itemsToTake+items: items;
 		}
 	}
 

@@ -3,43 +3,155 @@ package pl.pabilo8.immersiveintelligence.client;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler.IZoomTool;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.api.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
+import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 
 /**
  * Created by Pabilo8 on 27-09-2019.
  */
 public class ClientEventHandler implements IResourceManagerReloadListener
 {
+	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II_BULLET_HERE\u00A0"};
+
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
 		//TODO: Model Reloading
 	}
 
+	@SubscribeEvent()
+	public void onFOVUpdate(FOVUpdateEvent event)
+	{
+		EntityPlayer player = ClientUtils.mc().player;
+		if(player.getRidingEntity() instanceof EntityMachinegun&&ZoomHandler.isZooming)
+		{
+			if(!ZoomHandler.isZooming)
+			{
+				float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
+				if(steps!=null&&steps.length > 0)
+				{
+					int curStep = -1;
+					float dist = 0;
+					for(int i = 0; i < steps.length; i++)
+						if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
+						{
+							curStep = i;
+							dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
+						}
+					if(curStep!=-1)
+						ZoomHandler.fovZoom = steps[curStep];
+					else
+						ZoomHandler.fovZoom = event.getFov();
+				}
+			}
+			event.setNewfov(ZoomHandler.fovZoom);
+			event.setCanceled(true);
+		}
+	}
+
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onRenderOverlayPre(RenderGameOverlayEvent.Pre event)
 	{
+		if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+		{
+			ZoomHandler.isZooming = ClientProxy.keybind_machinegunScope.isKeyDown();
+			if(ZoomHandler.isZooming)
+			{
+				ClientUtils.mc().gameSettings.thirdPersonView = 0;
+				EntityMachinegun mg = (EntityMachinegun)ClientUtils.mc().player.getRidingEntity();
+
+				float px = mg.getPosition().getX(), py = mg.getPosition().getY(), pz = mg.getPosition().getZ();
+
+				float yaw = mg.gunYaw;
+				float pitch = mg.gunPitch;
+
+				EntityLivingBase psg = (EntityLivingBase)mg.getPassengers().get(0);
+				float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-mg.setYaw);
+				float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
+
+				if(mg.gunYaw < true_head_angle)
+					yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
+				else if(mg.gunYaw > true_head_angle)
+					yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
+
+				if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
+					yaw = true_head_angle;
+
+				yaw += mg.recoilYaw;
+
+				if(mg.gunPitch < true_head_angle2)
+					pitch += ClientUtils.mc().getRenderPartialTicks();
+				else if(mg.gunPitch > true_head_angle2)
+					pitch -= ClientUtils.mc().getRenderPartialTicks();
+
+				if(Math.ceil(mg.gunPitch) <= Math.ceil(true_head_angle2)+1f&&Math.ceil(mg.gunPitch) >= Math.ceil(true_head_angle2)-1f)
+					pitch = true_head_angle2;
+
+				pitch += mg.recoilPitch;
+
+				double true_angle = Math.toRadians(180-mg.setYaw-yaw);
+				double true_angle2 = Math.toRadians(pitch);
+
+				boolean hasScope = EntityMachinegun.scope.canZoom(mg.gun, null);
+
+				Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
+				Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
+
+				CameraHandler.INSTANCE.setCameraPos(px+0.5+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+0.5+(0.85*(gun_end.z+gun_height.z)));
+				CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
+				CameraHandler.INSTANCE.setEnabled(true);
+			}
+			else
+				CameraHandler.INSTANCE.setEnabled(false);
+		}
+
+		dothing:
 		if(ZoomHandler.isZooming&&event.getType()==RenderGameOverlayEvent.ElementType.CROSSHAIRS)
 		{
-			ItemStack stack_m = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
-			ItemStack stack_o = Minecraft.getMinecraft().player.getHeldItem(EnumHand.OFF_HAND);
+			ItemStack stack_m = ClientUtils.mc().player.getHeldItem(EnumHand.MAIN_HAND);
+			ItemStack stack_o = ClientUtils.mc().player.getHeldItem(EnumHand.OFF_HAND);
 
-			if(ZoomHandler.isZooming&&(stack_m.getItem() instanceof IAdvancedZoomTool||stack_o.getItem() instanceof IAdvancedZoomTool))
+			if(ZoomHandler.isZooming&&(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun||(stack_m.getItem() instanceof IAdvancedZoomTool||stack_o.getItem() instanceof IAdvancedZoomTool)))
 			{
 				event.setCanceled(true);
 
 				ItemStack stack = stack_m.getItem() instanceof IAdvancedZoomTool?stack_m: stack_o;
-				ClientUtils.bindTexture(((IAdvancedZoomTool)stack.getItem()).getZoomOverlayTexture(stack, Minecraft.getMinecraft().player));
+
+				if(ClientUtils.mc().player.getRidingEntity()!=null&&ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+				{
+					if(!EntityMachinegun.scope.canZoom(((EntityMachinegun)ClientUtils.mc().player.getRidingEntity()).gun, ClientUtils.mc().player))
+					{
+						ZoomHandler.isZooming = false;
+						break dothing;
+					}
+					ClientUtils.bindTexture(EntityMachinegun.scope.getZoomOverlayTexture(((EntityMachinegun)ClientUtils.mc().player.getRidingEntity()).gun, ClientUtils.mc().player));
+				}
+				else
+					ClientUtils.bindTexture(((IAdvancedZoomTool)stack.getItem()).getZoomOverlayTexture(stack, ClientUtils.mc().player));
+
+
 				int width = event.getResolution().getScaledWidth();
 				int height = event.getResolution().getScaledHeight();
 				int resMin = Math.min(width, height);
@@ -65,9 +177,13 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 				ClientUtils.bindTexture("immersiveengineering:textures/gui/hud_elements.png");
 				ClientUtils.drawTexturedRect(218/256f*resMin, 64/256f*resMin, 24/256f*resMin, 128/256f*resMin, 64/256f, 88/256f, 96/256f, 224/256f);
 				ItemStack equipped = ClientUtils.mc().player.getHeldItem(EnumHand.MAIN_HAND);
-				if(!equipped.isEmpty()&&equipped.getItem() instanceof IZoomTool)
+				if(!equipped.isEmpty()&&equipped.getItem() instanceof IZoomTool||(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun))
 				{
-					IZoomTool tool = (IZoomTool)equipped.getItem();
+					IZoomTool tool;
+					if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+						tool = EntityMachinegun.scope;
+					else
+						tool = (IZoomTool)equipped.getItem();
 					float[] steps = tool.getZoomSteps(equipped, ClientUtils.mc().player);
 					if(steps!=null&&steps.length > 1)
 					{
@@ -107,6 +223,64 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 
 				GlStateManager.translate(-offsetX, -offsetY, 0);
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onItemTooltip(ItemTooltipEvent event)
+	{
+		if(event.getItemStack().getItem() instanceof ItemIIBulletMagazine)
+		{
+			if(ItemNBTHelper.hasKey(event.getItemStack(), "bullets"))
+			{
+				if(ItemNBTHelper.getTag(event.getItemStack()).hasKey("bullet0"))
+					event.getToolTip().add("   "+new ItemStack(ItemNBTHelper.getTagCompound(event.getItemStack(), "bullet0")).getDisplayName());
+				if(ItemNBTHelper.getTag(event.getItemStack()).hasKey("bullet1"))
+					event.getToolTip().add("   "+new ItemStack(ItemNBTHelper.getTagCompound(event.getItemStack(), "bullet1")).getDisplayName());
+				if(ItemNBTHelper.getTag(event.getItemStack()).hasKey("bullet2"))
+					event.getToolTip().add("   "+new ItemStack(ItemNBTHelper.getTagCompound(event.getItemStack(), "bullet2")).getDisplayName());
+				if(ItemNBTHelper.getTag(event.getItemStack()).hasKey("bullet3"))
+					event.getToolTip().add("   "+new ItemStack(ItemNBTHelper.getTagCompound(event.getItemStack(), "bullet3")).getDisplayName());
+			}
+		}
+	}
+
+	@SubscribeEvent()
+	public void onRenderTooltip(RenderTooltipEvent.PostText event)
+	{
+		ItemStack stack = event.getStack();
+		if(stack.getItem() instanceof ItemIIBulletMagazine)
+		{
+
+			int line = event.getLines().size()-Utils.findSequenceInList(event.getLines(), II_BULLET_TOOLTIP, (s, s2) -> s.equals(s2.substring(2)));
+
+			if(line==-1)
+				return;
+
+			int currentX = event.getX();
+			int currentY = event.getY()+10;
+
+			GlStateManager.pushMatrix();
+			GlStateManager.enableBlend();
+			GlStateManager.enableRescaleNormal();
+			GlStateManager.translate(currentX, currentY, 700);
+			GlStateManager.scale(.5f, .5f, 1);
+
+
+			MachinegunRenderer.drawBulletsList(stack);
+
+			GlStateManager.disableRescaleNormal();
+			GlStateManager.popMatrix();
+
+		}
+	}
+
+	@SubscribeEvent
+	public void cameraSetup(EntityViewRenderEvent.CameraSetup event)
+	{
+		if(CameraHandler.INSTANCE.isEnabled())
+		{
+			event.setRoll(CameraHandler.INSTANCE.getRoll());
 		}
 	}
 }

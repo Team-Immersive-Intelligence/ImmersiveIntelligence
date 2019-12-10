@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.tmt;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.TexturedQuad;
@@ -2209,7 +2209,7 @@ public class ModelRendererTurbo extends ModelRenderer
 			GL11.glCallList(displayList);
 		else
 		{
-			TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
+			TextureManager renderEngine = ClientUtils.mc().renderEngine;
 
 			Collection<TextureGroup> textures = textureGroup.values();
 

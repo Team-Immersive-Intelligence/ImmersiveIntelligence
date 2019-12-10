@@ -1,11 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
@@ -21,12 +17,10 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  */
 public class ModelBullet extends BaseBlockModel implements IBulletModel
 {
+	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 	int textureX = 64;
 	int textureY = 32;
-
 	ModelRendererTurbo[] coreModel;
-
-	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 
 	public ModelBullet() //Same as Filename
 	{
@@ -79,14 +73,16 @@ public class ModelBullet extends BaseBlockModel implements IBulletModel
 		coreModel[0] = new ModelRendererTurbo(this, 15, 23, textureX, textureY); // Core
 		coreModel[1] = new ModelRendererTurbo(this, 39, 20, textureX, textureY); // Core
 
-		coreModel[0].addFlexTrapezoid(-3F, -16F, -3F, 6, 3, 6, 0F, -2.00F, -2.00F, -2.00F, -2.00F, -2.00F, -2.00F, ModelRendererTurbo.MR_TOP); // Core
+		coreModel[0].addFlexTrapezoid(-3F, -16F, -3F, 6, 3, 6, 0F, -2.00F, -2.00F, -2.00F, -2.00F, 0f, 0f, ModelRendererTurbo.MR_TOP); // Core
 		coreModel[0].setRotationPoint(8F, 0F, 8F);
 
 		coreModel[1].addBox(-3F, -12F, -3F, 6, 6, 6, 0F); // Core
 		coreModel[1].setRotationPoint(8F, 0F, 8F);
 
-		parts.add(baseModel);
-		parts.add(coreModel);
+		coreModel[0].mirror = true;
+		coreModel[0].flip = true;
+		parts.put("base", baseModel);
+		parts.put("core", coreModel);
 		flipAll();
 	}
 
@@ -130,6 +126,6 @@ public class ModelBullet extends BaseBlockModel implements IBulletModel
 	@Override
 	public void getConveyorOffset()
 	{
-
+		GlStateManager.translate(0, 0.035, 0);
 	}
 }

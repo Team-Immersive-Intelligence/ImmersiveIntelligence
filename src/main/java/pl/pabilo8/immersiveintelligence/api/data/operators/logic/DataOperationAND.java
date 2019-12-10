@@ -13,7 +13,7 @@ public class DataOperationAND extends DataOperator
 {
 	public DataOperationAND()
 	{
-		name = "AND";
+		name = "and";
 		sign = "&";
 		allowedType1 = DataPacketTypeBoolean.class;
 		allowedType2 = DataPacketTypeBoolean.class;

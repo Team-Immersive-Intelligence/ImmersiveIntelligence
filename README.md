@@ -25,7 +25,11 @@ The mod authors, the developers:
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
 - [@Choroman](https://github.com/Choroman) - Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
   - [Curseforge](https://www.curseforge.com/members/choroman1/)
-- [@Krystiano0306](https://github.com/Krystiano0306) - Newbie Modeller, model creator, helps at various model-related jobs
+  
+Special thanks to:
+- [@Krystiano0306](https://github.com/Krystiano0306) - Newbie Modeller, helped at various model-related jobs
+- @Blacknight - Texture artist, created some textures for the mod's items
+- @Kamo6343 - Helps at getting @Choroman to work, helped at building the trailer map 
  
 Proudly powered by Turbo Model Thingy (TMT):
 - Original author: [@GaryCXJk](https://github.com/GaryCXJk)

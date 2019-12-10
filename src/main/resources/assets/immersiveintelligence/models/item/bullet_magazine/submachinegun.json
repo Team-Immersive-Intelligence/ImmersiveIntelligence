@@ -1,0 +1,14 @@
+{
+  "parent": "immersiveengineering:item/ie_item_base",
+  "textures": {
+    "layer0": "immersiveintelligence:items/bullets/magazines/submachinegun/main",
+    "layer1": "immersiveintelligence:items/bullets/magazines/submachinegun/bullet0",
+    "layer2": "immersiveintelligence:items/bullets/magazines/submachinegun/paint0",
+    "layer3": "immersiveintelligence:items/bullets/magazines/submachinegun/bullet1",
+    "layer4": "immersiveintelligence:items/bullets/magazines/submachinegun/paint1",
+    "layer5": "immersiveintelligence:items/bullets/magazines/submachinegun/bullet2",
+    "layer6": "immersiveintelligence:items/bullets/magazines/submachinegun/paint2",
+    "layer7": "immersiveintelligence:items/bullets/magazines/submachinegun/bullet3",
+    "layer8": "immersiveintelligence:items/bullets/magazines/submachinegun/paint3"
+  }
+}

@@ -15,6 +15,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
+import pl.pabilo8.immersiveintelligence.api.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -30,10 +31,10 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.radioSta
 /**
  * Created by Pabilo8 on 20-06-2019.
  */
-public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice
+public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblock
 {
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(0, ItemStack.EMPTY);
-	public int frequency;
+	public int frequency, construction = 0;
 
 	public TileEntityRadioStation()
 	{
@@ -50,6 +51,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			frequency = 0;
 			if(nbt.hasKey("frequency"))
 				frequency = nbt.getInteger("frequency");
+			getConstructionNBT(nbt);
 		}
 	}
 
@@ -69,6 +71,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 				nbt.setTag("inventory", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventory));
 			nbt.setInteger("frequency", frequency);
 			RadioNetwork.INSTANCE.addDevice(this);
+			setConstructionNBT(nbt);
 		}
 	}
 
@@ -240,7 +243,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	public boolean onRadioReceive(DataPacket packet)
 	{
 		//Added because of getting double (and fake (with pos -1 and facing north) tile entities) when using world.getTileEntity
-		if(this.pos!=-1&&!this.isDummy())
+		if(this.pos!=-1&&!this.isDummy()&&isConstructionFinished())
 		{
 			IDataConnector conn = Utils.findConnectorAround(this.getPos(), this.world);
 			if(conn!=null)
@@ -259,7 +262,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(this.pos==9&&energyStorage.getEnergyStored() >= radioStation.energyUsage)
 		{
@@ -342,4 +345,27 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 		return getAdvancedSelectionBounds();
 	}
 
+	@Override
+	public int getConstructionCost()
+	{
+		return 200000;
+	}
+
+	@Override
+	public int getCurrentConstruction()
+	{
+		return master().construction;
+	}
+
+	@Override
+	public void setCurrentConstruction(int construction)
+	{
+		master().construction = construction;
+	}
+
+	@Override
+	public void onConstructionFinish()
+	{
+
+	}
 }

@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 
 /**
@@ -32,6 +33,6 @@ public class DataOperationDivide extends DataOperator
 		i2 = t2.value;
 
 		//Yes
-		return new DataPacketTypeInteger(i1/i2);
+		return i2!=0?(new DataPacketTypeInteger(i1/i2)): new DataPacketTypeNull();
 	}
 }

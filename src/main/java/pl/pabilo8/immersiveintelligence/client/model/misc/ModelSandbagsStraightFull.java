@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -321,9 +320,9 @@ public class ModelSandbagsStraightFull extends ModelSandbagsStraight
 		leftModel[14].addShapeBox(0F, 0F, 0F, 1, 4, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // Box 65
 		leftModel[14].setRotationPoint(19F, -16F, 0F);
 
-		parts.add(baseModel);
-		parts.add(rightModel);
-		parts.add(leftModel);
+		parts.put("base", baseModel);
+		parts.put("right", rightModel);
+		parts.put("left", leftModel);
 		flipAll();
 	}
 

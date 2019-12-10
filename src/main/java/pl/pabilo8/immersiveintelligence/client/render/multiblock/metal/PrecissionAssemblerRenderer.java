@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -28,7 +27,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 	public static ModelPrecissionBuzzsaw modelBuzzsaw = new ModelPrecissionBuzzsaw();
 	public static ModelPrecissionSolderer modelSolderer = new ModelPrecissionSolderer();
 	public static ModelPrecissionWelder modelWelder = new ModelPrecissionWelder();
-	static RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPrecissionAssembler model = new ModelPrecissionAssembler();
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";
 
@@ -324,6 +323,27 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 
 			GlStateManager.popMatrix();
 
+		}
+		else if(te==null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x-0.35, y-1.15, z-0.6);
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.rotate(-7.5f, 0, 0, 1);
+			GlStateManager.rotate(-7.5f, 1, 0, 0);
+			GlStateManager.scale(0.3, 0.3, 0.3);
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+			ClientUtils.bindTexture(texture);
+			for(ModelRendererTurbo mod : model.baseModel)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.drawer1)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.drawer2)
+				mod.render(0.0625f);
+
+			GlStateManager.popMatrix();
+			return;
 		}
 	}
 }

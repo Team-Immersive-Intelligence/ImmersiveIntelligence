@@ -38,6 +38,7 @@ public class SkyCrateRenderer extends Render<EntitySkyCrate>
 		GlStateManager.rotate(180.0F-entityYaw, 0.0F, 1.0F, 0.0F);
 		GlStateManager.scale(-1.0F, -1.0F, 1.0F);
 
+		ImmersiveIntelligence.logger.info("o");
 		model.render();
 
 		GlStateManager.popMatrix();

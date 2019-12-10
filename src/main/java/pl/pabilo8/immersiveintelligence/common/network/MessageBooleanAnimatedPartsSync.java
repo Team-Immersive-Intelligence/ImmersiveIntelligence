@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.network;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -69,9 +69,9 @@ public class MessageBooleanAnimatedPartsSync implements IMessage
 			world.addScheduledTask(() ->
 			{
 				//ImmersiveIntelligence.logger.info("server");
-				if(Minecraft.getMinecraft().world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
+				if(world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
 				{
-					IBooleanAnimatedPartsBlock te = (IBooleanAnimatedPartsBlock)Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
+					IBooleanAnimatedPartsBlock te = (IBooleanAnimatedPartsBlock)ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
 					te.onAnimationChangeServer(message.open, message.id);
 				}
 			});
@@ -84,15 +84,15 @@ public class MessageBooleanAnimatedPartsSync implements IMessage
 		@Override
 		public IMessage onMessage(MessageBooleanAnimatedPartsSync message, MessageContext ctx)
 		{
-			Minecraft.getMinecraft().addScheduledTask(() ->
+			ClientUtils.mc().addScheduledTask(() ->
 			{
 				World world = ImmersiveEngineering.proxy.getClientWorld();
 				//ImmersiveIntelligence.logger.info("client");
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
-					if(Minecraft.getMinecraft().world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
+					if(ClientUtils.mc().world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
 					{
-						IBooleanAnimatedPartsBlock te = (IBooleanAnimatedPartsBlock)Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
+						IBooleanAnimatedPartsBlock te = (IBooleanAnimatedPartsBlock)ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
 						te.onAnimationChangeClient(message.open, message.id);
 					}
 				}

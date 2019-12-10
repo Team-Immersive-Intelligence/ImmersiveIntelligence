@@ -13,7 +13,7 @@ public class DataOperationOR extends DataOperator
 {
 	public DataOperationOR()
 	{
-		name = "OR";
+		name = "or";
 		sign = "||";
 		allowedType1 = DataPacketTypeBoolean.class;
 		allowedType2 = DataPacketTypeBoolean.class;

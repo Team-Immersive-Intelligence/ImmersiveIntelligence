@@ -1,0 +1,14 @@
+{
+  "parent": "immersiveengineering:item/ie_item_base",
+  "textures": {
+    "layer0": "immersiveintelligence:items/bullets/magazines/automatic_revolver/main",
+    "layer1": "immersiveintelligence:items/bullets/magazines/automatic_revolver/bullet0",
+    "layer2": "immersiveintelligence:items/bullets/magazines/automatic_revolver/paint0",
+    "layer3": "immersiveintelligence:items/bullets/magazines/automatic_revolver/bullet1",
+    "layer4": "immersiveintelligence:items/bullets/magazines/automatic_revolver/paint1",
+    "layer5": "immersiveintelligence:items/bullets/magazines/automatic_revolver/bullet2",
+    "layer6": "immersiveintelligence:items/bullets/magazines/automatic_revolver/paint2",
+    "layer7": "immersiveintelligence:items/bullets/magazines/automatic_revolver/bullet3",
+    "layer8": "immersiveintelligence:items/bullets/magazines/automatic_revolver/paint3"
+  }
+}

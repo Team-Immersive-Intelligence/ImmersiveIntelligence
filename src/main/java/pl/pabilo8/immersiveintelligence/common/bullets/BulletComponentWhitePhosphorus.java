@@ -49,7 +49,6 @@ public class BulletComponentWhitePhosphorus implements IBulletComponent
 	@Override
 	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
 	{
-		//TODO: White Phosphorus
 		int lower = 0;
 		for(int l = 0; l < 24; l += 1)
 		{

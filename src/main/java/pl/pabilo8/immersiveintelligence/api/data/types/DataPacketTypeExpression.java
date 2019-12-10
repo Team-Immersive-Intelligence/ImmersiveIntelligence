@@ -14,12 +14,14 @@ public class DataPacketTypeExpression implements IDataType
 {
 	IDataType type1, type2;
 	DataOperator operation;
+	char requiredVariable = ' ';
 
-	public DataPacketTypeExpression(IDataType type1, IDataType type2, DataOperator operation)
+	public DataPacketTypeExpression(IDataType type1, IDataType type2, DataOperator operation, char requiredVariable)
 	{
 		this.type1 = type1;
 		this.type2 = type2;
 		this.operation = operation;
+		this.requiredVariable = requiredVariable;
 	}
 
 	public IDataType getType1()
@@ -37,9 +39,19 @@ public class DataPacketTypeExpression implements IDataType
 		return operation;
 	}
 
+	public char getRequiredVariable()
+	{
+		return requiredVariable;
+	}
+
 	public void setOperation(DataOperator operation)
 	{
 		this.operation = operation;
+	}
+
+	public void setRequiredVariable(char requiredVariable)
+	{
+		this.requiredVariable = requiredVariable;
 	}
 
 	public DataPacketTypeExpression()
@@ -69,6 +81,7 @@ public class DataPacketTypeExpression implements IDataType
 		this.type1 = new DataPacketTypeNull();
 		this.type2 = new DataPacketTypeNull();
 		this.operation = new DataOperationAdd();
+		this.requiredVariable = ' ';
 	}
 
 	@Override
@@ -116,6 +129,8 @@ public class DataPacketTypeExpression implements IDataType
 			type2 = new DataPacketTypeNull();
 		}
 
+		requiredVariable = nbt.getString("requiredVariable").charAt(0);
+
 		String type = nbt.getString("Operation");
 		if(DataOperation.operations.containsKey(type))
 		{
@@ -146,6 +161,7 @@ public class DataPacketTypeExpression implements IDataType
 		nbt.setTag("Value2", type2.valueToNBT());
 
 		nbt.setString("Operation", operation.name);
+		nbt.setString("requiredVariable", String.valueOf(requiredVariable));
 
 		return nbt;
 	}

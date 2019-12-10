@@ -66,6 +66,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 	private boolean wasDown = false;
 	private GuiTextField valueEdit;
 	private boolean editedstate = true;
+	char expressionAllowed = ' ';
 
 	public GuiArithmeticLogicMachineEdit(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, int page)
 	{
@@ -96,6 +97,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				mainType = this.list.getPacketVariable(expressionToEdit);
 				type1 = ((DataPacketTypeExpression)mainType).getType1();
 				type2 = ((DataPacketTypeExpression)mainType).getType2();
+				expressionAllowed = ((DataPacketTypeExpression)mainType).getRequiredVariable();
 			}
 		}
 
@@ -152,6 +154,9 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			this.buttonList.add(new GuiButtonIE(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+48, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
 			this.buttonList.add(new GuiButtonIE(12, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+54, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
 
+			this.buttonList.add(new GuiButtonIE(13, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"conditional_variable")), guiTop+64, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
+			this.buttonList.add(new GuiButtonIE(14, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"conditional_variable")), guiTop+70, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
+
 		}
 		else
 		{
@@ -185,6 +190,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				{
 					this.valueEdit = new GuiTextField(11, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
 					this.valueEdit.setFocused(true);
+					this.valueEdit.setMaxStringLength(512);
 					this.valueEdit.setText(currentlyEditeddataType.valueToString());
 				}
 				break;
@@ -244,7 +250,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			}*/
 			changeDataTypePage(true);
 
-			list.setVariable(expressionToEdit, new DataPacketTypeExpression(type1, type2, ((DataPacketTypeExpression)mainType).getOperation()));
+			list.setVariable(expressionToEdit, new DataPacketTypeExpression(type1, type2, ((DataPacketTypeExpression)mainType).getOperation(), expressionAllowed));
 
 			syncDataToServer();
 
@@ -288,6 +294,14 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			if(button.id==12)
 			{
 				changeOperation(false);
+			}
+			else if(button.id==13)
+			{
+				changeRequiredVariable(true);
+			}
+			else if(button.id==14)
+			{
+				changeRequiredVariable(false);
 			}
 		}
 		else if(currentlyEditeddataType.getName().equals("accessor"))
@@ -415,8 +429,10 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			case "expression":
 			{
 				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"operation"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"conditional_variable"), guiLeft+40, guiTop+62, 0x0a0a0a, false);
 
-				this.fontRenderer.drawString(I18n.format(CommonProxy.data_key+"function."+((DataPacketTypeExpression)currentlyEditeddataType).getOperation().name), guiLeft+52+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.data_key+"function."+((DataPacketTypeExpression)currentlyEditeddataType).getOperation().name), guiLeft+52+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+50, Lib.COLOUR_I_ImmersiveOrange, false);
+				this.fontRenderer.drawString(expressionAllowed==' '?I18n.format(CommonProxy.description_key+"no_variable"): String.valueOf(expressionAllowed), guiLeft+52+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"conditional_variable")), guiTop+62, Lib.COLOUR_I_ImmersiveOrange, true);
 			}
 			break;
 			case "accessor":
@@ -698,6 +714,30 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 
 		syncDataToServer();
 		initGui();
+	}
+
+	void changeRequiredVariable(boolean forward)
+	{
+		ImmersiveIntelligence.logger.info("o!");
+		if(expressionAllowed==' ')
+		{
+			if(forward)
+				expressionAllowed = DataPacket.varCharacters[0];
+			else
+				expressionAllowed = DataPacket.varCharacters[DataPacket.varCharacters.length-1];
+		}
+		else
+		{
+			int current_char;
+
+			current_char = ArrayUtils.indexOf(DataPacket.varCharacters, expressionAllowed);
+			current_char += forward?1: -1;
+
+			if(current_char >= DataPacket.varCharacters.length||current_char < 0)
+				expressionAllowed = ' ';
+			else
+				expressionAllowed = DataPacket.varCharacters[current_char];
+		}
 	}
 
 }

@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadioStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityRadioStation;
 
@@ -34,7 +35,33 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 			}
 
 			model.getBlockRotation(te.facing, model);
-			model.render();
+
+			if(te.isConstructionFinished())
+			{
+				model.render();
+			}
+			else
+			{
+				GlStateManager.pushMatrix();
+				GlStateManager.enableBlend();
+				GlStateManager.disableLighting();
+				float progress = Math.max(Math.min(te.getCurrentConstruction()/(float)te.getConstructionCost(), 1f), 0f);
+				GlStateManager.scale(0.98f, 0.98f, 0.98f);
+				GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
+				float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
+				ShaderUtil.blueprint_static(0.55f-(progress*0.35f), ClientUtils.mc().player.ticksExisted+partialTicks);
+				for(int i = 50; i >= 50*progress; i--)
+					model.baseModel[i].render(0.0625f);
+				ShaderUtil.releaseShader();
+				GlStateManager.disableBlend();
+				GlStateManager.enableLighting();
+				GlStateManager.popMatrix();
+
+				for(int i = 0; i < 50*progress; i++)
+					model.baseModel[i].render(0.0625f);
+
+
+			}
 
 			GlStateManager.popMatrix();
 

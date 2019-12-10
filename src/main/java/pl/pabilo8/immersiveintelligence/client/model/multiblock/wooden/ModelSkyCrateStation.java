@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
@@ -86,5 +87,35 @@ public class ModelSkyCrateStation extends BaseBlockModel
 		baseModel[15].setRotationPoint(16F, -43.5F, 8F);
 
 		flipAll();
+	}
+
+	@Override
+	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	{
+		switch(facing)
+		{
+			case NORTH:
+			{
+				GlStateManager.rotate(90F, 0F, 1F, 0F);
+				GlStateManager.translate(-1f, 0f, 0f);
+			}
+			break;
+			case SOUTH:
+			{
+				GlStateManager.rotate(270F, 0F, 1F, 0F);
+				GlStateManager.translate(0f, 0f, 1f);
+			}
+			break;
+			case EAST:
+			{
+				GlStateManager.translate(-1f, 0f, 1f);
+			}
+			break;
+			case WEST:
+			{
+				GlStateManager.rotate(180F, 0F, 1F, 0F);
+			}
+			break;
+		}
 	}
 }

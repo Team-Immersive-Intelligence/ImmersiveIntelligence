@@ -81,6 +81,27 @@ item.immersiveintelligence.electric_wirecutter.name=Electric Wirecutter
 item.immersiveintelligence.electric_multitool.name=Electric Multitool
 item.immersiveintelligence.radio_configurator.basic.name=Basic Frequency Configurator
 item.immersiveintelligence.radio_configurator.advanced.name=Advanced Frequency Configurator
+item.immersiveintelligence.machinegun.name=Machinegun
+
+item.immersiveintelligence.weapon_upgrade.water_cooling.name=Water Cooled Barrel
+item.immersiveintelligence.weapon_upgrade.heavy_barrel.name=Heavy Barrel
+item.immersiveintelligence.weapon_upgrade.second_magazine.name=Second Magazine
+item.immersiveintelligence.weapon_upgrade.belt_fed_loader.name=Belt Fed Ammunition Loader
+item.immersiveintelligence.weapon_upgrade.precise_bipod.name=Precise Bipod
+item.immersiveintelligence.weapon_upgrade.hasty_bipod.name=Field Bipod
+item.immersiveintelligence.weapon_upgrade.scope.name=Scope
+item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Infrared Scope
+
+item.immersiveintelligence.tracer_powder.name=Tracer Dust
+
+desc.immersiveintelligence.toolupgrade.water_cooling=Uses water to cool down the MG. Increases the max amount of heat the MG can take.
+desc.immersiveintelligence.toolupgrade.heavy_barrel=Dramatically increases fire rate, has higher recoil and overheats faster.
+desc.immersiveintelligence.toolupgrade.second_magazine=Allows to use ammunition from two magazines, needs to be reloaded separately.
+desc.immersiveintelligence.toolupgrade.belt_fed_loader=Allows to take ammunition from an ammo crate below the player. Increases setting up time.
+desc.immersiveintelligence.toolupgrade.precise_bipod=Increases setting up time, decreases recoil
+desc.immersiveintelligence.toolupgrade.hasty_bipod=Decreases setting up time, increases recoil
+desc.immersiveintelligence.toolupgrade.scope=Allows to aim at distant things
+desc.immersiveintelligence.toolupgrade.infrared_scope=Allows nightvision, requires a power source such as a capacitor backpack.
 
 item.immersiveintelligence.data_wire.name=Data Cable Coil
 
@@ -104,6 +125,15 @@ item.immersiveintelligence.bullet.artillery_8bCal.name=Artillery Shell
 item.immersiveintelligence.casing_grenade.name=Grenade Casing
 item.immersiveintelligence.bullet.grenade_4bCal.name=Grenade
 
+item.immersiveintelligence.casing_machinegun.name=Machinegun Bullet Casing
+item.immersiveintelligence.bullet.machinegun_2bCal.name=Machinegun Bullet
+
+item.immersiveintelligence.casing_submachinegun.name=Submachinegun Bullet Casing
+item.immersiveintelligence.bullet.submachinegun_2bCal.name=Submachinegun Bullet
+
+item.immersiveintelligence.casing_revolver.name=Revolver Cartridge Casing
+item.immersiveintelligence.bullet.revolver_2bCal.name=Revolver Cartridge
+
 item.immersiveintelligence.bullet.component.TNT.name=TNT
 item.immersiveintelligence.bullet.component.RDX.name=RDX
 item.immersiveintelligence.bullet.component.HMX.name=HMX
@@ -111,6 +141,10 @@ item.immersiveintelligence.bullet.component.HMX.name=HMX
 item.immersiveintelligence.bullet.component.CoreSteel.name=Steel Core
 item.immersiveintelligence.bullet.component.CoreBrass.name=Brass Core
 item.immersiveintelligence.bullet.component.CoreTungsten.name=Tungsten Core
+
+item.immersiveintelligence.bullet_magazine.machinegun.name=Machinegun Magazine
+item.immersiveintelligence.bullet_magazine.submachinegun.name=Submachinegun Magazine
+item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Automatic Revolver Magazine
 
 //Blocks
 
@@ -144,8 +178,8 @@ tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
 tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
 tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
 tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
-tile.immersiveintelligence.metal_device.redstone_output_device.name=Redstone Output Device
-tile.immersiveintelligence.metal_device.redstone_input_device.name=Redstone Input Device
+tile.immersiveintelligence.metal_device.data_router.name=Data Router
+tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
 
 tile.immersiveintelligence.small_crate.wooden_crate_box.name=Small Wooden Crate (Box)
 tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Small Wooden Crate (Cube)
@@ -185,9 +219,11 @@ tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Electrolyzer
 tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Precission Assembler
 tile.immersiveintelligence.metal_multiblock.persicope.name=Periscope
 tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Artillery Howitzer
+tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Ballistic Computer
 tile.immersiveintelligence.metal_multiblock.missile_silo.name=Missile Silo
 tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Ammunition Factory
 tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Scanning Conveyor
+tile.immersiveintelligence.metal_multiblock.redstone_data_interface.name=Redstone-Data Interface
 
 desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
@@ -199,9 +235,11 @@ desc.immersiveengineering.info.multiblock.II:Electrolyzer=Electrolyzer
 desc.immersiveengineering.info.multiblock.II:PrecissionAssembler=Precission Assembler
 desc.immersiveengineering.info.multiblock.II:Periscope=Periscope
 desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Artillery Howitzer
+desc.immersiveengineering.info.multiblock.II:BallisticComputer=Ballistic Computer
 desc.immersiveengineering.info.multiblock.II:MissileSilo=Missile Silo
 desc.immersiveengineering.info.multiblock.II:AmmunitionFactory=Ammunition Factory
 desc.immersiveengineering.info.multiblock.II:ConveyorScanner=Scanning Conveyor
+desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data Interface
 
 //Fluids
 fluid.ink=Ink
@@ -226,6 +264,11 @@ subtitle.immersiveintelligence.paper_eject=Paper Falling
 entity.minecart_wooden_crate.name=Minecart with Wooden Crate
 entity.minecart_reinforced_crate.name=Minecart with Reinforced Crate
 entity.minecart_steel_crate.name=Minecart with Steel Crate
+
+entity.skycrate.name=Skycrate
+entity.bullet.name=Bullet
+entity.shrapnel.name=Shrapnel
+entity.machinegun.name=Machinegun
 
 //Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Allows to set frequency for basic radio devices.
@@ -270,6 +313,8 @@ desc.immersiveintelligence.variable_properties=Properties
 desc.immersiveintelligence.variable_apply=Apply
 desc.immersiveintelligence.variable_value=Value:
 desc.immersiveintelligence.operation=Operation:
+desc.immersiveintelligence.conditional_variable=Conditional Variable:
+desc.immersiveintelligence.no_variable=None
 desc.immersiveintelligence.variable=Variable:
 
 //Bullets
@@ -287,10 +332,16 @@ desc.immersiveintelligence.bullets.core=Fitted with %s
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
+desc.immersiveintelligence.data_merger.0=Both
+desc.immersiveintelligence.data_merger.1=Left
+desc.immersiveintelligence.data_merger.2=Right
+
 //Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
 info.immersiveintelligence.frequency_invalid=Invalid frequency, basic devices can use frequencies up to %s!
 info.immersiveintelligence.current_frequency=Current frequency: %s
+
+info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
 
 info.immersiveintelligence.yaw=Yaw: %s
 

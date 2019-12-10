@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -23,7 +21,7 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.inserter
 @SideOnly(Side.CLIENT)
 public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInserter>
 {
-	static RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelInserter model = new ModelInserter();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/inserter.png";
@@ -189,7 +187,7 @@ public class InserterRenderer extends TileEntitySpecialRenderer<TileEntityInsert
 			if(te.conn_mv!=null)
 				renderItem.renderItem(te.conn_mv, TransformType.GROUND);
 
-			EntityRenderer.drawNameplate(this.getFontRenderer(), dir+" / "+te.armDirection+" / "+te.nextDirection, 0, 1, 0, 0, 0, 0, true, false);
+			//EntityRenderer.drawNameplate(this.getFontRenderer(), dir+" / "+te.armDirection+" / "+te.nextDirection, 0, 1, 0, 0, 0, 0, true, false);
 
 			GlStateManager.popMatrix();
 

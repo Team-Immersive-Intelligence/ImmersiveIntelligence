@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
 
 /**
  * Created by Pabilo8 on 31-07-2019.
@@ -44,4 +45,8 @@ public interface IBulletCasingType
 	//Whether a bullet is throwable by players
 	boolean isThrowable();
 
+	//Create a smoke cloud on bullet spawn
+	default void doPuff(EntityBullet bullet)
+	{
+	}
 }

@@ -687,7 +687,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	}
 
 	@Override
-	public void onReceive(DataPacket packet)
+	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(pos==449&&master()!=null)
 		{
@@ -734,7 +734,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 					//TODO:Remove
 					case "cheat":
 					{
-						master().bullet = ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "white_phosphorus", "empty", 1f).setStackDisplayName("Wurfgranate 42");
+						master().bullet = ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "HMX", "empty", 1f).setStackDisplayName("Wurfgranate 42");
 					}
 					break;
 				}
