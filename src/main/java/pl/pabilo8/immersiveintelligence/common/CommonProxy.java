@@ -10,8 +10,12 @@ import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
+import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
+import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
@@ -27,7 +31,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,22 +48,31 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
+import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.blocks.cloth.BlockIIClothDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.BlockIIWoodenMultiblock;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.rotary.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
@@ -72,18 +84,26 @@ import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponen
 import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentRDX;
 import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentTNT;
 import pl.pabilo8.immersiveintelligence.common.bullets.shrapnel.BulletComponentShrapnel;
-import pl.pabilo8.immersiveintelligence.common.entity.*;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
+import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.*;
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.bullet_casings.*;
+import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
+import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.wire.IIWireType;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -105,10 +125,20 @@ public abstract class CommonProxy implements IGuiHandler
 	public static final String description_key = "desc."+ImmersiveIntelligence.MODID+".";
 	public static final String info_key = "info."+ImmersiveIntelligence.MODID+".";
 	public static final String data_key = "datasystem."+ImmersiveIntelligence.MODID+".";
+	public static final String rotary_key = "rotary."+ImmersiveIntelligence.MODID+".";
 	public static final String block_key = "tile."+ImmersiveIntelligence.MODID+".";
+
+	public static final String TOOL_ADVANCED_HAMMER = "II_ADVANCED_HAMMER";
+	public static final String TOOL_WRENCH = "II_WRENCH";
+	public static final String TOOL_ADVANCED_WRENCH = "II_ADVANCED_WRENCH";
+	public static final String TOOL_CROWBAR = "II_CROWBAR";
+	public static final String TOOL_TACHOMETER = "TOOL_TACHOMETER";
 
 	public static ItemIIMaterial item_material = new ItemIIMaterial();
 	public static ItemIIFunctionalCircuit item_circuit = new ItemIIFunctionalCircuit();
+	public static ItemIIMotorBelt item_motor_belt = new ItemIIMotorBelt();
+	public static ItemIIMotorGear item_motor_gear = new ItemIIMotorGear();
+	public static ItemIISkycrateMount item_skycrate_mount = new ItemIISkycrateMount();
 
 	public static ItemIILighter item_lighter = new ItemIILighter();
 	public static ItemIIElectricHammer item_hammer = new ItemIIElectricHammer();
@@ -116,6 +146,13 @@ public abstract class CommonProxy implements IGuiHandler
 	public static List<Predicate<IBlockState>> hammer_blacklist = new ArrayList<>();
 
 	public static ItemIIElectricWirecutter item_wirecutter = new ItemIIElectricWirecutter();
+
+	public static ItemIIWrench item_wrench = new ItemIIWrench();
+	public static ItemIIElectricWrench item_electric_wrench = new ItemIIElectricWrench();
+	//TODO: Torque Meter and Tachometer
+	//public static ItemIITachometer item_tachometer = new ItemIITachometer();
+	//public static ItemIITorqueMeter item_torque_meter = new ItemIITorqueMeter();
+
 	public static ItemIIDataWireCoil item_data_wire_coil = new ItemIIDataWireCoil();
 	public static ItemIIMinecart item_minecart = new ItemIIMinecart();
 	public static ItemIIRadioConfigurator item_radio_configurator = new ItemIIRadioConfigurator();
@@ -149,17 +186,24 @@ public abstract class CommonProxy implements IGuiHandler
 			.setHardness(4.0F).setResistance(6.0F), block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(4.0F).setResistance(5.0F);
+
 	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration = new BlockIIStoneDecoration();
-	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration = (BlockIIBase)new BlockIIBase("metal_decoration", Material.IRON,
-			PropertyEnum.create("type", IIBlockTypes_MetalDecoration.class), ItemBlockIEBase.class, false)
-			.setBlockLayer(BlockRenderLayer.CUTOUT).setHardness(3.0F).setResistance(15.0F);
+
+	public static BlockIIBase<IIBlockTypes_ClothDecoration> block_cloth_decoration = new BlockIIClothDecoration();
+
+	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration = new BlockIIMetalDecoration();
 
 	public static BlockIIMetalDevice block_metal_device = new BlockIIMetalDevice();
 	public static BlockIIDataConnector block_data_connector = new BlockIIDataConnector();
 	public static BlockIISmallCrate block_small_crate = new BlockIISmallCrate();
 
+	public static BlockIIMechanicalDevice block_mechanical_device = new BlockIIMechanicalDevice();
+	public static BlockIIGearbox block_gearbox = new BlockIIGearbox();
+	public static BlockIIMechanicalConnector block_mechanical_connector = new BlockIIMechanicalConnector();
+
 	public static BlockIIWoodenMultiblock block_wooden_multiblock = new BlockIIWoodenMultiblock();
-	public static BlockIIMetalMultiblock block_metal_multiblock = new BlockIIMetalMultiblock();
+	public static BlockIIMetalMultiblock0 block_metal_multiblock0 = new BlockIIMetalMultiblock0();
+	public static BlockIIMetalMultiblock1 block_metal_multiblock1 = new BlockIIMetalMultiblock1();
 
 	public static BlockIIFluid block_fluid_ink_black;
 	public static BlockIIFluid block_fluid_ink_cyan;
@@ -208,7 +252,7 @@ public abstract class CommonProxy implements IGuiHandler
 		for(Block block : blocks)
 			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getTranslationKey())));
 
-		registerFeedthroughForWiretype(IIWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/empty.obj"),
+		registerFeedthroughForWiretype(IIDataWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/empty.obj"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/data_connector_feedtrough"), new float[]{0, 4, 8, 12},
 				0.09375, block_data_connector.getStateFromMeta(IIBlockTypes_Connector.DATA_RELAY.getMeta()),
 				0, 0, (f) -> f);
@@ -362,6 +406,19 @@ public abstract class CommonProxy implements IGuiHandler
 
 		OreDictionary.registerOre("dustSalt", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_salt")));
 		OreDictionary.registerOre("oreSalt", new ItemStack(block_ore, 1, IIBlockTypes_Ore.SALT.getMeta()));
+
+		int i = 0;
+		for(String name : item_motor_gear.getSubNames())
+		{
+			OreDictionary.registerOre(Utils.toCamelCase("gear_"+name, true), new ItemStack(item_motor_gear, 1, i));
+			i += 1;
+		}
+		i = 0;
+		for(String name : item_motor_belt.getSubNames())
+		{
+			OreDictionary.registerOre(Utils.toCamelCase("belt_"+name, true), new ItemStack(item_motor_belt, 1, i));
+			i += 1;
+		}
 	}
 
 	@SubscribeEvent
@@ -450,8 +507,9 @@ public abstract class CommonProxy implements IGuiHandler
 
 	public void preInit()
 	{
-		IIWireType.init();
+		IIDataWireType.init();
 		IIPacketHandler.preInit();
+		CapabilityRotaryEnergy.register();
 
 		fluid_ink_black = makeFluid("ink", 1500, 2250);
 		fluid_ink_cyan = makeFluid("ink_cyan", 1500, 2250);
@@ -521,6 +579,8 @@ public abstract class CommonProxy implements IGuiHandler
 		{
 			if(OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 0), stack, true))
 				return true;
+			if(stack.getItem()==item_minecart&&stack.getMetadata() < ItemIIMinecart.META_MINECART_WOODEN_BARREL)
+				return true;
 			return OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 1), stack, true);
 		});
 
@@ -552,12 +612,19 @@ public abstract class CommonProxy implements IGuiHandler
 		registerTile(TileEntityDataMerger.class);
 		registerTile(TileEntityDataRouter.class);
 		registerTile(TileEntityDataDebugger.class);
+		registerTile(TileEntityChemicalDispenser.class);
 
 		registerTile(TileEntityDataConnector.class);
 		registerTile(TileEntityDataRelay.class);
 
 		registerTile(TileEntitySandbags.class);
 
+		registerTile(TileEntityMechanicalWheel.class);
+		registerTile(TileEntityGearbox.class);
+		registerTile(TileEntityTransmissionBoxCreative.class);
+		registerTile(TileEntityTransmissionBox.class);
+
+		registerTile(TileEntitySkyCratePost.class);
 		registerTile(TileEntitySkyCrateStation.class);
 
 		registerTile(TileEntityRadioStation.class);
@@ -571,7 +638,10 @@ public abstract class CommonProxy implements IGuiHandler
 		registerTile(TileEntityArtilleryHowitzer.class);
 		registerTile(TileEntityAmmunitionFactory.class);
 		registerTile(TileEntityBallisticComputer.class);
+		registerTile(TileEntityPacker.class);
+		registerTile(TileEntityRedstoneInterface.class);
 
+		MultiblockHandler.registerMultiblock(MultiblockSkyCratePost.instance);
 		MultiblockHandler.registerMultiblock(MultiblockSkyCrateStation.instance);
 		MultiblockHandler.registerMultiblock(MultiblockRadioStation.instance);
 		MultiblockHandler.registerMultiblock(MultiblockDataInputMachine.instance);
@@ -584,6 +654,8 @@ public abstract class CommonProxy implements IGuiHandler
 		MultiblockHandler.registerMultiblock(MultiblockArtilleryHowitzer.instance);
 		MultiblockHandler.registerMultiblock(MultiblockAmmunitionFactory.instance);
 		MultiblockHandler.registerMultiblock(MultiblockBallisticComputer.instance);
+		MultiblockHandler.registerMultiblock(MultiblockPacker.instance);
+		MultiblockHandler.registerMultiblock(MultiblockRedstoneInterface.instance);
 
 		int i = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
@@ -595,10 +667,16 @@ public abstract class CommonProxy implements IGuiHandler
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_steel_crate"),
 				EntityMinecartCrateSteel.class, "minecart_steel_crate", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
 				true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_barrel"),
+				EntityMinecartBarrelWooden.class, "minecart_wooden_barrel", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
+				true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_metal_barrel"),
+				EntityMinecartBarrelSteel.class, "minecart_metal_barrel", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
+				true);
 
 		//Entities
 
-		//TODO:Skycrates, maybe someday they will be a thing ^^
+		//Finally Skycrates are a thing! ^^
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "skycrate"),
 				EntitySkyCrate.class, "skycrate", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 
@@ -613,11 +691,31 @@ public abstract class CommonProxy implements IGuiHandler
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "camera"),
 				EntityCamera.class, "camera", i++, ImmersiveIntelligence.INSTANCE, 1, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "skycrate_internal"),
+				EntitySkycrateInternal.class, "skycrate_internal", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 	}
 
 	public void postInit()
 	{
+		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.CRATE.getMeta()),
+				EntityMinecartCrateWooden::new);
+		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta()),
+				EntityMinecartCrateReinforced::new);
+		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==block_metal_device&&stack.getMetadata()==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()),
+				EntityMinecartCrateSteel::new);
+		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.BARREL.getMeta()),
+				EntityMinecartBarrelWooden::new);
+		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockMetalDevice0&&stack.getMetadata()==BlockTypes_MetalDevice0.BARREL.getMeta()),
+				EntityMinecartBarrelSteel::new);
 
+		RotaryUtils.ie_rotational_blocks_torque.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
+				aFloat -> aFloat*MechanicalDevices.dynamo_windmill_torque
+		);
+
+		RotaryUtils.ie_rotational_blocks_torque.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
+				aFloat -> aFloat*MechanicalDevices.dynamo_watermill_torque
+		);
 	}
 
 	public void reInitGui()
@@ -680,9 +778,12 @@ public abstract class CommonProxy implements IGuiHandler
 			else if(ID==IIGuiList.GUI_DATA_MERGER&&te instanceof TileEntityDataMerger)
 				gui = new ContainerDataMerger(player.inventory, (TileEntityDataMerger)te);
 
-			((IGuiTile)te).onGuiOpened(player, false);
+			else if(ID==IIGuiList.GUI_SKYCRATE_STATION&&te instanceof TileEntitySkyCrateStation)
+				gui = new ContainerSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te);
+			else if(ID==IIGuiList.GUI_GEARBOX&&te instanceof TileEntityGearbox)
+				gui = new ContainerGearbox(player.inventory, (TileEntityGearbox)te);
 
-			ImmersiveIntelligence.logger.info(world.isRemote+" / "+gui);
+			((IGuiTile)te).onGuiOpened(player, false);
 
 			return gui;
 		}
@@ -692,7 +793,6 @@ public abstract class CommonProxy implements IGuiHandler
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		ImmersiveIntelligence.logger.info("getClientGUI (on server???)");
 		return getServerGuiElement(ID, player, world, x, y, z);
 	}
 

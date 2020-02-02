@@ -50,5 +50,7 @@ public class IIGuiList
 	public static final int GUI_SMALL_CRATE = 30;
 	public static final int GUI_DATA_MERGER = 31;
 
+	public static final int GUI_GEARBOX = 32;
+
 
 }

@@ -2,21 +2,27 @@ package pl.pabilo8.immersiveintelligence.client.render;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrate;
+import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIISkycrateMount;
 
 /**
  * Created by Pabilo8 on 08-06-2019.
  */
 public class SkyCrateRenderer extends Render<EntitySkyCrate>
 {
-	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/skycrate.png";
+	public static String texture_mechanical = ImmersiveIntelligence.MODID+":textures/entity/skycrate.png";
+	public static String texture_electric = ImmersiveIntelligence.MODID+":textures/entity/skycrate_electric.png";
 
-	protected ModelSkyCrate model = new ModelSkyCrate();
+	public static ModelSkyCrate model_mechanical = new ModelSkyCrate();
+	public static ModelSkyCrate model_electric = new ModelSkyCrate();
 
 	public SkyCrateRenderer(RenderManager renderManagerIn)
 	{
@@ -29,17 +35,22 @@ public class SkyCrateRenderer extends Render<EntitySkyCrate>
 	 */
 	public void doRender(EntitySkyCrate entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
-
 		GlStateManager.pushMatrix();
 
-		ClientUtils.bindTexture(texture);
 
-		GlStateManager.translate(x, y+0.375F, z);
-		GlStateManager.rotate(180.0F-entityYaw, 0.0F, 1.0F, 0.0F);
-		GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+		GlStateManager.translate(x, y, z);
 
-		ImmersiveIntelligence.logger.info("o");
-		model.render();
+		if(entity.mount.getItem() instanceof ItemIISkycrateMount)
+		{
+			GlStateManager.scale(0.85, 0.85, 0.85);
+			GlStateManager.translate(0, -1.125, 0);
+			GlStateManager.rotate(180.0F-TmtUtil.TMTToAngle(entity.rotationYaw), 0.0F, 1.0F, 0.0F);
+			ISkycrateMount mount = (ISkycrateMount)entity.mount.getItem();
+			mount.render(entity.mount, entity.world, partialTicks, entity.energy);
+			GlStateManager.translate(0, 0.5, 0);
+			ClientUtils.mc().getRenderItem().renderItem(entity.crate, TransformType.NONE);
+		}
+
 
 		GlStateManager.popMatrix();
 
@@ -55,6 +66,6 @@ public class SkyCrateRenderer extends Render<EntitySkyCrate>
 	@Override
 	protected ResourceLocation getEntityTexture(EntitySkyCrate entity)
 	{
-		return new ResourceLocation(texture);
+		return new ResourceLocation(texture_mechanical);
 	}
 }

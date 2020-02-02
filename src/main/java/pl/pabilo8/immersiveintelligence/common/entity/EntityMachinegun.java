@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
+import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
@@ -8,9 +9,11 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -23,11 +26,12 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -49,7 +53,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public int pickProgress = 0;
 	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0;
 	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1;
-	public boolean shoot = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false;
+	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false;
 	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d);
 
 	public EntityMachinegun(World worldIn)
@@ -125,6 +129,29 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			}
 		}
 
+		if(!world.isRemote&&hasInfrared&&getPassengers().size() > 0&&getPassengers().get(0)!=null&&world.getTotalWorldTime()%20==0)
+		{
+
+			if(aiming)
+			{
+				if(getPassengers().get(0) instanceof EntityLivingBase)
+				{
+					EntityLivingBase ent = (EntityLivingBase)getPassengers().get(0);
+					int energy = 0;
+					for(ItemStack stack : ent.getArmorInventoryList())
+						if(EnergyHelper.isFluxItem(stack))
+						{
+							int out = EnergyHelper.extractFlux(stack, Machinegun.infraredScopeEnergyUsage*20, false);
+							if(out > 0)
+							{
+								ent.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, Math.round(out/(float)(Machinegun.infraredScopeEnergyUsage)*1.25f), 2, true, false));
+								break;
+							}
+						}
+				}
+			}
+		}
+
 		if(!world.isRemote&&world.getTotalWorldTime()%120==0)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
@@ -167,19 +194,25 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 							{
 								if(bulletDelay < 1)
 								{
-									ImmersiveIntelligence.logger.info("otak2!");
+									if(!loadedFromCrate)
+									{
+										if(hasSecondMag&&!mag2Empty)
+											mag2Empty = !shoot(2);
+										if(!mag1Empty)
+											mag1Empty = !shoot(1);
+									}
+									else
+									{
 
-									if(hasSecondMag&&!mag2Empty)
-										mag2Empty = !shoot(2);
-									if(!mag1Empty)
-										mag1Empty = !shoot(1);
+									}
+
 								}
 								else
 									bulletDelay -= 1;
 							}
 						}
 					}
-					if(!shoot)
+					if(!shoot&&!loadedFromCrate)
 					{
 						if(mag1Empty||mag2Empty)
 						{
@@ -282,7 +315,6 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				{
 					currentlyLoaded = setTo;
 					clipReload += 1;
-					ImmersiveIntelligence.logger.info(clipReload+" / "+clipReloadTime);
 					if(!world.isRemote&&clipReload < 2)
 					{
 						NBTTagCompound tag = new NBTTagCompound();
@@ -405,7 +437,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			if(compound.hasKey("magazine2"))
 				magazine2 = new ItemStack(compound.getCompoundTag("magazine2"));
 			if(compound.hasKey("gun"))
+			{
 				gun = new ItemStack(compound.getCompoundTag("gun"));
+				if(!world.isRemote)
+					getConfigFromItem(new ItemStack(compound.getCompoundTag("gun")));
+			}
+
 			if(compound.hasKey("overheating"))
 				overheating = compound.getInteger("overheating");
 			if(compound.hasKey("mag1Empty"))
@@ -434,8 +471,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		{
 			if(compound.hasKey("shoot"))
 				shoot = compound.getBoolean("shoot");
-			if(compound.hasKey("gun"))
-				getConfigFromItem(new ItemStack(compound.getCompoundTag("gun")));
+			if(compound.hasKey("aiming"))
+				aiming = compound.getBoolean("aiming");
 			//if(compound.hasKey("reload"))
 			//	shoot = compound.getBoolean("shoot");
 		}
@@ -510,6 +547,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			ZoomHandler.isZooming = false;
 		}
 		shoot = false;
+		aiming = false;
 		super.removePassenger(passenger);
 	}
 
@@ -570,7 +608,6 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
 		recoilPitch += maxRecoilPitch*Math.random();
 
-		ImmersiveIntelligence.logger.info("b_delay "+bulletDelayMax);
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean("forClient", true);
 		tag.setFloat("recoilYaw", recoilYaw);
@@ -667,6 +704,9 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		{
 			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack);
 		}
+
+		hasInfrared = CommonProxy.item_machinegun.getUpgrades(gun).hasKey("infrared_scope");
+		loadedFromCrate = CommonProxy.item_machinegun.getUpgrades(gun).hasKey("belt_fed_loader");
 
 		NBTTagCompound tag = new NBTTagCompound();
 		writeEntityToNBT(tag);

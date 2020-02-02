@@ -8,15 +8,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataConnector;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataRelay;
-import pl.pabilo8.immersiveintelligence.common.wire.IIWireType;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +32,7 @@ public class ItemIIDataWireCoil extends ItemIIBase implements IWireCoil
 	@Override
 	public WireType getWireType(ItemStack stack)
 	{
-		return IIWireType.DATA;
+		return IIDataWireType.DATA;
 	}
 
 	@Override
@@ -51,17 +48,10 @@ public class ItemIIDataWireCoil extends ItemIIBase implements IWireCoil
 		}
 	}
 
-
 	@Nonnull
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		return ApiUtils.doCoilUse(this, player, world, pos, hand, side, hitX, hitY, hitZ);
-	}
-
-	public boolean canConnectCable(WireType wire, TileEntity targetEntity)
-	{
-		return !(!(targetEntity instanceof TileEntityDataConnector)&&
-				!(targetEntity instanceof TileEntityDataRelay));
 	}
 }

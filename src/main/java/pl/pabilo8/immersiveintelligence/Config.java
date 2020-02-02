@@ -7,22 +7,14 @@ import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.HashMap;
-
 /**
  * Created by Pabilo8 on 2019-05-12.
  */
 @Mod.EventBusSubscriber
 public class Config
 {
-	public static HashMap<String, Boolean> manual_bool = new HashMap<String, Boolean>();
-	public static HashMap<String, Integer> manual_int = new HashMap<String, Integer>();
-	public static HashMap<String, int[]> manual_intA = new HashMap<String, int[]>();
-	public static HashMap<String, Double> manual_double = new HashMap<String, Double>();
-	public static HashMap<String, double[]> manual_doubleA = new HashMap<String, double[]>();
-
-	public static HashMap<String, Double> manual_float = new HashMap<String, Double>();
-	public static HashMap<String, double[]> manual_floatA = new HashMap<String, double[]>();
+	public static final String GEARS = "Gears: Copper, Brass, Iron, Steel, Tungsten";
+	public static final String BELTS = "Belts: Cloth, Steel";
 
 	@net.minecraftforge.common.config.Config(modid = ImmersiveIntelligence.MODID)
 	public static class IIConfig
@@ -31,6 +23,8 @@ public class Config
 		public static Ores ores;
 		@SubConfig
 		public static Machines machines;
+		@SubConfig
+		public static MechanicalDevices mechanicalDevices;
 		@SubConfig
 		public static Tools tools;
 		@SubConfig
@@ -44,6 +38,9 @@ public class Config
 
 		@Comment({"The maximum frequency for advanced radios."})
 		public static int radioAdvancedMaxFrequency = 256;
+
+		@Comment({"Should RPM be counted in real time or ingame time"})
+		public static boolean rpmRealTime = true;
 
 		public static class Ores
 		{
@@ -91,6 +88,9 @@ public class Config
 
 		public static class Tools
 		{
+			@SubConfig
+			public static SkycrateMounts skycrateMounts;
+
 			@Comment({"A modifier to apply to the ammunition resupply time of the Ammunition Crate (weapons reload)."})
 			public static float ammunition_crate_resupply_time = 1.0f;
 
@@ -110,6 +110,10 @@ public class Config
 			@RequiresMcRestart
 			public static int electric_wirecutter_capacity = 24000;
 
+			@Comment({"The energy capacity of the electric wrench."})
+			@RequiresMcRestart
+			public static int electric_wrench_capacity = 24000;
+
 			//Soon?
 			@Comment({"The energy capacity of the electric multitool. (when it will be added)"})
 			@RequiresMcRestart
@@ -126,6 +130,14 @@ public class Config
 			@Comment({"The energy usage of the electric wirecutter (when cutting wires)."})
 			@RequiresMcRestart
 			public static int electric_wirecutter_energy_per_use = 100;
+
+			@Comment({"The energy usage of the electric wrench (when destroying blocks / accessing GUIs)."})
+			@RequiresMcRestart
+			public static int electric_wrench_energy_per_use = 100;
+
+			@Comment({"The durability of the engineer's wrench."})
+			@RequiresMcRestart
+			public static int wrench_durability = 256;
 
 			@Comment({"Max zoom of the binoculars (in Blu's unit of distance measurement™)."})
 			@RequiresMcRestart
@@ -146,7 +158,7 @@ public class Config
 			public static int advanced_binoculars_energy_usage = 150;
 
 			//Durability
-			
+
 
 			@Comment({"The durability (max number of uses) of the Precission Buzzsaw."})
 			@RequiresMcRestart
@@ -190,10 +202,29 @@ public class Config
 			@RequiresMcRestart
 			public static int precission_tool_welder_usage_time = 160;
 
-			//Default bullet damage
-			@Comment({"Basic bullet damage (for caliber 1)"})
-			public static float basic_bullet_damage = 2.0f;
+			public static class SkycrateMounts
+			{
+				@Comment({"The speed of the Mechanical Skycrate Mount."})
+				@RequiresMcRestart
+				public static float mech_speed = 0.25f;
 
+				@Comment({"The energy (max distance to be traveled) of the Mechanical Skycrate Mount."})
+				@RequiresMcRestart
+				public static float mech_energy = 35;
+
+				@Comment({"The speed of the Electric Skycrate Mount."})
+				@RequiresMcRestart
+				public static float electric_speed = 1f;
+
+				@Comment({"The energy to distance ratio of the Electric Skycrate Mount. (in Immersive Flux per Meter)"})
+				@RequiresMcRestart
+				public static int electric_energy_ratio = 128;
+
+				@Comment({"The energy capacity of the Electric Skycrate Mount (in Immersive Flux)."})
+				@RequiresMcRestart
+				public static float electric_energy = 55;
+
+			}
 		}
 
 		public static class Machines
@@ -232,6 +263,70 @@ public class Config
 			public static AdvancedFluidInserter advanced_fluid_inserter;
 			@SubConfig
 			public static SmallDataBuffer small_data_buffer;
+			@SubConfig
+			public static SkycrateStation skycrate_station;
+			@SubConfig
+			public static Packer packer;
+			@SubConfig
+			public static RedstoneInterface redstoneInterface;
+
+			public static class RedstoneInterface
+			{
+				@Comment({"Energy capacity of the redstone interface."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Energy usage of the redstone interface (per operation)."})
+				public static int energyUsage = 512;
+
+			}
+
+			public static class Packer
+			{
+				@Comment({"Energy capacity of the glorious boxing device also known as The Packer."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Energy usage of the packer (after dropping a stack inside)."})
+				public static int energyUsage = 512;
+
+				@Comment({"Base duration of the insertion process (in ticks)."})
+				public static int baseInsertion = 60;
+
+				@Comment({"Duration of a single stack insertion process (in ticks)."})
+				public static int timeInsertion = 5;
+			}
+
+			public static class SkycrateStation
+			{
+				@Comment({"Rotations per minute required for the Skycrate Station to Work."})
+				public static int rpmMin = 20;
+
+				@Comment({"Max rotations per minute (reaching over this level doesn't change effectiveness)."})
+				public static int rpmEffectiveMax = 80;
+
+				@Comment({"Max rotations per minute (will break if over)."})
+				public static int rpmBreakingMax = 240;
+
+				@Comment({"Torque required for the Skycrate Station to Work."})
+				public static int torqueMin = 4;
+
+				@Comment({"Max Torque (reaching over this level doesn't change effectiveness)."})
+				public static int torqueEffectiveMax = 8;
+
+				@Comment({"Max Torque (will break if over)."})
+				public static int torqueBreakingMax = 256;
+
+				@Comment({"How long does it take for the station to put a crate onto the line. (in ticks)"})
+				public static int outputTime = 240;
+
+				@Comment({"How long does it take for the station to put a crate onto a minecart. (in ticks)"})
+				public static int inputTime = 240;
+
+				@Comment({"How long does it take for the minecart to drive into the station. (in ticks)"})
+				public static int minecartInTime = 60;
+
+				@Comment({"How long does it take for the minecart to drive out of the station. (in ticks)"})
+				public static int minecartOutTime = 60;
+			}
 
 			public static class RadioStation
 			{
@@ -481,7 +576,7 @@ public class Config
 				@Comment({"Time required to set up the MG (in ticks)."})
 				public static int setupTime = 100;
 
-				@Comment({"Max amount of heat, higher values will force the player to wait until the gun cools down."})
+				@Comment({"Max scatter of heat, higher values will force the player to wait until the gun cools down."})
 				public static int maxOverheat = 100;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
@@ -523,6 +618,9 @@ public class Config
 				@Comment({"Setup time multiplier when the belt fed loader upgrade is mouted on mg."})
 				public static float beltFedLoaderSetupTimeMultiplier = 0.5f;
 
+				@Comment({"Infrared scope energy usage per tick"})
+				public static int infraredScopeEnergyUsage = 15;
+
 				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
 				@RequiresMcRestart
 				@Mapped(mapClass = Config.class, mapName = "manual_floatA")
@@ -537,6 +635,59 @@ public class Config
 
 			@Comment({"The maximum length of a single data wire."})
 			public static int dataWireLength = 24;
+		}
+
+		public static class MechanicalDevices
+		{
+			@Comment({"Minimal RPM required by a gear to work.", GEARS})
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] gear_min_rpm = new int[]{10, 40, 120, 360, 720};
+
+			@Comment({"Gears will break if RPM is higher than this value.", GEARS})
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] gear_max_rpm = new int[]{60, 200, 240, 800, 2400};
+
+			@Comment({"Gears will break if Torque is higher than this value.", GEARS})
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] gear_max_torque = new int[]{6, 24, 32, 256, 512};
+
+			//20 mins, 40 mins 1h, 2h, 4h
+			@Comment({"Durability of the gear (decreases by 1 every 20 ticks (1 second)).", GEARS})
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] gear_max_durability = new int[]{2400, 4800, 7200, 14400, 28800};
+
+
+			@Comment({"Belts will break if RPM is higher than this value.", BELTS})
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] belt_max_rpm = new int[]{960, 3600};
+
+			@Comment({"Belts will break if Torque is higher than this value.", BELTS})
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] belt_max_torque = new int[]{48, 640};
+
+			@Comment({"Torque loss, later multiplied by belt length.", BELTS})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float[] belt_torque_loss = new float[]{0.05f, 0.1f};
+
+			@Comment({"Max length of the belt, works exactly like wires (measured in blocks).", BELTS})
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] belt_length = new int[]{8, 16};
+
+			@Comment({"Immersive Flux to Rotary Flux conversion ratio (default 1 RoF = 1 RF)."})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float rof_conversion_ratio = 1f;
+
+			@Comment({"Default torque, used as a fallback, when IE rotational device is not recognised."})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float dynamo_default_torque = 2f;
+
+			@Comment({"Torque multiplier for the windmill."})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float dynamo_windmill_torque = 8f;
+
+			@Comment({"Default torque, used as a fallback, when IE rotational device is not recognised."})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float dynamo_watermill_torque = 12f;
 		}
 	}
 }

@@ -24,8 +24,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
@@ -52,7 +51,7 @@ public class ItemIIMeasuringCup extends ItemIIBase implements ITool, IAdvancedFl
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"measuring_cup_size", getCapacity(stack, Tools.measuring_cup_capacity), Tools.measuring_cup_capacity));
+		list.add(I18n.format(CommonProxy.description_key+"measuring_cup_size", getCapacity(stack, Tools.measuring_cup_capacity), Tools.measuring_cup_capacity));
 		FluidStack fs = FluidUtil.getFluidContained(stack);
 		if(fs!=null)
 		{

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
-import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
@@ -23,13 +22,12 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile, IDataDevice, IGuiTile, IIEInventory
+public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice, IGuiTile, IIEInventory
 {
 	public EnumFacing facing = EnumFacing.NORTH;
 	public DataPacket packet = new DataPacket();
@@ -37,13 +35,6 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	public byte mode = 0;
 	DataPacket packetLeft = new DataPacket();
 	DataPacket packetRight = new DataPacket();
-
-	@Override
-	public void inputRotation(double rotation, @Nonnull EnumFacing side)
-	{
-		if(side!=this.facing.getOpposite())
-			return;
-	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
@@ -152,8 +143,6 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	{
 		DataPacket newpacket = packet.clone();
 		boolean send = false;
-
-		ImmersiveIntelligence.logger.info(side.getName());
 
 		//Left -2 -1 (1)
 		if(side==facing.rotateYCCW())

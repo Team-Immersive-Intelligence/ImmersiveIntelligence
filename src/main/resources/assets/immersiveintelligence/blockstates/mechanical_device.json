@@ -1,0 +1,107 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveintelligence:ii_six_sides_all_overlay"
+  },
+  "variants": {
+    "inventory,type=wooden_transmission_box": [
+      {
+        "model": "immersiveintelligence:ii_six_sides_all_overlay",
+        "textures": {
+          "overlay": "immersiveintelligence:blocks/metal_decoration/brass_overlay",
+          "block_north": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_input",
+          "block_south": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_output",
+          "block_east": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none",
+          "block_west": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none",
+          "block_up": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none",
+          "block_down": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none"
+        }
+      }
+    ],
+    "inventory,type=creative_transmission_box": [
+      {
+        "model": "immersiveintelligence:ii_six_sides_all_overlay",
+        "textures": {
+          "overlay": "immersiveintelligence:blocks/metal_decoration/iron_overlay",
+          "block_north": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_south": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_east": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_west": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_up": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_down": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative"
+        }
+      }
+    ],
+    "type": {
+      "wooden_transmission_box": {
+        "model": "immersiveintelligence:ii_six_sides_all_overlay",
+        "textures": {
+          "overlay": "immersiveintelligence:blocks/metal_decoration/brass_overlay",
+          "block_north": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_input",
+          "block_south": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_output",
+          "block_east": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none",
+          "block_west": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none",
+          "block_up": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none",
+          "block_down": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_none"
+        }
+      },
+      "creative_transmission_box": {
+        "model": "immersiveintelligence:ii_six_sides_all_overlay",
+        "textures": {
+          "overlay": "immersiveintelligence:blocks/metal_decoration/iron_overlay",
+          "block_north": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_south": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_east": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_west": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_up": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative",
+          "block_down": "immersiveintelligence:blocks/mechanical_device/transmission_box/wooden_creative"
+        }
+      }
+    },
+    "facing": {
+      "down": {
+        "transform": {
+          "rotation": {
+            "x": -90
+          }
+        }
+      },
+      "up": {
+        "transform": {
+          "rotation": {
+            "x": 90
+          }
+        }
+      },
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    }
+  }
+}

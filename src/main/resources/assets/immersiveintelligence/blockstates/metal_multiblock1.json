@@ -1,0 +1,60 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "type": {
+      "redstone_interface": {
+        "model": "immersiveintelligence:smartmodel/conn_redstone_interface"
+      }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "x": 90
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "x": -90
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "z": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "z": 90
+          }
+        }
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {}
+    }
+  }
+}

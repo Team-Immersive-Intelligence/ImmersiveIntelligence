@@ -1,0 +1,47 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveengineering:ie_six_sides_overlay_all"
+  },
+  "variants": {
+    "inventory,type=coil_rope": [
+      {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/cloth_decoration/coil_rope_side",
+          "top": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top",
+          "bottom": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top"
+        }
+      }
+    ],
+    "inventory,type=coil_cloth_motor_belt": [
+      {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/cloth_decoration/coil_cloth_motor_belt_side",
+          "top": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top",
+          "bottom": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top"
+        }
+      }
+    ],
+    "type": {
+      "coil_rope": {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/cloth_decoration/coil_rope_side",
+          "top": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top",
+          "bottom": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top"
+        }
+      },
+      "coil_cloth_motor_belt": {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/cloth_decoration/coil_cloth_motor_belt_side",
+          "top": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top",
+          "bottom": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top"
+        }
+      }
+    }
+  }
+}

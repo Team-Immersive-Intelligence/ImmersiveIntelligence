@@ -22,7 +22,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
 import javax.annotation.Nullable;
@@ -36,9 +37,9 @@ public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, Bathi
 
 	public BathingRecipeCategory(IGuiHelper helper)
 	{
-		super("bathing", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name", helper.createBlankDrawable(140, 50), BathingRecipe.class, new ItemStack(ImmersiveIntelligence.proxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta()));
+		super("bathing", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name", helper.createBlankDrawable(140, 50), BathingRecipe.class, new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()));
 		tankOverlay = helper.createDrawable(background, 0, 52, 20, 51, -2, 2, -2, 2);
-		machineStack = new ItemStack(ImmersiveIntelligence.proxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta());
+		machineStack = new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta());
 	}
 
 	@Nullable

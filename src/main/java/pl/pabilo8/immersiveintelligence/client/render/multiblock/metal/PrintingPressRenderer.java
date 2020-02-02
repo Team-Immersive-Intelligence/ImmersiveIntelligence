@@ -5,12 +5,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrintingPress;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityPrintingPress;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.printingPress;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrintingPress;
 
 /**
  * Created by Pabilo8 on 10-07-2019.
@@ -42,7 +41,7 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 
 			model.rotate(model.paperInserterDoorModel, 0, 0, -1.57079633F);
 
-			float time = (printingPress.printTime-(te.processTimeLeft+partialTicks/20))/((float)printingPress.printTime);
+			float time = (PrintingPress.printTime-(te.processTimeLeft+partialTicks/20))/((float)PrintingPress.printTime);
 			float product_x = 0f, product_y = 0f, product_z = 0f, rotation_x = 0f, rotation_y = 0f;
 			if(te.processTimeLeft!=0)
 			{

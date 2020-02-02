@@ -16,7 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.wire.IIWireType;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import java.util.Set;
 
@@ -80,7 +80,7 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		if(cableType!=IIWireType.DATA)
+		if(cableType!=IIDataWireType.DATA)
 			return false;
 		return limitType==null||limitType==cableType;
 	}
@@ -147,7 +147,7 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 
 	int getRenderRadiusIncrease()
 	{
-		return IIWireType.DATA.getMaxLength();
+		return IIDataWireType.DATA.getMaxLength();
 	}
 
 	@Override

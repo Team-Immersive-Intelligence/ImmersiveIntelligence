@@ -1,0 +1,27 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveengineering:smartmodel/conf_sides_hud_metal_device0_capacitor_creative"
+  },
+  "variants": {
+    "inventory,type=wooden_gearbox": [
+      {
+        "textures": {
+          "name": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden"
+        }
+      }
+    ],
+    "type": {
+      "wooden_gearbox": {
+        "textures": {
+          "name": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden"
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {}
+    }
+  }
+}

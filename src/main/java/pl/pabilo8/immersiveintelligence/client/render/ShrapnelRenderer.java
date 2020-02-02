@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 
 public class ShrapnelRenderer extends Render<EntityShrapnel>
 {

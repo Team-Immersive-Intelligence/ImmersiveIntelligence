@@ -9,7 +9,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 
 /**
  * Created by Pabilo8 on 2019-05-26.

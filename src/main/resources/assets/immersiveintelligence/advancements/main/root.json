@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:metal_decoration"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.root"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.root.desc"
+    },
+    "background": "immersiveintelligence:textures/blocks/metal/sheetmetal_brass.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "hold_manual": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveengineering:tool",
+            "data": 3
+          }
+        ]
+      }
+    }
+  }
+}

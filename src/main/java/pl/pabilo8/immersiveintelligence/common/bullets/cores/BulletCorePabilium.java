@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCoreType;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
  * Created by Pabilo8 on 30-08-2019.

@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.camera;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
@@ -56,7 +55,6 @@ public class CameraHandler
 				ClientUtils.mc().world.spawnEntity(camera);
 
 			}
-			ImmersiveIntelligence.logger.info(camera.posX+" / "+camera.posY+" / "+camera.posZ);
 			ClientUtils.mc().setRenderViewEntity(camera);
 		}
 		else

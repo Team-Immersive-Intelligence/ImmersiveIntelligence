@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
@@ -36,7 +35,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.api.IMinecartBlockPickable;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AdvancedInserter;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -44,19 +43,18 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.advanced_inserter;
-
 /**
  * Created by Pabilo8 on 15-07-2019.
  */
-public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IRotationAcceptor, IDataConnector
+public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
 {
 	public static ItemStack conn_data, conn_mv;
 	public int energyStorage = 0;
@@ -77,8 +75,8 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 	String filterItemMode = "item";
 	int itemsToTake = 0;
 	String itemTakeMode = "set";
-	//items / block (if possible)
-	String minecartMode = "items";
+	//place / take
+	String minecartMode = "place";
 	private boolean refreshWireNetwork = false;
 
 	@Override
@@ -108,15 +106,15 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount > 0&&energyStorage < advanced_inserter.energyCapacity)
+		if(amount > 0&&energyStorage < AdvancedInserter.energyCapacity)
 		{
 			if(!simulate)
 			{
-				int rec = Math.min(advanced_inserter.energyCapacity-energyStorage, advanced_inserter.energyUsage);
+				int rec = Math.min(AdvancedInserter.energyCapacity-energyStorage, AdvancedInserter.energyUsage);
 				energyStorage += rec;
 				return rec;
 			}
-			return Math.min(advanced_inserter.energyCapacity-energyStorage, advanced_inserter.energyUsage);
+			return Math.min(AdvancedInserter.energyCapacity-energyStorage, AdvancedInserter.energyUsage);
 		}
 		return 0;
 	}
@@ -137,7 +135,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 
 		if(conn==0)
 		{
-			return attachCat.equals("DATA")&&limitType==null;
+			return attachCat.equals(IIDataWireType.DATA_CATEGORY)&&limitType==null;
 		}
 		else if(conn==1)
 		{
@@ -344,13 +342,6 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 	}
 
 	@Override
-	public void inputRotation(double rotation, @Nonnull EnumFacing side)
-	{
-		if(side!=this.outputFacing.getOpposite())
-			return;
-	}
-
-	@Override
 	public float[] getBlockBounds()
 	{
 		return new float[]{0f, 0, 0f, 1f, 0.1875f, 1f};
@@ -414,22 +405,22 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 		if(pickProgress < 1)
 			pickProgress = 0;
 
-		if(energyStorage > advanced_inserter.energyUsage&&armDirection!=nextDirection||pickProgress!=nextPickProgress)
+		if(energyStorage > AdvancedInserter.energyUsage&&armDirection!=nextDirection||pickProgress!=nextPickProgress)
 		{
 			if(pickProgress!=nextPickProgress)
 			{
 				if(pickProgress < nextPickProgress)
-					pickProgress += 100f/advanced_inserter.grabTime;
+					pickProgress += 100f/AdvancedInserter.grabTime;
 				else if(pickProgress > nextPickProgress)
-					pickProgress -= 100f/advanced_inserter.grabTime;
+					pickProgress -= 100f/AdvancedInserter.grabTime;
 
 				if(Math.round(pickProgress/10f)*10f==Math.round(nextPickProgress/10f)*10f)
 					pickProgress = nextPickProgress;
 
 			}
-			else if(energyStorage > advanced_inserter.energyUsage&&armDirection!=nextDirection)
+			else if(energyStorage > AdvancedInserter.energyUsage&&armDirection!=nextDirection)
 			{
-				armDirection += Math.round(90f/advanced_inserter.rotateTime);
+				armDirection += Math.round(90f/AdvancedInserter.rotateTime);
 				if(Math.round(armDirection/10f)*10f==Math.round(nextDirection/10f)*10f)
 					armDirection = nextDirection;
 			}
@@ -438,7 +429,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 		{
 			int prevDirection = nextDirection, prevPickProgress = nextPickProgress;
 
-			if(hasWorld()&&!world.isRemote&&itemsToTake > 0&&outputFacing!=EnumFacing.UP&&inputFacing!=EnumFacing.UP&&energyStorage >= advanced_inserter.energyUsage)
+			if(hasWorld()&&!world.isRemote&&itemsToTake > 0&&outputFacing!=EnumFacing.UP&&inputFacing!=EnumFacing.UP&&energyStorage >= AdvancedInserter.energyUsage)
 			{
 				if(!inventory.get(0).isEmpty())
 				{
@@ -472,7 +463,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 										pickProgress = 0;
 									}
 								}
-								energyStorage -= advanced_inserter.energyUsage;
+								energyStorage -= AdvancedInserter.energyUsage;
 							}
 							else
 							{
@@ -509,11 +500,11 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 
 							if(right&&nextPickProgress==0&&cart!=null)
 							{
-								ItemStack stack = cart.getBlockForPickup();
+								ItemStack stack = cart.getBlockForPickup().getFirst();
 								insertionHandler.insertItem(0, stack, false);
 								nextPickProgress = 100;
 								nextDirection = Math.round(outputFacing.getHorizontalAngle());
-								energyStorage -= advanced_inserter.energyUsage;
+								energyStorage -= AdvancedInserter.energyUsage;
 							}
 							else
 							{
@@ -542,7 +533,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 							insertionHandler.insertItem(0, stack, false);
 							nextPickProgress = 100;
 							nextDirection = Math.round(outputFacing.getHorizontalAngle());
-							energyStorage -= advanced_inserter.energyUsage;
+							energyStorage -= AdvancedInserter.energyUsage;
 							done = true;
 						}
 					}

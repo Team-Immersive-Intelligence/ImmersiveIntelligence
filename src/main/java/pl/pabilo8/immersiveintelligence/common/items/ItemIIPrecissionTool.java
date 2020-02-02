@@ -6,11 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.IPrecissionTool;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecissionAssemblerRenderer;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.tools;
 
 /**
  * Created by Pabilo8 on 19-08-2019.
@@ -66,23 +65,23 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 		{
 			case "precission_buzzsaw":
 			{
-				return tools.precission_tool_buzzsaw_durability;
+				return Tools.precission_tool_buzzsaw_durability;
 			}
 			case "precission_drill":
 			{
-				return tools.precission_tool_drill_durability;
+				return Tools.precission_tool_drill_durability;
 			}
 			case "precission_inserter":
 			{
-				return tools.precission_tool_inserter_durability;
+				return Tools.precission_tool_inserter_durability;
 			}
 			case "precission_solderer":
 			{
-				return tools.precission_tool_solderer_durability;
+				return Tools.precission_tool_solderer_durability;
 			}
 			case "precission_welder":
 			{
-				return tools.precission_tool_welder_durability;
+				return Tools.precission_tool_welder_durability;
 			}
 		}
 		return -1;
@@ -107,23 +106,23 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 		{
 			case "buzzsaw":
 			{
-				return tools.precission_tool_buzzsaw_usage_time;
+				return Tools.precission_tool_buzzsaw_usage_time;
 			}
 			case "drill":
 			{
-				return tools.precission_tool_drill_usage_time;
+				return Tools.precission_tool_drill_usage_time;
 			}
 			case "inserter":
 			{
-				return tools.precission_tool_inserter_usage_time;
+				return Tools.precission_tool_inserter_usage_time;
 			}
 			case "solderer":
 			{
-				return tools.precission_tool_solderer_usage_time;
+				return Tools.precission_tool_solderer_usage_time;
 			}
 			case "welder":
 			{
-				return tools.precission_tool_welder_usage_time;
+				return Tools.precission_tool_welder_usage_time;
 			}
 		}
 		return -1;

@@ -49,6 +49,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.api.utils.IWrenchGui;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -415,6 +417,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlock
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof IConfigurableSides&&Utils.isHammer(heldItem)&&!world.isRemote)
 		{
+			//TODO: Engineer's wrench
 			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
 			if(((IConfigurableSides)tile).toggleSide(iSide, player))
 				return true;
@@ -455,7 +458,22 @@ public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlock
 			TileEntity master = ((IGuiTile)tile).getGuiMaster();
 			if(!world.isRemote&&master!=null&&((IGuiTile)master).canOpenGui(player))
 			{
-				pl.pabilo8.immersiveintelligence.common.CommonProxy.openGuiForTile(player, (TileEntity & IGuiTile)master);
+				if(tile instanceof IWrenchGui&&!player.isCreative())
+				{
+					if(pl.pabilo8.immersiveintelligence.api.Utils.isWrench(heldItem))
+					{
+						IWrench wrench = (IWrench)heldItem.getItem();
+						if(wrench.canBeUsed(heldItem))
+						{
+							wrench.damageWrench(heldItem, player);
+							pl.pabilo8.immersiveintelligence.common.CommonProxy.openGuiForTile(player, (TileEntity & IGuiTile)master);
+							return true;
+						}
+					}
+					return false;
+				}
+				else
+					pl.pabilo8.immersiveintelligence.common.CommonProxy.openGuiForTile(player, (TileEntity & IGuiTile)master);
 			}
 			return true;
 		}

@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.GuiChemicalBath;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiElectrolyzer;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer.ElectrolyzerRecipeCategory;
@@ -69,7 +69,7 @@ public class JEIHelper implements IModPlugin
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_bullet, 1, OreDictionary.WILDCARD_VALUE));
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_bullet_magazine, 1, OreDictionary.WILDCARD_VALUE));
 
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_metal_multiblock, 1, OreDictionary.WILDCARD_VALUE));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_metal_multiblock0, 1, OreDictionary.WILDCARD_VALUE));
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_wooden_multiblock, 1, OreDictionary.WILDCARD_VALUE));
 
 		ImmersiveIntelligence.logger.info("JEI has just requested our recipes, it seems that we even have a class for registering them!");
@@ -89,14 +89,14 @@ public class JEIHelper implements IModPlugin
 
 
 		//FIXME: WHAT THE FUCK?!?!?! I can't set a catalyst because of the itemstack (it doesn't even spit an error out)
-		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta()), "ii.bathing");
-		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.ELECTROLYZER.getMeta()), "ii.electrolyzer");
-		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.PRECISSION_ASSEMBLER.getMeta()), "ii.precissionassembler");
+		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()), "ii.bathing");
+		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta()), "ii.electrolyzer");
+		registryIn.addRecipeCatalyst(new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta()), "ii.precissionassembler");
 
 		//This works tho
 		registryIn.addRecipeCatalyst(new ItemStack(Blocks.CACTUS), VanillaRecipeCategoryUid.CRAFTING, "ii.bathing", "ii.electrolyzer", "ii.precissionassembler");
 
-		//registryIn.addRecipeCatalyst(new ItemStack(ImmersiveIntelligence.proxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.CHEMICAL_BATH.getMeta()),"ii.bathing");
+		//registryIn.addRecipeCatalyst(new ItemStack(ImmersiveIntelligence.proxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()),"ii.bathing");
 
 	}
 

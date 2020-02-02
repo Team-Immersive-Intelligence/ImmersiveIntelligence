@@ -39,7 +39,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.IAdvancedMultiblock;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -126,7 +127,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		IBlockState state = world.getBlockState(pos);
-		for(Predicate<IBlockState> p : ImmersiveIntelligence.proxy.hammer_blacklist)
+		for(Predicate<IBlockState> p : CommonProxy.hammer_blacklist)
 		{
 			ImmersiveIntelligence.logger.info(p.test(state));
 			if(p.test(state))
@@ -189,7 +190,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		IBlockState state = world.getBlockState(pos);
-		for(Predicate<IBlockState> p : ImmersiveIntelligence.proxy.hammer_blacklist)
+		for(Predicate<IBlockState> p : CommonProxy.hammer_blacklist)
 		{
 			ImmersiveIntelligence.logger.info(p.test(state));
 			if(p.test(state))
@@ -293,7 +294,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public Set<String> getToolClasses(ItemStack stack)
 	{
-		return ImmutableSet.of(Lib.TOOL_HAMMER, "II_ADVANCED_HAMMER");
+		return ImmutableSet.of(Lib.TOOL_HAMMER, CommonProxy.TOOL_ADVANCED_HAMMER);
 	}
 
 	@Override
@@ -307,6 +308,8 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 					return true;
 			}
 			else if(state.getBlock().isToolEffective(TOOL_HAMMER, state))
+				return true;
+			else if(state.getBlock().isToolEffective(CommonProxy.TOOL_ADVANCED_HAMMER, state))
 				return true;
 		}
 		return false;

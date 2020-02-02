@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.wire.IIWireType;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
 
@@ -114,9 +114,9 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		if(!cableType.getCategory().equals("DATA"))
+		if(!cableType.getCategory().equals(IIDataWireType.DATA_CATEGORY))
 			return false;
-		return limitType==null||limitType==cableType;
+		return limitType==null;
 	}
 
 	@Override
@@ -211,7 +211,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 
 	int getRenderRadiusIncrease()
 	{
-		return IIWireType.DATA.getMaxLength();
+		return IIDataWireType.DATA.getMaxLength();
 	}
 
 	@Override

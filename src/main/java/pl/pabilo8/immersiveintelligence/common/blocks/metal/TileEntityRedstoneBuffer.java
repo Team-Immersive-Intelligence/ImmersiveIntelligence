@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
-import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
@@ -17,23 +16,14 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile, IDataDevice
+public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice
 {
 	public boolean toggle = false;
 	public EnumFacing facing = EnumFacing.NORTH;
 	DataPacket packet = new DataPacket();
-
-	@Override
-	public void inputRotation(double rotation, @Nonnull EnumFacing side)
-	{
-		if(side!=this.facing.getOpposite())
-			return;
-	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)

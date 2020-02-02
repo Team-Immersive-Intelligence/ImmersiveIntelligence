@@ -2,13 +2,62 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "cube_all"
+    "textures": {
+    },
+    "custom": {
+      "flip-v": true
+    }
   },
   "variants": {
     "type": {
       "skycrate_station": {
         "model": "immersiveintelligence:smartmodel/conn_skycrate_station"
+      },
+      "skycrate_post": {
+        "model": "immersiveintelligence:smartmodel/conn_skycrate_post"
       }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "x": 90
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "x": -90
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "z": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "z": 90
+          }
+        }
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {}
     }
   }
 }

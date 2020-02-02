@@ -169,8 +169,6 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 
 	void switchMode(char c, boolean forward)
 	{
-		// -2 -1 0 1 2
-		ImmersiveIntelligence.logger.info("Change "+c+(forward?" forward!": "backward!"));
 		IDataType p = packet.getPacketVariable(c);
 		if(p instanceof DataPacketTypeInteger)
 		{

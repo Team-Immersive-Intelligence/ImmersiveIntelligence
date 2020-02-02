@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
-import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
@@ -34,12 +33,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +46,7 @@ import java.util.Random;
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer, IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile, IBooleanAnimatedPartsBlock
+public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer, IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IBooleanAnimatedPartsBlock
 {
 	NonNullList<ItemStack> inventory = NonNullList.withSize(38, ItemStack.EMPTY);
 
@@ -59,13 +57,6 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 	public float lidAngle = 0;
 
 	public EnumFacing facing = EnumFacing.NORTH;
-
-	@Override
-	public void inputRotation(double rotation, @Nonnull EnumFacing side)
-	{
-		if(side!=this.facing.getOpposite())
-			return;
-	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)

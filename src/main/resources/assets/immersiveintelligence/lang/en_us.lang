@@ -20,6 +20,8 @@ item.immersiveintelligence.material.processor_circuit_board.name=Processor Circu
 item.immersiveintelligence.material.processor_electronic_element.name=Processor
 
 item.immersiveintelligence.material.compact_electric_engine.name=Compact Electric Engine
+item.immersiveintelligence.material.compact_electric_engine_advanced.name=Advanced Compact Electric Engine
+item.immersiveintelligence.material.carbon_brush.name=Carbon Brush
 
 item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
 
@@ -61,18 +63,23 @@ item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Co
 
 item.immersiveintelligence.material.dust_salt.name=Salt Dust
 
+item.immersiveintelligence.material.spring_brass.name=Brass Spring
+item.immersiveintelligence.material.spring_iron.name=Iron Spring
+item.immersiveintelligence.material.spring_steel.name=Steel Spring
+
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.logic.name=Logic Circuit
 item.immersiveintelligence.circuit_functional.comparator.name=Comparator Circuit
 item.immersiveintelligence.circuit_functional.advanced_logic.name=Advanced Logic Circuit
 item.immersiveintelligence.circuit_functional.text.name=Text Processor Circuit
-item.immersiveintelligence.circuit_functional.conditional_construct.name=Conditional Construction Circuit
 item.immersiveintelligence.circuit_functional.itemstack.name=ItemStack Operations Circuit
 
 item.immersiveintelligence.minecart.wooden_crate.name=Minecart with Wooden Crate
 item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforced Crate
 item.immersiveintelligence.minecart.steel_crate.name=Minecart with Steel Crate
+item.immersiveintelligence.minecart.wooden_barrel.name=Minecart with Wooden Barrel
+item.immersiveintelligence.minecart.metal_barrel.name=Minecart with Metal Barrel
 
 item.immersiveintelligence.lighter.name=Lighter
 item.immersiveintelligence.measuring_cup.name=Measuring Cup
@@ -93,6 +100,9 @@ item.immersiveintelligence.weapon_upgrade.scope.name=Scope
 item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Infrared Scope
 
 item.immersiveintelligence.tracer_powder.name=Tracer Dust
+
+item.immersiveintelligence.skycrate_mount.mechanical.name=Skycrate Mount
+item.immersiveintelligence.skycrate_mount.electric.name=Electric Skycrate Mount
 
 desc.immersiveintelligence.toolupgrade.water_cooling=Uses water to cool down the MG. Increases the max amount of heat the MG can take.
 desc.immersiveintelligence.toolupgrade.heavy_barrel=Dramatically increases fire rate, has higher recoil and overheats faster.
@@ -144,7 +154,24 @@ item.immersiveintelligence.bullet.component.CoreTungsten.name=Tungsten Core
 
 item.immersiveintelligence.bullet_magazine.machinegun.name=Machinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun.name=Submachinegun Magazine
+item.immersiveintelligence.bullet_magazine.submachinegun_drum.name=Submachinegun Drum Magazine
 item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Automatic Revolver Magazine
+
+item.immersiveintelligence.motor_gear.copper.name=Copper Gear
+item.immersiveintelligence.motor_gear.brass.name=Brass Gear
+item.immersiveintelligence.motor_gear.iron.name=Iron Gear
+item.immersiveintelligence.motor_gear.steel.name=Steel Gear
+item.immersiveintelligence.motor_gear.tungsten.name=Tungsten Gear
+
+item.immersiveintelligence.motor_belt.cloth.name=Cloth Motor Belt
+item.immersiveintelligence.motor_belt.steel.name=Steel Motor Belt
+
+item.immersiveintelligence.wrench.name=Engineer's Wrench
+item.immersiveintelligence.electric_wrench.name=Electric Wrench
+
+item.immersiveintelligence.tachometer.name=Engineer's Tachometer
+item.immersiveintelligence.torque_meter.name=Engineer's Torque Meter
+
 
 //Blocks
 
@@ -165,9 +192,16 @@ tile.immersiveintelligence.ore.salt.name=Salt Ore
 tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
 
-tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Electronic Engineering Block
 tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Advanced Electronic Engineering Block
+tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechanical Engineering Block
+tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Heavy Mechanical Engineering Block
+
+tile.immersiveintelligence.metal_decoration.coil_data.name=Data Cable Coil
+tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Steel Motor Belt Coil
+
+tile.immersiveintelligence.cloth_decoration.coil_rope.name=Rope Coil
+tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Motor Belt Coil
 
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
@@ -180,6 +214,14 @@ tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
 tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
 tile.immersiveintelligence.metal_device.data_router.name=Data Router
 tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
+
+tile.immersiveintelligence.gearbox.wooden_gearbox.name=Wooden Gearbox
+tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden Transmission Box
+tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Creative Transmission Box
+
+tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Wooden Wheel
+tile.immersiveintelligence.mechanical_connector.brass_wheel.name=Brass Wheel
+tile.immersiveintelligence.mechanical_connector.steel_wheel.name=Steel Wheel
 
 tile.immersiveintelligence.small_crate.wooden_crate_box.name=Small Wooden Crate (Box)
 tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Small Wooden Crate (Cube)
@@ -199,6 +241,7 @@ tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithm
 
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
+tile.immersiveintelligence.data_connector.chemical_dispenser.name=Chemical Dispenser
 
 tile.immersiveintelligence.data_connector.alarm_siren.name=Alarm Siren
 
@@ -210,6 +253,7 @@ tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced 
 //Multiblock names
 
 tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=SkyCrate Station
+tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=SkyCrate Post
 tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithmetic Logic Machine
 tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
@@ -223,9 +267,11 @@ tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Ballistic Co
 tile.immersiveintelligence.metal_multiblock.missile_silo.name=Missile Silo
 tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Ammunition Factory
 tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Scanning Conveyor
-tile.immersiveintelligence.metal_multiblock.redstone_data_interface.name=Redstone-Data Interface
+
+tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Redstone-Data Interface
 
 desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
+desc.immersiveengineering.info.multiblock.II:SkyCratePost=SkyCrate Post
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
 desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Arithmetic Logic Machine
 desc.immersiveengineering.info.multiblock.II:RadioStation=Radio Station
@@ -264,6 +310,8 @@ subtitle.immersiveintelligence.paper_eject=Paper Falling
 entity.minecart_wooden_crate.name=Minecart with Wooden Crate
 entity.minecart_reinforced_crate.name=Minecart with Reinforced Crate
 entity.minecart_steel_crate.name=Minecart with Steel Crate
+entity.minecart_wooden_barrel.name=Minecart with Wooden Barrel
+entity.minecart_metal_barrel.name=Minecart with Metal Barrel
 
 entity.skycrate.name=Skycrate
 entity.bullet.name=Bullet
@@ -343,12 +391,37 @@ info.immersiveintelligence.current_frequency=Current frequency: %s
 
 info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
 
+info.immersiveintelligence.gear_durability=Durability: %1$s / %2$s
+
 info.immersiveintelligence.yaw=Yaw: %s
 
 info.immersiveintelligence.debugger_mode=Debugger Mode: %s
 info.immersiveintelligence.debugger_mode.0=Transceiver
 info.immersiveintelligence.debugger_mode.1=Transmitter
 info.immersiveintelligence.debugger_mode.2=Receiver
+
+//Rotational Energy
+
+rotary.immersiveintelligence.belt_system.wrongCable=Can't attach motor belts to a wire connector
+rotary.immersiveintelligence.belt_system.wrongCable1=One does not simply attach belts to a wire system
+rotary.immersiveintelligence.belt_system.wrongCable2=As I said, you CAN'T connect them, stop trying
+rotary.immersiveintelligence.belt_system.wrongCable3=Listen to me, if you try to connect them once again...
+rotary.immersiveintelligence.belt_system.wrongCable4=WHAT PART OF YOU CAN'T ATTACH BELTS YOU DO NOT UNDERSTAND?!
+rotary.immersiveintelligence.belt_system.wrongCable5=Just leave me alone... Dummkopf! Here, have an advancement, and now f**k off!
+rotary.immersiveintelligence.belt_system.itsBoringGetALife=You're really boring, even i, MotorBeltUtils.java have feelings, ok?!
+rotary.immersiveintelligence.belt_system.wrongBelt=You cannot attach this belt here
+
+rotary.immersiveintelligence.belt_system.wrongDimension=You are in the wrong dimension
+rotary.immersiveintelligence.belt_system.sameConnection=You cannot attach a belt to the same point
+rotary.immersiveintelligence.belt_system.tooFar=You are too far away from the previous connection
+rotary.immersiveintelligence.belt_system.cantSee=The connection is obstructed
+rotary.immersiveintelligence.belt_system.connectionExists=The connection exists already
+rotary.immersiveintelligence.belt_system.invalidPoint=One of the connection points is invalid
+
+rotary.immersiveintelligence.mechanical.speed=Speed
+rotary.immersiveintelligence.mechanical.speed_unit=RPM
+rotary.immersiveintelligence.mechanical.torque=Torque
+rotary.immersiveintelligence.mechanical.torque_unit=Nm
 
 //Data System Descriptions
 datasystem.immersiveintelligence.function.add=Addition
@@ -408,6 +481,16 @@ datasystem.immersiveintelligence.datatype.boolean.false=False
 desc.immersiveengineering.info.blueprint.basic_circuits=Basic Circuits
 desc.immersiveengineering.info.blueprint.advanced_circuits=Advanced Circuits
 desc.immersiveengineering.info.blueprint.processors=Processors
+
+//Advancements
+advancement.immersiveintelligence.root=Immersive Intelligence
+advancement.immersiveintelligence.root.desc=RTFM?
+
+advancement.immersiveintelligence.connect_belt=Powerful Conveying
+advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
+
+advancement.immersiveintelligence.secret_connect_wire=Who dares wins
+advancement.immersiveintelligence.secret_connect_wire.desc=You had enough? Now give me a rest.
 
 //Manual Categories
 

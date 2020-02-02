@@ -22,16 +22,15 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.tools;
 
 /**
  * Created by Pabilo8 on 15-09-2019.
@@ -56,7 +55,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 		{
 			String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
 			list.add(I18n.format(Lib.DESC+"info.energyStored", stored));
-			list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+(ItemNBTHelper.getBoolean(stack, "enabled")?"infrared_enabled": "infrared_disabled"), stored));
+			list.add(I18n.format(CommonProxy.description_key+(ItemNBTHelper.getBoolean(stack, "enabled")?"infrared_enabled": "infrared_disabled"), stored));
 		}
 	}
 
@@ -97,7 +96,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:blindness"), 240, 1, false, false));
 					ItemNBTHelper.setBoolean(stack, "wasUsed", true);
 
-					extractEnergy(stack, tools.advanced_binoculars_energy_usage, false);
+					extractEnergy(stack, Tools.advanced_binoculars_energy_usage, false);
 				}
 
 			}
@@ -114,24 +113,19 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 	@Override
 	public boolean canZoom(ItemStack stack, EntityPlayer player)
 	{
-		if((player).moveForward==0)
-		{
-			//ImmersiveEngineering.packetHandler.
-			return true;
-		}
-		return false;
+		return (player).moveForward==0;
 	}
 
 	@Override
 	public float[] getZoomSteps(ItemStack stack, EntityPlayer player)
 	{
-		return isAdvanced(stack)?tools.advanced_binoculars_max_zoom: tools.binoculars_max_zoom;
+		return isAdvanced(stack)?Tools.advanced_binoculars_max_zoom: Tools.binoculars_max_zoom;
 	}
 
 	@Override
 	public int getMaxEnergyStored(ItemStack container)
 	{
-		return isAdvanced(container)?tools.advanced_binoculars_energy_capacity: 0;
+		return isAdvanced(container)?Tools.advanced_binoculars_energy_capacity: 0;
 	}
 
 	@Override
@@ -158,6 +152,6 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 
 	boolean isEnabled(ItemStack stack)
 	{
-		return ItemNBTHelper.getBoolean(stack, "enabled")&&getEnergyStored(stack) >= tools.advanced_binoculars_energy_usage;
+		return ItemNBTHelper.getBoolean(stack, "enabled")&&getEnergyStored(stack) >= Tools.advanced_binoculars_energy_usage;
 	}
 }

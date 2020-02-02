@@ -7,15 +7,14 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.artilleryHowitzer;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
@@ -107,7 +106,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 			if(te.animation==1)
 				prgrs = Math.min((float)te.animationTime/((float)te.animationTimeMax*0.2f), 1f);
 			else
-				prgrs = te.shellLoadTime/(float)artilleryHowitzer.conveyorTime;
+				prgrs = te.shellLoadTime/(float)ArtilleryHowitzer.conveyorTime;
 
 			if(!shell_can_move[6])
 			{

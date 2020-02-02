@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.IPrecissionTool;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
 
 import java.util.*;
@@ -46,7 +46,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 			this.inputs[io] = ApiUtils.createIngredientStack(itemInputs[io]);
 
 		//Open time + close time
-		int processDuration = 2*IIConfig.machines.precissionAssembler.hatchTime;
+		int processDuration = 2*PrecissionAssembler.hatchTime;
 
 		for(String animation : animations)
 		{
@@ -101,7 +101,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 		for(PrecissionAssemblerRecipe recipe : recipeList)
 		{
-			if(!Objects.equals(ImmersiveIntelligence.proxy.item_assembly_scheme.getRecipeForStack(scheme), recipe))
+			if(!Objects.equals(CommonProxy.item_assembly_scheme.getRecipeForStack(scheme), recipe))
 				continue;
 
 			//Whether it should be accepted or not.
@@ -168,7 +168,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 		for(PrecissionAssemblerRecipe recipe : recipeList)
 		{
-			if(scheme.getItem() instanceof ItemIIAssemblyScheme&&ImmersiveIntelligence.proxy.item_assembly_scheme.getRecipeForStack(scheme)!=null&&ImmersiveIntelligence.proxy.item_assembly_scheme.getRecipeForStack(scheme).equals(recipe))
+			if(scheme.getItem() instanceof ItemIIAssemblyScheme&&CommonProxy.item_assembly_scheme.getRecipeForStack(scheme)!=null&&CommonProxy.item_assembly_scheme.getRecipeForStack(scheme).equals(recipe))
 			{
 				list.add(recipe);
 				continue;

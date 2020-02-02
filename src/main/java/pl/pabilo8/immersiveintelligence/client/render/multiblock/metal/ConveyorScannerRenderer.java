@@ -6,9 +6,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelConveyorScanner;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityConveyorScanner;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityConveyorScanner;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
@@ -43,7 +44,7 @@ public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.translate(0f, 1f, -1f);
 
 			ClientUtils.bindTexture("textures/atlas/blocks.png");
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing);
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
 
 			GlStateManager.translate(-0.5f, 0.25f, 1f);
 			GlStateManager.translate(1f, 0f, -(float)te.processTime/(float)te.processTimeMax);

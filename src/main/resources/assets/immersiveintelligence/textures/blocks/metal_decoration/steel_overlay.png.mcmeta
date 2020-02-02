@@ -2,7 +2,7 @@
   "ctm": {
     "ctm_version": 1,
     "type": "CTM",
-    "layer": "CUTOUT",
+    "layer": "CUTOUT_MIPPED",
     "textures": [
       "immersiveintelligence:blocks/metal_decoration/steel_overlay_ctm"
     ]

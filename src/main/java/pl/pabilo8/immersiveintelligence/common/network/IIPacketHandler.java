@@ -27,5 +27,6 @@ public class IIPacketHandler
 		INSTANCE.registerMessage(MessageMachinegunSync.HandlerClient.class, MessageMachinegunSync.class, 5, Side.CLIENT);
 		INSTANCE.registerMessage(MessageMachinegunSync.HandlerServer.class, MessageMachinegunSync.class, 6, Side.SERVER);
 		INSTANCE.registerMessage(MessageFireworks.HandlerClient.class, MessageFireworks.class, 7, Side.CLIENT);
+		INSTANCE.registerMessage(MessageRotaryPowerSync.HandlerClient.class, MessageRotaryPowerSync.class, 8, Side.CLIENT);
 	}
 }

@@ -7,8 +7,8 @@
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["Pabilo8","Choroman","Krystiano0306"],
-  "credits": "",
+  "authorList": ["Pabilo8","Choroman"],
+  "credits": "Blacknight, Krystiano0306, Kamo6343 and many others from the IE and modding community ^^",
   "logoFile": "assets/immersiveintelligence/logo.png",
   "screenshots": []
 }

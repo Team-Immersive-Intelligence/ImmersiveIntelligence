@@ -19,7 +19,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
 import javax.annotation.Nullable;
@@ -31,8 +32,8 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 
 	public PrecissionAssemblerRecipeCategory(IGuiHelper helper)
 	{
-		super("precissionassembler", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name", helper.createBlankDrawable(156, 60), PrecissionAssemblerRecipe.class, new ItemStack(ImmersiveIntelligence.proxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.PRECISSION_ASSEMBLER.getMeta()));
-		machineStack = new ItemStack(ImmersiveIntelligence.proxy.block_metal_multiblock, 1, IIBlockTypes_MetalMultiblock.PRECISSION_ASSEMBLER.getMeta());
+		super("precissionassembler", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name", helper.createBlankDrawable(156, 60), PrecissionAssemblerRecipe.class, new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta()));
+		machineStack = new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta());
 	}
 
 	@Nullable

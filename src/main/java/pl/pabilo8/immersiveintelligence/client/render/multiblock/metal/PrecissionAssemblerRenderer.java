@@ -7,14 +7,13 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.ArrayUtils;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.IPrecissionTool;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.*;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityPrecissionAssembler;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.precissionAssembler;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
@@ -70,12 +69,12 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			float f5 = 1F/16F;
 
 			float hatchProgress = te.active?135f: 0f;
-			if(te.active&&te.processTime < precissionAssembler.hatchTime)
-				hatchProgress = 135f*((te.processTime+(partialTicks/20f))/precissionAssembler.hatchTime);
-			else if(te.active&&te.processTime > te.processTimeMax-precissionAssembler.hatchTime)
+			if(te.active&&te.processTime < PrecissionAssembler.hatchTime)
+				hatchProgress = 135f*((te.processTime+(partialTicks/20f))/PrecissionAssembler.hatchTime);
+			else if(te.active&&te.processTime > te.processTimeMax-PrecissionAssembler.hatchTime)
 			{
 
-				hatchProgress = 135f*(te.processTimeMax-(te.processTime+(partialTicks/20f)))/(float)precissionAssembler.hatchTime;
+				hatchProgress = 135f*(te.processTimeMax-(te.processTime+(partialTicks/20f)))/(float)PrecissionAssembler.hatchTime;
 			}
 
 			GlStateManager.pushMatrix();
@@ -101,7 +100,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 
 			boolean action_drawn = false;
 			int time = 20;
-			int maxtime = te.processTimeMax-(2*precissionAssembler.hatchTime);
+			int maxtime = te.processTimeMax-(2*PrecissionAssembler.hatchTime);
 			float max_progress = 1f;
 			float time_between = 0f;
 			int moved_tool = -1;
@@ -112,7 +111,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			check:
 			if(te.active)
 			{
-				if(te.animationPrepared.size() > 0&&te.processTime > precissionAssembler.hatchTime&&te.processTime < te.processTimeMax-precissionAssembler.hatchTime)
+				if(te.animationPrepared.size() > 0&&te.processTime > PrecissionAssembler.hatchTime&&te.processTime < te.processTimeMax-PrecissionAssembler.hatchTime)
 				{
 					for(int i = 0; i < te.animationPrepared.size(); i += 1)
 					{
@@ -242,11 +241,11 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.pushMatrix();
 
 			hatchProgress = te.active?1f: 0f;
-			if(te.active&&te.processTime < precissionAssembler.hatchTime)
-				hatchProgress = ((te.processTime+(partialTicks/20f))/precissionAssembler.hatchTime);
-			else if(te.active&&te.processTime > te.processTimeMax-precissionAssembler.hatchTime)
+			if(te.active&&te.processTime < PrecissionAssembler.hatchTime)
+				hatchProgress = ((te.processTime+(partialTicks/20f))/PrecissionAssembler.hatchTime);
+			else if(te.active&&te.processTime > te.processTimeMax-PrecissionAssembler.hatchTime)
 			{
-				hatchProgress = 1f-(((te.processTime-te.processTimeMax+precissionAssembler.hatchTime)+(partialTicks/20f))/precissionAssembler.hatchTime);
+				hatchProgress = 1f-(((te.processTime-te.processTimeMax+PrecissionAssembler.hatchTime)+(partialTicks/20f))/PrecissionAssembler.hatchTime);
 			}
 
 			GlStateManager.translate(0f, 0.75f*hatchProgress, 0f);
@@ -261,7 +260,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 
 				GlStateManager.pushMatrix();
 				GlStateManager.scale(1.25f, 1.25f, 1.25f);
-				if(te.processTime < te.processTimeMax-precissionAssembler.hatchTime)
+				if(te.processTime < te.processTimeMax-PrecissionAssembler.hatchTime)
 					renderItem.renderItem(te.inventory.get(4), TransformType.GROUND);
 				else
 					renderItem.renderItem(te.effect, TransformType.GROUND);

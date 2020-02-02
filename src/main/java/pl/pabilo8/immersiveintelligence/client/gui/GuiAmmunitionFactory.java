@@ -8,18 +8,14 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityAmmunitionFactory;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityPrintingPress;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityAmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionFactory;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 
 import java.awt.*;
 import java.util.ArrayList;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ammunitionFactory;
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.printingPress;
 
 /**
  * Created by Pabilo8 on 10-07-2019.
@@ -78,7 +74,7 @@ public class GuiAmmunitionFactory extends GuiIEContainerBase
 
 		if(tile.ingredientCount1 > 0)
 		{
-			float comp1 = Math.min((float)tile.ingredientCount1/(float)ammunitionFactory.componentCapacity, 1);
+			float comp1 = Math.min((float)tile.ingredientCount1/(float)AmmunitionFactory.componentCapacity, 1);
 			Color c1 = new Color(BulletRegistry.INSTANCE.registeredComponents.get(tile.ingredient1).getColour());
 			GlStateManager.color(c1.getRed()/255f, c1.getGreen()/255f, c1.getBlue()/255f, 1f);
 			drawTexturedModalRect(guiLeft+8, guiTop+19+Math.round(16f*(1f-comp1)), 123, 22, 2, Math.round(16f*comp1));
@@ -86,7 +82,7 @@ public class GuiAmmunitionFactory extends GuiIEContainerBase
 
 		if(tile.ingredientCount2 > 0)
 		{
-			float comp2 = Math.min((float)tile.ingredientCount2/(float)ammunitionFactory.componentCapacity, 1);
+			float comp2 = Math.min((float)tile.ingredientCount2/(float)AmmunitionFactory.componentCapacity, 1);
 			Color c2 = new Color(BulletRegistry.INSTANCE.registeredComponents.get(tile.ingredient2).getColour());
 			GlStateManager.color(c2.getRed()/255f, c2.getGreen()/255f, c2.getBlue()/255f, 1f);
 			drawTexturedModalRect(guiLeft+8, guiTop+59+Math.round(16f*(1f-comp2)), 123, 22, 2, Math.round(16f*comp2));
@@ -94,7 +90,7 @@ public class GuiAmmunitionFactory extends GuiIEContainerBase
 
 		if(tile.gunpowderCount > 0)
 		{
-			float gunpowder = Math.min((float)tile.gunpowderCount/(float)ammunitionFactory.componentCapacity, 1);
+			float gunpowder = Math.min((float)tile.gunpowderCount/(float)AmmunitionFactory.componentCapacity, 1);
 			GlStateManager.color(gunpowder_colour.getRed()/255f, gunpowder_colour.getGreen()/255f, gunpowder_colour.getBlue()/255f, 1f);
 			drawTexturedModalRect(guiLeft+8, guiTop+39+Math.round(16f*(1f-gunpowder)), 123, 22, 2, Math.round(16f*gunpowder));
 		}

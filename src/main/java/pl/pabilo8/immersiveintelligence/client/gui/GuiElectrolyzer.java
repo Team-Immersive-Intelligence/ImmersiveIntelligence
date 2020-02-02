@@ -7,7 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityElectrolyzer;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerElectrolyzer;
 
 import java.util.ArrayList;

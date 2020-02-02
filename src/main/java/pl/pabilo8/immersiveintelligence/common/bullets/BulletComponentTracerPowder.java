@@ -5,10 +5,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
  * Created by Pabilo8 on 30-08-2019.
@@ -24,7 +24,7 @@ public class BulletComponentTracerPowder implements IBulletComponent
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack(new ItemStack(ImmersiveIntelligence.proxy.item_tracer_powder));
+		return new IngredientStack(new ItemStack(CommonProxy.item_tracer_powder));
 	}
 
 	@Override

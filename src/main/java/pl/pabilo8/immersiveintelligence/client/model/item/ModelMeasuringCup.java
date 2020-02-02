@@ -86,7 +86,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 		builder.put(TransformType.THIRD_PERSON_LEFT_HAND, leftify(thirdperson));
 		builder.put(TransformType.FIRST_PERSON_RIGHT_HAND, firstperson);
 		builder.put(TransformType.FIRST_PERSON_LEFT_HAND, leftify(firstperson));
-		return (ImmutableMap)builder.build();
+		return builder.build();
 	}
 
 	private static TRSRTransformation get(float tx, float ty, float tz, float ax, float ay, float az, float s)
@@ -136,7 +136,6 @@ public class ModelMeasuringCup extends ModelAbstractItem
 	public IBakedModel bake(IModelState state, VertexFormat format,
 							Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
-		//TODO: Transformation
 		ImmutableMap<TransformType, TRSRTransformation> transformMap = PerspectiveMapWrapper.getTransforms(state);
 		TRSRTransformation transform = state.apply(Optional.empty()).orElse(TRSRTransformation.identity());
 
@@ -163,7 +162,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 					ItemTextureQuadConverter.convertTexture(format, transform, filledTexture, fluidSprite, SOUTH_Z_FLUID, EnumFacing.SOUTH, fluid.getColor()));
 		}
 
-		return new Baked(this, builder.build(), fluidSprite, format, Maps.immutableEnumMap(transformMap), Maps.<String, IBakedModel>newHashMap());
+		return new Baked(this, builder.build(), fluidSprite, format, Maps.immutableEnumMap(transformMap), Maps.newHashMap());
 	}
 
 	@Override
@@ -221,7 +220,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 
 		private BakedOverrideHandler()
 		{
-			super(ImmutableList.<ItemOverride>of());
+			super(ImmutableList.of());
 		}
 
 		@Override
@@ -269,7 +268,6 @@ public class ModelMeasuringCup extends ModelAbstractItem
 	{
 
 		private final ModelMeasuringCup parent;
-		// FIXME: guava cache?
 		private final Map<String, IBakedModel> cache; // contains all the baked models since they'll never change
 		private final ImmutableMap<TransformType, TRSRTransformation> transforms;
 		private final ImmutableList<BakedQuad> quads;

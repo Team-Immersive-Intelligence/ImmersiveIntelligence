@@ -12,13 +12,23 @@
           "side": "immersiveintelligence:blocks/metal_decoration/coil_data_side",
           "top": "immersiveintelligence:blocks/metal_decoration/coil_data_top",
           "bottom": "immersiveintelligence:blocks/metal_decoration/coil_data_top"
-        }
+      }
+      }
+    ],
+    "inventory,type=coil_steel_motor_belt": [
+      {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_side",
+          "top": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_top",
+          "bottom": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_top"
+      }
       }
     ],
     "inventory,type=electronic_engineering": [
       {
         "textures": {
-          "block_all": "immersiveintelligence:blocks/metal_decoration/electronic_engineering",
+          "block_all": "immersiveintelligence:blocks/metal_decoration/absolutelly_unconnected/electronic_engineering",
           "overlay_all": "immersiveintelligence:blocks/metal_decoration/iron_overlay"
         }
       }
@@ -26,11 +36,28 @@
     "inventory,type=advanced_electronic_engineering": [
       {
         "textures": {
-          "block_all": "immersiveintelligence:blocks/metal_decoration/advanced_electronic_engineering",
+          "block_all": "immersiveintelligence:blocks/metal_decoration/absolutelly_unconnected/advanced_electronic_engineering",
           "overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
         }
       }
     ],
+    "inventory,type=mechanical_engineering": [
+      {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/absolutelly_unconnected/mechanical_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/aluminium_overlay"
+        }
+      }
+    ],
+    "inventory,type=heavy_mechanical_engineering": [
+      {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/absolutelly_unconnected/heavy_mechanical_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/brass_overlay"
+        }
+      }
+    ],
+
     "type": {
       "coil_data": {
         "model": "immersiveengineering:ie_pillar",
@@ -40,16 +67,36 @@
           "bottom": "immersiveintelligence:blocks/metal_decoration/coil_data_top"
         }
       },
+      "coil_steel_motor_belt": {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_side",
+          "top": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_top",
+          "bottom": "immersiveintelligence:blocks/metal_decoration/coil_steel_motor_belt_top"
+        }
+      },
       "electronic_engineering": {
         "textures": {
-          "block_all": "immersiveintelligence:blocks/metal_decoration/electronic_engineering_ctm",
+          "block_all": "immersiveintelligence:blocks/metal_decoration/electronic_engineering",
           "overlay_all": "immersiveintelligence:blocks/metal_decoration/iron_overlay"
         }
       },
       "advanced_electronic_engineering": {
         "textures": {
-          "block_all": "immersiveintelligence:blocks/metal_decoration/advanced_electronic_engineering_ctm",
+          "block_all": "immersiveintelligence:blocks/metal_decoration/advanced_electronic_engineering",
           "overlay_all": "immersiveintelligence:blocks/metal_decoration/steel_overlay"
+        }
+      },
+      "mechanical_engineering": {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/mechanical_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/aluminium_overlay"
+        }
+      },
+      "heavy_mechanical_engineering": {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/heavy_mechanical_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/brass_overlay"
         }
       }
     }

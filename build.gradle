@@ -8,8 +8,6 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
 
 version = "0.1.0"
 group= "pl.pabilo8.immersiveintelligence"
@@ -41,21 +39,44 @@ repositories {
         name 'DVS1 Maven FS'
         url 'http://dvs1.progwml6.com/files/maven'
     }
-    maven {
+    
+    maven { // CraftTweaker
         name 'jared maven'
         url 'https://maven.blamejared.com/'
     }
-    maven {
-        name 'JEI'
-        url 'http://dvs1.progwml6.com/files/maven'
+
+    maven { // ModMaven, there is a bunch of stuff on there
+        name 'ModMaven'
+        url "http://modmaven.k-4u.nl/"
     }
+
+    maven { // Albedo Lights
+        url 'https://repo.elytradev.com/'
+    }
+
+    maven { // CTM
+        name 'tterrag maven'
+        url "http://maven.tterrag.com/"
+    }
+
+    repositories {//Curseforge maven, in case some other maven goes offline
+        maven {
+            name = "CurseForge"
+            url = "https://minecraft.curseforge.com/api/maven/"
+        }
+    }
+
 }
 
 dependencies {
+    compileOnly "team.chisel.ctm:CTM:MC1.12.2-0.3.2.18"
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
     deobfCompile "mezz.jei:jei_1.12.2:4.15.+"
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.8.468"
-    compile files('libs/albedo-0.1.3-deobf.jar')
+    deobfCompile "albedo:albedo:0.1.3"
+    //Maybe someday...
+    //deobfCompile "albedo:albedo:1.12.2:1.1.0"
+    deobfCompile 'baubles:Baubles:1.12:1.5.2'
 }
 
 jar {

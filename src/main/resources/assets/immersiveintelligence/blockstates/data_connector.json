@@ -220,6 +220,9 @@
       },
       "advanced_fluid_inserter": {
         "model": "immersiveintelligence:smartmodel/conn_advanced_fluid_inserter"
+      },
+      "chemical_dispenser": {
+        "model": "immersiveintelligence:smartmodel/conn_chemical_dispenser"
       }
     },
     "facing": {

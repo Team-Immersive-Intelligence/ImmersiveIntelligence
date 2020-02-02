@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
  * Created by Pabilo8 on 31-07-2019.

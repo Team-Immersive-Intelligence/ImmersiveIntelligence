@@ -18,7 +18,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 public class MessageFireworks implements IMessage
 {
@@ -65,7 +64,6 @@ public class MessageFireworks implements IMessage
 				WorldClient world = ClientUtils.mc().world;
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
-					ImmersiveIntelligence.logger.info(message.tag);
 					NBTTagList list = new NBTTagList();
 					list.appendTag(message.tag.getTag("Explosion"));
 					NBTTagCompound nbt = new NBTTagCompound();

@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
@@ -33,23 +32,22 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FluidInserter;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.fluid_inserter;
 
 /**
  * Created by Pabilo8 on 15-07-2019.
  */
-public class TileEntityFluidInserter extends TileEntityImmersiveConnectable implements ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IRotationAcceptor, IDataConnector
+public class TileEntityFluidInserter extends TileEntityImmersiveConnectable implements ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
 {
 	public static ItemStack conn_data, conn_mv;
 	public int energyStorage = 0;
@@ -91,15 +89,15 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount > 0&&energyStorage < fluid_inserter.energyCapacity)
+		if(amount > 0&&energyStorage < FluidInserter.energyCapacity)
 		{
 			if(!simulate)
 			{
-				int rec = Math.min(fluid_inserter.energyCapacity-energyStorage, fluid_inserter.energyUsage);
+				int rec = Math.min(FluidInserter.energyCapacity-energyStorage, FluidInserter.energyUsage);
 				energyStorage += rec;
 				return rec;
 			}
-			return Math.min(fluid_inserter.energyCapacity-energyStorage, fluid_inserter.energyUsage);
+			return Math.min(FluidInserter.energyCapacity-energyStorage, FluidInserter.energyUsage);
 		}
 		return 0;
 	}
@@ -120,7 +118,7 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 
 		if(conn==0)
 		{
-			return attachCat.equals("DATA")&&limitType==null;
+			return attachCat.equals(IIDataWireType.DATA_CATEGORY)&&limitType==null;
 		}
 		else if(conn==1)
 		{
@@ -292,13 +290,6 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 	}
 
 	@Override
-	public void inputRotation(double rotation, @Nonnull EnumFacing side)
-	{
-		if(side!=this.outputFacing.getOpposite())
-			return;
-	}
-
-	@Override
 	public float[] getBlockBounds()
 	{
 		return new float[]{0f, 0, 0f, 1f, 0.1875f, 1f};
@@ -466,7 +457,7 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 			/*
 			if (doFill && barrel.fluidToTake<=0)
 			{
-				ImmersiveIntelligence.logger.info("res.amount");
+				ImmersiveIntelligence.logger.info("res.scatter");
 				return 0;
 			}
 
@@ -483,9 +474,9 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 				}
 				FluidStack res2 = resource.copy();
 
-				//Max amount to output
-				res2.amount=Math.min(resource.amount,Math.min(fluid_inserter.maxOutput,barrel.fluidToTake));
-				int maxfill =Math.min(resource.amount,Math.min(fluid_inserter.maxOutput,barrel.fluidToTake));
+				//Max scatter to output
+				res2.scatter=Math.min(resource.scatter,Math.min(fluid_inserter.maxOutput,barrel.fluidToTake));
+				int maxfill =Math.min(resource.scatter,Math.min(fluid_inserter.maxOutput,barrel.fluidToTake));
 				int left = handler.fill(res2,doFill);
 
 				if (doFill)
@@ -494,28 +485,28 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 					barrel.fluidToTake-=(maxfill-left);
 				}
 
-				return resource.amount-(maxfill-left);
+				return resource.scatter-(maxfill-left);
 			}
 			 */
 
 			//ImmersiveIntelligence.logger.info(barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite()));
 
-			if(barrel.energyStorage >= fluid_inserter.energyUsage&&barrel.fluidToTake > 0&&barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing))!=null&&barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite()))
+			if(barrel.energyStorage >= FluidInserter.energyUsage&&barrel.fluidToTake > 0&&barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing))!=null&&barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite()))
 			{
 				TileEntity te = barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing));
-				IFluidHandler handler = ((IFluidHandler)te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite()));
+				IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite());
 
 				BlockPos pos = barrel.pos.offset(barrel.outputFacing);
 
 				FluidStack res2 = resource.copy();
-				res2.amount = Math.min(resource.amount, Math.min(fluid_inserter.maxOutput, barrel.fluidToTake));
-				int maxfill = Math.min(resource.amount, Math.min(fluid_inserter.maxOutput, barrel.fluidToTake));
+				res2.amount = Math.min(resource.amount, Math.min(FluidInserter.maxOutput, barrel.fluidToTake));
+				int maxfill = Math.min(resource.amount, Math.min(FluidInserter.maxOutput, barrel.fluidToTake));
 				int left = handler.fill(res2, doFill);
 
 				if(doFill)
 				{
 					barrel.fluidToTake -= left;
-					barrel.energyStorage -= fluid_inserter.energyUsage;
+					barrel.energyStorage -= FluidInserter.energyUsage;
 				}
 
 				return left;

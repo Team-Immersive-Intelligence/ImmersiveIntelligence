@@ -1,27 +1,40 @@
 package pl.pabilo8.immersiveintelligence.api;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementManager;
+import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -282,7 +295,7 @@ public class Utils
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains("II_ADVANCED_HAMMER");
+		return stack.getItem().getToolClasses(stack).contains(CommonProxy.TOOL_ADVANCED_HAMMER);
 	}
 
 	public static boolean isAABBContained(@Nonnull AxisAlignedBB compared, @Nonnull AxisAlignedBB comparedTo)
@@ -298,10 +311,86 @@ public class Utils
 		c7 = new Vec3d(compared.maxX, compared.maxY, compared.maxZ);
 
 		AxisAlignedBB comp2 = comparedTo.grow(0.1f);
-		ImmersiveIntelligence.logger.info(""+comp2.contains(c0)+comp2.contains(c1)+comp2.contains(c2)+comp2.contains(c3)+comp2.contains(c4)+comp2.contains(c5)+comp2.contains(c6)+comp2.contains(c7));
-		ImmersiveIntelligence.logger.info(""+comp2.minX+" "+comp2.maxX);
 
 		return comp2.contains(c0)&&comp2.contains(c1)&&comp2.contains(c2)&&comp2.contains(c3)
 				&&comp2.contains(c4)&&comp2.contains(c5)&&comp2.contains(c6)&&comp2.contains(c7);
+	}
+
+	//Converts snake_case to camelCase or CamelCase
+	//Copy as you wish
+	public static String toCamelCase(String string, boolean startSmall)
+	{
+		StringBuilder result = new StringBuilder();
+		String[] all = string.split("_");
+		for(String s : all)
+		{
+			result.append(Character.toUpperCase(s.charAt(0)));
+			result.append(s.substring(1));
+		}
+		if(startSmall)
+			result.setCharAt(0, Character.toLowerCase(result.charAt(0)));
+		return result.toString();
+	}
+
+	public static void unlockIIAdvancement(EntityPlayer player, String name)
+	{
+		if(player instanceof EntityPlayerMP)
+		{
+			PlayerAdvancements advancements = ((EntityPlayerMP)player).getAdvancements();
+			AdvancementManager manager = ((WorldServer)player.getEntityWorld()).getAdvancementManager();
+			Advancement advancement = manager.getAdvancement(new ResourceLocation(ImmersiveIntelligence.MODID, name));
+			if(advancement!=null)
+				advancements.grantCriterion(advancement, "code_trigger");
+		}
+	}
+
+	public static boolean hasUnlockedIIAdvancement(EntityPlayer player, String name)
+	{
+		if(player instanceof EntityPlayerMP)
+		{
+			PlayerAdvancements advancements = ((EntityPlayerMP)player).getAdvancements();
+			AdvancementManager manager = ((WorldServer)player.getEntityWorld()).getAdvancementManager();
+			Advancement advancement = manager.getAdvancement(new ResourceLocation(ImmersiveIntelligence.MODID, name));
+			if(advancement!=null)
+				return advancements.getProgress(advancement).isDone();
+		}
+		return false;
+	}
+
+	public static boolean isWrench(ItemStack stack)
+	{
+		if(stack.isEmpty())
+			return false;
+		return stack.getItem().getToolClasses(stack).contains(CommonProxy.TOOL_WRENCH)&&stack.getItem() instanceof IWrench;
+	}
+
+	public static boolean isTachometer(ItemStack stack)
+	{
+		if(stack.isEmpty())
+			return false;
+		return stack.getItem().getToolClasses(stack).contains(CommonProxy.TOOL_TACHOMETER);
+	}
+
+	public static boolean isCrowbar(ItemStack stack)
+	{
+		if(stack.isEmpty())
+			return false;
+		return stack.getItem().getToolClasses(stack).contains(CommonProxy.TOOL_CROWBAR);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void drawStringCentered(FontRenderer fontRenderer, String string, int x, int y, int w, int h, int colour)
+	{
+		fontRenderer.drawString(string, x+(w/2)-(fontRenderer.getStringWidth(string)/2), y+h, colour);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void drawStringCenteredScaled(FontRenderer fontRenderer, String string, int x, int y, int w, int h, float scale, int colour)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x+((w/2)-(fontRenderer.getStringWidth(string)*scale/2)), y+h, 0);
+		GlStateManager.scale(scale, scale, 1);
+		fontRenderer.drawString(string, 0, 0, 0xd99747);
+		GlStateManager.popMatrix();
 	}
 }

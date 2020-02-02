@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelAmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityAmmunitionFactory;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityAmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 import java.util.List;
@@ -149,9 +149,6 @@ public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEnt
 					picked_stack.setCount(0);
 				}
 			}
-
-			ImmersiveIntelligence.logger.info(ip_current);
-
 
 			if(ip_current < 0.5)
 			{

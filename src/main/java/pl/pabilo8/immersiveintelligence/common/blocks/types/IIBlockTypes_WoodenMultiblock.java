@@ -10,6 +10,7 @@ import java.util.Locale;
  */
 public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockIEBase.IBlockEnum
 {
+	SKYCRATE_POST,
 	SKYCRATE_STATION;
 
 	@Override

@@ -13,7 +13,7 @@ public class DataPacketTypeItemStack implements IDataType
 
 	public DataPacketTypeItemStack(ItemStack i)
 	{
-		this.value = i;
+		this.value = i.copy();
 	}
 
 	public DataPacketTypeItemStack()
@@ -42,14 +42,18 @@ public class DataPacketTypeItemStack implements IDataType
 	@Override
 	public void valueFromNBT(NBTTagCompound n)
 	{
-		this.value = new ItemStack(n);
+		this.value = new ItemStack(n.getCompoundTag("Value"));
+		ImmersiveIntelligence.logger.info(this.value);
 	}
 
 	@Override
 	public NBTTagCompound valueToNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		value.writeToNBT(nbt);
+		NBTTagCompound item_nbt = new NBTTagCompound();
+		value.writeToNBT(item_nbt);
+		nbt.setString("Type", "itemstack");
+		nbt.setTag("Value", item_nbt);
 		return nbt;
 	}
 

@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.items;
 
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityMinecartContainer;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -10,9 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateReinforced;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateSteel;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMinecartCrateWooden;
+import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
@@ -22,10 +20,12 @@ public class ItemIIMinecart extends ItemIIBase
 	public static final int META_MINECART_WOODEN_CRATE = 0;
 	public static final int META_MINECART_REINFORCED_CRATE = 1;
 	public static final int META_MINECART_STEEL_CRATE = 2;
+	public static final int META_MINECART_WOODEN_BARREL = 3;
+	public static final int META_MINECART_METAL_BARREL = 4;
 
 	public ItemIIMinecart()
 	{
-		super("minecart", 1, "wooden_crate", "reinforced_crate", "steel_crate");
+		super("minecart", 1, "wooden_crate", "reinforced_crate", "steel_crate", "wooden_barrel", "metal_barrel");
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ItemIIMinecart extends ItemIIBase
 					d0 = 0.5D;
 				}
 
-				EntityMinecartContainer ent = null;
+				EntityMinecart ent = null;
 
 				switch(stack.getMetadata())
 				{
@@ -68,6 +68,16 @@ public class ItemIIMinecart extends ItemIIBase
 					case META_MINECART_STEEL_CRATE:
 					{
 						ent = new EntityMinecartCrateSteel(world, (double)pos.getX()+0.5D, (double)pos.getY()+0.0625D+d0, (double)pos.getZ()+0.5D);
+					}
+					break;
+					case META_MINECART_WOODEN_BARREL:
+					{
+						ent = new EntityMinecartBarrelWooden(world, (double)pos.getX()+0.5D, (double)pos.getY()+0.0625D+d0, (double)pos.getZ()+0.5D);
+					}
+					break;
+					case META_MINECART_METAL_BARREL:
+					{
+						ent = new EntityMinecartBarrelSteel(world, (double)pos.getX()+0.5D, (double)pos.getY()+0.0625D+d0, (double)pos.getZ()+0.5D);
 					}
 					break;
 				}

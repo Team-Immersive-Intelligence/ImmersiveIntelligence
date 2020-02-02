@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
-import blusunrize.immersiveengineering.api.energy.IRotationAcceptor;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
@@ -15,29 +14,21 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SmallDataBuffer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlayerInteraction, ITickable, IRotationAcceptor, IBlockBounds, IDirectionalTile, IDataDevice
+public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice
 {
 	public boolean toggle = false;
 	public EnumFacing facing = EnumFacing.NORTH;
 	ArrayList<DataPacket> packets = new ArrayList<>();
-
-	@Override
-	public void inputRotation(double rotation, @Nonnull EnumFacing side)
-	{
-		if(side!=this.facing.getOpposite())
-			return;
-	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
@@ -143,7 +134,7 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		if(packets.size() < IIConfig.machines.small_data_buffer.packetCapacity)
+		if(packets.size() < SmallDataBuffer.packetCapacity)
 		{
 			DataPacket np = new DataPacket();
 			np.fromNBT(packet.toNBT());

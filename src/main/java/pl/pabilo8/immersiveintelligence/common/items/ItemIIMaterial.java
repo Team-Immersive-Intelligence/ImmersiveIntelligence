@@ -23,6 +23,7 @@ public class ItemIIMaterial extends ItemIIBase
 				"processor_circuit_board_etched",
 				"processor_circuit_board",
 				"compact_electric_engine",
+				"compact_electric_engine_advanced",
 				"metal_ingot_platinum",
 				"metal_dust_platinum",
 				"metal_plate_platinum",
@@ -39,12 +40,15 @@ public class ItemIIMaterial extends ItemIIBase
 				"metal_dust_brass",
 				"metal_plate_brass",
 				"metal_nugget_brass",
-				"skycrate_mount",
 				"punchtape_empty",
 				"dust_rdx",
 				"dust_hmx",
 				"white_phosphorus",
-				"dust_salt"
+				"dust_salt",
+				"spring_brass",
+				"spring_iron",
+				"spring_steel",
+				"carbon_brush"
 		);
 	}
 }

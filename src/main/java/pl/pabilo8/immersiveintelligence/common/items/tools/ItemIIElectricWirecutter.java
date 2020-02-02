@@ -35,8 +35,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.SkyCrateHelper;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -131,22 +129,6 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 		{
 			double reachDistance = player.getAttributeMap().getAttributeInstance(EntityPlayer.REACH_DISTANCE).getAttributeValue();
 			Connection target = ApiUtils.getTargetConnection(world, player, null, reachDistance);
-
-			if(player.isSneaking())
-			{
-				TileEntity connector = null;
-				Connection line = null;
-				Connection con = ApiUtils.getConnectionMovedThrough(world, player);
-				if(con!=null)
-				{
-					connector = world.getTileEntity(con.start);
-					line = con;
-				}
-				if(line!=null&&connector!=null)
-					SkyCrateHelper.spawnSkyCrateTest(player, connector, line, player.getActiveHand());
-				ImmersiveIntelligence.logger.info("Skycrate on the way!");
-				return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-			}
 
 			if(target!=null)
 				ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(target, world, player.getPosition());

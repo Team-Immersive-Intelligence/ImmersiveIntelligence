@@ -1,10 +1,10 @@
 {
   "ctm": {
     "ctm_version": 1,
-    "layer": "CUTOUT",
-    "type": "pattern",
-    "extra": {
-      "size": 3
-    }
+    "layer": "CUTOUT_MIPPED",
+        "type": "pattern",
+        "extra": {
+          "size": 3
+        }
   }
 }

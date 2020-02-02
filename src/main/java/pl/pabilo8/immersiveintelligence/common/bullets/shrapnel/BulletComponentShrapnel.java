@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 
 /**
  * Created by Pabilo8 on 30-08-2019.

@@ -43,10 +43,7 @@ public abstract class DataOperator
 				IDataType p = preferred.newInstance();
 				p.setDefaultValue();
 				return preferred.cast(p);
-			} catch(InstantiationException e)
-			{
-				e.printStackTrace();
-			} catch(IllegalAccessException e)
+			} catch(InstantiationException|IllegalAccessException e)
 			{
 				e.printStackTrace();
 			}

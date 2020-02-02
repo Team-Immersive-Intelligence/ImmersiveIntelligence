@@ -7,13 +7,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.TileEntityPrintingPress;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 
 import java.util.ArrayList;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.printingPress;
 
 /**
  * Created by Pabilo8 on 10-07-2019.
@@ -69,7 +68,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 		drawTexturedModalRect(guiLeft+123, guiTop+21, 176, 0, 20, 51);
 
 		if(tile.active)
-			drawTexturedModalRect(guiLeft+31, guiTop+37, 176, 51, Math.round(55*(printingPress.printTime-tile.processTimeLeft)/printingPress.printTime), 20);
+			drawTexturedModalRect(guiLeft+31, guiTop+37, 176, 51, Math.round(55*(PrintingPress.printTime-tile.processTimeLeft)/PrintingPress.printTime), 20);
 
 	}
 

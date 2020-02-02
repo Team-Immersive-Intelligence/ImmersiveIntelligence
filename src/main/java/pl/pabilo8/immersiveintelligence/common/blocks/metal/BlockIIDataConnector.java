@@ -46,6 +46,7 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 		tesrMap.put(IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_INSERTER.getName());
 		tesrMap.put(IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_INSERTER.getName());
 		tesrMap.put(IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), IIBlockTypes_Connector.FLUID_INSERTER.getName());
+		tesrMap.put(IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), IIBlockTypes_Connector.CHEMICAL_DISPENSER.getName());
 		//tesrMap.put(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getName());
 
 	}
@@ -137,6 +138,8 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 				return new TileEntityAdvancedInserter();
 			case FLUID_INSERTER:
 				return new TileEntityFluidInserter();
+			case CHEMICAL_DISPENSER:
+				return new TileEntityChemicalDispenser();
 			//case ADVANCED_FLUID_INSERTER:
 			//	return new TileEntityAdvancedFluidInserter();
 		}

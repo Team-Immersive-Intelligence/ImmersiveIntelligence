@@ -12,6 +12,7 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -22,11 +23,13 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import pl.pabilo8.immersiveintelligence.api.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
 
 /**
  * Created by Pabilo8 on 27-09-2019.
@@ -34,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 public class ClientEventHandler implements IResourceManagerReloadListener
 {
 	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II_BULLET_HERE\u00A0"};
+	private static boolean mgAiming = false;
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
@@ -47,8 +51,7 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 		EntityPlayer player = ClientUtils.mc().player;
 		if(player.getRidingEntity() instanceof EntityMachinegun&&ZoomHandler.isZooming)
 		{
-			if(!ZoomHandler.isZooming)
-			{
+
 				float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
 				if(steps!=null&&steps.length > 0)
 				{
@@ -65,10 +68,10 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 					else
 						ZoomHandler.fovZoom = event.getFov();
 				}
-			}
 			event.setNewfov(ZoomHandler.fovZoom);
 			event.setCanceled(true);
 		}
+
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -77,6 +80,17 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 		if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
 		{
 			ZoomHandler.isZooming = ClientProxy.keybind_machinegunScope.isKeyDown();
+
+			if(ZoomHandler.isZooming^mgAiming)
+			{
+				mgAiming = !mgAiming;
+
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setBoolean("clientMessage", true);
+				tag.setBoolean("aiming", mgAiming);
+				IIPacketHandler.INSTANCE.sendToServer(new MessageMachinegunSync(ClientUtils.mc().player.getRidingEntity(), tag));
+			}
+
 			if(ZoomHandler.isZooming)
 			{
 				ClientUtils.mc().gameSettings.thirdPersonView = 0;

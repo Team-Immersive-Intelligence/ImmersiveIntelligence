@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:motor_belt"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.connect_belt"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.connect_belt.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/root",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -12,7 +12,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -34,7 +33,7 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 	public BlockIIWoodenMultiblock()
 	{
 		super("wooden_multiblock", Material.WOOD, PropertyEnum.create("type", IIBlockTypes_WoodenMultiblock.class), ItemBlockIEBase.class, IEProperties.FACING_HORIZONTAL,
-				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY);
+				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IOBJModelCallback.PROPERTY);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		lightOpacity = 0;
@@ -79,12 +78,6 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 		return true;
 	}
 
-	@Deprecated
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
@@ -114,6 +107,10 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 	{
 		switch(type)
 		{
+			case SKYCRATE_POST:
+			{
+				return new TileEntitySkyCratePost();
+			}
 			case SKYCRATE_STATION:
 			{
 				return new TileEntitySkyCrateStation();

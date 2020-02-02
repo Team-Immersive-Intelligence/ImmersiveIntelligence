@@ -7,7 +7,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import pl.pabilo8.immersiveintelligence.api.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 
 /**
  * Created by Pabilo8 on 24-06-2019.
