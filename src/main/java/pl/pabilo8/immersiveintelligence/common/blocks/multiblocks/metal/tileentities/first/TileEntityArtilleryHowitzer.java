@@ -2,13 +2,11 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileent
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
-import blusunrize.immersiveengineering.api.tool.BulletHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.entities.EntityRevolvershot;
 import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
@@ -40,7 +38,6 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -369,7 +366,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 								}
 								a.world.spawnEntity(a);
 
-								ItemStack casing = CommonProxy.item_bullet.getCasing(bullet).getStack(1);
+								ItemStack casing = ItemIIBullet.getCasing(bullet).getStack(1);
 								bullet = casing;
 							}
 
@@ -404,23 +401,29 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 		}
 
-		if(world.getWorldTime()%40==0&&inventoryHandler.getStackInSlot(0).isEmpty())
+		if(world.getTotalWorldTime()%40==0&&inventoryHandler.getStackInSlot(0).isEmpty())
 		{
 
-			List<EntityItem> itemsIn = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(getTileForPos(329).getPos().offset(EnumFacing.UP)));
-			for(EntityItem ent : itemsIn)
+			if(getTileForPos(329)!=null)
 			{
-				if(!(ent.getItem().getItem() instanceof ItemIIBullet)||!(CommonProxy.item_bullet.getCasing(ent.getItem())).getName().equals("artillery_8bCal"))
-					continue;
-
-				ItemStack stack = inventoryHandler.insertItem(0, ent.getItem().copy(), false);
-				update = true;
-				if(stack.isEmpty())
+				List<EntityItem> itemsIn = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(getTileForPos(329).getPos().offset(EnumFacing.UP)));
+				for(EntityItem ent : itemsIn)
 				{
-					ent.setItem(ItemStack.EMPTY);
-					break;
+					if(!(ent.getItem().getItem() instanceof ItemIIBullet)||!(ItemIIBullet.getCasing(ent.getItem())).getName().equals("artillery_8bCal"))
+						continue;
+					//ImmersiveIntelligence.logger.info(ent);
+
+					ItemStack stack = inventoryHandler.insertItem(0, ent.getItem().copy(), false);
+
+					update = true;
+					if(stack.isEmpty())
+					{
+						ent.setItem(ItemStack.EMPTY);
+						break;
+					}
 				}
 			}
+
 		}
 
 		if(shellLoadTime < ArtilleryHowitzer.conveyorTime)
@@ -545,7 +548,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		return new float[]{0, 0, 0, 0, 0, 0};
 	}
 
-	//TODO: Redstne and energy pos
 	@Override
 	public int[] getEnergyPos()
 	{
@@ -609,7 +611,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		//Matches caliber
-		return stack.getItem() instanceof ItemIIBullet&&ItemIIBullet.getCasing(stack).getSize()==1f;
+		return stack.getItem() instanceof ItemIIBullet&&ItemIIBullet.getCasing(stack).getSize()==0.5f;
 	}
 
 	@Override
@@ -729,12 +731,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 						master().animationTime = 0;
 					}
 					break;
-					//TODO:Remove
-					case "cheat":
-					{
-						master().bullet = ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "HMX", "empty", 1f).setStackDisplayName("Wurfgranate 42");
-					}
-					break;
 				}
 			}
 
@@ -767,7 +763,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	{
 		List list = new ArrayList<AxisAlignedBB>();
 
-		//TODO: Collision
 		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 		return list;
@@ -839,17 +834,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	public void onEntityCollision(World world, Entity entity)
 	{
 
-	}
-
-	//TODO: Remove
-	EntityRevolvershot getBulletEntity(World world, Vec3d vecDir, ItemStack stack)
-	{
-		Vec3d gunPos = getGunPosition();
-		EntityRevolvershot bullet = new EntityRevolvershot(world, gunPos.x+vecDir.x, gunPos.y+vecDir.y, gunPos.z+vecDir.z, 0, 0, 0, BulletHandler.getBullet("he"));
-		bullet.motionX = vecDir.x;
-		bullet.motionY = vecDir.y;
-		bullet.motionZ = vecDir.z;
-		return bullet;
 	}
 
 	protected Vec3d getGunPosition()

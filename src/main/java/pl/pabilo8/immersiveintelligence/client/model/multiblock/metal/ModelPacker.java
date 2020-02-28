@@ -66,7 +66,7 @@ public class ModelPacker extends BaseBlockModel
 		baseModel[2].addBox(0F, 0F, 0F, 16, 16, 16, 0F); // Base 4
 		baseModel[2].setRotationPoint(16F, -32F, 0F);
 
-		baseModel[3].addBox(0F, 0F, 0F, 16, 4, 16, 0F); // Base5
+		baseModel[3].addBox(0F, 0F, 0F, 16, 1, 16, 0F); // Base5
 		baseModel[3].setRotationPoint(32F, -16F, 32F);
 
 		baseModel[4].addBox(0F, 0F, 0F, 48, 16, 48, 0F); // Base

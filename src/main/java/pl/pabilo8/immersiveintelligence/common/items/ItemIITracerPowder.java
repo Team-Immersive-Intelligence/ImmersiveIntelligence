@@ -54,11 +54,13 @@ public class ItemIITracerPowder extends ItemIIBase
 	@Override
 	public int getColourForIEItem(ItemStack stack, int pass)
 	{
-		return ItemNBTHelper.getInt(stack, "colour");
+		return getColour(stack);
 	}
 
 	public static int getColour(ItemStack stack)
 	{
+		if(!ItemNBTHelper.hasKey(stack, "colour"))
+			setColour(stack, 0xffffff);
 		return ItemNBTHelper.getInt(stack, "colour");
 	}
 

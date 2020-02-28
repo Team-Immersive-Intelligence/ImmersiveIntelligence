@@ -417,7 +417,6 @@ public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlock
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof IConfigurableSides&&Utils.isHammer(heldItem)&&!world.isRemote)
 		{
-			//TODO: Engineer's wrench
 			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
 			if(((IConfigurableSides)tile).toggleSide(iSide, player))
 				return true;

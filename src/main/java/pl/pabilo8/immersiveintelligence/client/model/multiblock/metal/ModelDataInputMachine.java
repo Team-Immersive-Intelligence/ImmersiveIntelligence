@@ -90,8 +90,6 @@ public class ModelDataInputMachine extends BaseBlockModel
 		baseModel[6].addBox(0F, 0F, 0F, 12, 4, 15, 0F); // TableDrawer
 		baseModel[6].setRotationPoint(4F, -13F, 2F);
 
-		//TODO: Remove #7
-
 		baseModel[7].addBox(0F, 0F, 0F, 0, 0, 0, 0F); // TableDrawerPullThingey
 		baseModel[7].setRotationPoint(0F, 0F, 0F);
 

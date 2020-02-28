@@ -149,9 +149,9 @@ public abstract class CommonProxy implements IGuiHandler
 
 	public static ItemIIWrench item_wrench = new ItemIIWrench();
 	public static ItemIIElectricWrench item_electric_wrench = new ItemIIElectricWrench();
-	//TODO: Torque Meter and Tachometer
-	//public static ItemIITachometer item_tachometer = new ItemIITachometer();
-	//public static ItemIITorqueMeter item_torque_meter = new ItemIITorqueMeter();
+
+	//Don't know if i should make a seperate item for a torque meter
+	public static ItemIITachometer item_tachometer = new ItemIITachometer();
 
 	public static ItemIIDataWireCoil item_data_wire_coil = new ItemIIDataWireCoil();
 	public static ItemIIMinecart item_minecart = new ItemIIMinecart();
@@ -775,8 +775,17 @@ public abstract class CommonProxy implements IGuiHandler
 			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
 				gui = new ContainerAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
 
+			else if(ID==IIGuiList.GUI_PACKER&&te instanceof TileEntityPacker)
+				gui = new ContainerPacker(player.inventory, (TileEntityPacker)te);
+			/*else if(ID==IIGuiList.GUI_UNPACKER&&te instanceof TileEntityUnpacker)
+				gui = new ContainerUnpacker(player.inventory, (TileEntityUnpacker)te);*/
+
 			else if(ID==IIGuiList.GUI_DATA_MERGER&&te instanceof TileEntityDataMerger)
 				gui = new ContainerDataMerger(player.inventory, (TileEntityDataMerger)te);
+			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA&&te instanceof TileEntityRedstoneInterface)
+				gui = new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te);
+			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE&&te instanceof TileEntityRedstoneInterface)
+				gui = new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te);
 
 			else if(ID==IIGuiList.GUI_SKYCRATE_STATION&&te instanceof TileEntitySkyCrateStation)
 				gui = new ContainerSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te);

@@ -288,8 +288,8 @@ public class Config
 				@Comment({"Energy usage of the packer (after dropping a stack inside)."})
 				public static int energyUsage = 512;
 
-				@Comment({"Base duration of the insertion process (in ticks)."})
-				public static int baseInsertion = 60;
+				@Comment({"Duration of the container being pushed by conveyor into and out of the center (in ticks)."})
+				public static int conveyorTime = 60;
 
 				@Comment({"Duration of a single stack insertion process (in ticks)."})
 				public static int timeInsertion = 5;

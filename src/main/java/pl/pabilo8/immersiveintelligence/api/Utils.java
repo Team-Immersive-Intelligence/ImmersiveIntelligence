@@ -393,4 +393,14 @@ public class Utils
 		fontRenderer.drawString(string, 0, 0, 0xd99747);
 		GlStateManager.popMatrix();
 	}
+
+	public static int cycleInt(boolean forward, int current, int min, int max)
+	{
+		current += forward?1: -1;
+		if(current > max)
+			return min;
+		else if(current < min)
+			return max;
+		return current;
+	}
 }

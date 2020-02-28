@@ -26,6 +26,7 @@ public class DataPacket
 		varTypes.put("accessor", DataPacketTypeAccessor.class);
 		varTypes.put("expression", DataPacketTypeExpression.class);
 		varTypes.put("itemstack", DataPacketTypeItemStack.class);
+		varTypes.put("array", DataPacketTypeArray.class);
 	}
 
 	public IDataType getPacketVariable(Character name)
@@ -99,10 +100,7 @@ public class DataPacket
 					try
 					{
 						data = (IDataType)varTypes.get(type).newInstance();
-					} catch(InstantiationException e)
-					{
-						e.printStackTrace();
-					} catch(IllegalAccessException e)
+					} catch(InstantiationException|IllegalAccessException e)
 					{
 						e.printStackTrace();
 					}

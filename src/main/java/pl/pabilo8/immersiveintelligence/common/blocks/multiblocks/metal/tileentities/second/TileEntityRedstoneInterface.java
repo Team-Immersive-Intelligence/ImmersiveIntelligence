@@ -12,6 +12,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,10 +26,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.RedstoneInterface;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
+import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 
@@ -44,14 +49,20 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.REDSTONE
  */
 public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable<TileEntityRedstoneInterface, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IDataDevice, IRedstoneConnector
 {
-	NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
-	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
-	private boolean refreshWireNetwork = false;
 	public boolean rsDirty = false;
+	public DataPacket storedData = new DataPacket(), storedRedstone = new DataPacket();
+	//false - storedRedstone, true - storedData
+	public boolean copySide = false;
+	public int productionProgress = 0;
+	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
+	NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
+	byte[] redstoneOutput = new byte[16];
+	private boolean refreshWireNetwork = false;
+	private boolean redstoneChanged = false;
 
 	public TileEntityRedstoneInterface()
 	{
-		super(MultiblockRedstoneInterface.instance, new int[]{1, 3, 2}, RedstoneInterface.energyCapacity, true);
+		super(MultiblockRedstoneInterface.instance, new int[]{1, 3, 2}, RedstoneInterface.energyCapacity, false);
 	}
 
 	@Override
@@ -62,7 +73,14 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		{
 			if(!descPacket&&nbt.hasKey("inventory"))
 				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 2);
-
+			if(nbt.hasKey("copySide"))
+				copySide = nbt.getBoolean("copySide");
+			if(nbt.hasKey("storedData"))
+				storedData.fromNBT(nbt.getCompoundTag("storedData"));
+			if(nbt.hasKey("storedRedstone"))
+				storedRedstone.fromNBT(nbt.getCompoundTag("storedRedstone"));
+			if(nbt.hasKey("productionProgress"))
+				productionProgress = nbt.getInteger("productionProgress");
 		}
 	}
 
@@ -80,6 +98,10 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		{
 			if(!descPacket)
 				nbt.setTag("inventory", Utils.writeInventory(getInventory()));
+			nbt.setBoolean("copySide", copySide);
+			nbt.setTag("storedData", storedData.toNBT());
+			nbt.setTag("storedRedstone", storedRedstone.toNBT());
+			nbt.setInteger("productionProgress", productionProgress);
 		}
 	}
 
@@ -88,9 +110,32 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	{
 		if(message.hasKey("inventory"))
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), 2);
+		if(message.hasKey("copySide"))
+			copySide = message.getBoolean("copySide");
+		if(message.hasKey("storedData"))
+			storedData.fromNBT(message.getCompoundTag("storedData"));
+		if(message.hasKey("storedRedstone"))
+			storedRedstone.fromNBT(message.getCompoundTag("storedRedstone"));
+		if(message.hasKey("productionProgress"))
+			productionProgress = message.getInteger("productionProgress");
 
 		super.receiveMessageFromServer(message);
 	}
+
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		if(message.hasKey("copySide"))
+			copySide = message.getBoolean("copySide");
+		if(message.hasKey("storedData"))
+			storedData.fromNBT(message.getCompoundTag("storedData"));
+		if(message.hasKey("storedRedstone"))
+			storedRedstone.fromNBT(message.getCompoundTag("storedRedstone"));
+	}
+
+	IItemHandler inventoryHandler = new IEInventoryHandler(2, this, 0, true, true);
+
 
 	@Override
 	public void update()
@@ -186,7 +231,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return stack.getItem() instanceof IMotorGear;
+		return stack.getItem() instanceof IDataStorageItem||stack.isEmpty();
 	}
 
 	@Override
@@ -311,9 +356,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		//TODO: Change connection offset
 		return new Vec3d(.5, .625, .5);
-
 	}
 
 	@Override
@@ -337,7 +380,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_SKYCRATE_STATION;
+		return IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA;
 	}
 
 	@Nullable
@@ -350,7 +393,147 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public void onReceive(DataPacket packet, @Nullable EnumFacing side)
 	{
+		if(pos==0&&side==facing.getOpposite())
+		{
+			for(char c : packet.variables.keySet())
+			{
+				if(storedData.variables.containsKey(c))
+				{
+					if(storedData.variables.get(c) instanceof DataPacketTypeArray)
+					{
+						DataPacketTypeArray a = (DataPacketTypeArray)storedData.variables.get(c);
+						DataPacketTypeInteger int1 = (DataPacketTypeInteger)a.value[0];
+						DataPacketTypeInteger int2 = (DataPacketTypeInteger)a.value[1];
+						redstoneOutput[int1.value] = getRedstoneFromPacket(int2.value, packet, c);
 
+					}
+					else
+						storedData.removeVariable(c);
+				}
+			}
+			master().redstoneChanged = true;
+			getTileForPos(4).getNetwork().updateValues();
+			master().redstoneChanged = false;
+		}
+	}
+
+	private byte getRedstoneFromPacket(int value, DataPacket packet, char c)
+	{
+		switch(value)
+		{
+			case 0:
+			{
+				return 0;
+			}
+			case 1:
+			{
+				if(packet.getPacketVariable(c) instanceof DataPacketTypeBoolean)
+					return (byte)(((DataPacketTypeBoolean)packet.getPacketVariable(c)).value?15: 0);
+				else
+					return 0;
+			}
+			case 2:
+			{
+				if(packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+				{
+					int i = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value;
+					return (byte)MathHelper.clamp(i, 0, 15);
+				}
+				else
+					return 0;
+			}
+			case 3:
+			{
+				if(packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+				{
+					int i = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value;
+					return (byte)MathHelper.clamp(((float)i/255f)*15, 0, 15);
+				}
+				else
+					return 0;
+			}
+			case 4:
+			{
+				if(packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+				{
+					int i = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value;
+					return (byte)MathHelper.clamp(((float)i/100f)*15, 0, 15);
+				}
+				else
+					return 0;
+			}
+			case 5:
+			{
+				if(packet.getPacketVariable(c) instanceof DataPacketTypeString)
+				{
+					String s = ((DataPacketTypeString)packet.getPacketVariable(c)).value;
+					switch(s)
+					{
+						case "on":
+							return 15;
+						case "off":
+							return 0;
+						case "low":
+							return 4;
+						case "high":
+							return 12;
+						case "med":
+							return 8;
+					}
+					return 0;
+				}
+				else
+					return 0;
+			}
+
+		}
+		return 0;
+	}
+
+	private IDataType getTypeFromRedstone(byte value, int type)
+	{
+		switch(type)
+		{
+			case 0:
+			{
+				return new DataPacketTypeNull();
+			}
+			case 1:
+			{
+				return new DataPacketTypeBoolean(value > 0);
+			}
+			case 2:
+			{
+				return new DataPacketTypeInteger(value);
+			}
+
+			case 3:
+			{
+				return new DataPacketTypeInteger((int)((float)value/15f*255));
+			}
+			case 4:
+			{
+				return new DataPacketTypeInteger((int)((float)value/15f*100));
+			}
+			case 5:
+			{
+				String s;
+				if(value==15)
+					s = "on";
+				else if(value >= 12)
+					s = "high";
+				else if(value >= 8)
+					s = "med";
+				else if(value >= 4)
+					s = "low";
+				else
+					s = "off";
+
+				return new DataPacketTypeString(s);
+
+			}
+		}
+		return new DataPacketTypeNull();
 	}
 
 	@Override
@@ -360,29 +543,24 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	}
 
 	@Override
-	public void setNetwork(RedstoneWireNetwork net)
-	{
-		wireNetwork = net;
-	}
-
-	@Override
 	public RedstoneWireNetwork getNetwork()
 	{
 		return wireNetwork;
 	}
 
 	@Override
+	public void setNetwork(RedstoneWireNetwork net)
+	{
+		wireNetwork = net;
+	}
+
+	@Override
 	public void onChange()
 	{
-		/*
-		if(!isInvalid()&&isRSOutput())
+		if(!master().redstoneChanged)
 		{
-			markDirty();
-			IBlockState stateHere = world.getBlockState(pos);
-			markContainingBlockForUpdate(stateHere);
-			markBlockForUpdate(pos.offset(facing), stateHere);
+			dataToRedstone();
 		}
-		 */
 	}
 
 	@Override
@@ -394,7 +572,45 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public void updateInput(byte[] signals)
 	{
-		//TODO: Input
+		for(int i = 0; i < 16; i += 1)
+		{
+			if(signals[i] < master().redstoneOutput[i])
+				signals[i] = master().redstoneOutput[i];
+		}
+
+	}
+
+	private void dataToRedstone()
+	{
+		TileEntityRedstoneInterface m = master();
+		if(m==null)
+			return;
+
+		if(m.storedRedstone.variables.size() < 1)
+			return;
+
+		DataPacket out = new DataPacket();
+		for(char c : DataPacket.varCharacters)
+		{
+			if(m.storedRedstone.variables.containsKey(c)&&m.storedRedstone.variables.get(c) instanceof DataPacketTypeArray)
+			{
+				DataPacketTypeArray a = (DataPacketTypeArray)m.storedRedstone.variables.get(c);
+				int i1 = ((DataPacketTypeInteger)a.value[0]).value;
+				int i2 = ((DataPacketTypeInteger)a.value[1]).value;
+
+				out.setVariable(c, getTypeFromRedstone((byte)getTileForPos(4).getNetwork().getPowerOutput(i1), i2));
+			}
+		}
+
+		if(out.variables.size() < 1)
+			return;
+
+		IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(master().getPos(), world, facing.getOpposite());
+
+		ImmersiveIntelligence.logger.info(conn);
+
+		if(conn!=null)
+			conn.sendPacket(out);
 	}
 
 }

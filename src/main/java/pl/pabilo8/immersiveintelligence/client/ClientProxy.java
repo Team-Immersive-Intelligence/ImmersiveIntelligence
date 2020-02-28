@@ -143,7 +143,7 @@ public class ClientProxy extends CommonProxy
 		WireApi.registerConnectorForRender("advanced_fluid_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		WireApi.registerConnectorForRender("chemical_dispenser", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 
-		WireApi.registerConnectorForRender("redstone_interface", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+		WireApi.registerConnectorForRender("redstone_data_interface", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 
 		WireApi.registerConnectorForRender("skycrate_station", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		WireApi.registerConnectorForRender("skycrate_post", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
@@ -221,8 +221,6 @@ public class ClientProxy extends CommonProxy
 				}
 				else
 				{
-					//Currently supports only 1-meta items
-					//TODO: EXPAND
 					if(ieMetaItem.specialModelMap.containsKey(0))
 					{
 						ModelLoaderRegistry.registerLoader(ieMetaItem.specialModelMap.get(0).getInstance());
@@ -328,8 +326,17 @@ public class ClientProxy extends CommonProxy
 			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
 				gui = new GuiAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
 
+			else if(ID==IIGuiList.GUI_PACKER&&te instanceof TileEntityPacker)
+				gui = new GuiPacker(player.inventory, (TileEntityPacker)te);
+			/*else if(ID==IIGuiList.GUI_UNPACKER&&te instanceof TileEntityUnpacker)
+				gui = new GuiUnpacker(player.inventory, (TileEntityUnpacker)te);*/
+
 			else if(ID==IIGuiList.GUI_DATA_MERGER&&te instanceof TileEntityDataMerger)
 				gui = new GuiDataMerger(player.inventory, (TileEntityDataMerger)te);
+			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA&&te instanceof TileEntityRedstoneInterface)
+				gui = new GuiDataRedstoneInterfaceData(player.inventory, (TileEntityRedstoneInterface)te);
+			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE&&te instanceof TileEntityRedstoneInterface)
+				gui = new GuiDataRedstoneInterfaceRedstone(player.inventory, (TileEntityRedstoneInterface)te);
 
 			else if(ID==IIGuiList.GUI_SKYCRATE_STATION&&te instanceof TileEntitySkyCrateStation)
 				gui = new GuiSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te);

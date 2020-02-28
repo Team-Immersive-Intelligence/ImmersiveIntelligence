@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPacker;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker;
@@ -64,11 +65,36 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker>
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:covered", EnumFacing.WEST);
 			GlStateManager.popMatrix();
 
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(3, 0.5f, -2.5);
+
+			switch(te.animation)
+			{
+				case 0:
+				{
+					GlStateManager.translate(-((float)te.processTime/(float)Packer.conveyorTime)*1.5f, 0f, 0);
+				}
+				break;
+				case 1:
+				{
+					GlStateManager.translate(-1.5f, 0f, 0f);
+				}
+				break;
+				case 2:
+				{
+					GlStateManager.translate(-1.5f-((float)te.processTime/(float)Packer.conveyorTime*1.5f), 0f, 0);
+				}
+				break;
+			}
+
+			GlStateManager.scale(0.85, 0.85, 0.85);
+			renderItem.renderItem(te.inventory.get(0), TransformType.NONE);
+			GlStateManager.popMatrix();
+
+			GlStateManager.pushMatrix();
 			GlStateManager.translate(-0.5f, 0.25f, 1f);
-			GlStateManager.translate(1f, 0f, -(float)te.processTime/(float)te.processTimeMax);
 
-			renderItem.renderItem(te.inventory.get(0), TransformType.GROUND);
-
+			GlStateManager.popMatrix();
 
 			GlStateManager.popMatrix();
 

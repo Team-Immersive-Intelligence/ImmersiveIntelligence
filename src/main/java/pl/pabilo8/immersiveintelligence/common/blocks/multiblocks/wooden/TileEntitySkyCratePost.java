@@ -274,9 +274,7 @@ public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<Tile
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		//TODO: Change connection offset
 		return new Vec3d(.5, .625, .5);
-
 	}
 
 	@Override

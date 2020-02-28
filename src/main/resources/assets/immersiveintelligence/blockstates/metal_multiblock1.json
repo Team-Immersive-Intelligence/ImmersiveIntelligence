@@ -10,8 +10,8 @@
   },
   "variants": {
     "type": {
-      "redstone_interface": {
-        "model": "immersiveintelligence:smartmodel/conn_redstone_interface"
+      "redstone_data_interface": {
+        "model": "immersiveintelligence:smartmodel/conn_redstone_data_interface"
       }
     },
     "facing": {

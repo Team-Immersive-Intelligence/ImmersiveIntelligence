@@ -36,8 +36,8 @@ public class IIGuiList
 	public static final int GUI_PRINTED_PAGE_CODE = 21;
 	public static final int GUI_PRINTED_PAGE_BLUEPRINT = 22;
 
-	public static final int GUI_REDSTONE_OUTPUT_MACHINE = 20;
-	public static final int GUI_ITEM_BUFFER = 21;
+	public static final int GUI_DATA_REDSTONE_INTERFACE_DATA = 20;
+	public static final int GUI_DATA_REDSTONE_INTERFACE_REDSTONE = 21;
 	//public static final int GUI_ARTILLERY_HOWITZER = 22;
 	//public static final int GUI_MISSILE_SILO = 23;
 	public static final int GUI_CHEMICAL_BATH = 24;
@@ -52,5 +52,6 @@ public class IIGuiList
 
 	public static final int GUI_GEARBOX = 32;
 
-
+	public static final int GUI_PACKER = 33;
+	public static final int GUI_UNPACKER = 34;
 }

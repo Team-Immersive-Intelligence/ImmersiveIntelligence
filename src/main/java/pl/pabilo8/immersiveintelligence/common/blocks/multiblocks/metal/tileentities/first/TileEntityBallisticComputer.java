@@ -238,7 +238,6 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 					conn.sendPacket(new_packet);
 				}
 			}
-			//TODO: make this work
 		}
 	}
 

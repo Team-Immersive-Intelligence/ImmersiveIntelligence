@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,12 +143,21 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 
 	public static boolean matchesMagazine(ItemStack stack, String casing)
 	{
-		return casing.equals(ImmersiveIntelligence.proxy.item_bullet_magazine.subNames[stack.getMetadata()]);
+		switch(stack.getMetadata())
+		{
+			case 0:
+				return casing.equals("machinegun_2bCal");
+			case 1:
+				return casing.equals("submachinegun_1bCal");
+			case 2:
+				return casing.equals("revolver_1bCal");
+		}
+		return false;
 	}
 
 	public static ItemStack getMagazine(String type, ItemStack bullet1, ItemStack bullet2, ItemStack bullet3, ItemStack bullet4)
 	{
-		ItemStack stack = new ItemStack(ImmersiveIntelligence.proxy.item_bullet_magazine, 1, ImmersiveIntelligence.proxy.item_bullet_magazine.getMetaBySubname(type));
+		ItemStack stack = new ItemStack(CommonProxy.item_bullet_magazine, 1, CommonProxy.item_bullet_magazine.getMetaBySubname(type));
 		NonNullList<ItemStack> l = NonNullList.withSize(getBulletCapactity(stack), ItemStack.EMPTY);
 		for(int i = 0; i < l.size(); i++)
 		{

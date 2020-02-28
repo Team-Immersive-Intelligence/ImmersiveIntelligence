@@ -48,7 +48,9 @@ public class ItemIIMaterial extends ItemIIBase
 				"spring_brass",
 				"spring_iron",
 				"spring_steel",
-				"carbon_brush"
+				"carbon_brush",
+				"wire_tungsten",
+				"glass_fibre_cable"
 		);
 	}
 }

@@ -380,13 +380,17 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 						break;
 						case 5:
 						{
+							out:
 							if(!world.isRemote)
 							{
+
 								Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(getWorld(), getBlockPosForPos(getConnectionPos()[0]));
 								if(conns!=null&&conns.size() > 0)
 								{
 									for(Connection c : conns)
 									{
+										if(c==null)
+											break out;
 										animation = 3;
 										EntitySkyCrate s = new EntitySkyCrate(world, c, mount.copy(), crate.copy(), getBlockPosForPos(getConnectionPos()[0]));
 										world.spawnEntity(s);
@@ -673,9 +677,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		//TODO: Change connection offset
 		return new Vec3d(.5, .625, .5);
-
 	}
 
 	@Override

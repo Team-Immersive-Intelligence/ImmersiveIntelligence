@@ -18,7 +18,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityConveyorScanner;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock1;
 
@@ -44,7 +43,7 @@ public class MultiblockRedstoneInterface implements IMultiblock
 		structure[0][2][0] = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_REDSTONE.getMeta());
 	}
 
-	TileEntityConveyorScanner te;
+	TileEntityRedstoneInterface te;
 
 	@Override
 	public String getUniqueName()
@@ -197,7 +196,7 @@ public class MultiblockRedstoneInterface implements IMultiblock
 	{
 		if(te==null)
 		{
-			te = new TileEntityConveyorScanner();
+			te = new TileEntityRedstoneInterface();
 			te.facing = EnumFacing.SOUTH;
 		}
 

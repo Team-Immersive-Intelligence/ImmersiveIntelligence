@@ -596,7 +596,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 	public boolean shoot(int magazine)
 	{
-		//TODO: Shooting?
+		//TODO: Shooting sound
 
 		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
 			return false;

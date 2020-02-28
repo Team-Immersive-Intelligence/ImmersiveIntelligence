@@ -512,7 +512,6 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 
 					if(shouldIgnite)
 						chem.setFire(10);
-					chem.setTickLimit(1024);
 					world.spawnEntity(chem);
 				}
 				if(world.getTotalWorldTime()%4==0)

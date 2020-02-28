@@ -342,7 +342,6 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 			player.setActiveHand(hand);
 			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 		}
-		ImmersiveIntelligence.logger.info("fail!");
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, player.getHeldItem(hand));
 	}
 

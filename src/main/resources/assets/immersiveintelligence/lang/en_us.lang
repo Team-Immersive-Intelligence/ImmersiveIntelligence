@@ -22,6 +22,8 @@ item.immersiveintelligence.material.processor_electronic_element.name=Processor
 item.immersiveintelligence.material.compact_electric_engine.name=Compact Electric Engine
 item.immersiveintelligence.material.compact_electric_engine_advanced.name=Advanced Compact Electric Engine
 item.immersiveintelligence.material.carbon_brush.name=Carbon Brush
+item.immersiveintelligence.material.wire_tungsten.name=Tungsten Wire
+item.immersiveintelligence.material.glass_fibre_cable.name=Glass Fibre Cable
 
 item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
 
@@ -234,6 +236,16 @@ tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Inpu
 tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data Input Machine - Programming
 tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Data Input Machine - Editing a Variable
 
+tile.immersiveintelligence.metal_multiblock.redstone_interface.data=Redstone Data Interface - Data
+tile.immersiveintelligence.metal_multiblock.redstone_interface.redstone=Redstone Data Interface - Redstone
+
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.0=None
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.1=Boolean
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.2=Int. (0-15)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.3=Int. (0-255)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.4=Int. (0-100)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.5=String
+
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Arithmetic Logic Machine - Storage
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Arithmetic Logic Machine - Programming
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithmetic Logic Machine - Editing an Expression
@@ -267,6 +279,10 @@ tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Ballistic Co
 tile.immersiveintelligence.metal_multiblock.missile_silo.name=Missile Silo
 tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Ammunition Factory
 tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Scanning Conveyor
+tile.immersiveintelligence.metal_multiblock.packer.name=Packer
+tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Railway Packer
+tile.immersiveintelligence.metal_multiblock.unpacker.name=Unpacker
+tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Railway Unpacker
 
 tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Redstone-Data Interface
 
@@ -285,6 +301,11 @@ desc.immersiveengineering.info.multiblock.II:BallisticComputer=Ballistic Compute
 desc.immersiveengineering.info.multiblock.II:MissileSilo=Missile Silo
 desc.immersiveengineering.info.multiblock.II:AmmunitionFactory=Ammunition Factory
 desc.immersiveengineering.info.multiblock.II:ConveyorScanner=Scanning Conveyor
+desc.immersiveengineering.info.multiblock.II:Packer=Packer
+desc.immersiveengineering.info.multiblock.II:MinecartPacker=Railway Packer
+desc.immersiveengineering.info.multiblock.II:Unacker=Unpacker
+desc.immersiveengineering.info.multiblock.II:MinecartUnpacker=Railway Unpacker
+
 desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data Interface
 
 //Fluids
@@ -350,6 +371,8 @@ desc.immersiveintelligence.assembly_scheme.tools=Tools used:
 
 desc.immersiveintelligence.storage_module=Storage
 desc.immersiveintelligence.variables_module=Variables
+desc.immersiveintelligence.data_module=Data
+desc.immersiveintelligence.redstone_module=Redstone
 
 desc.immersiveintelligence.variable_type=Type:
 desc.immersiveintelligence.variable_add_desc=Add a new variable
@@ -399,6 +422,9 @@ info.immersiveintelligence.debugger_mode=Debugger Mode: %s
 info.immersiveintelligence.debugger_mode.0=Transceiver
 info.immersiveintelligence.debugger_mode.1=Transmitter
 info.immersiveintelligence.debugger_mode.2=Receiver
+
+info.immersiveintelligence.tachometer_message.basic=Internal: speed %s RPM / torque %s Nm.
+info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s RPM / torque %s Nm. External: speed %s RPM / torque %s Nm.
 
 //Rotational Energy
 
