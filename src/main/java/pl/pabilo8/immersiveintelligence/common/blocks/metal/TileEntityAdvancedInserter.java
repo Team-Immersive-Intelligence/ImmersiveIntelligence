@@ -7,7 +7,11 @@ import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IComparatorOverride;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
@@ -24,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -33,7 +38,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AdvancedInserter;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -53,7 +57,7 @@ import java.util.Set;
 /**
  * Created by Pabilo8 on 15-07-2019.
  */
-public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector, ISoundTile
+public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
 {
 	public static ItemStack conn_data, conn_mv;
 	public int energyStorage = 0;
@@ -404,17 +408,15 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 		if(pickProgress < 1)
 			pickProgress = 0;
 
-		if(world.isRemote)
+		if(world.isRemote&&world.getTotalWorldTime()%10==0)
 		{
 			if(armDirection!=nextDirection)
 			{
-				ImmersiveEngineering.proxy.stopTileSound(IISounds.inserter_forward.getSoundName().toString(), this);
-				ImmersiveEngineering.proxy.handleTileSound(IISounds.inserter_backward, this, true, .5f, 1);
+				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_backward, SoundCategory.BLOCKS, .25f, 1);
 			}
 			else if(pickProgress!=nextPickProgress)
 			{
-				ImmersiveEngineering.proxy.stopTileSound(IISounds.inserter_backward.getSoundName().toString(), this);
-				ImmersiveEngineering.proxy.handleTileSound(IISounds.inserter_forward, this, true, .5f, 1);
+				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_forward, SoundCategory.BLOCKS, .25f, 1);
 			}
 		}
 
@@ -774,19 +776,6 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 
 		}
 
-		return false;
-	}
-
-	@Override
-	public boolean shoudlPlaySound(String sound)
-	{
-		switch(sound)
-		{
-			case ImmersiveIntelligence.MODID+":inserter_forward":
-				return armDirection!=nextDirection;
-			case ImmersiveIntelligence.MODID+":inserter_backward":
-				return armDirection==nextDirection&&pickProgress!=nextPickProgress;
-		}
 		return false;
 	}
 }

@@ -3,9 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileent
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -34,7 +34,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
@@ -52,7 +51,7 @@ import java.util.List;
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
-public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileEntityArtilleryHowitzer, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IBooleanAnimatedPartsBlock, IConveyorAttachable, ISoundTile
+public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileEntityArtilleryHowitzer, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IBooleanAnimatedPartsBlock, IConveyorAttachable
 {
 	public boolean active = false;
 
@@ -67,7 +66,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	//0 - input, 11 - output 0-> 5 6->11
 	public IItemHandler inventoryHandler = new IEInventoryHandler(12, this, 0, true, true);
 	boolean update = false;
-
 
 	public TileEntityArtilleryHowitzer()
 	{
@@ -193,42 +191,38 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 		if(world.isRemote)
 		{
-			TileEntityArtilleryHowitzer centerTile = getTileForPos(526);
-			TileEntityArtilleryHowitzer doorTile = getTileForPos(525);
-			if(doorTile!=null)
-			{
-				boolean platform_ok = animation==0||platformHeight==((animation==1||animation==2)?0f: 5.25f);
-				boolean yaw_ok = turretYaw==plannedYaw;
-				boolean pitch_ok = turretPitch==plannedPitch;
-				if(platform_ok)
-				{
-					if(!yaw_ok)
-					{
-						ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_rotation_h.getSoundName().toString(), centerTile);
-						ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_rotation_v, centerTile, true, .5f, 1);
-					}
-					else if(!pitch_ok)
-					{
-						ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_rotation_v.getSoundName().toString(), centerTile);
-						ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_rotation_h, centerTile, true, .5f, 1);
-					}
-				}
-				else
-				{
-					ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_rotation_v.getSoundName().toString(), centerTile);
-					ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_rotation_h, centerTile, true, .5f, 1);
-				}
 
-				if(isDoorOpened&&doorAngle < 155f)
+			boolean platform_ok = animation==0||platformHeight==((animation==1||animation==2)?0f: 5.25f);
+			boolean yaw_ok = turretYaw==plannedYaw;
+			boolean pitch_ok = turretPitch==plannedPitch;
+			if(platform_ok)
+			{
+				if(!yaw_ok)
 				{
-					ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_door_close.getSoundName().toString(), doorTile);
-					ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_door_open, doorTile, true, 1f, 1);
+					if(world.getTotalWorldTime()%20==0)
+						world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_v, SoundCategory.BLOCKS, .5f, 1);
 				}
-				else if(!isDoorOpened&&doorAngle > 0f)
+				else if(!pitch_ok)
 				{
-					ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_door_open.getSoundName().toString(), doorTile);
-					ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_door_close, doorTile, true, 1f, 1);
+					if(world.getTotalWorldTime()%20==0)
+						world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
 				}
+			}
+			else
+			{
+				if(world.getTotalWorldTime()%20==0)
+					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
+			}
+
+			if(isDoorOpened&&doorAngle < 155f)
+			{
+				if(world.getTotalWorldTime()%20==0)
+					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_open, SoundCategory.BLOCKS, .5f, 1);
+			}
+			else if(!isDoorOpened&&doorAngle > 0f)
+			{
+				if(world.getTotalWorldTime()%20==0)
+					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_close, SoundCategory.BLOCKS, .5f, 1);
 			}
 		}
 
@@ -867,27 +861,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		if(pos==2)
 			return new EnumFacing[]{mirrored?facing.rotateYCCW(): facing.rotateY()};
 		return new EnumFacing[0];
-	}
-
-	@Override
-	public boolean shoudlPlaySound(String sound)
-	{
-		TileEntityArtilleryHowitzer master = master();
-		if(master==null)
-			return false;
-		switch(sound)
-		{
-			case ImmersiveIntelligence.MODID+":howitzer_door_open":
-				return (master.isDoorOpened&&master.doorAngle < 155f);
-			case ImmersiveIntelligence.MODID+":howitzer_door_close":
-				return (!master.isDoorOpened&&doorAngle > 0f);
-
-			case ImmersiveIntelligence.MODID+":howitzer_rotation_h":
-				return (animation!=0&&platformHeight!=((animation==1||animation==2)?0f: 5.25f))||!((master.turretYaw==master.plannedYaw)&&(master.turretPitch!=master.plannedPitch));
-			case ImmersiveIntelligence.MODID+":howitzer_rotation_v":
-				return master.turretYaw!=master.plannedYaw;
-		}
-		return false;
 	}
 
 	@Override
