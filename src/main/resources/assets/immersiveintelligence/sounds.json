@@ -19,5 +19,96 @@
       "immersiveintelligence:paper_eject"
     ],
     "subtitle": "subtitle.immersiveintelligence.paper_eject"
+  },
+  "machinegun_shot": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:machinegun/mg_default0",
+      "immersiveintelligence:machinegun/mg_default1",
+      "immersiveintelligence:machinegun/mg_default2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.machinegun_shot_def"
+  },
+  "machinegun_shot_heavybarrel": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:machinegun/mg_heavybarrel0",
+      "immersiveintelligence:machinegun/mg_heavybarrel1",
+      "immersiveintelligence:machinegun/mg_heavybarrel2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.machinegun_shot_hb"
+  },
+  "machinegun_shot_watercooled": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:machinegun/mg_watercooled0",
+      "immersiveintelligence:machinegun/mg_watercooled1"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.machinegun_shot_wc"
+  },
+  "machinegun_reload": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:machinegun/mg_reload"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.machinegun_reload"
+  },
+  "machinegun_unload": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:machinegun/mg_unload"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.machinegun_reload"
+  },
+  "howitzer_shot": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/howitzer0",
+      "immersiveintelligence:howitzer/howitzer1",
+      "immersiveintelligence:howitzer/howitzer2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_shot"
+  },
+  "howitzer_rotation_h": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/rotation_h"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_rotating"
+  },
+  "howitzer_rotation_v": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/rotation_v"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_rotating"
+  },
+  "howitzer_door_open": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/howitzer_door_open"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_door_open"
+  },
+  "howitzer_door_close": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/howitzer_door_close"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_door_close"
+  },
+  "inserter_forward": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:inserter/inserter_forward"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.inserter"
+  },
+  "inserter_backward": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:inserter/inserter_backward"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.inserter"
   }
 }

@@ -262,6 +262,8 @@ public class Config
 			@SubConfig
 			public static AdvancedFluidInserter advanced_fluid_inserter;
 			@SubConfig
+			public static ChemicalDispenser chemical_dispenser;
+			@SubConfig
 			public static SmallDataBuffer small_data_buffer;
 			@SubConfig
 			public static SkycrateStation skycrate_station;
@@ -469,8 +471,17 @@ public class Config
 				@Comment({"Energy capacity of the ammunition factory (in IF)."})
 				public static int energyCapacity = 32000;
 
-				@Comment({"Energy usage per one bullet making process (in IF)."})
-				public static int energyUsage = 8000;
+				@Comment({"Energy usage per one tick of the bullet core making process (in IF)."})
+				public static int energyUsageCore = 120;
+
+				@Comment({"Energy usage per one tick of putting a core into a casing (in IF)."})
+				public static int energyUsageCasing = 120;
+
+				@Comment({"Energy usage per one tick of putting gunpowder into a casing (in IF)."})
+				public static int energyUsageGunpowder = 120;
+
+				@Comment({"Energy usage per one tick of the paint conveyor process (in IF)."})
+				public static int energyUsagePaint = 120;
 
 				@Comment({"Component capacity of the ammunition factory (in Pabilo8's Unit of Measurement™)."})
 				public static int componentCapacity = 48;
@@ -550,6 +561,22 @@ public class Config
 
 				@Comment({"Max fluid output (in milibuckets per tick)"})
 				public static int maxOutput = 240;
+
+			}
+
+			public static class ChemicalDispenser
+			{
+				@Comment({"Energy capacity of the chemical dispenser."})
+				public static int energyCapacity = 2048;
+
+				@Comment({"Energy usage of the chemical dispenser per one shot."})
+				public static int energyUsage = 128;
+
+				@Comment({"How long does it take for the chemical dispenser to rotate 45 degrees horizontally (in ticks)"})
+				public static int rotateHTime = 80;
+
+				@Comment({"How long does it take for the chemical dispenser to rotate 45 degrees vertically (in ticks)"})
+				public static int rotateVTime = 100;
 
 			}
 

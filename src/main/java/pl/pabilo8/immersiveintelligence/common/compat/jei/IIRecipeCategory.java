@@ -5,8 +5,6 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeWrapperFactory;
-import mezz.jei.gui.elements.DrawableIngredient;
-import mezz.jei.plugins.vanilla.ingredients.item.ItemStackRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -35,18 +33,17 @@ public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements I
 		this.recipeClass = recipeClass;
 		this.displayStacks = displayStacks;
 	}
-
 	public void addCatalysts(IModRegistry registry)
 	{
 		for(ItemStack stack : displayStacks)
-			registry.addRecipeCatalyst(stack, this.getUid());
+			registry.addRecipeCategoryCraftingItem(stack, getUid());
 	}
 
 	@Nullable
 	@Override
 	public IDrawable getIcon()
 	{
-		return new DrawableIngredient<ItemStack>(displayStacks[0], new ItemStackRenderer());
+		return null;
 	}
 
 	@Override
@@ -78,16 +75,19 @@ public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements I
 		return Collections.emptyList();
 	}
 
+	//	@Override
 	public Class<T> getRecipeClass()
 	{
 		return this.recipeClass;
 	}
 
+	//	@Override
 	public String getRecipeCategoryUid()
 	{
 		return "ii."+uniqueName;
 	}
 
+	//	@Override
 	public boolean isRecipeValid(T recipe)
 	{
 		return true;

@@ -10,8 +10,15 @@ import java.util.Locale;
  */
 public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockIEBase.IBlockEnum
 {
-	SKYCRATE_POST,
-	SKYCRATE_STATION;
+	SKYCRATE_POST(false),
+	SKYCRATE_STATION(false);
+
+	private boolean needsCustomState;
+
+	IIBlockTypes_WoodenMultiblock(boolean needsCustomState)
+	{
+		this.needsCustomState = needsCustomState;
+	}
 
 	@Override
 	public String getName()
@@ -28,6 +35,16 @@ public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockI
 	@Override
 	public boolean listForCreative()
 	{
-		return true;
+		return false;
+	}
+
+	public boolean needsCustomState()
+	{
+		return this.needsCustomState;
+	}
+
+	public String getCustomState()
+	{
+		return getName().toLowerCase();
 	}
 }

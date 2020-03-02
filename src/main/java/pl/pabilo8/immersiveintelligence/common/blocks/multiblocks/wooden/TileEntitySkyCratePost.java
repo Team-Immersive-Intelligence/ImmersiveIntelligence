@@ -291,7 +291,9 @@ public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<Tile
 		{
 			if(!(other instanceof ISkyCrateConnector))
 			{
-				for(Connection conn : ImmersiveNetHandler.INSTANCE.getConnections(world, getPos()))
+				Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
+				if(conns!=null)
+					for(Connection conn : conns)
 					ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(conn, world, getBlockPosForPos(1));
 			}
 		}

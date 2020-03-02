@@ -25,7 +25,6 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRecipe, ElectrolyzerRecipeWrapper>
@@ -39,13 +38,6 @@ public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRec
 		super("electrolyzer", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name", helper.createBlankDrawable(140, 50), ElectrolyzerRecipe.class, new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta()));
 		tankOverlay = helper.createDrawable(background, 0, 52, 20, 51, -2, 2, -2, 2);
 		machineStack = new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta());
-	}
-
-	@Nullable
-	@Override
-	public IDrawable getIcon()
-	{
-		return super.getIcon();
 	}
 
 	@Override

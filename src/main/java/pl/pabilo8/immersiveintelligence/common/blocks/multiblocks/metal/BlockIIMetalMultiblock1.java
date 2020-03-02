@@ -8,7 +8,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -53,12 +52,8 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 	@Override
 	public String getCustomStateMapping(int meta, boolean itemBlock)
 	{
-		return null;
-	}
-
-	@Override
-	public CreativeTabs getCreativeTab()
-	{
+		if(IIBlockTypes_MetalMultiblock1.values()[meta].needsCustomState())
+			return IIBlockTypes_MetalMultiblock1.values()[meta].getCustomState();
 		return null;
 	}
 

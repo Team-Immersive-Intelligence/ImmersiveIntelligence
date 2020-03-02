@@ -326,29 +326,57 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 					{
 						if(itemsToPack > 0)
 						{
-							if(processTime >= Packer.timeInsertion)
+							if(energyStorage.getEnergyStored() >= Packer.energyUsage)
 							{
-								processTime = 0;
-								itemsToPack -= 1;
-
-							}
-							else if(processTime > 0)
-							{
-								processTime += 1;
-							}
-							else
-							{
-								switch(packingMode)
+								energyStorage.extractEnergy(Packer.energyUsage, false);
+								if(processTime >= Packer.timeInsertion)
 								{
-									//One by one
-									case 0:
+									processTime = 0;
+									itemsToPack -= 1;
+
+								}
+								else if(processTime > 0)
+								{
+									processTime += 1;
+								}
+								else
+								{
+									switch(packingMode)
 									{
-										s:
-										for(int i = 1; i < inventory.size(); i += 1)
+										//One by one
+										case 0:
 										{
-											if(!inventory.get(i).isEmpty())
+											s:
+											for(int i = 1; i < inventory.size(); i += 1)
 											{
-												ItemStack newStack = inventory.get(i).copy();
+												if(!inventory.get(i).isEmpty())
+												{
+													ItemStack newStack = inventory.get(i).copy();
+													int initialSize = Math.min(inventory.get(i).getCount(), insertQuantity);
+													newStack.setCount(initialSize);
+													for(Entry<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> p : predicates.entrySet())
+														if(p.getKey().test(inventory.get(0)))
+														{
+															ImmersiveIntelligence.logger.info("otak2!");
+															newStack = p.getValue().apply(new Tuple<ItemStack, ItemStack>(inventory.get(0), newStack));
+															newStack.setCount(initialSize-newStack.getCount());
+															inventory.get(i).shrink(initialSize-newStack.getCount());
+															break s;
+														}
+												}
+											}
+										}
+										break;
+										//One of every
+										case 1:
+										{
+											s:
+											for(int i = 1; i < inventory.size(); i += 1)
+											{
+												int j = (i+27-(itemsToPack%inventory.size()))%inventory.size();
+												if(j==0)
+													j = 1;
+												ItemStack newStack = inventory.get(j).copy();
 												int initialSize = Math.min(inventory.get(i).getCount(), insertQuantity);
 												newStack.setCount(initialSize);
 												for(Entry<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> p : predicates.entrySet())
@@ -357,39 +385,15 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 														ImmersiveIntelligence.logger.info("otak2!");
 														newStack = p.getValue().apply(new Tuple<ItemStack, ItemStack>(inventory.get(0), newStack));
 														newStack.setCount(initialSize-newStack.getCount());
-														inventory.get(i).shrink(initialSize-newStack.getCount());
+														inventory.get(j).shrink(initialSize-newStack.getCount());
 														break s;
 													}
 											}
 										}
+										break;
 									}
-									break;
-									//One of every
-									case 1:
-									{
-										s:
-										for(int i = 1; i < inventory.size(); i += 1)
-										{
-											int j = (i+27-(itemsToPack%inventory.size()))%inventory.size();
-											if(j==0)
-												j = 1;
-											ItemStack newStack = inventory.get(j).copy();
-											int initialSize = Math.min(inventory.get(i).getCount(), insertQuantity);
-											newStack.setCount(initialSize);
-											for(Entry<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> p : predicates.entrySet())
-												if(p.getKey().test(inventory.get(0)))
-												{
-													ImmersiveIntelligence.logger.info("otak2!");
-													newStack = p.getValue().apply(new Tuple<ItemStack, ItemStack>(inventory.get(0), newStack));
-													newStack.setCount(initialSize-newStack.getCount());
-													inventory.get(j).shrink(initialSize-newStack.getCount());
-													break s;
-												}
-										}
-									}
-									break;
+									processTime = Packer.timeInsertion;
 								}
-								processTime = Packer.timeInsertion;
 							}
 						}
 						else

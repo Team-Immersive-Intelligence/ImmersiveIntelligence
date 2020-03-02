@@ -10,22 +10,29 @@ import java.util.Locale;
  */
 public enum IIBlockTypes_MetalMultiblock0 implements IStringSerializable, BlockIEBase.IBlockEnum
 {
-	RADIO_STATION,
-	PRINTING_PRESS,
-	DATA_INPUT_MACHINE,
-	ARITHMETIC_LOGIC_MACHINE,
-	CHEMICAL_BATH,
-	ELECTROLYZER,
-	PRECISSION_ASSEMBLER,
-	BALLISTIC_COMPUTER,
-	ARTILLERY_HOWITZER,
-	PERISCOPE,
-	CONVEYOR_SCANNER,
-	AMMUNITION_FACTORY,
-	PACKER,
-	UNPACKER,
-	MINECART_PACKER,
-	MINECART_UNPACKER;
+	RADIO_STATION(false),
+	PRINTING_PRESS(true),
+	DATA_INPUT_MACHINE(false),
+	ARITHMETIC_LOGIC_MACHINE(false),
+	CHEMICAL_BATH(true),
+	ELECTROLYZER(true),
+	PRECISSION_ASSEMBLER(true),
+	BALLISTIC_COMPUTER(false),
+	ARTILLERY_HOWITZER(false),
+	PERISCOPE(false),
+	CONVEYOR_SCANNER(false),
+	AMMUNITION_FACTORY(false),
+	PACKER(true),
+	UNPACKER(true),
+	MINECART_PACKER(false),
+	MINECART_UNPACKER(false);
+
+	private boolean needsCustomState;
+
+	IIBlockTypes_MetalMultiblock0(boolean needsCustomState)
+	{
+		this.needsCustomState = needsCustomState;
+	}
 
 	@Override
 	public String getName()
@@ -42,6 +49,16 @@ public enum IIBlockTypes_MetalMultiblock0 implements IStringSerializable, BlockI
 	@Override
 	public boolean listForCreative()
 	{
-		return true;
+		return false;
+	}
+
+	public boolean needsCustomState()
+	{
+		return this.needsCustomState;
+	}
+
+	public String getCustomState()
+	{
+		return getName().toLowerCase();
 	}
 }

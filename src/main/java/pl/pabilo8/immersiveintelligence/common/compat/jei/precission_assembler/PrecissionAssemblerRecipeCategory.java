@@ -9,7 +9,6 @@
 package pl.pabilo8.immersiveintelligence.common.compat.jei.precission_assembler;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
@@ -23,8 +22,6 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
-import javax.annotation.Nullable;
-
 public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<PrecissionAssemblerRecipe, PrecissionAssemblerRecipeWrapper>
 {
 	public static ResourceLocation background = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/jei_stuff.png");
@@ -34,13 +31,6 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 	{
 		super("precissionassembler", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name", helper.createBlankDrawable(156, 60), PrecissionAssemblerRecipe.class, new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta()));
 		machineStack = new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta());
-	}
-
-	@Nullable
-	@Override
-	public IDrawable getIcon()
-	{
-		return super.getIcon();
 	}
 
 	@Override

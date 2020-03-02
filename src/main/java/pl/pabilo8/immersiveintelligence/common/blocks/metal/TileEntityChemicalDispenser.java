@@ -35,7 +35,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalDispenser;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
@@ -93,15 +93,15 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	@Override
 	public int outputEnergy(int amount, boolean simulate, int energyType)
 	{
-		if(amount > 0&&energyStorage < Inserter.energyCapacity)
+		if(amount > 0&&energyStorage < ChemicalDispenser.energyCapacity)
 		{
 			if(!simulate)
 			{
-				int rec = Math.min(Inserter.energyCapacity-energyStorage, Inserter.energyUsage);
+				int rec = Math.min(ChemicalDispenser.energyCapacity-energyStorage, ChemicalDispenser.energyUsage);
 				energyStorage += rec;
 				return rec;
 			}
-			return Math.min(Inserter.energyCapacity-energyStorage, Inserter.energyUsage);
+			return Math.min(ChemicalDispenser.energyCapacity-energyStorage, ChemicalDispenser.energyUsage);
 		}
 		return 0;
 	}
@@ -448,20 +448,22 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	public void update()
 	{
 		if(plannedPitch > pitch)
-			pitch += 0.5f;
+			pitch += 45f/(ChemicalDispenser.rotateVTime/20f);
 		if(plannedPitch < pitch)
-			pitch -= 0.5f;
+			pitch -= 45f/(ChemicalDispenser.rotateVTime/20f);
 
 		if(plannedPitch==Math.round(pitch/10)*10)
 			pitch = plannedPitch;
+		pitch = MathHelper.clamp(pitch, -45, 45);
 
 		if(plannedYaw > yaw)
-			yaw += 1f;
+			yaw += 45f/(ChemicalDispenser.rotateHTime/20f);
 		if(plannedYaw < yaw)
-			yaw -= 1f;
+			yaw -= 45f/(ChemicalDispenser.rotateHTime/20f);
 
 		if(plannedYaw==Math.round(yaw/10)*10)
 			yaw = plannedYaw;
+		yaw = MathHelper.clamp(yaw, -45, 45);
 
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
 		{
@@ -473,8 +475,9 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		{
 			int consumed = IEConfig.Tools.chemthrower_consumption;
 			FluidStack fs = tank.getFluid();
-			if(Math.min(consumed, plannedAmount) <= fs.amount)
+			if(energyStorage >= ChemicalDispenser.energyUsage&&Math.min(consumed, plannedAmount) <= fs.amount)
 			{
+				energyStorage -= ChemicalDispenser.energyUsage;
 				Vec3i vi = facing.getOpposite().getDirectionVec();
 				Vec3d v = new Vec3d(vi.getX(), vi.getY(), vi.getZ()).rotateYaw((float)Math.toRadians(yaw)*((facing.getAxisDirection()==AxisDirection.POSITIVE)?-1: 1));
 

@@ -700,7 +700,9 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 		{
 			if(!(other instanceof ISkyCrateConnector))
 			{
-				for(Connection conn : ImmersiveNetHandler.INSTANCE.getConnections(world, getPos()))
+				Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
+				if(conns!=null)
+					for(Connection conn : conns)
 					ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(conn, world, getBlockPosForPos(10));
 			}
 		}
@@ -709,21 +711,22 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(pos==20&&!world.isRemote)
+		TileEntitySkyCrateStation master = master();
+		if(pos==20&&master!=null&&!world.isRemote)
 		{
-			if(master().banner.isEmpty()&&heldItem.getItem()==Items.BANNER)
+			if(master.banner.isEmpty()&&heldItem.getItem()==Items.BANNER)
 			{
-				master().banner = heldItem.copy();
-				master().banner.setCount(1);
+				master.banner = heldItem.copy();
+				master.banner.setCount(1);
 				heldItem.shrink(1);
-				master().doGraphicalUpdates(0);
+				master.doGraphicalUpdates(0);
 				return true;
 			}
-			else if(!master().banner.isEmpty()&&Utils.isWirecutter(heldItem))
+			else if(!master.banner.isEmpty()&&Utils.isWirecutter(heldItem))
 			{
-				player.inventory.addItemStackToInventory(master().banner.copy());
-				master().banner = ItemStack.EMPTY;
-				master().doGraphicalUpdates(0);
+				player.inventory.addItemStackToInventory(master.banner.copy());
+				master.banner = ItemStack.EMPTY;
+				master.doGraphicalUpdates(0);
 				return true;
 			}
 		}

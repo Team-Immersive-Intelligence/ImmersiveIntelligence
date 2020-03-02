@@ -20,6 +20,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -33,11 +34,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -188,6 +191,47 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		if(isDummy())
 			return;
 
+		if(world.isRemote)
+		{
+			TileEntityArtilleryHowitzer centerTile = getTileForPos(526);
+			TileEntityArtilleryHowitzer doorTile = getTileForPos(525);
+			if(doorTile!=null)
+			{
+				boolean platform_ok = animation==0||platformHeight==((animation==1||animation==2)?0f: 5.25f);
+				boolean yaw_ok = turretYaw==plannedYaw;
+				boolean pitch_ok = turretPitch==plannedPitch;
+				if(platform_ok)
+				{
+					if(!yaw_ok)
+					{
+						ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_rotation_h.getSoundName().toString(), centerTile);
+						ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_rotation_v, centerTile, true, .5f, 1);
+					}
+					else if(!pitch_ok)
+					{
+						ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_rotation_v.getSoundName().toString(), centerTile);
+						ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_rotation_h, centerTile, true, .5f, 1);
+					}
+				}
+				else
+				{
+					ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_rotation_v.getSoundName().toString(), centerTile);
+					ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_rotation_h, centerTile, true, .5f, 1);
+				}
+
+				if(isDoorOpened&&doorAngle < 155f)
+				{
+					ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_door_close.getSoundName().toString(), doorTile);
+					ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_door_open, doorTile, true, 1f, 1);
+				}
+				else if(!isDoorOpened&&doorAngle > 0f)
+				{
+					ImmersiveEngineering.proxy.stopTileSound(IISounds.howitzer_door_open.getSoundName().toString(), doorTile);
+					ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_door_close, doorTile, true, 1f, 1);
+				}
+			}
+		}
+
 		if(!world.isRemote&&(isDoorOpened^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]))))
 		{
 			isDoorOpened = world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]));
@@ -196,9 +240,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 
 		if(isDoorOpened&&doorAngle < 155f)
-		{
 			doorAngle = Math.min(doorAngle+0.25f, 155f);
-		}
+
 		if(!isDoorOpened)
 		{
 			platformHeight = Math.max(0, platformHeight-(5/(float)ArtilleryHowitzer.platformTime));
@@ -211,6 +254,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 				update = true;
 			if(doorAngle > 0f)
 				doorAngle = Math.max(doorAngle-0.5f, 0f);
+
 		}
 
 		if(turretYaw!=plannedYaw&&!(animation==3&&platformHeight!=5.25f))
@@ -228,7 +272,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 				turretYaw = turretYaw%360;
 				update = true;
 			}
-
 
 		}
 		else if(turretPitch!=plannedPitch&&!(animation==3&&platformHeight!=5.25f))
@@ -254,7 +297,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 			if(animation==1||animation==2)
 			{
 				plannedPitch = 0;
-				plannedYaw = facing.getHorizontalAngle() > 180?360f-facing.getHorizontalAngle(): facing.getHorizontalAngle();
+				plannedYaw = facing.getOpposite().getHorizontalAngle() > 180?360f-facing.getOpposite().getHorizontalAngle(): facing.getOpposite().getHorizontalAngle();
 
 				if(turretYaw==plannedYaw&&turretPitch==plannedPitch&&energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsageLoader)
 				{
@@ -350,6 +393,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 							Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(3f, true_angle, true_angle2);
 							world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, 0, 0, 0);
+							world.playSound(null, getPos(), IISounds.howitzer_shot, SoundCategory.BLOCKS, 1F, 1);
 
 							if(!world.isRemote)
 							{
@@ -366,8 +410,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 								}
 								a.world.spawnEntity(a);
 
-								ItemStack casing = ItemIIBullet.getCasing(bullet).getStack(1);
-								bullet = casing;
+								bullet = ItemIIBullet.getCasing(bullet).getStack(1);
 							}
 
 						}
@@ -435,31 +478,31 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 			if(inventoryHandler.getStackInSlot(5).isEmpty())
 			{
 				ItemStack stack = inventoryHandler.extractItem(4, 1, false);
-				stack = inventoryHandler.insertItem(5, stack, false);
+				inventoryHandler.insertItem(5, stack, false);
 			}
 
 			if(inventoryHandler.getStackInSlot(4).isEmpty())
 			{
 				ItemStack stack = inventoryHandler.extractItem(3, 1, false);
-				stack = inventoryHandler.insertItem(4, stack, false);
+				inventoryHandler.insertItem(4, stack, false);
 			}
 
 			if(inventoryHandler.getStackInSlot(3).isEmpty())
 			{
 				ItemStack stack = inventoryHandler.extractItem(2, 1, false);
-				stack = inventoryHandler.insertItem(3, stack, false);
+				inventoryHandler.insertItem(3, stack, false);
 			}
 
 			if(inventoryHandler.getStackInSlot(2).isEmpty())
 			{
 				ItemStack stack = inventoryHandler.extractItem(1, 1, false);
-				stack = inventoryHandler.insertItem(2, stack, false);
+				inventoryHandler.insertItem(2, stack, false);
 			}
 
 			if(inventoryHandler.getStackInSlot(1).isEmpty())
 			{
 				ItemStack stack = inventoryHandler.extractItem(0, 1, false);
-				stack = inventoryHandler.insertItem(1, stack, false);
+				inventoryHandler.insertItem(1, stack, false);
 			}
 
 			update = true;
@@ -473,7 +516,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		else
 		{
 			if(!world.isRemote&&!inventoryHandler.getStackInSlot(11).isEmpty())
-				Utils.dropStackAtPos(world, getTileForPos(327).getPos().offset(EnumFacing.UP), inventoryHandler.extractItem(11, 1, false));
+				Utils.dropStackAtPos(world, getBlockPosForPos(327).offset(EnumFacing.UP), inventoryHandler.extractItem(11, 1, false));
 
 			if(inventoryHandler.getStackInSlot(11).isEmpty())
 			{
@@ -689,8 +732,10 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		if(pos==449&&master()!=null)
+		TileEntityArtilleryHowitzer master = master();
+		if(pos==449&&master!=null)
 		{
+
 			//Command
 			if(!active&&packet.getPacketVariable('c') instanceof DataPacketTypeString)
 			{
@@ -699,62 +744,62 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 				{
 					case "fire":
 					{
-						master().animation = 3;
-						master().animationTimeMax = ArtilleryHowitzer.fireTime;
-						master().animationTime = 0;
+						master.animation = 3;
+						master.animationTimeMax = ArtilleryHowitzer.fireTime;
+						master.animationTime = 0;
 					}
 					break;
 					case "load":
 					{
-						if(master().bullet.isEmpty())
+						if(master.bullet.isEmpty())
 						{
-							master().animation = 1;
-							master().animationTimeMax = ArtilleryHowitzer.loadTime;
-							master().animationTime = 0;
+							master.animation = 1;
+							master.animationTimeMax = ArtilleryHowitzer.loadTime;
+							master.animationTime = 0;
 						}
 					}
 					break;
 					case "unload":
 					{
-						if(!master().bullet.isEmpty())
+						if(!master.bullet.isEmpty())
 						{
-							master().animation = 2;
-							master().animationTimeMax = ArtilleryHowitzer.loadTime;
-							master().animationTime = 0;
+							master.animation = 2;
+							master.animationTimeMax = ArtilleryHowitzer.loadTime;
+							master.animationTime = 0;
 						}
 					}
 					break;
 					case "stop":
 					{
-						master().animation = 0;
-						master().animationTimeMax = 0;
-						master().animationTime = 0;
+						master.animation = 0;
+						master.animationTimeMax = 0;
+						master.animationTime = 0;
 					}
 					break;
 				}
 			}
 
-			if(master().animation!=0)
+			if(master.animation!=0)
 			{
 				if(packet.getPacketVariable('y') instanceof DataPacketTypeInteger)
 				{
-					master().plannedYaw = ((DataPacketTypeInteger)packet.getPacketVariable('y')).value%360;
-					if(master().plannedYaw < 0)
-						master().plannedYaw = 360f-master().plannedYaw;
+					master.plannedYaw = ((DataPacketTypeInteger)packet.getPacketVariable('y')).value%360;
+					if(master.plannedYaw < 0)
+						master.plannedYaw = 360f-master.plannedYaw;
 				}
 
 				if(packet.getPacketVariable('p') instanceof DataPacketTypeInteger)
 				{
-					master().plannedPitch = Math.min(Math.max(-Math.abs((((DataPacketTypeInteger)packet.getPacketVariable('p')).value)%360), -105), 0);
+					master.plannedPitch = Math.min(Math.max(-Math.abs((((DataPacketTypeInteger)packet.getPacketVariable('p')).value)%360), -105), 0);
 				}
 
 				if(packet.getPacketVariable('f') instanceof DataPacketTypeInteger)
 				{
-					master().fuse = Math.max(-1, ((DataPacketTypeInteger)packet.getPacketVariable('f')).value);
+					master.fuse = Math.max(-1, ((DataPacketTypeInteger)packet.getPacketVariable('f')).value);
 				}
 			}
 
-			master().update = true;
+			master.update = true;
 		}
 	}
 
@@ -827,7 +872,22 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	@Override
 	public boolean shoudlPlaySound(String sound)
 	{
-		return active;
+		TileEntityArtilleryHowitzer master = master();
+		if(master==null)
+			return false;
+		switch(sound)
+		{
+			case ImmersiveIntelligence.MODID+":howitzer_door_open":
+				return (master.isDoorOpened&&master.doorAngle < 155f);
+			case ImmersiveIntelligence.MODID+":howitzer_door_close":
+				return (!master.isDoorOpened&&doorAngle > 0f);
+
+			case ImmersiveIntelligence.MODID+":howitzer_rotation_h":
+				return (animation!=0&&platformHeight!=((animation==1||animation==2)?0f: 5.25f))||!((master.turretYaw==master.plannedYaw)&&(master.turretPitch!=master.plannedPitch));
+			case ImmersiveIntelligence.MODID+":howitzer_rotation_v":
+				return master.turretYaw!=master.plannedYaw;
+		}
+		return false;
 	}
 
 	@Override
@@ -836,7 +896,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 	}
 
-	protected Vec3d getGunPosition()
+	private Vec3d getGunPosition()
 	{
 		BlockPos shoot_pos = getBlockPosForPos(526).offset(EnumFacing.UP, 1);
 		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+1, shoot_pos.getZ()+.5);

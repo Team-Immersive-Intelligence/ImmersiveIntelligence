@@ -141,10 +141,10 @@ item.immersiveintelligence.casing_machinegun.name=Machinegun Bullet Casing
 item.immersiveintelligence.bullet.machinegun_2bCal.name=Machinegun Bullet
 
 item.immersiveintelligence.casing_submachinegun.name=Submachinegun Bullet Casing
-item.immersiveintelligence.bullet.submachinegun_2bCal.name=Submachinegun Bullet
+item.immersiveintelligence.bullet.submachinegun_1bCal.name=Submachinegun Bullet
 
 item.immersiveintelligence.casing_revolver.name=Revolver Cartridge Casing
-item.immersiveintelligence.bullet.revolver_2bCal.name=Revolver Cartridge
+item.immersiveintelligence.bullet.revolver_1bCal.name=Revolver Cartridge
 
 item.immersiveintelligence.bullet.component.TNT.name=TNT
 item.immersiveintelligence.bullet.component.RDX.name=RDX
@@ -325,6 +325,18 @@ fluid.brine=Brine
 subtitle.immersiveintelligence.siren=Siren Howling
 subtitle.immersiveintelligence.printing_press=Printing Press Working
 subtitle.immersiveintelligence.paper_eject=Paper Falling
+
+subtitle.immersiveintelligence.machinegun_shot_def=Machinegun Noises
+subtitle.immersiveintelligence.machinegun_shot_hb=Heavy Barrel Machinegun Noises
+subtitle.immersiveintelligence.machinegun_shot_wc=Water Cooled Machinegun Noises
+subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
+
+subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
+subtitle.immersiveintelligence.howitzer_rotating=Howitzer Moving
+subtitle.immersiveintelligence.howitzer_door_open=Howitzer Doors Opening
+subtitle.immersiveintelligence.howitzer_door_close=Howitzer Doors Closing
+
+subtitle.immersiveintelligence.inserter=Inserter Noises
 
 //Entities
 
@@ -517,6 +529,10 @@ advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels w
 
 advancement.immersiveintelligence.secret_connect_wire=Who dares wins
 advancement.immersiveintelligence.secret_connect_wire.desc=You had enough? Now give me a rest.
+
+advancement.immersiveintelligence.secret_cocoa=Stories of Deco Morreno
+advancement.immersiveintelligence.secret_cocoa.desc=The supreme quality has been achieved.
+
 
 //Manual Categories
 

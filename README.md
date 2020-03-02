@@ -2,13 +2,15 @@
 
 **Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so **most of the planned features are not added**. There are four main categories of the mod's content: 
 
- - **Data and Electronics** - alows the player to transmit signals on the data network via packets of variables, there will be many multiblock machines allowing to read, write, transmit and receive, allowing data to be an upgraded version of redstone
+ - **Data and Electronics** - alows the player to transmit signals on the data network via packets of variables, there are many multiblock machines which allow reading, writing, transmitting and receiving data, allowing it to be an upgraded version of redstone
   
- - **Logistics** - great storage and crafting system based on multiblocks, data transmission and drones, it will be customizable while staying as immersive as possible
+ - **Logistics** - great storage and crafting system based on multiblocks, data transmission and drones, it will be customizable while staying as immersive as possible. Includes skycrates!
  
  - **Warfare** - weapons of all sorts - machineguns, autocannons, combat drones, howitzers, missiles and much more
  
  - **Intelligence** - espionage - stealth - sabotage - this category contains various devices which will allow you to spy on other players and monitor the world
+ 
+ The mod also features the new rotary power system.
  
 Some GIFs / Screenshots on [Imgur](https://imgur.com/a/pDcBzSL)
 
@@ -29,8 +31,7 @@ The mod authors, the developers:
 Special thanks to:
 - [@Krystiano0306](https://github.com/Krystiano0306) - Newbie Modeller, helped at various model-related jobs
 - @Blacknight - Texture artist, created some textures for the mod's items
-- @Kamo6343 - Helps at getting @Choroman to work, helped at building the trailer map 
- 
+
 Proudly powered by Turbo Model Thingy (TMT):
 - Original author: [@GaryCXJk](https://github.com/GaryCXJk)
 - Maintainers of the version II uses: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)

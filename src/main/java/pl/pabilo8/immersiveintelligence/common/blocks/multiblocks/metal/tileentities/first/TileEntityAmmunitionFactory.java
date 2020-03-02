@@ -26,6 +26,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -294,11 +295,6 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 		super.update();
 		NBTTagCompound tag = new NBTTagCompound();
 
-		if(world.isRemote)
-		{
-
-		}
-
 		boolean update = productionProcess();
 
 		if(world.isRemote||isDummy())
@@ -497,8 +493,9 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 					shouldUpdate = true;
 				}
 			}
-			else
+			else if(energyStorage.getEnergyStored() >= AmmunitionFactory.energyUsageGunpowder)
 			{
+				energyStorage.extractEnergy(AmmunitionFactory.energyUsageGunpowder, false);
 				if(world.isRemote&&world.getTotalWorldTime()%4==0)
 				{
 					BlockPos p = getBlockPosForPos(33).up();
@@ -517,7 +514,13 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 			if(!inventory.get(5).isEmpty()&&BulletRegistry.INSTANCE.getCasing(plannedCoreList.get(0)).getCoreMaterialNeeded() <= inventory.get(5).getCount())
 			{
 				if(coreProgress < AmmunitionFactory.coreTime)
-					coreProgress += 1;
+				{
+					if(energyStorage.getEnergyStored() >= AmmunitionFactory.energyUsageCore)
+					{
+						energyStorage.extractEnergy(AmmunitionFactory.energyUsageCore, false);
+						coreProgress += 1;
+					}
+				}
 				else if(!world.isRemote)
 				{
 					inventory.get(5).shrink(BulletRegistry.INSTANCE.getCasing(plannedCoreList.get(0)).getCoreMaterialNeeded());
@@ -573,8 +576,11 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 					shouldUpdate = true;
 				}
 			}
-			else
+			else if(energyStorage.getEnergyStored() >= AmmunitionFactory.energyUsageCasing)
+			{
+				energyStorage.extractEnergy(AmmunitionFactory.energyUsageCasing, false);
 				casingProgress += 1;
+			}
 		}
 		else
 			casingProgress = 0;
@@ -644,7 +650,7 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 
 				int[] rgb = pl.pabilo8.immersiveintelligence.api.Utils.cmykToRgb(Math.round(c/AmmunitionFactory.paintUsage*255f), Math.round(m/AmmunitionFactory.paintUsage*255f), Math.round(y/AmmunitionFactory.paintUsage*255f), Math.round(k/AmmunitionFactory.paintUsage*255f));
 
-				ItemNBTHelper.setInt(stack, "colour", new Color(rgb[0], rgb[1], rgb[2]).getRGB());
+				ItemNBTHelper.setInt(stack, "colour", MathHelper.rgb(rgb[0], rgb[1], rgb[2]));
 				if(!name.isEmpty())
 				{
 					stack.setStackDisplayName(name);
@@ -659,8 +665,9 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 
 
 			}
-			else
+			else if(energyStorage.getEnergyStored() >= AmmunitionFactory.energyUsagePaint)
 			{
+				energyStorage.extractEnergy(AmmunitionFactory.energyUsagePaint, false);
 				if(world.isRemote&&world.getTotalWorldTime()%4==0)
 				{
 					BlockPos p = getBlockPosForPos(30).up();
@@ -909,24 +916,25 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		if(pos==40)
+		TileEntityAmmunitionFactory master = master();
+		if(pos==40&&master!=null)
 		{
 			//Proportion in percents
 			if(packet.getPacketVariable('p') instanceof DataPacketTypeInteger)
 			{
 				float o = (float)((DataPacketTypeInteger)packet.getPacketVariable('p')).value;
-				master().proportion = Math.min(Math.max(o/100f, 0f), 1f);
+				master.proportion = Math.min(Math.max(o/100f, 0f), 1f);
 			}
 
 			if(packet.getPacketVariable('c') instanceof DataPacketTypeInteger)
 			{
-				master().paintColour = ((DataPacketTypeInteger)packet.getPacketVariable('c')).value;
+				master.paintColour = ((DataPacketTypeInteger)packet.getPacketVariable('c')).value;
 			}
 			else if(packet.getPacketVariable('c') instanceof DataPacketTypeString)
 			{
 				try
 				{
-					master().paintColour = Integer.decode(packet.getPacketVariable('c').valueToString());
+					master.paintColour = Integer.decode(packet.getPacketVariable('c').valueToString());
 				} catch(NumberFormatException e)
 				{
 					ImmersiveIntelligence.logger.info("Not a Number!");
@@ -936,7 +944,7 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 
 			if(packet.getPacketVariable('n') instanceof DataPacketTypeString)
 			{
-				master().name = packet.getPacketVariable('n').valueToString();
+				master.name = packet.getPacketVariable('n').valueToString();
 			}
 
 		}

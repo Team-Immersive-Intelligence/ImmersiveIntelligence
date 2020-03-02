@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrate;
+import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrateElectric;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIISkycrateMount;
@@ -22,7 +23,7 @@ public class SkyCrateRenderer extends Render<EntitySkyCrate>
 	public static String texture_electric = ImmersiveIntelligence.MODID+":textures/entity/skycrate_electric.png";
 
 	public static ModelSkyCrate model_mechanical = new ModelSkyCrate();
-	public static ModelSkyCrate model_electric = new ModelSkyCrate();
+	public static ModelSkyCrateElectric model_electric = new ModelSkyCrateElectric();
 
 	public SkyCrateRenderer(RenderManager renderManagerIn)
 	{

@@ -26,7 +26,6 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, BathingRecipeWrapper>
@@ -40,13 +39,6 @@ public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, Bathi
 		super("bathing", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name", helper.createBlankDrawable(140, 50), BathingRecipe.class, new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()));
 		tankOverlay = helper.createDrawable(background, 0, 52, 20, 51, -2, 2, -2, 2);
 		machineStack = new ItemStack(CommonProxy.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta());
-	}
-
-	@Nullable
-	@Override
-	public IDrawable getIcon()
-	{
-		return super.getIcon();
 	}
 
 	@Override

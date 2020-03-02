@@ -546,6 +546,8 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallCrate.class, new SmallCrateRenderer());
 		Item.getItemFromBlock(block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
+		item_tachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
+
 		//Multiblocks
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCratePost.class, new SkyCratePostRenderer());

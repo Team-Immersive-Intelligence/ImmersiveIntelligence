@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "immersiveintelligence:items/electric_wirecutter"
+    "layer0": "immersiveintelligence:items/tools/electric_wirecutter"
   }
 }

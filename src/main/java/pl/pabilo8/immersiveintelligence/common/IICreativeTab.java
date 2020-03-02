@@ -84,17 +84,17 @@ public class IICreativeTab extends CreativeTabs
 		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "RDX", "", 1f));
 		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "HMX", "", 1f));
 
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "HMX", "white_phosphorus", 0.5f).setStackDisplayName("Wurfgranate 39"));
+		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "HMX", "white_phosphorus", 0.5f).setStackDisplayName("M65 White-Phosphorus Shell"));
 
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Stielhandgranate 38"));
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Stielhandgranate 39"));
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "RDX", "", 1f).setStackDisplayName("Stielhandgranate 42"));
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "HMX", "", 1f).setStackDisplayName("Stielhandgranate 46"));
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Stielhandgranate mk.1"));
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Phosphorgranate mk.1"));
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "RDX", "", 1f).setStackDisplayName("Stielhandsprenggranate mk.1"));
+		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "HMX", "", 1f).setStackDisplayName("Stielhandsprendgranate mk.2"));
 
 		ItemStack bullet1 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Sprengpatrone mk.1");
 		ItemStack bullet2 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreTungsten", "shrapnel_tungsten", "", 1f).setStackDisplayName("Wolframpatrone mk.1");
 		ItemStack bullet3 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreSteel", "", "", 1f).setStackDisplayName("Stahlpatrone mk.1");
-		ItemStack bullet4 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Wurfpatrone mk.1");
+		ItemStack bullet4 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Phosphorpatrone mk.1");
 		list.add(bullet1);
 		list.add(bullet2);
 		list.add(bullet3);

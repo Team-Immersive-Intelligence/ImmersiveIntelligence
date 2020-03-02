@@ -11,7 +11,15 @@ import java.util.Locale;
  */
 public enum IIBlockTypes_MetalMultiblock1 implements IStringSerializable, BlockIEBase.IBlockEnum
 {
-	REDSTONE_DATA_INTERFACE;
+	REDSTONE_DATA_INTERFACE(false);
+
+
+	private boolean needsCustomState;
+
+	IIBlockTypes_MetalMultiblock1(boolean needsCustomState)
+	{
+		this.needsCustomState = needsCustomState;
+	}
 
 	@Override
 	public String getName()
@@ -28,6 +36,16 @@ public enum IIBlockTypes_MetalMultiblock1 implements IStringSerializable, BlockI
 	@Override
 	public boolean listForCreative()
 	{
-		return true;
+		return false;
+	}
+
+	public boolean needsCustomState()
+	{
+		return this.needsCustomState;
+	}
+
+	public String getCustomState()
+	{
+		return getName().toLowerCase();
 	}
 }

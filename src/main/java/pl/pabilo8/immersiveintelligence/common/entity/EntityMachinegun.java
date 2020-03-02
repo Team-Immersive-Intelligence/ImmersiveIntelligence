@@ -17,6 +17,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
@@ -321,6 +323,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 						writeEntityToNBT(tag);
 						IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
 					}
+					if(!world.isRemote&&clipReload==1)
+						world.playSound(null, getPosition(), IISounds.machinegun_unload, SoundCategory.BLOCKS, 1F, 1f);
 					return true;
 				}
 			}
@@ -346,6 +350,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					{
 						clipReload += 1;
 						currentlyLoaded = setTo;
+						if(!world.isRemote&&clipReload==Math.round(clipReloadTime*0.35f))
+							world.playSound(null, getPosition(), IISounds.machinegun_reload, SoundCategory.BLOCKS, 1F, 1f);
 						return true;
 					}
 					else
@@ -603,6 +609,13 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		double true_angle = Math.toRadians(360f-rotationYaw);
 		double true_angle2 = Math.toRadians(-(rotationPitch));
+
+		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
+			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.BLOCKS, 1F, 1f);
+		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
+			world.playSound(null, getPosition(), IISounds.machinegun_shot_watercooled, SoundCategory.BLOCKS, 1F, 1f);
+		else
+			world.playSound(null, getPosition(), IISounds.machinegun_shot, SoundCategory.BLOCKS, 1F, 0f);
 
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();

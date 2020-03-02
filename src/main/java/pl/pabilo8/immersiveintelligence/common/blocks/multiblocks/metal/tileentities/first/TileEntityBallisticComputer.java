@@ -3,11 +3,18 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileent
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
@@ -16,7 +23,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.BallisticComputer;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -28,8 +34,10 @@ import java.util.List;
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
-public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileEntityBallisticComputer, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds
+public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileEntityBallisticComputer, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IPlayerInteraction
 {
+	public int progress = 0;
+
 	public TileEntityBallisticComputer()
 	{
 		super(MultiblockBallisticComputer.instance, new int[]{2, 2, 2}, BallisticComputer.energyCapacity, true);
@@ -160,7 +168,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	public void doGraphicalUpdates(int slot)
 	{
 		this.markDirty();
-		//this.markContainingBlockForUpdate(null);
+		this.markContainingBlockForUpdate(null);
 	}
 
 	@Override
@@ -182,13 +190,26 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	}
 
 	@Override
+	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	{
+		super.readCustomNBT(nbt, descPacket);
+		progress = nbt.getInteger("progress");
+	}
+
+	@Override
+	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
+		nbt.setInteger("progress", progress);
+	}
+
+	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		if(this.pos==2)
+		TileEntityBallisticComputer master = master();
+		if(this.pos==2&&master!=null&&master.energyStorage.getEnergyStored() > BallisticComputer.energyUsage)
 		{
-			ImmersiveIntelligence.logger.info("abuyin ibn djadir1");
-
-			master().energyStorage.extractEnergy(BallisticComputer.energyUsage, false);
+			master.energyStorage.extractEnergy(BallisticComputer.energyUsage, false);
 
 			DataPacket new_packet = packet.clone();
 
@@ -213,7 +234,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 				//Yaw calculation method borrowed from Pneumaticcraft (https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java)
 				//Huge thanks to desht and MineMaarten for this amazing code!
 
-				double drag = 0.99F; // this value will differ when a dispenser upgrade is inserted.
+				double drag = 0.99F;
 				double gravity = 0.02F*mass;
 
 				float yaw;
@@ -234,7 +255,6 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 				IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(3).getPos(), world, facing.rotateY());
 				if(conn!=null)
 				{
-					ImmersiveIntelligence.logger.info("abuyin ibn djadir2 "+yaw);
 					conn.sendPacket(new_packet);
 				}
 			}
@@ -261,5 +281,57 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	public List<AxisAlignedBB> getAdvancedColisionBounds()
 	{
 		return getAdvancedSelectionBounds();
+	}
+
+	@Override
+	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		if(pos==1||pos==5)
+		{
+			TileEntityBallisticComputer master = master();
+			if(master==null)
+				return false;
+
+			if(master.progress < 2&&heldItem.getItem()==Items.MILK_BUCKET)
+			{
+				player.setItemStackToSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND, new ItemStack(Items.BUCKET));
+				master.progress += 1;
+				master.doGraphicalUpdates(0);
+				return true;
+			}
+			else if(master.progress > 1&&master.progress < 6&&heldItem.getItem()==Items.DYE&&heldItem.getMetadata()==3)
+			{
+				heldItem.shrink(1);
+				master.progress += 1;
+				master.doGraphicalUpdates(0);
+				return true;
+			}
+			else if(master.progress > 5&&master.progress < 10&&heldItem.getItem()==Items.SUGAR)
+			{
+				heldItem.shrink(1);
+				master.progress += 1;
+				master.doGraphicalUpdates(0);
+				return true;
+			}
+			else if(master.progress > 9&&master.progress < 32&&Utils.compareToOreName(heldItem, "stickSteel"))
+			{
+				master.progress += 1;
+				master.doGraphicalUpdates(0);
+				return true;
+			}
+			else if(master.progress >= 32&&heldItem.isEmpty())
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 360, 2));
+				player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 360, 1));
+				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 10, 127));
+				player.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 1, 127));
+				master.progress = 0;
+				if(!pl.pabilo8.immersiveintelligence.api.Utils.hasUnlockedIIAdvancement(player, "main/secret_cocoa"))
+					pl.pabilo8.immersiveintelligence.api.Utils.unlockIIAdvancement(player, "main/secret_cocoa");
+				master.doGraphicalUpdates(0);
+				return true;
+			}
+		}
+		return false;
 	}
 }

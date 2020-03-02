@@ -93,9 +93,10 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 	@Override
 	public String getCustomStateMapping(int meta, boolean itemBlock)
 	{
+		if(IIBlockTypes_WoodenMultiblock.values()[meta].needsCustomState())
+			return IIBlockTypes_WoodenMultiblock.values()[meta].getCustomState();
 		return null;
 	}
-
 	@Override
 	public CreativeTabs getCreativeTab()
 	{
