@@ -82,19 +82,19 @@ public class ItemIIMotorBelt extends ItemIIBase implements IWireCoil
 
 	public enum MotorBelt implements IStringSerializable
 	{
-		CLOTH("light_belts", MechanicalDevices.belt_length[0], 1, MechanicalDevices.belt_max_torque[0], MechanicalDevices.belt_max_rpm[0], MechanicalDevices.belt_torque_loss[0]),
-		STEEL("heavy_belts", MechanicalDevices.belt_length[1], 1, MechanicalDevices.belt_max_torque[1], MechanicalDevices.belt_max_rpm[1], MechanicalDevices.belt_torque_loss[1]);
+		CLOTH("light_belts", MechanicalDevices.belt_length[0], 1, 6, MechanicalDevices.belt_max_torque[0], MechanicalDevices.belt_max_rpm[0], MechanicalDevices.belt_torque_loss[0]),
+		STEEL("heavy_belts", MechanicalDevices.belt_length[1], 1, 8, MechanicalDevices.belt_max_torque[1], MechanicalDevices.belt_max_rpm[1], MechanicalDevices.belt_torque_loss[1]);
 
 		public ResourceLocation res;
 		public String category;
 		public int thickness;
 		public float torqueLoss;
-		public int maxTorque, maxRPM, length;
+		public int maxTorque, maxRPM, length, width;
 		public IIMotorBeltType type;
 		@SideOnly(Side.CLIENT)
 		public IModelMotorBelt model;
 
-		MotorBelt(String category, int length, int thickness, int maxTorque, int maxRPM, float torqueLoss)
+		MotorBelt(String category, int length, int thickness, int width, int maxTorque, int maxRPM, float torqueLoss)
 		{
 			res = getResourceLocation(getName());
 			this.category = category;
@@ -103,6 +103,7 @@ public class ItemIIMotorBelt extends ItemIIBase implements IWireCoil
 			this.maxTorque = maxTorque;
 			this.maxRPM = maxRPM;
 			this.torqueLoss = torqueLoss;
+			this.width = width;
 			type = new IIMotorBeltType(this);
 		}
 

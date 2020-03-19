@@ -573,10 +573,10 @@ public class Config
 				public static int energyUsage = 128;
 
 				@Comment({"How long does it take for the chemical dispenser to rotate 45 degrees horizontally (in ticks)"})
-				public static int rotateHTime = 80;
+				public static int rotateHTime = 240;
 
 				@Comment({"How long does it take for the chemical dispenser to rotate 45 degrees vertically (in ticks)"})
-				public static int rotateVTime = 100;
+				public static int rotateVTime = 180;
 
 			}
 

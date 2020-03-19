@@ -1,11 +1,25 @@
 package pl.pabilo8.immersiveintelligence.api;
 
+import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
+import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,6 +44,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -402,5 +417,70 @@ public class Utils
 		else if(current < min)
 			return max;
 		return current;
+	}
+
+	public static boolean compareBlockstateOredict(IBlockState state, String oreName)
+	{
+		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+		return blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, oreName);
+	}
+
+	//Cheers, Blu ^^
+	@SideOnly(Side.CLIENT)
+	public static void tesselateBlockBreak(Tessellator tessellatorIn, WorldClient world, DimensionBlockPos blockpos, Float value, float partialTicks)
+	{
+		BufferBuilder worldRendererIn = tessellatorIn.getBuffer();
+		EntityPlayer player = ClientUtils.mc().player;
+		double d0 = player.lastTickPosX+(player.posX-player.lastTickPosX)*(double)partialTicks;
+		double d1 = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
+		double d2 = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
+		TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
+		int progress = 9-(int)MathHelper.clamp(value*10f, 0f, 10f); // 0-10
+		if(progress < 0)
+			return;
+		renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		//preRenderDamagedBlocks BEGIN
+		GlStateManager.pushMatrix();
+		GlStateManager.tryBlendFuncSeparate(774, 768, 1, 1);
+		GlStateManager.enableBlend();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
+		GlStateManager.doPolygonOffset(-3.0F, -3.0F);
+		GlStateManager.enablePolygonOffset();
+		//GlStateManager.alphaFunc(516, 0.1F);
+		GlStateManager.enableAlpha();
+
+
+		worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		worldRendererIn.setTranslation(-d0, -d1, -d2);
+
+		Block block = world.getBlockState(blockpos).getBlock();
+		TileEntity te = world.getTileEntity(blockpos);
+		boolean hasBreak = block instanceof BlockChest||block instanceof BlockEnderChest
+				||block instanceof BlockSign||block instanceof BlockSkull;
+		if(!hasBreak) hasBreak = te!=null&&te.canRenderBreaking();
+		if(!hasBreak)
+		{
+			IBlockState iblockstate = world.getBlockState(blockpos);
+			if(iblockstate.getMaterial()!=Material.AIR)
+			{
+				TextureAtlasSprite textureatlassprite = ClientUtils.destroyBlockIcons[progress];
+				BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+				blockrendererdispatcher.renderBlockDamage(iblockstate, blockpos, textureatlassprite, world);
+			}
+		}
+		tessellatorIn.draw();
+
+		worldRendererIn.setTranslation(0.0D, 0.0D, 0.0D);
+		// postRenderDamagedBlocks BEGIN
+		GlStateManager.disableAlpha();
+		GlStateManager.doPolygonOffset(0.0F, 0.0F);
+		GlStateManager.disablePolygonOffset();
+		GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_COLOR, GL11.GL_DST_COLOR, 1, 1);
+		GlStateManager.enableAlpha();
+		GlStateManager.color(1f, 1f, 1f, 1f);
+
+		GlStateManager.depthMask(true);
+		GlStateManager.popMatrix();
+
 	}
 }

@@ -48,6 +48,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -74,6 +75,10 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualLogistics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualWarfare;
 import pl.pabilo8.immersiveintelligence.client.render.*;
+import pl.pabilo8.immersiveintelligence.client.render.item.MachinegunItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.item.RadioConfiguratorItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.item.SmallCrateItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.item.TachometerItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
@@ -546,7 +551,9 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallCrate.class, new SmallCrateRenderer());
 		Item.getItemFromBlock(block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
+		//Tools
 		item_tachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
+		item_radio_configurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
 
 		//Multiblocks
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer());
@@ -594,6 +601,15 @@ public class ClientProxy extends CommonProxy
 	{
 		ClientUtils.mc().getSoundHandler().playSound(new SkyCrateSound(hook,
 				new ResourceLocation(ImmersiveEngineering.MODID, "skyhook")));
+	}
+
+	@Override
+	public void onBreakBlock(BreakEvent event)
+	{
+		if(!event.getWorld().isRemote)
+		{
+			super.onBreakBlock(event);
+		}
 	}
 
 	@SubscribeEvent

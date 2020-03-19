@@ -33,7 +33,8 @@ public interface IBulletCasingType
 	//Model name, client only
 	Class<? extends IBulletModel> getModel();
 
-	//How many blocks the bullet can penetrate
+	//How many blocks the bullet can penetrate (distance * hardness * density)
+	//Usually described in quantity of stone blocks penetrated (as stone has a density of 1.0)
 	float getPenetration();
 
 	//How much damage the bullet deals (in half-hearts)

@@ -62,6 +62,9 @@ item.immersiveintelligence.material.white_phosphorus.name=White Phosphorus
 item.immersiveintelligence.material.bullet_core_steel.name=Steel Bullet Core
 item.immersiveintelligence.material.bullet_core_brass.name=Brass Bullet Core
 item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Core
+item.immersiveintelligence.material.bullet_core_uranium.name=Uranium Bullet Core
+item.immersiveintelligence.material.bullet_core_lead.name=Lead Bullet Core
+item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Core
 
 item.immersiveintelligence.material.dust_salt.name=Salt Dust
 
@@ -83,13 +86,13 @@ item.immersiveintelligence.minecart.steel_crate.name=Minecart with Steel Crate
 item.immersiveintelligence.minecart.wooden_barrel.name=Minecart with Wooden Barrel
 item.immersiveintelligence.minecart.metal_barrel.name=Minecart with Metal Barrel
 
-item.immersiveintelligence.lighter.name=Lighter
-item.immersiveintelligence.measuring_cup.name=Measuring Cup
-item.immersiveintelligence.electric_hammer.name=Electric Hammer
-item.immersiveintelligence.electric_wirecutter.name=Electric Wirecutter
-item.immersiveintelligence.electric_multitool.name=Electric Multitool
-item.immersiveintelligence.radio_configurator.basic.name=Basic Frequency Configurator
-item.immersiveintelligence.radio_configurator.advanced.name=Advanced Frequency Configurator
+item.immersiveintelligence.lighter.name=Engineer's Lighter
+item.immersiveintelligence.measuring_cup.name=Engineer's Measuring Cup
+item.immersiveintelligence.electric_hammer.name=Engineer's Electric Hammer
+item.immersiveintelligence.electric_wirecutter.name=Engineer's Electric Wirecutter
+item.immersiveintelligence.electric_multitool.name=Engineer's Electric Multitool
+item.immersiveintelligence.radio_configurator.basic.name=Basic Radio Tuner
+item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
 item.immersiveintelligence.machinegun.name=Machinegun
 
 item.immersiveintelligence.weapon_upgrade.water_cooling.name=Water Cooled Barrel
@@ -180,19 +183,27 @@ item.immersiveintelligence.torque_meter.name=Engineer's Torque Meter
 tile.immersiveintelligence.ore.platinum.name=Platinum Ore
 tile.immersiveintelligence.sheetmetal.platinum.name=Platinum Sheetmetal
 tile.immersiveintelligence.storage.platinum.name=Platinum Block
+tile.immersiveintelligence.sheetmetal_slab.platinum.name=Platinum Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.platinum.name=Platinum Slab
 
 tile.immersiveintelligence.ore.zinc.name=Zinc Ore
 tile.immersiveintelligence.sheetmetal.zinc.name=Zinc Sheetmetal
 tile.immersiveintelligence.storage.zinc.name=Zinc Block
+tile.immersiveintelligence.sheetmetal_slab.zinc.name=Zinc Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.zinc.name=Zinc Slab
 
 tile.immersiveintelligence.ore.tungsten.name=Tungsten Ore
 tile.immersiveintelligence.sheetmetal.tungsten.name=Tungsten Sheetmetal
 tile.immersiveintelligence.storage.tungsten.name=Tungsten Block
+tile.immersiveintelligence.sheetmetal_slab.tungsten.name=Tungsten Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.tungsten.name=Tungsten Slab
 
 tile.immersiveintelligence.ore.salt.name=Salt Ore
 
 tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
+tile.immersiveintelligence.sheetmetal_slab.brass.name=Brass Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.brass.name=Brass Slab
 
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Electronic Engineering Block
 tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Advanced Electronic Engineering Block
@@ -418,6 +429,11 @@ desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 desc.immersiveintelligence.data_merger.0=Both
 desc.immersiveintelligence.data_merger.1=Left
 desc.immersiveintelligence.data_merger.2=Right
+
+//Potion effects
+
+potion.immersiveintelligence.suppression=Suppressed
+potion.immersiveintelligence.broken_armor=Armour Penetrated
 
 //Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s

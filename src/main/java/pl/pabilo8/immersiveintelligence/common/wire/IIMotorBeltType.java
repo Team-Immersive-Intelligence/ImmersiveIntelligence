@@ -50,7 +50,7 @@ public class IIMotorBeltType extends MotorBeltType
 	@Override
 	public int getWidth()
 	{
-		return 6;
+		return type.width;
 	}
 
 	@Override

@@ -452,7 +452,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		if(plannedPitch < pitch)
 			pitch -= 45f/(ChemicalDispenser.rotateVTime/20f);
 
-		if(plannedPitch==Math.round(pitch/10)*10)
+		if(Math.abs(plannedPitch-pitch) < (45f/(ChemicalDispenser.rotateVTime/20f)))
 			pitch = plannedPitch;
 		pitch = MathHelper.clamp(pitch, -45, 45);
 
@@ -461,7 +461,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		if(plannedYaw < yaw)
 			yaw -= 45f/(ChemicalDispenser.rotateHTime/20f);
 
-		if(plannedYaw==Math.round(yaw/10)*10)
+		if(Math.abs(plannedYaw-yaw) < (45f/(ChemicalDispenser.rotateHTime/20f)))
 			yaw = plannedYaw;
 		yaw = MathHelper.clamp(yaw, -45, 45);
 

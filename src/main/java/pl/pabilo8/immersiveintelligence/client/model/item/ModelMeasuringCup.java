@@ -187,7 +187,6 @@ public class ModelMeasuringCup extends ModelAbstractItem
 	@Override
 	public ModelMeasuringCup retexture(ImmutableMap<String, String> textures)
 	{
-		System.out.println("Retexturing");
 		return new ModelMeasuringCup(fluid);
 	}
 

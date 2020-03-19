@@ -10,7 +10,6 @@ package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
 import blusunrize.immersiveengineering.client.gui.GuiFluidSorter;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.compat.jei.FluidSorterGhostHandler;
 import blusunrize.immersiveengineering.common.util.compat.jei.IEFluidTooltipCallback;
@@ -52,10 +51,10 @@ public class JEIHelper implements IModPlugin
 	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
 	{
 		//For registering item subtypes in jei
-		subtypeRegistry.registerSubtypeInterpreter(IEContent.itemBullet, itemStack -> {
-			if(!itemStack.isEmpty()&&itemStack.getMetadata()==2&&ItemNBTHelper.hasKey(itemStack, "bullet"))
-				return ItemNBTHelper.getString(itemStack, "bullet");
+		subtypeRegistry.registerSubtypeInterpreter(CommonProxy.item_assembly_scheme, itemStack -> {
+			if(!itemStack.hasTagCompound())
 			return ISubtypeInterpreter.NONE;
+			return (new ItemStack(ItemNBTHelper.getTagCompound(itemStack, "recipeItem"))).getDisplayName();
 		});
 
 	}
@@ -94,7 +93,7 @@ public class JEIHelper implements IModPlugin
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_assembly_scheme, 1, OreDictionary.WILDCARD_VALUE));
 
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_bullet, 1, OreDictionary.WILDCARD_VALUE));
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_bullet_magazine, 1, OreDictionary.WILDCARD_VALUE));
+
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_wooden_multiblock, 1, OreDictionary.WILDCARD_VALUE));
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_metal_multiblock0, 1, OreDictionary.WILDCARD_VALUE));
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_metal_multiblock1, 1, OreDictionary.WILDCARD_VALUE));

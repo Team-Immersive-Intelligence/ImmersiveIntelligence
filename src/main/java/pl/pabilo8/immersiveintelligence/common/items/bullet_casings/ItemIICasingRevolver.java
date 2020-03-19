@@ -1,10 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.items.bullet_casings;
 
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 /**
@@ -68,7 +68,7 @@ public class ItemIICasingRevolver extends ItemIIBase implements IBulletCasingTyp
 	@Override
 	public float getPenetration()
 	{
-		return 0.2f;
+		return 0.35f;
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ItemIICasingRevolver extends ItemIIBase implements IBulletCasingTyp
 	@Override
 	public ItemStack getStack(int amount)
 	{
-		return new ItemStack(ImmersiveIntelligence.proxy.item_casing_revolver, amount);
+		return new ItemStack(CommonProxy.item_casing_revolver, amount);
 	}
 
 	@Override

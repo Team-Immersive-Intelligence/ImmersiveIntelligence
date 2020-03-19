@@ -1,12 +1,16 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -16,16 +20,21 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationHelper;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 /**
  * Created by Pabilo8 on 30-08-2019.
  * Yes, I stole this one from Flan's Mod too! (Thanks Flan!)
+ * Major update on 08-03-2020.
  * Also, I couldn't get the Immersive Engineering IEProjectile to work...
  * That's why I extend Entity
  */
@@ -147,7 +156,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		if(mop==null||mop.entityHit==null)
 		{
 			Entity entity = null;
-			List list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1), (e) -> e.canBeCollidedWith());
+			List list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1), e -> e.canBeCollidedWith());
 			double d0 = 0.0D;
 			for(int i = 0; i < list.size(); ++i)
 			{
@@ -155,7 +164,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 				if(entity1.canBeCollidedWith()&&(this.ticksExisted > 1))
 				{
 					float f = 0.3F;
-					AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow((double)f, (double)f, (double)f);
+					AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow(f, f, f);
 					RayTraceResult movingobjectposition1 = axisalignedbb.calculateIntercept(currentPos, nextPos);
 
 					if(movingobjectposition1!=null)
@@ -175,9 +184,6 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 
 		if(mop!=null)
 		{
-
-			canMove = false;
-			ImmersiveIntelligence.logger.info(mop.typeOfHit==Type.ENTITY);
 			if(onImpact(mop))
 			{
 				setDead();
@@ -201,6 +207,8 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		motionX *= drag;
 		motionY *= drag;
 		motionZ *= drag;
+		//The higher the velocity, the lower the penetration loss
+		penetrationPower *= drag;
 		motionY -= gravity_part*this.mass;
 
 		if(colourTrail!=-1)
@@ -307,12 +315,9 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			this.name = ByteBufUtils.readUTF8String(data);
 			colourCore = data.readInt();
 			colourPaint = data.readInt();
-			ImmersiveIntelligence.logger.info("Read bullet data on "+(world.isRemote?"Client": "Server")+", name: "+name);
 		} catch(Exception e)
 		{
-			ImmersiveIntelligence.logger.error("Failed to read stack owner from server.");
 			super.setDead();
-			ImmersiveIntelligence.logger.throwing(e);
 		}
 	}
 
@@ -333,48 +338,120 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		if(!this.world.isRemote&&!stack.isEmpty()&&stack.getItem() instanceof ItemIIBullet)
 		{
 			//Simulate the penetration
-			float damage = ItemIIBullet.getCasing(stack).getDamage()*(ItemIIBullet.hasCore(stack)?ItemIIBullet.getCore(stack).getDamageModifier(null): 1f);
-			float first_dmg = ItemIIBullet.hasFirstComponent(stack)?ItemIIBullet.getFirstComponent(stack).getDamageModifier(ItemIIBullet.getFirstComponentNBT(stack)): 0f;
-			float second_dmg = ItemIIBullet.hasSecondComponent(stack)?ItemIIBullet.getSecondComponent(stack).getDamageModifier(ItemIIBullet.getSecondComponentNBT(stack)): 0f;
-			damage += first_dmg+second_dmg;
 
 			if(this.penetrationPower > 0)
 			{
 				if(mop.typeOfHit==Type.BLOCK)
 				{
 					BlockPos pos = mop.getBlockPos();
+					IPenetrationHandler pen = null;
+					for(Entry<Predicate<IBlockState>, IPenetrationHandler> e : PenetrationRegistry.registeredBlocks.entrySet())
+					{
+						if(e.getKey().test(world.getBlockState(pos)))
+						{
+							pen = e.getValue();
+							break;
+						}
+					}
+					if(pen==null)
+					{
+						for(Entry<Predicate<Material>, IPenetrationHandler> e : PenetrationRegistry.registeredMaterials.entrySet())
+						{
+							if(e.getKey().test(world.getBlockState(pos).getMaterial()))
+							{
+								pen = e.getValue();
+								break;
+							}
+						}
+					}
+
 					float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
+					float density = pen.getDensity();
+					float width = 1;
 
-					ImmersiveIntelligence.logger.info("hardness: "+hardness);
-					ImmersiveIntelligence.logger.info("penetration: "+penetrationPower);
+					AxisAlignedBB aabb = world.getBlockState(pos).getBoundingBox(world, pos);
+					switch(EnumFacing.getFacingFromVector((float)motionX, (float)motionY, (float)motionZ))
+					{
+						case NORTH:
+						case SOUTH:
+							width = (float)Math.abs(aabb.maxX-aabb.minX);
+							break;
+						case EAST:
+						case WEST:
+							width = (float)Math.abs(aabb.maxZ-aabb.minZ);
+							break;
+						case UP:
+						case DOWN:
+							width = (float)Math.abs(aabb.maxY-aabb.minY);
+							break;
+					}
 
+
+					float hp = pen.getIntegrity()/pen.getDensity();
+
+					boolean done = false;
+					DimensionBlockPos blockHitPos = new DimensionBlockPos(pos, world);
+					for(Entry<DimensionBlockPos, Float> p : PenetrationRegistry.blockDamage.entrySet())
+					{
+						if(p.getKey().equals(blockHitPos))
+						{
+							blockHitPos = p.getKey();
+							hp = p.getValue();
+							done = true;
+							break;
+						}
+					}
+					if(!done)
+						PenetrationRegistry.blockDamage.put(blockHitPos, hp);
+
+					float penFraction = penetrationPower/(hardness*width*density);
+
+					//Over Penetration
+					if(penFraction > 1)
+					{
+						PenetrationHelper.dealBlockDamage(world, size*50, blockHitPos, hp, pen);
+						penetrationPower -= hardness*width*density;
+					}
 					//Ricochet
-					if(penetrationPower!=0&&hardness > 0&&!world.getBlockState(pos).getMaterial().isLiquid()&&hardness/4 >= penetrationPower*4)
+					else if(penFraction < 0.125f&&density >= 1f)
 					{
-						ImmersiveIntelligence.logger.info("Ricochet!");
-						penetrationPower /= 4;
-						if(penetrationPower < 0.5f)
-							penetrationPower = 0;
-						motionX *= -0.65f;
-						motionY *= -0.65f;
-						motionZ *= -0.65f;
+						penetrationPower = 0.1f;
+
+						motionX *= -0.125f;
+						motionZ *= -0.125f;
+						motionY *= -0.25f;
+						double newPitch = (90-Math.abs(rotationPitch));
+
+						if(rotationPitch < 0)
+							rotationPitch -= 2*newPitch;
+						else if(rotationPitch > 0)
+							rotationPitch += 2*newPitch;
+
+
+						//TODO: Ricochet Sound
+
 					}
-					//Penetration
-					else if(hardness > 0&&!world.getBlockState(pos).getMaterial().isLiquid()&&penetrationPower >= hardness)
-					{
-						world.destroyBlock(pos, false);
-						penetrationPower = Math.max(0f, penetrationPower-hardness);
-					}
-					//Non-penetrating hit
+					//Regular Penetration
 					else
 					{
-						this.penetrationPower = 0f;
+						PenetrationHelper.dealBlockDamage(world, size*penFraction*50, blockHitPos, hp, pen);
+						penetrationPower = 0;
 					}
-					ImmersiveIntelligence.logger.info(hardness);
+
 				}
 
 				if(mop.entityHit!=null)
 				{
+					boolean headshot = false;
+					if(mop.entityHit instanceof EntityLivingBase)
+						headshot = blusunrize.immersiveengineering.common.util.Utils.isVecInEntityHead((EntityLivingBase)mop.entityHit, new Vec3d(posX, posY, posZ));
+
+					float core_damage = ItemIIBullet.getCasing(stack).getDamage()*(ItemIIBullet.hasCore(stack)?ItemIIBullet.getCore(stack).getDamageModifier(null): 1f);
+					float first_dmg = ItemIIBullet.hasFirstComponent(stack)?ItemIIBullet.getFirstComponent(stack).getDamageModifier(ItemIIBullet.getFirstComponentNBT(stack)): 0f;
+					float second_dmg = ItemIIBullet.hasSecondComponent(stack)?ItemIIBullet.getSecondComponent(stack).getDamageModifier(ItemIIBullet.getSecondComponentNBT(stack)): 0f;
+
+					float damage = (float)(core_damage*(1+first_dmg+second_dmg)*(headshot?1.25: 1));
+
 					if(mop.entityHit.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.owner), damage))
 						mop.entityHit.hurtResistantTime = 0;
 					Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
@@ -382,7 +459,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 					moveToBlockPosAndAngles(new BlockPos(nextPos), rotationYaw, rotationPitch);
 				}
 			}
-			else
+			if(penetrationPower <= 0)
 			{
 				if(ItemIIBullet.hasFirstComponent(stack))
 					ItemIIBullet.getFirstComponent(stack).onExplosion(ItemIIBullet.getCore(stack).getExplosionModifier()*ItemIIBullet.getCasing(stack).getComponentCapacity()*ItemIIBullet.getFirstComponentQuantity(stack), ItemIIBullet.getFirstComponentNBT(stack), world, getPosition(), this);

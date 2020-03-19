@@ -71,7 +71,7 @@ public class ItemIICasingMachinegun extends ItemIIBase implements IBulletCasingT
 	@Override
 	public float getPenetration()
 	{
-		return 0.2f;
+		return 0.5f;
 	}
 
 	@Override

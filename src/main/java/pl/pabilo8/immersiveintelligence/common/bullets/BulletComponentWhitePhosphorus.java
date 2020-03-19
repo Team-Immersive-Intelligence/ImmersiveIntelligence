@@ -138,13 +138,13 @@ public class BulletComponentWhitePhosphorus implements IBulletComponent
 	@Override
 	public float getPenetrationModifier(NBTTagCompound tag)
 	{
-		return 0;
+		return 0.25f;
 	}
 
 	@Override
 	public float getDamageModifier(NBTTagCompound tag)
 	{
-		return 0;
+		return 0.25f;
 	}
 
 	@Override

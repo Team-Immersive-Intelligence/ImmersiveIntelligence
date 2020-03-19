@@ -11,18 +11,112 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ModelSteelMotorBelt extends BaseBlockModel implements IModelMotorBelt
 {
-	int textureX = 32;
-	int textureY = 16;
+	int textureX = 64;
+	int textureY = 32;
 
 	public ModelSteelMotorBelt() //Same as Filename
 	{
-		baseModel = new ModelRendererTurbo[1];
+		baseModel = new ModelRendererTurbo[25];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		baseModel[1] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		baseModel[2] = new ModelRendererTurbo(this, 6, 0, textureX, textureY); // Box 0
+		baseModel[3] = new ModelRendererTurbo(this, 0, 4, textureX, textureY); // Box 0
+		baseModel[4] = new ModelRendererTurbo(this, 8, 2, textureX, textureY); // Box 0
+		baseModel[5] = new ModelRendererTurbo(this, 4, 2, textureX, textureY); // Box 0
+		baseModel[6] = new ModelRendererTurbo(this, 0, 2, textureX, textureY); // Box 0
+		baseModel[7] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		baseModel[8] = new ModelRendererTurbo(this, 6, 0, textureX, textureY); // Box 0
+		baseModel[9] = new ModelRendererTurbo(this, 0, 4, textureX, textureY); // Box 0
+		baseModel[10] = new ModelRendererTurbo(this, 8, 2, textureX, textureY); // Box 0
+		baseModel[11] = new ModelRendererTurbo(this, 4, 2, textureX, textureY); // Box 0
+		baseModel[12] = new ModelRendererTurbo(this, 0, 2, textureX, textureY); // Box 0
+		baseModel[13] = new ModelRendererTurbo(this, 0, 18, textureX, textureY); // Box 0
+		baseModel[14] = new ModelRendererTurbo(this, 0, 18, textureX, textureY); // Box 0
+		baseModel[15] = new ModelRendererTurbo(this, 32, 0, textureX, textureY); // Box 0
+		baseModel[16] = new ModelRendererTurbo(this, 32, 0, textureX, textureY); // Box 0
+		baseModel[17] = new ModelRendererTurbo(this, 34, 22, textureX, textureY); // Box 0
+		baseModel[18] = new ModelRendererTurbo(this, 34, 22, textureX, textureY); // Box 0
+		baseModel[19] = new ModelRendererTurbo(this, 12, 17, textureX, textureY); // Box 0
+		baseModel[20] = new ModelRendererTurbo(this, 12, 17, textureX, textureY); // Box 0
+		baseModel[21] = new ModelRendererTurbo(this, 40, 9, textureX, textureY); // Box 0
+		baseModel[22] = new ModelRendererTurbo(this, 40, 9, textureX, textureY); // Box 0
+		baseModel[23] = new ModelRendererTurbo(this, 24, 23, textureX, textureY); // Box 0
+		baseModel[24] = new ModelRendererTurbo(this, 24, 23, textureX, textureY); // Box 0
 
-		baseModel[0].addBox(-3F, -1F, -5F, 6, 1, 10, 0F); // Box 0
+		baseModel[0].addBox(-4F, 0F, -8F, 8, 1, 16, 0F); // Box 0
 		baseModel[0].setRotationPoint(0F, 0F, 0F);
 
-		translateAll(0F, 0F, 0F);
+		baseModel[1].addBox(-3F, 1F, -5F, 2, 1, 1, 0F); // Box 0
+		baseModel[1].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[2].addBox(1F, 1F, -5F, 2, 1, 1, 0F); // Box 0
+		baseModel[2].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[3].addShapeBox(-4F, 1F, -5F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F); // Box 0
+		baseModel[3].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[4].addShapeBox(0F, 1F, -5F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F); // Box 0
+		baseModel[4].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[5].addShapeBox(-1F, 1F, -5F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[5].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[6].addShapeBox(3F, 1F, -5F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[6].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[7].addBox(-3F, 1F, 4F, 2, 1, 1, 0F); // Box 0
+		baseModel[7].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[8].addBox(1F, 1F, 4F, 2, 1, 1, 0F); // Box 0
+		baseModel[8].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[9].addShapeBox(-4F, 1F, 4F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F); // Box 0
+		baseModel[9].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[10].addShapeBox(0F, 1F, 4F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F); // Box 0
+		baseModel[10].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[11].addShapeBox(-1F, 1F, 4F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[11].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[12].addShapeBox(3F, 1F, 4F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[12].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[13].addBox(-3F, -1F, -8F, 2, 1, 8, 0F); // Box 0
+		baseModel[13].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[14].addBox(1F, -1F, -8F, 2, 1, 8, 0F); // Box 0
+		baseModel[14].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[15].addShapeBox(-4F, -1F, -8F, 1, 1, 8, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[15].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[16].addShapeBox(0F, -1F, -8F, 1, 1, 8, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[16].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[17].addShapeBox(-1F, -1F, -8F, 1, 1, 8, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[17].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[18].addShapeBox(3F, -1F, -8F, 1, 1, 8, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[18].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[19].addBox(-3F, -1F, 0F, 2, 1, 8, 0F); // Box 0
+		baseModel[19].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[20].addBox(1F, -1F, 0F, 2, 1, 8, 0F); // Box 0
+		baseModel[20].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[21].addShapeBox(-4F, -1F, 0F, 1, 1, 8, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[21].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[22].addShapeBox(0F, -1F, 0F, 1, 1, 8, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[22].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[23].addShapeBox(-1F, -1F, 0F, 1, 1, 8, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[23].setRotationPoint(0F, 0F, 0F);
+
+		baseModel[24].addShapeBox(3F, -1F, 0F, 1, 1, 8, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		baseModel[24].setRotationPoint(0F, 0F, 0F);
 
 		flipAll();
 	}
@@ -36,6 +130,7 @@ public class ModelSteelMotorBelt extends BaseBlockModel implements IModelMotorBe
 	@Override
 	public void setRotation(float y)
 	{
-		baseModel[0].rotateAngleZ = y;
+		for(ModelRendererTurbo mod : baseModel)
+			mod.rotateAngleZ = y;
 	}
 }

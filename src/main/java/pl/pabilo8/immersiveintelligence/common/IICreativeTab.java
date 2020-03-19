@@ -43,7 +43,7 @@ public class IICreativeTab extends CreativeTabs
 	{
 		super.displayAllRelevantItems(list);
 
-		addAssemblySchemes(list);
+		//addAssemblySchemes(list);
 		addExampleBullets(list);
 
 		for(Fluid fluid : fluidBucketMap)
@@ -101,10 +101,8 @@ public class IICreativeTab extends CreativeTabs
 		list.add(bullet4);
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet1, bullet2, bullet3, bullet4));
 
-		ItemStack bullet5 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreTungsten", "shrapnel_uranium", "", 1f).setStackDisplayName("Sonderpatrone mk.1");
-		ItemStack bullet6 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CorePabilium", "shrapnel_uranium", "white_phosphorus", 0.5f).setStackDisplayName("Pabiliumpatrone mk. 1");
+		ItemStack bullet5 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreUranium", "shrapnel_uranium", "", 1f).setStackDisplayName("Sonderpatrone mk.1");
 		list.add(bullet5);
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet5, bullet5, bullet5, bullet5));
-		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet6, bullet6, bullet6, bullet6));
 	}
 }

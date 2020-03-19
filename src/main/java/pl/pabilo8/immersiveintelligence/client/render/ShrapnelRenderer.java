@@ -62,4 +62,5 @@ public class ShrapnelRenderer extends Render<EntityShrapnel>
 		return new ResourceLocation("immersiveengineering:textures/models/bullet.png");
 	}
 
+
 }

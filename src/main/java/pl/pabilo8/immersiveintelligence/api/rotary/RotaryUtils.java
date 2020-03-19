@@ -334,7 +334,7 @@ public class RotaryUtils
 		GlStateManager.translate(data.offset.x, data.offset.y, data.offset.z);
 		ClientUtils.bindTexture(data.texture);
 
-		double speed = Math.abs(rpm*(world_rpm*data.bs))%1d;
+		double speed = Math.abs(rpm*(world_rpm))%1d;
 
 		model.setRotation(0);
 
@@ -373,7 +373,7 @@ public class RotaryUtils
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(point.x*(1f-speed), point.y*(1f-speed), point.z*(1f-speed));
 			GlStateManager.translate(point2.x*speed, point2.y*speed, point2.z*speed);
-			model.setRotation(data.slopes[i]);
+			model.setRotation((float)Math.PI+data.slopes[i]);
 
 			GlStateManager.rotate(data.yaw, 0, 1, 0);
 			model.renderBelt();

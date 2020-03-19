@@ -1,0 +1,76 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveengineering:ie_slab",
+    "textures": {
+      "all": "immersiveengineering:blocks/storage_copper",
+      "bottom": "#all",
+      "top": "#all",
+      "side": "#all",
+      "particle": "#all"
+    }
+  },
+  "variants": {
+    "inventory,type=platinum": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_platinum"
+        }
+      }
+    ],
+    "inventory,type=zinc": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_zinc"
+        }
+      }
+    ],
+    "inventory,type=tungsten": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_tungsten"
+        }
+      }
+    ],
+    "inventory,type=brass": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_brass"
+        }
+      }
+    ],
+    "type": {
+      "platinum": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_platinum"
+        }
+      },
+      "zinc": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_zinc"
+        }
+      },
+      "tungsten": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_tungsten"
+        }
+      },
+      "brass": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/storage_brass"
+        }
+      }
+    },
+    "slabtype": {
+      "0": {},
+      "1": {
+        "x": 180,
+        "uvlock": true
+      },
+      "2": {
+        "model": "cube_all"
+      }
+    }
+  }
+}

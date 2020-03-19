@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.items;
 
+import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
@@ -8,12 +9,13 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,12 +38,12 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		ItemStack s = ItemNBTHelper.getItemStack(stack, "recipeItem");
-		list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"assembly_scheme.used_to_create", s.getDisplayName()+(s.getCount() > 1?" x"+s.getCount(): "")));
-		list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"assembly_scheme.items_created", ItemNBTHelper.getInt(stack, "createdItems")));
+		list.add(I18n.format(CommonProxy.description_key+"assembly_scheme.used_to_create", s.getDisplayName()+(s.getCount() > 1?" x"+s.getCount(): "")));
+		list.add(I18n.format(CommonProxy.description_key+"assembly_scheme.items_created", ItemNBTHelper.getInt(stack, "createdItems")));
 
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 		{
-			list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"assembly_scheme.materials"));
+			list.add(I18n.format(CommonProxy.description_key+"assembly_scheme.materials"));
 			PrecissionAssemblerRecipe recipe = getRecipeForStack(stack);
 			if(recipe!=null)
 			{
@@ -51,7 +53,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
 		{
-			list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"assembly_scheme.tools"));
+			list.add(I18n.format(CommonProxy.description_key+"assembly_scheme.tools"));
 			PrecissionAssemblerRecipe recipe = getRecipeForStack(stack);
 			if(recipe!=null)
 			{
@@ -61,8 +63,8 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 		}
 		else
 		{
-			list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"assembly_scheme.info_hold1"));
-			list.add(I18n.format(ImmersiveIntelligence.proxy.description_key+"assembly_scheme.info_hold2"));
+			list.add(I18n.format(CommonProxy.description_key+"assembly_scheme.info_hold1"));
+			list.add(I18n.format(CommonProxy.description_key+"assembly_scheme.info_hold2"));
 		}
 
 	}
@@ -116,5 +118,21 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 	public void increaseCreatedItems(ItemStack stack, int amount)
 	{
 		ItemNBTHelper.setInt(stack, "createdItems", ItemNBTHelper.getInt(stack, "createdItems")+amount);
+	}
+
+	/**
+	 * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
+	 */
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
+	{
+		if(this.isInCreativeTab(tab))
+			for(String key : BlueprintCraftingRecipe.blueprintCategories)
+			{
+				ItemStack stack = new ItemStack(this);
+				ItemNBTHelper.setString(stack, "blueprint", key);
+				list.add(stack);
+			}
 	}
 }

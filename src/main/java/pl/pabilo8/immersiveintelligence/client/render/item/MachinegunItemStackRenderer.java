@@ -1,9 +1,10 @@
-package pl.pabilo8.immersiveintelligence.client.render;
+package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 
 /**
  * Created by Pabilo8 on 13-10-2019.

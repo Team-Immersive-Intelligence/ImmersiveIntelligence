@@ -5,27 +5,32 @@ import blusunrize.immersiveengineering.api.tool.ZoomHandler.IZoomTool;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.FogMode;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.FOVUpdateEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GLContext;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -43,6 +48,61 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
 		//TODO: Model Reloading
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void renderAdditionalBlockBounds(DrawBlockHighlightEvent event)
+	{
+		WorldClient world = ClientUtils.mc().world;
+		Tessellator tessellator = Tessellator.getInstance();
+
+		PenetrationRegistry.blockDamageClient.forEach(
+				(dimensionBlockPos, aFloat) ->
+				{
+					if(dimensionBlockPos.dimension==world.provider.getDimension()&&world.isBlockLoaded(dimensionBlockPos))
+					{
+						pl.pabilo8.immersiveintelligence.api.Utils.tesselateBlockBreak(tessellator, world, dimensionBlockPos, aFloat, event.getPartialTicks());
+					}
+				}
+		);
+	}
+
+	@SubscribeEvent()
+	public void onFogUpdate(EntityViewRenderEvent.RenderFogEvent event)
+	{
+		if(event.getEntity() instanceof EntityLivingBase&&((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression)!=null)
+		{
+			PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression);
+			int timeLeft = effect.getDuration();
+			int amplifier = effect.getAmplifier();
+			if(amplifier < 0)
+				amplifier = 254+amplifier;
+
+			ImmersiveIntelligence.logger.info(amplifier);
+
+			float f1 = MathHelper.clamp((float)amplifier/255f, 0f, 1f);
+			//if(timeLeft < 20)
+			//f1 += (event.getFarPlaneDistance()/4)*(1-timeLeft/20f);
+
+			GlStateManager.setFog(FogMode.LINEAR);
+			GlStateManager.setFogStart((float)Math.pow((1f-f1), 2)*12); //(
+			GlStateManager.setFogEnd((float)Math.pow((1f-f1), 2)*16);
+			GlStateManager.setFogDensity(.00625f+(.00625f*f1));
+
+			if(GLContext.getCapabilities().GL_NV_fog_distance)
+				GlStateManager.glFogi(34138, 34139);
+		}
+	}
+
+	@SubscribeEvent()
+	public void onFogColourUpdate(EntityViewRenderEvent.FogColors event)
+	{
+		if(event.getEntity() instanceof EntityLivingBase&&((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression)!=null)
+		{
+			event.setRed(0);
+			event.setGreen(0);
+			event.setBlue(0);
+		}
 	}
 
 	@SubscribeEvent()
@@ -153,7 +213,7 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 
 				ItemStack stack = stack_m.getItem() instanceof IAdvancedZoomTool?stack_m: stack_o;
 
-				if(ClientUtils.mc().player.getRidingEntity()!=null&&ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+				if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
 				{
 					if(!EntityMachinegun.scope.canZoom(((EntityMachinegun)ClientUtils.mc().player.getRidingEntity()).gun, ClientUtils.mc().player))
 					{
