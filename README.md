@@ -12,7 +12,7 @@
  
  The mod also features the new rotary power system.
  
-Some GIFs / Screenshots on [Imgur](https://imgur.com/a/pDcBzSL)
+Some GIFs / Screenshots on [Imgur](https://imgur.com/a/kiyUFdk)
 
 Short videos on Youtube:
 
