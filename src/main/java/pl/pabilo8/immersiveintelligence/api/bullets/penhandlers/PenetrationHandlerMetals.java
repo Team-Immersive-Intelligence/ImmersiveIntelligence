@@ -1,13 +1,20 @@
 package pl.pabilo8.immersiveintelligence.api.bullets.penhandlers;
 
+import net.minecraft.util.SoundEvent;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+
+import javax.annotation.Nullable;
+
+import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
 
 /**
  * Created by Pabilo8 on 06-03-2020.
  */
 public class PenetrationHandlerMetals
 {
-	public static class PenetrationHandlerIron implements IPenetrationHandler
+	public static class PenetrationHandlerIron extends PenetrationHandlerMetal
 	{
 		@Override
 		public float getIntegrity()
@@ -22,7 +29,7 @@ public class PenetrationHandlerMetals
 		}
 	}
 
-	public static class PenetrationHandlerSteel implements IPenetrationHandler
+	public static class PenetrationHandlerSteel extends PenetrationHandlerMetal
 	{
 		@Override
 		public float getIntegrity()
@@ -37,7 +44,7 @@ public class PenetrationHandlerMetals
 		}
 	}
 
-	public static class PenetrationHandlerCopper implements IPenetrationHandler
+	public static class PenetrationHandlerCopper extends PenetrationHandlerMetal
 	{
 		@Override
 		public float getIntegrity()
@@ -52,7 +59,7 @@ public class PenetrationHandlerMetals
 		}
 	}
 
-	public static class PenetrationHandlerAluminium implements IPenetrationHandler
+	public static class PenetrationHandlerAluminium extends PenetrationHandlerMetal
 	{
 		@Override
 		public float getIntegrity()
@@ -67,7 +74,7 @@ public class PenetrationHandlerMetals
 		}
 	}
 
-	public static class PenetrationHandlerGold implements IPenetrationHandler
+	public static class PenetrationHandlerGold extends PenetrationHandlerMetal
 	{
 		@Override
 		public float getIntegrity()
@@ -82,7 +89,7 @@ public class PenetrationHandlerMetals
 		}
 	}
 
-	public static class PenetrationHandlerTungsten implements IPenetrationHandler
+	public static class PenetrationHandlerTungsten extends PenetrationHandlerMetal
 	{
 		@Override
 		public float getIntegrity()
@@ -97,7 +104,7 @@ public class PenetrationHandlerMetals
 		}
 	}
 
-	public static class PenetrationHandlerBronze implements IPenetrationHandler
+	public static class PenetrationHandlerBronze extends PenetrationHandlerMetal
 	{
 		@Override
 		public float getIntegrity()
@@ -112,18 +119,13 @@ public class PenetrationHandlerMetals
 		}
 	}
 
-	public class PenetrationHandlerMisc implements IPenetrationHandler
+	public static abstract class PenetrationHandlerMetal implements IPenetrationHandler
 	{
+		@Nullable
 		@Override
-		public float getIntegrity()
+		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return 275f;
-		}
-
-		@Override
-		public float getDensity()
-		{
-			return 0.85f;
+			return effect==RICOCHET?IISounds.ricochet_metal: IISounds.penetration_metal;
 		}
 	}
 

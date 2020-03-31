@@ -45,7 +45,7 @@
       {
         "textures": {
           "block_all": "immersiveintelligence:blocks/metal_decoration/absolutelly_unconnected/mechanical_engineering",
-          "overlay_all": "immersiveintelligence:blocks/metal_decoration/aluminium_overlay"
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/wooden_overlay"
         }
       }
     ],
@@ -90,7 +90,7 @@
       "mechanical_engineering": {
         "textures": {
           "block_all": "immersiveintelligence:blocks/metal_decoration/mechanical_engineering",
-          "overlay_all": "immersiveintelligence:blocks/metal_decoration/aluminium_overlay"
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/wooden_overlay"
         }
       },
       "heavy_mechanical_engineering": {

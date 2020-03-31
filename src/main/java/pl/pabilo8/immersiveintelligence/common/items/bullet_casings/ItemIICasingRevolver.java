@@ -82,10 +82,4 @@ public class ItemIICasingRevolver extends ItemIIBase implements IBulletCasingTyp
 	{
 		return new ItemStack(CommonProxy.item_casing_revolver, amount);
 	}
-
-	@Override
-	public boolean isThrowable()
-	{
-		return false;
-	}
 }

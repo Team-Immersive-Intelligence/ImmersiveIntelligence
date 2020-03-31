@@ -50,7 +50,7 @@ public class BulletComponentShrapnel implements IBulletComponent
 
 		Vec3d v = new Vec3d(0, -1, 0);
 		Vec3d throwerPos = new Vec3d(pos.offset(EnumFacing.UP, 3));
-		for(int i = 0; i < 150*amount; i++)
+		for(int i = 0; i < 50*amount; i++)
 		{
 			Vec3d vecDir = v.add(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 

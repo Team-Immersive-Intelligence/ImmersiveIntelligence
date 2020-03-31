@@ -1,31 +1,31 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "prp",
-    "pmp",
-    "pwp"
+    "b b",
+    "sms",
+    "sws"
   ],
   "key": {
-    "m": {
-      "item": "immersiveengineering:material",
-      "data": 8
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "brushCarbon"
     },
     "w": {
       "item": "immersiveengineering:wirecoil",
       "data": 1
     },
-    "p": {
+    "s": {
       "type": "forge:ore_dict",
-      "ore": "plateIron"
+      "ore": "plateSteel"
     },
-    "r": {
+    "m": {
       "type": "forge:ore_dict",
-      "ore": "stickIron"
+      "ore": "ingotMagnet"
     }
   },
   "result": {
     "item": "immersiveintelligence:material",
     "count": 1,
-    "data": 14
+    "data": 13
   }
 }

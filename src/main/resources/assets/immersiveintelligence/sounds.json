@@ -110,5 +110,21 @@
       "immersiveintelligence:inserter/inserter_backward"
     ],
     "subtitle": "subtitle.immersiveintelligence.inserter"
+  },
+  "penetration_metal": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:sound_hit/metal_hit0",
+      "immersiveintelligence:sound_hit/metal_hit1"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.penetration_metal"
+  },
+  "ricochet_metal": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:sound_hit/metal_ricochet0",
+      "immersiveintelligence:sound_hit/metal_ricochet1"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.ricochet_metal"
   }
 }

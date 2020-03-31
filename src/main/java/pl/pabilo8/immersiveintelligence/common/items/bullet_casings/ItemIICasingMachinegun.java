@@ -87,15 +87,21 @@ public class ItemIICasingMachinegun extends ItemIIBase implements IBulletCasingT
 	}
 
 	@Override
-	public boolean isThrowable()
-	{
-		return false;
-	}
-
-	@Override
 	public void doPuff(EntityBullet bullet)
 	{
 		ImmersiveIntelligence.proxy.spawnGunfireFX(bullet.world, bullet.posX, bullet.posY, bullet.posZ, bullet.motionX/2f, bullet.motionY/2f, bullet.motionZ/2f, 2.5f);
 		ImmersiveEngineering.proxy.spawnRedstoneFX(bullet.world, bullet.posX, bullet.posY, bullet.posZ, 0, 0, 0, 1.5f, 0.75f, 0.75f, 0.75f);
+	}
+
+	@Override
+	public float getSupressionRadius()
+	{
+		return 2;
+	}
+
+	@Override
+	public int getSuppressionPower()
+	{
+		return 2;
 	}
 }

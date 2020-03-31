@@ -44,10 +44,23 @@ public interface IBulletCasingType
 	ItemStack getStack(int amount);
 
 	//Whether a bullet is throwable by players
-	boolean isThrowable();
+	default boolean isThrowable()
+	{
+		return false;
+	}
 
 	//Create a smoke cloud on bullet spawn
 	default void doPuff(EntityBullet bullet)
 	{
+	}
+
+	default float getSupressionRadius()
+	{
+		return 0;
+	}
+
+	default int getSuppressionPower()
+	{
+		return 0;
 	}
 }

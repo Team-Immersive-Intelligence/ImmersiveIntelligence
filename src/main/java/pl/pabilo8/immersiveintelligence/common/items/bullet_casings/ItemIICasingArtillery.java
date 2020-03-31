@@ -84,8 +84,14 @@ public class ItemIICasingArtillery extends ItemIIBase implements IBulletCasingTy
 	}
 
 	@Override
-	public boolean isThrowable()
+	public float getSupressionRadius()
 	{
-		return false;
+		return 4;
+	}
+
+	@Override
+	public int getSuppressionPower()
+	{
+		return 20;
 	}
 }

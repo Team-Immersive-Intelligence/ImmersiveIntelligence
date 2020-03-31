@@ -2,9 +2,6 @@
 //Items
 itemGroup.immersiveintelligence=Immersive Intelligence
 
-item.immersiveintelligence.material.advanced_plate_blend.name=Advanced Electronic Alloy Grit
-item.immersiveintelligence.material.advanced_plate.name=Advanced Electronic Alloy Plate
-
 item.immersiveintelligence.material.basic_circuit_board_raw.name=Raw Basic Circuit Board
 item.immersiveintelligence.material.basic_circuit_board_etched.name=Etched Basic Circuit Board
 item.immersiveintelligence.material.basic_electronic_element.name=Basic Electronic Component
@@ -18,6 +15,7 @@ item.immersiveintelligence.material.processor_circuit_board_raw.name=Raw Process
 item.immersiveintelligence.material.processor_circuit_board_etched.name=Etched Processor Circuit Board
 item.immersiveintelligence.material.processor_circuit_board.name=Processor Circuit Board
 item.immersiveintelligence.material.processor_electronic_element.name=Processor
+item.immersiveintelligence.material.transistor.name=Transistor
 
 item.immersiveintelligence.material.compact_electric_engine.name=Compact Electric Engine
 item.immersiveintelligence.material.compact_electric_engine_advanced.name=Advanced Compact Electric Engine
@@ -35,25 +33,47 @@ item.immersiveintelligence.binoculars.infrared_binoculars.name=Infrared Binocula
 
 item.immersiveintelligence.assembly_scheme.name=Assembly Scheme
 
-item.immersiveintelligence.material.metal_ingot_platinum.name=Platinum Ingot
-item.immersiveintelligence.material.metal_dust_platinum.name=Platinum Grit
-item.immersiveintelligence.material.metal_plate_platinum.name=Platinum Plate
-item.immersiveintelligence.material.metal_nugget_platinum.name=Platinum Nugget
+item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Artillery Shell Casing
+item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Machinegun Bullet Casing
+item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Submachinegun Bullet Casing
 
-item.immersiveintelligence.material.metal_ingot_zinc.name=Zinc Ingot
-item.immersiveintelligence.material.metal_dust_zinc.name=Zinc Grit
-item.immersiveintelligence.material.metal_plate_zinc.name=Zinc Plate
-item.immersiveintelligence.material.metal_nugget_zinc.name=Zinc Nugget
+item.immersiveintelligence.material_ingot.platinum.name=Platinum Ingot
+item.immersiveintelligence.material_ingot.zinc.name=Zinc Ingot
+item.immersiveintelligence.material_ingot.tungsten.name=Tungsten Ingot
+item.immersiveintelligence.material_ingot.brass.name=Brass Ingot
+item.immersiveintelligence.material_ingot.advanced_electronic_alloy.name=Advanced Electronic Alloy Ingot
+item.immersiveintelligence.material_ingot.silicon.name=Silicon Ingot
+item.immersiveintelligence.material_ingot.magnet.name=Magnet
 
-item.immersiveintelligence.material.metal_ingot_tungsten.name=Tungsten Ingot
-item.immersiveintelligence.material.metal_dust_tungsten.name=Tungsten Grit
-item.immersiveintelligence.material.metal_plate_tungsten.name=Tungsten Plate
-item.immersiveintelligence.material.metal_nugget_tungsten.name=Tungsten Nugget
+item.immersiveintelligence.material_dust.platinum.name=Platinum Grit
+item.immersiveintelligence.material_dust.zinc.name=Zinc Grit
+item.immersiveintelligence.material_dust.tungsten.name=Tungsten Grit
+item.immersiveintelligence.material_dust.brass.name=Brass Grit
+item.immersiveintelligence.material_dust.advanced_electronic_alloy.name=Advanced Electronic Alloy Grit
+item.immersiveintelligence.material_dust.silicon.name=Silicon Dust
+item.immersiveintelligence.material_dust.fluorite.name=Fluorite Dust
 
-item.immersiveintelligence.material.metal_ingot_brass.name=Brass Ingot
-item.immersiveintelligence.material.metal_dust_brass.name=Brass Grit
-item.immersiveintelligence.material.metal_plate_brass.name=Brass Plate
-item.immersiveintelligence.material.metal_nugget_brass.name=Brass Nugget
+item.immersiveintelligence.material_plate.platinum.name=Platinum Plate
+item.immersiveintelligence.material_plate.zinc.name=Zinc Plate
+item.immersiveintelligence.material_plate.tungsten.name=Tungsten Plate
+item.immersiveintelligence.material_plate.brass.name=Brass Plate
+item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Advanced Electronic Alloy Plate
+item.immersiveintelligence.material_plate.silicon.name=Silicon Wafer
+
+item.immersiveintelligence.material_nugget.platinum.name=Platinum Nugget
+item.immersiveintelligence.material_nugget.zinc.name=Zinc Nugget
+item.immersiveintelligence.material_nugget.tungsten.name=Tungsten Nugget
+item.immersiveintelligence.material_nugget.brass.name=Brass Nugget
+item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Advanced Electronic Alloy Nugget
+item.immersiveintelligence.material_nugget.silicon.name=Silicon Piece
+
+item.immersiveintelligence.material_wire.tungsten.name=Tungsten Wire
+
+item.immersiveintelligence.material_gem.fluorite.name=Nether Fluorite
+
+item.immersiveintelligence.material_spring.brass.name=Brass Spring
+item.immersiveintelligence.material_spring.iron.name=Iron Spring
+item.immersiveintelligence.material_spring.steel.name=Steel Spring
 
 item.immersiveintelligence.material.dust_rdx.name=RDX Dust
 item.immersiveintelligence.material.dust_hmx.name=HMX Dust
@@ -67,10 +87,6 @@ item.immersiveintelligence.material.bullet_core_lead.name=Lead Bullet Core
 item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Core
 
 item.immersiveintelligence.material.dust_salt.name=Salt Dust
-
-item.immersiveintelligence.material.spring_brass.name=Brass Spring
-item.immersiveintelligence.material.spring_iron.name=Iron Spring
-item.immersiveintelligence.material.spring_steel.name=Steel Spring
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
@@ -200,6 +216,8 @@ tile.immersiveintelligence.storage_slab.tungsten.name=Tungsten Slab
 
 tile.immersiveintelligence.ore.salt.name=Salt Ore
 
+tile.immersiveintelligence.ore.fluorite.name=Nether Fluorite Ore
+
 tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
 tile.immersiveintelligence.sheetmetal_slab.brass.name=Brass Sheetmetal Slab
@@ -325,6 +343,8 @@ fluid.ink_cyan=Cyan Ink
 fluid.ink_magenta=Magenta Ink
 fluid.ink_yellow=Yellow Ink
 fluid.etching_acid=Etching Acid
+fluid.hydrofluoric_acid=Hydrofluoric Acid
+fluid.sulfuric_acid=Sulfuric Acid
 fluid.oxygen=Oxygen
 fluid.hydrogen=Hydrogen
 fluid.chlorine=Chlorine
@@ -348,6 +368,9 @@ subtitle.immersiveintelligence.howitzer_door_open=Howitzer Doors Opening
 subtitle.immersiveintelligence.howitzer_door_close=Howitzer Doors Closing
 
 subtitle.immersiveintelligence.inserter=Inserter Noises
+
+subtitle.immersiveintelligence.penetration_metal=Projectile breaking trough metal
+subtitle.immersiveintelligence.ricochet_metal=Projectile bouncing off metal
 
 //Entities
 

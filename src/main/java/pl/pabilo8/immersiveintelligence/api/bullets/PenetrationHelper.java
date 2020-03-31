@@ -2,11 +2,21 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
+
+import java.util.List;
 
 /**
  * Created by Pabilo8 on 14-03-2020.
@@ -57,6 +67,47 @@ public class PenetrationHelper
 		for(Block b : blocks)
 		{
 			PenetrationRegistry.registeredBlocks.put(iBlockState -> iBlockState.getBlock()==b, handler);
+		}
+	}
+
+	public static void supress(World world, double posX, double posY, double posZ, float supressionRadius, int suppressionPower)
+	{
+		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(posX, posY, posZ, posX, posY, posZ).grow(supressionRadius));
+		for(EntityLivingBase entity : entities)
+		{
+			PotionEffect effect = entity.getActivePotionEffect(IIPotions.suppression);
+			if(effect==null)
+				effect = new PotionEffect(IIPotions.suppression, 50, suppressionPower, false, false);
+			else
+			{
+				effect.duration = 10;
+				effect.combine(new PotionEffect(IIPotions.suppression, 50, Math.min(255, effect.getAmplifier()+suppressionPower)));
+			}
+			ImmersiveIntelligence.logger.info(entity.toString()+" / "+effect.duration+" / "+effect.getAmplifier());
+			entity.addPotionEffect(effect);
+		}
+	}
+
+	public static void breakArmour(Entity entity, int damageToArmour)
+	{
+		if(entity instanceof EntityLivingBase)
+		{
+			EntityLivingBase ent = (EntityLivingBase)entity;
+			PotionEffect effect = ent.getActivePotionEffect(IIPotions.suppression);
+			if(effect==null)
+				effect = new PotionEffect(IIPotions.suppression, 60, damageToArmour, false, false);
+			else
+			{
+				effect.duration = 10;
+				effect.combine(new PotionEffect(IIPotions.suppression, 60, Math.min(255, effect.getAmplifier()+damageToArmour)));
+				ImmersiveIntelligence.logger.info(ent.toString()+" / "+effect.duration+" / "+effect.getAmplifier());
+			}
+			for(ItemStack stack : ent.getArmorInventoryList())
+			{
+				stack.damageItem(damageToArmour, ent);
+			}
+
+			ent.addPotionEffect(effect);
 		}
 	}
 }

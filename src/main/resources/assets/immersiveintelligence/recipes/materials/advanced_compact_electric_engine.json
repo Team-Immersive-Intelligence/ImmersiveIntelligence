@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "trt",
+    "mem",
+    "twt"
+  ],
+  "key": {
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "plateTungsten"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "m": {
+      "type": "forge:ore_dict",
+      "ore": "ingotMagnet"
+    },
+    "w": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 2
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "electricEngineSmall"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 14
+  }
+}

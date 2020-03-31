@@ -471,6 +471,9 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 			wireNetwork.removeFromNetwork(null);
 		}
 
+		if(world.isBlockPowered(this.getPos()))
+			plannedAmount = 20;
+
 		if(!world.isRemote&&plannedAmount > 0&&tank.getFluid()!=null&&plannedYaw==yaw&&plannedPitch==pitch)
 		{
 			int consumed = IEConfig.Tools.chemthrower_consumption;

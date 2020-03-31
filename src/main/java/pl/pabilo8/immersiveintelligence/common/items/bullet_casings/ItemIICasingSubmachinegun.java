@@ -82,10 +82,4 @@ public class ItemIICasingSubmachinegun extends ItemIIBase implements IBulletCasi
 	{
 		return new ItemStack(CommonProxy.item_casing_submachinegun, amount);
 	}
-
-	@Override
-	public boolean isThrowable()
-	{
-		return false;
-	}
 }

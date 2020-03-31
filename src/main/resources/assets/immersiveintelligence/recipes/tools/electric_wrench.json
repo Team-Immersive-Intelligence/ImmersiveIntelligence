@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " t ",
+    "pep",
+    "r r"
+  ],
+  "key": {
+    "t": {
+      "item": "immersiveintelligence:wrench"
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "electricEngineCompact"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:electric_wrench",
+    "count": 1
+  }
+}

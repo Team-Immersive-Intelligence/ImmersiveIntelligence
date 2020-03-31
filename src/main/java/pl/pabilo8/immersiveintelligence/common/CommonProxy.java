@@ -13,14 +13,12 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
-import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.world.IEWorldGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -36,6 +34,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -60,7 +59,6 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
@@ -102,6 +100,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerD
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.bullet_casings.*;
+import pl.pabilo8.immersiveintelligence.common.items.material.*;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
@@ -110,6 +109,8 @@ import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
+import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
+import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -141,6 +142,17 @@ public abstract class CommonProxy implements IGuiHandler
 	public static final String TOOL_TACHOMETER = "TOOL_TACHOMETER";
 
 	public static ItemIIMaterial item_material = new ItemIIMaterial();
+
+	public static ItemIIMaterialIngot item_material_ingot = new ItemIIMaterialIngot();
+	public static ItemIIMaterialPlate item_material_plate = new ItemIIMaterialPlate();
+	public static ItemIIMaterialDust item_material_dust = new ItemIIMaterialDust();
+	public static ItemIIMaterialNugget item_material_nugget = new ItemIIMaterialNugget();
+	public static ItemIIMaterialWire item_material_wire = new ItemIIMaterialWire();
+	public static ItemIIMaterialSpring item_material_spring = new ItemIIMaterialSpring();
+	public static ItemIIMaterialGem item_material_gem = new ItemIIMaterialGem();
+
+	public static ItemIIMetalPressMold item_mold = new ItemIIMetalPressMold();
+
 	public static ItemIIFunctionalCircuit item_circuit = new ItemIIFunctionalCircuit();
 	public static ItemIIMotorBelt item_motor_belt = new ItemIIMotorBelt();
 	public static ItemIIMotorGear item_motor_gear = new ItemIIMotorGear();
@@ -219,6 +231,8 @@ public abstract class CommonProxy implements IGuiHandler
 	public static BlockIIFluid block_fluid_ink_magenta;
 	public static BlockIIFluid block_fluid_ink_yellow;
 	public static BlockIIFluid block_fluid_etching_acid;
+	public static BlockIIFluid block_fluid_sulfuric_acid;
+	public static BlockIIFluid block_fluid_hydrofluoric_acid;
 
 	public static BlockIIFluid block_fluid_brine;
 	public static BlockIIFluid block_gas_hydrogen;
@@ -231,6 +245,8 @@ public abstract class CommonProxy implements IGuiHandler
 	public static Fluid fluid_ink_yellow;
 
 	public static Fluid fluid_etching_acid;
+	public static Fluid fluid_sulfuric_acid;
+	public static Fluid fluid_hydrofluoric_acid;
 
 	public static Fluid fluid_brine;
 	public static Fluid gas_hydrogen;
@@ -252,6 +268,8 @@ public abstract class CommonProxy implements IGuiHandler
 		block_fluid_ink_magenta = new BlockIIFluid("ink_magenta", fluid_ink_magenta, Material.WATER);
 		block_fluid_ink_yellow = new BlockIIFluid("ink_yellow", fluid_ink_yellow, Material.WATER);
 		block_fluid_etching_acid = new BlockIIFluid("etching_acid", fluid_etching_acid, Material.WATER);
+		block_fluid_sulfuric_acid = new BlockIIFluid("sulfuric_acid", fluid_sulfuric_acid, Material.WATER);
+		block_fluid_hydrofluoric_acid = new BlockIIFluid("hydrofluoric_acid", fluid_hydrofluoric_acid, Material.WATER);
 
 		block_fluid_brine = new BlockIIFluid("brine", fluid_brine, Material.WATER);
 		block_gas_hydrogen = new BlockIIFluid("hydrogen", gas_hydrogen, Material.WATER);
@@ -307,10 +325,10 @@ public abstract class CommonProxy implements IGuiHandler
 		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
 	}
 
-	public static void addConfiguredWorldgen(IBlockState state, String name, int[] config)
+	public static void addConfiguredWorldgen(IBlockState state, String name, int[] config, EnumOreType type)
 	{
 		if(config!=null&&config.length >= 5&&config[0] > 0)
-			IEWorldGen.addOreGen(name, state, config[0], config[1], config[2], config[3], config[4]);
+			IIWorldGen.addOreGen(name, state, config[0], config[1], config[2], config[3], config[4], type);
 	}
 
 	public static void registerTile(Class<? extends TileEntity> tile)
@@ -322,8 +340,6 @@ public abstract class CommonProxy implements IGuiHandler
 
 	public static void registerOreDict()
 	{
-		OreDictionary.registerOre("dustAdvancedElectronicAlloy", new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_plate_blend")));
-		OreDictionary.registerOre("plateAdvancedElectronicAlloy", new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_plate")));
 		OreDictionary.registerOre("electronTubeAdvanced", new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_electron_tube")));
 
 		//Basic Circuit Board
@@ -348,56 +364,22 @@ public abstract class CommonProxy implements IGuiHandler
 		OreDictionary.registerOre("circuitElite", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board")));
 		OreDictionary.registerOre("chipElite", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_electronic_element")));
 
-		OreDictionary.registerOre("electricEngineSmall", new ItemStack(item_material, 1, item_material.getMetaBySubname("compact_electric_engine")));
-		OreDictionary.registerOre("electricEngineCompact", new ItemStack(item_material, 1, item_material.getMetaBySubname("compact_electric_engine")));
+		registerItemOredict(item_material, "compact_electric_engine", "electricEngineSmall", "electricEngineCompact");
+		registerItemOredict(item_material, "compact_electric_engine_advanced", "electricEngineSmallAdvanced", "electricEngineCompactAdvanced");
 
-		//Platinum
-		OreDictionary.registerOre("ingotPlatinum", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_ingot_platinum")));
-		OreDictionary.registerOre("dustPlatinum", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_dust_platinum")));
-		OreDictionary.registerOre("platePlatinum", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_plate_platinum")));
-		OreDictionary.registerOre("nuggetPlatinum", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_nugget_platinum")));
-		OreDictionary.registerOre("orePlatinum", new ItemStack(block_ore, 1, IIBlockTypes_Ore.PLATINUM.getMeta()));
-		OreDictionary.registerOre("blockPlatinum", new ItemStack(block_metal_storage, 1, IIBlockTypes_Metal.PLATINUM.getMeta()));
-		OreDictionary.registerOre("sheetmetalPlatinum", new ItemStack(block_sheetmetal, 1, IIBlockTypes_Metal.PLATINUM.getMeta()));
+		registerMetalOredict(item_material_ingot, "ingot");
+		registerMetalOredict(item_material_plate, "plate");
+		registerMetalOredict(item_material_dust, "dust");
+		registerMetalOredict(item_material_nugget, "nugget");
+		registerMetalOredict(item_material_wire, "wire");
+		registerMetalOredict(item_material_spring, "spring");
 
-		//Zinc
+		registerMetalOredictBlock(block_ore, "ore");
+		registerMetalOredictBlock(block_sheetmetal, "sheetmetal");
+		registerMetalOredictBlock(block_sheetmetal_slabs, "slabSheetmetal");
+		registerMetalOredictBlock(block_metal_storage, "block");
+		registerMetalOredictBlock(block_metal_slabs, "slab");
 
-		OreDictionary.registerOre("ingotZinc", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_ingot_zinc")));
-		OreDictionary.registerOre("dustZinc", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_dust_zinc")));
-		OreDictionary.registerOre("plateZinc", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_plate_zinc")));
-		OreDictionary.registerOre("nuggetZinc", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_nugget_zinc")));
-		OreDictionary.registerOre("oreZinc", new ItemStack(block_ore, 1, IIBlockTypes_Ore.ZINC.getMeta()));
-		OreDictionary.registerOre("blockZinc", new ItemStack(block_metal_storage, 1, IIBlockTypes_Metal.ZINC.getMeta()));
-		OreDictionary.registerOre("sheetmetalZinc", new ItemStack(block_sheetmetal, 1, IIBlockTypes_Metal.ZINC.getMeta()));
-
-		//Tungsten
-
-		OreDictionary.registerOre("ingotTungsten", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_ingot_tungsten")));
-		OreDictionary.registerOre("dustTungsten", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_dust_tungsten")));
-		OreDictionary.registerOre("plateTungsten", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_plate_tungsten")));
-		OreDictionary.registerOre("nuggetTungsten", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_nugget_tungsten")));
-		OreDictionary.registerOre("oreTungsten", new ItemStack(block_ore, 1, IIBlockTypes_Ore.TUNGSTEN.getMeta()));
-		OreDictionary.registerOre("blockTungsten", new ItemStack(block_metal_storage, 1, IIBlockTypes_Metal.TUNGSTEN.getMeta()));
-		OreDictionary.registerOre("sheetmetalTungsten", new ItemStack(block_sheetmetal, 1, IIBlockTypes_Metal.TUNGSTEN.getMeta()));
-
-		OreDictionary.registerOre("ingotWolfram", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_ingot_tungsten")));
-		OreDictionary.registerOre("dustWolfram", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_dust_tungsten")));
-		OreDictionary.registerOre("plateWolfram", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_plate_tungsten")));
-		OreDictionary.registerOre("nuggetWolfram", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_nugget_tungsten")));
-		OreDictionary.registerOre("oreWolfram", new ItemStack(block_ore, 1, IIBlockTypes_Ore.TUNGSTEN.getMeta()));
-		OreDictionary.registerOre("blockWolfram", new ItemStack(block_metal_storage, 1, IIBlockTypes_Metal.TUNGSTEN.getMeta()));
-		OreDictionary.registerOre("sheetmetalWolfram", new ItemStack(block_sheetmetal, 1, IIBlockTypes_Metal.TUNGSTEN.getMeta()));
-
-		//Brass
-
-		OreDictionary.registerOre("ingotBrass", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_ingot_brass")));
-		OreDictionary.registerOre("dustBrass", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_dust_brass")));
-		OreDictionary.registerOre("plateBrass", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_plate_brass")));
-		OreDictionary.registerOre("nuggetBrass", new ItemStack(item_material, 1, item_material.getMetaBySubname("metal_nugget_brass")));
-		//Not this time ^^
-		//OreDictionary.registerOre("oreBrass", new ItemStack(block_ore, 1, IIBlockTypes_Ore.BRASS.getMeta()));
-		OreDictionary.registerOre("blockBrass", new ItemStack(block_metal_storage, 1, IIBlockTypes_Metal.BRASS.getMeta()));
-		OreDictionary.registerOre("sheetmetalBrass", new ItemStack(block_sheetmetal, 1, IIBlockTypes_Metal.BRASS.getMeta()));
 
 		//Punchtapes
 		OreDictionary.registerOre("punchtapeEmpty", new ItemStack(item_material, 1, item_material.getMetaBySubname("punchtape_empty")));
@@ -421,20 +403,30 @@ public abstract class CommonProxy implements IGuiHandler
 		OreDictionary.registerOre("whitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorus")));
 
 		OreDictionary.registerOre("dustSalt", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_salt")));
-		OreDictionary.registerOre("oreSalt", new ItemStack(block_ore, 1, IIBlockTypes_Ore.SALT.getMeta()));
 
-		int i = 0;
-		for(String name : item_motor_gear.getSubNames())
-		{
-			OreDictionary.registerOre(Utils.toCamelCase("gear_"+name, true), new ItemStack(item_motor_gear, 1, i));
-			i += 1;
-		}
-		i = 0;
-		for(String name : item_motor_belt.getSubNames())
-		{
-			OreDictionary.registerOre(Utils.toCamelCase("belt_"+name, true), new ItemStack(item_motor_belt, 1, i));
-			i += 1;
-		}
+		OreDictionary.registerOre("brushCarbon", new ItemStack(item_material, 1, item_material.getMetaBySubname("carbon_brush")));
+
+
+		registerMetalOredict(item_motor_gear, "gear");
+		registerMetalOredict(item_motor_belt, "belt");
+	}
+
+	private static void registerMetalOredictBlock(BlockIIBase block, String dict)
+	{
+		for(int i = 0; i < block.enumValues.length; i += 1)
+			OreDictionary.registerOre(Utils.toCamelCase(dict+"_"+block.enumValues[i].name().toLowerCase(), true), new ItemStack(block, 1, i));
+	}
+
+	private static void registerItemOredict(ItemIIBase item, String subname, String... dicts)
+	{
+		for(int i = 0; i < dicts.length; i += 1)
+			OreDictionary.registerOre(Utils.toCamelCase(dicts[i], true), new ItemStack(item, 1, item.getMetaBySubname(subname)));
+	}
+
+	private static void registerMetalOredict(ItemIIBase item, String dict)
+	{
+		for(int i = 0; i < item.getSubNames().length; i += 1)
+			OreDictionary.registerOre(Utils.toCamelCase(dict+"_"+item.getSubNames()[i].toLowerCase(), true), new ItemStack(item, 1, i));
 	}
 
 	@SubscribeEvent
@@ -461,31 +453,24 @@ public abstract class CommonProxy implements IGuiHandler
 
 		ArcFurnaceRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_plate_blend")), "dustAdvancedPlate", ItemStack.EMPTY, 600, 640);
 
-		//Remove all circuit blueprint recipes
-		BlueprintCraftingRecipe.recipeList.removeAll("components");
-		BlueprintCraftingRecipe.addRecipe("components", new ItemStack(IEContent.itemMaterial, 1, 8), "plateIron", "plateIron", "ingotCopper");
-		BlueprintCraftingRecipe.addRecipe("components", new ItemStack(IEContent.itemMaterial, 1, 9), "plateSteel", "plateSteel", "ingotCopper");
 
-		BlueprintCraftingRecipe.addRecipe("basic_circuits", new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_circuit_board_raw")), new ItemStack(IEContent.blockStoneDecoration, 2, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()), "plateCopper");
-		BlueprintCraftingRecipe.addRecipe("basic_circuits", new ItemStack(IEContent.itemMaterial, 1, 27), "circuitBasicEtched", new IngredientStack("chipBasic", 2));
+		for(int i = 0; i < item_mold.getSubNames().length; i++)
+			BlueprintCraftingRecipe.addRecipe("molds", new ItemStack(item_mold, 1, i), "plateSteel", "plateSteel", "plateSteel", "plateSteel", "plateSteel", new ItemStack(IEContent.itemTool, 1, 1));
 
-		BlueprintCraftingRecipe.addRecipe("advanced_circuits", new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_circuit_board_raw")), new IngredientStack("circuitBasicRaw", 2), "plateAdvancedElectronicAlloy");
-		BlueprintCraftingRecipe.addRecipe("advanced_circuits", new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_circuit_board")), "circuitAdvancedEtched", new IngredientStack("chipAdvanced", 3));
-
-		BlueprintCraftingRecipe.addRecipe("processors", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board_raw")), new IngredientStack("circuitAdvancedRaw", 4), new IngredientStack("plateAdvancedElectronicAlloy", 2));
-		BlueprintCraftingRecipe.addRecipe("processors", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board")), "circuitProcessorEtched", new IngredientStack("chipProcessor", 4));
 //((IForgeRegistryModifiable)CraftingManager.REGISTRY).remove(new ResourceLocation(""));
 
-		//It's cheap, believe me
-		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_circuit_board_etched")), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 15000, 360);
-		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_circuit_board_etched")), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 150000, 560);
-		BathingRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board_etched")), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 4000), 1500000, 720);
+		IIRecipes.addCircuitRecipes();
 
 		//Immersive Engineering can into space???
 		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 3000), FluidRegistry.getFluidStack("oxygen", 1000), FluidRegistry.getFluidStack("hydrogen", 2000), 640, 320);
 		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 3000), FluidRegistry.getFluidStack("chlorine", 1500), FluidRegistry.getFluidStack("hydrogen", 1500), 640, 320);
 
+
+		IIRecipes.addInkRecipes();
+
 		MixerRecipe.addRecipe(new FluidStack(fluid_etching_acid, 1000), new FluidStack(gas_chlorine, 500), new Object[]{"dustIron"}, 4800);
+		MixerRecipe.addRecipe(new FluidStack(fluid_sulfuric_acid, 500), new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustSulfur"}, 4800);
+		MixerRecipe.addRecipe(new FluidStack(fluid_hydrofluoric_acid, 500), new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustFluorite"}, 5600);
 		MixerRecipe.addRecipe(new FluidStack(fluid_brine, 750), new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
 
 		//2x Vacuum tube + 3 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
@@ -502,7 +487,6 @@ public abstract class CommonProxy implements IGuiHandler
 				1.0f
 		);
 
-		//Blu, pls add getting subitem stacks by name ^^ (not relevant to 1.13, i won't be porting my mod there anyway)
 		//1x Basic Electronic Component =  2x vacuum tube + nickel plate + 4 x redstone dust
 		PrecissionAssemblerRecipe.addRecipe(
 				new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_electronic_element")),
@@ -517,8 +501,57 @@ public abstract class CommonProxy implements IGuiHandler
 				1.0f
 		);
 
-		//CrusherRecipe.addRecipe(ItemStack(item_material,1,item_material.getMetaBySubname("dust_salt")),new IngredientStack("oreSalt"),3200);
+		PrecissionAssemblerRecipe.addRecipe(
+				new ItemStack(item_material, 2, item_material.getMetaBySubname("advanced_electron_tube")),
+				ItemStack.EMPTY,
 
+				new IngredientStack[]{new IngredientStack("plateSteel"), new IngredientStack("wireTungsten", 2), new IngredientStack("electronTube", 2)},
+
+				new String[]{"inserter", "solderer", "drill"},
+				new String[]{"drill work main", "inserter pick second", "inserter drop main", "inserter pick first", "inserter drop main", "solderer work main"},
+
+				24000,
+				1.25f
+		);
+
+		PrecissionAssemblerRecipe.addRecipe(
+				new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_electronic_element")),
+				ItemStack.EMPTY,
+
+				new IngredientStack[]{new IngredientStack("advancedElectronTube"), new IngredientStack("chipAdvanced", 2)},
+
+				new String[]{"inserter", "solderer", "drill"},
+				new String[]{"inserter pick second", "drill work main", "inserter drop main", "solderer work main", "inserter pick first", "inserter drop main"},
+
+				32000,
+				1.25f
+		);
+
+		PrecissionAssemblerRecipe.addRecipe(
+				new ItemStack(item_material, 2, item_material.getMetaBySubname("transistor")),
+				ItemStack.EMPTY,
+
+				new IngredientStack[]{new IngredientStack("plateSteel"), new IngredientStack("wireTungsten", 2), new IngredientStack("electronTube", 2)},
+
+				new String[]{"inserter", "solderer", "drill"},
+				new String[]{"drill work main", "inserter pick second", "inserter drop main", "inserter pick first", "inserter drop main", "solderer work main"},
+
+				50000,
+				1.25f
+		);
+
+		PrecissionAssemblerRecipe.addRecipe(
+				new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_electronic_element")),
+				ItemStack.EMPTY,
+
+				new IngredientStack[]{new IngredientStack("advancedElectronTube"), new IngredientStack("chipAdvanced", 2)},
+
+				new String[]{"inserter", "solderer", "drill"},
+				new String[]{"inserter pick second", "drill work main", "inserter drop main", "solderer work main", "inserter pick first", "inserter drop main"},
+
+				500000,
+				3f
+		);
 	}
 
 	public void preInit()
@@ -533,6 +566,8 @@ public abstract class CommonProxy implements IGuiHandler
 		fluid_ink_yellow = makeFluid("ink_yellow", 1500, 2250);
 
 		fluid_etching_acid = makeFluid("etching_acid", 1500, 2250);
+		fluid_sulfuric_acid = makeFluid("sulfuric_acid", 1500, 2250);
+		fluid_hydrofluoric_acid = makeFluid("hydrofluoric_acid", 1500, 2250);
 
 		fluid_brine = makeFluid("brine", 1500, 2250);
 		gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
@@ -591,6 +626,19 @@ public abstract class CommonProxy implements IGuiHandler
 
 	public void init()
 	{
+		//Worldgen registration
+		IIWorldGen iiWorldGen = new IIWorldGen();
+		GameRegistry.registerWorldGenerator(iiWorldGen, 0);
+		MinecraftForge.EVENT_BUS.register(iiWorldGen);
+
+		ImmersiveIntelligence.logger.info("Adding oregen");
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.PLATINUM.getMeta()), "platinum", Ores.ore_platinum, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.ZINC.getMeta()), "zinc", Ores.ore_zinc, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.TUNGSTEN.getMeta()), "tungsten", Ores.ore_tungsten, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.SALT.getMeta()), "salt", Ores.ore_salt, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.FLUORITE.getMeta()), "fluorite", Ores.ore_fluorite, EnumOreType.NETHER);
+
+		//Disallow crates in crates
 		IEApi.forbiddenInCrates.add((stack) ->
 		{
 			if(OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 0), stack, true))
@@ -606,11 +654,6 @@ public abstract class CommonProxy implements IGuiHandler
 
 		IEApi.forbiddenInCrates.add((stack) -> stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock() instanceof BlockIISmallCrate);
 
-		ImmersiveIntelligence.logger.info("Adding oregen");
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.PLATINUM.getMeta()), "platinum", Ores.ore_platinum);
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.ZINC.getMeta()), "zinc", Ores.ore_zinc);
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.TUNGSTEN.getMeta()), "tungsten", Ores.ore_tungsten);
-		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.SALT.getMeta()), "salt", Ores.ore_salt);
 
 		ImmersiveIntelligence.logger.info("Adding TileEntities");
 		registerTile(TileEntityMetalCrate.class);

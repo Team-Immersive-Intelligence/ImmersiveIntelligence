@@ -2,10 +2,10 @@ package pl.pabilo8.immersiveintelligence;
 
 import blusunrize.immersiveengineering.common.Config.Mapped;
 import blusunrize.immersiveengineering.common.Config.SubConfig;
-import blusunrize.immersiveengineering.common.world.IEWorldGen;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.fml.common.Mod;
+import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 /**
  * Created by Pabilo8 on 2019-05-12.
@@ -44,6 +44,19 @@ public class Config
 
 		public static class Ores
 		{
+			@Comment({"A blacklist of dimensions in which IE ores won't spawn. By default this is Nether (-1) and End (1)"})
+			public static int[] oreDimBlacklistNormal = new int[]{-1, 1};
+
+			@Comment({"A blacklist of dimensions in which IE ores won't spawn. By default this is the Overworld (0) and End (1)"})
+			public static int[] oreDimBlacklistNether = new int[]{0, 1};
+
+			@Comment({"Set this to false to disable the logging of the chunks that were flagged for retrogen."})
+			public static boolean retrogen_log_flagChunk = true;
+			@Comment({"Set this to false to disable the logging of the chunks that are still left to retrogen."})
+			public static boolean retrogen_log_remaining = true;
+			@Comment({"The retrogeneration key. Basically IE checks if this key is saved in the chunks data. If it isn't, it will perform retrogen on all ores marked for retrogen.", "Change this in combination with the retrogen booleans to regen only some of the ores."})
+			public static String retrogen_key = "DEFAULT_II";
+
 			@Comment({"Generation config for Platinum Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
@@ -62,27 +75,37 @@ public class Config
 			@Comment({"Generation config for Salt Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_salt = new int[]{4, 55, 75, 1, 65};
+			public static int[] ore_salt = new int[]{12, 55, 95, 1, 65};
+
+			@Comment({"Generation config for Salt Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] ore_fluorite = new int[]{12, 1, 55, 1, 10};
 
 			@Comment({"Set this to true to allow retro-generation of Platinum Ore."})
 			@RequiresMcRestart
-			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
+			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
 			public static boolean retrogen_platinum = false;
 
 			@Comment({"Set this to true to allow retro-generation of Zinc Ore."})
 			@RequiresMcRestart
-			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
+			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
 			public static boolean retrogen_zinc = false;
 
 			@Comment({"Set this to true to allow retro-generation of Tungsten Ore."})
 			@RequiresMcRestart
-			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
+			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
 			public static boolean retrogen_tungsten = false;
 
 			@Comment({"Set this to true to allow retro-generation of Salt Ore."})
 			@RequiresMcRestart
-			@Mapped(mapClass = IEWorldGen.class, mapName = "retrogenMap")
+			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
 			public static boolean retrogen_salt = false;
+
+			@Comment({"Set this to true to allow retro-generation of Salt Ore."})
+			@RequiresMcRestart
+			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
+			public static boolean retrogen_fluorite = false;
 
 		}
 

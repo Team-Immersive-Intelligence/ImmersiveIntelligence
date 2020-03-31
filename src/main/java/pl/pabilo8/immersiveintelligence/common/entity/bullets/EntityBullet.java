@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -12,6 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
@@ -409,13 +413,19 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 					//Over Penetration
 					if(penFraction > 1)
 					{
+
 						PenetrationHelper.dealBlockDamage(world, size*50, blockHitPos, hp, pen);
 						penetrationPower -= hardness*width*density;
+						float supressionRadius = ItemIIBullet.getCasing(stack).getSupressionRadius();
+						int suppressionPower = ItemIIBullet.getCasing(stack).getSuppressionPower();
+						PenetrationHelper.supress(world, posX, posY, posZ, supressionRadius*(1f-penFraction), suppressionPower);
+						playHitSound(HitEffect.PENETRATION, world, pos, pen);
+
 					}
 					//Ricochet
-					else if(penFraction < 0.125f&&density >= 1f)
+					else if(penetrationPower > 0.01f&&penFraction < 0.125f&&density >= 1f)
 					{
-						penetrationPower = 0.1f;
+						penetrationPower = 0.01f;
 
 						motionX *= -0.125f;
 						motionZ *= -0.125f;
@@ -427,7 +437,11 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 						else if(rotationPitch > 0)
 							rotationPitch += 2*newPitch;
 
+						float supressionRadius = ItemIIBullet.getCasing(stack).getSupressionRadius();
+						int suppressionPower = ItemIIBullet.getCasing(stack).getSuppressionPower();
+						PenetrationHelper.supress(world, posX, posY, posZ, supressionRadius, suppressionPower);
 
+						playHitSound(HitEffect.PARTIAL_PENETRATION, world, pos, pen);
 						//TODO: Ricochet Sound
 
 					}
@@ -435,6 +449,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 					else
 					{
 						PenetrationHelper.dealBlockDamage(world, size*penFraction*50, blockHitPos, hp, pen);
+						playHitSound(HitEffect.PENETRATION, world, pos, pen);
 						penetrationPower = 0;
 					}
 
@@ -455,6 +470,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 					if(mop.entityHit.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.owner), damage))
 						mop.entityHit.hurtResistantTime = 0;
 					Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
+
 					penetrationPower = Math.max(0f, penetrationPower-damage/3f);
 					moveToBlockPosAndAngles(new BlockPos(nextPos), rotationYaw, rotationPitch);
 				}
@@ -471,5 +487,17 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			}
 		}
 		return false;
+	}
+
+	private void playHitSound(HitEffect effect, World world, BlockPos pos, IPenetrationHandler handler)
+	{
+		IBlockState state = world.getBlockState(pos);
+		SoundEvent event = handler.getSpecialSound(effect);
+		if(event==null)
+		{
+			SoundType type = state.getBlock().getSoundType(state, world, pos, this);
+			event = effect==HitEffect.PENETRATION?type.getBreakSound(): type.getStepSound();
+		}
+		world.playSound(posX, posY, posZ, event, SoundCategory.BLOCKS, 0.5f, (float)(0.5f+(Math.random()*0.5f)), true);
 	}
 }

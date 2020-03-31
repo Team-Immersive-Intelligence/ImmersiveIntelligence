@@ -529,19 +529,20 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
 	{
-		if(player.isSneaking())
+		if(!this.world.isRemote)
 		{
-			return false;
-		}
-		else
-		{
-			if(!this.world.isRemote)
+			if(player.isSneaking()&&player.getHeldItem(hand).isEmpty())
+			{
+				dropItem();
+				return true;
+			}
+			else
 			{
 				player.startRiding(this);
+				return true;
 			}
-
-			return true;
 		}
+		return false;
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 
 import java.util.Map.Entry;
@@ -82,9 +81,6 @@ public class MessageBlockDamageSync implements IMessage
 							bpos2 = entry.getKey();
 						}
 					}
-
-					ImmersiveIntelligence.logger.info("damage:"+message.damage);
-
 					if(message.damage > 0)
 					{
 						if(PenetrationRegistry.blockDamageClient.containsKey(bpos2))

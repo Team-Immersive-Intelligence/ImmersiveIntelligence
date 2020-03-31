@@ -10,7 +10,6 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,17 +31,13 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 	@SubscribeEvent
 	public void onModelBakeEvent(ModelBakeEvent event)
 	{
-		ImmersiveIntelligence.logger.info("doing a thing!");
 		for(Map.Entry<ModelResourceLocation, ItemModelReplacement> entry : itemModelReplacements.entrySet())
 		{
-			ImmersiveIntelligence.logger.info("adding a model");
-			ImmersiveIntelligence.logger.info(entry.getKey());
 			IBakedModel object = event.getModelRegistry().getObject(entry.getKey());
 			if(object!=null)
 			{
 				try
 				{
-					ImmersiveIntelligence.logger.info("added a model");
 					event.getModelRegistry().putObject(entry.getKey(), entry.getValue().createBakedModel(object));
 				} catch(Exception e)
 				{
@@ -55,7 +50,6 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 	//This
 	public void registerCustomItemModel(ItemStack stack, ItemModelReplacement replacement, String modname)
 	{
-		ImmersiveIntelligence.logger.info("Adding an Item! ("+stack.toString()+")");
 		if(stack.getItem() instanceof ItemIEBase)
 		{
 			ResourceLocation loc;
@@ -64,7 +58,6 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 			else
 				loc = new ResourceLocation(modname, ((ItemIEBase)stack.getItem()).itemName);
 			itemModelReplacements.put(new ModelResourceLocation(loc, "inventory"), replacement);
-			ImmersiveIntelligence.logger.info(loc);
 		}
 	}
 }

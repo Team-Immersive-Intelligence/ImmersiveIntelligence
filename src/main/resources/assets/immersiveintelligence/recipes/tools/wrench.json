@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "b b",
+    "bbb",
+    " b "
+  ],
+  "key": {
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "ingotBrass"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:wrench",
+    "count": 1
+  }
+}

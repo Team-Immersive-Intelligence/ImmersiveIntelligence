@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.PenetrationHandlerConcrete;
@@ -13,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandl
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerWood.PenetrationHandlerPlanks;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
@@ -85,5 +87,19 @@ public class PenetrationRegistry
 		 * @return density (constant resistance multiplier)
 		 */
 		float getDensity();
+
+		@Nullable
+		default SoundEvent getSpecialSound(HitEffect effect)
+		{
+			return null;
+		}
 	}
+
+	public enum HitEffect
+	{
+		PENETRATION,
+		PARTIAL_PENETRATION,
+		RICOCHET
+	}
+
 }

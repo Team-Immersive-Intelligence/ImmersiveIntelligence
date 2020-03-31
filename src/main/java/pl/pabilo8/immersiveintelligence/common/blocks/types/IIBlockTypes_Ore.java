@@ -13,7 +13,8 @@ public enum IIBlockTypes_Ore implements IStringSerializable, BlockIEBase.IBlockE
 	PLATINUM,
 	ZINC,
 	TUNGSTEN,
-	SALT;
+	SALT,
+	FLUORITE;
 
 	@Override
 	public String getName()

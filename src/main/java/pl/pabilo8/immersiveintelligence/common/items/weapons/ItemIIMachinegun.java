@@ -19,7 +19,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 
@@ -100,7 +99,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 
 				if(entity.canBeCollidedWith())
 				{
-					AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow((double)entity.getCollisionBorderSize());
+					AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
 
 					if(axisalignedbb.contains(vec3d))
 					{
@@ -141,15 +140,15 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 						fence = new AxisAlignedBB(0, 0, 0, 1, 1, 0.5);
 						break;
 				}
+				/*
 				ImmersiveIntelligence.logger.info(aabb);
 				ImmersiveIntelligence.logger.info(fence);
 				//fence.offset(raytraceresult.getBlockPos());
-
+				 */
 				if(aabb==null)
 					return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
 
 				boolean intersects = Utils.isAABBContained(fence, aabb);
-				;
 
 				if(!intersects)
 				{

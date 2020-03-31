@@ -36,6 +36,13 @@
         }
       }
     ],
+    "inventory,type=fluorite": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_fluorite"
+        }
+      }
+    ],
     "type": {
       "platinum": {
         "textures": {
@@ -55,6 +62,11 @@
       "salt": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_salt"
+        }
+      },
+      "fluorite": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_fluorite"
         }
       }
     }

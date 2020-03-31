@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g g",
+    "ggs",
+    "ggg"
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:glass",
+      "data": 0
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:measuring_cup",
+    "count": 1
+  }
+}
