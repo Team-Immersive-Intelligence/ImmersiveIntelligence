@@ -308,7 +308,7 @@ public class MultiblockPrintingPress implements IMultiblock
 		if(te==null)
 		{
 			te = new TileEntityPrintingPress();
-			te.facing = EnumFacing.SOUTH;
+			te.facing = EnumFacing.NORTH;
 		}
 
 		ImmersiveIntelligence.proxy.renderTile(te);

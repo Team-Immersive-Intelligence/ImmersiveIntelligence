@@ -315,7 +315,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public DimensionBlockPos getDevicePosition()
 	{
-		//Should exist, but who knows ¯\_(ツ)_/¯
+		//Should exist, but who knows
 		if(getTileForPos(67)!=null)
 			return new DimensionBlockPos(getTileForPos(67));
 		else

@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationHelper;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import java.util.List;
@@ -69,14 +70,12 @@ public class BulletComponentWhitePhosphorus implements IBulletComponent
 		cloud.motionY = -5f;
 		world.spawnEntity(cloud);
 
-		ImmersiveIntelligence.logger.info("otak "+2048*amount);
-
 		List<Entity> list = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.offset(EnumFacing.DOWN, lower)).grow(amount*8f));
 
 		FluidStack fs = new FluidStack(FluidRegistry.getFluid("lava"), Math.round(24*amount));
 		Vec3d v = new Vec3d(0, -1, 0);
 		Vec3d throwerPos = new Vec3d(pos.offset(EnumFacing.UP, 5).offset(EnumFacing.DOWN, lower));
-		for(int i = 0; i < 720*amount; i++)
+		for(int i = 0; i < 400*amount; i++)
 		{
 			Vec3d vecDir = v.add(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f+(Math.floor(i/16f)*0.35f), Utils.RAND.nextGaussian()*.25f);
 
@@ -132,6 +131,8 @@ public class BulletComponentWhitePhosphorus implements IBulletComponent
 			cloud4.setDuration(Math.round(amount*240f));
 			cloud4.setParticle(EnumParticleTypes.CLOUD);
 			world.spawnEntity(cloud4);
+
+			//PenetrationHelper.supress(world,pos.getX(), pos.getY()-lower, pos.getZ(),5f*amount,(int)(125*amount));
 		}
 	}
 

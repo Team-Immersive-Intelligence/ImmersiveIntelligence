@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationHelper;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageFireworks;
@@ -42,6 +43,7 @@ public class BulletComponentFirework implements IBulletComponent
 	{
 		ImmersiveIntelligence.logger.info(tag);
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, (float)bullet.posX, (float)bullet.posY+1, (float)bullet.posZ), Utils.targetPointFromEntity(bullet, 96));
+		PenetrationHelper.supress(world,pos.getX(), pos.getY(), pos.getZ(),10f*amount,(int)(255*amount));
 	}
 
 	@Override

@@ -585,27 +585,20 @@ ie.manual.category.ii_intel.name=Intelligence
 ie.manual.entry.data_main.name=Data
 ie.manual.entry.data_main.subtext=Controlling the Flow
 ie.manual.entry.data_main0=When you want to control an automated factory, power plant or a different complicated structure you need some kind of a control system. <br>Redstone is good for a start, but with lots of machines the messy nature of it starts to show - and that's an appropriate moment to introduce The Data System.
-ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain 36 <link;data_variable_types;§n§oVariables§r> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
+ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain 36 <link;data_variable_types;§n§oVariables§r;> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
 
 ie.manual.entry.data_variable_types.name=Variable Types
 ie.manual.entry.data_variable_types.subtext=Results May Vary
-ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types_null;§n§oNull§r>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types_null;§n§oNull§r>, <link;data_variable_types_int;§n§oInteger§r>, <link;data_variable_types_string;§n§oString§r>, <link;data_variable_types_bool;§n§oBoolean§r>, there are also a couple of more advanced types like <link;data_variable_types_itemstack;§n§oItemStack§r>, <link;data_variable_types_array;§n§oArray§r>, <link;data_variable_types_pair;§n§oPair§r> and <link;data_variable_types_range;§n§oRange§r>.
+ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types_null;§o§nNull§r;>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types_null;§o§nNull§r;>, <link;data_variable_types_int;§o§nInteger§r;>, <link;data_variable_types_string;§o§nString§r;>, <link;data_variable_types_bool;§o§nBoolean§r;>, there are also a couple of more advanced types like <link;data_variable_types_itemstack;§o§nItemStack§r;>, <link;data_variable_types_array;§o§nArray§r;>, <link;data_variable_types_pair;§o§nPair§r;> and <link;data_variable_types_range;§o§nRange§r;>.
 
 ie.manual.entry.data_variable_types_null=Null is a special variable type, which has no value. It is the default type of an undefined variable.
-
 ie.manual.entry.data_variable_types_int=Integer (often shortened to Int) is a number variable type, mainly used in calculations and number comparisons.
-
 ie.manual.entry.data_variable_types_string=String is a text variable type, it can hold a variety of different characters.
-
 ie.manual.entry.data_variable_types_bool=Boolean (often shortened to Bool) is a logic variable type, it can hold one of two values - True or False and can be used in logic functions.
-
-ie.manual.entry.data_variable_types_itemstack=ItemStack is an advanced variable type which can hold informations about a specific item (not item type) like damage, meta data and NBT.
-
+ie.manual.entry.data_variable_types_itemstack=ItemStack is an advanced variable type which can hold informations about a specific item (not item type) like id, metadata (damage) and NBT.
 ie.manual.entry.data_variable_types_array=Array is a collection of variables, ordered by their index number (starting from 0), it can hold any variable type, except another array.
-
 ie.manual.entry.data_variable_types_pair=Pair is a variable type, which consists of two basic variable types, often used in comparisons.
-
-ie.manual.entry.data_variable_types_range=Range is a variable type, which consists of two <link;data_variable_types_int;§n§ointegers§r>, it is most commonly used in comparing numbers or setting them in a range.
+ie.manual.entry.data_variable_types_range=Range is a variable type, which consists of two <link;data_variable_types_int;§o§nIntegers§r;>, it is most commonly used in comparing numbers or setting them in a range.
 
 ie.manual.entry.def_value=Default Value
 ie.manual.entry.min_value=Minimal Value
@@ -616,3 +609,18 @@ ie.manual.entry.empty=Empty
 ie.manual.entry.def_value=Default Value
 ie.manual.entry.accepted_values=Accepted Values
 ie.manual.entry.max_length=Maximal Length
+ie.manual.entry.tf=True/False
+ie.manual.entry.false=False
+ie.manual.entry.true=True
+
+ie.manual.entry.circuit_production.name=Circuitry
+ie.manual.entry.circuit_production.subtext=Not really Beep-Boop yet
+ie.manual.entry.circuit_production0=Circuits are one of the most important and commonly used electronic parts. There are three kinds of circuits: <link;circuit_production_basic;§n§obasic§r;> - made using vacuum tubes and redstone, <link;circuit_production_advanced;§n§oadvanced§r;> - made using Advanced Electronic Alloy™ and upgraded vacuum tubes. The most sophisticated are the <link;circuit_production_processor;§n§oprocessor§r;> circuits, which are made mainly of silicon in a complicated <link;precission_assembler;§o§nassembly§r;> process.
+ie.manual.entry.circuit_production_basic=Basic circuits are the common, primary and cheap circuits. They can be refitted to perform simple arithmetic, logic and text operations, but their main use is construction of various machines. To produce a basic circuit a raw circuit board has to be <chemical_bath;barrel;§o§netched§r;> in acid and then a chip made of vacuum tubes in the <link;precission_assembler;§o§nPrecission §o§Assembler§r;> has to be installed onto them.
+ie.manual.entry.circuit_production_basic_usages=Basic circuits are used to make basic-tier electronic devices and machines, such as the Printing Press, the <link;arithmetic_logic_machine;§o§nArithmetic-Logic §o§nMachine§r;> and the <link;data_input_machine;§o§nData §o§Input §o§nMachine§r;>.
+ie.manual.entry.circuit_production_advanced=Advanced circuits are a direct upgrade to their predecessors, they still use vacuum tubes, but because of the new alloy used, their capabilities are much better. They are made of an upgraded circuit board and a chip composed of upgraded vacuum tubes.
+ie.manual.entry.circuit_production_advanced_usages=Because of their fast transmission rate, they can be refitted for performing more advanced arithmetic, logic, text and even item-processing operations. Because of their superior speed, they are used in wireless transmission and advanced computing machines.
+ie.manual.entry.circuit_production_processor=Processor circuits are the most advanced and powerful circuits in the world, crafted using silicon, advanced electronic alloy and various other materials during a multi-step assembly process.
+ie.manual.entry.circuit_production_processor_usages=Currently processors are not used in making anything, so build them more as a challenge than an actually needed item.
+
+

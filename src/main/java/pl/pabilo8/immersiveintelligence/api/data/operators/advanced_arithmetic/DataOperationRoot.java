@@ -15,7 +15,7 @@ public class DataOperationRoot extends DataOperator
 	public DataOperationRoot()
 	{
 		name = "root";
-		sign = "√";
+		sign = "\u221a";
 		allowedType1 = DataPacketTypeInteger.class;
 		allowedType2 = DataPacketTypeInteger.class;
 		expectedResult = DataPacketTypeInteger.class;

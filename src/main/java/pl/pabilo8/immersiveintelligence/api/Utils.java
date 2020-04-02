@@ -50,6 +50,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -482,5 +483,10 @@ public class Utils
 		GlStateManager.depthMask(true);
 		GlStateManager.popMatrix();
 
+	}
+
+	public static ItemStack getItemWithMetaName(ItemIIBase item, String name)
+	{
+		return new ItemStack(item,1,item.getMetaBySubname(name));
 	}
 }

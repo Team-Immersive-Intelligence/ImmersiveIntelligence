@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://files.minecraftforge.net/maven" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -19,7 +19,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2847"
+    version = "1.12.2-14.23.5.2838"
     runDir = "run"
 
     replace "@VERSION@", project.version
@@ -37,7 +37,7 @@ minecraft {
 repositories {
     maven { // JEI & Tinkers
         name 'DVS1 Maven FS'
-        url 'http://dvs1.progwml6.com/files/maven'
+        url 'https://dvs1.progwml6.com/files/maven'
     }
     
     maven { // CraftTweaker
@@ -47,7 +47,7 @@ repositories {
 
     maven { // ModMaven, there is a bunch of stuff on there
         name 'ModMaven'
-        url "http://modmaven.k-4u.nl/"
+        url "https://modmaven.k-4u.nl/"
     }
 
     maven { // Albedo Lights

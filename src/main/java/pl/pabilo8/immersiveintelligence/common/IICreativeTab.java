@@ -1,7 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
@@ -11,6 +15,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
@@ -90,6 +95,18 @@ public class IICreativeTab extends CreativeTabs
 		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Phosphorgranate mk.1"));
 		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "RDX", "", 1f).setStackDisplayName("Stielhandsprenggranate mk.1"));
 		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "HMX", "", 1f).setStackDisplayName("Stielhandsprendgranate mk.2"));
+		ItemStack grenade_firework = ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "firework", "", 1f).setStackDisplayName("Feuerwerkstielhandgranate mk.1");
+		try
+		{
+			NBTTagCompound firework_nbt=JsonToNBT.getTagFromJson("{Explosion:{Type:0b,Colors:[I;3887386]}}");
+			ItemNBTHelper.setTagCompound(grenade_firework,"firstComponentNBT",firework_nbt);
+
+		} catch(NBTException e)
+		{
+			e.printStackTrace();
+		}
+
+		list.add(grenade_firework);
 
 		ItemStack bullet1 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Sprengpatrone mk.1");
 		ItemStack bullet2 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreTungsten", "shrapnel_tungsten", "", 1f).setStackDisplayName("Wolframpatrone mk.1");

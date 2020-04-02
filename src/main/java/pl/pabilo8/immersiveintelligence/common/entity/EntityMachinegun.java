@@ -41,8 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
 
 import javax.annotation.Nullable;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun.clipReloadTime;
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun.machinegun_scope_max_zoom;
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun.*;
 
 /**
  * Created by Pabilo8 on 01-11-2019.
@@ -55,7 +54,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public int pickProgress = 0;
 	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0;
 	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1;
-	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false;
+	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated=false;
 	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d);
 
 	public EntityMachinegun(World worldIn)
@@ -190,29 +189,40 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 					if(!world.isRemote)
 					{
-						if(shoot)
+						if(!overheated)
 						{
-							if(clipReload==0)
+							if(shoot)
 							{
-								if(bulletDelay < 1)
+								if(clipReload==0)
 								{
-									if(!loadedFromCrate)
+									if(bulletDelay < 1)
 									{
-										if(hasSecondMag&&!mag2Empty)
-											mag2Empty = !shoot(2);
-										if(!mag1Empty)
-											mag1Empty = !shoot(1);
+										if(!loadedFromCrate)
+										{
+											if(hasSecondMag&&!mag2Empty)
+												mag2Empty = !shoot(2);
+											if(!mag1Empty)
+												mag1Empty = !shoot(1);
+										}
+										else
+										{
+
+										}
+
 									}
 									else
-									{
-
-									}
-
+										bulletDelay -= 1;
 								}
-								else
-									bulletDelay -= 1;
 							}
 						}
+						if(overheating>maxOverheat)
+						{
+							overheated=true;
+						}
+						overheating=Math.max(0,overheating-1);
+						if(overheated && overheating==0)
+							overheated=false;
+
 					}
 					if(!shoot&&!loadedFromCrate)
 					{
@@ -614,13 +624,14 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.BLOCKS, 1F, 1f);
 		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
-			world.playSound(null, getPosition(), IISounds.machinegun_shot_watercooled, SoundCategory.BLOCKS, 1F, 1f);
+			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.BLOCKS, 1F, 1f);
 		else
-			world.playSound(null, getPosition(), IISounds.machinegun_shot, SoundCategory.BLOCKS, 1F, 0f);
+			world.playSound(null, getPosition(), IISounds.machinegun_shot, SoundCategory.BLOCKS, 1F, 1f);
 
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
 		recoilPitch += maxRecoilPitch*Math.random();
+		overheating+=Machinegun.bulletFireTime*1.5f;
 
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean("forClient", true);
