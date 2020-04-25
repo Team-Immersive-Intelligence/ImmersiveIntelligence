@@ -10,7 +10,8 @@ public class ItemIIMetalPressMold extends ItemIIBase
 		super("press_mold", 1,
 				"howitzer",
 				"machinegun",
-				"submachinegun"
+				"submachinegun",
+				"grenade"
 		);
 	}
 }

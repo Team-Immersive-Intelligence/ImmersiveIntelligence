@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "rsr",
+    " r "
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 8
+    },
+    "s": {
+      "item": "immersiveintelligence:skycrate_mount",
+      "data": 0
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:skycrate_mount",
+    "data": 1,
+    "count": 1
+  }
+}

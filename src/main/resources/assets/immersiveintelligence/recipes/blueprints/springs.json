@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveengineering:blueprint",
+    "nbt": {
+      "blueprint": "springs"
+    }
+  },
+  "pattern": [
+    "BHB",
+    "PPP",
+    "PPP"
+  ],
+  "key": {
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "plateBrass"
+    },
+    "H": {
+      "item": "immersiveengineering:tool",
+      "data": 1
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  }
+}

@@ -54,4 +54,6 @@ public class IIGuiList
 
 	public static final int GUI_PACKER = 33;
 	public static final int GUI_UNPACKER = 34;
+
+	public static final int GUI_SAWMILL = 35;
 }

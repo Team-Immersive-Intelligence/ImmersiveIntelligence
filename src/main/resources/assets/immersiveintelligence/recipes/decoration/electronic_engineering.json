@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pcp",
+    "csc",
+    "pcp"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingAluminum"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:metal_decoration",
+    "count": 3,
+    "data": 1
+  }
+}

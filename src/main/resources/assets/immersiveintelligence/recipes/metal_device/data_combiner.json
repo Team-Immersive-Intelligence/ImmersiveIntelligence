@@ -1,0 +1,30 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device",
+    "data": 7
+  },
+  "pattern": [
+    " d ",
+    "dsd",
+    "pep"
+  ],
+  "key": {
+    "d": {
+      "item": "immersiveintelligence:data_connector",
+      "data": 0
+    },
+    "e": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 1
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingAluminum"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    }
+  }
+}

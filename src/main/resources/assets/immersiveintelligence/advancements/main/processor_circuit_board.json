@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:material",
+      "data": 12
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.processor_circuit_board"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.processor_circuit_board.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/advanced_circuit_board",
+  "criteria": {
+    "craft_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:material",
+            "data": 12
+          }
+        ]
+      }
+    }
+  }
+}

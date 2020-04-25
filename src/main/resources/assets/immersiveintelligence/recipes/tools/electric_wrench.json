@@ -11,7 +11,7 @@
     },
     "e": {
       "type": "forge:ore_dict",
-      "ore": "electricEngineCompact"
+      "ore": "engineElectricCompact"
     },
     "p": {
       "type": "forge:ore_dict",

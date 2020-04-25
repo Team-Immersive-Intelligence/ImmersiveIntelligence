@@ -11,7 +11,8 @@ import java.util.Locale;
 public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	SKYCRATE_POST(false),
-	SKYCRATE_STATION(false);
+	SKYCRATE_STATION(false),
+	SAWMILL(true);
 
 	private boolean needsCustomState;
 

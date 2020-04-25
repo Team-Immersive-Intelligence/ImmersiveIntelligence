@@ -1,0 +1,18 @@
+{
+  "type": "forge:ore_shaped",
+  "group": "immersiveengineering:sheetmetal",
+  "result": {
+    "item": "immersiveintelligence:sheetmetal",
+    "data": 2
+  },
+  "pattern": [
+    "S",
+    "S"
+  ],
+  "key": {
+    "S": {
+      "item": "immersiveintelligence:sheetmetal_slab",
+      "data": 2
+    }
+  }
+}

@@ -63,6 +63,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	public float drawer1Angle = 0, drawer2Angle = 0;
 
 	IItemHandler insertionHandler = new IEInventoryHandler(5, this, 4, true, false);
+	private float timeMod;
 
 	public TileEntityPrecissionAssembler()
 	{
@@ -121,6 +122,9 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 		if(message.hasKey("animationOrder"))
 		{
 			NBTTagList list = message.getTagList("animationOrder", NBT.TAG_STRING);
+			float modifier = 1f;
+			if(message.hasKey("animationTimeMod"))
+				modifier = message.getFloat("animationTimeMod");
 
 			animationOrder = new String[]{};
 			animationPrepared.clear();
@@ -129,7 +133,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 				NBTBase base = list.get(i);
 				NBTTagString string = (NBTTagString)base;
 				ArrayUtils.add(animationOrder, string.getString());
-				int duration = PrecissionAssemblerRecipe.toolMap.get(string.getString().split(" ")[0]).getWorkTime(string.getString().split(" ")[0]);
+				int duration = (int)(PrecissionAssemblerRecipe.toolMap.get(string.getString().split(" ")[0]).getWorkTime(string.getString().split(" ")[0])*modifier);
 				Tuple<Integer, String> tuple = new Tuple<Integer, String>(duration, string.getString());
 				animationPrepared.add(tuple);
 
@@ -209,6 +213,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 				toolOrder = new String[]{t0, t1, t2};
 				animationOrder = recipe.animations;
 				effect = recipe.output;
+				timeMod = recipe.timeModifier;
 				beginning = true;
 			}
 		}
@@ -262,6 +267,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 			for(String animation : animationOrder)
 				animationList.appendTag(new NBTTagString(animation));
 			tag.setTag("animationOrder", animationList);
+			tag.setFloat("animationTimeMod", this.processQueue.size() > 0?this.processQueue.get(0).recipe.timeModifier: 1);
 
 			if(beginning)
 				tag.setBoolean("beginning", true);

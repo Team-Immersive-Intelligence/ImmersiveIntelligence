@@ -10,7 +10,7 @@ public class ItemIIMaterialGem extends ItemIIBase
 	public ItemIIMaterialGem()
 	{
 		super("material_gem", 64,
-				"fluorite"
+				"fluorite", "phosphorus"
 		);
 	}
 }

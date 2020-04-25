@@ -60,12 +60,12 @@ public class Config
 			@Comment({"Generation config for Platinum Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_platinum = new int[]{4, 0, 10, 2, 35};
+			public static int[] ore_platinum = new int[]{6, 0, 10, 2, 35};
 
 			@Comment({"Generation config for Zinc Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_zinc = new int[]{8, 60, 95, 2, 55};
+			public static int[] ore_zinc = new int[]{10, 35, 95, 2, 55};
 
 			@Comment({"Generation config for Tungsten Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
@@ -77,7 +77,7 @@ public class Config
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] ore_salt = new int[]{12, 55, 95, 1, 65};
 
-			@Comment({"Generation config for Salt Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@Comment({"Generation config for Fluorite Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] ore_fluorite = new int[]{12, 1, 55, 1, 10};
@@ -185,23 +185,39 @@ public class Config
 
 			@Comment({"The durability (max number of uses) of the Precission Buzzsaw."})
 			@RequiresMcRestart
-			public static int precission_tool_buzzsaw_durability = 100;
+			public static int precission_tool_buzzsaw_durability = 150;
 
 			@Comment({"The durability (max number of uses) of the Precission Drill."})
 			@RequiresMcRestart
-			public static int precission_tool_drill_durability = 100;
+			public static int precission_tool_drill_durability = 250;
 
 			@Comment({"The durability (max number of uses) of the Precission Inserter."})
 			@RequiresMcRestart
-			public static int precission_tool_inserter_durability = 100;
+			public static int precission_tool_inserter_durability = 200;
 
 			@Comment({"The durability (max number of uses) of the Precission Solderer."})
 			@RequiresMcRestart
-			public static int precission_tool_solderer_durability = 100;
+			public static int precission_tool_solderer_durability = 150;
 
 			@Comment({"The durability (max number of uses) of the Precission Welder."})
 			@RequiresMcRestart
-			public static int precission_tool_welder_durability = 100;
+			public static int precission_tool_welder_durability = 250;
+
+			@Comment({"The durability (max number of uses) of the Precission Hammer."})
+			@RequiresMcRestart
+			public static int precission_tool_hammer_durability = 200;
+
+			@Comment({"The durability (max number of uses) of the Iron Sawblade."})
+			@RequiresMcRestart
+			public static int sawblade_iron_durability = 150;
+
+			@Comment({"The durability (max number of uses) of the Steel Sawblade."})
+			@RequiresMcRestart
+			public static int sawblade_steel_durability = 300;
+
+			@Comment({"The durability (max number of uses) of the Tungsten Sawblade."})
+			@RequiresMcRestart
+			public static int sawblade_tungsten_durability = 550;
 
 			//Usage Time
 
@@ -224,6 +240,10 @@ public class Config
 			@Comment({"The usage time of the Precission Welder."})
 			@RequiresMcRestart
 			public static int precission_tool_welder_usage_time = 160;
+
+			@Comment({"The usage time of the Precission Hammer."})
+			@RequiresMcRestart
+			public static int precission_tool_hammer_usage_time = 40;
 
 			public static class SkycrateMounts
 			{
@@ -294,14 +314,11 @@ public class Config
 			public static Packer packer;
 			@SubConfig
 			public static RedstoneInterface redstoneInterface;
+			@SubConfig
+			public static Sawmill sawmill;
 
 			public static class RedstoneInterface
 			{
-				@Comment({"Energy capacity of the redstone interface."})
-				public static int energyCapacity = 16000;
-
-				@Comment({"Energy usage of the redstone interface (per operation)."})
-				public static int energyUsage = 512;
 
 			}
 
@@ -351,6 +368,21 @@ public class Config
 
 				@Comment({"How long does it take for the minecart to drive out of the station. (in ticks)"})
 				public static int minecartOutTime = 60;
+			}
+
+			public static class Sawmill
+			{
+				@Comment({"Rotations per minute required for the Sawmill to Work."})
+				public static int rpmMin = 20;
+
+				@Comment({"Max rotations per minute (will break if over)."})
+				public static int rpmBreakingMax = 160;
+
+				@Comment({"Torque required for the Sawmill to Work."})
+				public static int torqueMin = 6;
+
+				@Comment({"Max Torque (will break if over)."})
+				public static int torqueBreakingMax = 140;
 			}
 
 			public static class RadioStation
@@ -571,7 +603,7 @@ public class Config
 				public static int energyUsage = 128;
 
 				@Comment({"Max fluid output (in milibuckets per tick)"})
-				public static int maxOutput = 80;
+				public static int maxOutput = 500;
 
 			}
 

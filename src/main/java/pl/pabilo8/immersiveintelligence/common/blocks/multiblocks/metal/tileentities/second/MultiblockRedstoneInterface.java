@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -197,9 +198,12 @@ public class MultiblockRedstoneInterface implements IMultiblock
 		if(te==null)
 		{
 			te = new TileEntityRedstoneInterface();
-			te.facing = EnumFacing.SOUTH;
+			te.facing = EnumFacing.NORTH;
 		}
 
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 1, 0);
 		ImmersiveIntelligence.proxy.renderTile(te);
+		GlStateManager.popMatrix();
 	}
 }

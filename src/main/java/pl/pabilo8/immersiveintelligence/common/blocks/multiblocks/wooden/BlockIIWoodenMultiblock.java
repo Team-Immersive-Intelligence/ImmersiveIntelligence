@@ -12,6 +12,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -38,7 +40,16 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 		setResistance(15.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
+		this.setMetaBlockLayer(IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta(), BlockRenderLayer.TRANSLUCENT);
 
+		tesrMap.put(IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta(), IIBlockTypes_WoodenMultiblock.SAWMILL.getName());
+
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		return getMetaFromState(state)==IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta()?EnumBlockRenderType.ENTITYBLOCK_ANIMATED: super.getRenderType(state);
 	}
 
 	@Override
@@ -115,6 +126,10 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 			case SKYCRATE_STATION:
 			{
 				return new TileEntitySkyCrateStation();
+			}
+			case SAWMILL:
+			{
+				return new TileEntitySawmill();
 			}
 		}
 		return null;

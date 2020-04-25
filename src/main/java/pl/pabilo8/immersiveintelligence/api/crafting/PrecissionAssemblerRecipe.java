@@ -21,8 +21,8 @@ import java.util.*;
  */
 public class PrecissionAssemblerRecipe extends MultiblockRecipe
 {
-	public static float energyModifier = 1.0F;
-	public static float timeModifier = 1.0F;
+	public float energyModifier = 1.0F;
+	public float timeModifier = 1.0F;
 
 	public ItemStack output;
 	public ItemStack trashOutput;
@@ -62,8 +62,9 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 		this.tools = tools;
 		this.animations = animations;
 
-		this.totalProcessEnergy = (int)Math.floor((double)((float)energy*energyModifier));
-		this.totalProcessTime = (int)Math.floor((double)((float)processDuration*timeModifier*timeMultiplier));
+		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
+		this.timeModifier = timeMultiplier;
+		this.totalProcessTime = (int)Math.floor((float)processDuration*this.timeModifier);
 
 		this.inputList = Lists.newArrayList(this.inputs);
 		this.outputList = ListUtils.fromItem(this.output);

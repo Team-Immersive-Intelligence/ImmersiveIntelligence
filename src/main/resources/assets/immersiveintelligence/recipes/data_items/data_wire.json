@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_wire"
+  },
+  "pattern": [
+    "dcd",
+    "cwc",
+    "dcd"
+  ],
+  "key": {
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "dyeWhite"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "wireCopper"
+    },
+    "w": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 6
+    }
+  }
+}

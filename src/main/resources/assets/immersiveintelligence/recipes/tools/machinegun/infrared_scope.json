@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ptg",
+    " s ",
+    "pcp"
+  ],
+  "key": {
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlassBlack"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "c": {
+      "item": "immersiveengineering:metal_device0",
+      "data": 0
+    },
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "electronTube"
+    },
+    "s": {
+      "item": "immersiveintelligence:weapon_upgrade",
+      "data": 6
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 7,
+    "count": 1
+  }
+}

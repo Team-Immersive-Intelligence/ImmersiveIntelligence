@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " p ",
+    "pgp",
+    " p "
+  ],
+  "key": {
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "gearTungsten"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateTungsten"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:sawblade",
+    "data": 2,
+    "count": 1
+  }
+}

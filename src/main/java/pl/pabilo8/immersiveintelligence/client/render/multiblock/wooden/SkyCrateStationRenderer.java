@@ -54,7 +54,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			double ticks = Math.min(1, ((te.getWorld().getTotalWorldTime()+partialTicks)%100)/100/0.75);
+			//double ticks = Math.min(1, ((te.getWorld().getTotalWorldTime()+partialTicks)%100)/100/0.75);
 
 			float rpm_pitch = 0, rpm_grab = 0, rpm_crate = 0, rpm_gears = 0;
 			double motorTick = (te.getWorld().getTotalWorldTime()+partialTicks%RotaryUtils.getRPMMax())/RotaryUtils.getRPMMax();

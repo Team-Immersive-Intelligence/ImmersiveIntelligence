@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "p p",
+    "srs"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "s": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 8
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:binoculars",
+    "data": 0,
+    "count": 1
+  }
+}

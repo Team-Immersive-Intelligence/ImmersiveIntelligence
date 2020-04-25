@@ -6,7 +6,7 @@ item.immersiveintelligence.material.basic_circuit_board_raw.name=Raw Basic Circu
 item.immersiveintelligence.material.basic_circuit_board_etched.name=Etched Basic Circuit Board
 item.immersiveintelligence.material.basic_electronic_element.name=Basic Electronic Component
 
-item.immersiveintelligence.material.advanced_circuit_board_raw.name=Advanced Circuit Board
+item.immersiveintelligence.material.advanced_circuit_board_raw.name=Raw Advanced Circuit Board
 item.immersiveintelligence.material.advanced_circuit_board_etched.name=Etched Advanced Circuit Board
 item.immersiveintelligence.material.advanced_circuit_board.name=Advanced Circuit Board
 item.immersiveintelligence.material.advanced_electronic_element.name=Advanced Electronic Component
@@ -36,6 +36,7 @@ item.immersiveintelligence.assembly_scheme.name=Assembly Scheme
 item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Artillery Shell Casing
 item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Machinegun Bullet Casing
 item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Submachinegun Bullet Casing
+item.immersiveintelligence.press_mold.grenade.name=Metal Press Mold: Grenade
 
 item.immersiveintelligence.material_ingot.platinum.name=Platinum Ingot
 item.immersiveintelligence.material_ingot.zinc.name=Zinc Ingot
@@ -52,6 +53,9 @@ item.immersiveintelligence.material_dust.brass.name=Brass Grit
 item.immersiveintelligence.material_dust.advanced_electronic_alloy.name=Advanced Electronic Alloy Grit
 item.immersiveintelligence.material_dust.silicon.name=Silicon Dust
 item.immersiveintelligence.material_dust.fluorite.name=Fluorite Dust
+item.immersiveintelligence.material_dust.quartz.name=Quartz Dust
+item.immersiveintelligence.material_dust.quartz_dirty.name=Dirty Quartz Dust
+item.immersiveintelligence.material_dust.phosphorus.name=Phosphorus Dust
 
 item.immersiveintelligence.material_plate.platinum.name=Platinum Plate
 item.immersiveintelligence.material_plate.zinc.name=Zinc Plate
@@ -70,6 +74,10 @@ item.immersiveintelligence.material_nugget.silicon.name=Silicon Piece
 item.immersiveintelligence.material_wire.tungsten.name=Tungsten Wire
 
 item.immersiveintelligence.material_gem.fluorite.name=Nether Fluorite
+//Based on real-life mineral glauconite, though the word phosphorus is easier to remember
+item.immersiveintelligence.material_gem.phosphorus.name=Nether Phosphorus
+
+item.immersiveintelligence.material_boule.silicon.name=Silicon Boule
 
 item.immersiveintelligence.material_spring.brass.name=Brass Spring
 item.immersiveintelligence.material_spring.iron.name=Iron Spring
@@ -87,6 +95,9 @@ item.immersiveintelligence.material.bullet_core_lead.name=Lead Bullet Core
 item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Core
 
 item.immersiveintelligence.material.dust_salt.name=Salt Dust
+item.immersiveintelligence.material.dust_wood.name=Sawdust
+item.immersiveintelligence.material.dust_hexamine.name=Hexamine Dust
+item.immersiveintelligence.material.dust_formaldehyde.name=Formaldehyde Dust
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
@@ -110,6 +121,12 @@ item.immersiveintelligence.electric_multitool.name=Engineer's Electric Multitool
 item.immersiveintelligence.radio_configurator.basic.name=Basic Radio Tuner
 item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
 item.immersiveintelligence.machinegun.name=Machinegun
+
+//Drillheads
+item.immersiveintelligence.drillhead.tungsten.name=Tungsten Drill Head
+item.immersiveintelligence.drillhead.iron_diamond_tip.name=Diamond-Tipped Iron Drill Head
+item.immersiveintelligence.drillhead.steel_diamond_tip.name=Diamond-Tipped Steel Drill Head
+item.immersiveintelligence.drillhead.tungsten_diamond_tip.name=Diamond-Tipped Tungsten Drill Head
 
 item.immersiveintelligence.weapon_upgrade.water_cooling.name=Water Cooled Barrel
 item.immersiveintelligence.weapon_upgrade.heavy_barrel.name=Heavy Barrel
@@ -141,13 +158,16 @@ item.immersiveintelligence.printed_page.text.name=Printed Text
 item.immersiveintelligence.printed_page.code.name=Printed Code
 item.immersiveintelligence.printed_page.blueprint.name=Printed Construction Scheme
 
-item.immersiveintelligence.precission_tool.precission_buzzsaw.name=Precission Buzzsaw
-item.immersiveintelligence.precission_tool.precission_drill.name=Precission Drill
-item.immersiveintelligence.precission_tool.precission_inserter.name=Precission Inserter
-item.immersiveintelligence.precission_tool.precission_solderer.name=Precission Solderer
-item.immersiveintelligence.precission_tool.precission_welder.name=Precission Welder
+item.immersiveintelligence.precission_tool.precission_buzzsaw.name=Precision Buzzsaw
+item.immersiveintelligence.precission_tool.precission_drill.name=Precision Drill
+item.immersiveintelligence.precission_tool.precission_inserter.name=Precision Inserter
+item.immersiveintelligence.precission_tool.precission_solderer.name=Precision Solderer
+item.immersiveintelligence.precission_tool.precission_welder.name=Precision Welder
+item.immersiveintelligence.precission_tool.precission_hammer.name=Precision Hammer
 
-item.immersiveintelligence.precission_tool.precission_welder.name=Precission Welder
+item.immersiveintelligence.sawblade.iron.name=Iron Saw Blade
+item.immersiveintelligence.sawblade.steel.name=Steel Saw Blade
+item.immersiveintelligence.sawblade.tungsten.name=Tungsten Saw Blade
 
 //bCal - Block-Caliber (1/16 Block = 1 bCal)
 item.immersiveintelligence.casing_artillery.name=Artillery Shell Casing
@@ -217,6 +237,7 @@ tile.immersiveintelligence.storage_slab.tungsten.name=Tungsten Slab
 tile.immersiveintelligence.ore.salt.name=Salt Ore
 
 tile.immersiveintelligence.ore.fluorite.name=Nether Fluorite Ore
+tile.immersiveintelligence.ore.phosphorus.name=Nether Phosphorus Ore
 
 tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
@@ -295,13 +316,14 @@ tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced 
 
 tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=SkyCrate Station
 tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=SkyCrate Post
+tile.immersiveintelligence.wooden_multiblock.sawmill.name=Sawmill
 tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithmetic Logic Machine
 tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
 tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
 tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Chemical Bath
 tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Electrolyzer
-tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Precission Assembler
+tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Precision Assembler
 tile.immersiveintelligence.metal_multiblock.persicope.name=Periscope
 tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Artillery Howitzer
 tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Ballistic Computer
@@ -317,13 +339,14 @@ tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Redsto
 
 desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
 desc.immersiveengineering.info.multiblock.II:SkyCratePost=SkyCrate Post
+desc.immersiveengineering.info.multiblock.II:Sawmill=Sawmill
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
 desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Arithmetic Logic Machine
 desc.immersiveengineering.info.multiblock.II:RadioStation=Radio Station
 desc.immersiveengineering.info.multiblock.II:PrintingPress=Printing Press
 desc.immersiveengineering.info.multiblock.II:ChemicalBath=Chemical Bath
 desc.immersiveengineering.info.multiblock.II:Electrolyzer=Electrolyzer
-desc.immersiveengineering.info.multiblock.II:PrecissionAssembler=Precission Assembler
+desc.immersiveengineering.info.multiblock.II:PrecissionAssembler=Precision Assembler
 desc.immersiveengineering.info.multiblock.II:Periscope=Periscope
 desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Artillery Howitzer
 desc.immersiveengineering.info.multiblock.II:BallisticComputer=Ballistic Computer
@@ -342,13 +365,21 @@ fluid.ink=Ink
 fluid.ink_cyan=Cyan Ink
 fluid.ink_magenta=Magenta Ink
 fluid.ink_yellow=Yellow Ink
+
 fluid.etching_acid=Etching Acid
 fluid.hydrofluoric_acid=Hydrofluoric Acid
 fluid.sulfuric_acid=Sulfuric Acid
+fluid.nitric_acid=Nitric Acid
+
 fluid.oxygen=Oxygen
 fluid.hydrogen=Hydrogen
 fluid.chlorine=Chlorine
+
 fluid.brine=Brine
+
+fluid.ammonia=Ammonia
+fluid.hexamine=Hexamine
+fluid.methanol=Methanol
 
 
 //Sounds
@@ -559,6 +590,11 @@ desc.immersiveengineering.info.blueprint.basic_circuits=Basic Circuits
 desc.immersiveengineering.info.blueprint.advanced_circuits=Advanced Circuits
 desc.immersiveengineering.info.blueprint.processors=Processors
 
+desc.immersiveengineering.info.blueprint.basic_functional_circuits=Basic Functional Circuits
+desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced Functional Circuits
+
+desc.immersiveengineering.info.blueprint.metal_springs=Springs
+
 //Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence
 advancement.immersiveintelligence.root.desc=RTFM?
@@ -569,9 +605,90 @@ advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels w
 advancement.immersiveintelligence.secret_connect_wire=Who dares wins
 advancement.immersiveintelligence.secret_connect_wire.desc=You had enough? Now give me a rest.
 
+advancement.immersiveintelligence.advanced_circuit_board=Better, Harder, Faster!
+advancement.immersiveintelligence.advanced_circuit_board.desc=Produce an Advanced Circuit Board
+
+advancement.immersiveintelligence.artillery_howitzer=Bertha's Sister
+advancement.immersiveintelligence.artillery_howitzer.desc=Create an Artillery Howitzer
+
+advancement.immersiveintelligence.chemical_bath=The Bulbulator
+advancement.immersiveintelligence.chemical_bath.desc=Create a Chemical Bath
+
+advancement.immersiveintelligence.circuit_board=Beep boop?
+advancement.immersiveintelligence.circuit_board.desc=Produce a Circuit Board
+
+#Ay you, yes you @CrimsonTwilight, we know you want the inserters in IG :D
+advancement.immersiveintelligence.craft_advanced_inserter=The Crimson Inserter
+advancement.immersiveintelligence.craft_advanced_inserter.desc=Craft an upgraded version of the inserter.
+
+advancement.immersiveintelligence.craft_binoculars=Tactical Observation
+advancement.immersiveintelligence.craft_binoculars.desc=Craft the binoculars
+
+advancement.immersiveintelligence.craft_chemdispenser=A Flame in the Black night
+advancement.immersiveintelligence.craft_chemdispenser.desc=Craft the Chemical Dispenser
+
+advancement.immersiveintelligence.craft_inserter=No yellow ones, sorry!
+advancement.immersiveintelligence.craft_inserter.desc=Craft an Inserter
+
+#Long story short, in Company of Heroes 2 on Wikinger Mod, there is a special unit type - the infiltrators
+#Those guys often have superior firepower and accuracy, German units are using the Sturmgewehrs with infrared sights
+#That's why all the infiltration stuff in II is related to Infrared Vision
+advancement.immersiveintelligence.craft_ir_binoculars=The Infiltrator
+advancement.immersiveintelligence.craft_ir_binoculars.desc=Craft the Infrared Binoculars
+
+#Reference to Fullmetal Alchemist: Brotherhood (Lust death scene)
+advancement.immersiveintelligence.craft_lighter=Comeback of the Zippo Guy
+advancement.immersiveintelligence.craft_lighter.desc=Craft a Lighter
+
+advancement.immersiveintelligence.craft_mg=Property of Hans
+advancement.immersiveintelligence.craft_mg.desc=Craft the infamous Machinegun
+
+advancement.immersiveintelligence.craft_siren=Is the reactor OK?
+advancement.immersiveintelligence.craft_siren.desc=Craft an Alarm Siren
+
+advancement.immersiveintelligence.electrolyzer=Fluid Shock Therapy
+advancement.immersiveintelligence.electrolyzer.desc=Create an Electrolyzer
+
+advancement.immersiveintelligence.hans_9000=Hans 9000
+advancement.immersiveintelligence.hans_9000.desc=Prepare the MG for stationary defense
+
+#A reference to the well known engineer and weapon maker Jörg Sprave
+advancement.immersiveintelligence.let_me_show_you_its_features=Let me show you its Features!
+advancement.immersiveintelligence.let_me_show_you_its_features.desc=Upgrade the MG with an Infrared Scope, a Heavy Barrel and a Second Magazine
+
+#A JoJo reference
+advancement.immersiveintelligence.make_platinum=Better than the World?
+advancement.immersiveintelligence.make_platinum.desc=Acquire a Platinum Ingot
+
+#A Dr. Stone reference
+advancement.immersiveintelligence.make_tungsten=Defeating the Monster with Heat
+advancement.immersiveintelligence.make_tungsten.desc=Acquire a Tungsten Ingot
+
+advancement.immersiveintelligence.make_tungsten_drillhead=Faster than Dwarves
+advancement.immersiveintelligence.make_tungsten_drillhead.desc=Craft a Tungsten Drill Head
+
+#Reference to a well known mod
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond=Tinkering with Tools
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond.desc=Craft a Diamond Tipped Tungsten Drill Head
+
+advancement.immersiveintelligence.prec_assembler=Quality: Masterwork
+advancement.immersiveintelligence.prec_assembler.desc=Craft the Precision Assembler
+
+advancement.immersiveintelligence.printing_press=Low on ink
+advancement.immersiveintelligence.printing_press.desc=Create a Printing Press
+
+#Ah, the good old Crysis 3
+advancement.immersiveintelligence.processor_circuit_board=Can it run Crysis?
+advancement.immersiveintelligence.processor_circuit_board.desc=Produce an Processor Circuit Board
+
+advancement.immersiveintelligence.radio_station=Remote Control
+advancement.immersiveintelligence.radio_station.desc=Create a Radio Station
+
+
+//Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
+//The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
 advancement.immersiveintelligence.secret_cocoa=Stories of Deco Morreno
 advancement.immersiveintelligence.secret_cocoa.desc=The supreme quality has been achieved.
-
 
 //Manual Categories
 
@@ -580,13 +697,15 @@ ie.manual.category.ii_warfare.name=Warfare
 ie.manual.category.ii_logi.name=Logistics
 ie.manual.category.ii_intel.name=Intelligence
 
-//Manual - Data
+//Data and Electronics
 
+#Reference to... flow control... yeah, really, that boring
 ie.manual.entry.data_main.name=Data
 ie.manual.entry.data_main.subtext=Controlling the Flow
 ie.manual.entry.data_main0=When you want to control an automated factory, power plant or a different complicated structure you need some kind of a control system. <br>Redstone is good for a start, but with lots of machines the messy nature of it starts to show - and that's an appropriate moment to introduce The Data System.
 ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain 36 <link;data_variable_types;§n§oVariables§r;> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
 
+#Reference to possibly a box of foodstuffs
 ie.manual.entry.data_variable_types.name=Variable Types
 ie.manual.entry.data_variable_types.subtext=Results May Vary
 ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types_null;§o§nNull§r;>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types_null;§o§nNull§r;>, <link;data_variable_types_int;§o§nInteger§r;>, <link;data_variable_types_string;§o§nString§r;>, <link;data_variable_types_bool;§o§nBoolean§r;>, there are also a couple of more advanced types like <link;data_variable_types_itemstack;§o§nItemStack§r;>, <link;data_variable_types_array;§o§nArray§r;>, <link;data_variable_types_pair;§o§nPair§r;> and <link;data_variable_types_range;§o§nRange§r;>.
@@ -615,12 +734,241 @@ ie.manual.entry.true=True
 
 ie.manual.entry.circuit_production.name=Circuitry
 ie.manual.entry.circuit_production.subtext=Not really Beep-Boop yet
-ie.manual.entry.circuit_production0=Circuits are one of the most important and commonly used electronic parts. There are three kinds of circuits: <link;circuit_production_basic;§n§obasic§r;> - made using vacuum tubes and redstone, <link;circuit_production_advanced;§n§oadvanced§r;> - made using Advanced Electronic Alloy™ and upgraded vacuum tubes. The most sophisticated are the <link;circuit_production_processor;§n§oprocessor§r;> circuits, which are made mainly of silicon in a complicated <link;precission_assembler;§o§nassembly§r;> process.
-ie.manual.entry.circuit_production_basic=Basic circuits are the common, primary and cheap circuits. They can be refitted to perform simple arithmetic, logic and text operations, but their main use is construction of various machines. To produce a basic circuit a raw circuit board has to be <chemical_bath;barrel;§o§netched§r;> in acid and then a chip made of vacuum tubes in the <link;precission_assembler;§o§nPrecission §o§Assembler§r;> has to be installed onto them.
-ie.manual.entry.circuit_production_basic_usages=Basic circuits are used to make basic-tier electronic devices and machines, such as the Printing Press, the <link;arithmetic_logic_machine;§o§nArithmetic-Logic §o§nMachine§r;> and the <link;data_input_machine;§o§nData §o§Input §o§nMachine§r;>.
+ie.manual.entry.circuit_production0=Circuits are one of the most important and commonly used electronic parts. There are three kinds of circuits: <link;circuit_production_basic;§n§obasic§r;> - made using vacuum tubes and redstone, <link;circuit_production_advanced;§o§nadvanced§r;> - made using Advanced Electronic Alloy™ and upgraded vacuum tubes. The most sophisticated are the <link;circuit_production_processor;§o§nprocessor§r;> circuits, which are made mainly of silicon in a complicated <link;precision_assembler;§o§nassembly§r;> process.
+ie.manual.entry.circuit_production_basic=Basic circuits are the common, primary and cheap circuits. They can be refitted to perform simple arithmetic, logic and text operations, but their main use is construction of various machines. To produce a basic circuit a raw circuit board has to be <chemical_bath;§o§netched§r;> in acid and then a chip made of vacuum tubes in the <link;precission_assembler;§o§nPrecision §o§nAssembler§r;> has to be installed onto them.
+ie.manual.entry.circuit_production_basic_usages=Basic circuits are used to make basic-tier electronic devices and machines, such as the Printing Press, the <link;arithmetic_logic_machine;§o§nArithmetic-Logic §o§nMachine§r;> and the <link;data_input_machine;§o§nData §o§nInput §o§nMachine§r;>.
 ie.manual.entry.circuit_production_advanced=Advanced circuits are a direct upgrade to their predecessors, they still use vacuum tubes, but because of the new alloy used, their capabilities are much better. They are made of an upgraded circuit board and a chip composed of upgraded vacuum tubes.
 ie.manual.entry.circuit_production_advanced_usages=Because of their fast transmission rate, they can be refitted for performing more advanced arithmetic, logic, text and even item-processing operations. Because of their superior speed, they are used in wireless transmission and advanced computing machines.
 ie.manual.entry.circuit_production_processor=Processor circuits are the most advanced and powerful circuits in the world, crafted using silicon, advanced electronic alloy and various other materials during a multi-step assembly process.
 ie.manual.entry.circuit_production_processor_usages=Currently processors are not used in making anything, so build them more as a challenge than an actually needed item.
 
+#Reference to a Polish tinkerer/Baumeister slang word meaning doohickey, thingamabob, but in exact meaning a device that makes the "bul bul" (splash splash?) noise
+ie.manual.entry.chemical_bath.name=Chemical Bath
+ie.manual.entry.chemical_bath.subtext=The Bulbulator
+ie.manual.entry.chemical_bath0=The Chemical Bath is a machine, constructed of an industrial-size steel bathtub and a moving carriage with a grasper. The machine is commonly used for etching raw circuits in acid.
+
+#Reference to Dr.Stone
+ie.manual.entry.precission_assembler.name=Precision Assembler
+ie.manual.entry.precission_assembler.subtext=The Godly Artisan
+ie.manual.entry.precission_assembler0=The Precision Assembler is an advanced machine used for crafting items with high precision. It requires an Assembly Scheme and some precise tools for operation. Because of its high precision,
+ie.manual.entry.precission_assembler1=the machine uses only the amount it needs and outputs scrap along with the produced item. Its most common use is electonic component production.
+
+ie.manual.entry.electrolyzer.name=Electrolyzer
+ie.manual.entry.electrolyzer.subtext=The fluid shock therapy
+ie.manual.entry.electrolyzer0=The Electrolyzer is a machine which uses the electrolysis process to split a fluid into two different ones. It can split water into hydrogen and oxygen and brine into chlorine and hydrogen. It requires electricity to operate.
+
+ie.manual.entry.printing_press.name=Printing Press
+ie.manual.entry.printing_press.subtext=The Engineer's Book & Quill
+ie.manual.entry.printing_press0=The Printing Press is a machine which can print out text on demand when it receives a data packet. The Press requires ink and paper to operate. The printing paper is a special thinned version of a standard one used in books. Machine requires different
+ie.manual.entry.printing_press1=amount of inks depending on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
+ie.manual.entry.printing_press2=String 't' - output type (text/construction/code)<br>Integer c - amount of copies<br>String 's' - text to print (if using the mode "text")<br>
+
+ie.manual.entry.data_input_machine.name=Data Input Machine
+ie.manual.entry.data_input_machine.subtext=The Input Outputter
+ie.manual.entry.data_input_machine0=The Data Input Machine is an electronic device which consists of a wooden desk with a keyboard on top and a steel machine casing. A user can input data into it and send it by applying a redstone signal. After sending a data packet, the variables remain there and the machine can be used again. To operate, the device requires electricity.
+ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift). When editing the
+
+#Reference to a song
+ie.manual.entry.arithmetic_logic_machine.name=Arithmetic-Logic Machine
+ie.manual.entry.arithmetic_logic_machine.subtext=Does Quick Maths
+ie.manual.entry.arithmetic_logic_machine0=The Arithmetic-Logic Machine is an electronic device, which primary task is to process and modify data. It requires energy and to operate.
+ie.manual.entry.arithmetic_logic_machine1=When a data packet is received at the left side of the machine, it uses functional circuits placed into 4 slots in the rack to change variables accordingly. The machine iterates trough all the circuits and then trough variables alphabetically and sets their values to the result of the given Expression. The expression consists of 2 values and an operator (+,-,*, etc.). Each circuit has a list of available expressions. The expression can also have a Conditional Variable (a Boolean),
+ie.manual.entry.arithmetic_logic_machine2=The machine also offers a non-standard datatype, the Accessor, which doesn't hold any value of its own, but can get a value from variable from the received packet. The variable in an expression can be toggled to an Accessor by clicking the '@' button.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_arithmetic=Arithmetic Circuit<br>This circuit  is used to calculate basic math expressions such as addition, subtraction, multiplication and division.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_arithmetic=Advanced Arithmetic Circuit<br> This circuit allows to calculate more advanced math expressions such as raising a number to a power, getting a square root or getting the lowest or highest number from two.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_logic=Logic Circuit<br> This circuit is used for basic logic expressions (like a logic gate) such as AND, OR, NOT.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_comparator=Comparator Circuit<br>This circuit allows to compare two integers and returns a boolean.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_logic=Advanced Logic Circuit<br> This circuit can perform advanced logic operations, such as NAND, NOR, XOR and XNOR and the basic ones.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_text=Text Processor Circuit<br> This circuit can do basic text processing, currently only allows to merge two Strings.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_itemstack=ItemStack Operations Circuit<br> This circuit can get and manipulate the properties of an ItemStack datatype, it can be used for getting/setting the stack's NBT, meta and id. Can be used in combination with other circuits to control a logistic system.
+
+#Reference to Fullmetal Alchemist
+ie.manual.entry.redstone_interface.name=Redstone Interface
+ie.manual.entry.redstone_interface.subtext=The Equivalent Exchange
+ie.manual.entry.redstone_interface0=The Redstone Interface is a bridge between the old, but still used redstone and the new data system. It can convert data from and to a redstone signal. Because it's only a converter, the machine doesn't use any power.
+ie.manual.entry.redstone_interface1=The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, but the most important ones are the data input port, on which a connector needs to be placed and a built-in redstone output connector, to which you can attach a wire. In the user interface there are two sections, data to redstone and the opposite. After you add an entry, you have to specify the variable letter and the corresponding redstone colour.
+
+#Reference to a meme
+ie.manual.entry.conveyor_scanner.name=Conveyor Scanner
+ie.manual.entry.conveyor_scanner.subtext=Get the camera!
+ie.manual.entry.conveyor_scanner0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. Then an item passes trough the Conveyor Scanner, its properties are read and sent in an ItemStack type variable 's' inside a Data Packet. To operate, the machine requires electricity.
+
+#Reference to Factorio
+ie.manual.entry.inserters.name=Inserters
+ie.manual.entry.inserters.subtext=No yellow this time!
+ie.manual.entry.inserters0=The Precision Insertion Device, also known as the Inserter is a device used to transfer items from one inventory to another. Item inserters consists of an arm and motors for rotation and handling the item pickup. Fluid inserters use pipes and automatic valves. Inserters are able to take and output from and to any horizontal side desired.
+ie.manual.entry.inserters1=The Inserter's sides can be configured with a hammer (sneak to set output). Inserters require electricity to run and data to tell them what to do.
+ie.manual.entry.inserters_basic=The basic inserter is used for simple, but controlled item transfer. Made of basic circuits and mechanical components, it is a cheap and easy way to determine how many items should be transfered from one block to other.
+ie.manual.entry.inserters_basic_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of items<br>
+ie.manual.entry.inserters_advanced=The advanced inserter is an upgraded version, which allows to filter picking certain items and allows picking up crates and barrels from minecarts. The Advanced Inserters are much faster, but they also drain more power.
+ie.manual.entry.inserters_advanced_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of items<br>Boolean 'b' - can pick blocks (from minecarts)<br>String 'f' - filter mode (whitelist, blacklist, none)<br>String 'g' - advanced filter mode (exact, item, oredict)<br> String 'w' - minecart take mode (items / block)<br>ItemStacks '1'-'0' - item filters
+ie.manual.entry.inserters_fluid=The fluid inserter is a precise limiter of fluid transfer. In some situations you want to insert only a required amount, this device does exactly that.
+ie.manual.entry.inserters_fluid_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of fluid (mB)<br>
+
+#Reference to IndustrialCraft's siren addon
+ie.manual.entry.alarm_siren.name=Alarm Siren
+ie.manual.entry.alarm_siren.subtext=The reactor is OK, was, at least.
+ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noise when provided a redstone signal. Redstone wire can be attached from any side. The siren, like every redstone connector, can be reconfigured to use a different redstone channel (default is white).
+
+#Reference to an event from my life
+ie.manual.entry.radio_station.name=Radio Station
+ie.manual.entry.radio_station.subtext=The Wireless Wire™
+ie.manual.entry.radio_station0=The Radio Station is a device for sending and receiving data wirelessly. Radio stations can only communicate, when they are in range (which is lower in bad weather), when they work on the same frequency and when both towers are given enough electrical energy.
+ie.manual.entry.radio_station1=The Radio Station is an advanced multiblock, which means it can be only built using an Electric Engineer's Hammer in a 2-step process. In the first stage the multiblock must be built like every other, in the second energy (trough using the electric hammer) has to be provided to finish it.
+ie.manual.entry.radio_station2=The Radio Station's frequency can be set by using a Radio Tuner. There are 2 versions of the tuner with different ranges of frequencies. The radio station can use only the basic range.
+
+#Reference to... Immersive Engineering's Curse Description
+ie.manual.entry.small_data_devices.name=Small Data Devices
+ie.manual.entry.small_data_devices.subtext=The Gray Future Cubes
+ie.manual.entry.data_merger=The data merger is a machine which can combine two data inputs from the sides into an output to the front. The machine has a toggle for the preferred side to take variable from. Each variable also has a side override mode, green is the left and red is the right, darker colours remove the variable if the latest packet from that side doesn't contain the variable.
+ie.manual.entry.data_router=Data router allows to direct a packet into a specific side, which is defined by one of the packet's variables (can be set on the router by sneak using hammer). The variable has to be an integer.<br>Top - 0<br>Bottom - 1<br>North - 2<br>South - 3<br>East - 4<br>West - 5
+ie.manual.entry.redstone_buffer=The redstone buffer is a device which can hold an incoming data packet, until it doesn't receive a redstone signal.
+ie.manual.entry.timed_buffer=The timed buffer is a device, which can hold an incoming data packet for a given amount of time. The duration is set by the variable '0' (a number of ticks to wait).
+ie.manual.entry.small_data_buffer=The small data buffer is a device which can hold up to 4 packets and can release them using the First-In-First-Out method when given a redstone signal.
+
+ie.manual.entry.data_wires.name=Data Wiring
+ie.manual.entry.data_wires.subtext=Not really powerlines
+ie.manual.entry.data_wires0=Trough the wires, data is sent and received immediately. In some cases using <link;radio_station;§o§nWireless §o§nTransmission§r;> might be better, but wires offer better stability during harsh weather and are cheaper.
+ie.manual.entry.data_wires1=Data wires like most cabling have their own relays and connectors, which split and connect machines. These can be used to create great logistic, warfare, intelligence and production networks.
+
+ie.manual.entry.tools.name=Data Wiring
+ie.manual.entry.tools.subtext=Not really powerlines
+ie.manual.entry.tools0=Trough the wires, data is sent and received immediately. In some cases using <link;radio_station;§o§nWireless §o§nTransmission§r;> might be better, but wires offer better stability during harsh weather and are cheaper.
+ie.manual.entry.tools1=Data wires like most cabling have their own relays and connectors, which split and connect machines. These can be used to create great logistic, warfare, intelligence and production networks.
+
+
+//Intelligence
+
+#Reference to Dr. Stone
+ie.manual.entry.intel_main.name=Intelligence
+ie.manual.entry.intel_main.subtext=Science's most powerful weapon
+ie.manual.entry.intel_main0=Intelligence is a branch of engineering focused on espionage, infiltration, sabotage and reconnaissance.<br>Intelligence offers multiple tools and machines to observe and predicate enemy movements. These include simple ones like the Binoculars and advanced like the Infrared Observer or Strategic Command Table.
+
+#Reference to Dr. Stone
+ie.manual.entry.binoculars.name=Binoculars
+ie.manual.entry.binoculars.subtext=The Eyes of the Science
+ie.manual.entry.binoculars0=The Binoculars are a tool, that allows further vision. They are based on the same magnification principle the scope of the <link;railgun;§o§nRailgun§r;>.
+ie.manual.entry.binoculars1=The Infrared Binoculars are an upgraded version of the regular ones. When provided energy i.e. from a <link;powerpack;§o§nCapacitor §o§nBackpack§r;> it allows night vision, don't use them in lighted areas, it could severely blind you.
+
+#Reference to Ubersoldaten from Wolfenstein
+ie.manual.entry.infiltrators_goggles.name=Infiltrator's Goggles
+ie.manual.entry.infiltrators_goggles.subtext=Übervision
+ie.manual.entry.infiltrators_goggles0=
+
+#Reference to Orwell's 1984
+ie.manual.entry.infrared_observer.name=Infrared Observer
+ie.manual.entry.infrared_observer.subtext=The Big Brother
+ie.manual.entry.infrared_observer0=
+
+#Reference to the Battle of Britain in WW2
+ie.manual.entry.radar.name=Radar
+ie.manual.entry.radar.subtext=A relic from Dover
+ie.manual.entry.radar0=
+
+#Reference to a book by Sun Tzu
+ie.manual.entry.strategic_command_table.name=Strategic Command Table
+ie.manual.entry.strategic_command_table.subtext=The Art of War
+ie.manual.entry.strategic_command_table0=
+
+//Warfare
+
+#Reference to an RTS game
+ie.manual.entry.warfare_main.name=Warfare
+ie.manual.entry.warfare_main.subtext=Engineer & Conquer
+ie.manual.entry.warfare_main0=Warfare is a branch of engineering focused on defense and offense against enemies. Engineered inventions have revolutionised the modern way of combat, swords and shields have become obsolete, the era of projectile weapons has come. Modern warfare is based on both precise and fast attacks with range superior to any weapon of the past.
+
+#Reference to the well known meme
+ie.manual.entry.machinegun.name=Machinegun
+ie.manual.entry.machinegun.subtext=Property of Hans
+ie.manual.entry.machinegun0=The machinegun is a pioneering, sophisticated new invention, that allows effective defense against all sorts of threats. Unlike most manned weapons, the machinegun can not be fired on the go. In order to fire it has to be displaced on a block with enough space. The MG uses disposable magazines, which can be loaded with bullets in the <link;packer;§o§nPacker§r;>.
+ie.manual.entry.machinegun1=While firing bullets, casings drop on the ground to be picked. The MG is prone to overheating, which depends on the firing rate. The gun like most modern-day equipment allows for different configurations using upgrades, such as water cooling, scopes, change of bipod and more.
+
+ie.manual.entry.machinegun_upgrade_heavy_barrel=The heavy barrel is a modification, which increases the gun fire rate dramatically, but by that also increases the speed of the gun overheating. Firing the gun with short bursts is the best tactic using this upgrade.
+ie.manual.entry.machinegun_upgrade_water_cooling=The heavy barrel is a modification that allows to fill the tank underneath the barrel with coolant (such as water), this almost eliminates the gun overheating. Laying suppresive fire with this upgrade is a good idea, but you have to do it with precision, because of the gun's slow firing rate.
+ie.manual.entry.machinegun_upgrade_belt_fed_loader=*CURRENTLY NOT IMPLEMENTED* The belt fed ammunition loader allows for loading ammunition from a belt, provided by the ammunition crate below the firing position.
+ie.manual.entry.machinegun_upgrade_second_magazine=The double magazine upgrade allows to load two magazines into the gun, the second magazine can be loaded from the offhand.
+ie.manual.entry.machinegun_upgrade_hasty_bipod=The field bipod is a hastily-made replacement for the default one, it decreases the gun's deployment speed, but increases the recoil.
+ie.manual.entry.machinegun_upgrade_precise_bipod=The precise bipod is a replacement for the default one, made with high precision, it increases the gun's deployment speed, but decreases the recoil.
+ie.manual.entry.machinegun_upgrade_scope=The machinegun scope is a modified version of the scope from the <link;railgun;§o§nRailgun§r;> that allows magnification of the distant target.
+ie.manual.entry.machinegun_upgrade_infrared_scope=The infrared scope is an upgraded version of its predecessor, which can also provide nightvision using the infrared reflector and a special filter, to work it requires energy provided by a capacitor backpack.
+
+ie.manual.entry.grenade.name=Grenades
+ie.manual.entry.grenade.subtext=Achtung, Granate!
+ie.manual.entry.grenade0=The stick-hand-grenade is a thrown weapon that contains explosives or other material that triggers on contact.
+
+#Reference to Dicker Bertha cannon
+ie.manual.entry.artillery_howitzer.name=Artillery Howitzer
+ie.manual.entry.artillery_howitzer.subtext=Bertha's Sister
+ie.manual.entry.artillery_howitzer0=
+ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, that allows attacking targets as distant as 300 blocks. It is controlled using the data system and loaded with special high-caliber shells. It is best used in offensive operations.
+ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate.
+ie.manual.entry.artillery_howitzer3=Variables<br>String 'm' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
+
+ie.manual.entry.ballistic_computer.name=Ballistic Computer
+ie.manual.entry.ballistic_computer.subtext=Calculate this to that
+ie.manual.entry.ballistic_computer0=The Ballistic Computer is a device that translates a position vector and bullet mass to yaw and pitch used by most data-driven weapons.
+ie.manual.entry.ballistic_computer1=Variables input:<br>Integers 'x','y','z' - the position to fire onto<br>Integer 'm' - the bullet's mass<br>Variables output:<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun
+
+#Reference to the BluSunrize's general dislike of the machinegun and the ammunition crate
+ie.manual.entry.ammocrate.name=Ammunition Crate
+ie.manual.entry.ammocrate.subtext=Coloured green, not Blu
+ie.manual.entry.ammocrate0=The Ammunition Crate is a portable storage for all the bullets and empty casings. It can be used to load a revolver or a speedloader, by creating a load pattern and putting the cartridges inside. To reclaim a revolver from the crate, use it with an empty hand.
+
+#Reference to Blacknight, author of the sprites for electric hammer and lighter, also the author of the idea of the chemical dispenser.
+ie.manual.entry.chemdispenser.name=Chemical Dispenser
+ie.manual.entry.chemdispenser.subtext=A flame in the Black night
+ie.manual.entry.chemdispenser0=A device invented by the same engineer, who designed the electric hammer, originally for watering crops and stopping fires, it also can be used for precise spraying a position with an incendiary liquid.
+ie.manual.entry.chemdispenser1=The Chemical Dispenser requires power supplied trough a wire to the device's connector, a data signal (or a constant redstone signal) to decide about its actions and fluid to the input on the back.
+ie.manual.entry.chemdispenser2=Variables:<br>Integer 'a'-amount of fluid to spray<br>Boolean 'i' - should the fluid be ignited<br>Integers 'y','p' - yaw and pitch of the nozzle<br>
+
+#Reference to a Polish Copypasta about guys estabilishing a regime in a kindergarten and forcing the children to work on assembling pens, while making a secret police from the other kids to watch over them
+ie.manual.entry.ammunition_factory.name=Ammunition Factory
+ie.manual.entry.ammunition_factory.subtext=Still better that making pens!
+ie.manual.entry.ammunition_factory0=The Ammunition Factory is a heavy, multi-section machine which produces ammunition of all types. You can produce grenades, bullets and shells here and their effect depends on materials used.
+ie.manual.entry.ammunition_factory1=The machine requires a power supply and can be given an optional data signal to change the bullets' fuse time, colouration and name. The basic ingredients of ammunition are:<br>The core - made of metal, such as steel or brass<br>The components - explosive materials, tracer dust, incendiary materials, fireworks, etc.<br>Gunpowder - the amount used depends of ammunition's calliber.<br>The higher the calliber the bigger the capacity for the components, thus bigger the mass.
+ie.manual.entry.ammunition_factory2=When making bullets, remember: there is no such thing as "the best bullet composition", add ingredients adjacent to your needs. Need a stun grenade? Use fireworks. Need a bullet that can penetrate trough steel? Use uranium cores. Keep in mind, that combining these two will result in lower suppression modifier of the fireworks, the cores modify the strengths of the effects. Some materials like brass raise it, while some like tungsten, steel or uranium decrease it.
+ie.manual.entry.ammunition_factory3=Use the data system to name and color your bullets. This will allow you to differentiate them easier, so you won't mistake an armour-piercing round for a high-explosive one. For coloring the machine requires a supply of inks to its tank, similar to the <link;printing_press;§o§nPrinting §o§nPress§r;>.
+ie.manual.entry.ammunition_factory4=Variables:<br>Integer 'p'-percentage proportion of the bullet components (0-100)<br>Integer or String 'c'-bullet casing's colour (Int - RGB, String - Hex)<br>String 'n' - bullet name.
+
+//Logistics
+
+#Reference to Foxhole - a MMO game with a big persitent war in which logistics play a key role
+ie.manual.entry.logistics.name=Logistics
+ie.manual.entry.logistics.subtext=Logi, bmats ASAP!
+ie.manual.entry.logistics0=Logistics is a unique branch of engineering focused on storing, delivering and managing the way of transfer of goods. A good logistic system consists of a warehouse for storage and nearby production plants and factories for quick manufacturing of needed things. With the newest electronic and electric technology and some old rotary powered machines, creating a good delivery system is easier than ever.
+
+#Reference to Choroman's laziness, but also some hard work on the Packer model
+ie.manual.entry.packer.name=Packer
+ie.manual.entry.packer.subtext=Even more Pipes and Tunnels!
+ie.manual.entry.packer0=Packer is a machine used to batch load items into containers such as crates or bullet magazines. For operation it requires power and a single data signal defining how much items should be put each time. The packer receives items to be packed from the side and containers onto the bottom conveyor.
+ie.manual.entry.packer1=Variables:<br>Integer 'c'-items to pack<br>Integer or String (one_by_one, one_of_all) 'm'-item packing mode<br>Integer 'q' - insert quantity<br>Boolean 'i' - whether the machine should ignore empty stacks.
+
+#Ziplines
+ie.manual.entry.skycrates.name=Skycrates
+ie.manual.entry.skycrates.subtext=The actual logistic lines!
+ie.manual.entry.skycrates0=The skycrate system is a different approach on delivering items. It's speed is superior to any conveyor and lines made of rope are much cheaper and more space-efficient. There are also some drawbacks to it: it requires stations on both sides and the crates need to be inserted to a minecart. Skycrates are a better option than conveyors on longer distances, it is not encouraged to use them on short (0-30m) distances.
+ie.manual.entry.skycrates1=The Skycrate Station is a begin and end point of a skycrate line. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power3;§o§nGearboxes§r;>.
+ie.manual.entry.skycrates2=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. Minecarts can only enter the station when the railway barrier is up, a minecart can be forced out of the station, by applying a redstone signal. The station will automatically expell minecarts after loading/unloading.
+ie.manual.entry.skycrates3=The Skycrate Post is what a relay between two points in the skycrate network. Only two wires can be attached.
+ie.manual.entry.skycrates4=Crate minecarts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart, items inside won't be lost. When disassembled, the minecart splits into the actual cart and the crate.
+ie.manual.entry.skycrates5=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.
+
+
+//Other
+
+#Reference to a certain picture i've seen on reddit few years ago
+ie.manual.entry.sawmill.name=Sawmill
+ie.manual.entry.sawmill.subtext=The better fidget spinner!
+ie.manual.entry.sawmill0=The Sawmill is an automatic carpentry machine powered by rotary energy. It consists of a table, a mechanical inserter and saw mount. Saws made of different materials can be mounted. While every saw is effective at cutting wood, saws made of hard materials like steel and tunsten can even cut trough metals.
+ie.manual.entry.sawmill1=The machine requires a constant supply of rotary power to it's side. Resources can be inserted to table's right side and processed items are outputted to the wooden storage box on the ground
+
+ie.manual.entry.rotary_power.name=Rotary Power
+ie.manual.entry.rotary_power.subtext=Things start turning!
+ie.manual.entry.rotary_power0=Rotary power is an old-fashioned alternative to electric power. Instead of wires and connectors, wheels and motor belts are used. The power system utilizes 2 factors: torque - in Newton metres (Nm) and speed in RPM. Machines require different torque and speed to work effectively.
+ie.manual.entry.rotary_power1=If any of those values surpasses the limit, the machine explodes. Power can be merged and splitted using <link;rotary_power3;§o§nGearboxes§r;>.
+ie.manual.entry.rotary_power2=The wheel is used to transfer mechanical (rotary) power between devices. After placing it can be connected to another wheel using a motor belt, the same way connectors are linked with wires.
+ie.manual.entry.rotary_power3=The motor belts are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque or the speed it too high for the belt, it detaches from the wheel and falls on the ground. Use different materials for different needs - steel might be more resistant to torque, but power losses are higher.
+ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels together, their sides can be changed to input, output or nothing. Inputted torque from all inputs is summed and then divided equally between all outputs. You can use the gearbox to merge torque to make it higher or divide it between 2 or more wheels. The gearbox requires gears of certain resistance to torque and speed to operate on full power.
+ie.manual.entry.rotary_power5=The Transmission Boxes are used to connect mechanical devices using a different standard of axles, they can be used to connect a windmill or a waterwheel to a motor belt network or output mechanical energy to a dynamo.
+ie.manual.entry.rotary_power6=The wrench and the electric wrench can be used to open hatches of mechanical devices for maintenance purposes, such as changing gears in a gearbox.
 

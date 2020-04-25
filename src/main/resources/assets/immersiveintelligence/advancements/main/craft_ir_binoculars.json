@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:binoculars",
+      "data": 1
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_ir_binoculars"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_ir_binoculars.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_binoculars",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:binoculars",
+            "data": 1
+          }
+        ]
+      }
+    }
+  }
+}

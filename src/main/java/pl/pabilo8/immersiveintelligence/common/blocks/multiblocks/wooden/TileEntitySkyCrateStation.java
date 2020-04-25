@@ -160,9 +160,9 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	{
 		super.update();
 
-		boolean b = false;
 		if(!isDummy()&&!world.isRemote)
 		{
+			boolean b = false;
 			if(rotation.getRotationSpeed() > SkycrateStation.rpmBreakingMax||rotation.getTorque() > SkycrateStation.torqueBreakingMax)
 			{
 				selfDestruct();

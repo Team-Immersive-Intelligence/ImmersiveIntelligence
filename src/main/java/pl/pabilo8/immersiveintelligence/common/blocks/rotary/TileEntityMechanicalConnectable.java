@@ -35,6 +35,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
  */
 public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiveConnectable implements IMotorBeltConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IOBJModelCallback<IBlockState>, IRotationalEnergyBlock
 {
+	protected MotorBeltNetwork beltNetwork = new MotorBeltNetwork().add(this);
 	public RotaryStorage energy = new RotaryStorage()
 	{
 		@Override
@@ -55,7 +56,6 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 			return getNetwork()!=null?(float)getNetwork().getNetworkTorque(): this.getTorque();
 		}
 	};
-	protected MotorBeltNetwork beltNetwork = new MotorBeltNetwork().add(this);
 	protected boolean refreshBeltNetwork = false;
 
 	@Override
@@ -168,12 +168,12 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	public void onChange()
 	{
 
-			/*
-			markDirty();
-			IBlockState stateHere = world.getBlockState(pos);
-			markContainingBlockForUpdate(stateHere);
-			markBlockForUpdate(getConnectionPos(), stateHere);
-			 */
+
+		markDirty();
+		IBlockState stateHere = world.getBlockState(pos);
+		markContainingBlockForUpdate(stateHere);
+		markBlockForUpdate(getConnectionPos(), stateHere);
+
 		//IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, getPos()), Utils.targetPointFromTile(this, 32));
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(getNetwork().getEnergyStorage(), 1, getPos()), Utils.targetPointFromTile(this, 32));
 

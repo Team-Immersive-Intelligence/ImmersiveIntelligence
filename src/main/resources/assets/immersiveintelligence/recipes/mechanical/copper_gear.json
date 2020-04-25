@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " i ",
+    "ipi",
+    " i "
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotCopper"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateCopper"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:motor_gear",
+    "data": 0,
+    "count": 1
+  }
+}

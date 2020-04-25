@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device",
+    "data": 1
+  },
+  "pattern": [
+    "gpg",
+    " c ",
+    "gpg"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "dyeGreen"
+    },
+    "c": {
+      "item": "immersiveintelligence:metal_device",
+      "data": 0
+    }
+  }
+}

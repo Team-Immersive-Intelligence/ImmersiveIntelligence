@@ -1,0 +1,34 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 7
+  },
+  "pattern": [
+    " n ",
+    "pep",
+    "pcb"
+  ],
+  "key": {
+    "n": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 7
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "b": {
+      "item": "immersiveengineering:metal_device0",
+      "data": 4
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "engineElectricSmall"
+    }
+  }
+}

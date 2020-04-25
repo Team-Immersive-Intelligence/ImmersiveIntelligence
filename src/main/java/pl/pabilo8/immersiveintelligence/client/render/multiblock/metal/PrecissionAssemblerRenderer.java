@@ -26,6 +26,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 	public static ModelPrecissionBuzzsaw modelBuzzsaw = new ModelPrecissionBuzzsaw();
 	public static ModelPrecissionSolderer modelSolderer = new ModelPrecissionSolderer();
 	public static ModelPrecissionWelder modelWelder = new ModelPrecissionWelder();
+	public static ModelPrecissionHammer modelHammer = new ModelPrecissionHammer();
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPrecissionAssembler model = new ModelPrecissionAssembler();
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";

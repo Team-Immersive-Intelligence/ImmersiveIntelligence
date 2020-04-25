@@ -1,12 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.items.weapons;
 
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -19,12 +22,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 
 import java.util.List;
-
-import static pl.pabilo8.immersiveintelligence.common.items.ItemIIBase.fixupItem;
 
 /**
  * Created by Pabilo8 on 01-11-2019.
@@ -35,7 +38,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 	{
 		super("machinegun", 1, "MACHINEGUN");
 		//Use interfaces pls Blu
-		fixupItem(this);
+		fixupItem();
 	}
 
 	@Override
@@ -171,5 +174,29 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 			}
 		}
+	}
+
+	public void fixupItem()
+	{
+		//First, get the item out of IE's registries.
+		Item rItem = IEContent.registeredIEItems.remove(IEContent.registeredIEItems.size()-1);
+		if(rItem!=this) throw new IllegalStateException("fixupItem was not called at the appropriate time");
+
+		//Now, reconfigure the block to match our mod.
+		this.setTranslationKey(ImmersiveIntelligence.MODID+"."+this.itemName);
+		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
+
+		//And add it to our registries.
+		CommonProxy.items.add(this);
+	}
+
+	@Override
+	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
+	{
+		NBTTagCompound upgrades = getUpgrades(stack);
+		if(!Utils.hasUnlockedIIAdvancement(player, "main/let_me_show_you_its_features")&&upgrades.hasKey("heavy_barrel")&&upgrades.hasKey("second_magazine")&&upgrades.hasKey("infrared_scope"))
+			Utils.unlockIIAdvancement(player, "main/let_me_show_you_its_features");
+		if(!Utils.hasUnlockedIIAdvancement(player, "main/hans_9000")&&upgrades.hasKey("belt_fed_loader")&&upgrades.hasKey("precise_bipod")&&upgrades.hasKey("heavy_barrel"))
+			Utils.unlockIIAdvancement(player, "main/hans_9000");
 	}
 }

@@ -9,6 +9,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevic
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -310,7 +311,9 @@ public class MultiblockPrintingPress implements IMultiblock
 			te = new TileEntityPrintingPress();
 			te.facing = EnumFacing.NORTH;
 		}
-
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-3, 2, 2);
 		ImmersiveIntelligence.proxy.renderTile(te);
+		GlStateManager.popMatrix();
 	}
 }

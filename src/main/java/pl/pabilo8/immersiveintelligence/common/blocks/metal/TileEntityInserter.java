@@ -32,6 +32,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
@@ -330,7 +332,6 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 	@Override
 	public void readOnPlacement(@Nullable EntityLivingBase placer, ItemStack stack)
 	{
-
 		if(stack.hasTagCompound())
 		{
 			receiveMessageFromServer(stack.getTagCompound());
@@ -379,17 +380,8 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 		if(pickProgress < 1)
 			pickProgress = 0;
 
-		if(world.isRemote&&world.getTotalWorldTime()%10==0)
-		{
-			if(armDirection!=nextDirection)
-			{
-				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_backward, SoundCategory.BLOCKS, .25f, 1);
-			}
-			else if(pickProgress!=nextPickProgress)
-			{
-				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_forward, SoundCategory.BLOCKS, .25f, 1);
-			}
-		}
+		if(world.isRemote)
+			handleSounds();
 
 		if(energyStorage > Inserter.energyUsage&&armDirection!=nextDirection||pickProgress!=nextPickProgress)
 		{
@@ -660,5 +652,21 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 		ItemNBTHelper.setInt(stack, "outputFacing", outputFacing.ordinal());
 		ItemNBTHelper.setInt(stack, "inputFacing", inputFacing.ordinal());
 		return stack;
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void handleSounds()
+	{
+		if(world.isRemote&&world.getTotalWorldTime()%10==0)
+		{
+			if(armDirection!=nextDirection)
+			{
+				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_backward, SoundCategory.BLOCKS, .25f, 1);
+			}
+			else if(pickProgress!=nextPickProgress)
+			{
+				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_forward, SoundCategory.BLOCKS, .25f, 1);
+			}
+		}
 	}
 }

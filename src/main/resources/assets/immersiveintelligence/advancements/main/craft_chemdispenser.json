@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:data_connector",
+      "data": 7
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_chemdispenser"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_chemdispenser.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/circuit_board",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:data_connector",
+            "data": 7
+          }
+        ]
+      }
+    }
+  }
+}

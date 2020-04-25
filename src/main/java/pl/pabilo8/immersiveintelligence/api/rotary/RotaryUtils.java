@@ -334,7 +334,7 @@ public class RotaryUtils
 		GlStateManager.translate(data.offset.x, data.offset.y, data.offset.z);
 		ClientUtils.bindTexture(data.texture);
 
-		double speed = Math.abs(rpm*(world_rpm))%1d;
+		double speed = Math.abs(world_rpm*rpm*data.bs)%1;
 
 		model.setRotation(0);
 

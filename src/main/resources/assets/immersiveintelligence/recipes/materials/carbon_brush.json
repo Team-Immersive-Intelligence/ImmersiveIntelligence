@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustCoke"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "springIron"
+    }
+  ],
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 3,
+    "data": 20
+  }
+}

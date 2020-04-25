@@ -27,7 +27,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.RedstoneInterface;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -62,7 +61,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 
 	public TileEntityRedstoneInterface()
 	{
-		super(MultiblockRedstoneInterface.instance, new int[]{1, 3, 2}, RedstoneInterface.energyCapacity, false);
+		super(MultiblockRedstoneInterface.instance, new int[]{1, 3, 2}, 0, false);
 	}
 
 	@Override

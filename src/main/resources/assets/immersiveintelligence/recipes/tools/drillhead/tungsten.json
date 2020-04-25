@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ii ",
+    "bbi",
+    "ii "
+  ],
+  "key": {
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "blockTungsten"
+    },
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotTungsten"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:drillhead",
+    "count": 1,
+    "data": 0
+  }
+}

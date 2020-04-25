@@ -11,6 +11,7 @@ import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecor
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -423,10 +424,14 @@ public class MultiblockRadioStation implements IMultiblock
 		if(te==null)
 		{
 			te = new TileEntityRadioStation();
-			te.facing = EnumFacing.SOUTH;
+			te.facing = EnumFacing.NORTH;
+			te.setCurrentConstruction(te.getConstructionCost());
 		}
 
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-3, 2, 1);
 		ImmersiveIntelligence.proxy.renderTile(te);
+		GlStateManager.popMatrix();
 	}
 
 }

@@ -40,10 +40,13 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
 
+		tesrMap.put(IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta(), IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getName());
+		tesrMap.put(IIBlockTypes_MetalMultiblock0.RADIO_STATION.getMeta(), IIBlockTypes_MetalMultiblock0.RADIO_STATION.getName());
 		tesrMap.put(IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta(), IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getName());
 		tesrMap.put(IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getName());
 		tesrMap.put(IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta(), IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getName());
 		tesrMap.put(IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getName());
+		tesrMap.put(IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getName());
 
 
 	}

@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 2
+  },
+  "pattern": [
+    "ppp",
+    " n ",
+    "prp"
+  ],
+  "key": {
+    "n": {
+      "item": "minecraft:noteblock"
+    },
+    "r": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 3
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateAluminum"
+    }
+  }
+}

@@ -4,10 +4,12 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
-import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
+import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
+import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
+import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
@@ -25,14 +27,17 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -60,7 +65,6 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
@@ -122,9 +126,14 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
 
 /**
  * Created by Pabilo8 on 2019-05-07.
+ * 2 days of headache, pain, lack of sleep and addict-like coffee drinking, finally i got a fix!
+ * the problem why the server couldn't load was the modifier "abstract" in this class
+ * why? i don't know why it was here in the first place
+ * for how long? ask github
+ * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
  */
 @Mod.EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
-public abstract class CommonProxy implements IGuiHandler
+public class CommonProxy implements IGuiHandler
 {
 	public static final List<Block> blocks = new ArrayList<>();
 	public static final List<Item> items = new ArrayList<>();
@@ -150,6 +159,7 @@ public abstract class CommonProxy implements IGuiHandler
 	public static ItemIIMaterialWire item_material_wire = new ItemIIMaterialWire();
 	public static ItemIIMaterialSpring item_material_spring = new ItemIIMaterialSpring();
 	public static ItemIIMaterialGem item_material_gem = new ItemIIMaterialGem();
+	public static ItemIIMaterialBoule item_material_boule = new ItemIIMaterialBoule();
 
 	public static ItemIIMetalPressMold item_mold = new ItemIIMetalPressMold();
 
@@ -168,6 +178,8 @@ public abstract class CommonProxy implements IGuiHandler
 	public static ItemIIWrench item_wrench = new ItemIIWrench();
 	public static ItemIIElectricWrench item_electric_wrench = new ItemIIElectricWrench();
 
+	public static ItemIIDrillHead item_drillhead = new ItemIIDrillHead();
+
 	//Don't know if i should make a seperate item for a torque meter
 	public static ItemIITachometer item_tachometer = new ItemIITachometer();
 
@@ -175,8 +187,11 @@ public abstract class CommonProxy implements IGuiHandler
 	public static ItemIIMinecart item_minecart = new ItemIIMinecart();
 	public static ItemIIRadioConfigurator item_radio_configurator = new ItemIIRadioConfigurator();
 	public static ItemIIMeasuringCup item_measuring_cup = new ItemIIMeasuringCup();
+
 	public static ItemIIPrecissionTool item_precission_tool = new ItemIIPrecissionTool();
 	public static ItemIIAssemblyScheme item_assembly_scheme = new ItemIIAssemblyScheme();
+	public static ItemIISawblade item_sawblade = new ItemIISawblade();
+
 	public static ItemIIBinoculars item_binoculars = new ItemIIBinoculars();
 
 	public static ItemIIMachinegun item_machinegun = new ItemIIMachinegun();
@@ -197,8 +212,27 @@ public abstract class CommonProxy implements IGuiHandler
 	public static ItemIITracerPowder item_tracer_powder = new ItemIITracerPowder();
 
 	public static BlockIIBase<IIBlockTypes_Ore> block_ore = (BlockIIBase)new BlockIIBase("ore", Material.ROCK,
-			PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false).setOpaque(true)
-			.setHardness(3.0F).setResistance(10.0F);
+			PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false)
+	{
+		@Override
+		public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+		{
+			if(getMetaFromState(state)==IIBlockTypes_Ore.FLUORITE.getMeta())
+			{
+				ItemStack out = Utils.getItemWithMetaName(item_material_gem, "fluorite");
+				out.setCount((1+Math.round((float)Math.random()))*(1+fortune));
+				drops.add(out);
+			}
+			else if(getMetaFromState(state)==IIBlockTypes_Ore.PHOSPHORUS.getMeta())
+			{
+				ItemStack out = Utils.getItemWithMetaName(item_material_gem, "phosphorus");
+				out.setCount((2+Math.round((float)Math.random()))*(1+fortune));
+				drops.add(out);
+			}
+			else
+				super.getDrops(drops, world, pos, state, fortune);
+		}
+	}.setOpaque(true).setHardness(3.0F).setResistance(10.0F);
 	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(3.0F).setResistance(10.0F), block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
@@ -209,15 +243,12 @@ public abstract class CommonProxy implements IGuiHandler
 	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal_slabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("sheetmetal_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
 
 	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration = new BlockIIStoneDecoration();
-
 	public static BlockIIBase<IIBlockTypes_ClothDecoration> block_cloth_decoration = new BlockIIClothDecoration();
-
 	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration = new BlockIIMetalDecoration();
 
 	public static BlockIIMetalDevice block_metal_device = new BlockIIMetalDevice();
 	public static BlockIIDataConnector block_data_connector = new BlockIIDataConnector();
 	public static BlockIISmallCrate block_small_crate = new BlockIISmallCrate();
-
 	public static BlockIIMechanicalDevice block_mechanical_device = new BlockIIMechanicalDevice();
 	public static BlockIIGearbox block_gearbox = new BlockIIGearbox();
 	public static BlockIIMechanicalConnector block_mechanical_connector = new BlockIIMechanicalConnector();
@@ -230,28 +261,46 @@ public abstract class CommonProxy implements IGuiHandler
 	public static BlockIIFluid block_fluid_ink_cyan;
 	public static BlockIIFluid block_fluid_ink_magenta;
 	public static BlockIIFluid block_fluid_ink_yellow;
+
 	public static BlockIIFluid block_fluid_etching_acid;
 	public static BlockIIFluid block_fluid_sulfuric_acid;
+	public static BlockIIFluid block_fluid_nitric_acid;
 	public static BlockIIFluid block_fluid_hydrofluoric_acid;
+
+	public static BlockIIFluid block_fluid_ammonia, block_fluid_methanol;
 
 	public static BlockIIFluid block_fluid_brine;
 	public static BlockIIFluid block_gas_hydrogen;
 	public static BlockIIFluid block_gas_oxygen;
 	public static BlockIIFluid block_gas_chlorine;
 
-	public static Fluid fluid_ink_black;
-	public static Fluid fluid_ink_cyan;
-	public static Fluid fluid_ink_magenta;
-	public static Fluid fluid_ink_yellow;
+	public static Fluid fluid_ink_black = makeFluid("ink", 2000, 2250);
+	public static Fluid fluid_ink_cyan = makeFluid("ink_cyan", 2000, 2250);
+	public static Fluid fluid_ink_magenta = makeFluid("ink_magenta", 2000, 2250);
+	public static Fluid fluid_ink_yellow = makeFluid("ink_yellow", 2000, 2250);
 
-	public static Fluid fluid_etching_acid;
-	public static Fluid fluid_sulfuric_acid;
-	public static Fluid fluid_hydrofluoric_acid;
+	public static Fluid fluid_etching_acid = makeFluid("etching_acid", 1500, 1500);
+	public static Fluid fluid_sulfuric_acid = makeFluid("sulfuric_acid", 1500, 1500);
+	public static Fluid fluid_hydrofluoric_acid = makeFluid("hydrofluoric_acid", 1500, 1500);
+	public static Fluid fluid_nitric_acid = makeFluid("nitric_acid", 1500, 1500, "rdx_fluids/");
 
-	public static Fluid fluid_brine;
-	public static Fluid gas_hydrogen;
-	public static Fluid gas_oxygen;
-	public static Fluid gas_chlorine;
+	public static Fluid fluid_ammonia, fluid_methanol;
+
+	public static Fluid fluid_brine = makeFluid("brine", 1000, 1500);
+	public static Fluid gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
+	public static Fluid gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
+	public static Fluid gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
+
+	static
+	{
+		fluid_ammonia = makeFluid("ammonia", 1500, 1000, "rdx_fluids/");
+		fluid_methanol = makeFluid("methanol", 1500, 1000, "rdx_fluids/");
+	}
+
+	public CommonProxy()
+	{
+
+	}
 
 	private static ResourceLocation createRegistryName(String unlocalized)
 	{
@@ -269,9 +318,13 @@ public abstract class CommonProxy implements IGuiHandler
 		block_fluid_ink_yellow = new BlockIIFluid("ink_yellow", fluid_ink_yellow, Material.WATER);
 		block_fluid_etching_acid = new BlockIIFluid("etching_acid", fluid_etching_acid, Material.WATER);
 		block_fluid_sulfuric_acid = new BlockIIFluid("sulfuric_acid", fluid_sulfuric_acid, Material.WATER);
+		block_fluid_nitric_acid = new BlockIIFluid("nitric_acid", fluid_nitric_acid, Material.WATER);
 		block_fluid_hydrofluoric_acid = new BlockIIFluid("hydrofluoric_acid", fluid_hydrofluoric_acid, Material.WATER);
-
 		block_fluid_brine = new BlockIIFluid("brine", fluid_brine, Material.WATER);
+
+		block_fluid_ammonia = new BlockIIFluid("ammonia", fluid_ammonia, Material.WATER);
+		block_fluid_methanol = new BlockIIFluid("methanol", fluid_methanol, Material.WATER);
+
 		block_gas_hydrogen = new BlockIIFluid("hydrogen", gas_hydrogen, Material.WATER);
 		block_gas_oxygen = new BlockIIFluid("oxygen", gas_oxygen, Material.WATER);
 		block_gas_chlorine = new BlockIIFluid("chlorine", gas_chlorine, Material.WATER);
@@ -341,8 +394,10 @@ public abstract class CommonProxy implements IGuiHandler
 	public static void registerOreDict()
 	{
 		OreDictionary.registerOre("electronTubeAdvanced", new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_electron_tube")));
+		OreDictionary.registerOre("transistor", new ItemStack(item_material, 1, item_material.getMetaBySubname("transistor")));
 
 		//Basic Circuit Board
+		OreDictionary.registerOre("circuitBasic", new ItemStack(IEContent.itemMaterial, 1, 27));
 		OreDictionary.registerOre("circuitBasicRaw", new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_circuit_board_raw")));
 		OreDictionary.registerOre("circuitBasicEtched", new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_circuit_board_etched")));
 		OreDictionary.registerOre("chipBasic", new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_electronic_element")));
@@ -364,8 +419,8 @@ public abstract class CommonProxy implements IGuiHandler
 		OreDictionary.registerOre("circuitElite", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_circuit_board")));
 		OreDictionary.registerOre("chipElite", new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_electronic_element")));
 
-		registerItemOredict(item_material, "compact_electric_engine", "electricEngineSmall", "electricEngineCompact");
-		registerItemOredict(item_material, "compact_electric_engine_advanced", "electricEngineSmallAdvanced", "electricEngineCompactAdvanced");
+		registerItemOredict(item_material, "compact_electric_engine", "engineElectricSmall", "engineElectricCompact");
+		registerItemOredict(item_material, "compact_electric_engine_advanced", "engineElectricSmallAdvanced", "engineElectricCompactAdvanced");
 
 		registerMetalOredict(item_material_ingot, "ingot");
 		registerMetalOredict(item_material_plate, "plate");
@@ -373,6 +428,8 @@ public abstract class CommonProxy implements IGuiHandler
 		registerMetalOredict(item_material_nugget, "nugget");
 		registerMetalOredict(item_material_wire, "wire");
 		registerMetalOredict(item_material_spring, "spring");
+		registerMetalOredict(item_material_gem, "gem");
+		registerMetalOredict(item_material_boule, "boule");
 
 		registerMetalOredictBlock(block_ore, "ore");
 		registerMetalOredictBlock(block_sheetmetal, "sheetmetal");
@@ -403,9 +460,18 @@ public abstract class CommonProxy implements IGuiHandler
 		OreDictionary.registerOre("whitePhosphorus", new ItemStack(item_material, 1, item_material.getMetaBySubname("white_phosphorus")));
 
 		OreDictionary.registerOre("dustSalt", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_salt")));
+		OreDictionary.registerOre("dustWood", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_wood")));
+		OreDictionary.registerOre("dustHexamine", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_hexamine")));
+		OreDictionary.registerOre("dustFormaldehyde", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_formaldehyde")));
 
 		OreDictionary.registerOre("brushCarbon", new ItemStack(item_material, 1, item_material.getMetaBySubname("carbon_brush")));
 
+		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
+		OreDictionary.registerOre("listAllMeatRaw", Items.BEEF);
+		OreDictionary.registerOre("listAllMeatRaw", Items.FISH);
+		OreDictionary.registerOre("listAllMeatRaw", Items.CHICKEN);
+		OreDictionary.registerOre("listAllMeatRaw", Items.RABBIT);
+		OreDictionary.registerOre("listAllMeatRaw", Items.MUTTON);
 
 		registerMetalOredict(item_motor_gear, "gear");
 		registerMetalOredict(item_motor_belt, "belt");
@@ -444,22 +510,47 @@ public abstract class CommonProxy implements IGuiHandler
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
+		String sulfur = OreDictionary.doesOreNameExist("oreSulfur")?"oreSulfur": "dustSulfur";
+
+		MineralMix mineralFluorite = ExcavatorHandler.addMineral("Fluorite", 25, .65f, new String[]{"oreFluorite", "oreQuartz"}, new float[]{.5f, .25f});
+		MineralMix mineralPhosphorite = ExcavatorHandler.addMineral("Phosphorite", 30, .45f, new String[]{"orePhosphorus", sulfur, "oreIron", "oreAluminum"}, new float[]{.65f, .125f, 0.0625f, 0.0125f});
+		mineralFluorite.dimensionWhitelist = new int[]{-1};
+		mineralPhosphorite.dimensionWhitelist = new int[]{-1};
+
+		ExcavatorHandler.addMineral("Wolframite", 15, .15f, new String[]{"oreTungsten", "oreIron"}, new float[]{.25f, .75f});
+		ExcavatorHandler.addMineral("Ferberite", 10, .2f, new String[]{"oreTungsten", "oreIron", "oreTin"}, new float[]{.2f, .4f, .3f});
+
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
 		// LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"),100);
 
+		CrusherRecipe.addRecipe(Utils.getItemWithMetaName(item_material_dust, "silicon"), new IngredientStack("plateSilicon"), 12000);
+
 		final ItemStack powder = new ItemStack(item_tracer_powder, 1, 0);
 		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveEngineering.MODID, "tracer_powder_colour"));
 
-		ArcFurnaceRecipe.addRecipe(new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_plate_blend")), "dustAdvancedPlate", ItemStack.EMPTY, 600, 640);
-
+		IIRecipes.addMinecartRecipes(event.getRegistry());
+		IIRecipes.addSmallCrateRecipes(event.getRegistry());
 
 		for(int i = 0; i < item_mold.getSubNames().length; i++)
 			BlueprintCraftingRecipe.addRecipe("molds", new ItemStack(item_mold, 1, i), "plateSteel", "plateSteel", "plateSteel", "plateSteel", "plateSteel", new ItemStack(IEContent.itemTool, 1, 1));
 
-//((IForgeRegistryModifiable)CraftingManager.REGISTRY).remove(new ResourceLocation(""));
+		//((IForgeRegistryModifiable)CraftingManager.REGISTRY).remove(new ResourceLocation(""));
 
+		IIRecipes.addBulletPressRecipes();
+
+		IIRecipes.addSiliconProcessingRecipes();
 		IIRecipes.addCircuitRecipes();
+
+		IIRecipes.addFunctionalCircuits();
+		IIRecipes.addSpringRecipes();
+		IIRecipes.addMiscIERecipes();
+
+		IIRecipes.addWoodTableSawRecipes(event);
+		IIRecipes.addRotaryPowerRecipes();
+
+		IIRecipes.addRDXProductionRecipes();
+		IIRecipes.addHMXProductionRecipes();
 
 		//Immersive Engineering can into space???
 		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 3000), FluidRegistry.getFluidStack("oxygen", 1000), FluidRegistry.getFluidStack("hydrogen", 2000), 640, 320);
@@ -470,109 +561,56 @@ public abstract class CommonProxy implements IGuiHandler
 
 		MixerRecipe.addRecipe(new FluidStack(fluid_etching_acid, 1000), new FluidStack(gas_chlorine, 500), new Object[]{"dustIron"}, 4800);
 		MixerRecipe.addRecipe(new FluidStack(fluid_sulfuric_acid, 500), new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustSulfur"}, 4800);
-		MixerRecipe.addRecipe(new FluidStack(fluid_hydrofluoric_acid, 500), new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustFluorite"}, 5600);
+		MixerRecipe.addRecipe(new FluidStack(fluid_hydrofluoric_acid, 500), new FluidStack(fluid_sulfuric_acid, 1000), new Object[]{"dustFluorite"}, 5600);
+		MixerRecipe.addRecipe(new FluidStack(fluid_nitric_acid, 250), new FluidStack(fluid_sulfuric_acid, 1000), new Object[]{"dustSaltpeter"}, 5600);
 		MixerRecipe.addRecipe(new FluidStack(fluid_brine, 750), new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
-
-		//2x Vacuum tube + 3 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
-		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(IEContent.itemMaterial, 2, 26),
-				new ItemStack(IEContent.itemMetal, 1, 20),
-
-				new IngredientStack[]{new IngredientStack("plateIron"), new IngredientStack("wireCopper", 2), new IngredientStack("blockGlass")},
-
-				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"drill work main", "solderer work first", "inserter pick first", "inserter drop main", "solderer work main", "drill work second", "inserter pick second", "inserter drop main"},
-
-				12000,
-				1.0f
-		);
-
-		//1x Basic Electronic Component =  2x vacuum tube + nickel plate + 4 x redstone dust
-		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(item_material, 1, item_material.getMetaBySubname("basic_electronic_element")),
-				ItemStack.EMPTY,
-
-				new IngredientStack[]{new IngredientStack("electronTube"), new IngredientStack("plateNickel"), new IngredientStack("dustRedstone", 4)},
-
-				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"inserter pick second", "drill work main", "inserter drop main", "solderer work main", "inserter pick first", "inserter drop main"},
-
-				18000,
-				1.0f
-		);
-
-		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(item_material, 2, item_material.getMetaBySubname("advanced_electron_tube")),
-				ItemStack.EMPTY,
-
-				new IngredientStack[]{new IngredientStack("plateSteel"), new IngredientStack("wireTungsten", 2), new IngredientStack("electronTube", 2)},
-
-				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"drill work main", "inserter pick second", "inserter drop main", "inserter pick first", "inserter drop main", "solderer work main"},
-
-				24000,
-				1.25f
-		);
-
-		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(item_material, 1, item_material.getMetaBySubname("advanced_electronic_element")),
-				ItemStack.EMPTY,
-
-				new IngredientStack[]{new IngredientStack("advancedElectronTube"), new IngredientStack("chipAdvanced", 2)},
-
-				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"inserter pick second", "drill work main", "inserter drop main", "solderer work main", "inserter pick first", "inserter drop main"},
-
-				32000,
-				1.25f
-		);
-
-		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(item_material, 2, item_material.getMetaBySubname("transistor")),
-				ItemStack.EMPTY,
-
-				new IngredientStack[]{new IngredientStack("plateSteel"), new IngredientStack("wireTungsten", 2), new IngredientStack("electronTube", 2)},
-
-				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"drill work main", "inserter pick second", "inserter drop main", "inserter pick first", "inserter drop main", "solderer work main"},
-
-				50000,
-				1.25f
-		);
-
-		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(item_material, 1, item_material.getMetaBySubname("processor_electronic_element")),
-				ItemStack.EMPTY,
-
-				new IngredientStack[]{new IngredientStack("advancedElectronTube"), new IngredientStack("chipAdvanced", 2)},
-
-				new String[]{"inserter", "solderer", "drill"},
-				new String[]{"inserter pick second", "drill work main", "inserter drop main", "solderer work main", "inserter pick first", "inserter drop main"},
-
-				500000,
-				3f
-		);
 	}
+
+	public static Fluid makeFluid(String name, int density, int viscosity)
+	{
+		return makeFluid(name, density, viscosity, "");
+	}
+
+	public static Fluid makeFluid(String name, int density, int viscosity, String prefix)
+	{
+		Fluid fl = new Fluid(
+				name,
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
+		).setDensity(density).setViscosity(viscosity);
+		if(!FluidRegistry.registerFluid(fl))
+			fl = FluidRegistry.getFluid(name);
+		FluidRegistry.addBucketForFluid(fl);
+		IICreativeTab.fluidBucketMap.add(fl);
+		return fl;
+	}
+
+	public static void refreshFluidReferences()
+	{
+		fluid_ink_black = FluidRegistry.getFluid("ink");
+		fluid_ink_cyan = FluidRegistry.getFluid("ink_cyan");
+		fluid_ink_magenta = FluidRegistry.getFluid("ink_magenta");
+		fluid_ink_yellow = FluidRegistry.getFluid("ink_yellow");
+
+		fluid_brine = FluidRegistry.getFluid("brine");
+		fluid_etching_acid = FluidRegistry.getFluid("etching_acid");
+		fluid_hydrofluoric_acid = FluidRegistry.getFluid("hydrofluoric_acid");
+		fluid_sulfuric_acid = FluidRegistry.getFluid("sulfuric_acid");
+
+		fluid_ammonia = FluidRegistry.getFluid("ammonia");
+		fluid_methanol = FluidRegistry.getFluid("methanol");
+
+		gas_chlorine = FluidRegistry.getFluid("chlorine");
+		gas_hydrogen = FluidRegistry.getFluid("hydrogen");
+		gas_oxygen = FluidRegistry.getFluid("oxygen");
+	}
+
 
 	public void preInit()
 	{
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
 		CapabilityRotaryEnergy.register();
-
-		fluid_ink_black = makeFluid("ink", 1500, 2250);
-		fluid_ink_cyan = makeFluid("ink_cyan", 1500, 2250);
-		fluid_ink_magenta = makeFluid("ink_magenta", 1500, 2250);
-		fluid_ink_yellow = makeFluid("ink_yellow", 1500, 2250);
-
-		fluid_etching_acid = makeFluid("etching_acid", 1500, 2250);
-		fluid_sulfuric_acid = makeFluid("sulfuric_acid", 1500, 2250);
-		fluid_hydrofluoric_acid = makeFluid("hydrofluoric_acid", 1500, 2250);
-
-		fluid_brine = makeFluid("brine", 1500, 2250);
-		gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
-		gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
-		gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
 
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
@@ -686,6 +724,8 @@ public abstract class CommonProxy implements IGuiHandler
 		registerTile(TileEntitySkyCratePost.class);
 		registerTile(TileEntitySkyCrateStation.class);
 
+		registerTile(TileEntitySawmill.class);
+
 		registerTile(TileEntityRadioStation.class);
 		registerTile(TileEntityDataInputMachine.class);
 		registerTile(TileEntityArithmeticLogicMachine.class);
@@ -700,8 +740,12 @@ public abstract class CommonProxy implements IGuiHandler
 		registerTile(TileEntityPacker.class);
 		registerTile(TileEntityRedstoneInterface.class);
 
+		//Wooden
 		MultiblockHandler.registerMultiblock(MultiblockSkyCratePost.instance);
 		MultiblockHandler.registerMultiblock(MultiblockSkyCrateStation.instance);
+		MultiblockHandler.registerMultiblock(MultiblockSawmill.instance);
+
+		//Metal0
 		MultiblockHandler.registerMultiblock(MultiblockRadioStation.instance);
 		MultiblockHandler.registerMultiblock(MultiblockDataInputMachine.instance);
 		MultiblockHandler.registerMultiblock(MultiblockArithmeticLogicMachine.instance);
@@ -714,6 +758,8 @@ public abstract class CommonProxy implements IGuiHandler
 		MultiblockHandler.registerMultiblock(MultiblockAmmunitionFactory.instance);
 		MultiblockHandler.registerMultiblock(MultiblockBallisticComputer.instance);
 		MultiblockHandler.registerMultiblock(MultiblockPacker.instance);
+
+		//Metal1
 		MultiblockHandler.registerMultiblock(MultiblockRedstoneInterface.instance);
 
 		int i = -1;
@@ -851,6 +897,9 @@ public abstract class CommonProxy implements IGuiHandler
 			else if(ID==IIGuiList.GUI_GEARBOX&&te instanceof TileEntityGearbox)
 				gui = new ContainerGearbox(player.inventory, (TileEntityGearbox)te);
 
+			else if(ID==IIGuiList.GUI_SAWMILL&&te instanceof TileEntitySawmill)
+				gui = new ContainerSawmill(player.inventory, (TileEntitySawmill)te);
+
 			((IGuiTile)te).onGuiOpened(player, false);
 
 			return gui;
@@ -883,20 +932,6 @@ public abstract class CommonProxy implements IGuiHandler
 		{
 			openSpecificGuiForEvenMoreSpecificTile(player, (TileEntity & IGuiTile)te, gui);
 		}
-	}
-
-	public Fluid makeFluid(String name, int density, int viscosity)
-	{
-		Fluid fl = new Fluid(
-				name,
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+name+"_flow")
-		).setDensity(density).setViscosity(viscosity);
-		if(!FluidRegistry.registerFluid(fl))
-			fl = FluidRegistry.getFluid(name);
-		FluidRegistry.addBucketForFluid(fl);
-		IICreativeTab.fluidBucketMap.add(fl);
-		return fl;
 	}
 
 	//Cancel when using a machinegun

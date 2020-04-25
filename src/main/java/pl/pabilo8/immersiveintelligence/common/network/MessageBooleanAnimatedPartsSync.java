@@ -69,9 +69,9 @@ public class MessageBooleanAnimatedPartsSync implements IMessage
 			world.addScheduledTask(() ->
 			{
 				//ImmersiveIntelligence.logger.info("server");
-				if(world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
+				if(world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
 				{
-					IBooleanAnimatedPartsBlock te = (IBooleanAnimatedPartsBlock)ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
+					IBooleanAnimatedPartsBlock te = (IBooleanAnimatedPartsBlock)world.getTileEntity(new BlockPos(message.x, message.y, message.z));
 					te.onAnimationChangeServer(message.open, message.id);
 				}
 			});

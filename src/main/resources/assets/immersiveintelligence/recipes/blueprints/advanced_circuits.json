@@ -17,8 +17,8 @@
       "ore": "chipAdvanced"
     },
     "B": {
-      "type": "forge:ore_dict",
-      "ore": "circuitAdvancedEtched"
+      "item": "immersiveengineering:tool",
+      "data": 3
     },
     "D": {
       "type": "forge:ore_dict",

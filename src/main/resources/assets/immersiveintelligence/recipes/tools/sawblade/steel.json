@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " p ",
+    "pgp",
+    " p "
+  ],
+  "key": {
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "gearSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:sawblade",
+    "data": 1,
+    "count": 1
+  }
+}

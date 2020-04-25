@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "r r",
+    "p p"
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickTungsten"
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 5,
+    "count": 1
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "plp",
+    "sss",
+    "plp"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateBrass"
+    },
+    "l": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 3
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:metal_decoration",
+    "count": 2,
+    "data": 4
+  }
+}

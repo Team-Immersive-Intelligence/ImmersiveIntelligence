@@ -624,14 +624,15 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.BLOCKS, 1F, 1f);
 		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
-			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.BLOCKS, 1F, 1f);
+			world.playSound(null, getPosition(), IISounds.machinegun_shot_watercooled, SoundCategory.BLOCKS, 1F, 0.85f);
 		else
 			world.playSound(null, getPosition(), IISounds.machinegun_shot, SoundCategory.BLOCKS, 1F, 1f);
 
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
 		recoilPitch += maxRecoilPitch*Math.random();
-		overheating+=Machinegun.bulletFireTime*1.5f;
+		//TODO: Bring back overheating with better HUD
+		//overheating+=Machinegun.bulletFireTime*1.5f;
 
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean("forClient", true);

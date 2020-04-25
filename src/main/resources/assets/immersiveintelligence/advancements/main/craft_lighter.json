@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:lighter"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_lighter"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_lighter.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/root",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:lighter"
+          }
+        ]
+      }
+    }
+  }
+}

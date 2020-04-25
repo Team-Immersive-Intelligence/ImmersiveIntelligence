@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.items;
 
-import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
@@ -77,13 +76,6 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 			ItemNBTHelper.setInt(stack, "createdItems", 0);
 	}
 
-	@Nullable
-	@Override
-	public CreativeTabs getCreativeTab()
-	{
-		return null;
-	}
-
 	public ItemStack getStackForRecipe(PrecissionAssemblerRecipe recipe)
 	{
 		ItemStack stack = new ItemStack(this);
@@ -128,10 +120,10 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		if(this.isInCreativeTab(tab))
-			for(String key : BlueprintCraftingRecipe.blueprintCategories)
+			for(PrecissionAssemblerRecipe recipe : PrecissionAssemblerRecipe.recipeList)
 			{
 				ItemStack stack = new ItemStack(this);
-				ItemNBTHelper.setString(stack, "blueprint", key);
+				ItemNBTHelper.setTagCompound(stack, "recipeItem", recipe.output.serializeNBT());
 				list.add(stack);
 			}
 	}

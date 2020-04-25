@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  r",
+    "pcp",
+    "plp"
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickIron"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateBrass"
+    },
+    "l": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 4
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:radio_configurator",
+    "count": 1,
+    "data": 0
+  }
+}

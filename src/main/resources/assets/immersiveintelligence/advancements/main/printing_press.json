@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:metal_multiblock",
+      "data": 1
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.printing_press"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.printing_press.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/circuit_board",
+  "criteria": {
+    "form_ppress": {
+      "trigger": "immersiveengineering:multiblock_formed",
+      "conditions": {
+        "multiblock": "II:PrintingPress"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "form_ppress"
+    ]
+  ]
+}

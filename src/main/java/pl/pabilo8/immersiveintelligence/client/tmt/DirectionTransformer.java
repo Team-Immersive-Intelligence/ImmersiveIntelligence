@@ -19,7 +19,7 @@ public abstract class DirectionTransformer
 		GlStateManager.translate(x, y, z);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-		GlStateManager.disableLighting();
+		//GlStateManager.disableLighting();
 		RenderHelper.enableStandardItemLighting();
 
 	}

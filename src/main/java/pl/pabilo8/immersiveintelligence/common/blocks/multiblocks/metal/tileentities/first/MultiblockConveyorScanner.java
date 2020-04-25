@@ -9,6 +9,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Conveyor;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -180,6 +181,9 @@ public class MultiblockConveyorScanner implements IMultiblock
 			te.facing = EnumFacing.SOUTH;
 		}
 
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-1, 2, -1);
 		ImmersiveIntelligence.proxy.renderTile(te);
+		GlStateManager.popMatrix();
 	}
 }

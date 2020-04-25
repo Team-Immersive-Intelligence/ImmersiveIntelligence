@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " cl",
+    "csc",
+    "lc "
+  ],
+  "key": {
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "fabricHemp"
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:motor_belt",
+    "data": 0,
+    "count": 6
+  }
+}

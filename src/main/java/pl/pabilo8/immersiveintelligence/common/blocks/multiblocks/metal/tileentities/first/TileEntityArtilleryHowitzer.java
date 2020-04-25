@@ -31,6 +31,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
@@ -191,39 +193,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 		if(world.isRemote)
 		{
-
-			boolean platform_ok = animation==0||platformHeight==((animation==1||animation==2)?0f: 5.25f);
-			boolean yaw_ok = turretYaw==plannedYaw;
-			boolean pitch_ok = turretPitch==plannedPitch;
-			if(platform_ok)
-			{
-				if(!yaw_ok)
-				{
-					if(world.getTotalWorldTime()%20==0)
-						world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_v, SoundCategory.BLOCKS, .5f, 1);
-				}
-				else if(!pitch_ok)
-				{
-					if(world.getTotalWorldTime()%20==0)
-						world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
-				}
-			}
-			else
-			{
-				if(world.getTotalWorldTime()%20==0)
-					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
-			}
-
-			if(isDoorOpened&&doorAngle < 155f)
-			{
-				if(world.getTotalWorldTime()%20==0)
-					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_open, SoundCategory.BLOCKS, .5f, 1);
-			}
-			else if(!isDoorOpened&&doorAngle > 0f)
-			{
-				if(world.getTotalWorldTime()%20==0)
-					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_close, SoundCategory.BLOCKS, .5f, 1);
-			}
+			handleSounds();
 		}
 
 		if(!world.isRemote&&(isDoorOpened^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]))))
@@ -576,6 +546,43 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 			tag.setTag("inventory", Utils.writeInventory(inventory));
 			tag.setTag("bullet", bullet.serializeNBT());
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 48));
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void handleSounds()
+	{
+		boolean platform_ok = animation==0||platformHeight==((animation==1||animation==2)?0f: 5.25f);
+		boolean yaw_ok = turretYaw==plannedYaw;
+		boolean pitch_ok = turretPitch==plannedPitch;
+		if(platform_ok)
+		{
+			if(!yaw_ok)
+			{
+				if(world.getTotalWorldTime()%20==0)
+					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_v, SoundCategory.BLOCKS, .5f, 1);
+			}
+			else if(!pitch_ok)
+			{
+				if(world.getTotalWorldTime()%20==0)
+					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
+			}
+		}
+		else
+		{
+			if(world.getTotalWorldTime()%20==0)
+				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
+		}
+
+		if(isDoorOpened&&doorAngle < 155f)
+		{
+			if(world.getTotalWorldTime()%20==0)
+				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_open, SoundCategory.BLOCKS, .5f, 1);
+		}
+		else if(!isDoorOpened&&doorAngle > 0f)
+		{
+			if(world.getTotalWorldTime()%20==0)
+				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_close, SoundCategory.BLOCKS, .5f, 1);
 		}
 	}
 

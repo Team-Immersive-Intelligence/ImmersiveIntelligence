@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bp ",
+    "bhd",
+    "bp "
+  ],
+  "key": {
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "blockDiamond"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "blockSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "h": {
+      "item": "immersiveengineering:drillhead",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:drillhead",
+    "count": 1,
+    "data": 2
+  }
+}

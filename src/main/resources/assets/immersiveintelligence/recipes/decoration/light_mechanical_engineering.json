@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pgp",
+    "sws",
+    "pgp"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateCopper"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingTreatedWood"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springIron"
+    },
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "gearBrass"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:metal_decoration",
+    "count": 4,
+    "data": 3
+  }
+}

@@ -67,6 +67,41 @@
             "fluid": "chlorine"
           }
         }
-        ]
+      ],
+      "hydrofluoric_acid": [
+        {
+          "custom": {
+            "fluid": "hydrofluoric_acid"
+          }
+        }
+      ],
+      "sulfuric_acid": [
+        {
+          "custom": {
+            "fluid": "sulfuric_acid"
+          }
+        }
+      ],
+      "ammonia": [
+        {
+          "custom": {
+            "fluid": "ammonia"
+          }
+        }
+      ],
+      "methanol": [
+        {
+          "custom": {
+            "fluid": "methanol"
+          }
+        }
+      ],
+      "nitric_acid": [
+        {
+          "custom": {
+            "fluid": "nitric_acid"
+          }
+        }
+      ]
     }
 }

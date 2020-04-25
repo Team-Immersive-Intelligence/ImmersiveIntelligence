@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:material_ingot",
+      "data": 2
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.make_platinum"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.make_platinum.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/make_tungsten",
+  "criteria": {
+    "craft_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:material_ingot",
+            "data": 2
+          }
+        ]
+      }
+    }
+  }
+}

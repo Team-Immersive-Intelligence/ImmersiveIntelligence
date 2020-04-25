@@ -16,7 +16,7 @@
     },
     "s": {
       "type": "forge:ore_dict",
-      "ore": "plateSteel"
+      "ore": "plateAluminum"
     },
     "m": {
       "type": "forge:ore_dict",

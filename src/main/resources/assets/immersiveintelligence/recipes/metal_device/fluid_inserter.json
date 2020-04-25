@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 4
+  },
+  "pattern": [
+    " f ",
+    "fcf",
+    "pcp"
+  ],
+  "key": {
+    "f": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 6
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    }
+  }
+}

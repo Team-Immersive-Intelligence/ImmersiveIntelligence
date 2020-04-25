@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:drillhead",
+      "data": 3
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.make_tungsten_drillhead_diamond"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.make_tungsten_drillhead_diamond.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/make_tungsten_drillhead",
+  "criteria": {
+    "craft_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:drillhead",
+            "data": 3
+          }
+        ]
+      }
+    }
+  }
+}

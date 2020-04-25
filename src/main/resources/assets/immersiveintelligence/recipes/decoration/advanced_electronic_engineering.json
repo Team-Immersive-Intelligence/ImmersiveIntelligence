@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "csc",
+    "pwp",
+    "csc"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateAdvancedElectronicAlloy"
+    },
+    "s": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 1
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitAdvanced"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "wireTungsten"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:metal_decoration",
+    "count": 3,
+    "data": 2
+  }
+}

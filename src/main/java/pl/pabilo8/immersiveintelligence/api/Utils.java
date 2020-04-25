@@ -487,6 +487,13 @@ public class Utils
 
 	public static ItemStack getItemWithMetaName(ItemIIBase item, String name)
 	{
-		return new ItemStack(item,1,item.getMetaBySubname(name));
+		return new ItemStack(item, 1, item.getMetaBySubname(name));
+	}
+
+	public static ItemStack getItemWithMetaName(ItemIIBase item, String name, int count)
+	{
+		ItemStack stack = getItemWithMetaName(item, name);
+		stack.setCount(count);
+		return stack;
 	}
 }

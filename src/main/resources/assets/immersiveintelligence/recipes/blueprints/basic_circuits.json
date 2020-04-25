@@ -17,8 +17,8 @@
       "ore": "chipBasic"
     },
     "B": {
-      "type": "forge:ore_dict",
-      "ore": "circuitBasicEtched"
+      "item": "immersiveengineering:tool",
+      "data": 3
     },
     "D": {
       "type": "forge:ore_dict",

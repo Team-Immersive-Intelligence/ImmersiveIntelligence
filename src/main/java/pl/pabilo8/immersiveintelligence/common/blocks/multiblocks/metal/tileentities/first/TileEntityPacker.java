@@ -217,6 +217,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	public boolean ignoreEmptyStacks = false;
 	public int packingMode = 0;
 	public int itemsToPack = 0;
+	public int currentItemsToPack = 0;
 	public int insertQuantity = 64;
 	IItemHandler crateHandler = new IEInventoryHandler(1, this, 0, true, true);
 	IItemHandler inventoryHandler = new IEInventoryHandler(27, this, 1, true, true);
@@ -235,6 +236,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 			if(!descPacket)
 				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 28);
 			itemsToPack = nbt.getInteger("itemsToPack");
+			currentItemsToPack = nbt.getInteger("currentItemsToPack");
 			packingMode = nbt.getInteger("packingMode");
 			ignoreEmptyStacks = nbt.getBoolean("ignoreEmptyStacks");
 			insertQuantity = nbt.getInteger("insertQuantity");
@@ -260,6 +262,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 			if(!descPacket)
 				nbt.setTag("inventory", Utils.writeInventory(inventory));
 			nbt.setInteger("itemsToPack", itemsToPack);
+			nbt.setInteger("currentItemsToPack", currentItemsToPack);
 			nbt.setInteger("packingMode", packingMode);
 			nbt.setBoolean("ignoreEmptyStacks", ignoreEmptyStacks);
 			nbt.setInteger("insertQuantity", insertQuantity);
@@ -285,6 +288,8 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 
 		if(message.hasKey("itemsToPack"))
 			itemsToPack = message.getInteger("itemsToPack");
+		if(message.hasKey("currentItemsToPack"))
+			currentItemsToPack = message.getInteger("currentItemsToPack");
 		if(message.hasKey("packingMode"))
 			packingMode = message.getInteger("packingMode");
 		if(message.hasKey("ignoreEmptyStacks"))
@@ -318,13 +323,14 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 						{
 							animation = 1;
 							processTime = 0;
+							currentItemsToPack = itemsToPack;
 							doGraphicalUpdates(1);
 						}
 					}
 					break;
 					case 1:
 					{
-						if(itemsToPack > 0)
+						if(currentItemsToPack > 0)
 						{
 							if(energyStorage.getEnergyStored() >= Packer.energyUsage)
 							{
@@ -332,7 +338,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 								if(processTime >= Packer.timeInsertion)
 								{
 									processTime = 0;
-									itemsToPack -= 1;
+									currentItemsToPack -= 1;
 
 								}
 								else if(processTime > 0)
@@ -352,15 +358,16 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 												if(!inventory.get(i).isEmpty())
 												{
 													ItemStack newStack = inventory.get(i).copy();
-													int initialSize = Math.min(inventory.get(i).getCount(), insertQuantity);
+													int initialSize = Math.min(newStack.getCount(), insertQuantity);
+													int left = inventory.get(i).getCount()-initialSize;
 													newStack.setCount(initialSize);
 													for(Entry<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> p : predicates.entrySet())
 														if(p.getKey().test(inventory.get(0)))
 														{
 															ImmersiveIntelligence.logger.info("otak2!");
-															newStack = p.getValue().apply(new Tuple<ItemStack, ItemStack>(inventory.get(0), newStack));
-															newStack.setCount(initialSize-newStack.getCount());
-															inventory.get(i).shrink(initialSize-newStack.getCount());
+															newStack = p.getValue().apply(new Tuple<>(inventory.get(0), newStack));
+															newStack.setCount(left+newStack.getCount());
+															inventory.set(i, newStack);
 															break s;
 														}
 												}
@@ -373,19 +380,20 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 											s:
 											for(int i = 1; i < inventory.size(); i += 1)
 											{
-												int j = (i+27-(itemsToPack%inventory.size()))%inventory.size();
+												int j = (i+27-(currentItemsToPack%inventory.size()))%inventory.size();
 												if(j==0)
 													j = 1;
 												ItemStack newStack = inventory.get(j).copy();
-												int initialSize = Math.min(inventory.get(i).getCount(), insertQuantity);
+												int initialSize = Math.min(newStack.getCount(), insertQuantity);
+												int left = inventory.get(j).getCount()-initialSize;
 												newStack.setCount(initialSize);
 												for(Entry<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> p : predicates.entrySet())
 													if(p.getKey().test(inventory.get(0)))
 													{
 														ImmersiveIntelligence.logger.info("otak2!");
-														newStack = p.getValue().apply(new Tuple<ItemStack, ItemStack>(inventory.get(0), newStack));
-														newStack.setCount(initialSize-newStack.getCount());
-														inventory.get(j).shrink(initialSize-newStack.getCount());
+														newStack = p.getValue().apply(new Tuple<>(inventory.get(0), newStack));
+														newStack.setCount(left+newStack.getCount());
+														inventory.set(j, newStack);
 														break s;
 													}
 											}

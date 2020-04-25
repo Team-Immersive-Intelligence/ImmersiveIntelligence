@@ -1,0 +1,30 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 5
+  },
+  "pattern": [
+    "rr ",
+    " ec",
+    "pcp"
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickAluminum"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitAdvanced"
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "engineElectricSmallAdvanced"
+    }
+  }
+}

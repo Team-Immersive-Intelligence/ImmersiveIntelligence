@@ -25,7 +25,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
@@ -41,7 +40,6 @@ public class ItemIIMeasuringCup extends ItemIIBase implements ITool, IAdvancedFl
 	public ItemIIMeasuringCup()
 	{
 		super("measuring_cup", 1);
-		specialModelMap.put(0, ModelMeasuringCup.MODEL);
 	}
 
 	/**

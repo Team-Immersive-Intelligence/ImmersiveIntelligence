@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 0,
+    "count": 4
+  },
+  "pattern": [
+    " i ",
+    "cic",
+    "cec"
+  ],
+  "key": {
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "c": {
+      "item": "minecraft:stained_hardened_clay",
+      "data": 0
+    },
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotCopper"
+    }
+  }
+}

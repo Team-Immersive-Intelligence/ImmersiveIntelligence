@@ -56,15 +56,16 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 		WorldClient world = ClientUtils.mc().world;
 		Tessellator tessellator = Tessellator.getInstance();
 
-		PenetrationRegistry.blockDamageClient.forEach(
-				(dimensionBlockPos, aFloat) ->
-				{
-					if(dimensionBlockPos.dimension==world.provider.getDimension()&&world.isBlockLoaded(dimensionBlockPos))
+		if(world!=null&&world.provider!=null)
+			PenetrationRegistry.blockDamageClient.forEach(
+					(dimensionBlockPos, aFloat) ->
 					{
-						pl.pabilo8.immersiveintelligence.api.Utils.tesselateBlockBreak(tessellator, world, dimensionBlockPos, aFloat, event.getPartialTicks());
+						if(dimensionBlockPos!=null&&dimensionBlockPos.dimension==world.provider.getDimension()&&aFloat!=null&&world.isBlockLoaded(dimensionBlockPos))
+						{
+							pl.pabilo8.immersiveintelligence.api.Utils.tesselateBlockBreak(tessellator, world, dimensionBlockPos, aFloat, event.getPartialTicks());
+						}
 					}
-				}
-		);
+			);
 	}
 
 	@SubscribeEvent()

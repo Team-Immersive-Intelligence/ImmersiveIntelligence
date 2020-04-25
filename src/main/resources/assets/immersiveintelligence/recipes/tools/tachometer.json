@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " c ",
+    "sbs"
+  ],
+  "key": {
+    "c": {
+      "item": "minecraft:compass"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "ingotBrass"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:tachometer",
+    "count": 1
+  }
+}

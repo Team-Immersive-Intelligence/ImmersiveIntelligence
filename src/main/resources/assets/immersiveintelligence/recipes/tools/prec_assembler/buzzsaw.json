@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "cr ",
+    "s r",
+    " pe"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickAluminum"
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "engineElectricSmall"
+    },
+    "s": {
+      "item": "immersiveintelligence:sawblade",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:precission_tool",
+    "count": 1,
+    "data": 0
+  }
+}

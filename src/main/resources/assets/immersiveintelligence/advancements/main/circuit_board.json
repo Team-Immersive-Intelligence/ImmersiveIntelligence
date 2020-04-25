@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveengineering:material",
+      "data": 27
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.circuit_board"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.circuit_board.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/chemical_bath",
+  "criteria": {
+    "craft_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveengineering:material",
+            "data": 27
+          }
+        ]
+      }
+    }
+  }
+}

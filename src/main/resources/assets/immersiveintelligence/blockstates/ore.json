@@ -43,6 +43,13 @@
         }
       }
     ],
+    "inventory,type=phosphorus": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_phosphorus"
+        }
+      }
+    ],
     "type": {
       "platinum": {
         "textures": {
@@ -67,6 +74,11 @@
       "fluorite": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/ore_fluorite"
+        }
+      },
+      "phosphorus": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/ore_phosphorus"
         }
       }
     }

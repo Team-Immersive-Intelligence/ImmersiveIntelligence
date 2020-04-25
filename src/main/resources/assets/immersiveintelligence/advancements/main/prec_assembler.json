@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:metal_multiblock",
+      "data": 6
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.prec_assembler"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.prec_assembler.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/root",
+  "criteria": {
+    "form_precassembler": {
+      "trigger": "immersiveengineering:multiblock_formed",
+      "conditions": {
+        "multiblock": "II:PrecissionAssembler"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "form_precassembler"
+    ]
+  ]
+}

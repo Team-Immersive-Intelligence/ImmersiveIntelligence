@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device",
+    "data": 6
+  },
+  "pattern": [
+    "cdc",
+    "dsd",
+    "cdc"
+  ],
+  "key": {
+    "d": {
+      "item": "immersiveintelligence:data_connector",
+      "data": 0
+    },
+    "c": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 1
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingAluminum"
+    }
+  }
+}

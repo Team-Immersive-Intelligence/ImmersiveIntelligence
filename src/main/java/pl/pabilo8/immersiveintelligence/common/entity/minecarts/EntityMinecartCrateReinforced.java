@@ -23,7 +23,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 
 import javax.annotation.Nonnull;
@@ -112,7 +111,7 @@ public class EntityMinecartCrateReinforced extends EntityMinecartContainer imple
 	@Override
 	public String getGuiID()
 	{
-		return ImmersiveIntelligence.MODID+":reinforced_crate";
+		return "intelli"+":reinforced_crate";
 	}
 
 	@Override

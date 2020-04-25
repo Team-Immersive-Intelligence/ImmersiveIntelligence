@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "tbt",
+    "g g"
+  ],
+  "key": {
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "electronTube"
+    },
+    "b": {
+      "item": "immersiveintelligence:binoculars",
+      "data": 0
+    },
+    "c": {
+      "item": "immersiveengineering:metal_device0",
+      "data": 0
+    },
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlassBlack"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:binoculars",
+    "data": 1,
+    "count": 1
+  }
+}

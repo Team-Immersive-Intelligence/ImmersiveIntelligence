@@ -29,11 +29,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
@@ -408,17 +411,8 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 		if(pickProgress < 1)
 			pickProgress = 0;
 
-		if(world.isRemote&&world.getTotalWorldTime()%10==0)
-		{
-			if(armDirection!=nextDirection)
-			{
-				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_backward, SoundCategory.BLOCKS, .25f, 1);
-			}
-			else if(pickProgress!=nextPickProgress)
-			{
-				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_forward, SoundCategory.BLOCKS, .25f, 1);
-			}
-		}
+		if(world.isRemote)
+			handleSounds();
 
 		if(energyStorage > AdvancedInserter.energyUsage&&armDirection!=nextDirection||pickProgress!=nextPickProgress)
 		{
@@ -496,7 +490,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 						}
 					}
 				}
-				else if(world.isAirBlock(getPos().offset(inputFacing))&&!world.getEntitiesWithinAABB(EntityMinecart.class, getRenderBoundingBox().offset(new BlockPos(0, 0, 0).offset(inputFacing, 2))).isEmpty())
+				else if(world.isAirBlock(getPos().offset(inputFacing))&&!world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(this.pos).offset(new BlockPos(0, 0, 0).offset(inputFacing, 2))).isEmpty())
 				{
 					if(nextDirection!=armDirection&&armDirection!=Math.round(outputFacing.getHorizontalAngle()))
 					{
@@ -505,9 +499,9 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 					}
 					else
 					{
-						if(canPickBlocks&&!world.getEntitiesWithinAABB(EntityMinecart.class, getRenderBoundingBox().offset(new BlockPos(0, 0, 0).offset(inputFacing, 2))).isEmpty())
+						if(canPickBlocks&&!world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(this.pos).offset(new BlockPos(0, 0, 0).offset(inputFacing, 2))).isEmpty())
 						{
-							List<Entity> entities = world.getEntitiesWithinAABB(EntityMinecart.class, getRenderBoundingBox().offset(new BlockPos(0, 0, 0).offset(inputFacing, 2)));
+							List<Entity> entities = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(this.pos).offset(new BlockPos(0, 0, 0).offset(inputFacing, 2)));
 							IMinecartBlockPickable cart = null;
 							boolean right = false;
 
@@ -583,6 +577,22 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 		}
 
 
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void handleSounds()
+	{
+		if(world.isRemote&&world.getTotalWorldTime()%10==0)
+		{
+			if(armDirection!=nextDirection)
+			{
+				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_backward, SoundCategory.BLOCKS, .25f, 1);
+			}
+			else if(pickProgress!=nextPickProgress)
+			{
+				world.playSound(ClientUtils.mc().player, getPos(), IISounds.inserter_forward, SoundCategory.BLOCKS, .25f, 1);
+			}
+		}
 	}
 
 	@Override

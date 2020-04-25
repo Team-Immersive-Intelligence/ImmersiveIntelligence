@@ -179,8 +179,15 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 		else
 			this.connection = ImmersiveNetHandler.INSTANCE.getReverseConnection(world.provider.getDimension(), connection);
 		this.linePos = linePos;
-		Vec3d v = this.connection.getVecAt(this.linePos);
-		this.setPosition(firstPos.getX()+v.x, firstPos.getY()+v.y, firstPos.getZ()+v.z);
+		try
+		{
+			Vec3d v = this.connection.getVecAt(this.linePos);
+			this.setPosition(firstPos.getX()+v.x, firstPos.getY()+v.y, firstPos.getZ()+v.z);
+		} catch(NullPointerException e)
+		{
+
+		}
+
 		if(world.getTileEntity(connection.start) instanceof IImmersiveConnectable&&world.getTileEntity(connection.end) instanceof IImmersiveConnectable)
 		{
 			ignoreCollisions.addAll(((IImmersiveConnectable)world.getTileEntity(connection.start)).getIgnored(((IImmersiveConnectable)world.getTileEntity(connection.end))));

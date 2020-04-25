@@ -10,12 +10,10 @@ package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
 import blusunrize.immersiveengineering.client.gui.GuiFluidSorter;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.compat.jei.FluidSorterGhostHandler;
 import blusunrize.immersiveengineering.common.util.compat.jei.IEFluidTooltipCallback;
 import blusunrize.immersiveengineering.common.util.compat.jei.IEGhostItemHandler;
 import mezz.jei.api.*;
-import mezz.jei.api.ISubtypeRegistry.ISubtypeInterpreter;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.ITooltipCallback;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
@@ -28,13 +26,16 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiChemicalBath;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiElectrolyzer;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiSawmill;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer.ElectrolyzerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.precission_assembler.PrecissionAssemblerRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.sawmill.SawmillRecipeCategory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,12 +51,6 @@ public class JEIHelper implements IModPlugin
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
 	{
-		//For registering item subtypes in jei
-		subtypeRegistry.registerSubtypeInterpreter(CommonProxy.item_assembly_scheme, itemStack -> {
-			if(!itemStack.hasTagCompound())
-			return ISubtypeInterpreter.NONE;
-			return (new ItemStack(ItemNBTHelper.getTagCompound(itemStack, "recipeItem"))).getDisplayName();
-		});
 
 	}
 
@@ -77,6 +72,7 @@ public class JEIHelper implements IModPlugin
 		categories.put(BathingRecipe.class, new BathingRecipeCategory(guiHelper));
 		categories.put(ElectrolyzerRecipe.class, new ElectrolyzerRecipeCategory(guiHelper));
 		categories.put(PrecissionAssemblerRecipe.class, new PrecissionAssemblerRecipeCategory(guiHelper));
+		categories.put(SawmillRecipe.class, new SawmillRecipeCategory(guiHelper));
 
 		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[categories.size()]));
 	}
@@ -119,6 +115,9 @@ public class JEIHelper implements IModPlugin
 
 		modRegistry.addRecipes(PrecissionAssemblerRecipe.recipeList, "ii.precissionassembler");
 		modRegistry.addRecipeClickArea(GuiPrecissionAssembler.class, 16, 58, 19, 12, "ii.precissionassembler");
+
+		modRegistry.addRecipes(SawmillRecipe.recipeList, "ii.sawmill");
+		modRegistry.addRecipeClickArea(GuiSawmill.class, 16, 58, 19, 12, "ii.sawmill");
 	}
 
 	@Override

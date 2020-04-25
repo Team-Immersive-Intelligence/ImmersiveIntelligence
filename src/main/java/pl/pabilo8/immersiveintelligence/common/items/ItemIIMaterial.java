@@ -29,7 +29,10 @@ public class ItemIIMaterial extends ItemIIBase
 				"white_phosphorus",
 				"dust_salt",
 				"carbon_brush",
-				"glass_fibre_cable"
+				"glass_fibre_cable",
+				"dust_wood",
+				"dust_formaldehyde",
+				"dust_hexamine"
 		);
 	}
 }

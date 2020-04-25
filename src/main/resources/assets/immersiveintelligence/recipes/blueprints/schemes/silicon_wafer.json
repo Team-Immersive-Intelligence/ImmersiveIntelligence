@@ -4,25 +4,25 @@
     "item": "immersiveintelligence:assembly_scheme",
     "nbt": {
       "recipeItem": {
-        "id": "immersiveintelligence:material",
+        "id": "immersiveintelligence:material_plate",
         "Count": 1,
-        "Damage": 3
+        "Damage": 5
       }
     }
   },
   "pattern": [
-    "WBW",
+    "QHQ",
     "DDD",
     "PPP"
   ],
   "key": {
-    "W": {
+    "Q": {
       "type": "forge:ore_dict",
-      "ore": "dustRedstone"
+      "ore": "dustQuartz"
     },
-    "B": {
-      "type": "forge:ore_dict",
-      "ore": "plateNickel"
+    "H": {
+      "item": "immersiveintelligence:sawblade",
+      "data": 0
     },
     "D": {
       "type": "forge:ore_dict",

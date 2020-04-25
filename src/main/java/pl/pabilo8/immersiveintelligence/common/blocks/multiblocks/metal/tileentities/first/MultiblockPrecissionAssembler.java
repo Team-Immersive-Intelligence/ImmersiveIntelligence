@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDec
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -258,9 +259,12 @@ public class MultiblockPrecissionAssembler implements IMultiblock
 		if(te==null)
 		{
 			te = new TileEntityPrecissionAssembler();
-			te.facing = EnumFacing.SOUTH;
+			te.facing = EnumFacing.NORTH;
 		}
 
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(1, 1, 5);
 		ImmersiveIntelligence.proxy.renderTile(te);
+		GlStateManager.popMatrix();
 	}
 }

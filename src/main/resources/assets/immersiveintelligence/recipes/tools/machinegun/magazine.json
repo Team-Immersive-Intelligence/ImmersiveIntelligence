@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ps",
+    "p "
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:bullet_magazine",
+    "data": 0,
+    "count": 1
+  }
+}

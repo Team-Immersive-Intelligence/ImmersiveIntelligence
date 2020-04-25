@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustHexamine"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustSaltpeter"
+    }
+  ],
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 2,
+    "data": 16
+  }
+}

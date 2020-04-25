@@ -73,7 +73,7 @@ dependencies {
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
     deobfCompile "mezz.jei:jei_1.12.2:4.15.+"
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.8.468"
-    deobfCompile "albedo:albedo:0.1.3"
+    compileOnly "albedo:albedo:0.1.3"
     //Maybe someday...
     //deobfCompile "albedo:albedo:1.12.2:1.1.0"
     deobfCompile 'baubles:Baubles:1.12:1.5.2'

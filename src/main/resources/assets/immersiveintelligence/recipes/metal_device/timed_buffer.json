@@ -1,0 +1,29 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device",
+    "data": 3
+  },
+  "pattern": [
+    " t ",
+    "csc",
+    "ppp"
+  ],
+  "key": {
+    "t": {
+      "item": "minecraft:clock"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingAluminum"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    }
+  }
+}

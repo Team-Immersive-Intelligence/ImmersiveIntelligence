@@ -442,12 +442,12 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 	//Copied from TileEntityWoodenBarrel
 	static class SidedFluidHandler implements IFluidHandler
 	{
-		TileEntityFluidInserter barrel;
+		TileEntityFluidInserter internal;
 		EnumFacing facing;
 
-		SidedFluidHandler(TileEntityFluidInserter barrel, EnumFacing facing)
+		SidedFluidHandler(TileEntityFluidInserter internal, EnumFacing facing)
 		{
-			this.barrel = barrel;
+			this.internal = internal;
 			this.facing = facing;
 		}
 
@@ -491,22 +491,22 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 
 			//ImmersiveIntelligence.logger.info(barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite()));
 
-			if(barrel.energyStorage >= FluidInserter.energyUsage&&barrel.fluidToTake > 0&&barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing))!=null&&barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite()))
+			if(internal.energyStorage >= FluidInserter.energyUsage&&internal.fluidToTake > 0&&internal.world.getTileEntity(internal.pos.offset(internal.outputFacing))!=null&&internal.world.getTileEntity(internal.pos.offset(internal.outputFacing)).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, internal.outputFacing.getOpposite()))
 			{
-				TileEntity te = barrel.world.getTileEntity(barrel.pos.offset(barrel.outputFacing));
-				IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, barrel.outputFacing.getOpposite());
+				TileEntity te = internal.world.getTileEntity(internal.pos.offset(internal.outputFacing));
+				IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, internal.outputFacing.getOpposite());
 
-				BlockPos pos = barrel.pos.offset(barrel.outputFacing);
+				BlockPos pos = internal.pos.offset(internal.outputFacing);
 
 				FluidStack res2 = resource.copy();
-				res2.amount = Math.min(resource.amount, Math.min(FluidInserter.maxOutput, barrel.fluidToTake));
-				int maxfill = Math.min(resource.amount, Math.min(FluidInserter.maxOutput, barrel.fluidToTake));
+				res2.amount = Math.min(resource.amount, Math.min(FluidInserter.maxOutput, internal.fluidToTake));
+				int maxfill = Math.min(resource.amount, Math.min(FluidInserter.maxOutput, internal.fluidToTake));
 				int left = handler.fill(res2, doFill);
 
 				if(doFill)
 				{
-					barrel.fluidToTake -= left;
-					barrel.energyStorage -= FluidInserter.energyUsage;
+					internal.fluidToTake -= left;
+					internal.energyStorage -= FluidInserter.energyUsage;
 				}
 
 				return left;

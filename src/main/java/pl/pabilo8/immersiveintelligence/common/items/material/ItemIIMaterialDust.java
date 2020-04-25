@@ -16,7 +16,10 @@ public class ItemIIMaterialDust extends ItemIIBase
 				"tungsten",
 				"zinc",
 				"silicon",
-				"fluorite"
+				"fluorite",
+				"quartz",
+				"quartz_dirty",
+				"phosphorus"
 		);
 	}
 }

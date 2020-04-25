@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " p ",
+    "psp",
+    " p "
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:motor_belt",
+    "count": 3,
+    "data": 1
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "gsg",
+    " p ",
+    "ppp"
+  ],
+  "key": {
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "s": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 8
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 6,
+    "count": 1
+  }
+}

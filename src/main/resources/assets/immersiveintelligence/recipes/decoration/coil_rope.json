@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ccc",
+    "csc",
+    "ccc"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 3
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:cloth_decoration",
+    "data": 0
+  }
+}

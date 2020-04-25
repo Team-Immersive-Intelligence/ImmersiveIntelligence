@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:machinegun",
+      "data": 0,
+      "nbt": "{upgrades:{infrared_scope:1,second_magazine:1, heavy_barrel:1}}"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.let_me_show_you_its_features"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.let_me_show_you_its_features.desc"
+    },
+    "frame": "challenge"
+  },
+  "parent": "immersiveintelligence:main/craft_mg",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "loot": [
+      "immersiveengineering:advancements/shader_epic"
+    ]
+  }
+}

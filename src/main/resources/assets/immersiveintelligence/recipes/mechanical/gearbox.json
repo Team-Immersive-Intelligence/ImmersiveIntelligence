@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:gearbox"
+  },
+  "pattern": [
+    "prp",
+    "rwr",
+    "prp"
+  ],
+  "key": {
+    "r": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateBrass"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingTreatedWood"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " r ",
+    "ccs",
+    " r "
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 2,
+    "count": 1
+  }
+}

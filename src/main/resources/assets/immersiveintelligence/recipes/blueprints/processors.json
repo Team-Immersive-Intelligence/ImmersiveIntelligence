@@ -17,8 +17,8 @@
       "ore": "chipProcessor"
     },
     "B": {
-      "type": "forge:ore_dict",
-      "ore": "circuitProcessorEtched"
+      "item": "immersiveengineering:tool",
+      "data": 3
     },
     "D": {
       "type": "forge:ore_dict",

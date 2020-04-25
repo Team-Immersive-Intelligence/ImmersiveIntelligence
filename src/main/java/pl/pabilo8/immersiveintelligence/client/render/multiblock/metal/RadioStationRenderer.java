@@ -48,7 +48,7 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 				float progress = Math.max(Math.min(te.getCurrentConstruction()/(float)te.getConstructionCost(), 1f), 0f);
 				GlStateManager.scale(0.98f, 0.98f, 0.98f);
 				GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
-				float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
+				//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 				ShaderUtil.blueprint_static(0.55f-(progress*0.35f), ClientUtils.mc().player.ticksExisted+partialTicks);
 				for(int i = 50; i >= 50*progress; i--)
 					model.baseModel[i].render(0.0625f);
@@ -63,6 +63,17 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 
 			}
 
+			GlStateManager.popMatrix();
+
+		}
+		else if(te==null)
+		{
+			ClientUtils.bindTexture(texture);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((float)x+3, (float)y-2, (float)z+2);
+			GlStateManager.rotate(180F, 0F, 1F, 0F);
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+			model.render();
 			GlStateManager.popMatrix();
 
 		}

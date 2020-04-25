@@ -84,6 +84,8 @@ public class ImmersiveIntelligence
 				IISaveData.setInstance(world.provider.getDimension(), worldData);
 			}
 		}
+
+		CommonProxy.refreshFluidReferences();
 	}
 
 }

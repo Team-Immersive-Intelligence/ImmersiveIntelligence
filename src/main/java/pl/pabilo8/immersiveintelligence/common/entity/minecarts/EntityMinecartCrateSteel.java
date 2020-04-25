@@ -21,7 +21,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
@@ -114,7 +113,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 	@Override
 	public String getGuiID()
 	{
-		return ImmersiveIntelligence.MODID+":steel_crate";
+		return "intelli"+":steel_crate";
 	}
 
 	@Override

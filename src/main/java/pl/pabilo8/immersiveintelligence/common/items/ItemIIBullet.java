@@ -260,6 +260,7 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack)
 	{
 		return getCasing(stack)!=null?I18n.format("item."+ImmersiveIntelligence.MODID+".bullet."+getCasing(stack).getName()+".name"): ImmersiveIntelligence.MODID+".item.bullet.null";

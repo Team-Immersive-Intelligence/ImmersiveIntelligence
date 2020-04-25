@@ -1,0 +1,18 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device",
+    "data": 0
+  },
+  "pattern": [
+    "ppp",
+    "p p",
+    "ppp"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    }
+  }
+}

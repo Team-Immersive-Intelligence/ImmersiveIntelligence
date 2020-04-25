@@ -18,12 +18,13 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 {
 	public ItemIIPrecissionTool()
 	{
-		super("precission_tool", 1, "precission_buzzsaw", "precission_drill", "precission_inserter", "precission_solderer", "precission_welder");
+		super("precission_tool", 1, "precission_buzzsaw", "precission_drill", "precission_inserter", "precission_solderer", "precission_welder", "precission_hammer");
 		PrecissionAssemblerRecipe.registerToolType("buzzsaw", this);
 		PrecissionAssemblerRecipe.registerToolType("drill", this);
 		PrecissionAssemblerRecipe.registerToolType("inserter", this);
 		PrecissionAssemblerRecipe.registerToolType("solderer", this);
 		PrecissionAssemblerRecipe.registerToolType("welder", this);
+		PrecissionAssemblerRecipe.registerToolType("hammer", this);
 	}
 
 	@Override
@@ -83,6 +84,10 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 			{
 				return Tools.precission_tool_welder_durability;
 			}
+			case "precission_hammer":
+			{
+				return Tools.precission_tool_welder_durability;
+			}
 		}
 		return -1;
 	}
@@ -124,6 +129,10 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 			{
 				return Tools.precission_tool_welder_usage_time;
 			}
+			case "hammer":
+			{
+				return Tools.precission_tool_hammer_usage_time;
+			}
 		}
 		return -1;
 	}
@@ -163,6 +172,11 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 			case "precission_welder":
 			{
 				PrecissionAssemblerRenderer.modelWelder.renderProgress(progress, angle, maxProgress);
+				return;
+			}
+			case "precission_hammer":
+			{
+				PrecissionAssemblerRenderer.modelHammer.renderProgress(progress, angle, maxProgress);
 				return;
 			}
 		}

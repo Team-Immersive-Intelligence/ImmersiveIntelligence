@@ -1,0 +1,31 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveengineering:blueprint",
+    "nbt": {
+      "blueprint": "basic_functional_circuits"
+    }
+  },
+  "pattern": [
+    "CWC",
+    "DDD",
+    "PPP"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "W": {
+      "item": "immersiveengineering:tool",
+      "data": 2
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  }
+}
