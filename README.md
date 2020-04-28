@@ -1,5 +1,7 @@
 <p align="center"><img src="https://github.com/Pabilo8/ImmersiveIntelligence/blob/master/logos/logofullhq.png?raw=true"></p>
 
+[![](http://cf.way2muchnoise.eu/versions/immersive-intelligence.svg)](https://minecraft.curseforge.com/projects/immersive-intelligence) 
+
 **Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so **most of the planned features are not added**. There are four main categories of the mod's content: 
 
  - **Data and Electronics** - alows the player to transmit signals on the data network via packets of variables, there are many multiblock machines which allow reading, writing, transmitting and receiving data, allowing it to be an upgraded version of redstone
