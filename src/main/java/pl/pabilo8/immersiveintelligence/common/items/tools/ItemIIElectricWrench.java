@@ -25,6 +25,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -73,7 +74,9 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 				{
 					if(capability==CapabilityEnergy.ENERGY)
 						return (T)energyStorage;
-					return super.getCapability(capability, facing);
+					if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+						return (T)this;
+					return null;
 				}
 			};
 		return null;
