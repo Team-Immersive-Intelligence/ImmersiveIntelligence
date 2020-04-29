@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecor
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -32,8 +33,8 @@ public class MultiblockSkyCrateStation implements IMultiblock
 			new IngredientStack(new ItemStack(IEContent.blockWoodenDecoration, 4, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockStoneDecorationSlabs, 2, BlockTypes_StoneDecoration.CONCRETE.getMeta())),
 			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 8, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 2, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
+			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 2, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(CommonProxy.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
 	};
 	public static MultiblockSkyCrateStation instance = new MultiblockSkyCrateStation();
 	static ItemStack[][][] structure = new ItemStack[3][3][3];
@@ -263,9 +264,12 @@ public class MultiblockSkyCrateStation implements IMultiblock
 		if(te==null)
 		{
 			te = new TileEntitySkyCrateStation();
-			te.facing = EnumFacing.SOUTH;
+			te.facing = EnumFacing.EAST;
 		}
 
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(1, 1, 1);
 		ImmersiveIntelligence.proxy.renderTile(te);
+		GlStateManager.popMatrix();
 	}
 }

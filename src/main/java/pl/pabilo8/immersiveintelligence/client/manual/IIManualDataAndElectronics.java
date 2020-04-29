@@ -128,7 +128,8 @@ public class IIManualDataAndElectronics extends IIManual
 
 		ManualHelper.addEntry("radio_station", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "radio_station0", MultiblockRadioStation.instance),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "radio_station1",
+				new ManualPages.Text(ManualHelper.getManual(), "radio_station1"),
+				new ManualPages.ItemDisplay(ManualHelper.getManual(), "radio_station2",
 						new ItemStack(CommonProxy.item_radio_configurator, 1, 0),
 						new ItemStack(CommonProxy.item_radio_configurator, 1, 1)
 				)

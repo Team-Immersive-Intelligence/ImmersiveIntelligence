@@ -70,8 +70,9 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 		{
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+3, (float)y-2, (float)z+2);
+			GlStateManager.translate((float)x+2.5, (float)y+1, (float)z+1.75);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
+			GlStateManager.scale(0.25, 0.25, 0.25);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 			model.render();
 			GlStateManager.popMatrix();

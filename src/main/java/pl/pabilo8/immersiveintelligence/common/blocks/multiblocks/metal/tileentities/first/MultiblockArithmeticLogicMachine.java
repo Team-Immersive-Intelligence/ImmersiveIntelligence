@@ -30,6 +30,14 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 
 	static ItemStack[][][] structure = new ItemStack[3][3][2];
 
+	static final IngredientStack[] materials = new IngredientStack[]{
+			new IngredientStack("scaffoldingTreatedWood", 2),
+			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 6, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())),
+			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RADIATOR.getMeta())),
+	};
+
 	static
 	{
 		for(int h = 0; h < 3; h++)
@@ -208,14 +216,6 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 	{
 		return structure;
 	}
-
-	static final IngredientStack[] materials = new IngredientStack[]{
-			new IngredientStack("scaffoldingTreatedWood", 2),
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 6, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())),
-			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RADIATOR.getMeta())),
-	};
 
 	@Override
 	public IngredientStack[] getTotalMaterials()

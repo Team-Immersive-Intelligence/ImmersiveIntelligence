@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
@@ -27,8 +26,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenM
 public class MultiblockSawmill implements IMultiblock
 {
 	static final IngredientStack[] materials = new IngredientStack[]{
-			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 6, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 3, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
+			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 6, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IEContent.blockWoodenDecoration, 3, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta()))
 	};
 	public static MultiblockSawmill instance = new MultiblockSawmill();
 	static ItemStack[][][] structure = new ItemStack[2][2][4];

@@ -71,7 +71,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 
 						if((l==2&&w==2)||(l==2&&w==6)||(l==6&&w==2)||(l==6&&w==6))
 							structure[h][l][w] = new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE.getMeta());
-							//Schweres Ingueniuring
+							//Schweres Ingenieuring
 						else if(w >= 3&&w <= 5&&l >= 3&&l <= 5)
 							structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta());
 							//Radiators

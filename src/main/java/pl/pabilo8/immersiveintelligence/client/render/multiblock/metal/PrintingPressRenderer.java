@@ -177,5 +177,16 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 			GlStateManager.popMatrix();
 
 		}
+		else if(te==null)
+		{
+			ClientUtils.bindTexture(texture);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((float)x+0.5, (float)y+0.5, (float)z+1.75);
+			GlStateManager.scale(0.3, 0.3, 0.3);
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+			model.render();
+			GlStateManager.popMatrix();
+
+		}
 	}
 }

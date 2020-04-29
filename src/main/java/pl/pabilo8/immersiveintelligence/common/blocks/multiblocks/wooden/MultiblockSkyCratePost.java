@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -196,9 +197,13 @@ public class MultiblockSkyCratePost implements IMultiblock
 		if(te==null)
 		{
 			te = new TileEntitySkyCratePost();
-			te.facing = EnumFacing.SOUTH;
-		}
 
+		}
+		te.facing = EnumFacing.EAST;
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 1, 0);
 		ImmersiveIntelligence.proxy.renderTile(te);
+		GlStateManager.popMatrix();
 	}
 }

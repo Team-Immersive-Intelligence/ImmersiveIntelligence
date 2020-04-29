@@ -192,6 +192,8 @@ item.immersiveintelligence.bullet.component.HMX.name=HMX
 item.immersiveintelligence.bullet.component.CoreSteel.name=Steel Core
 item.immersiveintelligence.bullet.component.CoreBrass.name=Brass Core
 item.immersiveintelligence.bullet.component.CoreTungsten.name=Tungsten Core
+item.immersiveintelligence.bullet.component.CoreLead.name=Lead Core
+item.immersiveintelligence.bullet.component.CoreUranium.name=Uranium Core
 
 item.immersiveintelligence.bullet_magazine.machinegun.name=Machinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun.name=Submachinegun Magazine
@@ -745,27 +747,28 @@ ie.manual.entry.circuit_production_processor_usages=Currently processors are not
 #Reference to a Polish tinkerer/Baumeister slang word meaning doohickey, thingamabob, but in exact meaning a device that makes the "bul bul" (splash splash?) noise
 ie.manual.entry.chemical_bath.name=Chemical Bath
 ie.manual.entry.chemical_bath.subtext=The Bulbulator
-ie.manual.entry.chemical_bath0=The Chemical Bath is a machine, constructed of an industrial-size steel bathtub and a moving carriage with a grasper. The machine is commonly used for etching raw circuits in acid.
+ie.manual.entry.chemical_bath0=The Chemical Bath is a machine, constructed of an industrial-size steel bathtub and a moving carriage with a grasper. The machine is commonly used for etching raw circuits in acid. To form it use a hammer on the middle sheetmetal block.
 
 #Reference to Dr.Stone
 ie.manual.entry.precission_assembler.name=Precision Assembler
 ie.manual.entry.precission_assembler.subtext=The Godly Artisan
-ie.manual.entry.precission_assembler0=The Precision Assembler is an advanced machine used for crafting items with high precision. It requires an Assembly Scheme and some precise tools for operation. Because of its high precision,
+ie.manual.entry.precission_assembler0=The Precision Assembler is an advanced machine used for crafting items with high precision. It requires an Assembly Scheme and some precise tools for operation. To form it, use a hammer on the wooden scaffolding block.
 ie.manual.entry.precission_assembler1=the machine uses only the amount it needs and outputs scrap along with the produced item. Its most common use is electonic component production.
 
 ie.manual.entry.electrolyzer.name=Electrolyzer
 ie.manual.entry.electrolyzer.subtext=The fluid shock therapy
-ie.manual.entry.electrolyzer0=The Electrolyzer is a machine which uses the electrolysis process to split a fluid into two different ones. It can split water into hydrogen and oxygen and brine into chlorine and hydrogen. It requires electricity to operate.
+ie.manual.entry.electrolyzer0=The Electrolyzer is a machine which uses the electrolysis process to split a fluid into two different ones. It can split water into hydrogen and oxygen and brine into chlorine and hydrogen. It requires electricity to operate. To form the block, use a hammer on the heavy engineering block in front of the machine.
 
 ie.manual.entry.printing_press.name=Printing Press
 ie.manual.entry.printing_press.subtext=The Engineer's Book & Quill
-ie.manual.entry.printing_press0=The Printing Press is a machine which can print out text on demand when it receives a data packet. The Press requires ink and paper to operate. The printing paper is a special thinned version of a standard one used in books. Machine requires different
-ie.manual.entry.printing_press1=amount of inks depending on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
-ie.manual.entry.printing_press2=String 't' - output type (text/construction/code)<br>Integer c - amount of copies<br>String 's' - text to print (if using the mode "text")<br>
+ie.manual.entry.printing_press0=The Printing Press is a machine which can print out text on demand when it receives a data packet. The Press requires ink and paper to operate. To form it, use a hammer on the light engineering block in front of the machine.
+ie.manual.entry.printing_press1= The printing paper is a special thinned version of a standard one used in books, it is created by pressing a paper in a metal press. Machine requires different ink colors, depending on the CMYK values of the currently printed color.
+ie.manual.entry.printing_press2=amount of inks depending on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
+ie.manual.entry.printing_press3=String 't' - output type (text/construction/code)<br>Integer c - amount of copies<br>String 's' - text to print (if using the mode "text")<br>
 
 ie.manual.entry.data_input_machine.name=Data Input Machine
 ie.manual.entry.data_input_machine.subtext=The Input Outputter
-ie.manual.entry.data_input_machine0=The Data Input Machine is an electronic device which consists of a wooden desk with a keyboard on top and a steel machine casing. A user can input data into it and send it by applying a redstone signal. After sending a data packet, the variables remain there and the machine can be used again. To operate, the device requires electricity.
+ie.manual.entry.data_input_machine0=The Data Input Machine is an electronic device which consists of a wooden desk with a keyboard on top and a steel machine casing. A user can input data into it and send it by applying a redstone signal. After sending a data packet, the variables remain there and the machine can be used again. To operate, the device requires electricity. To form it use a hammer on the light engineering block to the left.
 ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift). When editing the
 
 #Reference to a song
@@ -791,7 +794,7 @@ ie.manual.entry.redstone_interface1=The machine consists of several parts, some 
 #Reference to a meme
 ie.manual.entry.conveyor_scanner.name=Conveyor Scanner
 ie.manual.entry.conveyor_scanner.subtext=Get the camera!
-ie.manual.entry.conveyor_scanner0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. Then an item passes trough the Conveyor Scanner, its properties are read and sent in an ItemStack type variable 's' inside a Data Packet. To operate, the machine requires electricity.
+ie.manual.entry.conveyor_scanner0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. Then an item passes trough the Conveyor Scanner, its properties are read and sent in an ItemStack type variable 's' inside a Data Packet. To operate, the machine requires electricity. To form it use a hammer on the conveyor.
 
 #Reference to Factorio
 ie.manual.entry.inserters.name=Inserters
@@ -814,7 +817,7 @@ ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noi
 ie.manual.entry.radio_station.name=Radio Station
 ie.manual.entry.radio_station.subtext=The Wireless Wire™
 ie.manual.entry.radio_station0=The Radio Station is a device for sending and receiving data wirelessly. Radio stations can only communicate, when they are in range (which is lower in bad weather), when they work on the same frequency and when both towers are given enough electrical energy.
-ie.manual.entry.radio_station1=The Radio Station is an advanced multiblock, which means it can be only built using an Electric Engineer's Hammer in a 2-step process. In the first stage the multiblock must be built like every other, in the second energy (trough using the electric hammer) has to be provided to finish it.
+ie.manual.entry.radio_station1=The Radio Station is an advanced multiblock, which means it can be only built using an Electric Engineer's Hammer in a 2-step process. In the first stage the multiblock must be built and then a hammer has to be used on the upper advanced electronic engineering block, in the second energy (trough using the electric hammer) has to be provided to finish it.
 ie.manual.entry.radio_station2=The Radio Station's frequency can be set by using a Radio Tuner. There are 2 versions of the tuner with different ranges of frequencies. The radio station can use only the basic range.
 
 #Reference to... Immersive Engineering's Curse Description
@@ -901,7 +904,7 @@ ie.manual.entry.artillery_howitzer.name=Artillery Howitzer
 ie.manual.entry.artillery_howitzer.subtext=Bertha's Sister
 ie.manual.entry.artillery_howitzer0=
 ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, that allows attacking targets as distant as 300 blocks. It is controlled using the data system and loaded with special high-caliber shells. It is best used in offensive operations.
-ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate.
+ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate. To form it use a hammer on the concrete block sticking out at the top.
 ie.manual.entry.artillery_howitzer3=Variables<br>String 'm' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
 
 ie.manual.entry.ballistic_computer.name=Ballistic Computer
@@ -940,16 +943,17 @@ ie.manual.entry.logistics0=Logistics is a unique branch of engineering focused o
 #Reference to Choroman's laziness, but also some hard work on the Packer model
 ie.manual.entry.packer.name=Packer
 ie.manual.entry.packer.subtext=Even more Pipes and Tunnels!
-ie.manual.entry.packer0=Packer is a machine used to batch load items into containers such as crates or bullet magazines. For operation it requires power and a single data signal defining how much items should be put each time. The packer receives items to be packed from the side and containers onto the bottom conveyor.
-ie.manual.entry.packer1=Variables:<br>Integer 'c'-items to pack<br>Integer or String (one_by_one, one_of_all) 'm'-item packing mode<br>Integer 'q' - insert quantity<br>Boolean 'i' - whether the machine should ignore empty stacks.
+ie.manual.entry.packer0=Packer is a machine used to batch load items into containers such as crates or bullet magazines. For operation it requires power and a single data signal defining how much items should be put each time. To form it, use a hammer on the pipe above the conveyor belt.
+ie.manual.entry.packer1= The packer receives items to be packed from the side and containers onto the bottom conveyor.
+ie.manual.entry.packer2=Variables:<br>Integer 'c'-items to pack<br>Integer or String (one_by_one, one_of_all) 'm'-item packing mode<br>Integer 'q' - insert quantity<br>Boolean 'i' - whether the machine should ignore empty stacks.
 
 #Ziplines
 ie.manual.entry.skycrates.name=Skycrates
 ie.manual.entry.skycrates.subtext=The actual logistic lines!
 ie.manual.entry.skycrates0=The skycrate system is a different approach on delivering items. It's speed is superior to any conveyor and lines made of rope are much cheaper and more space-efficient. There are also some drawbacks to it: it requires stations on both sides and the crates need to be inserted to a minecart. Skycrates are a better option than conveyors on longer distances, it is not encouraged to use them on short (0-30m) distances.
-ie.manual.entry.skycrates1=The Skycrate Station is a begin and end point of a skycrate line. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power3;§o§nGearboxes§r;>.
+ie.manual.entry.skycrates1=The Skycrate Station is a begin and end point of a skycrate line. To form it use a hammer on the scaffolding in the middle. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power3;§o§nGearboxes§r;>.
 ie.manual.entry.skycrates2=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. Minecarts can only enter the station when the railway barrier is up, a minecart can be forced out of the station, by applying a redstone signal. The station will automatically expell minecarts after loading/unloading.
-ie.manual.entry.skycrates3=The Skycrate Post is what a relay between two points in the skycrate network. Only two wires can be attached.
+ie.manual.entry.skycrates3=The Skycrate Post is what a relay between two points in the skycrate network. Only two wires can be attached. To form it use a hammer on the fence.
 ie.manual.entry.skycrates4=Crate minecarts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart, items inside won't be lost. When disassembled, the minecart splits into the actual cart and the crate.
 ie.manual.entry.skycrates5=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.
 
@@ -959,8 +963,9 @@ ie.manual.entry.skycrates5=The skycrate mounts are used to transport crates via 
 #Reference to a certain picture i've seen on reddit few years ago
 ie.manual.entry.sawmill.name=Sawmill
 ie.manual.entry.sawmill.subtext=The better fidget spinner!
-ie.manual.entry.sawmill0=The Sawmill is an automatic carpentry machine powered by rotary energy. It consists of a table, a mechanical inserter and saw mount. Saws made of different materials can be mounted. While every saw is effective at cutting wood, saws made of hard materials like steel and tunsten can even cut trough metals.
-ie.manual.entry.sawmill1=The machine requires a constant supply of rotary power to it's side. Resources can be inserted to table's right side and processed items are outputted to the wooden storage box on the ground
+ie.manual.entry.sawmill0=The Sawmill is an automatic carpentry machine powered by rotary energy. It consists of a table, a mechanical inserter and saw mount. To form the multiblock, use a hammer on the middle wooden scaffolding.
+ie.manual.entry.sawmill1=Saws made of different materials can be mounted. While every saw is effective at cutting wood, saws made of hard materials like steel and tunsten can even cut trough metals.
+ie.manual.entry.sawmill2=The machine requires a constant supply of rotary power to it's side. Resources can be inserted to table's right side and processed items are outputted to the wooden storage box on the ground
 
 ie.manual.entry.rotary_power.name=Rotary Power
 ie.manual.entry.rotary_power.subtext=Things start turning!

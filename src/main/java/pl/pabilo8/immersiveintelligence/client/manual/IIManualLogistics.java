@@ -49,7 +49,8 @@ public class IIManualLogistics extends IIManual
 
 		ManualHelper.addEntry("packer", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPacker.instance),
-				new ManualPages.Text(ManualHelper.getManual(), "packer1")
+				new ManualPages.Text(ManualHelper.getManual(), "packer1"),
+				new ManualPages.Text(ManualHelper.getManual(), "packer2")
 		);
 
 		ManualHelper.addEntry("skycrates", getCategory(),

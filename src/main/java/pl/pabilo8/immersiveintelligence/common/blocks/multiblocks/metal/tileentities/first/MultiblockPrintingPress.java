@@ -83,7 +83,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						{
 							structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta());
 						}
-						else
+						else if(l!=0)
 						{
 							structure[h][l][w] = new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.BARREL.getMeta());
 						}

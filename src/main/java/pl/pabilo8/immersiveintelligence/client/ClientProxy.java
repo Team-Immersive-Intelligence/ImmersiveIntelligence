@@ -543,7 +543,8 @@ public class ClientProxy extends CommonProxy
 
 		ManualHelper.addEntry("sawmill", ManualHelper.CAT_MACHINES,
 				new ManualPageMultiblock(ManualHelper.getManual(), "sawmill0", MultiblockSawmill.instance),
-				new ManualPages.Text(ManualHelper.getManual(), "sawmill1")
+				new ManualPages.Text(ManualHelper.getManual(), "sawmill1"),
+				new ManualPages.Text(ManualHelper.getManual(), "sawmill2")
 		);
 
 

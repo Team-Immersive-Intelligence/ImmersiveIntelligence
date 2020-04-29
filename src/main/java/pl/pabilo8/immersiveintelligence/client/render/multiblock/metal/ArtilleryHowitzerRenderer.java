@@ -468,5 +468,33 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 			GlStateManager.popMatrix();
 
 		}
+		else if(te==null)
+		{
+			ClientUtils.bindTexture(texture);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((float)x+1.5, (float)y+0.55, (float)z+1.5);
+			GlStateManager.rotate(180F, 0F, 1F, 0F);
+			GlStateManager.scale(0.5, 0.5, 0.5);
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+			for(ModelRendererTurbo mod : model.cannon_platform)
+				mod.render(0.0625f);
+
+			GlStateManager.translate(0f, 1.625f, 0f);
+			GlStateManager.rotate(-45, 1f, 0f, 0f);
+
+			for(ModelRendererTurbo mod : model.cannon)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.cannon_barrel)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.cannon_ammo_door_left)
+				mod.render(0.0625f);
+			for(ModelRendererTurbo mod : model.cannon_ammo_door_right)
+				mod.render(0.0625f);
+
+			GlStateManager.popMatrix();
+
+		}
 	}
+
 }
