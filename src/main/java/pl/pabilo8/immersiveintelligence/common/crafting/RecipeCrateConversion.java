@@ -32,9 +32,7 @@ public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeR
 		{
 			ItemStack stackInSlot = inv.getStackInSlot(i);
 			if(!stackInSlot.isEmpty())
-				for(ItemStack inputCrate : inputCrates)
-					if(inputCrate.isItemEqual(stackInSlot))
-						return true;
+				return inputCrates.stream().anyMatch(stack -> stack.isItemEqual(stackInSlot));
 		}
 		return false;
 	}
