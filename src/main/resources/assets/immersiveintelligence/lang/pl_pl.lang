@@ -1,0 +1,969 @@
+
+//Items
+itemGroup.immersiveintelligence=Immersive Intelligence
+
+item.immersiveintelligence.material.basic_circuit_board_raw.name=Niewytrawiony Prosty Układ Scalony
+item.immersiveintelligence.material.basic_circuit_board_etched.name=Wytrawiony Prosty Układ Scalony
+item.immersiveintelligence.material.basic_electronic_element.name=Prosty Komponent Elektroniczny
+
+item.immersiveintelligence.material.advanced_circuit_board_raw.name=Niewytrawiony Zaawansowany Układ Scalony
+item.immersiveintelligence.material.advanced_circuit_board_etched.name=Wytrawiony Zaawansowany Układ Scalony
+item.immersiveintelligence.material.advanced_circuit_board.name=Zaawansowany Układ Scalony
+item.immersiveintelligence.material.advanced_electronic_element.name=Zaawansowany Komponent Elektroniczny
+
+item.immersiveintelligence.material.processor_circuit_board_raw.name=Niewytrawiony Układ Procesorowy
+item.immersiveintelligence.material.processor_circuit_board_etched.name=Wytrawiony Układ Procesorowy
+item.immersiveintelligence.material.processor_circuit_board.name=Układ Procesorowy
+item.immersiveintelligence.material.processor_electronic_element.name=Procesor
+item.immersiveintelligence.material.transistor.name=Tranzystor
+
+item.immersiveintelligence.material.compact_electric_engine.name=Silniczek Elektryczny
+item.immersiveintelligence.material.compact_electric_engine_advanced.name=Zaawansowany Silniczek Elektryczny
+item.immersiveintelligence.material.carbon_brush.name=Szczotka Węglowa
+item.immersiveintelligence.material.wire_tungsten.name=Wolframowy Drut
+item.immersiveintelligence.material.glass_fibre_cable.name=Światłowód
+
+item.immersiveintelligence.material.advanced_electron_tube.name=Zaawansowana Lampa Elektronowa
+
+item.immersiveintelligence.material.punchtape_empty.name=Niezadziurkowana Taśma
+item.immersiveintelligence.punchtape.name=Taśma Dziurkowana
+
+item.immersiveintelligence.binoculars.binoculars.name=Lornetka
+item.immersiveintelligence.binoculars.infrared_binoculars.name=Podczerwona Lornetka
+
+item.immersiveintelligence.assembly_scheme.name=Schemat Konstrukcyjny
+
+item.immersiveintelligence.press_mold.howitzer.name=Forma do Prasy: Pocisk Artyleryjski
+item.immersiveintelligence.press_mold.machinegun.name=Forma do Prasy: Pocisk do Karabinu Maszynowego
+item.immersiveintelligence.press_mold.submachinegun.name=Forma do Prasy: Pocisk do Pistoletu Maszynowego
+item.immersiveintelligence.press_mold.grenade.name=Forma do Prasy: Granat
+
+item.immersiveintelligence.material_ingot.platinum.name=Sztabka Platyny
+item.immersiveintelligence.material_ingot.zinc.name=Sztabka Cynku
+item.immersiveintelligence.material_ingot.tungsten.name=Sztabka Wolframu
+item.immersiveintelligence.material_ingot.brass.name=Sztabka Mosiądzu
+item.immersiveintelligence.material_ingot.advanced_electronic_alloy.name=Sztabka Zaawansowanego Stopu Elektronicznego
+item.immersiveintelligence.material_ingot.silicon.name=Sztabka Krzemu
+item.immersiveintelligence.material_ingot.magnet.name=Magnes
+
+item.immersiveintelligence.material_dust.platinum.name=Platynowy Proszek
+item.immersiveintelligence.material_dust.zinc.name=Cynkowy Proszek
+item.immersiveintelligence.material_dust.tungsten.name=Wolframowy Proszek
+item.immersiveintelligence.material_dust.brass.name=Mosiężny Proszek
+item.immersiveintelligence.material_dust.advanced_electronic_alloy.name=Proszek Zaawansowanego Stopu Elektronicznego
+item.immersiveintelligence.material_dust.silicon.name=Krzemowy Proszek
+item.immersiveintelligence.material_dust.fluorite.name=Fluorytowy Proszek
+item.immersiveintelligence.material_dust.quartz.name=Kwarcowy Proszek
+item.immersiveintelligence.material_dust.quartz_dirty.name=Nieprzetworzony Kwarcowy Proszek
+item.immersiveintelligence.material_dust.phosphorus.name=Fosforowy Proszek
+
+item.immersiveintelligence.material_plate.platinum.name=Platynowa Płytka
+item.immersiveintelligence.material_plate.zinc.name=Cynkowa Płytka
+item.immersiveintelligence.material_plate.tungsten.name=Wolframowa Płytka
+item.immersiveintelligence.material_plate.brass.name=Mosiężna Płytka
+item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Płytka Zaawansowanego Stopu Elektronicznego
+item.immersiveintelligence.material_plate.silicon.name=Wafel Krzemowy
+
+item.immersiveintelligence.material_nugget.platinum.name=Odłamek Platyny
+item.immersiveintelligence.material_nugget.zinc.name=Odłamek Cynku
+item.immersiveintelligence.material_nugget.tungsten.name=Odłamek Wolframu
+item.immersiveintelligence.material_nugget.brass.name=Odłamek Mosiądzu
+item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Odłamek Zaawansowanego Stopu Elektronicznego
+item.immersiveintelligence.material_nugget.silicon.name=Kawałek Krzemu
+
+item.immersiveintelligence.material_wire.tungsten.name=Wolframowy Drut
+
+item.immersiveintelligence.material_gem.fluorite.name=Netherowy Fluoryt
+//Oparty na prawdziwym minerale o nazwie glaukonit, po prostu łatwiej jest zapamiętać "fosfor"
+item.immersiveintelligence.material_gem.phosphorus.name=Netherowy Fosfor
+
+item.immersiveintelligence.material_boule.silicon.name=Walec Krzemowy
+
+item.immersiveintelligence.material_spring.brass.name=Mosiężna Sprężyna
+item.immersiveintelligence.material_spring.iron.name=Żelazna Sprężyna
+item.immersiveintelligence.material_spring.steel.name=Stalowa Sprężyna
+
+item.immersiveintelligence.material.dust_rdx.name=Sproszkowany Heksogen
+item.immersiveintelligence.material.dust_hmx.name=Sproszkowany HMX
+item.immersiveintelligence.material.white_phosphorus.name=Biały Fosfor
+
+item.immersiveintelligence.material.dust_salt.name=Sproszkowana Sól
+item.immersiveintelligence.material.dust_wood.name=Trociny
+item.immersiveintelligence.material.dust_hexamine.name=Sproszkowana Urotropina
+item.immersiveintelligence.material.dust_formaldehyde.name=Sproszkowany Formaldehyd
+
+item.immersiveintelligence.circuit_functional.arithmetic.name=Układ Arytmetyczny
+item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Zaawansowany Układ Arytmetyczny
+item.immersiveintelligence.circuit_functional.logic.name=Układ Logiczny
+item.immersiveintelligence.circuit_functional.comparator.name=Układ Porównawczy
+item.immersiveintelligence.circuit_functional.advanced_logic.name=Zaawansowany Układ Logiczny
+item.immersiveintelligence.circuit_functional.text.name=Układ Przetwarzania Tekstu
+item.immersiveintelligence.circuit_functional.itemstack.name=Układ Operacji na Przedmiotach
+
+item.immersiveintelligence.minecart.wooden_crate.name=Wagonik z Drewnianą Skrzynką
+item.immersiveintelligence.minecart.reinforced_crate.name=Wagonik ze Wzmocnioną Skrzynką
+item.immersiveintelligence.minecart.steel_crate.name=Wagonik ze Stalową Skrzynką
+item.immersiveintelligence.minecart.wooden_barrel.name=Wagonik z Drewnianą Beczką
+item.immersiveintelligence.minecart.metal_barrel.name=Wagonik z Metalową Beczką
+
+item.immersiveintelligence.lighter.name=Zapalniczka Inżyniera
+item.immersiveintelligence.measuring_cup.name=Kubek Mierniczy Inżyniera
+item.immersiveintelligence.electric_hammer.name=Młotek Elektryczny Inżyniera
+item.immersiveintelligence.electric_wirecutter.name=Elektryczne Nożyce Inżyniera
+item.immersiveintelligence.electric_multitool.name=Elektryczne Wszechnarzędzie Inżyniera
+item.immersiveintelligence.radio_configurator.basic.name=Tuner Radiowy
+item.immersiveintelligence.radio_configurator.advanced.name=Zaawansowany Tuner Radiowy
+item.immersiveintelligence.machinegun.name=Karabin Maszynowy
+
+//Drillheads
+item.immersiveintelligence.drillhead.tungsten.name=Wolframowe Wiertło
+item.immersiveintelligence.drillhead.iron_diamond_tip.name=Żelazne Wiertło z Diamentowym Czubem
+item.immersiveintelligence.drillhead.steel_diamond_tip.name=Stalowe Wiertło z Diamentowym Czubem
+item.immersiveintelligence.drillhead.tungsten_diamond_tip.name=Wolframowe Wiertło z Diamentowym Czubem
+
+item.immersiveintelligence.weapon_upgrade.water_cooling.name=Chłodzenie Wodne
+item.immersiveintelligence.weapon_upgrade.heavy_barrel.name=Ciężka Lufa
+item.immersiveintelligence.weapon_upgrade.second_magazine.name=Drugi Magazynek
+item.immersiveintelligence.weapon_upgrade.belt_fed_loader.name=Taśmowe Ładowanie Amunicji
+item.immersiveintelligence.weapon_upgrade.precise_bipod.name=Precyzyjny Dwójnóg
+item.immersiveintelligence.weapon_upgrade.hasty_bipod.name=Polowy Dwójnóg
+item.immersiveintelligence.weapon_upgrade.scope.name=Celownik
+item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Celownik Podczerwony
+
+item.immersiveintelligence.tracer_powder.name=Proszek Smugowy
+
+item.immersiveintelligence.skycrate_mount.mechanical.name=Tyrolka do Skycrate'a
+item.immersiveintelligence.skycrate_mount.electric.name=Elektryczna Tyrolka do Skycrate'a
+
+desc.immersiveintelligence.toolupgrade.water_cooling=Używa wody by chłodzić KM. Zwiększa ilość ciepła którą KM może przyjąć.
+desc.immersiveintelligence.toolupgrade.heavy_barrel=Znacząco zwiększa siłę ognia, lecz prędzej przegrzewa się i ma większy rozrzut.
+desc.immersiveintelligence.toolupgrade.second_magazine=Pozwala zabierać amunicję z dwóch magazynków, muszą być ładowane osobno.
+desc.immersiveintelligence.toolupgrade.belt_fed_loader=Pozwala pobierać amunicję ze skrzynki z amunicją poniżej KMu, zwiększa czas rozstawiania.
+desc.immersiveintelligence.toolupgrade.precise_bipod=Zwiększa czas rozstawiania, zmniejsza rozrzut
+desc.immersiveintelligence.toolupgrade.hasty_bipod=Zmniejsza czas rozstawiania, zwiększa rozrzut
+desc.immersiveintelligence.toolupgrade.scope=Pozwala strzelać do odległych celów
+desc.immersiveintelligence.toolupgrade.infrared_scope=Umożliwa noktowizję, wymaga źródła prądu takiego jak plecak z baterią.
+
+item.immersiveintelligence.data_wire.name=Zwój Kabla Danych
+
+item.immersiveintelligence.printed_page.blank.name=Pusta Strona
+item.immersiveintelligence.printed_page.text.name=Wydrukowany Tekst
+item.immersiveintelligence.printed_page.code.name=Wydrukowany Kod
+item.immersiveintelligence.printed_page.blueprint.name=Wydrukowany Schemat Budowlany
+
+item.immersiveintelligence.precission_tool.precission_buzzsaw.name=Precyzyjna Piła
+item.immersiveintelligence.precission_tool.precission_drill.name=Precyzyjne Wiertło
+item.immersiveintelligence.precission_tool.precission_inserter.name=Precyzyjny Podajnik
+item.immersiveintelligence.precission_tool.precission_solderer.name=Precyzyjna Lutownica
+item.immersiveintelligence.precission_tool.precission_welder.name=Precyzyjna Spawarka
+item.immersiveintelligence.precission_tool.precission_hammer.name=Precyzyjny Młot
+
+item.immersiveintelligence.sawblade.iron.name=Żelazna Piła
+item.immersiveintelligence.sawblade.steel.name=Stalowa Piła
+item.immersiveintelligence.sawblade.tungsten.name=Wolframowa Piła
+
+//bCal - Blok-Kaliber (1/16 Block = 1 bCal)
+item.immersiveintelligence.casing_artillery.name=Łuska Pocisku Artyleryjskiego
+item.immersiveintelligence.bullet.artillery_8bCal.name=Pocisk Artyleryjski
+
+item.immersiveintelligence.casing_grenade.name=Część Granatu
+item.immersiveintelligence.bullet.grenade_4bCal.name=Granat
+
+item.immersiveintelligence.casing_machinegun.name=Łuska Pocisku do Karabinu Maszynowego
+item.immersiveintelligence.bullet.machinegun_2bCal.name=Pocisk do Karabinu Maszynowego
+
+item.immersiveintelligence.casing_submachinegun.name=Łuska Pocisku do Pistoletu Maszynowego
+item.immersiveintelligence.bullet.submachinegun_1bCal.name=Pocisk do Pistoletu Maszynowego
+
+item.immersiveintelligence.casing_revolver.name=Łuska Naboju Rewolwerowego
+item.immersiveintelligence.bullet.revolver_1bCal.name=Nabój Rewolwerowy
+
+item.immersiveintelligence.bullet.component.TNT.name=TNT
+item.immersiveintelligence.bullet.component.RDX.name=Heksogen
+item.immersiveintelligence.bullet.component.HMX.name=HMX
+
+item.immersiveintelligence.bullet.component.CoreSteel.name=Stalowy Rdzeń
+item.immersiveintelligence.bullet.component.CoreBrass.name=Mosiężny Rdzeń
+item.immersiveintelligence.bullet.component.CoreTungsten.name=Wolframowy Rdzeń
+item.immersiveintelligence.bullet.component.CoreLead.name=Ołowiany Rdzeń
+item.immersiveintelligence.bullet.component.CoreUranium.name=Uranowy Rdzeń
+
+item.immersiveintelligence.bullet_magazine.machinegun.name=Magazynek do Karabinu Maszynowego
+item.immersiveintelligence.bullet_magazine.submachinegun.name=Magazynek do Pistoletu Maszynowego
+item.immersiveintelligence.bullet_magazine.submachinegun_drum.name=Magazynek Talerzowy do Karabinu Maszynowego
+item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Magazynek do Autorewolweru
+
+item.immersiveintelligence.motor_gear.copper.name=Miedziana Zębatka
+item.immersiveintelligence.motor_gear.brass.name=Ołowiana Zębatka
+item.immersiveintelligence.motor_gear.iron.name=Żelazna Zębatka
+item.immersiveintelligence.motor_gear.steel.name=Stalowa Zębatka
+item.immersiveintelligence.motor_gear.tungsten.name=Wolframowa Zębatka
+
+item.immersiveintelligence.motor_belt.cloth.name=Szmaciany Pas Napędowy
+item.immersiveintelligence.motor_belt.steel.name=Stalowy Pas Napędowy
+
+item.immersiveintelligence.wrench.name=Klucz Inżyniera
+item.immersiveintelligence.electric_wrench.name=Elektryczny Klucz Inżyniera
+
+item.immersiveintelligence.tachometer.name=Tachometr Inżyniera
+item.immersiveintelligence.torque_meter.name=Miernik Momentu Obrotowego Inżyniera
+
+
+//Blocks
+
+tile.immersiveintelligence.ore.platinum.name=Ruda Platyny
+tile.immersiveintelligence.sheetmetal.platinum.name=Platynowa Blacha
+tile.immersiveintelligence.storage.platinum.name=Blok Platyny
+tile.immersiveintelligence.sheetmetal_slab.platinum.name=Półblok Platynowej Blachy
+tile.immersiveintelligence.storage_slab.platinum.name=Półblok Platyny
+
+tile.immersiveintelligence.ore.zinc.name=Ruda Cynku
+tile.immersiveintelligence.sheetmetal.zinc.name=Cynkowa Blacha
+tile.immersiveintelligence.storage.zinc.name=Blok Cynku
+tile.immersiveintelligence.sheetmetal_slab.zinc.name=Półblok Cynkowa Blachy
+tile.immersiveintelligence.storage_slab.zinc.name=Półblok Cynku
+
+tile.immersiveintelligence.ore.tungsten.name=Ruda Wolframu
+tile.immersiveintelligence.sheetmetal.tungsten.name=Wolframowa Blacha
+tile.immersiveintelligence.storage.tungsten.name=Blok Wolframu
+tile.immersiveintelligence.sheetmetal_slab.tungsten.name=Półblok Wolframowa Blachy
+tile.immersiveintelligence.storage_slab.tungsten.name=Półblok Wolframu
+
+tile.immersiveintelligence.sheetmetal.brass.name=Mosiężna Blacha
+tile.immersiveintelligence.storage.brass.name=Blok Mosiądzu
+tile.immersiveintelligence.sheetmetal_slab.brass.name=Półblok Mosiężnej Blachy
+tile.immersiveintelligence.storage_slab.brass.name=Mosiądzu Platyny
+
+tile.immersiveintelligence.ore.salt.name=Sól Kamienna
+
+tile.immersiveintelligence.ore.fluorite.name=Ruda Netherowego Fluorytu
+tile.immersiveintelligence.ore.phosphorus.name=Ruda Neterowego Fosforu
+
+tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Elektroniczny Blok Inżynieryjny
+tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Zaawansowany Elektroniczny Blok Inżynieryjny
+tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechaniczny Blok Inżynieryjny
+tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Ciężki Mechaniczny Blok Inżynieryjny
+
+tile.immersiveintelligence.metal_decoration.coil_data.name=Zwój Kabla Danych
+tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Zwój Stalowego Pasa Napędowego
+
+tile.immersiveintelligence.cloth_decoration.coil_rope.name=Zwój Ropy
+tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Zwój Szmacianego Pasa Napędowego
+
+tile.immersiveintelligence.stone_decoration.sandbags.name=Worki z Piaskiem
+
+tile.immersiveintelligence.metal_device.metal_crate.name=Stalowa Skrzynka
+tile.immersiveintelligence.metal_device.ammunition_crate.name=Skrzynka na Amunicję
+tile.immersiveintelligence.metal_device.small_data_buffer.name=Mały Bufor Danych
+
+tile.immersiveintelligence.metal_device.timed_buffer.name=Bufor Czasowy
+tile.immersiveintelligence.metal_device.redstone_buffer.name=Bufor Redstone
+tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
+tile.immersiveintelligence.metal_device.data_router.name=Router Danych
+tile.immersiveintelligence.metal_device.data_merger.name=Łącznik Danych
+
+tile.immersiveintelligence.gearbox.wooden_gearbox.name=Drewniana Przekładnia
+tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Drewniana Przerzutnia
+tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Kreatywna Przerzutnia
+
+tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Drewniane Koło Napędowe
+tile.immersiveintelligence.mechanical_connector.brass_wheel.name=Mosiężne Koło Napędowe
+tile.immersiveintelligence.mechanical_connector.steel_wheel.name=Stalowe Koło Napędowe
+
+tile.immersiveintelligence.small_crate.wooden_crate_box.name=Mała Drewniana Skrzynka (Zwykła)
+tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Mała Drewniana Skrzynka (Sześcian)
+tile.immersiveintelligence.small_crate.wooden_crate_wide.name=Mała Drewniana Skrzynka (Podłużna)
+tile.immersiveintelligence.small_crate.metal_crate_box.name=Mała Stalowa Skrzynka (Zwykła)
+tile.immersiveintelligence.small_crate.metal_crate_cube.name=Mała Stalowa Skrzynka (Sześcian)
+tile.immersiveintelligence.small_crate.metal_crate_wide.name=Mała Stalowa Skrzynka (Podłużna)
+
+tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Maszyna Wprowadzania Danych - Schowek
+tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Maszyna Wprowadzania Danych - Programowanie
+tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Maszyna Wprowadzania Danych - Edycja zmiennej
+
+tile.immersiveintelligence.metal_multiblock.redstone_interface.data=Interfejs Redstone-Dane - Dane
+tile.immersiveintelligence.metal_multiblock.redstone_interface.redstone=Interfejs Redstone-Dane - Redstone
+
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.0=Nic
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.1=Boolean
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.2=Int. (0-15)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.3=Int. (0-255)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.4=Int. (0-100)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.5=String
+
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Maszyna Arytmetyczno-Logiczna - Storage
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Maszyna Arytmetyczno-Logiczna - Programming
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Maszyna Arytmetyczno-Logiczna - Editing an Expression
+
+
+tile.immersiveintelligence.data_connector.data_connector.name=Wtyczka Danych
+tile.immersiveintelligence.data_connector.data_relay.name=Rozdzielacz Danych
+tile.immersiveintelligence.data_connector.chemical_dispenser.name=Dozownik Chemiczny
+
+tile.immersiveintelligence.data_connector.alarm_siren.name=Syrena Alarmowa
+
+tile.immersiveintelligence.data_connector.inserter.name=Podajnik
+tile.immersiveintelligence.data_connector.advanced_inserter.name=Zaawansowany Podajnik
+tile.immersiveintelligence.data_connector.fluid_inserter.name=Podajnik Cieczy
+tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Zaawansowany Podajnik Cieczy
+
+//Multiblock names
+
+tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=Stacja SkyCrate
+tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=Węzeł SkyCrate
+tile.immersiveintelligence.wooden_multiblock.sawmill.name=Krajzega
+tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Maszyna Wprowadzania Danych
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Maszyna Arytmetyczno-Logiczna
+tile.immersiveintelligence.metal_multiblock.radio_station.name=Radiostacja
+tile.immersiveintelligence.metal_multiblock.printing_press.name=Prasa Drukarska
+tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Wanna Chemiczna
+tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Elektrolizer
+tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Składacz Precyzyjny
+tile.immersiveintelligence.metal_multiblock.persicope.name=Peryskop
+tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Haubica
+tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Komputer Balistyczny
+tile.immersiveintelligence.metal_multiblock.missile_silo.name=Silos Rakietowy
+tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Fabryka Amunicji
+tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Skaner Taśmociągowy
+tile.immersiveintelligence.metal_multiblock.packer.name=Maszyna Pakująca
+tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Kolejowa Maszyna Pakująca
+tile.immersiveintelligence.metal_multiblock.unpacker.name=Maszyna Odpakowująca
+tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Kolejowa Maszyna Odpakowująca
+
+tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Interfejs Redstone-Dane
+
+desc.immersiveengineering.info.multiblock.II:SkyCrateStation=Stacja SkyCrate
+desc.immersiveengineering.info.multiblock.II:SkyCratePost=Węzeł SkyCrate
+desc.immersiveengineering.info.multiblock.II:Sawmill=Krajzega
+desc.immersiveengineering.info.multiblock.II:DataInputMachine=Maszyna Wprowadzania Danych
+desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Maszyna Arytmetyczno-Logiczna
+desc.immersiveengineering.info.multiblock.II:RadioStation=Radiostacja
+desc.immersiveengineering.info.multiblock.II:PrintingPress=Prasa Drukarska
+desc.immersiveengineering.info.multiblock.II:ChemicalBath=Wanna Chemiczna
+desc.immersiveengineering.info.multiblock.II:Electrolyzer=Elektrolizer
+desc.immersiveengineering.info.multiblock.II:PrecissionAssembler=Składacz Precyzyjny
+desc.immersiveengineering.info.multiblock.II:Periscope=Peryskop
+desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Haubica
+desc.immersiveengineering.info.multiblock.II:BallisticComputer=Komputer Balistyczny
+desc.immersiveengineering.info.multiblock.II:MissileSilo=Silos Rakietowy
+desc.immersiveengineering.info.multiblock.II:AmmunitionFactory=Fabryka Amunicji
+desc.immersiveengineering.info.multiblock.II:ConveyorScanner=Skaner Taśmociągowy
+desc.immersiveengineering.info.multiblock.II:Packer=Maszyna Pakująca
+desc.immersiveengineering.info.multiblock.II:MinecartPacker=Kolejowa Maszyna Pakująca
+desc.immersiveengineering.info.multiblock.II:Unacker=Maszyna Odpakowująca
+desc.immersiveengineering.info.multiblock.II:MinecartUnpacker=Kolejowa Maszyna Odpakowująca
+
+desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Interfejs Redstone-Dane
+
+//Fluids
+fluid.ink=Atrament
+fluid.ink_cyan=Cyjanowy Atrament
+fluid.ink_magenta=Magentowy Atrament
+fluid.ink_yellow=Żółty Atrament
+
+fluid.etching_acid=Kwas Wytrawiający
+fluid.hydrofluoric_acid=Kwas Fluorowodorowy
+fluid.sulfuric_acid=Kwas Siarkowy
+fluid.nitric_acid=Kwas Azotowy
+
+fluid.oxygen=Tlen
+fluid.hydrogen=Wodór
+fluid.chlorine=Chlor
+
+fluid.brine=Solanka
+
+fluid.ammonia=Amoniak
+fluid.hexamine=Urotropina
+fluid.methanol=Metanol
+
+
+//Sounds
+
+subtitle.immersiveintelligence.siren=Wycie Syreny
+subtitle.immersiveintelligence.printing_press=Hałas Prasy do Metalu
+subtitle.immersiveintelligence.paper_eject=Spadanie Papieru
+
+subtitle.immersiveintelligence.machinegun_shot_def=Strzały z Karabinu Maszynowego
+subtitle.immersiveintelligence.machinegun_shot_hb=Strzały z Karabinu Maszynowego z Ciężką Lufą
+subtitle.immersiveintelligence.machinegun_shot_wc=Strzały z Karabinu Maszynowego Chłodzonego Wodą
+subtitle.immersiveintelligence.machinegun_reload=Przeładowywanie Karabinu Maszynowego
+
+subtitle.immersiveintelligence.howitzer_shot=Strzał z Haubicy
+subtitle.immersiveintelligence.howitzer_rotating=Obracanie się Haubicy
+subtitle.immersiveintelligence.howitzer_door_open=Otwieranie Pokrywy Haubicy
+subtitle.immersiveintelligence.howitzer_door_close=Zamykanie Pokrywy Haubicy
+
+subtitle.immersiveintelligence.inserter=Dźwięki Podajników
+
+subtitle.immersiveintelligence.penetration_metal=Pocisk Przełamujący się przez metal
+subtitle.immersiveintelligence.ricochet_metal=Pocisk rykoszetujący od metalu
+
+//Entities
+
+entity.minecart_wooden_crate.name=Wagonik z Drewnianą Skrzynką
+entity.minecart_reinforced_crate.name=Wagonik ze Wzmocnioną Skrzynką
+entity.minecart_steel_crate.name=Wagonik ze Stalową Skrzynką
+entity.minecart_wooden_barrel.name=Wagonik z Drewnianą Beczką
+entity.minecart_metal_barrel.name=Wagonik z Metalową Beczką
+
+entity.skycrate.name=Skycrate
+entity.bullet.name=Pocisk
+entity.shrapnel.name=Szrapnel
+entity.machinegun.name=Karabin Maszynowy
+
+//Descriptions
+desc.immersiveintelligence.radio_configurator_basic=Pozwala ustawić częstotliwość dla podstawowego radia.
+desc.immersiveintelligence.radio_configurator_advanced=Ulepszony model obsługujący wyższe częstotliwości.
+desc.immersiveintelligence.radio_configurator_frequency=Częstotliwość: %s
+desc.immersiveintelligence.radio_configurator_max_frequency=Maksymalna Częstotliwość: %s
+desc.immersiveintelligence.measuring_cup_size=Pojemność: %s / %s mB
+desc.immersiveintelligence.measuring_cup_cant_resize=Nie można zmienić pojemności gdy ciecz jest w środku.
+desc.immersiveintelligence.functional_circuit=Pozwala maszynie wykonywać funkcje takie jak:
+
+desc.immersiveintelligence.printed_page.blank=Pusta strona gotowa do druku.
+desc.immersiveintelligence.printed_page.text=Strona zawierająca tekst.
+desc.immersiveintelligence.printed_page.code=Strona zawierająca kod w języku programowania.
+desc.immersiveintelligence.printed_page.blueprint=Strona zawierające informacje o budowie jakiejś struktury.
+
+desc.immersiveintelligence.infrared_enabled=Wizja §4Podczerwona§r aktywna!
+desc.immersiveintelligence.infrared_disabled=Wizja §cPodczerwona§r wyłączona!
+
+desc.immersiveintelligence.assembly_scheme.used_to_create=Używana do stworzenia: %s
+desc.immersiveintelligence.assembly_scheme.items_created=Przedmioty stworzone: %s
+
+desc.immersiveengineering.info.holdControl=§4Przytrzymaj Control§r
+desc.immersiveengineering.info.holdControlForInfo=§cPrzytrzymaj Control by pokazać informacje§r
+
+
+desc.immersiveintelligence.assembly_scheme.info_hold1=§6Przytrzymaj Shift§r - Potrzebne Materiały
+desc.immersiveintelligence.assembly_scheme.info_hold2=§4Przytrzymaj Control§r - Potrzebne Narzędzia
+desc.immersiveintelligence.assembly_scheme.materials=Potrzebne Materiały:
+desc.immersiveintelligence.assembly_scheme.tools=Potrzebne Narzędzia:
+
+
+desc.immersiveintelligence.storage_module=Schowek
+desc.immersiveintelligence.variables_module=Zmienne
+desc.immersiveintelligence.data_module=Dane
+desc.immersiveintelligence.redstone_module=Redstone
+
+desc.immersiveintelligence.variable_type=Tyo:
+desc.immersiveintelligence.variable_add_desc=Dodaj nową zmienną
+desc.immersiveintelligence.variable_set=Ustaw
+desc.immersiveintelligence.variable_set_desc=Zmień wartość zmiennej
+desc.immersiveintelligence.variable_remove=Usuń
+desc.immersiveintelligence.variable_remove_desc=Usuń zmienną
+desc.immersiveintelligence.variable_properties=Właściwości
+desc.immersiveintelligence.variable_apply=Zastosuj
+desc.immersiveintelligence.variable_value=Wartość:
+desc.immersiveintelligence.operation=Operacja:
+desc.immersiveintelligence.conditional_variable=Zmienna warunkowa:
+desc.immersiveintelligence.no_variable=Brak
+desc.immersiveintelligence.variable=Zmienna:
+
+//Bullets
+
+desc.immersiveintelligence.bullet_type.shrapnel=Odłamkowy
+desc.immersiveintelligence.bullet_type.piercing=Przeciwpancerny
+desc.immersiveintelligence.bullet_type.explosive=Burzący
+desc.immersiveintelligence.bullet_type.incendiary=Zapalający
+desc.immersiveintelligence.bullet_type.tracer=Smugowy
+desc.immersiveintelligence.bullet_type.flare=Flarowy
+desc.immersiveintelligence.bullet_type.chemical=Chemiczny
+desc.immersiveintelligence.bullet_type.special=Specjalnego Przeznaczenia
+
+desc.immersiveintelligence.bullets.core=Wyposażony w %s
+desc.immersiveintelligence.bullets.mass=Masa: %s
+desc.immersiveintelligence.bullets.caliber=Kaliber: %s bCal
+
+desc.immersiveintelligence.data_merger.0=Oba
+desc.immersiveintelligence.data_merger.1=Lewy
+desc.immersiveintelligence.data_merger.2=Prawy
+
+//Potion effects
+
+potion.immersiveintelligence.suppression=Przygwożdżony
+potion.immersiveintelligence.broken_armor=Zbroja Przebita
+
+//Chat info / debug
+info.immersiveintelligence.frequency_set=Częstotliwość została ustawiona na %s
+info.immersiveintelligence.frequency_invalid=Nieprawidłowa częstotliwość, podstawowe urządzenia mogą używać częstotliwości do %s!
+info.immersiveintelligence.current_frequency=Obecna Częstotliwość: %s
+
+info.immersiveintelligence.requires_advanced_hammer=Zaawansowana inżynieria wymaga zaawansowanych narzędzi... potrzebujesz Elektrycznego Młotka by zbudować tą maszynę!
+
+info.immersiveintelligence.gear_durability=Wytrzymałośc: %1$s / %2$s
+
+info.immersiveintelligence.yaw=Obrót Poziomy: %s
+
+info.immersiveintelligence.debugger_mode=Tryb Debuggera: %s
+info.immersiveintelligence.debugger_mode.0=Nadajniko-Odbiornik
+info.immersiveintelligence.debugger_mode.1=Nadajnik
+info.immersiveintelligence.debugger_mode.2=Odbiornik
+
+info.immersiveintelligence.tachometer_message.basic=Wewnętrzne: prędkość %s Obr./min / moment obrotowy %s Nm.
+info.immersiveintelligence.tachometer_message.advanced=Wewnętrzne: prędkość %s Obr./min / moment obrotowy %s Nm. prędkość: speed %s Obr./min / moment obrotowy %s Nm.
+
+//Energia Obrotowa
+
+rotary.immersiveintelligence.belt_system.wrongCable=Nie możesz połączyć pasów napędowych do wtyczek elektrycznych
+rotary.immersiveintelligence.belt_system.wrongCable1=Nie można tak poprostu wetknąć pas napędowy w sieć elektryczną
+rotary.immersiveintelligence.belt_system.wrongCable2=Jak już mówiłem, NIE MOŻESZ ich połączyć, po co się męczysz?
+rotary.immersiveintelligence.belt_system.wrongCable3=Słuchaj gościu, jeszcze raz tylko spróbuj je połączyć...
+rotary.immersiveintelligence.belt_system.wrongCable4=CZEGO DOKŁADNIE W "NIE MOŻESZ TU POŁĄCZYĆ PASÓW NAPĘDOWYCH" NIE ROZUMIESZ, CO?!
+rotary.immersiveintelligence.belt_system.wrongCable5=A zostaw mnie w spokoju... Dummkopf! O tu, masz, żryj ten Advancement, a teraz spie***laj!
+rotary.immersiveintelligence.belt_system.itsBoringGetALife=Na serio mnie nudzisz, nawet ja, MotorBeltUtils.java mam uczucia, okej?!
+rotary.immersiveintelligence.belt_system.wrongBelt=Nie możesz założyć tego pasa tutaj
+
+rotary.immersiveintelligence.belt_system.wrongDimension=Jesteś w innym wymiarze
+rotary.immersiveintelligence.belt_system.sameConnection=Nie można połączyć pasa do tego samego miejsca
+rotary.immersiveintelligence.belt_system.tooFar=Jesteś zbyt daleko od początku połączenia
+rotary.immersiveintelligence.belt_system.cantSee=Połączenie jest zablokowane
+rotary.immersiveintelligence.belt_system.connectionExists=Takie połączenie już istnieje
+rotary.immersiveintelligence.belt_system.invalidPoint=Jeden z punktów jest niewłaściwy
+
+rotary.immersiveintelligence.mechanical.speed=Prędkość
+rotary.immersiveintelligence.mechanical.speed_unit=Obr./min
+rotary.immersiveintelligence.mechanical.torque=Moment Obrotowy
+rotary.immersiveintelligence.mechanical.torque_unit=Nm
+
+//Data System Descriptions
+datasystem.immersiveintelligence.function.add=Dodawanie
+datasystem.immersiveintelligence.function.subtract=Odejmowanie
+datasystem.immersiveintelligence.function.multiply=Mnożenie
+datasystem.immersiveintelligence.function.divide=Dzielenie
+datasystem.immersiveintelligence.function.power=Potęga
+datasystem.immersiveintelligence.function.root=Pierwiastek
+datasystem.immersiveintelligence.function.max=Maksimum
+datasystem.immersiveintelligence.function.min=Minimum
+
+datasystem.immersiveintelligence.function.and=AND
+datasystem.immersiveintelligence.function.or=OR
+datasystem.immersiveintelligence.function.not=NOT
+datasystem.immersiveintelligence.function.nand=NAND
+datasystem.immersiveintelligence.function.nor=NOR
+datasystem.immersiveintelligence.function.xor=XOR
+datasystem.immersiveintelligence.function.xnor=XNOR
+
+datasystem.immersiveintelligence.function.greater=Większy
+datasystem.immersiveintelligence.function.less=Mniejszy
+datasystem.immersiveintelligence.function.greater_or_equal=Większy lub Równy
+datasystem.immersiveintelligence.function.less_or_equal=Mniejszy or Równy
+datasystem.immersiveintelligence.function.equal=Równy
+
+datasystem.immersiveintelligence.function.join=Połącz
+datasystem.immersiveintelligence.function.filter=Filtruj
+datasystem.immersiveintelligence.function.format=Format
+
+datasystem.immersiveintelligence.function.construct_null=Warunkowa Konstrukcja - Null
+datasystem.immersiveintelligence.function.construct_boolean=Warunkowa Konstrukcja - Boolean
+datasystem.immersiveintelligence.function.construct_integer=Warunkowa Konstrukcja - Integer
+datasystem.immersiveintelligence.function.construct_string=Warunkowa Konstrukcja - String
+
+datasystem.immersiveintelligence.function.get_quantity=Pobierz Ilość
+datasystem.immersiveintelligence.function.set_quantity=Ustaw Ilość
+datasystem.immersiveintelligence.function.get_durability=Pobierz Wytrzymałość
+datasystem.immersiveintelligence.function.set_durability=Ustaw Wytrzymałość
+datasystem.immersiveintelligence.function.get_nbt=Pobierz NBT
+datasystem.immersiveintelligence.function.set_nbt=Ustaw NBT
+datasystem.immersiveintelligence.function.can_stack_with=Stackuje się z
+datasystem.immersiveintelligence.function.matches_oredict=Pasuje do wpisu w OreDictionary
+
+datasystem.immersiveintelligence.datatype.null=Null
+datasystem.immersiveintelligence.datatype.boolean=Boolean
+datasystem.immersiveintelligence.datatype.integer=Integer
+datasystem.immersiveintelligence.datatype.string=String
+datasystem.immersiveintelligence.datatype.expression=Wyrażenie
+datasystem.immersiveintelligence.datatype.accessor=Akcesor
+datasystem.immersiveintelligence.datatype.itemstack=Przedmiot
+
+datasystem.immersiveintelligence.datatype.boolean.true=Prawda
+datasystem.immersiveintelligence.datatype.boolean.false=Fałsz
+
+//Blueprints
+
+desc.immersiveengineering.info.blueprint.basic_circuits=Podstawowe Układy Scalone
+desc.immersiveengineering.info.blueprint.advanced_circuits=Zaawansowane Układy Scalone
+desc.immersiveengineering.info.blueprint.processors=Procesory
+
+desc.immersiveengineering.info.blueprint.basic_functional_circuits=Podstawowe Układy Funkcyjne
+desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Zaawansowane Układy Funkcyjne
+
+desc.immersiveengineering.info.blueprint.metal_springs=Sprężyny
+
+//Advancements
+advancement.immersiveintelligence.root=Immersive Intelligence
+//Przeczytaj Ten Jebany Podręcznik? (XD)
+advancement.immersiveintelligence.root.desc=PTJP?
+
+advancement.immersiveintelligence.connect_belt=Mocarskie Taśmociągi
+advancement.immersiveintelligence.connect_belt.desc=Połącz dwa koła pasem napędowym
+
+advancement.immersiveintelligence.secret_connect_wire=Who dares wins
+advancement.immersiveintelligence.secret_connect_wire.desc=Masz już dość? Daj mi odpocząć!
+
+advancement.immersiveintelligence.advanced_circuit_board=Lepiej, Mocniej, Szybciej!
+advancement.immersiveintelligence.advanced_circuit_board.desc=Wyprodukuj Zaawansowany Układ Scalony
+
+advancement.immersiveintelligence.artillery_howitzer=Siostra Berty
+advancement.immersiveintelligence.artillery_howitzer.desc=Zbuduj Haubicę
+
+advancement.immersiveintelligence.chemical_bath=Bulbulator
+advancement.immersiveintelligence.chemical_bath.desc=Zbuduj Wannę Chemiczną
+
+advancement.immersiveintelligence.circuit_board=Bip Bup?
+advancement.immersiveintelligence.circuit_board.desc=Wyprodukuj Układ Scalony
+
+#Ay you, yes you @CrimsonTwilight, we know you want the inserters in IG :D
+advancement.immersiveintelligence.craft_advanced_inserter=The Crimson Inserter
+advancement.immersiveintelligence.craft_advanced_inserter.desc=Wytwórz ulepszony podajnik
+
+advancement.immersiveintelligence.craft_binoculars=Taktyczna Obserwacja
+advancement.immersiveintelligence.craft_binoculars.desc=Wytwórz Lornetkę
+
+advancement.immersiveintelligence.craft_chemdispenser=A Flame in the Black night
+advancement.immersiveintelligence.craft_chemdispenser.desc=Wytwórz Dozownik Chemiczny
+
+advancement.immersiveintelligence.craft_inserter=Żółtych zabrakło, wybaczcie!
+advancement.immersiveintelligence.craft_inserter.desc=Wytwórz Podajnik
+
+#Długo by mówić, ale w Company of Heroes 2 na Wikinger modzie, jest taka jednostka jak Infiltratorzy
+#Zwykle są lepsi zarówno w sile ognia jak i w celności, ale najważniejsze jest ich wyposażenie:
+#Niemieccy Infiltratorzy używają Sturmgewehrów z celownikami na podczerwień (Otak Wunderwafle)
+#I dlatego w modzie wszystko związane z infiltracją prędzej czy później nawiązuje właśnie do nich
+advancement.immersiveintelligence.craft_ir_binoculars=Pan Infiltrator
+advancement.immersiveintelligence.craft_ir_binoculars.desc=Wytwórz Lornetkę Podczerwoną
+
+#Fullmetal Alchemist: Brotherhood (Scena śmierci Lust)
+advancement.immersiveintelligence.craft_lighter=Powrót tego z Zapalniczką
+advancement.immersiveintelligence.craft_lighter.desc=Wytwórz Zapalniczkę
+
+advancement.immersiveintelligence.craft_mg=Własność Hansa
+advancement.immersiveintelligence.craft_mg.desc=Stwórz niesławny Karabin Maszynowy
+
+advancement.immersiveintelligence.craft_siren=Reaktor w porządku?
+advancement.immersiveintelligence.craft_siren.desc=Stwórz Syrenę Alarmową
+
+advancement.immersiveintelligence.electrolyzer=A Ciecze traktować prądem!
+advancement.immersiveintelligence.electrolyzer.desc=Stwórz Elektrolizer
+
+advancement.immersiveintelligence.hans_9000=Hans 9000
+advancement.immersiveintelligence.hans_9000.desc=Przygotuj swój Karabin do utrzymania pozycji
+
+#A reference to the well known engineer and weapon maker Jörg Sprave
+advancement.immersiveintelligence.let_me_show_you_its_features=Let me show you its Features!
+advancement.immersiveintelligence.let_me_show_you_its_features.desc=Ulepsz KM za pomocą Celownika Podczerwonego, a Heavy Barrel and a Second Magazine
+
+#A JoJo reference
+advancement.immersiveintelligence.make_platinum=Better than the World?
+advancement.immersiveintelligence.make_platinum.desc=Uzyskaj Sztabkę Platyny
+
+#A Dr. Stone reference
+advancement.immersiveintelligence.make_tungsten=Pokonać Potwora Ciepłem
+advancement.immersiveintelligence.make_tungsten.desc=Uzyskaj Sztabkę Wolframu
+
+advancement.immersiveintelligence.make_tungsten_drillhead=Szybsze niż Krasnoludy!
+advancement.immersiveintelligence.make_tungsten_drillhead.desc=Wytwórz Wolframowe Wiertło
+
+#Reference to a well known mod
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond=Tinkering with Tools
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond.desc=Wytwórz Wolframowe Wiertło z Diamentowym Czubem
+
+advancement.immersiveintelligence.prec_assembler=Jakość: Mistrzowska
+advancement.immersiveintelligence.prec_assembler.desc=Zbuduj Składacz Precyzyjny
+
+advancement.immersiveintelligence.printing_press=Brakuje Atramentu
+advancement.immersiveintelligence.printing_press.desc=Create a Printing Press
+
+#Ah, the good old Crysis 3
+advancement.immersiveintelligence.processor_circuit_board=A Crysisa pociągnie?
+advancement.immersiveintelligence.processor_circuit_board.desc=Wyprodukuj Układ Procesorowy
+
+advancement.immersiveintelligence.radio_station=Kontrola Zdalna
+advancement.immersiveintelligence.radio_station.desc=Zbuduj Radiostację
+
+
+//Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
+//The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
+advancement.immersiveintelligence.secret_cocoa=Opowieści Deco Morreno
+advancement.immersiveintelligence.secret_cocoa.desc=Najwyższa Jakość została uzyskana.
+
+//Manual Categories
+
+ie.manual.category.ii_data.name=Transmisja Danych
+ie.manual.category.ii_warfare.name=Walka
+ie.manual.category.ii_logi.name=Logistyka
+ie.manual.category.ii_intel.name=Wywiad
+
+//Data and Electronics
+
+#Reference to... flow control... yeah, really, that boring
+ie.manual.entry.data_main.name=Dane
+ie.manual.entry.data_main.subtext=Kontrola Przepływu
+ie.manual.entry.data_main0=When you want to control an automated factory, power plant or a different complicated structure you need some kind of a control system. <br>Redstone is good for a start, but with lots of machines the messy nature of it starts to show - and that's an appropriate moment to introduce The Data System.
+ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain 36 <link;data_variable_types;§n§oVariables§r;> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
+
+#Reference to possibly a box of foodstuffs
+ie.manual.entry.data_variable_types.name=Typy Zmiennych
+ie.manual.entry.data_variable_types.subtext=Efekt może się różnić
+ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types_null;§o§nNull§r;>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types_null;§o§nNull§r;>, <link;data_variable_types_int;§o§nInteger§r;>, <link;data_variable_types_string;§o§nString§r;>, <link;data_variable_types_bool;§o§nBoolean§r;>, there are also a couple of more advanced types like <link;data_variable_types_itemstack;§o§nItemStack§r;>, <link;data_variable_types_array;§o§nArray§r;>, <link;data_variable_types_pair;§o§nPair§r;> and <link;data_variable_types_range;§o§nRange§r;>.
+
+ie.manual.entry.data_variable_types_null=Null is a special variable type, which has no value. It is the default type of an undefined variable.
+ie.manual.entry.data_variable_types_int=Integer (often shortened to Int) is a number variable type, mainly used in calculations and number comparisons.
+ie.manual.entry.data_variable_types_string=String is a text variable type, it can hold a variety of different characters.
+ie.manual.entry.data_variable_types_bool=Boolean (often shortened to Bool) is a logic variable type, it can hold one of two values - True or False and can be used in logic functions.
+ie.manual.entry.data_variable_types_itemstack=ItemStack is an advanced variable type which can hold informations about a specific item (not item type) like id, metadata (damage) and NBT.
+ie.manual.entry.data_variable_types_array=Array is a collection of variables, ordered by their index number (starting from 0), it can hold any variable type, except another array.
+ie.manual.entry.data_variable_types_pair=Pair is a variable type, which consists of two basic variable types, often used in comparisons.
+ie.manual.entry.data_variable_types_range=Range is a variable type, which consists of two <link;data_variable_types_int;§o§nIntegers§r;>, it is most commonly used in comparing numbers or setting them in a range.
+
+ie.manual.entry.def_value=Domyślna Wartość
+ie.manual.entry.min_value=Najmniejsza Wartość
+ie.manual.entry.max_value=Największa Wartość
+ie.manual.entry.min_index=Najniższy Numer
+ie.manual.entry.max_index=Najwyższy Numer
+ie.manual.entry.empty=Pusty
+ie.manual.entry.def_value=Domyślna Wartość
+ie.manual.entry.accepted_values=Dozwolone Wartości
+ie.manual.entry.max_length=Maksymalna Długość
+ie.manual.entry.tf=Prawda/Fałsz
+ie.manual.entry.false=Fałsz
+ie.manual.entry.true=Prawda
+
+ie.manual.entry.circuit_production.name=Układy Scalone
+ie.manual.entry.circuit_production.subtext=Jeszcze nie do końca bip-bup
+ie.manual.entry.circuit_production0=Circuits are one of the most important and commonly used electronic parts. There are three kinds of circuits: <link;circuit_production_basic;§n§obasic§r;> - made using vacuum tubes and redstone, <link;circuit_production_advanced;§o§nadvanced§r;> - made using Advanced Electronic Alloy™ and upgraded vacuum tubes. The most sophisticated are the <link;circuit_production_processor;§o§nprocessor§r;> circuits, which are made mainly of silicon in a complicated <link;precision_assembler;§o§nassembly§r;> process.
+ie.manual.entry.circuit_production_basic=Basic circuits are the common, primary and cheap circuits. They can be refitted to perform simple arithmetic, logic and text operations, but their main use is construction of various machines. To produce a basic circuit a raw circuit board has to be <chemical_bath;§o§netched§r;> in acid and then a chip made of vacuum tubes in the <link;precission_assembler;§o§nPrecision §o§nAssembler§r;> has to be installed onto them.
+ie.manual.entry.circuit_production_basic_usages=Basic circuits are used to make basic-tier electronic devices and machines, such as the Printing Press, the <link;arithmetic_logic_machine;§o§nArithmetic-Logic §o§nMachine§r;> and the <link;data_input_machine;§o§nData §o§nInput §o§nMachine§r;>.
+ie.manual.entry.circuit_production_advanced=Advanced circuits are a direct upgrade to their predecessors, they still use vacuum tubes, but because of the new alloy used, their capabilities are much better. They are made of an upgraded circuit board and a chip composed of upgraded vacuum tubes.
+ie.manual.entry.circuit_production_advanced_usages=Because of their fast transmission rate, they can be refitted for performing more advanced arithmetic, logic, text and even item-processing operations. Because of their superior speed, they are used in wireless transmission and advanced computing machines.
+ie.manual.entry.circuit_production_processor=Processor circuits are the most advanced and powerful circuits in the world, crafted using silicon, advanced electronic alloy and various other materials during a multi-step assembly process.
+ie.manual.entry.circuit_production_processor_usages=Currently processors are not used in making anything, so build them more as a challenge than an actually needed item.
+
+#Reference to a Polish tinkerer/Baumeister slang word meaning doohickey, thingamabob, but in exact meaning a device that makes the "bul bul" (splash splash?) noise
+ie.manual.entry.chemical_bath.name=Wanna Chemiczna
+ie.manual.entry.chemical_bath.subtext=Bulbulator
+ie.manual.entry.chemical_bath0=The Chemical Bath is a machine, constructed of an industrial-size steel bathtub and a moving carriage with a grasper. The machine is commonly used for etching raw circuits in acid. To form it use a hammer on the middle sheetmetal block.
+
+#Reference to Dr.Stone
+ie.manual.entry.precission_assembler.name=Precyzyjna Maszyna
+ie.manual.entry.precission_assembler.subtext=Rzemieślnik z Kamiennego Świata
+ie.manual.entry.precission_assembler0=The Precision Assembler is an advanced machine used for crafting items with high precision. It requires an Assembly Scheme and some precise tools for operation. To form it, use a hammer on the wooden scaffolding block.
+ie.manual.entry.precission_assembler1=the machine uses only the amount it needs and outputs scrap along with the produced item. Its most common use is electonic component production.
+
+ie.manual.entry.electrolyzer.name=Elektrolizer
+ie.manual.entry.electrolyzer.subtext=A ciecze razić prądem!
+ie.manual.entry.electrolyzer0=The Electrolyzer is a machine which uses the electrolysis process to split a fluid into two different ones. It can split water into hydrogen and oxygen and brine into chlorine and hydrogen. It requires electricity to operate. To form the block, use a hammer on the heavy engineering block in front of the machine.
+
+ie.manual.entry.printing_press.name=Prasa Drukarska
+ie.manual.entry.printing_press.subtext=Pióro i Księga, Wersja Inżynierska
+ie.manual.entry.printing_press0=The Printing Press is a machine which can print out text on demand when it receives a data packet. The Press requires ink and paper to operate. To form it, use a hammer on the light engineering block in front of the machine.
+ie.manual.entry.printing_press1= The printing paper is a special thinned version of a standard one used in books, it is created by pressing a paper in a metal press. Machine requires different ink colors, depending on the CMYK values of the currently printed color.
+ie.manual.entry.printing_press2=amount of inks depending on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
+ie.manual.entry.printing_press3=String 't' - output type (text/construction/code)<br>Integer c - amount of copies<br>String 's' - text to print (if using the mode "text")<br>
+
+ie.manual.entry.data_input_machine.name=Maszyna Wprowadzania Danych
+ie.manual.entry.data_input_machine.subtext=Output dla Inputu
+ie.manual.entry.data_input_machine0=The Data Input Machine is an electronic device which consists of a wooden desk with a keyboard on top and a steel machine casing. A user can input data into it and send it by applying a redstone signal. After sending a data packet, the variables remain there and the machine can be used again. To operate, the device requires electricity. To form it use a hammer on the light engineering block to the left.
+ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift). When editing the
+
+#Reference to a song
+ie.manual.entry.arithmetic_logic_machine.name=Maszyna Arytmetyczno-Logiczna
+ie.manual.entry.arithmetic_logic_machine.subtext=Szybka Matma!
+ie.manual.entry.arithmetic_logic_machine0=The Arithmetic-Logic Machine is an electronic device, which primary task is to process and modify data. It requires energy and to operate.
+ie.manual.entry.arithmetic_logic_machine1=When a data packet is received at the left side of the machine, it uses functional circuits placed into 4 slots in the rack to change variables accordingly. The machine iterates trough all the circuits and then trough variables alphabetically and sets their values to the result of the given Expression. The expression consists of 2 values and an operator (+,-,*, etc.). Each circuit has a list of available expressions. The expression can also have a Conditional Variable (a Boolean),
+ie.manual.entry.arithmetic_logic_machine2=The machine also offers a non-standard datatype, the Accessor, which doesn't hold any value of its own, but can get a value from variable from the received packet. The variable in an expression can be toggled to an Accessor by clicking the '@' button.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_arithmetic=Arithmetic Circuit<br>This circuit  is used to calculate basic math expressions such as addition, subtraction, multiplication and division.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_arithmetic=Advanced Arithmetic Circuit<br> This circuit allows to calculate more advanced math expressions such as raising a number to a power, getting a square root or getting the lowest or highest number from two.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_logic=Logic Circuit<br> This circuit is used for basic logic expressions (like a logic gate) such as AND, OR, NOT.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_comparator=Comparator Circuit<br>This circuit allows to compare two integers and returns a boolean.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_logic=Advanced Logic Circuit<br> This circuit can perform advanced logic operations, such as NAND, NOR, XOR and XNOR and the basic ones.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_text=Text Processor Circuit<br> This circuit can do basic text processing, currently only allows to merge two Strings.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_itemstack=ItemStack Operations Circuit<br> This circuit can get and manipulate the properties of an ItemStack datatype, it can be used for getting/setting the stack's NBT, meta and id. Can be used in combination with other circuits to control a logistic system.
+
+#Reference to Fullmetal Alchemist
+ie.manual.entry.redstone_interface.name=Interfejs Redstone-Dane
+ie.manual.entry.redstone_interface.subtext=Równowarta Wymiana
+ie.manual.entry.redstone_interface0=The Redstone Interface is a bridge between the old, but still used redstone and the new data system. It can convert data from and to a redstone signal. Because it's only a converter, the machine doesn't use any power.
+ie.manual.entry.redstone_interface1=The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, but the most important ones are the data input port, on which a connector needs to be placed and a built-in redstone output connector, to which you can attach a wire. In the user interface there are two sections, data to redstone and the opposite. After you add an entry, you have to specify the variable letter and the corresponding redstone colour.
+
+#Reference to a meme
+ie.manual.entry.conveyor_scanner.name=Skaner Taśmociągowy
+ie.manual.entry.conveyor_scanner.subtext=To się kameruje!
+ie.manual.entry.conveyor_scanner0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. Then an item passes trough the Conveyor Scanner, its properties are read and sent in an ItemStack type variable 's' inside a Data Packet. To operate, the machine requires electricity. To form it use a hammer on the conveyor.
+
+#Reference to Factorio
+ie.manual.entry.inserters.name=Podajniki
+ie.manual.entry.inserters.subtext=Tym razem bez Żółtych!
+ie.manual.entry.inserters0=The Precision Insertion Device, also known as the Inserter is a device used to transfer items from one inventory to another. Item inserters consists of an arm and motors for rotation and handling the item pickup. Fluid inserters use pipes and automatic valves. Inserters are able to take and output from and to any horizontal side desired.
+ie.manual.entry.inserters1=The Inserter's sides can be configured with a hammer (sneak to set output). Inserters require electricity to run and data to tell them what to do.
+ie.manual.entry.inserters_basic=The basic inserter is used for simple, but controlled item transfer. Made of basic circuits and mechanical components, it is a cheap and easy way to determine how many items should be transfered from one block to other.
+ie.manual.entry.inserters_basic_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of items<br>
+ie.manual.entry.inserters_advanced=The advanced inserter is an upgraded version, which allows to filter picking certain items and allows picking up crates and barrels from minecarts. The Advanced Inserters are much faster, but they also drain more power.
+ie.manual.entry.inserters_advanced_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of items<br>Boolean 'b' - can pick blocks (from minecarts)<br>String 'f' - filter mode (whitelist, blacklist, none)<br>String 'g' - advanced filter mode (exact, item, oredict)<br> String 'w' - minecart take mode (items / block)<br>ItemStacks '1'-'0' - item filters
+ie.manual.entry.inserters_fluid=The fluid inserter is a precise limiter of fluid transfer. In some situations you want to insert only a required amount, this device does exactly that.
+ie.manual.entry.inserters_fluid_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of fluid (mB)<br>
+
+#Reference to IndustrialCraft's siren addon
+ie.manual.entry.alarm_siren.name=Syrena Alarmowa
+ie.manual.entry.alarm_siren.subtext=Reaktor miał się dobrze, ostatnio.
+ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noise when provided a redstone signal. Redstone wire can be attached from any side. The siren, like every redstone connector, can be reconfigured to use a different redstone channel (default is white).
+
+#Reference to an event from my life
+ie.manual.entry.radio_station.name=Radiostacja
+ie.manual.entry.radio_station.subtext=Kabel Bezprzewodowy™
+ie.manual.entry.radio_station0=The Radio Station is a device for sending and receiving data wirelessly. Radio stations can only communicate, when they are in range (which is lower in bad weather), when they work on the same frequency and when both towers are given enough electrical energy.
+ie.manual.entry.radio_station1=The Radio Station is an advanced multiblock, which means it can be only built using an Electric Engineer's Hammer in a 2-step process. In the first stage the multiblock must be built and then a hammer has to be used on the upper advanced electronic engineering block, in the second energy (trough using the electric hammer) has to be provided to finish it.
+ie.manual.entry.radio_station2=The Radio Station's frequency can be set by using a Radio Tuner. There are 2 versions of the tuner with different ranges of frequencies. The radio station can use only the basic range.
+
+#Reference to... Immersive Engineering's Curse Description
+ie.manual.entry.small_data_devices.name=Małe Urządzenia Danych
+ie.manual.entry.small_data_devices.subtext=Szare Sześciany z Przyszłości
+ie.manual.entry.data_merger=The data merger is a machine which can combine two data inputs from the sides into an output to the front. The machine has a toggle for the preferred side to take variable from. Each variable also has a side override mode, green is the left and red is the right, darker colours remove the variable if the latest packet from that side doesn't contain the variable.
+ie.manual.entry.data_router=Data router allows to direct a packet into a specific side, which is defined by one of the packet's variables (can be set on the router by sneak using hammer). The variable has to be an integer.<br>Top - 0<br>Bottom - 1<br>North - 2<br>South - 3<br>East - 4<br>West - 5
+ie.manual.entry.redstone_buffer=The redstone buffer is a device which can hold an incoming data packet, until it doesn't receive a redstone signal.
+ie.manual.entry.timed_buffer=The timed buffer is a device, which can hold an incoming data packet for a given amount of time. The duration is set by the variable '0' (a number of ticks to wait).
+ie.manual.entry.small_data_buffer=The small data buffer is a device which can hold up to 4 packets and can release them using the First-In-First-Out method when given a redstone signal.
+
+ie.manual.entry.data_wires.name=Okablowanie Danych
+ie.manual.entry.data_wires.subtext=Nie do końca druty elektryczne
+ie.manual.entry.data_wires0=Trough the wires, data is sent and received immediately. In some cases using <link;radio_station;§o§nWireless §o§nTransmission§r;> might be better, but wires offer better stability during harsh weather and are cheaper.
+ie.manual.entry.data_wires1=Data wires like most cabling have their own relays and connectors, which split and connect machines. These can be used to create great logistic, warfare, intelligence and production networks.
+
+
+//Intelligence
+
+#Reference to Dr. Stone
+ie.manual.entry.intel_main.name=Wywiad
+ie.manual.entry.intel_main.subtext=Najpotężniejsza z Naukowych Broni
+ie.manual.entry.intel_main0=Intelligence is a branch of engineering focused on espionage, infiltration, sabotage and reconnaissance.<br>Intelligence offers multiple tools and machines to observe and predicate enemy movements. These include simple ones like the Binoculars and advanced like the Infrared Observer or Strategic Command Table.
+
+#Reference to Dr. Stone
+ie.manual.entry.binoculars.name=Lornetka
+ie.manual.entry.binoculars.subtext=Oczy Nauki
+ie.manual.entry.binoculars0=The Binoculars are a tool, that allows further vision. They are based on the same magnification principle the scope of the <link;railgun;§o§nRailgun§r;>.
+ie.manual.entry.binoculars1=The Infrared Binoculars are an upgraded version of the regular ones. When provided energy i.e. from a <link;powerpack;§o§nCapacitor §o§nBackpack§r;> it allows night vision, don't use them in lighted areas, it could severely blind you.
+
+#Reference to Ubersoldaten from Wolfenstein
+ie.manual.entry.infiltrators_goggles.name=Gogle Infiltratora
+ie.manual.entry.infiltrators_goggles.subtext=Überwizja
+ie.manual.entry.infiltrators_goggles0=
+
+#Reference to Orwell's 1984
+ie.manual.entry.infrared_observer.name=Obserwator Podczerwony
+ie.manual.entry.infrared_observer.subtext=Wieli Brat
+ie.manual.entry.infrared_observer0=
+
+#Reference to the Battle of Britain in WW2
+ie.manual.entry.radar.name=Radar
+ie.manual.entry.radar.subtext=Relikt z Dover
+ie.manual.entry.radar0=
+
+#Reference to a book by Sun Tzu
+ie.manual.entry.strategic_command_table.name=Stół Zarządzania Strategicznego
+ie.manual.entry.strategic_command_table.subtext=Sztuka Wojny
+ie.manual.entry.strategic_command_table0=
+
+//Warfare
+
+#Reference to an RTS game
+ie.manual.entry.warfare_main.name=Walka
+ie.manual.entry.warfare_main.subtext=Inżynieruj i Rządź
+ie.manual.entry.warfare_main0=Warfare is a branch of engineering focused on defense and offense against enemies. Engineered inventions have revolutionised the modern way of combat, swords and shields have become obsolete, the era of projectile weapons has come. Modern warfare is based on both precise and fast attacks with range superior to any weapon of the past.
+
+#Reference to the well known meme
+ie.manual.entry.machinegun.name=Karabin Maszynowy
+ie.manual.entry.machinegun.subtext=Własność Hansa
+ie.manual.entry.machinegun0=The machinegun is a pioneering, sophisticated new invention, that allows effective defense against all sorts of threats. Unlike most manned weapons, the machinegun can not be fired on the go. In order to fire it has to be displaced on a block with enough space. The MG uses disposable magazines, which can be loaded with bullets in the <link;packer;§o§nPacker§r;>.
+ie.manual.entry.machinegun1=While firing bullets, casings drop on the ground to be picked. The MG is prone to overheating, which depends on the firing rate. The gun like most modern-day equipment allows for different configurations using upgrades, such as water cooling, scopes, change of bipod and more.
+
+ie.manual.entry.machinegun_upgrade_heavy_barrel=The heavy barrel is a modification, which increases the gun fire rate dramatically, but by that also increases the speed of the gun overheating. Firing the gun with short bursts is the best tactic using this upgrade.
+ie.manual.entry.machinegun_upgrade_water_cooling=The heavy barrel is a modification that allows to fill the tank underneath the barrel with coolant (such as water), this almost eliminates the gun overheating. Laying suppresive fire with this upgrade is a good idea, but you have to do it with precision, because of the gun's slow firing rate.
+ie.manual.entry.machinegun_upgrade_belt_fed_loader=*CURRENTLY NOT IMPLEMENTED* The belt fed ammunition loader allows for loading ammunition from a belt, provided by the ammunition crate below the firing position.
+ie.manual.entry.machinegun_upgrade_second_magazine=The double magazine upgrade allows to load two magazines into the gun, the second magazine can be loaded from the offhand.
+ie.manual.entry.machinegun_upgrade_hasty_bipod=The field bipod is a hastily-made replacement for the default one, it decreases the gun's deployment speed, but increases the recoil.
+ie.manual.entry.machinegun_upgrade_precise_bipod=The precise bipod is a replacement for the default one, made with high precision, it increases the gun's deployment speed, but decreases the recoil.
+ie.manual.entry.machinegun_upgrade_scope=The machinegun scope is a modified version of the scope from the <link;railgun;§o§nRailgun§r;> that allows magnification of the distant target.
+ie.manual.entry.machinegun_upgrade_infrared_scope=The infrared scope is an upgraded version of its predecessor, which can also provide nightvision using the infrared reflector and a special filter, to work it requires energy provided by a capacitor backpack.
+
+ie.manual.entry.grenade.name=Granaty
+ie.manual.entry.grenade.subtext=Achtung, Granate!
+ie.manual.entry.grenade0=The stick-hand-grenade is a thrown weapon that contains explosives or other material that triggers on contact.
+
+#Reference to Dicker Bertha cannon
+ie.manual.entry.artillery_howitzer.name=Haubica
+ie.manual.entry.artillery_howitzer.subtext=Siostra Berty
+ie.manual.entry.artillery_howitzer0=
+ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, that allows attacking targets as distant as 300 blocks. It is controlled using the data system and loaded with special high-caliber shells. It is best used in offensive operations.
+ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate. To form it use a hammer on the concrete block sticking out at the top.
+ie.manual.entry.artillery_howitzer3=Variables<br>String 'm' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
+
+ie.manual.entry.ballistic_computer.name=Komputer Balistyczny
+ie.manual.entry.ballistic_computer.subtext=Przelicza to na tamto
+ie.manual.entry.ballistic_computer0=The Ballistic Computer is a device that translates a position vector and bullet mass to yaw and pitch used by most data-driven weapons.
+ie.manual.entry.ballistic_computer1=Variables input:<br>Integers 'x','y','z' - the position to fire onto<br>Integer 'm' - the bullet's mass<br>Variables output:<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun
+
+#Reference to the BluSunrize's general dislike of the machinegun and the ammunition crate
+ie.manual.entry.ammocrate.name=Skrzynka na Amunicję
+ie.manual.entry.ammocrate.subtext=Green, nie Blu
+ie.manual.entry.ammocrate0=The Ammunition Crate is a portable storage for all the bullets and empty casings. It can be used to load a revolver or a speedloader, by creating a load pattern and putting the cartridges inside. To reclaim a revolver from the crate, use it with an empty hand.
+
+#Reference to Blacknight, author of the sprites for electric hammer and lighter, also the author of the idea of the chemical dispenser.
+ie.manual.entry.chemdispenser.name=Dozownik Chemiczny
+ie.manual.entry.chemdispenser.subtext=A flame in the Black night
+ie.manual.entry.chemdispenser0=A device invented by the same engineer, who designed the electric hammer, originally for watering crops and stopping fires, it also can be used for precise spraying a position with an incendiary liquid.
+ie.manual.entry.chemdispenser1=The Chemical Dispenser requires power supplied trough a wire to the device's connector, a data signal (or a constant redstone signal) to decide about its actions and fluid to the input on the back.
+ie.manual.entry.chemdispenser2=Variables:<br>Integer 'a'-amount of fluid to spray<br>Boolean 'i' - should the fluid be ignited<br>Integers 'y','p' - yaw and pitch of the nozzle<br>
+
+#Reference to a Polish Copypasta about guys estabilishing a regime in a kindergarten and forcing the children to work on assembling pens, while making a secret police from the other kids to watch over them
+ie.manual.entry.ammunition_factory.name=Ammunition Factory
+ie.manual.entry.ammunition_factory.subtext=Still better that making pens!
+ie.manual.entry.ammunition_factory0=The Ammunition Factory is a heavy, multi-section machine which produces ammunition of all types. You can produce grenades, bullets and shells here and their effect depends on materials used.
+ie.manual.entry.ammunition_factory1=The machine requires a power supply and can be given an optional data signal to change the bullets' fuse time, colouration and name. The basic ingredients of ammunition are:<br>The core - made of metal, such as steel or brass<br>The components - explosive materials, tracer dust, incendiary materials, fireworks, etc.<br>Gunpowder - the amount used depends of ammunition's calliber.<br>The higher the calliber the bigger the capacity for the components, thus bigger the mass.
+ie.manual.entry.ammunition_factory2=When making bullets, remember: there is no such thing as "the best bullet composition", add ingredients adjacent to your needs. Need a stun grenade? Use fireworks. Need a bullet that can penetrate trough steel? Use uranium cores. Keep in mind, that combining these two will result in lower suppression modifier of the fireworks, the cores modify the strengths of the effects. Some materials like brass raise it, while some like tungsten, steel or uranium decrease it.
+ie.manual.entry.ammunition_factory3=Use the data system to name and color your bullets. This will allow you to differentiate them easier, so you won't mistake an armour-piercing round for a high-explosive one. For coloring the machine requires a supply of inks to its tank, similar to the <link;printing_press;§o§nPrinting §o§nPress§r;>.
+ie.manual.entry.ammunition_factory4=Variables:<br>Integer 'p'-percentage proportion of the bullet components (0-100)<br>Integer or String 'c'-bullet casing's colour (Int - RGB, String - Hex)<br>String 'n' - bullet name.
+
+//Logistics
+
+#Reference to Foxhole - a MMO game with a big persitent war in which logistics play a key role
+ie.manual.entry.logistics.name=Logistyka
+ie.manual.entry.logistics.subtext=Logi, bmats ASAP!
+ie.manual.entry.logistics0=Logistics is a unique branch of engineering focused on storing, delivering and managing the way of transfer of goods. A good logistic system consists of a warehouse for storage and nearby production plants and factories for quick manufacturing of needed things. With the newest electronic and electric technology and some old rotary powered machines, creating a good delivery system is easier than ever.
+
+#Reference to Choroman's laziness, but also some hard work on the Packer model
+ie.manual.entry.packer.name=Maszyna Pakująca
+ie.manual.entry.packer.subtext=Więcej rur i tuneli!
+ie.manual.entry.packer0=Packer is a machine used to batch load items into containers such as crates or bullet magazines. For operation it requires power and a single data signal defining how much items should be put each time. To form it, use a hammer on the pipe above the conveyor belt.
+ie.manual.entry.packer1= The packer receives items to be packed from the side and containers onto the bottom conveyor.
+ie.manual.entry.packer2=Variables:<br>Integer 'c'-items to pack<br>Integer or String (one_by_one, one_of_all) 'm'-item packing mode<br>Integer 'q' - insert quantity<br>Boolean 'i' - whether the machine should ignore empty stacks.
+
+#Ziplines
+ie.manual.entry.skycrates.name=Skycrate'y
+ie.manual.entry.skycrates.subtext=Dosłownie linie logistyczne
+ie.manual.entry.skycrates0=The skycrate system is a different approach on delivering items. It's speed is superior to any conveyor and lines made of rope are much cheaper and more space-efficient. There are also some drawbacks to it: it requires stations on both sides and the crates need to be inserted to a minecart. Skycrates are a better option than conveyors on longer distances, it is not encouraged to use them on short (0-30m) distances.
+ie.manual.entry.skycrates1=The Skycrate Station is a begin and end point of a skycrate line. To form it use a hammer on the scaffolding in the middle. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power3;§o§nGearboxes§r;>.
+ie.manual.entry.skycrates2=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. Minecarts can only enter the station when the railway barrier is up, a minecart can be forced out of the station, by applying a redstone signal. The station will automatically expell minecarts after loading/unloading.
+ie.manual.entry.skycrates3=The Skycrate Post is what a relay between two points in the skycrate network. Only two wires can be attached. To form it use a hammer on the fence.
+ie.manual.entry.skycrates4=Crate minecarts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart, items inside won't be lost. When disassembled, the minecart splits into the actual cart and the crate.
+ie.manual.entry.skycrates5=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.
+
+
+//Other
+
+#Reference to a certain picture i've seen on reddit few years ago
+ie.manual.entry.sawmill.name=Krajzega
+ie.manual.entry.sawmill.subtext=Lepszy fidget spinner!
+ie.manual.entry.sawmill0=The Sawmill is an automatic carpentry machine powered by rotary energy. It consists of a table, a mechanical inserter and saw mount. To form the multiblock, use a hammer on the middle wooden scaffolding.
+ie.manual.entry.sawmill1=Saws made of different materials can be mounted. While every saw is effective at cutting wood, saws made of hard materials like steel and tunsten can even cut trough metals.
+ie.manual.entry.sawmill2=The machine requires a constant supply of rotary power to it's side. Resources can be inserted to table's right side and processed items are outputted to the wooden storage box on the ground
+
+ie.manual.entry.rotary_power.name=Energia obrotowa
+ie.manual.entry.rotary_power.subtext=Jeszcze się obraca!
+ie.manual.entry.rotary_power0=Rotary power is an old-fashioned alternative to electric power. Instead of wires and connectors, wheels and motor belts are used. The power system utilizes 2 factors: torque - in Newton metres (Nm) and speed in RPM. Machines require different torque and speed to work effectively.
+ie.manual.entry.rotary_power1=If any of those values surpasses the limit, the machine explodes. Power can be merged and splitted using <link;rotary_power3;§o§nGearboxes§r;>.
+ie.manual.entry.rotary_power2=The wheel is used to transfer mechanical (rotary) power between devices. After placing it can be connected to another wheel using a motor belt, the same way connectors are linked with wires.
+ie.manual.entry.rotary_power3=The motor belts are the main transmission element of every rotary power network. They differ with the amount of torque and speed they can transfer. If the torque or the speed it too high for the belt, it detaches from the wheel and falls on the ground. Use different materials for different needs - steel might be more resistant to torque, but power losses are higher.
+ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels together, their sides can be changed to input, output or nothing. Inputted torque from all inputs is summed and then divided equally between all outputs. You can use the gearbox to merge torque to make it higher or divide it between 2 or more wheels. The gearbox requires gears of certain resistance to torque and speed to operate on full power.
+ie.manual.entry.rotary_power5=The Transmission Boxes are used to connect mechanical devices using a different standard of axles, they can be used to connect a windmill or a waterwheel to a motor belt network or output mechanical energy to a dynamo.
+ie.manual.entry.rotary_power6=The wrench and the electric wrench can be used to open hatches of mechanical devices for maintenance purposes, such as changing gears in a gearbox.
+

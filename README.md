@@ -1,6 +1,6 @@
 <p align="center"><img src="https://github.com/Pabilo8/ImmersiveIntelligence/blob/master/logos/logofullhq.png?raw=true"></p>
 
-[![](http://cf.way2muchnoise.eu/versions/immersive-intelligence.svg)](https://minecraft.curseforge.com/projects/immersive-intelligence) 
+[![](http://cf.way2muchnoise.eu/versions/immersive-intelligence.svg)](https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence) 
 
 **Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so **most of the planned features are not added**. There are four main categories of the mod's content: 
 

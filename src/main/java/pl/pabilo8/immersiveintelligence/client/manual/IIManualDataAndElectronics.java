@@ -35,7 +35,7 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "data_main1")
 		);
 
-		String[][] intInfoTable = {{"ie.manual.entry.def_value", "0"}, {"ie.manual.entry.min_value", "-8192"}, {"ie.manual.entry.max_value", "8192"}};
+		String[][] intInfoTable = {{"ie.manual.entry.def_value", "0"}};
 		String[][] stringInfoTable = {{"ie.manual.entry.def_value", "\'\'"}, {"ie.manual.entry.max_length", "512"}};
 		String[][] boolInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.false"}, {"ie.manual.entry.accepted_values", "ie.manual.entry.tf"}};
 		String[][] itemstackInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
