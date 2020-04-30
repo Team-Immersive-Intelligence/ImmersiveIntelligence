@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.1.0"
+version = "0.1.1"
 group= "pl.pabilo8.immersiveintelligence"
 archivesBaseName = "immersiveintelligence"
 
