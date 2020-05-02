@@ -37,7 +37,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	public FluidTank[] tanks = {new FluidTank(ChemicalBath.fluidCapacity)};
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 	public int processTime, processTimeMax;
-	public ItemStack effect;
+	public ItemStack effect = ItemStack.EMPTY;
 	public boolean active = false;
 
 	IItemHandler insertionHandler = new IEInventoryHandler(1, this, 0, true, false);

@@ -326,8 +326,14 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 					if(c=='<')
 					{
 						//printedChars+="<";
-						String fragment = toPrint.value.substring(charnum-1, charnum+14);
-						if(fragment.substring(0, 8).equals("<hexcol="))
+						String fragment = toPrint.value.substring(charnum-1);
+
+						if(fragment.length() > 3&&fragment.substring(0, 4).equals("<br>"))
+						{
+							shouldstartfrom = charnum+4;
+							printedChars += "<br>";
+						}
+						else if(fragment.length() > 7&&fragment.substring(0, 8).equals("<hexcol="))
 						{
 							black_cost.get(black_cost.size()-1);
 
