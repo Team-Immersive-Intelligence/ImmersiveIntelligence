@@ -43,7 +43,6 @@ public class DataPacketTypeItemStack implements IDataType
 	public void valueFromNBT(NBTTagCompound n)
 	{
 		this.value = new ItemStack(n.getCompoundTag("Value"));
-		ImmersiveIntelligence.logger.info(this.value);
 	}
 
 	@Override

@@ -132,7 +132,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		IBlockState state = world.getBlockState(pos);
 		for(Predicate<IBlockState> p : CommonProxy.hammer_blacklist)
 		{
-			ImmersiveIntelligence.logger.info(p.test(state));
 			if(p.test(state))
 				return EnumActionResult.PASS;
 		}
@@ -195,7 +194,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		IBlockState state = world.getBlockState(pos);
 		for(Predicate<IBlockState> p : CommonProxy.hammer_blacklist)
 		{
-			ImmersiveIntelligence.logger.info(p.test(state));
 			if(p.test(state))
 				return EnumActionResult.PASS;
 		}

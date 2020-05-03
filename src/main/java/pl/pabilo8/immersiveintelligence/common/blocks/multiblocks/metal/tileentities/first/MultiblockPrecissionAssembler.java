@@ -172,7 +172,6 @@ public class MultiblockPrecissionAssembler implements IMultiblock
 						{
 							if(!Utils.isBlockAt(world, pos, IEContent.blockWoodenDecoration, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta()))
 							{
-								ImmersiveIntelligence.logger.info(h+" "+l+" "+w);
 								return false;
 							}
 						}

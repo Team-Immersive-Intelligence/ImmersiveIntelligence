@@ -107,7 +107,6 @@ public class TileEntityDataRouter extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		ImmersiveIntelligence.logger.info("otak! "+packet.toNBT().toString());
 		if(packet.getPacketVariable(variable) instanceof DataPacketTypeInteger)
 		{
 			int c = ((DataPacketTypeInteger)packet.getPacketVariable(variable)).value;

@@ -362,7 +362,6 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 			a.motionX = distance*(gun_end.x);
 			a.motionY = distance*(gun_end.y);
 			a.motionZ = distance*(gun_end.z);
-			ImmersiveIntelligence.logger.info(entityLiving.rotationPitch);
 			a.world.spawnEntity(a);
 
 			if(!(entityLiving instanceof EntityPlayer)||!((EntityPlayer)entityLiving).capabilities.isCreativeMode)

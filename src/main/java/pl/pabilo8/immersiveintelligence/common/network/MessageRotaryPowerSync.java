@@ -72,7 +72,7 @@ public class MessageRotaryPowerSync implements IMessage
 			ClientUtils.mc().addScheduledTask(() ->
 			{
 				World world = ImmersiveEngineering.proxy.getClientWorld();
-				//ImmersiveIntelligence.logger.info("client");
+
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
 					BlockPos bpos = new BlockPos(message.x, message.y, message.z);

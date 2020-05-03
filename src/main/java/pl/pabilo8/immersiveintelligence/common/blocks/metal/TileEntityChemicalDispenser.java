@@ -528,7 +528,6 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 						world.playSound(null, pos.getX()+0.5f, pos.getY()-0.5f, pos.getZ()+0.5f, IESounds.spray, SoundCategory.PLAYERS, .5f, .75f);
 				}
 			}
-			ImmersiveIntelligence.logger.info("otak!");
 			tank.drain(Math.min(plannedAmount, consumed), true);
 			plannedAmount -= consumed;
 			plannedAmount = Math.max(plannedAmount, 0);
@@ -580,7 +579,6 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 
 		if(packet.getPacketVariable('y') instanceof DataPacketTypeInteger)
 		{
-			ImmersiveIntelligence.logger.info("packet!");
 			this.plannedYaw = ((DataPacketTypeInteger)packet.getPacketVariable('y')).value;
 			this.plannedYaw = MathHelper.clamp(this.plannedYaw, -45, 45);
 

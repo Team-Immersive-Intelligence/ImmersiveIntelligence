@@ -103,7 +103,6 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 			effect = new ItemStack(message.getCompoundTag("output"));
 		if(message.hasKey("toolOrder"))
 		{
-			ImmersiveIntelligence.logger.info("received1");
 			NBTTagList list = message.getTagList("toolOrder", NBT.TAG_STRING);
 			toolOrder = new String[]{};
 			ArrayList<String> l2 = new ArrayList<>();
@@ -318,13 +317,11 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 			{
 				if(inventory.get(0).isEmpty())
 				{
-					ImmersiveIntelligence.logger.info("o1");
 					check = false;
 					break test;
 				}
 				if(!((IPrecissionTool)inventory.get(0).getItem()).getPrecissionToolType(inventory.get(0)).equals(toolOrder[0]))
 				{
-					ImmersiveIntelligence.logger.info("o2");
 					check = false;
 					break test;
 				}
@@ -360,7 +357,6 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 
 		if(!check)
 		{
-			ImmersiveIntelligence.logger.info(check);
 			processQueue.clear();
 			update = true;
 		}

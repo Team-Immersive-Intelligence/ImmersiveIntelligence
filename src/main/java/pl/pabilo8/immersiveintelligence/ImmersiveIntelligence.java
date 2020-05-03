@@ -47,7 +47,6 @@ public class ImmersiveIntelligence
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		logger.info("INIT!");
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, proxy);
 
 		proxy.init();

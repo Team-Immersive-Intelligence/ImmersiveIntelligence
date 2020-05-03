@@ -84,7 +84,6 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 		if(message.hasKey("mode"))
 		{
 			mode = message.getByte("mode");
-			ImmersiveIntelligence.logger.info(mode);
 		}
 		if(message.hasKey("packet"))
 			packet.fromNBT(message.getCompoundTag("packet"));

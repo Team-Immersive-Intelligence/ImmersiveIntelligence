@@ -94,7 +94,6 @@ public class RotaryUtils
 			if(!((IImmersiveConnectable)tileEntity).canConnectCable(wire, target, offset)||!coil.canConnectCable(stack, tileEntity))
 			{
 
-				ImmersiveIntelligence.logger.info("onie");
 				if(tileEntity instanceof TileEntityMechanicalConnectable)
 				{
 					player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.wrongBelt"), true);
@@ -124,8 +123,6 @@ public class RotaryUtils
 						ItemNBTHelper.setInt(stack, "tries", 0);
 					}
 				}
-				ImmersiveIntelligence.logger.info("onie2");
-
 
 				return EnumActionResult.FAIL;
 			}

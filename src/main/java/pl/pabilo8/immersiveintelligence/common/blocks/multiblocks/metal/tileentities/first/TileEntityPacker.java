@@ -364,7 +364,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 													for(Entry<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> p : predicates.entrySet())
 														if(p.getKey().test(inventory.get(0)))
 														{
-															ImmersiveIntelligence.logger.info("otak2!");
 															newStack = p.getValue().apply(new Tuple<>(inventory.get(0), newStack));
 															newStack.setCount(left+newStack.getCount());
 															inventory.set(i, newStack);
@@ -390,7 +389,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 												for(Entry<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> p : predicates.entrySet())
 													if(p.getKey().test(inventory.get(0)))
 													{
-														ImmersiveIntelligence.logger.info("otak2!");
 														newStack = p.getValue().apply(new Tuple<>(inventory.get(0), newStack));
 														newStack.setCount(left+newStack.getCount());
 														inventory.set(j, newStack);
@@ -640,7 +638,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 			if(packet.getPacketVariable('i') instanceof DataPacketTypeBoolean)
 				master.ignoreEmptyStacks = ((DataPacketTypeBoolean)packet.getPacketVariable('i')).value;
 
-			ImmersiveIntelligence.logger.info(master().itemsToPack);
 		}
 	}
 

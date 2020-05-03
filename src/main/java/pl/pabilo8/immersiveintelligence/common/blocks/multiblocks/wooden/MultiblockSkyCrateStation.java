@@ -135,7 +135,6 @@ public class MultiblockSkyCrateStation implements IMultiblock
 						tile.mirrored = false;
 						tile.formed = true;
 						tile.pos = ((h+1)*9)+((l+1)*3)+(w+1);
-						ImmersiveIntelligence.logger.info(tile.pos);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
 						world.addBlockEvent(pos2, CommonProxy.block_wooden_multiblock, 255, 0);

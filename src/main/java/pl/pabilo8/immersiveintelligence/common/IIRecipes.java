@@ -293,8 +293,6 @@ public class IIRecipes
 				{
 					if(Objects.equals(iRecipe.getGroup(), "planks"))
 					{
-						ImmersiveIntelligence.logger.info("recipe for:"+iRecipe.getRecipeOutput());
-
 						ItemStack out = iRecipe.getRecipeOutput().copy();
 						out.setCount(Math.round(out.getCount()*1.5f));
 						SawmillRecipe.addRecipe(out, new IngredientStack(ListUtils.fromItems(iRecipe.getIngredients().get(0).getMatchingStacks())).setUseNBT(false), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 16, 200, 1);

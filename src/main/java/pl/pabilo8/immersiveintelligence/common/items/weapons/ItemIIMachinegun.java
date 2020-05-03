@@ -143,11 +143,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 						fence = new AxisAlignedBB(0, 0, 0, 1, 1, 0.5);
 						break;
 				}
-				/*
-				ImmersiveIntelligence.logger.info(aabb);
-				ImmersiveIntelligence.logger.info(fence);
-				//fence.offset(raytraceresult.getBlockPos());
-				 */
+
 				if(aabb==null)
 					return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
 

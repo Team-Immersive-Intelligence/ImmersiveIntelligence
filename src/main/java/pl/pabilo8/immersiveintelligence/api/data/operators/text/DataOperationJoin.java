@@ -36,7 +36,6 @@ public class DataOperationJoin extends DataOperator
 		if(t2 instanceof DataPacketTypeAccessor)
 			t2 = packet.getPacketVariable(((DataPacketTypeAccessor)t2).variable);
 
-		ImmersiveIntelligence.logger.info("accessor "+t2);
 		i1 = t1.valueToString();
 		i2 = t2.valueToString();
 

@@ -79,8 +79,6 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 			if(amplifier < 0)
 				amplifier = 254+amplifier;
 
-			ImmersiveIntelligence.logger.info(amplifier);
-
 			float f1 = MathHelper.clamp((float)amplifier/255f, 0f, 1f);
 			//if(timeLeft < 20)
 			//f1 += (event.getFarPlaneDistance()/4)*(1-timeLeft/20f);

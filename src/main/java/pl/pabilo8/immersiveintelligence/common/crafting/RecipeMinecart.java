@@ -48,7 +48,6 @@ public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistry
 				else
 					return false;
 		}
-		ImmersiveIntelligence.logger.info(!minecart.isEmpty()&&!crate.isEmpty());
 		return !minecart.isEmpty()&&!crate.isEmpty();
 	}
 

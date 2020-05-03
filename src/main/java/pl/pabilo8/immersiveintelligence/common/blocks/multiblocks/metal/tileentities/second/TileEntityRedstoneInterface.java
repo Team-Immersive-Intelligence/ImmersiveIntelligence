@@ -606,8 +606,6 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 
 		IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(master().getPos(), world, facing.getOpposite());
 
-		ImmersiveIntelligence.logger.info(conn);
-
 		if(conn!=null)
 			conn.sendPacket(out);
 	}

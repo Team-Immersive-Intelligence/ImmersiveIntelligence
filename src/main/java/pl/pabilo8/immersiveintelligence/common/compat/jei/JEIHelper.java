@@ -123,7 +123,7 @@ public class JEIHelper implements IModPlugin
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime)
 	{
-		ImmersiveIntelligence.logger.info("otak!");
+
 	}
 
 

@@ -72,7 +72,7 @@ public class PenetrationHelper
 
 	public static void supress(World world, double posX, double posY, double posZ, float supressionRadius, int suppressionPower)
 	{
-		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(posX, posY, posZ, posX+1, posY+1, posZ+1).grow(supressionRadius));
+		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(posX, posY, posZ, posX+1, posY+1, posZ+1).grow(supressionRadius));
 		for(EntityLivingBase entity : entities)
 		{
 			PotionEffect effect = entity.getActivePotionEffect(IIPotions.suppression);
@@ -83,7 +83,6 @@ public class PenetrationHelper
 				effect.duration = 10;
 				effect.combine(new PotionEffect(IIPotions.suppression, 120, Math.min(255, effect.getAmplifier()+suppressionPower)));
 			}
-			ImmersiveIntelligence.logger.info(entity.toString()+" / "+effect.duration+" / "+effect.getAmplifier());
 			entity.addPotionEffect(effect);
 		}
 	}
@@ -100,7 +99,6 @@ public class PenetrationHelper
 			{
 				effect.duration = 10;
 				effect.combine(new PotionEffect(IIPotions.suppression, 60, Math.min(255, effect.getAmplifier()+damageToArmour)));
-				ImmersiveIntelligence.logger.info(ent.toString()+" / "+effect.duration+" / "+effect.getAmplifier());
 			}
 			for(ItemStack stack : ent.getArmorInventoryList())
 			{

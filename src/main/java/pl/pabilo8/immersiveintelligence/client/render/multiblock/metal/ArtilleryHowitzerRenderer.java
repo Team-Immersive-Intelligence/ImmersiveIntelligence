@@ -113,7 +113,6 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.pushMatrix();
 				if(te.animation==2)
 				{
-					ImmersiveIntelligence.logger.info(prgrs);
 					GlStateManager.translate(0f, 1f-prgrs, 0f);
 					is_moved = true;
 				}
@@ -221,11 +220,9 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.pushMatrix();
 				if(te.animation==1)
 				{
-					ImmersiveIntelligence.logger.info(prgrs);
 					GlStateManager.translate(0f, -prgrs, 0f);
 					is_moved = true;
 				}
-				//ImmersiveIntelligence.logger.info("abuyin ibn djadir ibn omar kalid ben hadji al sharidi");
 				GlStateManager.translate(1f, 0f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(5);
 				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));

@@ -68,7 +68,7 @@ public class MessageBooleanAnimatedPartsSync implements IMessage
 			WorldServer world = ctx.getServerHandler().player.getServerWorld();
 			world.addScheduledTask(() ->
 			{
-				//ImmersiveIntelligence.logger.info("server");
+
 				if(world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
 				{
 					IBooleanAnimatedPartsBlock te = (IBooleanAnimatedPartsBlock)world.getTileEntity(new BlockPos(message.x, message.y, message.z));
@@ -87,7 +87,6 @@ public class MessageBooleanAnimatedPartsSync implements IMessage
 			ClientUtils.mc().addScheduledTask(() ->
 			{
 				World world = ImmersiveEngineering.proxy.getClientWorld();
-				//ImmersiveIntelligence.logger.info("client");
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
 					if(ClientUtils.mc().world.isBlockLoaded(new BlockPos(message.x, message.y, message.z))&&ClientUtils.mc().world.getTileEntity(new BlockPos(message.x, message.y, message.z)) instanceof IBooleanAnimatedPartsBlock)
