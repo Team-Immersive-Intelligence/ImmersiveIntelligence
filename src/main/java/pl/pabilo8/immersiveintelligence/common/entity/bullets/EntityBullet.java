@@ -9,6 +9,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -458,18 +460,26 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 				if(mop.entityHit!=null)
 				{
 					boolean headshot = false;
-					if(mop.entityHit instanceof EntityLivingBase)
-						headshot = blusunrize.immersiveengineering.common.util.Utils.isVecInEntityHead((EntityLivingBase)mop.entityHit, new Vec3d(posX, posY, posZ));
 
 					float core_damage = ItemIIBullet.getCasing(stack).getDamage()*(ItemIIBullet.hasCore(stack)?ItemIIBullet.getCore(stack).getDamageModifier(null): 1f);
 					float first_dmg = ItemIIBullet.hasFirstComponent(stack)?ItemIIBullet.getFirstComponent(stack).getDamageModifier(ItemIIBullet.getFirstComponentNBT(stack)): 0f;
 					float second_dmg = ItemIIBullet.hasSecondComponent(stack)?ItemIIBullet.getSecondComponent(stack).getDamageModifier(ItemIIBullet.getSecondComponentNBT(stack)): 0f;
+
+					if(mop.entityHit instanceof EntityLivingBase)
+					{
+						headshot = blusunrize.immersiveengineering.common.util.Utils.isVecInEntityHead((EntityLivingBase)mop.entityHit, new Vec3d(posX, posY, posZ));
+
+						IAttributeInstance armor = ((EntityLivingBase)mop.entityHit).getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS);
+						PenetrationHelper.breakArmour(mop.entityHit, (int)Math.ceil((core_damage*0.125f)/armor.getAttributeValue()));
+
+					}
 
 					float damage = (float)(core_damage*(1+first_dmg+second_dmg)*(headshot?1.25: 1));
 
 					if(mop.entityHit.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.owner), damage))
 						mop.entityHit.hurtResistantTime = 0;
 					Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
+
 
 					penetrationPower = Math.max(0f, penetrationPower-damage/3f);
 					moveToBlockPosAndAngles(new BlockPos(nextPos), rotationYaw, rotationPitch);

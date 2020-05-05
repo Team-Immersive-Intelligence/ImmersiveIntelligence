@@ -769,7 +769,8 @@ ie.manual.entry.printing_press3=String 't' - output type (text/construction/code
 ie.manual.entry.data_input_machine.name=Data Input Machine
 ie.manual.entry.data_input_machine.subtext=The Input Outputter
 ie.manual.entry.data_input_machine0=The Data Input Machine is an electronic device which consists of a wooden desk with a keyboard on top and a steel machine casing. A user can input data into it and send it by applying a redstone signal. After sending a data packet, the variables remain there and the machine can be used again. To operate, the device requires electricity. To form it use a hammer on the light engineering block to the left.
-ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift). When editing the
+ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift).
+ie.manual.entry.data_input_machine2=When editing a variable, you can change it's letter by using the up and down arrows, to change it's type hold shift when clicking it.
 
 #Reference to a song
 ie.manual.entry.arithmetic_logic_machine.name=Arithmetic-Logic Machine
@@ -905,7 +906,7 @@ ie.manual.entry.artillery_howitzer.subtext=Bertha's Sister
 ie.manual.entry.artillery_howitzer0=
 ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, that allows attacking targets as distant as 300 blocks. It is controlled using the data system and loaded with special high-caliber shells. It is best used in offensive operations.
 ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate. To form it use a hammer on the concrete block sticking out at the top.
-ie.manual.entry.artillery_howitzer3=Variables<br>String 'm' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
+ie.manual.entry.artillery_howitzer3=Variables<br>String 'c' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
 
 ie.manual.entry.ballistic_computer.name=Ballistic Computer
 ie.manual.entry.ballistic_computer.subtext=Calculate this to that

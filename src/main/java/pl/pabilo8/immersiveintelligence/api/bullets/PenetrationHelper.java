@@ -3,13 +3,11 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -92,13 +90,13 @@ public class PenetrationHelper
 		if(entity instanceof EntityLivingBase)
 		{
 			EntityLivingBase ent = (EntityLivingBase)entity;
-			PotionEffect effect = ent.getActivePotionEffect(IIPotions.suppression);
+			PotionEffect effect = ent.getActivePotionEffect(IIPotions.broken_armor);
 			if(effect==null)
-				effect = new PotionEffect(IIPotions.suppression, 60, damageToArmour, false, false);
+				effect = new PotionEffect(IIPotions.broken_armor, 60, damageToArmour, false, false);
 			else
 			{
 				effect.duration = 10;
-				effect.combine(new PotionEffect(IIPotions.suppression, 60, Math.min(255, effect.getAmplifier()+damageToArmour)));
+				effect.combine(new PotionEffect(IIPotions.broken_armor, 60, Math.min(255, effect.getAmplifier()+damageToArmour)));
 			}
 			for(ItemStack stack : ent.getArmorInventoryList())
 			{

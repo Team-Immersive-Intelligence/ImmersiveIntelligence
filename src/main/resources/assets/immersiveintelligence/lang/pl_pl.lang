@@ -654,7 +654,7 @@ advancement.immersiveintelligence.let_me_show_you_its_features=Let me show you i
 advancement.immersiveintelligence.let_me_show_you_its_features.desc=Ulepsz KM za pomocą Celownika Podczerwonego, a Heavy Barrel and a Second Magazine
 
 #A JoJo reference
-advancement.immersiveintelligence.make_platinum=Better than the World?
+advancement.immersiveintelligence.make_platinum=Lepsze niż The World?
 advancement.immersiveintelligence.make_platinum.desc=Uzyskaj Sztabkę Platyny
 
 #A Dr. Stone reference
@@ -731,8 +731,8 @@ ie.manual.entry.true=Prawda
 
 ie.manual.entry.circuit_production.name=Układy Scalone
 ie.manual.entry.circuit_production.subtext=Jeszcze nie do końca bip-bup
-ie.manual.entry.circuit_production0=Circuits are one of the most important and commonly used electronic parts. There are three kinds of circuits: <link;circuit_production_basic;§n§obasic§r;> - made using vacuum tubes and redstone, <link;circuit_production_advanced;§o§nadvanced§r;> - made using Advanced Electronic Alloy™ and upgraded vacuum tubes. The most sophisticated are the <link;circuit_production_processor;§o§nprocessor§r;> circuits, which are made mainly of silicon in a complicated <link;precision_assembler;§o§nassembly§r;> process.
-ie.manual.entry.circuit_production_basic=Basic circuits are the common, primary and cheap circuits. They can be refitted to perform simple arithmetic, logic and text operations, but their main use is construction of various machines. To produce a basic circuit a raw circuit board has to be <chemical_bath;§o§netched§r;> in acid and then a chip made of vacuum tubes in the <link;precission_assembler;§o§nPrecision §o§nAssembler§r;> has to be installed onto them.
+ie.manual.entry.circuit_production0=Układy Scalone są jednych z najczęściej używanych podzespołów elektronicznyh. Mają trzy rodzaje: <link;circuit_production_basic;§n§opodstawowe§r;> - produkowane z lamp elektronowych i redstone'a, <link;circuit_production_advanced;§o§nzaawansowane§r;> - tworzone z Zaawansowanego Stopu Elektronicznego™ i ulepszonych lamp. Najbardziej skomplikowanymi są <link;circuit_production_processor;§o§nukłady ;§o§nprocesorowe§r;>, tworzone głównie z krzemu w procesie <link;precission_assembler;§o§nprecyzyjnego §o§nmontażu§r;> .
+ie.manual.entry.circuit_production_basic=Podstawowe układy są proste, tanie i łatwe w budowie. Mogą być przerobione do wykonywania prostych operacji arytmetycznych, logicznych i tekstowych, lecz ich najważniejszym zastosowaniem jest budowa maszyn. By wyprodukować układ, płytka musi zostać <chemical_bath;§o§nwytrawiona§r;> w kwasie, a element elektroniczny wytworzony w <link;precission_assembler;§o§nSkładaczu §o§nPrecyzyjnym§r;> zamontowany na wytrawioną płytkę.
 ie.manual.entry.circuit_production_basic_usages=Basic circuits are used to make basic-tier electronic devices and machines, such as the Printing Press, the <link;arithmetic_logic_machine;§o§nArithmetic-Logic §o§nMachine§r;> and the <link;data_input_machine;§o§nData §o§nInput §o§nMachine§r;>.
 ie.manual.entry.circuit_production_advanced=Advanced circuits are a direct upgrade to their predecessors, they still use vacuum tubes, but because of the new alloy used, their capabilities are much better. They are made of an upgraded circuit board and a chip composed of upgraded vacuum tubes.
 ie.manual.entry.circuit_production_advanced_usages=Because of their fast transmission rate, they can be refitted for performing more advanced arithmetic, logic, text and even item-processing operations. Because of their superior speed, they are used in wireless transmission and advanced computing machines.
@@ -745,7 +745,7 @@ ie.manual.entry.chemical_bath.subtext=Bulbulator
 ie.manual.entry.chemical_bath0=The Chemical Bath is a machine, constructed of an industrial-size steel bathtub and a moving carriage with a grasper. The machine is commonly used for etching raw circuits in acid. To form it use a hammer on the middle sheetmetal block.
 
 #Reference to Dr.Stone
-ie.manual.entry.precission_assembler.name=Precyzyjna Maszyna
+ie.manual.entry.precission_assembler.name=Składacz Precyzyjny
 ie.manual.entry.precission_assembler.subtext=Rzemieślnik z Kamiennego Świata
 ie.manual.entry.precission_assembler0=The Precision Assembler is an advanced machine used for crafting items with high precision. It requires an Assembly Scheme and some precise tools for operation. To form it, use a hammer on the wooden scaffolding block.
 ie.manual.entry.precission_assembler1=the machine uses only the amount it needs and outputs scrap along with the produced item. Its most common use is electonic component production.
@@ -764,7 +764,8 @@ ie.manual.entry.printing_press3=String 't' - output type (text/construction/code
 ie.manual.entry.data_input_machine.name=Maszyna Wprowadzania Danych
 ie.manual.entry.data_input_machine.subtext=Output dla Inputu
 ie.manual.entry.data_input_machine0=The Data Input Machine is an electronic device which consists of a wooden desk with a keyboard on top and a steel machine casing. A user can input data into it and send it by applying a redstone signal. After sending a data packet, the variables remain there and the machine can be used again. To operate, the device requires electricity. To form it use a hammer on the light engineering block to the left.
-ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift). When editing the
+ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift).
+ie.manual.entry.data_input_machine2=When editing a variable, you can change it's letter by using the up and down arrows, to change it's type hold shift when clicking it.
 
 #Reference to a song
 ie.manual.entry.arithmetic_logic_machine.name=Maszyna Arytmetyczno-Logiczna
@@ -895,7 +896,7 @@ ie.manual.entry.artillery_howitzer.subtext=Siostra Berty
 ie.manual.entry.artillery_howitzer0=
 ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, that allows attacking targets as distant as 300 blocks. It is controlled using the data system and loaded with special high-caliber shells. It is best used in offensive operations.
 ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate. To form it use a hammer on the concrete block sticking out at the top.
-ie.manual.entry.artillery_howitzer3=Variables<br>String 'm' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
+ie.manual.entry.artillery_howitzer3=Variables<br>String 'c' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
 
 ie.manual.entry.ballistic_computer.name=Komputer Balistyczny
 ie.manual.entry.ballistic_computer.subtext=Przelicza to na tamto

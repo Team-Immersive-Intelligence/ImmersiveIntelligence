@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockAmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockBallisticComputer;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockPacker;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
@@ -82,9 +81,5 @@ public class IIManualWarfare extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "chemdispenser2")
 		);
 
-		ManualHelper.addEntry("packer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPacker.instance),
-				new ManualPages.Text(ManualHelper.getManual(), "packer1")
-		);
 	}
 }
