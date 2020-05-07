@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.blocks;
 
+import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -20,14 +21,19 @@ public class BlockIIFluid extends BlockFluidClassic
 {
 	private int flammability = 0;
 	private int fireSpread = 0;
+	private int acid = 0;
 	private PotionEffect[] potionEffects;
 
 	public BlockIIFluid(String name, Fluid fluid, Material material)
 	{
 		super(fluid, material);
-		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
+		this.setTranslationKey(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 		ImmersiveIntelligence.proxy.blocks.add(this);
+			if (name.endsWith("acid"));
+			{
+				acid = 1;	
+			}
 	}
 
 	public BlockIIFluid setFlammability(int flammability, int fireSpread)
@@ -63,13 +69,18 @@ public class BlockIIFluid extends BlockFluidClassic
 
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
+	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
 		if(potionEffects!=null&&entity instanceof EntityLivingBase)
 		{
 			for(PotionEffect effect : potionEffects)
 				if(effect!=null)
 					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(effect));
+		}
+		
+		if(acid==1&&entity instanceof EntityLivingBase)
+		{
+			((EntityLivingBase)entity).attackEntityFrom(IEDamageSources.acid, 4);
 		}
 	}
 
