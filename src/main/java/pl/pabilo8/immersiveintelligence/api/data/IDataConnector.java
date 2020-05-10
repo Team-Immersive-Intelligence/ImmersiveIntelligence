@@ -13,17 +13,17 @@ public interface IDataConnector extends IImmersiveConnectable
 	 *
 	 * @param net the new network for this connector.
 	 */
-	void setNetwork(DataWireNetwork net);
+	void setDataNetwork(DataWireNetwork net);
 
 	/**
 	 * @return the DataWireNetwork this connector is connected to.
 	 */
-	DataWireNetwork getNetwork();
+	DataWireNetwork getDataNetwork();
 
 	/**
 	 * Called whenever the DataWireNetwork is changed in some way (both adding/removing connectors and changes in RS values).
 	 */
-	void onChange();
+	void onDataChange();
 
 	/**
 	 * @return the world that this connector is in

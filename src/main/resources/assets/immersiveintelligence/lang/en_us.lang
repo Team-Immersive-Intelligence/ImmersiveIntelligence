@@ -308,6 +308,7 @@ tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
 tile.immersiveintelligence.data_connector.chemical_dispenser.name=Chemical Dispenser
 
 tile.immersiveintelligence.data_connector.alarm_siren.name=Alarm Siren
+tile.immersiveintelligence.data_connector.programmable_speaker.name=Programmable Speaker
 
 tile.immersiveintelligence.data_connector.inserter.name=Item Inserter
 tile.immersiveintelligence.data_connector.advanced_inserter.name=Advanced Inserter
@@ -812,7 +813,13 @@ ie.manual.entry.inserters_fluid_desc=Variables<br>String 'm' - item take mode (s
 #Reference to IndustrialCraft's siren addon
 ie.manual.entry.alarm_siren.name=Alarm Siren
 ie.manual.entry.alarm_siren.subtext=The reactor is OK, was, at least.
-ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noise when provided a redstone signal. Redstone wire can be attached from any side. The siren, like every redstone connector, can be reconfigured to use a different redstone channel (default is white).
+ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noise when provided a redstone signal (volume depends on signal strength). Redstone wire can be attached from any side. The siren, like every redstone connector, can be reconfigured to use a different redstone channel (default is white).
+
+#Reference to Choroman's radar concept drawings
+ie.manual.entry.programmable_speaker.name=Programmable Speaker
+ie.manual.entry.programmable_speaker.subtext=Happy Engineer Noises
+ie.manual.entry.programmable_speaker0=The Programmable Speaker is a device, which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side. Data can be used to set the sound and its pitch, while redstone sets the volume.
+ie.manual.entry.programmable_speaker1=Variables<br>String 's' - id of the sound to play (f.e immersiveintelligence:siren<br>Integer 't' - tone/pitch<br>
 
 #Reference to an event from my life
 ie.manual.entry.radio_station.name=Radio Station

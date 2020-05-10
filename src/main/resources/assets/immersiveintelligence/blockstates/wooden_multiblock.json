@@ -11,10 +11,10 @@
   "variants": {
     "type": {
       "skycrate_station": {
-        "model": "immersiveintelligence:smartmodel/conn_skycrate_station"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "skycrate_post": {
-        "model": "immersiveintelligence:smartmodel/conn_skycrate_post"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "facing": {

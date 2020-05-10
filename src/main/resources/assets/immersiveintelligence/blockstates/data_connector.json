@@ -201,28 +201,31 @@
     ],
     "type": {
       "data_connector": {
-        "model": "immersiveintelligence:smartmodel/conn_conn_data"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "data_relay": {
-        "model": "immersiveintelligence:smartmodel/conn_rel_data"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "alarm_siren": {
-        "model": "immersiveintelligence:smartmodel/conn_alarm_siren"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "inserter": {
-        "model": "immersiveintelligence:smartmodel/conn_inserter"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "advanced_inserter": {
-        "model": "immersiveintelligence:smartmodel/conn_advanced_inserter"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "fluid_inserter": {
-        "model": "immersiveintelligence:smartmodel/conn_fluid_inserter"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "advanced_fluid_inserter": {
-        "model": "immersiveintelligence:smartmodel/conn_advanced_fluid_inserter"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       },
       "chemical_dispenser": {
-        "model": "immersiveintelligence:smartmodel/conn_chemical_dispenser"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
+      "programmable_speaker": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "facing": {

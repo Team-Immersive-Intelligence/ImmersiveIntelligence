@@ -57,19 +57,19 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	}
 
 	@Override
-	public void setNetwork(DataWireNetwork net)
+	public void setDataNetwork(DataWireNetwork net)
 	{
 		wireNetwork = net;
 	}
 
 	@Override
-	public DataWireNetwork getNetwork()
+	public DataWireNetwork getDataNetwork()
 	{
 		return wireNetwork;
 	}
 
 	@Override
-	public void onChange()
+	public void onDataChange()
 	{
 		if(!isInvalid())
 		{
@@ -99,13 +99,13 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	@Override
 	public void sendPacket(DataPacket packet)
 	{
-		this.getNetwork().sendPacket(packet, this);
+		this.getDataNetwork().sendPacket(packet, this);
 	}
 
 	@Override
 	public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
-		onChange();
+		onDataChange();
 		this.markContainingBlockForUpdate(null);
 		world.addBlockEvent(getPos(), this.getBlockType(), 254, 0);
 		return true;

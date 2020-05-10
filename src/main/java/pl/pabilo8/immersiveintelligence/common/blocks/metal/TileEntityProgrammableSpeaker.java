@@ -4,58 +4,57 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import net.minecraft.block.BlockRedstoneWire;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
+import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageAlarmSirenSync;
+import pl.pabilo8.immersiveintelligence.common.network.MessageProgrammableSpeakerSync;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
-import javax.annotation.Nullable;
-
-import static blusunrize.immersiveengineering.api.energy.wires.WireType.REDSTONE_CATEGORY;
+import java.util.Objects;
 
 /**
  * Created by Pabilo8 on 15-06-2019.
  */
-public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
-		implements IRedstoneConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockOverlayText, ISoundTile
+public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectable
+		implements IRedstoneConnector, IDataConnector, ITickable, IHammerInteraction, IBlockOverlayText, ISoundTile
 {
 	public int redstoneChannel = 0;
 	public boolean rsDirty = false;
-
-	EnumFacing facing = EnumFacing.NORTH;
-
 	public boolean active = false;
-
-	public String soundID = "siren";
-	public float soundVolume = 1f;
-
+	public String soundID = ImmersiveIntelligence.MODID+":siren";
+	public float soundVolume = 1f, tone = 1f;
+	protected WireType wireData = null;
+	protected RedstoneWireNetwork redstoneNetwork = new RedstoneWireNetwork().add(this);
+	protected DataWireNetwork dataNetwork = new DataWireNetwork().add(this);
+	EnumFacing facing = EnumFacing.NORTH;
+	@SideOnly(Side.CLIENT)
 	SoundEvent sound = IISounds.siren;
-
-	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
 
 	@Override
@@ -64,77 +63,68 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 
 		if(world.isRemote)
 		{
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.siren, this, this.active, soundVolume, 1);
+			if(active)
+			this.updateSound();
+			if (!soundID.equals(""))
+			{
+				if(sound!=null)
+				{
+					ImmersiveEngineering.proxy.handleTileSound(sound, this, this.active, soundVolume, tone);
+				}
+
+			}
 		}
 		else if(hasWorld())
 		{
 			boolean wasActive = active;
 			active = this.getNetwork().getPowerOutput(redstoneChannel) > 0;
 			if(active^wasActive)
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageAlarmSirenSync(active, soundVolume,this.getPos()), this.world.provider.getDimension());
+				IIPacketHandler.INSTANCE.sendToDimension(new MessageProgrammableSpeakerSync(active, this.getPos(),tone, soundVolume,soundID), this.world.provider.getDimension());
 		}
 
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
 		{
 			refreshWireNetwork = true;
-			wireNetwork.removeFromNetwork(null);
+			redstoneNetwork.removeFromNetwork(null);
+			dataNetwork.removeFromNetwork(null);
 		}
 		if(hasWorld()&&!world.isRemote&&rsDirty)
-			wireNetwork.updateValues();
-	}
-
-	@Override
-	public EnumFacing getFacing()
-	{
-		return facing;
-	}
-
-	@Override
-	public void setFacing(EnumFacing facing)
-	{
-		this.facing = facing;
-	}
-
-	@Override
-	public int getFacingLimitation()
-	{
-		return 2;
-	}
-
-	@Override
-	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
-	{
-		return !entity.isSneaking();
-	}
-
-	@Override
-	public boolean canRotate(EnumFacing axis)
-	{
-		return !axis.getAxis().isVertical();
-	}
-
-	@Override
-	public void setNetwork(RedstoneWireNetwork net)
-	{
-		wireNetwork = net;
+			redstoneNetwork.updateValues();
 	}
 
 	@Override
 	public RedstoneWireNetwork getNetwork()
 	{
-		return wireNetwork;
+		return redstoneNetwork;
+	}
+
+	@Override
+	public void setNetwork(RedstoneWireNetwork net)
+	{
+		redstoneNetwork = net;
 	}
 
 	@Override
 	public void onChange()
 	{
-		soundVolume=wireNetwork.channelValues[this.redstoneChannel]/15f;
+		soundVolume=getNetwork().channelValues[this.redstoneChannel]/15f;
+	}
+
+	@Override
+	public DataWireNetwork getDataNetwork()
+	{
+		return dataNetwork;
+	}
+
+	@Override
+	public void setDataNetwork(DataWireNetwork net)
+	{
+		this.dataNetwork = net;
+	}
+
+	@Override
+	public void onDataChange()
+	{
 
 	}
 
@@ -142,6 +132,31 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	public World getConnectorWorld()
 	{
 		return getWorld();
+	}
+
+	@Override
+	public void onPacketReceive(DataPacket packet)
+	{
+		if(packet.variables.containsKey('s'))
+		{
+			soundID = packet.getPacketVariable('s').valueToString();
+			IIPacketHandler.INSTANCE.sendToDimension(new MessageProgrammableSpeakerSync(active, this.getPos(),tone,soundVolume,soundID), this.world.provider.getDimension());
+		}
+
+		if(packet.variables.containsKey('t')&&packet.getPacketVariable('t') instanceof DataPacketTypeInteger)
+			tone = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('t')).value/100f, -2, 2);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void updateSound()
+	{
+		sound = SoundEvent.REGISTRY.getObject(new ResourceLocation(soundID));
+	}
+
+	@Override
+	public void sendPacket(DataPacket packet)
+	{
+
 	}
 
 	@Override
@@ -154,12 +169,12 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	@Override
 	public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
-		// Sneaking iterates through colours, normal hammerign toggles in and out
+		// Sneaking iterates through colours, normal hammering toggles in and out
 		if(player.isSneaking())
 			redstoneChannel = (redstoneChannel+1)%16;
 
 		markDirty();
-		wireNetwork.updateValues();
+		redstoneNetwork.updateValues();
 		onChange();
 		this.markContainingBlockForUpdate(null);
 		world.addBlockEvent(getPos(), this.getBlockType(), 254, 0);
@@ -169,23 +184,63 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		if(!REDSTONE_CATEGORY.equals(cableType.getCategory()))
-			return false;
-		return limitType==null||limitType==cableType;
+		String category = cableType.getCategory();
+		return (Objects.equals(category, WireType.REDSTONE.getCategory())&& this.limitType==null) || (Objects.equals(category, IIDataWireType.DATA.getCategory())&& this.wireData==null);
 	}
 
 	@Override
 	public void connectCable(WireType cableType, TargetingInfo target, IImmersiveConnectable other)
 	{
-		super.connectCable(cableType, target, other);
-		RedstoneWireNetwork.updateConnectors(pos, world, wireNetwork);
+		ImmersiveIntelligence.logger.info("Trying to connect "+cableType.toString());
+		if(Objects.equals(cableType.getCategory(), WireType.REDSTONE.getCategory())&& this.limitType==null)
+		{
+			RedstoneWireNetwork.updateConnectors(pos, world, redstoneNetwork);
+			this.limitType = cableType;
+		}
+		else if(Objects.equals(cableType.getCategory(), IIDataWireType.DATA.getCategory())&& this.wireData==null)
+		{
+			DataWireNetwork.updateConnectors(pos, world, dataNetwork);
+			this.wireData = cableType;
+		}
+
+		this.markContainingBlockForUpdate(null);
 	}
 
 	@Override
-	public void removeCable(@Nullable ImmersiveNetHandler.Connection connection)
+	public void removeCable(Connection connection)
 	{
-		super.removeCable(connection);
-		wireNetwork.removeFromNetwork(this);
+
+		WireType type = connection!=null?connection.cableType: null;
+		if(type==null)
+		{
+			limitType = null;
+			wireData = null;
+		}
+		if(type==limitType)
+		{
+			redstoneNetwork.removeFromNetwork(this);
+			this.limitType = null;
+		}
+		if(type==wireData)
+		{
+			dataNetwork.removeFromNetwork(this);
+			this.wireData = null;
+		}
+		this.markContainingBlockForUpdate(null);
+	}
+
+	@Override
+	public Vec3d getConnectionOffset(Connection con, TargetingInfo target, Vec3i offsetLink)
+	{
+		return getConnectionOffset(con, Objects.equals(con.cableType.getCategory(), IIDataWireType.DATA_CATEGORY));
+	}
+
+	private Vec3d getConnectionOffset(Connection con, boolean data)
+	{
+		if(data)
+			return new Vec3d(0.5f, 0.325f, 0.5f);
+		else
+			return new Vec3d(0.5f, 0.2f, 0.5f);
 	}
 
 	@Override
@@ -200,6 +255,8 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		nbt.setInteger("facing", facing.ordinal());
 
 		nbt.setInteger("redstoneChannel", redstoneChannel);
+
+		nbt.setFloat("tone", tone);
 	}
 
 	@Override
@@ -214,6 +271,8 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
 
 		redstoneChannel = nbt.getInteger("redstoneChannel");
+
+		tone=nbt.getFloat("tone");
 	}
 
 	@Override
@@ -229,9 +288,6 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	}
 
 	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
-
-	@SideOnly(Side.CLIENT)
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
@@ -242,7 +298,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 
 	int getRenderRadiusIncrease()
 	{
-		return WireType.REDSTONE.getMaxLength();
+		return Math.max(WireType.REDSTONE.getMaxLength(), IIDataWireType.DATA.getMaxLength());
 	}
 
 	@Override

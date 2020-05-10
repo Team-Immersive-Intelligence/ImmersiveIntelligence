@@ -195,7 +195,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		for(Predicate<IBlockState> p : CommonProxy.hammer_blacklist)
 		{
 			if(p.test(state))
-				return EnumActionResult.PASS;
+				return EnumActionResult.SUCCESS;
 		}
 
 		TileEntity tileEntity = world.getTileEntity(pos);

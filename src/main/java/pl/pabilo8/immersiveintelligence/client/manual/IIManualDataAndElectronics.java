@@ -143,5 +143,10 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPages.Crafting(ManualHelper.getManual(), "small_data_buffer", new ItemStack(CommonProxy.block_metal_device, 1, IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta()))
 
 		);
+
+		ManualHelper.addEntry("programmable_speaker", getCategory(),
+				new ManualPages.Crafting(ManualHelper.getManual(), "programmable_speaker0", new ItemStack(CommonProxy.block_data_connector, 1, IIBlockTypes_Connector.ALARM_SIREN.getMeta())),
+				new ManualPages.Text(ManualHelper.getManual(), "programmable_speaker1")
+		);
 	}
 }

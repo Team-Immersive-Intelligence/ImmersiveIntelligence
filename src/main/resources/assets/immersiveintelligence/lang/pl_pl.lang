@@ -301,6 +301,7 @@ tile.immersiveintelligence.data_connector.data_relay.name=Rozdzielacz Danych
 tile.immersiveintelligence.data_connector.chemical_dispenser.name=Dozownik Chemiczny
 
 tile.immersiveintelligence.data_connector.alarm_siren.name=Syrena Alarmowa
+tile.immersiveintelligence.data_connector.programmable_speaker.name=Głośnik Programowalny
 
 tile.immersiveintelligence.data_connector.inserter.name=Podajnik
 tile.immersiveintelligence.data_connector.advanced_inserter.name=Zaawansowany Podajnik

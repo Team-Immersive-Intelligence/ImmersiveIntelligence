@@ -316,10 +316,26 @@ public class Config
 			public static RedstoneInterface redstoneInterface;
 			@SubConfig
 			public static Sawmill sawmill;
+			@SubConfig
+			public static AlarmSiren alarmSiren;
+			@SubConfig
+			public static ProgrammableSpeaker speaker;
 
 			public static class RedstoneInterface
 			{
 
+			}
+
+			public static class AlarmSiren
+			{
+				@Comment({"The distance the siren can be heard from."})
+				public static int soundRange = 16;
+			}
+
+			public static class ProgrammableSpeaker
+			{
+				@Comment({"The distance the speaker can be heard from."})
+				public static int soundRange = 24;
 			}
 
 			public static class Packer

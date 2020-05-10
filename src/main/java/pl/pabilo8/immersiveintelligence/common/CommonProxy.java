@@ -698,6 +698,7 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityAmmunitionCrate.class);
 		registerTile(TileEntitySmallCrate.class);
 		registerTile(TileEntityAlarmSiren.class);
+		registerTile(TileEntityProgrammableSpeaker.class);
 
 		registerTile(TileEntityInserter.class);
 		registerTile(TileEntityAdvancedInserter.class);

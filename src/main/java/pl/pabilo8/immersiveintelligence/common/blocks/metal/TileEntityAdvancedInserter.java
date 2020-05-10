@@ -642,19 +642,19 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 	}
 
 	@Override
-	public DataWireNetwork getNetwork()
+	public DataWireNetwork getDataNetwork()
 	{
 		return wireNetwork;
 	}
 
 	@Override
-	public void setNetwork(DataWireNetwork net)
+	public void setDataNetwork(DataWireNetwork net)
 	{
 		wireNetwork = net;
 	}
 
 	@Override
-	public void onChange()
+	public void onDataChange()
 	{
 		if(!isInvalid())
 		{
