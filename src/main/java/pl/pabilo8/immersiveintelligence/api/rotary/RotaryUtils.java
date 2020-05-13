@@ -183,7 +183,7 @@ public class RotaryUtils
 								Connection tmpConn = new Connection(Utils.toCC(nodeHere), Utils.toCC(nodeLink), wire,
 										(int)Math.sqrt(distanceSq));
 								Vec3d start = nodeHere.getConnectionOffset(tmpConn, target, pos.subtract(masterPos));
-								Vec3d end = nodeLink.getConnectionOffset(tmpConn, targetLink, offsetLink).add(linkPos.getX()-masterPos.getX(),
+								Vec3d end = nodeLink.getConnectionOffset(tmpConn, targetLink, offsetLink).addVector(linkPos.getX()-masterPos.getX(),
 										linkPos.getY()-masterPos.getY(),
 										linkPos.getZ()-masterPos.getZ());
 								BlockPos.MutableBlockPos failedReason = new BlockPos.MutableBlockPos();

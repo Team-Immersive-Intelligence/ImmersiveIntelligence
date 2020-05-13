@@ -52,7 +52,7 @@ public class BulletComponentShrapnel implements IBulletComponent
 		Vec3d throwerPos = new Vec3d(pos.offset(EnumFacing.UP, 3));
 		for(int i = 0; i < 50*amount; i++)
 		{
-			Vec3d vecDir = v.add(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
+			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 
 			EntityShrapnel shrap = new EntityShrapnel(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
 					throwerPos.z+v.z*2, 0, 0, 0, name);

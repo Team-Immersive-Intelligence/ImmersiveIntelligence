@@ -82,6 +82,8 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 		return null;
 	}
 
+
+
 	@Nonnull
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -133,7 +135,19 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
-		return this.getEnergyStored(stack)/this.getMaxEnergyStored(stack);
+		return 1f-(this.getEnergyStored(stack)/(float)this.getMaxEnergyStored(stack));
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack)
+	{
+		return this.getEnergyStored(stack) < this.getMaxEnergyStored(stack);
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack)
+	{
+		return 0xff0000;
 	}
 
 	@Override

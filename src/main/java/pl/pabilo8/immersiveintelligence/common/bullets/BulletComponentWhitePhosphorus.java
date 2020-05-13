@@ -77,7 +77,7 @@ public class BulletComponentWhitePhosphorus implements IBulletComponent
 		Vec3d throwerPos = new Vec3d(pos.offset(EnumFacing.UP, 5).offset(EnumFacing.DOWN, lower));
 		for(int i = 0; i < 400*amount; i++)
 		{
-			Vec3d vecDir = v.add(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f+(Math.floor(i/16f)*0.35f), Utils.RAND.nextGaussian()*.25f);
+			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f+(Math.floor(i/16f)*0.35f), Utils.RAND.nextGaussian()*.25f);
 
 			EntityChemthrowerShot chem = new EntityChemthrowerShot(world, throwerPos.x+v.x*0.875, throwerPos.y+v.y*0.875,
 					throwerPos.z+v.z*0.875, 0, 0, 0, fs);

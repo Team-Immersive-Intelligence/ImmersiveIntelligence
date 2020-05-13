@@ -593,7 +593,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			tag.setTag("crate", crate.serializeNBT());
 			tag.setTag("mount", mount.serializeNBT());
 		}
-		if(!tag.isEmpty())
+		if(!tag.hasNoTags())
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
 	}
 

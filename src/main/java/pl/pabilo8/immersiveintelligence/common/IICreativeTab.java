@@ -36,7 +36,7 @@ public class IICreativeTab extends CreativeTabs
 	}
 
 	@Override
-	public ItemStack createIcon()
+	public ItemStack getTabIconItem()
 	{
 		return new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.ordinal());
 	}

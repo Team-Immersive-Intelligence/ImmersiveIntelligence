@@ -181,7 +181,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	{
 		EnumFacing side = facing.getOpposite();
 		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5+side.getXOffset()*(.25-conRadius), 0.5+side.getYOffset()*(.25-conRadius), .5+side.getZOffset()*(.25-conRadius));
+		return new Vec3d(.5+side.getFrontOffsetX()*(.25-conRadius), 0.5+side.getFrontOffsetY()*(.25-conRadius), .5+side.getFrontOffsetZ()*(.25-conRadius));
 	}
 
 	@Override

@@ -496,4 +496,9 @@ public class Utils
 		stack.setCount(count);
 		return stack;
 	}
+
+	public static int RGBAToRGB(int color)
+	{
+		return color-(color >> 24& 0xFF);
+	}
 }

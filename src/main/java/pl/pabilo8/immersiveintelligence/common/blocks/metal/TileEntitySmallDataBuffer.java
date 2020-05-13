@@ -33,7 +33,7 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		if(nbt.hasKey("packets"))
 		{
 			packets.clear();

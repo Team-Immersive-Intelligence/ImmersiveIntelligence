@@ -436,7 +436,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 		{
 			return;
 		}
-		if(!list.toNBT().isEmpty())
+		if(!list.toNBT().hasNoTags())
 		{
 			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
 		}

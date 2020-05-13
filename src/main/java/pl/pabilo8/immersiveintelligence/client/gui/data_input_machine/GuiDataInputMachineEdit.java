@@ -397,7 +397,7 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 		{
 			return;
 		}
-		if(!list.toNBT().isEmpty())
+		if(!list.toNBT().hasNoTags())
 		{
 			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
 		}

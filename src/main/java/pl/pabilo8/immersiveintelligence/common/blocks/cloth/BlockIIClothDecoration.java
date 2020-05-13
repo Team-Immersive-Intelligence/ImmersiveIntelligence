@@ -68,7 +68,7 @@ public class BlockIIClothDecoration extends BlockIITileProvider<IIBlockTypes_Clo
 	}
 
 	@Override
-	public BlockRenderLayer getRenderLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}

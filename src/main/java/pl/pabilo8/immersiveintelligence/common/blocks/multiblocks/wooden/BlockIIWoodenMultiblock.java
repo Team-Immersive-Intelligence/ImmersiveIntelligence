@@ -108,11 +108,6 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 			return IIBlockTypes_WoodenMultiblock.values()[meta].getCustomState();
 		return null;
 	}
-	@Override
-	public CreativeTabs getCreativeTab()
-	{
-		return null;
-	}
 
 	@Override
 	public TileEntity createBasicTE(World world, IIBlockTypes_WoodenMultiblock type)

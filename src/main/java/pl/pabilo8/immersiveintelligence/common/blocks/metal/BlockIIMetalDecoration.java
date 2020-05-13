@@ -30,7 +30,7 @@ public class BlockIIMetalDecoration extends BlockIIBase<IIBlockTypes_MetalDecora
 	}
 
 	@Override
-	public BlockRenderLayer getRenderLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}

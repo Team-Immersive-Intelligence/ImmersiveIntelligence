@@ -268,7 +268,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		soundID = nbt.getString("sound");
 		soundVolume = nbt.getFloat("volume");
 
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 
 		redstoneChannel = nbt.getInteger("redstoneChannel");
 
@@ -313,7 +313,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		if(!hammer)
 			return null;
 		return new String[]{I18n.format(Lib.DESC_INFO+"redstoneChannel",
-				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getTranslationKey()))};
+				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getUnlocalizedName()))};
 	}
 
 	@Override

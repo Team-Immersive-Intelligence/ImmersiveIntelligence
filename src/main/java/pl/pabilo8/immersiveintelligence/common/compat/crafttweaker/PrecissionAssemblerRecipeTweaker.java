@@ -60,7 +60,7 @@ public class PrecissionAssemblerRecipeTweaker
 		@Override
 		public String describe()
 		{
-			return "Adding Precission Assembler Recipe for "+recipe.output.getTranslationKey();
+			return "Adding Precission Assembler Recipe for "+recipe.output.getUnlocalizedName();
 		}
 	}
 
@@ -83,7 +83,7 @@ public class PrecissionAssemblerRecipeTweaker
 		@Override
 		public String describe()
 		{
-			return "Removing Chemical Bath Recipe for "+f1.getTranslationKey();
+			return "Removing Chemical Bath Recipe for "+f1.getUnlocalizedName();
 		}
 	}
 

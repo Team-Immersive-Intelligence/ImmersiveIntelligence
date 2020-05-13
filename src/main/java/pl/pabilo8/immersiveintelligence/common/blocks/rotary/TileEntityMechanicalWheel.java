@@ -67,7 +67,7 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 	}
 
 	@Override

@@ -229,9 +229,9 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 			energyStorage = message.getInteger("energyStorage");
 
 		if(message.hasKey("outputFacing"))
-			outputFacing = EnumFacing.byIndex(message.getInteger("outputFacing"));
+			outputFacing = EnumFacing.getFront(message.getInteger("outputFacing"));
 		if(message.hasKey("inputFacing"))
-			inputFacing = EnumFacing.byIndex(message.getInteger("inputFacing"));
+			inputFacing = EnumFacing.getFront(message.getInteger("inputFacing"));
 
 	}
 
@@ -243,8 +243,8 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 		fluidToTake = nbt.getInteger("fluidToTake");
 		fluidTakeMode = nbt.getString("fluidTakeMode");
 
-		outputFacing = EnumFacing.byIndex(nbt.getInteger("outputFacing"));
-		inputFacing = EnumFacing.byIndex(nbt.getInteger("inputFacing"));
+		outputFacing = EnumFacing.getFront(nbt.getInteger("outputFacing"));
+		inputFacing = EnumFacing.getFront(nbt.getInteger("inputFacing"));
 		if(nbt.hasKey("secondCable"))
 			secondCable = ApiUtils.getWireTypeFromNBT(nbt, "secondCable");
 		else

@@ -246,9 +246,9 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 			energyStorage = message.getInteger("energyStorage");
 
 		if(message.hasKey("outputFacing"))
-			outputFacing = EnumFacing.byIndex(message.getInteger("outputFacing"));
+			outputFacing = EnumFacing.getFront(message.getInteger("outputFacing"));
 		if(message.hasKey("inputFacing"))
-			inputFacing = EnumFacing.byIndex(message.getInteger("inputFacing"));
+			inputFacing = EnumFacing.getFront(message.getInteger("inputFacing"));
 
 		if(message.hasKey("inventory"))
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), 1);
@@ -270,8 +270,8 @@ public class TileEntityInserter extends TileEntityImmersiveConnectable implement
 		nextPickProgress = nbt.getInteger("nextPickProgress");
 		nextDirection = nbt.getInteger("nextDirection");
 
-		outputFacing = EnumFacing.byIndex(nbt.getInteger("outputFacing"));
-		inputFacing = EnumFacing.byIndex(nbt.getInteger("inputFacing"));
+		outputFacing = EnumFacing.getFront(nbt.getInteger("outputFacing"));
+		inputFacing = EnumFacing.getFront(nbt.getInteger("inputFacing"));
 		if(nbt.hasKey("secondCable"))
 			secondCable = ApiUtils.getWireTypeFromNBT(nbt, "secondCable");
 		else

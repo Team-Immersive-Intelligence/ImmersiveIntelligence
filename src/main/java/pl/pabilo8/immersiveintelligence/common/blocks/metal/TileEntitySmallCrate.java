@@ -187,7 +187,7 @@ public class TileEntitySmallCrate extends TileEntityIEBase implements IIEInvento
 		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 		NBTTagCompound tag = new NBTTagCompound();
 		writeInv(tag, true);
-		if(!tag.isEmpty())
+		if(!tag.hasNoTags())
 			stack.setTagCompound(tag);
 		if(this.name!=null)
 			stack.setStackDisplayName(this.name);
