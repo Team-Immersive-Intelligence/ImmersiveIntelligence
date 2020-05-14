@@ -13,6 +13,7 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.RotationUtil;
 import blusunrize.immersiveengineering.common.util.advancements.IEAdvancements;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -32,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.animation.ITimeValue;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -39,6 +41,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
@@ -173,12 +176,14 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				{
 					if(player instanceof EntityPlayerMP)
 						IEAdvancements.TRIGGER_MULTIBLOCK.trigger((EntityPlayerMP)player, mb, stack);
-					return EnumActionResult.SUCCESS;
+					return doAction(player, hand);
 				}
 			}
 
 		if(performHammerFunctions(player,world,pos,side,hitX,hitY,hitZ,hand))
-			return EnumActionResult.SUCCESS;
+		{
+			return doAction(player, hand);
+		}
 
 		return EnumActionResult.PASS;
 	}
@@ -197,21 +202,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				if(energy > 0)
 				{
 					mb.setCurrentConstruction(mb.getCurrentConstruction()+energy);
-					return EnumActionResult.SUCCESS;
+					return doAction(player, hand);
 				}
 				else
 					return EnumActionResult.PASS;
 			}
-		}
-		if(!(tileEntity instanceof IDirectionalTile)&&!(tileEntity instanceof IHammerInteraction)&&!(tileEntity instanceof IConfigurableSides)&&hasEnoughEnergy(player.getHeldItem(hand)))
-		{
-			if(RotationUtil.rotateBlock(world, pos, side))
-			{
-				player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use, false);
-				return EnumActionResult.SUCCESS;
-			}
-			else
-				return EnumActionResult.PASS;
 		}
 		return EnumActionResult.PASS;
 
@@ -289,7 +284,15 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 			return false;
 
 
-		if(tile instanceof IConfigurableSides&&!world.isRemote)
+		if(!(tile instanceof IDirectionalTile)&&!(tile instanceof IHammerInteraction)&&!(tile instanceof IConfigurableSides)&&hasEnoughEnergy(player.getHeldItem(hand)))
+		{
+			if(RotationUtil.rotateBlock(world, pos, side))
+			{
+				player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use, false);
+				return true;
+			}
+		}
+		else if(tile instanceof IConfigurableSides&&!world.isRemote)
 		{
 			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
 			if(((IConfigurableSides)tile).toggleSide(iSide, player))
@@ -365,5 +368,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public boolean hasEnoughEnergy(ItemStack stack)
 	{
 		return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electric_hammer_energy_per_use;
+	}
+
+	private EnumActionResult doAction(EntityPlayer player, EnumHand hand)
+	{
+		player.swingArm(hand);
+		return EnumActionResult.SUCCESS;
 	}
 }

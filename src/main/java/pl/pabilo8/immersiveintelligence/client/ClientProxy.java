@@ -152,6 +152,7 @@ public class ClientProxy extends CommonProxy
 		//You've tricked me
 		//I thought the connector rendering is based on something different, but actually it renders the obj connector model with the wire
 		WireApi.registerConnectorForRender("empty", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+		//WireApi.registerConnectorForRender("conn_data", new ResourceLocation(ImmersiveIntelligence.MODID+":block/data_connector.obj"), null);
 
 		item_measuring_cup.specialModelMap.put(0, ModelMeasuringCup.MODEL);
 
@@ -449,6 +450,10 @@ public class ClientProxy extends CommonProxy
 
 		for(DrillHeadPerm perm : item_drillhead.perms)
 			perm.sprite = ApiUtils.getRegisterSprite(event.getMap(), perm.texture);
+
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector_feedtrough");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector");
+
 	}
 
 	@Override
