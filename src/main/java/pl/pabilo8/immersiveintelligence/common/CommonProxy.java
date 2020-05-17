@@ -14,7 +14,6 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityChargingStation;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
@@ -463,8 +462,13 @@ public class CommonProxy implements IGuiHandler
 
 		OreDictionary.registerOre("dustSalt", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_salt")));
 		OreDictionary.registerOre("dustWood", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_wood")));
+		OreDictionary.registerOre("pulpWood", new ItemStack(item_material, 1, item_material.getMetaBySubname("pulp_wood")));
+		OreDictionary.registerOre("pulpWoodTreated", new ItemStack(item_material, 1, item_material.getMetaBySubname("pulp_wood_treated")));
 		OreDictionary.registerOre("dustHexamine", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_hexamine")));
 		OreDictionary.registerOre("dustFormaldehyde", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_formaldehyde")));
+
+		OreDictionary.registerOre("leatherArtificial", new ItemStack(item_material, 1, item_material.getMetaBySubname("artificial_leather")));
+		OreDictionary.registerOre("leather", new ItemStack(item_material, 1, item_material.getMetaBySubname("artificial_leather")));
 
 		OreDictionary.registerOre("brushCarbon", new ItemStack(item_material, 1, item_material.getMetaBySubname("carbon_brush")));
 
@@ -553,6 +557,8 @@ public class CommonProxy implements IGuiHandler
 
 		IIRecipes.addRDXProductionRecipes();
 		IIRecipes.addHMXProductionRecipes();
+
+		IIRecipes.addChemicalBathCleaningRecipes();
 
 		//Immersive Engineering can into space???
 		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 3000), FluidRegistry.getFluidStack("oxygen", 1000), FluidRegistry.getFluidStack("hydrogen", 2000), 640, 320);

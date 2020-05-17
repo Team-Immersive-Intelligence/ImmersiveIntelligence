@@ -96,8 +96,12 @@ item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Co
 
 item.immersiveintelligence.material.dust_salt.name=Salt Dust
 item.immersiveintelligence.material.dust_wood.name=Sawdust
+item.immersiveintelligence.material.pulp_wood.name=Wood Pulp
+item.immersiveintelligence.material.pulp_wood_treated.name=Treated Wood Pulp
 item.immersiveintelligence.material.dust_hexamine.name=Hexamine Dust
 item.immersiveintelligence.material.dust_formaldehyde.name=Formaldehyde Dust
+
+item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit

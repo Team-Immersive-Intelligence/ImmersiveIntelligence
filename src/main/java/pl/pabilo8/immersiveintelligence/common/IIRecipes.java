@@ -4,6 +4,8 @@ import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.util.ListUtils;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -301,10 +303,15 @@ public class IIRecipes
 				}
 		);
 		//Planks to sticks
-		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 200, 1);
-		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 1, 0), new IngredientStack("plankTreatedWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 200, 1);
+		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 1, 0), new IngredientStack("plankTreatedWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
 
-		BottlingMachineRecipe.addRecipe(new ItemStack(Items.PAPER, 2), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
+		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "pulp_wood", 2), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
+		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "pulp_wood_treated", 1), new IngredientStack("pulpWood"), new FluidStack(IEContent.fluidCreosote, 1000));
+
+		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 1, 0), new IngredientStack("pulpWood"), new ItemStack(IEContent.itemMold, 1, 0), 100);
+		MetalPressRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "artificial_leather"), new IngredientStack("pulpWoodTreated"), new ItemStack(IEContent.itemMold, 1, 0), 600);
+
 	}
 
 	public static void addRotaryPowerRecipes()
@@ -359,6 +366,127 @@ public class IIRecipes
 	public static void addHMXProductionRecipes()
 	{
 		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "dust_hmx", 1), new IngredientStack("materialHexogen"), new FluidStack(CommonProxy.fluid_nitric_acid, 500));
+	}
+
+	public static void addChemicalBathCleaningRecipes()
+	{
+		String[] dyes =
+				{
+						"Black",
+						"Red",
+						"Green",
+						"Brown",
+						"Blue",
+						"Purple",
+						"Cyan",
+						"LightGray",
+						"Gray",
+						"Pink",
+						"Lime",
+						"Yellow",
+						"LightBlue",
+						"Magenta",
+						"Orange",
+						"White"
+				};
+
+		for(String dye : dyes)
+		{
+			addBathingCleaningRecipe(
+					new ItemStack(Blocks.WOOL, 1),
+					new IngredientStack("wool"+dye),
+					1000, 1024, 200, true, false, false
+			);
+
+			addBathingCleaningRecipe(
+					new ItemStack(Blocks.GLASS, 1),
+					new IngredientStack("blockGlass"+dye),
+					1000, 1024, 200, true
+			);
+
+			addBathingCleaningRecipe(
+					new ItemStack(Blocks.GLASS_PANE, 1),
+					new IngredientStack("paneGlass"+dye),
+					1000, 1024, 200, true
+			);
+		}
+
+		for(int i = 0; i < 16; i += 1)
+		{
+			if(i!=0)
+			{
+				addBathingCleaningRecipe(
+						new ItemStack(Blocks.BED, 1),
+						new IngredientStack(new ItemStack(Blocks.BED, 1, i)),
+						2000,
+						3096, 240, true, false, false
+				);
+
+				addBathingCleaningRecipe(
+						new ItemStack(Blocks.CARPET, 1),
+						new IngredientStack(new ItemStack(Blocks.CARPET, 1, i)),
+						2000,
+						3096, 240, true, false, false
+				);
+			}
+			addBathingCleaningRecipe(
+					new ItemStack(Blocks.HARDENED_CLAY, 1),
+					new IngredientStack(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, i)),
+					2000,
+					1440, 280, false, true, true
+			);
+		}
+
+		Block[] shulker_boxes = new Block[]{
+				Blocks.ORANGE_SHULKER_BOX,
+				Blocks.MAGENTA_SHULKER_BOX,
+				Blocks.LIGHT_BLUE_SHULKER_BOX,
+				Blocks.YELLOW_SHULKER_BOX,
+				Blocks.LIME_SHULKER_BOX,
+				Blocks.PINK_SHULKER_BOX,
+				Blocks.GRAY_SHULKER_BOX,
+				Blocks.SILVER_SHULKER_BOX,
+				Blocks.CYAN_SHULKER_BOX,
+				Blocks.BLUE_SHULKER_BOX,
+				Blocks.BROWN_SHULKER_BOX,
+				Blocks.GREEN_SHULKER_BOX,
+				Blocks.RED_SHULKER_BOX
+		};
+
+		for(Block shulker_box : shulker_boxes)
+		{
+			addBathingCleaningRecipe(
+					new ItemStack(Blocks.WHITE_SHULKER_BOX, 1),
+					new IngredientStack(new ItemStack(shulker_box, 1)),
+					2000,
+					4096, 120, false, true, true
+			);
+		}
+
+		addBathingCleaningRecipe(
+				new ItemStack(Items.BANNER, 1),
+				new IngredientStack(new ItemStack(Items.BANNER, 1)),
+				2000,
+				1024, 160, true, false, false
+		);
+
+
+	}
+
+
+	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowHFl)
+	{
+		addBathingCleaningRecipe(out, in, amount, energy, time, true, true, allowHFl);
+	}
+
+	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowWater, boolean allowSulfuric, boolean allowHFl)
+	{
+		if(allowWater)
+			BathingRecipe.addRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time);
+		if(allowSulfuric)
+			BathingRecipe.addRecipe(out, in, new FluidStack(CommonProxy.fluid_sulfuric_acid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time);
+		if(allowHFl)
+			BathingRecipe.addRecipe(out, in, new FluidStack(CommonProxy.fluid_hydrofluoric_acid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2);
 	}
 
 }

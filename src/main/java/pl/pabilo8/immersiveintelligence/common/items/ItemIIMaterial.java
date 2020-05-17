@@ -32,7 +32,10 @@ public class ItemIIMaterial extends ItemIIBase
 				"glass_fibre_cable",
 				"dust_wood",
 				"dust_formaldehyde",
-				"dust_hexamine"
+				"dust_hexamine",
+				"pulp_wood",
+				"pulp_wood_treated",
+				"artificial_leather"
 		);
 	}
 }
