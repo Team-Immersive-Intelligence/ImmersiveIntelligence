@@ -157,7 +157,7 @@ public class IIManualDataAndElectronics extends IIManual
 		);
 
 		ManualHelper.addEntry("programmable_speaker", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "programmable_speaker0", new ItemStack(CommonProxy.block_data_connector, 1, IIBlockTypes_Connector.ALARM_SIREN.getMeta())),
+				new ManualPages.Crafting(ManualHelper.getManual(), "programmable_speaker0", new ItemStack(CommonProxy.block_data_connector, 1, IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta())),
 				new DataVariablesDisplay(ManualHelper.getManual(), "programmable_speaker", true)
 						.addEntry(new DataPacketTypeString(), 's')
 						.addEntry(new DataPacketTypeInteger(), 't')
