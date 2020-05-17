@@ -5,7 +5,12 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesDisplay;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockPacker;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCratePost;
@@ -40,17 +45,33 @@ public class IIManualLogistics extends IIManual
 		ManualHelper.addEntry("inserters", getCategory(),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "inserters0", inserter0, inserter1, inserter2),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_basic", inserter0),
-				new ManualPages.Text(ManualHelper.getManual(), "inserters_basic_desc"),
+				new DataVariablesDisplay(ManualHelper.getManual(), "inserters_basic", true)
+						.addEntry(new DataPacketTypeString(), 'm')
+						.addEntry(new DataPacketTypeInteger(), 'c'),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_advanced", inserter1),
-				new ManualPages.Text(ManualHelper.getManual(), "inserters_advanced_desc"),
+				new DataVariablesDisplay(ManualHelper.getManual(), "inserters_advanced", true)
+						.addEntry(new DataPacketTypeString(), 'm')
+						.addEntry(new DataPacketTypeInteger(), 'c')
+						.addEntry(new DataPacketTypeBoolean(), 'b')
+						.addEntry(new DataPacketTypeString(), 'f')
+						.addEntry(new DataPacketTypeString(), 'g'),
+				new DataVariablesDisplay(ManualHelper.getManual(), "inserters_advanced2", true)
+						.addEntry(new DataPacketTypeString(), 'w')
+						.addEntry(new DataPacketTypeItemStack(), '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_fluid", inserter2),
-				new ManualPages.Text(ManualHelper.getManual(), "inserters_fluid_desc")
+				new DataVariablesDisplay(ManualHelper.getManual(), "inserters_fluid", true)
+						.addEntry(new DataPacketTypeString(), 'm')
+						.addEntry(new DataPacketTypeInteger(), 'c')
 		);
 
 		ManualHelper.addEntry("packer", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPacker.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "packer1"),
-				new ManualPages.Text(ManualHelper.getManual(), "packer2")
+				new DataVariablesDisplay(ManualHelper.getManual(), "packer", true)
+						.addEntry(new DataPacketTypeString(), 'm')
+						.addEntry(new DataPacketTypeInteger(), 'c')
+						.addEntry(new DataPacketTypeInteger(), 'q')
+						.addEntry(new DataPacketTypeBoolean(), 'i')
 		);
 
 		ManualHelper.addEntry("skycrates", getCategory(),

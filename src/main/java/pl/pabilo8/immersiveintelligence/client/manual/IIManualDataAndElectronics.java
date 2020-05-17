@@ -5,7 +5,11 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesDisplay;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
@@ -118,12 +122,20 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "redstone_interface1")
 		);
 		ManualHelper.addEntry("conveyor_scanner", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.instance)
+				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.instance),
+				new DataVariablesDisplay(ManualHelper.getManual(), "conveyor_scanner", false)
+						.addEntry(new DataPacketTypeItemStack(), 's')
 		);
 
 		ManualHelper.addEntry("printing_press", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "printing_press0", MultiblockPrintingPress.instance),
-				new ManualPages.Text(ManualHelper.getManual(), "printing_press1")
+				new ManualPages.Text(ManualHelper.getManual(), "printing_press1"),
+				new ManualPages.Text(ManualHelper.getManual(), "printing_press2"),
+				new DataVariablesDisplay(ManualHelper.getManual(), "printing_press", true)
+						.addEntry(new DataPacketTypeString(), 't')
+						.addEntry(new DataPacketTypeInteger(), 'c')
+						.addEntry(new DataPacketTypeString(), 's')
+
 		);
 
 		ManualHelper.addEntry("radio_station", getCategory(),
@@ -146,7 +158,9 @@ public class IIManualDataAndElectronics extends IIManual
 
 		ManualHelper.addEntry("programmable_speaker", getCategory(),
 				new ManualPages.Crafting(ManualHelper.getManual(), "programmable_speaker0", new ItemStack(CommonProxy.block_data_connector, 1, IIBlockTypes_Connector.ALARM_SIREN.getMeta())),
-				new ManualPages.Text(ManualHelper.getManual(), "programmable_speaker1")
+				new DataVariablesDisplay(ManualHelper.getManual(), "programmable_speaker", true)
+						.addEntry(new DataPacketTypeString(), 's')
+						.addEntry(new DataPacketTypeInteger(), 't')
 		);
 	}
 }
