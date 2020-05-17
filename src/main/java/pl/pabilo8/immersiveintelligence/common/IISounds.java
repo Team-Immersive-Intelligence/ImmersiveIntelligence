@@ -25,6 +25,8 @@ public class IISounds
 	public static SoundEvent machinegun_unload = registerSound("machinegun_unload");
 
 	public static SoundEvent howitzer_shot = registerSound("howitzer_shot");
+	public static SoundEvent howitzer_load = registerSound("howitzer_load");
+	public static SoundEvent howitzer_unload = registerSound("howitzer_unload");
 	public static SoundEvent howitzer_rotation_h = registerSound("howitzer_rotation_h");
 	public static SoundEvent howitzer_rotation_v = registerSound("howitzer_rotation_v");
 	public static SoundEvent howitzer_door_open = registerSound("howitzer_door_open");

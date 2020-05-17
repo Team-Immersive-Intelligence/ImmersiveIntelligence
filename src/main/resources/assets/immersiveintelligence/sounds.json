@@ -69,6 +69,20 @@
     ],
     "subtitle": "subtitle.immersiveintelligence.howitzer_shot"
   },
+  "howitzer_load": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/howitzer_load"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_load"
+  },
+  "howitzer_unload": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/howitzer_unload"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_unload"
+  },
   "howitzer_rotation_h": {
     "category": "block",
     "sounds": [
