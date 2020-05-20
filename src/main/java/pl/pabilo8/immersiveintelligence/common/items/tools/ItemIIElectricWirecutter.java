@@ -36,6 +36,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -169,7 +170,19 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
-		return this.getEnergyStored(stack)/this.getMaxEnergyStored(stack);
+		return 1f-(this.getEnergyStored(stack)/(float)this.getMaxEnergyStored(stack));
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack)
+	{
+		return this.getEnergyStored(stack) < this.getMaxEnergyStored(stack);
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack)
+	{
+		return 0xff0000;
 	}
 
 	@Override

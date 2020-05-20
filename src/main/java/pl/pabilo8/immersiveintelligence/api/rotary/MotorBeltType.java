@@ -94,13 +94,14 @@ public abstract class MotorBeltType extends WireType
 	@Override
 	public double getDamageRadius()
 	{
-		return 0;
+		return getWidth()/16f;
 	}
+
 
 	@Override
 	public boolean canCauseDamage()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

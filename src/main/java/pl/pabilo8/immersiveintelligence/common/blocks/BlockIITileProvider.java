@@ -709,10 +709,12 @@ public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlock
 	 * Called When an Entity Collided with the Block
 	 */
 	@Override
-	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity)
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof TileEntityIEBase)
 			((TileEntityIEBase)te).onEntityCollision(world, entity);
 	}
+
+
 }

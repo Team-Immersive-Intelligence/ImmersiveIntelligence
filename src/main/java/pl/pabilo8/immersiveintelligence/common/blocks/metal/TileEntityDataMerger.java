@@ -40,7 +40,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		mode = nbt.getByte("mode");
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		packet = new DataPacket();
 		for(char c : DataPacket.varCharacters)
 			packet.setVariable(c, new DataPacketTypeInteger(0));

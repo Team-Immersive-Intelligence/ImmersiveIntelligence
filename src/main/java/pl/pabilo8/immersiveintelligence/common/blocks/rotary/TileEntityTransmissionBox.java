@@ -77,7 +77,7 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 	{
 		if(nbt.hasKey("energy"))
 			energy.fromNBT(nbt.getCompoundTag("energy"));
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 	}
 
 	@Override

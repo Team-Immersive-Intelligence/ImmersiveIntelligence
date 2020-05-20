@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
@@ -11,6 +12,7 @@ import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDev
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
+
+import static pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockConveyorScanner.conveyorStack;
 
 /**
  * Created by Pabilo8 on 28-06-2019.
@@ -258,6 +262,20 @@ public class MultiblockPacker implements IMultiblock
 	@Override
 	public boolean overwriteBlockRender(ItemStack stack, int iterator)
 	{
+		if(iterator==2||iterator==8||iterator==14)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0.5,0.5,0.5);
+			GlStateManager.rotate(90,0,1,0);
+			ClientUtils.mc().getRenderItem().renderItem(conveyorStack, TransformType.NONE);
+			GlStateManager.popMatrix();
+			return true;
+		}
+		if(iterator==25||iterator==26||iterator==27||iterator==28)
+		{
+			return ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
+		}
+
 		return false;
 	}
 

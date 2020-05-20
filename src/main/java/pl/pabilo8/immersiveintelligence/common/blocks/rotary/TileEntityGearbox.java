@@ -109,7 +109,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 				if(s==SideConfig.NONE)
 					continue;
 
-				EnumFacing f = EnumFacing.byIndex(i);
+				EnumFacing f = EnumFacing.getFront(i);
 				BlockPos p = pos.offset(f);
 
 				if(world.getTileEntity(p)==null)

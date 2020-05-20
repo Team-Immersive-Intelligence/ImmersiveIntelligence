@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
 
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.render.MechanicalConnectorRenderer;
@@ -69,7 +70,6 @@ public class MotorBeltData
 			yaw = start.getPos().getX() > end.getPos().getX()?-180: 0;
 		else if(start.getConnectionAxis()==Axis.Z)
 			yaw = start.getPos().getZ() > end.getPos().getZ()?90: -90;
-
 		if(sidePointsFirst > 0)
 			angleFirst = 180/sidePointsFirst;
 		if(sidePointsSecond > 0)

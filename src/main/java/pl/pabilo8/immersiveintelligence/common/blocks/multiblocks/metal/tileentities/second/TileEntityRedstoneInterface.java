@@ -288,7 +288,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		this.markContainingBlockForUpdate(null);
 		NBTTagCompound tag = new NBTTagCompound();
 
-		if(!tag.isEmpty())
+		if(!tag.hasNoTags())
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
 	}
 

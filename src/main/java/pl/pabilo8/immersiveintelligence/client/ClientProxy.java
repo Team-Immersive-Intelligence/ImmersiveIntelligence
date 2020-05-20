@@ -151,21 +151,8 @@ public class ClientProxy extends CommonProxy
 
 		//You've tricked me
 		//I thought the connector rendering is based on something different, but actually it renders the obj connector model with the wire
-		WireApi.registerConnectorForRender("conn_data", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-		WireApi.registerConnectorForRender("rel_data", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-		WireApi.registerConnectorForRender("alarm_siren", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-
-		WireApi.registerConnectorForRender("inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-		WireApi.registerConnectorForRender("advanced_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-		WireApi.registerConnectorForRender("fluid_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-		WireApi.registerConnectorForRender("advanced_fluid_inserter", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-		WireApi.registerConnectorForRender("chemical_dispenser", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-
-		WireApi.registerConnectorForRender("redstone_data_interface", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-
-		WireApi.registerConnectorForRender("skycrate_station", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-		WireApi.registerConnectorForRender("skycrate_post", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
-
+		WireApi.registerConnectorForRender("empty", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
+		//WireApi.registerConnectorForRender("conn_data", new ResourceLocation(ImmersiveIntelligence.MODID+":block/data_connector.obj"), null);
 
 		item_measuring_cup.specialModelMap.put(0, ModelMeasuringCup.MODEL);
 
@@ -463,6 +450,10 @@ public class ClientProxy extends CommonProxy
 
 		for(DrillHeadPerm perm : item_drillhead.perms)
 			perm.sprite = ApiUtils.getRegisterSprite(event.getMap(), perm.texture);
+
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector_feedtrough");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector");
+
 	}
 
 	@Override
@@ -592,6 +583,10 @@ public class ClientProxy extends CommonProxy
 		//Alarm Siren
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAlarmSiren.class, new AlarmSirenRenderer());
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.ALARM_SIREN.getMeta(), TileEntityAlarmSiren.class);
+
+		//Programmable Speaker
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProgrammableSpeaker.class, new ProgrammableSpeakerRenderer());
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta(), TileEntityProgrammableSpeaker.class);
 
 		//Small Crate
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallCrate.class, new SmallCrateRenderer());

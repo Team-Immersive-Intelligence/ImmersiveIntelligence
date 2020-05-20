@@ -50,7 +50,9 @@ public class GuiPrintedPage extends GuiScreen
 		int i = (this.width-pageImageWidth)/2;
 		int j = (this.height-pageImageHeight)/2;
 		this.drawTexturedModalRect(i, j, 0, 0, 192, 192);
+		String text_processed=text.replace("<br>","\n");
+		text_processed=text_processed.replace("\\n","\n");
 
-		ClientProxy.itemFont.drawSplitString(text, i+8, j+24, pageImageWidth-8, 0x0a0a0a);
+		ClientProxy.itemFont.drawSplitString(text_processed, i+8, j+24, pageImageWidth-8, 0x0a0a0a);
 	}
 }

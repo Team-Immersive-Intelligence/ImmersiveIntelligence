@@ -96,8 +96,12 @@ item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Co
 
 item.immersiveintelligence.material.dust_salt.name=Salt Dust
 item.immersiveintelligence.material.dust_wood.name=Sawdust
+item.immersiveintelligence.material.pulp_wood.name=Wood Pulp
+item.immersiveintelligence.material.pulp_wood_treated.name=Treated Wood Pulp
 item.immersiveintelligence.material.dust_hexamine.name=Hexamine Dust
 item.immersiveintelligence.material.dust_formaldehyde.name=Formaldehyde Dust
+
+item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
@@ -308,6 +312,7 @@ tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
 tile.immersiveintelligence.data_connector.chemical_dispenser.name=Chemical Dispenser
 
 tile.immersiveintelligence.data_connector.alarm_siren.name=Alarm Siren
+tile.immersiveintelligence.data_connector.programmable_speaker.name=Programmable Speaker
 
 tile.immersiveintelligence.data_connector.inserter.name=Item Inserter
 tile.immersiveintelligence.data_connector.advanced_inserter.name=Advanced Inserter
@@ -396,6 +401,8 @@ subtitle.immersiveintelligence.machinegun_shot_wc=Water Cooled Machinegun Noises
 subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
 
 subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
+subtitle.immersiveintelligence.howitzer_load=Howitzer Loading
+subtitle.immersiveintelligence.howitzer_unload=Howitzer Unloading
 subtitle.immersiveintelligence.howitzer_rotating=Howitzer Moving
 subtitle.immersiveintelligence.howitzer_door_open=Howitzer Doors Opening
 subtitle.immersiveintelligence.howitzer_door_close=Howitzer Doors Closing
@@ -489,7 +496,8 @@ desc.immersiveintelligence.data_merger.2=Right
 //Potion effects
 
 potion.immersiveintelligence.suppression=Suppressed
-potion.immersiveintelligence.broken_armor=Armour Penetrated
+potion.immersiveintelligence.broken_armor=Penetrated Armor
+potion.immersiveintelligence.corrosion=Corrosion
 
 //Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
@@ -734,6 +742,9 @@ ie.manual.entry.tf=True/False
 ie.manual.entry.false=False
 ie.manual.entry.true=True
 
+ie.manual.entry.variables_input=Input Variables:
+ie.manual.entry.variables_output=Output Variables:
+
 ie.manual.entry.circuit_production.name=Circuitry
 ie.manual.entry.circuit_production.subtext=Not really Beep-Boop yet
 ie.manual.entry.circuit_production0=Circuits are one of the most important and commonly used electronic parts. There are three kinds of circuits: <link;circuit_production_basic;§n§obasic§r;> - made using vacuum tubes and redstone, <link;circuit_production_advanced;§o§nadvanced§r;> - made using Advanced Electronic Alloy™ and upgraded vacuum tubes. The most sophisticated are the <link;circuit_production_processor;§o§nprocessor§r;> circuits, which are made mainly of silicon in a complicated <link;precision_assembler;§o§nassembly§r;> process.
@@ -763,8 +774,15 @@ ie.manual.entry.printing_press.name=Printing Press
 ie.manual.entry.printing_press.subtext=The Engineer's Book & Quill
 ie.manual.entry.printing_press0=The Printing Press is a machine which can print out text on demand when it receives a data packet. The Press requires ink and paper to operate. To form it, use a hammer on the light engineering block in front of the machine.
 ie.manual.entry.printing_press1= The printing paper is a special thinned version of a standard one used in books, it is created by pressing a paper in a metal press. Machine requires different ink colors, depending on the CMYK values of the currently printed color.
-ie.manual.entry.printing_press2=amount of inks depending on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
-ie.manual.entry.printing_press3=String 't' - output type (text/construction/code)<br>Integer c - amount of copies<br>String 's' - text to print (if using the mode "text")<br>
+ie.manual.entry.printing_press2=The amount of inks depends on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
+
+//Printing Press output variables
+ie.manual.entry.printing_press.vars_in.t.main=Output type
+ie.manual.entry.printing_press.vars_in.t.sub=Possible values: "text", "code", "blueprint"
+ie.manual.entry.printing_press.vars_in.c.main=Amount of copies
+ie.manual.entry.printing_press.vars_in.c.sub=
+ie.manual.entry.printing_press.vars_in.s.main=Text to print
+ie.manual.entry.printing_press.vars_in.s.sub=Available only when using the "text" mode
 
 ie.manual.entry.data_input_machine.name=Data Input Machine
 ie.manual.entry.data_input_machine.subtext=The Input Outputter
@@ -793,9 +811,12 @@ ie.manual.entry.redstone_interface0=The Redstone Interface is a bridge between t
 ie.manual.entry.redstone_interface1=The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, but the most important ones are the data input port, on which a connector needs to be placed and a built-in redstone output connector, to which you can attach a wire. In the user interface there are two sections, data to redstone and the opposite. After you add an entry, you have to specify the variable letter and the corresponding redstone colour.
 
 #Reference to a meme
-ie.manual.entry.conveyor_scanner.name=Conveyor Scanner
+ie.manual.entry.conveyor_scanner.name=Scanning Conveyor
 ie.manual.entry.conveyor_scanner.subtext=Get the camera!
-ie.manual.entry.conveyor_scanner0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. Then an item passes trough the Conveyor Scanner, its properties are read and sent in an ItemStack type variable 's' inside a Data Packet. To operate, the machine requires electricity. To form it use a hammer on the conveyor.
+ie.manual.entry.conveyor_scanner0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. When an item passes trough the Conveyor Scanner, its properties are read and sent in a Data Packet. To operate, the machine requires electricity. To form it use a hammer on the conveyor.
+
+ie.manual.entry.conveyor_scanner.vars_out.s.main=Scanned item
+ie.manual.entry.conveyor_scanner.vars_out.s.sub=Scanned item with its id, durability and NBT
 
 #Reference to Factorio
 ie.manual.entry.inserters.name=Inserters
@@ -803,16 +824,50 @@ ie.manual.entry.inserters.subtext=No yellow this time!
 ie.manual.entry.inserters0=The Precision Insertion Device, also known as the Inserter is a device used to transfer items from one inventory to another. Item inserters consists of an arm and motors for rotation and handling the item pickup. Fluid inserters use pipes and automatic valves. Inserters are able to take and output from and to any horizontal side desired.
 ie.manual.entry.inserters1=The Inserter's sides can be configured with a hammer (sneak to set output). Inserters require electricity to run and data to tell them what to do.
 ie.manual.entry.inserters_basic=The basic inserter is used for simple, but controlled item transfer. Made of basic circuits and mechanical components, it is a cheap and easy way to determine how many items should be transfered from one block to other.
-ie.manual.entry.inserters_basic_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of items<br>
+
+ie.manual.entry.inserters_basic.vars_in.m.main=Item take mode
+ie.manual.entry.inserters_basic.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.inserters_basic.vars_in.c.main=Amount of items
+ie.manual.entry.inserters_basic.vars_in.c.sub=
+
 ie.manual.entry.inserters_advanced=The advanced inserter is an upgraded version, which allows to filter picking certain items and allows picking up crates and barrels from minecarts. The Advanced Inserters are much faster, but they also drain more power.
-ie.manual.entry.inserters_advanced_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of items<br>Boolean 'b' - can pick blocks (from minecarts)<br>String 'f' - filter mode (whitelist, blacklist, none)<br>String 'g' - advanced filter mode (exact, item, oredict)<br> String 'w' - minecart take mode (items / block)<br>ItemStacks '1'-'0' - item filters
+
+ie.manual.entry.inserters_advanced.vars_in.m.main=Item take mode
+ie.manual.entry.inserters_advanced.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.inserters_advanced.vars_in.c.main=Amount of items
+ie.manual.entry.inserters_advanced.vars_in.c.sub=
+ie.manual.entry.inserters_advanced.vars_in.b.main=Can pick blocks from minecarts
+ie.manual.entry.inserters_advanced.vars_in.b.sub=
+ie.manual.entry.inserters_advanced.vars_in.f.main=Filter mode
+ie.manual.entry.inserters_advanced.vars_in.f.sub=Possible values: "whitelist", "blacklist", "none"
+ie.manual.entry.inserters_advanced.vars_in.g.main=Advanced filter mode
+ie.manual.entry.inserters_advanced.vars_in.g.sub=Possible values: "exact", "item", "oredict"
+ie.manual.entry.inserters_advanced2.vars_in.w.main=Minecart take mode
+ie.manual.entry.inserters_advanced2.vars_in.w.sub=Possible values: "items", "block"
+ie.manual.entry.inserters_advanced2.vars_in.1.main=Item filters
+ie.manual.entry.inserters_advanced2.vars_in.1.sub=
+
 ie.manual.entry.inserters_fluid=The fluid inserter is a precise limiter of fluid transfer. In some situations you want to insert only a required amount, this device does exactly that.
-ie.manual.entry.inserters_fluid_desc=Variables<br>String 'm' - item take mode (set/add)<br>Integer 'c' - amount of fluid (mB)<br>
+
+ie.manual.entry.inserters_fluid.vars_in.m.main=Fluid take mode
+ie.manual.entry.inserters_fluid.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.inserters_fluid.vars_in.c.main=Amount of fluid to take
+ie.manual.entry.inserters_fluid.vars_in.c.sub=in Milibuckets (mB)
 
 #Reference to IndustrialCraft's siren addon
 ie.manual.entry.alarm_siren.name=Alarm Siren
 ie.manual.entry.alarm_siren.subtext=The reactor is OK, was, at least.
-ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noise when provided a redstone signal. Redstone wire can be attached from any side. The siren, like every redstone connector, can be reconfigured to use a different redstone channel (default is white).
+ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noise when provided a redstone signal (volume depends on signal strength). Redstone wire can be attached from any side. The siren, like every redstone connector, can be reconfigured to use a different redstone channel (default is white).
+
+#Reference to Choroman's radar concept drawings
+ie.manual.entry.programmable_speaker.name=Programmable Speaker
+ie.manual.entry.programmable_speaker.subtext=Happy Engineer Noises
+ie.manual.entry.programmable_speaker0=The Programmable Speaker is a device, which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side. Data can be used to set the sound and its pitch, while redstone sets the volume.
+
+ie.manual.entry.programmable_speaker.vars_in.s.main=ID of the sound to play
+ie.manual.entry.programmable_speaker.vars_in.s.sub=Example "immersiveintelligence:siren"
+ie.manual.entry.programmable_speaker.vars_in.t.main=Tone/Pitch
+ie.manual.entry.programmable_speaker.vars_in.t.sub=Value must be between -100 and 100
 
 #Reference to an event from my life
 ie.manual.entry.radio_station.name=Radio Station
@@ -825,7 +880,7 @@ ie.manual.entry.radio_station2=The Radio Station's frequency can be set by using
 ie.manual.entry.small_data_devices.name=Small Data Devices
 ie.manual.entry.small_data_devices.subtext=The Gray Future Cubes
 ie.manual.entry.data_merger=The data merger is a machine which can combine two data inputs from the sides into an output to the front. The machine has a toggle for the preferred side to take variable from. Each variable also has a side override mode, green is the left and red is the right, darker colours remove the variable if the latest packet from that side doesn't contain the variable.
-ie.manual.entry.data_router=Data router allows to direct a packet into a specific side, which is defined by one of the packet's variables (can be set on the router by sneak using hammer). The variable has to be an integer.<br>Top - 0<br>Bottom - 1<br>North - 2<br>South - 3<br>East - 4<br>West - 5
+ie.manual.entry.data_router=Data router allows to direct a packet into a specific side, which is defined by one of the packet's variables (can be set on the router by sneak using hammer). The variable has to be an integer.<br>Top - 0, Bottom - 1<br>North - 2, South - 3<br>East - 4, West - 5
 ie.manual.entry.redstone_buffer=The redstone buffer is a device which can hold an incoming data packet, until it doesn't receive a redstone signal.
 ie.manual.entry.timed_buffer=The timed buffer is a device, which can hold an incoming data packet for a given amount of time. The duration is set by the variable '0' (a number of ticks to wait).
 ie.manual.entry.small_data_buffer=The small data buffer is a device which can hold up to 4 packets and can release them using the First-In-First-Out method when given a redstone signal.
@@ -906,12 +961,28 @@ ie.manual.entry.artillery_howitzer.subtext=Bertha's Sister
 ie.manual.entry.artillery_howitzer0=
 ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, that allows attacking targets as distant as 300 blocks. It is controlled using the data system and loaded with special high-caliber shells. It is best used in offensive operations.
 ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate. To form it use a hammer on the concrete block sticking out at the top.
-ie.manual.entry.artillery_howitzer3=Variables<br>String 'c' - action mode (load/unload/fire/stop)<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun<br>Integer 'f' - the bullet fuse time (in ticks), after the time is out, the bullet is triggered.
+ie.manual.entry.artillery_howitzer.vars_in.c.main=Action mode
+ie.manual.entry.artillery_howitzer.vars_in.c.sub=Possible values: "load", "unload", "fire", "stop"
+ie.manual.entry.artillery_howitzer.vars_in.f.main=Shell fuse time
+ie.manual.entry.artillery_howitzer.vars_in.f.sub=The amount of time before the shell explodes (in ticks, 20 ticks=1 second), default is -1 (disabled)
+ie.manual.entry.artillery_howitzer.vars_in.y.main=Gun yaw
+ie.manual.entry.artillery_howitzer.vars_in.y.sub=Proper values from 0-360, but accepts any number and normalizes it
+ie.manual.entry.artillery_howitzer2.vars_in.p.main=Gun pitch
+ie.manual.entry.artillery_howitzer2.vars_in.p.sub=Possible values: from 0 (gun up) to -105 (gun down)
 
 ie.manual.entry.ballistic_computer.name=Ballistic Computer
 ie.manual.entry.ballistic_computer.subtext=Calculate this to that
 ie.manual.entry.ballistic_computer0=The Ballistic Computer is a device that translates a position vector and bullet mass to yaw and pitch used by most data-driven weapons.
 ie.manual.entry.ballistic_computer1=Variables input:<br>Integers 'x','y','z' - the position to fire onto<br>Integer 'm' - the bullet's mass<br>Variables output:<br>Integer 'p' - the pitch rotation of the gun<br>Integer 'y' - the yaw rotation of the gun
+ie.manual.entry.ballistic_computer.vars_in.x.main=Firing position
+ie.manual.entry.ballistic_computer.vars_in.x.sub=Relative to the center of the artillery
+ie.manual.entry.ballistic_computer.vars_in.m.main=Bullet mass
+ie.manual.entry.ballistic_computer.vars_in.m.sub=Because you can't input a Float, you have to round the number
+
+ie.manual.entry.ballistic_computer.vars_out.y.main=Gun yaw
+ie.manual.entry.ballistic_computer.vars_out.y.sub=Proper values from 0-360, but accepts any number and normalizes it
+ie.manual.entry.ballistic_computer.vars_out.p.main=Gun pitch
+ie.manual.entry.ballistic_computer.vars_out.p.sub=Possible values: from 0 (gun up) to -105 (gun down)
 
 #Reference to the BluSunrize's general dislike of the machinegun and the ammunition crate
 ie.manual.entry.ammocrate.name=Ammunition Crate
@@ -923,7 +994,14 @@ ie.manual.entry.chemdispenser.name=Chemical Dispenser
 ie.manual.entry.chemdispenser.subtext=A flame in the Black night
 ie.manual.entry.chemdispenser0=A device invented by the same engineer, who designed the electric hammer, originally for watering crops and stopping fires, it also can be used for precise spraying a position with an incendiary liquid.
 ie.manual.entry.chemdispenser1=The Chemical Dispenser requires power supplied trough a wire to the device's connector, a data signal (or a constant redstone signal) to decide about its actions and fluid to the input on the back.
-ie.manual.entry.chemdispenser2=Variables:<br>Integer 'a'-amount of fluid to spray<br>Boolean 'i' - should the fluid be ignited<br>Integers 'y','p' - yaw and pitch of the nozzle<br>
+ie.manual.entry.chemdispenser.vars_in.a.main=Amount of fluid to spray
+ie.manual.entry.chemdispenser.vars_in.a.sub=in Milibuckets (mB)
+ie.manual.entry.chemdispenser.vars_in.i.main=Should the fluid be ignited
+ie.manual.entry.chemdispenser.vars_in.i.sub=
+ie.manual.entry.chemdispenser.vars_in.y.main=Nozzle yaw
+ie.manual.entry.chemdispenser.vars_in.y.sub=Possible values: from -45 to 45
+ie.manual.entry.chemdispenser.vars_in.p.main=Nozzle pitch
+ie.manual.entry.chemdispenser.vars_in.p.sub=Possible values: from -45 to 45
 
 #Reference to a Polish Copypasta about guys estabilishing a regime in a kindergarten and forcing the children to work on assembling pens, while making a secret police from the other kids to watch over them
 ie.manual.entry.ammunition_factory.name=Ammunition Factory
@@ -933,6 +1011,141 @@ ie.manual.entry.ammunition_factory1=The machine requires a power supply and can 
 ie.manual.entry.ammunition_factory2=When making bullets, remember: there is no such thing as "the best bullet composition", add ingredients adjacent to your needs. Need a stun grenade? Use fireworks. Need a bullet that can penetrate trough steel? Use uranium cores. Keep in mind, that combining these two will result in lower suppression modifier of the fireworks, the cores modify the strengths of the effects. Some materials like brass raise it, while some like tungsten, steel or uranium decrease it.
 ie.manual.entry.ammunition_factory3=Use the data system to name and color your bullets. This will allow you to differentiate them easier, so you won't mistake an armour-piercing round for a high-explosive one. For coloring the machine requires a supply of inks to its tank, similar to the <link;printing_press;§o§nPrinting §o§nPress§r;>.
 ie.manual.entry.ammunition_factory4=Variables:<br>Integer 'p'-percentage proportion of the bullet components (0-100)<br>Integer or String 'c'-bullet casing's colour (Int - RGB, String - Hex)<br>String 'n' - bullet name.
+
+//Bullet cores & components
+ie.manual.entry.bullet_cores.name=Bullet Cores
+ie.manual.entry.bullet_cores.subtext=That one bounced!
+
+ie.manual.entry.bullet_core.CoreBrass=Brass Core
+ie.manual.entry.bullet_core.CoreBrass.lore=Make it Steampunk
+ie.manual.entry.bullet_core.CoreBrass.desc=Brass is a heavy metal with bad penetration capabilities, but it greatly increases the effect of other components.
+
+ie.manual.entry.bullet_core.CoreLead=Lead Core
+ie.manual.entry.bullet_core.CoreLead.lore=Good, bad and ugly
+ie.manual.entry.bullet_core.CoreLead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power.
+
+ie.manual.entry.bullet_core.CoreSteel=Steel Core
+ie.manual.entry.bullet_core.CoreSteel.lore=Full Metal Jacket
+ie.manual.entry.bullet_core.CoreSteel.desc=Using steel is a non-expensive way to increase the penetration capabilties of the projectiles, only disadvantage is slightly decreased component effect.
+
+ie.manual.entry.bullet_core.CoreTungsten=Tungsten Core
+ie.manual.entry.bullet_core.CoreTungsten.lore=Load APCR!
+ie.manual.entry.bullet_core.CoreTungsten.desc=Tungsten is a better at penetrating objects than steel, but it decreases the effect of other components
+
+ie.manual.entry.bullet_core.CoreUranium=Uranium Core
+ie.manual.entry.bullet_core.CoreUranium.lore=What do you mean, ammo is depleted?
+ie.manual.entry.bullet_core.CoreUranium.desc=Low weight and hardness make uranium a great penetrator without loosing capability to carry explosive materials. Great, but expensive choice.
+
+ie.manual.entry.bullet_components.name=Bullet Components
+ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!
+ie.manual.entry.bullet_components.dmg_mod=Damage: %sx
+ie.manual.entry.bullet_components.pen_mod=Penetration: %sx
+ie.manual.entry.bullet_components.blast_mod=Blast Radius: %sx
+ie.manual.entry.bullet_components.density=Density: %s
+ie.manual.entry.bullet_components.type=Type: %s
+
+#A quote from World in Conflict
+ie.manual.entry.bullet_component.firework=Fireworks
+ie.manual.entry.bullet_component.firework.lore=And now, free the skies
+ie.manual.entry.bullet_component.firework.desc=Fireworks, while mostly known for their beautiful looks, can be used to suppress and blind enemies.
+
+ie.manual.entry.bullet_component.tracer_powder=Tracer Dust
+#Quote from Company of Heroes/Market Garden campaign
+ie.manual.entry.bullet_component.tracer_powder.lore=Fill the sky with tracers!
+ie.manual.entry.bullet_component.tracer_powder.desc=Tracers are a good way to see which way your bullet flies, this can be used for purely decorative purposes or for correcting a gun's shot angle.
+
+#Reference to a song
+ie.manual.entry.bullet_component.TNT=TNT
+ie.manual.entry.bullet_component.TNT.lore=Tons of it!
+ie.manual.entry.bullet_component.TNT.desc=TNT is an explosive material with mediocre destructive power. Because of how easy it is to produce, it is a good choice for machinegun bullets and grenades.
+
+#CoH2 Reference
+ie.manual.entry.bullet_component.RDX=RDX
+ie.manual.entry.bullet_component.RDX.lore=Things go up, things go down!
+ie.manual.entry.bullet_component.RDX.desc=RDX, also known as the hexogen is a powerful high-explosive material. Being twice as powerful as TNT, it's able to destroy even the heaviest emplacements.
+
+#There are many variants of HMX's full name, one of them is Her Majesty's Explosive
+ie.manual.entry.bullet_component.HMX=HMX
+ie.manual.entry.bullet_component.HMX.lore=Her Majesty's Finest
+ie.manual.entry.bullet_component.HMX.desc=HMX is one of the most powerful conventional explosives, it's three times more powerful than TNT it's capable of breaching trough any fortifications.
+
+#Reference to a song
+ie.manual.entry.bullet_component.white_phosphorus=White Phosphorus
+ie.manual.entry.bullet_component.white_phosphorus.lore=Storm clouds, fire and steel.
+ie.manual.entry.bullet_component.white_phosphorus.desc=White phosphorus is the main ingredient of most incendiary shells. Its high heat makes surrounding enemies more flammable, while the burning hot fragments ignite everything around.
+
+ie.manual.entry.bullet_component.shrapnel_aluminum=Aluminum Shrapnel
+ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Amelinium, one does not simply paint it
+ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminum is not the best material for shrapnel, but it's cheap enough to be mass used in combat.
+
+ie.manual.entry.bullet_component.shrapnel_zinc=Zinc Shrapnel
+ie.manual.entry.bullet_component.shrapnel_zinc.lore=
+ie.manual.entry.bullet_component.shrapnel_zinc.desc=Zinc is not a good shrapnel material, but when there are shortages, anything will do.
+
+#Reference to Terraria's coin gun
+ie.manual.entry.bullet_component.shrapnel_copper=Copper Shrapnel
+ie.manual.entry.bullet_component.shrapnel_copper.lore=Make coins your ammo
+ie.manual.entry.bullet_component.shrapnel_copper.desc=While throwing copper at the enemies won't bribe them, after a few shots it might make them dead.
+
+#Reference to JoJo, yes even in the II there has to be one
+ie.manual.entry.bullet_component.shrapnel_platinum=Platinum Shrapnel
+ie.manual.entry.bullet_component.shrapnel_platinum.lore=A Shrapnel User, huh?
+ie.manual.entry.bullet_component.shrapnel_platinum.desc=Choosing Platinum? Yes, definitely, make yourself poor, you want it, not me.
+
+#Murica' fuck yeah
+ie.manual.entry.bullet_component.shrapnel_gold=Gold Shrapnel
+ie.manual.entry.bullet_component.shrapnel_gold.lore=And who cares about Taxpayers?
+ie.manual.entry.bullet_component.shrapnel_gold.desc=Ah yes, the good old way of wasting money - war. While the bullets are somewhat expensive, they don't seem to have much effect on the opponent.
+
+ie.manual.entry.bullet_component.shrapnel_nickel=Nickel Shrapnel
+ie.manual.entry.bullet_component.shrapnel_nickel.lore=
+ie.manual.entry.bullet_component.shrapnel_nickel.desc=Nickel is a bad choice for shrapnel, it doesn't deal much damage, but in hard times it can save the day.
+
+#Reference to the Netflix's Witcher series
+ie.manual.entry.bullet_component.shrapnel_silver=Silver Shrapnel
+ie.manual.entry.bullet_component.shrapnel_silver.lore=Toss a coin to your gunner
+ie.manual.entry.bullet_component.shrapnel_silver.desc=Silver shrapnel is a good option for combating undead enemies, the shrapnel deals more damage to them and slows them down.
+
+ie.manual.entry.bullet_component.shrapnel_electrum=Electrum Shrapnel
+ie.manual.entry.bullet_component.shrapnel_electrum.lore=The Shock Troops have arrived
+ie.manual.entry.bullet_component.shrapnel_electrum.desc=Electrum excels at conducting electricity, while the shapnel won't hurt much, enemies hit will receive more damage from energy weapons, such as tesla coils.
+
+#Reference to a post-ww2 poster for inter-country help in Western Europe
+ie.manual.entry.bullet_component.shrapnel_constantan=Constantan Shrapnel
+ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Whatever the weather, we kill enemies together.
+ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well known for its heat conductive properties, enemies hit will be prone to fire damage for some time.
+
+#Reference to words by Otto von Bismarck
+ie.manual.entry.bullet_component.shrapnel_iron=Iron Shrapnel
+ie.manual.entry.bullet_component.shrapnel_iron.lore=With Blood and Iron!
+ie.manual.entry.bullet_component.shrapnel_iron.desc=
+
+ie.manual.entry.bullet_component.shrapnel_lead=Lead Shrapnel
+ie.manual.entry.bullet_component.shrapnel_lead.lore=Let the Lead rain!
+ie.manual.entry.bullet_component.shrapnel_lead.desc=Lead is a good shrapnel material, it's heavy and inflicts high damage on unarmored enemies.
+
+#Japanese "hagane" means steel, but the literal translation is "full metal", Hagane no Renkinjutsushi
+ie.manual.entry.bullet_component.shrapnel_steel=Steel Shrapnel
+ie.manual.entry.bullet_component.shrapnel_steel.lore=The fullmetal in all its glory
+ie.manual.entry.bullet_component.shrapnel_steel.desc=Steel is a fine shrapnel material, good damage, scatter and speed make it effective against all opponents.
+
+ie.manual.entry.bullet_component.shrapnel_brass=Brass Shrapnel
+ie.manual.entry.bullet_component.shrapnel_brass.lore=Ornamental Design
+ie.manual.entry.bullet_component.shrapnel_brass.desc=Brass is a bad choice for making shrapnel, although its high weight makes it deal more damage than other weak metals.
+
+#A reference to Bear989sr. - a gregtech player, I just love when he says the word "steel", also some nice GT tutorials
+ie.manual.entry.bullet_component.shrapnel_tungsten=Tungsten Shrapnel
+ie.manual.entry.bullet_component.shrapnel_tungsten.lore=And now we make *ekhem* TUNGSTEN-STEEL...
+ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Tungsten is a very good material for shrapnel, its high damage allows to shred enemies to pieces.
+
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Graphite Shrapnel
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very good shrapnel material, its low weight and high piercing capabilities make it useful in combat.
+
+ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
+ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
+ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel, the scattering fragments have no problem piercing trough armor and can deal high damage to any target.
+
 
 //Logistics
 
@@ -946,7 +1159,15 @@ ie.manual.entry.packer.name=Packer
 ie.manual.entry.packer.subtext=Even more Pipes and Tunnels!
 ie.manual.entry.packer0=Packer is a machine used to batch load items into containers such as crates or bullet magazines. For operation it requires power and a single data signal defining how much items should be put each time. To form it, use a hammer on the pipe above the conveyor belt.
 ie.manual.entry.packer1= The packer receives items to be packed from the side and containers onto the bottom conveyor.
-ie.manual.entry.packer2=Variables:<br>Integer 'c'-items to pack<br>Integer or String (one_by_one, one_of_all) 'm'-item packing mode<br>Integer 'q' - insert quantity<br>Boolean 'i' - whether the machine should ignore empty stacks.
+
+ie.manual.entry.packer.vars_in.m.main=Item packing mode
+ie.manual.entry.packer.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.packer.vars_in.c.main=Items to pack
+ie.manual.entry.packer.vars_in.c.sub=
+ie.manual.entry.packer.vars_in.q.main=Insert quantity
+ie.manual.entry.packer.vars_in.q.sub=
+ie.manual.entry.packer.vars_in.i.main=Ignore empty stacks
+ie.manual.entry.packer.vars_in.i.sub=
 
 #Ziplines
 ie.manual.entry.skycrates.name=Skycrates

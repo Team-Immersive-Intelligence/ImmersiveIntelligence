@@ -10,10 +10,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Pabilo8 on 08-08-2019.
@@ -27,7 +24,7 @@ public class BathingRecipe extends MultiblockRecipe
 
 	public final FluidStack fluidInput;
 
-	public static ArrayList<BathingRecipe> recipeList = new ArrayList();
+	public static LinkedList<BathingRecipe> recipeList = new LinkedList();
 	int totalProcessTime;
 	int totalProcessEnergy;
 

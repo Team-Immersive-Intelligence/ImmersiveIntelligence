@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.items.tools;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.ITool;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import mezz.jei.util.MathUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -18,6 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -31,6 +33,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -123,6 +126,27 @@ public class ItemIILighter extends ItemIIBase implements ITool
 			return ret;
 		}
 		return stack;
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack)
+	{
+		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
+		return fluidStack!=null;
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack)
+	{
+		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
+		return fluidStack!=null?Utils.RGBAToRGB(fluidStack.getFluid().getColor()):0;
+	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack)
+	{
+		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
+		return fluidStack!=null?1f-(fluidStack.amount/(float)Tools.lighter_capacity):0;
 	}
 
 	@Override

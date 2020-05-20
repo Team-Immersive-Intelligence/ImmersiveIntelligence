@@ -39,6 +39,16 @@ public class GuiSawmill extends GuiIEContainerBase
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		Utils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.sawmill.name"), 0, 0, getXSize(), 6, 0xd99747);
+		renderEnergyBars(148, 20, 7, 48, 2, tile.rotation, sawmill.rpmMin, sawmill.torqueMin);
+
+		fontRenderer.drawString(tile.getCurrentEfficiency()*100+"%", 45, 48, 0xd99747);
+
+		ClientUtils.bindTexture(texture_skycrate_station);
+		if(tile.processTimeMax!=0)
+		{
+			float progress = Math.min(1f, tile.processTime/(float)tile.processTimeMax);
+			this.drawTexturedModalRect(33, 38, 0, 168, Math.round(49f*progress), 12);
+		}
 	}
 
 	/**
@@ -50,9 +60,7 @@ public class GuiSawmill extends GuiIEContainerBase
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		ClientUtils.bindTexture(texture_skycrate_station);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, sawmill.rpmMin, sawmill.torqueMin);
 
-		fontRenderer.drawString(tile.getCurrentEfficiency()*100+"%", guiLeft+45, guiTop+48, 0xd99747);
 	}
 
 	@Override

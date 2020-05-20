@@ -13,6 +13,7 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.RotationUtil;
 import blusunrize.immersiveengineering.common.util.advancements.IEAdvancements;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -32,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.animation.ITimeValue;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -129,13 +131,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		IBlockState state = world.getBlockState(pos);
-		for(Predicate<IBlockState> p : CommonProxy.hammer_blacklist)
-		{
-			if(p.test(state))
-				return EnumActionResult.PASS;
-		}
-
 		ItemStack stack = player.getHeldItem(hand);
 		String[] permittedMultiblocks = null;
 		String[] interdictedMultiblocks = null;
@@ -181,9 +176,15 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				{
 					if(player instanceof EntityPlayerMP)
 						IEAdvancements.TRIGGER_MULTIBLOCK.trigger((EntityPlayerMP)player, mb, stack);
-					return EnumActionResult.SUCCESS;
+					return doAction(player, hand);
 				}
 			}
+
+		if(performHammerFunctions(player,world,pos,side,hitX,hitY,hitZ,hand))
+		{
+			return doAction(player, hand);
+		}
+
 		return EnumActionResult.PASS;
 	}
 
@@ -191,13 +192,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		IBlockState state = world.getBlockState(pos);
-		for(Predicate<IBlockState> p : CommonProxy.hammer_blacklist)
-		{
-			if(p.test(state))
-				return EnumActionResult.PASS;
-		}
-
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if(tileEntity instanceof IAdvancedMultiblock)
 		{
@@ -208,21 +202,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				if(energy > 0)
 				{
 					mb.setCurrentConstruction(mb.getCurrentConstruction()+energy);
-					return EnumActionResult.SUCCESS;
+					return doAction(player, hand);
 				}
 				else
 					return EnumActionResult.PASS;
 			}
-		}
-		if(!(tileEntity instanceof IDirectionalTile)&&!(tileEntity instanceof IHammerInteraction)&&!(tileEntity instanceof IConfigurableSides)&&hasEnoughEnergy(player.getHeldItem(hand)))
-		{
-			if(RotationUtil.rotateBlock(world, pos, side))
-			{
-				player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use, false);
-				return EnumActionResult.SUCCESS;
-			}
-			else
-				return EnumActionResult.PASS;
 		}
 		return EnumActionResult.PASS;
 
@@ -264,7 +248,19 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
-		return this.getEnergyStored(stack)/this.getMaxEnergyStored(stack);
+		return 1f-(this.getEnergyStored(stack)/(float)this.getMaxEnergyStored(stack));
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack)
+	{
+		return this.getEnergyStored(stack) < this.getMaxEnergyStored(stack);
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack)
+	{
+		return 0xff0000;
 	}
 
 	@Override
@@ -277,6 +273,59 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 					return 16;
 		}
 		return super.getDestroySpeed(stack, state);
+	}
+
+	//Shares code with II, long live IEn-II Cooperation!
+	boolean performHammerFunctions(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		IBlockState state = world.getBlockState(pos);
+		if(tile==null)
+			return false;
+
+
+		if(!(tile instanceof IDirectionalTile)&&!(tile instanceof IHammerInteraction)&&!(tile instanceof IConfigurableSides)&&hasEnoughEnergy(player.getHeldItem(hand)))
+		{
+			if(RotationUtil.rotateBlock(world, pos, side))
+			{
+				player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use, false);
+				return true;
+			}
+		}
+		else if(tile instanceof IConfigurableSides&&!world.isRemote)
+		{
+			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
+			if(((IConfigurableSides)tile).toggleSide(iSide, player))
+				return true;
+		}
+		else if(CommonProxy.tileEntitiesWeDontLike.stream().noneMatch(tileEntityPredicate -> tileEntityPredicate.test(tile))
+				&& tile instanceof IDirectionalTile&&((IDirectionalTile)tile).canHammerRotate(side, hitX, hitY, hitZ, player)&&!world.isRemote)
+		{
+			EnumFacing f = ((IDirectionalTile)tile).getFacing();
+			EnumFacing oldF = f;
+			int limit = ((IDirectionalTile)tile).getFacingLimitation();
+
+			if(limit==0)
+				f = EnumFacing.VALUES[(f.ordinal()+1)%EnumFacing.VALUES.length];
+			else if(limit==1)
+				f = player.isSneaking()?f.rotateAround(side.getAxis()).getOpposite(): f.rotateAround(side.getAxis());
+			else if(limit==2||limit==5)
+				f = player.isSneaking()?f.rotateYCCW(): f.rotateY();
+			((IDirectionalTile)tile).setFacing(f);
+			((IDirectionalTile)tile).afterRotation(oldF, f);
+			tile.markDirty();
+			world.notifyBlockUpdate(pos, state, state, 3);
+			world.addBlockEvent(tile.getPos(), tile.getBlockType(), 255, 0);
+			return true;
+		}
+		else if(tile instanceof IHammerInteraction&&!world.isRemote)
+		{
+			boolean b = ((IHammerInteraction)tile).hammerUseSide(side, player, hitX, hitY, hitZ);
+			if(b)
+				return b;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -295,7 +344,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public Set<String> getToolClasses(ItemStack stack)
 	{
-		return ImmutableSet.of(Lib.TOOL_HAMMER, CommonProxy.TOOL_ADVANCED_HAMMER);
+		return ImmutableSet.of(CommonProxy.TOOL_ADVANCED_HAMMER);
 	}
 
 	@Override
@@ -319,5 +368,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public boolean hasEnoughEnergy(ItemStack stack)
 	{
 		return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() >= Tools.electric_hammer_energy_per_use;
+	}
+
+	private EnumActionResult doAction(EntityPlayer player, EnumHand hand)
+	{
+		player.swingArm(hand);
+		return EnumActionResult.SUCCESS;
 	}
 }

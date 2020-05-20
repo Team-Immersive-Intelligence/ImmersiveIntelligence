@@ -365,7 +365,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		if(message.hasKey("shouldIgnite"))
 			shouldIgnite = message.getBoolean("shouldIgnite");
 		if(message.hasKey("facing"))
-			facing = EnumFacing.byIndex(message.getInteger("facing"));
+			facing = EnumFacing.getFront(message.getInteger("facing"));
 
 	}
 
@@ -384,7 +384,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 		pitch = nbt.getInteger("pitch");
 		yaw = nbt.getInteger("yaw");
 		if(nbt.hasKey("facing"))
-			facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+			facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		if(nbt.hasKey("tank"))
 			tank.readFromNBT(nbt.getCompoundTag("tank"));
 		if(nbt.hasKey("plannedYaw"))
@@ -486,12 +486,12 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 
 				if(facing.getHorizontalIndex()!=-1)
 				{
-					v = v.add(0, Math.toRadians(pitch), 0);
+					v = v.addVector(0, Math.toRadians(pitch), 0);
 				}
 				else
 				{
 					v = new Vec3d(vi.getX(), vi.getY(), vi.getZ());
-					v = v.add(Math.toRadians(-pitch), 0, Math.toRadians(yaw));
+					v = v.addVector(Math.toRadians(-pitch), 0, Math.toRadians(yaw));
 				}
 
 				int split = 8;
@@ -508,7 +508,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 
 				for(int i = 0; i < split; i++)
 				{
-					Vec3d vecDir = v.add(FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter, FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter, FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter);
+					Vec3d vecDir = v.addVector(FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter, FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter, FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter);
 					EntityChemthrowerShot chem = new EntityChemthrowerShot(world, (float)pos.getX()+0.5f+(v.x/2f), (float)pos.getY()+0.5f+(v.y/2f), (float)pos.getZ()+0.5f+(v.z/2f), vecDir.x*0.5, vecDir.y*0.5, vecDir.z*0.5, fs);
 
 					// Apply momentum from the player.
@@ -535,19 +535,19 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	}
 
 	@Override
-	public DataWireNetwork getNetwork()
+	public DataWireNetwork getDataNetwork()
 	{
 		return wireNetwork;
 	}
 
 	@Override
-	public void setNetwork(DataWireNetwork net)
+	public void setDataNetwork(DataWireNetwork net)
 	{
 		wireNetwork = net;
 	}
 
 	@Override
-	public void onChange()
+	public void onDataChange()
 	{
 		if(!isInvalid())
 		{
@@ -604,7 +604,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 			nbt.setBoolean("shouldIgnite", shouldIgnite);
 		}
 
-		if(!nbt.isEmpty())
+		if(!nbt.hasNoTags())
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 24));
 
 	}

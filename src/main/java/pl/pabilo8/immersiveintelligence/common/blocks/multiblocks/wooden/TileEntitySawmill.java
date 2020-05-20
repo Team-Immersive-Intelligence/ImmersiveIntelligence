@@ -9,15 +9,16 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.particle.ParticleRedstone;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -35,11 +36,14 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
+import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.sawmill;
 
@@ -61,6 +65,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		}
 	};
 	IItemHandler insertionHandler = new IEInventoryHandler(1, this, 0, true, false);
+	IItemHandler dustExtractionHandler = new IEInventoryHandler(1, this, 3, false, true);
 
 	public TileEntitySawmill()
 	{
@@ -73,6 +78,11 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		super.readCustomNBT(nbt, descPacket);
 		if(!descPacket)
 			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 4);
+
+		if(nbt.hasKey("processTime"))
+			this.processTime = nbt.getInteger("processTime");
+		if(nbt.hasKey("processTimeMax"))
+			this.processTimeMax = nbt.getInteger("processTimeMax");
 	}
 
 	@Override
@@ -81,7 +91,12 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		super.writeCustomNBT(nbt, descPacket);
 
 		if(!descPacket)
+		{
 			nbt.setTag("inventory", Utils.writeInventory(inventory));
+			nbt.setInteger("processTime",processTime);
+			nbt.setInteger("processTimeMax",processTimeMax);
+		}
+
 	}
 
 	@Override
@@ -92,8 +107,6 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 			this.processTime = message.getInteger("processTime");
 		if(message.hasKey("processTimeMax"))
 			this.processTimeMax = message.getInteger("processTimeMax");
-		if(message.hasKey("active"))
-			this.active = message.getBoolean("active");
 		if(message.hasKey("inventory"))
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), 4);
 		if(message.hasKey("processPrimary"))
@@ -175,9 +188,35 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 						processTime = 0;
 						processTimeMax = (int)((float)recipe.getTotalProcessTime());
 						//process.t
-						doGraphicalUpdates(1);
+						sendUpdate(1);
 					}
 				}
+			}
+
+			if(rotation.getRotationSpeed()>0&&inventory.get(1).getItem() instanceof ISawblade&&(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360,0,1))==0))
+			{
+				ISawblade sawblade = (ISawblade)inventory.get(1).getItem();
+				int hardness = sawblade.getHardness(inventory.get(1));
+				Vec3i v = facing.getDirectionVec();
+				List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class,new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5,v.getY()*0.5,v.getZ()*0.5));
+				for(EntityLivingBase l: entities)
+				{
+					l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE,hardness);
+				}
+			}
+
+			if(world.getTotalWorldTime()%20==0)
+			{
+				BlockPos pos = getBlockPosForPos(4).offset(facing.getOpposite(), 1);
+				ItemStack output = inventory.get(2);
+				ItemStack output_secondary = inventory.get(3);
+				TileEntity inventoryTile = this.world.getTileEntity(pos);
+				if(inventoryTile!=null)
+				{
+					output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
+				}
+				inventory.set(2, output);
+
 			}
 		}
 	}
@@ -185,7 +224,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@SideOnly(Side.CLIENT)
 	private void spawnDustParticleLast()
 	{
-		BlockPos pos = getBlockPosForPos(4);
+		BlockPos pos = getBlockPosForPos(2);
 
 		float mod = (float)(Math.random()*2f);
 
@@ -203,11 +242,11 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	private void spawnDustParticle()
 	{
 		//Hardcoded for now :D, might make it configurable later on.
-		BlockPos pos = getPos();
+		BlockPos pos = getBlockPosForPos(2);
 		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
 		Vec3d facing2 = new Vec3d(getFacing().rotateY().getDirectionVec());
 		facing = facing.scale(1.15f);
-		facing2 = facing2.scale(0.5f);
+		facing2 = facing2.scale(-0.5f);
 
 		float mod = (float)(Math.random()*2f);
 
@@ -273,7 +312,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	{
 		boolean condition = inventory.get(1).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&inventory.get(2).getCount()+process.recipe.itemOutput.getCount() <= getSlotLimit(2);
 		if(!condition)
-			doGraphicalUpdates(1);
+			sendUpdate(1);
 		return condition;
 	}
 
@@ -322,7 +361,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		processSecondary = ItemStack.EMPTY;
 		int time = processTime;
 		processTime = -1;
-		doGraphicalUpdates(1);
+		sendUpdate(1);
 		processTime = time;
 	}
 
@@ -402,33 +441,39 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@Override
 	public void doGraphicalUpdates(int slot)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
 
-		if(slot==1)
+	}
+
+	public void sendUpdate(int id)
+	{
+		if(!world.isRemote)
 		{
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			if(processTime!=-1&&processQueue.size() > 0&&inventory.get(1).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&inventory.get(2).getCount()+processQueue.get(0).recipe.itemOutput.getCount() <= getSlotLimit(2))
+			NBTTagCompound tag = new NBTTagCompound();
+			if(id==1)
 			{
-				processPrimary = processQueue.get(0).recipe.itemOutput;
-				processSecondary = processQueue.get(0).recipe.itemSecondaryOutput;
+				tag.setTag("inventory", Utils.writeInventory(inventory));
+				if(processTime!=-1&&processQueue.size() > 0&&inventory.get(1).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&inventory.get(2).getCount()+processQueue.get(0).recipe.itemOutput.getCount() <= getSlotLimit(2))
+				{
+					processPrimary = processQueue.get(0).recipe.itemOutput;
+					processSecondary = processQueue.get(0).recipe.itemSecondaryOutput;
+				}
+				else
+				{
+					processPrimary = ItemStack.EMPTY;
+					processSecondary = ItemStack.EMPTY;
+					processTime = 0;
+					processTimeMax = 0;
+				}
 			}
-			else
-			{
-				processPrimary = ItemStack.EMPTY;
-				processSecondary = ItemStack.EMPTY;
-				processTime = 0;
-				processTimeMax = 0;
-			}
+			tag.setTag("processPrimary", processPrimary.serializeNBT());
+			tag.setTag("processSecondary", processSecondary.serializeNBT());
+
+
+			tag.setInteger("processTime", processTime);
+			tag.setInteger("processTimeMax", processTimeMax);
+
+			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
 		}
-
-		tag.setTag("processPrimary", processPrimary.serializeNBT());
-		tag.setTag("processSecondary", processSecondary.serializeNBT());
-
-
-		tag.setInteger("processTime", processTime);
-		tag.setInteger("processTimeMax", processTimeMax);
-
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
 	}
 
 	@Override
@@ -476,7 +521,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		if(pos==15&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==this.facing.getOpposite())
+		if((pos==15||pos==2||pos==6)&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return true;
 		return super.hasCapability(capability, facing);
 	}
@@ -484,11 +529,15 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==15)
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
 			TileEntitySawmill master = master();
+			if(pos==15)
 			return (T)master.insertionHandler;
+			else if(pos==2||pos==6)
+				return (T)master.dustExtractionHandler;
 		}
+
 
 		return super.getCapability(capability, facing);
 	}

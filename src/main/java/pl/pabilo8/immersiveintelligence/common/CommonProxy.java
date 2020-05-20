@@ -14,7 +14,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityChargingStation;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
@@ -33,6 +33,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -171,7 +172,8 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIILighter item_lighter = new ItemIILighter();
 	public static ItemIIElectricHammer item_hammer = new ItemIIElectricHammer();
 
-	public static List<Predicate<IBlockState>> hammer_blacklist = new ArrayList<>();
+	//Shares code with Immersive Energy, long live II-IEn Cooperation!
+	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
 
 	public static ItemIIElectricWirecutter item_wirecutter = new ItemIIElectricWirecutter();
 
@@ -330,11 +332,11 @@ public class CommonProxy implements IGuiHandler
 		block_gas_chlorine = new BlockIIFluid("chlorine", gas_chlorine, Material.WATER);
 
 		for(Block block : blocks)
-			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getTranslationKey())));
+			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getUnlocalizedName())));
 
-		registerFeedthroughForWiretype(IIDataWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/empty.obj"),
-				new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/data_connector_feedtrough"), new float[]{0, 4, 8, 12},
-				0.09375, block_data_connector.getStateFromMeta(IIBlockTypes_Connector.DATA_RELAY.getMeta()),
+		registerFeedthroughForWiretype(IIDataWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/data_connector.obj"),
+				new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/data_connector_feedtrough"), new float[]{4, 4, 12, 12},
+				0.09375, block_data_connector.getStateFromMeta(IIBlockTypes_Connector.DATA_CONNECTOR.getMeta()),
 				0, 0, (f) -> f);
 
 	}
@@ -345,7 +347,7 @@ public class CommonProxy implements IGuiHandler
 		ImmersiveIntelligence.logger.info("Registering Items");
 
 		for(Item item : items)
-			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getTranslationKey())));
+			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getUnlocalizedName())));
 
 		registerOreDict();
 	}
@@ -355,6 +357,11 @@ public class CommonProxy implements IGuiHandler
 	{
 		/*POTIONS*/
 		IIPotions.init();
+		for(Block block : blocks)
+		{
+			if(block instanceof BlockIIFluid&&((BlockIIFluid)block).isAcid)
+				((BlockIIFluid)block).setPotionEffects(new PotionEffect(IIPotions.corrosion, 40, 1));
+		}
 	}
 
 	public static <T extends TileEntity & IGuiTile> void openGuiForTile(@Nonnull EntityPlayer player, @Nonnull T tile)
@@ -461,8 +468,13 @@ public class CommonProxy implements IGuiHandler
 
 		OreDictionary.registerOre("dustSalt", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_salt")));
 		OreDictionary.registerOre("dustWood", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_wood")));
+		OreDictionary.registerOre("pulpWood", new ItemStack(item_material, 1, item_material.getMetaBySubname("pulp_wood")));
+		OreDictionary.registerOre("pulpWoodTreated", new ItemStack(item_material, 1, item_material.getMetaBySubname("pulp_wood_treated")));
 		OreDictionary.registerOre("dustHexamine", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_hexamine")));
 		OreDictionary.registerOre("dustFormaldehyde", new ItemStack(item_material, 1, item_material.getMetaBySubname("dust_formaldehyde")));
+
+		OreDictionary.registerOre("leatherArtificial", new ItemStack(item_material, 1, item_material.getMetaBySubname("artificial_leather")));
+		OreDictionary.registerOre("leather", new ItemStack(item_material, 1, item_material.getMetaBySubname("artificial_leather")));
 
 		OreDictionary.registerOre("brushCarbon", new ItemStack(item_material, 1, item_material.getMetaBySubname("carbon_brush")));
 
@@ -551,6 +563,8 @@ public class CommonProxy implements IGuiHandler
 
 		IIRecipes.addRDXProductionRecipes();
 		IIRecipes.addHMXProductionRecipes();
+
+		IIRecipes.addChemicalBathCleaningRecipes();
 
 		//Immersive Engineering can into space???
 		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 3000), FluidRegistry.getFluidStack("oxygen", 1000), FluidRegistry.getFluidStack("hydrogen", 2000), 640, 320);
@@ -686,9 +700,7 @@ public class CommonProxy implements IGuiHandler
 			return OreDictionary.itemMatches(new ItemStack(block_metal_device, 1, 1), stack, true);
 		});
 
-		hammer_blacklist.add(
-				iBlockState -> (iBlockState.getBlock().equals(IEContent.blockMetalDevice1)&&iBlockState.getBlock().getMetaFromState(iBlockState)==BlockTypes_MetalDevice1.CHARGING_STATION.getMeta())
-		);
+		tileEntitiesWeDontLike.add(tileEntity -> tileEntity instanceof TileEntityChargingStation);
 
 		IEApi.forbiddenInCrates.add((stack) -> stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock() instanceof BlockIISmallCrate);
 
@@ -698,6 +710,7 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityAmmunitionCrate.class);
 		registerTile(TileEntitySmallCrate.class);
 		registerTile(TileEntityAlarmSiren.class);
+		registerTile(TileEntityProgrammableSpeaker.class);
 
 		registerTile(TileEntityInserter.class);
 		registerTile(TileEntityAdvancedInserter.class);

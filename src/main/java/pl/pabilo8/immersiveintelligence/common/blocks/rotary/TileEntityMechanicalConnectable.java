@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.blocks.rotary;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
@@ -10,6 +11,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBou
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -204,15 +206,44 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	}
 
 	@Override
+	public void processDamage(Entity e, float amount, Connection c)
+	{
+
+	}
+
+	@Override
+	protected float getBaseDamage(Connection c)
+	{
+		return 1;
+	}
+
+	@Override
+	protected float getMaxDamage(Connection c)
+	{
+		return 20;
+	}
+
+	@Override
 	public void removeCable(@Nullable ImmersiveNetHandler.Connection connection)
 	{
 		super.removeCable(connection);
 		beltNetwork.removeFromNetwork(this);
 	}
 
+
 	@Override
 	public RotaryStorage getRotaryStorage()
 	{
 		return energy;
+	}
+
+	@Override
+	public float getDamageAmount(Entity e, Connection c)
+	{
+		if(c.cableType instanceof MotorBeltType)
+		{
+			return (float)beltNetwork.getNetworkTorque()/4f;
+		}
+		return super.getDamageAmount(e, c);
 	}
 }

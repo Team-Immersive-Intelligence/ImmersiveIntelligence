@@ -121,7 +121,7 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 	{
 		super.readCustomNBT(nbt, descPacket);
 		if(nbt.hasKey("facing"))
-			facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+			facing = EnumFacing.getFront(nbt.getInteger("facing"));
 	}
 
 
@@ -130,7 +130,7 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 	{
 		EnumFacing side = facing.getOpposite();
 		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5+side.getXOffset()*(.5-conRadius), 0.5+side.getYOffset()*(.5-conRadius), .5+side.getZOffset()*(.5-conRadius));
+		return new Vec3d(.5+side.getFrontOffsetX()*(.5-conRadius), 0.5+side.getFrontOffsetY()*(.5-conRadius), .5+side.getFrontOffsetZ()*(.5-conRadius));
 	}
 
 	@SideOnly(Side.CLIENT)

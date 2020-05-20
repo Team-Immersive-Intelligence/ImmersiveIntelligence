@@ -28,7 +28,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		packet = new DataPacket();
 		if(nbt.hasKey("packet"))
 			packet.fromNBT(nbt.getCompoundTag("packet"));

@@ -11,7 +11,7 @@
   "variants": {
     "type": {
       "redstone_data_interface": {
-        "model": "immersiveintelligence:smartmodel/conn_redstone_data_interface"
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "facing": {

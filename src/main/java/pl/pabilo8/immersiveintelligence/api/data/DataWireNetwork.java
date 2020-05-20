@@ -56,7 +56,7 @@ public class DataWireNetwork
 		{
 			WeakReference<IDataConnector> conn = iterator.next();
 			IDataConnector start = conn.get();
-			if(start!=null&&!knownNets.contains(start.getNetwork()))
+			if(start!=null&&!knownNets.contains(start.getDataNetwork()))
 			{
 				DataWireNetwork newNet = new DataWireNetwork();
 				updateConnectors(Utils.toCC(start), start.getConnectorWorld(), newNet);
@@ -83,7 +83,7 @@ public class DataWireNetwork
 			Set<Connection> connsAtBlock = INSTANCE.getConnections(dimension, next);
 			if(iic instanceof IDataConnector)
 			{
-				((IDataConnector)iic).setNetwork(network);
+				((IDataConnector)iic).setDataNetwork(network);
 				network.connectors.add(new WeakReference<>((IDataConnector)iic));
 			}
 			if(connsAtBlock!=null&&iic!=null)

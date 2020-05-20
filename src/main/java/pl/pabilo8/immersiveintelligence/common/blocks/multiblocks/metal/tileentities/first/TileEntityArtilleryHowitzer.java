@@ -285,6 +285,11 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 					}
 
+					if(animationTime==animationTimeMax/2)
+					{
+						world.playSound(null, getPos(), animation==1?IISounds.howitzer_load: IISounds.howitzer_unload, SoundCategory.BLOCKS, 0.5F, 1);
+					}
+
 					if(animationTime >= animationTimeMax)
 					{
 						if(!world.isRemote)

@@ -53,7 +53,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	public String soundID = "siren";
 	public float soundVolume = 1f;
 
-	SoundEvent sound = IISounds.siren;//SoundEvent.REGISTRY.getObject(new ResourceLocation(ImmersiveIntelligence.MODID,soundID));
+	SoundEvent sound = IISounds.siren;
 
 	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
@@ -71,7 +71,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 			boolean wasActive = active;
 			active = this.getNetwork().getPowerOutput(redstoneChannel) > 0;
 			if(active^wasActive)
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageAlarmSirenSync(active, this.getPos()), this.world.provider.getDimension());
+				IIPacketHandler.INSTANCE.sendToDimension(new MessageAlarmSirenSync(active, soundVolume,this.getPos()), this.world.provider.getDimension());
 		}
 
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
@@ -134,6 +134,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	@Override
 	public void onChange()
 	{
+		soundVolume=wireNetwork.channelValues[this.redstoneChannel]/15f;
 
 	}
 
@@ -147,21 +148,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	public void updateInput(byte[] signals)
 	{
 		rsDirty = false;
-	}
 
-	protected int getLocalRS()
-	{
-		int val = world.getStrongPower(pos);
-		if(val==0)
-		{
-			for(EnumFacing f : EnumFacing.HORIZONTALS)
-			{
-				IBlockState state = world.getBlockState(pos.offset(f));
-				if(state.getBlock()==Blocks.REDSTONE_WIRE&&state.getValue(BlockRedstoneWire.POWER) > val)
-					val = state.getValue(BlockRedstoneWire.POWER);
-			}
-		}
-		return val;
 	}
 
 	@Override
@@ -224,7 +211,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		soundID = nbt.getString("sound");
 		soundVolume = nbt.getFloat("volume");
 
-		facing = EnumFacing.byIndex(nbt.getInteger("facing"));
+		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 
 		redstoneChannel = nbt.getInteger("redstoneChannel");
 	}
@@ -270,7 +257,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		if(!hammer)
 			return null;
 		return new String[]{I18n.format(Lib.DESC_INFO+"redstoneChannel",
-				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getTranslationKey()))};
+				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getUnlocalizedName()))};
 	}
 
 	@Override

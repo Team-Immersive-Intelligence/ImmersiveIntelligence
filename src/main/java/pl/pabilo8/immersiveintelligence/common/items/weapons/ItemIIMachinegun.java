@@ -83,7 +83,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 		float f7 = f4*f5;
 		float f8 = f3*f5;
 		double d3 = 5.0D;
-		Vec3d vec3d1 = vec3d.add((double)f7*5.0D, (double)f6*5.0D, (double)f8*5.0D);
+		Vec3d vec3d1 = vec3d.addVector((double)f7*5.0D, (double)f6*5.0D, (double)f8*5.0D);
 		RayTraceResult raytraceresult = worldIn.rayTraceBlocks(vec3d, vec3d1, false);
 
 		if(raytraceresult==null)
@@ -179,7 +179,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 		if(rItem!=this) throw new IllegalStateException("fixupItem was not called at the appropriate time");
 
 		//Now, reconfigure the block to match our mod.
-		this.setTranslationKey(ImmersiveIntelligence.MODID+"."+this.itemName);
+		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.

@@ -2,11 +2,11 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 /**
@@ -15,9 +15,9 @@ import java.util.Locale;
 public class BulletRegistry
 {
 	public static BulletRegistry INSTANCE = new BulletRegistry();
-	public HashMap<String, IBulletComponent> registeredComponents = new HashMap<>();
-	public HashMap<String, IBulletCoreType> registeredBulletCores = new HashMap<>();
-	public HashMap<String, IBulletCasingType> registeredCasings = new HashMap<>();
+	public LinkedHashMap<String, IBulletComponent> registeredComponents = new LinkedHashMap<>();
+	public LinkedHashMap<String, IBulletCoreType> registeredBulletCores = new LinkedHashMap<>();
+	public LinkedHashMap<String, IBulletCasingType> registeredCasings = new LinkedHashMap<>();
 
 	public HashMap<String, IBulletModel> registeredModels = new HashMap<>();
 
@@ -83,7 +83,7 @@ public class BulletRegistry
 		return registeredBulletCores.get(name);
 	}
 
-	public static enum EnumComponentRole implements IStringSerializable
+	public enum EnumComponentRole implements IStringSerializable
 	{
 		SHRAPNEL,
 		PIERCING,

@@ -17,7 +17,8 @@ public enum IIBlockTypes_Connector implements IStringSerializable, BlockIEBase.I
 	FLUID_INSERTER,
 	ADVANCED_INSERTER,
 	ADVANCED_FLUID_INSERTER,
-	CHEMICAL_DISPENSER;
+	CHEMICAL_DISPENSER,
+	PROGRAMMABLE_SPEAKER;
 
 	@Override
 	public String getName()

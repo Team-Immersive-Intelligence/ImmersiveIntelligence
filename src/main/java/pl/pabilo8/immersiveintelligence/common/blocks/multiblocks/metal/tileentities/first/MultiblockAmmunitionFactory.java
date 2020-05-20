@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -25,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMu
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
+
 public class MultiblockAmmunitionFactory implements IMultiblock
 {
 	static final IngredientStack[] materials = new IngredientStack[]{
@@ -253,6 +255,18 @@ public class MultiblockAmmunitionFactory implements IMultiblock
 	@Override
 	public boolean overwriteBlockRender(ItemStack stack, int iterator)
 	{
+		if(iterator==28||iterator==33)
+		{
+			return ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.EAST);
+		}
+		if(iterator==25||iterator==30||iterator==35)
+		{
+			return ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.WEST);
+		}
+		if(iterator==36||iterator==37||iterator==38||iterator==41||iterator==42)
+		{
+			return ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
+		}
 		return false;
 	}
 

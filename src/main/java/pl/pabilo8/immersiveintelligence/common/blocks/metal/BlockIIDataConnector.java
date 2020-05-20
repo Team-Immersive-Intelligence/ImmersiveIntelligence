@@ -47,6 +47,7 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 		tesrMap.put(IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_INSERTER.getName());
 		tesrMap.put(IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), IIBlockTypes_Connector.FLUID_INSERTER.getName());
 		tesrMap.put(IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), IIBlockTypes_Connector.CHEMICAL_DISPENSER.getName());
+		tesrMap.put(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta(), IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getName());
 		//tesrMap.put(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getMeta(), IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getName());
 
 	}
@@ -132,6 +133,8 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 				return new TileEntityDataRelay();
 			case ALARM_SIREN:
 				return new TileEntityAlarmSiren();
+			case PROGRAMMABLE_SPEAKER:
+				return new TileEntityProgrammableSpeaker();
 			case INSERTER:
 				return new TileEntityInserter();
 			case ADVANCED_INSERTER:

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common;
 import blusunrize.immersiveengineering.common.util.IEPotions.IEPotion;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
  */
 public class IIPotions
 {
-	public static Potion suppression, broken_armor;
+	public static Potion suppression, broken_armor, corrosion;
 
 	public static void init()
 	{
@@ -28,6 +29,18 @@ public class IIPotions
 		broken_armor = new IIPotion(new ResourceLocation(ImmersiveIntelligence.MODID, "broken_armor"), true, 0x755959, 0, false, 1, true, true);
 		broken_armor.setPotionName("potion."+ImmersiveIntelligence.MODID+".broken_armor");
 		broken_armor.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+
+		corrosion = new IIPotion(new ResourceLocation(ImmersiveIntelligence.MODID, "corrosion"), true, 0x567b46, 0, false, 2, true, true)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				living.getArmorInventoryList().forEach(stack -> stack.damageItem(amplifier, living));
+			}
+		};
+		corrosion.setPotionName("potion."+ImmersiveIntelligence.MODID+".corrosion");
+		corrosion.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+
 
 	}
 
