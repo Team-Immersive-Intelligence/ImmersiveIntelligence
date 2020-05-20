@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 /**
  * Created by Pabilo8 on 10-07-2019.
@@ -22,19 +23,16 @@ public class BlockIIFluid extends BlockFluidClassic
 {
 	private int flammability = 0;
 	private int fireSpread = 0;
-	private int acid = 0;
+	public boolean isAcid = false;
 	private PotionEffect[] potionEffects;
 
 	public BlockIIFluid(String name, Fluid fluid, Material material)
 	{
 		super(fluid, material);
-		this.setTranslationKey(ImmersiveIntelligence.MODID+"."+name);
+		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
-		ImmersiveIntelligence.proxy.blocks.add(this);
-			if (name.endsWith("acid"));
-			{
-				acid = 1;	
-			}
+		CommonProxy.blocks.add(this);
+		isAcid = name.endsWith("acid");
 	}
 
 	public BlockIIFluid setFlammability(int flammability, int fireSpread)
@@ -70,19 +68,21 @@ public class BlockIIFluid extends BlockFluidClassic
 
 
 	@Override
-	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity)
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
 		if(potionEffects!=null&&entity instanceof EntityLivingBase)
 		{
 			for(PotionEffect effect : potionEffects)
 				if(effect!=null)
 					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(effect));
+
+			if(isAcid)
+			{
+				entity.attackEntityFrom(IEDamageSources.acid, 2);
+			}
 		}
-		
-		if(acid==1&&entity instanceof EntityLivingBase)
-		{
-			((EntityLivingBase)entity).attackEntityFrom(IEDamageSources.acid, 4);
-		}
+
+
 	}
 
 }

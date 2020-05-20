@@ -496,7 +496,8 @@ desc.immersiveintelligence.data_merger.2=Right
 //Potion effects
 
 potion.immersiveintelligence.suppression=Suppressed
-potion.immersiveintelligence.broken_armor=Armour Penetrated
+potion.immersiveintelligence.broken_armor=Penetrated Armor
+potion.immersiveintelligence.corrosion=Corrosion
 
 //Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s

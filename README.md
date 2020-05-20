@@ -33,6 +33,8 @@ The mod authors, the developers:
 Special thanks to:
 - [@Krystiano0306](https://github.com/Krystiano0306) - Newbie Modeller, helped at various model-related jobs
 - @Blacknight - Texture artist, created some textures for the mod's items
+- [@Kingcavespider1](https://github.com/kingcavespider1) - added a damage effect for the acid blocks
+- @Carver - A lot of great ideas for new content, *a lot*, also helped with sounds
 
 Proudly powered by Turbo Model Thingy (TMT):
 - Original author: [@GaryCXJk](https://github.com/GaryCXJk)
