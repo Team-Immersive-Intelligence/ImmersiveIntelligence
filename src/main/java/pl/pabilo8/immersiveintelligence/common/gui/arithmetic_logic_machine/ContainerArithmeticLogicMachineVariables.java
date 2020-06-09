@@ -9,13 +9,13 @@ import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.Cont
 /**
  * Created by Pabilo8 on 30-06-2019.
  */
-public class ContainerArithmeticLogicMachineVariables0 extends ContainerIEBase
+public class ContainerArithmeticLogicMachineVariables extends ContainerIEBase
 {
-	public ContainerArithmeticLogicMachineVariables0(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile)
+	public ContainerArithmeticLogicMachineVariables(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, int page)
 	{
 		super(inventoryPlayer, tile);
 
-		this.addSlotToContainer(new CircuitSlot(this, this.inv, 0, 5, 61));
+		this.addSlotToContainer(new CircuitSlot(this, this.inv, page, 5, 61));
 
 		this.slotCount = tile.getInventory().size();
 		this.tile = tile;
@@ -26,5 +26,4 @@ public class ContainerArithmeticLogicMachineVariables0 extends ContainerIEBase
 		for(int i = 0; i < 9; i++)
 			addSlotToContainer(new Slot(inventoryPlayer, i, 8+i*18, 199));
 	}
-
 }

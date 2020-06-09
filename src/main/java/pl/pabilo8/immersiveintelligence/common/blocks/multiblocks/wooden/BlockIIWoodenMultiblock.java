@@ -8,7 +8,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -121,6 +120,10 @@ public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_Wood
 			case SKYCRATE_STATION:
 			{
 				return new TileEntitySkyCrateStation();
+			}
+			case SKYCART_STATION:
+			{
+				return new TileEntitySkyCartStation();
 			}
 			case SAWMILL:
 			{

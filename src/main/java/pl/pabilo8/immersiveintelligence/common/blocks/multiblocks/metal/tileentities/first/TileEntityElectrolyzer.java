@@ -323,7 +323,7 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_ELECTROLYZER;
+		return IIGuiList.GUI_ELECTROLYZER.ordinal();
 	}
 
 	@Override

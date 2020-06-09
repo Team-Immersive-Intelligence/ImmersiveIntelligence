@@ -2,47 +2,39 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden;
 
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
-import blusunrize.immersiveengineering.api.tool.ConveyorHandler.ConveyorDirection;
-import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorBelt;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.models.ModelConveyor;
-import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.model.ModelBanner;
 import net.minecraft.client.renderer.BannerTextures;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityBanner;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCartStation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrateStation;
+import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCartStation;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCartStation;
 
-import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
  */
-public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCrateStation>
+public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCartStation>
 {
-	private static ModelSkyCrateStation model = new ModelSkyCrateStation();
+	private static ModelSkyCartStation model = new ModelSkyCartStation();
 	private static TileEntityBanner banner = new TileEntityBanner();
 	private static ModelBanner modelBanner = new ModelBanner();
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_station.png";
+	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycart_station.png";
 
 	static
 	{
@@ -52,7 +44,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 	}
 
 	@Override
-	public void render(TileEntitySkyCrateStation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(TileEntitySkyCartStation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
@@ -63,75 +55,54 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
+			//double ticks = Math.min(1, ((te.getWorld().getTotalWorldTime()+partialTicks)%100)/100/0.75);
+
 			float rpm_pitch = 0, rpm_grab = 0, rpm_crate = 0, rpm_gears = 0;
 			double motorTick = 0f;
 			float progress = 0f;
-			IConveyorBelt con = ConveyorHandler.getConveyor(new ResourceLocation("immersiveengineering:conveyor"), null);
-
-			ItemStack crateItem = ItemStack.EMPTY;
-			ItemStack mountItem = ItemStack.EMPTY;
 
 			if(te.hasWorld())
 			{
 				motorTick = (te.getWorld().getTotalWorldTime()+partialTicks%RotaryUtils.getRPMMax())/RotaryUtils.getRPMMax();
 				progress = te.progress+(partialTicks*te.getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(te.getInventory(), te.getEfficiencyMultiplier()));
-				crateItem = te.getInventory().get(3);
-				mountItem = te.getInventory().get(4);
-
 			}
-			double pistonOnly = 0, cratePusher = 0, inserterAngle = 0, inserterLength = 0;
-
+			double railBlock = 0, pistonDoor = 0, pistonOnly = 0, cratePusher = 0, inserterAngle = 0, inserterLength = 0;
+			//Math.abs(Math.min(Math.max(((Math.abs(ticks-0.5f)*2f)-0.5)/0.5, 0)/0.25, 1))
 			double animProgress = 0;
-			boolean convInWork = false, convOutWork = false;
-
 			rpm_gears = te.rotation.getRotationSpeed();
-
-			model.getBlockRotation(te.facing, model);
-
 			switch(te.animation)
 			{
+				case 0:
+				{
+					railBlock = 0;
+					break;
+				}
 				case 1:
 				{
-					drawCrate(te, 0, null
-					);
+
+					railBlock = 1;
 					break;
 				}
 				case 2:
 				{
-					animProgress = progress/SkyCrateStation.crateInTime;
-					convInWork = true;
-					float oneThird = (float)Math.min(animProgress/0.45f, 1f);
-					float half = (float)Math.min(animProgress/0.65f, 1f);
-					float secondHalf = (float)Math.min(Math.max(animProgress-0.65f, 0f)/0.35f, 1f);
-					float secondHalfQuarter = (float)MathHelper.clamp((animProgress-0.45)/0.2f, 0f, 1f);
-					drawCrate(te, animProgress, (double1) ->
-							{
-								GlStateManager.translate(1.5-half-secondHalf*0.5, -1+half, 0);
-								GlStateManager.rotate(35+(oneThird*10)-(secondHalfQuarter*35)-(secondHalf*10), 0, 0, -1);
-								GlStateManager.translate(0, 0.125f-(secondHalfQuarter*0.125), 0);
-							}
-					);
-
+					animProgress = progress/SkyCartStation.minecartInTime;
+					railBlock = (progress > 0.5)?animProgress: 0;
 					break;
 				}
 				case 3:
 				{
-					animProgress = progress/SkyCrateStation.crateOutTime;
-					float finalAnimProgress = (float)animProgress;
-					drawCrate(te, animProgress, (double1) ->
-							{
-								GlStateManager.translate(-1.5*finalAnimProgress, 0, 0);
-							}
-					);
-					convOutWork = true;
+					animProgress = progress/SkyCartStation.minecartOutTime;
+					railBlock = 1f-Math.min(1, animProgress/0.35);
+					double angle = Math.abs(animProgress-0.5d)/0.5;
+					double angle2 = MathHelper.clamp(Math.abs(animProgress-0.65d)/0.15, 0, 1);
+					pistonDoor = angle > 0.5?1f-((angle-0.5)/0.5): 1;
+					pistonOnly = angle2 > 0.5?1f-((angle2-0.5)/0.5): 1;
 					break;
 				}
 				case 4:
 				{
-					animProgress = progress/SkyCrateStation.inputTime;
-					mountItem = te.getInventory().get(4);
-					double angle2 = MathHelper.clamp(Math.abs(animProgress-0.35d)/0.15, 0, 1);
-					pistonOnly = angle2 > 0.5?1f-((angle2-0.5)/0.5): 1;
+					animProgress = progress/SkyCrateStation.outputTime;
+					railBlock = 1;
 
 					rpm_grab = animProgress <= 0.3f?60f:
 							animProgress <= 0.5f?60f-(60f*((float)animProgress-0.3f)/0.2f):
@@ -154,15 +125,16 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 				}
 				case 5:
 				{
-					animProgress = progress/SkyCrateStation.outputTime;
+					animProgress = progress/SkyCrateStation.inputTime;
+					railBlock = 1;
 
-					inserterAngle = animProgress <= 0.15d?animProgress/0.15*-1:
-							animProgress <= 0.65d?-1+((animProgress-0.15)/0.5*1.75):
-									animProgress <= 0.6d?1.75-((animProgress-0.65)/0.1*0.75):
+					inserterAngle = animProgress <= 0.15d?animProgress/0.15*-1.25:
+							animProgress <= 0.65d?-1.25+((animProgress-0.15)/0.5*2.35):
+									animProgress <= 0.6d?1.25-((animProgress-0.65)/0.1*0.75):
 											0.65*(1f-((animProgress-0.75)/0.25));
 
 					inserterLength = animProgress <= 0.15?animProgress/0.15d*0.25:
-							animProgress <= 0.65?0.25+((animProgress-0.15)/0.5):
+							animProgress <= 0.65?0.25+((animProgress-0.15)/0.5*0.75):
 									animProgress <= 0.75?1: 1-((animProgress-0.75)/0.25);
 
 					rpm_pitch = animProgress <= 0.15?-60f:
@@ -184,6 +156,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 				}
 			}
 
+			model.getBlockRotation(te.facing, model);
 			model.render();
 
 			GlStateManager.pushMatrix();
@@ -214,16 +187,24 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, pistonOnly*-0.5f, 0);
+			GlStateManager.translate(0, pistonDoor*0.75f, 0);
 			for(ModelRendererTurbo mod : model.pistonDoorModel)
 				mod.render(0.0625f);
-			GlStateManager.translate(0, 1, 1);
-			ClientUtils.bindAtlas();
-			List<BakedQuad> quads = ModelConveyor.getBaseConveyor(EnumFacing.WEST, 1, new Matrix4(EnumFacing.WEST), ConveyorDirection.HORIZONTAL,
-					ClientUtils.getSprite((convInWork||convOutWork)?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
-			ClientUtils.renderQuads(quads, 1, 1, 1, 1);
-			ClientUtils.bindTexture(texture);
 			GlStateManager.popMatrix();
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(pistonOnly*0.5f, 0f, 0);
+			for(ModelRendererTurbo mod : model.pistonModel)
+				mod.render(0.0625f);
+			GlStateManager.popMatrix();
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(1.8125f, 0.71875f, 0.5f);
+			GlStateManager.rotate(90f*(float)railBlock, 1, 0, 0);
+			for(ModelRendererTurbo mod : model.trainBlockerModel)
+				mod.render(0.0625f);
+			GlStateManager.popMatrix();
+
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0, 21f/16f, -7f/16f);
@@ -238,30 +219,30 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			for(ModelRendererTurbo mod : model.inserterTopperModel)
 				mod.render(0.0625f);
 
-			if(te.animation==4&&animProgress > 0.3&&animProgress < 0.8&&mountItem.getItem() instanceof ISkycrateMount)
+			if(te.animation==4&&animProgress > 0.3&&animProgress < 0.8&&te.mount.getItem() instanceof ISkycrateMount)
 			{
-				ISkycrateMount mount = (ISkycrateMount)mountItem.getItem();
+				ISkycrateMount mount = (ISkycrateMount)te.mount.getItem();
 
 				GlStateManager.translate(0.5, 21f/16f+(1f-inserterLength)-0.625f+inserterLength, -0.125);
 				GlStateManager.rotate(-90f*(float)inserterAngle, 1, 0, 0);
 				GlStateManager.translate(0, -1, 0);
 				GlStateManager.scale(0.85, 0.85, 0.85);
-				mount.render(mountItem, getWorld(), partialTicks, -1);
+				mount.render(te.mount, getWorld(), partialTicks, -1);
 			}
-			else if(te.animation==5&&animProgress > 0.15&&animProgress <= 0.75&&mountItem.getItem() instanceof ISkycrateMount)
+			else if(te.animation==5&&animProgress > 0.15&&animProgress <= 0.75&&te.mount.getItem() instanceof ISkycrateMount)
 			{
-				ISkycrateMount mount = (ISkycrateMount)mountItem.getItem();
+				ISkycrateMount mount = (ISkycrateMount)te.mount.getItem();
 
 				GlStateManager.translate(0.5, 21f/16f+(1f-inserterLength)-0.625f+inserterLength, -0.125);
 				GlStateManager.rotate(-90f*(float)inserterAngle, 1, 0, 0);
 				GlStateManager.translate(0, -1, 0);
 				GlStateManager.scale(0.85, 0.85, 0.85);
-				mount.render(mountItem, getWorld(), partialTicks, -1);
+				mount.render(te.mount, getWorld(), partialTicks, -1);
 
 				if(animProgress >= 0.65)
 				{
 					GlStateManager.translate(0, 0.5, 0);
-					ClientUtils.mc().getRenderItem().renderItem(crateItem, TransformType.NONE);
+					ClientUtils.mc().getRenderItem().renderItem(te.crate, TransformType.NONE);
 				}
 			}
 
@@ -322,9 +303,10 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 				GlStateManager.popMatrix();
 
-				if(mountItem.getItem() instanceof ISkycrateMount)
+				if(te.mount.getItem() instanceof ISkycrateMount)
 				{
-					ISkycrateMount mount = (ISkycrateMount)mountItem.getItem();
+					boolean renderCrate = true, renderMount = true;
+					ISkycrateMount mount = (ISkycrateMount)te.mount.getItem();
 					GlStateManager.translate(0.5, 1.625+0.0625, 1.5);
 					GlStateManager.scale(0.85, 0.85, 0.85);
 					if(te.animation==4)
@@ -332,35 +314,34 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 						if(animProgress < 0.3)
 						{
 							GlStateManager.pushMatrix();
-							GlStateManager.translate(0, 0, -MathHelper.clamp((animProgress-0.25)/0.1, 0, 1));
-							mount.render(mountItem, getWorld(), partialTicks, -1);
+							GlStateManager.translate(0, 0, Math.min(1, (animProgress-0.2)/0.1)*-0.25);
+							mount.render(te.mount, getWorld(), partialTicks, -1);
 							GlStateManager.popMatrix();
 
 						}
 						GlStateManager.translate(0, 0.5, 0);
-						float pushPiston = animProgress > 0.45?(float)(1f-pistonOnly)*-0.6f: 0;
-						GlStateManager.translate(0, -1.25*(MathHelper.clamp((animProgress-0.25)/0.1, 0, 1))-pushPiston, 0);
-						ClientUtils.mc().getRenderItem().renderItem(crateItem, TransformType.NONE);
+						GlStateManager.translate(0, -1.5*(MathHelper.clamp((animProgress-0.25)/0.1, 0, 1)), 0);
+						ClientUtils.mc().getRenderItem().renderItem(te.crate, TransformType.NONE);
 					}
 					else if(te.animation==5)
 					{
 						if(animProgress > 0.75)
 						{
-							mount.render(mountItem, getWorld(), partialTicks, -1);
+							mount.render(te.mount, getWorld(), partialTicks, -1);
 							GlStateManager.translate(0, 0.5, 0);
-							ClientUtils.mc().getRenderItem().renderItem(crateItem, TransformType.NONE);
+							ClientUtils.mc().getRenderItem().renderItem(te.crate, TransformType.NONE);
 						}
 						else if(animProgress < 0.65)
 						{
-							GlStateManager.translate(0, -0.25, 0);
-							ClientUtils.mc().getRenderItem().renderItem(crateItem, TransformType.NONE);
+							GlStateManager.translate(0, -1.25, 0);
+							ClientUtils.mc().getRenderItem().renderItem(te.crate, TransformType.NONE);
 						}
 					}
 					else
 					{
-						mount.render(mountItem, getWorld(), partialTicks, -1);
+						mount.render(te.mount, getWorld(), partialTicks, -1);
 						GlStateManager.translate(0, 0.5, 0);
-						ClientUtils.mc().getRenderItem().renderItem(crateItem, TransformType.NONE);
+						ClientUtils.mc().getRenderItem().renderItem(te.crate, TransformType.NONE);
 					}
 				}
 
@@ -368,17 +349,15 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			GlStateManager.popMatrix();
 
-			ItemStack bannerItem = te.getInventory().get(5);
-
-			if(!bannerItem.isEmpty())
+			if(!te.banner.isEmpty())
 			{
 				GlStateManager.pushMatrix();
-				banner.setItemValues(bannerItem, false);
+				banner.setItemValues(te.banner, false);
 				ResourceLocation res = BannerTextures.BANNER_DESIGNS.getResourceLocation(banner.getPatternResourceLocation(), banner.getPatternList(), banner.getColorList());
 				if(res!=null)
 				{
-					GlStateManager.translate(1.5, 3.65, 1.9);
-					GlStateManager.scale(0.55, 0.55, 0.55);
+					GlStateManager.translate(1.3875, 3.5, 1.9);
+					GlStateManager.scale(0.5, 0.5, 0.5);
 					ClientUtils.mc().getTextureManager().bindTexture(res);
 					float f3 = (float)(x*7+y*9+z*13+te.getWorld().getTotalWorldTime()+partialTicks);
 					modelBanner.bannerSlate.rotateAngleZ = (float)Math.PI;
@@ -393,32 +372,14 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			}
 
 			ClientUtils.bindAtlas();
-			GlStateManager.translate(1f, 0, 1f);
-			quads = ModelConveyor.getBaseConveyor(EnumFacing.WEST, 1, new Matrix4(EnumFacing.WEST), ConveyorDirection.UP,
-					ClientUtils.getSprite(convInWork?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
-//			GlStateManager.translate(0, 0, 1);
-			ClientUtils.renderQuads(quads, 1, 1, 1, 1);
-
-			//Second conveyor
-			quads = ModelConveyor.getBaseConveyor(EnumFacing.WEST, 1, new Matrix4(EnumFacing.WEST), ConveyorDirection.HORIZONTAL,
-					ClientUtils.getSprite(convOutWork?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
-			GlStateManager.translate(-2f, 1, 0);
-			ClientUtils.renderQuads(quads, 1, 1, 1, 1);
-
-
+			IBlockState state = Blocks.RAIL.getDefaultState();
+			GlStateManager.translate(0, 0.125, 2);
+			ClientUtils.mc().getBlockRendererDispatcher().renderBlockBrightness(state, 1f);
+			GlStateManager.translate(1, -0.0625, 2);
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.rotate(3.5f, 0, 0, 1);
+			ClientUtils.mc().getBlockRendererDispatcher().renderBlockBrightness(state, 1f);
 			GlStateManager.popMatrix();
 		}
-	}
-
-	private void drawCrate(TileEntitySkyCrateStation te, double animation, @Nullable Consumer<Double> executed)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0.5, 1.55, 1.5);
-		if(executed!=null)
-			executed.accept(animation);
-		GlStateManager.scale(0.85, 0.85, 0.85);
-		ClientUtils.mc().getRenderItem().renderItem(te.getInventory().get(3), TransformType.NONE);
-		GlStateManager.popMatrix();
-		ClientUtils.bindTexture(texture);
 	}
 }

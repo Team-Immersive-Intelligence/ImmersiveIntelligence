@@ -167,6 +167,11 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 			horizontalSpeedPowered = s.getPoweredSpeed(mount);
 			horizontalSpeedUnpowered = s.getUnpoweredSpeed(mount);
 		}
+		else
+			setDead();
+
+		if(crate.isEmpty())
+			setDead();
 
 		dataManager.set(dataMarkerCrate, crate.serializeNBT());
 		dataManager.set(dataMarkerMount, mount.serializeNBT());

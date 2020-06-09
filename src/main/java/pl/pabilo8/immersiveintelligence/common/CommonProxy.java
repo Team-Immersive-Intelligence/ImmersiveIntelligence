@@ -28,6 +28,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -99,10 +100,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
-import pl.pabilo8.immersiveintelligence.common.gui.*;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.*;
-import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.bullet_casings.*;
 import pl.pabilo8.immersiveintelligence.common.items.material.*;
@@ -736,6 +733,7 @@ public class CommonProxy implements IGuiHandler
 
 		registerTile(TileEntitySkyCratePost.class);
 		registerTile(TileEntitySkyCrateStation.class);
+		registerTile(TileEntitySkyCartStation.class);
 
 		registerTile(TileEntitySawmill.class);
 
@@ -756,6 +754,7 @@ public class CommonProxy implements IGuiHandler
 		//Wooden
 		MultiblockHandler.registerMultiblock(MultiblockSkyCratePost.instance);
 		MultiblockHandler.registerMultiblock(MultiblockSkyCrateStation.instance);
+		MultiblockHandler.registerMultiblock(MultiblockSkyCartStation.instance);
 		MultiblockHandler.registerMultiblock(MultiblockSawmill.instance);
 
 		//Metal0
@@ -847,75 +846,18 @@ public class CommonProxy implements IGuiHandler
 		ItemStack stack = player.getActiveItemStack();
 		if(te instanceof IGuiTile)
 		{
-			Object gui = null;
-			if(ID==IIGuiList.GUI_METAL_CRATE&&te instanceof TileEntityMetalCrate)
-				gui = new ContainerMetalCrate(player.inventory, (TileEntityMetalCrate)te);
-			else if(ID==IIGuiList.GUI_AMMUNITION_CRATE&&te instanceof TileEntityAmmunitionCrate)
-				gui = new ContainerAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te);
-			else if(ID==IIGuiList.GUI_SMALL_CRATE&&te instanceof TileEntitySmallCrate)
-				gui = new ContainerSmallCrate(player.inventory, (TileEntitySmallCrate)te);
+			Container gui = null;
+			if(IIGuiList.values().length > ID&&IIGuiList.values()[ID].teClass.isInstance(te))
+			{
+				gui = IIGuiList.values()[ID].container.apply(player, te);
+			}
 
-			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE&&te instanceof TileEntityDataInputMachine)
-				gui = new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te);
-			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES&&te instanceof TileEntityDataInputMachine)
-				gui = new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te);
-			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT&&te instanceof TileEntityDataInputMachine)
-				gui = new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te);
+			if(gui!=null)
+			{
+				((IGuiTile)te).onGuiOpened(player, false);
+				return gui;
+			}
 
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineVariables0(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineVariables1(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineVariables2(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineVariables3(player.inventory, (TileEntityArithmeticLogicMachine)te);
-
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te);
-
-			else if(ID==IIGuiList.GUI_PRINTING_PRESS&&te instanceof TileEntityPrintingPress)
-				gui = new ContainerPrintingPress(player.inventory, (TileEntityPrintingPress)te);
-			else if(ID==IIGuiList.GUI_CHEMICAL_BATH&&te instanceof TileEntityChemicalBath)
-				gui = new ContainerChemicalBath(player.inventory, (TileEntityChemicalBath)te);
-			else if(ID==IIGuiList.GUI_ELECTROLYZER&&te instanceof TileEntityElectrolyzer)
-				gui = new ContainerElectrolyzer(player.inventory, (TileEntityElectrolyzer)te);
-			else if(ID==IIGuiList.GUI_PRECISSION_ASSEMBLER&&te instanceof TileEntityPrecissionAssembler)
-				gui = new ContainerPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te);
-			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
-				gui = new ContainerAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
-
-			else if(ID==IIGuiList.GUI_PACKER&&te instanceof TileEntityPacker)
-				gui = new ContainerPacker(player.inventory, (TileEntityPacker)te);
-			/*else if(ID==IIGuiList.GUI_UNPACKER&&te instanceof TileEntityUnpacker)
-				gui = new ContainerUnpacker(player.inventory, (TileEntityUnpacker)te);*/
-
-			else if(ID==IIGuiList.GUI_DATA_MERGER&&te instanceof TileEntityDataMerger)
-				gui = new ContainerDataMerger(player.inventory, (TileEntityDataMerger)te);
-			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA&&te instanceof TileEntityRedstoneInterface)
-				gui = new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te);
-			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE&&te instanceof TileEntityRedstoneInterface)
-				gui = new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te);
-
-			else if(ID==IIGuiList.GUI_SKYCRATE_STATION&&te instanceof TileEntitySkyCrateStation)
-				gui = new ContainerSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te);
-			else if(ID==IIGuiList.GUI_GEARBOX&&te instanceof TileEntityGearbox)
-				gui = new ContainerGearbox(player.inventory, (TileEntityGearbox)te);
-
-			else if(ID==IIGuiList.GUI_SAWMILL&&te instanceof TileEntitySawmill)
-				gui = new ContainerSawmill(player.inventory, (TileEntitySawmill)te);
-
-			((IGuiTile)te).onGuiOpened(player, false);
-
-			return gui;
 		}
 		return null;
 	}

@@ -1,10 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
@@ -27,18 +26,17 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenM
 /**
  * Created by Pabilo8 on 2019-06-01.
  */
-public class MultiblockSkyCrateStation implements IMultiblock
+public class MultiblockSkyCartStation implements IMultiblock
 {
 	static final IngredientStack[] materials = new IngredientStack[]{
 
 			new IngredientStack(new ItemStack(IEContent.blockWoodenDecoration, 4, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta())),
-			new IngredientStack(Utils.copyStackWithAmount(ConveyorHandler.getConveyorStack("immersiveengineering:conveyor"), 3)),
+			new IngredientStack(new ItemStack(IEContent.blockStoneDecorationSlabs, 2, BlockTypes_StoneDecoration.CONCRETE.getMeta())),
 			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 8, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 2, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(CommonProxy.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta())),
-			new IngredientStack("blockIron")
+			new IngredientStack(new ItemStack(CommonProxy.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
 	};
-	public static MultiblockSkyCrateStation instance = new MultiblockSkyCrateStation();
+	public static MultiblockSkyCartStation instance = new MultiblockSkyCartStation();
 	static ItemStack[][][] structure = new ItemStack[3][3][3];
 
 	static
@@ -59,13 +57,8 @@ public class MultiblockSkyCrateStation implements IMultiblock
 					}
 					else if(h==0&&l==0)
 					{
-						if(w==1)
-							structure[h][l][w] = new IngredientStack("blockIron").getExampleStack();
-						else
-							structure[h][l][w] = ConveyorHandler.getConveyorStack("immersiveengineering:conveyor");
+						structure[h][l][w] = new ItemStack(IEContent.blockStoneDecorationSlabs, 1, BlockTypes_StoneDecoration.CONCRETE.getMeta());
 					}
-					else if(h==1&&w < 2&&l==0)
-						structure[h][l][w] = ConveyorHandler.getConveyorStack("immersiveengineering:conveyor");
 					else if(w >= 1&&l >= 1)
 					{
 						if(h==1&&w==1&&l==1)
@@ -88,12 +81,12 @@ public class MultiblockSkyCrateStation implements IMultiblock
 		}
 	}
 
-	TileEntitySkyCrateStation te;
+	TileEntitySkyCartStation te;
 
 	@Override
 	public String getUniqueName()
 	{
-		return "II:SkyCrateStation";
+		return "II:SkyCartStation";
 	}
 
 	@Override
@@ -124,19 +117,20 @@ public class MultiblockSkyCrateStation implements IMultiblock
 			for(int l = -1; l < 2; l++)
 				for(int w = -1; w < 2; w++)
 				{
-					if(h==1&&(w==-1||l==1))
+
+					if(h==0&&(w==-1||l==-1))
 						continue;
-					if(h==0&&((w==1&&l==-1)||(w==-1&&l > -1)))
+					if(h==1&&(w==-1||l==1))
 						continue;
 
 					int ww = w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCRATE_STATION.getMeta()));
+					world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCART_STATION.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
-					if(curr instanceof TileEntitySkyCrateStation)
+					if(curr instanceof TileEntitySkyCartStation)
 					{
-						TileEntitySkyCrateStation tile = (TileEntitySkyCrateStation)curr;
+						TileEntitySkyCartStation tile = (TileEntitySkyCartStation)curr;
 						tile.facing = side;
 						tile.mirrored = false;
 						tile.formed = true;
@@ -176,23 +170,9 @@ public class MultiblockSkyCrateStation implements IMultiblock
 							}
 						}
 					}
-					else if(h==-1&&l==-1&&w==1)
+					else if(h==-1&&l==-1)
 					{
-						if(!ConveyorHandler.isConveyor(world, pos, "immersiveengineering:conveyor", dir.rotateYCCW()))
-						{
-							return false;
-						}
-					}
-					else if(h==-1&&l==-1&&w==0)
-					{
-						if(!Utils.isOreBlockAt(world, pos, "blockIron"))
-						{
-							return false;
-						}
-					}
-					else if(h==0&&l==-1&&w < 1)
-					{
-						if(!ConveyorHandler.isConveyor(world, pos, "immersiveengineering:conveyor", dir.rotateYCCW()))
+						if(!Utils.isBlockAt(world, pos, IEContent.blockStoneDecorationSlabs, BlockTypes_StoneDecoration.CONCRETE.getMeta()))
 						{
 							return false;
 						}
@@ -260,13 +240,6 @@ public class MultiblockSkyCrateStation implements IMultiblock
 	@Override
 	public boolean overwriteBlockRender(ItemStack stack, int iterator)
 	{
-		if(iterator==2||iterator==9||iterator==10)
-		{
-			GlStateManager.pushMatrix();
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
-			GlStateManager.popMatrix();
-			return true;
-		}
 		return false;
 	}
 
@@ -289,7 +262,7 @@ public class MultiblockSkyCrateStation implements IMultiblock
 	{
 		if(te==null)
 		{
-			te = new TileEntitySkyCrateStation();
+			te = new TileEntitySkyCartStation();
 			te.facing = EnumFacing.EAST;
 		}
 

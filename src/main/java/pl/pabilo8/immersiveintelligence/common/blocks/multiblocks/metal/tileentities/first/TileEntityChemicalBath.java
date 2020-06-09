@@ -342,7 +342,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_CHEMICAL_BATH;
+		return IIGuiList.GUI_CHEMICAL_BATH.ordinal();
 	}
 
 	@Override

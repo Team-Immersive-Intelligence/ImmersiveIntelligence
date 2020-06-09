@@ -691,7 +691,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_PRINTING_PRESS;
+		return IIGuiList.GUI_PRINTING_PRESS.ordinal();
 	}
 
 	@Nullable

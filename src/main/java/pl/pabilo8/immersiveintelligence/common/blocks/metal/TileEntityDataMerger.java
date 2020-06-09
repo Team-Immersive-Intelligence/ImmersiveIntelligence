@@ -15,7 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -227,7 +226,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_DATA_MERGER;
+		return IIGuiList.GUI_DATA_MERGER.ordinal();
 	}
 
 	@Nullable

@@ -9,7 +9,6 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.particle.ParticleRedstone;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +17,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -42,7 +40,6 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.sawmill;
@@ -127,6 +124,13 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 
 		if(world.isRemote)
 		{
+			if(inventory.get(0).isEmpty())
+			{
+				processPrimary = ItemStack.EMPTY;
+				processSecondary = ItemStack.EMPTY;
+				processTime = 0;
+				processTimeMax = 0;
+			}
 			if(!processPrimary.isEmpty()&&processTime < processTimeMax)
 				processTime += 1;
 
@@ -177,7 +181,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 
 			if(getCurrentEfficiency() >= 0.95&&processQueue.size() < this.getProcessQueueMaxLength())
 			{
-				if(!inventory.get(0).isEmpty()&&inventory.get(1).getItem() instanceof ISawblade)
+				if(!inventory.get(0).isEmpty()&&inventory.get(1).getItem() instanceof ISawblade&&(inventory.get(3).isEmpty()||inventory.get(3).getCount() < inventory.get(3).getMaxStackSize()))
 				{
 					ISawblade sawblade = (ISawblade)inventory.get(1).getItem();
 					SawmillRecipe recipe = SawmillRecipe.findRecipe(inventory.get(0));
@@ -216,6 +220,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 					output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
 				}
 				inventory.set(2, output);
+				sendUpdate(2);
 
 			}
 		}
@@ -465,12 +470,20 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 					processTimeMax = 0;
 				}
 			}
-			tag.setTag("processPrimary", processPrimary.serializeNBT());
-			tag.setTag("processSecondary", processSecondary.serializeNBT());
+			else if(id==2)
+			{
+				tag.setTag("inventory", Utils.writeInventory(inventory));
+			}
+			if(id!=2)
+			{
+				tag.setTag("processPrimary", processPrimary.serializeNBT());
+				tag.setTag("processSecondary", processSecondary.serializeNBT());
 
 
-			tag.setInteger("processTime", processTime);
-			tag.setInteger("processTimeMax", processTimeMax);
+				tag.setInteger("processTime", processTime);
+				tag.setInteger("processTimeMax", processTimeMax);
+
+			}
 
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
 		}
@@ -497,7 +510,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_SAWMILL;
+		return IIGuiList.GUI_SAWMILL.ordinal();
 	}
 
 	@Override

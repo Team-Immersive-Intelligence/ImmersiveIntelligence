@@ -410,7 +410,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE;
+		return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE.ordinal();
 	}
 
 	@Nullable

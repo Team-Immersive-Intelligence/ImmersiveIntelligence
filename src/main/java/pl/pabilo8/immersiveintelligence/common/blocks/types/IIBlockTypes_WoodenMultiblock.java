@@ -12,7 +12,8 @@ public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockI
 {
 	SKYCRATE_POST(false),
 	SKYCRATE_STATION(false),
-	SAWMILL(true);
+	SAWMILL(true),
+	SKYCART_STATION(false);
 
 	private boolean needsCustomState;
 

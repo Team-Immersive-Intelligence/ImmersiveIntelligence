@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
 import java.util.UUID;
 
@@ -30,6 +31,11 @@ public class MessageGuiNBT implements IMessage
 		this.y = pos.getY();
 		this.z = pos.getZ();
 		this.player = player.getUniqueID().toString();
+	}
+
+	public MessageGuiNBT(IIGuiList id, BlockPos pos, EntityPlayer player)
+	{
+		this(id.ordinal(), pos, player);
 	}
 
 	public MessageGuiNBT()

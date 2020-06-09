@@ -282,7 +282,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_GEARBOX;
+		return IIGuiList.GUI_GEARBOX.ordinal();
 	}
 
 	@Nullable

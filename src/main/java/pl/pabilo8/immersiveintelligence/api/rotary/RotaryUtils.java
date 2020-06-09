@@ -35,7 +35,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
 
@@ -468,14 +467,19 @@ public class RotaryUtils
 		renderEnergyBars(x, y, 7, 48, 2, storage, getMaxRPM(gears), getMaxTorque(gears));
 	}
 
-	public static float getGearEffectiveness(NonNullList<ItemStack> inventory, float modifier)
+	public static float getGearEffectiveness(NonNullList<ItemStack> inventory, float modifier, float invsize)
 	{
-		float fraction = 1f/(inventory.size()+1);
+		float fraction = 1f/(invsize+1);
 		float effectiveness = 0;
 		for(ItemStack stack : inventory)
 			if(!stack.isEmpty())
 				effectiveness += fraction;
 		return MathHelper.clamp((effectiveness*modifier)+fraction, 0, 1);
+	}
+
+	public static float getGearEffectiveness(NonNullList<ItemStack> inventory, float modifier)
+	{
+		return getGearEffectiveness(inventory, modifier, inventory.size());
 	}
 
 	public static float getTorqueForIEDevice(TileEntity t, double rotation)

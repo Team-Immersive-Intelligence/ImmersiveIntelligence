@@ -36,7 +36,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -725,7 +724,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_PACKER;
+		return IIGuiList.GUI_PACKER.ordinal();
 	}
 
 	@Nullable

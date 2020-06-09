@@ -1,10 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client;
 
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler.IZoomTool;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
@@ -19,16 +22,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GLContext;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
@@ -111,24 +116,51 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 		if(player.getRidingEntity() instanceof EntityMachinegun&&ZoomHandler.isZooming)
 		{
 
-				float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
-				if(steps!=null&&steps.length > 0)
-				{
-					int curStep = -1;
-					float dist = 0;
-					for(int i = 0; i < steps.length; i++)
-						if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
-						{
-							curStep = i;
-							dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
-						}
-					if(curStep!=-1)
-						ZoomHandler.fovZoom = steps[curStep];
-					else
-						ZoomHandler.fovZoom = event.getFov();
-				}
+			float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
+			if(steps!=null&&steps.length > 0)
+			{
+				int curStep = -1;
+				float dist = 0;
+				for(int i = 0; i < steps.length; i++)
+					if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
+					{
+						curStep = i;
+						dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
+					}
+				if(curStep!=-1)
+					ZoomHandler.fovZoom = steps[curStep];
+				else
+					ZoomHandler.fovZoom = event.getFov();
+			}
 			event.setNewfov(ZoomHandler.fovZoom);
 			event.setCanceled(true);
+		}
+
+	}
+
+	@SubscribeEvent
+	public void onRenderOverlayPost(RenderGameOverlayEvent.Post event)
+	{
+		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
+		EntityPlayer player = ClientUtils.mc().player;
+
+		if(mop!=null&&mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof IEntityOverlayText)
+		{
+			boolean hammer = !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND));
+
+			IEntityOverlayText overlayBlock = (IEntityOverlayText)mop.entityHit;
+			String[] text = overlayBlock.getOverlayText(ClientUtils.mc().player, mop, hammer);
+			boolean useNixie = overlayBlock.useNixieFont(ClientUtils.mc().player, mop);
+			if(text!=null&&text.length > 0)
+			{
+				FontRenderer font = useNixie?blusunrize.immersiveengineering.client.ClientProxy.nixieFontOptional: ClientUtils.font();
+				int col = (useNixie&&IEConfig.nixietubeFont)?Lib.colour_nixieTubeText: 0xffffff;
+				int i = 0;
+				for(String s : text)
+					if(s!=null)
+						font.drawString(s, event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8+(i++)*font.FONT_HEIGHT, col, true);
+			}
+
 		}
 
 	}

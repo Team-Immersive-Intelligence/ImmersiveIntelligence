@@ -10,8 +10,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycrateStation;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycartStation;
 
 import java.util.ArrayList;
 
@@ -20,14 +20,14 @@ import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.renderEner
 /**
  * Created by Pabilo8 on 10-07-2019.
  */
-public class GuiSkycrateStation extends GuiIEContainerBase
+public class GuiSkycartStation extends GuiIEContainerBase
 {
 	public static final String texture_skycrate_station = ImmersiveIntelligence.MODID+":textures/gui/wooden_gearbox.png";
-	TileEntitySkyCrateStation tile;
+	TileEntitySkyCartStation tile;
 
-	public GuiSkycrateStation(InventoryPlayer inventoryPlayer, TileEntitySkyCrateStation tile)
+	public GuiSkycartStation(InventoryPlayer inventoryPlayer, TileEntitySkyCartStation tile)
 	{
-		super(new ContainerSkycrateStation(inventoryPlayer, tile));
+		super(new ContainerSkycartStation(inventoryPlayer, tile));
 		this.ySize = 176;
 		this.tile = tile;
 	}
@@ -38,8 +38,8 @@ public class GuiSkycrateStation extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		Utils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.skycrate_station.name"), 0, 0, getXSize(), 6, 0xd99747);
-		fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(), 3)*100)+"%", 76, 47, 0xd99747);
+		Utils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.skycart_station.name"), 0, 0, getXSize(), 6, 0xd99747);
+		fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier())*100)+"%", 76, 47, 0xd99747);
 	}
 
 	/**

@@ -27,7 +27,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -379,7 +378,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA;
+		return IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA.ordinal();
 	}
 
 	@Nullable

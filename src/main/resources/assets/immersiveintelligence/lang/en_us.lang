@@ -322,6 +322,7 @@ tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced 
 //Multiblock names
 
 tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=SkyCrate Station
+tile.immersiveintelligence.wooden_multiblock.skycart_station.name=SkyCart Station
 tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=SkyCrate Post
 tile.immersiveintelligence.wooden_multiblock.sawmill.name=Sawmill
 tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
@@ -345,6 +346,7 @@ tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Railway Unpacke
 tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Redstone-Data Interface
 
 desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
+desc.immersiveengineering.info.multiblock.II:SkyCartStation=SkyCart Station
 desc.immersiveengineering.info.multiblock.II:SkyCratePost=SkyCrate Post
 desc.immersiveengineering.info.multiblock.II:Sawmill=Sawmill
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
@@ -1174,10 +1176,12 @@ ie.manual.entry.skycrates.name=Skycrates
 ie.manual.entry.skycrates.subtext=The actual logistic lines!
 ie.manual.entry.skycrates0=The skycrate system is a different approach on delivering items. It's speed is superior to any conveyor and lines made of rope are much cheaper and more space-efficient. There are also some drawbacks to it: it requires stations on both sides and the crates need to be inserted to a minecart. Skycrates are a better option than conveyors on longer distances, it is not encouraged to use them on short (0-30m) distances.
 ie.manual.entry.skycrates1=The Skycrate Station is a begin and end point of a skycrate line. To form it use a hammer on the scaffolding in the middle. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power3;§o§nGearboxes§r;>.
-ie.manual.entry.skycrates2=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. Minecarts can only enter the station when the railway barrier is up, a minecart can be forced out of the station, by applying a redstone signal. The station will automatically expell minecarts after loading/unloading.
-ie.manual.entry.skycrates3=The Skycrate Post is what a relay between two points in the skycrate network. Only two wires can be attached. To form it use a hammer on the fence.
-ie.manual.entry.skycrates4=Crate minecarts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart, items inside won't be lost. When disassembled, the minecart splits into the actual cart and the crate.
-ie.manual.entry.skycrates5=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.
+ie.manual.entry.skycrates2=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. The crates are inserted and outputted onto the conveyor. A crate can be forced be forced out of the station, by applying a redstone signal.
+ie.manual.entry.skycrates3=The Skycart Station is a begin and end point of a skycrate line. To form it use a hammer on the scaffolding in the middle. To function, it requires rotary power inputted to its side. The amount of gears increase its efficiency similar to how it works with the <link;rotary_power3;§o§nGearboxes§r;>.
+ie.manual.entry.skycrates4=The station uses mounts to attach the skycrates, the mounts are taken from the back, behind the inserter. Minecarts can only enter the station when the railway barrier is up, a minecart can be forced out of the station, by applying a redstone signal. The station will automatically expell minecarts after loading/unloading.
+ie.manual.entry.skycrates5=The Skycrate Post is what a relay between two points in the skycrate network. Only two wires can be attached. To form it use a hammer on the fence.
+ie.manual.entry.skycrates6=Crate minecarts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart, items inside won't be lost. When disassembled, the minecart splits into the actual cart and the crate.
+ie.manual.entry.skycrates7=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.
 
 
 //Other

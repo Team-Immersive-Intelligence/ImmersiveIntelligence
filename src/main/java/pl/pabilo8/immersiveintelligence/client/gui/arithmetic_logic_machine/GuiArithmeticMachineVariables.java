@@ -28,10 +28,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiButtonItemAdvance
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables0;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables1;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables2;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables3;
+import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
@@ -54,20 +51,18 @@ public class GuiArithmeticMachineVariables extends GuiIEContainerBase implements
 
 	public TileEntityArithmeticLogicMachine tile;
 	public InventoryPlayer playerInv;
-	private boolean wasDown = false;
-	IItemHandler handler;
 	public ContainerIEBase container;
+	IItemHandler handler;
 	ItemStack item;
-
 	int page;
-
 	DataPacket list;
+	private boolean wasDown = false;
 
 	//It was necessary to make the Gui control the Container
 	public GuiArithmeticMachineVariables(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, int page)
 	{
 		//Tricky, but definitely doable!
-		super(page==0?new ContainerArithmeticLogicMachineVariables0(inventoryPlayer, tile): page==1?new ContainerArithmeticLogicMachineVariables1(inventoryPlayer, tile): page==2?new ContainerArithmeticLogicMachineVariables2(inventoryPlayer, tile): new ContainerArithmeticLogicMachineVariables3(inventoryPlayer, tile));
+		super(new ContainerArithmeticLogicMachineVariables(inventoryPlayer, tile, page));
 
 		this.ySize = 222;
 		this.playerInv = inventoryPlayer;

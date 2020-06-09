@@ -13,6 +13,9 @@
       "skycrate_station": {
         "model": "immersiveintelligence:smartmodel/conn_empty"
       },
+      "skycart_station": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
       "skycrate_post": {
         "model": "immersiveintelligence:smartmodel/conn_empty"
       }

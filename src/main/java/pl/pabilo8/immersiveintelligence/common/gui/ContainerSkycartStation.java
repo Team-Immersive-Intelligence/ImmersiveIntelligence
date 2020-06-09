@@ -5,17 +5,17 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCartStation;
 
 /**
  * Created by Pabilo8 on 2019-05-17.
  */
-public class ContainerSkycrateStation extends ContainerIEBase
+public class ContainerSkycartStation extends ContainerIEBase
 {
-	public ContainerSkycrateStation(InventoryPlayer inventoryPlayer, TileEntitySkyCrateStation tile)
+	public ContainerSkycartStation(InventoryPlayer inventoryPlayer, TileEntitySkyCartStation tile)
 	{
 		super(inventoryPlayer, tile);
-		for(int i = 0; i < 3; i++)
+		for(int i = 0; i < tile.getInventory().size(); i++)
 			this.addSlotToContainer(new Slot(this.inv, i, 52+(i%9)*18, 29+(i/9)*18)
 			{
 				@Override

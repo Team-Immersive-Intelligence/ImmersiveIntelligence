@@ -117,7 +117,7 @@ public class TileEntitySmallCrate extends TileEntityIEBase implements IIEInvento
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_SMALL_CRATE;
+		return IIGuiList.GUI_SMALL_CRATE.ordinal();
 	}
 
 	@Override

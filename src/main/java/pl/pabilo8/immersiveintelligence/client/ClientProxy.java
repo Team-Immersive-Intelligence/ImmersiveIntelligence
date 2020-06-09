@@ -22,6 +22,7 @@ import blusunrize.lib.manual.ManualPages;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -66,13 +67,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleGunfire;
-import pl.pabilo8.immersiveintelligence.client.gui.*;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualDataAndElectronics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualLogistics;
@@ -87,6 +82,7 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRen
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SawmillRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCartStationRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCratePostRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCrateStationRenderer;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -96,11 +92,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSawmill;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCratePost;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalWheel;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
@@ -279,85 +271,26 @@ public class ClientProxy extends CommonProxy
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItemMainhand();
-		ItemStack stack2 = player.getHeldItemOffhand();
+		ItemStack stack = player.getActiveItemStack();
 		if(te instanceof IGuiTile)
 		{
+			GuiScreen gui = null;
+			if(IIGuiList.values().length > ID&&IIGuiList.values()[ID].teClass.isInstance(te))
+			{
+				gui = IIGuiList.values()[ID].gui.apply(player, te);
+			}
 
-			Object gui = null;
-			if(ID==IIGuiList.GUI_METAL_CRATE&&te instanceof TileEntityMetalCrate)
-				gui = new GuiMetalCrate(player.inventory, (TileEntityMetalCrate)te);
-			else if(ID==IIGuiList.GUI_AMMUNITION_CRATE&&te instanceof TileEntityAmmunitionCrate)
-				gui = new GuiAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te);
-			else if(ID==IIGuiList.GUI_SMALL_CRATE&&te instanceof TileEntitySmallCrate)
-				gui = new GuiSmallCrate(player.inventory, (TileEntitySmallCrate)te);
-
-			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE&&te instanceof TileEntityDataInputMachine)
-				gui = new GuiDataInputMachineStorage(player.inventory, (TileEntityDataInputMachine)te);
-			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES&&te instanceof TileEntityDataInputMachine)
-				gui = new GuiDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te);
-			else if(ID==IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT&&te instanceof TileEntityDataInputMachine)
-				gui = new GuiDataInputMachineEdit(player.inventory, (TileEntityDataInputMachine)te);
-
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine)te);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 0);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 1);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 2);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 3);
-
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 0);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 1);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 2);
-			else if(ID==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4&&te instanceof TileEntityArithmeticLogicMachine)
-				gui = new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 3);
-
-			else if(ID==IIGuiList.GUI_PRINTING_PRESS&&te instanceof TileEntityPrintingPress)
-				gui = new GuiPrintingPress(player.inventory, (TileEntityPrintingPress)te);
-			else if(ID==IIGuiList.GUI_CHEMICAL_BATH&&te instanceof TileEntityChemicalBath)
-				gui = new GuiChemicalBath(player.inventory, (TileEntityChemicalBath)te);
-			else if(ID==IIGuiList.GUI_ELECTROLYZER&&te instanceof TileEntityElectrolyzer)
-				gui = new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer)te);
-			else if(ID==IIGuiList.GUI_PRECISSION_ASSEMBLER&&te instanceof TileEntityPrecissionAssembler)
-				gui = new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te);
-			else if(ID==IIGuiList.GUI_AMMUNITION_FACTORY&&te instanceof TileEntityAmmunitionFactory)
-				gui = new GuiAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te);
-
-			else if(ID==IIGuiList.GUI_PACKER&&te instanceof TileEntityPacker)
-				gui = new GuiPacker(player.inventory, (TileEntityPacker)te);
-			/*else if(ID==IIGuiList.GUI_UNPACKER&&te instanceof TileEntityUnpacker)
-				gui = new GuiUnpacker(player.inventory, (TileEntityUnpacker)te);*/
-
-			else if(ID==IIGuiList.GUI_DATA_MERGER&&te instanceof TileEntityDataMerger)
-				gui = new GuiDataMerger(player.inventory, (TileEntityDataMerger)te);
-			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA&&te instanceof TileEntityRedstoneInterface)
-				gui = new GuiDataRedstoneInterfaceData(player.inventory, (TileEntityRedstoneInterface)te);
-			else if(ID==IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE&&te instanceof TileEntityRedstoneInterface)
-				gui = new GuiDataRedstoneInterfaceRedstone(player.inventory, (TileEntityRedstoneInterface)te);
-
-			else if(ID==IIGuiList.GUI_SKYCRATE_STATION&&te instanceof TileEntitySkyCrateStation)
-				gui = new GuiSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te);
-			else if(ID==IIGuiList.GUI_GEARBOX&&te instanceof TileEntityGearbox)
-				gui = new GuiGearbox(player.inventory, (TileEntityGearbox)te);
-
-			else if(ID==IIGuiList.GUI_SAWMILL&&te instanceof TileEntitySawmill)
-				gui = new GuiSawmill(player.inventory, (TileEntitySawmill)te);
-
-			((IGuiTile)te).onGuiOpened(player, true);
-			return gui;
+			if(gui!=null)
+			{
+				((IGuiTile)te).onGuiOpened(player, true);
+				return gui;
+			}
 		}
 		else
 		{
-			if((stack.getItem() instanceof ItemIIPrintedPage||stack2.getItem() instanceof ItemIIPrintedPage)&&ID==IIGuiList.GUI_PRINTED_PAGE_TEXT)
+			if(stack.getItem() instanceof ItemIIPrintedPage&&ID==IIGuiList.GUI_PRINTED_PAGE_TEXT.ordinal())
 			{
-				return new GuiPrintedPage(player, (stack.getItem() instanceof ItemIIPrintedPage)?stack: stack2);
+				return new GuiPrintedPage(player, stack);
 			}
 		}
 		return null;
@@ -489,8 +422,6 @@ public class ClientProxy extends CommonProxy
 		TileEntityChemicalDispenser.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityChemicalDispenser.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
-		TileEntitySkyCrateStation.gear_iron = new ItemStack(item_motor_gear, 1, 2);
-
 		//TODO:Advanced Fluid Inserter
 		//TileEntityInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		//TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
@@ -598,6 +529,7 @@ public class ClientProxy extends CommonProxy
 
 		//Multiblocks
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCartStation.class, new SkyCartStationRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCratePost.class, new SkyCratePostRenderer());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer());

@@ -28,7 +28,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
@@ -508,7 +507,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_PRECISSION_ASSEMBLER;
+		return IIGuiList.GUI_PRECISSION_ASSEMBLER.ordinal();
 	}
 
 	@Override

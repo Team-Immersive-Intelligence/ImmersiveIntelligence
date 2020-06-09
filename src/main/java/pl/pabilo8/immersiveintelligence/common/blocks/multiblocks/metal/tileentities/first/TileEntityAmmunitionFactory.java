@@ -981,7 +981,7 @@ public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileE
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_AMMUNITION_FACTORY;
+		return IIGuiList.GUI_AMMUNITION_FACTORY.ordinal();
 	}
 
 	@Nullable

@@ -25,7 +25,7 @@ public class TileEntityMetalCrate extends TileEntityWoodenCrate implements IGuiT
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_METAL_CRATE;
+		return IIGuiList.GUI_METAL_CRATE.ordinal();
 	}
 
 	@Override

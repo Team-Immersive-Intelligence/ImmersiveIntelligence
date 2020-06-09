@@ -410,7 +410,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE;
+		return IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE.ordinal();
 	}
 
 	@Nullable

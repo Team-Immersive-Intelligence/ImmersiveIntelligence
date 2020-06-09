@@ -309,7 +309,9 @@ public class Config
 			@SubConfig
 			public static SmallDataBuffer small_data_buffer;
 			@SubConfig
-			public static SkycrateStation skycrate_station;
+			public static SkyCrateStation skycrate_station;
+			@SubConfig
+			public static SkyCartStation skycart_station;
 			@SubConfig
 			public static Packer packer;
 			@SubConfig
@@ -353,7 +355,7 @@ public class Config
 				public static int timeInsertion = 5;
 			}
 
-			public static class SkycrateStation
+			public static class SkyCrateStation
 			{
 				@Comment({"Rotations per minute required for the Skycrate Station to Work."})
 				public static int rpmMin = 20;
@@ -380,10 +382,19 @@ public class Config
 				public static int inputTime = 240;
 
 				@Comment({"How long does it take for the minecart to drive into the station. (in ticks)"})
-				public static int minecartInTime = 60;
+				public static int crateInTime = 60;
 
 				@Comment({"How long does it take for the minecart to drive out of the station. (in ticks)"})
-				public static int minecartOutTime = 60;
+				public static int crateOutTime = 60;
+			}
+
+			public static class SkyCartStation
+			{
+				@Comment({"How long does it take for the minecart to drive into the station. (in ticks)"})
+				public static int minecartInTime = 40;
+
+				@Comment({"How long does it take for the minecart to drive out of the station. (in ticks)"})
+				public static int minecartOutTime = 40;
 			}
 
 			public static class Sawmill

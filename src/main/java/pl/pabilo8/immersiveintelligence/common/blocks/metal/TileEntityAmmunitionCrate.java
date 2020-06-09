@@ -138,7 +138,7 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 	@Override
 	public int getGuiID()
 	{
-		return IIGuiList.GUI_AMMUNITION_CRATE;
+		return IIGuiList.GUI_AMMUNITION_CRATE.ordinal();
 	}
 
 	@Override
