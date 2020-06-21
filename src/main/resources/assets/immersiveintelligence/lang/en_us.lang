@@ -140,6 +140,7 @@ item.immersiveintelligence.weapon_upgrade.precise_bipod.name=Precise Bipod
 item.immersiveintelligence.weapon_upgrade.hasty_bipod.name=Field Bipod
 item.immersiveintelligence.weapon_upgrade.scope.name=Scope
 item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Infrared Scope
+item.immersiveintelligence.weapon_upgrade.shield.name=Attachable Shields
 
 item.immersiveintelligence.tracer_powder.name=Tracer Dust
 
@@ -154,6 +155,7 @@ desc.immersiveintelligence.toolupgrade.precise_bipod=Increases setting up time, 
 desc.immersiveintelligence.toolupgrade.hasty_bipod=Decreases setting up time, increases recoil
 desc.immersiveintelligence.toolupgrade.scope=Allows to aim at distant things
 desc.immersiveintelligence.toolupgrade.infrared_scope=Allows nightvision, requires a power source such as a capacitor backpack.
+desc.immersiveintelligence.toolupgrade.shield=Deflects projectiles and protects the gunner from melee damage. Increases setting up time.
 
 item.immersiveintelligence.data_wire.name=Data Cable Coil
 
@@ -944,14 +946,15 @@ ie.manual.entry.machinegun.subtext=Property of Hans
 ie.manual.entry.machinegun0=The machinegun is a pioneering, sophisticated new invention, that allows effective defense against all sorts of threats. Unlike most manned weapons, the machinegun can not be fired on the go. In order to fire it has to be displaced on a block with enough space. The MG uses disposable magazines, which can be loaded with bullets in the <link;packer;§o§nPacker§r;>.
 ie.manual.entry.machinegun1=While firing bullets, casings drop on the ground to be picked. The MG is prone to overheating, which depends on the firing rate. The gun like most modern-day equipment allows for different configurations using upgrades, such as water cooling, scopes, change of bipod and more.
 
-ie.manual.entry.machinegun_upgrade_heavy_barrel=The heavy barrel is a modification, which increases the gun fire rate dramatically, but by that also increases the speed of the gun overheating. Firing the gun with short bursts is the best tactic using this upgrade.
-ie.manual.entry.machinegun_upgrade_water_cooling=The heavy barrel is a modification that allows to fill the tank underneath the barrel with coolant (such as water), this almost eliminates the gun overheating. Laying suppresive fire with this upgrade is a good idea, but you have to do it with precision, because of the gun's slow firing rate.
+ie.manual.entry.machinegun_upgrade_heavy_barrel=The heavy machinegun is a modification, which increases the gun fire rate dramatically, but by that also increases the speed of the gun overheating. Firing the gun with short bursts is the best tactic using this upgrade.
+ie.manual.entry.machinegun_upgrade_water_cooling=The heavy machinegun is a modification that allows to fill the tank underneath the machinegun with coolant (such as water), this almost eliminates the gun overheating. Laying suppresive fire with this upgrade is a good idea, but you have to do it with precision, because of the gun's slow firing rate.
 ie.manual.entry.machinegun_upgrade_belt_fed_loader=*CURRENTLY NOT IMPLEMENTED* The belt fed ammunition loader allows for loading ammunition from a belt, provided by the ammunition crate below the firing position.
 ie.manual.entry.machinegun_upgrade_second_magazine=The double magazine upgrade allows to load two magazines into the gun, the second magazine can be loaded from the offhand.
 ie.manual.entry.machinegun_upgrade_hasty_bipod=The field bipod is a hastily-made replacement for the default one, it decreases the gun's deployment speed, but increases the recoil.
 ie.manual.entry.machinegun_upgrade_precise_bipod=The precise bipod is a replacement for the default one, made with high precision, it increases the gun's deployment speed, but decreases the recoil.
 ie.manual.entry.machinegun_upgrade_scope=The machinegun scope is a modified version of the scope from the <link;railgun;§o§nRailgun§r;> that allows magnification of the distant target.
 ie.manual.entry.machinegun_upgrade_infrared_scope=The infrared scope is an upgraded version of its predecessor, which can also provide nightvision using the infrared reflector and a special filter, to work it requires energy provided by a capacitor backpack.
+ie.manual.entry.machinegun_upgrade_shield=Shields are a simple and effective way of protecting the gunner's front from projectiles and melee damage. It can resist a limited amount of projectiles, after that no damage is deflected. Shield's resistance is regenerated over time until it hasn't been broken. Attaching the upgrade also increases gun's setting up time.
 
 ie.manual.entry.grenade.name=Grenades
 ie.manual.entry.grenade.subtext=Achtung, Granate!

@@ -80,4 +80,9 @@ public class CameraHandler
 	{
 		return camera.rotationRoll;
 	}
+
+	public void setCameraZoom(int zoom)
+	{
+
+	}
 }

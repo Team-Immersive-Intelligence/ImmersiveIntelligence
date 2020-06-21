@@ -25,11 +25,17 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GLContext;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
@@ -47,7 +53,83 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
 public class ClientEventHandler implements IResourceManagerReloadListener
 {
 	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II_BULLET_HERE\u00A0"};
+	private static final String texture_gui = ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png";
 	private static boolean mgAiming = false;
+
+	public static void drawMachinegunGui(EntityMachinegun mg, RenderGameOverlayEvent.Post event)
+	{
+		GlStateManager.pushMatrix();
+		ClientUtils.bindTexture(texture_gui);
+		int width = event.getResolution().getScaledWidth();
+		int height = event.getResolution().getScaledHeight();
+		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.enableAlpha();
+		boolean drawWater = mg.tankCapacity > 0, hasShield = mg.maxShieldStrength > 0, hasSecondMag = mg.hasSecondMag;
+		int bars = 1+(hasShield?1: 0)+(drawWater?1: 0);
+
+		for(int i = 0; i < (hasSecondMag?2: 1); i += 1)
+		{
+			GlStateManager.pushMatrix();
+			ClientUtils.drawTexturedRect(width-26-(18*bars), height-36-(i*18), 16, 16, 16/256f, 32/256f, 16/256f, 32/256f);
+			for(int j = 0; j < bars+1; j += 1)
+				ClientUtils.drawTexturedRect(width-16-(j*16), height-36-(i*18), 16, 16, 32/256f, 48/256f, 16/256f, 32/256f);
+
+			if((i==0&&!mg.mag1Empty))
+			{
+				int tlen = ClientUtils.font().getStringWidth(String.valueOf(mg.bullets1));
+				ClientUtils.font().drawString(String.valueOf(mg.bullets1), width-tlen-(18*bars), height-32-(i*18), 0xffffff, false);
+				ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(mg.magazine1, width-44-(18*bars), height-36-(i*18));
+			}
+			else if((i==1&&!mg.mag2Empty))
+			{
+				int tlen = ClientUtils.font().getStringWidth(String.valueOf(mg.bullets2));
+				ClientUtils.font().drawString(String.valueOf(mg.bullets2), width-tlen-(18*bars), height-32-(i*18), Lib.COLOUR_I_ImmersiveOrange, false);
+				ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(mg.magazine2, width-44-(18*bars), height-36-(i*18));
+			}
+
+			GlStateManager.popMatrix();
+			ClientUtils.bindTexture(texture_gui);
+		}
+		GlStateManager.enableBlend();
+
+		ClientUtils.drawTexturedRect(width-19, height-18, 18, 18, 0/256f, 18/256f, 62/256f, 78/256f);
+		ClientUtils.drawTexturedRect(width-16, height-64, 12, 46, 3/256f, 15/256f, 16/256f, 62/256f);
+		ClientUtils.drawTexturedRect(width-18, height-17, 16, 16, 16/256f, 32/256f, 0, 16/256f);
+		ClientUtils.drawGradientRect(width-14, height-19-(int)((mg.overheating/100f)*43), width-6, height-19, 0xffdf9916, 0x0fba0f0f);
+
+		FluidStack fluid = mg.tank.getFluid();
+		if(drawWater)
+		{
+			ClientUtils.drawTexturedRect(width-37, height-18, 18, 18, 0/256f, 18/256f, 62/256f, 78/256f);
+			ClientUtils.drawTexturedRect(width-34, height-64, 12, 46, 3/256f, 15/256f, 16/256f, 62/256f);
+			ClientUtils.drawTexturedRect(width-36, height-17, 16, 16, 0, 16/256f, 0, 16/256f);
+			if(fluid!=null)
+			{
+				float hh = 43*((float)mg.tank.getFluidAmount()/(float)mg.tankCapacity);
+				ClientUtils.drawRepeatedFluidSprite(fluid, width-32, height-62+(43-hh), 8, hh);
+
+			}
+			GlStateManager.enableBlend();
+			GlStateManager.translate(-18, 0, 0);
+		}
+
+		if(hasShield)
+		{
+			ClientUtils.bindTexture(texture_gui);
+			ClientUtils.drawTexturedRect(width-37, height-18, 18, 18, 0/256f, 18/256f, 62/256f, 78/256f);
+			ClientUtils.drawTexturedRect(width-34, height-64, 12, 46, 3/256f, 15/256f, 16/256f, 62/256f);
+			ClientUtils.drawTexturedRect(width-36, height-17, 16, 16, 32/256f, 48/256f, 0, 16/256f);
+			ClientUtils.drawGradientRect(width-32, height-19-(int)((mg.shieldStrength/mg.maxShieldStrength)*43), width-24, height-19, 0xcfcfcfcf, 0x0cfcfcfc);
+			GlStateManager.enableBlend();
+		}
+
+		if(drawWater)
+			GlStateManager.translate(18, 0, 0);
+
+		//ClientUtils.drawTexturedRect(width-17,height-17,16,16,0,16/256f,0,16/256f);
+
+		GlStateManager.popMatrix();
+	}
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
@@ -109,11 +191,11 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 		}
 	}
 
-	@SubscribeEvent()
-	public void onFOVUpdate(FOVUpdateEvent event)
+	@SubscribeEvent
+	public void onFOVUpdate(FOVModifier event)
 	{
 		EntityPlayer player = ClientUtils.mc().player;
-		if(player.getRidingEntity() instanceof EntityMachinegun&&ZoomHandler.isZooming)
+		if(player.getRidingEntity() instanceof EntityMachinegun&&mgAiming)
 		{
 
 			float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
@@ -130,10 +212,10 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 				if(curStep!=-1)
 					ZoomHandler.fovZoom = steps[curStep];
 				else
-					ZoomHandler.fovZoom = event.getFov();
+					ZoomHandler.fovZoom = event.getFOV();
+				event.setFOV(ZoomHandler.fovZoom*event.getFOV());
 			}
-			event.setNewfov(ZoomHandler.fovZoom);
-			event.setCanceled(true);
+			ZoomHandler.isZooming = true;
 		}
 
 	}
@@ -144,94 +226,34 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 		RayTraceResult mop = ClientUtils.mc().objectMouseOver;
 		EntityPlayer player = ClientUtils.mc().player;
 
-		if(mop!=null&&mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof IEntityOverlayText)
+		if(ClientUtils.mc().player!=null&&event.getType()==RenderGameOverlayEvent.ElementType.TEXT)
 		{
-			boolean hammer = !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND));
-
-			IEntityOverlayText overlayBlock = (IEntityOverlayText)mop.entityHit;
-			String[] text = overlayBlock.getOverlayText(ClientUtils.mc().player, mop, hammer);
-			boolean useNixie = overlayBlock.useNixieFont(ClientUtils.mc().player, mop);
-			if(text!=null&&text.length > 0)
+			if(mop!=null&&mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof IEntityOverlayText)
 			{
-				FontRenderer font = useNixie?blusunrize.immersiveengineering.client.ClientProxy.nixieFontOptional: ClientUtils.font();
-				int col = (useNixie&&IEConfig.nixietubeFont)?Lib.colour_nixieTubeText: 0xffffff;
-				int i = 0;
-				for(String s : text)
-					if(s!=null)
-						font.drawString(s, event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8+(i++)*font.FONT_HEIGHT, col, true);
+				boolean hammer = !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND));
+
+				IEntityOverlayText overlayBlock = (IEntityOverlayText)mop.entityHit;
+				String[] text = overlayBlock.getOverlayText(ClientUtils.mc().player, mop, hammer);
+				boolean useNixie = overlayBlock.useNixieFont(ClientUtils.mc().player, mop);
+				if(text!=null&&text.length > 0)
+				{
+					FontRenderer font = useNixie?blusunrize.immersiveengineering.client.ClientProxy.nixieFontOptional: ClientUtils.font();
+					int col = (useNixie&&IEConfig.nixietubeFont)?Lib.colour_nixieTubeText: 0xffffff;
+					int i = 0;
+					for(String s : text)
+						if(s!=null)
+							font.drawString(s, event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8+(i++)*font.FONT_HEIGHT, col, true);
+				}
+
 			}
-
+			if(player.getRidingEntity() instanceof EntityMachinegun)
+				drawMachinegunGui((EntityMachinegun)player.getRidingEntity(), event);
 		}
-
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onRenderOverlayPre(RenderGameOverlayEvent.Pre event)
 	{
-		if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
-		{
-			ZoomHandler.isZooming = ClientProxy.keybind_machinegunScope.isKeyDown();
-
-			if(ZoomHandler.isZooming^mgAiming)
-			{
-				mgAiming = !mgAiming;
-
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("aiming", mgAiming);
-				IIPacketHandler.INSTANCE.sendToServer(new MessageMachinegunSync(ClientUtils.mc().player.getRidingEntity(), tag));
-			}
-
-			if(ZoomHandler.isZooming)
-			{
-				ClientUtils.mc().gameSettings.thirdPersonView = 0;
-				EntityMachinegun mg = (EntityMachinegun)ClientUtils.mc().player.getRidingEntity();
-
-				float px = mg.getPosition().getX(), py = mg.getPosition().getY(), pz = mg.getPosition().getZ();
-
-				float yaw = mg.gunYaw;
-				float pitch = mg.gunPitch;
-
-				EntityLivingBase psg = (EntityLivingBase)mg.getPassengers().get(0);
-				float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-mg.setYaw);
-				float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
-
-				if(mg.gunYaw < true_head_angle)
-					yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
-				else if(mg.gunYaw > true_head_angle)
-					yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
-
-				if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
-					yaw = true_head_angle;
-
-				yaw += mg.recoilYaw;
-
-				if(mg.gunPitch < true_head_angle2)
-					pitch += ClientUtils.mc().getRenderPartialTicks();
-				else if(mg.gunPitch > true_head_angle2)
-					pitch -= ClientUtils.mc().getRenderPartialTicks();
-
-				if(Math.ceil(mg.gunPitch) <= Math.ceil(true_head_angle2)+1f&&Math.ceil(mg.gunPitch) >= Math.ceil(true_head_angle2)-1f)
-					pitch = true_head_angle2;
-
-				pitch += mg.recoilPitch;
-
-				double true_angle = Math.toRadians(180-mg.setYaw-yaw);
-				double true_angle2 = Math.toRadians(pitch);
-
-				boolean hasScope = EntityMachinegun.scope.canZoom(mg.gun, null);
-
-				Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
-				Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
-
-				CameraHandler.INSTANCE.setCameraPos(px+0.5+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+0.5+(0.85*(gun_end.z+gun_height.z)));
-				CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
-				CameraHandler.INSTANCE.setEnabled(true);
-			}
-			else
-				CameraHandler.INSTANCE.setEnabled(false);
-		}
-
 		dothing:
 		if(ZoomHandler.isZooming&&event.getType()==RenderGameOverlayEvent.ElementType.CROSSHAIRS)
 		{
@@ -328,6 +350,73 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 
 				GlStateManager.translate(-offsetX, -offsetY, 0);
 			}
+		}
+
+		if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+		{
+			ZoomHandler.isZooming = ClientProxy.keybind_machinegunScope.isKeyDown();
+			EntityMachinegun mg = (EntityMachinegun)ClientUtils.mc().player.getRidingEntity();
+
+			if(ZoomHandler.isZooming^mgAiming)
+			{
+				mgAiming = !mgAiming;
+
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setBoolean("clientMessage", true);
+				tag.setBoolean("aiming", mgAiming);
+				IIPacketHandler.INSTANCE.sendToServer(new MessageMachinegunSync(ClientUtils.mc().player.getRidingEntity(), tag));
+			}
+
+			if(ZoomHandler.isZooming)
+			{
+				ClientUtils.mc().gameSettings.thirdPersonView = 0;
+
+				float px = mg.getPosition().getX(), py = mg.getPosition().getY(), pz = mg.getPosition().getZ();
+
+				float yaw = mg.gunYaw;
+				float pitch = mg.gunPitch;
+
+				EntityLivingBase psg = (EntityLivingBase)mg.getPassengers().get(0);
+				float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-mg.setYaw);
+				float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
+
+				if(mg.gunYaw < true_head_angle)
+					yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
+				else if(mg.gunYaw > true_head_angle)
+					yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
+
+				if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
+					yaw = true_head_angle;
+
+				yaw += mg.recoilYaw;
+
+				if(mg.gunPitch < true_head_angle2)
+					pitch += ClientUtils.mc().getRenderPartialTicks();
+				else if(mg.gunPitch > true_head_angle2)
+					pitch -= ClientUtils.mc().getRenderPartialTicks();
+
+				if(Math.ceil(mg.gunPitch) <= Math.ceil(true_head_angle2)+1f&&Math.ceil(mg.gunPitch) >= Math.ceil(true_head_angle2)-1f)
+					pitch = true_head_angle2;
+
+				pitch += mg.recoilPitch;
+
+				double true_angle = Math.toRadians(180-mg.setYaw-yaw);
+				double true_angle2 = Math.toRadians(pitch);
+
+				boolean hasScope = EntityMachinegun.scope.canZoom(mg.gun, null);
+
+				Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
+				Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
+				/*Vec3d gun_zoom_offset=new Vec3d(0,0,0);
+				if(hasScope)
+					gun_zoom_offset=new Vec3d(0,0,-1f/ZoomHandler.fovZoom).rotateYaw((float)true_angle);
+*/
+				CameraHandler.INSTANCE.setCameraPos(px+0.5+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+0.5+(0.85*(gun_end.z+gun_height.z)));
+				CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
+				CameraHandler.INSTANCE.setEnabled(true);
+			}
+			else
+				CameraHandler.INSTANCE.setEnabled(false);
 		}
 	}
 

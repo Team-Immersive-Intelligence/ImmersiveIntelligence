@@ -245,4 +245,14 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 		}
 		return 0xffffffff;
 	}
+
+	public static int getRemainingBulletCount(ItemStack stack)
+	{
+		NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(stack).getTagList("bullets", 10), getBulletCapactity(stack));
+		int count = 0;
+		for(ItemStack s : cartridge)
+			if(!s.isEmpty())
+				count++;
+		return count;
+	}
 }

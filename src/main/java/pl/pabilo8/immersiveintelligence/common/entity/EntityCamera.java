@@ -1,13 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 /**
  * Created by Pabilo8 on 10-11-2019.
  */
-public class EntityCamera extends Entity
+public class EntityCamera extends EntityLivingBase
 {
 	public float rotationRoll = 0;
 
@@ -17,20 +21,40 @@ public class EntityCamera extends Entity
 	}
 
 	@Override
-	protected void entityInit()
+	public void readEntityFromNBT(NBTTagCompound compound)
 	{
 
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound)
+	public void writeEntityToNBT(NBTTagCompound compound)
 	{
 
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound)
+	public Iterable<ItemStack> getArmorInventoryList()
+	{
+		return NonNullList.withSize(0, ItemStack.EMPTY);
+	}
+
+	@Override
+	public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
+	{
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
 	{
 
 	}
+
+	@Override
+	public EnumHandSide getPrimaryHand()
+	{
+		return null;
+	}
+
+
 }

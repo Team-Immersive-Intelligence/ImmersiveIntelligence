@@ -128,6 +128,7 @@ public class EntityMinecartBarrelSteel extends EntityMinecartFluidContainer impl
 			if(stack.hasTagCompound())
 			{
 				readTank(stack.getTagCompound());
+				updateTank(false);
 			}
 		}
 	}

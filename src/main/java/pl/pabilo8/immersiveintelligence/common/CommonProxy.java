@@ -61,6 +61,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
+import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.Utils;
@@ -531,6 +532,8 @@ public class CommonProxy implements IGuiHandler
 
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"), 100);
 		LighterFuelHandler.addFuel(FluidRegistry.getFluid("ethanol"), 20);
+
+		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 1);
 		// LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"),100);
 
 		CrusherRecipe.addRecipe(Utils.getItemWithMetaName(item_material_dust, "silicon"), new IngredientStack("plateSilicon"), 12000);
@@ -589,9 +592,10 @@ public class CommonProxy implements IGuiHandler
 				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
 				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
 		).setDensity(density).setViscosity(viscosity);
+		FluidRegistry.addBucketForFluid(fl);
 		if(!FluidRegistry.registerFluid(fl))
 			fl = FluidRegistry.getFluid(name);
-		FluidRegistry.addBucketForFluid(fl);
+
 		IICreativeTab.fluidBucketMap.add(fl);
 		return fl;
 	}

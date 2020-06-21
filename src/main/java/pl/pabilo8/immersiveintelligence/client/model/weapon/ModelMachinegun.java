@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.weapon;
 
+import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
@@ -20,8 +21,8 @@ public class ModelMachinegun extends BaseBlockModel
 
 	ModelRendererTurbo[] barrelModel, sightsModel, triggerModel, ammoModel, slideModel, gripModel, bipodModel;
 	public TmtNamedBoxGroup baseBox, barrelBox, sightsBox, triggerBox, ammoBox, slideBox, gripBox, bipodBox;
-	ModelRendererTurbo[] heavyBarrelModel, waterCoolingModel, secondMagazineMainModel, secondMagazineMagModel, beltFedLoaderModel, scopeModel, infraredScopeModel, hastyBipodModel, preciseBipodModel;
-	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox;
+	ModelRendererTurbo[] heavyBarrelModel, waterCoolingModel, secondMagazineMainModel, secondMagazineMagModel, beltFedLoaderModel, scopeModel, infraredScopeModel, hastyBipodModel, preciseBipodModel, shieldModel;
+	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
 
@@ -108,7 +109,7 @@ public class ModelMachinegun extends BaseBlockModel
 		barrelModel[6] = new ModelRendererTurbo(this, 40, 8, textureX, textureY); // BoxBipodRod
 		barrelModel[7] = new ModelRendererTurbo(this, 40, 8, textureX, textureY); // BoxBipodRod
 
-		barrelModel[0].addFlexTrapezoid(0F, 0F, 0F, 4, 4, 3, 0F, 0.00F, -1.00F, -0.50F, -0.50F, -0.50F, -0.50F, ModelRendererTurbo.MR_BACK); // BarrelBigBox
+		barrelModel[0].addShapeBox(0F, 0F, 0F, 4, 4, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -1F, 0F, -0.5F, -1F, 0F); // BarrelBigBox
 		barrelModel[0].setRotationPoint(6F, -10F, 16F);
 
 		barrelModel[1].addBox(0F, 0F, 0F, 3, 3, 1, 0F); // BarrelBack
@@ -216,14 +217,8 @@ public class ModelMachinegun extends BaseBlockModel
 		bipodModel = new ModelRendererTurbo[2];
 		bipodModel[0] = new ModelRendererTurbo(this, 4, 37, textureX, textureY); // BoxBipodLeg
 		bipodModel[1] = new ModelRendererTurbo(this, 0, 37, textureX, textureY); // BoxBipodLeg
-
 		bipodModel[0].addBox(-1F, 0F, 0F, 1, 8, 1, 0F); // BoxBipodLeg
-		bipodModel[0].setRotationPoint(8F, -4.75F, 26F);
-		bipodModel[0].rotateAngleZ = -0.61086524F;
-
 		bipodModel[1].addBox(0F, 0F, 0F, 1, 8, 1, 0F); // BoxBipodLeg
-		bipodModel[1].setRotationPoint(8F, -4.75F, 26F);
-		bipodModel[1].rotateAngleZ = 0.61086524F;
 
 		parts.put("base", baseModel);
 		parts.put("barrel", barrelModel);
@@ -243,9 +238,9 @@ public class ModelMachinegun extends BaseBlockModel
 		heavyBarrelModel[3] = new ModelRendererTurbo(this, 27, 25, textureX, textureY); // BarrelEnd1
 		heavyBarrelModel[4] = new ModelRendererTurbo(this, 35, 27, textureX, textureY); // BarrelEnd2
 		heavyBarrelModel[5] = new ModelRendererTurbo(this, 14, 38, textureX, textureY); // BarrelEnd3
-		heavyBarrelModel[6] = new ModelRendererTurbo(this, 24, 71, textureX, textureY); // BoxMain
+		heavyBarrelModel[6] = new ModelRendererTurbo(this, 38, 115, textureX, textureY); // BoxMain
 
-		heavyBarrelModel[0].addFlexTrapezoid(0F, 0F, 0F, 4, 4, 3, 0F, -0.50F, -0.50F, -0.50F, -0.50F, -0.50F, -0.50F, ModelRendererTurbo.MR_BACK); // BarrelBigBox
+		heavyBarrelModel[0].addShapeBox(0F, 0F, 0F, 4, 4, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F); // BarrelBigBox
 		heavyBarrelModel[0].setRotationPoint(6F, -10F, 16F);
 
 		heavyBarrelModel[1].addBox(0F, 0F, 0F, 3, 3, 1, 0F); // BarrelBack
@@ -493,14 +488,8 @@ public class ModelMachinegun extends BaseBlockModel
 		hastyBipodModel = new ModelRendererTurbo[2];
 		hastyBipodModel[0] = new ModelRendererTurbo(this, 4, 0, textureX, textureY); // BoxBipodLeg
 		hastyBipodModel[1] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // BoxBipodLeg
-
 		hastyBipodModel[0].addBox(-1F, 0F, 0F, 1, 8, 1, 0F); // BoxBipodLeg
-		hastyBipodModel[0].setRotationPoint(8F, -4.75F, 26F);
-		hastyBipodModel[0].rotateAngleZ = -0.61086524F;
-
 		hastyBipodModel[1].addBox(0F, 0F, 0F, 1, 8, 1, 0F); // BoxBipodLeg
-		hastyBipodModel[1].setRotationPoint(8F, -4.75F, 26F);
-		hastyBipodModel[1].rotateAngleZ = 0.61086524F;
 		parts.put("hastyBipod", hastyBipodModel);
 
 		preciseBipodModel = new ModelRendererTurbo[2];
@@ -508,12 +497,7 @@ public class ModelMachinegun extends BaseBlockModel
 		preciseBipodModel[1] = new ModelRendererTurbo(this, 18, 0, textureX, textureY); // BoxBipodLeg
 
 		preciseBipodModel[0].addBox(-1F, 0F, 0F, 1, 8, 1, 0F); // BoxBipodLeg
-		preciseBipodModel[0].setRotationPoint(8F, -4.75F, 26F);
-		preciseBipodModel[0].rotateAngleZ = -0.61086524F;
-
 		preciseBipodModel[1].addBox(0F, 0F, 0F, 1, 8, 1, 0F); // BoxBipodLeg
-		preciseBipodModel[1].setRotationPoint(8F, -4.75F, 26F);
-		preciseBipodModel[1].rotateAngleZ = 0.61086524F;
 		parts.put("preciseBipod", preciseBipodModel);
 
 		beltFedLoaderModel = new ModelRendererTurbo[3];
@@ -532,6 +516,55 @@ public class ModelMachinegun extends BaseBlockModel
 
 		parts.put("beltFedLoader", beltFedLoaderModel);
 
+		shieldModel = new ModelRendererTurbo[10];
+		shieldModel[0] = new ModelRendererTurbo(this, 22, 13, textureX, textureY); // Box 42
+		shieldModel[1] = new ModelRendererTurbo(this, 12, 13, textureX, textureY); // Box 42
+		shieldModel[2] = new ModelRendererTurbo(this, 16, 13, textureX, textureY); // Box 42
+		shieldModel[3] = new ModelRendererTurbo(this, 24, 70, textureX, textureY); // Shape 45
+		shieldModel[4] = new ModelRendererTurbo(this, 22, 13, textureX, textureY); // Box 42
+		shieldModel[5] = new ModelRendererTurbo(this, 12, 13, textureX, textureY); // Box 42
+		shieldModel[6] = new ModelRendererTurbo(this, 16, 13, textureX, textureY); // Box 42
+		shieldModel[7] = new ModelRendererTurbo(this, 24, 70, textureX, textureY); // Shape 45
+		shieldModel[8] = new ModelRendererTurbo(this, 0, 76, textureX, textureY); // CustomPaint
+		shieldModel[9] = new ModelRendererTurbo(this, 0, 76, textureX, textureY); // CustomPaint
+
+		shieldModel[0].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 42
+		shieldModel[0].setRotationPoint(5F, -10F, 13F);
+
+		shieldModel[1].addBox(0F, 0F, 0F, 1, 1, 1, 0F); // Box 42
+		shieldModel[1].setRotationPoint(5F, -10F, 14F);
+
+		shieldModel[2].addBox(0F, 0F, 0F, 1, 1, 1, 0F); // Box 42
+		shieldModel[2].setRotationPoint(5F, -7F, 14F);
+
+		shieldModel[3].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(6, 0, 6, 0), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12)}), 1, 6, 12, 35, 1, ModelRendererTurbo.MR_FRONT, new float[]{12, 4, 3, 10, 6}); // Shape 45
+		shieldModel[3].setRotationPoint(7.05F, -4F, 16F);
+		shieldModel[3].rotateAngleX = 0.06981317F;
+
+		shieldModel[4].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 42
+		shieldModel[4].setRotationPoint(10F, -10F, 13F);
+
+		shieldModel[5].addBox(0F, 0F, 0F, 1, 1, 1, 0F); // Box 42
+		shieldModel[5].setRotationPoint(10F, -10F, 14F);
+
+		shieldModel[6].addBox(0F, 0F, 0F, 1, 1, 1, 0F); // Box 42
+		shieldModel[6].setRotationPoint(10F, -7F, 14F);
+
+		shieldModel[7].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(6, 0, 6, 0), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12)}), 1, 6, 12, 35, 1, ModelRendererTurbo.MR_FRONT, new float[]{12, 4, 3, 10, 6}); // Shape 45
+		shieldModel[7].setRotationPoint(9.05F, -4F, 15F);
+		shieldModel[7].rotateAngleX = -0.06981317F;
+		shieldModel[7].rotateAngleY = -3.14159265F;
+
+		shieldModel[8].addShapeBox(0F, 0F, 0F, 6, 6, 0, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // CustomPaint
+		shieldModel[8].setRotationPoint(1F, -13F, 15.4F);
+		shieldModel[8].rotateAngleX = 0.08726646F;
+
+		shieldModel[9].addShapeBox(0F, 0F, 0F, 6, 6, 0, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // CustomPaint
+		shieldModel[9].setRotationPoint(15F, -13F, 15.4F);
+		shieldModel[9].rotateAngleX = -0.08726646F;
+		shieldModel[9].rotateAngleY = -3.14159265F;
+
+		parts.put("shield", shieldModel);
 
 		flipAll();
 
@@ -544,6 +577,7 @@ public class ModelMachinegun extends BaseBlockModel
 		parts.remove("infraredScope");
 		parts.remove("hastyBipod");
 		parts.remove("preciseBipod");
+		parts.remove("shield");
 
 		baseBox = new TmtNamedBoxGroup("base", baseModel, MachinegunRenderer.texture);
 		barrelBox = new TmtNamedBoxGroup("barrel", barrelModel, MachinegunRenderer.texture);
@@ -552,7 +586,23 @@ public class ModelMachinegun extends BaseBlockModel
 		ammoBox = new TmtNamedBoxGroup("ammo", ammoModel, MachinegunRenderer.texture);
 		slideBox = new TmtNamedBoxGroup("slide", slideModel, MachinegunRenderer.texture);
 		gripBox = new TmtNamedBoxGroup("grip", gripModel, MachinegunRenderer.texture);
-		bipodBox = new TmtNamedBoxGroup("bipod", bipodModel, MachinegunRenderer.texture);
+		bipodBox = new TmtNamedBoxGroup("bipod", bipodModel, MachinegunRenderer.texture)
+		{
+			@Override
+			public void render(float scale, float animation)
+			{
+				float legs = animation > 0.5f?(animation-0.5f)/0.5f: 0;
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(8F*scale, 4.75F*scale, -26F*scale);
+				GlStateManager.rotate(-90*animation, 1, 0, 0);
+				GlStateManager.translate(0, scale*animation, 0);
+				GlStateManager.rotate(-35f*(1f-legs), 0f, 0f, 1f);
+				getModel()[0].render(scale);
+				GlStateManager.rotate(2*35f*(1f-legs), 0f, 0f, 1f);
+				getModel()[1].render(scale);
+				GlStateManager.popMatrix();
+			}
+		};
 
 		//The upgrades should use the same names as the parts they replace (if they replace parts)
 		//I know the rendering is done in a weird way, but hey, it works.
@@ -568,8 +618,41 @@ public class ModelMachinegun extends BaseBlockModel
 		scopeBox = new TmtNamedBoxGroup("scope", scopeModel, MachinegunRenderer.texture);
 		infraredScopeBox = new TmtNamedBoxGroup("infrared_scope", infraredScopeModel, MachinegunRenderer.texture);
 
-		hastyBipodBox = new TmtNamedBoxGroup("bipod", hastyBipodModel, MachinegunRenderer.texture);
-		preciseBipodBox = new TmtNamedBoxGroup("bipod", preciseBipodModel, MachinegunRenderer.texture);
+		hastyBipodBox = new TmtNamedBoxGroup("bipod", hastyBipodModel, MachinegunRenderer.texture)
+		{
+			@Override
+			public void render(float scale, float animation)
+			{
+				float legs = animation > 0.5f?(animation-0.5f)/0.5f: 0;
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(8F*scale, 4.75F*scale, -26F*scale);
+				GlStateManager.rotate(-90*animation, 1, 0, 0);
+				GlStateManager.translate(0, scale*animation, 0);
+				GlStateManager.rotate(-35f*(1f-legs), 0f, 0f, 1f);
+				getModel()[0].render(scale);
+				GlStateManager.rotate(2*35f*(1f-legs), 0f, 0f, 1f);
+				getModel()[1].render(scale);
+				GlStateManager.popMatrix();
+			}
+		};
+		preciseBipodBox = new TmtNamedBoxGroup("bipod", preciseBipodModel, MachinegunRenderer.texture)
+		{
+			@Override
+			public void render(float scale, float animation)
+			{
+				float legs = animation > 0.5f?(animation-0.5f)/0.5f: 0;
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(8F*scale, 4.75F*scale, -26F*scale);
+				GlStateManager.rotate(-90*animation, 1, 0, 0);
+				GlStateManager.translate(0, scale*animation, 0);
+				GlStateManager.rotate(-35f*(1f-legs), 0f, 0f, 1f);
+				getModel()[0].render(scale);
+				GlStateManager.rotate(2*35f*(1f-legs), 0f, 0f, 1f);
+				getModel()[1].render(scale);
+				GlStateManager.popMatrix();
+			}
+		};
+		shieldBox = new TmtNamedBoxGroup("shield", shieldModel, MachinegunRenderer.texture);
 
 	}
 }

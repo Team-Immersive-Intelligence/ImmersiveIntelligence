@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,23 +15,32 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
@@ -46,16 +57,23 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegu
 /**
  * Created by Pabilo8 on 01-11-2019.
  */
-public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData
+public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IEntityOverlayText
 {
+	//TODO: switch nbt sending to DataParameters
+	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMachinegun.class, DataSerializers.COMPOUND_TAG);
+	private static final DataParameter<Integer> dataMarkerFluidCap = EntityDataManager.createKey(EntityMachinegun.class, DataSerializers.VARINT);
+
 	public static MachinegunZoom scope = new MachinegunZoom();
 	//Second magazine is an upgrade
 	public ItemStack gun, magazine1 = ItemStack.EMPTY, magazine2 = ItemStack.EMPTY;
-	public int pickProgress = 0;
-	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0;
-	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1;
-	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated=false;
+	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0, tankCapacity = 0, bullets1 = 0, bullets2 = 0;
+	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1, shieldStrength = 0f, maxShieldStrength = 0f;
+	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated = false;
+	public FluidTank tank = new FluidTank(tankCapacity);
+
 	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d);
+	NonSidedFluidHandler fluidHandler = new NonSidedFluidHandler(this);
+
 
 	public EntityMachinegun(World worldIn)
 	{
@@ -76,6 +94,35 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		this.setYaw = yaw;
 
 		getConfigFromItem(stack);
+	}
+
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount)
+	{
+		if(!isDead)
+		{
+			if(source.isProjectile())
+			{
+				Vec3d v = source.getDamageLocation();
+				if(v!=null)
+				{
+					v = v.subtract(posX, posY, posZ);
+					if(getHorizontalFacing()==EnumFacing.getFacingFromVector((float)v.x, (float)v.y, (float)v.z))
+					{
+						this.shieldStrength -= amount;
+						if(shieldStrength > 0)
+							return false;
+					}
+				}
+			}
+			if(!world.isRemote&&amount > 6)
+			{
+				dropItem();
+				if(shoot&&(!mag1Empty||!mag2Empty))
+					world.createExplosion(source.getTrueSource(), this.posX, this.posY+0.5, this.posZ, 1, true);
+			}
+		}
+		return super.attackEntityFrom(source, amount);
 	}
 
 	@Override
@@ -153,12 +200,17 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			}
 		}
 
-		if(!world.isRemote&&world.getTotalWorldTime()%120==0)
+		if(world.getTotalWorldTime()%120==0)
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setBoolean("forClient", true);
-			writeEntityToNBT(tag);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
+			if(world.isRemote)
+				updateTank(true);
+			else
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setBoolean("forClient", true);
+				writeEntityToNBT(tag);
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
+			}
 		}
 
 		if(getPassengers().size() > 0&&getPassengers().get(0)!=null)
@@ -187,6 +239,20 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					if(hasSecondMag&&magazine2.isEmpty())
 						mag2Empty = true;
 
+					if(overheating > maxOverheat)
+					{
+						overheated = true;
+					}
+					overheating = Math.max(0, overheating-1);
+					if(world.getTotalWorldTime()%2==0&&overheating > 0&&tank.getFluid()!=null&&tank.getFluidAmount() >= Machinegun.waterCoolingFluidUsage)
+					{
+						overheating = Math.max(0, overheating-MachinegunCoolantHandler.getCoolAmount(tank.getFluid()));
+						tank.drain(Machinegun.waterCoolingFluidUsage, true);
+					}
+
+					if(overheated&&overheating==0)
+						overheated = false;
+
 					if(!world.isRemote)
 					{
 						if(!overheated)
@@ -201,7 +267,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 										{
 											if(hasSecondMag&&!mag2Empty)
 												mag2Empty = !shoot(2);
-											if(!mag1Empty)
+											else if(!mag1Empty)
 												mag1Empty = !shoot(1);
 										}
 										else
@@ -215,13 +281,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 								}
 							}
 						}
-						if(overheating>maxOverheat)
-						{
-							overheated=true;
-						}
-						overheating=Math.max(0,overheating-1);
-						if(overheated && overheating==0)
-							overheated=false;
+
 
 					}
 					if(!shoot&&!loadedFromCrate)
@@ -254,35 +314,9 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		}
 		else
 		{
-			//gunPitch=Math.max(gunPitch-1,-25);
+			gunPitch = Math.max(gunPitch-1, -25);
 		}
 
-		if(world.isRemote&&world.getTotalWorldTime()%2==0)
-		{
-			double true_angle = Math.toRadians(360f-rotationYaw);
-			double true_angle2 = Math.toRadians(-(rotationPitch));
-
-			Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.6875f, true_angle, true_angle2);
-			Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
-
-			//ImmersiveEngineering.proxy.spawnRedstoneFX(this.world, posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z),0,1f,0,1.5f,0.75f,0.75f,0.75f);
-		}
-
-	}
-
-	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount)
-	{
-		if(!isDead&&!world.isRemote)
-		{
-			if(amount > 10||pickProgress > 3)
-			{
-				dropItem();
-			}
-			else
-				pickProgress += 1;
-		}
-		return super.attackEntityFrom(source, amount);
 	}
 
 	@Override
@@ -383,6 +417,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 						if(!world.isRemote)
 						{
 							NBTTagCompound tag = new NBTTagCompound();
+							bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
+							bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
 							writeEntityToNBT(tag);
 							IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
 						}
@@ -438,7 +474,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	protected void entityInit()
 	{
-
+		this.dataManager.register(dataMarkerFluid, new NBTTagCompound());
+		this.dataManager.register(dataMarkerFluidCap, 0);
 	}
 
 	@Override
@@ -452,6 +489,14 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				magazine1 = new ItemStack(compound.getCompoundTag("magazine1"));
 			if(compound.hasKey("magazine2"))
 				magazine2 = new ItemStack(compound.getCompoundTag("magazine2"));
+			if(compound.hasKey("bullets1"))
+				bullets1 = compound.getInteger("bullets1");
+			else if(!magazine1.isEmpty())
+				bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
+			if(compound.hasKey("bullets2"))
+				bullets2 = compound.getInteger("bullets2");
+			else if(!magazine2.isEmpty())
+				bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
 			if(compound.hasKey("gun"))
 			{
 				gun = new ItemStack(compound.getCompoundTag("gun"));
@@ -459,12 +504,20 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					getConfigFromItem(new ItemStack(compound.getCompoundTag("gun")));
 			}
 
+			if(compound.hasKey("shieldStrength"))
+				shieldStrength = compound.getInteger("shieldStrength");
+			if(compound.hasKey("maxShieldStrength"))
+				maxShieldStrength = compound.getInteger("maxShieldStrength");
 			if(compound.hasKey("overheating"))
 				overheating = compound.getInteger("overheating");
+			if(compound.hasKey("tankCapacity"))
+				tankCapacity = compound.getInteger("tankCapacity");
 			if(compound.hasKey("mag1Empty"))
 				mag1Empty = compound.getBoolean("mag1Empty");
 			if(compound.hasKey("mag2Empty"))
 				mag2Empty = compound.getBoolean("mag2Empty");
+			if(compound.hasKey("hasSecondMag"))
+				hasSecondMag = compound.getBoolean("hasSecondMag");
 			if(compound.hasKey("setYaw"))
 				setYaw = compound.getFloat("setYaw");
 			if(compound.hasKey("gunYaw"))
@@ -504,9 +557,14 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		compound.setBoolean("mag1Empty", mag1Empty);
 		compound.setBoolean("mag2Empty", mag2Empty);
+		compound.setBoolean("hasSecondMag", hasSecondMag);
 		compound.setFloat("currentlyLoaded", currentlyLoaded);
 
+		compound.setFloat("shieldStrength", shieldStrength);
+		compound.setFloat("maxShieldStrength", maxShieldStrength);
+
 		compound.setInteger("overheating", overheating);
+		compound.setInteger("tankCapacity", tankCapacity);
 		compound.setFloat("setYaw", setYaw);
 		compound.setFloat("gunYaw", gunYaw);
 		compound.setFloat("gunPitch", gunPitch);
@@ -539,20 +597,32 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
 	{
-		if(!this.world.isRemote)
+		FluidStack f = FluidUtil.getFluidContained(player.getHeldItem(EnumHand.MAIN_HAND));
+		if(f==null)
+			f = FluidUtil.getFluidContained(player.getHeldItem(EnumHand.OFF_HAND));
+
+		if(f!=null&&this.tankCapacity > 0)
 		{
-			if(player.isSneaking()&&player.getHeldItem(hand).isEmpty())
+			if(MachinegunCoolantHandler.isValidCoolant(f))
 			{
-				dropItem();
-				return true;
+				FluidUtil.interactWithFluidHandler(player, hand, tank);
+				if(!world.isRemote)
+					updateTank(false);
 			}
-			else
-			{
-				player.startRiding(this);
-				return true;
-			}
+			return true;
 		}
-		return false;
+		else if(player.isSneaking()&&player.getHeldItem(hand).isEmpty())
+		{
+			if(!world.isRemote)
+				dropItem();
+			return true;
+		}
+		else
+		{
+			if(!world.isRemote)
+				player.startRiding(this);
+			return true;
+		}
 	}
 
 	@Override
@@ -613,8 +683,6 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 	public boolean shoot(int magazine)
 	{
-		//TODO: Shooting sound
-
 		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
 			return false;
 
@@ -631,30 +699,43 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
 		recoilPitch += maxRecoilPitch*Math.random();
-		//TODO: Bring back overheating with better HUD
-		//overheating+=Machinegun.bulletFireTime*1.5f;
+		overheating += 8;
 
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean("forClient", true);
 		tag.setFloat("recoilYaw", recoilYaw);
 		tag.setFloat("recoilPitch", recoilPitch);
+		tag.setFloat("overheating", overheating);
 
 		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.95f, true_angle, true_angle2);
 		Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
 
 		ItemStack stack = magazine==1?ItemIIBulletMagazine.takeBullet(magazine1): ItemIIBulletMagazine.takeBullet(magazine2);
-		if(stack.isEmpty())
+
+		if(magazine==1)
 		{
-			if(magazine==1)
-				mag1Empty = true;
-			else if(magazine==2)
-				mag2Empty = true;
-			return false;
+			mag1Empty = stack.isEmpty();
+			if(!mag1Empty)
+			{
+				bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
+				tag.setInteger("bullets1", bullets1);
+			}
+		}
+		else if(magazine==2)
+		{
+			mag2Empty = stack.isEmpty();
+			if(!mag2Empty)
+			{
+				bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
+				tag.setInteger("bullets2", bullets2);
+			}
 		}
 
 		tag.setBoolean("mag1Empty", mag1Empty);
 		tag.setBoolean("mag2Empty", mag2Empty);
 
+		if(stack.isEmpty())
+			return false;
 		EntityBullet a = new EntityBullet(world, posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z), (EntityLivingBase)getPassengers().get(0), stack);
 		//blocks per tick
 		float distance = 6.0f;
@@ -682,6 +763,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			setup_multiplier = Machinegun.hastyBipodSetupTimeMultiplier;
 		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("belt_fed_loader"))
 			setup_multiplier *= Machinegun.beltFedLoaderSetupTimeMultiplier;
+		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("shield"))
+		{
+			shieldStrength = Machinegun.shieldStrengthInitial;
+			maxShieldStrength = Machinegun.shieldStrengthInitial;
+			setup_multiplier *= Machinegun.shieldSetupTimeMultiplier;
+		}
 
 		setupTime = Math.round(Machinegun.setupTime*setup_multiplier);
 		maxSetupTime = setupTime;
@@ -690,7 +777,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 			bullet_delay_multiplier = Machinegun.heavyBarrelFireRateMultiplier;
 		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
-			bullet_delay_multiplier = Machinegun.waterCoolingFireRateMultiplier;
+			tankCapacity = Machinegun.waterCoolingTankCapacity;
 
 		bulletDelayMax = Math.round(bullet_delay_multiplier*Machinegun.bulletFireTime);
 		bulletDelay = 0;
@@ -714,9 +801,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("second_magazine"))
 		{
 			recoil_multiplier_w *= Machinegun.recoilSecondMagazine;
+			hasSecondMag = true;
 		}
-
-		hasSecondMag = CommonProxy.item_machinegun.getUpgrades(gun).hasKey("second_magazine");
 
 		maxRecoilYaw *= recoil_multiplier_w;
 		maxRecoilPitch *= recoil_multiplier_h;
@@ -731,21 +817,99 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack);
 		}
 
+		if(!magazine1.isEmpty())
+			bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
+		if(!magazine2.isEmpty())
+			bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
+
 		hasInfrared = CommonProxy.item_machinegun.getUpgrades(gun).hasKey("infrared_scope");
 		loadedFromCrate = CommonProxy.item_machinegun.getUpgrades(gun).hasKey("belt_fed_loader");
+
+		updateTank(false);
 
 		NBTTagCompound tag = new NBTTagCompound();
 		writeEntityToNBT(tag);
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
 
+		tank.setCapacity(tankCapacity);
 	}
 
 	void dropItem()
 	{
-		ItemNBTHelper.setTagCompound(gun, "magazine1", magazine1.serializeNBT());
-		ItemNBTHelper.setTagCompound(gun, "magazine2", magazine2.serializeNBT());
-		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), gun);
-		setDead();
+		if(!isDead)
+		{
+			ItemNBTHelper.setTagCompound(gun, "magazine1", magazine1.serializeNBT());
+			ItemNBTHelper.setTagCompound(gun, "magazine2", magazine2.serializeNBT());
+			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), gun);
+			setDead();
+		}
+	}
+
+	protected void updateTank(boolean read)
+	{
+		if(read)
+			readTank(dataManager.get(dataMarkerFluid));
+		else
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			writeTank(tag, false);
+			dataManager.set(dataMarkerFluid, tag);
+		}
+	}
+
+	public void writeTank(NBTTagCompound nbt, boolean toItem)
+	{
+		boolean write = tank.getFluidAmount() > 0;
+		NBTTagCompound tankTag = tank.writeToNBT(new NBTTagCompound());
+		if(!toItem||write)
+			nbt.setTag("tank", tankTag);
+	}
+
+	public void readTank(NBTTagCompound nbt)
+	{
+		if(nbt.hasKey("tank"))
+		{
+			tank.readFromNBT(nbt.getCompoundTag("tank"));
+		}
+		tank.setCapacity(tankCapacity);
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(tankCapacity > 0&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nullable
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		if(tankCapacity > 0&&capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return (T)fluidHandler;
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	{
+		if(blusunrize.immersiveengineering.common.util.Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+		{
+			String s;
+			if(tank.getFluid()!=null)
+				s = tank.getFluid().getLocalizedName()+": "+tank.getFluidAmount()+"mB";
+			else
+				s = I18n.format(Lib.GUI+"empty");
+			return new String[]{s};
+		}
+		return null;
+	}
+
+	@Override
+	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
+	{
+		return false;
 	}
 
 	public static class MachinegunZoom implements IAdvancedZoomTool
@@ -769,6 +933,57 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		public float[] getZoomSteps(ItemStack stack, EntityPlayer player)
 		{
 			return machinegun_scope_max_zoom;
+		}
+	}
+
+	static class NonSidedFluidHandler implements IFluidHandler
+	{
+		EntityMachinegun machinegun;
+
+		NonSidedFluidHandler(EntityMachinegun machinegun)
+		{
+			this.machinegun = machinegun;
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill)
+		{
+			if(resource==null)
+				return 0;
+			if(!MachinegunCoolantHandler.isValidCoolant(resource))
+				return 0;
+
+			int i = machinegun.tank.fill(resource, doFill);
+			if(i > 0)
+			{
+				machinegun.updateTank(false);
+			}
+			return i;
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain)
+		{
+			if(resource==null)
+				return null;
+			return this.drain(resource.amount, doDrain);
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain)
+		{
+			FluidStack f = machinegun.tank.drain(maxDrain, doDrain);
+			if(f!=null&&f.amount > 0)
+			{
+				machinegun.updateTank(false);
+			}
+			return f;
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties()
+		{
+			return machinegun.tank.getTankProperties();
 		}
 	}
 }

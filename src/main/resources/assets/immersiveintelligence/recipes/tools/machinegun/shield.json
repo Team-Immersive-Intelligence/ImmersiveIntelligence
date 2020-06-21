@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "p p",
+    "brb",
+    "p p"
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "blockSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 8,
+    "count": 1
+  }
+}

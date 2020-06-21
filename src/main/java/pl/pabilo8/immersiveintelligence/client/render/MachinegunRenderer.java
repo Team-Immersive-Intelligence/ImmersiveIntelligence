@@ -70,7 +70,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 
 		if(entity!=null)
 		{
-			float yaw = entity.gunYaw;
+			float yaw = entity.gunYaw, pitch = entity.gunPitch;
 			if(entity.setupTime < 1&&entity.getPassengers().size() > 0&&entity.getPassengers().get(0) instanceof EntityLivingBase)
 			{
 				EntityLivingBase psg = (EntityLivingBase)entity.getPassengers().get(0);
@@ -84,10 +84,21 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 				if(Math.ceil(entity.gunYaw) <= Math.ceil(true_head_angle)+0.5f&&Math.ceil(entity.gunYaw) >= Math.ceil(true_head_angle)-0.5f)
 					yaw = true_head_angle;
 
+				if(pitch < psg.rotationPitch)
+					pitch += ClientUtils.mc().getRenderPartialTicks();
+				else if(pitch > psg.rotationPitch)
+					pitch -= ClientUtils.mc().getRenderPartialTicks();
+
+
 				yaw += entity.recoilYaw;
+				pitch += entity.recoilPitch;
+
+				pitch = MathHelper.clamp(pitch, -20, 20);
 			}
 
 			GlStateManager.translate(0f, -0.34375, 0f);
+			GlStateManager.rotate(-25f*(entity.setupTime/(float)entity.maxSetupTime), 1, 0, 0);
+			GlStateManager.translate(0, 0.25*(entity.setupTime/(float)entity.maxSetupTime), 0);
 
 			for(TmtNamedBoxGroup nmod : renderParts)
 			{
@@ -98,8 +109,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 					GlStateManager.scale(0.85, 0.85, 0.85);
 					GlStateManager.rotate(180-entity.setYaw, 0f, 1f, 0f);
 					GlStateManager.translate(-0.5f, 0.34375, 1.65625);
-					for(ModelRendererTurbo m : nmod.getModel())
-						m.render(0.0625f);
+					nmod.render(0.0625f, entity.setupTime/(float)entity.maxSetupTime);
 					GlStateManager.popMatrix();
 				}
 				else
@@ -108,8 +118,8 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 					GlStateManager.scale(0.85, 0.85, 0.85);
 					GlStateManager.rotate(180-entity.setYaw, 0f, 1f, 0f);
 					GlStateManager.rotate(-yaw, 0f, 1f, 0f);
-					GlStateManager.rotate(-entity.gunPitch, 1, 0, 0);
-					GlStateManager.translate(-0.5f, 0.34375, 1.65625+(entity.gunPitch/20*0.25));
+					GlStateManager.rotate(-pitch, 1, 0, 0);
+					GlStateManager.translate(-0.5f, 0.34375, 1.65625+(pitch/20*0.25));
 
 					if(nmod.getName().equals("ammo"))
 					{
@@ -125,8 +135,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 							should_render = true;
 
 						if(should_render)
-							for(ModelRendererTurbo m : nmod.getModel())
-								m.render(0.0625f);
+							nmod.render(0.0625f);
 					}
 					else if(nmod.getName().equals("second_magazine_mag"))
 					{
@@ -142,8 +151,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 							should_render = true;
 
 						if(should_render)
-							for(ModelRendererTurbo m : nmod.getModel())
-								m.render(0.0625f);
+							nmod.render(0.0625f);
 					}
 					else if(nmod.getName().equals("slide"))
 					{
@@ -157,14 +165,16 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 								progress = (curr/0.65f);
 							GlStateManager.translate(0f, 0f, progress*0.375);
 						}
-						for(ModelRendererTurbo m : nmod.getModel())
-							m.render(0.0625f);
+						nmod.render(0.0625f);
+					}
+					else if(nmod.getName().equals("shield"))
+					{
+						ClientUtils.bindTexture(nmod.getTexturePath());
+						nmod.render(0.0625f);
+						//TODO: add breaking progress
 					}
 					else
-						for(ModelRendererTurbo m : nmod.getModel())
-						{
-							m.render(0.0625f);
-						}
+						nmod.render(0.0625f);
 					GlStateManager.popMatrix();
 				}
 			}
@@ -175,6 +185,11 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 			{
 				ClientUtils.bindTexture(nmod.getTexturePath());
 
+				if(nmod.getName().equals("bipod"))
+				{
+					nmod.render(0.0625f, 0f);
+					continue;
+				}
 				if(nmod.getName().equals("ammo")&&!(ItemNBTHelper.hasKey(stack, "magazine1")&&!(new ItemStack(ItemNBTHelper.getTagCompound(stack, "magazine1")).isEmpty())))
 					continue;
 				if(nmod.getName().equals("second_magazine_mag")&&!(ItemNBTHelper.hasKey(stack, "magazine2")&&!(new ItemStack(ItemNBTHelper.getTagCompound(stack, "magazine2")).isEmpty())))

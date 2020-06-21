@@ -7,6 +7,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -18,6 +21,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -29,8 +33,8 @@ import javax.annotation.Nullable;
 public abstract class EntityMinecartFluidContainer extends EntityMinecart implements IEntityOverlayText
 {
 	public FluidTank tank = new FluidTank(getTankCapacity());
-
 	SidedFluidHandler fluidHandler = new SidedFluidHandler(this, null);
+	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMinecartFluidContainer.class, DataSerializers.COMPOUND_TAG);
 
 	public EntityMinecartFluidContainer(World worldIn)
 	{
@@ -40,6 +44,33 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 	public EntityMinecartFluidContainer(World worldIn, double x, double y, double z)
 	{
 		super(worldIn, x, y, z);
+	}
+
+	@Override
+	protected void entityInit()
+	{
+		super.entityInit();
+		this.dataManager.register(dataMarkerFluid, new NBTTagCompound());
+	}
+
+	@Override
+	public void onUpdate()
+	{
+		super.onUpdate();
+		if(world.isRemote)
+			updateTank(true);
+	}
+
+	protected void updateTank(boolean b)
+	{
+		if(b)
+			readTank(dataManager.get(dataMarkerFluid));
+		else
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			writeTank(tag, false);
+			dataManager.set(dataMarkerFluid, tag);
+		}
 	}
 
 	@Override
@@ -59,6 +90,8 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
+		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return true;
 		return super.hasCapability(capability, facing);
 	}
 
@@ -66,6 +99,8 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
+		if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return (T)fluidHandler;
 		return super.getCapability(capability, facing);
 	}
 
@@ -116,6 +151,27 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 
 	public abstract int getTankCapacity();
 
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	{
+		if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
+		{
+			String s;
+			if(tank.getFluid()!=null)
+				s = tank.getFluid().getLocalizedName()+": "+tank.getFluidAmount()+"mB";
+			else
+				s = I18n.format(Lib.GUI+"empty");
+			return new String[]{s};
+		}
+		return null;
+	}
+
+	@Override
+	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
+	{
+		return false;
+	}
+
 	static class SidedFluidHandler implements IFluidHandler
 	{
 		EntityMinecartFluidContainer barrel;
@@ -136,7 +192,7 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 			int i = barrel.tank.fill(resource, doFill);
 			if(i > 0)
 			{
-				//Update
+				barrel.updateTank(false);
 			}
 			return i;
 		}
@@ -155,7 +211,7 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 			FluidStack f = barrel.tank.drain(maxDrain, doDrain);
 			if(f!=null&&f.amount > 0)
 			{
-				//Update
+				barrel.updateTank(false);
 			}
 			return f;
 		}
@@ -165,26 +221,5 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 		{
 			return barrel.tank.getTankProperties();
 		}
-	}
-
-	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
-	{
-		if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
-		{
-			String s = null;
-			if(tank.getFluid()!=null)
-				s = tank.getFluid().getLocalizedName()+": "+tank.getFluidAmount()+"mB";
-			else
-				s = I18n.format(Lib.GUI+"empty");
-			return new String[]{s};
-		}
-		return null;
-	}
-
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
 	}
 }

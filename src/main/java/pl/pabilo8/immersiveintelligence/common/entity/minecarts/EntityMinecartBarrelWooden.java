@@ -129,6 +129,7 @@ public class EntityMinecartBarrelWooden extends EntityMinecartFluidContainer imp
 			if(stack.hasTagCompound())
 			{
 				readTank(stack.getTagCompound());
+				updateTank(false);
 			}
 		}
 	}

@@ -680,10 +680,10 @@ public class Config
 				public static int clipReloadTime = 35;
 
 				@Comment({"Time required to fire a single bullet in MG."})
-				public static int bulletFireTime = 4;
+				public static int bulletFireTime = 2;
 
 				@Comment({"Time required to set up the MG (in ticks)."})
-				public static int setupTime = 100;
+				public static int setupTime = 50;
 
 				@Comment({"Max scatter of heat, higher values will force the player to wait until the gun cools down."})
 				public static int maxOverheat = 100;
@@ -704,10 +704,10 @@ public class Config
 				public static float recoilHBVertical = 1.25f;
 
 				@Comment({"Water usage when water cooling upgrade is mounted on mg (in mB)."})
-				public static int waterCoolingFluidUsage = 40;
+				public static int waterCoolingFluidUsage = 10;
 
-				@Comment({"Fire rate multiplier when water cooling upgrade is mouted on mg."})
-				public static float waterCoolingFireRateMultiplier = 1.5f;
+				@Comment({"Coolant tank capacity of the water cooling upgrade."})
+				public static int waterCoolingTankCapacity = 4000;
 
 				@Comment({"Setup time multiplier when the precise bipod is mouted on mg."})
 				public static float preciseBipodSetupTimeMultiplier = 2f;
@@ -733,7 +733,14 @@ public class Config
 				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
 				@RequiresMcRestart
 				@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-				public static float[] machinegun_scope_max_zoom = new float[]{0.05f, 0.0833f, 0.15f};
+				public static float[] machinegun_scope_max_zoom = new float[]{0.15f, 0.35f, 0.55f,};
+
+				@Comment({"Shield's initial strength (resistance vs attacks)."})
+				public static float shieldStrengthInitial = 45;
+
+				@Comment({"Setup time multiplier when a shield is mouted on mg."})
+				public static float shieldSetupTimeMultiplier = 0.5f;
+
 			}
 		}
 

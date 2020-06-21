@@ -70,7 +70,12 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		//Allows nightvision + 2 x magnification, uses energy from player's backpack
 		INFRARED_SCOPE(ImmutableSet.of("MACHINEGUN"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("scope"),
-				(upgrade, modifications) -> modifications.setBoolean("infrared_scope", true));
+				(upgrade, modifications) -> modifications.setBoolean("infrared_scope", true)),
+
+		//Allows nightvision + 2 x magnification, uses energy from player's backpack
+		SHIELD(ImmutableSet.of("MACHINEGUN"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("shield"),
+				(upgrade, modifications) -> modifications.setBoolean("shield", true));
 
 
 		private ImmutableSet<String> toolset;
@@ -222,6 +227,14 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.preciseBipodBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (ImmersiveIntelligence.proxy.item_machinegun.getUpgrades(stack).getBoolean("shield")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox);
 				}
 		);
 	}

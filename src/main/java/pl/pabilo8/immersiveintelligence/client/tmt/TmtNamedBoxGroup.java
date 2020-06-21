@@ -31,9 +31,14 @@ public class TmtNamedBoxGroup
 		return model;
 	}
 
-	public void render(float scale)
+	public void render(float scale, float animation)
 	{
 		for(ModelRendererTurbo mod : model)
 			mod.render(scale);
+	}
+
+	public void render(float scale)
+	{
+		render(scale, 0);
 	}
 }

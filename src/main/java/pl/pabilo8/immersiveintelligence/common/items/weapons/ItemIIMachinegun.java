@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.items.weapons;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
+import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +21,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * Created by Pabilo8 on 01-11-2019.
  */
-public class ItemIIMachinegun extends ItemUpgradeableTool
+public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFluidItem
 {
 	public ItemIIMachinegun()
 	{
@@ -154,17 +156,15 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 					return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
 				}
 
-				EntityMachinegun maschinengewehr = new EntityMachinegun(worldIn, raytraceresult.getBlockPos(), yaw, pitch, itemstack);
+				EntityMachinegun maschinengewehr = new EntityMachinegun(worldIn, raytraceresult.getBlockPos(), yaw, pitch, itemstack.copy());
 
 				if(!worldIn.isRemote)
 				{
 					worldIn.spawnEntity(maschinengewehr);
 				}
+				playerIn.startRiding(maschinengewehr);
 
-				if(!playerIn.capabilities.isCreativeMode)
-				{
-					itemstack.shrink(1);
-				}
+				itemstack.shrink(1);
 
 				playerIn.addStat(StatList.getObjectUseStats(this));
 				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
@@ -192,7 +192,19 @@ public class ItemIIMachinegun extends ItemUpgradeableTool
 		NBTTagCompound upgrades = getUpgrades(stack);
 		if(!Utils.hasUnlockedIIAdvancement(player, "main/let_me_show_you_its_features")&&upgrades.hasKey("heavy_barrel")&&upgrades.hasKey("second_magazine")&&upgrades.hasKey("infrared_scope"))
 			Utils.unlockIIAdvancement(player, "main/let_me_show_you_its_features");
-		if(!Utils.hasUnlockedIIAdvancement(player, "main/hans_9000")&&upgrades.hasKey("belt_fed_loader")&&upgrades.hasKey("precise_bipod")&&upgrades.hasKey("heavy_barrel"))
+		if(!Utils.hasUnlockedIIAdvancement(player, "main/hans_9000")&&upgrades.hasKey("belt_fed_loader")&&upgrades.hasKey("shield")&&upgrades.hasKey("water_cooling"))
 			Utils.unlockIIAdvancement(player, "main/hans_9000");
+	}
+
+	@Override
+	public int getCapacity(ItemStack stack, int baseCapacity)
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean allowFluid(ItemStack container, FluidStack fluid)
+	{
+		return false;
 	}
 }

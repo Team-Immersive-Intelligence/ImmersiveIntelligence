@@ -3,7 +3,7 @@
     "icon": {
       "item": "immersiveintelligence:machinegun",
       "data": 0,
-      "nbt": "{upgrades:{infrared_scope:1,second_magazine:1, heavy_barrel:1}}"
+      "nbt": "{upgrades:{infrared_scope:1,shield:1, water_cooling:1}}"
     },
     "title": {
       "translate": "advancement.immersiveintelligence.hans_9000"
