@@ -12,13 +12,14 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.*;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
  */
-public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecissionAssembler>
+public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecissionAssembler> implements IReloadableModelContainer<PrecissionAssemblerRenderer>
 {
 	//Tool Models (if you want to add custom tools from your mod, you have to init them in your own class)
 	public static ModelPrecissionInserter modelInserter = new ModelPrecissionInserter();
@@ -28,7 +29,8 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 	public static ModelPrecissionWelder modelWelder = new ModelPrecissionWelder();
 	public static ModelPrecissionHammer modelHammer = new ModelPrecissionHammer();
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
-	private static ModelPrecissionAssembler model = new ModelPrecissionAssembler();
+	private static ModelPrecissionAssembler model;
+	private static ModelPrecissionAssembler modelFlipped;
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";
 
 	@Override
@@ -48,12 +50,16 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
-			model.render();
+			//A bit of trick here, because it's pointless to rewrite the whole code just because only one part is mirrored :v
+			GlStateManager.pushMatrix();
+			ModelPrecissionAssembler currentModel = te.mirrored?modelFlipped: model;
+			float flipMod = te.mirrored?-1: 1;
+			currentModel.getBlockRotation(te.facing, te.mirrored);
+			currentModel.render();
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(-(Math.min(5f, Math.max(te.drawer1Angle+(te.isDrawer1Opened?0.4f*partialTicks: -0.5f*partialTicks), 0f)))/16f, 0, 0);
-			for(ModelRendererTurbo mod : model.drawer1)
+			for(ModelRendererTurbo mod : currentModel.drawer1Model)
 			{
 				mod.render(0.0625f);
 			}
@@ -61,11 +67,14 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(-(Math.min(5f, Math.max(te.drawer2Angle+(te.isDrawer2Opened?0.4f*partialTicks: -0.5f*partialTicks), 0f)))/16f, 0, 0);
-			for(ModelRendererTurbo mod : model.drawer2)
+			for(ModelRendererTurbo mod : currentModel.drawer2Model)
 			{
 				mod.render(0.0625f);
 			}
 			GlStateManager.popMatrix();
+			GlStateManager.popMatrix();
+
+			model.getBlockRotation(te.facing, false);
 
 			float f5 = 1F/16F;
 
@@ -81,7 +90,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(24f/16f, 17f/16f, -31f/16f);
 			GlStateManager.rotate(hatchProgress, 1f, 0f, 0f);
-			for(ModelRendererTurbo mod : model.doorLeft)
+			for(ModelRendererTurbo mod : model.doorLeftModel)
 			{
 				mod.render(0.0625f);
 			}
@@ -90,7 +99,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(24f/16f, 17f/16f, -49f/16f);
 			GlStateManager.rotate(-hatchProgress, 1f, 0f, 0f);
-			for(ModelRendererTurbo mod : model.doorRight)
+			for(ModelRendererTurbo mod : model.doorRightModel)
 			{
 				mod.render(0.0625f);
 			}
@@ -337,13 +346,28 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			ClientUtils.bindTexture(texture);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.drawer1)
+			for(ModelRendererTurbo mod : model.drawer1Model)
 				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.drawer2)
+			for(ModelRendererTurbo mod : model.drawer2Model)
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
 			return;
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		modelInserter = new ModelPrecissionInserter();
+		modelDrill = new ModelPrecissionDrill();
+		modelBuzzsaw = new ModelPrecissionBuzzsaw();
+		modelSolderer = new ModelPrecissionSolderer();
+		modelWelder = new ModelPrecissionWelder();
+		modelHammer = new ModelPrecissionHammer();
+
+		model = new ModelPrecissionAssembler(false);
+		modelFlipped = new ModelPrecissionAssembler(true);
+		modelFlipped.flipAllZ();
 	}
 }

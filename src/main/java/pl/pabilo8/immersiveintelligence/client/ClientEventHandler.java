@@ -134,7 +134,7 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
-		//TODO: Model Reloading
+		EvenMoreImmersiveModelRegistry.instance.reloadRegisteredModels();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

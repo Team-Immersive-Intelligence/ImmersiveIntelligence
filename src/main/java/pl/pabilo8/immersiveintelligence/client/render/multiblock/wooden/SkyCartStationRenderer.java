@@ -21,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCartStation;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCartStation;
 
@@ -29,9 +30,10 @@ import java.util.Set;
 /**
  * Created by Pabilo8 on 2019-06-01.
  */
-public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCartStation>
+public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCartStation> implements IReloadableModelContainer<SkyCartStationRenderer>
 {
-	private static ModelSkyCartStation model = new ModelSkyCartStation();
+	private static ModelSkyCartStation model;
+	private static ModelSkyCartStation modelFlipped;
 	private static TileEntityBanner banner = new TileEntityBanner();
 	private static ModelBanner modelBanner = new ModelBanner();
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycart_station.png";
@@ -50,7 +52,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 		{
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+1, (float)y-1, (float)z);
+			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.disableLighting();
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -156,67 +158,69 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 				}
 			}
 
-			model.getBlockRotation(te.facing, model);
-			model.render();
+			float flipMod = te.mirrored?-1: 1;
+			ModelSkyCartStation modelCurrent = te.mirrored?modelFlipped: model;
+			modelCurrent.getBlockRotation(te.facing, te.mirrored);
+			modelCurrent.render();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 0.65625f, -0.625f);
+			GlStateManager.translate(0, 0.65625f, -0.625f*flipMod);
 			GlStateManager.rotate(360f*(float)motorTick*rpm_pitch, 1, 0, 0);
-			for(ModelRendererTurbo mod : model.backAxleModel)
+			for(ModelRendererTurbo mod : modelCurrent.backAxleModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 0.65625f, -0.375f);
+			GlStateManager.translate(0, 0.65625f, -0.375f*flipMod);
 			GlStateManager.rotate(360f*(float)motorTick*rpm_grab, 1, 0, 0);
-			for(ModelRendererTurbo mod : model.frontAxleModel)
+			for(ModelRendererTurbo mod : modelCurrent.frontAxleModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0.59375f, 2.84375f-0.0625f, 0.1875f);
+			GlStateManager.translate(0.59375f, 2.84375f-0.0625f, 0.1875f*flipMod);
 			GlStateManager.rotate(360f*(float)motorTick*rpm_crate, 1, 0, 0);
-			for(ModelRendererTurbo mod : model.cratePusherAxleModel)
+			for(ModelRendererTurbo mod : modelCurrent.cratePusherAxleModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 0, -cratePusher*0.425f);
-			for(ModelRendererTurbo mod : model.cratePusherModel)
+			GlStateManager.translate(0, 0, -cratePusher*0.425f*flipMod);
+			for(ModelRendererTurbo mod : modelCurrent.cratePusherModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0, pistonDoor*0.75f, 0);
-			for(ModelRendererTurbo mod : model.pistonDoorModel)
+			for(ModelRendererTurbo mod : modelCurrent.pistonDoorModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(pistonOnly*0.5f, 0f, 0);
-			for(ModelRendererTurbo mod : model.pistonModel)
+			for(ModelRendererTurbo mod : modelCurrent.pistonModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(1.8125f, 0.71875f, 0.5f);
-			GlStateManager.rotate(90f*(float)railBlock, 1, 0, 0);
+			GlStateManager.translate(1.8125f, 0.71875f, 0.5f*flipMod);
+			GlStateManager.rotate(90f*(float)railBlock*flipMod, 1, 0, 0);
 			for(ModelRendererTurbo mod : model.trainBlockerModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 21f/16f, -7f/16f);
-			GlStateManager.rotate(90f*(float)inserterAngle, 1, 0, 0);
-			GlStateManager.translate(0, 2f/16f, 2f/16f);
-			for(ModelRendererTurbo mod : model.inserterBaseModel)
+			GlStateManager.translate(0, 21f/16f, -7f/16f*flipMod);
+			GlStateManager.rotate(90f*(float)inserterAngle*flipMod, 1, 0, 0);
+			GlStateManager.translate(0, 2f/16f, 2f/16f*flipMod);
+			for(ModelRendererTurbo mod : modelCurrent.inserterBaseModel)
 				mod.render(0.0625f);
 			GlStateManager.translate(0, -(1f-inserterLength)*0.5, 0);
-			for(ModelRendererTurbo mod : model.inserterTopModel)
+			for(ModelRendererTurbo mod : modelCurrent.inserterTopModel)
 				mod.render(0.0625f);
 			GlStateManager.translate(0, -(1f-inserterLength)*0.5, 0);
-			for(ModelRendererTurbo mod : model.inserterTopperModel)
+			for(ModelRendererTurbo mod : modelCurrent.inserterTopperModel)
 				mod.render(0.0625f);
 
 			if(te.animation==4&&animProgress > 0.3&&animProgress < 0.8&&te.mount.getItem() instanceof ISkycrateMount)
@@ -224,7 +228,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 				ISkycrateMount mount = (ISkycrateMount)te.mount.getItem();
 
 				GlStateManager.translate(0.5, 21f/16f+(1f-inserterLength)-0.625f+inserterLength, -0.125);
-				GlStateManager.rotate(-90f*(float)inserterAngle, 1, 0, 0);
+				GlStateManager.rotate(-90f*(float)inserterAngle*flipMod, 1, 0, 0);
 				GlStateManager.translate(0, -1, 0);
 				GlStateManager.scale(0.85, 0.85, 0.85);
 				mount.render(te.mount, getWorld(), partialTicks, -1);
@@ -234,7 +238,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 				ISkycrateMount mount = (ISkycrateMount)te.mount.getItem();
 
 				GlStateManager.translate(0.5, 21f/16f+(1f-inserterLength)-0.625f+inserterLength, -0.125);
-				GlStateManager.rotate(-90f*(float)inserterAngle, 1, 0, 0);
+				GlStateManager.rotate(-90f*(float)inserterAngle*flipMod, 1, 0, 0);
 				GlStateManager.translate(0, -1, 0);
 				GlStateManager.scale(0.85, 0.85, 0.85);
 				mount.render(te.mount, getWorld(), partialTicks, -1);
@@ -286,8 +290,8 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 				ClientUtils.bindTexture("immersiveengineering:textures/blocks/wire.png");
 				GlStateManager.color(col[0], col[1], col[2]);
 				GlStateManager.disableCull();
-				GlStateManager.rotate(90, 0, 1, 0);
-				GlStateManager.translate(-1.5, 2.5625, 0.5);
+				GlStateManager.rotate(te.mirrored?270: 90, 0, 1, 0);
+				GlStateManager.translate(-1.5, 2.5625, 0.5*flipMod);
 				GlStateManager.disableLighting();
 				GlStateManager.rotate(2.5f, 0, 0, 1);
 				GlStateManager.translate(0, -0.03125, 0);
@@ -307,7 +311,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 				{
 					boolean renderCrate = true, renderMount = true;
 					ISkycrateMount mount = (ISkycrateMount)te.mount.getItem();
-					GlStateManager.translate(0.5, 1.625+0.0625, 1.5);
+					GlStateManager.translate(0.5, 1.625+0.0625, 1.5*flipMod);
 					GlStateManager.scale(0.85, 0.85, 0.85);
 					if(te.animation==4)
 					{
@@ -356,7 +360,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 				ResourceLocation res = BannerTextures.BANNER_DESIGNS.getResourceLocation(banner.getPatternResourceLocation(), banner.getPatternList(), banner.getColorList());
 				if(res!=null)
 				{
-					GlStateManager.translate(1.3875, 3.5, 1.9);
+					GlStateManager.translate(1.3875, 3.5, te.mirrored?-2: 1.9);
 					GlStateManager.scale(0.5, 0.5, 0.5);
 					ClientUtils.mc().getTextureManager().bindTexture(res);
 					float f3 = (float)(x*7+y*9+z*13+te.getWorld().getTotalWorldTime()+partialTicks);
@@ -373,7 +377,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 
 			ClientUtils.bindAtlas();
 			IBlockState state = Blocks.RAIL.getDefaultState();
-			GlStateManager.translate(0, 0.125, 2);
+			GlStateManager.translate(0, 0.125, te.mirrored?-1: 2);
 			ClientUtils.mc().getBlockRendererDispatcher().renderBlockBrightness(state, 1f);
 			GlStateManager.translate(1, -0.0625, 2);
 			GlStateManager.rotate(90, 0, 1, 0);
@@ -381,5 +385,13 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 			ClientUtils.mc().getBlockRendererDispatcher().renderBlockBrightness(state, 1f);
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelSkyCartStation();
+		modelFlipped = new ModelSkyCartStation();
+		modelFlipped.flipAllZ();
 	}
 }

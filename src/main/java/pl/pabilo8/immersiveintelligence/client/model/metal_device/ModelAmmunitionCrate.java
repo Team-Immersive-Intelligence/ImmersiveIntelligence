@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
@@ -122,7 +121,7 @@ public class ModelAmmunitionCrate extends BaseBlockModel //Same as Filename
 	}
 
 	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch (facing)
 		{

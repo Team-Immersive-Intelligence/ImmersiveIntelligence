@@ -17,8 +17,9 @@ public class ModelPrintingPress extends BaseBlockModel
 
 	public ModelRendererTurbo[] rollerModel, paperInserterDoorModel;
 
-	public ModelPrintingPress() //Same as Filename
+	public ModelPrintingPress(boolean flipped) //Same as Filename
 	{
+		int modifier = flipped?-1: 1;
 		baseModel = new ModelRendererTurbo[64];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // MainBox
 		baseModel[1] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // TableTop
@@ -129,28 +130,34 @@ public class ModelPrintingPress extends BaseBlockModel
 		baseModel[13].addBox(0F, 0F, 0F, 16, 16, 48, 0F); // EnergyInput
 		baseModel[13].setRotationPoint(32F, -16F, 16F);
 
+		baseModel[14].flip = flipped;
 		baseModel[14].addShape3D(2F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(4, 15, 4, 15), new Coord2D(3, 16, 3, 16), new Coord2D(1, 16, 1, 16), new Coord2D(0, 15, 0, 15)}), 2, 4, 16, 40, 2, ModelRendererTurbo.MR_FRONT, new float[]{15, 2, 2, 2, 15, 4}); // ProductionHolderPost1
-		baseModel[14].setRotationPoint(48F, -19F, 22F);
+		baseModel[14].setRotationPoint(48F, -19F*modifier, 22F*modifier);
 		baseModel[14].rotateAngleY = -1.57079633F;
 
+		baseModel[15].flip = flipped;
 		baseModel[15].addShape3D(2F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(4, 15, 4, 15), new Coord2D(3, 16, 3, 16), new Coord2D(1, 16, 1, 16), new Coord2D(0, 15, 0, 15)}), 2, 4, 16, 40, 2, ModelRendererTurbo.MR_FRONT, new float[]{15, 2, 2, 2, 15, 4}); // ProductionHolderPost2
-		baseModel[15].setRotationPoint(48F, -19F, 28F);
+		baseModel[15].setRotationPoint(48F, -19F*modifier, 28F*modifier);
 		baseModel[15].rotateAngleY = -1.57079633F;
 
+		baseModel[16].flip = flipped;
 		baseModel[16].addShape3D(2F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(4, 15, 4, 15), new Coord2D(3, 16, 3, 16), new Coord2D(1, 16, 1, 16), new Coord2D(0, 15, 0, 15)}), 2, 4, 16, 40, 2, ModelRendererTurbo.MR_FRONT, new float[]{15, 2, 2, 2, 15, 4}); // ProductionHolderPost3
-		baseModel[16].setRotationPoint(48F, -19F, 34F);
+		baseModel[16].setRotationPoint(48F, -19F*modifier, 34F*modifier);
 		baseModel[16].rotateAngleY = -1.57079633F;
 
+		baseModel[17].flip = flipped;
 		baseModel[17].addShape3D(2F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(4, 15, 4, 15), new Coord2D(3, 16, 3, 16), new Coord2D(1, 16, 1, 16), new Coord2D(0, 15, 0, 15)}), 2, 4, 16, 40, 2, ModelRendererTurbo.MR_FRONT, new float[]{15, 2, 2, 2, 15, 4}); // ProductionHolderPost4
-		baseModel[17].setRotationPoint(48F, -19F, 40F);
+		baseModel[17].setRotationPoint(48F, -19F*modifier, 40F*modifier);
 		baseModel[17].rotateAngleY = -1.57079633F;
 
+		baseModel[18].flip = flipped;
 		baseModel[18].addShape3D(2F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(4, 15, 4, 15), new Coord2D(3, 16, 3, 16), new Coord2D(1, 16, 1, 16), new Coord2D(0, 15, 0, 15)}), 2, 4, 16, 40, 2, ModelRendererTurbo.MR_FRONT, new float[]{15, 2, 2, 2, 15, 4}); // ProductionHolderPost5
-		baseModel[18].setRotationPoint(48F, -19F, 46F);
+		baseModel[18].setRotationPoint(48F, -19F*modifier, 46F*modifier);
 		baseModel[18].rotateAngleY = -1.57079633F;
 
+		baseModel[19].flip = flipped;
 		baseModel[19].addShape3D(2F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(4, 15, 4, 15), new Coord2D(3, 16, 3, 16), new Coord2D(1, 16, 1, 16), new Coord2D(0, 15, 0, 15)}), 2, 4, 16, 40, 2, ModelRendererTurbo.MR_FRONT, new float[]{15, 2, 2, 2, 15, 4}); // ProductionHolderPost6
-		baseModel[19].setRotationPoint(48F, -19F, 52F);
+		baseModel[19].setRotationPoint(48F, -19F*modifier, 52F*modifier);
 		baseModel[19].rotateAngleY = -1.57079633F;
 
 		baseModel[20].addBox(0F, 0F, 0F, 14, 1, 10, 0F); // ProductionPaperInserter
@@ -362,28 +369,34 @@ public class ModelPrintingPress extends BaseBlockModel
 		rollerModel[11].addBox(0F, -1F, -1F, 1, 2, 2, 0F); // ProductionAxle6
 		rollerModel[11].setRotationPoint(45F, -21F, 52F);
 
+		rollerModel[12].flip = flipped;
 		rollerModel[12].addShape3D(3F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(6, 5, 6, 5), new Coord2D(5, 6, 5, 6), new Coord2D(1, 6, 1, 6), new Coord2D(0, 5, 0, 5), new Coord2D(0, 1, 0, 1)}), 12, 6, 6, 24, 12, ModelRendererTurbo.MR_FRONT, new float[]{2, 4, 2, 4, 2, 4, 2, 4}); // ProductionRoller1
-		rollerModel[12].setRotationPoint(33F, -26F, 22F);
+		rollerModel[12].setRotationPoint(33F, -26F*modifier, 22F*modifier);
 		rollerModel[12].rotateAngleY = 1.57079633F;
 
+		rollerModel[13].flip = flipped;
 		rollerModel[13].addShape3D(3F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(6, 5, 6, 5), new Coord2D(5, 6, 5, 6), new Coord2D(1, 6, 1, 6), new Coord2D(0, 5, 0, 5), new Coord2D(0, 1, 0, 1)}), 12, 6, 6, 24, 12, ModelRendererTurbo.MR_FRONT, new float[]{2, 4, 2, 4, 2, 4, 2, 4}); // ProductionRoller2
-		rollerModel[13].setRotationPoint(33F, -21F, 28F);
+		rollerModel[13].setRotationPoint(33F, -21F*modifier, 28F*modifier);
 		rollerModel[13].rotateAngleY = 1.57079633F;
 
+		rollerModel[14].flip = flipped;
 		rollerModel[14].addShape3D(3F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(6, 5, 6, 5), new Coord2D(5, 6, 5, 6), new Coord2D(1, 6, 1, 6), new Coord2D(0, 5, 0, 5), new Coord2D(0, 1, 0, 1)}), 12, 6, 6, 24, 12, ModelRendererTurbo.MR_FRONT, new float[]{2, 4, 2, 4, 2, 4, 2, 4}); // ProductionRoller3
-		rollerModel[14].setRotationPoint(33F, -26F, 46F);
+		rollerModel[14].setRotationPoint(33F, -26F*modifier, 46F*modifier);
 		rollerModel[14].rotateAngleY = 1.57079633F;
 
+		rollerModel[15].flip = flipped;
 		rollerModel[15].addShape3D(3F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(6, 5, 6, 5), new Coord2D(5, 6, 5, 6), new Coord2D(1, 6, 1, 6), new Coord2D(0, 5, 0, 5), new Coord2D(0, 1, 0, 1)}), 12, 6, 6, 24, 12, ModelRendererTurbo.MR_FRONT, new float[]{2, 4, 2, 4, 2, 4, 2, 4}); // ProductionRoller4
-		rollerModel[15].setRotationPoint(33F, -21F, 40F);
+		rollerModel[15].setRotationPoint(33F, -21F*modifier, 40F*modifier);
 		rollerModel[15].rotateAngleY = 1.57079633F;
 
+		rollerModel[16].flip = flipped;
 		rollerModel[16].addShape3D(3F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(6, 5, 6, 5), new Coord2D(5, 6, 5, 6), new Coord2D(1, 6, 1, 6), new Coord2D(0, 5, 0, 5), new Coord2D(0, 1, 0, 1)}), 12, 6, 6, 24, 12, ModelRendererTurbo.MR_FRONT, new float[]{2, 4, 2, 4, 2, 4, 2, 4}); // ProductionRoller5
-		rollerModel[16].setRotationPoint(33F, -26F, 34F);
+		rollerModel[16].setRotationPoint(33F, -26F*modifier, 34F*modifier);
 		rollerModel[16].rotateAngleY = 1.57079633F;
 
+		rollerModel[17].flip = flipped;
 		rollerModel[17].addShape3D(3F, -3F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(6, 5, 6, 5), new Coord2D(5, 6, 5, 6), new Coord2D(1, 6, 1, 6), new Coord2D(0, 5, 0, 5), new Coord2D(0, 1, 0, 1)}), 12, 6, 6, 24, 12, ModelRendererTurbo.MR_FRONT, new float[]{2, 4, 2, 4, 2, 4, 2, 4}); // ProductionRoller6
-		rollerModel[17].setRotationPoint(33F, -21F, 52F);
+		rollerModel[17].setRotationPoint(33F, -21F*modifier, 52F*modifier);
 		rollerModel[17].rotateAngleY = 1.57079633F;
 
 		paperInserterDoorModel = new ModelRendererTurbo[1];
@@ -392,70 +405,41 @@ public class ModelPrintingPress extends BaseBlockModel
 		paperInserterDoorModel[0].setRotationPoint(32F, -31F, 54F);
 		paperInserterDoorModel[0].rotateAngleZ = -1.57079633F;
 
+		parts.put("base", baseModel);
+		parts.put("rollerModel", rollerModel);
+		parts.put("paperInserterDoor", paperInserterDoorModel);
 		flipAll();
 	}
 
 	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(rollerModel);
-		flip(paperInserterDoorModel);
-	}
-
-	@Override
-	public void translateAll(float x, float y, float z)
-	{
-		super.translateAll(x, y, z);
-		translate(rollerModel, x, y, z);
-		translate(paperInserterDoorModel, x, y, z);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		super.rotateAll(x, y, z);
-		rotate(rollerModel, x, y, z);
-		rotate(paperInserterDoorModel, x, y, z);
-	}
-
-	@Override
-	public void render()
-	{
-		super.render();
-		float f5 = 1F/16F;
-		for(ModelRendererTurbo model : rollerModel)
-			model.render(f5);
-		for(ModelRendererTurbo model : paperInserterDoorModel)
-			model.render(f5);
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case NORTH:
 			{
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-4f, 0f, 0f);
+				GlStateManager.rotate(mirrored?270f: 90F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-2f: -1f, -2f, mirrored?-2f: 2f);
 			}
 			break;
 			case SOUTH:
 			{
-				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(1f, 0f, 1f);
+				GlStateManager.rotate(mirrored?90f: 270F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-1f: -2f, -2f, mirrored?1f: -1f);
 			}
 			break;
 			case EAST:
 			{
-				GlStateManager.translate(-2f, 0f, 3f);
+				if(mirrored)
+					GlStateManager.rotate(180, 0, 1, 0);
+				GlStateManager.translate(mirrored?-3: 0, -2f, 0f);
 			}
 			break;
 			case WEST:
 			{
-				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f, 0f, -2f);
+				if(!mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?0: -3, -2f, mirrored?-1f: 1f);
 			}
 			break;
 		}

@@ -18,7 +18,7 @@ public class ModelSawmill extends BaseBlockModel
 	int textureX = 256;
 	int textureY = 128;
 
-	public ModelSawmill() //Same as Filename
+	public ModelSawmill(boolean mirror) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[82];
 		baseModel[0] = new ModelRendererTurbo(this, 136, 42, textureX, textureY); // Box 0
@@ -180,19 +180,20 @@ public class ModelSawmill extends BaseBlockModel
 		baseModel[24].addBox(0F, 0F, 0F, 34, 1, 2, 0F); // Box 0
 		baseModel[24].setRotationPoint(23F, -13F, 12.5F);
 
+		baseModel[25].flip = !mirror;
 		baseModel[25].addBox(0F, 0F, 0F, 17, 0, 13, 0F); // Box 0
 		baseModel[25].setRotationPoint(15F, -16.05F, -16F);
-		baseModel[25].flip = true;
 
+		baseModel[26].flip = !mirror;
 		baseModel[26].addBox(0F, 0F, 0F, 17, 0, 5, 0F); // Box 0
 		baseModel[26].setRotationPoint(15F, -16.05F, -16F);
 		baseModel[26].rotateAngleX = -1.6406095F;
-		baseModel[26].flip = true;
 
+		baseModel[27].flip = !mirror;
 		baseModel[27].addBox(-2F, 0F, 0F, 2, 0, 5, 0F); // Box 0
 		baseModel[27].setRotationPoint(16F, -16.05F, -10F);
 		baseModel[27].rotateAngleZ = 0.61086524F;
-		baseModel[27].flip = true;
+
 
 		baseModel[28].addBox(0F, 3F, 0F, 4, 4, 1, 0F); // Box 0
 		baseModel[28].setRotationPoint(38F, -16F, 9F);
@@ -327,6 +328,7 @@ public class ModelSawmill extends BaseBlockModel
 		baseModel[69].addBox(0F, 0F, 0F, 1, 4, 2, 0F); // Box 0
 		baseModel[69].setRotationPoint(25F, -21F, -12F);
 
+		baseModel[70].flip = mirror;
 		baseModel[70].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(3, 0, 3, 0), new Coord2D(4, 1, 4, 1), new Coord2D(4, 3, 4, 3), new Coord2D(3, 4, 3, 4), new Coord2D(1, 4, 1, 4), new Coord2D(0, 3, 0, 3), new Coord2D(0, 1, 0, 1)}), 1, 4, 4, 16, 1, ModelRendererTurbo.MR_FRONT, new float[]{2, 2, 2, 2, 2, 2, 2, 2}); // Shape 95
 		baseModel[70].setRotationPoint(29F, -17F, -9F);
 		baseModel[70].rotateAngleX = 1.57079633F;
@@ -568,33 +570,36 @@ public class ModelSawmill extends BaseBlockModel
 	}
 
 	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case EAST:
 			{
-				GlStateManager.translate(-1f, 0f, -1f);
+				if(mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-4: -1f, -1f, mirrored?1: -1f);
 			}
 			break;
 			case WEST:
 			{
-				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-4f, 0f, 0f);
+				if(!mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-1: -4f, -1f, 0f);
 
 			}
 			break;
 			case NORTH:
 			{
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-2f, 0f, 1f);
+				GlStateManager.rotate(mirrored?270f: 90F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-3: -2f, -1f, mirrored?-1: 1f);
 
 			}
 			break;
 			case SOUTH:
 			{
-				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(-3f, 0f, -2f);
+				GlStateManager.rotate(mirrored?90f: 270F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-2: -3f, -1f, mirrored?2: -2f);
 			}
 			break;
 		}

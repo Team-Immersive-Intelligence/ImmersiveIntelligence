@@ -6,14 +6,16 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadioStation;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityRadioStation;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
  */
-public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRadioStation>
+public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRadioStation> implements IReloadableModelContainer<RadioStationRenderer>
 {
-	private static ModelRadioStation model = new ModelRadioStation();
+	private static ModelRadioStation model;
+	private static ModelRadioStation modelFlipped;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/radio_station.png";
 
@@ -24,7 +26,7 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 		{
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+3, (float)y-2, (float)z+2);
+			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -34,11 +36,13 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
+			ModelRadioStation modelCurrent = te.mirrored?modelFlipped: model;
+
+			modelCurrent.getBlockRotation(te.facing, te.mirrored);
 
 			if(te.isConstructionFinished())
 			{
-				model.render();
+				modelCurrent.render();
 			}
 			else
 			{
@@ -51,14 +55,14 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 				//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 				ShaderUtil.blueprint_static(0.55f-(progress*0.35f), ClientUtils.mc().player.ticksExisted+partialTicks);
 				for(int i = 50; i >= 50*progress; i--)
-					model.baseModel[i].render(0.0625f);
+					modelCurrent.baseModel[i].render(0.0625f);
 				ShaderUtil.releaseShader();
 				GlStateManager.disableBlend();
 				GlStateManager.enableLighting();
 				GlStateManager.popMatrix();
 
 				for(int i = 0; i < 50*progress; i++)
-					model.baseModel[i].render(0.0625f);
+					modelCurrent.baseModel[i].render(0.0625f);
 
 
 			}
@@ -78,5 +82,13 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 			GlStateManager.popMatrix();
 
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelRadioStation();
+		modelFlipped = new ModelRadioStation();
+		modelFlipped.flipAllZ();
 	}
 }

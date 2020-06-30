@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first;
 
+import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
@@ -194,12 +196,20 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 
 		ArrayList<BlockPos> checklist = new ArrayList<BlockPos>();
 
-		boolean bool = this.structureCheck(world, pos, side, false, checklist);
-
-		if(!bool)
+		boolean mirrored = false;
+		boolean b = structureCheck(world, pos, side, false, checklist);
+		if(!b)
 		{
-			return false;
+			checklist.clear();
+			mirrored = true;
+			b = structureCheck(world, pos, side, true, checklist);
 		}
+		if(!b)
+			return false;
+
+		ItemStack hammer = player.getHeldItemMainhand().getItem().getToolClasses(player.getHeldItemMainhand()).contains(Lib.TOOL_HAMMER)?player.getHeldItemMainhand(): player.getHeldItemOffhand();
+		if(MultiblockHandler.fireMultiblockFormationEventPost(player, this, pos, hammer).isCanceled())
+			return false;
 
 		for(int h = -5; h < 2; h++)
 			for(int l = 0; l < 9; l++)
@@ -230,7 +240,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 					{
 						TileEntityArtilleryHowitzer tile = (TileEntityArtilleryHowitzer)curr;
 						tile.facing = side;
-						tile.mirrored = false;
+						tile.mirrored = mirrored;
 						tile.formed = true;
 						tile.pos = ((h+5)*81)+(l*9)+(w+4);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};

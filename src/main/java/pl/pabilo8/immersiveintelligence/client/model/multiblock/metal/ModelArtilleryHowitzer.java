@@ -17,7 +17,7 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 	int textureX = 1024;
 	int textureY = 1024;
 
-	public ModelArtilleryHowitzer() //Same as Filename
+	public ModelArtilleryHowitzer(boolean flip) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[78];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Base
@@ -102,36 +102,44 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		baseModel[0].addBox(0F, 0F, 0F, 144, 16, 144, 0F); // Base
 		baseModel[0].setRotationPoint(0F, 0F, 0F);
 
+		baseModel[1].field_1402_i = flip;
 		baseModel[1].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(32, 0, 32, 0), new Coord2D(48, 16, 48, 16), new Coord2D(48, 48, 48, 48), new Coord2D(0, 48, 0, 48)}), 64, 48, 48, 183, 64, ModelRendererTurbo.MR_FRONT, new float[]{48, 48, 32, 23, 32}); // Corner1
 		baseModel[1].setRotationPoint(96F, 0F, 0F);
 		baseModel[1].rotateAngleX = -1.57079633F;
 		baseModel[1].rotateAngleY = -1.57079633F;
 
-		baseModel[2].addShape3D(72F, 56F, -24F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(32, 0, 32, 0), new Coord2D(48, 16, 48, 16), new Coord2D(48, 48, 48, 48), new Coord2D(0, 48, 0, 48)}), 64, 48, 48, 183, 64, ModelRendererTurbo.MR_FRONT, new float[]{48, 48, 32, 23, 32}); // Corner2
-		baseModel[2].setRotationPoint(72F, -24F, 104F);
+		baseModel[2].field_1402_i = flip;
+		baseModel[2].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(32, 0, 32, 0), new Coord2D(48, 16, 48, 16), new Coord2D(48, 48, 48, 48), new Coord2D(0, 48, 0, 48)}), 64, 48, 48, 183, 64, ModelRendererTurbo.MR_FRONT, new float[]{48, 48, 32, 23, 32}); // Corner2
+		baseModel[2].setRotationPoint(0F, 0F, 48F);
 		baseModel[2].rotateAngleX = -1.57079633F;
 		baseModel[2].rotateAngleY = 3.14159265F;
 
+		baseModel[3].field_1402_i = flip;
 		baseModel[3].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(32, 0, 32, 0), new Coord2D(48, 16, 48, 16), new Coord2D(48, 48, 48, 48), new Coord2D(0, 48, 0, 48)}), 64, 48, 48, 183, 64, ModelRendererTurbo.MR_FRONT, new float[]{48, 48, 32, 23, 32}); // Corner3
 		baseModel[3].setRotationPoint(144F, 0F, 96F);
 		baseModel[3].rotateAngleX = -1.57079633F;
 
+		baseModel[4].field_1402_i = flip;
 		baseModel[4].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(32, 0, 32, 0), new Coord2D(48, 16, 48, 16), new Coord2D(48, 48, 48, 48), new Coord2D(0, 48, 0, 48)}), 64, 48, 48, 183, 64, ModelRendererTurbo.MR_FRONT, new float[]{48, 48, 32, 23, 32}); // Corner4
 		baseModel[4].setRotationPoint(48F, 0F, 144F);
 		baseModel[4].rotateAngleX = -1.57079633F;
 		baseModel[4].rotateAngleY = 1.57079633F;
 
+		baseModel[5].field_1402_i = flip;
 		baseModel[5].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(6, 16, 6, 16)}), 48, 16, 16, 60, 48, ModelRendererTurbo.MR_FRONT, new float[]{18, 10, 16, 16}); // TopBorder1
 		baseModel[5].setRotationPoint(32F, -64F, 96F);
 
+		baseModel[6].field_1402_i = flip;
 		baseModel[6].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(6, 16, 6, 16)}), 48, 16, 16, 60, 48, ModelRendererTurbo.MR_FRONT, new float[]{18, 10, 16, 16}); // TopBorder2
 		baseModel[6].setRotationPoint(112F, -64F, 48F);
 		baseModel[6].rotateAngleY = -3.14159265F;
 
+		baseModel[7].field_1402_i = flip;
 		baseModel[7].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(6, 16, 6, 16)}), 48, 16, 16, 60, 48, ModelRendererTurbo.MR_FRONT, new float[]{18, 10, 16, 16}); // TopBorder3
 		baseModel[7].setRotationPoint(48F, -64F, 32F);
 		baseModel[7].rotateAngleY = 1.57079633F;
 
+		baseModel[8].field_1402_i = flip;
 		baseModel[8].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(6, 16, 6, 16)}), 48, 16, 16, 60, 48, ModelRendererTurbo.MR_FRONT, new float[]{18, 10, 16, 16}); // TopBorder4
 		baseModel[8].setRotationPoint(96F, -64F, 112F);
 		baseModel[8].rotateAngleY = 4.71238898F;
@@ -151,20 +159,24 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		baseModel[12].setRotationPoint(0F, -64F, 96F);
 		baseModel[12].rotateAngleY = -1.57079633F;
 
+		baseModel[13].field_1402_i = flip;
 		baseModel[13].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(32, 22, 32, 22), new Coord2D(32, 32, 32, 32), new Coord2D(16, 32, 16, 32), new Coord2D(0, 16, 0, 16), new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0)}), 2, 32, 32, 107, 2, ModelRendererTurbo.MR_FRONT, new float[]{32, 10, 16, 23, 16, 10}); // TableCorner1
 		baseModel[13].setRotationPoint(128F, -78F, 96F);
 		baseModel[13].rotateAngleX = -1.57079633F;
 
+		baseModel[14].field_1402_i = flip;
 		baseModel[14].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(32, 22, 32, 22), new Coord2D(32, 32, 32, 32), new Coord2D(16, 32, 16, 32), new Coord2D(0, 16, 0, 16), new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0)}), 2, 32, 32, 107, 2, ModelRendererTurbo.MR_FRONT, new float[]{32, 10, 16, 23, 16, 10}); // TableCorner2
 		baseModel[14].setRotationPoint(96F, -78F, 16F);
 		baseModel[14].rotateAngleX = -1.57079633F;
 		baseModel[14].rotateAngleY = -1.57079633F;
 
+		baseModel[15].field_1402_i = flip;
 		baseModel[15].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(32, 22, 32, 22), new Coord2D(32, 32, 32, 32), new Coord2D(16, 32, 16, 32), new Coord2D(0, 16, 0, 16), new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0)}), 2, 32, 32, 107, 2, ModelRendererTurbo.MR_FRONT, new float[]{32, 10, 16, 23, 16, 10}); // TableCorner3
 		baseModel[15].setRotationPoint(16F, -78F, 48F);
 		baseModel[15].rotateAngleX = -1.57079633F;
 		baseModel[15].rotateAngleY = -3.14159265F;
 
+		baseModel[16].field_1402_i = flip;
 		baseModel[16].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(32, 22, 32, 22), new Coord2D(32, 32, 32, 32), new Coord2D(16, 32, 16, 32), new Coord2D(0, 16, 0, 16), new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0)}), 2, 32, 32, 107, 2, ModelRendererTurbo.MR_FRONT, new float[]{32, 10, 16, 23, 16, 10}); // TableCorner4
 		baseModel[16].setRotationPoint(48F, -78F, 128F);
 		baseModel[16].rotateAngleX = -1.57079633F;
@@ -174,6 +186,7 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		baseModel[17].setRotationPoint(102F, -56F, 40F);
 		baseModel[17].rotateAngleY = 0.78539816F;
 
+		baseModel[18].flip = false;
 		baseModel[18].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(8, 4, 8, 4), new Coord2D(8, 0, 8, 0)}), 4, 8, 4, 23, 4, ModelRendererTurbo.MR_FRONT, new float[]{8, 4, 6, 5}, true); // Wire2_2
 		baseModel[18].setRotationPoint(99F, -56F, 43F);
 		baseModel[18].rotateAngleY = 2.35619449F;
@@ -214,31 +227,37 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		baseModel[29].setRotationPoint(46F, -40F, 34F);
 		baseModel[29].rotateAngleY = 0.78539816F;
 
+		baseModel[30].flip = !flip;
 		baseModel[30].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(5, 4, 5, 4), new Coord2D(5, 0, 5, 0)}), 4, 5, 4, 17, 4, ModelRendererTurbo.MR_FRONT, new float[]{5, 4, 3, 5}); // Wire3_2
 		baseModel[30].setRotationPoint(32F, -56F, 48F);
 		baseModel[30].rotateAngleX = 1.57079633F;
 		baseModel[30].rotateAngleY = 2.35619449F;
 
+		baseModel[31].flip = !flip;
 		baseModel[31].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[31].setRotationPoint(47F, -48F, 39F);
 		baseModel[31].rotateAngleX = 1.57079633F;
 		baseModel[31].rotateAngleY = 0.78539816F;
 
+		baseModel[32].flip = !flip;
 		baseModel[32].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[32].setRotationPoint(32F, -40F, 48F);
 		baseModel[32].rotateAngleX = 1.57079633F;
 		baseModel[32].rotateAngleY = 2.35619449F;
 
+		baseModel[33].flip = !flip;
 		baseModel[33].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[33].setRotationPoint(32F, -48F, 48F);
 		baseModel[33].rotateAngleX = 1.57079633F;
 		baseModel[33].rotateAngleY = 2.35619449F;
 
+		baseModel[34].flip = !flip;
 		baseModel[34].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[34].setRotationPoint(49F, -40F, 37F);
 		baseModel[34].rotateAngleX = 1.57079633F;
 		baseModel[34].rotateAngleY = 0.78539816F;
 
+		baseModel[35].flip = !flip;
 		baseModel[35].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 3, 0, 3), new Coord2D(2, 8, 2, 8), new Coord2D(4, 8, 4, 8), new Coord2D(4, 0, 4, 0)}), 4, 4, 8, 21, 4, ModelRendererTurbo.MR_FRONT, new float[]{5, 8, 2, 6}); // Wire3_2
 		baseModel[35].setRotationPoint(47F, -56F, 35F);
 		baseModel[35].rotateAngleX = 1.57079633F;
@@ -367,10 +386,10 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		baseModel[65].rotateAngleX = -0.10471976F;
 		baseModel[65].rotateAngleY = -0.59341195F;
 
+		baseModel[66].field_1402_i = flip;
 		baseModel[66].addBox(0F, 0F, 0F, 32, 14, 0, 0F); // WallSteelChain1
 		baseModel[66].setRotationPoint(94.5F, -78F, 27F);
 		baseModel[66].rotateAngleY = 0.78539816F;
-		baseModel[66].flip = true;
 
 		baseModel[67].addBox(0F, 0F, 0F, 32, 14, 0, 0F); // WallSteelChain1
 		baseModel[67].setRotationPoint(116.5F, -78F, 94F);
@@ -450,8 +469,8 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 
 		cannon_platform[0].addBox(6.5F, -24F, -1.5F, 3, 20, 3, 0F); // TurntableRodEnd
 
+		cannon_platform[1].field_1402_i = flip;
 		cannon_platform[1].addBox(-21F, -4F, -21F, 42, 3, 42, 0F); // TurntablePlatform
-		cannon_platform[1].flip = true;
 
 		cannon_platform[2].addShape3D(6.5F, 0F, -7F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(12, 0, 12, 0), new Coord2D(12, 20, 12, 20), new Coord2D(4, 20, 4, 20), new Coord2D(0, 16, 0, 16)}), 1, 12, 20, 62, 1, ModelRendererTurbo.MR_FRONT, new float[]{16, 6, 8, 20, 12}); // FlakSidePlate
 		cannon_platform[2].setRotationPoint(0, -16F, 0);
@@ -585,71 +604,33 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 		cannon[10].addTrapezoid(-2.5F, -36F, -8.5F, 8, 4, 8, 0F, -0.75F, ModelRendererTurbo.MR_TOP); // FlakBarrel1
 		cannon[10].setRotationPoint(0F, 28F, 0F);
 
+		parts.put("base", baseModel);
+		parts.put("cannon_platform", cannon_platform);
+		parts.put("cannon", cannon);
+		parts.put("cannon_barrel", cannon_barrel);
+		parts.put("cannon_ammo_door_right", cannon_ammo_door_right);
+		parts.put("cannon_ammo_door_left", cannon_ammo_door_left);
+		parts.put("ammo_door", ammo_door);
+		parts.put("hatch", hatch);
+		parts.put("platform_rod", platform_rod);
+
 		flipAll();
 	}
 
 	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(cannon_platform);
-		flip(cannon);
-		flip(cannon_barrel);
-		flip(cannon_ammo_door_right);
-		flip(cannon_ammo_door_left);
-		flip(ammo_door);
-		flip(hatch);
-		flip(platform_rod);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		super.rotateAll(x, y, z);
-		rotate(cannon_platform, x, y, z);
-		rotate(cannon, x, y, z);
-		rotate(cannon_barrel, x, y, z);
-		rotate(cannon_ammo_door_right, x, y, z);
-		rotate(cannon_ammo_door_left, x, y, z);
-		rotate(ammo_door, x, y, z);
-		rotate(hatch, x, y, z);
-		rotate(platform_rod, x, y, z);
-	}
-
-	@Override
-	public void rotateAddAll(float x, float y, float z)
-	{
-		super.rotateAddAll(x, y, z);
-		addRotation(cannon_platform, x, y, z);
-		addRotation(cannon, x, y, z);
-		addRotation(cannon_barrel, x, y, z);
-		addRotation(cannon_ammo_door_right, x, y, z);
-		addRotation(cannon_ammo_door_left, x, y, z);
-		addRotation(ammo_door, x, y, z);
-		addRotation(hatch, x, y, z);
-		addRotation(platform_rod, x, y, z);
-	}
-
-	@Override
-	public void render()
-	{
-		super.render();
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case WEST:
 			{
-				GlStateManager.translate(-2f, 0f, 12f);
+				GlStateManager.translate(mirrored?7: -2f, 0f, 12f);
 			}
 			break;
 			case EAST:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-7f, 0f, 5f);
+				GlStateManager.translate(mirrored?2: -7f, 0f, 5f);
 
 			}
 			break;
@@ -657,13 +638,13 @@ public class ModelArtilleryHowitzer extends BaseBlockModel
 			{
 
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f, 0f, 6f);
+				GlStateManager.translate(mirrored?8: -1f, 0f, 6f);
 			}
 			break;
 			case SOUTH:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-8f, 0f, 11f);
+				GlStateManager.translate(mirrored?1: -8f, 0f, 11f);
 			}
 			break;
 		}

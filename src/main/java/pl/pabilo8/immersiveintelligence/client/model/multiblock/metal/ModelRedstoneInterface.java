@@ -232,32 +232,35 @@ public class ModelRedstoneInterface extends BaseBlockModel
 	}
 
 	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case NORTH:
 			{
-				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(0f, 0f, 0f);
+				GlStateManager.rotate(mirrored?90f: 270F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-1f: 0f, -1f, 0f);
 			}
 			break;
 			case SOUTH:
 			{
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f, 0f, 1f);
+				GlStateManager.rotate(mirrored?270f: 90F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?0f: -1f, -1f, mirrored?-1f: 1f);
 			}
 			break;
 			case EAST:
 			{
-				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f, 0f, 0f);
+				if(!mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?0: -1f, -1f, 0f);
 
 			}
 			break;
 			case WEST:
 			{
-				GlStateManager.translate(0f, 0f, 1f);
+				if(mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-1f: 0f, -1f, mirrored?-1f: 1f);
 
 			}
 			break;

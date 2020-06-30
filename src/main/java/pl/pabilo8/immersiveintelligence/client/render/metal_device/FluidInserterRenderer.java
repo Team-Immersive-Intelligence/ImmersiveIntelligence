@@ -42,7 +42,7 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 
 			float f5 = 1f/16f;
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 
 			boolean renderOut = true, renderIn = true;
 
@@ -150,7 +150,7 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			model.rotate(model.inserterGaugeArrow, 0, 0, 0);
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 
 			model.render();
 

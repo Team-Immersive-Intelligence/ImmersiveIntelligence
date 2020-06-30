@@ -6,12 +6,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
@@ -19,9 +19,10 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 /**
  * Created by Pabilo8 on 21-06-2019.
  */
-public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEntityArtilleryHowitzer>
+public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEntityArtilleryHowitzer> implements IReloadableModelContainer<ArtilleryHowitzerRenderer>
 {
-	private static ModelArtilleryHowitzer model = new ModelArtilleryHowitzer();
+	private static ModelArtilleryHowitzer model;
+	private static ModelArtilleryHowitzer modelFlipped;
 	private static ModelBullet modelBullet = new ModelBullet();
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/artillery_howitzer.png";
@@ -44,8 +45,12 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
-			model.render();
+			ModelArtilleryHowitzer modelCurrent = te.mirrored?modelFlipped: model;
+			GlStateManager.pushMatrix();
+			modelCurrent.getBlockRotation(te.facing, te.mirrored);
+			modelCurrent.render();
+			GlStateManager.popMatrix();
+			modelCurrent.getBlockRotation(te.facing, false);
 
 			float loadingProgress = 0f;
 
@@ -400,9 +405,6 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 			GlStateManager.translate(0f, 1.625f, 0f);
 			GlStateManager.rotate(te.turretPitch, 1f, 0f, 0f);
 
-			if(Keyboard.isKeyDown(Keyboard.KEY_I)&&getWorld().getTotalWorldTime()%20==0)
-				model = new ModelArtilleryHowitzer();
-
 			for(ModelRendererTurbo mod : model.cannon)
 				mod.render(0.0625f);
 
@@ -494,4 +496,30 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 		}
 	}
 
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelArtilleryHowitzer(false);
+		modelFlipped = new ModelArtilleryHowitzer(true);
+		for(ModelRendererTurbo[] mod : modelFlipped.parts.values())
+		{
+
+			for(ModelRendererTurbo m : mod)
+			{
+				if(!m.field_1402_i)
+				{
+					m.doMirror(true, false, false);
+					m.setRotationPoint(-m.rotationPointX, m.rotationPointY, m.rotationPointZ);
+					m.rotateAngleY *= -1;
+					m.rotateAngleZ *= -1;
+				}
+				else
+				{
+					m.rotationPointX -= 144f;
+					m.field_1402_i = false;
+				}
+			}
+
+		}
+	}
 }

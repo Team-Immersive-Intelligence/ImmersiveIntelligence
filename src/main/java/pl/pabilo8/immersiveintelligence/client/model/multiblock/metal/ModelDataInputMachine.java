@@ -225,7 +225,7 @@ public class ModelDataInputMachine extends BaseBlockModel
 		lidModel[0] = new ModelRendererTurbo(this, 84, 147, textureX, textureY); // TopBoxPanel
 
 		lidModel[0].addBox(-0.5F, 0F, 0F, 1, 16, 16, 0F); // TopBoxPanel
-		lidModel[0].setRotationPoint(16F, -48F, 15.5F);
+		lidModel[0].setRotationPoint(0f, -48F, 0f);
 		lidModel[0].rotateAngleY = -1.57079633F;
 
 		drawerModel = new ModelRendererTurbo[5];
@@ -250,63 +250,33 @@ public class ModelDataInputMachine extends BaseBlockModel
 		drawerModel[4].addBox(0F, 0F, 0F, 2, 2, 1, 0F); // TableDrawerPullThingey
 		drawerModel[4].setRotationPoint(9F, -12F, 0F);
 
+		parts.put("base", baseModel);
+		parts.put("drawer", drawerModel);
+		parts.put("lid", lidModel);
 		flipAll();
 
 
 	}
 
 	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(lidModel);
-		flip(drawerModel);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		super.rotateAll(x, y, z);
-		rotate(lidModel, x, y, z);
-		rotate(drawerModel, x, y, z);
-	}
-
-	@Override
-	public void rotateAddAll(float x, float y, float z)
-	{
-		super.rotateAddAll(x, y, z);
-		addRotation(lidModel, x, y, z);
-		addRotation(drawerModel, x, y, z);
-	}
-
-	@Override
-	public void render() {
-		super.render();
-		float f5 = 1F / 16F;
-		for (ModelRendererTurbo model : lidModel)
-			model.render(f5);
-		for (ModelRendererTurbo model : drawerModel)
-			model.render(f5);
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch (facing)
 		{
 			case NORTH: {
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f,0f,0f);
+				GlStateManager.translate(0f, -2f, 2f);
 			} break;
 			case SOUTH: {
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(0f,0f,1f);
+				GlStateManager.translate(-1f, -2f, -1f);
 			} break;
 			case EAST: {
-				GlStateManager.translate(-1f,0f,1f);
+				GlStateManager.translate(1f, -2f, 0f);
 			} break;
 			case WEST: {
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(-2f, -2f, 1f);
 			} break;
 		}
 	}

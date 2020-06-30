@@ -276,7 +276,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	{
 		if(pos==2)
 		{
-			master().onReceive(packet, side);
+			master().onReceive(packet, EnumFacing.DOWN);
+		}
+		else if(pos==3)
+		{
+			master().onReceive(packet, EnumFacing.UP);
 		}
 
 		if(this.pos==8&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
@@ -369,8 +373,13 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 				}
 				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
 			}
+			//
+			IDataConnector conn;
+			if(side==EnumFacing.DOWN)
+				conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(3).getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
+			else
+				conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(2).getPos(), world, mirrored?facing.rotateY(): facing.rotateYCCW());
 
-			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);
 			if(conn!=null)
 			{
 				conn.sendPacket(new_packet);
@@ -464,6 +473,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 		if(part==0)
 			isDoorOpened = state;
 
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 }

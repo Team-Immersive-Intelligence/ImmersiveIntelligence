@@ -8,7 +8,8 @@ import net.minecraftforge.fml.common.Mod;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 /**
- * Created by Pabilo8 on 2019-05-12.
+ * @author Pabilo8
+ * @since 2019-05-12
  */
 @Mod.EventBusSubscriber
 public class Config

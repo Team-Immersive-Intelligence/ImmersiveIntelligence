@@ -1,32 +1,16 @@
 package pl.pabilo8.immersiveintelligence.api.utils;
 
-import net.minecraft.nbt.NBTTagCompound;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by Pabilo8 on 26-10-2019.
+ * Created by Pabilo8 on 23-06-2020.
  */
-public interface IAdvancedMultiblock
+@Retention(RetentionPolicy.RUNTIME)
+public @interface IAdvancedMultiblock
 {
-	int getConstructionCost();
-
-	int getCurrentConstruction();
-
-	void setCurrentConstruction(int construction);
-
-	void onConstructionFinish();
-
-	default boolean isConstructionFinished()
-	{
-		return getCurrentConstruction() >= getConstructionCost();
-	}
-
-	default void setConstructionNBT(NBTTagCompound nbt)
-	{
-		nbt.setInteger("construction", getCurrentConstruction());
-	}
-
-	default void getConstructionNBT(NBTTagCompound nbt)
-	{
-		setCurrentConstruction(nbt.getInteger("construction"));
-	}
+	/**
+	 * Just a marker to check if the multiblock is advanced (requires advanced hammer to build)
+	 * For TileEntities use {@link IAdvancedMultiblockTileEntity}
+	 */
 }

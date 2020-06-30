@@ -9,14 +9,38 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelBallisticComputer;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
+import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityBallisticComputer;
 
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
-public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEntityBallisticComputer>
+public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEntityBallisticComputer> implements IReloadableModelContainer<BallisticComputerRenderer>
 {
-	private static ModelBallisticComputer model = new ModelBallisticComputer();
+	private static ModelBallisticComputer model;
+	private static ModelBallisticComputer modelFlipped;
+
+	static
+	{
+		model = new ModelBallisticComputer();
+		modelFlipped = new ModelBallisticComputer();
+
+		modelFlipped.baseModel[2].flip = true;
+		modelFlipped.baseModel[2].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(4, 16, 4, 16), new Coord2D(0, 12, 0, 12)}), 1, 16, 16, 62, 1, ModelRendererTurbo.MR_FRONT, new float[]{12, 6, 12, 16, 16}); // ShapeMiddleWall
+		modelFlipped.baseModel[2].setRotationPoint(16F, -8F, 0F);
+		modelFlipped.baseModel[2].rotateAngleY = 1.57079633F;
+
+		modelFlipped.flipAllZ();
+
+		for(ModelRendererTurbo[] mod : model.parts.values())
+		{
+			for(ModelRendererTurbo m : mod)
+				m.rotateAngleY *= -1;
+		}
+	}
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/ballistic_computer.png";
 
@@ -37,8 +61,10 @@ public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
-			model.render();
+			ModelBallisticComputer modelCurrent = te.mirrored?modelFlipped: model;
+
+			modelCurrent.getBlockRotation(te.facing, te.mirrored);
+			modelCurrent.render();
 
 			if(te.progress > 0)
 			{
@@ -75,5 +101,19 @@ public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEnt
 			GlStateManager.popMatrix();
 
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelBallisticComputer();
+		modelFlipped = new ModelBallisticComputer();
+
+		modelFlipped.baseModel[2].flip = true;
+		modelFlipped.baseModel[2].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(4, 16, 4, 16), new Coord2D(0, 12, 0, 12)}), 1, 16, 16, 62, 1, ModelRendererTurbo.MR_FRONT, new float[]{12, 6, 12, 16, 16}); // ShapeMiddleWall
+		modelFlipped.baseModel[2].setRotationPoint(16F, -8F, 0F);
+		modelFlipped.baseModel[2].rotateAngleY = 1.57079633F;
+
+		modelFlipped.flipAllZ();
 	}
 }

@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  */
 public class ModelChemicalBath extends BaseBlockModel
 {
-	public ModelRendererTurbo[] slider, slider_lowering, itemPickerLeftTop, itemPickerLeftBottom, itemPickerRightTop, itemPickerRightBottom, itemDoor;
+	public ModelRendererTurbo[] sliderModel, sliderLoweringModel, itemPickerLeftTopModel, itemPickerLeftBottomModel, itemPickerRightTopModel, itemPickerRightBottomModel, itemDoorModel;
 
 	int textureX = 256;
 	int textureY = 256;
@@ -195,134 +195,96 @@ public class ModelChemicalBath extends BaseBlockModel
 		baseModel[37].setRotationPoint(6F, -5F, 17F);
 
 
-		slider = new ModelRendererTurbo[3];
-		slider_lowering = new ModelRendererTurbo[1];
-		itemPickerLeftTop = new ModelRendererTurbo[1];
-		itemPickerRightTop = new ModelRendererTurbo[1];
-		itemPickerLeftBottom = new ModelRendererTurbo[1];
-		itemPickerRightBottom = new ModelRendererTurbo[1];
+		sliderModel = new ModelRendererTurbo[3];
+		sliderLoweringModel = new ModelRendererTurbo[1];
+		itemPickerLeftTopModel = new ModelRendererTurbo[1];
+		itemPickerRightTopModel = new ModelRendererTurbo[1];
+		itemPickerLeftBottomModel = new ModelRendererTurbo[1];
+		itemPickerRightBottomModel = new ModelRendererTurbo[1];
 
-		slider[0] = new ModelRendererTurbo(this, 100, 40, textureX, textureY); // CraneMainBox
-		slider[1] = new ModelRendererTurbo(this, 118, 43, textureX, textureY); // CraneMainBoxUpper
-		slider[2] = new ModelRendererTurbo(this, 80, 49, textureX, textureY); // CraneMainBox
+		sliderModel[0] = new ModelRendererTurbo(this, 100, 40, textureX, textureY); // CraneMainBox
+		sliderModel[1] = new ModelRendererTurbo(this, 118, 43, textureX, textureY); // CraneMainBoxUpper
+		sliderModel[2] = new ModelRendererTurbo(this, 80, 49, textureX, textureY); // CraneMainBox
 
-		slider[0].addBox(-2.5F, 0F, -2F, 5, 3, 4, 0F); // CraneMainBox
-		slider[0].setRotationPoint(21.5F, -29F, 6F);
+		sliderModel[0].addBox(-2.5F, 0F, -2F, 5, 3, 4, 0F); // CraneMainBox
+		sliderModel[0].setRotationPoint(21.5F, -29F, 6F);
 
-		slider[1].addBox(-3.5F, 0F, -2F, 7, 1, 4, 0F); // CraneMainBoxUpper
-		slider[1].setRotationPoint(21.5F, -30F, 6F);
+		sliderModel[1].addBox(-3.5F, 0F, -2F, 7, 1, 4, 0F); // CraneMainBoxUpper
+		sliderModel[1].setRotationPoint(21.5F, -30F, 6F);
 
-		slider[2].addShapeBox(-2F, 0F, -1.5F, 4, 2, 3, 0F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // CraneMainBox
-		slider[2].setRotationPoint(21.5F, -32F, 6F);
+		sliderModel[2].addShapeBox(-2F, 0F, -1.5F, 4, 2, 3, 0F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // CraneMainBox
+		sliderModel[2].setRotationPoint(21.5F, -32F, 6F);
 
-		slider_lowering[0] = new ModelRendererTurbo(this, 100, 40, textureX, textureY); // CraneGrabberBox
+		sliderLoweringModel[0] = new ModelRendererTurbo(this, 100, 40, textureX, textureY); // CraneGrabberBox
 
-		slider_lowering[0].addBox(-2.5F, 0F, -2F, 5, 1, 4, 0F); // CraneGrabberBox
-		slider_lowering[0].setRotationPoint(21.5F, -25F, 6F);
+		sliderLoweringModel[0].addBox(-2.5F, 0F, -2F, 5, 1, 4, 0F); // CraneGrabberBox
+		sliderLoweringModel[0].setRotationPoint(21.5F, -25F, 6F);
 
 
 		//baseModel[32] = new ModelRendererTurbo(this, 91, 49, textureX, textureY); // CraneRope
 
-		itemPickerLeftTop[0] = new ModelRendererTurbo(this, 122, 48, textureX, textureY); // CraneGrabberLeftTop
-		itemPickerRightTop[0] = new ModelRendererTurbo(this, 122, 48, textureX, textureY); // CraneGrabberRightTop
-		itemPickerLeftBottom[0] = new ModelRendererTurbo(this, 126, 48, textureX, textureY); // CraneGrabberLeftTop
-		itemPickerRightBottom[0] = new ModelRendererTurbo(this, 126, 48, textureX, textureY); // CraneGrabberRightTop
+		itemPickerLeftTopModel[0] = new ModelRendererTurbo(this, 122, 48, textureX, textureY); // CraneGrabberLeftTop
+		itemPickerRightTopModel[0] = new ModelRendererTurbo(this, 122, 48, textureX, textureY); // CraneGrabberRightTop
+		itemPickerLeftBottomModel[0] = new ModelRendererTurbo(this, 126, 48, textureX, textureY); // CraneGrabberLeftTop
+		itemPickerRightBottomModel[0] = new ModelRendererTurbo(this, 126, 48, textureX, textureY); // CraneGrabberRightTop
 
-		itemPickerLeftTop[0].addBox(-0.5F, 0F, -0.5F, 1, 4, 1, 0F); // CraneGrabberLeftTop
-		//itemPickerLeftTop[0].setRotationPoint(23.5F, -24F, 6F);
+		itemPickerLeftTopModel[0].addBox(-0.5F, 0F, -0.5F, 1, 4, 1, 0F); // CraneGrabberLeftTop
+		//itemPickerLeftTopModel[0].setRotationPoint(23.5F, -24F, 6F);
 
-		itemPickerRightTop[0].addBox(-0.5F, 0F, -0.5F, 1, 4, 1, 0F); // CraneGrabberRightTop
-		//itemPickerRightTop[0].setRotationPoint(19.5F, -24F, 6F);
+		itemPickerRightTopModel[0].addBox(-0.5F, 0F, -0.5F, 1, 4, 1, 0F); // CraneGrabberRightTop
+		//itemPickerRightTopModel[0].setRotationPoint(19.5F, -24F, 6F);
 
-		itemPickerLeftBottom[0].addBox(-0.5F, 0F, -0.5F, 1, 3, 1, 0F); // CraneGrabberLeftTop
-		//itemPickerLeftBottom[0].setRotationPoint(23.5F, -20F, 6F);
+		itemPickerLeftBottomModel[0].addBox(-0.5F, 0F, -0.5F, 1, 3, 1, 0F); // CraneGrabberLeftTop
+		//itemPickerLeftBottomModel[0].setRotationPoint(23.5F, -20F, 6F);
 
-		itemPickerRightBottom[0].addBox(-0.5F, 0F, -0.5F, 1, 3, 1, 0F); // CraneGrabberRightTop
-		//itemPickerRightBottom[0].setRotationPoint(19.5F, -20F, 6F);
+		itemPickerRightBottomModel[0].addBox(-0.5F, 0F, -0.5F, 1, 3, 1, 0F); // CraneGrabberRightTop
+		//itemPickerRightBottomModel[0].setRotationPoint(19.5F, -20F, 6F);
 
 
-		itemDoor = new ModelRendererTurbo[1];
+		itemDoorModel = new ModelRendererTurbo[1];
 
-		itemDoor[0] = new ModelRendererTurbo(this, 0, 109, textureX, textureY); // ItemInputDoor
+		itemDoorModel[0] = new ModelRendererTurbo(this, 0, 109, textureX, textureY); // ItemInputDoor
 
-		itemDoor[0].addBox(-0.5F, 0.5F, -6F, 1, 7, 12, 0F); // ItemInputDoor
-		itemDoor[0].setRotationPoint(31.5F, -15.5F, 8F);
+		itemDoorModel[0].addBox(-0.5F, 0.5F, -6F, 1, 7, 12, 0F); // ItemInputDoor
+		itemDoorModel[0].setRotationPoint(31.5F, -15.5F, 8F);
 
-		translateAll(0F, 0F, 0F);
+		parts.put("base", baseModel);
+		parts.put("slider", sliderModel);
+		parts.put("slider_lowering", sliderLoweringModel);
+		parts.put("itemPickerLeftBottom", itemPickerLeftBottomModel);
+		parts.put("itemPickerLeftTop", itemPickerLeftTopModel);
+		parts.put("itemPickerRightBottom", itemPickerRightBottomModel);
+		parts.put("itemPickerRightTop", itemPickerRightTopModel);
 		flipAll();
+		parts.put("itemDoor", itemDoorModel);
 	}
 
 	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(slider);
-		flip(slider_lowering);
-		flip(itemPickerLeftTop);
-		flip(itemPickerRightTop);
-		flip(itemPickerLeftBottom);
-		flip(itemPickerRightBottom);
-
-		//baseModel[6].doMirror(false, true, false);
-		//baseModel[7].doMirror(false, true, false);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		super.rotateAll(x, y, z);
-		rotate(slider, x, y, z);
-		rotate(slider_lowering, x, y, z);
-		rotate(itemPickerLeftTop, x, y, z);
-		rotate(itemPickerRightTop, x, y, z);
-		rotate(itemPickerLeftBottom, x, y, z);
-		rotate(itemPickerRightBottom, x, y, z);
-	}
-
-	@Override
-	public void rotateAddAll(float x, float y, float z)
-	{
-		super.rotateAddAll(x, y, z);
-		addRotation(slider, x, y, z);
-		addRotation(slider_lowering, x, y, z);
-		addRotation(itemPickerLeftTop, x, y, z);
-		addRotation(itemPickerRightTop, x, y, z);
-		addRotation(itemPickerLeftBottom, x, y, z);
-		addRotation(itemPickerRightBottom, x, y, z);
-	}
-
-	@Override
-	public void render()
-	{
-		super.render();
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case WEST:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-3f, 0f, 4f);
+				GlStateManager.translate(-3f, 0f, mirrored?-1f: 4f);
 			}
 			break;
 			case EAST:
 			{
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(0f, 0f, 1f);
+				GlStateManager.translate(0f, 0f, mirrored?-4f: 1f);
 			}
 			break;
 			case NORTH:
 			{
-				GlStateManager.translate(0f, 0f, 4f);
+				GlStateManager.translate(0f, 0f, mirrored?-1f: 4f);
 			}
 			break;
 			case SOUTH:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-3f, 0f, 1f);
+				GlStateManager.translate(-3f, 0f, mirrored?-4f: 1f);
 			}
 			break;
 		}

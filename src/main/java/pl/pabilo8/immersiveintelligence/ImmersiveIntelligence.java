@@ -1,22 +1,18 @@
 package pl.pabilo8.immersiveintelligence;
 
+import blusunrize.immersiveengineering.common.util.commands.CommandHandler;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.IICreativeTab;
-import pl.pabilo8.immersiveintelligence.common.IISaveData;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.*;
 
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
@@ -85,6 +81,14 @@ public class ImmersiveIntelligence
 		}
 
 		CommonProxy.refreshFluidReferences();
+
+	}
+
+	@Mod.EventHandler
+	public void serverStarting(FMLServerStartingEvent event)
+	{
+		event.registerServerCommand(new CommandHandler(false));
+		ClientCommandHandler.instance.registerCommand(new IICommandHandler("ii"));
 	}
 
 }

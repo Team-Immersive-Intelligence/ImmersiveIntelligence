@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
@@ -117,12 +119,20 @@ public class MultiblockPacker implements IMultiblock
 			side = EnumFacing.fromAngle(player.rotationYaw);
 		}
 
-		boolean bool = this.structureCheck(world, pos, side, false);
-
-		if(!bool)
+		boolean mirrored = false;
+		boolean b = structureCheck(world, pos, side, false);
+		if(!b)
 		{
-			return false;
+			mirrored = true;
+			b = structureCheck(world, pos, side, true);
 		}
+		if(!b)
+			return false;
+
+		ItemStack hammer = player.getHeldItemMainhand().getItem().getToolClasses(player.getHeldItemMainhand()).contains(Lib.TOOL_HAMMER)?player.getHeldItemMainhand(): player.getHeldItemOffhand();
+		if(MultiblockHandler.fireMultiblockFormationEventPost(player, this, pos, hammer).isCanceled())
+			return false;
+
 
 		for(int h = -1; h < 2; h++)
 			for(int l = 0; l < 3; l++)
@@ -136,7 +146,7 @@ public class MultiblockPacker implements IMultiblock
 					if(h==1&&!(l==0&&w > 1))
 						continue;
 
-					int ww = w;
+					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
 					world.setBlockState(pos2, CommonProxy.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.PACKER.getMeta()));
@@ -145,7 +155,7 @@ public class MultiblockPacker implements IMultiblock
 					{
 						TileEntityPacker tile = (TileEntityPacker)curr;
 						tile.facing = side;
-						tile.mirrored = false;
+						tile.mirrored = mirrored;
 						tile.formed = true;
 						tile.pos = (h+1)*18+(l)*6+(w+2);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
@@ -210,7 +220,7 @@ public class MultiblockPacker implements IMultiblock
 						}
 						else if(w!=0&&l==1)
 						{
-							if(!ConveyorHandler.isConveyor(world, pos, ImmersiveEngineering.MODID+":conveyor", dir.rotateY()))
+							if(!ConveyorHandler.isConveyor(world, pos, ImmersiveEngineering.MODID+":conveyor", mirror?dir.rotateYCCW(): dir.rotateY()))
 								return false;
 						}
 						else if(l==0&&(w==-1||w==0||w==1))

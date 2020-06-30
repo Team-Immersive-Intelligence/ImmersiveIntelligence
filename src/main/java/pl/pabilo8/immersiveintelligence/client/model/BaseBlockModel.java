@@ -20,80 +20,6 @@ public class BaseBlockModel extends ModelBase
 	//List of parts for group flipping / translation / rotation
 	public HashMap<String, ModelRendererTurbo[]> parts = new HashMap<>();
 
-	public void flipAll()
-	{
-		if(parts.isEmpty())
-			parts.put("base", baseModel);
-		for(ModelRendererTurbo[] mod : parts.values())
-			flip(mod);
-	}
-
-	public void flip(ModelRendererTurbo[] model)
-	{
-		for(ModelRendererTurbo part : model)
-		{
-			part.doMirror(false, true, true);
-			part.setRotationPoint(part.rotationPointX, -part.rotationPointY, -part.rotationPointZ);
-		}
-	}
-
-	public void translateAll(float x, float y, float z)
-	{
-		for(ModelRendererTurbo[] mod : parts.values())
-			translate(mod, x, y, z);
-	}
-
-	public void rotateAll(float x, float y, float z)
-	{
-		for(ModelRendererTurbo[] mod : parts.values())
-			rotate(mod, x, y, z);
-
-	}
-
-	public void rotateAddAll(float x, float y, float z)
-	{
-		for(ModelRendererTurbo[] mod : parts.values())
-			addRotation(mod, x, y, z);
-	}
-
-	public void translate(ModelRendererTurbo[] model, float x, float y, float z)
-	{
-		for(ModelRendererTurbo mod : model)
-		{
-			mod.rotationPointX += x;
-			mod.rotationPointY += y;
-			mod.rotationPointZ += z;
-		}
-	}
-
-	public void rotate(ModelRendererTurbo[] model, float x, float y, float z)
-	{
-		for(ModelRendererTurbo mod : model)
-		{
-			mod.rotateAngleX = x;
-			mod.rotateAngleY = y;
-			mod.rotateAngleZ = z;
-		}
-	}
-
-	public void addRotation(ModelRendererTurbo[] model, float x, float y, float z)
-	{
-		for(ModelRendererTurbo mod : model)
-		{
-			mod.rotateAngleX += x;
-			mod.rotateAngleY += y;
-			mod.rotateAngleZ += z;
-		}
-	}
-
-	public void render()
-	{
-		float f5 = 1F/16F;
-
-		for(ModelRendererTurbo model : baseModel)
-			model.render(f5);
-	}
-
 	public static void copyModelAngles(BaseBlockModel setmodel, BaseBlockModel getmodel)
 	{
 		for(int j = 0; j < setmodel.baseModel.length; j++)
@@ -155,7 +81,111 @@ public class BaseBlockModel extends ModelBase
 		}
 	}
 
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void flipAll()
+	{
+		if(parts.isEmpty())
+			parts.put("base", baseModel);
+		for(ModelRendererTurbo[] mod : parts.values())
+			flip(mod);
+	}
+
+	public void flipAllZ()
+	{
+		if(parts.isEmpty())
+			parts.put("base", baseModel);
+		for(ModelRendererTurbo[] mod : parts.values())
+		{
+			flipZ(mod);
+			for(ModelRendererTurbo m : mod)
+			{
+				m.rotateAngleY *= -1;
+			}
+
+		}
+
+	}
+
+	public void flip(ModelRendererTurbo[] model)
+	{
+		for(ModelRendererTurbo part : model)
+		{
+			part.doMirror(false, true, true);
+			part.setRotationPoint(part.rotationPointX, -part.rotationPointY, -part.rotationPointZ);
+			part.setMirrored(!part.mirror);
+		}
+	}
+
+	public void flipZ(ModelRendererTurbo[] model)
+	{
+		for(ModelRendererTurbo part : model)
+		{
+			part.doMirror(false, false, true);
+			if(!part.flip)
+				part.setRotationPoint(part.rotationPointX, part.rotationPointY, -part.rotationPointZ);
+			else
+				part.setRotationPoint(part.rotationPointX, -part.rotationPointY, part.rotationPointZ);
+
+		}
+	}
+
+	public void translateAll(float x, float y, float z)
+	{
+		for(ModelRendererTurbo[] mod : parts.values())
+			translate(mod, x, y, z);
+	}
+
+	public void rotateAll(float x, float y, float z)
+	{
+		for(ModelRendererTurbo[] mod : parts.values())
+			rotate(mod, x, y, z);
+
+	}
+
+	public void rotateAddAll(float x, float y, float z)
+	{
+		for(ModelRendererTurbo[] mod : parts.values())
+			addRotation(mod, x, y, z);
+	}
+
+	public void translate(ModelRendererTurbo[] model, float x, float y, float z)
+	{
+		for(ModelRendererTurbo mod : model)
+		{
+			mod.rotationPointX += x;
+			mod.rotationPointY += y;
+			mod.rotationPointZ += z;
+		}
+	}
+
+	public void rotate(ModelRendererTurbo[] model, float x, float y, float z)
+	{
+		for(ModelRendererTurbo mod : model)
+		{
+			mod.rotateAngleX = x;
+			mod.rotateAngleY = y;
+			mod.rotateAngleZ = z;
+		}
+	}
+
+	public void addRotation(ModelRendererTurbo[] model, float x, float y, float z)
+	{
+		for(ModelRendererTurbo mod : model)
+		{
+			mod.rotateAngleX += x;
+			mod.rotateAngleY += y;
+			mod.rotateAngleZ += z;
+		}
+	}
+
+	public void render()
+	{
+		float f5 = 1F/16F;
+
+		for(ModelRendererTurbo model : baseModel)
+			model.render(f5);
+	}
+
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{

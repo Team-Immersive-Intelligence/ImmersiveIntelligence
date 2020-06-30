@@ -8,15 +8,17 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
  */
-public class RedstoneInterfaceRenderer extends TileEntitySpecialRenderer<TileEntityRedstoneInterface>
+public class RedstoneInterfaceRenderer extends TileEntitySpecialRenderer<TileEntityRedstoneInterface> implements IReloadableModelContainer<RedstoneInterfaceRenderer>
 {
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
-	private static ModelRedstoneInterface model = new ModelRedstoneInterface();
+	private static ModelRedstoneInterface model;
+	private static ModelRedstoneInterface modelFlipped;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/redstone_interface.png";
 
@@ -27,7 +29,7 @@ public class RedstoneInterfaceRenderer extends TileEntitySpecialRenderer<TileEnt
 		{
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x, (float)y-1, (float)z);
+			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			if(te.hasWorld())
@@ -37,16 +39,25 @@ public class RedstoneInterfaceRenderer extends TileEntitySpecialRenderer<TileEnt
 			}
 
 			GlStateManager.enableBlend();
-			model.getBlockRotation(te.facing, model);
-			model.render();
+			ModelRedstoneInterface modelCurrent = te.mirrored?modelFlipped: model;
+			modelCurrent.getBlockRotation(te.facing, te.mirrored);
+			modelCurrent.render();
 			GlStateManager.disableBlend();
 
-			GlStateManager.rotate(90, 0, 1, 0);
-			GlStateManager.translate(2, 0, 1);
+			GlStateManager.rotate(te.mirrored?270: 90, 0, 1, 0);
+			GlStateManager.translate(2, 0, te.mirrored?0: 1);
 			ClientUtils.bindAtlas();
 			ClientUtils.mc().getBlockRendererDispatcher().renderBlockBrightness(IEContent.blockConnectors.getStateFromMeta(BlockTypes_Connector.CONNECTOR_REDSTONE.getMeta()), 8);
 
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelRedstoneInterface();
+		modelFlipped = new ModelRedstoneInterface();
+		modelFlipped.flipAllZ();
 	}
 }

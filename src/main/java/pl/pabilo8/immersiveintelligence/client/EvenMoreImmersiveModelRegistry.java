@@ -10,9 +10,11 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Pabilo8 on 14-09-2019.
@@ -26,6 +28,7 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 	public static EvenMoreImmersiveModelRegistry instance = new EvenMoreImmersiveModelRegistry();
 	//Yes
 	public HashMap<ModelResourceLocation, ItemModelReplacement> itemModelReplacements = new HashMap<ModelResourceLocation, ItemModelReplacement>();
+	private Map<ResourceLocation, IReloadableModelContainer> reloadableModels = new HashMap<>();
 
 	@Override
 	@SubscribeEvent
@@ -59,5 +62,29 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 				loc = new ResourceLocation(modname, ((ItemIEBase)stack.getItem()).itemName);
 			itemModelReplacements.put(new ModelResourceLocation(loc, "inventory"), replacement);
 		}
+	}
+
+	public void addReloadableModel(IReloadableModelContainer model, ResourceLocation modelName)
+	{
+		reloadableModels.put(modelName, model);
+	}
+
+	public void reloadRegisteredModels()
+	{
+		reloadableModels.values().forEach(IReloadableModelContainer::reloadModels);
+	}
+
+	public void reloadModel(ResourceLocation modelName)
+	{
+		reloadableModels.forEach((s, iReloadableModelContainer) ->
+		{
+			if(s.equals(modelName))
+				iReloadableModelContainer.reloadModels();
+		});
+	}
+
+	public Set<ResourceLocation> getReloadableModels()
+	{
+		return reloadableModels.keySet();
 	}
 }

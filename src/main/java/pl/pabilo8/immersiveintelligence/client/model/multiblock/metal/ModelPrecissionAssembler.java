@@ -10,12 +10,12 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ModelPrecissionAssembler extends BaseBlockModel
 {
-	public ModelRendererTurbo[] lowerBox, drawer1, drawer2, doorLeft, doorRight;
+	public ModelRendererTurbo[] lowerBox, drawer1Model, drawer2Model, doorLeftModel, doorRightModel;
 
 	int textureX = 256;
 	int textureY = 256;
 
-	public ModelPrecissionAssembler() //Same as Filename
+	public ModelPrecissionAssembler(boolean flip) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[59];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // MainBox
@@ -104,7 +104,7 @@ public class ModelPrecissionAssembler extends BaseBlockModel
 
 		baseModel[8].addBox(0F, 0F, 0F, 1, 20, 44, 0F); // BackWall
 		baseModel[8].setRotationPoint(46.5F, -37F, 18F);
-		baseModel[8].flip = true;
+		baseModel[8].flip = !flip;
 
 		baseModel[9].addBox(0F, 0F, 0F, 2, 19, 2, 0F); // BackWallCorner
 		baseModel[9].setRotationPoint(46F, -37F, 16F);
@@ -124,7 +124,7 @@ public class ModelPrecissionAssembler extends BaseBlockModel
 
 		baseModel[14].addBox(0F, 0F, 0F, 1, 20, 44, 0F); // BackWall
 		baseModel[14].setRotationPoint(12.5F, -37F, 18F);
-		baseModel[14].flip = true;
+		baseModel[14].flip = !flip;
 
 		baseModel[15].addBox(0F, 0F, 0F, 2, 19, 2, 0F); // BackWallCorner
 		baseModel[15].setRotationPoint(12F, -37F, 16F);
@@ -171,7 +171,7 @@ public class ModelPrecissionAssembler extends BaseBlockModel
 
 		baseModel[29].addShapeBox(0F, 0F, 0F, 14, 3, 1, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // SideViewerBase
 		baseModel[29].setRotationPoint(15F, -29F, 14F);
-		baseModel[29].flip = true;
+		baseModel[29].flip = !flip;
 
 		baseModel[30].addBox(0F, 0F, 0F, 12, 1, 16, 0F); // DrawerPlate
 		baseModel[30].setRotationPoint(0F, -8F, 32F);
@@ -210,7 +210,7 @@ public class ModelPrecissionAssembler extends BaseBlockModel
 
 		baseModel[41].addBox(0F, 0F, 0F, 32, 1, 47, 0F); // TopGlassPlate
 		baseModel[41].setRotationPoint(14F, -38.5F, 16F);
-		baseModel[41].flip = true;
+		baseModel[41].flip = !flip;
 
 		baseModel[42].addBox(0F, 0F, 0F, 14, 8, 1, 0F); // BackCablePlate
 		baseModel[42].setRotationPoint(32F, -37F, 62F);
@@ -271,132 +271,98 @@ public class ModelPrecissionAssembler extends BaseBlockModel
 		lowerBox[0].setRotationPoint(16F, -6F, 32F);
 
 
-		drawer1 = new ModelRendererTurbo[5];
-		drawer1[0] = new ModelRendererTurbo(this, 204, 0, textureX, textureY); // Drawer1
-		drawer1[1] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer1
-		drawer1[2] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer1
-		drawer1[3] = new ModelRendererTurbo(this, 144, 32, textureX, textureY); // Drawer1
-		drawer1[4] = new ModelRendererTurbo(this, 162, 32, textureX, textureY); // Drawer1
+		drawer1Model = new ModelRendererTurbo[5];
+		drawer1Model[0] = new ModelRendererTurbo(this, 204, 0, textureX, textureY); // Drawer1
+		drawer1Model[1] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer1
+		drawer1Model[2] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer1
+		drawer1Model[3] = new ModelRendererTurbo(this, 144, 32, textureX, textureY); // Drawer1
+		drawer1Model[4] = new ModelRendererTurbo(this, 162, 32, textureX, textureY); // Drawer1
 
-		drawer1[0].addBox(0F, 0F, 0F, 10, 1, 16, 0F); // Drawer1
-		drawer1[0].setRotationPoint(2F, -9F, 32F);
+		drawer1Model[0].addBox(0F, 0F, 0F, 10, 1, 16, 0F); // Drawer1
+		drawer1Model[0].setRotationPoint(2F, -9F, 32F);
 
-		drawer1[1].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer1
-		drawer1[1].setRotationPoint(2F, -13F, 32F);
+		drawer1Model[1].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer1
+		drawer1Model[1].setRotationPoint(2F, -13F, 32F);
 
-		drawer1[2].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer1
-		drawer1[2].setRotationPoint(2F, -13F, 47F);
+		drawer1Model[2].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer1
+		drawer1Model[2].setRotationPoint(2F, -13F, 47F);
 
-		drawer1[3].addBox(0F, 0F, 0F, 1, 5, 16, 0F); // Drawer1
-		drawer1[3].setRotationPoint(1F, -13F, 32F);
+		drawer1Model[3].addBox(0F, 0F, 0F, 1, 5, 16, 0F); // Drawer1
+		drawer1Model[3].setRotationPoint(1F, -13F, 32F);
 
-		drawer1[4].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Drawer1
-		drawer1[4].setRotationPoint(0F, -11.5F, 39F);
-
-
-		drawer2 = new ModelRendererTurbo[5];
-		drawer2[0] = new ModelRendererTurbo(this, 204, 0, textureX, textureY); // Drawer2
-		drawer2[1] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer2
-		drawer2[2] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer2
-		drawer2[3] = new ModelRendererTurbo(this, 144, 32, textureX, textureY); // Drawer2
-		drawer2[4] = new ModelRendererTurbo(this, 162, 32, textureX, textureY); // Drawer2
-
-		drawer2[0].addBox(0F, 0F, 0F, 10, 1, 16, 0F); // Drawer2
-		drawer2[0].setRotationPoint(2F, -3F, 32F);
-
-		drawer2[1].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer2
-		drawer2[1].setRotationPoint(2F, -7F, 32F);
-
-		drawer2[2].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer2
-		drawer2[2].setRotationPoint(2F, -7F, 47F);
-
-		drawer2[3].addBox(0F, 0F, 0F, 1, 5, 16, 0F); // Drawer2
-		drawer2[3].setRotationPoint(1F, -7F, 32F);
-
-		drawer2[4].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Drawer2
-		drawer2[4].setRotationPoint(0F, -5.5F, 39F);
+		drawer1Model[4].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Drawer1
+		drawer1Model[4].setRotationPoint(0F, -11.5F, 39F);
 
 
-		doorLeft = new ModelRendererTurbo[1];
-		doorLeft[0] = new ModelRendererTurbo(this, 130, 179, textureX, textureY); // LowerBoxHatchFront
+		drawer2Model = new ModelRendererTurbo[5];
+		drawer2Model[0] = new ModelRendererTurbo(this, 204, 0, textureX, textureY); // Drawer2
+		drawer2Model[1] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer2
+		drawer2Model[2] = new ModelRendererTurbo(this, 168, 28, textureX, textureY); // Drawer2
+		drawer2Model[3] = new ModelRendererTurbo(this, 144, 32, textureX, textureY); // Drawer2
+		drawer2Model[4] = new ModelRendererTurbo(this, 162, 32, textureX, textureY); // Drawer2
 
-		doorLeft[0].addBox(-9F, 0F, 1F, 18, 1, 8, 0F); // LowerBoxHatchFront
+		drawer2Model[0].addBox(0F, 0F, 0F, 10, 1, 16, 0F); // Drawer2
+		drawer2Model[0].setRotationPoint(2F, -3F, 32F);
 
-		doorRight = new ModelRendererTurbo[1];
-		doorRight[0] = new ModelRendererTurbo(this, 130, 188, textureX, textureY); // LowerBoxHatchBack
+		drawer2Model[1].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer2
+		drawer2Model[1].setRotationPoint(2F, -7F, 32F);
 
-		doorRight[0].addBox(-9F, 0F, -9F, 18, 1, 8, 0F); // LowerBoxHatchBack
+		drawer2Model[2].addBox(0F, 0F, 0F, 10, 4, 1, 0F); // Drawer2
+		drawer2Model[2].setRotationPoint(2F, -7F, 47F);
 
-		translateAll(0F, 0F, 0F);
+		drawer2Model[3].addBox(0F, 0F, 0F, 1, 5, 16, 0F); // Drawer2
+		drawer2Model[3].setRotationPoint(1F, -7F, 32F);
+
+		drawer2Model[4].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Drawer2
+		drawer2Model[4].setRotationPoint(0F, -5.5F, 39F);
+
+
+		doorLeftModel = new ModelRendererTurbo[1];
+		doorLeftModel[0] = new ModelRendererTurbo(this, 130, 179, textureX, textureY); // LowerBoxHatchFront
+
+		doorLeftModel[0].addBox(-9F, 0F, 1F, 18, 1, 8, 0F); // LowerBoxHatchFront
+
+		doorRightModel = new ModelRendererTurbo[1];
+		doorRightModel[0] = new ModelRendererTurbo(this, 130, 188, textureX, textureY); // LowerBoxHatchBack
+
+		doorRightModel[0].addBox(-9F, 0F, -9F, 18, 1, 8, 0F); // LowerBoxHatchBack
+
+		parts.put("base", baseModel);
+		parts.put("lowerBox", lowerBox);
+		parts.put("drawer1", drawer1Model);
+		parts.put("drawer2", drawer2Model);
+		parts.put("doorLeft", doorLeftModel);
+		parts.put("doorRight", doorRightModel);
 
 		flipAll();
 	}
 
 	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(lowerBox);
-		flip(drawer1);
-		flip(drawer2);
-		flip(doorLeft);
-		flip(doorRight);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		super.rotateAll(x, y, z);
-		rotate(lowerBox, x, y, z);
-		rotate(drawer1, x, y, z);
-		rotate(drawer2, x, y, z);
-		rotate(doorLeft, x, y, z);
-		rotate(doorRight, x, y, z);
-	}
-
-	@Override
-	public void rotateAddAll(float x, float y, float z)
-	{
-		super.rotateAddAll(x, y, z);
-		addRotation(lowerBox, x, y, z);
-		addRotation(drawer1, x, y, z);
-		addRotation(drawer2, x, y, z);
-		addRotation(doorLeft, x, y, z);
-		addRotation(doorRight, x, y, z);
-	}
-
-	@Override
-	public void render()
-	{
-		super.render();
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case WEST:
 			{
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(1f, 0f, 0f);
+				GlStateManager.translate(1f, 0f, mirrored?-5f: 0f);
 			}
 			break;
 			case EAST:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-2f, 0f, 5f);
+				GlStateManager.translate(-2f, 0f, mirrored?0f: 5f);
 			}
 			break;
 			case NORTH:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-3f, 0f, 1f);
+				GlStateManager.translate(-3f, 0f, mirrored?-4f: 1f);
 			}
 			break;
 			case SOUTH:
 			{
-				GlStateManager.translate(2f, 0f, 4f);
+				GlStateManager.translate(2f, 0f, mirrored?-1f: 4f);
 			}
 			break;
 		}

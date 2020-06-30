@@ -10,15 +10,18 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPacker;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
  */
-public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker>
+public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> implements IReloadableModelContainer<PackerRenderer>
 {
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
-	private static ModelPacker model = new ModelPacker();
+	private static ModelPacker model;
+	private static ModelPacker modelFlipped;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/packer.png";
 
@@ -39,13 +42,15 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker>
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
-			model.render();
+			ModelPacker modelCurrent = te.mirrored?modelFlipped: model;
+
+			modelCurrent.getBlockRotation(te.facing, te.mirrored);
+			modelCurrent.render();
 
 
 			ClientUtils.bindTexture("textures/atlas/blocks.png");
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(1f, 1f, -2f);
+			GlStateManager.translate(te.mirrored?-2: 1f, 1f, -2f);
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
 			GlStateManager.translate(0, 0, -2);
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
@@ -57,12 +62,12 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker>
 
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0f, 0f, -3f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.WEST);
+			GlStateManager.translate(te.mirrored?-3: 0f, 0f, -3f);
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.mirrored?EnumFacing.EAST: EnumFacing.WEST);
 			GlStateManager.translate(1, 0, 0);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.WEST);
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.mirrored?EnumFacing.EAST: EnumFacing.WEST);
 			GlStateManager.translate(1, 0, 0);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:covered", EnumFacing.WEST);
+			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:covered", te.mirrored?EnumFacing.EAST: EnumFacing.WEST);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
@@ -99,6 +104,26 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker>
 			GlStateManager.popMatrix();
 
 			//ImmersiveIntelligence.logger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
+		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelPacker();
+		modelFlipped = new ModelPacker();
+		for(ModelRendererTurbo[] mod : modelFlipped.parts.values())
+		{
+			for(ModelRendererTurbo m : mod)
+			{
+				m.doMirror(true, false, false);
+				if(!m.flip)
+					m.setRotationPoint(-m.rotationPointX, m.rotationPointY, m.rotationPointZ);
+				else
+					m.setRotationPoint(m.rotationPointX, -m.rotationPointY, m.rotationPointZ);
+				m.rotateAngleY *= -1;
+			}
+
 		}
 	}
 }

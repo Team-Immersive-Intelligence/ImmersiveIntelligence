@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblockTileEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by Pabilo8 on 20-06-2019.
  */
-public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblock
+public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblockTileEntity
 {
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(0, ItemStack.EMPTY);
 	public int frequency, construction = 0;

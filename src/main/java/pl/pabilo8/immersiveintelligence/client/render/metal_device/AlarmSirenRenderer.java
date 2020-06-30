@@ -35,7 +35,7 @@ public class AlarmSirenRenderer extends TileEntitySpecialRenderer<TileEntityAlar
 			GlStateManager.disableLighting();
 			RenderHelper.enableStandardItemLighting();
 
-			model.getBlockRotation(te.getFacing(), model);
+			model.getBlockRotation(te.getFacing(), false);
 			model.render();
 
 			GlStateManager.popMatrix();
@@ -53,7 +53,7 @@ public class AlarmSirenRenderer extends TileEntitySpecialRenderer<TileEntityAlar
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 
 			model.render();
 

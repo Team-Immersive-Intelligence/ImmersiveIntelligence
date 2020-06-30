@@ -208,7 +208,7 @@ public class ModelPrecissionDrill extends BaseBlockModel
 	}
 
 	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		GlStateManager.rotate(180F, 0F, 1F, 0F);
 	}

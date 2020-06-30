@@ -32,7 +32,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -112,6 +111,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			this.active = message.getBoolean("active");
 		if(message.hasKey("inventory"))
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), 4);
+		if(message.hasKey("tank"))
+			tanks[0] = tanks[0].readFromNBT(message.getCompoundTag("tank"));
 	}
 
 	@Override
@@ -226,30 +227,10 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			tag.setBoolean("active", active);
 		}
 
-		if(inventory.get(2).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)&&inventory.get(2).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).getTankProperties()[0].getContents()!=null)
+		if(pl.pabilo8.immersiveintelligence.api.Utils.handleBucketTankInteraction(tanks, inventory, 2, 3, 0))
 		{
-			String fname = inventory.get(2).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).drain(1000, false).getFluid().getName();
-
-			if(fname.equals("ink")||fname.equals("ink_cyan")||fname.equals("ink_magenta")||fname.equals("ink_yellow"))
-			{
-				int amount_prev = tanks[0].getFluidAmount();
-				ItemStack emptyContainer = Utils.drainFluidContainer(tanks[0], inventory.get(2), inventory.get(3), null);
-				if(amount_prev!=tanks[0].getFluidAmount())
-				{
-					if(!inventory.get(3).isEmpty()&&OreDictionary.itemMatches(inventory.get(3), emptyContainer, true))
-						inventory.get(3).grow(emptyContainer.getCount());
-					else if(inventory.get(3).isEmpty())
-						inventory.set(3, emptyContainer.copy());
-					inventory.get(2).shrink(1);
-					if(inventory.get(2).getCount() <= 0)
-						inventory.set(2, ItemStack.EMPTY);
-
-					update = true;
-					writeToNBT(tag);
-					this.markDirty();
-					this.markContainingBlockForUpdate(null);
-				}
-			}
+			update = true;
+			tag.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
 		}
 
 		if(update)

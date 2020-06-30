@@ -33,7 +33,7 @@ public class TimedBufferRenderer extends TileEntitySpecialRenderer<TileEntityTim
 
 			float timer = ((float)te.timer)+((float)te.timer > 0?partialTicks/20f: 0);
 			model.rotate(model.clockModel, TmtUtil.AngleToTMT(45-(timer/(float)te.maxtimer)*360f), 0, 0);
-			model.getBlockRotation(te.facing, model);
+			model.getBlockRotation(te.facing, false);
 			model.render();
 
 			GlStateManager.popMatrix();
@@ -51,7 +51,7 @@ public class TimedBufferRenderer extends TileEntitySpecialRenderer<TileEntityTim
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 			model.render();
 
 			GlStateManager.popMatrix();

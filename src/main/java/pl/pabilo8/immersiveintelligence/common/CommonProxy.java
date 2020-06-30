@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
+import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent;
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
@@ -21,11 +22,13 @@ import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
@@ -39,6 +42,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -70,6 +74,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
@@ -558,7 +563,6 @@ public class CommonProxy implements IGuiHandler
 		IIRecipes.addSpringRecipes();
 		IIRecipes.addMiscIERecipes();
 
-		IIRecipes.addWoodTableSawRecipes(event);
 		IIRecipes.addRotaryPowerRecipes();
 
 		IIRecipes.addRDXProductionRecipes();
@@ -837,6 +841,8 @@ public class CommonProxy implements IGuiHandler
 		RotaryUtils.ie_rotational_blocks_torque.put(tileEntity -> tileEntity instanceof TileEntityWatermill,
 				aFloat -> aFloat*MechanicalDevices.dynamo_watermill_torque
 		);
+
+		IIRecipes.addWoodTableSawRecipes();
 	}
 
 	public void reInitGui()
@@ -944,8 +950,28 @@ public class CommonProxy implements IGuiHandler
 		}
 	}
 
+	@SubscribeEvent
+	public void onMultiblockForm(MultiblockFormEvent.Post event)
+	{
+		if(event.isCancelable()&&!event.isCanceled()&&event.getMultiblock().getClass().isAnnotationPresent(IAdvancedMultiblock.class))
+		{
+			//Required by Advanced Structures!
+			if(!pl.pabilo8.immersiveintelligence.api.Utils.isAdvancedHammer(event.getHammer()))
+			{
+				if(!event.getEntityPlayer().getEntityWorld().isRemote)
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"requires_advanced_hammer")), (EntityPlayerMP)event.getEntityPlayer());
+				event.setCanceled(true);
+			}
+		}
+	}
+
 
 	public void spawnGunfireFX(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	{
+
+	}
+
+	public void reloadModels()
 	{
 
 	}

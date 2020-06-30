@@ -30,7 +30,7 @@ public class SmallDataBufferRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.translate(x+1, y, z);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.getBlockRotation(te.facing, model);
+			model.getBlockRotation(te.facing, false);
 			model.render();
 
 			GlStateManager.popMatrix();
@@ -48,7 +48,7 @@ public class SmallDataBufferRenderer extends TileEntitySpecialRenderer<TileEntit
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 			model.render();
 
 			GlStateManager.popMatrix();

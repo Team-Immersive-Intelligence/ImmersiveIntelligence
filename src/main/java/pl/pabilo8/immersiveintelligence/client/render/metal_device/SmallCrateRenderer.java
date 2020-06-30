@@ -43,7 +43,7 @@ public class SmallCrateRenderer extends TileEntitySpecialRenderer<TileEntitySmal
 	{
 		ModelRendererTurbo[] mod = (meta==0||meta==3)?model.boxCrateModel: ((meta==1||meta==4)?model.cubeCrateModel: model.wideCrateModel);
 		ClientUtils.bindTexture(meta < 3?(texture_wooden+meta+".png"): (texture_metal+(meta-3)+".png"));
-		model.getBlockRotation(facing, model);
+		model.getBlockRotation(facing, false);
 		for(ModelRendererTurbo m : mod)
 			m.render(0.0625f);
 	}

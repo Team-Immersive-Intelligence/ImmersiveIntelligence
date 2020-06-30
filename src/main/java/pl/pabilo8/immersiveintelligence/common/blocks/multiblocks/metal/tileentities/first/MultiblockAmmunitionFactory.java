@@ -16,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -24,7 +23,8 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 
 public class MultiblockAmmunitionFactory implements IMultiblock

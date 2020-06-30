@@ -252,38 +252,40 @@ public class ModelBallisticComputer extends BaseBlockModel
 		baseModel[45].addBox(0F, 0F, 0F, 12, 10, 1, 0F); // BoxFrontPlate
 		baseModel[45].setRotationPoint(2F, -28F, 15F);
 
-		for(ModelRendererTurbo mod : baseModel)
-			mod.rotateAngleY = -mod.rotateAngleY;
-
+		parts.put("base", baseModel);
 		flipAll();
+
 	}
 
 	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case NORTH:
 			{
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(0f, 0f, 2f);
+				GlStateManager.rotate(mirrored?270f: 90F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-1f: 0f, 0f, mirrored?-2f: 2f);
 			}
 			break;
 			case SOUTH:
 			{
-				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f, 0f, -1f);
+				GlStateManager.rotate(mirrored?90F: 270f, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?0f: -1f, 0f, mirrored?1f: -1f);
 			}
 			break;
 			case EAST:
 			{
-				GlStateManager.translate(1f, 0f, 0f);
+				if(mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-2f: 1f, 0f, 0f);
 			}
 			break;
 			case WEST:
 			{
-				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-2f, 0f, 1f);
+				if(!mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?1f: -2f, 0f, mirrored?-1f: 1f);
 			}
 			break;
 		}

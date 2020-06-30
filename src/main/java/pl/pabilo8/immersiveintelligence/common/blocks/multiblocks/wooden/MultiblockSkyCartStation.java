@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden;
 
+import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
@@ -106,12 +108,19 @@ public class MultiblockSkyCartStation implements IMultiblock
 			side = EnumFacing.fromAngle(player.rotationYaw);
 		}
 
-		boolean bool = this.structureCheck(world, pos, side, false);
-
-		if(!bool)
+		boolean mirrored = false;
+		boolean b = structureCheck(world, pos, side, false);
+		if(!b)
 		{
-			return false;
+			mirrored = true;
+			b = structureCheck(world, pos, side, true);
 		}
+		if(!b)
+			return false;
+
+		ItemStack hammer = player.getHeldItemMainhand().getItem().getToolClasses(player.getHeldItemMainhand()).contains(Lib.TOOL_HAMMER)?player.getHeldItemMainhand(): player.getHeldItemOffhand();
+		if(MultiblockHandler.fireMultiblockFormationEventPost(player, this, pos, hammer).isCanceled())
+			return false;
 
 		for(int h = -1; h < 2; h++)
 			for(int l = -1; l < 2; l++)
@@ -123,7 +132,7 @@ public class MultiblockSkyCartStation implements IMultiblock
 					if(h==1&&(w==-1||l==1))
 						continue;
 
-					int ww = w;
+					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
 					world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCART_STATION.getMeta()));
@@ -132,7 +141,7 @@ public class MultiblockSkyCartStation implements IMultiblock
 					{
 						TileEntitySkyCartStation tile = (TileEntitySkyCartStation)curr;
 						tile.facing = side;
-						tile.mirrored = false;
+						tile.mirrored = mirrored;
 						tile.formed = true;
 						tile.pos = ((h+1)*9)+((l+1)*3)+(w+1);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};

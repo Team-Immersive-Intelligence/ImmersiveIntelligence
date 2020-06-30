@@ -140,7 +140,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	{
 		super.update();
 
-
+		main:
 		if(!isDummy()&&!world.isRemote)
 		{
 			handleRotation();
@@ -160,7 +160,8 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 				if(getInventory().get(4).isEmpty()&&world.getTotalWorldTime()%4==0)
 				{
 					TileEntity te = world.getTileEntity(getBlockPosForPos(7).offset(facing));
-					if(te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()))
+
+					if(te!=null&&te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()))
 					{
 						IItemHandler cap = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 						for(int i = 0; i < cap.getSlots(); i += 1)
@@ -173,7 +174,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 						}
 					}
 				}
-				if(world.getRedstonePower(getBlockPosForPos(8).offset(facing.rotateY()), facing.rotateYCCW()) > 0)
+				if(world.getRedstonePower(getBlockPosForPos(8).offset(mirrored?this.facing.rotateYCCW(): this.facing.rotateY()), (mirrored?this.facing.rotateY(): this.facing.rotateYCCW())) > 0)
 				{
 					animation = 3;
 					progress = 0;
@@ -212,7 +213,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 							animation = 0;
 							if(!world.isRemote)
 							{
-								ItemStack crate = Utils.insertStackIntoInventory(world.getTileEntity(getBlockPosForPos(9).offset(facing.rotateYCCW())), inventory.get(3), facing.rotateY());
+								ItemStack crate = Utils.insertStackIntoInventory(world.getTileEntity(getBlockPosForPos(9).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))), inventory.get(3), mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
 								if(!crate.isEmpty())
 									Utils.dropStackAtPos(world, getBlockPosForPos(9).offset(facing), crate);
 								inventory.set(3, ItemStack.EMPTY);
@@ -282,13 +283,13 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			selfDestruct();
 		}
 
-		if(world.getTileEntity(getBlockPosForPos(6).offset(facing.rotateYCCW()))!=null)
+		if(world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())))!=null)
 		{
-			TileEntity te = world.getTileEntity(getBlockPosForPos(6).offset(facing.rotateYCCW()));
-			if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.rotateY()))
+			TileEntity te = world.getTileEntity(getBlockPosForPos(6).offset((mirrored?this.facing.rotateY(): this.facing.rotateYCCW())));
+			if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
 			{
-				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.rotateY());
-				if(rotation.handleRotation(cap, facing.rotateY()))
+				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
+				if(rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
 				{
 					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(master(), 24));
 				}
@@ -527,9 +528,9 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==this.facing.rotateYCCW())
+		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==(mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))
 			return true;
-		if(pos==2&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
+		if(pos==2&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==(mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
 			return true;
 		return super.hasCapability(capability, facing);
 	}
@@ -541,9 +542,9 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 		if(master==null)
 			return super.getCapability(capability, facing);
 
-		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==this.facing.rotateYCCW())
+		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==(mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))
 			return (T)rotation;
-		if(pos==2&&master.animation==0&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
+		if(pos==2&&master.animation==0&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==(mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
 			return (T)insertionHandler;
 		return super.getCapability(capability, facing);
 	}
@@ -715,6 +716,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileEntityConveyorBelt)
-			((TileEntityConveyorBelt)tile).setFacing(this.facing.rotateYCCW());
+			((TileEntityConveyorBelt)tile).setFacing((mirrored?this.facing.rotateY(): this.facing.rotateYCCW()));
 	}
 }

@@ -192,14 +192,14 @@ public class ModelArithmeticLogicMachine extends BaseBlockModel
 		doorLeftModel[0] = new ModelRendererTurbo(this, 172, 112, textureX, textureY); // MainBoxDoorLeft
 
 		doorLeftModel[0].addBox(-0.5F, 0F, -15F, 1, 28, 16, 0F); // MainBoxDoorLeft
-		doorLeftModel[0].setRotationPoint(31F, -48F, 15.5F);
+		//doorLeftModel[0].setRotationPoint(31F, -48F, 15.5F);
 		doorLeftModel[0].rotateAngleY = TmtUtil.AngleToTMT(-90);
 
 		doorRightModel = new ModelRendererTurbo[1];
 		doorRightModel[0] = new ModelRendererTurbo(this, 172, 112, textureX, textureY); // MainBoxDoorRight
 
 		doorRightModel[0].addBox(-0.5F, 0F, -15F, 1, 28, 16, 0F); // MainBoxDoorRight
-		doorRightModel[0].setRotationPoint(1F, -48F, 15.5F);
+		//doorRightModel[0].setRotationPoint(1F, -48F, 15.5F);
 		doorRightModel[0].rotateAngleY = TmtUtil.AngleToTMT(90);
 
 
@@ -234,74 +234,38 @@ public class ModelArithmeticLogicMachine extends BaseBlockModel
 		chip4Model[0].setRotationPoint(11F, -42F, 31F);
 		chip4Model[0].rotateAngleY = 0.2443461F;
 
+		parts.put("base", baseModel);
+		parts.put("chip1", this.chip1Model);
+		parts.put("chip2", this.chip2Model);
+		parts.put("chip3", this.chip3Model);
+		parts.put("chip4", this.chip4Model);
+		parts.put("doorLeftModel", this.doorLeftModel);
+		parts.put("doorRightModel", this.doorRightModel);
+
 		flipAll();
 	}
 
 	@Override
-	public void flipAll()
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
-		super.flipAll();
-		flip(doorRightModel);
-		flip(doorLeftModel);
-		flip(chip1Model);
-		flip(chip2Model);
-		flip(chip3Model);
-		flip(chip4Model);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		super.rotateAll(x, y, z);
-		rotate(doorRightModel,x,y,z);
-		rotate(doorLeftModel,x,y,z);
-		rotate(chip1Model,x,y,z);
-		rotate(chip2Model,x,y,z);
-		rotate(chip3Model,x,y,z);
-		rotate(chip4Model,x,y,z);
-	}
-
-	@Override
-	public void rotateAddAll(float x, float y, float z)
-	{
-		super.rotateAddAll(x, y, z);
-		addRotation(doorRightModel, x, y, z);
-		addRotation(doorLeftModel, x, y, z);
-		addRotation(chip1Model, x, y, z);
-		addRotation(chip2Model, x, y, z);
-		addRotation(chip3Model, x, y, z);
-		addRotation(chip4Model, x, y, z);
-	}
-
-	@Override
-	public void render() {
-		super.render();
-		float f5 = 1F / 16F;
-		for (ModelRendererTurbo model : doorRightModel)
-			model.render(f5);
-		for (ModelRendererTurbo model : doorLeftModel)
-			model.render(f5);
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
-	{
+		if(mirrored)
+			GlStateManager.rotate(180, 0, 1, 0);
 		switch (facing)
 		{
 			case NORTH: {
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f,0f,1f);
+				GlStateManager.translate(mirrored?-1: 0, -2, mirrored?-3: 3);
 			} break;
 			case SOUTH: {
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(0f, 0f, 2f);
+				GlStateManager.translate(mirrored?0: -1, -2, 0);
 			} break;
 			case EAST: {
-				GlStateManager.translate(-1f,0f,2f);
+				GlStateManager.translate(mirrored?-2f: 1f, -2, mirrored?-1: 1);
 			} break;
 			case WEST: {
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(0f,0f,1f);
+				GlStateManager.translate(mirrored?1: -2, -2, mirrored?-2: 2);
 			} break;
 		}
 	}

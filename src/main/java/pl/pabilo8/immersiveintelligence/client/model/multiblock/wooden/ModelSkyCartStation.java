@@ -442,32 +442,36 @@ public class ModelSkyCartStation extends BaseBlockModel
 	}
 
 	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{
 			case NORTH:
 			{
-				GlStateManager.translate(-1f, 0f, 0f);
+				if(mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-1: 0, -1f, 0f);
 			}
 			break;
 			case SOUTH:
 			{
-				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(0f, 0f, -1f);
+				if(!mirrored)
+					GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?0: -1f, -1f, mirrored?1: -1f);
 
 			}
 			break;
 			case EAST:
 			{
-				GlStateManager.rotate(270F, 0F, 1F, 0F);
+				GlStateManager.rotate(mirrored?90: 270F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?-1: 0, -1f, mirrored?1: -1);
 
 			}
 			break;
 			case WEST:
 			{
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f, 0f, -1f);
+				GlStateManager.rotate(mirrored?270: 90F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?0: -1f, -1f, 0);
 
 			}
 			break;

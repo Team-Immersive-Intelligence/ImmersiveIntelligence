@@ -9,15 +9,16 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelConveyorScanner;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityConveyorScanner;
 
 /**
  * Created by Pabilo8 on 21-06-2019.
  */
-public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntityConveyorScanner>
+public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntityConveyorScanner> implements IReloadableModelContainer<ConveyorScannerRenderer>
 {
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
-	private static ModelConveyorScanner model = new ModelConveyorScanner();
+	private static ModelConveyorScanner model;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/conveyor_scanner.png";
 
@@ -38,7 +39,7 @@ public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntit
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
+			model.getBlockRotation(te.facing, false);
 			model.render();
 
 			GlStateManager.translate(0f, 1f, -1f);
@@ -56,5 +57,11 @@ public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			//ImmersiveIntelligence.logger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelConveyorScanner();
 	}
 }

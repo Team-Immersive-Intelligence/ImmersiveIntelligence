@@ -31,7 +31,7 @@ public class AmmunitionCrateRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			float angle = Math.min(1.5f, Math.max(te.lidAngle+(te.open?0.2f*partialTicks: -0.3f*partialTicks), 0f));
-			model.getBlockRotation(te.facing, model);
+			model.getBlockRotation(te.facing, false);
 			model.rotate(model.lidModel, 0, 0, angle);
 			model.translate(model.lidModel, 0, angle/1.5f, 0);
 			model.render();
@@ -52,7 +52,7 @@ public class AmmunitionCrateRenderer extends TileEntitySpecialRenderer<TileEntit
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 			model.rotate(model.lidModel, 0, 0, 0);
 			model.render();
 

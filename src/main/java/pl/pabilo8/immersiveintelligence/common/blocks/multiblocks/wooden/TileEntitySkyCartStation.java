@@ -171,10 +171,10 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			if(world.getTileEntity(getBlockPosForPos(6).offset(facing.rotateYCCW()))!=null)
 			{
 				TileEntity te = world.getTileEntity(getBlockPosForPos(6).offset(facing.rotateYCCW()));
-				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.rotateY()))
+				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY())))
 				{
-					IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.rotateY());
-					if(rotation.handleRotation(cap, facing.rotateY()))
+					IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY()));
+					if(rotation.handleRotation(cap, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY())))
 					{
 						IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(master(), 24));
 					}
@@ -213,7 +213,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 
 			if(animation==1)
 			{
-				if(world.getRedstonePower(getBlockPosForPos(8).offset(facing.rotateY()), facing.rotateYCCW()) > 0)
+				if(world.getRedstonePower(getBlockPosForPos(8).offset((mirrored?this.facing.rotateYCCW(): this.facing.rotateY())), facing.rotateYCCW()) > 0)
 				{
 					animation = 3;
 					progress = 0;
@@ -273,7 +273,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 				if(animation==2)
 				{
 					float time = Math.min(1, progress/(SkyCartStation.minecartInTime*0.25f));
-					BlockPos p = getBlockPosForPos(1).offset(facing.rotateY());
+					BlockPos p = getBlockPosForPos(1).offset((mirrored?this.facing.rotateYCCW(): this.facing.rotateY()));
 					internalEntity.riding_x = p.getX()+0.5f+(v.getX()*time);
 					internalEntity.riding_y = p.getY()+0.125f+(v.getY()*time);
 					internalEntity.riding_z = p.getZ()+0.5f+(v.getZ()*time);
@@ -306,7 +306,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			}
 			if(cart==null&&world.getTotalWorldTime()%4==0)
 			{
-				List<EntityMinecart> e = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(getBlockPosForPos(2).offset(facing.rotateY())), (EntityMinecart input) ->
+				List<EntityMinecart> e = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(getBlockPosForPos(2).offset((mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))), (EntityMinecart input) ->
 				{
 					return EnumFacing.getFacingFromVector((float)input.motionX, (float)input.motionY, (float)input.motionZ)==facing.rotateYCCW();
 				});
@@ -634,7 +634,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==this.facing.rotateYCCW())
+		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==(mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))
 			return true;
 		return super.hasCapability(capability, facing);
 	}
@@ -643,7 +643,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
 
-		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==this.facing.rotateYCCW())
+		if(pos==6&&capability==CapabilityRotaryEnergy.ROTARY_ENERGY&&facing==(mirrored?this.facing.rotateY(): this.facing.rotateYCCW()))
 			return (T)rotation;
 		return super.getCapability(capability, facing);
 	}
@@ -810,10 +810,10 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		if(!isDummy()&&cart!=null)
 		{
 			cart.dismountRidingEntity();
-			BlockPos p = getBlockPosForPos(2).offset(facing.rotateY(), 2);
+			BlockPos p = getBlockPosForPos(2).offset((mirrored?this.facing.rotateYCCW(): this.facing.rotateY()), 2);
 			cart.setPosition(p.getX()+0.5, p.getY(), p.getZ()+0.5);
 			cart.setCanUseRail(true);
-			Vec3i yaw = facing.rotateY().getDirectionVec();
+			Vec3i yaw = (mirrored?this.facing.rotateYCCW(): this.facing.rotateY()).getDirectionVec();
 			cart.motionX = yaw.getX();
 			cart.motionZ = yaw.getZ();
 			cart = null;

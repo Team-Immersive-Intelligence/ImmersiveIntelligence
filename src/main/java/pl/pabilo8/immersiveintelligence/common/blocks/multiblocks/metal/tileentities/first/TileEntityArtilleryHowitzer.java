@@ -416,9 +416,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		if(world.getTotalWorldTime()%40==0&&inventoryHandler.getStackInSlot(0).isEmpty())
 		{
 
-			if(getTileForPos(329)!=null)
+			if(getTileForPos(mirrored?327: 329)!=null)
 			{
-				List<EntityItem> itemsIn = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(getTileForPos(329).getPos().offset(EnumFacing.UP)));
+				List<EntityItem> itemsIn = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(getTileForPos(mirrored?327: 329).getPos().offset(EnumFacing.UP)));
 				for(EntityItem ent : itemsIn)
 				{
 					if(!(ent.getItem().getItem() instanceof ItemIIBullet)||!(ItemIIBullet.getCasing(ent.getItem())).getName().equals("artillery_8bCal"))
@@ -485,7 +485,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		else
 		{
 			if(!world.isRemote&&!inventoryHandler.getStackInSlot(11).isEmpty())
-				Utils.dropStackAtPos(world, getBlockPosForPos(327).offset(EnumFacing.UP), inventoryHandler.extractItem(11, 1, false));
+				Utils.dropStackAtPos(world, getBlockPosForPos(mirrored?329: 327).offset(EnumFacing.UP), inventoryHandler.extractItem(11, 1, false));
 
 			if(inventoryHandler.getStackInSlot(11).isEmpty())
 			{
@@ -600,7 +600,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	@Override
 	public int[] getEnergyPos()
 	{
-		return new int[]{441};
+		return new int[]{mirrored?449: 441};
 	}
 
 	@Override
@@ -739,7 +739,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		TileEntityArtilleryHowitzer master = master();
-		if(pos==449&&master!=null)
+		if(pos==(mirrored?441: 449)&master!=null)
 		{
 
 			//Command

@@ -38,7 +38,7 @@ public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEnti
 
 			float f5 = 1f/16f;
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 
 			boolean renderOut = true, renderIn = true;
 
@@ -203,7 +203,7 @@ public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEnti
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 			model.render();
 
 			float progress = 0.15f;

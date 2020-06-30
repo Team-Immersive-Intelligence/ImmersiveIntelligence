@@ -32,3 +32,4 @@ libs/
 *.project
 *.classpath
 .settings/
+custom.gradle

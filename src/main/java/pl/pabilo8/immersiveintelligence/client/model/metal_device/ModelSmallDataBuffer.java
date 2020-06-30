@@ -73,7 +73,7 @@ public class ModelSmallDataBuffer extends BaseBlockModel
 	}
 
 	@Override
-	public void getBlockRotation(EnumFacing facing, BaseBlockModel model)
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
 		switch(facing)
 		{

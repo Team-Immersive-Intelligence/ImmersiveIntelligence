@@ -252,7 +252,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 				new_packet.setVariable('y', new DataPacketTypeInteger(Math.round(yaw)));
 				new_packet.setVariable('p', new DataPacketTypeInteger(Math.round(pitch)));
 
-				IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(3).getPos(), world, facing.rotateY());
+				IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(3).getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
 				if(conn!=null)
 				{
 					conn.sendPacket(new_packet);

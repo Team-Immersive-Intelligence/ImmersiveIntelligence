@@ -6,14 +6,15 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCratePost;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCratePost;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
  */
-public class SkyCratePostRenderer extends TileEntitySpecialRenderer<TileEntitySkyCratePost>
+public class SkyCratePostRenderer extends TileEntitySpecialRenderer<TileEntitySkyCratePost> implements IReloadableModelContainer<SkyCratePostRenderer>
 {
-	private static ModelSkyCratePost model = new ModelSkyCratePost();
+	private static ModelSkyCratePost model;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_post.png";
 
@@ -29,11 +30,17 @@ public class SkyCratePostRenderer extends TileEntitySpecialRenderer<TileEntitySk
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.getBlockRotation(te.facing, model);
+			model.getBlockRotation(te.facing, false);
 			model.render();
 
 			GlStateManager.popMatrix();
 
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelSkyCratePost();
 	}
 }

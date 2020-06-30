@@ -64,7 +64,7 @@ public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
+			model.getBlockRotation(te.facing, false);
 			model.render();
 
 			GlStateManager.pushMatrix();

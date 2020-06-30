@@ -44,7 +44,7 @@ public class ItemIIPrintedPage extends ItemIIBase implements IGuiItem
 	public int getGuiID(ItemStack stack)
 	{
 		//TODO: Add a switch when needed
-		return IIGuiList.GUI_PRINTED_PAGE_BLANK.ordinal();
+		return IIGuiList.GUI_PRINTED_PAGE_TEXT.ordinal();
 	}
 
 	/**

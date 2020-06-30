@@ -8,16 +8,19 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrintingPress;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrintingPress;
 
 /**
  * Created by Pabilo8 on 10-07-2019.
  */
-public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityPrintingPress>
+public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityPrintingPress> implements IReloadableModelContainer<PrintingPressRenderer>
 {
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
-	private static ModelPrintingPress model = new ModelPrintingPress();
+	private static ModelPrintingPress model;
+	private static ModelPrintingPress modelFlipped;
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/printing_press.png";
 
 	@Override
@@ -27,7 +30,7 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 		{
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+3, (float)y-2, (float)z+2);
+			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -37,9 +40,9 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
-
-			model.rotate(model.paperInserterDoorModel, 0, 0, -1.57079633F);
+			ModelPrintingPress modelCurrent = te.mirrored?modelFlipped: model;
+			modelCurrent.getBlockRotation(te.facing, te.mirrored);
+			modelCurrent.rotate(modelCurrent.paperInserterDoorModel, 0, 0, -1.57079633F);
 
 			float time = (PrintingPress.printTime-(te.processTimeLeft+partialTicks/20))/((float)PrintingPress.printTime);
 			float product_x = 0f, product_y = 0f, product_z = 0f, rotation_x = 0f, rotation_y = 0f;
@@ -48,7 +51,7 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 				if(time <= 0.125&&te.active)
 				{
 					product_y = 0.375f;
-					model.rotate(model.paperInserterDoorModel, 0, 0, -1.57079633F+(float)((time/0.125)*1.57079633F));
+					modelCurrent.rotate(modelCurrent.paperInserterDoorModel, 0, 0, -1.57079633F+(float)((time/0.125)*1.57079633F));
 				}
 				else if(time <= 0.375)
 				{
@@ -56,13 +59,13 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 					float ttime = (time-0.125f)/0.125f;
 					product_x = ttime/2f;
 
-					model.rotate(model.paperInserterDoorModel, 0, 0, 0);
+					modelCurrent.rotate(modelCurrent.paperInserterDoorModel, 0, 0, 0);
 				}
 				else if(time <= 0.5)
 				{
 					product_y = 0.25f;
 					product_x = 1f;
-					model.rotate(model.paperInserterDoorModel, 0, 0, -(float)(((time-0.375)/0.125)*1.57079633F));
+					modelCurrent.rotate(modelCurrent.paperInserterDoorModel, 0, 0, -(float)(((time-0.375)/0.125)*1.57079633F));
 					rotation_y = -15f;
 					float ttime = (time-0.375f)/0.125f;
 
@@ -144,33 +147,40 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 				}
 			}
 
-			model.rotate(model.rollerModel, 0, 1.57079633F, TmtUtil.AngleToTMT(te.rollerRotation+(te.active?partialTicks: 0f)));
+			modelCurrent.rotate(modelCurrent.rollerModel, 0, 1.57079633F, TmtUtil.AngleToTMT(te.rollerRotation+(te.active?partialTicks: 0f)));
 
-			model.render();
+			modelCurrent.parts.values().forEach(modelRendererTurbos ->
+			{
+				for(ModelRendererTurbo mod : modelRendererTurbos)
+					mod.render(0.0625f);
+			});
 
 			GlStateManager.pushMatrix();
 
-			GlStateManager.translate(1.625f+product_x, 1.5f+product_y, -3.7f+product_z);
+			if(!te.mirrored)
+				GlStateManager.translate(1.625f+product_x, 1.5f+product_y, -3.7f+product_z);
+			else
+				GlStateManager.translate(1.625f+product_x, 1.5f+product_y, 3.7f-product_z);
 			GlStateManager.scale(1.5f, 1.5f, 1.5f);
 			GlStateManager.rotate(270f, 1f, 0f, 0f);
 			GlStateManager.rotate(90f, 0f, 0f, 1f);
-			GlStateManager.rotate(rotation_x, 1f, 0f, 0f);
-			GlStateManager.rotate(rotation_y, 0f, 1f, 0f);
+			GlStateManager.rotate(te.mirrored?-rotation_x: rotation_x, 1f, 0f, 0f);
+			GlStateManager.rotate(te.mirrored?-rotation_y: rotation_y, 0f, 1f, 0f);
 			renderItem.renderItem(time > 0.625?te.renderStack1: te.renderStack0, TransformType.GROUND);
 
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(2.6875f, 0.375f, -0.375f);
+			GlStateManager.translate(2.6875f, 0.375f, te.mirrored?0.375f: -0.375f);
 			GlStateManager.scale(1.5f, 1.5f, 1.5f);
 			GlStateManager.rotate(270f, 1f, 0f, 0f);
 			GlStateManager.rotate(90f, 0f, 0f, 1f);
-			GlStateManager.rotate(-45f, 0f, 1f, 0f);
+			GlStateManager.rotate(te.mirrored?45f: -45f, 0f, 1f, 0f);
 
 			for(int i = te.inventory.get(1).getCount(); i > 0; i--)
 			{
 				renderItem.renderItem(te.inventory.get(1), TransformType.GROUND);
-				GlStateManager.translate(0.03125f, 0f, 0.03125f);
+				GlStateManager.translate(te.mirrored?-0.03125f: 0.03125f, 0f, 0.03125f);
 			}
 			GlStateManager.popMatrix();
 
@@ -188,5 +198,29 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 			GlStateManager.popMatrix();
 
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelPrintingPress(false);
+		modelFlipped = new ModelPrintingPress(true);
+		for(int i = 14; i <= 19; i += 1)
+			modelFlipped.baseModel[i].rotateAngleY *= -1;
+		modelFlipped.flipAllZ();
+
+		//A special case (the model is done in a deprecated way), not applied in other models
+		modelFlipped.parts.values().forEach(modelRendererTurbos ->
+		{
+			for(ModelRendererTurbo m : modelRendererTurbos)
+			{
+				m.rotateAngleX *= -1;
+				m.rotateAngleZ *= -1;
+				m.offsetX *= -1;
+				m.offsetY *= -1;
+				m.offsetZ *= -1;
+			}
+
+		});
 	}
 }

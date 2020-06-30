@@ -44,7 +44,7 @@ public class SandbagsRenderer extends TileEntitySpecialRenderer<TileEntitySandba
 
 			ModelSandbagsStraight curr = lower?modelFull: model;
 
-			curr.getBlockRotation(te.getFacing().getOpposite(), curr);
+			curr.getBlockRotation(te.getFacing().getOpposite(), false);
 			if(te.getCornerFacing()==1)
 			{
 				GlStateManager.rotate(45f, 0f, 1f, 0f);
@@ -88,7 +88,7 @@ public class SandbagsRenderer extends TileEntitySpecialRenderer<TileEntitySandba
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.getBlockRotation(EnumFacing.NORTH, model);
+			model.getBlockRotation(EnumFacing.NORTH, false);
 
 			model.render();
 

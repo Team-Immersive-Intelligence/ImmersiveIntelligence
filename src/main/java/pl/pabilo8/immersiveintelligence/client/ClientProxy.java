@@ -18,6 +18,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
+import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -43,6 +44,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
@@ -86,6 +88,7 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCartS
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCratePostRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.SkyCrateStationRenderer;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IICommandHandler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
@@ -271,7 +274,7 @@ public class ClientProxy extends CommonProxy
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getActiveItemStack();
+		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
 		if(te instanceof IGuiTile)
 		{
 			GuiScreen gui = null;
@@ -469,6 +472,8 @@ public class ClientProxy extends CommonProxy
 				new ManualPages.Text(ManualHelper.getManual(), "sawmill2")
 		);
 
+		ClientCommandHandler.instance.registerCommand(new IICommandHandler("tmt"));
+
 
 		//Weapons (Items)
 		item_machinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
@@ -528,48 +533,50 @@ public class ClientProxy extends CommonProxy
 		item_radio_configurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
 
 		//Multiblocks
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCartStation.class, new SkyCartStationRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCratePost.class, new SkyCratePostRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer().subscribeToList("skycrate_station"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCartStation.class, new SkyCartStationRenderer().subscribeToList("skycart_station"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCratePost.class, new SkyCratePostRenderer().subscribeToList("skycrate_post"));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer().subscribeToList("radio_station"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.RADIO_STATION.getMeta(), TileEntityRadioStation.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataInputMachine.class, new DataInputMachineRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArithmeticLogicMachine.class, new ArithmeticLogicMachineRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataInputMachine.class, new DataInputMachineRenderer().subscribeToList("data_input_machine"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArithmeticLogicMachine.class, new ArithmeticLogicMachineRenderer().subscribeToList("arithmetic_logic_machine"));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrintingPress.class, new PrintingPressRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrintingPress.class, new PrintingPressRenderer().subscribeToList("printing_press"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta(), TileEntityPrintingPress.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer().subscribeToList("chemical_bath"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta(), TileEntityChemicalBath.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer().subscribeToList("electrolyzer"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), TileEntityElectrolyzer.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer());
+		//TODO: Fix misspeling on 1.14, not now, it could break stuff
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer().subscribeToList("precision_assembler"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), TileEntityPrecissionAssembler.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionFactory.class, new AmmunitionFactoryRenderer());
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta(), TileEntityAmmunitionFactory.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySawmill.class, new SawmillRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySawmill.class, new SawmillRenderer().subscribeToList("sawmill"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_wooden_multiblock), IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta(), TileEntitySawmill.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer().subscribeToList("conveyor_scanner"));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer().subscribeToList("artillery_howitzer"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), TileEntityArtilleryHowitzer.class);
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPacker.class, new PackerRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPacker.class, new PackerRenderer().subscribeToList("packer"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("redstone_data_interface"));
 
 		mech_con_renderer = new MechanicalConnectorRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalConnectable.class, mech_con_renderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalWheel.class, new WheelRenderer());
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_mechanical_connector), IIBlockTypes_MechanicalConnector.WOODEN_WHEEL.getMeta(), TileEntityMechanicalWheel.class);
 
+		reloadModels();
 	}
 
 	@Override
@@ -650,6 +657,12 @@ public class ClientProxy extends CommonProxy
 	{
 		Particle particle = new ParticleGunfire(world, x, y, z, mx, my, mz, size);
 		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		EvenMoreImmersiveModelRegistry.instance.reloadRegisteredModels();
 	}
 
 	static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition

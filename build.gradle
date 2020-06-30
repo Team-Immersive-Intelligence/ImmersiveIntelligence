@@ -122,3 +122,13 @@ processResources {
     }
 
 }
+
+//To use personalized options when working with the mod create a file named custom.gradle
+//The file is not sychronised with GitHub and can be used i.e. to store username and password
+//Thanks to BluSunrize for the idea (taken from IE)
+def customGradle = rootProject.file('custom.gradle');
+if (customGradle.exists()) {
+    apply from: customGradle;
+}
+
+

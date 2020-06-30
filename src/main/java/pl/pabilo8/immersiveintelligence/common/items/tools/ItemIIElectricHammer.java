@@ -13,7 +13,6 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.RotationUtil;
 import blusunrize.immersiveengineering.common.util.advancements.IEAdvancements;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -33,7 +32,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.animation.ITimeValue;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -41,8 +39,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblockTileEntity;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
@@ -50,7 +47,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import static blusunrize.immersiveengineering.api.Lib.TOOL_HAMMER;
 
@@ -132,6 +128,8 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		ItemStack stack = player.getHeldItem(hand);
+		TileEntity tile = world.getTileEntity(pos);
+		ItemNBTHelper.setBoolean(stack, "forbidHammer", CommonProxy.tileEntitiesWeDontLike.stream().anyMatch(tileEntityPredicate -> tileEntityPredicate.test(tile)));
 		String[] permittedMultiblocks = null;
 		String[] interdictedMultiblocks = null;
 		if(ItemNBTHelper.hasKey(stack, "multiblockPermission"))
@@ -170,7 +168,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 						}
 				if(!b)
 					break;
-				if(MultiblockHandler.postMultiblockFormationEvent(player, mb, pos, stack).isCanceled())
+				if(MultiblockHandler.fireMultiblockFormationEventPre(player, mb, pos, stack).isCanceled())
 					continue;
 				if(mb.createStructure(world, pos, side, player))
 				{
@@ -193,9 +191,9 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity instanceof IAdvancedMultiblock)
+		if(tileEntity instanceof IAdvancedMultiblockTileEntity)
 		{
-			IAdvancedMultiblock mb = (IAdvancedMultiblock)tileEntity;
+			IAdvancedMultiblockTileEntity mb = (IAdvancedMultiblockTileEntity)tileEntity;
 			if(!mb.isConstructionFinished())
 			{
 				int energy = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use_construction, false);
@@ -275,7 +273,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		return super.getDestroySpeed(stack, state);
 	}
 
-	//Shares code with II, long live IEn-II Cooperation!
+	//Shares code with IEn, long live II-IEn Cooperation!
 	boolean performHammerFunctions(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		TileEntity tile = world.getTileEntity(pos);
@@ -344,7 +342,10 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public Set<String> getToolClasses(ItemStack stack)
 	{
-		return ImmutableSet.of(CommonProxy.TOOL_ADVANCED_HAMMER);
+		if(ItemNBTHelper.getBoolean(stack, "forbidHammer"))
+			return ImmutableSet.of(CommonProxy.TOOL_ADVANCED_HAMMER);
+		else
+			return ImmutableSet.of(CommonProxy.TOOL_ADVANCED_HAMMER, Lib.TOOL_HAMMER);
 	}
 
 	@Override

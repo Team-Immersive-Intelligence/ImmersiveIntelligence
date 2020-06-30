@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -37,6 +38,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -158,12 +160,13 @@ public class Utils
 		return px >= x&&px < xx&&py >= y&&py < yy;
 	}
 
-	public static boolean handleBucketTankInteraction(FluidTank[] tanks, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, int tank)
+	public static <T extends IFluidTank & IFluidHandler> boolean handleBucketTankInteraction(T[] tanks, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, int tank)
 	{
 		if(inventory.get(bucketInputSlot).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)&&inventory.get(bucketInputSlot).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).getTankProperties()[0].getContents()!=null)
 		{
 
 			int amount_prev = tanks[tank].getFluidAmount();
+
 			ItemStack emptyContainer = blusunrize.immersiveengineering.common.util.Utils.drainFluidContainer(tanks[tank], inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
 			if(amount_prev!=tanks[tank].getFluidAmount())
 			{
@@ -185,7 +188,7 @@ public class Utils
 	{
 		if(tank.getFluidAmount() > 0)
 		{
-			FluidStack out = blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(tank.getFluid(), Math.min(tank.getFluidAmount(), 80), false);
+			FluidStack out = blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(tank.getFluid(), Math.min(tank.getFluidAmount(), amount), false);
 			IFluidHandler output = FluidUtil.getFluidHandler(world, pos.offset(side), side);
 			if(output!=null)
 			{
@@ -500,5 +503,60 @@ public class Utils
 	public static int RGBAToRGB(int color)
 	{
 		return color-(color >> 24& 0xFF);
+	}
+
+	//Thanks Blu, these stencil buffers look really capable
+	@SideOnly(Side.CLIENT)
+	public static void drawItemProgress(ItemStack stack1, ItemStack stack2, float progress, TransformType type, Tessellator tessellator, float scale)
+	{
+		GlStateManager.scale(scale, scale, scale);
+
+		if(progress==0)
+			ClientUtils.mc().getRenderItem().renderItem(stack1, type);
+		else if(progress==1)
+			ClientUtils.mc().getRenderItem().renderItem(stack2, type);
+		else
+		{
+			float h0 = -.5f;
+			float h1 = h0+progress;
+
+			BufferBuilder worldrenderer = tessellator.getBuffer();
+
+			GL11.glEnable(GL11.GL_STENCIL_TEST);
+
+			GlStateManager.colorMask(false, false, false, false);
+			GlStateManager.depthMask(false);
+
+			GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
+			GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
+
+			GL11.glStencilMask(0xFF);
+			GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT);
+
+			GlStateManager.rotate(90.0F-ClientUtils.mc().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
+
+			GlStateManager.disableTexture2D();
+			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+			ClientUtils.renderBox(worldrenderer, -.5, h0, -.5, .5, h1, .5);
+			tessellator.draw();
+			GlStateManager.enableTexture2D();
+
+			GlStateManager.rotate(-(90.0F-ClientUtils.mc().getRenderManager().playerViewY), 0.0F, 1.0F, 0.0F);
+
+			GlStateManager.colorMask(true, true, true, true);
+			GlStateManager.depthMask(true);
+
+			GL11.glStencilMask(0x00);
+
+			GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+			ClientUtils.mc().getRenderItem().renderItem(stack1, type);
+
+			GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+			ClientUtils.mc().getRenderItem().renderItem(stack2, type);
+
+			GL11.glDisable(GL11.GL_STENCIL_TEST);
+		}
+
+		GlStateManager.scale(1/scale, 1/scale, 1/scale);
 	}
 }

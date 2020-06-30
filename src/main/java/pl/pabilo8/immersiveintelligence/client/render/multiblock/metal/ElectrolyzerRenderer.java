@@ -5,15 +5,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelElectrolyzer;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityElectrolyzer;
 
 /**
  * Created by Pabilo8 on 28-06-2019.
  */
-public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityElectrolyzer>
+public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityElectrolyzer> implements IReloadableModelContainer<ElectrolyzerRenderer>
 {
-	private static ModelElectrolyzer model = new ModelElectrolyzer();
-	private static final ModelElectrolyzer model_default = new ModelElectrolyzer();
+	private static ModelElectrolyzer model;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/electrolyzer.png";
 
@@ -24,10 +24,8 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 		{
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+1, (float)y-2, (float)z+2);
+			GlStateManager.translate(x, y, z);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			//GlStateManager.disableLighting();
-			//RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			if(te.hasWorld())
@@ -36,7 +34,7 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			model.getBlockRotation(te.facing, model);
+			model.getBlockRotation(te.facing, false);
 			model.render();
 
 			GlStateManager.popMatrix();
@@ -58,5 +56,11 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 			GlStateManager.popMatrix();
 			return;
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelElectrolyzer();
 	}
 }

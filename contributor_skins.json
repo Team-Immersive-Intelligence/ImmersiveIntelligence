@@ -1,0 +1,83 @@
+{
+  "anno_1880": {
+    "uuid": [
+      "f34afdfb-996b-4020-b8a2-b740e2937b29",
+      "07c11943-628b-4671-a331-84899d08e538"
+    ],
+    "appliesTo": [
+      "howitzer"
+    ],
+    "howitzerMods": []
+  },
+  "royal": {
+    "uuid": [],
+    "appliesTo": [
+      "machinegun",
+      "howitzer"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  },
+  "old_glory": {
+    "uuid": [],
+    "appliesTo": [
+      "howitzer",
+      "machinegun"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  },
+  "vaterland": {
+    "uuid": [],
+    "appliesTo": [
+      "howitzer",
+      "machinegun"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  },
+  "pershing": {
+    "uuid": [],
+    "appliesTo": [
+      "howitzer",
+      "machinegun"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  },
+  "zvezda": {
+    "uuid": [],
+    "appliesTo": [
+      "howitzer",
+      "machinegun"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  },
+  "stormwind": {
+    "uuid": [],
+    "appliesTo": [
+      "howitzer",
+      "machinegun"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  },
+  "flakmeister": {
+    "uuid": [],
+    "appliesTo": [
+      "howitzer"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  },
+  "eisenheim": {
+    "uuid": [],
+    "appliesTo": [
+      "howitzer",
+      "machinegun"
+    ],
+    "howitzerMods": [],
+    "machinegunMods": []
+  }
+}

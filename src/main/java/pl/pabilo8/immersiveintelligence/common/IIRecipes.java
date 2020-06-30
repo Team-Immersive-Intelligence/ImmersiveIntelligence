@@ -3,14 +3,13 @@ package pl.pabilo8.immersiveintelligence.common;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
-import blusunrize.immersiveengineering.common.util.ListUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -23,7 +22,9 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_SmallCr
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeCrateConversion;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Pabilo8 on 22-03-2020.
@@ -288,28 +289,37 @@ public class IIRecipes
 	}
 
 	//Laggy, weird and wrong, but kinda universal
-	public static void addWoodTableSawRecipes(RegistryEvent.Register<IRecipe> event)
+	public static void addWoodTableSawRecipes()
 	{
 
 		CraftingManager.REGISTRY.forEach(iRecipe ->
 				{
-					if(Objects.equals(iRecipe.getGroup(), "planks"))
+					if(blusunrize.immersiveengineering.common.util.Utils.compareToOreName(iRecipe.getRecipeOutput(), "plankWood"))
 					{
 						ItemStack out = iRecipe.getRecipeOutput().copy();
 						out.setCount(Math.round(out.getCount()*1.5f));
-						SawmillRecipe.addRecipe(out, new IngredientStack(ListUtils.fromItems(iRecipe.getIngredients().get(0).getMatchingStacks())).setUseNBT(false), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 16, 200, 1);
+						List<ItemStack> stacks = new ArrayList<>();
+						for(Ingredient ingredient : iRecipe.getIngredients())
+							Arrays.stream(ingredient.getMatchingStacks()).filter(stack -> blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, "logWood")).forEachOrdered(stacks::add);
+
+						if(!stacks.isEmpty())
+						{
+							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 16, 200, 1);
+
+						}
+
 						//ImmersiveIntelligence.logger.info("Added recipe for "+stack.getDisplayName()+" x"+stack.getCount()+" -> "+out.getDisplayName()+" x"+out.getCount());
 					}
 				}
 		);
 		//Planks to sticks
 		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
-		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 1, 0), new IngredientStack("plankTreatedWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), new IngredientStack("plankTreatedWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
 
-		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "pulp_wood", 2), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
+		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "pulp_wood"), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
 		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "pulp_wood_treated", 1), new IngredientStack("pulpWood"), new FluidStack(IEContent.fluidCreosote, 1000));
 
-		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 1, 0), new IngredientStack("pulpWood"), new ItemStack(IEContent.itemMold, 1, 0), 100);
+		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 2, 0), new IngredientStack("pulpWood"), new ItemStack(IEContent.itemMold, 1, 0), 100);
 		MetalPressRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "artificial_leather"), new IngredientStack("pulpWoodTreated"), new ItemStack(IEContent.itemMold, 1, 0), 600);
 
 	}
