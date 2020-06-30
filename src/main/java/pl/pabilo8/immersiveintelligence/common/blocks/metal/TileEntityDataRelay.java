@@ -21,7 +21,8 @@ import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 2019-05-31.
+ * @author Pabilo8
+ * @since 2019-05-31
  */
 public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 		implements ITickable, IDirectionalTile, IBlockBounds

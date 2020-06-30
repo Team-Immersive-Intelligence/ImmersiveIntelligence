@@ -17,7 +17,8 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice
 {

@@ -28,7 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDe
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 
 /**
- * Created by Pabilo8 on 20-06-2019.
+ * @author Pabilo8
+ * @since 20-06-2019
  */
 @IAdvancedMultiblock
 public class MultiblockRadioStation implements IMultiblock

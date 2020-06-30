@@ -10,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class ContainerPrecissionAssembler extends ContainerIEBase
 {

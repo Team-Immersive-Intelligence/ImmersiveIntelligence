@@ -60,7 +60,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileEntityAmmunitionFactory, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IConveyorAttachable, ISoundTile
 {

@@ -10,7 +10,8 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
- * Created by Pabilo8 on 09-07-2019.
+ * @author Pabilo8
+ * @since 09-07-2019
  */
 public class GuiPrintedPage extends GuiScreen
 {

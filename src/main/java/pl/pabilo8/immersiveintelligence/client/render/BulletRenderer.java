@@ -10,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 /**
- * Created by Pabilo8 on 08-06-2019.
+ * @author Pabilo8
+ * @since 08-06-2019
  */
 public class BulletRenderer extends Render<EntityBullet>
 {

@@ -5,7 +5,8 @@ import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
- * Created by Pabilo8 on 31-07-2019.
+ * @author Pabilo8
+ * @since 31-07-2019
  */
 public interface IBulletCasingType
 {

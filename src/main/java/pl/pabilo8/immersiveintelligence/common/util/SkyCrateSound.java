@@ -12,7 +12,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Created by Pabilo8 on 08-06-2019.
+ * @author Pabilo8
+ * @since 08-06-2019
  */
 public class SkyCrateSound implements ITickableSound
 {

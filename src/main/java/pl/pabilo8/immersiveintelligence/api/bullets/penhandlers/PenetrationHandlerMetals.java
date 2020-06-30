@@ -10,7 +10,8 @@ import javax.annotation.Nullable;
 import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
 
 /**
- * Created by Pabilo8 on 06-03-2020.
+ * @author Pabilo8
+ * @since 06-03-2020
  */
 public class PenetrationHandlerMetals
 {

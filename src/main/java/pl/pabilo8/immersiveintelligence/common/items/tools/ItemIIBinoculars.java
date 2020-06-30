@@ -42,7 +42,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 15-09-2019.
+ * @author Pabilo8
+ * @since 15-09-2019
  */
 public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, IIEEnergyItem, ITextureOverride
 {

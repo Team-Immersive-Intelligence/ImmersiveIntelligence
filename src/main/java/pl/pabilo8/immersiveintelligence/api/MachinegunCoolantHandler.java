@@ -6,7 +6,8 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.HashMap;
 
 /**
- * Created by Pabilo8 on 2019-05-24.
+ * @author Pabilo8
+ * @since 2019-05-24
  */
 public class MachinegunCoolantHandler
 {

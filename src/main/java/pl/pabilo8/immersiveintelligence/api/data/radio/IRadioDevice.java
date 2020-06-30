@@ -4,7 +4,8 @@ import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 /**
- * Created by Pabilo8 on 23-06-2019.
+ * @author Pabilo8
+ * @since 23-06-2019
  */
 public interface IRadioDevice
 {

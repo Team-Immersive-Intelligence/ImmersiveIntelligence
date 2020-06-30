@@ -4,7 +4,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 /**
- * Created by Pabilo8 on 26-12-2019.
+ * @author Pabilo8
+ * @since 26-12-2019
  */
 public interface IMotorBeltConnector
 {

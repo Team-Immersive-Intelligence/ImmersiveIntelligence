@@ -25,7 +25,8 @@ import javax.annotation.Nullable;
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices.rof_conversion_ratio;
 
 /**
- * Created by Pabilo8 on 29-12-2019.
+ * @author Pabilo8
+ * @since 29-12-2019
  */
 public class TileEntityTransmissionBox extends TileEntityIEBase implements ITickable, IRotationAcceptor, IDirectionalTile, IHammerInteraction, IRotationalEnergyBlock
 {

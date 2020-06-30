@@ -6,7 +6,8 @@ import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
- * Created by Pabilo8 on 16-07-2019.
+ * @author Pabilo8
+ * @since 16-07-2019
  */
 public class ModelRedstoneBuffer extends BaseBlockModel
 {

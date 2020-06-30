@@ -3,7 +3,8 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public interface IDataType
 {

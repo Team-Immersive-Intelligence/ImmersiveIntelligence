@@ -26,7 +26,8 @@ import javax.annotation.Nullable;
 import static pl.pabilo8.immersiveintelligence.common.IIDamageSources.causeShrapnelDamage;
 
 /**
- * Created by Pabilo8 on 26-10-2019.
+ * @author Pabilo8
+ * @since 26-10-2019
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class EntityShrapnel extends EntityIEProjectile implements ILightProvider, IEntityAdditionalSpawnData

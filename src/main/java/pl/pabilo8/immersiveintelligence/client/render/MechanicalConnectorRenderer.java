@@ -18,7 +18,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 2019-05-26.
+ * @author Pabilo8
+ * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
 public class MechanicalConnectorRenderer extends TileEntitySpecialRenderer<TileEntityMechanicalConnectable>

@@ -43,7 +43,8 @@ import java.util.Set;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.REDSTONE_CATEGORY;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable<TileEntityRedstoneInterface, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IDataDevice, IRedstoneConnector
 {

@@ -7,7 +7,8 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
- * Created by Pabilo8 on 2019-05-24.
+ * @author Pabilo8
+ * @since 2019-05-24
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".RotaryInput")
 @ZenRegister

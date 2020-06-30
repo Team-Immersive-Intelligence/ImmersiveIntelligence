@@ -44,7 +44,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer, IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IBooleanAnimatedPartsBlock
 {

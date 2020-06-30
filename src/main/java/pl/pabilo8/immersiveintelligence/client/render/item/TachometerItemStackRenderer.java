@@ -11,7 +11,8 @@ import pl.pabilo8.immersiveintelligence.client.model.item.ModelTachometer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
- * Created by Pabilo8 on 13-10-2019.
+ * @author Pabilo8
+ * @since 13-10-2019
  */
 public class TachometerItemStackRenderer extends TileEntityItemStackRenderer
 {

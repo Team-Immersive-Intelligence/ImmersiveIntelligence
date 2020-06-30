@@ -8,7 +8,8 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 /**
- * Created by Pabilo8 on 30-08-2019.
+ * @author Pabilo8
+ * @since 30-08-2019
  */
 public class ItemIICasingArtillery extends ItemIIBase implements IBulletCasingType
 {

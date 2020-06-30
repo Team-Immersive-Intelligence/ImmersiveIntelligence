@@ -50,7 +50,8 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 15-07-2019.
+ * @author Pabilo8
+ * @since 15-07-2019
  */
 public class TileEntityInserter extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
 {

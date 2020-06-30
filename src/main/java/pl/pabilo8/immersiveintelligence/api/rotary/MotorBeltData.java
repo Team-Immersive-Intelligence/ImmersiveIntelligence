@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.api.rotary;
 
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.render.MechanicalConnectorRenderer;
@@ -11,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanica
 import javax.annotation.Nullable;
 
 /**
- * Created by Pabilo8 on 03-01-2020.
+ * @author Pabilo8
+ * @since 03-01-2020
  */
 public class MotorBeltData
 {

@@ -14,7 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
- * Created by Pabilo8 on 03-03-2020.
+ * @author Pabilo8
+ * @since 03-03-2020
  */
 public class IIPotions
 {

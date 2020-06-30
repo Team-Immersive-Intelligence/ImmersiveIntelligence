@@ -51,7 +51,8 @@ import java.util.Set;
 import static blusunrize.immersiveengineering.api.Lib.TOOL_HAMMER;
 
 /**
- * Created by Pabilo8 on 2019-05-30.
+ * @author Pabilo8
+ * @since 2019-05-30
  */
 public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergyItem
 {

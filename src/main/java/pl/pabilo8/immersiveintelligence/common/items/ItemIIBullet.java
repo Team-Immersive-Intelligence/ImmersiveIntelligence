@@ -32,7 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 2019-05-11.
+ * @author Pabilo8
+ * @since 2019-05-11
  */
 public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 {

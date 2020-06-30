@@ -5,13 +5,14 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 2019-05-31.
- */
 public enum IIBlockTypes_MechanicalConnector implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	WOODEN_WHEEL;
 
+	/**
+	 * @author Pabilo8
+	 * @since 2019-05-31
+	 */
 	@Override
 	public String getName()
 	{

@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Pabilo8 on 2019-05-31.
+ * @author Pabilo8
+ * @since 2019-05-31
  */
 public class DataPacket
 {

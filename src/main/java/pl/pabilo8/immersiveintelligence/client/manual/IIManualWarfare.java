@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 /**
- * Created by Pabilo8 on 18-01-2020.
+ * @author Pabilo8
+ * @since 18-01-2020
  */
 public class IIManualWarfare extends IIManual
 {

@@ -40,7 +40,8 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.canMix;
 import static blusunrize.immersiveengineering.api.energy.wires.WireType.*;
 
 /**
- * Created by Pabilo8 on 17-10-2019.
+ * @author Pabilo8
+ * @since 17-10-2019
  */
 public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultiblockMetal<T, R>, R extends IMultiblockRecipe> extends TileEntityMultiblockMetal<T, R> implements IImmersiveConnectable
 {

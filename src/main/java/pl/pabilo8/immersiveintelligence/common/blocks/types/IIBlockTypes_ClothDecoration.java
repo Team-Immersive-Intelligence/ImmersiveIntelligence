@@ -5,14 +5,15 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 16-07-2019.
- */
 public enum IIBlockTypes_ClothDecoration implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	COIL_ROPE,
 	COIL_CLOTH_MOTOR_BELT;
 
+	/**
+	 * @author Pabilo8
+	 * @since 16-07-2019
+	 */
 	@Override
 	public String getName()
 	{

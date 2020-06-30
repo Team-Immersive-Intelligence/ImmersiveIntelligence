@@ -9,7 +9,8 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityElectrolyzer;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityElectrolyzer> implements IReloadableModelContainer<ElectrolyzerRenderer>
 {

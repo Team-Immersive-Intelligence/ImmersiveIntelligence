@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public class DataPacketTypeArray implements IDataType
 {

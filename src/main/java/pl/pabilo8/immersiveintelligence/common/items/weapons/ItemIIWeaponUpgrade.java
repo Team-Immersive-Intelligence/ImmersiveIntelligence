@@ -21,7 +21,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 /**
- * Created by Pabilo8 on 01-11-2019.
+ * @author Pabilo8
+ * @since 01-11-2019
  */
 public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 {

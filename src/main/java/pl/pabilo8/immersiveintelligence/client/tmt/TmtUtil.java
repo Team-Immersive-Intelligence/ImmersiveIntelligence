@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.tmt;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public class TmtUtil
 {

@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.renderEnergyBars;
 
 /**
- * Created by Pabilo8 on 10-07-2019.
+ * @author Pabilo8
+ * @since 10-07-2019
  */
 public class GuiSkycrateStation extends GuiIEContainerBase
 {

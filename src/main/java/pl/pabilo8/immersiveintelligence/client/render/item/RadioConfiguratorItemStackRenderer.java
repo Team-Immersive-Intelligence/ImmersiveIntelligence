@@ -15,7 +15,8 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 /**
- * Created by Pabilo8 on 13-10-2019.
+ * @author Pabilo8
+ * @since 13-10-2019
  */
 public class RadioConfiguratorItemStackRenderer extends TileEntityItemStackRenderer
 {

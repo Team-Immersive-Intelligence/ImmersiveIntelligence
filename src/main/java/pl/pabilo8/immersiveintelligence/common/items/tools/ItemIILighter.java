@@ -38,7 +38,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 2019-05-23.
+ * @author Pabilo8
+ * @since 2019-05-23
  */
 public class ItemIILighter extends ItemIIBase implements ITool
 {

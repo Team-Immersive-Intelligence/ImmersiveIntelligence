@@ -36,7 +36,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -47,7 +46,8 @@ import java.util.Set;
 import static blusunrize.immersiveengineering.api.Lib.TOOL_WIRECUTTER;
 
 /**
- * Created by Pabilo8 on 07-06-2019.
+ * @author Pabilo8
+ * @since 07-06-2019
  */
 public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEnergyItem
 {

@@ -13,7 +13,8 @@ import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import java.util.Map.Entry;
 
 /**
- * Created by Pabilo8 on 2020-01-11.
+ * @author Pabilo8
+ * @since 2020-01-11
  */
 public class MessageBlockDamageSync implements IMessage
 {

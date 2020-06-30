@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.manual;
 
 /**
- * Created by Pabilo8 on 18-01-2020.
+ * @author Pabilo8
+ * @since 18-01-2020
  */
 public abstract class IIManual
 {

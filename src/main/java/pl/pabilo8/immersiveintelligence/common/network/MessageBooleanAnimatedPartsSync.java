@@ -12,7 +12,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 
 /**
- * Created by Pabilo8 on 2019-05-26.
+ * @author Pabilo8
+ * @since 2019-05-26
  */
 public class MessageBooleanAnimatedPartsSync implements IMessage
 {

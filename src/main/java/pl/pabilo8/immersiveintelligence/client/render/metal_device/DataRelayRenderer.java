@@ -11,7 +11,8 @@ import pl.pabilo8.immersiveintelligence.client.model.connector.ModelDataRelay;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataRelay;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public class DataRelayRenderer extends TileEntitySpecialRenderer<TileEntityDataRelay>
 {

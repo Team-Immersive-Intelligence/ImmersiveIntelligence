@@ -14,7 +14,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 
 /**
- * Created by Pabilo8 on 30-08-2019.
+ * @author Pabilo8
+ * @since 30-08-2019
  */
 public class BulletComponentShrapnel implements IBulletComponent
 {

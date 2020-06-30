@@ -7,7 +7,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineStorage.CircuitSlot;
 
 /**
- * Created by Pabilo8 on 30-06-2019.
+ * @author Pabilo8
+ * @since 30-06-2019
  */
 public class ContainerArithmeticLogicMachineVariables extends ContainerIEBase
 {

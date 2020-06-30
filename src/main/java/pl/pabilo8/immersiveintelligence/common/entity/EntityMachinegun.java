@@ -55,7 +55,8 @@ import javax.annotation.Nullable;
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun.*;
 
 /**
- * Created by Pabilo8 on 01-11-2019.
+ * @author Pabilo8
+ * @since 01-11-2019
  */
 public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IEntityOverlayText
 {

@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by Pabilo8 on 15-05-2020.
+ * @author Pabilo8
+ * @since 15-05-2020
  */
 public class IIManualPages
 {

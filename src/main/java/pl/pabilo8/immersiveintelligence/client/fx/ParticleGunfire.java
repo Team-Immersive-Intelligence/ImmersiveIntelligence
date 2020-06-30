@@ -1,7 +1,6 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
-
-/**
- * Created by Pabilo8 on 16-11-2019.
+package pl.pabilo8.immersiveintelligence.client.fx; /**
+ * @author Pabilo8
+ * @since 16-11-2019
  */
 
 import blusunrize.immersiveengineering.common.util.Utils;

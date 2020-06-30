@@ -5,9 +5,6 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 2019-06-04.
- */
 public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	SKYCRATE_POST(false),
@@ -15,6 +12,10 @@ public enum IIBlockTypes_WoodenMultiblock implements IStringSerializable, BlockI
 	SAWMILL(true),
 	SKYCART_STATION(false);
 
+	/**
+	 * @author Pabilo8
+	 * @since 2019-06-04
+	 */
 	private boolean needsCustomState;
 
 	IIBlockTypes_WoodenMultiblock(boolean needsCustomState)

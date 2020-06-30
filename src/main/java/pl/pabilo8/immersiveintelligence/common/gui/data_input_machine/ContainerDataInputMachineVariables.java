@@ -8,7 +8,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine.FilteredPunchtape;
 
 /**
- * Created by Pabilo8 on 30-06-2019.
+ * @author Pabilo8
+ * @since 30-06-2019
  */
 public class ContainerDataInputMachineVariables extends ContainerIEBase
 {

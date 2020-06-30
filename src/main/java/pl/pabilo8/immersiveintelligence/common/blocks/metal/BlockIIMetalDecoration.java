@@ -10,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class BlockIIMetalDecoration extends BlockIIBase<IIBlockTypes_MetalDecoration>
 {

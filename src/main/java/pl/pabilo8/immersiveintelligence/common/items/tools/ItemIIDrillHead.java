@@ -33,7 +33,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 24-04-2020.
+ * @author Pabilo8
+ * @since 24-04-2020
  */
 public class ItemIIDrillHead extends ItemIIBase implements IDrillHead
 {

@@ -11,7 +11,8 @@ import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelSmallData
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntitySmallDataBuffer;
 
 /**
- * Created by Pabilo8 on 2019-05-26.
+ * @author Pabilo8
+ * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
 public class SmallDataBufferRenderer extends TileEntitySpecialRenderer<TileEntitySmallDataBuffer>

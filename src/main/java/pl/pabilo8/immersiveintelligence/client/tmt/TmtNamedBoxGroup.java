@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.tmt;
 
 /**
- * Created by Pabilo8 on 02-11-2019.
+ * @author Pabilo8
+ * @since 02-11-2019
  */
 public class TmtNamedBoxGroup
 {

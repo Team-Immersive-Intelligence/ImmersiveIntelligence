@@ -9,7 +9,8 @@ import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
 
 /**
- * Created by Pabilo8 on 19-08-2019.
+ * @author Pabilo8
+ * @since 19-08-2019
  */
 public class ItemIISawblade extends ItemIIBase implements ISawblade
 {

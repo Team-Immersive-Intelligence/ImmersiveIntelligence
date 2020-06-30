@@ -8,7 +8,8 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 
 /**
- * Created by Pabilo8 on 25-06-2019.
+ * @author Pabilo8
+ * @since 25-06-2019
  */
 public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 {

@@ -5,9 +5,6 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 2019-05-31.
- */
 public enum IIBlockTypes_Connector implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	DATA_CONNECTOR,
@@ -20,6 +17,10 @@ public enum IIBlockTypes_Connector implements IStringSerializable, BlockIEBase.I
 	CHEMICAL_DISPENSER,
 	PROGRAMMABLE_SPEAKER;
 
+	/**
+	 * @author Pabilo8
+	 * @since 2019-05-31
+	 */
 	@Override
 	public String getName()
 	{

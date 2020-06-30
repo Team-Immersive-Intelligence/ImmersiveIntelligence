@@ -3,7 +3,8 @@ package pl.pabilo8.immersiveintelligence.api.utils;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Created by Pabilo8 on 26-10-2019.
+ * @author Pabilo8
+ * @since 26-10-2019
  */
 public interface IAdvancedMultiblockTileEntity
 {

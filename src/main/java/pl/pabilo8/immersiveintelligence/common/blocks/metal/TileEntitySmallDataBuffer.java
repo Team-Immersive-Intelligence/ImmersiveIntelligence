@@ -22,7 +22,8 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import java.util.ArrayList;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice
 {

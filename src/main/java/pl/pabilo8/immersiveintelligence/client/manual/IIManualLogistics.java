@@ -19,7 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.Multibl
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 
 /**
- * Created by Pabilo8 on 18-01-2020.
+ * @author Pabilo8
+ * @since 18-01-2020
  */
 public class IIManualLogistics extends IIManual
 {

@@ -18,7 +18,8 @@ import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityChemicalBath;
 
 /**
- * Created by Pabilo8 on 21-06-2019.
+ * @author Pabilo8
+ * @since 21-06-2019
  */
 public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityChemicalBath> implements IReloadableModelContainer<ChemicalBathRenderer>
 {

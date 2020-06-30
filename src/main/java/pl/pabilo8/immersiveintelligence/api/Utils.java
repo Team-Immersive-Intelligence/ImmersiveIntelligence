@@ -58,7 +58,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Created by Pabilo8 on 22-06-2019.
+ * @author Pabilo8
+ * @since 22-06-2019
  */
 public class Utils
 {

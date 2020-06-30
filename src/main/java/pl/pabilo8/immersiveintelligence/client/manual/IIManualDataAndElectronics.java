@@ -19,7 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDe
 import static pl.pabilo8.immersiveintelligence.api.Utils.getItemWithMetaName;
 
 /**
- * Created by Pabilo8 on 18-01-2020.
+ * @author Pabilo8
+ * @since 18-01-2020
  */
 public class IIManualDataAndElectronics extends IIManual
 {

@@ -9,7 +9,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunition
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class GuiAmmunitionCrate extends GuiIEContainerBase
 {

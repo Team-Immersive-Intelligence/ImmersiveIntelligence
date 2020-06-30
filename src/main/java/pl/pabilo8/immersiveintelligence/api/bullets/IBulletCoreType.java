@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.bullets;
 
 /**
- * Created by Pabilo8 on 13-09-2019.
+ * @author Pabilo8
+ * @since 13-09-2019
  */
 public interface IBulletCoreType extends IBulletComponent
 {

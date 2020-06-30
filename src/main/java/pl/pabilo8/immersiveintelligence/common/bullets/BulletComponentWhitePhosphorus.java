@@ -16,16 +16,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationHelper;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 30-08-2019.
+ * @author Pabilo8
+ * @since 30-08-2019
  */
 public class BulletComponentWhitePhosphorus implements IBulletComponent
 {

@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 23-04-2020.
+ * @author Pabilo8
+ * @since 23-04-2020
  */
 public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
 {

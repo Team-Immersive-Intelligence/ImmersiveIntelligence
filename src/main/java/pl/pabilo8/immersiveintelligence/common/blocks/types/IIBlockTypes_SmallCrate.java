@@ -5,9 +5,6 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 16-07-2019.
- */
 public enum IIBlockTypes_SmallCrate implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	WOODEN_CRATE_BOX,
@@ -17,6 +14,10 @@ public enum IIBlockTypes_SmallCrate implements IStringSerializable, BlockIEBase.
 	METAL_CRATE_CUBE,
 	METAL_CRATE_WIDE;
 
+	/**
+	 * @author Pabilo8
+	 * @since 16-07-2019
+	 */
 	@Override
 	public String getName()
 	{

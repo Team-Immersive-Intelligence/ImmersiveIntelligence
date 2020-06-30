@@ -10,7 +10,8 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
 
 /**
- * Created by Pabilo8 on 10-11-2019.
+ * @author Pabilo8
+ * @since 10-11-2019
  */
 public class EntitySkycrateInternal extends Entity
 {

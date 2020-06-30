@@ -17,7 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_ClothDecoration;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class BlockIIClothDecoration extends BlockIITileProvider<IIBlockTypes_ClothDecoration>
 {

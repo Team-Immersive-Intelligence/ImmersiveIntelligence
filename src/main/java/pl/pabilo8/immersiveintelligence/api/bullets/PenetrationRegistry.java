@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.function.Predicate;
 
 /**
- * Created by Pabilo8 on 05-03-2020.
+ * @author Pabilo8
+ * @since 05-03-2020
  */
 public class PenetrationRegistry
 {

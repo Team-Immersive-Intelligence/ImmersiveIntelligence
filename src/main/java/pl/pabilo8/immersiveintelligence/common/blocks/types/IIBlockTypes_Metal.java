@@ -5,9 +5,6 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 2019-05-12.
- */
 public enum IIBlockTypes_Metal implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	PLATINUM,
@@ -15,6 +12,10 @@ public enum IIBlockTypes_Metal implements IStringSerializable, BlockIEBase.IBloc
 	TUNGSTEN,
 	BRASS;
 
+	/**
+	 * @author Pabilo8
+	 * @since 2019-05-12
+	 */
 	@Override
 	public String getName()
 	{

@@ -8,11 +8,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelProgrammableSpeaker;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAlarmSiren;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityProgrammableSpeaker;
 
 /**
- * Created by Pabilo8 on 15-06-2019.
+ * @author Pabilo8
+ * @since 15-06-2019
  */
 
 @SideOnly(Side.CLIENT)

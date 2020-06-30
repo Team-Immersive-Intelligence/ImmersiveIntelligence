@@ -10,7 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 
 /**
- * Created by Pabilo8 on 30-08-2019.
+ * @author Pabilo8
+ * @since 30-08-2019
  */
 public class BulletRegistry
 {

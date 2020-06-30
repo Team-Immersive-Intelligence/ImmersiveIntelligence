@@ -14,7 +14,8 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityChemicalDispenser;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public class ChemicalDispenserRenderer extends TileEntitySpecialRenderer<TileEntityChemicalDispenser>
 {

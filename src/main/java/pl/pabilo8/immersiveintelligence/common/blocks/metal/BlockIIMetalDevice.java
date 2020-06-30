@@ -26,7 +26,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDe
 import java.util.Arrays;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDevice>
 {

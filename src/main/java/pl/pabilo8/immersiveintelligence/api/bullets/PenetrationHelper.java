@@ -17,7 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 14-03-2020.
+ * @author Pabilo8
+ * @since 14-03-2020
  */
 public class PenetrationHelper
 {

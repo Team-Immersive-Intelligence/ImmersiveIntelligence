@@ -27,7 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMu
 import java.util.Arrays;
 
 /**
- * Created by Pabilo8 on 20-06-2019.
+ * @author Pabilo8
+ * @since 20-06-2019
  */
 public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_MetalMultiblock0>
 {

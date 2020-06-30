@@ -46,7 +46,8 @@ import java.util.function.Predicate;
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.rpmRealTime;
 
 /**
- * Created by Pabilo8 on 26-12-2019.
+ * @author Pabilo8
+ * @since 26-12-2019
  */
 public class RotaryUtils
 {

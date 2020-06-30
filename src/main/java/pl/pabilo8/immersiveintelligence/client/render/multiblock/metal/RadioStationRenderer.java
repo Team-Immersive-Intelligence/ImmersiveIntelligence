@@ -10,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityRadioStation;
 
 /**
- * Created by Pabilo8 on 21-06-2019.
+ * @author Pabilo8
+ * @since 21-06-2019
  */
 public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRadioStation> implements IReloadableModelContainer<RadioStationRenderer>
 {

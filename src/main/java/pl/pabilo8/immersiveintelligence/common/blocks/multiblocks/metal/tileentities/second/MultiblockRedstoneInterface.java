@@ -25,7 +25,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDe
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock1;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class MultiblockRedstoneInterface implements IMultiblock
 {

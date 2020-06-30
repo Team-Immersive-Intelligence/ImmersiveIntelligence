@@ -26,7 +26,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connect
 import java.util.Arrays;
 
 /**
- * Created by Pabilo8 on 2019-05-31.
+ * @author Pabilo8
+ * @since 2019-05-31
  */
 public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Connector>
 {

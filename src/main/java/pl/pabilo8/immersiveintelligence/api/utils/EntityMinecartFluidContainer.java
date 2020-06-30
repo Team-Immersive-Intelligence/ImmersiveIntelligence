@@ -28,7 +28,8 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import javax.annotation.Nullable;
 
 /**
- * Created by Pabilo8 on 27-12-2019.
+ * @author Pabilo8
+ * @since 27-12-2019
  */
 public abstract class EntityMinecartFluidContainer extends EntityMinecart implements IEntityOverlayText
 {

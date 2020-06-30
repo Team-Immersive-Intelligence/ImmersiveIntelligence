@@ -29,7 +29,8 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEntityAmmunitionFactory>
 {

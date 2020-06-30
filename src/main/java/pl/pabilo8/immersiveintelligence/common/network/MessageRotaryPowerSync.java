@@ -12,7 +12,8 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 
 /**
- * Created by Pabilo8 on 2020-01-11.
+ * @author Pabilo8
+ * @since 2020-01-11
  */
 public class MessageRotaryPowerSync implements IMessage
 {

@@ -7,7 +7,8 @@ import net.minecraft.server.MinecraftServer;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Pabilo8 on 23-06-2020.
+ * @author Pabilo8
+ * @since 23-06-2020
  */
 public class CommandTMTAnimControl extends CommandBase
 {

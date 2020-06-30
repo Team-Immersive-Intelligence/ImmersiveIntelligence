@@ -15,7 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 21-11-2019.
+ * @author Pabilo8
+ * @since 21-11-2019
  */
 public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements IRecipeCategory<W>, IRecipeWrapperFactory<T>
 {

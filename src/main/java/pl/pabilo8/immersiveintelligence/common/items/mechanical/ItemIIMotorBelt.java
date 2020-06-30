@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by Pabilo8 on 27-12-2019.
+ * @author Pabilo8
+ * @since 27-12-2019
  */
 public class ItemIIMotorBelt extends ItemIIBase implements IWireCoil
 {

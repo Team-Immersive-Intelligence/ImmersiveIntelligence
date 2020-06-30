@@ -12,7 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Created by Pabilo8 on 29-12-2019.
+ * @author Pabilo8
+ * @since 29-12-2019
  */
 public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 {

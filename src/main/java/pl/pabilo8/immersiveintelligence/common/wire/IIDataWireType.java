@@ -10,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Wires;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 /**
- * Created by Pabilo8 on 2019-05-31.
+ * @author Pabilo8
+ * @since 2019-05-31
  */
 public class IIDataWireType extends WireType
 {

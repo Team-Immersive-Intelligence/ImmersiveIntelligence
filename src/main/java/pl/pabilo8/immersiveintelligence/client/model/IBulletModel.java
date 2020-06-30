@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.model;
 
 /**
- * Created by Pabilo8 on 04-10-2019.
+ * @author Pabilo8
+ * @since 04-10-2019
  */
 public interface IBulletModel
 {

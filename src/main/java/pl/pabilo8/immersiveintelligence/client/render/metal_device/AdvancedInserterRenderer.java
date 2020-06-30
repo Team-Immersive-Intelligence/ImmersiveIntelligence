@@ -16,7 +16,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAdvancedIn
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.inserter;
 
 /**
- * Created by Pabilo8 on 2019-05-26.
+ * @author Pabilo8
+ * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
 public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEntityAdvancedInserter>

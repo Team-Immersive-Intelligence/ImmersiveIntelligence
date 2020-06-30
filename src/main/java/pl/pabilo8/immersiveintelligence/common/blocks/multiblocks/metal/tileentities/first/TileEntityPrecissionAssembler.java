@@ -41,7 +41,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<TileEntityPrecissionAssembler, PrecissionAssemblerRecipe> implements IGuiTile, ISoundTile, IBooleanAnimatedPartsBlock
 {

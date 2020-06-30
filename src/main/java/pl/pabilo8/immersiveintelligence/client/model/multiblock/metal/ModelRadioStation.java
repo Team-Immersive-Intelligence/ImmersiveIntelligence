@@ -6,7 +6,8 @@ import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
- * Created by Pabilo8 on 20-06-2019.
+ * @author Pabilo8
+ * @since 20-06-2019
  */
 public class ModelRadioStation extends BaseBlockModel
 {

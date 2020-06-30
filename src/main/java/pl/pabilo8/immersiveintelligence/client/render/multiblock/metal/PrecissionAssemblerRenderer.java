@@ -17,7 +17,8 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
 
 /**
- * Created by Pabilo8 on 21-06-2019.
+ * @author Pabilo8
+ * @since 21-06-2019
  */
 public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecissionAssembler> implements IReloadableModelContainer<PrecissionAssemblerRenderer>
 {

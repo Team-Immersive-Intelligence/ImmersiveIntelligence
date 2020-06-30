@@ -5,7 +5,8 @@ import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
- * Created by Pabilo8 on 10-11-2019.
+ * @author Pabilo8
+ * @since 10-11-2019
  */
 public class CameraHandler
 {

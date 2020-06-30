@@ -19,7 +19,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
- * Created by Pabilo8 on 25-06-2019.
+ * @author Pabilo8
+ * @since 25-06-2019
  */
 public abstract class BlockIIMultiblock<E extends Enum<E> & BlockIIBase.IBlockEnum> extends BlockIITileProvider<E>
 {

@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.utils;
 
 /**
- * Created by Pabilo8 on 02-07-2019.
+ * @author Pabilo8
+ * @since 02-07-2019
  */
 public interface IBooleanAnimatedPartsBlock
 {

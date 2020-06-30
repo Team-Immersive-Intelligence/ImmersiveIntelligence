@@ -49,7 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntityPrintingPress, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IBooleanAnimatedPartsBlock, IConveyorAttachable, ISoundTile
 {

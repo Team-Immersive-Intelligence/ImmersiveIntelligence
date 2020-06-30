@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
 /**
- * Created by Pabilo8 on 25-06-2019.
+ * @author Pabilo8
+ * @since 25-06-2019
  */
 public class DataHelper
 {

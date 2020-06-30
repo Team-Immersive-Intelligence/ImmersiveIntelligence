@@ -9,7 +9,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAlarmSiren;
 
 /**
- * Created by Pabilo8 on 16-06-2019.
+ * @author Pabilo8
+ * @since 16-06-2019
  */
 public class MessageAlarmSirenSync implements IMessage
 {

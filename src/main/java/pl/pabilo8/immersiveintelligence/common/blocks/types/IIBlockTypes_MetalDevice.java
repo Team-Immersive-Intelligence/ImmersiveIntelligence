@@ -5,9 +5,6 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 2019-05-17.
- */
 public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	METAL_CRATE,
@@ -19,6 +16,10 @@ public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase
 	DATA_ROUTER,
 	DATA_MERGER;
 
+	/**
+	 * @author Pabilo8
+	 * @since 2019-05-17
+	 */
 	@Override
 	public String getName()
 	{

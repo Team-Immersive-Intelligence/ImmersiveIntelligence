@@ -28,7 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEnt
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCartStation> implements IReloadableModelContainer<SkyCartStationRenderer>
 {

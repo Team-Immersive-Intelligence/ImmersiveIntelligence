@@ -36,7 +36,8 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
 import java.util.ArrayList;
 
 /**
- * Created by Pabilo8 on 09-02-2020.
+ * @author Pabilo8
+ * @since 09-02-2020
  */
 public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements ITabbedGui
 {

@@ -16,7 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 14-04-2020.
+ * @author Pabilo8
+ * @since 14-04-2020
  */
 public class SawmillRecipe extends MultiblockRecipe
 {

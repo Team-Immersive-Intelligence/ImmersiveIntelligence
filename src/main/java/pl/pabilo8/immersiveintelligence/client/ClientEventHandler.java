@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.GlStateManager.FogMode;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,6 +29,9 @@ import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.resource.IResourceType;
+import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
+import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -47,10 +49,13 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
 
+import java.util.function.Predicate;
+
 /**
- * Created by Pabilo8 on 27-09-2019.
+ * @author Pabilo8
+ * @since 27-09-2019
  */
-public class ClientEventHandler implements IResourceManagerReloadListener
+public class ClientEventHandler implements ISelectiveResourceReloadListener
 {
 	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II_BULLET_HERE\u00A0"};
 	private static final String texture_gui = ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png";
@@ -132,9 +137,10 @@ public class ClientEventHandler implements IResourceManagerReloadListener
 	}
 
 	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager)
+	public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate)
 	{
-		EvenMoreImmersiveModelRegistry.instance.reloadRegisteredModels();
+		if(resourcePredicate.test(VanillaResourceType.MODELS))
+			EvenMoreImmersiveModelRegistry.instance.reloadRegisteredModels();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

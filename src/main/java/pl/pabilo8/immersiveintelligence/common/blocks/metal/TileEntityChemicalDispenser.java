@@ -36,7 +36,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalDispenser;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -48,7 +47,8 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 15-07-2019.
+ * @author Pabilo8
+ * @since 15-07-2019
  */
 public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IBlockBounds, IDataConnector
 {

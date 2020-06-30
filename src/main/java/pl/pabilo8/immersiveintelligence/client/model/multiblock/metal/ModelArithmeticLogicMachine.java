@@ -7,7 +7,8 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 
 /**
- * Created by Pabilo8 on 20-06-2019.
+ * @author Pabilo8
+ * @since 20-06-2019
  */
 public class ModelArithmeticLogicMachine extends BaseBlockModel
 {

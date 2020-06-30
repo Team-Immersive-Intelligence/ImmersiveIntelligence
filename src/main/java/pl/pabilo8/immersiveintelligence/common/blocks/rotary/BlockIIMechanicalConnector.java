@@ -27,7 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Mechani
 import java.util.Arrays;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes_MechanicalConnector>
 {

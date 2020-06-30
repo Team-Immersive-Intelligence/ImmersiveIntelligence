@@ -60,7 +60,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlockEnum> extends BlockIIBase<E> implements IColouredBlock
 {

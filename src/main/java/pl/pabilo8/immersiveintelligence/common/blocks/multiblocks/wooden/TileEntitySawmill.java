@@ -45,7 +45,8 @@ import java.util.List;
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.sawmill;
 
 /**
- * Created by Pabilo8 on 13-04-2020.
+ * @author Pabilo8
+ * @since 13-04-2020
  */
 public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmill, SawmillRecipe> implements IGuiTile, ISoundTile, IRotationalEnergyBlock
 {

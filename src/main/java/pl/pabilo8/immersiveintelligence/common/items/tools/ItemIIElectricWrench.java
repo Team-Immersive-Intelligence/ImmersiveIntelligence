@@ -37,7 +37,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 2019-05-30.
+ * @author Pabilo8
+ * @since 2019-05-30
  */
 public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergyItem, IWrench
 {

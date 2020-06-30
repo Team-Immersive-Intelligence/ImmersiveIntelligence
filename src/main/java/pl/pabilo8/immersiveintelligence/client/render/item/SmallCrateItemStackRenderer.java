@@ -7,7 +7,8 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.SmallCrateRenderer;
 
 /**
- * Created by Pabilo8 on 13-10-2019.
+ * @author Pabilo8
+ * @since 13-10-2019
  */
 public class SmallCrateItemStackRenderer extends TileEntityItemStackRenderer
 {

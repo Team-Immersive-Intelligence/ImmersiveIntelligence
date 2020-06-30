@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.items;
 
 /**
- * Created by Pabilo8 on 2019-05-11.
+ * @author Pabilo8
+ * @since 2019-05-11
  */
 public class ItemIIMetalPressMold extends ItemIIBase
 {

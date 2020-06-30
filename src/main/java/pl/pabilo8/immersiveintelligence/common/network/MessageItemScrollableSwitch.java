@@ -10,7 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 
 /**
- * Created by Pabilo8 on 24-06-2019.
+ * @author Pabilo8
+ * @since 24-06-2019
  */
 public class MessageItemScrollableSwitch implements IMessage
 {

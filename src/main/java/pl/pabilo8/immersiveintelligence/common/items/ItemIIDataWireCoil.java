@@ -20,7 +20,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by Pabilo8 on 2019-05-31.
+ * @author Pabilo8
+ * @since 2019-05-31
  */
 public class ItemIIDataWireCoil extends ItemIIBase implements IWireCoil
 {

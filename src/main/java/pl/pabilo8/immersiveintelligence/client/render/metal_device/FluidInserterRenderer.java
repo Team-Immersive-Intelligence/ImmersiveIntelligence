@@ -17,7 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityFluidInser
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.fluid_inserter;
 
 /**
- * Created by Pabilo8 on 15-06-2019.
+ * @author Pabilo8
+ * @since 15-06-2019
  */
 
 @SideOnly(Side.CLIENT)

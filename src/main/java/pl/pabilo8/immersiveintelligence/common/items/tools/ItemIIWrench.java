@@ -37,7 +37,8 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 2019-05-30.
+ * @author Pabilo8
+ * @since 2019-05-30
  */
 public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE, IWrench
 {

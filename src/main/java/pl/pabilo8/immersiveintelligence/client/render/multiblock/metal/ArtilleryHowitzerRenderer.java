@@ -17,7 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 /**
- * Created by Pabilo8 on 21-06-2019.
+ * @author Pabilo8
+ * @since 21-06-2019
  */
 public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEntityArtilleryHowitzer> implements IReloadableModelContainer<ArtilleryHowitzerRenderer>
 {

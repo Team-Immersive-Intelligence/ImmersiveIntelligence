@@ -12,7 +12,8 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntitySmallCrate;
 
 /**
- * Created by Pabilo8 on 2019-05-26.
+ * @author Pabilo8
+ * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
 public class SmallCrateRenderer extends TileEntitySpecialRenderer<TileEntitySmallCrate>

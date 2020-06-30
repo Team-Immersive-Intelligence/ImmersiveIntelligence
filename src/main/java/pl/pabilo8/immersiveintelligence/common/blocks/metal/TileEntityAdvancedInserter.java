@@ -58,7 +58,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Pabilo8 on 15-07-2019.
+ * @author Pabilo8
+ * @since 15-07-2019
  */
 public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable implements IIEInventory, ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
 {

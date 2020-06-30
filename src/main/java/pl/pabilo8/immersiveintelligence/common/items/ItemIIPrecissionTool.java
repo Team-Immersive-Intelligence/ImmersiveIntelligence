@@ -12,7 +12,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecissionAssemblerRenderer;
 
 /**
- * Created by Pabilo8 on 19-08-2019.
+ * @author Pabilo8
+ * @since 19-08-2019
  */
 public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 {

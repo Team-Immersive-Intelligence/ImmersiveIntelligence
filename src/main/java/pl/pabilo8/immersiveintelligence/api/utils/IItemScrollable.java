@@ -4,7 +4,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Pabilo8 on 13-07-2019.
+ * @author Pabilo8
+ * @since 13-07-2019
  */
 public interface IItemScrollable
 {

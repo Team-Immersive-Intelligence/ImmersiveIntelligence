@@ -12,7 +12,8 @@ import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAlarmSire
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAlarmSiren;
 
 /**
- * Created by Pabilo8 on 15-06-2019.
+ * @author Pabilo8
+ * @since 15-06-2019
  */
 
 @SideOnly(Side.CLIENT)

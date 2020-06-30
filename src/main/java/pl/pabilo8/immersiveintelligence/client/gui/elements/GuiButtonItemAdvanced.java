@@ -7,7 +7,8 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Pabilo8 on 07-07-2019.
+ * @author Pabilo8
+ * @since 07-07-2019
  */
 public class GuiButtonItemAdvanced extends GuiButtonIE
 {

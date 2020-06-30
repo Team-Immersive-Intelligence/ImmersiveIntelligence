@@ -21,7 +21,8 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 
 /**
- * Created by Pabilo8 on 11-06-2019.
+ * @author Pabilo8
+ * @since 11-06-2019
  */
 public class TileEntityDataDebugger extends TileEntityIEBase implements ITickable, IRedstoneOutput, IDataDevice, IHammerInteraction
 {

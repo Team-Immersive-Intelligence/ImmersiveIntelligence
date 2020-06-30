@@ -15,7 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 import java.util.ArrayList;
 
 /**
- * Created by Pabilo8 on 10-07-2019.
+ * @author Pabilo8
+ * @since 10-07-2019
  */
 public class GuiPrintingPress extends GuiIEContainerBase
 {

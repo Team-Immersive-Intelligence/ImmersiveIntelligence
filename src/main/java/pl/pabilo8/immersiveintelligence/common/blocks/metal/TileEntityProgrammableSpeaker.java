@@ -12,7 +12,6 @@ import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNet
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
@@ -29,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -39,7 +37,8 @@ import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import java.util.Objects;
 
 /**
- * Created by Pabilo8 on 15-06-2019.
+ * @author Pabilo8
+ * @since 15-06-2019
  */
 public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectable
 		implements IRedstoneConnector, IDataConnector, ITickable, IHammerInteraction, IBlockOverlayText, ISoundTile

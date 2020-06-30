@@ -3,12 +3,12 @@ package pl.pabilo8.immersiveintelligence.common;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.IEDamageSource_Indirect;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 
 /**
- * Created by Pabilo8 on 30-08-2019.
+ * @author Pabilo8
+ * @since 30-08-2019
  */
 public class IIDamageSources
 {

@@ -5,7 +5,8 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Pabilo8 on 19-08-2019.
+ * @author Pabilo8
+ * @since 19-08-2019
  */
 public interface ISawblade
 {

@@ -6,7 +6,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumFacing;
 
 /**
- * Created by Pabilo8 on 04-01-2020.
+ * @author Pabilo8
+ * @since 04-01-2020
  */
 public abstract class DirectionTransformer
 {

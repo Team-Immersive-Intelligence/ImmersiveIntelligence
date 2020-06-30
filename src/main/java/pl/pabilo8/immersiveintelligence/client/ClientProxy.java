@@ -120,7 +120,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Created by Pabilo8 on 2019-05-07.
+ * @author Pabilo8
+ * @since 2019-05-07
  */
 @SuppressWarnings("deprecation")
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)

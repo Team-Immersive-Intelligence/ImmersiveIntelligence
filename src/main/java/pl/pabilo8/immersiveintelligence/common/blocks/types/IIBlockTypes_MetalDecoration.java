@@ -5,9 +5,6 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 2019-05-15.
- */
 public enum IIBlockTypes_MetalDecoration implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	COIL_DATA,
@@ -17,6 +14,10 @@ public enum IIBlockTypes_MetalDecoration implements IStringSerializable, BlockIE
 	HEAVY_MECHANICAL_ENGINEERING,
 	COIL_STEEL_MOTOR_BELT;
 
+	/**
+	 * @author Pabilo8
+	 * @since 2019-05-15
+	 */
 	@Override
 	public String getName()
 	{

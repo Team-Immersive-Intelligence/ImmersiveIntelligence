@@ -5,7 +5,8 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.tmt.DirectionTransformer;
 
 /**
- * Created by Pabilo8 on 04-01-2020.
+ * @author Pabilo8
+ * @since 04-01-2020
  */
 public class DirectionTransformerWheel extends DirectionTransformer
 {

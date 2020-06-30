@@ -10,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCratePost;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public class SkyCratePostRenderer extends TileEntitySpecialRenderer<TileEntitySkyCratePost> implements IReloadableModelContainer<SkyCratePostRenderer>
 {

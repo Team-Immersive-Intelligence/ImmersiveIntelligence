@@ -5,14 +5,15 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-/**
- * Created by Pabilo8 on 2019-05-31.
- */
 public enum IIBlockTypes_MechanicalDevice implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	WOODEN_TRANSMISSION_BOX,
 	CREATIVE_TRANSMISSION_BOX;
 
+	/**
+	 * @author Pabilo8
+	 * @since 2019-05-31
+	 */
 	@Override
 	public String getName()
 	{

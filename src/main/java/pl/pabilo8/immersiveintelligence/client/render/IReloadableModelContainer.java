@@ -5,7 +5,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.EvenMoreImmersiveModelRegistry;
 
 /**
- * Created by Pabilo8 on 23-06-2020.
+ * @author Pabilo8
+ * @since 23-06-2020
  */
 public interface IReloadableModelContainer<T>
 {

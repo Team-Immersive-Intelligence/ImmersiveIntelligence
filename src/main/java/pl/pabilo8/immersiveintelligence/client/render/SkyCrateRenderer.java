@@ -15,7 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIISkycrateMount;
 
 /**
- * Created by Pabilo8 on 08-06-2019.
+ * @author Pabilo8
+ * @since 08-06-2019
  */
 public class SkyCrateRenderer extends Render<EntitySkyCrate>
 {

@@ -10,7 +10,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.BELT_CATEGORY;
 
 /**
- * Created by Pabilo8 on 26-12-2019.
+ * @author Pabilo8
+ * @since 26-12-2019
  */
 public abstract class MotorBeltType extends WireType
 {

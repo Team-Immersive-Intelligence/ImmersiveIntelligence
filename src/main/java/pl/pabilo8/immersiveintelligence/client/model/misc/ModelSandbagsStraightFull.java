@@ -3,7 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
- * Created by Pabilo8 on 15-06-2019.
+ * @author Pabilo8
+ * @since 15-06-2019
  */
 public class ModelSandbagsStraightFull extends ModelSandbagsStraight
 {

@@ -4,7 +4,8 @@ import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import net.minecraft.world.World;
 
 /**
- * Created by Pabilo8 on 2019-05-31.
+ * @author Pabilo8
+ * @since 2019-05-31
  */
 public interface IDataConnector extends IImmersiveConnectable
 {

@@ -24,7 +24,8 @@ import static pl.pabilo8.immersiveintelligence.api.Utils.handleBucketTankInterac
 import static pl.pabilo8.immersiveintelligence.api.Utils.outputFluidToTank;
 
 /**
- * Created by Pabilo8 on 28-06-2019.
+ * @author Pabilo8
+ * @since 28-06-2019
  */
 public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntityElectrolyzer, ElectrolyzerRecipe> implements IGuiTile, ISoundTile
 {

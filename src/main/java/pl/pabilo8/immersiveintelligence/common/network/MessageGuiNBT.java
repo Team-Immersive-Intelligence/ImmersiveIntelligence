@@ -15,7 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import java.util.UUID;
 
 /**
- * Created by Pabilo8 on 04-07-2019.
+ * @author Pabilo8
+ * @since 04-07-2019
  */
 public class MessageGuiNBT implements IMessage
 {

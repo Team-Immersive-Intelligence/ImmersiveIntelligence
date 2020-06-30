@@ -9,7 +9,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 /**
- * Created by Pabilo8 on 10-11-2019.
+ * @author Pabilo8
+ * @since 10-11-2019
  */
 public class EntityCamera extends EntityLivingBase
 {

@@ -8,7 +8,8 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
 
 /**
- * Created by Pabilo8 on 2019-05-17.
+ * @author Pabilo8
+ * @since 2019-05-17
  */
 public class ContainerGearbox extends ContainerIEBase
 {

@@ -27,7 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenM
 import java.util.Arrays;
 
 /**
- * Created by Pabilo8 on 2019-06-05.
+ * @author Pabilo8
+ * @since 2019-06-05
  */
 public class BlockIIWoodenMultiblock extends BlockIIMultiblock<IIBlockTypes_WoodenMultiblock>
 {

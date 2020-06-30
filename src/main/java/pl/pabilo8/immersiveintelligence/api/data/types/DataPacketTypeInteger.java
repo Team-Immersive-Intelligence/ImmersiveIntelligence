@@ -4,7 +4,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
- * Created by Pabilo8 on 2019-06-01.
+ * @author Pabilo8
+ * @since 2019-06-01
  */
 public class DataPacketTypeInteger implements IDataType
 {

@@ -23,7 +23,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDe
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenMultiblock;
 
 /**
- * Created by Pabilo8 on 13-04-2020.
+ * @author Pabilo8
+ * @since 13-04-2020
  */
 public class MultiblockSawmill implements IMultiblock
 {

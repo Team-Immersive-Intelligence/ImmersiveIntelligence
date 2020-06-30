@@ -7,7 +7,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 
 /**
- * Created by Pabilo8 on 05-07-2019.
+ * @author Pabilo8
+ * @since 05-07-2019
  */
 public class DataOperationXOR extends DataOperator
 {

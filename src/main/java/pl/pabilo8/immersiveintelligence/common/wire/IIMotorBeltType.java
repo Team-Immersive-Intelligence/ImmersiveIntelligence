@@ -10,7 +10,8 @@ import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt.
 import java.util.ArrayList;
 
 /**
- * Created by Pabilo8 on 29-12-2019.
+ * @author Pabilo8
+ * @since 29-12-2019
  */
 public class IIMotorBeltType extends MotorBeltType
 {

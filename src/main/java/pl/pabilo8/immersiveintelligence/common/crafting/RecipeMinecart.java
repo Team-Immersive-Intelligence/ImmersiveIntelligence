@@ -8,10 +8,10 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
- * Created by Pabilo8 on 23-04-2020.
+ * @author Pabilo8
+ * @since 23-04-2020
  */
 public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
 {

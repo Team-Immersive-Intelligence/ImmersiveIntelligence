@@ -7,7 +7,8 @@ import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityAmmunitionFactory;
 
 /**
- * Created by Pabilo8 on 10-07-2019.
+ * @author Pabilo8
+ * @since 10-07-2019
  */
 public class ContainerAmmunitionFactory extends ContainerIEBase
 {

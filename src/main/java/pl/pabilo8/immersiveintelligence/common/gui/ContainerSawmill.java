@@ -14,7 +14,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
 
 /**
- * Created by Pabilo8 on 10-07-2019.
+ * @author Pabilo8
+ * @since 10-07-2019
  */
 public class ContainerSawmill extends ContainerIEBase
 {

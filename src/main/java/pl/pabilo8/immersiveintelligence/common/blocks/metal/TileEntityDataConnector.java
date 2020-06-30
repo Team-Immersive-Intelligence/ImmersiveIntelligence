@@ -32,7 +32,8 @@ import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import javax.annotation.Nullable;
 
 /**
- * Created by Pabilo8 on 2019-05-31.
+ * @author Pabilo8
+ * @since 2019-05-31
  */
 public class TileEntityDataConnector extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>
 {
