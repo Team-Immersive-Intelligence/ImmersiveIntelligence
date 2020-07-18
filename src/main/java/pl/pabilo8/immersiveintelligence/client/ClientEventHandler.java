@@ -37,6 +37,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GLContext;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
@@ -45,9 +46,10 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
+import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
 import java.util.function.Predicate;
 
@@ -370,14 +372,14 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setBoolean("clientMessage", true);
 				tag.setBoolean("aiming", mgAiming);
-				IIPacketHandler.INSTANCE.sendToServer(new MessageMachinegunSync(ClientUtils.mc().player.getRidingEntity(), tag));
+				IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
 			}
 
 			if(ZoomHandler.isZooming)
 			{
 				ClientUtils.mc().gameSettings.thirdPersonView = 0;
 
-				float px = mg.getPosition().getX(), py = mg.getPosition().getY(), pz = mg.getPosition().getZ();
+				float px = (float)mg.posX, py = (float)mg.posY, pz = (float)mg.posZ;
 
 				float yaw = mg.gunYaw;
 				float pitch = mg.gunPitch;
@@ -394,16 +396,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
 					yaw = true_head_angle;
 
-				yaw += mg.recoilYaw;
-
 				if(mg.gunPitch < true_head_angle2)
 					pitch += ClientUtils.mc().getRenderPartialTicks();
 				else if(mg.gunPitch > true_head_angle2)
 					pitch -= ClientUtils.mc().getRenderPartialTicks();
 
-				if(Math.ceil(mg.gunPitch) <= Math.ceil(true_head_angle2)+1f&&Math.ceil(mg.gunPitch) >= Math.ceil(true_head_angle2)-1f)
-					pitch = true_head_angle2;
+				yaw = MathHelper.clamp(yaw, -45, 45);
+				pitch = MathHelper.clamp(pitch, -20, 20);
 
+				yaw += mg.recoilYaw;
 				pitch += mg.recoilPitch;
 
 				double true_angle = Math.toRadians(180-mg.setYaw-yaw);
@@ -413,11 +414,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
 				Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
-				/*Vec3d gun_zoom_offset=new Vec3d(0,0,0);
-				if(hasScope)
-					gun_zoom_offset=new Vec3d(0,0,-1f/ZoomHandler.fovZoom).rotateYaw((float)true_angle);
-*/
-				CameraHandler.INSTANCE.setCameraPos(px+0.5+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+0.5+(0.85*(gun_end.z+gun_height.z)));
+
+				CameraHandler.INSTANCE.setCameraPos(px+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+(0.85*(gun_end.z+gun_height.z)));
 				CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
 				CameraHandler.INSTANCE.setEnabled(true);
 			}
@@ -478,6 +476,25 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent
 	public void cameraSetup(EntityViewRenderEvent.CameraSetup event)
 	{
+
+		if(Motorbike.cameraRoll&&ClientUtils.mc().player.getRidingEntity() instanceof EntityMotorbike)
+		{
+			EntityMotorbike entity = (EntityMotorbike)ClientUtils.mc().player.getRidingEntity();
+			float tilt = entity.tilt;
+			if(entity.turnLeft)
+				tilt -= event.getRenderPartialTicks()*0.1;
+			else if(entity.turnRight)
+				tilt += event.getRenderPartialTicks()*0.1;
+			else if(tilt!=0)
+			{
+				tilt = (float)(tilt < 0?tilt+(event.getRenderPartialTicks()*0.1f): tilt-(event.getRenderPartialTicks()*0.1f));
+				if(Math.abs(tilt) < 0.01f)
+					tilt = 0;
+			}
+
+			event.setRoll((MathHelper.clamp(tilt, -1f, 1f)*15f));
+		}
+
 		if(CameraHandler.INSTANCE.isEnabled())
 		{
 			event.setRoll(CameraHandler.INSTANCE.getRoll());

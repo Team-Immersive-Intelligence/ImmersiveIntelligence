@@ -70,7 +70,7 @@ public class IIManualPages
 				this.localizedLore = manual.formatText(text+".lore");
 				this.localizedName = manual.formatText(text);
 
-				localizedType = I18n.format(CommonProxy.description_key+"bullet_type."+type.getName());
+				localizedType = I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+type.getName());
 
 				this.localizedText = addLinks(manual, gui, this.localizedText, x, y+60, 60, pageButtons);
 				if(this.localizedText==null)
@@ -239,7 +239,7 @@ public class IIManualPages
 			if(tooltip!=null)
 			{
 				ArrayList<String> toDraw = new ArrayList<>();
-				toDraw.add(I18n.format(CommonProxy.data_key+"datatype."+tooltip.dataType.getName()));
+				toDraw.add(I18n.format(CommonProxy.DATA_KEY+"datatype."+tooltip.dataType.getName()));
 				ClientUtils.drawHoveringText(toDraw, mx, my, manual.fontRenderer, -1, -1);
 			}
 			manual.fontRenderer.setUnicodeFlag(true);

@@ -11,7 +11,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,14 +40,16 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
+import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
 import javax.annotation.Nullable;
 
@@ -58,7 +59,7 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegu
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IEntityOverlayText
+public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IEntityOverlayText, IEntitySpecialRepairable
 {
 	//TODO: switch nbt sending to DataParameters
 	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMachinegun.class, DataSerializers.COMPOUND_TAG);
@@ -193,7 +194,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 							int out = EnergyHelper.extractFlux(stack, Machinegun.infraredScopeEnergyUsage*20, false);
 							if(out > 0)
 							{
-								ent.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, Math.round(out/(float)(Machinegun.infraredScopeEnergyUsage)*1.25f), 2, true, false));
+								ent.addPotionEffect(new PotionEffect(IIPotions.infrared_vision, Math.round(out/(float)(Machinegun.infraredScopeEnergyUsage)*1.25f), 2, true, false));
 								break;
 							}
 						}
@@ -210,7 +211,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setBoolean("forClient", true);
 				writeEntityToNBT(tag);
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
 			}
 		}
 
@@ -341,6 +342,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		return super.getMountedYOffset();
 	}
 
+	@Override
+	public boolean shouldRiderSit()
+	{
+		return false;
+	}
+
 	boolean processEmptyMagazine(boolean isEmpty, ItemStack magazine, EntityLivingBase entity, EntityEquipmentSlot takeFrom, int setTo)
 	{
 		if(isEmpty)
@@ -366,7 +373,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					{
 						NBTTagCompound tag = new NBTTagCompound();
 						writeEntityToNBT(tag);
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
 					}
 					if(!world.isRemote&&clipReload==1)
 						world.playSound(null, getPosition(), IISounds.machinegun_unload, SoundCategory.BLOCKS, 1F, 1f);
@@ -421,7 +428,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 							bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
 							bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
 							writeEntityToNBT(tag);
-							IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
+							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
 						}
 						return true;
 					}
@@ -700,6 +707,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
 		recoilPitch += maxRecoilPitch*Math.random();
+		if(((EntityLivingBase)getPassengers().get(0)).getActivePotionEffects().stream().anyMatch(potionEffect -> potionEffect.getPotion()==IIPotions.iron_will))
+		{
+			recoilYaw *= 0.1;
+			recoilPitch *= 0.1;
+		}
+
 		overheating += 8;
 
 		NBTTagCompound tag = new NBTTagCompound();
@@ -749,7 +762,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
 
 		if(!world.isRemote)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
 
 		return true;
 	}
@@ -830,7 +843,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		NBTTagCompound tag = new NBTTagCompound();
 		writeEntityToNBT(tag);
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageMachinegunSync(this, tag), Utils.targetPointFromEntity(this, 24));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
 
 		tank.setCapacity(tankCapacity);
 	}
@@ -911,6 +924,25 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
 	{
 		return false;
+	}
+
+	@Override
+	public boolean canRepair()
+	{
+		return maxShieldStrength > 0&&shieldStrength < maxShieldStrength;
+	}
+
+	@Override
+	public boolean repair(int repairPoints)
+	{
+		shieldStrength = Math.min(shieldStrength += repairPoints, shieldStrength);
+		return true;
+	}
+
+	@Override
+	public int getRepairCost()
+	{
+		return 2;
 	}
 
 	public static class MachinegunZoom implements IAdvancedZoomTool

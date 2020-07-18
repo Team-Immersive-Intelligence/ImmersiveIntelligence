@@ -21,8 +21,8 @@ public class ModelMachinegun extends BaseBlockModel
 
 	ModelRendererTurbo[] barrelModel, sightsModel, triggerModel, ammoModel, slideModel, gripModel, bipodModel;
 	public TmtNamedBoxGroup baseBox, barrelBox, sightsBox, triggerBox, ammoBox, slideBox, gripBox, bipodBox;
-	ModelRendererTurbo[] heavyBarrelModel, waterCoolingModel, secondMagazineMainModel, secondMagazineMagModel, beltFedLoaderModel, scopeModel, infraredScopeModel, hastyBipodModel, preciseBipodModel, shieldModel;
-	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox;
+	ModelRendererTurbo[] heavyBarrelModel, waterCoolingModel, secondMagazineMainModel, secondMagazineMagModel, beltFedLoaderModel, scopeModel, infraredScopeModel, hastyBipodModel, preciseBipodModel, shieldModel, baubleModel;
+	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox, baubleBox;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
 
@@ -566,6 +566,45 @@ public class ModelMachinegun extends BaseBlockModel
 
 		parts.put("shield", shieldModel);
 
+		baubleModel = new ModelRendererTurbo[5];
+		baubleModel[0] = new ModelRendererTurbo(this, 28, 122, textureX, textureY); // BoxClock
+		baubleModel[1] = new ModelRendererTurbo(this, 33, 122, textureX, textureY); // BoxClock
+		baubleModel[2] = new ModelRendererTurbo(this, 44, 121, textureX, textureY); // BoxClock
+		baubleModel[3] = new ModelRendererTurbo(this, 42, 121, textureX, textureY); // BoxClock
+		baubleModel[4] = new ModelRendererTurbo(this, 36, 122, textureX, textureY); // BoxClock
+
+		baubleModel[0].addBox(0F, 1F, -2F, 1, 3, 3, 0F); // BoxClock
+		baubleModel[0].setRotationPoint(6F, -10F, 0F);
+		baubleModel[0].rotateAngleX = 0.27925268F;
+		baubleModel[0].rotateAngleY = 3.4906585F;
+		baubleModel[0].rotateAngleZ = 0.01745329F;
+
+		baubleModel[1].addBox(0.5F, -1.5F, -0.5F, 0, 2, 1, 0F); // BoxClock
+		baubleModel[1].setRotationPoint(6F, -9F, 0F);
+		baubleModel[1].rotateAngleX = 0.06981317F;
+		baubleModel[1].rotateAngleY = 2.65290046F;
+		baubleModel[1].rotateAngleZ = 0.17453293F;
+
+		baubleModel[2].addBox(0.5F, -4.5F, -0.5F, 0, 5, 1, 0F); // BoxClock
+		baubleModel[2].setRotationPoint(6F, -10F, 0F);
+		baubleModel[2].rotateAngleX = 0.06981317F;
+		baubleModel[2].rotateAngleY = 2.23402144F;
+		baubleModel[2].rotateAngleZ = 1.67551608F;
+
+		baubleModel[3].addBox(-3.75F, -1.5F, 2F, 0, 5, 1, 0F); // BoxClock
+		baubleModel[3].setRotationPoint(6F, -8.5F, 0F);
+		baubleModel[3].rotateAngleX = 0.13962634F;
+		baubleModel[3].rotateAngleY = 2.87979327F;
+		baubleModel[3].rotateAngleZ = 0.06981317F;
+
+		baubleModel[4].addBox(0.5F, -4.5F, 0F, 0, 5, 1, 0F); // BoxClock
+		baubleModel[4].setRotationPoint(6F, -5.25F, 0F);
+		baubleModel[4].rotateAngleX = 0.06981317F;
+		baubleModel[4].rotateAngleY = 2.23402144F;
+		baubleModel[4].rotateAngleZ = 1.67551608F;
+
+		parts.put("bauble", baubleModel);
+
 		flipAll();
 
 		parts.remove("heavyBarrel");
@@ -578,6 +617,7 @@ public class ModelMachinegun extends BaseBlockModel
 		parts.remove("hastyBipod");
 		parts.remove("preciseBipod");
 		parts.remove("shield");
+		parts.remove("bauble");
 
 		baseBox = new TmtNamedBoxGroup("base", baseModel, MachinegunRenderer.texture);
 		barrelBox = new TmtNamedBoxGroup("barrel", barrelModel, MachinegunRenderer.texture);
@@ -654,5 +694,7 @@ public class ModelMachinegun extends BaseBlockModel
 		};
 		shieldBox = new TmtNamedBoxGroup("shield", shieldModel, MachinegunRenderer.texture);
 
+		//Custom skin elements can be added, but it requires mentioning in skin file too
+		baubleBox = new TmtNamedBoxGroup("skin_bauble", baubleModel, MachinegunRenderer.texture);
 	}
 }

@@ -20,10 +20,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 
 import javax.annotation.Nullable;
@@ -36,10 +38,11 @@ import java.util.function.Predicate;
 
 public class MachinegunRenderer extends Render<EntityMachinegun>
 {
-	public static final String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
+	public static final String texture = "machinegun.png";
 	public static ModelMachinegun model = new ModelMachinegun();
 	public static HashMap<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> upgrades = new HashMap<>();
 	public static List<TmtNamedBoxGroup> defaultGunParts = new ArrayList<>();
+	public static List<TmtNamedBoxGroup> skinParts = new ArrayList<>();
 
 	public MachinegunRenderer(RenderManager renderManager)
 	{
@@ -52,15 +55,37 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 		defaultGunParts.add(model.slideBox);
 		defaultGunParts.add(model.gripBox);
 		defaultGunParts.add(model.bipodBox);
+
+		skinParts.add(model.baubleBox);
 	}
 
 	public static void renderMachinegun(ItemStack stack, @Nullable EntityMachinegun entity)
 	{
 		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(texture);
-
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>();
 		renderParts.addAll(defaultGunParts);
+		boolean drawText = false;
+
+		String skin = CommonProxy.item_machinegun.getSkinnableCurrentSkin(stack);
+		if(!skin.isEmpty())
+		{
+			SpecialSkin s = CustomSkinHandler.specialSkins.get(skin);
+			if(s!=null)
+			{
+				if(s.mods.contains("skin_mg_text"))
+					drawText = true;
+				skinParts.forEach(tmtNamedBoxGroup -> {
+					if(s.mods.contains(tmtNamedBoxGroup.getName()))
+						renderParts.add(tmtNamedBoxGroup);
+				});
+			}
+
+		}
+		skin = (skin.isEmpty()?CommonProxy.item_machinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
+
+
+		ClientUtils.bindTexture(skin+texture);
+
 
 		for(Entry<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> s : upgrades.entrySet())
 		{
@@ -74,21 +99,25 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 			if(entity.setupTime < 1&&entity.getPassengers().size() > 0&&entity.getPassengers().get(0) instanceof EntityLivingBase)
 			{
 				EntityLivingBase psg = (EntityLivingBase)entity.getPassengers().get(0);
-				float true_head_angle = MathHelper.wrapDegrees(psg.rotationYawHead-entity.setYaw);
+
+				float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-entity.setYaw);
+				float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
 
 				if(entity.gunYaw < true_head_angle)
 					yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
 				else if(entity.gunYaw > true_head_angle)
 					yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
 
-				if(Math.ceil(entity.gunYaw) <= Math.ceil(true_head_angle)+0.5f&&Math.ceil(entity.gunYaw) >= Math.ceil(true_head_angle)-0.5f)
+				if(Math.ceil(entity.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(entity.gunYaw) >= Math.ceil(true_head_angle)-1f)
 					yaw = true_head_angle;
 
-				if(pitch < psg.rotationPitch)
+				if(entity.gunPitch < true_head_angle2)
 					pitch += ClientUtils.mc().getRenderPartialTicks();
-				else if(pitch > psg.rotationPitch)
+				else if(entity.gunPitch > true_head_angle2)
 					pitch -= ClientUtils.mc().getRenderPartialTicks();
 
+				yaw = MathHelper.clamp(yaw, -45, 45);
+				pitch = MathHelper.clamp(pitch, -20, 20);
 
 				yaw += entity.recoilYaw;
 				pitch += entity.recoilPitch;
@@ -97,19 +126,40 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 			}
 
 			GlStateManager.translate(0f, -0.34375, 0f);
-			GlStateManager.rotate(-25f*(entity.setupTime/(float)entity.maxSetupTime), 1, 0, 0);
-			GlStateManager.translate(0, 0.25*(entity.setupTime/(float)entity.maxSetupTime), 0);
+			float setup = Math.max(entity.setupTime-ClientUtils.mc().getRenderPartialTicks(), 0);
+			GlStateManager.rotate(-25f*(setup/(float)entity.maxSetupTime), 1, 0, 0);
+			GlStateManager.translate(0, 0.25*(setup/(float)entity.maxSetupTime), 0);
+
+			if(drawText)
+			{
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(0.85, 0.85, 0.85);
+				GlStateManager.rotate(180-entity.setYaw, 0f, 1f, 0f);
+				GlStateManager.rotate(-yaw, 0f, 1f, 0f);
+				GlStateManager.rotate(-pitch, 1, 0, 0);
+				GlStateManager.translate(-0.5f, 0.34375, 1.65625+(pitch/20*0.25));
+
+				GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.scale(-1, -1, 1);
+				GlStateManager.translate(-0.93, -0.7, 0.44);
+				GlStateManager.rotate(-45, 1, 0, 0);
+				GlStateManager.scale(1/96f, 1/96f, 1/96f);
+
+				ClientUtils.font().drawString("Eisenheim", 0, 1, 0xce953c);
+				GlStateManager.color(1, 1, 1);
+				GlStateManager.popMatrix();
+			}
 
 			for(TmtNamedBoxGroup nmod : renderParts)
 			{
-				ClientUtils.bindTexture(nmod.getTexturePath());
+				ClientUtils.bindTexture(skin+nmod.getTexturePath());
 				if(nmod.getName().equals("bipod"))
 				{
 					GlStateManager.pushMatrix();
 					GlStateManager.scale(0.85, 0.85, 0.85);
 					GlStateManager.rotate(180-entity.setYaw, 0f, 1f, 0f);
-					GlStateManager.translate(-0.5f, 0.34375, 1.65625);
-					nmod.render(0.0625f, entity.setupTime/(float)entity.maxSetupTime);
+					GlStateManager.translate(-0.5f, 0.34375+0.0625, 1.65625);
+					nmod.render(0.0625f, setup/(float)entity.maxSetupTime);
 					GlStateManager.popMatrix();
 				}
 				else
@@ -169,7 +219,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 					}
 					else if(nmod.getName().equals("shield"))
 					{
-						ClientUtils.bindTexture(nmod.getTexturePath());
+						ClientUtils.bindTexture(skin+nmod.getTexturePath());
 						nmod.render(0.0625f);
 						//TODO: add breaking progress
 					}
@@ -183,7 +233,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 		{
 			for(TmtNamedBoxGroup nmod : renderParts)
 			{
-				ClientUtils.bindTexture(nmod.getTexturePath());
+				ClientUtils.bindTexture(skin+nmod.getTexturePath());
 
 				if(nmod.getName().equals("bipod"))
 				{
@@ -259,7 +309,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 	@Override
 	protected ResourceLocation getEntityTexture(EntityMachinegun entity)
 	{
-		return new ResourceLocation(texture);
+		return new ResourceLocation(CommonProxy.item_machinegun.getSkinnableDefaultTextureLocation()+texture);
 	}
 
 }

@@ -12,8 +12,8 @@ import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.entities.EntityChemthrowerShot;
-import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.IESounds;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
@@ -508,7 +508,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 
 				for(int i = 0; i < split; i++)
 				{
-					Vec3d vecDir = v.addVector(FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter, FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter, FakePlayerUtil.getAnyFakePlayer().getRNG().nextGaussian()*scatter);
+					Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter);
 					EntityChemthrowerShot chem = new EntityChemthrowerShot(world, (float)pos.getX()+0.5f+(v.x/2f), (float)pos.getY()+0.5f+(v.y/2f), (float)pos.getZ()+0.5f+(v.z/2f), vecDir.x*0.5, vecDir.y*0.5, vecDir.z*0.5, fs);
 
 					// Apply momentum from the player.

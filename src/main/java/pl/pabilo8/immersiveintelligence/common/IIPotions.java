@@ -44,7 +44,11 @@ public class IIPotions
 		corrosion.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
 		infrared_vision = new IIPotion("infrared_vision", false, 0x7b0000, 0, false, 3, true, true);
+
 		iron_will = new IIPotion("iron_will", false, 0xe2c809, 0, false, 4, true, true);
+		iron_will.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.003921569f, 1);
+		iron_will.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), 0.007843138f, 2);
+
 		well_supplied = new IIPotion("well_supplied", false, 0xa49e66, 0, false, 5, true, true);
 		concealed = new IIPotion("concealed", false, 0x558858, 0, false, 6, true, true);
 		medical_treatment = new IIPotion("medical_treatment", false, 0xe13eb8, 0, false, 7, true, true)

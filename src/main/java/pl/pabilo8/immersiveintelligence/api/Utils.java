@@ -207,10 +207,14 @@ public class Utils
 
 
 	/**
-	 * @param offset Length
-	 * @param yaw    Yaw angle in radians
-	 * @param pitch  Pitch angle in radians
-	 * @return Transformed Position
+	 * @author Pabilo8
+	 * <p>
+	 *     Used to calculate 3D vector offset in a direction
+	 * </p>
+	 * @param offset (length) of the vector
+	 * @param yaw of the vector (in radians)
+	 * @param pitch of the vector (in radians)
+	 * @return direction transformed position
 	 */
 	public static Vec3d offsetPosDirection(float offset, double yaw, double pitch)
 	{

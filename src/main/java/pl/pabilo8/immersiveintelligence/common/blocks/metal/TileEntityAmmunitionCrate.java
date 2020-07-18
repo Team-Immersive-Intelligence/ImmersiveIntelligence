@@ -172,7 +172,7 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 			Utils.shuffleLootItems(list, listSlots.size(), rand);
 			for(ItemStack itemstack : list)
 			{
-				int slot = listSlots.remove(listSlots.size()-1).intValue();
+				int slot = listSlots.remove(listSlots.size()-1);
 				inventory.set(slot, itemstack);
 			}
 			this.markDirty();
@@ -192,11 +192,11 @@ public class TileEntityAmmunitionCrate extends TileEntityIEBase implements IIEIn
 		{
 			return stack.getItem() instanceof ItemBullet&&!(stack.isItemEqual(BulletHandler.emptyCasing)||stack.isItemEqual(BulletHandler.emptyShell));
 		}
-		if(slot >= 20&&slot < 29)
+		if(slot < 29)
 		{
 			return stack.getItem() instanceof ItemBullet&&(stack.isItemEqual(BulletHandler.emptyCasing))||stack.isItemEqual(BulletHandler.emptyShell)&&!stack.hasTagCompound();
 		}
-		if(slot >= 29&&slot < 37)
+		if(slot < 37)
 		{
 			return stack.getItem() instanceof ItemBullet&&!(stack.equals(BulletHandler.emptyCasing)||stack.equals(BulletHandler.emptyShell));
 		}

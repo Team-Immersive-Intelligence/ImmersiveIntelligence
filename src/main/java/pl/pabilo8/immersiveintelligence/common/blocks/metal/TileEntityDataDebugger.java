@@ -103,7 +103,7 @@ public class TileEntityDataDebugger extends TileEntityIEBase implements ITickabl
 		mode += 1;
 		if(mode > 2)
 			mode = 0;
-		ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(ImmersiveIntelligence.proxy.info_key+"debugger_mode", new TextComponentTranslation(ImmersiveIntelligence.proxy.info_key+"debugger_mode."+mode))), ((EntityPlayerMP)player));
+		ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(ImmersiveIntelligence.proxy.INFO_KEY+"debugger_mode", new TextComponentTranslation(ImmersiveIntelligence.proxy.INFO_KEY+"debugger_mode."+mode))), ((EntityPlayerMP)player));
 		return true;
 	}
 }

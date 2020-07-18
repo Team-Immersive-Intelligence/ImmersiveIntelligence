@@ -122,10 +122,10 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		ArrayList<String> tooltip = new ArrayList<String>();
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
-			tooltip.add(I18n.format(CommonProxy.description_key+"data_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"data_module"));
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+28&&my < guiTop+56)
-			tooltip.add(I18n.format(CommonProxy.description_key+"redstone_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"redstone_module"));
 
 		//Draw the punchcard progress bar
 		GlStateManager.pushMatrix();
@@ -170,7 +170,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 				if(canDelete)
 				{
-					tooltip.add(I18n.format(CommonProxy.description_key+"variable_remove_desc"));
+					tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_remove_desc"));
 					if(Mouse.isButtonDown(0)&&!wasDown)
 					{
 						onVariableRemoveButtonClick(c, true);
@@ -309,13 +309,13 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 				//'Set' Button
 				/*this.drawTexturedModalRect(drawx+93, drawy+5, hovered?32: 0, 242, 32, 12);
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+(isShiftKeyDown()?"variable_remove": "variable_set")), drawx+96, drawy+7, hovered?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+(isShiftKeyDown()?"variable_remove": "variable_set")), drawx+96, drawy+7, hovered?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
 				if(hovered)
 				{
 					if(!isShiftKeyDown())
 					{
 						onVariableEditButtonClick(c, true);
-						tooltip.add(I18n.format(CommonProxy.description_key+(isShiftKeyDown()?"variable_remove_desc": "variable_set_desc")));
+						tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(isShiftKeyDown()?"variable_remove_desc": "variable_set_desc")));
 					}
 					else
 					{
@@ -345,7 +345,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 		if(hovered)
 		{
-			tooltip.add(I18n.format(CommonProxy.description_key+"variable_add_desc"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_add_desc"));
 		}
 
 		//Check for button click

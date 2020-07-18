@@ -76,6 +76,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
@@ -100,10 +101,7 @@ import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponen
 import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentRDX;
 import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentTNT;
 import pl.pabilo8.immersiveintelligence.common.bullets.shrapnel.BulletComponentShrapnel;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
-import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
+import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
@@ -143,11 +141,13 @@ public class CommonProxy implements IGuiHandler
 	public static final List<Block> blocks = new ArrayList<>();
 	public static final List<Item> items = new ArrayList<>();
 
-	public static final String description_key = "desc."+ImmersiveIntelligence.MODID+".";
-	public static final String info_key = "info."+ImmersiveIntelligence.MODID+".";
-	public static final String data_key = "datasystem."+ImmersiveIntelligence.MODID+".";
-	public static final String rotary_key = "rotary."+ImmersiveIntelligence.MODID+".";
-	public static final String block_key = "tile."+ImmersiveIntelligence.MODID+".";
+	public static final String DESCRIPTION_KEY = "desc."+ImmersiveIntelligence.MODID+".";
+	public static final String INFO_KEY = "info."+ImmersiveIntelligence.MODID+".";
+	public static final String DATA_KEY = "datasystem."+ImmersiveIntelligence.MODID+".";
+	public static final String ROTARY_KEY = "rotary."+ImmersiveIntelligence.MODID+".";
+	public static final String BLOCK_KEY = "tile."+ImmersiveIntelligence.MODID+".";
+
+	public static final String SKIN_LOCATION = ImmersiveIntelligence.MODID+":textures/skins/";
 
 	public static final String TOOL_ADVANCED_HAMMER = "II_ADVANCED_HAMMER";
 	public static final String TOOL_WRENCH = "II_WRENCH";
@@ -290,18 +290,17 @@ public class CommonProxy implements IGuiHandler
 	public static Fluid fluid_hydrofluoric_acid = makeFluid("hydrofluoric_acid", 1500, 1500);
 	public static Fluid fluid_nitric_acid = makeFluid("nitric_acid", 1500, 1500, "rdx_fluids/");
 
-	public static Fluid fluid_ammonia, fluid_methanol;
-
 	public static Fluid fluid_brine = makeFluid("brine", 1000, 1500);
 	public static Fluid gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
 	public static Fluid gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
 	public static Fluid gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
 
-	static
-	{
-		fluid_ammonia = makeFluid("ammonia", 1500, 1000, "rdx_fluids/");
-		fluid_methanol = makeFluid("methanol", 1500, 1000, "rdx_fluids/");
-	}
+	public static Fluid fluid_ammonia = makeFluid("ammonia", 1500, 1000, "rdx_fluids/");
+	public static Fluid fluid_methanol = makeFluid("methanol", 1500, 1000, "rdx_fluids/");
+
+	public static final MachineUpgrade UPGRADE_INSERTER = createMachineUpgrade("inserter"); //for crates
+	public static final MachineUpgrade UPGRADE_FASTER_ENGINE = createMachineUpgrade("faster_engine"); //increases machine speed
+	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = createMachineUpgrade("saw_unregulator"); //more sawdust for cost of planks
 
 	public CommonProxy()
 	{
@@ -723,6 +722,8 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntitySmallCrate.class);
 		registerTile(TileEntityAlarmSiren.class);
 		registerTile(TileEntityProgrammableSpeaker.class);
+		registerTile(TileEntityMedicalCrate.class);
+		registerTile(TileEntityRepairCrate.class);
 
 		registerTile(TileEntityInserter.class);
 		registerTile(TileEntityAdvancedInserter.class);
@@ -826,6 +827,12 @@ public class CommonProxy implements IGuiHandler
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "skycrate_internal"),
 				EntitySkycrateInternal.class, "skycrate_internal", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "motorbike"),
+				EntityMotorbike.class, "motorbike", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "field_howitzer"),
+				EntityFieldHowitzer.class, "field_howitzer", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
 	}
 
 	public void postInit()
@@ -966,20 +973,19 @@ public class CommonProxy implements IGuiHandler
 			if(!pl.pabilo8.immersiveintelligence.api.Utils.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"requires_advanced_hammer")), (EntityPlayerMP)event.getEntityPlayer());
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"requires_advanced_hammer")), (EntityPlayerMP)event.getEntityPlayer());
 				event.setCanceled(true);
 			}
 		}
 	}
 
-
-	public void spawnGunfireFX(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	public void reloadModels()
 	{
 
 	}
 
-	public void reloadModels()
+	public static MachineUpgrade createMachineUpgrade(String name)
 	{
-
+		return new MachineUpgrade(new ResourceLocation(ImmersiveIntelligence.MODID, name), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name));
 	}
 }

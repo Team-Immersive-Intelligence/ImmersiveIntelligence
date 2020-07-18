@@ -126,7 +126,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 	{
 		if(stack.getItemDamage() < getSubNames().length)
 		{
-			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(I18n.format(ImmersiveIntelligence.proxy.description_key+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]), 200);
+			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(I18n.format(ImmersiveIntelligence.proxy.DESCRIPTION_KEY+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]), 200);
 			for(String s : flavour)
 				list.add(s);
 		}

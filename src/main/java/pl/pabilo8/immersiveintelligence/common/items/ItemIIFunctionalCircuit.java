@@ -32,10 +32,10 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(I18n.format(CommonProxy.description_key+"functional_circuit"));
+		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"functional_circuit"));
 		for(String s : getOperationsList(stack))
 		{
-			list.add("-"+I18n.format(CommonProxy.data_key+"function."+s));
+			list.add("-"+I18n.format(CommonProxy.DATA_KEY+"function."+s));
 		}
 	}
 

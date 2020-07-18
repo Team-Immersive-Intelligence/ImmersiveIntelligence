@@ -16,15 +16,16 @@ public class IIDamageSources
 
 	public static DamageSource causeBulletDamage(EntityBullet shot, Entity shooter)
 	{
+		// TODO: 08.07.2020 integrate damage sources with bullet components
 		if(shooter==null)
-			return new DamageSource("iiBullet");
-		return new IEDamageSource_Indirect("iiBullet", shot, shooter);
+			return new DamageSource("iiBullet").setProjectile();
+		return new IEDamageSource_Indirect("iiBullet", shot, shooter).setProjectile();
 	}
 
 	public static DamageSource causeShrapnelDamage(EntityShrapnel shot, Entity shooter)
 	{
 		if(shooter==null)
-			return new DamageSource("iiShrapnel");
-		return new IEDamageSource_Indirect("iiShrapnel", shot, shooter);
+			return new DamageSource("iiShrapnel").setProjectile();
+		return new IEDamageSource_Indirect("iiShrapnel", shot, shooter).setProjectile();
 	}
 }

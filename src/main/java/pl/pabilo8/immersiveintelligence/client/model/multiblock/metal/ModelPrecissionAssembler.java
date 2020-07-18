@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ModelPrecissionAssembler extends BaseBlockModel
 {
-	public ModelRendererTurbo[] lowerBox, drawer1Model, drawer2Model, doorLeftModel, doorRightModel;
+	public ModelRendererTurbo[] lowerBox, drawer1Model, drawer2Model, doorLeftModel, doorRightModel, schemeModel;
 
 	int textureX = 256;
 	int textureY = 256;
@@ -328,12 +328,20 @@ public class ModelPrecissionAssembler extends BaseBlockModel
 
 		doorRightModel[0].addBox(-9F, 0F, -9F, 18, 1, 8, 0F); // LowerBoxHatchBack
 
+		schemeModel = new ModelRendererTurbo[1];
+		schemeModel[0] = new ModelRendererTurbo(this, 128, 197, textureX, textureY); // Scheme
+
+		schemeModel[0].addShapeBox(-3F, 0F, 0F, 1, 10, 14, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F); // Scheme
+		schemeModel[0].setRotationPoint(12F, -16F, 33F);
+		schemeModel[0].rotateAngleZ = -1.30899694F;
+
 		parts.put("base", baseModel);
 		parts.put("lowerBox", lowerBox);
 		parts.put("drawer1", drawer1Model);
 		parts.put("drawer2", drawer2Model);
 		parts.put("doorLeft", doorLeftModel);
 		parts.put("doorRight", doorRightModel);
+		parts.put("scheme", schemeModel);
 
 		flipAll();
 	}

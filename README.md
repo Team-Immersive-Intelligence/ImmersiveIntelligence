@@ -1,6 +1,8 @@
 <p align="center"><img src="https://github.com/Pabilo8/ImmersiveIntelligence/blob/master/logos/logofullhq.png?raw=true"></p>
 
 [![](http://cf.way2muchnoise.eu/versions/immersive-intelligence.svg)](https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence) 
+[![Join Here!](https://img.shields.io/discord/610912351142674434?style=flat-square)](https://discord.gg/teMfm3R)
+[![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?style=flat-square&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)  
 
 **Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so **most of the planned features are not added**. There are four main categories of the mod's content: 
 
@@ -22,16 +24,16 @@ Short videos on Youtube:
 
  - [Artillery Howitzer Test](https://youtu.be/o3mt9exEfL0)
 
-The mod authors, the developers:
+The mod author, the developer:
 - [@Pabilo8](https://github.com/Pabilo8/) - Main Developer, author - the programmer, graphic artist and modeller 
   - [Curseforge](https://www.curseforge.com/members/pabilo8/), 
   - [Twitter](https://twitter.com/PablosferaGames), 
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
-- [@Choroman](https://github.com/Choroman) - Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
-  - [Curseforge](https://www.curseforge.com/members/choroman1/)
   
 Special thanks to:
-- [@Krystiano0306](https://github.com/Krystiano0306) - Newbie Modeller, helped at various model-related jobs
+- [@Choroman](https://github.com/Choroman) - Concept Artist, multiblock sketch and blueprint creator, general helper, modeller, currently retired
+  - [Curseforge](https://www.curseforge.com/members/choroman1/)
+- [@Krystiano0306](https://github.com/Krystiano0306) - Newbie Modeller, helped at various model-related jobs, currently retired
 - @Blacknight - Texture artist, created some textures for the mod's items
 - [@Kingcavespider1](https://github.com/kingcavespider1) - added a damage effect for the acid blocks
 - @Carver - A lot of great ideas for new content, *a lot*, also helped with sounds
@@ -43,3 +45,4 @@ Proudly powered by Turbo Model Thingy (TMT):
 Permission: ![Imgur](https://i.imgur.com/xd9rUrM.png)
 
 Please report any bugs you find in the 'issues' tab. Don't do that on Curseforge / DM however ^^.
+Feek free to join mod's discord

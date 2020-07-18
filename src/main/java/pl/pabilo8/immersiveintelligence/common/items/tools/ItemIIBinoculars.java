@@ -14,9 +14,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
@@ -34,6 +34,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -65,7 +66,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 		{
 			String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
 			list.add(I18n.format(Lib.DESC+"info.energyStored", stored));
-			list.add(I18n.format(CommonProxy.description_key+(ItemNBTHelper.getBoolean(stack, "enabled")?"infrared_enabled": "infrared_disabled"), stored));
+			list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(ItemNBTHelper.getBoolean(stack, "enabled")?"infrared_enabled": "infrared_disabled"), stored));
 		}
 	}
 
@@ -86,7 +87,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 					if(ItemNBTHelper.getBoolean(stack, "wasUsed"))
 					{
 						ItemNBTHelper.setBoolean(stack, "wasUsed", false);
-						((EntityLivingBase)entityIn).removePotionEffect(Potion.getPotionFromResourceLocation("minecraft:night_vision"));
+						((EntityLivingBase)entityIn).removePotionEffect(IIPotions.infrared_vision);
 					}
 				}
 			}
@@ -95,15 +96,15 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 				if(worldIn.getTotalWorldTime()%5==0&&entityIn.isSneaking()&&entityIn instanceof EntityPlayerMP)
 				{
 					float yaw = (360+((EntityLivingBase)entityIn).rotationYawHead)%360;
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"yaw", yaw)), (EntityPlayerMP)entityIn);
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"yaw", yaw)), (EntityPlayerMP)entityIn);
 				}
 
 				if(do_tick&&isEnabled(stack)&&isAdvanced(stack))
 				{
 					if(worldIn.getLightBrightness(entityIn.getPosition()) <= 0.5f)
-						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:night_vision"), 240, 1, true, false));
+						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(IIPotions.infrared_vision, 240, 1, true, false));
 					else
-						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("minecraft:blindness"), 240, 1, false, false));
+						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 240, 1, false, false));
 					ItemNBTHelper.setBoolean(stack, "wasUsed", true);
 
 					extractEnergy(stack, Tools.advanced_binoculars_energy_usage, false);

@@ -50,9 +50,9 @@ public class ItemIIRadioConfigurator extends ItemIIBase implements IItemScrollab
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(I18n.format(CommonProxy.description_key+"radio_configurator_"+(isBasic(stack)?"basic": "advanced")));
-		list.add(I18n.format(CommonProxy.description_key+"radio_configurator_max_frequency", isBasic(stack)?IIConfig.radioBasicMaxFrequency: IIConfig.radioAdvancedMaxFrequency));
-		list.add(I18n.format(CommonProxy.description_key+"radio_configurator_frequency", ItemNBTHelper.getInt(stack, "Frequency")));
+		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"radio_configurator_"+(isBasic(stack)?"basic": "advanced")));
+		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"radio_configurator_max_frequency", isBasic(stack)?IIConfig.radioBasicMaxFrequency: IIConfig.radioAdvancedMaxFrequency));
+		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"radio_configurator_frequency", ItemNBTHelper.getInt(stack, "Frequency")));
 	}
 
 	@Override
@@ -75,23 +75,23 @@ public class ItemIIRadioConfigurator extends ItemIIBase implements IItemScrollab
 				if(device.isBasicRadio()&&ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency") <= IIConfig.radioBasicMaxFrequency)
 				{
 					device.setFrequency(ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency"));
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"frequency_set", device.getFrequency())), (EntityPlayerMP)player);
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"frequency_set", device.getFrequency())), (EntityPlayerMP)player);
 					return EnumActionResult.SUCCESS;
 				}
 				else if(!device.isBasicRadio()&&ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency") <= IIConfig.radioAdvancedMaxFrequency)
 				{
 					device.setFrequency(ItemNBTHelper.getInt(player.getHeldItem(hand), "Frequency"));
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"frequency_set", device.getFrequency())), (EntityPlayerMP)player);
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"frequency_set", device.getFrequency())), (EntityPlayerMP)player);
 					return EnumActionResult.SUCCESS;
 				}
 				else
 				{
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"frequency_invalid", IIConfig.radioBasicMaxFrequency)), (EntityPlayerMP)player);
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"frequency_invalid", IIConfig.radioBasicMaxFrequency)), (EntityPlayerMP)player);
 				}
 			}
 			else
 			{
-				ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.info_key+"current_frequency", String.valueOf(device.getFrequency()))), (EntityPlayerMP)player);
+				ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"current_frequency", String.valueOf(device.getFrequency()))), (EntityPlayerMP)player);
 			}
 			ImmersiveEngineering.packetHandler.sendToAll(new MessageTileSync((TileEntityIEBase)worldIn.getTileEntity(pos), worldIn.getTileEntity(pos).serializeNBT()));
 		}
@@ -102,7 +102,7 @@ public class ItemIIRadioConfigurator extends ItemIIBase implements IItemScrollab
 	public void onScroll(ItemStack stack, boolean forward, EntityPlayerMP player)
 	{
 		ItemNBTHelper.setInt(stack, "Frequency", Math.min(Math.max(ItemNBTHelper.getInt(stack, "Frequency")+(forward?1: -1), 0), isBasic(stack)?IIConfig.radioBasicMaxFrequency: IIConfig.radioAdvancedMaxFrequency));
-		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(CommonProxy.description_key+"radio_configurator_frequency", ItemNBTHelper.getInt(stack, "Frequency")), 0, 20, 0);
+		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(CommonProxy.DESCRIPTION_KEY+"radio_configurator_frequency", ItemNBTHelper.getInt(stack, "Frequency")), 0, 20, 0);
 		player.connection.sendPacket(packet);
 	}
 }

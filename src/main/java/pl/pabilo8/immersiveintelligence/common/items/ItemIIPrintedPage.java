@@ -33,7 +33,7 @@ public class ItemIIPrintedPage extends ItemIIBase implements IGuiItem
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(CommonProxy.description_key+"printed_page."+getSubNames()[stack.getMetadata()]));
+		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"printed_page."+getSubNames()[stack.getMetadata()]));
 	}
 
 	public void setText(ItemStack stack, String text)

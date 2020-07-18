@@ -7,7 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 /**
  * @author Pabilo8
@@ -33,12 +32,13 @@ public class BulletRenderer extends Render<EntityBullet>
 
 		float size = 1;
 		if(!entity.stack.isEmpty())
-			size = ItemIIBullet.getCasing(entity.stack).getSize();
+			size = entity.getSize();
 
-		GlStateManager.translate(x+(size/2f), y+(size/2f), z+(size/2f));
-		GlStateManager.rotate(180.0F-entityYaw, 0.0F, 1.0F, 0.0F);
+		GlStateManager.translate(x, y+0.25, z);
+		GlStateManager.rotate(entityYaw, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(90+entity.rotationPitch, 1.0F, 0.0F, 0.0F);
-		GlStateManager.scale(-1.0F*size, -1.0F*size, 1.0F*size);
+
+		GlStateManager.scale(size, size, size);
 
 		if(entity.name!=null)
 			BulletRegistry.INSTANCE.registeredModels.get(entity.name).renderBullet(entity.colourCore, entity.colourPaint);

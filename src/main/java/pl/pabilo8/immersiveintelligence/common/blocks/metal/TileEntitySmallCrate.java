@@ -106,7 +106,7 @@ public class TileEntitySmallCrate extends TileEntityIEBase implements IIEInvento
 	@Nullable
 	public ITextComponent getDisplayName()
 	{
-		return name!=null?new TextComponentString(name): new TextComponentTranslation(ImmersiveIntelligence.proxy.block_key+"small_crate."+IIBlockTypes_SmallCrate.values()[getBlockMetadata()].getName()+".name");
+		return name!=null?new TextComponentString(name): new TextComponentTranslation(ImmersiveIntelligence.proxy.BLOCK_KEY+"small_crate."+IIBlockTypes_SmallCrate.values()[getBlockMetadata()].getName()+".name");
 	}
 
 	@Override

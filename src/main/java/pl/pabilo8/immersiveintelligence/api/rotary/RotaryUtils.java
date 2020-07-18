@@ -15,6 +15,7 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageObstructedConnection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -96,7 +97,7 @@ public class RotaryUtils
 
 				if(tileEntity instanceof TileEntityMechanicalConnectable)
 				{
-					player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.wrongBelt"), true);
+					player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.wrongBelt"), true);
 				}
 				else if(ItemNBTHelper.hasKey(stack, "linkingPos"))
 				{
@@ -113,13 +114,13 @@ public class RotaryUtils
 							pl.pabilo8.immersiveintelligence.api.Utils.unlockIIAdvancement(player, "main/secret_connect_wire");
 							ItemNBTHelper.remove(stack, "tries");
 						}
-						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.wrongCable"+tries), true);
+						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.wrongCable"+tries), true);
 					}
 					else if(pl.pabilo8.immersiveintelligence.api.Utils.hasUnlockedIIAdvancement(player, "main/secret_connect_wire"))
-						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.itsBoringGetALife"), true);
+						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.itsBoringGetALife"), true);
 					else
 					{
-						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.wrongCable"), true);
+						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.wrongCable"), true);
 						ItemNBTHelper.setInt(stack, "tries", 0);
 					}
 				}
@@ -148,11 +149,11 @@ public class RotaryUtils
 					int maxLengthSq = coil.getMaxLength(stack); //not squared yet
 					maxLengthSq *= maxLengthSq;
 					if(array[0]!=world.provider.getDimension())
-						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.wrongDimension"), true);
+						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.wrongDimension"), true);
 					else if(linkPos.equals(masterPos))
-						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.sameConnection"), true);
+						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.sameConnection"), true);
 					else if(distanceSq > maxLengthSq)
-						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.tooFar"), true);
+						player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.tooFar"), true);
 					else
 					{
 						TargetingInfo targetLink = TargetingInfo.readFromNBT(ItemNBTHelper.getTagCompound(stack, "targettingInfo"));
@@ -160,7 +161,7 @@ public class RotaryUtils
 								!((IImmersiveConnectable)tileEntityLinkingPos).canConnectCable(wire, targetLink, offsetLink)||
 								!((IImmersiveConnectable)tileEntityLinkingPos).getConnectionMaster(wire, targetLink).equals(linkPos)||
 								!coil.canConnectCable(stack, tileEntityLinkingPos))
-							player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.invalidPoint"), true);
+							player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.invalidPoint"), true);
 						else
 						{
 							IImmersiveConnectable nodeHere = (IImmersiveConnectable)tileEntity;
@@ -174,7 +175,7 @@ public class RotaryUtils
 										connectionExists = true;
 								}
 							if(connectionExists)
-								player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.connectionExists"), true);
+								player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.connectionExists"), true);
 							else
 							{
 								Set<BlockPos> ignore = new HashSet<>();
@@ -226,7 +227,7 @@ public class RotaryUtils
 								}
 								else
 								{
-									player.sendStatusMessage(new TextComponentTranslation(CommonProxy.rotary_key+"belt_system.cantSee"), true);
+									player.sendStatusMessage(new TextComponentTranslation(CommonProxy.ROTARY_KEY+"belt_system.cantSee"), true);
 									ImmersiveEngineering.packetHandler.sendToAllAround(new MessageObstructedConnection(tmpConn, failedReason, player.world),
 											new NetworkRegistry.TargetPoint(player.world.provider.getDimension(), player.posX, player.posY, player.posZ,
 													64));
@@ -328,6 +329,9 @@ public class RotaryUtils
 		IModelMotorBelt model = data.model;
 
 		GlStateManager.pushMatrix();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderHelper.enableStandardItemLighting();
+
 		GlStateManager.translate(data.offset.x, data.offset.y, data.offset.z);
 		ClientUtils.bindTexture(data.texture);
 
@@ -432,20 +436,20 @@ public class RotaryUtils
 
 			if(mx > xx&&mx < xx+iconSize&&my > yy&&my < yy+iconHeight)
 			{
-				tooltip.add(CommonProxy.rotary_key+"mechanical.speed");
+				tooltip.add(CommonProxy.ROTARY_KEY+"mechanical.speed");
 				return;
 			}
 			xx += spacing+(0.5*w);
 			if(mx > xx&&mx < xx+iconSize&&my > yy&&my < yy+iconHeight)
 			{
-				tooltip.add(CommonProxy.rotary_key+"mechanical.torque");
+				tooltip.add(CommonProxy.ROTARY_KEY+"mechanical.torque");
 				return;
 			}
 		}
 		if(mx >= x+spacing&&mx <= x+spacing+w&&my >= y+spacing&&my <= y+spacing+h)
-			tooltip.add(I18n.format(CommonProxy.rotary_key+"mechanical.speed")+": "+storage.getRotationSpeed()+" "+I18n.format(CommonProxy.rotary_key+"mechanical.speed_unit"));
+			tooltip.add(I18n.format(CommonProxy.ROTARY_KEY+"mechanical.speed")+": "+storage.getRotationSpeed()+" "+I18n.format(CommonProxy.ROTARY_KEY+"mechanical.speed_unit"));
 		if(mx >= x+w+(2*spacing)&&mx <= x+(2*w)+(2*spacing)&&my >= y+spacing&&my <= y+spacing+h)
-			tooltip.add(I18n.format(CommonProxy.rotary_key+"mechanical.torque")+": "+storage.getTorque()+" "+I18n.format(CommonProxy.rotary_key+"mechanical.torque_unit"));
+			tooltip.add(I18n.format(CommonProxy.ROTARY_KEY+"mechanical.torque")+": "+storage.getTorque()+" "+I18n.format(CommonProxy.ROTARY_KEY+"mechanical.torque_unit"));
 	}
 
 	public static void renderEnergyTooltip(ArrayList<String> tooltip, int mx, int my, int x, int y, RotaryStorage storage)

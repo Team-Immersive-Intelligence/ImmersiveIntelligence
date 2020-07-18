@@ -16,8 +16,10 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 /**
- * Created by Pabilo8 on 10-07-2019.
- * Edited by Kingcavespider1 on 07-05-2020
+ * @author Pabilo8
+ * @since 10-07-2019.
+ * @author Kingcavespider1
+ * @since 07-05-2020
  */
 public class BlockIIFluid extends BlockFluidClassic
 {

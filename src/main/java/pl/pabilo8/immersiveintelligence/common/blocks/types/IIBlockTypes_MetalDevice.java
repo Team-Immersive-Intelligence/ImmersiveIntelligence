@@ -14,7 +14,9 @@ public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase
 	REDSTONE_BUFFER,
 	DATA_DEBUGGER,
 	DATA_ROUTER,
-	DATA_MERGER;
+	DATA_MERGER,
+	MEDICAL_CRATE,
+	REPAIR_CRATE;
 
 	/**
 	 * @author Pabilo8

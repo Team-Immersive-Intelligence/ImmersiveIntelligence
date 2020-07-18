@@ -22,9 +22,7 @@ import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -52,6 +50,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -68,7 +67,6 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualDataAndElectronics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualIntelligence;
@@ -100,9 +98,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanica
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalWheel;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
-import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
+import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
@@ -110,8 +106,8 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIDrillHead.DrillHeadPerm;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemScrollableSwitch;
-import pl.pabilo8.immersiveintelligence.common.network.MessageMachinegunSync;
 import pl.pabilo8.immersiveintelligence.common.util.SkyCrateSound;
 
 import javax.annotation.Nonnull;
@@ -132,7 +128,24 @@ public class ClientProxy extends CommonProxy
 	public static final String CAT_LOGISTICS = "ii_logi";
 	public static final String CAT_INTELLIGENCE = "ii_intel";
 
+	IKeyConflictContext passenger_action = new IKeyConflictContext()
+	{
+		@Override
+		public boolean isActive()
+		{
+			return KeyConflictContext.IN_GAME.isActive();
+		}
+
+		@Override
+		public boolean conflicts(IKeyConflictContext other)
+		{
+			return other==KeyConflictContext.IN_GAME&&other!=this;
+		}
+	};
+
 	public static KeyBinding keybind_machinegunScope = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
+	public static KeyBinding keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
+	public static KeyBinding keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
 	public static MechanicalConnectorRenderer mech_con_renderer;
 	public NBTTagCompound storedGuiData = new NBTTagCompound();
 
@@ -315,6 +328,8 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShrapnel.class, ShrapnelRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityMachinegun.class, MachinegunRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityMotorbike.class, MotorbikeRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
 		//Thanks Blu!
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
 
@@ -409,8 +424,13 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(handler);
 		((IReloadableResourceManager)ClientUtils.mc().getResourceManager()).registerReloadListener(handler);
 
-		keybind_machinegunScope.setKeyConflictContext(KeyConflictContext.IN_GAME);
+		keybind_machinegunScope.setKeyConflictContext(passenger_action);
+		keybind_motorbikeEngine.setKeyConflictContext(passenger_action);
+		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
+
 		ClientRegistry.registerKeyBinding(keybind_machinegunScope);
+		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
+		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);
 
 		ShaderUtil.init();
 
@@ -649,15 +669,8 @@ public class ClientProxy extends CommonProxy
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setBoolean("clientMessage", true);
 			tag.setBoolean("shoot", event.isButtonstate());
-			IIPacketHandler.INSTANCE.sendToServer(new MessageMachinegunSync(ClientUtils.mc().player.getRidingEntity(), tag));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
 		}
-	}
-
-	@Override
-	public void spawnGunfireFX(World world, double x, double y, double z, double mx, double my, double mz, float size)
-	{
-		Particle particle = new ParticleGunfire(world, x, y, z, mx, my, mz, size);
-		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 	}
 
 	@Override

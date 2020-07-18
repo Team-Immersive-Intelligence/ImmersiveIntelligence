@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -30,8 +31,8 @@ public class PenetrationRegistry
 	//Materials second
 	public static HashMap<Predicate<Material>, IPenetrationHandler> registeredMaterials = new HashMap<>();
 
-	public static HashMap<DimensionBlockPos, Float> blockDamage = new HashMap<>();
-	public static HashMap<DimensionBlockPos, Float> blockDamageClient = new HashMap<>();
+	public static ConcurrentHashMap<DimensionBlockPos, Float> blockDamage = new ConcurrentHashMap<>();
+	public static ConcurrentHashMap<DimensionBlockPos, Float> blockDamageClient = new ConcurrentHashMap<>();
 
 	static
 	{

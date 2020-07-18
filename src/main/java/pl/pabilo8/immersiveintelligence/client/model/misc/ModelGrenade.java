@@ -24,14 +24,16 @@ public class ModelGrenade extends BaseBlockModel implements IBulletModel
 		baseModel = new ModelRendererTurbo[1];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 10, textureX, textureY); // Box 0
 
-		baseModel[0].addBox(0F, 0F, 0F, 2, 2, 12, 0F); // Box 0
-		baseModel[0].setRotationPoint(-6.5F, -1F, -4F);
+		baseModel[0].addBox(-1F, -1F, -12F, 2, 2, 12, 0F); // Box 0
+		baseModel[0].setRotationPoint(0F, 0F, 0F);
+		baseModel[0].rotateAngleX = -1.57079633F;
 
 		coreModel = new ModelRendererTurbo[1];
 		coreModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 1
 
-		coreModel[0].addShapeBox(0F, 0F, 0F, 4, 4, 6, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F); // Box 1
-		coreModel[0].setRotationPoint(-7.5F, -2F, -10F);
+		coreModel[0].addShapeBox(-2F, -2F, -18F, 4, 4, 6, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F); // Box 1
+		coreModel[0].setRotationPoint(0F, 0F, 0F);
+		coreModel[0].rotateAngleX = -1.57079633F;
 
 		parts.put("base", baseModel);
 		parts.put("core", coreModel);

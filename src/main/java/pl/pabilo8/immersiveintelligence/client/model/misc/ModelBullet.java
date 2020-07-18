@@ -36,48 +36,48 @@ public class ModelBullet extends BaseBlockModel implements IBulletModel
 		baseModel[8] = new ModelRendererTurbo(this, 12, 14, textureX, textureY); // Casing
 
 		baseModel[0].addShape3D(4F, -4F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 1, 0, 1), new Coord2D(1, 0, 1, 0), new Coord2D(1, 8, 1, 8), new Coord2D(0, 7, 0, 7)}), 12, 1, 8, 18, 12, ModelRendererTurbo.MR_FRONT, new float[]{6, 2, 8, 2}); // Casing
-		baseModel[0].setRotationPoint(8F, 0F, 8F);
+		baseModel[0].setRotationPoint(0F, 0F, 0F);
 		baseModel[0].rotateAngleX = -1.57079633F;
 
 		baseModel[1].addShape3D(4F, -4F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 1, 0, 1), new Coord2D(1, 0, 1, 0), new Coord2D(1, 8, 1, 8), new Coord2D(0, 7, 0, 7)}), 12, 1, 8, 18, 12, ModelRendererTurbo.MR_FRONT, new float[]{6, 2, 8, 2}); // Casing
-		baseModel[1].setRotationPoint(8F, 0F, 8F);
+		baseModel[1].setRotationPoint(0F, 0F, 0F);
 		baseModel[1].rotateAngleX = -1.57079633F;
-		baseModel[1].rotateAngleY = 3.14159265F;
+		baseModel[1].rotateAngleY = -3.14159265F;
 
 		baseModel[2].addBox(-3F, -12F, -4F, 6, 12, 1, 0F); // Casing
-		baseModel[2].setRotationPoint(8F, 0F, 8F);
+		baseModel[2].setRotationPoint(0F, 0F, 0F);
 
 		baseModel[3].addShapeBox(-3F, -13F, 3F, 6, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 1F, 0F, 0F, 1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Casing
-		baseModel[3].setRotationPoint(8F, 0F, 8F);
+		baseModel[3].setRotationPoint(0F, 0F, 0F);
 
 		baseModel[4].addShapeBox(-3F, -13F, 3F, 6, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 1F, 0F, 0F, 1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Casing
-		baseModel[4].setRotationPoint(8F, 0F, 8F);
-		baseModel[4].rotateAngleY = 3.14159265F;
+		baseModel[4].setRotationPoint(0F, 0F, 0F);
+		baseModel[4].rotateAngleY = -3.14159265F;
 
 		baseModel[5].addShapeBox(-3F, -13F, 3F, 6, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Casing
-		baseModel[5].setRotationPoint(8F, 0F, 8F);
-		baseModel[5].rotateAngleY = 1.57079633F;
+		baseModel[5].setRotationPoint(0F, 0F, 0F);
+		baseModel[5].rotateAngleY = -1.57079633F;
 
 		baseModel[6].addShapeBox(-3F, -13F, 3F, 6, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Casing
-		baseModel[6].setRotationPoint(8F, 0F, 8F);
-		baseModel[6].rotateAngleY = -1.57079633F;
+		baseModel[6].setRotationPoint(0F, 0F, 0F);
+		baseModel[6].rotateAngleY = 1.57079633F;
 
 		baseModel[7].addBox(-3F, -12F, 3F, 6, 12, 1, 0F); // Casing
-		baseModel[7].setRotationPoint(8F, 0F, 8F);
+		baseModel[7].setRotationPoint(0F, 0F, 0F);
 
 		baseModel[8].addBox(-3F, -2F, -3F, 6, 1, 6, 0F); // Casing
-		baseModel[8].setRotationPoint(8F, 0F, 8F);
+		baseModel[8].setRotationPoint(0F, 0F, 0F);
+
 
 		coreModel = new ModelRendererTurbo[2];
-
 		coreModel[0] = new ModelRendererTurbo(this, 15, 23, textureX, textureY); // Core
 		coreModel[1] = new ModelRendererTurbo(this, 39, 20, textureX, textureY); // Core
 
-		coreModel[0].addFlexTrapezoid(-3F, -16F, -3F, 6, 3, 6, 0F, -2.00F, -2.00F, -2.00F, -2.00F, 0f, 0f, ModelRendererTurbo.MR_TOP); // Core
-		coreModel[0].setRotationPoint(8F, 0F, 8F);
+		coreModel[0].addFlexTrapezoid(-3F, -16F, -3F, 6, 3, 6, 0F, -2.00F, -2.00F, -2.00F, -2.00F, -2.00F, -2.00F, ModelRendererTurbo.MR_TOP); // Core
+		coreModel[0].setRotationPoint(0F, 0F, 0F);
 
 		coreModel[1].addBox(-3F, -12F, -3F, 6, 6, 6, 0F); // Core
-		coreModel[1].setRotationPoint(8F, 0F, 8F);
+		coreModel[1].setRotationPoint(0F, 0F, 0F);
 
 		coreModel[0].mirror = true;
 		coreModel[0].flip = true;

@@ -48,6 +48,7 @@ public class ImmersiveIntelligence
 		proxy.init();
 
 		IISounds.init();
+		new CustomSkinHandler.ThreadContributorSpecialsDownloader();
 	}
 
 	@EventHandler

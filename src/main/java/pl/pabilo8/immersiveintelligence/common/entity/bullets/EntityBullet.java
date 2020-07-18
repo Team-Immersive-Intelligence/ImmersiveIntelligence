@@ -69,14 +69,13 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		this.stack = stack.copy();
 		setPosition(x, y, z);
 		setParams();
-		ItemIIBullet.getCasing(stack).doPuff(this);
 		setEntityInvulnerable(false);
 	}
 
 
 	public float getSize()
 	{
-		return size;
+		return size = ItemIIBullet.getCasing(this.stack).getSize();
 	}
 
 	public void setFuse(int fuse)
@@ -162,7 +161,7 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		if(mop==null||mop.entityHit==null)
 		{
 			Entity entity = null;
-			List list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1), e -> e.canBeCollidedWith());
+			List list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1), Entity::canBeCollidedWith);
 			double d0 = 0.0D;
 			for(int i = 0; i < list.size(); ++i)
 			{
@@ -214,7 +213,8 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 		motionY *= drag;
 		motionZ *= drag;
 		//The higher the velocity, the lower the penetration loss
-		penetrationPower *= drag;
+		//Penetrating up is harder than down
+		penetrationPower *= 0.95*(motionY > 0?-1: 1);
 		motionY -= gravity_part*this.mass;
 
 		if(colourTrail!=-1)
@@ -321,6 +321,9 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			this.name = ByteBufUtils.readUTF8String(data);
 			colourCore = data.readInt();
 			colourPaint = data.readInt();
+
+			if(world.isRemote)
+				ItemIIBullet.getCasing(stack).doPuff(this);
 		} catch(Exception e)
 		{
 			super.setDead();

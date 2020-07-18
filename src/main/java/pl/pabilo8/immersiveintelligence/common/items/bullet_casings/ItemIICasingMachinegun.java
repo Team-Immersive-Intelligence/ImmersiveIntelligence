@@ -1,9 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.items.bullet_casings;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
+import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -90,8 +89,10 @@ public class ItemIICasingMachinegun extends ItemIIBase implements IBulletCasingT
 	@Override
 	public void doPuff(EntityBullet bullet)
 	{
-		ImmersiveIntelligence.proxy.spawnGunfireFX(bullet.world, bullet.posX, bullet.posY, bullet.posZ, bullet.motionX/2f, bullet.motionY/2f, bullet.motionZ/2f, 2.5f);
-		ImmersiveEngineering.proxy.spawnRedstoneFX(bullet.world, bullet.posX, bullet.posY, bullet.posZ, 0, 0, 0, 1.5f, 0.75f, 0.75f, 0.75f);
+		// TODO: 17.07.2020 better effects
+		for(int i = 1; i < 5; i++)
+			ParticleUtils.spawnGunfireFX(bullet.posX, bullet.posY, bullet.posZ, bullet.motionX/i, bullet.motionY/i, bullet.motionZ/i, 8*bullet.getSize()*(i/2.5f));
+		//ImmersiveEngineering.proxy.spawnRedstoneFX(bullet.world, bullet.posX, bullet.posY, bullet.posZ, 0, 0, 0, 1.5f, 0.75f, 0.75f, 0.75f);
 	}
 
 	@Override

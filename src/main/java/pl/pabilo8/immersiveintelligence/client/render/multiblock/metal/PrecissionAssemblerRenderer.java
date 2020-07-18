@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.client.render.TileRenderAutoWorkbench;
+import blusunrize.immersiveengineering.client.render.TileRenderAutoWorkbench.BlueprintLines;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -14,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPreci
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
 
 /**
@@ -29,7 +32,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 	public static ModelPrecissionSolderer modelSolderer = new ModelPrecissionSolderer();
 	public static ModelPrecissionWelder modelWelder = new ModelPrecissionWelder();
 	public static ModelPrecissionHammer modelHammer = new ModelPrecissionHammer();
-	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	private static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPrecissionAssembler model;
 	private static ModelPrecissionAssembler modelFlipped;
 	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";
@@ -54,7 +57,6 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			//A bit of trick here, because it's pointless to rewrite the whole code just because only one part is mirrored :v
 			GlStateManager.pushMatrix();
 			ModelPrecissionAssembler currentModel = te.mirrored?modelFlipped: model;
-			float flipMod = te.mirrored?-1: 1;
 			currentModel.getBlockRotation(te.facing, te.mirrored);
 			currentModel.render();
 
@@ -109,9 +111,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.pushMatrix();
 
 
-			boolean action_drawn = false;
 			int time = 20;
-			int maxtime = te.processTimeMax-(2*PrecissionAssembler.hatchTime);
 			float max_progress = 1f;
 			float time_between = 0f;
 			int moved_tool = -1;
@@ -187,18 +187,14 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 					{
 						if(time_between==0.5f)
 						{
-							switch(action[2])
+							if("main".equals(action[2]))
 							{
-								case "main":
-								{
-									if(moved_tool==0)
-										te.stackPicked1 = ItemStack.EMPTY;
-									else if(moved_tool==1)
-										te.stackPicked2 = ItemStack.EMPTY;
-									else if(moved_tool==2)
-										te.stackPicked3 = ItemStack.EMPTY;
-								}
-								break;
+								if(moved_tool==0)
+									te.stackPicked1 = ItemStack.EMPTY;
+								else if(moved_tool==1)
+									te.stackPicked2 = ItemStack.EMPTY;
+								else if(moved_tool==2)
+									te.stackPicked3 = ItemStack.EMPTY;
 								//NOP I DON"T WANT TO DO THAT
 							}
 						}
@@ -224,7 +220,6 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 							break;
 					}
 
-					action_drawn = true;
 				}
 			}
 
@@ -300,25 +295,31 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.popMatrix();
 
 			//TODO:Scheme rendering
-			/*Maybe someday
-			if (!te.inventory.get(3).isEmpty())
+
+			if(!te.inventory.get(3).isEmpty())
 			{
-				ItemStack drawStack = ImmersiveIntelligence.proxy.item_assembly_scheme.getProducedStack(te.inventory.get(3));
+				for(ModelRendererTurbo model : model.schemeModel)
+					model.render(0.0625f);
+				ItemStack drawStack = CommonProxy.item_assembly_scheme.getProducedStack(te.inventory.get(3));
 
 				double playerDistanceSq = ClientUtils.mc().player.getDistanceSq(te.getPos());
 				float lineWidth = playerDistanceSq < 25?1: playerDistanceSq < 40?.5f: .1f;
+				GlStateManager.color(0.65f, 0.65f, 0.65f);
 
-
+				GlStateManager.translate(0, 1, -2.25);
+				GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.rotate(75, 1, 0, 0);
+				GlStateManager.translate(0, 0.15625, 0.0625/2f);
 				BlueprintLines blueprint = TileRenderAutoWorkbench.getBlueprintDrawable(drawStack, te.getWorld());
-				if(blueprint!=null && playerDistanceSq < 120)
+				if(blueprint!=null&&playerDistanceSq < 120)
 				{
-					GlStateManager.translate(dX, dY/scale, 0);
+					GlStateManager.translate(0, 0, 0);
 
 					//Width depends on distance
 					GlStateManager.disableCull();
 					GlStateManager.disableTexture2D();
 					GlStateManager.enableBlend();
-					float texScale = blueprint.textureScale/16f;
+					float texScale = 32f;
 					GlStateManager.scale(1/texScale, 1/texScale, 1/texScale);
 					GlStateManager.color(1, 1, 1, 1);
 					blueprint.draw(lineWidth);
@@ -326,10 +327,9 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 					GlStateManager.enableAlpha();
 					GlStateManager.enableTexture2D();
 					GlStateManager.enableCull();
-					GlStateManager.translate(-dX, -dY/scale, 0);
-					i++;
+					GlStateManager.translate(-1, 1, 0);
 				}
-			}*/
+			}
 
 			GlStateManager.popMatrix();
 
@@ -353,7 +353,6 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

@@ -90,7 +90,7 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		if(flagIn.isAdvanced())
 		{
-			tooltip.add(I18n.format(CommonProxy.info_key+"gear_durability", getGearMaxDurability(stack)-getGearDurability(stack), getGearMaxDurability(stack)));
+			tooltip.add(I18n.format(CommonProxy.INFO_KEY+"gear_durability", getGearMaxDurability(stack)-getGearDurability(stack), getGearMaxDurability(stack)));
 		}
 	}
 

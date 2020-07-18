@@ -129,7 +129,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		if(!handler.getStackInSlot(3).isEmpty())
 			this.buttonList.add(new GuiButtonItemAdvanced(4, guiLeft-28, guiTop+100, 28, 24, texture_storage, 176, 24, handler.getStackInSlot(3), 6, 2).setHoverOffset(28, 0));
 
-		this.buttonList.add(new GuiButtonIE(5, guiLeft+96, guiTop+121, 64, 12, I18n.format(CommonProxy.description_key+"variable_apply"), texture_edit, 0, 222).setHoverOffset(64, 0));
+		this.buttonList.add(new GuiButtonIE(5, guiLeft+96, guiTop+121, 64, 12, I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_apply"), texture_edit, 0, 222).setHoverOffset(64, 0));
 
 		//Type Change Buttons
 		this.buttonList.add(new GuiButtonIE(6, guiLeft+10, guiTop+52, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
@@ -151,11 +151,11 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		if(editingPage==0)
 		{
 
-			this.buttonList.add(new GuiButtonIE(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+48, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
-			this.buttonList.add(new GuiButtonIE(12, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+54, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
+			this.buttonList.add(new GuiButtonIE(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"operation")), guiTop+48, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
+			this.buttonList.add(new GuiButtonIE(12, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"operation")), guiTop+54, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
 
-			this.buttonList.add(new GuiButtonIE(13, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"conditional_variable")), guiTop+64, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
-			this.buttonList.add(new GuiButtonIE(14, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"conditional_variable")), guiTop+70, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
+			this.buttonList.add(new GuiButtonIE(13, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"conditional_variable")), guiTop+64, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
+			this.buttonList.add(new GuiButtonIE(14, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"conditional_variable")), guiTop+70, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
 
 		}
 		else
@@ -170,8 +170,8 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				case "boolean":
 				{
 					editedstate = ((DataPacketTypeBoolean)currentlyEditeddataType).value;
-					this.buttonList.add(new GuiButtonState(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.data_key+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
-					this.buttonList.add(new GuiButtonState(12, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.data_key+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
+					this.buttonList.add(new GuiButtonState(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
+					this.buttonList.add(new GuiButtonState(12, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
 					GuiButtonState b1 = ((GuiButtonState)buttonList.get(11));
 					GuiButtonState b2 = ((GuiButtonState)buttonList.get(12));
 
@@ -181,7 +181,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				break;
 				case "integer":
 				{
-					this.valueEdit = new GuiTextField(11, this.fontRenderer, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 121-fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), 20);
+					this.valueEdit = new GuiTextField(11, this.fontRenderer, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 121-fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), 20);
 					this.valueEdit.setFocused(true);
 					this.valueEdit.setText(currentlyEditeddataType.valueToString());
 				}
@@ -196,8 +196,8 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				break;
 				case "accessor":
 				{
-					this.buttonList.add(new GuiButtonIE(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+48, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
-					this.buttonList.add(new GuiButtonIE(12, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+54, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
+					this.buttonList.add(new GuiButtonIE(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"operation")), guiTop+48, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
+					this.buttonList.add(new GuiButtonIE(12, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"operation")), guiTop+54, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
 				}
 				break;
 			}
@@ -365,7 +365,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		ArrayList<String> tooltip = new ArrayList<String>();
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
-			tooltip.add(I18n.format(CommonProxy.description_key+"storage_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"storage_module"));
 
 		if(!handler.getStackInSlot(0).isEmpty()&&mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+28&&my < guiTop+52)
 			tooltip.add(handler.getStackInSlot(0).getDisplayName());
@@ -398,13 +398,13 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		this.fontRenderer.drawString(String.valueOf(expressionToEdit), guiLeft+11, guiTop+64, Lib.COLOUR_I_ImmersiveOrange, true);
 
 		//Type:
-		this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_type"), guiLeft+62, guiTop+19, 0x0a0a0a, false);
+		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_type"), guiLeft+62, guiTop+19, 0x0a0a0a, false);
 
 		//Variable type
-		this.fontRenderer.drawString(" "+I18n.format(CommonProxy.data_key+"datatype."+currentlyEditeddataType.getName()), guiLeft+62+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_type")), guiTop+19, currentlyEditeddataType.getTypeColour(), true);
+		this.fontRenderer.drawString(" "+I18n.format(CommonProxy.DATA_KEY+"datatype."+currentlyEditeddataType.getName()), guiLeft+62+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_type")), guiTop+19, currentlyEditeddataType.getTypeColour(), true);
 
 		//Title
-		this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_properties"), guiLeft+100-(fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_properties"))/2), guiTop+33, 0x0a0a0a, false);
+		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_properties"), guiLeft+100-(fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_properties"))/2), guiTop+33, 0x0a0a0a, false);
 
 		//Type Dependant
 		switch(currentlyEditeddataType.getName())
@@ -416,29 +416,29 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			break;
 			case "boolean":
 			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
 			}
 			break;
 			case "integer":
 			case "string":
 			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
 				this.valueEdit.drawTextBox();
 			}
 			break;
 			case "expression":
 			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"operation"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"conditional_variable"), guiLeft+40, guiTop+62, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"operation"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"conditional_variable"), guiLeft+40, guiTop+62, 0x0a0a0a, false);
 
-				this.fontRenderer.drawString(I18n.format(CommonProxy.data_key+"function."+((DataPacketTypeExpression)currentlyEditeddataType).getOperation().name), guiLeft+52+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"operation")), guiTop+50, Lib.COLOUR_I_ImmersiveOrange, false);
-				this.fontRenderer.drawString(expressionAllowed==' '?I18n.format(CommonProxy.description_key+"no_variable"): String.valueOf(expressionAllowed), guiLeft+52+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"conditional_variable")), guiTop+62, Lib.COLOUR_I_ImmersiveOrange, true);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DATA_KEY+"function."+((DataPacketTypeExpression)currentlyEditeddataType).getOperation().name), guiLeft+52+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"operation")), guiTop+50, Lib.COLOUR_I_ImmersiveOrange, false);
+				this.fontRenderer.drawString(expressionAllowed==' '?I18n.format(CommonProxy.DESCRIPTION_KEY+"no_variable"): String.valueOf(expressionAllowed), guiLeft+52+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"conditional_variable")), guiTop+62, Lib.COLOUR_I_ImmersiveOrange, true);
 			}
 			break;
 			case "accessor":
 			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
-				this.fontRenderer.drawString(currentlyEditeddataType.valueToString(), guiLeft+50+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable")), guiTop+50, Lib.COLOUR_I_ImmersiveOrange, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(currentlyEditeddataType.valueToString(), guiLeft+50+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable")), guiTop+50, Lib.COLOUR_I_ImmersiveOrange, false);
 			}
 			break;
 		}

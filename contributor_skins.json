@@ -1,83 +1,176 @@
-{
-  "anno_1880": {
+[
+  {
+    "name": "anno_1880",
     "uuid": [
       "f34afdfb-996b-4020-b8a2-b740e2937b29",
-      "07c11943-628b-4671-a331-84899d08e538"
+      "07c11943-628b-4671-a331-84899d08e538",
+      "22153f9b-4950-4028-911a-7d39a2c80101"
     ],
-    "appliesTo": [
-      "howitzer"
-    ],
-    "howitzerMods": []
-  },
-  "royal": {
-    "uuid": [],
     "appliesTo": [
       "machinegun",
       "howitzer"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble",
+      "rarity=Masterwork"
+    ]
   },
-  "old_glory": {
-    "uuid": [],
+  {
+    "name": "royal",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
+    "appliesTo": [
+      "machinegun",
+      "howitzer"
+    ],
+    "mods": [
+      "rarity=Epic"
+    ]
+  },
+  {
+    "name": "old_glory",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
     "appliesTo": [
       "howitzer",
       "machinegun"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble"
+    ]
   },
-  "vaterland": {
-    "uuid": [],
+  {
+    "name": "vaterland",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
     "appliesTo": [
       "howitzer",
       "machinegun"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble",
+      "skin_mg_text",
+      "text_color=ffffff"
+    ]
   },
-  "pershing": {
-    "uuid": [],
+  {
+    "name": "pershing",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
     "appliesTo": [
       "howitzer",
       "machinegun"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble",
+      "skin_mg_text",
+      "text_color=ffffff"
+    ]
   },
-  "zvezda": {
-    "uuid": [],
+  {
+    "name": "zvezda",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
     "appliesTo": [
       "howitzer",
       "machinegun"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble",
+      "skin_mg_text",
+      "text_color=ffffff"
+    ]
   },
-  "stormwind": {
-    "uuid": [],
+  {
+    "name": "stormwind",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
     "appliesTo": [
       "howitzer",
       "machinegun"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble",
+      "rarity=Rare"
+    ]
   },
-  "flakmeister": {
-    "uuid": [],
+  {
+    "name": "flakmeister",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
     "appliesTo": [
       "howitzer"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble",
+      "rarity=Rare"
+    ]
   },
-  "eisenheim": {
-    "uuid": [],
+  {
+    "name": "eisenheim",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
     "appliesTo": [
       "howitzer",
       "machinegun"
     ],
-    "howitzerMods": [],
-    "machinegunMods": []
+    "mods": [
+      "skin_bauble",
+      "skin_mg_text",
+      "skin_howitzer_text",
+      "text_color=ce953c",
+      "rarity=Epic"
+    ]
+  },
+  {
+    "name": "vanguard",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101",
+      "ddfe79a5-7453-49f6-98e1-b0689fc8e692",
+      "e5a193c4-3e5b-4b6e-87af-3a9f561a48ce"
+    ],
+    "names": [
+      "#0 Pabilo8",
+      "#1 Tyon2006",
+      "#2 Cearvec"
+    ],
+    "appliesTo": [
+      "machinegun"
+    ],
+    "mods": [
+      "rarity=Epic"
+    ]
+  },
+  {
+    "name": "magnate",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
+    "appliesTo": [
+      "machinegun"
+    ],
+    "mods": []
+  },
+  {
+    "name": "investor",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
+    "appliesTo": [
+      "howitzer",
+      "machinegun"
+    ],
+    "mods": [
+      "skin_bauble",
+      "rarity=Masterwork"
+    ]
   }
-}
+]

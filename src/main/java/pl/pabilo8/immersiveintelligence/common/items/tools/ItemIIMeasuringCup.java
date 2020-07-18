@@ -50,7 +50,7 @@ public class ItemIIMeasuringCup extends ItemIIBase implements ITool, IAdvancedFl
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(I18n.format(CommonProxy.description_key+"measuring_cup_size", getCapacity(stack, Tools.measuring_cup_capacity), Tools.measuring_cup_capacity));
+		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"measuring_cup_size", getCapacity(stack, Tools.measuring_cup_capacity), Tools.measuring_cup_capacity));
 		FluidStack fs = FluidUtil.getFluidContained(stack);
 		if(fs!=null)
 		{
@@ -126,12 +126,12 @@ public class ItemIIMeasuringCup extends ItemIIBase implements ITool, IAdvancedFl
 		if(fs==null)
 		{
 			ItemNBTHelper.setInt(stack, "maxCap", Math.min(Math.max(ItemNBTHelper.getInt(stack, "maxCap")+(forward?10: -10), 10), Tools.measuring_cup_capacity));
-			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(CommonProxy.description_key+"measuring_cup_size", ItemNBTHelper.getInt(stack, "maxCap"), Tools.measuring_cup_capacity), 0, 20, 0);
+			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(CommonProxy.DESCRIPTION_KEY+"measuring_cup_size", ItemNBTHelper.getInt(stack, "maxCap"), Tools.measuring_cup_capacity), 0, 20, 0);
 			player.connection.sendPacket(packet);
 		}
 		else
 		{
-			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(CommonProxy.description_key+"measuring_cup_cant_resize"), 0, 20, 0);
+			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(CommonProxy.DESCRIPTION_KEY+"measuring_cup_cant_resize"), 0, 20, 0);
 			player.connection.sendPacket(packet);
 		}
 	}

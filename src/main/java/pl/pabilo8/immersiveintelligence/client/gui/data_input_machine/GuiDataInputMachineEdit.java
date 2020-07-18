@@ -98,7 +98,7 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 		this.buttonList.add(new GuiButtonIE(0, guiLeft-28, guiTop+4, 28, 24, "", texture_storage, 176, 0).setHoverOffset(28, 0));
 		this.buttonList.add(new GuiButtonIE(1, guiLeft-28, guiTop+28, 28, 24, "", texture_storage, 204, 24));
 
-		this.buttonList.add(new GuiButtonIE(2, guiLeft+96, guiTop+121, 64, 12, I18n.format(CommonProxy.description_key+"variable_apply"), texture_edit, 0, 222).setHoverOffset(64, 0));
+		this.buttonList.add(new GuiButtonIE(2, guiLeft+96, guiTop+121, 64, 12, I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_apply"), texture_edit, 0, 222).setHoverOffset(64, 0));
 
 		//Type Change Buttons
 		this.buttonList.add(new GuiButtonIE(3, guiLeft+52, guiTop+15, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
@@ -116,8 +116,8 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 			case "boolean":
 			{
 				editedstate = ((DataPacketTypeBoolean)dataType).value;
-				this.buttonList.add(new GuiButtonState(5, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.data_key+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
-				this.buttonList.add(new GuiButtonState(6, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.data_key+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
+				this.buttonList.add(new GuiButtonState(5, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
+				this.buttonList.add(new GuiButtonState(6, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
 				GuiButtonState b1 = ((GuiButtonState)buttonList.get(5));
 				GuiButtonState b2 = ((GuiButtonState)buttonList.get(6));
 
@@ -127,7 +127,7 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 			break;
 			case "integer":
 			{
-				this.valueEdit = new GuiTextField(5, this.fontRenderer, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), guiTop+48, 121-fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_value")), 20);
+				this.valueEdit = new GuiTextField(5, this.fontRenderer, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 121-fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), 20);
 				this.valueEdit.setFocused(true);
 				this.valueEdit.setText(dataType.valueToString());
 			}
@@ -273,10 +273,10 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 		ArrayList<String> tooltip = new ArrayList<String>();
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
-			tooltip.add(I18n.format(CommonProxy.description_key+"storage_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"storage_module"));
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+28&&my < guiTop+56)
-			tooltip.add(I18n.format(CommonProxy.description_key+"variables_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"variables_module"));
 
 		//Draw the punchcard progress bar
 		GlStateManager.pushMatrix();
@@ -308,13 +308,13 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 		this.fontRenderer.drawString(String.valueOf(variableToEdit), guiLeft+38, guiTop+19, Lib.COLOUR_I_ImmersiveOrange, true);
 
 		//Type:
-		this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_type"), guiLeft+62, guiTop+19, 0x0a0a0a, false);
+		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_type"), guiLeft+62, guiTop+19, 0x0a0a0a, false);
 
 		//Variable type
-		this.fontRenderer.drawString(" "+I18n.format(CommonProxy.data_key+"datatype."+dataType.getName()), guiLeft+62+fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_type")), guiTop+19, dataType.getTypeColour(), true);
+		this.fontRenderer.drawString(" "+I18n.format(CommonProxy.DATA_KEY+"datatype."+dataType.getName()), guiLeft+62+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_type")), guiTop+19, dataType.getTypeColour(), true);
 
 		//Title
-		this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_properties"), guiLeft+100-(fontRenderer.getStringWidth(I18n.format(CommonProxy.description_key+"variable_properties"))/2), guiTop+36, 0x0a0a0a, false);
+		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_properties"), guiLeft+100-(fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_properties"))/2), guiTop+36, 0x0a0a0a, false);
 
 		//Type Dependant
 		switch(dataType.getName())
@@ -326,13 +326,13 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 			break;
 			case "boolean":
 			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
 			}
 			break;
 			case "integer":
 			case "string":
 			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
 				this.valueEdit.drawTextBox();
 			}
 			break;

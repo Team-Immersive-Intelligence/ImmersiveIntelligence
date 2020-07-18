@@ -97,6 +97,14 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 			{
 				return new TileEntityDataRouter();
 			}
+			case MEDICAL_CRATE:
+			{
+				return new TileEntityMedicalCrate();
+			}
+			case REPAIR_CRATE:
+			{
+				return new TileEntityRepairCrate();
+			}
 		}
 		return null;
 	}

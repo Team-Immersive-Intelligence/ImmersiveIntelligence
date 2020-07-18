@@ -229,27 +229,27 @@ public class ItemIIBullet extends ItemIIBase implements ITextureOverride
 
 			if(getCore(stack)!=null)
 			{
-				core_name = I18n.format(CommonProxy.description_key+"bullet_type."+getCore(stack).getRole().getName());
-				tooltip.add(I18n.format(CommonProxy.description_key+"bullets.core", I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+getCore(stack).getName()+".name")));
+				core_name = I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+getCore(stack).getRole().getName());
+				tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.core", I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+getCore(stack).getName()+".name")));
 			}
 			if(getFirstComponent(stack)!=null)
 			{
-				comp1_name = I18n.format(CommonProxy.description_key+"bullet_type."+getFirstComponent(stack).getRole().getName());
+				comp1_name = I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+getFirstComponent(stack).getRole().getName());
 			}
 			if(getSecondComponent(stack)!=null)
 			{
-				comp2_name = I18n.format(CommonProxy.description_key+"bullet_type."+getSecondComponent(stack).getRole().getName());
+				comp2_name = I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+getSecondComponent(stack).getRole().getName());
 			}
 
 			tooltip.add(core_name+(!comp1_name.isEmpty()&&!comp1_name.equals(core_name)?" - "+comp1_name: "")+(!comp2_name.isEmpty()&&!comp2_name.equals(core_name)&&!comp2_name.equals(comp1_name)?" - "+comp2_name: ""));
 
-			tooltip.add(I18n.format(CommonProxy.description_key+"bullets.mass", getMass(stack)));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
 
 		}
 
 		if(getCasing(stack)!=null)
 		{
-			tooltip.add(I18n.format(CommonProxy.description_key+"bullets.caliber", getCasing(stack).getSize()*16f));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", getCasing(stack).getSize()*16f));
 		}
 	}
 

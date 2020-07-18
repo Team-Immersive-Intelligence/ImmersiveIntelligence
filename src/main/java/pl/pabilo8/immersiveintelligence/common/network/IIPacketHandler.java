@@ -25,8 +25,8 @@ public class IIPacketHandler
 		INSTANCE.registerMessage(MessageBooleanAnimatedPartsSync.HandlerClient.class, MessageBooleanAnimatedPartsSync.class, 2, Side.CLIENT);
 		INSTANCE.registerMessage(MessageBooleanAnimatedPartsSync.HandlerServer.class, MessageBooleanAnimatedPartsSync.class, 3, Side.SERVER);
 		INSTANCE.registerMessage(MessageGuiNBT.HandlerServer.class, MessageGuiNBT.class, 4, Side.SERVER);
-		INSTANCE.registerMessage(MessageMachinegunSync.HandlerClient.class, MessageMachinegunSync.class, 5, Side.CLIENT);
-		INSTANCE.registerMessage(MessageMachinegunSync.HandlerServer.class, MessageMachinegunSync.class, 6, Side.SERVER);
+		INSTANCE.registerMessage(MessageEntityNBTSync.HandlerClient.class, MessageEntityNBTSync.class, 5, Side.CLIENT);
+		INSTANCE.registerMessage(MessageEntityNBTSync.HandlerServer.class, MessageEntityNBTSync.class, 6, Side.SERVER);
 		INSTANCE.registerMessage(MessageFireworks.HandlerClient.class, MessageFireworks.class, 7, Side.CLIENT);
 		INSTANCE.registerMessage(MessageRotaryPowerSync.HandlerClient.class, MessageRotaryPowerSync.class, 8, Side.CLIENT);
 		INSTANCE.registerMessage(MessageBlockDamageSync.HandlerClient.class, MessageBlockDamageSync.class, 9, Side.CLIENT);

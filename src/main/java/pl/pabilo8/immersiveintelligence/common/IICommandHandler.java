@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
 import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandIIGiveBullet;
+import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandReloadSkins;
 import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandTMTAnimControl;
 import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandTMTReloadModels;
 
@@ -36,6 +37,7 @@ public class IICommandHandler extends CommandTreeBase
 				break;
 			case "ii":
 				addSubcommand(new CommandIIGiveBullet());
+				addSubcommand(new CommandReloadSkins());
 				//addSubcommand(new CommandIIToggleInstantBuild());
 				break;
 		}

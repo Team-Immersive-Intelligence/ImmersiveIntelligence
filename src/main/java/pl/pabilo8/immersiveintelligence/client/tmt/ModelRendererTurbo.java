@@ -2225,7 +2225,7 @@ public class ModelRendererTurbo extends ModelRenderer
 		}
 	}
 
-	private void compileDisplayList(float worldScale)
+	public void compileDisplayList(float worldScale)
 	{
 		if(useLegacyCompiler)
 			compileLegacyDisplayList(worldScale);
@@ -2298,4 +2298,9 @@ public class ModelRendererTurbo extends ModelRenderer
 	public static final int MR_BOTTOM = 5;
 
 	private static final float pi = (float)Math.PI;
+
+	public boolean isCompiled()
+	{
+		return compiled;
+	}
 }

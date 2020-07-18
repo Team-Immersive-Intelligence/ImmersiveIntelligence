@@ -1,5 +1,5 @@
 
-//Items
+#Items
 itemGroup.immersiveintelligence=Immersive Intelligence
 
 item.immersiveintelligence.material.basic_circuit_board_raw.name=Niewytrawiony Prosty Układ Scalony
@@ -74,7 +74,7 @@ item.immersiveintelligence.material_nugget.silicon.name=Kawałek Krzemu
 item.immersiveintelligence.material_wire.tungsten.name=Wolframowy Drut
 
 item.immersiveintelligence.material_gem.fluorite.name=Netherowy Fluoryt
-//Oparty na prawdziwym minerale o nazwie glaukonit, po prostu łatwiej jest zapamiętać "fosfor"
+#Oparty na prawdziwym minerale o nazwie glaukonit, po prostu łatwiej jest zapamiętać "fosfor"
 item.immersiveintelligence.material_gem.phosphorus.name=Netherowy Fosfor
 
 item.immersiveintelligence.material_boule.silicon.name=Walec Krzemowy
@@ -115,7 +115,7 @@ item.immersiveintelligence.radio_configurator.basic.name=Tuner Radiowy
 item.immersiveintelligence.radio_configurator.advanced.name=Zaawansowany Tuner Radiowy
 item.immersiveintelligence.machinegun.name=Karabin Maszynowy
 
-//Drillheads
+#Drillheads
 item.immersiveintelligence.drillhead.tungsten.name=Wolframowe Wiertło
 item.immersiveintelligence.drillhead.iron_diamond_tip.name=Żelazne Wiertło z Diamentowym Czubem
 item.immersiveintelligence.drillhead.steel_diamond_tip.name=Stalowe Wiertło z Diamentowym Czubem
@@ -162,7 +162,7 @@ item.immersiveintelligence.sawblade.iron.name=Żelazna Piła
 item.immersiveintelligence.sawblade.steel.name=Stalowa Piła
 item.immersiveintelligence.sawblade.tungsten.name=Wolframowa Piła
 
-//bCal - Blok-Kaliber (1/16 Block = 1 bCal)
+#bCal - Blok-Kaliber (1/16 Block = 1 bCal)
 item.immersiveintelligence.casing_artillery.name=Łuska Pocisku Artyleryjskiego
 item.immersiveintelligence.bullet.artillery_8bCal.name=Pocisk Artyleryjski
 
@@ -209,7 +209,7 @@ item.immersiveintelligence.tachometer.name=Tachometr Inżyniera
 item.immersiveintelligence.torque_meter.name=Miernik Momentu Obrotowego Inżyniera
 
 
-//Blocks
+#Blocks
 
 tile.immersiveintelligence.ore.platinum.name=Ruda Platyny
 tile.immersiveintelligence.sheetmetal.platinum.name=Platynowa Blacha
@@ -308,7 +308,7 @@ tile.immersiveintelligence.data_connector.advanced_inserter.name=Zaawansowany Po
 tile.immersiveintelligence.data_connector.fluid_inserter.name=Podajnik Cieczy
 tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Zaawansowany Podajnik Cieczy
 
-//Multiblock names
+#Multiblock names
 
 tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=Stacja SkyCrate
 tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=Węzeł SkyCrate
@@ -356,7 +356,7 @@ desc.immersiveengineering.info.multiblock.II:MinecartUnpacker=Kolejowa Maszyna O
 
 desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Interfejs Redstone-Dane
 
-//Fluids
+#Fluids
 fluid.ink=Atrament
 fluid.ink_cyan=Cyjanowy Atrament
 fluid.ink_magenta=Magentowy Atrament
@@ -378,7 +378,7 @@ fluid.hexamine=Urotropina
 fluid.methanol=Metanol
 
 
-//Sounds
+#Sounds
 
 subtitle.immersiveintelligence.siren=Wycie Syreny
 subtitle.immersiveintelligence.printing_press=Hałas Prasy do Metalu
@@ -399,7 +399,7 @@ subtitle.immersiveintelligence.inserter=Dźwięki Podajników
 subtitle.immersiveintelligence.penetration_metal=Pocisk Przełamujący się przez metal
 subtitle.immersiveintelligence.ricochet_metal=Pocisk rykoszetujący od metalu
 
-//Entities
+#Entities
 
 entity.minecart_wooden_crate.name=Wagonik z Drewnianą Skrzynką
 entity.minecart_reinforced_crate.name=Wagonik ze Wzmocnioną Skrzynką
@@ -412,7 +412,7 @@ entity.bullet.name=Pocisk
 entity.shrapnel.name=Szrapnel
 entity.machinegun.name=Karabin Maszynowy
 
-//Descriptions
+#Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Pozwala ustawić częstotliwość dla podstawowego radia.
 desc.immersiveintelligence.radio_configurator_advanced=Ulepszony model obsługujący wyższe częstotliwości.
 desc.immersiveintelligence.radio_configurator_frequency=Częstotliwość: %s
@@ -461,7 +461,7 @@ desc.immersiveintelligence.conditional_variable=Zmienna warunkowa:
 desc.immersiveintelligence.no_variable=Brak
 desc.immersiveintelligence.variable=Zmienna:
 
-//Bullets
+#Bullets
 
 desc.immersiveintelligence.bullet_type.shrapnel=Odłamkowy
 desc.immersiveintelligence.bullet_type.piercing=Przeciwpancerny
@@ -480,12 +480,12 @@ desc.immersiveintelligence.data_merger.0=Oba
 desc.immersiveintelligence.data_merger.1=Lewy
 desc.immersiveintelligence.data_merger.2=Prawy
 
-//Potion effects
+#Potion effects
 
 potion.immersiveintelligence.suppression=Przygwożdżony
 potion.immersiveintelligence.broken_armor=Zbroja Przebita
 
-//Chat info / debug
+#Chat info / debug
 info.immersiveintelligence.frequency_set=Częstotliwość została ustawiona na %s
 info.immersiveintelligence.frequency_invalid=Nieprawidłowa częstotliwość, podstawowe urządzenia mogą używać częstotliwości do %s!
 info.immersiveintelligence.current_frequency=Obecna Częstotliwość: %s
@@ -504,7 +504,7 @@ info.immersiveintelligence.debugger_mode.2=Odbiornik
 info.immersiveintelligence.tachometer_message.basic=Wewnętrzne: prędkość %s Obr./min / moment obrotowy %s Nm.
 info.immersiveintelligence.tachometer_message.advanced=Wewnętrzne: prędkość %s Obr./min / moment obrotowy %s Nm. prędkość: speed %s Obr./min / moment obrotowy %s Nm.
 
-//Energia Obrotowa
+#Energia Obrotowa
 
 rotary.immersiveintelligence.belt_system.wrongCable=Nie możesz połączyć pasów napędowych do wtyczek elektrycznych
 rotary.immersiveintelligence.belt_system.wrongCable1=Nie można tak poprostu wetknąć pas napędowy w sieć elektryczną
@@ -527,7 +527,7 @@ rotary.immersiveintelligence.mechanical.speed_unit=Obr./min
 rotary.immersiveintelligence.mechanical.torque=Moment Obrotowy
 rotary.immersiveintelligence.mechanical.torque_unit=Nm
 
-//Data System Descriptions
+#Data System Descriptions
 datasystem.immersiveintelligence.function.add=Dodawanie
 datasystem.immersiveintelligence.function.subtract=Odejmowanie
 datasystem.immersiveintelligence.function.multiply=Mnożenie
@@ -580,7 +580,7 @@ datasystem.immersiveintelligence.datatype.itemstack=Przedmiot
 datasystem.immersiveintelligence.datatype.boolean.true=Prawda
 datasystem.immersiveintelligence.datatype.boolean.false=Fałsz
 
-//Blueprints
+#Blueprints
 
 desc.immersiveengineering.info.blueprint.basic_circuits=Podstawowe Układy Scalone
 desc.immersiveengineering.info.blueprint.advanced_circuits=Zaawansowane Układy Scalone
@@ -591,9 +591,9 @@ desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Zaawansowa
 
 desc.immersiveengineering.info.blueprint.metal_springs=Sprężyny
 
-//Advancements
+#Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence
-//Przeczytaj Ten Jebany Podręcznik? (XD)
+#Przeczytaj Ten Jebany Podręcznik? (XD)
 advancement.immersiveintelligence.root.desc=PTJP?
 
 advancement.immersiveintelligence.connect_belt=Mocarskie Taśmociągi
@@ -683,19 +683,19 @@ advancement.immersiveintelligence.radio_station=Kontrola Zdalna
 advancement.immersiveintelligence.radio_station.desc=Zbuduj Radiostację
 
 
-//Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
-//The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
+#Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
+#The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
 advancement.immersiveintelligence.secret_cocoa=Opowieści Deco Morreno
 advancement.immersiveintelligence.secret_cocoa.desc=Najwyższa Jakość została uzyskana.
 
-//Manual Categories
+#Manual Categories
 
 ie.manual.category.ii_data.name=Transmisja Danych
 ie.manual.category.ii_warfare.name=Walka
 ie.manual.category.ii_logi.name=Logistyka
 ie.manual.category.ii_intel.name=Wywiad
 
-//Data and Electronics
+#Data and Electronics
 
 #Reference to... flow control... yeah, really, that boring
 ie.manual.entry.data_main.name=Dane
@@ -832,7 +832,7 @@ ie.manual.entry.data_wires0=Trough the wires, data is sent and received immediat
 ie.manual.entry.data_wires1=Data wires like most cabling have their own relays and connectors, which split and connect machines. These can be used to create great logistic, warfare, intelligence and production networks.
 
 
-//Intelligence
+#Intelligence
 
 #Reference to Dr. Stone
 ie.manual.entry.intel_main.name=Wywiad
@@ -865,7 +865,7 @@ ie.manual.entry.strategic_command_table.name=Stół Zarządzania Strategicznego
 ie.manual.entry.strategic_command_table.subtext=Sztuka Wojny
 ie.manual.entry.strategic_command_table0=
 
-//Warfare
+#Warfare
 
 #Reference to an RTS game
 ie.manual.entry.warfare_main.name=Walka
@@ -925,7 +925,7 @@ ie.manual.entry.ammunition_factory2=When making bullets, remember: there is no s
 ie.manual.entry.ammunition_factory3=Use the data system to name and color your bullets. This will allow you to differentiate them easier, so you won't mistake an armour-piercing round for a high-explosive one. For coloring the machine requires a supply of inks to its tank, similar to the <link;printing_press;§o§nPrinting §o§nPress§r;>.
 ie.manual.entry.ammunition_factory4=Variables:<br>Integer 'p'-percentage proportion of the bullet components (0-100)<br>Integer or String 'c'-bullet casing's colour (Int - RGB, String - Hex)<br>String 'n' - bullet name.
 
-//Logistics
+#Logistics
 
 #Reference to Foxhole - a MMO game with a big persitent war in which logistics play a key role
 ie.manual.entry.logistics.name=Logistyka
@@ -937,7 +937,6 @@ ie.manual.entry.packer.name=Maszyna Pakująca
 ie.manual.entry.packer.subtext=Więcej rur i tuneli!
 ie.manual.entry.packer0=Packer is a machine used to batch load items into containers such as crates or bullet magazines. For operation it requires power and a single data signal defining how much items should be put each time. To form it, use a hammer on the pipe above the conveyor belt.
 ie.manual.entry.packer1= The packer receives items to be packed from the side and containers onto the bottom conveyor.
-ie.manual.entry.packer2=Variables:<br>Integer 'c'-items to pack<br>Integer or String (one_by_one, one_of_all) 'm'-item packing mode<br>Integer 'q' - insert quantity<br>Boolean 'i' - whether the machine should ignore empty stacks.
 
 #Ziplines
 ie.manual.entry.skycrates.name=Skycrate'y
@@ -950,7 +949,7 @@ ie.manual.entry.skycrates4=Crate minecarts are a safe way to transport items via
 ie.manual.entry.skycrates5=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.
 
 
-//Other
+#Other
 
 #Reference to a certain picture i've seen on reddit few years ago
 ie.manual.entry.sawmill.name=Krajzega
@@ -969,3 +968,257 @@ ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels tog
 ie.manual.entry.rotary_power5=The Transmission Boxes are used to connect mechanical devices using a different standard of axles, they can be used to connect a windmill or a waterwheel to a motor belt network or output mechanical energy to a dynamo.
 ie.manual.entry.rotary_power6=The wrench and the electric wrench can be used to open hatches of mechanical devices for maintenance purposes, such as changing gears in a gearbox.
 
+
+item.immersiveintelligence.material.bullet_core_steel.name=Steel Bullet Core
+item.immersiveintelligence.material.bullet_core_brass.name=Brass Bullet Core
+item.immersiveintelligence.material.bullet_core_uranium.name=Uranium Bullet Core
+item.immersiveintelligence.material.bullet_core_lead.name=Lead Bullet Core
+item.immersiveintelligence.material.bullet_core_tungsten.name=Tungsten Bullet Core
+item.immersiveintelligence.material.pulp_wood.name=Wood Pulp
+item.immersiveintelligence.material.pulp_wood_treated.name=Treated Wood Pulp
+item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
+item.immersiveintelligence.weapon_upgrade.shield.name=Attachable Shields
+desc.immersiveintelligence.toolupgrade.shield=Deflects projectiles and protects the gunner from melee damage. Increases setting up time.
+tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
+tile.immersiveintelligence.metal_device.medical_crate.name=Medical Crate
+tile.immersiveintelligence.metal_device.repair_crate.name=Repair Crate
+tile.immersiveintelligence.upgrade_toolbox.name=Maintenance Toolbox
+tile.immersiveintelligence.circuit_socket.basic.name=Basic Circuit Socket
+tile.immersiveintelligence.circuit_socket.advanced.name=Advanced Circuit Socket
+tile.immersiveintelligence.circuit_socket.processor.name=Processor Circuit Socket
+tile.immersiveintelligence.wooden_multiblock.skycart_station.name=SkyCart Station
+tile.immersiveintelligence.metal_multiblock.minecart_unpacker.name=Railway Unpacker
+tile.immersiveintelligence.metal_multiblock1.vehicle_workshop.name=Vehicle Workshop
+tile.immersiveintelligence.metal_multiblock1.fuel_station.name=Fuel Station
+tile.immersiveintelligence.metal_multiblock1.ammunition_filler.name=Ammunition Filler
+tile.immersiveintelligence.metal_multiblock1.ammunition_assembly.name=Ammunition Assembly
+tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name=Ammunition Workshop
+tile.immersiveintelligence.metal_multiblock1.chemical_painter.name=Chemical Painter
+desc.immersiveengineering.info.multiblock.II:SkyCartStation=SkyCart Station
+desc.immersiveengineering.info.multiblock.II:VehicleWorkshop=Vehicle Workshop
+desc.immersiveengineering.info.multiblock.II:FuelStation=Fuel Station
+desc.immersiveengineering.info.multiblock.II:AmmunitionFiller=Ammunition Filler
+desc.immersiveengineering.info.multiblock.II:AmmunitionAssembly=Ammunition Assembly
+desc.immersiveengineering.info.multiblock.II:AmmunitionWorkshop=Ammunition Workshop
+desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Chemical Painter
+subtitle.immersiveintelligence.howitzer_load=Howitzer Loading
+subtitle.immersiveintelligence.howitzer_unload=Howitzer Unloading
+entity.motorbike.name=Motorbike
+entity.wheel.name=Wheel
+# Skins
+skin.immersiveintelligence.anno_1880.name=Anno 1880
+skin.immersiveintelligence.anno_1880.desc=Refined, precise, ornamental
+skin.immersiveintelligence.royal.name=Royal
+skin.immersiveintelligence.royal.desc=A relic from an old empire
+skin.immersiveintelligence.old_glory.name=Old Glory
+skin.immersiveintelligence.old_glory.desc=Glory to Heroes
+skin.immersiveintelligence.vaterland.name=Vaterland
+skin.immersiveintelligence.vaterland.sec=And all that sacrifice just for an Iron Cross...
+skin.immersiveintelligence.pershing.name=Pershing
+skin.immersiveintelligence.pershing.desc=Whatever the weather, we'll win this war together
+skin.immersiveintelligence.zvezda.name=Zvezda
+skin.immersiveintelligence.zvezda.desc=Reward for the great sacrifice
+skin.immersiveintelligence.stormwind.name=Stormwind
+skin.immersiveintelligence.stormwind.desc=A tribute to defenders of the sea fortress
+skin.immersiveintelligence.flakmeister.name=Flakmeister
+skin.immersiveintelligence.flakmeister.desc=For a renown artillerist
+skin.immersiveintelligence.eisenheim.name=Eisenheim
+skin.immersiveintelligence.eisenheim.desc=The warpaint of heroes from the mountain fortress
+skin.immersiveintelligence.ornamental.name=Ornamentalist
+skin.immersiveintelligence.ornamental.desc=For support of progress in engineering
+skin.immersiveintelligence.vanguard.name=Vanguard
+skin.immersiveintelligence.vanguard.desc=For the elite of engineering supporters
+skin.immersiveintelligence.investor.name=Investor
+skin.immersiveintelligence.investor.desc=A little reward for big generosity
+potion.immersiveintelligence.corrosion=Corrosion
+potion.immersiveintelligence.infrared_vision=Infrared Vision
+potion.immersiveintelligence.iron_will=Iron Will
+potion.immersiveintelligence.well_supplied=Well Supplied
+potion.immersiveintelligence.concealed=Concealed
+potion.immersiveintelligence.medical_treatment=Medical Treatment
+potion.immersiveintelligence.undergoing_repairs=Undergoing Repairs
+ie.manual.entry.variables_input=Input Variables:
+ie.manual.entry.variables_output=Output Variables:
+# Printing Press output variables
+ie.manual.entry.printing_press.vars_in.t.main=Output type
+ie.manual.entry.printing_press.vars_in.t.sub=Possible values: "text", "code", "blueprint"
+ie.manual.entry.printing_press.vars_in.c.main=Amount of copies
+ie.manual.entry.printing_press.vars_in.c.sub=
+ie.manual.entry.printing_press.vars_in.s.main=Text to print
+ie.manual.entry.printing_press.vars_in.s.sub=Available only when using the "text" mode
+ie.manual.entry.conveyor_scanner.vars_out.s.main=Scanned item
+ie.manual.entry.conveyor_scanner.vars_out.s.sub=Scanned item with its id, durability and NBT
+ie.manual.entry.inserters_basic.vars_in.m.main=Item take mode
+ie.manual.entry.inserters_basic.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.inserters_basic.vars_in.c.main=Amount of items
+ie.manual.entry.inserters_basic.vars_in.c.sub=
+ie.manual.entry.inserters_advanced.vars_in.m.main=Item take mode
+ie.manual.entry.inserters_advanced.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.inserters_advanced.vars_in.c.main=Amount of items
+ie.manual.entry.inserters_advanced.vars_in.c.sub=
+ie.manual.entry.inserters_advanced.vars_in.b.main=Can pick blocks from minecarts
+ie.manual.entry.inserters_advanced.vars_in.b.sub=
+ie.manual.entry.inserters_advanced.vars_in.f.main=Filter mode
+ie.manual.entry.inserters_advanced.vars_in.f.sub=Possible values: "whitelist", "blacklist", "none"
+ie.manual.entry.inserters_advanced.vars_in.g.main=Advanced filter mode
+ie.manual.entry.inserters_advanced.vars_in.g.sub=Possible values: "exact", "item", "oredict"
+ie.manual.entry.inserters_advanced2.vars_in.w.main=Minecart take mode
+ie.manual.entry.inserters_advanced2.vars_in.w.sub=Possible values: "items", "block"
+ie.manual.entry.inserters_advanced2.vars_in.1.main=Item filters
+ie.manual.entry.inserters_advanced2.vars_in.1.sub=
+ie.manual.entry.inserters_fluid.vars_in.m.main=Fluid take mode
+ie.manual.entry.inserters_fluid.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.inserters_fluid.vars_in.c.main=Amount of fluid to take
+ie.manual.entry.inserters_fluid.vars_in.c.sub=in Milibuckets (mB)
+# Reference to Choroman's radar concept drawings
+ie.manual.entry.programmable_speaker.name=Programmable Speaker
+ie.manual.entry.programmable_speaker.subtext=Happy Engineer Noises
+ie.manual.entry.programmable_speaker0=The Programmable Speaker is a device, which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side. Data can be used to set the sound and its pitch, while redstone sets the volume.
+ie.manual.entry.programmable_speaker.vars_in.s.main=ID of the sound to play
+ie.manual.entry.programmable_speaker.vars_in.s.sub=Example "immersiveintelligence:siren"
+ie.manual.entry.programmable_speaker.vars_in.t.main=Tone/Pitch
+ie.manual.entry.programmable_speaker.vars_in.t.sub=Value must be between -100 and 100
+ie.manual.entry.tools.name=Data Wiring
+ie.manual.entry.tools.subtext=Not really powerlines
+ie.manual.entry.tools0=Trough the wires, data is sent and received immediately. In some cases using <link;radio_station;§o§nWireless §o§nTransmission§r;> might be better, but wires offer better stability during harsh weather and are cheaper.
+ie.manual.entry.tools1=Data wires like most cabling have their own relays and connectors, which split and connect machines. These can be used to create great logistic, warfare, intelligence and production networks.
+ie.manual.entry.machinegun_upgrade_shield=Shields are a simple and effective way of protecting the gunner's front from projectiles and melee damage. It can resist a limited amount of projectiles, after that no damage is deflected. Shield's resistance is regenerated over time until it hasn't been broken. Attaching the upgrade also increases gun's setting up time.
+ie.manual.entry.artillery_howitzer.vars_in.c.main=Action mode
+ie.manual.entry.artillery_howitzer.vars_in.c.sub=Possible values: "load", "unload", "fire", "stop"
+ie.manual.entry.artillery_howitzer.vars_in.f.main=Shell fuse time
+ie.manual.entry.artillery_howitzer.vars_in.f.sub=The amount of time before the shell explodes (in ticks, 20 ticks=1 second), default is -1 (disabled)
+ie.manual.entry.artillery_howitzer.vars_in.y.main=Gun yaw
+ie.manual.entry.artillery_howitzer.vars_in.y.sub=Proper values from 0-360, but accepts any number and normalizes it
+ie.manual.entry.artillery_howitzer2.vars_in.p.main=Gun pitch
+ie.manual.entry.artillery_howitzer2.vars_in.p.sub=Possible values: from 0 (gun up) to -105 (gun down)
+ie.manual.entry.ballistic_computer.vars_in.x.main=Firing position
+ie.manual.entry.ballistic_computer.vars_in.x.sub=Relative to the center of the artillery
+ie.manual.entry.ballistic_computer.vars_in.m.main=Bullet mass
+ie.manual.entry.ballistic_computer.vars_in.m.sub=Because you can't input a Float, you have to round the number
+ie.manual.entry.ballistic_computer.vars_out.y.main=Gun yaw
+ie.manual.entry.ballistic_computer.vars_out.y.sub=Proper values from 0-360, but accepts any number and normalizes it
+ie.manual.entry.ballistic_computer.vars_out.p.main=Gun pitch
+ie.manual.entry.ballistic_computer.vars_out.p.sub=Possible values: from 0 (gun up) to -105 (gun down)
+ie.manual.entry.chemdispenser.vars_in.a.main=Amount of fluid to spray
+ie.manual.entry.chemdispenser.vars_in.a.sub=in Milibuckets (mB)
+ie.manual.entry.chemdispenser.vars_in.i.main=Should the fluid be ignited
+ie.manual.entry.chemdispenser.vars_in.i.sub=
+ie.manual.entry.chemdispenser.vars_in.y.main=Nozzle yaw
+ie.manual.entry.chemdispenser.vars_in.y.sub=Possible values: from -45 to 45
+ie.manual.entry.chemdispenser.vars_in.p.main=Nozzle pitch
+ie.manual.entry.chemdispenser.vars_in.p.sub=Possible values: from -45 to 45
+# Bullet cores & components
+ie.manual.entry.bullet_cores.name=Bullet Cores
+ie.manual.entry.bullet_cores.subtext=That one bounced!
+ie.manual.entry.bullet_core.CoreBrass=Brass Core
+ie.manual.entry.bullet_core.CoreBrass.lore=Make it Steampunk
+ie.manual.entry.bullet_core.CoreBrass.desc=Brass is a heavy metal with bad penetration capabilities, but it greatly increases the effect of other components.
+ie.manual.entry.bullet_core.CoreLead=Lead Core
+ie.manual.entry.bullet_core.CoreLead.lore=Good, bad and ugly
+ie.manual.entry.bullet_core.CoreLead.desc=Lead is a good material for cheap bullets with high damage and mediocre penetrating power.
+ie.manual.entry.bullet_core.CoreSteel=Steel Core
+ie.manual.entry.bullet_core.CoreSteel.lore=Full Metal Jacket
+ie.manual.entry.bullet_core.CoreSteel.desc=Using steel is a non-expensive way to increase the penetration capabilties of the projectiles, only disadvantage is slightly decreased component effect.
+ie.manual.entry.bullet_core.CoreTungsten=Tungsten Core
+ie.manual.entry.bullet_core.CoreTungsten.lore=Load APCR!
+ie.manual.entry.bullet_core.CoreTungsten.desc=Tungsten is a better at penetrating objects than steel, but it decreases the effect of other components
+ie.manual.entry.bullet_core.CoreUranium=Uranium Core
+ie.manual.entry.bullet_core.CoreUranium.lore=What do you mean, ammo is depleted?
+ie.manual.entry.bullet_core.CoreUranium.desc=Low weight and hardness make uranium a great penetrator without loosing capability to carry explosive materials. Great, but expensive choice.
+ie.manual.entry.bullet_components.name=Bullet Components
+ie.manual.entry.bullet_components.subtext=Load APCRHEFSPTSD B-Capped!
+ie.manual.entry.bullet_components.dmg_mod=Damage: %sx
+ie.manual.entry.bullet_components.pen_mod=Penetration: %sx
+ie.manual.entry.bullet_components.blast_mod=Blast Radius: %sx
+ie.manual.entry.bullet_components.density=Density: %s
+ie.manual.entry.bullet_components.type=Type: %s
+# A quote from World in Conflict
+ie.manual.entry.bullet_component.firework=Fireworks
+ie.manual.entry.bullet_component.firework.lore=And now, free the skies
+ie.manual.entry.bullet_component.firework.desc=Fireworks, while mostly known for their beautiful looks, can be used to suppress and blind enemies.
+ie.manual.entry.bullet_component.tracer_powder=Tracer Dust
+# Quote from Company of Heroes/Market Garden campaign
+ie.manual.entry.bullet_component.tracer_powder.lore=Fill the sky with tracers!
+ie.manual.entry.bullet_component.tracer_powder.desc=Tracers are a good way to see which way your bullet flies, this can be used for purely decorative purposes or for correcting a gun's shot angle.
+# Reference to a song
+ie.manual.entry.bullet_component.TNT=TNT
+ie.manual.entry.bullet_component.TNT.lore=Tons of it!
+ie.manual.entry.bullet_component.TNT.desc=TNT is an explosive material with mediocre destructive power. Because of how easy it is to produce, it is a good choice for machinegun bullets and grenades.
+# CoH2 Reference
+ie.manual.entry.bullet_component.RDX=RDX
+ie.manual.entry.bullet_component.RDX.lore=Things go up, things go down!
+ie.manual.entry.bullet_component.RDX.desc=RDX, also known as the hexogen is a powerful high-explosive material. Being twice as powerful as TNT, it's able to destroy even the heaviest emplacements.
+# There are many variants of HMX's full name, one of them is Her Majesty's Explosive
+ie.manual.entry.bullet_component.HMX=HMX
+ie.manual.entry.bullet_component.HMX.lore=Her Majesty's Finest
+ie.manual.entry.bullet_component.HMX.desc=HMX is one of the most powerful conventional explosives, it's three times more powerful than TNT it's capable of breaching trough any fortifications.
+# Reference to a song
+ie.manual.entry.bullet_component.white_phosphorus=White Phosphorus
+ie.manual.entry.bullet_component.white_phosphorus.lore=Storm clouds, fire and steel.
+ie.manual.entry.bullet_component.white_phosphorus.desc=White phosphorus is the main ingredient of most incendiary shells. Its high heat makes surrounding enemies more flammable, while the burning hot fragments ignite everything around.
+ie.manual.entry.bullet_component.shrapnel_aluminum=Aluminum Shrapnel
+ie.manual.entry.bullet_component.shrapnel_aluminum.lore=Amelinium, one does not simply paint it
+ie.manual.entry.bullet_component.shrapnel_aluminum.desc=Aluminum is not the best material for shrapnel, but it's cheap enough to be mass used in combat.
+ie.manual.entry.bullet_component.shrapnel_zinc=Zinc Shrapnel
+ie.manual.entry.bullet_component.shrapnel_zinc.lore=
+ie.manual.entry.bullet_component.shrapnel_zinc.desc=Zinc is not a good shrapnel material, but when there are shortages, anything will do.
+# Reference to Terraria's coin gun
+ie.manual.entry.bullet_component.shrapnel_copper=Copper Shrapnel
+ie.manual.entry.bullet_component.shrapnel_copper.lore=Make coins your ammo
+ie.manual.entry.bullet_component.shrapnel_copper.desc=While throwing copper at the enemies won't bribe them, after a few shots it might make them dead.
+# Reference to JoJo, yes even in the II there has to be one
+ie.manual.entry.bullet_component.shrapnel_platinum=Platinum Shrapnel
+ie.manual.entry.bullet_component.shrapnel_platinum.lore=A Shrapnel User, huh?
+ie.manual.entry.bullet_component.shrapnel_platinum.desc=Choosing Platinum? Yes, definitely, make yourself poor, you want it, not me.
+# Murica' fuck yeah
+ie.manual.entry.bullet_component.shrapnel_gold=Gold Shrapnel
+ie.manual.entry.bullet_component.shrapnel_gold.lore=And who cares about Taxpayers?
+ie.manual.entry.bullet_component.shrapnel_gold.desc=Ah yes, the good old way of wasting money - war. While the bullets are somewhat expensive, they don't seem to have much effect on the opponent.
+ie.manual.entry.bullet_component.shrapnel_nickel=Nickel Shrapnel
+ie.manual.entry.bullet_component.shrapnel_nickel.lore=
+ie.manual.entry.bullet_component.shrapnel_nickel.desc=Nickel is a bad choice for shrapnel, it doesn't deal much damage, but in hard times it can save the day.
+# Reference to the Netflix's Witcher series
+ie.manual.entry.bullet_component.shrapnel_silver=Silver Shrapnel
+ie.manual.entry.bullet_component.shrapnel_silver.lore=Toss a coin to your gunner
+ie.manual.entry.bullet_component.shrapnel_silver.desc=Silver shrapnel is a good option for combating undead enemies, the shrapnel deals more damage to them and slows them down.
+ie.manual.entry.bullet_component.shrapnel_electrum=Electrum Shrapnel
+ie.manual.entry.bullet_component.shrapnel_electrum.lore=The Shock Troops have arrived
+ie.manual.entry.bullet_component.shrapnel_electrum.desc=Electrum excels at conducting electricity, while the shapnel won't hurt much, enemies hit will receive more damage from energy weapons, such as tesla coils.
+# Reference to a post-ww2 poster for inter-country help in Western Europe
+ie.manual.entry.bullet_component.shrapnel_constantan=Constantan Shrapnel
+ie.manual.entry.bullet_component.shrapnel_constantan.lore=<br>Whatever the weather, we kill enemies together.
+ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well known for its heat conductive properties, enemies hit will be prone to fire damage for some time.
+# Reference to words by Otto von Bismarck
+ie.manual.entry.bullet_component.shrapnel_iron=Iron Shrapnel
+ie.manual.entry.bullet_component.shrapnel_iron.lore=With Blood and Iron!
+ie.manual.entry.bullet_component.shrapnel_iron.desc=
+ie.manual.entry.bullet_component.shrapnel_lead=Lead Shrapnel
+ie.manual.entry.bullet_component.shrapnel_lead.lore=Let the Lead rain!
+ie.manual.entry.bullet_component.shrapnel_lead.desc=Lead is a good shrapnel material, it's heavy and inflicts high damage on unarmored enemies.
+# Japanese "hagane" means steel, but the literal translation is "full metal", Hagane no Renkinjutsushi
+ie.manual.entry.bullet_component.shrapnel_steel=Steel Shrapnel
+ie.manual.entry.bullet_component.shrapnel_steel.lore=The fullmetal in all its glory
+ie.manual.entry.bullet_component.shrapnel_steel.desc=Steel is a fine shrapnel material, good damage, scatter and speed make it effective against all opponents.
+ie.manual.entry.bullet_component.shrapnel_brass=Brass Shrapnel
+ie.manual.entry.bullet_component.shrapnel_brass.lore=Ornamental Design
+ie.manual.entry.bullet_component.shrapnel_brass.desc=Brass is a bad choice for making shrapnel, although its high weight makes it deal more damage than other weak metals.
+# A reference to Bear989sr. - a gregtech player, I just love when he says the word "steel", also some nice GT tutorials
+ie.manual.entry.bullet_component.shrapnel_tungsten=Tungsten Shrapnel
+ie.manual.entry.bullet_component.shrapnel_tungsten.lore=And now we make *ekhem* TUNGSTEN-STEEL...
+ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Tungsten is a very good material for shrapnel, its high damage allows to shred enemies to pieces.
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Graphite Shrapnel
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=
+ie.manual.entry.bullet_component.shrapnel_HOPGraphite.desc=Graphite is a very good shrapnel material, its low weight and high piercing capabilities make it useful in combat.
+ie.manual.entry.bullet_component.shrapnel_uranium=Uranium Shrapnel
+ie.manual.entry.bullet_component.shrapnel_uranium.lore=Ra-di-o-active
+ie.manual.entry.bullet_component.shrapnel_uranium.desc=Uranium is one of the best materials for shrapnel, the scattering fragments have no problem piercing trough armor and can deal high damage to any target.
+ie.manual.entry.packer.vars_in.m.main=Item packing mode
+ie.manual.entry.packer.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.packer.vars_in.c.main=Items to pack
+ie.manual.entry.packer.vars_in.c.sub=
+ie.manual.entry.packer.vars_in.q.main=Insert quantity
+ie.manual.entry.packer.vars_in.q.sub=
+ie.manual.entry.packer.vars_in.i.main=Ignore empty stacks
+ie.manual.entry.packer.vars_in.i.sub=
+ie.manual.entry.skycrates6=Crate minecarts are a safe way to transport items via rail. They can be crafted by putting a crate into a minecart, items inside won't be lost. When disassembled, the minecart splits into the actual cart and the crate.
+ie.manual.entry.skycrates7=The skycrate mounts are used to transport crates via the zipline, there are two models: the basic one and the electric one, which uses energy provided on the go by <link;tesla_coil;§o§nTesla §o§nCoils§r;> nearby.

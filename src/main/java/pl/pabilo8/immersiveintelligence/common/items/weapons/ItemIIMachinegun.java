@@ -4,6 +4,8 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -20,22 +22,27 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IRarity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFluidItem
+public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFluidItem, ISkinnable
 {
 	public ItemIIMachinegun()
 	{
@@ -66,6 +73,29 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 						new IESlot.Upgrades(container, inv, 1, 100, 32, "MACHINEGUN", stack, true),
 						new IESlot.Upgrades(container, inv, 2, 120, 32, "MACHINEGUN", stack, true)
 				};
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	{
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		String skin = getSkinnableCurrentSkin(stack);
+		if(!skin.isEmpty()&&CustomSkinHandler.specialSkins.containsKey(skin))
+		{
+			tooltip.add(TextFormatting.WHITE+I18n.format(String.format("skin.%1$s.%2$s.name", ImmersiveIntelligence.MODID, skin)));
+			tooltip.add(TextFormatting.GRAY.toString()+TextFormatting.ITALIC+I18n.format(String.format("skin.%1$s.%2$s.desc", ImmersiveIntelligence.MODID, skin)));
+		}
+	}
+
+	@Override
+	public IRarity getForgeRarity(ItemStack stack)
+	{
+		String skin = getSkinnableCurrentSkin(stack);
+		if(!skin.isEmpty()&&CustomSkinHandler.specialSkins.containsKey(skin))
+		{
+			return CustomSkinHandler.specialSkins.get(skin).rarity;
+		}
+		return super.getForgeRarity(stack);
 	}
 
 	@Override
@@ -207,5 +237,11 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	public boolean allowFluid(ItemStack container, FluidStack fluid)
 	{
 		return false;
+	}
+
+	@Override
+	public String getSkinnableDefaultTextureLocation()
+	{
+		return ImmersiveIntelligence.MODID+":textures/items/weapons/";
 	}
 }

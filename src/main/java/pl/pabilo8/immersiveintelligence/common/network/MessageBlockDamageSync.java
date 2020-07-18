@@ -75,22 +75,28 @@ public class MessageBlockDamageSync implements IMessage
 				{
 					DimensionBlockPos bpos = new DimensionBlockPos(message.x, message.y, message.z, message.dim);
 					DimensionBlockPos bpos2 = null;
-					for(Entry<DimensionBlockPos, Float> entry : PenetrationRegistry.blockDamage.entrySet())
+					synchronized(PenetrationRegistry.blockDamage.entrySet())
 					{
-						if(entry.getKey().equals(bpos))
+						for(Entry<DimensionBlockPos, Float> entry : PenetrationRegistry.blockDamage.entrySet())
 						{
-							bpos2 = entry.getKey();
+							if(entry.getKey().equals(bpos))
+							{
+								bpos2 = entry.getKey();
+							}
 						}
-					}
-					if(message.damage > 0)
-					{
-						if(PenetrationRegistry.blockDamageClient.containsKey(bpos2))
-							PenetrationRegistry.blockDamageClient.replace(bpos2, message.damage);
+						if(bpos2==null)
+							return;
+						if(message.damage > 0)
+						{
+							if(PenetrationRegistry.blockDamageClient.containsKey(bpos2))
+								PenetrationRegistry.blockDamageClient.replace(bpos2, message.damage);
+							else
+								PenetrationRegistry.blockDamageClient.put(bpos2, message.damage);
+						}
 						else
-							PenetrationRegistry.blockDamageClient.put(bpos2, message.damage);
+							PenetrationRegistry.blockDamageClient.remove(bpos2);
 					}
-					else
-						PenetrationRegistry.blockDamageClient.remove(bpos2);
+
 				}
 			});
 			return null;

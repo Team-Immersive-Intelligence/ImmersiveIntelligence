@@ -123,10 +123,10 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 		ArrayList<String> tooltip = new ArrayList<String>();
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
-			tooltip.add(I18n.format(CommonProxy.description_key+"storage_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"storage_module"));
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+28&&my < guiTop+56)
-			tooltip.add(I18n.format(CommonProxy.description_key+"variables_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"variables_module"));
 
 		//Draw the punchcard progress bar
 		GlStateManager.pushMatrix();
@@ -188,13 +188,13 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 
 				//'Set' Button
 				this.drawTexturedModalRect(drawx+93, drawy+5, hovered?32: 0, 242, 32, 12);
-				this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+(isShiftKeyDown()?"variable_remove": "variable_set")), drawx+96, drawy+7, hovered?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+(isShiftKeyDown()?"variable_remove": "variable_set")), drawx+96, drawy+7, hovered?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
 				if(hovered)
 				{
 					if(!isShiftKeyDown())
 					{
 						onVariableEditButtonClick(c, true);
-						tooltip.add(I18n.format(CommonProxy.description_key+(isShiftKeyDown()?"variable_remove_desc": "variable_set_desc")));
+						tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(isShiftKeyDown()?"variable_remove_desc": "variable_set_desc")));
 					}
 					else
 					{
@@ -204,7 +204,7 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 
 				GL11.glPopMatrix();
 
-				this.fontRenderer.drawString(I18n.format(CommonProxy.data_key+"datatype."+data.getName()), drawx+38, drawy+6, data.getTypeColour(), true);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DATA_KEY+"datatype."+data.getName()), drawx+38, drawy+6, data.getTypeColour(), true);
 
 				//Draw variable name (single character)
 				this.fontRenderer.drawString(String.valueOf(c), drawx+8, drawy+5, Lib.COLOUR_I_ImmersiveOrange, true);
@@ -227,7 +227,7 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 
 		if(hovered)
 		{
-			tooltip.add(I18n.format(CommonProxy.description_key+"variable_add_desc"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_add_desc"));
 		}
 
 		//Check for button click

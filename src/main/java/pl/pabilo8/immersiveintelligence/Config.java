@@ -32,7 +32,8 @@ public class Config
 		public static Weapons weapons;
 		@SubConfig
 		public static Wires wires;
-
+		@SubConfig
+		public static Vehicles vehicles;
 
 		@Comment({"The maximum frequency for basic radios."})
 		public static int radioBasicMaxFrequency = 32;
@@ -323,6 +324,8 @@ public class Config
 			public static AlarmSiren alarmSiren;
 			@SubConfig
 			public static ProgrammableSpeaker speaker;
+			@SubConfig
+			public static EffectCrates effectCrates;
 
 			public static class RedstoneInterface
 			{
@@ -339,6 +342,24 @@ public class Config
 			{
 				@Comment({"The distance the speaker can be heard from."})
 				public static int soundRange = 24;
+			}
+
+			public static class EffectCrates
+			{
+				@Comment({"The amount of fluid a Medical Crate can store (in mB)"})
+				public static int mediCrateTankSize = 4000;
+
+				@Comment({"The amount of energy an inserter upgraded Medical Crate takes per one heal (in IF/RF/FE)"})
+				public static int mediCrateEnergyPerHeal = 50;
+
+				@Comment({"The amount of energy an inserter upgraded Repair Crate takes per one repair (in IF/RF/FE)"})
+				public static int repairCrateEnergyPerHeal = 65;
+
+				@Comment({"The amount of energy an inserter upgraded crate can store (in IF/RF/FE)"})
+				public static int maxEnergyStored = 4000;
+
+				@Comment({"The amount of energy an inserter upgraded crate can drain in one tick (in IF/RF/FE)"})
+				public static int energyDrain = 40;
 			}
 
 			public static class Packer
@@ -734,7 +755,7 @@ public class Config
 				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
 				@RequiresMcRestart
 				@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-				public static float[] machinegun_scope_max_zoom = new float[]{0.15f, 0.35f, 0.55f,};
+				public static float[] machinegun_scope_max_zoom = new float[]{0.55f, 0.35f, 0.15f};
 
 				@Comment({"Shield's initial strength (resistance vs attacks)."})
 				public static float shieldStrengthInitial = 45;
@@ -752,6 +773,56 @@ public class Config
 
 			@Comment({"The maximum length of a single data wire."})
 			public static int dataWireLength = 24;
+
+		}
+
+		public static class Vehicles
+		{
+			@SubConfig
+			public static Motorbike motorbike;
+
+			public static class Motorbike
+			{
+				@Comment({"Fuel capacity of the motorbike."})
+				public static int fuelCapacity = 12000;
+
+				@Comment({"Fuel usage per one meter driven."})
+				public static int fuelUsage = 6;
+
+				@Comment({"Damage resistance of the wheels."})
+				public static int wheelDurability = 40;
+
+				@Comment({"Damage resistance of the engine."})
+				public static int engineDurability = 100;
+
+				@Comment({"Damage resistance of the fuel tank."})
+				public static int fuelTankDurability = 80;
+
+				@Comment({"Roll the camera when turning the motorbike."})
+				public static boolean cameraRoll = false;
+
+				@Comment({"Amount of fuel burn per time, dependent on diesel generator fluids (in mB)"})
+				public static int fuelBurnAmount = 8;
+
+			}
+
+			public static class FieldHowitzer
+			{
+				@Comment({"Damage resistance of the wheels."})
+				public static int wheelDurability = 40;
+
+				@Comment({"Damage resistance of the gun frame."})
+				public static int mainDurability = 160;
+
+				@Comment({"Damage resistance of the gun barrel."})
+				public static int gunDurability = 80;
+
+				@Comment({"Damage resistance of the gun shield (both sides have common health)."})
+				public static int shieldDurability = 160;
+
+				@Comment({"Time required to tow a field howitzer."})
+				public static int towingTime = 80;
+			}
 		}
 
 		public static class MechanicalDevices

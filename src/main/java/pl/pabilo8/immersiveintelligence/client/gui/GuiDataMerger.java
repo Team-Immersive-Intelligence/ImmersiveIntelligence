@@ -86,7 +86,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	public void drawScreen(int mx, int my, float partial)
 	{
 		super.drawScreen(mx, my, partial);
-		this.fontRenderer.drawString(I18n.format(CommonProxy.description_key+"data_merger."+tile.mode), guiLeft+14, guiTop+19, 0x0a0a0a);
+		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"data_merger."+tile.mode), guiLeft+14, guiTop+19, 0x0a0a0a);
 
 		ArrayList<String> tooltip = new ArrayList<String>();
 

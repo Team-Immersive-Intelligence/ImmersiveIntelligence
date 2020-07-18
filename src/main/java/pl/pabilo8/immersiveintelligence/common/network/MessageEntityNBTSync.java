@@ -20,19 +20,20 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
 
-public class MessageMachinegunSync implements IMessage
+public class MessageEntityNBTSync implements IMessage
 {
 	int entityID;
 	NBTTagCompound tag;
 
-	public MessageMachinegunSync(Entity entity, NBTTagCompound tag)
+	public MessageEntityNBTSync(Entity entity, NBTTagCompound tag)
 	{
 		this.entityID = entity.getEntityId();
 		this.tag = tag;
 	}
 
-	public MessageMachinegunSync()
+	public MessageEntityNBTSync()
 	{
 	}
 
@@ -50,10 +51,10 @@ public class MessageMachinegunSync implements IMessage
 		ByteBufUtils.writeTag(buf, this.tag);
 	}
 
-	public static class HandlerClient implements IMessageHandler<MessageMachinegunSync, IMessage>
+	public static class HandlerClient implements IMessageHandler<MessageEntityNBTSync, IMessage>
 	{
 		@Override
-		public IMessage onMessage(MessageMachinegunSync message, MessageContext ctx)
+		public IMessage onMessage(MessageEntityNBTSync message, MessageContext ctx)
 		{
 			Minecraft.getMinecraft().addScheduledTask(() ->
 			{
@@ -69,10 +70,10 @@ public class MessageMachinegunSync implements IMessage
 		}
 	}
 
-	public static class HandlerServer implements IMessageHandler<MessageMachinegunSync, IMessage>
+	public static class HandlerServer implements IMessageHandler<MessageEntityNBTSync, IMessage>
 	{
 		@Override
-		public IMessage onMessage(MessageMachinegunSync message, MessageContext ctx)
+		public IMessage onMessage(MessageEntityNBTSync message, MessageContext ctx)
 		{
 			WorldServer world = ctx.getServerHandler().player.getServerWorld();
 			world.addScheduledTask(() ->
@@ -80,6 +81,8 @@ public class MessageMachinegunSync implements IMessage
 				Entity entity = world.getEntityByID(message.entityID);
 				if(entity instanceof EntityMachinegun)
 					((EntityMachinegun)entity).readEntityFromNBT(message.tag);
+				else if(entity instanceof EntityMotorbike)
+					((EntityMotorbike)entity).syncKeyPress(message.tag);
 			});
 			return null;
 		}
