@@ -33,6 +33,22 @@ public class PrecissionAssemblerRecipeTweaker
 				adds[i] = CraftTweakerHelper.toObject(itemInputs[i]);
 		}
 
+		if(adds==null)
+		{
+			CraftTweakerAPI.getLogger().logError("Did not add precission assembler recipe for "+itemOutput.getDisplayName()+", no valid inputs were provided");
+			return;
+		}
+		if(tools==null)
+		{
+			CraftTweakerAPI.getLogger().logError("Did not add precission assembler recipe for "+itemOutput.getDisplayName()+", no tools were provided");
+			return;
+		}
+		if(animations==null)
+		{
+			CraftTweakerAPI.getLogger().logError("Did not add precission assembler recipe for "+itemOutput.getDisplayName()+", no valid animations were provided");
+			return;
+		}
+
 		PrecissionAssemblerRecipe r = new PrecissionAssemblerRecipe(CraftTweakerHelper.toStack(itemOutput), CraftTweakerHelper.toStack(trash), adds, tools, animations, energy, timeMultiplier);
 		CraftTweakerAPI.apply(new PrecissionAssemblerRecipeTweaker.Add(r));
 	}
@@ -84,7 +100,7 @@ public class PrecissionAssemblerRecipeTweaker
 		@Override
 		public String describe()
 		{
-			return "Removing Chemical Bath Recipe for "+f1.getUnlocalizedName();
+			return "Removing Precission Assembler Recipe for "+f1.getUnlocalizedName();
 		}
 	}
 

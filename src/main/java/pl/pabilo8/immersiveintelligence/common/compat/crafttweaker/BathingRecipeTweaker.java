@@ -37,7 +37,7 @@ public class BathingRecipeTweaker
 		Object oItemInput = CraftTweakerHelper.toObject(itemInput);
 		if(oItemInput==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Did not add chemical bath recipe for, input was null");
+			CraftTweakerAPI.getLogger().logError("Did not add chemical bath recipe for "+itemOutput.getDisplayName()+", input was null");
 			return;
 		}
 

@@ -62,8 +62,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 	public static void renderMachinegun(ItemStack stack, @Nullable EntityMachinegun entity)
 	{
 		GlStateManager.pushMatrix();
-		List<TmtNamedBoxGroup> renderParts = new ArrayList<>();
-		renderParts.addAll(defaultGunParts);
+		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
 		boolean drawText = false;
 
 		String skin = CommonProxy.item_machinegun.getSkinnableCurrentSkin(stack);

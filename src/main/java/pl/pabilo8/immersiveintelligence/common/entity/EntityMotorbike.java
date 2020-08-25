@@ -11,14 +11,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,19 +28,24 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Pabilo8
@@ -67,15 +70,22 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	private static final DataParameter<Float> dataMarkerAcceleration = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> dataMarkerSpeed = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> dataMarkerTilt = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> dataMarkerYaw = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.FLOAT);
 
-	public EntityVehicleMultiPart[] partArray;
+	private static final DataParameter<String> dataMarkerUpgrade = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.STRING);
+
+	private EntityVehicleMultiPart[] partArray;
 
 	public EntityVehicleWheel partWheelFront = new EntityVehicleWheel(this, "wheel_front", 1F, 1.0F);
 	public EntityVehicleWheel partWheelBack = new EntityVehicleWheel(this, "wheel_back", 1F, 1.0F);
 	public EntityVehicleMultiPart partFuelTank = new EntityVehicleMultiPart(this, "fuel_tank", 1.0F, 0.45F);
 	public EntityVehicleMultiPart partEngine = new EntityVehicleMultiPart(this, "engine", 1.0F, 0.45F);
 
-	public int destroyTimer = -1;
+	public EntityVehicleMultiPart partSeat = new EntityVehicleMultiPart(this, "seat", 1.0F, 0.125F);
+	public EntityVehicleMultiPart partUpgradeSeat = new EntityVehicleMultiPart(this, "upgrade_seat", 1.0F, 0.125F);
+	public EntityVehicleMultiPart partUpgradeCargo = new EntityVehicleMultiPart(this, "upgrade_cargo", 1.0F, 0.45F);
+
+	private int destroyTimer = -1;
 
 	public FluidTank tank = new FluidTank(12000)
 	{
@@ -84,26 +94,29 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	NonSidedFluidHandler fluidHandler = new NonSidedFluidHandler(this);
 
 	public float acceleration = 0f, speed = 0f, tilt = 0f, brakeProgress = 0f;
-	public boolean accelerated = false, brake = false, engineWorking = false, willRotate = false, turnLeft = false, turnRight = false, engineKeyPress = false;
+	public boolean accelerated = false, brake = false, engineWorking = false, turnLeft = false, turnRight = false, engineKeyPress = false, towingKeyPress = false;
 	public int wheelTraverse = 0;
 	public int frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
+	public int untowingTries = 0;
 
-	static AxisAlignedBB aabb = new AxisAlignedBB(-2, 0, -2, 2, 1.35, 2);
+	String upgrade = "";
+
+	static AxisAlignedBB aabb = new AxisAlignedBB(-2.5, 0, -2.5, 2.5, 1.5, 2.5);
 	static AxisAlignedBB aabb_wheel = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
-	static AxisAlignedBB aabb_tank = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 0.45d, -0.5);
+	static AxisAlignedBB aabb_tank = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
 	static AxisAlignedBB aabb_engine = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
+	static AxisAlignedBB aabb_woodgas = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
+	static AxisAlignedBB aabb_seat = new AxisAlignedBB(-0.3, -0.25d, 0.3, 0.3, 0.25d, -0.3);
 
 	public EntityMotorbike(World worldIn)
 	{
 		super(worldIn);
-		setSize(1, 1.25f);
-		stepHeight = 1f;
-		partArray = new EntityVehicleMultiPart[]{partWheelFront, partWheelBack, partFuelTank, partEngine};
+		setSize(2.5f, 1.5f);
+		partArray = new EntityVehicleMultiPart[]{partWheelFront, partWheelBack, partFuelTank, partEngine, partSeat, partUpgradeSeat, partUpgradeCargo};
 		frontWheelDurability = Motorbike.wheelDurability;
 		backWheelDurability = Motorbike.wheelDurability;
 		engineDurability = Motorbike.engineDurability;
 		fuelTankDurability = Motorbike.fuelTankDurability;
-
 	}
 
 	@Override
@@ -126,6 +139,9 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		this.dataManager.register(dataMarkerAcceleration, 1f);
 		this.dataManager.register(dataMarkerSpeed, 1f);
 		this.dataManager.register(dataMarkerTilt, 1f);
+		this.dataManager.register(dataMarkerYaw, 0f);
+
+		this.dataManager.register(dataMarkerUpgrade, "");
 	}
 
 	@Override
@@ -150,6 +166,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			engineDurability = compound.getInteger("engineDurability");
 		if(compound.hasKey("fuelTankDurability"))
 			fuelTankDurability = compound.getInteger("fuelTankDurability");
+
+		upgrade = compound.getString("upgrade");
 	}
 
 	@Override
@@ -170,12 +188,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		compound.setInteger("backWheelDurability", backWheelDurability);
 		compound.setInteger("engineDurability", engineDurability);
 		compound.setInteger("fuelTankDurability", fuelTankDurability);
-	}
 
-	@Override
-	public boolean canPassengerSteer()
-	{
-		return super.canPassengerSteer();
+		compound.setString("upgrade", upgrade);
 	}
 
 	@Override
@@ -185,45 +199,110 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	}
 
 	@Override
+	protected boolean canFitPassenger(Entity passenger)
+	{
+		return passenger instanceof EntityVehicleSeat;
+	}
+
+	//delete seats with the vehicle
+	@Override
+	public void setDead()
+	{
+		getPassengers().forEach(Entity::setDead);
+		super.setDead();
+	}
+
+	@Override
 	public void updatePassenger(Entity passenger)
 	{
 		if(isPassenger(passenger))
+			passenger.setPosition(posX, posY, posZ);
+	}
+
+	@Override
+	public void applyOrientationToEntity(Entity passenger)
+	{
+		if(passenger!=null&&isPassenger(passenger))
+		{
+			passenger.rotationYaw = this.rotationYaw;
+			passenger.rotationPitch = this.rotationPitch;
+		}
+	}
+
+	@Override
+	public void getSeatRidingPosition(int seatID, Entity passenger)
+	{
+		if(seatID==0||seatID==1)
 		{
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 			double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
 			float tylt = -tilt*45;
 			double true_angle4 = Math.toRadians((tylt-90) > 180?360f-(tylt-90): (tylt-90));
 
-			Vec3d pos2 = Utils.offsetPosDirection(-0.55f, true_angle, 0);
+			Vec3d pos2 = Utils.offsetPosDirection(seatID==0?-0.55f: -1.35f, true_angle, 0);
 			Vec3d pos3 = Utils.offsetPosDirection(0.75f, true_angle2, -true_angle4);
 
-			passenger.setPosition(posX+pos2.x+pos3.x, posY+pos3.y, posZ+pos2.z+pos3.z);
+			passenger.setPosition(posX+pos2.x+pos3.x+motionX, posY+pos3.y+motionY, posZ+pos2.z+pos3.z+motionZ);
+		}
+		else if(seatID==2)
+		{
+			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
+			Vec3d pos_mtb = Utils.offsetPosDirection(-2.25f, true_angle, 0);
+
+			passenger.setPosition(posX+pos_mtb.x+motionX, posY+motionY, posZ+pos_mtb.z+motionZ);
+			passenger.rotationYaw = this.rotationYaw+180;
+
+		}
+
+	}
+
+	@Override
+	public void getSeatRidingAngle(int seatID, Entity passenger)
+	{
+		if(seatID==0||seatID==1)
+		{
+			passenger.setRenderYawOffset(this.rotationYaw);
+
+			float f = MathHelper.wrapDegrees(passenger.rotationYaw-this.rotationYaw);
+			float f1 = MathHelper.clamp(f, -55.0F, 55.0F);
+			passenger.prevRotationYaw += f1-f;
+			passenger.rotationYaw += f1-f;
+			passenger.setRotationYawHead(passenger.rotationYaw);
+		}
+		else if(seatID==2)
+		{
+			passenger.prevRotationYaw = 180+this.rotationYaw;
+			passenger.rotationYaw = 180+this.rotationYaw;
 		}
 	}
 
 	@Override
-	public void applyOrientationToEntity(Entity driving)
+	public boolean shouldSeatPassengerSit(int seatID, Entity passenger)
 	{
-		if(isPassenger(driving))
-		{
-			driving.setRenderYawOffset(this.rotationYaw);
-
-			float f = MathHelper.wrapDegrees(driving.rotationYaw-this.rotationYaw);
-			float f1 = MathHelper.clamp(f, -55.0F, 55.0F);
-			driving.prevRotationYaw += f1-f;
-			driving.rotationYaw += f1-f;
-			driving.setRotationYawHead(driving.rotationYaw);
-		}
+		return true;
 	}
 
 	@Override
 	public void onUpdate()
 	{
-		super.onUpdate();
+		if(firstUpdate)
+		{
+			if(!world.isRemote)
+			{
+				EntityVehicleSeat.getOrCreateSeat(this, 0);
+				EntityVehicleSeat.getOrCreateSeat(this, 1);
+				EntityVehicleSeat.getOrCreateSeat(this, 2);
+			}
+			updateParts(false);
+
+		}
+
+		//super.onUpdate();
 
 		if(world.isRemote)
 		{
-			if(getPassengers().size() > 0&&getPassengers().get(0).equals(ClientUtils.mc().player))
+			Entity pre = ClientUtils.mc().player.getRidingEntity();
+			if(pre instanceof EntityVehicleSeat&&pre.getRidingEntity()==this&&((EntityVehicleSeat)pre).seatID==0)
 			{
 				//Handle, send to server
 				handleClientKeyInput();
@@ -248,16 +327,15 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		if(!world.isRemote)
 		{
-			if(world.getTotalWorldTime()%20==0)
-				updateTank(false);
-
+			updateTank(false);
 			handleServerKeyInput();
+			dataManager.set(dataMarkerUpgrade, upgrade);
 		}
 
 		//waste fuel and kill the passenger, try at least ^^
 		if(destroyTimer==-1)
 		{
-			accelerated = accelerated&&getPassengers().size() > 0;
+			accelerated = accelerated&&getPassengers().stream().anyMatch(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID==0&&entity.getPassengers().size() > 0);
 			if(engineDurability <= 0)
 				destroyTimer = 100;
 		}
@@ -283,19 +361,21 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			if(Math.abs(tilt) < 0.01f)
 				tilt = 0;
 		}
+		tilt = MathHelper.clamp(tilt, -1f, 1f);
 
 		if(tilt!=0&&speed > 0)
 		{
-			rotationYaw += tilt*(speed/5f);
+			rotationYaw += tilt*(speed/3.5f);
 		}
 		if(!engineWorking)
 			if(turnLeft||turnRight)
 			{
-				rotationYaw += tilt*0.25;
-				moveRelative(0, 0, -0.025f, 0.35f);
+				rotationYaw += tilt*0.35;
 			}
 
-		tilt = MathHelper.clamp(tilt, -1f, 1f);
+
+		//boolean canTowedMove = getRecursivePassengers().stream().noneMatch(entity -> entity instanceof ITowable && !((ITowable)entity).canMoveTowed());
+		//&&canTowedMove
 
 		if(engineWorking&&accelerated)
 		{
@@ -322,52 +402,42 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			if(hasFuel()&&engineDurability < Motorbike.engineDurability*0.85f)
 				spawnEngineDamageParticle(true_angle, true_angle2);
 		}
-		updateParts();
+
+
+		//updateParts(false);
+		//if(!world.isRemote)
 		handleMovement();
-		setFlag(7, false);
-
-		//this.setPosition(posX+(partWheelFront.posX-ppx),posY+(partWheelFront.posY-ppy),posZ+(partWheelFront.posZ-ppz));
-
-		// TODO: 08.07.2020 entity damage
-		/*
-		Vec3d currentPos = new Vec3d(this.posX, this.posY, this.posZ);
-		Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
-		RayTraceResult mop = this.world.rayTraceBlocks(currentPos, nextPos, false, true, false);
-
-		if(mop!=null && mop.typeOfHit.equals(Type.ENTITY))
-		{
-
-		}
-		 */
+		updateParts(true);
+		super.onUpdate();
 
 	}
 
 	private void handleMovement()
 	{
-		// TODO: 09.07.2020 handle
-		double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
+		float r = world.isRemote?rotationYaw: -rotationYaw;
+		double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
+		ImmersiveIntelligence.logger.info(true_angle);
 
 		Vec3d pos1_x = Utils.offsetPosDirection(-1.25f, true_angle, 0);
-		Vec3d pos2_x = Utils.offsetPosDirection(1.25f, true_angle, 0);
 
 		partWheelFront.rotationYaw = this.rotationYaw;
-		partWheelFront.travel(0, 0, 1f, -0.2f, speed*0.0125*1.5f);
+		partWheelFront.travel(0, 0, 1f, -0.0125f, speed*0.0125*2f);
+
+		partWheelBack.rotationYaw = this.rotationYaw;
+		partWheelBack.travel(0, 0, 1f, -0.015f, speed*0.0125*2f);
 
 		if(partWheelFront.collidedHorizontally&&destroyTimer!=-1)
 			destroyTimer = 1;
-		/*
 
-		partWheelBack.rotationYaw=this.rotationYaw;
-		partWheelBack.travel(0,0,1f,-0.2f,speed*0.0125);
-		 */
-
-		if(!partWheelFront.isEntityInsideOpaqueBlock())
+		if(!world.isRemote&&!partWheelFront.isEntityInsideOpaqueBlock())
 		{
 			Vec3d currentPos = new Vec3d(partWheelFront.posX+pos1_x.x, partWheelFront.posY, partWheelFront.posZ+pos1_x.z);
 			setPosition(currentPos.x, currentPos.y, currentPos.z);
+			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 		}
 
-
+		if(partWheelBack.isEntityInsideOpaqueBlock())
+			partWheelBack.posY = partWheelFront.posY;
 	}
 
 	private void handleServerKeyInput()
@@ -378,10 +448,10 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		dataManager.set(dataMarkerTurnRight, turnRight);
 		dataManager.set(dataMarkerEngineWorking, engineWorking);
 
-
 		dataManager.set(dataMarkerAcceleration, acceleration);
 		dataManager.set(dataMarkerSpeed, speed);
 		dataManager.set(dataMarkerTilt, tilt);
+		dataManager.set(dataMarkerYaw, rotationYaw);
 
 		dataManager.set(dataMarkerEngineDurability, engineDurability);
 		dataManager.set(dataMarkerFuelTankDurability, fuelTankDurability);
@@ -403,6 +473,9 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		backWheelDurability = dataManager.get(dataMarkerWheelBackDurability);
 		frontWheelDurability = dataManager.get(dataMarkerWheelFrontDurability);
 		fuelTankDurability = dataManager.get(dataMarkerFuelTankDurability);
+
+		upgrade = dataManager.get(dataMarkerUpgrade);
+
 	}
 
 	private void handleClientKeyInput()
@@ -427,6 +500,19 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			}
 			else
 				engineKeyPress = false;
+
+			if(ClientProxy.keybind_motorbikeTowing.isKeyDown())
+			{
+				if(!towingKeyPress)
+				{
+					towingKeyPress = true;
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setBoolean("startTowing", true);
+					IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(this, tag));
+				}
+			}
+			else
+				towingKeyPress = false;
 		}
 
 		if(a^accelerated||b^brake||tl^turnLeft||tr^turnRight||en^engineWorking)
@@ -539,12 +625,15 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		{
 			engineDurability -= amount*0.85;
 			dataManager.set(dataMarkerEngineDurability, engineDurability);
-			return true;
+			if(world.isRemote)
+				playSound(IISounds.penetration_metal, Math.min(amount/16f, 1f), 1f);
 		}
-		else if(part==partFuelTank&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
+		else if((part==partFuelTank||part==partSeat)&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
 		{
 			fuelTankDurability -= amount*0.85;
 			dataManager.set(dataMarkerFuelTankDurability, fuelTankDurability);
+			if(world.isRemote)
+				playSound(IISounds.penetration_metal, Math.min(amount/16f, 1f), 1f);
 		}
 		else if(part==partWheelFront)
 		{
@@ -622,7 +711,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		return 1;
 	}
 
-	protected void updateTank(boolean read)
+	private void updateTank(boolean read)
 	{
 		if(read)
 			readTank(dataManager.get(dataMarkerFluid));
@@ -634,7 +723,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		}
 	}
 
-	public void writeTank(NBTTagCompound nbt)
+	private void writeTank(NBTTagCompound nbt)
 	{
 		boolean write = tank.getFluidAmount() > 0;
 		NBTTagCompound tankTag = tank.writeToNBT(new NBTTagCompound());
@@ -642,7 +731,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			nbt.setTag("tank", tankTag);
 	}
 
-	public void readTank(NBTTagCompound nbt)
+	private void readTank(NBTTagCompound nbt)
 	{
 		if(nbt.hasKey("tank"))
 		{
@@ -653,26 +742,29 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	@Override
 	public boolean onInteractWithPart(EntityVehicleMultiPart part, EntityPlayer player, EnumHand hand)
 	{
-		if(!isPassenger(player)&&(part==partFuelTank||part==partEngine))
+		if(!getRecursivePassengers().contains(player))
 		{
-			FluidStack f = FluidUtil.getFluidContained(player.getHeldItem(EnumHand.MAIN_HAND));
-			if(f==null)
-				f = FluidUtil.getFluidContained(player.getHeldItem(EnumHand.OFF_HAND));
-
-			if(f!=null)
+			if((part==partFuelTank||part==partEngine))
 			{
-				if(DieselHandler.isValidFuel(f.getFluid()))
-				{
-					FluidUtil.interactWithFluidHandler(player, hand, tank);
-					if(!world.isRemote)
-						updateTank(false);
-				}
-				return true;
-			}
-			else if(!world.isRemote)
-				player.startRiding(this);
+				FluidStack f = FluidUtil.getFluidContained(player.getHeldItem(EnumHand.MAIN_HAND));
+				if(f==null)
+					f = FluidUtil.getFluidContained(player.getHeldItem(EnumHand.OFF_HAND));
 
-			return true;
+				if(f!=null)
+				{
+					if(DieselHandler.isValidFuel(f.getFluid()))
+					{
+						FluidUtil.interactWithFluidHandler(player, hand, tank);
+						if(!world.isRemote)
+							updateTank(false);
+					}
+					return true;
+				}
+			}
+			else if(!world.isRemote&&part==partSeat)
+				return player.startRiding(EntityVehicleSeat.getOrCreateSeat(this, 0));
+			else if(!world.isRemote&&upgrade.equals("seat")&&part==partUpgradeSeat)
+				return player.startRiding(EntityVehicleSeat.getOrCreateSeat(this, 1));
 		}
 		return false;
 	}
@@ -754,16 +846,77 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	public void syncKeyPress(NBTTagCompound tag)
 	{
-		if(tag.hasKey("accelerated"))
-			accelerated = tag.getBoolean("accelerated");
-		if(tag.hasKey("brake"))
-			brake = tag.getBoolean("brake");
-		if(tag.hasKey("turnLeft"))
-			turnLeft = tag.getBoolean("turnLeft");
-		if(tag.hasKey("turnRight"))
-			turnRight = tag.getBoolean("turnRight");
-		if(tag.hasKey("engineWorking"))
-			engineWorking = tag.getBoolean("engineWorking");
+		if(tag.hasKey("startTowing"))
+		{
+			if(acceleration > 0)
+				return;
+			EntityVehicleSeat seat = EntityVehicleSeat.getOrCreateSeat(this, 2);
+
+			//dismount
+			if(seat.getPassengers().size() > 0)
+			{
+				Entity towed = seat.getPassengers().get(0);
+				if(towed instanceof ITowable)
+				{
+					((ITowable)towed).stopTowing();
+				}
+				else
+					towed.dismountRidingEntity();
+
+				getRecursivePassengers().forEach(entity -> {
+					if(entity instanceof EntityPlayer)
+					{
+						((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(CommonProxy.INFO_KEY+"towing.untowed"), true);
+					}
+				});
+			}
+			//mount
+			else
+			{
+				List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox(), input -> input instanceof ITowable);
+				if(entitiesWithinAABB.size() > 0)
+				{
+					//sort based on distance
+					entitiesWithinAABB.sort((o1, o2) -> (int)(((o1.getPositionVector().distanceTo(getPositionVector()))-(o2.getPositionVector().distanceTo(getPositionVector())))*10));
+					assert entitiesWithinAABB.get(0) instanceof ITowable;
+					((ITowable)entitiesWithinAABB.get(0)).startTowing(seat);
+					getRecursivePassengers().forEach(entity -> {
+						if(entity instanceof EntityPlayer)
+						{
+							((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(CommonProxy.INFO_KEY+"towing.towed"), true);
+						}
+					});
+				}
+				else
+					getRecursivePassengers().forEach(entity -> {
+						if(entity instanceof EntityPlayer)
+						{
+							if(untowingTries < 50)
+								((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(CommonProxy.INFO_KEY+"towing.no"), true);
+							else
+							{
+								((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(CommonProxy.INFO_KEY+"towing.no_easter_egg"), true);
+								untowingTries = 0;
+							}
+							untowingTries += 1;
+						}
+					});
+			}
+		}
+		else
+		{
+			if(tag.hasKey("accelerated"))
+				accelerated = tag.getBoolean("accelerated");
+			if(tag.hasKey("brake"))
+				brake = tag.getBoolean("brake");
+			if(tag.hasKey("turnLeft"))
+				turnLeft = tag.getBoolean("turnLeft");
+			if(tag.hasKey("turnRight"))
+				turnRight = tag.getBoolean("turnRight");
+			if(tag.hasKey("engineWorking"))
+				engineWorking = tag.getBoolean("engineWorking");
+		}
+
 	}
 
 	public Entity[] getParts()
@@ -771,42 +924,71 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		return partArray;
 	}
 
-	void updateParts()
+	private void updateParts(boolean wheelHandle)
 	{
 		double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 
-		Vec3d pos1_x = Utils.offsetPosDirection(1.25f, true_angle, 0);
-		Vec3d pos2_x = Utils.offsetPosDirection(-1.25f, true_angle, 0);
+		Vec3d pos_x = Utils.offsetPosDirection(1f, true_angle, 0);
 
+		Vec3d pos1_x = pos_x.scale(1.25);
+		Vec3d pos2_x = pos_x.scale(-1.5);
+		Vec3d pos3_x = pos_x.scale(0.1);
+		Vec3d pos4_x = pos_x.scale(-0.55);
+		Vec3d pos5_x = pos_x.scale(-1.35);
 
-		/*
-		this.partSeatDriver.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
-		this.partSeatPassenger.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
-		this.partSeatTowable.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
-		 */
+		this.partSeat.setLocationAndAngles(posX+pos4_x.x, posY+1.175, posZ+pos4_x.z, 0.0F, 0);
+		this.partSeat.setEntityBoundingBox(aabb_seat.offset(this.partSeat.posX, this.partSeat.posY, this.partSeat.posZ));
+		this.partSeat.setVelocity(this.motionX, this.motionY, this.motionZ);
+		this.partSeat.onUpdate();
 
-		this.partWheelFront.setLocationAndAngles(posX+pos1_x.x, posY, posZ+pos1_x.z, 0.0F, 0);
+		this.partUpgradeSeat.setLocationAndAngles(posX+pos5_x.x, posY+1.175, posZ+pos5_x.z, 0.0F, 0);
+		this.partUpgradeSeat.setVelocity(this.motionX, this.motionY, this.motionZ);
+
+		this.partUpgradeCargo.setLocationAndAngles(posX+pos5_x.x, posY+1, posZ+pos5_x.z, 0.0F, 0);
+		this.partUpgradeCargo.setVelocity(this.motionX, this.motionY, this.motionZ);
+
+		if(upgrade.equals("seat"))
+		{
+			this.partUpgradeSeat.setEntityBoundingBox(aabb_seat.offset(this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ));
+			this.partUpgradeCargo.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ, this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
+		}
+		else
+		{
+			this.partUpgradeSeat.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ, this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ));
+			if(!upgrade.isEmpty())
+				this.partUpgradeCargo.setEntityBoundingBox((upgrade.equals("woodgas")?aabb_woodgas: aabb_tank).offset(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
+			else
+				this.partUpgradeCargo.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ, this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
+
+		}
+		this.partUpgradeSeat.onUpdate();
+		this.partUpgradeCargo.onUpdate();
+
+		this.partWheelFront.setLocationAndAngles(posX+pos1_x.x, wheelHandle?partWheelFront.posY: posY, posZ+pos1_x.z, 0.0F, 0);
 		this.partWheelFront.setEntityBoundingBox(aabb_wheel.offset(this.partWheelFront.posX, this.partWheelFront.posY, this.partWheelFront.posZ));
+		this.partWheelFront.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partWheelFront.onUpdate();
+
+		this.partWheelBack.setLocationAndAngles(posX+pos2_x.x, wheelHandle?partWheelBack.posY: posY, posZ+pos2_x.z, 0.0F, 0);
+		this.partWheelBack.setEntityBoundingBox(aabb_wheel.offset(this.partWheelBack.posX, this.partWheelBack.posY, this.partWheelBack.posZ));
+		this.partWheelBack.setVelocity(this.motionX, this.motionY, this.motionZ);
+		this.partWheelBack.onUpdate();
 
 		this.partEngine.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
 		this.partEngine.setEntityBoundingBox(aabb_engine.offset(this.partEngine.posX, this.partEngine.posY, this.partEngine.posZ));
 		this.partEngine.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partEngine.onUpdate();
 
-		this.partFuelTank.setLocationAndAngles(posX, posY+1, posZ, 0.0F, 0);
+		this.partFuelTank.setLocationAndAngles(posX+pos3_x.x, posY+1, posZ+pos3_x.z, 0.0F, 0);
 		this.partFuelTank.setEntityBoundingBox(aabb_tank.offset(this.partFuelTank.posX, this.partFuelTank.posY, this.partFuelTank.posZ));
 		this.partFuelTank.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partFuelTank.onUpdate();
 
-		this.partWheelBack.setLocationAndAngles(posX+pos2_x.x, posY, posZ+pos2_x.z, 0.0F, 0);
-		this.partWheelBack.setEntityBoundingBox(aabb_wheel.offset(this.partWheelBack.posX, this.partWheelBack.posY, this.partWheelBack.posZ));
-		this.partWheelBack.setVelocity(this.motionX, this.motionY, this.motionZ);
-		this.partWheelBack.onUpdate();
+
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void spawnDebrisExplosion()
+	private void spawnDebrisExplosion()
 	{
 		double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 		double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
@@ -835,5 +1017,11 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 			ParticleUtils.spawnTMTModelFX(vo.x, vo.y, vo.z, (vx.x+vz.x+vecDir.x)/1.5f, (0.25+vecDir.y)/1.5f, (vx.z+vz.z+vecDir.z)/1.5f, 0.0625f, mod, MotorbikeRenderer.texture);
 		}
+	}
+
+	@Override
+	public void playSound(SoundEvent soundIn, float volume, float pitch)
+	{
+		super.playSound(soundIn, volume, pitch);
 	}
 }

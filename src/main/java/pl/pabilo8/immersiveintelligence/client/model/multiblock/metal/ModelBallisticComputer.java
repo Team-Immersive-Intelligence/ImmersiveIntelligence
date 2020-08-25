@@ -74,7 +74,7 @@ public class ModelBallisticComputer extends BaseBlockModel
 
 		baseModel[2].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(4, 16, 4, 16), new Coord2D(0, 12, 0, 12)}), 1, 16, 16, 62, 1, ModelRendererTurbo.MR_FRONT, new float[]{12, 6, 12, 16, 16}); // ShapeMiddleWall
 		baseModel[2].setRotationPoint(17F, -8F, 0F);
-		baseModel[2].rotateAngleY = 1.57079633F;
+		baseModel[2].rotateAngleY = -1.57079633F;
 
 		baseModel[3].addShapeBox(0F, 0F, 0F, 14, 1, 12, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // BoxMap
 		baseModel[3].setRotationPoint(17F, -9F, 3F);
@@ -82,7 +82,7 @@ public class ModelBallisticComputer extends BaseBlockModel
 
 		baseModel[4].addShapeBox(0F, 0F, 0F, 8, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F); // BoxPaperPage
 		baseModel[4].setRotationPoint(17F, -22F, 10F);
-		baseModel[4].rotateAngleY = 1.57079633F;
+		baseModel[4].rotateAngleY = -1.57079633F;
 		baseModel[4].rotateAngleZ = 0.10471976F;
 
 		baseModel[5].addShapeBox(0.5F, 0F, -2F, 2, 12, 4, 0F, 0F, 0F, 0F, -0.75F, 0F, -0.75F, -0.75F, 0F, -0.75F, 0F, 0F, 0F, 0F, 0F, 0F, -0.75F, 0F, -0.75F, -0.75F, 0F, -0.75F, 0F, 0F, 0F); // BulletSide

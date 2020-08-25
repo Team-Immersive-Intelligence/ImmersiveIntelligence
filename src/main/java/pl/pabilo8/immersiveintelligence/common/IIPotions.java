@@ -6,12 +6,15 @@ import blusunrize.immersiveengineering.common.util.IEPotions.IEPotion;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
 
 /**
  * @author Pabilo8
@@ -38,7 +41,10 @@ public class IIPotions
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
 			{
-				living.getArmorInventoryList().forEach(stack -> stack.damageItem(amplifier, living));
+				living.getArmorInventoryList().forEach(stack -> {
+					if(CorrosionHandler.canCorrode(stack))
+						stack.damageItem(amplifier, living);
+				});
 			}
 		};
 		corrosion.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
@@ -105,6 +111,12 @@ public class IIPotions
 			int iconindex = super.getStatusIconIndex();
 			Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
 			return iconindex;
+		}
+
+		@Override
+		public void renderHUDEffect(PotionEffect effect, Gui gui, int x, int y, float z, float alpha)
+		{
+			super.renderHUDEffect(effect, gui, x, y, z, alpha);
 		}
 	}
 }

@@ -27,7 +27,7 @@ public class LighterTweaker
 		FluidStack mcFluidStack;
 		if(fuelEntry==null)
 		{
-			CraftTweakerAPI.logError("Found null FluidStack in fuel entry");
+			CraftTweakerAPI.logError("Found null FluidStack in lighter fuel entry");
 		}
 		else
 		{
@@ -44,7 +44,7 @@ public class LighterTweaker
 		FluidStack mcFluidStack;
 		if(fuelEntry==null)
 		{
-			CraftTweakerAPI.logError("Found null FluidStack in fuel entry");
+			CraftTweakerAPI.logError("Found null FluidStack in lighter fuel entry");
 		}
 		else
 		{
@@ -61,7 +61,7 @@ public class LighterTweaker
 		FluidStack mcFluidStack;
 		if(fuelEntry==null)
 		{
-			CraftTweakerAPI.logError("Found null FluidStack in fuel entry");
+			CraftTweakerAPI.logError("Found null FluidStack in lighter fuel entry");
 		}
 		else
 		{

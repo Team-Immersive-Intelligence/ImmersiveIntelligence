@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence;
 
-import blusunrize.immersiveengineering.common.util.commands.CommandHandler;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -57,12 +56,6 @@ public class ImmersiveIntelligence
 		proxy.postInit();
 	}
 
-	/*@Mod.EventHandler
-	public void serverStarting(FMLServerStartingEvent event)
-	{
-		event.registerServerCommand(new IICommandHandler());
-	}*/
-
 	@EventHandler
 	public void serverStarted(FMLServerStartedEvent event)
 	{
@@ -88,8 +81,9 @@ public class ImmersiveIntelligence
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event)
 	{
-		event.registerServerCommand(new CommandHandler(false));
 		ClientCommandHandler.instance.registerCommand(new IICommandHandler("ii"));
+		if(event.getSide()==Side.CLIENT)
+			ClientCommandHandler.instance.registerCommand(new IICommandHandler("tmt"));
 	}
 
 }

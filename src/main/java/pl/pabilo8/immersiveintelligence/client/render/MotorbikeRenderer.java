@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelMotorbike;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
@@ -50,12 +51,12 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		float wheelRot = entity.wheelTraverse+(entity.speed > 0?(f1*entity.speed): 0);
 		float tilt = entity.tilt;
 		if(entity.turnLeft)
-			tilt -= f1*0.1;
+			tilt -= 0.1f*f1;
 		else if(entity.turnRight)
-			tilt += f1*0.1;
+			tilt += 0.1f*f1;
 		else if(tilt!=0)
 		{
-			tilt = tilt < 0?tilt+(f1*0.1f): tilt-(f1*0.1f);
+			tilt = tilt < 0?tilt+(0.1f*f1): tilt-(0.1f*f1);
 			if(Math.abs(tilt) < 0.01f)
 				tilt = 0;
 		}
@@ -78,7 +79,14 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		float engineMove = entity.engineWorking?Math.abs((totalWorldTime%engineSpeed/engineSpeed)-0.5f): 0;
 		float pipesMove = entity.engineWorking?Math.abs((totalWorldTime%speed/speed)-0.5f): 0;
 		float plannedRotation = entity.rotationYaw-(tilt!=0?f1*tilt*(speed/5f): 0);
+		if(!entity.engineWorking&&(entity.turnLeft||entity.turnRight))
+			plannedRotation += tilt*0.25*f1;
 
+		boolean isTowing = entity.getRecursivePassengers().stream().anyMatch(entity1 -> entity1 instanceof ITowable);
+
+		float stepAngle = (float)((entity.partWheelFront.posY-entity.partWheelBack.posY)*12.5f);
+
+		GlStateManager.rotate(stepAngle, 1, 0, 0);
 		GlStateManager.rotate(-plannedRotation, 0, 1, 0);
 		GlStateManager.rotate(-tilt*25, 0, 0, 1);
 		GlStateManager.translate(-0.55, 0.5, 0);
@@ -87,6 +95,10 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		ClientUtils.bindTexture(texture);
 		for(ModelRendererTurbo mod : model.baseModel)
 			mod.render(0.0625f);
+
+		if(isTowing)
+			for(ModelRendererTurbo mod : model.trailerThingyModel)
+				mod.render(0.0625f);
 
 		GlStateManager.pushMatrix();
 		float partDurability = entity.engineDurability/(float)Motorbike.engineDurability;
@@ -107,7 +119,7 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0.5625f, 15/16f, 1f-0.125f);
 		GlStateManager.rotate(-18, 1, 0, 0);
-		GlStateManager.rotate(tilt*-35, 0, 1, 0);
+		GlStateManager.rotate(tilt*-35f, 0, 1, 0);
 		GlStateManager.translate(0, -15/16f, 0);
 		GlStateManager.rotate(18, 1, 0, 0);
 

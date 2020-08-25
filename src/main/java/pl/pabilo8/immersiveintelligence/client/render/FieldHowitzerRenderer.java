@@ -45,14 +45,28 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		RenderHelper.enableStandardItemLighting();
 
 		float tt = entity.world.getTotalWorldTime()+f1;
-		float pitch = entity.rotationPitch;//Math.abs(((tt%120)/120f)-0.5f)*-155f;
+		float pitch = -entity.gunPitch;//Math.abs(((tt%120)/120f)-0.5f)*-155f;
 		float recoil = 0;//(tt%20)/20f;
 		float gun_recoil = 1f-Math.abs(Math.min(recoil/0.5f, 1f)-0.5f)/0.5f;
 		float plate_recoil = 1f-(Math.abs(Math.max((recoil-0.5f)/0.5f, 0f)-0.5f)/0.5f);
 		float wheelRot = entity.wheelTraverse+(entity.speed > 0?(f1*entity.speed): 0);
+		float yaw = -entity.rotationYaw;//(tt%60)/60f*360f;
 
-		GlStateManager.translate(-0.45, 0.45, 0.5);
+
+		if(entity.isRiding())
+		{
+			GlStateManager.rotate(yaw, 0, 1, 0);
+			GlStateManager.translate(-0.45, 0.45, 1.65);
+
+		}
+		else
+		{
+			GlStateManager.rotate(yaw, 0, 1, 0);
+			GlStateManager.translate(-0.45, 0.45, 0.5);
+		}
+
 		ClientUtils.bindTexture(texture);
+
 		for(ModelRendererTurbo mod : model.baseModel)
 			mod.render(0.0625f);
 

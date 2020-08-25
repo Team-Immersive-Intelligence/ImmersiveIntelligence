@@ -43,8 +43,9 @@ public class SawmillRecipe extends MultiblockRecipe
 
 	int torque;
 	int hardness;
+	int dustColor;
 
-	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)
+	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, int dustColor)
 	{
 		this.itemOutput = itemOutput;
 		this.itemSecondaryOutput = itemSecondaryOutput;
@@ -55,11 +56,17 @@ public class SawmillRecipe extends MultiblockRecipe
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItem(this.itemOutput);
+		this.dustColor = dustColor;
 	}
 
 	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)
 	{
-		SawmillRecipe r = new SawmillRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness);
+		return addRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, 0xffffff);
+	}
+
+	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, int dustColor)
+	{
+		SawmillRecipe r = new SawmillRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, dustColor);
 		recipeList.add(r);
 		return r;
 	}

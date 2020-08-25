@@ -13,6 +13,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -511,6 +512,6 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			SoundType type = state.getBlock().getSoundType(state, world, pos, this);
 			event = effect==HitEffect.PENETRATION?type.getBreakSound(): type.getStepSound();
 		}
-		world.playSound(posX, posY, posZ, event, SoundCategory.BLOCKS, 0.5f, (float)(0.5f+(Math.random()*0.5f)), true);
+		world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, posX, posY, posZ, 24D, this.world.provider.getDimension(), new SPacketSoundEffect(event, SoundCategory.BLOCKS, posX, posY, posZ, 1f, 1f));
 	}
 }

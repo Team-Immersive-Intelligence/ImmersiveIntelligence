@@ -89,7 +89,6 @@ public class ItemIICasingMachinegun extends ItemIIBase implements IBulletCasingT
 	@Override
 	public void doPuff(EntityBullet bullet)
 	{
-		// TODO: 17.07.2020 better effects
 		for(int i = 1; i < 5; i++)
 			ParticleUtils.spawnGunfireFX(bullet.posX, bullet.posY, bullet.posZ, bullet.motionX/i, bullet.motionY/i, bullet.motionZ/i, 8*bullet.getSize()*(i/2.5f));
 		//ImmersiveEngineering.proxy.spawnRedstoneFX(bullet.world, bullet.posX, bullet.posY, bullet.posZ, 0, 0, 0, 1.5f, 0.75f, 0.75f, 0.75f);

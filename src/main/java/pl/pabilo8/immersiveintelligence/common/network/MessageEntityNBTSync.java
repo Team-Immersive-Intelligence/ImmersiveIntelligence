@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
 
@@ -83,6 +84,8 @@ public class MessageEntityNBTSync implements IMessage
 					((EntityMachinegun)entity).readEntityFromNBT(message.tag);
 				else if(entity instanceof EntityMotorbike)
 					((EntityMotorbike)entity).syncKeyPress(message.tag);
+				else if(entity instanceof EntityFieldHowitzer)
+					((EntityFieldHowitzer)entity).syncKeyPress(message.tag);
 			});
 			return null;
 		}

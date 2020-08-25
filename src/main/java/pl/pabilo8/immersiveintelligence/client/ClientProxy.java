@@ -74,10 +74,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualLogistics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualWarfare;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.render.*;
-import pl.pabilo8.immersiveintelligence.client.render.item.MachinegunItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.item.RadioConfiguratorItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.item.SmallCrateItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.item.TachometerItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.item.*;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
@@ -143,6 +140,7 @@ public class ClientProxy extends CommonProxy
 		}
 	};
 
+	public static KeyBinding keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
 	public static KeyBinding keybind_machinegunScope = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
 	public static KeyBinding keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
 	public static KeyBinding keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
@@ -332,6 +330,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
 		//Thanks Blu!
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityVehicleSeat.class, EntityRenderNone::new);
 
 		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(item_bullet, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
 		{
@@ -424,10 +423,12 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(handler);
 		((IReloadableResourceManager)ClientUtils.mc().getResourceManager()).registerReloadListener(handler);
 
+		keybind_manualReload.setKeyConflictContext(passenger_action);
 		keybind_machinegunScope.setKeyConflictContext(passenger_action);
 		keybind_motorbikeEngine.setKeyConflictContext(passenger_action);
 		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
 
+		ClientRegistry.registerKeyBinding(keybind_manualReload);
 		ClientRegistry.registerKeyBinding(keybind_machinegunScope);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);
@@ -498,6 +499,7 @@ public class ClientProxy extends CommonProxy
 
 		//Weapons (Items)
 		item_machinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
+		item_submachinegun.setTileEntityItemStackRenderer(SubmachinegunItemStackRenderer.instance);
 		ItemIIWeaponUpgrade.addUpgradesToRender();
 
 		//Block / ItemStack rendering

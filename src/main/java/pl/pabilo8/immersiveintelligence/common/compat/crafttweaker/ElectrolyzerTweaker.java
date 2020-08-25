@@ -65,7 +65,7 @@ public class ElectrolyzerTweaker
 		@Override
 		public String describe()
 		{
-			return "Adding Chemical Bath Recipe for "+recipe.fluidInput.getLocalizedName();
+			return "Adding Electrolyzer Recipe for "+recipe.fluidInput.getLocalizedName();
 		}
 	}
 
@@ -89,7 +89,7 @@ public class ElectrolyzerTweaker
 		@Override
 		public String describe()
 		{
-			return "Removing Chemical Bath Recipe for "+f1.getLocalizedName()+f2!=null?f2.getUnlocalizedName(): "";
+			return "Removing Electrolyzer Recipe for "+f2.getLocalizedName();
 		}
 	}
 

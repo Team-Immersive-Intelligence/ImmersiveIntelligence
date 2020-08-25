@@ -23,4 +23,10 @@ public interface IVehicleMultiPart extends IEntityMultiPart
 	String[] getOverlayTextOnPart(EntityVehicleMultiPart part, EntityPlayer player, RayTraceResult mop, boolean hammer);
 
 	Entity[] getParts();
+
+	void getSeatRidingPosition(int seatID, Entity passenger);
+
+	void getSeatRidingAngle(int seatID, Entity passenger);
+
+	boolean shouldSeatPassengerSit(int seatID, Entity passenger);
 }

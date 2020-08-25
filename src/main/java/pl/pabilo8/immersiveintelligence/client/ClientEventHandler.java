@@ -51,6 +51,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -59,7 +60,7 @@ import java.util.function.Predicate;
  */
 public class ClientEventHandler implements ISelectiveResourceReloadListener
 {
-	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II_BULLET_HERE\u00A0"};
+	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II\u00A0", "\u00A0\u00A0AMMO\u00A0", "\u00A0\u00A0HERE\u00A0", "\u00A0\u00A0--\u00A0"};
 	private static final String texture_gui = ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png";
 	private static boolean mgAiming = false;
 
@@ -191,6 +192,29 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent()
 	public void onFogColourUpdate(EntityViewRenderEvent.FogColors event)
 	{
+		if(event.getEntity() instanceof EntityLivingBase&&((EntityLivingBase)event.getEntity()).isPotionActive(IIPotions.infrared_vision))
+		{
+			float r = event.getRed(), g = event.getGreen(), b = event.getBlue();
+			float f15 = Math.min(Objects.requireNonNull(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.infrared_vision)).getAmplifier(), 4)/4f;
+			float f6 = 1.0F/event.getRed();
+
+			if(f6 > 1.0F/event.getGreen())
+			{
+				f6 = 1.0F/event.getGreen();
+			}
+
+			if(f6 > 1.0F/event.getBlue())
+			{
+				f6 = 1.0F/event.getBlue();
+			}
+
+			// Forge: fix MC-4647 and MC-10480
+			if(Float.isInfinite(f6)) f6 = Math.nextAfter(f6, 0.0);
+
+			event.setRed(r*(1.0F-f15)+r*f6*f15);
+			event.setGreen(g*(1.0F-f15)+g*f6*f15);
+			event.setBlue(b*(1.0F-f15)+b*f6*f15);
+		}
 		if(event.getEntity() instanceof EntityLivingBase&&((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression)!=null)
 		{
 			event.setRed(0);
@@ -450,20 +474,20 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(stack.getItem() instanceof ItemIIBulletMagazine)
 		{
 
-			int line = event.getLines().size()-Utils.findSequenceInList(event.getLines(), II_BULLET_TOOLTIP, (s, s2) -> s.equals(s2.substring(2)));
-
-			if(line==-1)
-				return;
-
 			int currentX = event.getX();
-			int currentY = event.getY()+10;
+			int currentY = event.getY();
+			for(int i = 0; i < event.getLines().size(); i += 1)
+				if(event.getLines().get(i).contains("   "))
+				{
+					currentY += i*10;
+					break;
+				}
 
 			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.enableRescaleNormal();
 			GlStateManager.translate(currentX, currentY, 700);
 			GlStateManager.scale(.5f, .5f, 1);
-
 
 			MachinegunRenderer.drawBulletsList(stack);
 

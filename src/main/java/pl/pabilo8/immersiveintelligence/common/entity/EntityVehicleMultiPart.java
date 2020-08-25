@@ -29,7 +29,7 @@ public class EntityVehicleMultiPart extends MultiPartEntityPart implements IEnti
 	public void applyEntityCollision(Entity entityIn)
 	{
 		//disable collisions for entities of the same multipart
-		if(entityIn!=parentExt&&Arrays.stream(parentExt.getParts()).noneMatch(entity -> entity==entityIn))
+		if(!(entityIn instanceof EntityVehicleSeat)&&entityIn!=parentExt&&Arrays.stream(parentExt.getParts()).noneMatch(entity -> entity==entityIn))
 			super.applyEntityCollision(entityIn);
 	}
 
@@ -60,6 +60,13 @@ public class EntityVehicleMultiPart extends MultiPartEntityPart implements IEnti
 	@Override
 	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
 	{
+		return false;
+	}
+
+	@Override
+	public boolean canRenderOnFire()
+	{
+		//handled by parent
 		return false;
 	}
 }

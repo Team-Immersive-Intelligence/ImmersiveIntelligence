@@ -71,8 +71,8 @@ public class IIManualWarfare extends IIManual
 		ArrayList<ManualPages> mg_pages = new ArrayList<>();
 		mg_pages.add(new ManualPages.Crafting(ManualHelper.getManual(), "machinegun0", new ItemStack(CommonProxy.item_machinegun)));
 		mg_pages.add(new ManualPages.Text(ManualHelper.getManual(), "machinegun1"));
-		for(int i = 0; i < CommonProxy.item_machinegun_upgrade.getSubNames().length; i += 1)
-			mg_pages.add(new Crafting(ManualHelper.getManual(), "machinegun_upgrade_"+CommonProxy.item_machinegun_upgrade.getSubNames()[i], new ItemStack(CommonProxy.item_machinegun_upgrade, 1, i)));
+		for(int i = 0; i < CommonProxy.item_weapon_upgrade.getSubNames().length; i += 1)
+			mg_pages.add(new Crafting(ManualHelper.getManual(), "machinegun_upgrade_"+CommonProxy.item_weapon_upgrade.getSubNames()[i], new ItemStack(CommonProxy.item_weapon_upgrade, 1, i)));
 
 		ManualPages[] mg_array = mg_pages.toArray(new ManualPages[]{});
 

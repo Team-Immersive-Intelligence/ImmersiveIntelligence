@@ -198,7 +198,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 				itemstack.shrink(1);
 
 				playerIn.addStat(StatList.getObjectUseStats(this));
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+				return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
 			}
 		}
 	}

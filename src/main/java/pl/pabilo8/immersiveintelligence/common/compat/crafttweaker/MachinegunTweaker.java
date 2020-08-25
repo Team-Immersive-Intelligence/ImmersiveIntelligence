@@ -27,7 +27,7 @@ public class MachinegunTweaker
 		FluidStack mcFluidStack;
 		if(fuelEntry==null)
 		{
-			CraftTweakerAPI.logError("Found null FluidStack in fuel entry");
+			CraftTweakerAPI.logError("Found null FluidStack in MG coolant entry");
 		}
 		else
 		{
@@ -44,7 +44,7 @@ public class MachinegunTweaker
 		FluidStack mcFluidStack;
 		if(fuelEntry==null)
 		{
-			CraftTweakerAPI.logError("Found null FluidStack in fuel entry");
+			CraftTweakerAPI.logError("Found null FluidStack in MG coolant entry");
 		}
 		else
 		{
@@ -61,7 +61,7 @@ public class MachinegunTweaker
 		FluidStack mcFluidStack;
 		if(fuelEntry==null)
 		{
-			CraftTweakerAPI.logError("Found null FluidStack in fuel entry");
+			CraftTweakerAPI.logError("Found null FluidStack in MG coolant entry");
 		}
 		else
 		{

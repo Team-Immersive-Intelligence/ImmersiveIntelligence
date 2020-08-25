@@ -65,11 +65,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
-import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
-import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
+import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
-import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
@@ -112,6 +109,7 @@ import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
@@ -201,7 +199,9 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIIBinoculars item_binoculars = new ItemIIBinoculars();
 
 	public static ItemIIMachinegun item_machinegun = new ItemIIMachinegun();
-	public static ItemIIWeaponUpgrade item_machinegun_upgrade = new ItemIIWeaponUpgrade();
+	public static ItemIISubmachinegun item_submachinegun = new ItemIISubmachinegun();
+	public static ItemIIWeaponUpgrade item_weapon_upgrade = new ItemIIWeaponUpgrade();
+
 
 	public static ItemIIBullet item_bullet = new ItemIIBullet();
 	public static ItemIICasingArtillery item_casing_artillery = new ItemIICasingArtillery();
@@ -829,10 +829,13 @@ public class CommonProxy implements IGuiHandler
 				EntitySkycrateInternal.class, "skycrate_internal", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "motorbike"),
-				EntityMotorbike.class, "motorbike", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
+				EntityMotorbike.class, "motorbike", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "field_howitzer"),
-				EntityFieldHowitzer.class, "field_howitzer", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
+				EntityFieldHowitzer.class, "field_howitzer", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "seat"),
+				EntityVehicleSeat.class, "seat", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 	}
 
 	public void postInit()
@@ -857,6 +860,11 @@ public class CommonProxy implements IGuiHandler
 		);
 
 		IIRecipes.addWoodTableSawRecipes();
+
+		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_HELMET));
+		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_CHESTPLATE));
+		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_LEGGINGS));
+		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_BOOTS));
 	}
 
 	public void reInitGui()

@@ -124,6 +124,9 @@ item.immersiveintelligence.electric_multitool.name=Engineer's Electric Multitool
 item.immersiveintelligence.radio_configurator.basic.name=Basic Radio Tuner
 item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
 item.immersiveintelligence.machinegun.name=Machinegun
+item.immersiveintelligence.submachinegun.name=Subachinegun
+item.immersiveintelligence.autorevolver.name=Autorevolver
+item.immersiveintelligence.spigot_mortar.name=Spigot Mortar
 
 #Drillheads
 item.immersiveintelligence.drillhead.tungsten.name=Tungsten Drill Head
@@ -588,6 +591,12 @@ info.immersiveintelligence.debugger_mode.2=Receiver
 info.immersiveintelligence.tachometer_message.basic=Internal: speed %s RPM / torque %s Nm.
 info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s RPM / torque %s Nm. External: speed %s RPM / torque %s Nm.
 
+info.immersiveintelligence.towing.no=Can't find a towable vehicle
+info.immersiveintelligence.towing.towed=Successfully towed!
+info.immersiveintelligence.towing.untowed=Successfully untowed!
+#Do not translate, it's a Factorio reference ^^
+info.immersiveintelligence.towing.no_easter_egg=Nie można rozsprzęgać taboru nie będąc w pojeździe!
+
 #Rotational Energy
 
 rotary.immersiveintelligence.belt_system.wrongCable=Can't attach motor belts to a wire connector
@@ -676,8 +685,10 @@ desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced F
 desc.immersiveengineering.info.blueprint.metal_springs=Springs
 
 #Keybindings
+key.immersiveintelligence.manualReload=Manual Reload
 key.immersiveintelligence.mgScope=Machinegun Scope
 key.immersiveintelligence.engineWorking=Toggle Engine
+key.immersiveintelligence.motorbikeTowing=Tow/Untow
 
 #Advancements
 advancement.immersiveintelligence.root=Immersive Intelligence
@@ -1192,7 +1203,7 @@ ie.manual.entry.bullet_component.shrapnel_constantan.desc=Constantan is well kno
 #Reference to words by Otto von Bismarck
 ie.manual.entry.bullet_component.shrapnel_iron=Iron Shrapnel
 ie.manual.entry.bullet_component.shrapnel_iron.lore=With Blood and Iron!
-ie.manual.entry.bullet_component.shrapnel_iron.desc=
+ie.manual.entry.bullet_component.shrapnel_iron.desc=Iron is a good choice for shrapnel, it easily penetrates enemies wearing light armor.
 
 ie.manual.entry.bullet_component.shrapnel_lead=Lead Shrapnel
 ie.manual.entry.bullet_component.shrapnel_lead.lore=Let the Lead rain!

@@ -23,7 +23,7 @@ public class ParticleGunfire extends Particle
 		this.motionZ = mz*0.025;
 		this.particleScale = (float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f;
 		this.actualParticleScale = this.particleScale;
-		this.particleMaxAge = (int)(10+(10*Utils.RAND.nextGaussian()))+1;
+		this.particleMaxAge = (int)(4+(6*Utils.RAND.nextGaussian()))+1;
 	}
 
 	public void onUpdate()

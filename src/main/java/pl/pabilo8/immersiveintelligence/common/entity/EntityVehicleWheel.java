@@ -14,7 +14,7 @@ public class EntityVehicleWheel extends EntityVehicleMultiPart
 	public EntityVehicleWheel(IVehicleMultiPart parent, String partName, float width, float height)
 	{
 		super(parent, partName, width, height);
-		stepHeight = 0.7f;
+		stepHeight = 0.75f;
 	}
 
 	public void travel(float strafe, float vertical, float forward, float gravity, double moveSpeed)
