@@ -1,9 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
@@ -35,151 +39,215 @@ import java.util.function.BiFunction;
  * Major update on 2020-06-08
  */
 
-public enum IIGuiList
-{
-	GUI_METAL_CRATE(TileEntityMetalCrate.class,
-			(player, te) -> new ContainerMetalCrate(player.inventory, (TileEntityMetalCrate)te),
-			(player, te) -> new GuiMetalCrate(player.inventory, (TileEntityMetalCrate)te)
-	),
-	GUI_AMMUNITION_CRATE(TileEntityAmmunitionCrate.class,
-			(player, te) -> new ContainerAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te),
-			(player, te) -> new GuiAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te)
-	),
-	GUI_SMALL_CRATE(TileEntitySmallCrate.class,
-			(player, te) -> new ContainerSmallCrate(player.inventory, (TileEntitySmallCrate)te),
-			(player, te) -> new GuiSmallCrate(player.inventory, (TileEntitySmallCrate)te)
-	),
+public enum IIGuiList {
+    GUI_METAL_CRATE(TileEntityMetalCrate.class),
+    GUI_AMMUNITION_CRATE(TileEntityAmmunitionCrate.class),
+    GUI_SMALL_CRATE(TileEntitySmallCrate.class),
 
-	GUI_SKYCRATE_STATION(TileEntitySkyCrateStation.class,
-			(player, te) -> new ContainerSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te),
-			(player, te) -> new GuiSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te)
-	),
-	GUI_SKYCART_STATION(TileEntitySkyCartStation.class,
-			(player, te) -> new ContainerSkycartStation(player.inventory, (TileEntitySkyCartStation)te),
-			(player, te) -> new GuiSkycartStation(player.inventory, (TileEntitySkyCartStation)te)
-	),
+    GUI_SKYCRATE_STATION(TileEntitySkyCrateStation.class),
+    GUI_SKYCART_STATION(TileEntitySkyCartStation.class),
 
-	GUI_DATA_INPUT_MACHINE_STORAGE(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te),
-			(player, te) -> new GuiDataInputMachineStorage(player.inventory, (TileEntityDataInputMachine)te)
-	),
-	GUI_DATA_INPUT_MACHINE_VARIABLES(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te),
-			(player, te) -> new GuiDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te)
-	),
-	GUI_DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te),
-			(player, te) -> new GuiDataInputMachineEdit(player.inventory, (TileEntityDataInputMachine)te)
-	),
+    GUI_DATA_INPUT_MACHINE_STORAGE(TileEntityDataInputMachine.class),
+    GUI_DATA_INPUT_MACHINE_VARIABLES(TileEntityDataInputMachine.class),
+    GUI_DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class),
 
-	GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine)te),
-			(player, te) -> new GuiArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine)te)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 0),
-			(player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 0)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 1),
-			(player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 1)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 2),
-			(player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 2)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 3),
-			(player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 3)
-	),
+    GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class),
+    GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1(TileEntityArithmeticLogicMachine.class),
+    GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2(TileEntityArithmeticLogicMachine.class),
+    GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3(TileEntityArithmeticLogicMachine.class),
+    GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4(TileEntityArithmeticLogicMachine.class),
 
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te),
-			(player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 0)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te),
-			(player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 1)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te),
-			(player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 2)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te),
-			(player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 3)
-	),
+    GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1(TileEntityArithmeticLogicMachine.class),
+    GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2(TileEntityArithmeticLogicMachine.class),
+    GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3(TileEntityArithmeticLogicMachine.class),
+    GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4(TileEntityArithmeticLogicMachine.class),
 
-	GUI_PRINTED_PAGE_BLANK(null, null, null),
-	GUI_PRINTED_PAGE_TEXT(null, null, null),
-	GUI_PRINTED_PAGE_CODE(null, null, null),
-	GUI_PRINTED_PAGE_BLUEPRINT(null, null, null),
+    GUI_PRINTED_PAGE_BLANK(null),
+    GUI_PRINTED_PAGE_TEXT(null),
+    GUI_PRINTED_PAGE_CODE(null),
+    GUI_PRINTED_PAGE_BLUEPRINT(null),
 
-	GUI_DATA_REDSTONE_INTERFACE_DATA(TileEntityRedstoneInterface.class,
-			(player, te) -> new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te),
-			(player, te) -> new GuiDataRedstoneInterfaceData(player.inventory, (TileEntityRedstoneInterface)te)
-	),
-	GUI_DATA_REDSTONE_INTERFACE_REDSTONE(TileEntityRedstoneInterface.class,
-			(player, te) -> new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te),
-			(player, te) -> new GuiDataRedstoneInterfaceRedstone(player.inventory, (TileEntityRedstoneInterface)te)
-	),
+    GUI_DATA_REDSTONE_INTERFACE_DATA(TileEntityRedstoneInterface.class),
+    GUI_DATA_REDSTONE_INTERFACE_REDSTONE(TileEntityRedstoneInterface.class),
 
-	GUI_PRINTING_PRESS(TileEntityPrintingPress.class,
-			(player, te) -> new ContainerPrintingPress(player.inventory, (TileEntityPrintingPress)te),
-			(player, te) -> new GuiPrintingPress(player.inventory, (TileEntityPrintingPress)te)
-	),
+    GUI_PRINTING_PRESS(TileEntityPrintingPress.class),
 
-	GUI_CHEMICAL_BATH(TileEntityChemicalBath.class,
-			(player, te) -> new ContainerChemicalBath(player.inventory, (TileEntityChemicalBath)te),
-			(player, te) -> new GuiChemicalBath(player.inventory, (TileEntityChemicalBath)te)
-	),
-	GUI_ELECTROLYZER(TileEntityElectrolyzer.class,
-			(player, te) -> new ContainerElectrolyzer(player.inventory, (TileEntityElectrolyzer)te),
-			(player, te) -> new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer)te)
-	),
+    GUI_CHEMICAL_BATH(TileEntityChemicalBath.class),
+    GUI_ELECTROLYZER(TileEntityElectrolyzer.class),
 
-	GUI_PRECISSION_ASSEMBLER(TileEntityPrecissionAssembler.class,
-			(player, te) -> new ContainerPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te),
-			(player, te) -> new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te)
-	),
+    GUI_PRECISSION_ASSEMBLER(TileEntityPrecissionAssembler.class),
 
-	GUI_AMMUNITION_FACTORY(TileEntityAmmunitionFactory.class,
-			(player, te) -> new ContainerAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te),
-			(player, te) -> new GuiAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te)
-	),
+    GUI_AMMUNITION_FACTORY(TileEntityAmmunitionFactory.class),
 
 
-	GUI_DATA_MERGER(TileEntityDataMerger.class,
-			(player, te) -> new ContainerDataMerger(player.inventory, (TileEntityDataMerger)te),
-			(player, te) -> new GuiDataMerger(player.inventory, (TileEntityDataMerger)te)
-	),
+    GUI_DATA_MERGER(TileEntityDataMerger.class),
 
-	GUI_GEARBOX(TileEntityGearbox.class,
-			(player, te) -> new ContainerGearbox(player.inventory, (TileEntityGearbox)te),
-			(player, te) -> new GuiGearbox(player.inventory, (TileEntityGearbox)te)
-	),
+    GUI_GEARBOX(TileEntityGearbox.class),
 
-	GUI_PACKER(TileEntityPacker.class,
-			(player, te) -> new ContainerPacker(player.inventory, (TileEntityPacker)te),
-			(player, te) -> new GuiPacker(player.inventory, (TileEntityPacker)te)
-	),
-	//GUI_UNPACKER,
+    GUI_PACKER(TileEntityPacker.class),
+    //GUI_UNPACKER,
 
-	GUI_SAWMILL(TileEntitySawmill.class,
-			(player, te) -> new ContainerSawmill(player.inventory, (TileEntitySawmill)te),
-			(player, te) -> new GuiSawmill(player.inventory, (TileEntitySawmill)te)
-	);
+    GUI_SAWMILL(TileEntitySawmill.class);
 
-	//GUI_PERISCOPE,
+    //GUI_PERISCOPE,
 
-	public Class<? extends TileEntity> teClass;
-	public BiFunction<EntityPlayer, TileEntity, Container> container;
-	public BiFunction<EntityPlayer, TileEntity, GuiScreen> gui;
+    public Class<? extends TileEntity> teClass;
 
-	IIGuiList(Class<? extends TileEntity> teClass, BiFunction<EntityPlayer, TileEntity, Container> container, BiFunction<EntityPlayer, TileEntity, GuiScreen> gui)
-	{
-		this.teClass = teClass;
-		this.container = container;
-		this.gui = gui;
-	}
+    IIGuiList(Class<? extends TileEntity> teClass) {
+        this.teClass = teClass;
+    }
+
+    /**
+     * The GUI class does not exist on the server side, hence the {@link SideOnly} annotation.
+     * @param player Player for who to get the GUI.
+     * @param te TileEntity referenced.
+     * @return Returns a newly instantiated GUI screen.
+     */
+    @SideOnly(Side.CLIENT)
+    public GuiScreen getGui(EntityPlayer player, TileEntity te) {
+        switch (this) {
+            case GUI_METAL_CRATE:
+                return new GuiMetalCrate(player.inventory, (TileEntityMetalCrate) te);
+            case GUI_AMMUNITION_CRATE:
+                return new GuiAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate) te);
+            case GUI_SMALL_CRATE:
+                return new GuiSmallCrate(player.inventory, (TileEntitySmallCrate) te);
+            case GUI_SKYCRATE_STATION:
+                return new GuiSkycrateStation(player.inventory, (TileEntitySkyCrateStation) te);
+            case GUI_SKYCART_STATION:
+                return new GuiSkycartStation(player.inventory, (TileEntitySkyCartStation) te);
+            case GUI_DATA_INPUT_MACHINE_STORAGE:
+                return new GuiDataInputMachineStorage(player.inventory, (TileEntityDataInputMachine) te);
+            case GUI_DATA_INPUT_MACHINE_VARIABLES:
+                return new GuiDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine) te);
+            case GUI_DATA_INPUT_MACHINE_EDIT:
+                return new GuiDataInputMachineEdit(player.inventory, (TileEntityDataInputMachine) te);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE:
+                return new GuiArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine) te);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1:
+                return new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 0);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2:
+                return new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 1);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3:
+                return new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 2);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4:
+                return new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 3);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1:
+                return new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te, 0);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2:
+                return new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te, 1);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3:
+                return new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te, 2);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4:
+                return new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te, 3);
+            case GUI_PRINTED_PAGE_BLANK:
+                return null;
+            case GUI_PRINTED_PAGE_TEXT:
+                return null;
+            case GUI_PRINTED_PAGE_CODE:
+                return null;
+            case GUI_PRINTED_PAGE_BLUEPRINT:
+                return null;
+            case GUI_DATA_REDSTONE_INTERFACE_DATA:
+                return new GuiDataRedstoneInterfaceData(player.inventory, (TileEntityRedstoneInterface) te);
+            case GUI_DATA_REDSTONE_INTERFACE_REDSTONE:
+                return new GuiDataRedstoneInterfaceRedstone(player.inventory, (TileEntityRedstoneInterface) te);
+            case GUI_PRINTING_PRESS:
+                return new GuiPrintingPress(player.inventory, (TileEntityPrintingPress) te);
+            case GUI_CHEMICAL_BATH:
+                return new GuiChemicalBath(player.inventory, (TileEntityChemicalBath) te);
+            case GUI_ELECTROLYZER:
+                return new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer) te);
+            case GUI_PRECISSION_ASSEMBLER:
+                return new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler) te);
+            case GUI_AMMUNITION_FACTORY:
+                return new GuiAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory) te);
+            case GUI_DATA_MERGER:
+                return new GuiDataMerger(player.inventory, (TileEntityDataMerger) te);
+            case GUI_GEARBOX:
+                return new GuiGearbox(player.inventory, (TileEntityGearbox) te);
+            case GUI_PACKER:
+                return new GuiPacker(player.inventory, (TileEntityPacker) te);
+            case GUI_SAWMILL:
+                return new GuiSawmill(player.inventory, (TileEntitySawmill) te);
+        }
+        return null;
+    }
+
+    /**
+     * Creates a new container for the provided player and TileEntity.
+     * @param player Player reference.
+     * @param te TileEntity reference.
+     * @return Returns a newly instantiated {@link Container}.
+     */
+    Container getContainer(EntityPlayer player, TileEntity te) {
+        switch (this) {
+            case GUI_METAL_CRATE:
+                return new ContainerMetalCrate(player.inventory, (TileEntityMetalCrate) te);
+            case GUI_AMMUNITION_CRATE:
+                return new ContainerAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate) te);
+            case GUI_SMALL_CRATE:
+                return new ContainerSmallCrate(player.inventory, (TileEntitySmallCrate) te);
+            case GUI_SKYCRATE_STATION:
+                return new ContainerSkycrateStation(player.inventory, (TileEntitySkyCrateStation) te);
+            case GUI_SKYCART_STATION:
+                return new ContainerSkycartStation(player.inventory, (TileEntitySkyCartStation) te);
+            case GUI_DATA_INPUT_MACHINE_STORAGE:
+                return new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine) te);
+            case GUI_DATA_INPUT_MACHINE_VARIABLES:
+                return new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine) te);
+            case GUI_DATA_INPUT_MACHINE_EDIT:
+                return new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine) te);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE:
+                return new ContainerArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine) te);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1:
+                return new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 0);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2:
+                return new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 1);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3:
+                return new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 2);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4:
+                return new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine) te, 3);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1:
+                return new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2:
+                return new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3:
+                return new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te);
+            case GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4:
+                return new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine) te);
+            case GUI_PRINTED_PAGE_BLANK:
+                return null;
+            case GUI_PRINTED_PAGE_TEXT:
+                return null;
+            case GUI_PRINTED_PAGE_CODE:
+                return null;
+            case GUI_PRINTED_PAGE_BLUEPRINT:
+                return null;
+            case GUI_DATA_REDSTONE_INTERFACE_DATA:
+                return new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface) te);
+            case GUI_DATA_REDSTONE_INTERFACE_REDSTONE:
+                return new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface) te);
+            case GUI_PRINTING_PRESS:
+                return new ContainerPrintingPress(player.inventory, (TileEntityPrintingPress) te);
+            case GUI_CHEMICAL_BATH:
+                return new ContainerChemicalBath(player.inventory, (TileEntityChemicalBath) te);
+            case GUI_ELECTROLYZER:
+                return new ContainerElectrolyzer(player.inventory, (TileEntityElectrolyzer) te);
+            case GUI_PRECISSION_ASSEMBLER:
+                return new ContainerPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler) te);
+            case GUI_AMMUNITION_FACTORY:
+                return new ContainerAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory) te);
+            case GUI_DATA_MERGER:
+                return new ContainerDataMerger(player.inventory, (TileEntityDataMerger) te);
+            case GUI_GEARBOX:
+                return new ContainerGearbox(player.inventory, (TileEntityGearbox) te);
+            case GUI_PACKER:
+                return new ContainerPacker(player.inventory, (TileEntityPacker) te);
+            case GUI_SAWMILL:
+                return new ContainerSawmill(player.inventory, (TileEntitySawmill) te);
+            default:
+                return null;
+        }
+    }
 }

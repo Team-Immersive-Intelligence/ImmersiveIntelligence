@@ -18,44 +18,40 @@ import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 
 @Mod(modid = MODID, version = VERSION, dependencies = "required-after:immersiveengineering@[0.12,);")
-public class ImmersiveIntelligence
-{
-	public static final String MODID = "immersiveintelligence";
-	public static final String VERSION = "@VERSION@";
+public class ImmersiveIntelligence {
+    public static final String MODID = "immersiveintelligence";
+    public static final String VERSION = "@VERSION@";
 
-	@SidedProxy(clientSide = "pl.pabilo8.immersiveintelligence.client.ClientProxy", serverSide = "pl.pabilo8.immersiveintelligence.common.CommonProxy")
-	public static CommonProxy proxy;
+    @SidedProxy(clientSide = "pl.pabilo8.immersiveintelligence.client.ClientProxy", serverSide = "pl.pabilo8.immersiveintelligence.common.CommonProxy")
+    public static CommonProxy proxy;
 
-	public static Logger logger;
+    public static Logger logger;
 
-	public static IICreativeTab creativeTab = new IICreativeTab(MODID);
+    public static IICreativeTab creativeTab = new IICreativeTab(MODID);
 
-	@Instance(MODID)
-	public static ImmersiveIntelligence INSTANCE;
+    @Instance(MODID)
+    public static ImmersiveIntelligence INSTANCE;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		logger = event.getModLog();
-		proxy.preInit();
-	}
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        logger = event.getModLog();
+        proxy.preInit();
+    }
 
-	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, proxy);
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, proxy);
 
-		proxy.init();
+        proxy.init();
 
-		IISounds.init();
-		new CustomSkinHandler.ThreadContributorSpecialsDownloader();
-	}
+        IISounds.init();
+        new CustomSkinHandler.ThreadContributorSpecialsDownloader();
+    }
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
-		proxy.postInit();
-	}
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit();
+    }
 
 	/*@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event)
@@ -63,33 +59,28 @@ public class ImmersiveIntelligence
 		event.registerServerCommand(new IICommandHandler());
 	}*/
 
-	@EventHandler
-	public void serverStarted(FMLServerStartedEvent event)
-	{
-		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER)
-		{
-			World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
-			if(!world.isRemote)
-			{
-				IISaveData worldData = (IISaveData)world.loadData(IISaveData.class, IISaveData.dataName);
-				if(worldData==null)
-				{
-					worldData = new IISaveData(IISaveData.dataName);
-					world.setData(IISaveData.dataName, worldData);
-				}
-				IISaveData.setInstance(world.provider.getDimension(), worldData);
-			}
-		}
+    @EventHandler
+    public void serverStarted(FMLServerStartedEvent event) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
+            if (!world.isRemote) {
+                IISaveData worldData = (IISaveData) world.loadData(IISaveData.class, IISaveData.dataName);
+                if (worldData == null) {
+                    worldData = new IISaveData(IISaveData.dataName);
+                    world.setData(IISaveData.dataName, worldData);
+                }
+                IISaveData.setInstance(world.provider.getDimension(), worldData);
+            }
+        }
 
-		CommonProxy.refreshFluidReferences();
+        CommonProxy.refreshFluidReferences();
 
-	}
+    }
 
-	@Mod.EventHandler
-	public void serverStarting(FMLServerStartingEvent event)
-	{
-		event.registerServerCommand(new CommandHandler(false));
-		ClientCommandHandler.instance.registerCommand(new IICommandHandler("ii"));
-	}
-
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandHandler(false));
+        if (event.getSide().isClient())
+            ClientCommandHandler.instance.registerCommand(new IICommandHandler("ii"));
+    }
 }
