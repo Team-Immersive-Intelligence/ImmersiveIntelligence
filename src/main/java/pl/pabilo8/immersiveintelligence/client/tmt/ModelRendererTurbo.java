@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.tmt;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import com.google.common.collect.Lists;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.TexturedQuad;
@@ -2042,6 +2041,11 @@ public class ModelRendererTurbo extends ModelRenderer
 		render(worldScale, false);
 	}
 
+	public void render()
+	{
+		render(0.0625f);
+	}
+
 
 	/**
 	 * Renders the shape
@@ -2083,6 +2087,8 @@ public class ModelRendererTurbo extends ModelRenderer
 			{
 				GL11.glRotatef(rotateAngleX*57.29578F, 1.0F, 0.0F, 0.0F);
 			}
+			if(hasOffset)
+				GL11.glTranslatef(offsetX*worldScale, offsetY*worldScale, offsetZ*worldScale);
 
 			callDisplayList();
 			if(childModels!=null)
@@ -2159,9 +2165,7 @@ public class ModelRendererTurbo extends ModelRenderer
 	public void addChild(ModelRendererTurbo renderer)
 	{
 		if(this.childModels==null)
-		{
-			this.childModels = Lists.<ModelRenderer>newArrayList();
-		}
+			this.childModels = new ArrayList<>();
 
 		this.childModels.add(renderer);
 	}
@@ -2220,7 +2224,7 @@ public class ModelRendererTurbo extends ModelRenderer
 				curTexGroup.loadTexture();
 				GL11.glCallList(displayListArray[i]);
 				if(!defaultTexture.equals(""))
-					renderEngine.bindTexture(new ResourceLocation("", defaultTexture)); //TODO : Check. Not sure about this one
+					renderEngine.bindTexture(new ResourceLocation(defaultTexture));
 			}
 		}
 	}
@@ -2267,6 +2271,13 @@ public class ModelRendererTurbo extends ModelRenderer
 		GL11.glEndList();
 	}
 
+	public void setRotationAngle(float x, float y, float z)
+	{
+		this.rotateAngleX = x;
+		this.rotateAngleY = y;
+		this.rotateAngleZ = z;
+	}
+
 	private PositionTextureVertex vertices[];
 	private TexturedPolygon faces[];
 	private int textureOffsetX;
@@ -2281,11 +2292,12 @@ public class ModelRendererTurbo extends ModelRenderer
 	public boolean mirror;
 	public boolean flip;
 	public boolean showModel;
+	public boolean hasOffset = false;
 	public boolean field_1402_i;
 	public boolean forcedRecompile;
 	public boolean useLegacyCompiler;
 	public List cubeList;
-	public List childModels;
+	public ArrayList<ModelRenderer> childModels;
 	public final String boxName;
 
 	private String defaultTexture;

@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 15-06-2019
  */
-public class ModelSandbagsStraight extends BaseBlockModel
+public class ModelSandbagsStraight extends ModelBlockBase
 {
 	public ModelRendererTurbo[] rightModel, leftModel;
 

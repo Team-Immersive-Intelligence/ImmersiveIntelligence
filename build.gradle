@@ -9,8 +9,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.1.1"
-group= "pl.pabilo8.immersiveintelligence"
+version = "0.2.0"
+group= "pl.pabilo8"
+def archiveGroup = "pl.pabilo8"
 archivesBaseName = "immersiveintelligence"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
@@ -71,7 +72,6 @@ repositories {
 dependencies {
     compileOnly "team.chisel.ctm:CTM:MC1.12.2-0.3.2.18"
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
-    deobfCompile "mezz.jei:jei_1.12.2:4.15.+"
 
     // compile against the JEI API but do not include it at runtime
     deobfProvided "mezz.jei:jei_1.12.2:4.15.+:api"
@@ -85,14 +85,74 @@ dependencies {
     deobfCompile 'baubles:Baubles:1.12:1.5.2'
 }
 
-jar {
-    archiveName = "${baseName}-1.12.2-${version}.jar"
+reobf {
+    coreJar { mappingType = 'SEARGE' }
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-        archiveName = "${baseName}-1.12.2-${version}-deobf.jar"
-    classifier = 'deobf'
+task coreJar(type: Jar) {
+    // Copy all compiled files and resources from the source set to the JAR
+    // If you have additional source sets, add the same logic here
+    from(sourceSets.main.output) {
+        // Don't include the coremod in the main mod
+        // If you have more coremod-related packages that aren't nested in the main one, add exclusions for them
+        include 'pl/pabilo8/immersiveintelligence/common/asm/**'
+    }
+    manifest {
+        attributes "FMLCorePlugin": "pl.pabilo8.immersiveintelligence.common.asm.IILoadingPlugin"
+        attributes 'Maven-Artifact': archiveGroup + ':' + archivesBaseName + '-core:' + version
+    }
+    // Add a classifier to the JAR ('-core' at the end of the file name)
+    // Distinguishes the mod JAR from the shipped one
+    classifier 'core'
+    group = 'build'
+}
+
+task signCoreJar(type: SignJar) {
+    onlyIf { // Skip the task if our secret data isn't available
+        project.hasProperty('keyStore')
+    }
+    dependsOn reobfCoreJar
+    if (project.hasProperty('keyStore')) { // This needs to be a path to the keystore file
+        keyStore = project.keyStore
+        alias = project.keyStoreAlias
+        storePass = project.keyStorePass
+        keyPass = project.keyStorePass
+        inputFile = coreJar.archivePath
+        outputFile = coreJar.archivePath
+    }
+}
+
+task signMainJar(type: SignJar) {
+    onlyIf { // Skip the task if our secret data isn't available
+        project.hasProperty('keyStore')
+    }
+    dependsOn reobfJar
+    if (project.hasProperty('keyStore')) { // This needs to be a path to the keystore file
+        keyStore = project.keyStore
+        alias = project.keyStoreAlias
+        storePass = project.keyStorePass
+        keyPass = project.keyStorePass
+        inputFile = jar.archivePath
+        outputFile = jar.archivePath
+    }
+}
+build.dependsOn signMainJar
+jar.dependsOn signCoreJar
+def libPrefix = 'META-INF/libraries'
+
+jar {
+    manifest {
+        attributes 'ContainedDeps': libPrefix + '/' + coreJar.archivePath.name
+        attributes "FMLAT": "ImmersiveIntelligence_at.cfg"
+        attributes 'Maven-Artifact': archiveGroup + ':' + archivesBaseName + ':' + version
+    }
+
+    exclude 'pl/pabilo8/immersiveintelligence/common/asm/**'
+    // Add the output of the mod JAR task to the main JAR for later extraction
+    from(coreJar.archivePath.absolutePath) {
+        include '*' // Due to the way Gradle's copy tasks work, we need this line for the JAR to get added
+        into libPrefix
+    }
 }
 
 processResources {
@@ -121,6 +181,19 @@ processResources {
 
     }
 
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest {
+        attributes 'FMLAT': 'immersiveintelligence_at.cfg'
+        attributes 'Maven-Artifact': group + ':' + archivesBaseName + ':' + version
+    }
+}
+
+artifacts {
+    archives deobfJar
 }
 
 //To use personalized options when working with the mod create a file named custom.gradle

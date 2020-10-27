@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelPrecissionHammer extends BaseBlockModel
+public class ModelPrecissionHammer extends ModelBlockBase
 {
 	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterOutput, inserterInput;
 	int textureX = 64;
@@ -91,7 +91,7 @@ public class ModelPrecissionHammer extends BaseBlockModel
 
 		inserterUpperArm[0].addBox(-0.5F, -9F, -0.5F, 1, 9, 1, 0F); // InserterArm2Top
 		inserterUpperArm[1].addShapeBox(-2.5F, -10F, -1.5F, 5, 1, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F); // InserterArm2End
-		inserterUpperArm[2].addBox(-2.5F, -4F, -4F, 5, 4, 8, 0F); // InserterHamer
+		inserterUpperArm[2].addBox(-2.5F, -14F, -4F, 5, 4, 8, 0F); // InserterHamer
 		inserterUpperArm[3].addBox(-1F, -15F, -1F, 2, 1, 2, 0F); // InserterArm2End
 
 		inserterOutput = new ModelRendererTurbo[1];
@@ -172,7 +172,7 @@ public class ModelPrecissionHammer extends BaseBlockModel
 
 
 		GlStateManager.translate(0f, 0.125f, 0);
-		GlStateManager.rotate(15+55*progress2, 1, 0, 0);
+		GlStateManager.rotate(15-75*progress2, 1, 0, 0);
 
 		for(ModelRendererTurbo mod : inserterLowerArm)
 			mod.render(0.0625f);

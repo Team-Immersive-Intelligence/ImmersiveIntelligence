@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 15-06-2019
  */
-public class ModelProgrammableSpeaker extends BaseBlockModel
+public class ModelProgrammableSpeaker extends ModelBlockBase
 {
 	int textureX = 32;
 	int textureY = 64;

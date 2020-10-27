@@ -4,9 +4,11 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.model.connector.ModelDataConnector;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataConnector;
 
@@ -28,16 +30,22 @@ public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityD
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x, y, z+1);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
+			float[] colors = Utils.rgbIntToRGB(EnumDyeColor.byMetadata(te.color).getColorValue());
+			GlStateManager.color(colors[0], colors[1], colors[2], 1.0f);
 			GlStateManager.disableLighting();
 			RenderHelper.enableStandardItemLighting();
 
 			//model.getBlockRotation(te.getFacing(),model);
 			//I didn't have a standardised model making system, so i used rotation and offset in this one
 			//And that's why it doesn't use getBlockRotation
-			BaseBlockModel.getCommonConnectorModelRotation(te.facing, model);
-			model.render();
+			ModelBlockBase.getCommonConnectorModelRotation(te.facing, model);
+			model.baseModel[0].render(0.0625f);
+			model.baseModel[2].render(0.0625f);
+
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+			model.baseModel[1].render(0.0625f);
+			model.baseModel[3].render(0.0625f);
 
 			GlStateManager.popMatrix();
 			return;
@@ -54,7 +62,7 @@ public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityD
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			BaseBlockModel.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
+			ModelBlockBase.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
 			//model.getBlockRotation(EnumFacing.DOWN,model);
 
 			model.render();

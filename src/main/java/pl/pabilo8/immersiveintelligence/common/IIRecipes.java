@@ -13,6 +13,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.IForgeRegistry;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
@@ -36,28 +37,32 @@ public class IIRecipes
 	{
 		//Allow me to introduce you to Immersive Gregineering™
 
-		//Remove old circuit recipe
-		ItemStack circuitboard = new ItemStack(IEContent.itemMaterial, 1, 27);
-		BlueprintCraftingRecipe.recipeList.get("components").removeIf(blueprintCraftingRecipe -> blueprintCraftingRecipe.output.isItemEqual(circuitboard));
+		if(IIConfig.changeCircuitProduction)
+		{
+			//Remove old circuit recipe
+			ItemStack circuitboard = new ItemStack(IEContent.itemMaterial, 1, 27);
+			BlueprintCraftingRecipe.recipeList.get("components").removeIf(blueprintCraftingRecipe -> blueprintCraftingRecipe.output.isItemEqual(circuitboard));
 
-		BlueprintCraftingRecipe.addRecipe("basic_circuits",
-				new ItemStack(CommonProxy.item_material, 1,
-						CommonProxy.item_material.getMetaBySubname("basic_circuit_board_raw")), new ItemStack(IEContent.blockStoneDecoration, 2, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()), "plateCopper");
-		BlueprintCraftingRecipe.addRecipe("basic_circuits", new ItemStack(IEContent.itemMaterial, 1, 27), "circuitBasicEtched", new IngredientStack("chipBasic", 2));
+			BlueprintCraftingRecipe.addRecipe("basic_circuits",
+					new ItemStack(CommonProxy.item_material, 1,
+							CommonProxy.item_material.getMetaBySubname("basic_circuit_board_raw")), new ItemStack(IEContent.blockStoneDecoration, 2, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()), "plateCopper");
+			BlueprintCraftingRecipe.addRecipe("basic_circuits", new ItemStack(IEContent.itemMaterial, 1, 27), "circuitBasicEtched", new IngredientStack("chipBasic", 2));
 
-		BlueprintCraftingRecipe.addRecipe("advanced_circuits",
-				new ItemStack(CommonProxy.item_material, 1,
-						CommonProxy.item_material.getMetaBySubname("advanced_circuit_board_raw")), new IngredientStack("circuitBasicRaw", 2), "plateAdvancedElectronicAlloy");
-		BlueprintCraftingRecipe.addRecipe("advanced_circuits",
-				new ItemStack(CommonProxy.item_material, 1,
-						CommonProxy.item_material.getMetaBySubname("advanced_circuit_board")), "circuitAdvancedEtched", new IngredientStack("chipAdvanced", 2));
+			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
+					new ItemStack(CommonProxy.item_material, 1,
+							CommonProxy.item_material.getMetaBySubname("advanced_circuit_board_raw")), new IngredientStack("circuitBasicRaw", 2), "plateAdvancedElectronicAlloy");
+			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
+					new ItemStack(CommonProxy.item_material, 1,
+							CommonProxy.item_material.getMetaBySubname("advanced_circuit_board")), "circuitAdvancedEtched", new IngredientStack("chipAdvanced", 2));
 
-		BlueprintCraftingRecipe.addRecipe("processors",
-				new ItemStack(CommonProxy.item_material, 1,
-						CommonProxy.item_material.getMetaBySubname("processor_circuit_board_raw")), new IngredientStack("circuitAdvancedRaw", 4), new IngredientStack("plateAdvancedElectronicAlloy", 2));
-		BlueprintCraftingRecipe.addRecipe("processors",
-				new ItemStack(CommonProxy.item_material, 1,
-						CommonProxy.item_material.getMetaBySubname("processor_circuit_board")), "circuitProcessorEtched", new IngredientStack("chipProcessor", 2));
+			BlueprintCraftingRecipe.addRecipe("processors",
+					new ItemStack(CommonProxy.item_material, 1,
+							CommonProxy.item_material.getMetaBySubname("processor_circuit_board_raw")), new IngredientStack("circuitAdvancedRaw", 4), new IngredientStack("plateAdvancedElectronicAlloy", 2));
+			BlueprintCraftingRecipe.addRecipe("processors",
+					new ItemStack(CommonProxy.item_material, 1,
+							CommonProxy.item_material.getMetaBySubname("processor_circuit_board")), "circuitProcessorEtched", new IngredientStack("chipProcessor", 2));
+
+		}
 
 		//Circuits
 		BathingRecipe.addRecipe(new ItemStack(CommonProxy.item_material, 1, CommonProxy.item_material.getMetaBySubname("basic_circuit_board_etched")), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 15000, 360);
@@ -119,7 +124,7 @@ public class IIRecipes
 		);
 
 		PrecissionAssemblerRecipe.addRecipe(
-				Utils.getItemWithMetaName(CommonProxy.item_material, "transistor", 4),
+				Utils.getStackWithMetaName(CommonProxy.item_material, "transistor", 4),
 				ItemStack.EMPTY,
 
 				new IngredientStack[]{new IngredientStack("plateSilicon", 2), new IngredientStack("plateAdvancedElectronicAlloy"), new IngredientStack("plateAluminum"), new IngredientStack("dyeBlack")},
@@ -133,7 +138,7 @@ public class IIRecipes
 
 		PrecissionAssemblerRecipe.addRecipe(
 				new ItemStack(CommonProxy.item_material, 1, CommonProxy.item_material.getMetaBySubname("processor_electronic_element")),
-				Utils.getItemWithMetaName(CommonProxy.item_material_nugget, "silicon"),
+				Utils.getStackWithMetaName(CommonProxy.item_material_nugget, "silicon"),
 
 				new IngredientStack[]{new IngredientStack("transistor", 32), new IngredientStack("electronTubeAdvanced", 2)},
 
@@ -148,7 +153,7 @@ public class IIRecipes
 	public static void addSiliconProcessingRecipes()
 	{
 		PrecissionAssemblerRecipe.addRecipe(
-				Utils.getItemWithMetaName(CommonProxy.item_material_plate, "silicon"),
+				Utils.getStackWithMetaName(CommonProxy.item_material_plate, "silicon"),
 				ItemStack.EMPTY,
 
 				new IngredientStack[]{new IngredientStack("bouleSilicon", 1)},
@@ -161,7 +166,7 @@ public class IIRecipes
 		);
 
 		PrecissionAssemblerRecipe.addRecipe(
-				Utils.getItemWithMetaName(CommonProxy.item_material_ingot, "silicon"),
+				Utils.getStackWithMetaName(CommonProxy.item_material_ingot, "silicon"),
 				ItemStack.EMPTY,
 
 				new IngredientStack[]{new IngredientStack("bouleSilicon", 1)},
@@ -176,20 +181,20 @@ public class IIRecipes
 
 		CrusherRecipe.removeRecipesForInput(new ItemStack(Items.QUARTZ));
 		CrusherRecipe.addRecipe(
-				Utils.getItemWithMetaName(CommonProxy.item_material_dust, "quartz_dirty"),
+				Utils.getStackWithMetaName(CommonProxy.item_material_dust, "quartz_dirty"),
 				new IngredientStack("gemQuartz", 1),
 				3200
 		);
 
 		BathingRecipe.addRecipe(
-				Utils.getItemWithMetaName(CommonProxy.item_material_dust, "quartz"),
+				Utils.getStackWithMetaName(CommonProxy.item_material_dust, "quartz"),
 				new IngredientStack("dustQuartzDirty"),
 				new FluidStack(CommonProxy.fluid_hydrofluoric_acid, 1000),
 				4200, 240
 		);
 
 		ArcFurnaceRecipe.addRecipe(
-				Utils.getItemWithMetaName(CommonProxy.item_material_boule, "silicon"),
+				Utils.getStackWithMetaName(CommonProxy.item_material_boule, "silicon"),
 				new IngredientStack("dustQuartz", 6),
 				ItemStack.EMPTY,
 				400, 512
@@ -208,10 +213,10 @@ public class IIRecipes
 
 	public static void addBulletPressRecipes()
 	{
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_artillery), new IngredientStack("ingotBrass", 4), Utils.getItemWithMetaName(CommonProxy.item_mold, "howitzer"), 2800);
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_grenade), new IngredientStack("nuggetBrass", 5), Utils.getItemWithMetaName(CommonProxy.item_mold, "grenade"), 1800);
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_machinegun, 3), new IngredientStack("ingotBrass"), Utils.getItemWithMetaName(CommonProxy.item_mold, "machinegun"), 1600);
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_submachinegun, 6), new IngredientStack("ingotBrass"), Utils.getItemWithMetaName(CommonProxy.item_mold, "submachinegun"), 1200);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_artillery), new IngredientStack("ingotBrass", 4), Utils.getStackWithMetaName(CommonProxy.item_mold, "howitzer"), 2800);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_grenade), new IngredientStack("nuggetBrass", 5), Utils.getStackWithMetaName(CommonProxy.item_mold, "grenade"), 1800);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_machinegun, 3), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(CommonProxy.item_mold, "machinegun"), 1600);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_submachinegun, 6), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(CommonProxy.item_mold, "submachinegun"), 1200);
 
 		MetalPressRecipe.removeRecipes(new ItemStack(IEContent.itemBullet, 2, 0));
 		MetalPressRecipe.addRecipe(new ItemStack(IEContent.itemBullet, 2, 0), "ingotBrass", new ItemStack(IEContent.itemMold, 1, 3), 2800);
@@ -222,32 +227,32 @@ public class IIRecipes
 	public static void addFunctionalCircuits()
 	{
 		BlueprintCraftingRecipe.addRecipe("basic_functional_circuits",
-				Utils.getItemWithMetaName(CommonProxy.item_circuit, "arithmetic"),
+				Utils.getStackWithMetaName(CommonProxy.item_circuit, "arithmetic"),
 				new IngredientStack("circuitBasic", 2), new ItemStack(IEContent.itemTool, 1, 1)
 		);
 		BlueprintCraftingRecipe.addRecipe("basic_functional_circuits",
-				Utils.getItemWithMetaName(CommonProxy.item_circuit, "logic"),
+				Utils.getStackWithMetaName(CommonProxy.item_circuit, "logic"),
 				new IngredientStack("circuitBasic", 2), new ItemStack(IEContent.itemTool, 1, 1)
 		);
 		BlueprintCraftingRecipe.addRecipe("basic_functional_circuits",
-				Utils.getItemWithMetaName(CommonProxy.item_circuit, "comparator"),
+				Utils.getStackWithMetaName(CommonProxy.item_circuit, "comparator"),
 				new IngredientStack("circuitBasic", 2), new ItemStack(IEContent.itemTool, 1, 1)
 		);
 		BlueprintCraftingRecipe.addRecipe("basic_functional_circuits",
-				Utils.getItemWithMetaName(CommonProxy.item_circuit, "text"),
+				Utils.getStackWithMetaName(CommonProxy.item_circuit, "text"),
 				new IngredientStack("circuitBasic", 2), new ItemStack(IEContent.itemTool, 1, 1)
 		);
 
 		BlueprintCraftingRecipe.addRecipe("advanced_functional_circuits",
-				Utils.getItemWithMetaName(CommonProxy.item_circuit, "advanced_arithmetic"),
+				Utils.getStackWithMetaName(CommonProxy.item_circuit, "advanced_arithmetic"),
 				new IngredientStack("circuitAdvanced", 2), new ItemStack(IEContent.itemTool, 1, 1)
 		);
 		BlueprintCraftingRecipe.addRecipe("advanced_functional_circuits",
-				Utils.getItemWithMetaName(CommonProxy.item_circuit, "advanced_logic"),
+				Utils.getStackWithMetaName(CommonProxy.item_circuit, "advanced_logic"),
 				new IngredientStack("circuitAdvanced", 2), new ItemStack(IEContent.itemTool, 1, 1)
 		);
 		BlueprintCraftingRecipe.addRecipe("advanced_functional_circuits",
-				Utils.getItemWithMetaName(CommonProxy.item_circuit, "itemstack"),
+				Utils.getStackWithMetaName(CommonProxy.item_circuit, "itemstack"),
 				new IngredientStack("circuitAdvanced", 2), new ItemStack(IEContent.itemTool, 1, 1)
 		);
 	}
@@ -255,16 +260,16 @@ public class IIRecipes
 	public static void addSpringRecipes()
 	{
 		BlueprintCraftingRecipe.addRecipe("metal_springs",
-				Utils.getItemWithMetaName(CommonProxy.item_material_spring, "iron"),
-				new IngredientStack("plateIron", 2), new ItemStack(IEContent.itemTool, 1)
+				Utils.getStackWithMetaName(CommonProxy.item_material_spring, "iron", 2),
+				new IngredientStack("plateIron", 1), new ItemStack(IEContent.itemTool, 1)
 		);
 		BlueprintCraftingRecipe.addRecipe("metal_springs",
-				Utils.getItemWithMetaName(CommonProxy.item_material_spring, "steel"),
-				new IngredientStack("plateSteel", 2), new ItemStack(IEContent.itemTool, 1)
+				Utils.getStackWithMetaName(CommonProxy.item_material_spring, "steel", 2),
+				new IngredientStack("plateSteel", 1), new ItemStack(IEContent.itemTool, 1)
 		);
 		BlueprintCraftingRecipe.addRecipe("metal_springs",
-				Utils.getItemWithMetaName(CommonProxy.item_material_spring, "brass"),
-				new IngredientStack("plateBrass", 2), new ItemStack(IEContent.itemTool, 1)
+				Utils.getStackWithMetaName(CommonProxy.item_material_spring, "brass", 2),
+				new IngredientStack("plateBrass", 1), new ItemStack(IEContent.itemTool, 1)
 		);
 
 	}
@@ -281,7 +286,7 @@ public class IIRecipes
 		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_printed_page, 1, 0), new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0), 600);
 
 		ArcFurnaceRecipe.addRecipe(
-				Utils.getItemWithMetaName(CommonProxy.item_material, "white_phosphorus", 4),
+				Utils.getStackWithMetaName(CommonProxy.item_material, "white_phosphorus", 4),
 				new IngredientStack("dustPhosphorus", 4),
 				ItemStack.EMPTY,
 				400, 512,
@@ -305,7 +310,7 @@ public class IIRecipes
 
 						if(!stacks.isEmpty())
 						{
-							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 16, 200, 1);
+							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false), Utils.getStackWithMetaName(CommonProxy.item_material, "dust_wood"), 16, 200, 1);
 
 						}
 
@@ -313,15 +318,19 @@ public class IIRecipes
 					}
 				}
 		);
-		//Planks to sticks
-		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
-		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), new IngredientStack("plankTreatedWood"), Utils.getItemWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
+		//Crusher, logs to sawdust
+		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "dust_wood", 2), new IngredientStack("logWood"), 4096);
+		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "dust_wood", 1), new IngredientStack("plankWood", 2), 3192);
 
-		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "pulp_wood"), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
-		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "pulp_wood_treated", 1), new IngredientStack("pulpWood"), new FluidStack(IEContent.fluidCreosote, 1000));
+		//Planks to sticks
+		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getStackWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), new IngredientStack("plankTreatedWood"), Utils.getStackWithMetaName(CommonProxy.item_material, "dust_wood"), 8, 100, 1);
+
+		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "pulp_wood"), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
+		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "pulp_wood_treated", 1), new IngredientStack("pulpWood"), new FluidStack(IEContent.fluidCreosote, 1000));
 
 		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 2, 0), new IngredientStack("pulpWood"), new ItemStack(IEContent.itemMold, 1, 0), 100);
-		MetalPressRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "artificial_leather"), new IngredientStack("pulpWoodTreated"), new ItemStack(IEContent.itemMold, 1, 0), 600);
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "artificial_leather"), new IngredientStack("pulpWoodTreated"), new ItemStack(IEContent.itemMold, 1, 0), 600);
 
 	}
 
@@ -369,14 +378,25 @@ public class IIRecipes
 		FermenterRecipe.addRecipe(new FluidStack(CommonProxy.fluid_ammonia, 120), ItemStack.EMPTY, new IngredientStack("listAllMeatRaw"), 1600);
 		FermenterRecipe.addRecipe(new FluidStack(CommonProxy.fluid_ammonia, 160), ItemStack.EMPTY, new ItemStack(Items.ROTTEN_FLESH), 1000);
 
-		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "dust_formaldehyde", 2), new IngredientStack("nuggetSilver"), new FluidStack(CommonProxy.fluid_methanol, 1000));
+		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "dust_formaldehyde", 2), new IngredientStack("nuggetSilver"), new FluidStack(CommonProxy.fluid_methanol, 1000));
 
-		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "dust_hexamine", 1), new IngredientStack("dustFormaldehyde"), new FluidStack(CommonProxy.fluid_ammonia, 320));
+		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "dust_hexamine", 1), new IngredientStack("dustFormaldehyde"), new FluidStack(CommonProxy.fluid_ammonia, 320));
 	}
 
 	public static void addHMXProductionRecipes()
 	{
-		BottlingMachineRecipe.addRecipe(Utils.getItemWithMetaName(CommonProxy.item_material, "dust_hmx", 1), new IngredientStack("materialHexogen"), new FluidStack(CommonProxy.fluid_nitric_acid, 500));
+		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.item_material, "dust_hmx", 1), new IngredientStack("materialHexogen"), new FluidStack(CommonProxy.fluid_nitric_acid, 500));
+	}
+
+	public static void addConcreteRecipes()
+	{
+		//Concrete Bricks / Volksbeton
+		BathingRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.block_concrete_decoration, "concrete_bricks"), new IngredientStack(new ItemStack(Blocks.BRICK_BLOCK)), new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120);
+		//Panzerconcrete / Panzerbeton
+		ArcFurnaceRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.block_concrete_decoration, "sturdy_concrete_bricks"), Utils.getStackWithMetaName(CommonProxy.block_concrete_decoration, "concrete_bricks"), ItemStack.EMPTY, 200, 2400, new IngredientStack("stickSteel", 2));
+		//Uberconcrete / Uberbeton
+		ArcFurnaceRecipe.addRecipe(Utils.getStackWithMetaName(CommonProxy.block_concrete_decoration, "uberconcrete", 2), Utils.getStackWithMetaName(CommonProxy.block_concrete_decoration, "sturdy_concrete_bricks"), ItemStack.EMPTY, 200, 3600, new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()));
+
 	}
 
 	public static void addChemicalBathCleaningRecipes()

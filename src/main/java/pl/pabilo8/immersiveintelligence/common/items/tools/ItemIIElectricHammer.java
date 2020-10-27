@@ -197,7 +197,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 			IAdvancedMultiblockTileEntity mb = (IAdvancedMultiblockTileEntity)tileEntity;
 			if(!mb.isConstructionFinished())
 			{
-				int energy = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use_construction, false);
+				int energy;
+				if(player.isCreative())
+					energy = 10000;
+				else
+					energy = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use_construction, false);
 				if(energy > 0)
 				{
 					mb.setCurrentConstruction(mb.getCurrentConstruction()+energy);

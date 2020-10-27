@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence;
 import blusunrize.immersiveengineering.common.Config.Mapped;
 import blusunrize.immersiveengineering.common.Config.SubConfig;
 import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.RangeDouble;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.fml.common.Mod;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
@@ -44,6 +45,10 @@ public class Config
 		@Comment({"Should RPM be counted in real time or ingame time"})
 		public static boolean rpmRealTime = true;
 
+		@Comment({"Whether basic circuits should be produced in II or IE way"})
+		@RequiresMcRestart
+		public static boolean changeCircuitProduction = true;
+
 		public static class Ores
 		{
 			@Comment({"A blacklist of dimensions in which IE ores won't spawn. By default this is Nether (-1) and End (1)"})
@@ -62,27 +67,32 @@ public class Config
 			@Comment({"Generation config for Platinum Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_platinum = new int[]{6, 0, 10, 2, 35};
+			public static int[] ore_platinum = new int[]{6, 0, 10, 2, 75};
 
 			@Comment({"Generation config for Zinc Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_zinc = new int[]{10, 35, 95, 2, 55};
+			public static int[] ore_zinc = new int[]{10, 35, 95, 2, 100};
 
 			@Comment({"Generation config for Tungsten Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_tungsten = new int[]{6, 0, 35, 2, 45};
+			public static int[] ore_tungsten = new int[]{6, 0, 35, 2, 75};
 
 			@Comment({"Generation config for Salt Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_salt = new int[]{12, 55, 95, 1, 65};
+			public static int[] ore_salt = new int[]{12, 55, 95, 1, 75};
 
 			@Comment({"Generation config for Fluorite Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] ore_fluorite = new int[]{12, 1, 55, 1, 10};
+			public static int[] ore_fluorite = new int[]{6, 1, 55, 1, 65};
+
+			@Comment({"Generation config for Fluorite Ore.", "Parameters: Vein size, lowest possible Y, highest possible Y, veins per chunk, chance for vein to spawn (out of 100). Set vein size to 0 to disable the generation"})
+			@RequiresMcRestart
+			@Mapped(mapClass = Config.class, mapName = "manual_intA")
+			public static int[] ore_phosphorus = new int[]{12, 1, 55, 1, 80};
 
 			@Comment({"Set this to true to allow retro-generation of Platinum Ore."})
 			@RequiresMcRestart
@@ -109,6 +119,10 @@ public class Config
 			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
 			public static boolean retrogen_fluorite = false;
 
+			@Comment({"Set this to true to allow retro-generation of Salt Ore."})
+			@RequiresMcRestart
+			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
+			public static boolean retrogen_phosphorus = false;
 		}
 
 		public static class Tools
@@ -350,10 +364,13 @@ public class Config
 				public static int mediCrateTankSize = 4000;
 
 				@Comment({"The amount of energy an inserter upgraded Medical Crate takes per one heal (in IF/RF/FE)"})
-				public static int mediCrateEnergyPerHeal = 50;
+				public static int mediCrateEnergyPerAction = 50;
 
 				@Comment({"The amount of energy an inserter upgraded Repair Crate takes per one repair (in IF/RF/FE)"})
-				public static int repairCrateEnergyPerHeal = 65;
+				public static int repairCrateEnergyPerAction = 65;
+
+				@Comment({"The amount of energy an inserter upgraded Ammunition Crate takes per one 4 second effect (in IF/RF/FE)"})
+				public static int ammoCrateEnergyPerAction = 85;
 
 				@Comment({"The amount of energy an inserter upgraded crate can store (in IF/RF/FE)"})
 				public static int maxEnergyStored = 4000;
@@ -434,6 +451,21 @@ public class Config
 				public static int torqueBreakingMax = 140;
 			}
 
+			public static class MechanicalPump
+			{
+				@Comment({"Rotations per minute required for the Sawmill to Work."})
+				public static int rpmMin = 40;
+
+				@Comment({"Max rotations per minute (will break if over)."})
+				public static int rpmBreakingMax = 160;
+
+				@Comment({"Torque required for the Sawmill to Work."})
+				public static int torqueMin = 2;
+
+				@Comment({"Max Torque (will break if over)."})
+				public static int torqueBreakingMax = 40;
+			}
+
 			public static class RadioStation
 			{
 				@Comment({"Energy capacity of the radio station."})
@@ -448,8 +480,9 @@ public class Config
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
 				public static int radioRange = 64;
 
+				@RangeDouble(min = 0, max = 1)
 				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 0 - full range, 0.5 - half range, 1 - no range, etc.)"})
-				public static float weatherHarshness = 0.5f;
+				public static double weatherHarshness = 0.5;
 			}
 
 			public static class DataInputMachine
@@ -568,6 +601,15 @@ public class Config
 			{
 				@Comment({"Energy capacity of the missile silo (per one block of height)."})
 				public static int energyCapacity = 2500000;
+			}
+
+			public static class Emplacement
+			{
+				@Comment({"Energy capacity of the emplacement."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Time for the multiblock to open/close the lid."})
+				public static int lidTime = 240;
 			}
 
 			public static class AmmunitionFactory
@@ -694,7 +736,42 @@ public class Config
 		public static class Weapons
 		{
 			@SubConfig
+			public static Submachinegun submachinegun;
+			@SubConfig
 			public static Machinegun machinegun;
+			@SubConfig
+			public static EmplacementWeapons emplacementWeapons;
+
+			public static class EmplacementWeapons
+			{
+
+				@SubConfig
+				public static Autocannon autocannon;
+
+				public static class Autocannon
+				{
+					@Comment({"Time required to reload all the magazines."})
+					public static int reloadTime = 340;
+
+					@Comment({"Time required to fire a single bullet from all the cannons."})
+					public static int bulletFireTime = 10;
+				}
+			}
+
+			public static class Submachinegun
+			{
+				@Comment({"Time required to reload a magazine in SMG."})
+				public static int clipReloadTime = 45;
+
+				@Comment({"Time required to fire a single bullet."})
+				public static int bulletFireTime = 2;
+
+				@Comment({"Amount of horizontal recoil after taking a shot."})
+				public static float recoilHorizontal = 2f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilVertical = 6f;
+			}
 
 			public static class Machinegun
 			{
@@ -774,6 +851,17 @@ public class Config
 			@Comment({"The maximum length of a single data wire."})
 			public static int dataWireLength = 24;
 
+			@Comment({"The RGB color of the small data wire."})
+			public static int smallRedstoneWireColouration = 0xff2f2f;
+
+			@Comment({"The maximum length of a single small data wire. Should not be much."})
+			public static int smallRedstoneWireLength = 4;
+
+			@Comment({"The RGB color of the small data wire."})
+			public static int smallDataWireColouration = 0xb3d1d6;
+
+			@Comment({"The maximum length of a single small data wire. Should not be much."})
+			public static int smallDataWireLength = 4;
 		}
 
 		public static class Vehicles

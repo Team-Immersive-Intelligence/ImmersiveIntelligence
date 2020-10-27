@@ -2,14 +2,14 @@ package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 20-06-2019
  */
-public class ModelPrecissionAssembler extends BaseBlockModel
+public class ModelPrecissionAssembler extends ModelBlockBase
 {
 	public ModelRendererTurbo[] lowerBox, drawer1Model, drawer2Model, doorLeftModel, doorRightModel, schemeModel;
 

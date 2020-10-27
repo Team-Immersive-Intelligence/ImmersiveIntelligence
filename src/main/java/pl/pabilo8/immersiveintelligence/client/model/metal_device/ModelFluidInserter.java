@@ -2,14 +2,14 @@ package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelFluidInserter extends BaseBlockModel
+public class ModelFluidInserter extends ModelBlockBase
 {
 	public ModelRendererTurbo[] inserterGaugeArrow, inserterOutput, inserterInput;
 	int textureX = 64;

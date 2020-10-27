@@ -171,7 +171,7 @@ public class MultiblockElectrolyzer implements IMultiblock
 							}
 							else
 							{
-								if(!Utils.isBlockAt(world, pos, IEContent.blockStorage, BlockTypes_MetalsIE.STEEL.getMeta()))
+								if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 								{
 									return false;
 								}

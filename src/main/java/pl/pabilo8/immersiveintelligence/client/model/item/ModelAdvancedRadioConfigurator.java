@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.item;
 
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelAdvancedRadioConfigurator extends BaseBlockModel
+public class ModelAdvancedRadioConfigurator extends ModelBlockBase
 {
 	public ModelRendererTurbo[] gaugeModel1, gaugeModel2, gaugeModel3;
 	int textureX = 64;

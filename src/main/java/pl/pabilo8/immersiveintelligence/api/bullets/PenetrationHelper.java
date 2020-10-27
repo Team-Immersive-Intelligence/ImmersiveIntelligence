@@ -15,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -28,16 +29,20 @@ public class PenetrationHelper
 		float newHp = hp-bulletDamage;
 		if(newHp > 0)
 		{
-			PenetrationRegistry.blockDamage.replace(pos, newHp);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(newHp/(pen.getIntegrity()/pen.getDensity()), pos), Utils.targetPointFromPos(pos, world, 32));
+			List<DamageBlockPos> list = PenetrationRegistry.blockDamage.stream().filter(damageBlockPos -> damageBlockPos.equals(pos)).collect(Collectors.toList());
+			if(list.size() > 0)
+				list.forEach(damageBlockPos -> damageBlockPos.damage = newHp);
+			else
+				PenetrationRegistry.blockDamage.add(new DamageBlockPos(pos, newHp));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(pos, newHp/(pen.getIntegrity()/pen.getDensity()))), Utils.targetPointFromPos(pos, world, 32));
 		}
 		else
 		{
 			if(newHp <= 0)
 			{
-				PenetrationRegistry.blockDamage.remove(pos);
+				PenetrationRegistry.blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(pos));
 				world.destroyBlock(pos, false);
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(-1f, pos), Utils.targetPointFromPos(pos, world, 32));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(pos, 0f)), Utils.targetPointFromPos(pos, world, 32));
 			}
 		}
 
@@ -71,7 +76,7 @@ public class PenetrationHelper
 
 	public static void supress(World world, double posX, double posY, double posZ, float supressionRadius, int suppressionPower)
 	{
-		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(posX, posY, posZ, posX+1, posY+1, posZ+1).grow(supressionRadius));
+		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(posX, posY, posZ, posX, posY, posZ).grow(supressionRadius));
 		for(EntityLivingBase entity : entities)
 		{
 			PotionEffect effect = entity.getActivePotionEffect(IIPotions.suppression);

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
@@ -14,6 +15,8 @@ import java.util.Map;
 public class DataPacket
 {
 	public Map<Character, IDataType> variables = new HashMap<>();
+	private EnumDyeColor packetColor = EnumDyeColor.WHITE;
+	private int packetAddress = -1;
 
 	public static final char[] varCharacters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 	public static final Map<String, Class> varTypes = new HashMap<>();
@@ -21,13 +24,28 @@ public class DataPacket
 	static
 	{
 		varTypes.put("null", DataPacketTypeNull.class);
+
 		varTypes.put("integer", DataPacketTypeInteger.class);
+		//varTypes.put("float", DataPacketTypeFloat.class);
+		//varTypes.put("vector", DataPacketTypeVector.class);
+		//varTypes.put("range", DataPacketTypeRange.class);
+
 		varTypes.put("string", DataPacketTypeString.class);
+		//varTypes.put("formatted_text", DataPacketTypeFormattedText.class);
+		//varTypes.put("character", DataPacketTypeCharacter.class);
+
 		varTypes.put("boolean", DataPacketTypeBoolean.class);
+
 		varTypes.put("accessor", DataPacketTypeAccessor.class);
 		varTypes.put("expression", DataPacketTypeExpression.class);
+
 		varTypes.put("itemstack", DataPacketTypeItemStack.class);
+		//varTypes.put("fluidstack", DataPacketTypeFluidStack.class);
+		//varTypes.put("crafting_recipe", DataPacketTypeCraftingRecipe.class);
+
 		varTypes.put("array", DataPacketTypeArray.class);
+
+		//varTypes.put("pair", DataPacketTypePair.class);
 	}
 
 	public IDataType getPacketVariable(Character name)
@@ -49,6 +67,24 @@ public class DataPacket
 			return true;
 		}
 		return false;
+	}
+
+	public DataPacket setPacketColor(EnumDyeColor color)
+	{
+		this.packetColor = color;
+		return this;
+	}
+
+	public DataPacket setPacketAddress(int address)
+	{
+		if(address >= -1)
+			this.packetAddress = address;
+		return this;
+	}
+
+	public boolean matchesConnector(EnumDyeColor connColor, int connAddress)
+	{
+		return (packetAddress==-1||packetAddress==connAddress)&&(packetColor==EnumDyeColor.WHITE||connColor==packetColor);
 	}
 
 	//If you really need to
@@ -82,6 +118,12 @@ public class DataPacket
 			nbt.setTag(String.valueOf(entry.getKey()), entry.getValue().valueToNBT());
 		}
 
+		if(packetColor!=EnumDyeColor.WHITE)
+			nbt.setInteger("color", packetColor.getMetadata());
+		if(packetAddress!=-1)
+			nbt.setInteger("address", packetAddress);
+
+
 		return nbt;
 	}
 
@@ -113,6 +155,10 @@ public class DataPacket
 				}
 			}
 		}
+		if(nbt.hasKey("color"))
+			this.packetColor = EnumDyeColor.byMetadata(nbt.getInteger("color"));
+		if(nbt.hasKey("address"))
+			this.packetAddress = nbt.getInteger("address");
 	}
 
 	@Override
@@ -121,5 +167,11 @@ public class DataPacket
 		DataPacket packet = new DataPacket();
 		packet.fromNBT(this.toNBT());
 		return packet;
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.toNBT().toString();
 	}
 }

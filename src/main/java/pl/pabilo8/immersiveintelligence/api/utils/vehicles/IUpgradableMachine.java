@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
  */
 public interface IUpgradableMachine
 {
-	boolean canFitUpgrade(MachineUpgrade upgrade);
+	boolean addUpgrade(MachineUpgrade upgrade, boolean test);
 
 	boolean hasUpgrade(MachineUpgrade upgrade);
 

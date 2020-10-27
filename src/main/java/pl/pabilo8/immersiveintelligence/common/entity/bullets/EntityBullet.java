@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.SoundType;
@@ -27,6 +26,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
@@ -400,19 +400,19 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 					float hp = pen.getIntegrity()/pen.getDensity();
 
 					boolean done = false;
-					DimensionBlockPos blockHitPos = new DimensionBlockPos(pos, world);
-					for(Entry<DimensionBlockPos, Float> p : PenetrationRegistry.blockDamage.entrySet())
+					DamageBlockPos blockHitPos = new DamageBlockPos(pos, world, hp);
+					for(DamageBlockPos p : PenetrationRegistry.blockDamage)
 					{
-						if(p.getKey().equals(blockHitPos))
+						if(p.equals(blockHitPos))
 						{
-							blockHitPos = p.getKey();
-							hp = p.getValue();
+							blockHitPos = p;
+							hp = p.damage;
 							done = true;
 							break;
 						}
 					}
 					if(!done)
-						PenetrationRegistry.blockDamage.put(blockHitPos, hp);
+						PenetrationRegistry.blockDamage.add(blockHitPos);
 
 					float penFraction = penetrationPower/(hardness*width*density);
 

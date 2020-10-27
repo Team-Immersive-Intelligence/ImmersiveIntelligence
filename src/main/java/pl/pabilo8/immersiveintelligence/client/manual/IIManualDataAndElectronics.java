@@ -5,18 +5,18 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesCallbackDisplay;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesDisplay;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
-
-import static pl.pabilo8.immersiveintelligence.api.Utils.getItemWithMetaName;
 
 /**
  * @author Pabilo8
@@ -71,31 +71,31 @@ public class IIManualDataAndElectronics extends IIManual
 		ManualHelper.addEntry("circuit_production", getCategory(),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production0",
 						new ItemStack(IEContent.itemMaterial, 1, 27),
-						getItemWithMetaName(CommonProxy.item_material, "advanced_circuit_board"),
-						getItemWithMetaName(CommonProxy.item_material, "processor_circuit_board")
+						Utils.getStackWithMetaName(CommonProxy.item_material, "advanced_circuit_board"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "processor_circuit_board")
 				),
 
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_basic",
-						getItemWithMetaName(CommonProxy.item_material, "basic_circuit_board_raw"),
-						getItemWithMetaName(CommonProxy.item_material, "basic_circuit_board_etched"),
-						getItemWithMetaName(CommonProxy.item_material, "advanced_electronic_element"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "basic_circuit_board_raw"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "basic_circuit_board_etched"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "advanced_electronic_element"),
 						new ItemStack(IEContent.itemMaterial, 1, 27)
 				),
 				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_basic_usages"),
 
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_advanced",
-						getItemWithMetaName(CommonProxy.item_material, "advanced_circuit_board_raw"),
-						getItemWithMetaName(CommonProxy.item_material, "advanced_circuit_board_etched"),
-						getItemWithMetaName(CommonProxy.item_material, "advanced_electronic_element"),
-						getItemWithMetaName(CommonProxy.item_material, "advanced_circuit_board")
+						Utils.getStackWithMetaName(CommonProxy.item_material, "advanced_circuit_board_raw"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "advanced_circuit_board_etched"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "advanced_electronic_element"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "advanced_circuit_board")
 				),
 				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_advanced_usages"),
 
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_processor",
-						getItemWithMetaName(CommonProxy.item_material, "processor_circuit_board_raw"),
-						getItemWithMetaName(CommonProxy.item_material, "processor_circuit_board_etched"),
-						getItemWithMetaName(CommonProxy.item_material, "processor_electronic_element"),
-						getItemWithMetaName(CommonProxy.item_material, "processor_circuit_board")
+						Utils.getStackWithMetaName(CommonProxy.item_material, "processor_circuit_board_raw"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "processor_circuit_board_etched"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "processor_electronic_element"),
+						Utils.getStackWithMetaName(CommonProxy.item_material, "processor_circuit_board")
 				),
 				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_processor_usages")
 		);
@@ -133,9 +133,16 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press1"),
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press2"),
 				new DataVariablesDisplay(ManualHelper.getManual(), "printing_press", true)
-						.addEntry(new DataPacketTypeString(), 't')
-						.addEntry(new DataPacketTypeInteger(), 'c')
-						.addEntry(new DataPacketTypeString(), 's')
+						.addEntry(new DataPacketTypeInteger(), 'a')
+						.addEntry(new DataPacketTypeString(), 'm')
+						.addEntry(new DataPacketTypeString(), 't'),
+				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "printing_press")
+						.addEntry(new DataPacketTypeInteger(), "get_ink", "get_ink_black")
+						.addEntry(new DataPacketTypeInteger(), "get_ink_cyan")
+						.addEntry(new DataPacketTypeInteger(), "get_ink_magenta")
+						.addEntry(new DataPacketTypeInteger(), "get_ink_yellow")
+						.addEntry(new DataPacketTypeInteger(), "get_energy")
+						.addEntry(new DataPacketTypeInteger(), "get_paper")
 
 		);
 

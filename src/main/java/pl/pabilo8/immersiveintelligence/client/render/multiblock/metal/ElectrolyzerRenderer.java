@@ -21,8 +21,10 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 	@Override
 	public void render(TileEntityElectrolyzer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
-		if(te!=null&&!te.isDummy())
+		if(te!=null)
 		{
+			if(te.isDummy())
+				return;
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x, y, z);
@@ -41,7 +43,7 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 			GlStateManager.popMatrix();
 
 		}
-		else if(te==null)
+		else
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x-0.35, y-1.1, z-0.35);

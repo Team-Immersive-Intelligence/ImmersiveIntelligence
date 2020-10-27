@@ -1,25 +1,33 @@
 package pl.pabilo8.immersiveintelligence.client;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler.IZoomTool;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.network.MessageRequestBlockUpdate;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -33,6 +41,7 @@ import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,16 +50,23 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
+import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -63,6 +79,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II\u00A0", "\u00A0\u00A0AMMO\u00A0", "\u00A0\u00A0HERE\u00A0", "\u00A0\u00A0--\u00A0"};
 	private static final String texture_gui = ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png";
 	private static boolean mgAiming = false;
+	public static ArrayList<EntityPlayer> aimingPlayers = new ArrayList<>();
 
 	public static void drawMachinegunGui(EntityMachinegun mg, RenderGameOverlayEvent.Post event)
 	{
@@ -154,11 +171,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(world!=null&&world.provider!=null)
 			PenetrationRegistry.blockDamageClient.forEach(
-					(dimensionBlockPos, aFloat) ->
+					(damageBlockPos) ->
 					{
-						if(dimensionBlockPos!=null&&dimensionBlockPos.dimension==world.provider.getDimension()&&aFloat!=null&&world.isBlockLoaded(dimensionBlockPos))
+						if(damageBlockPos!=null&&damageBlockPos.dimension==world.provider.getDimension()&&damageBlockPos.damage > 0&&world.isBlockLoaded(damageBlockPos))
 						{
-							pl.pabilo8.immersiveintelligence.api.Utils.tesselateBlockBreak(tessellator, world, dimensionBlockPos, aFloat, event.getPartialTicks());
+							pl.pabilo8.immersiveintelligence.api.Utils.tesselateBlockBreak(tessellator, world, damageBlockPos, event.getPartialTicks());
 						}
 					}
 			);
@@ -260,24 +277,70 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(ClientUtils.mc().player!=null&&event.getType()==RenderGameOverlayEvent.ElementType.TEXT)
 		{
-			if(mop!=null&&mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof IEntityOverlayText)
-			{
-				boolean hammer = !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND));
-
-				IEntityOverlayText overlayBlock = (IEntityOverlayText)mop.entityHit;
-				String[] text = overlayBlock.getOverlayText(ClientUtils.mc().player, mop, hammer);
-				boolean useNixie = overlayBlock.useNixieFont(ClientUtils.mc().player, mop);
-				if(text!=null&&text.length > 0)
+			if(mop!=null)
+				if(mop.typeOfHit==Type.BLOCK&&!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&pl.pabilo8.immersiveintelligence.api.Utils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND)))
 				{
-					FontRenderer font = useNixie?blusunrize.immersiveengineering.client.ClientProxy.nixieFontOptional: ClientUtils.font();
-					int col = (useNixie&&IEConfig.nixietubeFont)?Lib.colour_nixieTubeText: 0xffffff;
-					int i = 0;
-					for(String s : text)
-						if(s!=null)
-							font.drawString(s, event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8+(i++)*font.FONT_HEIGHT, col, true);
-				}
+					int col = IEConfig.nixietubeFont?Lib.colour_nixieTubeText: 0xffffff;
+					String[] text = null;
+					TileEntity tileEntity = player.world.getTileEntity(mop.getBlockPos());
 
-			}
+					if(tileEntity!=null&&tileEntity.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite()))
+					{
+						IRotaryEnergy energy = tileEntity.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite());
+
+						if(energy!=null)
+						{
+							float int_torque = energy.getTorque();
+							float ext_torque = energy.getOutputRotationSpeed();
+							float int_speed = energy.getRotationSpeed();
+							float ext_speed = energy.getOutputRotationSpeed();
+							if(int_torque!=ext_torque&&int_speed!=ext_speed)
+								text = new String[]{
+										I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_torque", int_torque),
+										I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_speed", int_speed),
+										I18n.format(CommonProxy.INFO_KEY+"tachometer.external_torque", ext_torque),
+										I18n.format(CommonProxy.INFO_KEY+"tachometer.external_speed", ext_speed)
+								};
+							else
+								text = new String[]{
+										I18n.format(CommonProxy.INFO_KEY+"tachometer.torque", int_torque),
+										I18n.format(CommonProxy.INFO_KEY+"tachometer.speed", int_speed)
+								};
+						}
+					}
+
+					//here add new block types
+
+					if(text!=null)
+					{
+						if(player.world.getTotalWorldTime()%20==0)
+						{
+							ImmersiveEngineering.packetHandler.sendToServer(new MessageRequestBlockUpdate(mop.getBlockPos()));
+						}
+						int i = 0;
+						for(String s : text)
+							if(s!=null)
+								ClientUtils.font().drawString(s, event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8+(i++)*ClientUtils.font().FONT_HEIGHT, col, true);
+					}
+				}
+				else if(mop.typeOfHit==Type.ENTITY&&mop.entityHit instanceof IEntityOverlayText)
+				{
+					boolean hammer = !player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND));
+
+					IEntityOverlayText overlayBlock = (IEntityOverlayText)mop.entityHit;
+					String[] text = overlayBlock.getOverlayText(ClientUtils.mc().player, mop, hammer);
+					boolean useNixie = overlayBlock.useNixieFont(ClientUtils.mc().player, mop);
+					if(text!=null&&text.length > 0)
+					{
+						FontRenderer font = useNixie?blusunrize.immersiveengineering.client.ClientProxy.nixieFontOptional: ClientUtils.font();
+						int col = (useNixie&&IEConfig.nixietubeFont)?Lib.colour_nixieTubeText: 0xffffff;
+						int i = 0;
+						for(String s : text)
+							if(s!=null)
+								font.drawString(s, event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8+(i++)*font.FONT_HEIGHT, col, true);
+					}
+
+				}
 			if(player.getRidingEntity() instanceof EntityMachinegun)
 				drawMachinegunGui((EntityMachinegun)player.getRidingEntity(), event);
 		}
@@ -523,5 +586,122 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		{
 			event.setRoll(CameraHandler.INSTANCE.getRoll());
 		}
+	}
+
+	public static void handleBipedRotations(ModelBiped model, Entity entity)
+	{
+		if(!Config.IEConfig.fancyItemHolding)
+			return;
+
+		model.bipedHead.rotateAngleZ = 0f;
+		model.bipedHeadwear.rotateAngleZ = 0f;
+
+		if(entity instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)entity;
+
+			// TODO: 26.09.2020 Find a better way, or make an animation API!
+			if(aimingPlayers.contains(entity))
+			{
+				model.bipedHead.rotateAngleZ = -0.35f;
+				model.bipedHeadwear.rotateAngleZ = -0.35f;
+			}
+
+			Entity ridingEntity = player.getRidingEntity();
+			if(ridingEntity instanceof EntityMachinegun)
+			{
+				EntityMachinegun mg = ((EntityMachinegun)ridingEntity);
+				float ff = (float)(-1.35f-(Math.toRadians(mg.gunPitch))*1.25);
+				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead-mg.setYaw);
+
+				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
+				float wtime = (Math.abs((((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40)/40f)-0.5f)/0.5f)-0.5f;
+				wtime *= 0.65f;
+
+				if(Math.abs(mg.gunYaw-true_head_angle) > 5)
+					if(mg.gunYaw < true_head_angle)
+					{
+						model.bipedRightLeg.rotateAngleX = (wtime)*2f;
+						model.bipedLeftLeg.rotateAngleX = -(wtime)*2f;
+					}
+					else if(mg.gunYaw > true_head_angle)
+					{
+						model.bipedRightLeg.rotateAngleX = -(wtime)*2f;
+						model.bipedLeftLeg.rotateAngleX = (wtime)*2f;
+					}
+
+
+				ridingEntity.applyOrientationToEntity(player);
+				model.bipedHead.rotateAngleX *= -0.35f;
+				model.bipedHeadwear.rotateAngleX *= -0.35f;
+				model.bipedRightArm.rotateAngleX = ff;
+				model.bipedLeftArm.rotateAngleY = .08726f+(3.14f/6f);
+				model.bipedLeftArm.rotateAngleX = ff;
+				model.bipedBody.rotateAngleX -= 0.0625f;
+				//model.bipedRightArm.rotateAngleY = -.08726f+model.bipedHead.rotateAngleY;
+			}
+			else if(ridingEntity instanceof EntityVehicleSeat)
+			{
+				EntityVehicleSeat seat = ((EntityVehicleSeat)ridingEntity);
+
+				if(player.getLowestRidingEntity() instanceof EntityMotorbike)
+				{
+					if(seat.seatID==0)
+					{
+						model.bipedRightArm.rotateAngleX = -1.5f;
+						model.bipedRightArm.rotateAngleY = 0.5f;
+						model.bipedLeftArm.rotateAngleX = -1.5f;
+						model.bipedLeftArm.rotateAngleY = -0.5f;
+					}
+
+					model.bipedRightLeg.rotateAngleY = 0.65f;
+					model.bipedLeftLeg.rotateAngleY = -0.65f;
+					model.bipedRightLeg.rotateAngleX = -0.65f;
+					model.bipedLeftLeg.rotateAngleX = -0.65f;
+
+				}
+				else
+				{
+
+				}
+
+			}
+			else
+				for(EnumHand hand : EnumHand.values())
+				{
+					ItemStack heldItem = player.getHeldItem(hand);
+					if(!heldItem.isEmpty())
+					{
+						boolean right = (hand==EnumHand.MAIN_HAND)==(player.getPrimaryHand()==EnumHandSide.RIGHT);
+						if(heldItem.getItem() instanceof ItemIISubmachinegun&&hand!=EnumHand.OFF_HAND)
+						{
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
+								model.bipedRightArm.rotateAngleY = -.08726f-TmtUtil.AngleToTMT(15f)+model.bipedHead.rotateAngleY;
+								// TODO: 26.09.2020 vector calculation
+								float v = model.bipedBody.rotateAngleY-model.bipedRightArm.rotateAngleY;
+
+								model.bipedLeftArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
+								model.bipedLeftArm.rotateAngleY = 1.25f-model.bipedBody.rotateAngleY-v;
+								//model.bipedLeftArm.rotateAngleZ = -v;
+								//model.bipedLeftArm.rotateAngleY = -.08726f+v+model.bipedHead.rotateAngleY;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
+								model.bipedLeftArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
+							}
+						}
+
+					}
+				}
+		}
+	}
+
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event)
+	{
+		aimingPlayers.clear();
 	}
 }

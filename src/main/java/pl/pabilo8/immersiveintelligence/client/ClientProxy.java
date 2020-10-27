@@ -67,7 +67,6 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualDataAndElectronics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualLogistics;
@@ -75,6 +74,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualWarfare;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.render.*;
 import pl.pabilo8.immersiveintelligence.client.render.item.*;
+import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.MechanicalPumpRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
@@ -87,11 +87,14 @@ import pl.pabilo8.immersiveintelligence.common.IICommandHandler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
+import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalPump;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalWheel;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
@@ -99,7 +102,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIDrillHead.DrillHeadPerm;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -167,8 +169,6 @@ public class ClientProxy extends CommonProxy
 		{
 			final ResourceLocation loc = Block.REGISTRY.getNameForObject(block);
 			Item blockItem = Item.getItemFromBlock(block);
-			if(blockItem==null)
-				throw new RuntimeException("ITEMBLOCK FOR "+loc+" : "+block+" IS NULL");
 			if(block instanceof BlockIIFluid)
 			{
 				mapFluidState(block, ((BlockIIFluid)block).getFluid());
@@ -189,9 +189,9 @@ public class ClientProxy extends CommonProxy
 				for(int meta = 0; meta < ieMetaBlock.getMetaEnums().length; meta++)
 				{
 					BlockIIBase b = (BlockIIBase)block;
-					if(!b.tesrMap.isEmpty()&&b.tesrMap.containsKey(Integer.valueOf(meta)))
+					if(!b.tesrMap.isEmpty()&&b.tesrMap.containsKey(meta))
 					{
-						ModelLoader.setCustomModelResourceLocation(blockItem, meta, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "itemblock/"+b.tesrMap.get(Integer.valueOf(meta))), "inventory"));
+						ModelLoader.setCustomModelResourceLocation(blockItem, meta, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "itemblock/"+b.tesrMap.get(meta)), "inventory"));
 					}
 					else
 					{
@@ -200,6 +200,7 @@ public class ClientProxy extends CommonProxy
 						if(ieMetaBlock.useCustomStateMapper())
 						{
 							String custom = ieMetaBlock.getCustomStateMapping(meta, true);
+							//Use @Nullable annotation!
 							if(custom!=null)
 								location += "_"+custom;
 						}
@@ -267,11 +268,8 @@ public class ClientProxy extends CommonProxy
 	{
 		Item item = Item.getItemFromBlock(block);
 		FluidStateMapper mapper = new FluidStateMapper(fluid);
-		if(item!=null)
-		{
-			ModelLoader.registerItemVariants(item);
-			ModelLoader.setCustomMeshDefinition(item, mapper);
-		}
+		ModelLoader.registerItemVariants(item);
+		ModelLoader.setCustomMeshDefinition(item, mapper);
 		ModelLoader.setCustomStateMapper(block, mapper);
 	}
 
@@ -287,27 +285,26 @@ public class ClientProxy extends CommonProxy
 	{
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
-		if(te instanceof IGuiTile)
-		{
-			GuiScreen gui = null;
-			if(IIGuiList.values().length > ID&&IIGuiList.values()[ID].teClass.isInstance(te))
-			{
-				gui = IIGuiList.values()[ID].gui.apply(player, te);
-			}
 
-			if(gui!=null)
-			{
-				((IGuiTile)te).onGuiOpened(player, true);
-				return gui;
-			}
-		}
-		else
+		GuiScreen gui;
+		if(IIGuiList.values().length > ID)
 		{
-			if(stack.getItem() instanceof ItemIIPrintedPage&&ID==IIGuiList.GUI_PRINTED_PAGE_TEXT.ordinal())
+			IIGuiList guiBuilder = IIGuiList.values()[ID];
+			if(guiBuilder.item)
 			{
-				return new GuiPrintedPage(player, stack);
+				return guiBuilder.guiFromStack.apply(player, stack);
+			}
+			else if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))
+			{
+				gui = guiBuilder.guiFromTile.apply(player, te);
+				if(gui!=null)
+				{
+					((IGuiTile)te).onGuiOpened(player, true);
+					return gui;
+				}
 			}
 		}
+
 		return null;
 	}
 
@@ -502,8 +499,15 @@ public class ClientProxy extends CommonProxy
 		item_submachinegun.setTileEntityItemStackRenderer(SubmachinegunItemStackRenderer.instance);
 		ItemIIWeaponUpgrade.addUpgradesToRender();
 
+		item_light_engineer_helmet.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+		item_light_engineer_chestplate.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+		item_light_engineer_leggings.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+		item_light_engineer_boots.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+
 		//Block / ItemStack rendering
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionCrate.class, new AmmunitionCrateRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionCrate.class, new AmmunitionCrateRenderer().subscribeToList("ammunition_crate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMedicalCrate.class, new MedicalCrateRenderer().subscribeToList("medical_crate"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRepairCrate.class, new RepairCrateRenderer().subscribeToList("repair_crate"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInserter.class, new InserterRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedInserter.class, new AdvancedInserterRenderer());
@@ -513,30 +517,45 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneBuffer.class, new RedstoneBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallDataBuffer.class, new SmallDataBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataMerger.class, new DataMergerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataDebugger.class, new DataDebuggerRenderer().subscribeToList("data_debugger"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPunchtapeReader.class, new PunchtapeReaderRenderer().subscribeToList("punchtape_reader"));
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), TileEntityAmmunitionCrate.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta(), TileEntityMedicalCrate.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta(), TileEntityRepairCrate.class);
 
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_device), IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getMeta(), TileEntityPunchtapeReader.class);
+
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalPump.class, new MechanicalPumpRenderer().subscribeToList("mechanical_pump"));
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_mechanical_device1), IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta(), TileEntityMechanicalPump.class);
 
 		//Data Connectors
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataConnector.class, new DataConnectorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataRelay.class, new DataRelayRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataCallbackConnector.class, new DataCallbackConnectorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalDispenser.class, new ChemicalDispenserRenderer());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySandbags.class, new SandbagsRenderer());
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_stone_decoration), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
 
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTankTrap.class, new TankTrapRenderer().subscribeToList("tank_trap"));
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_fortification1), IIBlockTypes_MetalFortification1.TANK_TRAP.getMeta(), TileEntityTankTrap.class);
+
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_CALLBACK_CONNECTOR.getMeta(), TileEntityDataCallbackConnector.class);
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), TileEntityAdvancedInserter.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), TileEntityChemicalDispenser.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.DATA_DEBUGGER.getMeta(), TileEntityDataDebugger.class);
 		//ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
 
 		//Alarm Siren
@@ -549,6 +568,8 @@ public class ClientProxy extends CommonProxy
 
 		//Small Crate
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallCrate.class, new SmallCrateRenderer());
+		Item.getItemFromBlock(block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
+
 		Item.getItemFromBlock(block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
 		//Tools
@@ -593,6 +614,10 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPacker.class, new PackerRenderer().subscribeToList("packer"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("redstone_data_interface"));
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEmplacement.class, new EmplacementRenderer().subscribeToList("emplacement"));
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_metal_multiblock1), IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
+
 
 		mech_con_renderer = new MechanicalConnectorRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalConnectable.class, mech_con_renderer);

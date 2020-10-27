@@ -35,7 +35,7 @@ public class MultiblockChemicalBath implements IMultiblock
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 7, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())),
 			new IngredientStack("blockSteel", 2),
-			new IngredientStack("sheetmetalIron", 3)
+			new IngredientStack("blockSheetmetalIron", 3)
 	};
 	public static MultiblockChemicalBath instance = new MultiblockChemicalBath();
 	static ItemStack[][][] structure = new ItemStack[2][3][5];
@@ -225,7 +225,7 @@ public class MultiblockChemicalBath implements IMultiblock
 							}
 							else
 							{
-								if(!Utils.isBlockAt(world, pos, IEContent.blockSheetmetal, BlockTypes_MetalsAll.IRON.getMeta()))
+								if(!Utils.isOreBlockAt(world, pos, "blockSheetmetalIron"))
 								{
 
 									return false;

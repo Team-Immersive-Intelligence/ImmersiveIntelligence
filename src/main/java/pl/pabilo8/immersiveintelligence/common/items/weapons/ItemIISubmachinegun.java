@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -26,9 +27,9 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ISkinnable;
+import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -103,22 +104,35 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 
-		if(!playerIn.world.isRemote&&playerIn.world.getTotalWorldTime()%2==0)
+		if(handIn==EnumHand.OFF_HAND)
+			return new ActionResult<>(EnumActionResult.PASS, itemstack);
+
+		if(playerIn.world.getTotalWorldTime()%2==0)
 		{
 			Vec3d vec = playerIn.getLookVec().scale(1f);
 
-			ItemStack stack = CommonProxy.item_bullet.getAmmoStack(1, "submachinegun_1bCal", "CoreSteel", "empty", "empty", 0, 0, 0);
+			if(!playerIn.world.isRemote)
+			{
+				ItemStack stack = CommonProxy.item_bullet.getAmmoStack(1, "submachinegun_1bCal", "CoreSteel", "empty", "empty", 0, 0, 0);
 
-			worldIn.playSound(null, playerIn.posX+vec.x, playerIn.posY+vec.y, playerIn.posZ+vec.z, IISounds.machinegun_shot, SoundCategory.PLAYERS, 0.5f, 0.85f);
+				worldIn.playSound(null, playerIn.posX+vec.x, playerIn.posY+vec.y, playerIn.posZ+vec.z, IISounds.machinegun_shot, SoundCategory.PLAYERS, 0.5f, 0.85f);
 
-			EntityBullet a = new EntityBullet(playerIn.world, playerIn.posX+vec.x, playerIn.posY+1f+vec.y, playerIn.posZ+vec.z, playerIn, stack);
-			//blocks per tick
-			a.motionX = vec.x*2.5;
-			a.motionY = vec.y*2.5;
-			a.motionZ = vec.z*2.5;
-			a.world.spawnEntity(a);
+				EntityTippedArrow a = new EntityTippedArrow(playerIn.world, playerIn.posX+vec.x, playerIn.posY+playerIn.eyeHeight+vec.y, playerIn.posZ+vec.z);
+				//blocks per tick
+				a.motionX = vec.x*4.5;
+				a.motionY = vec.y*4.5;
+				a.motionZ = vec.z*4.5;
+				a.setDamage(8f);
+				a.world.spawnEntity(a);
 
-			return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+				return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+			}
+			else
+			{
+				ParticleUtils.spawnGunfireFX(playerIn.posX+vec.x, playerIn.posY+playerIn.eyeHeight+vec.y, playerIn.posZ+vec.z, vec.x, vec.y, vec.z, 1f);
+				return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+			}
+
 		}
 
 		return new ActionResult<>(EnumActionResult.FAIL, itemstack);

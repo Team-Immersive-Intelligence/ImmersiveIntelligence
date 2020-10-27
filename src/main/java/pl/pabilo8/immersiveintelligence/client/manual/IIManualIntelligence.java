@@ -30,8 +30,8 @@ public class IIManualIntelligence extends IIManual
 		);
 
 		ManualHelper.addEntry("binoculars", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars0", Utils.getItemWithMetaName(CommonProxy.item_binoculars, "binoculars")),
-				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars1", Utils.getItemWithMetaName(CommonProxy.item_binoculars, "infrared_binoculars"))
+				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars0", Utils.getStackWithMetaName(CommonProxy.item_binoculars, "binoculars")),
+				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars1", Utils.getStackWithMetaName(CommonProxy.item_binoculars, "infrared_binoculars"))
 		);
 
 		ManualHelper.addEntry("alarm_siren", getCategory(),

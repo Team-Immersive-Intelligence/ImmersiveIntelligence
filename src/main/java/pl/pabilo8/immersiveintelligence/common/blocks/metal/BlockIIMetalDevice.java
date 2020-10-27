@@ -43,8 +43,10 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 		tesrMap.put(IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), IIBlockTypes_MetalDevice.TIMED_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getName());
-		tesrMap.put(IIBlockTypes_MetalDevice.DATA_DEBUGGER.getMeta(), IIBlockTypes_MetalDevice.DATA_DEBUGGER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), IIBlockTypes_MetalDevice.DATA_MERGER.getName());
+		tesrMap.put(IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getMeta(), IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getName());
+		tesrMap.put(IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta(), IIBlockTypes_MetalDevice.MEDICAL_CRATE.getName());
+		tesrMap.put(IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta(), IIBlockTypes_MetalDevice.REPAIR_CRATE.getName());
 	}
 
 	@Override
@@ -81,9 +83,9 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 			{
 				return new TileEntityRedstoneBuffer();
 			}
-			case DATA_DEBUGGER:
+			case PUNCHTAPE_READER:
 			{
-				return new TileEntityDataDebugger();
+				return new TileEntityPunchtapeReader();
 			}
 			case SMALL_DATA_BUFFER:
 			{

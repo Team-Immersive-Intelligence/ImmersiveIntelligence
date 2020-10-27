@@ -31,5 +31,6 @@ public class IIPacketHandler
 		INSTANCE.registerMessage(MessageRotaryPowerSync.HandlerClient.class, MessageRotaryPowerSync.class, 8, Side.CLIENT);
 		INSTANCE.registerMessage(MessageBlockDamageSync.HandlerClient.class, MessageBlockDamageSync.class, 9, Side.CLIENT);
 		INSTANCE.registerMessage(MessageProgrammableSpeakerSync.Handler.class, MessageProgrammableSpeakerSync.class, 10, Side.CLIENT);
+		INSTANCE.registerMessage(MessagePlayerAimAnimationSync.HandlerClient.class, MessagePlayerAimAnimationSync.class, 11, Side.CLIENT);
 	}
 }

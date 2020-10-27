@@ -11,6 +11,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,6 +51,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.network.MessagePlayerAimAnimationSync;
 
 import javax.annotation.Nullable;
 
@@ -194,7 +196,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 							int out = EnergyHelper.extractFlux(stack, Machinegun.infraredScopeEnergyUsage*20, false);
 							if(out > 0)
 							{
-								ent.addPotionEffect(new PotionEffect(IIPotions.infrared_vision, Math.round(out/(float)(Machinegun.infraredScopeEnergyUsage)*1.25f), 2, true, false));
+								ent.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, Math.round(out/(float)(Machinegun.infraredScopeEnergyUsage)*1.25f), 2, true, false));
 								break;
 							}
 						}
@@ -549,7 +551,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			if(compound.hasKey("shoot"))
 				shoot = compound.getBoolean("shoot");
 			if(compound.hasKey("aiming"))
+			{
 				aiming = compound.getBoolean("aiming");
+				if(isBeingRidden())
+					IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(getPassengers().get(0), aiming), this.world.provider.getDimension());
+			}
+
 			//if(compound.hasKey("reload"))
 			//	shoot = compound.getBoolean("shoot");
 		}
@@ -643,6 +650,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		}
 		shoot = false;
 		aiming = false;
+		if(!world.isRemote)
+			IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(passenger, false), this.world.provider.getDimension());
 		super.removePassenger(passenger);
 	}
 

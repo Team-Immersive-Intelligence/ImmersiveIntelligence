@@ -153,7 +153,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 					}
 					else if(l==0)
 					{
-						if(!Utils.isBlockAt(world, pos, IEContent.blockStorage, BlockTypes_MetalsIE.STEEL.getMeta()))
+						if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 						{
 							return false;
 						}

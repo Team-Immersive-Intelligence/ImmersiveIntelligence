@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -13,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
 
-public class ModelAmmunitionCrate extends BaseBlockModel //Same as Filename
+public class ModelAmmunitionCrate extends ModelBlockBase //Same as Filename
 {
 	int textureX = 64;
 	int textureY = 32;
@@ -78,7 +76,7 @@ public class ModelAmmunitionCrate extends BaseBlockModel //Same as Filename
 		baseModel[12].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(0, 1, 0, 1) }), 1, 6, 1, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {2 ,6 ,2 ,4}); // Shape 13
 		baseModel[12].setRotationPoint(11F, -3F, 12.5F);
 
-		baseModel[13].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(0, 1, 0, 1) }), 1, 6, 1, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {2 ,6 ,2 ,4}); // Shape 13
+		baseModel[13].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(0, 1, 0, 1)}), 1, 6, 1, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{2, 6, 2, 4}); // Shape 13
 		baseModel[13].setRotationPoint(11F, -3F, 4.5F);
 
 		lidModel = new ModelRendererTurbo[2];
@@ -86,60 +84,11 @@ public class ModelAmmunitionCrate extends BaseBlockModel //Same as Filename
 		lidModel[1] = new ModelRendererTurbo(this, 0, 24, textureX, textureY); // BorderBoxHandle
 
 		lidModel[0].addBox(-1F, -1F, -4F, 16, 1, 8, 0F); // TopLid
-		lidModel[0].setRotationPoint(1F, -8F, 8F);
-
 		lidModel[1].addBox(14.5F, -0.5F, -2F, 1, 2, 4, 0F); // TopLidHandle
-		lidModel[1].setRotationPoint(1F, -8F, 8F);
+
+		parts.put("base", baseModel);
+		parts.put("lid", lidModel);
 
 		flipAll();
-	}
-
-	@Override
-	public void flipAll() {
-		super.flipAll();
-		flip(lidModel);
-	}
-
-	@Override
-	public void translateAll(float x, float y, float z) {
-		super.translateAll(x,y,z);
-		translate(lidModel, x, y, z);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z) {
-		super.rotateAll(x,y,z);
-		rotate(lidModel, x, y, z);
-	}
-
-	@Override
-	public void render() {
-		super.render();
-		float f5 = 1F / 16F;
-		for (ModelRendererTurbo model : lidModel)
-			model.render(f5);
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, boolean mirrored)
-	{
-		switch (facing)
-		{
-			case NORTH: {
-				GlStateManager.rotate(180F, 0F, 1F, 0F);
-			} break;
-			case SOUTH: {
-				//GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f,0f,1f);
-			} break;
-			case EAST: {
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-1f,0f,0f);
-			} break;
-			case WEST: {
-				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(0f,0f,1f);
-			} break;
-		}
 	}
 }

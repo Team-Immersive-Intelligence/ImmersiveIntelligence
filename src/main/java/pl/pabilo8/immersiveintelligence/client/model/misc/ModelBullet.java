@@ -4,8 +4,8 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelBullet extends BaseBlockModel implements IBulletModel
+public class ModelBullet extends ModelBlockBase implements IBulletModel
 {
 	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 	int textureX = 64;

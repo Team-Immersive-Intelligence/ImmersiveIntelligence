@@ -51,6 +51,8 @@ public class GuiPrintedPage extends GuiScreen
 		int i = (this.width-pageImageWidth)/2;
 		int j = (this.height-pageImageHeight)/2;
 		this.drawTexturedModalRect(i, j, 0, 0, 192, 192);
+
+
 		String text_processed=text.replace("<br>","\n");
 		text_processed=text_processed.replace("\\n","\n");
 

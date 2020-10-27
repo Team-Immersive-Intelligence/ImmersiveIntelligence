@@ -51,10 +51,10 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 9, BlockTypes_MetalDecoration0.RADIATOR.getMeta())),
-			new IngredientStack(new ItemStack(IEContent.blockWoodenDecoration, 12, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta())),
+			new IngredientStack("scaffoldingTreatedWood", 12),
 			new IngredientStack(new ItemStack(IEContent.blockWoodenDevice0, 12, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta())),
 			new IngredientStack("blockSteel", 16),
-			new IngredientStack("sheetmetalSteel", 22)
+			new IngredientStack("blockSheetmetalSteel", 22)
 
 	};
 	public static MultiblockArtilleryHowitzer instance = new MultiblockArtilleryHowitzer();
@@ -222,6 +222,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
 					//I DON"T LIKE MANUAL POSITION INPUTTING! Once again, Blu please change the system to something easier (nbt structures maybe?)!
+					// 09.10 .2020 and so, I predicted the future ^^
 					for(BlockPos posv : checklist)
 					{
 						if(posv.getX()==pos2.getX()&&posv.getY()==pos2.getY()&&posv.getZ()==pos2.getZ())
@@ -361,7 +362,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 
 					else if(l==4&&w==0&&h >= -4&&h <= 0)
 					{
-						if(!Utils.isBlockAt(world, pos, IEContent.blockStorage, BlockTypes_MetalsIE.STEEL.getMeta()))
+						if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 						{
 							return false;
 						}
@@ -369,7 +370,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 					//Cannon
 					else if(h==-2&&w >= -1&&w <= 1&&l >= 3&&l <= 5&&w!=0)
 					{
-						if(!Utils.isBlockAt(world, pos, IEContent.blockSheetmetal, BlockTypes_MetalsAll.STEEL.getMeta()))
+						if(!Utils.isOreBlockAt(world, pos, "blockSheetmetalSteel"))
 						{
 							return false;
 						}
@@ -427,7 +428,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 						{
 							if(w!=0)
 							{
-								if(!Utils.isBlockAt(world, pos, IEContent.blockStorage, BlockTypes_MetalsIE.STEEL.getMeta()))
+								if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 								{
 									return false;
 								}
@@ -459,7 +460,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 							}
 							else
 							{
-								if(!Utils.isBlockAt(world, pos, IEContent.blockStorage, BlockTypes_MetalsIE.STEEL.getMeta()))
+								if(!Utils.isOreBlockAt(world, pos, "blockSteel"))
 								{
 									return false;
 								}
@@ -510,7 +511,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 
 						else if(w >= -2&&w <= 2&&l >= 2&&l <= 6)
 						{
-							if(!Utils.isBlockAt(world, pos, IEContent.blockSheetmetal, BlockTypes_MetalsAll.STEEL.getMeta()))
+							if(!Utils.isOreBlockAt(world, pos, "blockSheetmetalSteel"))
 							{
 								return false;
 							}

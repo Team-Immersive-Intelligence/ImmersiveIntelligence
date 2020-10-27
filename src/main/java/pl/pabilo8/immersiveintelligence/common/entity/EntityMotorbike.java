@@ -28,7 +28,6 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
@@ -416,7 +415,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	{
 		float r = world.isRemote?rotationYaw: -rotationYaw;
 		double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
-		ImmersiveIntelligence.logger.info(true_angle);
+		//ImmersiveIntelligence.logger.info(true_angle);
 
 		Vec3d pos1_x = Utils.offsetPosDirection(-1.25f, true_angle, 0);
 

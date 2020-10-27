@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.model.connector.ModelChemicalDispenser;
 import pl.pabilo8.immersiveintelligence.client.render.direction_transformer.DirectionTransformerWallMountable;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
@@ -92,7 +92,7 @@ public class ChemicalDispenserRenderer extends TileEntitySpecialRenderer<TileEnt
 		else
 		{
 			t.startItemModel(x, y, z+1, texture);
-			BaseBlockModel.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
+			ModelBlockBase.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
 
 			GlStateManager.scale(0.75f, 0.75f, 0.75f);
 			GlStateManager.translate(0.25, 0, 0);

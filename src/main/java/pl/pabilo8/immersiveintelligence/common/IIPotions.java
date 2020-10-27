@@ -60,14 +60,26 @@ public class IIPotions
 		medical_treatment = new IIPotion("medical_treatment", false, 0xe13eb8, 0, false, 7, true, true)
 		{
 			@Override
+			public boolean isReady(int duration, int amplifier)
+			{
+				return amplifier==0?(duration > 200): (duration > 120);
+			}
+
+			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
 			{
 				if(living.getEntityWorld().getTotalWorldTime()%4==0)
-					living.heal(amplifier/4f);
+					living.heal((amplifier+1)/4f);
 			}
 		};
 		undergoing_repairs = new IIPotion("undergoing_repairs", false, 0xc0c0c0, 0, false, 8, true, true)
 		{
+			@Override
+			public boolean isReady(int duration, int amplifier)
+			{
+				return amplifier==0?(duration > 200): (duration > 120);
+			}
+
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
 			{
@@ -77,11 +89,11 @@ public class IIPotions
 						if(stack.getItem() instanceof IItemDamageableIE)
 						{
 							IItemDamageableIE damageable = (IItemDamageableIE)stack.getItem();
-							ItemNBTHelper.setInt(stack, Lib.NBT_DAMAGE, Math.max(damageable.getItemDamageIE(stack)-amplifier, 0));
+							ItemNBTHelper.setInt(stack, Lib.NBT_DAMAGE, Math.max(damageable.getItemDamageIE(stack)-(amplifier+1), 0));
 						}
 						else if(stack.isItemStackDamageable()&&stack.getItem().isRepairable())
 						{
-							stack.setItemDamage(Math.max(stack.getItemDamage()-amplifier, 0));
+							stack.setItemDamage(Math.max(stack.getItemDamage()-(amplifier+1), 0));
 						}
 					}
 			}

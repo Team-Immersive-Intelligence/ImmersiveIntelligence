@@ -1,16 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.network;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
-
-import java.util.Map.Entry;
 
 /**
  * @author Pabilo8
@@ -21,9 +19,9 @@ public class MessageBlockDamageSync implements IMessage
 	public float damage;
 	public int dim, x, y, z;
 
-	public MessageBlockDamageSync(float damage, DimensionBlockPos pos)
+	public MessageBlockDamageSync(DamageBlockPos pos)
 	{
-		this.damage = damage;
+		this.damage = pos.damage;
 
 		this.dim = pos.dimension;
 		this.x = pos.getX();
@@ -73,28 +71,23 @@ public class MessageBlockDamageSync implements IMessage
 
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
-					DimensionBlockPos bpos = new DimensionBlockPos(message.x, message.y, message.z, message.dim);
-					DimensionBlockPos bpos2 = null;
-					synchronized(PenetrationRegistry.blockDamage.entrySet())
+					DamageBlockPos bpos = new DamageBlockPos(message.x, message.y, message.z, message.dim, message.damage);
+
+					if(message.damage > 0)
 					{
-						for(Entry<DimensionBlockPos, Float> entry : PenetrationRegistry.blockDamage.entrySet())
+						if(PenetrationRegistry.blockDamageClient.stream().anyMatch(damageBlockPos -> damageBlockPos.equals(bpos)))
 						{
-							if(entry.getKey().equals(bpos))
-							{
-								bpos2 = entry.getKey();
-							}
-						}
-						if(bpos2==null)
-							return;
-						if(message.damage > 0)
-						{
-							if(PenetrationRegistry.blockDamageClient.containsKey(bpos2))
-								PenetrationRegistry.blockDamageClient.replace(bpos2, message.damage);
-							else
-								PenetrationRegistry.blockDamageClient.put(bpos2, message.damage);
+							PenetrationRegistry.blockDamageClient.forEach(damageBlockPos -> {
+								if(damageBlockPos.equals(bpos))
+									damageBlockPos.damage = bpos.damage;
+							});
 						}
 						else
-							PenetrationRegistry.blockDamageClient.remove(bpos2);
+							PenetrationRegistry.blockDamageClient.add(bpos);
+					}
+					else
+					{
+						PenetrationRegistry.blockDamageClient.removeIf(damageBlockPos -> damageBlockPos.equals(bpos));
 					}
 
 				}

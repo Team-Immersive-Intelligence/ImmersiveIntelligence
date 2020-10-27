@@ -22,4 +22,9 @@ public interface IReloadableModelContainer<T>
 		EvenMoreImmersiveModelRegistry.instance.addReloadableModel(this, modelName);
 		return (T)this;
 	}
+
+	default void unsubscribeToList()
+	{
+		EvenMoreImmersiveModelRegistry.instance.removeReloadableModel(this);
+	}
 }

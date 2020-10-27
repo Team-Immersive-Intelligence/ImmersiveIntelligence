@@ -1,0 +1,50 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "all": "immersiveintelligence:blocks/metal/ore_platinum"
+    },
+    "model": "cube_all"
+  },
+  "variants": {
+    "inventory,type=concrete_bricks": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/volksbeton"
+        }
+      }
+    ],
+    "inventory,type=sturdy_concrete_bricks": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/panzerbeton"
+        }
+      }
+    ],
+    "inventory,type=uberconcrete": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/uberbeton"
+        }
+      }
+    ],
+    "type": {
+      "concrete_bricks": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/volksbeton"
+        }
+      },
+      "sturdy_concrete_bricks": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/panzerbeton"
+        }
+      },
+      "uberconcrete": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/uberbeton"
+        }
+      }
+    }
+  }
+}

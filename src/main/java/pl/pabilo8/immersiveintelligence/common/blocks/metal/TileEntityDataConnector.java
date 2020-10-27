@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
@@ -8,21 +9,23 @@ import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConne
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -35,14 +38,13 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 2019-05-31
  */
-public class TileEntityDataConnector extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>
+public class TileEntityDataConnector extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IBlockOverlayText
 {
 	public EnumFacing facing = EnumFacing.DOWN;
 
+	public int color = 0;
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
-	// ONLY EVER USE THIS ON THE CLIENT! I don't want to sync the entire network...
-	private int outputClient = -1;
 
 	/**
 	 * Like the old updateEntity(), except more generic.
@@ -90,22 +92,30 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
-		if(world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataDevice)
+		if(packet.matchesConnector(EnumDyeColor.byMetadata(this.color), -1))
 		{
-			IDataDevice d = (IDataDevice)world.getTileEntity(this.pos.offset(facing));
-			d.onReceive(packet, facing.getOpposite());
+			BlockPos devicePos = this.pos.offset(facing);
+			TileEntity device = world.getTileEntity(devicePos);
+
+			if(world.isBlockLoaded(devicePos)&&device instanceof IDataDevice)
+			{
+				IDataDevice d = (IDataDevice)device;
+				d.onReceive(packet, facing.getOpposite());
+			}
 		}
+
 	}
 
 	@Override
 	public void sendPacket(DataPacket packet)
 	{
-		this.getDataNetwork().sendPacket(packet, this);
+		this.getDataNetwork().sendPacket(packet.setPacketColor(EnumDyeColor.byMetadata(this.color)), this);
 	}
 
 	@Override
 	public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
+		color = Utils.cycleInt(player.isSneaking(), color, 0, 15);
 		onDataChange();
 		this.markContainingBlockForUpdate(null);
 		world.addBlockEvent(getPos(), this.getBlockType(), 254, 0);
@@ -176,6 +186,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	{
 		super.writeCustomNBT(nbt, descPacket);
 		nbt.setInteger("facing", facing.ordinal());
+		nbt.setInteger("color", color);
 	}
 
 	@Override
@@ -183,6 +194,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	{
 		super.readCustomNBT(nbt, descPacket);
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
+		color = nbt.getInteger("color");
 	}
 
 	@Override
@@ -243,5 +255,22 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	public boolean moveConnectionTo(Connection c, BlockPos newEnd)
 	{
 		return true;
+	}
+
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	{
+		if(hammer)
+			return new String[]{
+					I18n.format(Lib.DESC_INFO+"redstoneChannel", I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(color).getUnlocalizedName()))
+			};
+		else
+			return new String[0];
+	}
+
+	@Override
+	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
+	{
+		return false;
 	}
 }

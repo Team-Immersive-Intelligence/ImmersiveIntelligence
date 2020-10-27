@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 
@@ -10,13 +10,13 @@ import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
  * @author Pabilo8
  * @since 20-06-2019
  */
-public class ModelArithmeticLogicMachine extends BaseBlockModel
+public class ModelArithmeticLogicMachine extends ModelBlockBase
 {
 
 	int textureX = 256;
 	int textureY = 256;
 
-	public ModelRendererTurbo[] doorRightModel,doorLeftModel,chip1Model,chip2Model,chip3Model,chip4Model;
+	public ModelRendererTurbo[] doorRightModel, doorLeftModel, chip1Model, chip2Model, chip3Model, chip4Model;
 
 	public ModelArithmeticLogicMachine() //Same as Filename
 	{

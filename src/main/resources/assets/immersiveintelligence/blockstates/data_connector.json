@@ -226,6 +226,12 @@
       },
       "programmable_speaker": {
         "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
+      "data_debugger": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
+      "data_callback_connector": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
       }
     },
     "facing": {

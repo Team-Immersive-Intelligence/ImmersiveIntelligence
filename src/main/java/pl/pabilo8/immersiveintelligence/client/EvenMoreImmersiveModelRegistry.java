@@ -69,6 +69,11 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 		reloadableModels.put(modelName, model);
 	}
 
+	public void removeReloadableModel(IReloadableModelContainer model)
+	{
+		reloadableModels.remove(model);
+	}
+
 	public void reloadRegisteredModels()
 	{
 		reloadableModels.values().forEach(IReloadableModelContainer::reloadModels);

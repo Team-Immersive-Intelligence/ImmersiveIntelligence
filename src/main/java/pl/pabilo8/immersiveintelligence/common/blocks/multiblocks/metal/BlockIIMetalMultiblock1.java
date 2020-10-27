@@ -20,6 +20,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock1;
 
@@ -66,6 +67,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			case REDSTONE_DATA_INTERFACE:
 			{
 				return new TileEntityRedstoneInterface();
+			}
+			case EMPLACEMENT:
+			{
+				return new TileEntityEmplacement();
 			}
 		}
 		return null;

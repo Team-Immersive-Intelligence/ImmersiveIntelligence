@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common;
 
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -10,10 +9,10 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 
 import java.util.Iterator;
-import java.util.Map.Entry;
 
 /**
  * @author Pabilo8
@@ -55,9 +54,8 @@ public class IISaveData extends WorldSavedData
 				NBTTagCompound posTag = (NBTTagCompound)compound.getTag("pos");
 				BlockPos pos = NBTUtil.getPosFromTag(posTag);
 				int dimension = posTag.getInteger("dim");
-				DimensionBlockPos dpos = new DimensionBlockPos(pos, dimension);
-				float dmg = compound.getFloat("damage");
-				PenetrationRegistry.blockDamage.put(dpos, dmg);
+				DamageBlockPos dpos = new DamageBlockPos(pos, dimension, compound.getFloat("damage"));
+				PenetrationRegistry.blockDamage.add(dpos);
 			} catch(ClassCastException|NullPointerException e)
 			{
 				ImmersiveIntelligence.logger.info("Error in the block damage list!");
@@ -70,13 +68,13 @@ public class IISaveData extends WorldSavedData
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		NBTTagList blockDamage = new NBTTagList();
-		for(Entry<DimensionBlockPos, Float> entry : PenetrationRegistry.blockDamage.entrySet())
+		for(DamageBlockPos entry : PenetrationRegistry.blockDamage)
 		{
 			NBTTagCompound compound = new NBTTagCompound();
-			NBTTagCompound posTag = NBTUtil.createPosTag(entry.getKey());
-			posTag.setInteger("dim", entry.getKey().dimension);
+			NBTTagCompound posTag = NBTUtil.createPosTag(entry);
+			posTag.setInteger("dim", entry.dimension);
 			compound.setTag("pos", posTag);
-			compound.setFloat("damage", entry.getValue());
+			compound.setFloat("damage", entry.damage);
 			blockDamage.appendTag(compound);
 		}
 		nbt.setTag("block_damage", blockDamage);

@@ -19,7 +19,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
@@ -245,7 +244,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 
 		speed = 0;
 
-		handleMovement();
+		//handleMovement();
 		updateParts();
 
 	}
@@ -254,7 +253,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	{
 		float r = rotationYaw;
 		double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
-		ImmersiveIntelligence.logger.info(true_angle);
+		//ImmersiveIntelligence.logger.info(true_angle);
 
 		Vec3d pos1_x = Utils.offsetPosDirection(-0.5f, true_angle, 0);
 

@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by Pabilo8 on 2019-05-07.
@@ -27,6 +29,11 @@ public class BlockIIBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends Blo
 	{
 		super(name, material, mainProperty, itemBlock, additionalProperties);
 		fixupBlock(this, itemBlock);
+	}
+
+	public void addToTESRMap(E id)
+	{
+		tesrMap.put(id.getMeta(), id.name());
 	}
 
 	@Override
@@ -65,5 +72,12 @@ public class BlockIIBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends Blo
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public int getMetaBySubname(String subname)
+	{
+		Optional<E> first = Stream.of(enumValues).filter(e -> e.getName().equals(subname)).findFirst();
+		//Not the best option, but it will actually always get the correct meta (unless I mess something up)
+		return first.orElseGet(() -> enumValues[0]).getMeta();
 	}
 }

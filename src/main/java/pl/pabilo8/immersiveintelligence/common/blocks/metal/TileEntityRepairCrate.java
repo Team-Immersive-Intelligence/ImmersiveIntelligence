@@ -1,18 +1,18 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.repairCrateEnergyPerHeal;
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.repairCrateEnergyPerAction;
 
 /**
  * @author Pabilo8
@@ -20,27 +20,10 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCr
  */
 public class TileEntityRepairCrate extends TileEntityEffectCrate
 {
-	NonNullList<ItemStack> inventory = NonNullList.withSize(9, ItemStack.EMPTY);
-
 	public TileEntityRepairCrate()
 	{
-
-	}
-
-	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.readCustomNBT(nbt, descPacket);
-		if(!descPacket)
-			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), inventory.size());
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(!descPacket)
-			nbt.setTag("inventory", Utils.writeInventory(inventory));
+		inventory = NonNullList.withSize(9, ItemStack.EMPTY);
+		insertionHandler = new IEInventoryHandler(9, this);
 	}
 
 	@Override
@@ -56,9 +39,9 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 	}
 
 	@Override
-	void affectEntity(Entity entity)
+	void affectEntity(Entity entity, boolean upgraded)
 	{
-		if(repairCrateEnergyPerHeal <= energyStorage)
+		if(!upgraded||(repairCrateEnergyPerAction <= energyStorage))
 		{
 			boolean repaired = false;
 			if(entity instanceof IEntitySpecialRepairable)
@@ -71,19 +54,19 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 			{
 				if(!((EntityLivingBase)entity).isPotionActive(IIPotions.undergoing_repairs))
 				{
-					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(IIPotions.undergoing_repairs, 60, 1, false, false));
+					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(IIPotions.undergoing_repairs, upgraded?200: 400, upgraded?1: 0, true, true));
 					repaired = true;
 				}
 			}
-			if(repaired)
-				energyStorage -= repairCrateEnergyPerHeal;
+			if(!upgraded&&repaired)
+				energyStorage -= repairCrateEnergyPerAction;
 		}
 	}
 
 	@Override
 	boolean checkEntity(Entity entity)
 	{
-		return entity instanceof IEntitySpecialRepairable;
+		return entity instanceof IEntitySpecialRepairable||(entity instanceof EntityLivingBase);
 	}
 
 
@@ -91,5 +74,17 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 	public Vec3d getConnectionOffset(Connection con)
 	{
 		return new Vec3d(0.5, 0.5, 0.5);
+	}
+
+	@Override
+	public int getGuiID()
+	{
+		return IIGuiList.GUI_REPAIR_CRATE.ordinal();
+	}
+
+	@Override
+	public boolean isStackValid(int slot, ItemStack stack)
+	{
+		return true;
 	}
 }

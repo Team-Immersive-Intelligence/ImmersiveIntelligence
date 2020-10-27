@@ -1,24 +1,49 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
+import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
+import com.google.common.collect.Lists;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.ILootContainer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.energyDrain;
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.maxEnergyStored;
@@ -27,8 +52,9 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCr
  * @author Pabilo8
  * @since 06.07.2020
  */
-public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IUpgradableMachine
+public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectable implements IDirectionalTile, IBooleanAnimatedPartsBlock, ITickable, IUpgradableMachine, IPlayerInteraction, IBlockBounds, IIEInventory, IGuiTile, ITileDrop, IComparatorOverride, ILootContainer
 {
+	public ResourceLocation lootTable;
 	public EnumFacing facing = EnumFacing.NORTH;
 	public String name;
 	public boolean open = false;
@@ -36,10 +62,20 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	private ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	public int energyStorage = 0;
 
+	//Client only
+	float inserterAnimation = 0f;
+	float inserterAngle = 0f;
+	Entity focusedEntity = null;
+
+	@Nonnull
+	NonNullList<ItemStack> inventory;
+	@Nonnull
+	IItemHandler insertionHandler;
+
 	@Override
 	public EnumFacing getFacing()
 	{
-		return null;
+		return facing;
 	}
 
 	@Override
@@ -75,6 +111,61 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	}
 
 	@Override
+	@Nullable
+	public ITextComponent getDisplayName()
+	{
+		return name!=null?new TextComponentString(name): new TextComponentTranslation("tile."+ImmersiveIntelligence.MODID+".metal_device.metal_crate.name");
+	}
+
+	@Override
+	public int getSlotLimit(int slot)
+	{
+		return 64;
+	}
+
+	@Override
+	public NonNullList<ItemStack> getInventory()
+	{
+		return inventory;
+	}
+
+	@Override
+	public void doGraphicalUpdates(int slot)
+	{
+		this.markDirty();
+	}
+
+	@Override
+	public ItemStack getTileDrop(EntityPlayer player, IBlockState state)
+	{
+		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setTag("inventory", Utils.writeInventory(inventory));
+		if(!tag.hasNoTags())
+			stack.setTagCompound(tag);
+		if(this.name!=null)
+			stack.setStackDisplayName(this.name);
+		return stack;
+	}
+
+	@Override
+	public void readOnPlacement(EntityLivingBase placer, ItemStack stack)
+	{
+		if(stack.hasTagCompound())
+		{
+			readCustomNBT(stack.getTagCompound(), false);
+			if(stack.hasDisplayName())
+				this.name = stack.getDisplayName();
+		}
+	}
+
+	@Override
+	public boolean preventInventoryDrop()
+	{
+		return true;
+	}
+
+	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		if(nbt.hasKey("name"))
@@ -84,6 +175,15 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
 		getUpgradesFromNBT(nbt);
 		energyStorage = nbt.getInteger("energyStorage");
+		if(!descPacket)
+		{
+			if(nbt.hasKey("lootTable", 8))
+				this.lootTable = new ResourceLocation(nbt.getString("lootTable"));
+			else
+				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 38);
+
+			open = !insertionHandler.getStackInSlot(37).isEmpty();
+		}
 
 	}
 
@@ -96,7 +196,13 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		nbt.setInteger("facing", facing.getIndex());
 		saveUpgradesToNBT(nbt);
 		nbt.setInteger("energyStorage", energyStorage);
-
+		if(!descPacket)
+		{
+			if(lootTable!=null)
+				nbt.setString("lootTable", lootTable.toString());
+			else
+				nbt.setTag("inventory", Utils.writeInventory(inventory));
+		}
 	}
 
 	@Override
@@ -112,27 +218,127 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	}
 
 	@Override
+	public void receiveMessageFromServer(NBTTagCompound message)
+	{
+		if(message.hasKey("focused"))
+			focusedEntity = world.getEntityByID(message.getInteger("focused"));
+		else
+			focusedEntity = null;
+	}
+
+	@Override
 	public void update()
 	{
 		updateLid();
-		if(!world.isRemote&&hasUpgrade(CommonProxy.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
+		if(!open)
+			focusedEntity = null;
+
+		if(world.isRemote)
+		{
+			if(hasUpgrade(CommonProxy.UPGRADE_INSERTER))
+			{
+				inserterAnimation = calculateInserterAnimation(0);
+				inserterAngle = calculateInserterAngle(0);
+			}
+		}
+		else if(open&&hasUpgrade(CommonProxy.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
 		{
 			//get all in range
 			//effect
 			List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).grow(getRange()));
-			entitiesWithinAABB.removeIf(this::checkEntity);
+			entitiesWithinAABB.removeIf(entity -> !checkEntity(entity));
 			if(entitiesWithinAABB.size() > 0)
 			{
-				entitiesWithinAABB.forEach(this::affectEntity);
+				entitiesWithinAABB.forEach(this::affectEntityUpgraded);
 				useSupplies();
+				if(!entitiesWithinAABB.contains(focusedEntity))
+				{
+					focusedEntity = entitiesWithinAABB.get(0);
+					inserterAnimation = 0f;
+					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
+				}
+			}
+			else
+			{
+				focusedEntity = null;
+				inserterAnimation = 0f;
+				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
 			}
 		}
 	}
 
-	@Override
-	public boolean canFitUpgrade(MachineUpgrade upgrade)
+	public float calculateInserterAnimation(float partialTicks)
 	{
-		return upgrade.equals(CommonProxy.UPGRADE_INSERTER);
+		float anim;
+		if(focusedEntity!=null)
+			anim = Math.min(inserterAnimation+(0.05f*(1+partialTicks)), 1f);
+		else
+			anim = Math.max(inserterAnimation-(0.025f*(1+partialTicks)), 0f);
+		return anim;
+	}
+
+	public float calculateInserterAngle(float partialTicks)
+	{
+		if(focusedEntity!=null)
+		{
+			//Subtracts two vector and calculates angle (in degrees) using atan
+			Vec3d vec3d = focusedEntity.getPositionVector().subtract(new Vec3d(this.pos));
+			float yaw;
+			if(vec3d.x < 0&&vec3d.z >= 0)
+				yaw = (float)(Math.atan(Math.abs(vec3d.x/vec3d.z))/Math.PI*180D);
+			else if(vec3d.x <= 0&&vec3d.z <= 0)
+				yaw = (float)(Math.atan(Math.abs(vec3d.z/vec3d.x))/Math.PI*180D)+90;
+			else if(vec3d.x >= 0&&vec3d.z < 0)
+				yaw = (float)(Math.atan(Math.abs(vec3d.x/vec3d.z))/Math.PI*180D)+180;
+			else
+				yaw = (float)(Math.atan(Math.abs(vec3d.z/vec3d.x))/Math.PI*180D)+270;
+			// TODO: 04.10.2020 calculates nearest path (+/-) to angle, and goes toward
+			//float angle = inserterAngle;
+
+			return yaw;
+		}
+		return inserterAngle;
+	}
+
+	private NBTTagCompound makeSyncEntity()
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		if(focusedEntity!=null)
+			tag.setInteger("focused", focusedEntity.getEntityId());
+		else
+			tag.setBoolean("hasNoFocus", true);
+		return tag;
+	}
+
+	@Override
+	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		if(heldItem.getItem().getToolClasses(heldItem).contains(CommonProxy.TOOL_WRENCH))
+		{
+			return addUpgrade(CommonProxy.UPGRADE_INSERTER, false);
+		}
+		else if(player.isSneaking())
+		{
+			open = !open;
+			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
+			return true;
+		}
+		else if(open)
+		{
+			affectEntityBasic(player);
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
+	{
+		boolean b = !hasUpgrade(upgrade)&&upgrade.equals(CommonProxy.UPGRADE_INSERTER);
+		if(!test&&b)
+			upgrades.add(upgrade);
+		return b;
 	}
 
 	@Override
@@ -214,10 +420,100 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 	int getRange()
 	{
-		return 4;
+		return 3;
 	}
 
-	abstract void affectEntity(Entity entity);
+	void affectEntityUpgraded(Entity entity)
+	{
+		affectEntity(entity, true);
+	}
+
+	void affectEntityBasic(Entity entity)
+	{
+		affectEntity(entity, false);
+	}
+
+	abstract void affectEntity(Entity entity, boolean upgraded);
 
 	abstract boolean checkEntity(Entity entity);
+
+	@Override
+	public float[] getBlockBounds()
+	{
+		if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
+			return new float[]{0f, 0, .25f, 1f, .58f, .75f};
+		else
+			return new float[]{.25f, 0, 0f, .75f, .58f, 1f};
+	}
+
+	@Override
+	public int getComparatorInputOverride()
+	{
+		return Utils.calcRedstoneFromInventory(this);
+	}
+
+	@Override
+	public boolean canOpenGui()
+	{
+		return !open;
+	}
+
+	@Override
+	public TileEntity getGuiMaster()
+	{
+		return this;
+	}
+
+	@Override
+	public void onGuiOpened(EntityPlayer player, boolean clientside)
+	{
+		if(this.lootTable!=null&&!clientside)
+		{
+			LootTable loottable = this.world.getLootTableManager().getLootTableFromLocation(this.lootTable);
+			this.lootTable = null;
+			LootContext.Builder contextBuilder = new LootContext.Builder((WorldServer)this.world);
+			if(player!=null)
+				contextBuilder.withLuck(player.getLuck());
+			LootContext context = contextBuilder.build();
+			Random rand = new Random();
+
+			List<ItemStack> list = loottable.generateLootForPools(rand, context);
+			List<Integer> listSlots = Lists.newArrayList();
+			for(int i = 0; i < inventory.size(); i++)
+				if(inventory.get(i).isEmpty())
+					listSlots.add(i);
+			Collections.shuffle(listSlots, rand);
+			if(listSlots.isEmpty())
+				return;
+			Utils.shuffleLootItems(list, listSlots.size(), rand);
+			for(ItemStack itemstack : list)
+			{
+				int slot = listSlots.remove(listSlots.size()-1);
+				inventory.set(slot, itemstack);
+			}
+			this.markDirty();
+		}
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return (T)insertionHandler;
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public ResourceLocation getLootTable()
+	{
+		return this.lootTable;
+	}
 }

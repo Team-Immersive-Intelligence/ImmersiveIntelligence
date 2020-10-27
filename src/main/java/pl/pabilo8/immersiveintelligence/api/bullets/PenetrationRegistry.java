@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.api.bullets;
 
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -15,8 +14,8 @@ import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandl
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -31,8 +30,8 @@ public class PenetrationRegistry
 	//Materials second
 	public static HashMap<Predicate<Material>, IPenetrationHandler> registeredMaterials = new HashMap<>();
 
-	public static ConcurrentHashMap<DimensionBlockPos, Float> blockDamage = new ConcurrentHashMap<>();
-	public static ConcurrentHashMap<DimensionBlockPos, Float> blockDamageClient = new ConcurrentHashMap<>();
+	public static ArrayList<DamageBlockPos> blockDamage = new ArrayList<>();
+	public static ArrayList<DamageBlockPos> blockDamageClient = new ArrayList<>();
 
 	static
 	{

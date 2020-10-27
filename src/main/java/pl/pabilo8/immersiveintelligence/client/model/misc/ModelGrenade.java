@@ -3,8 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelGrenade extends BaseBlockModel implements IBulletModel
+public class ModelGrenade extends ModelBlockBase implements IBulletModel
 {
 	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/grenade.png";
 	int textureX = 32;

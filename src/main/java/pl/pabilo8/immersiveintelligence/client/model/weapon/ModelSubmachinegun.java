@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.weapon;
 
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelSubmachinegun extends BaseBlockModel
+public class ModelSubmachinegun extends ModelBlockBase
 {
 	int textureX = 64;
 	int textureY = 128;

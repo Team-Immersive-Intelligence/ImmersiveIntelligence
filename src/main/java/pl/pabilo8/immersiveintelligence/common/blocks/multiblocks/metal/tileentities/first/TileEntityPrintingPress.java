@@ -34,10 +34,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationAdd;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -254,13 +256,13 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 		if(pagesLeft < 1)
 			active = false;
 
-		DataPacketTypeString item_type = (DataPacketTypeString)DataOperationAdd.getVarInType(DataPacketTypeString.class, dataToPrint.getPacketVariable('t'), dataToPrint);
+		DataPacketTypeString item_type = (DataPacketTypeString)DataOperationAdd.getVarInType(DataPacketTypeString.class, dataToPrint.getPacketVariable('m'), dataToPrint);
 
 		switch(item_type.value)
 		{
 			case "text":
 			{
-				DataPacketTypeString toPrint = (DataPacketTypeString)DataOperationAdd.getVarInType(DataPacketTypeString.class, dataToPrint.getPacketVariable('s'), dataToPrint);
+				DataPacketTypeString toPrint = (DataPacketTypeString)DataOperationAdd.getVarInType(DataPacketTypeString.class, dataToPrint.getPacketVariable('t'), dataToPrint);
 				String printedChars = "";
 
 				int black_amount = 0, cyan_amount = 0, magenta_amount = 0, yellow_amount = 0;
@@ -634,11 +636,67 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			master().onReceive(packet, side);
 		}
 
-		if(!this.isDummy()&&energyStorage.getEnergyStored() >= PrintingPress.energyUsage)
+		if(!this.isDummy())
 		{
-			energyStorage.extractEnergy(PrintingPress.energyUsage, false);
-			this.pagesLeft = ((DataPacketTypeInteger)DataOperationAdd.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('c'), packet)).value;
-			this.newDataToPrint = packet.clone();
+			if(packet.variables.containsKey('c'))
+			{
+				IDataType c = packet.getPacketVariable('c');
+				if(c instanceof DataPacketTypeString)
+				{
+					IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(6), world, mirrored?facing.rotateY(): facing.rotateYCCW());
+					if(conn==null)
+						return;
+					DataPacket p = new DataPacket();
+					int amount;
+
+					switch(((DataPacketTypeString)c).value)
+					{
+						case "get_ink":
+						case "get_ink_black":
+							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink")).mapToInt(fs -> fs.amount).sum();
+							p.setVariable('c', new DataPacketTypeString("ink_black"));
+							p.setVariable('g', new DataPacketTypeInteger(amount));
+							conn.sendPacket(p);
+							break;
+						case "get_ink_cyan":
+							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink_cyan")).mapToInt(fs -> fs.amount).sum();
+							p.setVariable('c', new DataPacketTypeString("ink_cyan"));
+							p.setVariable('g', new DataPacketTypeInteger(amount));
+							conn.sendPacket(p);
+							break;
+						case "get_ink_yellow":
+							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink_yellow")).mapToInt(fs -> fs.amount).sum();
+							p.setVariable('c', new DataPacketTypeString("ink_yellow"));
+							p.setVariable('g', new DataPacketTypeInteger(amount));
+							conn.sendPacket(p);
+							break;
+						case "get_ink_magenta":
+							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink_magenta")).mapToInt(fs -> fs.amount).sum();
+							p.setVariable('c', new DataPacketTypeString("ink_magenta"));
+							p.setVariable('g', new DataPacketTypeInteger(amount));
+							conn.sendPacket(p);
+							break;
+
+						case "get_energy":
+							p.setVariable('c', new DataPacketTypeString("energy"));
+							p.setVariable('g', new DataPacketTypeInteger(energyStorage.getEnergyStored()));
+							conn.sendPacket(p);
+							break;
+						case "get_paper":
+							p.setVariable('c', new DataPacketTypeString("paper"));
+							p.setVariable('g', new DataPacketTypeInteger(inventory.get(0).getCount()));
+							conn.sendPacket(p);
+							break;
+					}
+				}
+			}
+			else
+			{
+				energyStorage.extractEnergy(PrintingPress.energyUsage, false);
+				this.pagesLeft = ((DataPacketTypeInteger)DataOperationAdd.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('a'), packet)).value;
+				this.newDataToPrint = packet.clone();
+			}
+
 		}
 	}
 

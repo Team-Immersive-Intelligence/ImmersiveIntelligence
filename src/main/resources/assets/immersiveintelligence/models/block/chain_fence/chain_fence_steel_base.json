@@ -1,0 +1,7 @@
+{
+  "parent": "immersiveintelligence:block/chain_fence/chain_fence_base",
+  "textures": {
+    "texture": "immersiveintelligence:blocks/fortification/steel_chain_fence",
+    "particle": "immersiveintelligence:blocks/fortification/steel_chain_fence"
+  }
+}

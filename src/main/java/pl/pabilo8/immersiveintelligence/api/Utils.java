@@ -48,10 +48,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -207,14 +209,14 @@ public class Utils
 
 
 	/**
+	 * @param offset (length) of the vector
+	 * @param yaw    of the vector (in radians)
+	 * @param pitch  of the vector (in radians)
+	 * @return direction transformed position
 	 * @author Pabilo8
 	 * <p>
-	 *     Used to calculate 3D vector offset in a direction
+	 * Used to calculate 3D vector offset in a direction
 	 * </p>
-	 * @param offset (length) of the vector
-	 * @param yaw of the vector (in radians)
-	 * @param pitch of the vector (in radians)
-	 * @return direction transformed position
 	 */
 	public static Vec3d offsetPosDirection(float offset, double yaw, double pitch)
 	{
@@ -428,10 +430,26 @@ public class Utils
 		return current;
 	}
 
+	public static int cycleIntAvoid(boolean forward, int current, int min, int max, int avoid)
+	{
+		int i = cycleInt(forward, current, min, max);
+		if(i==avoid)
+			return cycleInt(forward, i, min, max);
+		else
+			return i;
+	}
+
 	public static boolean compareBlockstateOredict(IBlockState state, String oreName)
 	{
 		ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 		return blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, oreName);
+	}
+
+	//Cheers, Blu ^^
+	@SideOnly(Side.CLIENT)
+	public static void tesselateBlockBreak(Tessellator tessellatorIn, WorldClient world, DamageBlockPos blockpos, float partialTicks)
+	{
+		tesselateBlockBreak(tessellatorIn, world, blockpos, blockpos.damage, partialTicks);
 	}
 
 	//Cheers, Blu ^^
@@ -493,21 +511,33 @@ public class Utils
 
 	}
 
-	public static ItemStack getItemWithMetaName(ItemIIBase item, String name)
+	public static ItemStack getStackWithMetaName(BlockIIBase block, String name)
+	{
+		return new ItemStack(block, 1, block.getMetaBySubname(name));
+	}
+
+	public static ItemStack getStackWithMetaName(BlockIIBase block, String name, int count)
+	{
+		ItemStack stack = getStackWithMetaName(block, name);
+		stack.setCount(count);
+		return stack;
+	}
+
+	public static ItemStack getStackWithMetaName(ItemIIBase item, String name)
 	{
 		return new ItemStack(item, 1, item.getMetaBySubname(name));
 	}
 
-	public static ItemStack getItemWithMetaName(ItemIIBase item, String name, int count)
+	public static ItemStack getStackWithMetaName(ItemIIBase item, String name, int count)
 	{
-		ItemStack stack = getItemWithMetaName(item, name);
+		ItemStack stack = getStackWithMetaName(item, name);
 		stack.setCount(count);
 		return stack;
 	}
 
 	public static int RGBAToRGB(int color)
 	{
-		return color-(color >> 24& 0xFF);
+		return color-(color >> 24&0xFF);
 	}
 
 	//Thanks Blu, these stencil buffers look really capable

@@ -81,10 +81,10 @@ public class IIWorldGen implements IWorldGenerator
 	public void chunkLoad(ChunkDataEvent.Load event)
 	{
 		int dimension = event.getWorld().provider.getDimension();
-		if((!event.getData().getCompoundTag("ImmersiveIntelligence").hasKey(IIConfig.Ores.retrogen_key))&&(Ores.retrogen_platinum||Ores.retrogen_salt||Ores.retrogen_tungsten||Ores.retrogen_zinc||Ores.retrogen_fluorite))
+		if((!event.getData().getCompoundTag("ImmersiveIntelligence").hasKey(IIConfig.Ores.retrogen_key))&&(Ores.retrogen_platinum||Ores.retrogen_salt||Ores.retrogen_tungsten||Ores.retrogen_zinc||Ores.retrogen_fluorite||Ores.retrogen_phosphorus))
 		{
 			if(IIConfig.Ores.retrogen_log_flagChunk)
-				ImmersiveIntelligence.logger.info("Chunk "+event.getChunk().getPos()+" has been flagged for Ore RetroGeneration by IE.");
+				ImmersiveIntelligence.logger.info("Chunk "+event.getChunk().getPos()+" has been flagged for Ore RetroGeneration by II.");
 			retrogenChunks.put(dimension, event.getChunk().getPos());
 		}
 	}

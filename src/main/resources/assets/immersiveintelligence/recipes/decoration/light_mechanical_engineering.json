@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "pgp",
-    "sws",
-    "pgp"
+    "wpw",
+    "sgs",
+    "wpw"
   ],
   "key": {
     "p": {
@@ -16,7 +16,7 @@
     },
     "s": {
       "type": "forge:ore_dict",
-      "ore": "springIron"
+      "ore": "springBrass"
     },
     "g": {
       "type": "forge:ore_dict",

@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent;
@@ -11,6 +10,7 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
+import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
@@ -32,21 +32,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -68,6 +70,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
@@ -75,34 +78,43 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentFirework;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentTracerPowder;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentWhitePhosphorus;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.cores.*;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentHMX;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentRDX;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentTNT;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.shrapnel.BulletComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIOre;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIISlab;
 import pl.pabilo8.immersiveintelligence.common.blocks.cloth.BlockIIClothDecoration;
+import pl.pabilo8.immersiveintelligence.common.blocks.concrete.BlockIIConcreteDecoration;
+import pl.pabilo8.immersiveintelligence.common.blocks.fortification.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock1;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
-import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentFirework;
-import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentTracerPowder;
-import pl.pabilo8.immersiveintelligence.common.bullets.BulletComponentWhitePhosphorus;
-import pl.pabilo8.immersiveintelligence.common.bullets.cores.*;
-import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentHMX;
-import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentRDX;
-import pl.pabilo8.immersiveintelligence.common.bullets.explosives.BulletComponentTNT;
-import pl.pabilo8.immersiveintelligence.common.bullets.shrapnel.BulletComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
 import pl.pabilo8.immersiveintelligence.common.items.*;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerBoots;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerChestplate;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerLeggings;
 import pl.pabilo8.immersiveintelligence.common.items.bullet_casings.*;
 import pl.pabilo8.immersiveintelligence.common.items.material.*;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
@@ -173,6 +185,7 @@ public class CommonProxy implements IGuiHandler
 
 	public static ItemIILighter item_lighter = new ItemIILighter();
 	public static ItemIIElectricHammer item_hammer = new ItemIIElectricHammer();
+	public static ItemIITrenchShovel item_trench_shovel = new ItemIITrenchShovel();
 
 	//Shares code with Immersive Energy, long live II-IEn Cooperation!
 	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
@@ -188,6 +201,7 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIITachometer item_tachometer = new ItemIITachometer();
 
 	public static ItemIIDataWireCoil item_data_wire_coil = new ItemIIDataWireCoil();
+	public static ItemIISmallWireCoil item_small_wire_coil = new ItemIISmallWireCoil();
 	public static ItemIIMinecart item_minecart = new ItemIIMinecart();
 	public static ItemIIRadioConfigurator item_radio_configurator = new ItemIIRadioConfigurator();
 	public static ItemIIMeasuringCup item_measuring_cup = new ItemIIMeasuringCup();
@@ -202,6 +216,12 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIISubmachinegun item_submachinegun = new ItemIISubmachinegun();
 	public static ItemIIWeaponUpgrade item_weapon_upgrade = new ItemIIWeaponUpgrade();
 
+	public static ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor", ImmersiveIntelligence.MODID+":light_engineer_armor", 42, new int[]{4, 7, 8, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
+	//public static ItemIIArmorUpgrade item_armor_upgrade = new ItemIIArmorUpgrade();
+	public static ItemIILightEngineerHelmet item_light_engineer_helmet = new ItemIILightEngineerHelmet();
+	public static ItemIILightEngineerChestplate item_light_engineer_chestplate = new ItemIILightEngineerChestplate();
+	public static ItemIILightEngineerLeggings item_light_engineer_leggings = new ItemIILightEngineerLeggings();
+	public static ItemIILightEngineerBoots item_light_engineer_boots = new ItemIILightEngineerBoots();
 
 	public static ItemIIBullet item_bullet = new ItemIIBullet();
 	public static ItemIICasingArtillery item_casing_artillery = new ItemIICasingArtillery();
@@ -217,31 +237,12 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIIPrintedPage item_printed_page = new ItemIIPrintedPage();
 	public static ItemIITracerPowder item_tracer_powder = new ItemIITracerPowder();
 
-	public static BlockIIBase<IIBlockTypes_Ore> block_ore = (BlockIIBase)new BlockIIBase("ore", Material.ROCK,
-			PropertyEnum.create("type", IIBlockTypes_Ore.class), ItemBlockIEBase.class, false)
-	{
-		@Override
-		public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-		{
-			if(getMetaFromState(state)==IIBlockTypes_Ore.FLUORITE.getMeta())
-			{
-				ItemStack out = Utils.getItemWithMetaName(item_material_gem, "fluorite");
-				out.setCount((1+Math.round((float)Math.random()))*(1+fortune));
-				drops.add(out);
-			}
-			else if(getMetaFromState(state)==IIBlockTypes_Ore.PHOSPHORUS.getMeta())
-			{
-				ItemStack out = Utils.getItemWithMetaName(item_material_gem, "phosphorus");
-				out.setCount((2+Math.round((float)Math.random()))*(1+fortune));
-				drops.add(out);
-			}
-			else
-				super.getDrops(drops, world, pos, state, fortune);
-		}
-	}.setOpaque(true).setHardness(3.0F).setResistance(10.0F);
+	public static BlockIIOre block_ore = new BlockIIOre();
 	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
-			.setHardness(3.0F).setResistance(10.0F), block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
+			.setHardness(3.0F).setResistance(10.0F);
+
+	public static BlockIIBase<IIBlockTypes_Metal> block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(3.0F).setResistance(10.0F);
 
@@ -251,11 +252,17 @@ public class CommonProxy implements IGuiHandler
 	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration = new BlockIIStoneDecoration();
 	public static BlockIIBase<IIBlockTypes_ClothDecoration> block_cloth_decoration = new BlockIIClothDecoration();
 	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration = new BlockIIMetalDecoration();
+	public static BlockIIBase<IIBlockTypes_ConcreteDecoration> block_concrete_decoration = new BlockIIConcreteDecoration();
+
+	public static BlockIIMetalFortification block_metal_fortification = new BlockIIMetalFortification();
+	public static BlockIIMetalFortification1 block_metal_fortification1 = new BlockIIMetalFortification1();
+	public static BlockIIWoodenFortification block_wooden_fortification = new BlockIIWoodenFortification();
 
 	public static BlockIIMetalDevice block_metal_device = new BlockIIMetalDevice();
 	public static BlockIIDataConnector block_data_connector = new BlockIIDataConnector();
 	public static BlockIISmallCrate block_small_crate = new BlockIISmallCrate();
 	public static BlockIIMechanicalDevice block_mechanical_device = new BlockIIMechanicalDevice();
+	public static BlockIIMechanicalDevice1 block_mechanical_device1 = new BlockIIMechanicalDevice1();
 	public static BlockIIGearbox block_gearbox = new BlockIIGearbox();
 	public static BlockIIMechanicalConnector block_mechanical_connector = new BlockIIMechanicalConnector();
 
@@ -547,7 +554,7 @@ public class CommonProxy implements IGuiHandler
 		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 1);
 		// LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"),100);
 
-		CrusherRecipe.addRecipe(Utils.getItemWithMetaName(item_material_dust, "silicon"), new IngredientStack("plateSilicon"), 12000);
+		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(item_material_dust, "silicon"), new IngredientStack("plateSilicon"), 12000);
 
 		final ItemStack powder = new ItemStack(item_tracer_powder, 1, 0);
 		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveEngineering.MODID, "tracer_powder_colour"));
@@ -574,6 +581,7 @@ public class CommonProxy implements IGuiHandler
 		IIRecipes.addRDXProductionRecipes();
 		IIRecipes.addHMXProductionRecipes();
 
+		IIRecipes.addConcreteRecipes();
 		IIRecipes.addChemicalBathCleaningRecipes();
 
 		//Immersive Engineering can into space???
@@ -689,6 +697,9 @@ public class CommonProxy implements IGuiHandler
 
 	public void init()
 	{
+		//Blocks config
+		block_ore.setMiningLevels();
+
 		//Worldgen registration
 		IIWorldGen iiWorldGen = new IIWorldGen();
 		GameRegistry.registerWorldGenerator(iiWorldGen, 0);
@@ -700,6 +711,9 @@ public class CommonProxy implements IGuiHandler
 		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.TUNGSTEN.getMeta()), "tungsten", Ores.ore_tungsten, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.SALT.getMeta()), "salt", Ores.ore_salt, EnumOreType.OVERWORLD);
 		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.FLUORITE.getMeta()), "fluorite", Ores.ore_fluorite, EnumOreType.NETHER);
+		addConfiguredWorldgen(block_ore.getStateFromMeta(IIBlockTypes_Ore.PHOSPHORUS.getMeta()), "phosphorus", Ores.ore_phosphorus, EnumOreType.NETHER);
+
+		RailgunHandler.registerProjectileProperties(new IngredientStack("stickTungsten"), 32, 1.3).setColourMap(new int[][]{{0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0x9EA2A7, 0x9EA2A7}});
 
 		//Disallow crates in crates
 		IEApi.forbiddenInCrates.add((stack) ->
@@ -735,10 +749,12 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityDataMerger.class);
 		registerTile(TileEntityDataRouter.class);
 		registerTile(TileEntityDataDebugger.class);
+		registerTile(TileEntityPunchtapeReader.class);
 		registerTile(TileEntityChemicalDispenser.class);
 
 		registerTile(TileEntityDataConnector.class);
 		registerTile(TileEntityDataRelay.class);
+		registerTile(TileEntityDataCallbackConnector.class);
 
 		registerTile(TileEntitySandbags.class);
 
@@ -746,6 +762,10 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityGearbox.class);
 		registerTile(TileEntityTransmissionBoxCreative.class);
 		registerTile(TileEntityTransmissionBox.class);
+		registerTile(TileEntityMechanicalPump.class);
+
+		registerTile(TileEntityTankTrap.class);
+		registerTile(TileEntityChainFence.class);
 
 		registerTile(TileEntitySkyCratePost.class);
 		registerTile(TileEntitySkyCrateStation.class);
@@ -766,6 +786,7 @@ public class CommonProxy implements IGuiHandler
 		registerTile(TileEntityBallisticComputer.class);
 		registerTile(TileEntityPacker.class);
 		registerTile(TileEntityRedstoneInterface.class);
+		registerTile(TileEntityEmplacement.class);
 
 		//Wooden
 		MultiblockHandler.registerMultiblock(MultiblockSkyCratePost.instance);
@@ -789,6 +810,7 @@ public class CommonProxy implements IGuiHandler
 
 		//Metal1
 		MultiblockHandler.registerMultiblock(MultiblockRedstoneInterface.instance);
+		MultiblockHandler.registerMultiblock(MultiblockEmplacement.instance);
 
 		int i = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
@@ -875,22 +897,26 @@ public class CommonProxy implements IGuiHandler
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getActiveItemStack();
-		if(te instanceof IGuiTile)
+		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
+
+		Container gui;
+		if(IIGuiList.values().length > ID)
 		{
-			Container gui = null;
-			if(IIGuiList.values().length > ID&&IIGuiList.values()[ID].teClass.isInstance(te))
+			IIGuiList guiBuilder = IIGuiList.values()[ID];
+			// TODO: 03.10.2020 items with server side container inventory
+			if(guiBuilder.item)
+				return null;
+			else if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))
 			{
-				gui = IIGuiList.values()[ID].container.apply(player, te);
+				gui = guiBuilder.container.apply(player, te);
+				if(gui!=null)
+				{
+					((IGuiTile)te).onGuiOpened(player, true);
+					return gui;
+				}
 			}
-
-			if(gui!=null)
-			{
-				((IGuiTile)te).onGuiOpened(player, false);
-				return gui;
-			}
-
 		}
+
 		return null;
 	}
 
@@ -956,19 +982,20 @@ public class CommonProxy implements IGuiHandler
 	@SubscribeEvent
 	public void onBreakBlock(BreakEvent event)
 	{
-		DimensionBlockPos dpos = null;
-		for(Entry<DimensionBlockPos, Float> g : PenetrationRegistry.blockDamage.entrySet())
+		DamageBlockPos dpos = null;
+		for(DamageBlockPos g : PenetrationRegistry.blockDamage)
 		{
-			if(g.getKey().dimension==event.getWorld().provider.getDimension()&&event.getPos().equals(g.getKey())) ;
+			if(g.dimension==event.getWorld().provider.getDimension()&&event.getPos().equals(g)) ;
 			{
-				dpos = g.getKey();
+				dpos = g;
 				break;
 			}
 		}
 		if(dpos!=null)
 		{
 			PenetrationRegistry.blockDamage.remove(dpos);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(-1f, dpos), Utils.targetPointFromPos(dpos, event.getWorld(), 32));
+			dpos.damage = 0;
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(dpos), Utils.targetPointFromPos(dpos, event.getWorld(), 32));
 		}
 	}
 

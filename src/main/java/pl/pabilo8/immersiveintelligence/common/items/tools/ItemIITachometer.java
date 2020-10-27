@@ -54,14 +54,17 @@ public class ItemIITachometer extends ItemIIBase implements ITool
 			{
 				IRotaryEnergy energy = tileEntity.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
 
+				if(energy==null)
+					return EnumActionResult.PASS;
+
 				float int_torque = energy.getTorque();
 				float ext_torque = energy.getOutputRotationSpeed();
 				float int_speed = energy.getRotationSpeed();
 				float ext_speed = energy.getOutputRotationSpeed();
 				if(int_torque!=ext_torque&&int_speed!=ext_speed)
-					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(CommonProxy.INFO_KEY+"tachometer_message.basic", int_speed, int_torque, ext_speed, ext_torque));
+					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(CommonProxy.INFO_KEY+"tachometer_message.advanced", int_speed, int_torque, ext_speed, ext_torque));
 				else
-					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(CommonProxy.INFO_KEY+"tachometer_message.advanced", int_speed, int_torque));
+					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(CommonProxy.INFO_KEY+"tachometer_message.basic", int_speed, int_torque));
 
 				return EnumActionResult.SUCCESS;
 			}

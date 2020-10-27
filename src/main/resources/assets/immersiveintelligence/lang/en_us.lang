@@ -116,6 +116,11 @@ item.immersiveintelligence.minecart.steel_crate.name=Minecart with Steel Crate
 item.immersiveintelligence.minecart.wooden_barrel.name=Minecart with Wooden Barrel
 item.immersiveintelligence.minecart.metal_barrel.name=Minecart with Metal Barrel
 
+item.immersiveintelligence.light_engineer_armor_helmet.name=Engineer's Light Helmet
+item.immersiveintelligence.light_engineer_armor_chestplate.name=Engineer's Light Chestplate
+item.immersiveintelligence.light_engineer_armor_leggings.name=Engineer's Light Leggings
+item.immersiveintelligence.light_engineer_armor_boots.name=Engineer's Light Boots
+
 item.immersiveintelligence.lighter.name=Engineer's Lighter
 item.immersiveintelligence.measuring_cup.name=Engineer's Measuring Cup
 item.immersiveintelligence.electric_hammer.name=Engineer's Electric Hammer
@@ -123,8 +128,10 @@ item.immersiveintelligence.electric_wirecutter.name=Engineer's Electric Wirecutt
 item.immersiveintelligence.electric_multitool.name=Engineer's Electric Multitool
 item.immersiveintelligence.radio_configurator.basic.name=Basic Radio Tuner
 item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
+item.immersiveintelligence.trench_shovel.name=Trench Shovel
 item.immersiveintelligence.machinegun.name=Machinegun
-item.immersiveintelligence.submachinegun.name=Subachinegun
+item.immersiveintelligence.submachinegun.name=Submachinegun
+item.immersiveintelligence.assault_rifle.name=Assault Rifle
 item.immersiveintelligence.autorevolver.name=Autorevolver
 item.immersiveintelligence.spigot_mortar.name=Spigot Mortar
 
@@ -160,6 +167,10 @@ desc.immersiveintelligence.toolupgrade.infrared_scope=Allows nightvision, requir
 desc.immersiveintelligence.toolupgrade.shield=Deflects projectiles and protects the gunner from melee damage. Increases setting up time.
 
 item.immersiveintelligence.data_wire.name=Data Cable Coil
+
+item.immersiveintelligence.small_wirecoil.data.name=Small Data Cable Coil
+item.immersiveintelligence.small_wirecoil.redstone.name=Small Redstone Cable Coil
+desc.immersiveintelligence.small_wirecoil=Used for linking precise electronics, such as mounted circuits.
 
 item.immersiveintelligence.printed_page.blank.name=Blank Page
 item.immersiveintelligence.printed_page.text.name=Printed Text
@@ -253,6 +264,10 @@ tile.immersiveintelligence.storage.brass.name=Brass Block
 tile.immersiveintelligence.sheetmetal_slab.brass.name=Brass Sheetmetal Slab
 tile.immersiveintelligence.storage_slab.brass.name=Brass Slab
 
+tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Concrete Bricks
+tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Panzerconcrete Bricks
+tile.immersiveintelligence.concrete_decoration.uberconcrete.name=Überconcrete Bricks
+
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Electronic Engineering Block
 tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Advanced Electronic Engineering Block
 tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechanical Engineering Block
@@ -272,7 +287,7 @@ tile.immersiveintelligence.metal_device.small_data_buffer.name=Small Data Buffer
 tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
 tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
 tile.immersiveintelligence.metal_device.redstone_buffer.name=Redstone Buffer
-tile.immersiveintelligence.metal_device.data_debugger.name=Debugger
+tile.immersiveintelligence.metal_device.punchtape_reader.name=Punchtape Reader
 tile.immersiveintelligence.metal_device.data_router.name=Data Router
 tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
 
@@ -284,6 +299,7 @@ tile.immersiveintelligence.upgrade_toolbox.name=Maintenance Toolbox
 tile.immersiveintelligence.gearbox.wooden_gearbox.name=Wooden Gearbox
 tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden Transmission Box
 tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Creative Transmission Box
+tile.immersiveintelligence.mechanical_device1.mechanical_pump.name=Mechanical Pump
 
 tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Wooden Wheel
 tile.immersiveintelligence.mechanical_connector.brass_wheel.name=Brass Wheel
@@ -295,6 +311,15 @@ tile.immersiveintelligence.small_crate.wooden_crate_wide.name=Small Wooden Crate
 tile.immersiveintelligence.small_crate.metal_crate_box.name=Small Metal Crate (Box)
 tile.immersiveintelligence.small_crate.metal_crate_cube.name=Small Metal Crate (Cube)
 tile.immersiveintelligence.small_crate.metal_crate_wide.name=Small Metal Crate (Wide)
+
+tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Steel Chain Fence
+tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Brass Chain Fence
+tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=Aluminium Chain Fence
+
+tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=Wooden Steel Chain Fence
+tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Wooden Brass Chain Fence
+
+tile.immersiveintelligence.metal_fortification1.tank_trap.name=Anti-Tank Trap
 
 tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Input Machine - Storage
 tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data Input Machine - Programming
@@ -317,6 +342,7 @@ tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithm
 
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
+tile.immersiveintelligence.data_connector.data_callback_connector.name=Data Callback Connector
 tile.immersiveintelligence.data_connector.chemical_dispenser.name=Chemical Dispenser
 
 tile.immersiveintelligence.data_connector.alarm_siren.name=Alarm Siren
@@ -326,6 +352,8 @@ tile.immersiveintelligence.data_connector.inserter.name=Item Inserter
 tile.immersiveintelligence.data_connector.advanced_inserter.name=Advanced Inserter
 tile.immersiveintelligence.data_connector.fluid_inserter.name=Fluid Inserter
 tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Advanced Fluid Inserter
+
+tile.immersiveintelligence.data_connector.data_debugger.name=Data Debugger
 
 tile.immersiveintelligence.circuit_socket.basic.name=Basic Circuit Socket
 tile.immersiveintelligence.circuit_socket.advanced.name=Advanced Circuit Socket
@@ -590,6 +618,12 @@ info.immersiveintelligence.debugger_mode.2=Receiver
 
 info.immersiveintelligence.tachometer_message.basic=Internal: speed %s RPM / torque %s Nm.
 info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s RPM / torque %s Nm. External: speed %s RPM / torque %s Nm.
+info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s
+info.immersiveintelligence.tachometer.external_torque=External Torque: %s
+info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s
+info.immersiveintelligence.tachometer.external_speed=Enternal Speed: %s
+info.immersiveintelligence.tachometer.torque=Torque: %s
+info.immersiveintelligence.tachometer.speed=Speed: %s
 
 info.immersiveintelligence.towing.no=Can't find a towable vehicle
 info.immersiveintelligence.towing.towed=Successfully towed!
@@ -828,6 +862,7 @@ ie.manual.entry.true=True
 
 ie.manual.entry.variables_input=Input Variables:
 ie.manual.entry.variables_output=Output Variables:
+ie.manual.entry.variables_callback=Callback Variables:
 
 ie.manual.entry.circuit_production.name=Circuitry
 ie.manual.entry.circuit_production.subtext=Not really Beep-Boop yet
@@ -861,12 +896,19 @@ ie.manual.entry.printing_press1= The printing paper is a special thinned version
 ie.manual.entry.printing_press2=The amount of inks depends on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
 
 #Printing Press output variables
-ie.manual.entry.printing_press.vars_in.t.main=Output type
-ie.manual.entry.printing_press.vars_in.t.sub=Possible values: "text", "code", "blueprint"
-ie.manual.entry.printing_press.vars_in.c.main=Amount of copies
-ie.manual.entry.printing_press.vars_in.c.sub=
-ie.manual.entry.printing_press.vars_in.s.main=Text to print
-ie.manual.entry.printing_press.vars_in.s.sub=Available only when using the "text" mode
+ie.manual.entry.printing_press.vars_in.m.main=Output mode
+ie.manual.entry.printing_press.vars_in.m.sub=Possible values: "text", "code", "blueprint"
+ie.manual.entry.printing_press.vars_in.a.main=Amount of copies
+ie.manual.entry.printing_press.vars_in.a.sub=
+ie.manual.entry.printing_press.vars_in.t.main=Text to print
+ie.manual.entry.printing_press.vars_in.t.sub=Available only when using the "text" mode
+
+ie.manual.entry.printing_press.vars_callback.get_ink=Returns black ink amount
+ie.manual.entry.printing_press.vars_callback.get_ink_cyan=Returns cyan ink amount
+ie.manual.entry.printing_press.vars_callback.get_ink_yellow=Returns yellow ink amount
+ie.manual.entry.printing_press.vars_callback.get_ink_magenta=Returns magenta ink amount
+ie.manual.entry.printing_press.vars_callback.get_energy=Returns energy amount
+ie.manual.entry.printing_press.vars_callback.get_paper=Returns blank paper pages amount
 
 ie.manual.entry.data_input_machine.name=Data Input Machine
 ie.manual.entry.data_input_machine.subtext=The Input Outputter

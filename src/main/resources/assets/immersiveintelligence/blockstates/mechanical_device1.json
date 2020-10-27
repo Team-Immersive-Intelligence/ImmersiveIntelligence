@@ -1,0 +1,29 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveengineering:smartmodel/conf_sides_hv_metal_device0_fluid_pump"
+  },
+  "variants": {
+    "inventory,type=mechanical_pump": [
+      {
+        "textures": {
+          "name": "immersiveintelligence:blocks/mechanical_device/pump/pump"
+        }
+      }
+    ],
+    "type": {
+      "mechanical_pump": {
+        "textures": {
+          "name": "immersiveintelligence:blocks/mechanical_device/pump/pump"
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    }
+  }
+}

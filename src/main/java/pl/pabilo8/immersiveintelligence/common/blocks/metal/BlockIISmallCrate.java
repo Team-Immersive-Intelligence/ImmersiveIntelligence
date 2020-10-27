@@ -30,6 +30,7 @@ public class BlockIISmallCrate extends BlockIITileProvider<IIBlockTypes_SmallCra
 		setResistance(15.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
+		setOpaque(false);
 
 		for(IIBlockTypes_SmallCrate b : IIBlockTypes_SmallCrate.values())
 			tesrMap.put(b.getMeta(), "crate");

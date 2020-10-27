@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -294,10 +295,9 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 
 			GlStateManager.popMatrix();
 
-			//TODO:Scheme rendering
-
 			if(!te.inventory.get(3).isEmpty())
 			{
+				GlStateManager.color(1f, 1f, 1f, 1f);
 				for(ModelRendererTurbo model : model.schemeModel)
 					model.render(0.0625f);
 				ItemStack drawStack = CommonProxy.item_assembly_scheme.getProducedStack(te.inventory.get(3));
@@ -321,8 +321,8 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 					GlStateManager.enableBlend();
 					float texScale = 32f;
 					GlStateManager.scale(1/texScale, 1/texScale, 1/texScale);
-					GlStateManager.color(1, 1, 1, 1);
-					blueprint.draw(lineWidth);
+					GlStateManager.color(1, 1, 1, (float)(0.25f*MathHelper.clamp(1f-(playerDistanceSq/120f), 0, 1)));
+					blueprint.draw(lineWidth*2f);
 					GlStateManager.scale(texScale, texScale, texScale);
 					GlStateManager.enableAlpha();
 					GlStateManager.enableTexture2D();

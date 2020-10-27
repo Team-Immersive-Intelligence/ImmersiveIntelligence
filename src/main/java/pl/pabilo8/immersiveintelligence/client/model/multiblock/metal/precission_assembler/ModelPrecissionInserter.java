@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelPrecissionInserter extends BaseBlockModel
+public class ModelPrecissionInserter extends ModelBlockBase
 {
 	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterItemPicker1, inserterItemPicker2, inserterOutput, inserterInput;
 	int textureX = 64;

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
@@ -11,10 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiA
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataMerger;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityMetalCrate;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntitySmallCrate;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
@@ -45,6 +43,15 @@ public enum IIGuiList
 			(player, te) -> new ContainerAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te),
 			(player, te) -> new GuiAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te)
 	),
+	GUI_MEDICRATE(TileEntityMedicalCrate.class,
+			(player, te) -> new ContainerMedicalCrate(player.inventory, (TileEntityMedicalCrate)te),
+			(player, te) -> new GuiMedicalCrate(player.inventory, (TileEntityMedicalCrate)te)
+	),
+	GUI_REPAIR_CRATE(TileEntityRepairCrate.class,
+			(player, te) -> new ContainerRepairCrate(player.inventory, (TileEntityRepairCrate)te),
+			(player, te) -> new GuiRepairCrate(player.inventory, (TileEntityRepairCrate)te)
+	),
+
 	GUI_SMALL_CRATE(TileEntitySmallCrate.class,
 			(player, te) -> new ContainerSmallCrate(player.inventory, (TileEntitySmallCrate)te),
 			(player, te) -> new GuiSmallCrate(player.inventory, (TileEntitySmallCrate)te)
@@ -110,10 +117,10 @@ public enum IIGuiList
 			(player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 3)
 	),
 
-	GUI_PRINTED_PAGE_BLANK(null, null, null),
-	GUI_PRINTED_PAGE_TEXT(null, null, null),
-	GUI_PRINTED_PAGE_CODE(null, null, null),
-	GUI_PRINTED_PAGE_BLUEPRINT(null, null, null),
+	GUI_PRINTED_PAGE_BLANK(GuiPrintedPage::new),
+	GUI_PRINTED_PAGE_TEXT(GuiPrintedPage::new),
+	GUI_PRINTED_PAGE_CODE(GuiPrintedPage::new),
+	GUI_PRINTED_PAGE_BLUEPRINT(GuiPrintedPage::new),
 
 	GUI_DATA_REDSTONE_INTERFACE_DATA(TileEntityRedstoneInterface.class,
 			(player, te) -> new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te),
@@ -172,14 +179,23 @@ public enum IIGuiList
 
 	//GUI_PERISCOPE,
 
+	public boolean item;
 	public Class<? extends TileEntity> teClass;
 	public BiFunction<EntityPlayer, TileEntity, Container> container;
-	public BiFunction<EntityPlayer, TileEntity, GuiScreen> gui;
+	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
+	public BiFunction<EntityPlayer, ItemStack, GuiScreen> guiFromStack;
 
-	IIGuiList(Class<? extends TileEntity> teClass, BiFunction<EntityPlayer, TileEntity, Container> container, BiFunction<EntityPlayer, TileEntity, GuiScreen> gui)
+	IIGuiList(Class<? extends TileEntity> teClass, BiFunction<EntityPlayer, TileEntity, Container> container, BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile)
 	{
 		this.teClass = teClass;
 		this.container = container;
-		this.gui = gui;
+		this.guiFromTile = guiFromTile;
+		item = false;
+	}
+
+	IIGuiList(BiFunction<EntityPlayer, ItemStack, GuiScreen> guiFromStack)
+	{
+		this.guiFromStack = guiFromStack;
+		item = true;
 	}
 }

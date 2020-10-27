@@ -161,7 +161,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 						}
 						else
 						{
-							if(!Utils.isBlockAt(world, pos, IEContent.blockSheetmetal, BlockTypes_MetalsAll.STEEL.getMeta()))
+							if(!Utils.isOreBlockAt(world, pos, "blockSheetmetalSteel"))
 							{
 								return false;
 							}

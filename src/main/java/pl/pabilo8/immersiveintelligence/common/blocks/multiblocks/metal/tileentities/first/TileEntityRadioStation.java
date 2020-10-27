@@ -310,7 +310,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public float getWeatherRangeDecrease()
 	{
-		return world.isRainingAt(getPos())?RadioStation.weatherHarshness: 1f;
+		return world.isRainingAt(getPos())?(float)RadioStation.weatherHarshness: 1f;
 	}
 
 	@Override

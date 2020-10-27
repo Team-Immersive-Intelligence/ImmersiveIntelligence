@@ -84,15 +84,15 @@ public class IIManualLogistics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "skycrates4"),
 				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates5", MultiblockSkyCratePost.instance),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "skycrates6",
-						Utils.getItemWithMetaName(CommonProxy.item_minecart, "wooden_crate"),
-						Utils.getItemWithMetaName(CommonProxy.item_minecart, "reinforced_crate"),
-						Utils.getItemWithMetaName(CommonProxy.item_minecart, "steel_crate"),
-						Utils.getItemWithMetaName(CommonProxy.item_minecart, "wooden_barrel"),
-						Utils.getItemWithMetaName(CommonProxy.item_minecart, "metal_barrel")
+						Utils.getStackWithMetaName(CommonProxy.item_minecart, "wooden_crate"),
+						Utils.getStackWithMetaName(CommonProxy.item_minecart, "reinforced_crate"),
+						Utils.getStackWithMetaName(CommonProxy.item_minecart, "steel_crate"),
+						Utils.getStackWithMetaName(CommonProxy.item_minecart, "wooden_barrel"),
+						Utils.getStackWithMetaName(CommonProxy.item_minecart, "metal_barrel")
 				),
 				new ManualPages.CraftingMulti(ManualHelper.getManual(), "skycrates7",
-						Utils.getItemWithMetaName(CommonProxy.item_skycrate_mount, "mechanical"),
-						Utils.getItemWithMetaName(CommonProxy.item_skycrate_mount, "electric"))
+						Utils.getStackWithMetaName(CommonProxy.item_skycrate_mount, "mechanical"),
+						Utils.getStackWithMetaName(CommonProxy.item_skycrate_mount, "electric"))
 		);
 
 

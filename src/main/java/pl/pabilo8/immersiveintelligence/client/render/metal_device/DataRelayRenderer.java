@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.BaseBlockModel;
+import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.model.connector.ModelDataRelay;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataRelay;
 
@@ -36,7 +36,7 @@ public class DataRelayRenderer extends TileEntitySpecialRenderer<TileEntityDataR
 			//model.getBlockRotation(te.getFacing(),model);
 			//I didn't have a standardised model making system, so i used rotation and offset in this one
 			//And that's why it doesn't use getBlockRotation
-			BaseBlockModel.getCommonConnectorModelRotation(te.facing, model);
+			ModelBlockBase.getCommonConnectorModelRotation(te.facing, model);
 			model.render();
 
 			GlStateManager.popMatrix();
@@ -54,7 +54,7 @@ public class DataRelayRenderer extends TileEntitySpecialRenderer<TileEntityDataR
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			BaseBlockModel.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
+			ModelBlockBase.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
 			//model.getBlockRotation(EnumFacing.DOWN,model);
 
 			model.render();

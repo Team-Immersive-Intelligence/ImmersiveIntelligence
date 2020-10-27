@@ -12,7 +12,7 @@ public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase
 	SMALL_DATA_BUFFER,
 	TIMED_BUFFER,
 	REDSTONE_BUFFER,
-	DATA_DEBUGGER,
+	PUNCHTAPE_READER,
 	DATA_ROUTER,
 	DATA_MERGER,
 	MEDICAL_CRATE,

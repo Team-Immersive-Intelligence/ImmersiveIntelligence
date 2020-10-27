@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 public class EntityVehicleSeat extends Entity
 {
-	int seatID;
+	public int seatID;
 
 	private static final DataParameter<Integer> dataMarkerSeatID = EntityDataManager.createKey(EntityVehicleSeat.class, DataSerializers.VARINT);
 

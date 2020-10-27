@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
@@ -54,7 +53,6 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer
 	{
 		GlStateManager.pushMatrix();
 
-		RenderHelper.enableStandardItemLighting();
 
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
 		String skin = CommonProxy.item_submachinegun.getSkinnableCurrentSkin(stack);
