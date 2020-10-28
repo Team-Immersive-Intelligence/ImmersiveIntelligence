@@ -1,0 +1,978 @@
+//Предметы
+itemGroup.immersiveintelligence=Immersive Intelligence
+
+item.immersiveintelligence.material.basic_circuit_board_raw.name=Сырая Простая Печатная Плата
+item.immersiveintelligence.material.basic_circuit_board_etched.name=Травленная Простая Печатная Плата
+item.immersiveintelligence.material.basic_electronic_element.name=Простой Электронный Компонент
+
+item.immersiveintelligence.material.advanced_circuit_board_raw.name=Сырая Продвинутая Печатная Плата
+item.immersiveintelligence.material.advanced_circuit_board_etched.name=Травленная Продвинутая Печатная Плата
+item.immersiveintelligence.material.advanced_circuit_board.name=Продвинутая Печатная Плата
+item.immersiveintelligence.material.advanced_electronic_element.name=Продвинутый Электронный Компонент
+
+item.immersiveintelligence.material.processor_circuit_board_raw.name=Сырая Процессорная Печатная Плата
+item.immersiveintelligence.material.processor_circuit_board_etched.name=Травленная Процессорная Печатная Плата
+item.immersiveintelligence.material.processor_circuit_board.name=Процессорная Печатная Плата
+item.immersiveintelligence.material.processor_electronic_element.name=Процессор
+item.immersiveintelligence.material.transistor.name=Транзистор
+
+item.immersiveintelligence.material.compact_electric_engine.name=Компактный Электрический Двигатель
+item.immersiveintelligence.material.compact_electric_engine_advanced.name=Продвинутый Компактный Электрический Двигатель
+item.immersiveintelligence.material.carbon_brush.name=Карбоновая Щётка
+item.immersiveintelligence.material.wire_tungsten.name=Вольфрамовый Провод
+item.immersiveintelligence.material.glass_fibre_cable.name=Стекловолоконный Кабель
+
+item.immersiveintelligence.material.advanced_electron_tube.name=Продвинутая Вакуумная Трубка
+
+item.immersiveintelligence.material.punchtape_empty.name=Пустая Перфолента
+item.immersiveintelligence.punchtape.name=Перфолента
+
+item.immersiveintelligence.binoculars.binoculars.name=Бинокль
+item.immersiveintelligence.binoculars.infrared_binoculars.name=Инфракрасный Бинокль
+
+item.immersiveintelligence.assembly_scheme.name=Сборочная схема
+
+item.immersiveintelligence.press_mold.howitzer.name=Пресс-форма Для Металла: Артерелийская Гильза
+item.immersiveintelligence.press_mold.machinegun.name=Пресс-форма Для Металла: Гильза Для Пулемёта
+item.immersiveintelligence.press_mold.submachinegun.name=Пресс-форма Для Металла: Гильза Для Пистолета-пулемёта
+item.immersiveintelligence.press_mold.grenade.name=Пресс-форма Для Металла: Граната
+
+item.immersiveintelligence.material_ingot.platinum.name=Платиновый Слиток
+item.immersiveintelligence.material_ingot.zinc.name=Цинковый Слиток
+item.immersiveintelligence.material_ingot.tungsten.name=Вольфрамовый Слиток
+item.immersiveintelligence.material_ingot.brass.name=Латунный Слиток
+item.immersiveintelligence.material_ingot.advanced_electronic_alloy.name=Слиток Продвинутого Электронного Сплава
+item.immersiveintelligence.material_ingot.silicon.name=Слиток Кремния
+item.immersiveintelligence.material_ingot.magnet.name=Магнит
+
+item.immersiveintelligence.material_dust.platinum.name=Платиновая Крошка
+item.immersiveintelligence.material_dust.zinc.name=Цинковая Крошка
+item.immersiveintelligence.material_dust.tungsten.name=Вольфрамовая Крошка
+item.immersiveintelligence.material_dust.brass.name=Латунная Крошка
+item.immersiveintelligence.material_dust.advanced_electronic_alloy.name=Крошка Продвинутого Электронного Сплава
+item.immersiveintelligence.material_dust.silicon.name=Кремнивая Пыль
+item.immersiveintelligence.material_dust.fluorite.name=Флюоритовая Пыль
+item.immersiveintelligence.material_dust.quartz.name=Кварцивая Пыль
+item.immersiveintelligence.material_dust.quartz_dirty.name=Грязная Кварцевая Пыль
+item.immersiveintelligence.material_dust.phosphorus.name=Фосфоровая Пыль
+
+item.immersiveintelligence.material_plate.platinum.name=Платиновая Пластина
+item.immersiveintelligence.material_plate.zinc.name=Цинковая Пластина
+item.immersiveintelligence.material_plate.tungsten.name=Вольфрамовая Пластина
+item.immersiveintelligence.material_plate.brass.name=Латунная Пластина
+item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Пластина Продвинутого Электронного Сплава
+item.immersiveintelligence.material_plate.silicon.name=Кремнивая Пластина
+
+item.immersiveintelligence.material_nugget.platinum.name=Платиновый Кусочек
+item.immersiveintelligence.material_nugget.zinc.name=Цинковый Кусочек
+item.immersiveintelligence.material_nugget.tungsten.name=Вольфрамовый Кусочек
+item.immersiveintelligence.material_nugget.brass.name=Латунный Кусочек
+item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Кусочек Продвинутого Электронного Сплава
+item.immersiveintelligence.material_nugget.silicon.name=Кремниевый Кусочек
+
+item.immersiveintelligence.material_wire.tungsten.name=Вольфрамовый Провод
+
+item.immersiveintelligence.material_gem.fluorite.name=Флюорит Незера
+//Основан на реальном минерале глауконите, хотя слово фосфор легче запомнить
+item.immersiveintelligence.material_gem.phosphorus.name=Фосфор Незера
+
+item.immersiveintelligence.material_boule.silicon.name=Кремнивая Буля
+
+item.immersiveintelligence.material_spring.brass.name=Латунная Пружина
+item.immersiveintelligence.material_spring.iron.name=Железная Пружина
+item.immersiveintelligence.material_spring.steel.name=Стальная Пружина
+
+item.immersiveintelligence.material.dust_rdx.name=RDX Пыль
+item.immersiveintelligence.material.dust_hmx.name=HMX Пыль
+item.immersiveintelligence.material.white_phosphorus.name=Белый Фосфор
+
+item.immersiveintelligence.material.bullet_core_steel.name=Стальное Ядро Пули
+item.immersiveintelligence.material.bullet_core_brass.name=Латунное Ядро Пули
+item.immersiveintelligence.material.bullet_core_tungsten.name=Вольфрамовое Ядро Пули
+item.immersiveintelligence.material.bullet_core_uranium.name=Урановое Ядро Пули
+item.immersiveintelligence.material.bullet_core_lead.name=Свинцовое Ядро Пули
+item.immersiveintelligence.material.bullet_core_tungsten.name=Вольфрамовое Ядро Пули
+
+item.immersiveintelligence.material.dust_salt.name=Соляная Пыль
+item.immersiveintelligence.material.dust_wood.name=Опилки
+item.immersiveintelligence.material.dust_hexamine.name=Гексаминовая Пыль
+item.immersiveintelligence.material.dust_formaldehyde.name=Формальдегитовая Пыль
+
+item.immersiveintelligence.circuit_functional.arithmetic.name=Арифметическая Плата
+item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Продвинутая Арифметическая Плата
+item.immersiveintelligence.circuit_functional.logic.name=Логическая Плата
+item.immersiveintelligence.circuit_functional.comparator.name=Сравнительна Плата
+item.immersiveintelligence.circuit_functional.advanced_logic.name=Продвинутая Логическая Плата
+item.immersiveintelligence.circuit_functional.text.name=Плата Текстового Процессора
+item.immersiveintelligence.circuit_functional.itemstack.name=Плата Операций Стека Предметов
+
+item.immersiveintelligence.minecart.wooden_crate.name=Вагонетка с Деревянным Ящиком
+item.immersiveintelligence.minecart.reinforced_crate.name=Вагонетка с Защищённым Ящиком
+item.immersiveintelligence.minecart.steel_crate.name=Вагонетка со Стальным Ящиком
+item.immersiveintelligence.minecart.wooden_barrel.name=Вагонетка с Деревянной Бочкой
+item.immersiveintelligence.minecart.metal_barrel.name=Вагонетка с Металлической Бочкой
+
+item.immersiveintelligence.lighter.name=Зажигалка Инженера
+item.immersiveintelligence.measuring_cup.name=Мерный Стакан Инжинера
+item.immersiveintelligence.electric_hammer.name=Электрический Молоток Инженера
+item.immersiveintelligence.electric_wirecutter.name=Электрические Кусачки Инженера
+item.immersiveintelligence.electric_multitool.name=Электрический Мультитул Инженера
+item.immersiveintelligence.radio_configurator.basic.name=Базовый Радиотюнер
+item.immersiveintelligence.radio_configurator.advanced.name=Продвинутый Радиотюнер
+item.immersiveintelligence.machinegun.name=Пулемёт
+
+//Сверлильные Головки
+item.immersiveintelligence.drillhead.tungsten.name=Вольфрамовая Сверлильная Головка
+item.immersiveintelligence.drillhead.iron_diamond_tip.name=Покрытая Алмазом Железная Сверлильная Головка
+item.immersiveintelligence.drillhead.steel_diamond_tip.name=Покрытая Алмазом Стальная Сверлильная Головка
+item.immersiveintelligence.drillhead.tungsten_diamond_tip.name=Покрытая Алмазом Вольфрамовая Сверлильная Головка
+
+item.immersiveintelligence.weapon_upgrade.water_cooling.name=Охлаждаемый Водой Ствол
+item.immersiveintelligence.weapon_upgrade.heavy_barrel.name=Тяжёлый Ствол
+item.immersiveintelligence.weapon_upgrade.second_magazine.name=Второй Магазин
+item.immersiveintelligence.weapon_upgrade.belt_fed_loader.name=Ленточный Магазин
+item.immersiveintelligence.weapon_upgrade.precise_bipod.name=Точные Сошки
+item.immersiveintelligence.weapon_upgrade.hasty_bipod.name=Полевые Сошки
+item.immersiveintelligence.weapon_upgrade.scope.name=Прицел
+item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Инфракрасный Прицел
+
+item.immersiveintelligence.tracer_powder.name=Трассирующая Пыль
+
+item.immersiveintelligence.skycrate_mount.mechanical.name=Небесный Ящик
+item.immersiveintelligence.skycrate_mount.electric.name=Электрический Небесный Ящик
+
+desc.immersiveintelligence.toolupgrade.water_cooling=Использует воду, чтобы охладить ПМ. Увеличивает максимальное кол-во тепла, которое ПМ может принять.
+desc.immersiveintelligence.toolupgrade.heavy_barrel=Значительно увеличивает скорострельность, имеет более высокую отдачу и быстрее перегревается.
+desc.immersiveintelligence.toolupgrade.second_magazine=Позволяет использовать боеприпасы из двух магазинов, перезаряжается отдельно.
+desc.immersiveintelligence.toolupgrade.belt_fed_loader=Позволяет брать боеприпасы из ящика с боеприпасами под игроком. Увеличивает время настройки.
+desc.immersiveintelligence.toolupgrade.precise_bipod=Увеличивает время настройки, уменьшает отдачу.
+desc.immersiveintelligence.toolupgrade.hasty_bipod=Уменьшает время настройки, увеличивает отдачу.
+desc.immersiveintelligence.toolupgrade.scope=Позволяет прицеливаться в даль.
+desc.immersiveintelligence.toolupgrade.infrared_scope=Обеспечивает ночное видение, требует источника питания, такого как конденсаторный рюкзак.
+
+item.immersiveintelligence.data_wire.name=Катушка Кабеля Данных
+
+item.immersiveintelligence.printed_page.blank.name=Пустая Страница
+item.immersiveintelligence.printed_page.text.name=Распечатанный Текст
+item.immersiveintelligence.printed_page.code.name=Распечатанный Код
+item.immersiveintelligence.printed_page.blueprint.name=Распечатанная Конструкционная плата
+
+item.immersiveintelligence.precission_tool.precission_buzzsaw.name=Точная Циркулярная Пила
+item.immersiveintelligence.precission_tool.precission_drill.name=Точная Дрель
+item.immersiveintelligence.precission_tool.precission_inserter.name=Точный Установщик
+item.immersiveintelligence.precission_tool.precission_solderer.name=Точный Паяльник
+item.immersiveintelligence.precission_tool.precission_welder.name=Точный Сварщик
+item.immersiveintelligence.precission_tool.precission_hammer.name=Точный Молоток
+
+item.immersiveintelligence.sawblade.iron.name=Железное Лезвие Пилы
+item.immersiveintelligence.sawblade.steel.name=Стальное Лезвие Пилы
+item.immersiveintelligence.sawblade.tungsten.name=Вольфрамовое Лезвие Пилы
+
+//bCal - Блок-Калибр (1/16 Блока = 1 bCal)
+item.immersiveintelligence.casing_artillery.name=Корпус Артирелийского Снаряда
+item.immersiveintelligence.bullet.artillery_8bCal.name=Артирелийский Снаряд
+
+item.immersiveintelligence.casing_grenade.name=Корпус Гранаты
+item.immersiveintelligence.bullet.grenade_4bCal.name=Граната
+
+item.immersiveintelligence.casing_machinegun.name=Пулемётная Гильза
+item.immersiveintelligence.bullet.machinegun_2bCal.name=Пулемётный Патрон
+
+item.immersiveintelligence.casing_submachinegun.name=Пистолетно-пулемётная Гильза
+item.immersiveintelligence.bullet.submachinegun_1bCal.name=Пистолетно-пулемётный Патрон
+
+item.immersiveintelligence.casing_revolver.name=Кожух Патрона Револьвера
+item.immersiveintelligence.bullet.revolver_1bCal.name=Револьверный Патрон
+
+item.immersiveintelligence.bullet.component.TNT.name=TNT
+item.immersiveintelligence.bullet.component.RDX.name=RDX
+item.immersiveintelligence.bullet.component.HMX.name=HMX
+
+item.immersiveintelligence.bullet.component.CoreSteel.name=Стальное Ядро
+item.immersiveintelligence.bullet.component.CoreBrass.name=Латунное Ядро
+item.immersiveintelligence.bullet.component.CoreTungsten.name=Вольфрамовое Ядро
+item.immersiveintelligence.bullet.component.CoreLead.name=Свинцовое Ядро
+item.immersiveintelligence.bullet.component.CoreUranium.name=Урановое Ядро
+
+item.immersiveintelligence.bullet_magazine.machinegun.name=Пулемётный Магазин
+item.immersiveintelligence.bullet_magazine.submachinegun.name=Пистолетно-пулемётный Магазин
+item.immersiveintelligence.bullet_magazine.submachinegun_drum.name=Пистолетно-пулемётный Барабанный Магазин
+item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Автаматический Револьверный Магазин
+
+item.immersiveintelligence.motor_gear.copper.name=Медная Шестерня
+item.immersiveintelligence.motor_gear.brass.name=Латунная Шестерня
+item.immersiveintelligence.motor_gear.iron.name=Железная Шестерня
+item.immersiveintelligence.motor_gear.steel.name=Стальная Шестерня
+item.immersiveintelligence.motor_gear.tungsten.name=Вольфрамовая Шестерня
+
+item.immersiveintelligence.motor_belt.cloth.name=Тканевый Моторный Ремень
+item.immersiveintelligence.motor_belt.steel.name=Стальной Моторный Ремень
+
+item.immersiveintelligence.wrench.name=Гаечный Ключ Инжинера
+item.immersiveintelligence.electric_wrench.name=Электрический Гаечный Ключ
+
+item.immersiveintelligence.tachometer.name=Тахометр Инжинера
+item.immersiveintelligence.torque_meter.name=Измеритель Крутящего Момента Инжинера
+
+
+//Блоки
+
+tile.immersiveintelligence.ore.platinum.name=Платиновая Руда
+tile.immersiveintelligence.sheetmetal.platinum.name=Платиновый Листовой Металл
+tile.immersiveintelligence.storage.platinum.name=Платиновый Блок
+tile.immersiveintelligence.sheetmetal_slab.platinum.name=Плита Платинового Листового Металла
+tile.immersiveintelligence.storage_slab.platinum.name=Платиновая Плита
+
+tile.immersiveintelligence.ore.zinc.name=Цинковая Руда
+tile.immersiveintelligence.sheetmetal.zinc.name=Цинковый Листовой Металл
+tile.immersiveintelligence.storage.zinc.name=Цинковый Блок
+tile.immersiveintelligence.sheetmetal_slab.zinc.name=Плита Цинкового Листового Металла
+tile.immersiveintelligence.storage_slab.zinc.name=Цинковая Плита
+
+tile.immersiveintelligence.ore.tungsten.name=Вольфрамовая Руда
+tile.immersiveintelligence.sheetmetal.tungsten.name=Вольфрамовый Листовой Металл
+tile.immersiveintelligence.storage.tungsten.name=Вольфрамовый Блок
+tile.immersiveintelligence.sheetmetal_slab.tungsten.name=Плита Вольфрамового Листового Металла
+tile.immersiveintelligence.storage_slab.tungsten.name=Вольфрамовая Плита
+
+tile.immersiveintelligence.ore.salt.name=Соляная Руда
+
+tile.immersiveintelligence.ore.fluorite.name=Руда Незерского Флюорита
+tile.immersiveintelligence.ore.phosphorus.name=Руда Незерского Фосфора
+
+tile.immersiveintelligence.sheetmetal.brass.name=Латунный Листовой Металл
+tile.immersiveintelligence.storage.brass.name=Латунный Блок
+tile.immersiveintelligence.sheetmetal_slab.brass.name=Плита Латунного Листового Металла
+tile.immersiveintelligence.storage_slab.brass.name=Латунная Плита
+
+tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Электронный Инжинерный Блок
+tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Продвинутый Электронный Инжинерный Блок
+tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Механический Инжинерный Блок
+tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Тжёлый Механический Инжинерный Блок
+
+tile.immersiveintelligence.metal_decoration.coil_data.name=Катушка Кабеля Данных
+tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Стальная Катушка Ремня Двигателя
+
+tile.immersiveintelligence.cloth_decoration.coil_rope.name=Катушка Верёвки
+tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Тканевая Катушка Ремня Двигателя
+
+tile.immersiveintelligence.stone_decoration.sandbags.name=Мешки с Песком
+
+tile.immersiveintelligence.metal_device.metal_crate.name=Стальной Ящик
+tile.immersiveintelligence.metal_device.ammunition_crate.name=Ящик с Аммуницией
+tile.immersiveintelligence.metal_device.small_data_buffer.name=Маленький Буфер Данных
+tile.immersiveintelligence.metal_device.item_buffer.name=Буфер Вещей
+tile.immersiveintelligence.metal_device.timed_buffer.name=Фременной Буфер
+tile.immersiveintelligence.metal_device.redstone_buffer.name=Краснокаменный Буфер
+tile.immersiveintelligence.metal_device.data_debugger.name=Отладчик
+tile.immersiveintelligence.metal_device.data_router.name=Маршрутизатор Данных
+tile.immersiveintelligence.metal_device.data_merger.name=Объеденитель данных
+
+tile.immersiveintelligence.gearbox.wooden_gearbox.name=Деревянная Коробка Передач
+tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Деревянная Трансмиссионная Коробка
+tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Креативная Трансмиссионная Коробка
+
+tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Деревянное Колесо
+tile.immersiveintelligence.mechanical_connector.brass_wheel.name=Латунное Колесо
+tile.immersiveintelligence.mechanical_connector.steel_wheel.name=Стальное Колесо
+
+tile.immersiveintelligence.small_crate.wooden_crate_box.name=Маленький Деревянных Ящик (Коробка)
+tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Маленький Деревянных Ящик (Куб)
+tile.immersiveintelligence.small_crate.wooden_crate_wide.name=Маленький Деревянных Ящик (Широкий)
+tile.immersiveintelligence.small_crate.metal_crate_box.name=Маленький Металлический Ящик (Коробка)
+tile.immersiveintelligence.small_crate.metal_crate_cube.name=Маленький Металлический Ящик (Куб)
+tile.immersiveintelligence.small_crate.metal_crate_wide.name=Маленький Металлический Ящик (Широкий)
+
+tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Машина Ввода Данных - Шранилище
+tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Машина Ввода Данных - Программирование
+tile.immersiveintelligence.metal_multiblock.data_input_machine.edit=Машина Ввода Данных - Редактирование Переменной
+
+tile.immersiveintelligence.metal_multiblock.redstone_interface.data=Краснокаменный Интерфейс Данных - Данные
+tile.immersiveintelligence.metal_multiblock.redstone_interface.redstone=Краснокаменный Интерфейс Данных - Красный камень
+
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.0=None
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.1=Boolean
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.2=Int. (0-15)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.3=Int. (0-255)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.4=Int. (0-100)
+tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.5=String
+
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Арифметическая Логическая Машина - Хранилище
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Арифметическая Логическая Машина - Программирование
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Арифметическая Логическая Машина - Редактирование Выражения
+
+
+tile.immersiveintelligence.data_connector.data_connector.name=Коннектор Данных
+tile.immersiveintelligence.data_connector.data_relay.name=Реле Данных
+tile.immersiveintelligence.data_connector.chemical_dispenser.name=Химический Выбрасыватель
+
+tile.immersiveintelligence.data_connector.alarm_siren.name=Сирена
+
+tile.immersiveintelligence.data_connector.inserter.name=Установщик
+tile.immersiveintelligence.data_connector.advanced_inserter.name=Продвинутых Установщик
+tile.immersiveintelligence.data_connector.fluid_inserter.name=Жидкостный Загрущик
+tile.immersiveintelligence.data_connector.advanced_fluid_inserter.name=Продвинутый Жидкостный Загрущик
+
+//Названия Мультиблоковых Струтур
+
+tile.immersiveintelligence.wooden_multiblock.skycrate_station.name=Небесноящиковая Станция
+tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=Небесноящиковый Пост
+tile.immersiveintelligence.wooden_multiblock.sawmill.name=Лесопилка
+tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Машина Ввода Данных
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Арифметическая Логическая Машина
+tile.immersiveintelligence.metal_multiblock.radio_station.name=Радиостанция
+tile.immersiveintelligence.metal_multiblock.printing_press.name=Печатный Пресс
+tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Химическая Ванная
+tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Электролизер
+tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Прециззионый Сборщик
+tile.immersiveintelligence.metal_multiblock.persicope.name=Перископ
+tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Артирелиское Орудие
+tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Баллистический Компьютер
+tile.immersiveintelligence.metal_multiblock.missile_silo.name=Ракетная Шахта
+tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Завод Боеприпасов
+tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Конвейрный Сканер
+tile.immersiveintelligence.metal_multiblock.packer.name=Упоковщик
+tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Рельсовый Упаковщик
+tile.immersiveintelligence.metal_multiblock.unpacker.name=Распаковщик
+tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Рельсовый Распаковщик
+
+tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Интерфейс Красный камень - Данный
+
+desc.immersiveengineering.info.multiblock.II:SkyCrateStation=Небесноящиковая Станция
+desc.immersiveengineering.info.multiblock.II:SkyCratePost=Небесноящиковый Пост
+desc.immersiveengineering.info.multiblock.II:Sawmill=Лесопилка
+desc.immersiveengineering.info.multiblock.II:DataInputMachine=Машина Ввода Данных
+desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Арифметическая Логическая Машина
+desc.immersiveengineering.info.multiblock.II:RadioStation=Радиостанция
+desc.immersiveengineering.info.multiblock.II:PrintingPress=Печатный Пресс
+desc.immersiveengineering.info.multiblock.II:ChemicalBath=Химическая Ванная
+desc.immersiveengineering.info.multiblock.II:Electrolyzer=Электролизер
+desc.immersiveengineering.info.multiblock.II:PrecissionAssembler=Прециззионый Сборщик
+desc.immersiveengineering.info.multiblock.II:Periscope=Перископ
+desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Артирелиское Орудие
+desc.immersiveengineering.info.multiblock.II:BallisticComputer=Баллистический Компьютер
+desc.immersiveengineering.info.multiblock.II:MissileSilo=Ракетная Шахта
+desc.immersiveengineering.info.multiblock.II:AmmunitionFactory=Завод Боеприпасов
+desc.immersiveengineering.info.multiblock.II:ConveyorScanner=Конвейрный Сканер
+desc.immersiveengineering.info.multiblock.II:Packer=Упаковщик
+desc.immersiveengineering.info.multiblock.II:MinecartPacker=Рельсовый Упаковщик
+desc.immersiveengineering.info.multiblock.II:Unacker=Распаковщик
+desc.immersiveengineering.info.multiblock.II:MinecartUnpacker=Рельсовый Распаковщик
+
+desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Интерфейс Красный камень - Данный
+
+//Жидкости
+fluid.ink=Чернила
+fluid.ink_cyan=Бирюзове Чернила
+fluid.ink_magenta=Пурпурные Чернила
+fluid.ink_yellow=Жёлтые Черныла
+
+fluid.etching_acid=Кислота для Травки
+fluid.hydrofluoric_acid=Фтористоводородная Кислота
+fluid.sulfuric_acid=Серная Кислота
+fluid.nitric_acid=Азотная Кислота
+
+fluid.oxygen=Кислород
+fluid.hydrogen=Водород
+fluid.chlorine=Хлор
+
+fluid.brine=Рассол
+
+fluid.ammonia=Аммиак
+fluid.hexamine=Гексамин
+fluid.methanol=Метанол
+
+
+//Звуки
+
+subtitle.immersiveintelligence.siren=Сирена Ревёт
+subtitle.immersiveintelligence.printing_press=Печатный Пресс  Работает
+subtitle.immersiveintelligence.paper_eject=Бумага Падает
+
+subtitle.immersiveintelligence.machinegun_shot_def=Machinegun Noises
+subtitle.immersiveintelligence.machinegun_shot_hb=Heavy Barrel Machinegun Noises
+subtitle.immersiveintelligence.machinegun_shot_wc=Water Cooled Machinegun Noises
+subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
+
+subtitle.immersiveintelligence.howitzer_shot=Артирелийское Орудие Стреляет
+subtitle.immersiveintelligence.howitzer_rotating=Артирелийское Орудие Двидется
+subtitle.immersiveintelligence.howitzer_door_open=Двери Артирелийского Орудия Открываются
+subtitle.immersiveintelligence.howitzer_door_close=Двери Артирелийского Орудия Закрываются
+
+subtitle.immersiveintelligence.inserter=Звуки Установщика
+
+subtitle.immersiveintelligence.penetration_metal=Снаряд пролетает сквозь металл
+subtitle.immersiveintelligence.ricochet_metal=Снаряд рикошетит от металла
+
+//Сущности
+
+entity.minecart_wooden_crate.name=Вагонетка с Деревянным Ящиком
+entity.minecart_reinforced_crate.name=Вагонетка с Защищённым Ящиком
+entity.minecart_steel_crate.name=Вагонетка со Стальным Ящиком
+entity.minecart_wooden_barrel.name=Вагонетка с Деревянной Бочкой
+entity.minecart_metal_barrel.name=Вагонетка с Металлической Бочкой
+
+entity.skycrate.name=Небесный Ящик
+entity.bullet.name=Пуля
+entity.shrapnel.name=Шрапнель
+entity.machinegun.name=Пулемёт
+
+//Описания
+desc.immersiveintelligence.radio_configurator_basic=Позволяет установить частоту для основных радиоустройств.
+desc.immersiveintelligence.radio_configurator_advanced=Модернизированная модель для установки более высоких частот.
+desc.immersiveintelligence.radio_configurator_frequency=Частота: %s
+desc.immersiveintelligence.radio_configurator_max_frequency=Макс. Частота: %s
+desc.immersiveintelligence.measuring_cup_size=Capacity: %s / %s мВ
+desc.immersiveintelligence.measuring_cup_cant_resize=Невозможно изменить размер, когда содержит жидкость.
+desc.immersiveintelligence.functional_circuit=Позволяет машине выполнять такие операции, как:
+
+desc.immersiveintelligence.printed_page.blank=Пустая страница, готовая к печати.
+desc.immersiveintelligence.printed_page.text=Страница с текстом.
+desc.immersiveintelligence.printed_page.code=Страница, содержащая некоторый код, написанный на языке программирования.
+desc.immersiveintelligence.printed_page.blueprint=Страница с информацией о том, как построить конструкцию.
+
+desc.immersiveintelligence.infrared_enabled=§4Инфракрасное§r Зрение Активно!
+desc.immersiveintelligence.infrared_disabled=§cИнфракрасное§r Зрение Выключено!
+
+desc.immersiveintelligence.assembly_scheme.used_to_create=Используется для создания: %s
+desc.immersiveintelligence.assembly_scheme.items_created=Созданные Предметы: %s
+
+desc.immersiveengineering.info.holdControl=§4Удерживайте Control§r
+desc.immersiveengineering.info.holdControlForInfo=§cУдерживайте Control для большей информации§r
+
+
+desc.immersiveintelligence.assembly_scheme.info_hold1=§6Удерживайте Shift§r - Материалы Использованы:
+desc.immersiveintelligence.assembly_scheme.info_hold2=§4Удержиавйте Control§r - Инстременты Использованы:
+desc.immersiveintelligence.assembly_scheme.materials=Материалы Использованы:
+desc.immersiveintelligence.assembly_scheme.tools=Инстременты Использованы:
+
+
+desc.immersiveintelligence.storage_module=Хранилище
+desc.immersiveintelligence.variables_module=Переменные
+desc.immersiveintelligence.data_module=Данные
+desc.immersiveintelligence.redstone_module=Красный Камень
+
+desc.immersiveintelligence.variable_type=Тип:
+desc.immersiveintelligence.variable_add_desc=Добавить новую переменную
+desc.immersiveintelligence.variable_set=Установить
+desc.immersiveintelligence.variable_set_desc=Изменить Значение Переменной
+desc.immersiveintelligence.variable_remove=Удалть
+desc.immersiveintelligence.variable_remove_desc=Удалть Переменную
+desc.immersiveintelligence.variable_properties=Свойства
+desc.immersiveintelligence.variable_apply=Применить
+desc.immersiveintelligence.variable_value=Значение:
+desc.immersiveintelligence.operation=Операция:
+desc.immersiveintelligence.conditional_variable=Условная Переменная:
+desc.immersiveintelligence.no_variable=None
+desc.immersiveintelligence.variable=Переменная:
+
+//Патроны
+
+desc.immersiveintelligence.bullet_type.shrapnel=Шрапнель
+desc.immersiveintelligence.bullet_type.piercing=Бронебойный
+desc.immersiveintelligence.bullet_type.explosive=Взрывной
+desc.immersiveintelligence.bullet_type.incendiary=Зажигательный
+desc.immersiveintelligence.bullet_type.tracer=Следовой
+desc.immersiveintelligence.bullet_type.flare=Вспышка
+desc.immersiveintelligence.bullet_type.chemical=Химический
+desc.immersiveintelligence.bullet_type.special=Спец. Назначение
+
+desc.immersiveintelligence.bullets.core=Заполнен: %s
+desc.immersiveintelligence.bullets.mass=Масса: %s
+desc.immersiveintelligence.bullets.caliber=Калибр: %s bCal
+
+desc.immersiveintelligence.data_merger.0=Обе
+desc.immersiveintelligence.data_merger.1=Лево
+desc.immersiveintelligence.data_merger.2=Право
+
+//Эфекты зелий
+
+potion.immersiveintelligence.suppression=Подавлен
+potion.immersiveintelligence.broken_armor=Броня Пробита
+
+//Информация в чате / отладка
+info.immersiveintelligence.frequency_set=Радио частота была установлена на %s
+info.immersiveintelligence.frequency_invalid=Неверная частота, базовые устройства могут использовать частоты до %s!
+info.immersiveintelligence.current_frequency=Текущая частота: %s
+
+info.immersiveintelligence.requires_advanced_hammer=Для продвинутой инженерии требуются продвинутые инструменты ... чтобы построить эту машину, вам понадобится электрический молоток!
+
+info.immersiveintelligence.gear_durability=Прочность: %1$s / %2$s
+
+info.immersiveintelligence.yaw=Рысканье: %s
+
+info.immersiveintelligence.debugger_mode=Режим отладки: %s
+info.immersiveintelligence.debugger_mode.0=Трансивер
+info.immersiveintelligence.debugger_mode.1=Передатчик
+info.immersiveintelligence.debugger_mode.2=Приемник
+
+info.immersiveintelligence.tachometer_message.basic=Внутренний: скорость %s RPM / крутящий момент %s Nm.
+info.immersiveintelligence.tachometer_message.advanced=Внутренний: скорость %s RPM / крутящий момент %s Nm. Внешнее: скорость %s RPM / крутящий момент %s Nm.
+
+//Энергия вращения
+
+rotary.immersiveintelligence.belt_system.wrongCable=Не удается прикрепить ремни двигателя к разъему проводов
+rotary.immersiveintelligence.belt_system.wrongCable1=Ремни не просто прикрепить к проволочной системе.
+rotary.immersiveintelligence.belt_system.wrongCable2=Как я уже сказал, вы НЕ МОЖЕТЕ соединить их, перестаньте пытаться!
+rotary.immersiveintelligence.belt_system.wrongCable3=Послушайте меня, если вы попробуете их еще раз соединить ...
+rotary.immersiveintelligence.belt_system.wrongCable4=КАКАЯ ЧАСТЬ ВАС НЕ ПОНИМАЕТ, ЧТО ВЫ НЕ МОЖЕТЕ ПРИКРЕПИТЬ ЗДЕСЬ РЕМНИ?!
+rotary.immersiveintelligence.belt_system.wrongCable5=Просто оставь меня в покое ... Думмкопф! Здесь есть продвижение, а теперь к черту!
+rotary.immersiveintelligence.belt_system.itsBoringGetALife=Ты действительно скучный, даже у меня, MotorBeltUtils.java есть чувства, ладно?!
+rotary.immersiveintelligence.belt_system.wrongBelt=Вы не можете прикрепить этот ремень здесь
+
+rotary.immersiveintelligence.belt_system.wrongDimension=Вы находитесь в неправильном измерении
+rotary.immersiveintelligence.belt_system.sameConnection=Ремень нельзя прикрепить к одной и той же точке
+rotary.immersiveintelligence.belt_system.tooFar=Вы слишком далеко от предыдущего подключения
+rotary.immersiveintelligence.belt_system.cantSee=Соединение заблокировано
+rotary.immersiveintelligence.belt_system.connectionExists=Подключение уже существует
+rotary.immersiveintelligence.belt_system.invalidPoint=Одна из точек подключения недействительна
+
+rotary.immersiveintelligence.mechanical.speed=Скорость
+rotary.immersiveintelligence.mechanical.speed_unit=RPM
+rotary.immersiveintelligence.mechanical.torque=Крутящий момент
+rotary.immersiveintelligence.mechanical.torque_unit=Nm
+
+//Описание системы данных
+datasystem.immersiveintelligence.function.add=Сложение
+datasystem.immersiveintelligence.function.subtract=Сычитание
+datasystem.immersiveintelligence.function.multiply=Умножение
+datasystem.immersiveintelligence.function.divide=Деление
+datasystem.immersiveintelligence.function.power=Степень
+datasystem.immersiveintelligence.function.root=Корень
+datasystem.immersiveintelligence.function.max=Минимум
+datasystem.immersiveintelligence.function.min=Максимум
+
+datasystem.immersiveintelligence.function.and=И
+datasystem.immersiveintelligence.function.or=ИЛИ
+datasystem.immersiveintelligence.function.not=НЕ
+datasystem.immersiveintelligence.function.nand=НИ
+datasystem.immersiveintelligence.function.nor=НИЛИ
+datasystem.immersiveintelligence.function.xor=Искл. ИЛИ
+datasystem.immersiveintelligence.function.xnor=НИскл. ИЛИ
+
+datasystem.immersiveintelligence.function.greater=Больше
+datasystem.immersiveintelligence.function.less=Меньше
+datasystem.immersiveintelligence.function.greater_or_equal=Больше или Равно
+datasystem.immersiveintelligence.function.less_or_equal=Меньше или Равно
+datasystem.immersiveintelligence.function.equal=Равно
+
+datasystem.immersiveintelligence.function.join=Соеденить
+datasystem.immersiveintelligence.function.filter=Фильтровать
+datasystem.immersiveintelligence.function.format=Форматировать
+
+datasystem.immersiveintelligence.function.construct_null=Условная Конструкция - Null
+datasystem.immersiveintelligence.function.construct_boolean=Условная Конструкция - Boolean
+datasystem.immersiveintelligence.function.construct_integer=Условная Конструкция - Integer
+datasystem.immersiveintelligence.function.construct_string=Условная Конструкция - String
+
+datasystem.immersiveintelligence.function.get_quantity=Получить Количество
+datasystem.immersiveintelligence.function.set_quantity=Установить Количество
+datasystem.immersiveintelligence.function.get_durability=Получить Прочность
+datasystem.immersiveintelligence.function.set_durability=Установить Прочность
+datasystem.immersiveintelligence.function.get_nbt=Получить NBT
+datasystem.immersiveintelligence.function.set_nbt=Установить NBT
+datasystem.immersiveintelligence.function.can_stack_with=Можно Складывать С
+datasystem.immersiveintelligence.function.matches_oredict=Соответствует РудномуСловарю
+
+datasystem.immersiveintelligence.datatype.null=Null
+datasystem.immersiveintelligence.datatype.boolean=Boolean
+datasystem.immersiveintelligence.datatype.integer=Integer
+datasystem.immersiveintelligence.datatype.string=String
+datasystem.immersiveintelligence.datatype.expression=Expression
+datasystem.immersiveintelligence.datatype.accessor=Accessor
+datasystem.immersiveintelligence.datatype.itemstack=ItemStack
+
+datasystem.immersiveintelligence.datatype.boolean.true=True
+datasystem.immersiveintelligence.datatype.boolean.false=False
+
+//Чертежи
+
+desc.immersiveengineering.info.blueprint.basic_circuits=Бызовые Печатные Платы
+desc.immersiveengineering.info.blueprint.advanced_circuits=Продвинутые Печатные Платы
+desc.immersiveengineering.info.blueprint.processors=Процессоры
+
+desc.immersiveengineering.info.blueprint.basic_functional_circuits=Базовые Функциональные Платы
+desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Продвинутые Функциональные Платы
+
+desc.immersiveengineering.info.blueprint.metal_springs=Пружины
+
+//Достижения
+advancement.immersiveintelligence.root=Immersive Intelligence
+advancement.immersiveintelligence.root.desc=RTFM?
+
+advancement.immersiveintelligence.connect_belt=Мощная передача
+advancement.immersiveintelligence.connect_belt.desc=Связать два механических колеса катушкой ремня.
+
+advancement.immersiveintelligence.secret_connect_wire=Кто посмеет побеждать
+advancement.immersiveintelligence.secret_connect_wire.desc=Тебе было достаточно? А теперь дай мне отдохнуть.
+
+advancement.immersiveintelligence.advanced_circuit_board=Лучше, сложнее, быстрее!
+advancement.immersiveintelligence.advanced_circuit_board.desc=Изготовить усовершенствованную печатную плату
+
+advancement.immersiveintelligence.artillery_howitzer=Сестра Берты
+advancement.immersiveintelligence.artillery_howitzer.desc=Создать артиллерийское орудие
+
+advancement.immersiveintelligence.chemical_bath=Бульбулятор
+advancement.immersiveintelligence.chemical_bath.desc=Создать химическую ванну
+
+advancement.immersiveintelligence.circuit_board=Бип-буп?
+advancement.immersiveintelligence.circuit_board.desc=Изготовить печатную плату
+
+#Да, вы, @CrimsonTwilight, мы знаем, что вам нужны устройства для вставки в IG :D
+advancement.immersiveintelligence.craft_advanced_inserter=Багровый вставщик
+advancement.immersiveintelligence.craft_advanced_inserter.desc=Создайте обновленную версию устройства для вставки.
+
+advancement.immersiveintelligence.craft_binoculars=Тактическое наблюдение
+advancement.immersiveintelligence.craft_binoculars.desc=Скарфтите Бинокль
+
+advancement.immersiveintelligence.craft_chemdispenser=Пламя в черной ночи
+advancement.immersiveintelligence.craft_chemdispenser.desc=Изготовить химический дозатор
+
+advancement.immersiveintelligence.craft_inserter=Никаких желтых, извините!
+advancement.immersiveintelligence.craft_inserter.desc=Создать установщик
+
+#Короче говоря, в Company of Heroes 2 на Wikinger Mod есть особый тип юнитов - лазутчики.
+#Эти парни часто обладают превосходной огневой мощью и точностью, немецкие подразделения используют Sturmgewehrs с инфракрасными прицелами.
+#Вот почему вся инфильтрация во II связана с инфракрасным зрением.
+advancement.immersiveintelligence.craft_ir_binoculars=Разведчик
+advancement.immersiveintelligence.craft_ir_binoculars.desc=Создайте инфракрасный бинокль
+
+#Отсылка к Fullmetal Alchemist: Brotherhood (сцена смерти Lust)
+advancement.immersiveintelligence.craft_lighter=Возвращение Zippo Guy
+advancement.immersiveintelligence.craft_lighter.desc=Создайте зажигалку
+
+advancement.immersiveintelligence.craft_mg=Собственность Ганса
+advancement.immersiveintelligence.craft_mg.desc=Создайте печально известный пулемет
+
+advancement.immersiveintelligence.craft_siren=Реактор в порядке?
+advancement.immersiveintelligence.craft_siren.desc=Создайте сирену
+
+advancement.immersiveintelligence.electrolyzer=Гидравлическая шоковая терапия
+advancement.immersiveintelligence.electrolyzer.desc=Создайте электролизер
+
+advancement.immersiveintelligence.hans_9000=Ганс 9000
+advancement.immersiveintelligence.hans_9000.desc=Подготовьте пулемет к стационарной защите
+
+#Отсылка к известному инженеру и оружейнику Йоргу Справе.
+advancement.immersiveintelligence.let_me_show_you_its_features=Позвольте мне показать вам его особенности!
+advancement.immersiveintelligence.let_me_show_you_its_features.desc=Улучшите пулемет с помощью инфракрасного прицела, тяжелого ствола и второго магазина.
+
+#Отсылка на JoJo
+advancement.immersiveintelligence.make_platinum=Лучше мира?
+advancement.immersiveintelligence.make_platinum.desc=Получить платиновый слиток
+
+#Отсылка на доктора Стоуна
+advancement.immersiveintelligence.make_tungsten=Победить монстра с помощью тепла
+advancement.immersiveintelligence.make_tungsten.desc=Получить вольфрамовый слиток
+
+advancement.immersiveintelligence.make_tungsten_drillhead=Быстрее гномов
+advancement.immersiveintelligence.make_tungsten_drillhead.desc=Изготовить вольфрамовую сверлильную головку
+
+#Ссылка на известный мод
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond=Возиться с инструментами
+advancement.immersiveintelligence.make_tungsten_drillhead_diamond.desc=Изготовить покрытую алмазами вольфрамовую сверлильную головку
+
+advancement.immersiveintelligence.prec_assembler=Качество: мастерство
+advancement.immersiveintelligence.prec_assembler.desc=Создайте прецизионный сборщик
+
+advancement.immersiveintelligence.printing_press=Мало чернил
+advancement.immersiveintelligence.printing_press.desc=Создать печатный станок
+
+#Ах, старый добрый Crysis 3
+advancement.immersiveintelligence.processor_circuit_board=Может ли на нем работать Crysis?
+advancement.immersiveintelligence.processor_circuit_board.desc=Изготовить процессорную печатную плату
+
+advancement.immersiveintelligence.radio_station=Удалюнный контроль
+advancement.immersiveintelligence.radio_station.desc=Создайте радиостанцию
+
+
+//Отсылка к старому польскому мему, в котором определенный бренд какао на самом деле представляет собой богатую историей книгу!
+//Однажды какао положили на полку магазина, ошибочно приняв за книгу, вот с чего и началось.
+advancement.immersiveintelligence.secret_cocoa=Истории Деко Моррено
+advancement.immersiveintelligence.secret_cocoa.desc=Достигнуто высшее качество.
+
+//катекории руководства
+
+ie.manual.category.ii_data.name=Передача данных
+ie.manual.category.ii_warfare.name=Военное дело
+ie.manual.category.ii_logi.name=Логистика
+ie.manual.category.ii_intel.name=Интеллект
+
+//Дата и электроника
+
+#Ссылка на ... управление потоком ... да, правда, это скучно
+ie.manual.entry.data_main.name=Данные
+ie.manual.entry.data_main.subtext=Управление потоком
+ie.manual.entry.data_main0=Если вы хотите управлять автоматизированным заводом, электростанцией или другим сложным сооружением, вам нужна какая-то система управления. <br> Redstone хорош для начала, но с большим количеством машин его беспорядочный характер начинает проявляться - и это подходящий момент, чтобы представить Систему Данных.
+ie.manual.entry.data_main1=Данные, в отличие от сигнала красного камня, передаются асинхронно через пакеты. Это означает, что сигнал отправляется не все время, а только один раз. Каждый пакет может содержать 36 <link; data_variable_types; §n§oVariables§r;> разных типов, помеченных одной из 26 букв и цифр 0-9. Пакеты принимаются и отправляются мгновенно, что позволяет им преодолевать большие расстояния без потери хранимых данных.
+
+#Отсылка на возможную коробку с продуктами
+ie.manual.entry.data_variable_types.name=Типы переменных
+ie.manual.entry.data_variable_types.subtext=Результаты могут отличаться
+ie.manual.entry.data_variable_types=Пакет может содержать несколько типов переменных. Каждый из них имеет значение по умолчанию (не путать с <link; data_variable_types_null; §o§nNull§r;>) и другие параметры, специфичные для их типа. <br> Основные типы: <link; data_variable_types_null; §o§ nNull§r;>, <link; data_variable_types_int; §o§nInteger§r;>, <link; data_variable_types_string; §o§nString§r;>, <link; data_variable_types_bool; §o§nBoolean§r;>, есть также несколько более продвинутых типов, таких как <link; data_variable_types_itemstack; §o§nItemStack§r;>, <link; data_variable_types_array; §o§nArray§r;>, <link; data_variable_types_pair; §o§nPair§r;> и <ссылка; диапазон_типов_данных; §o§nRange§r;>.
+
+ie.manual.entry.data_variable_types_null=Null это особый тип переменной, не имеющий значения. Это тип неопределенной переменной по умолчанию.
+ie.manual.entry.data_variable_types_int=Integer (часто сокращается до Int) - это тип числовой переменной, в основном используемый в вычислениях и сравнении чисел.
+ie.manual.entry.data_variable_types_string=String - это тип текстовой переменной, он может содержать множество различных символов.
+ie.manual.entry.data_variable_types_bool=Boolean (часто сокращается до Bool) - это тип логической переменной, он может содержать одно из двух значений - True или False и может использоваться в логических функциях.
+ie.manual.entry.data_variable_types_itemstack=ItemStack - это расширенный тип переменной, который может содержать информацию об определенном элементе (не типе элемента), таком как идентификатор, метаданные (повреждение) и NBT.
+ie.manual.entry.data_variable_types_array=Array представляет собой набор переменных, упорядоченных по их порядковому номеру (начиная с 0), он может содержать любой тип переменной, кроме другого массива.
+ie.manual.entry.data_variable_types_pair=Pair - это тип переменной, состоящий из двух основных типов переменных, часто используемых при сравнении.
+ie.manual.entry.data_variable_types_range=Range - это тип переменной, состоящий из двух <link; data_variable_types_int; §o§nIntegers§r;>, он чаще всего используется для сравнения чисел или задания их в диапазоне.
+
+ie.manual.entry.def_value=Значение по умолчанию
+ie.manual.entry.min_value=Минимальное значение
+ie.manual.entry.max_value=Максимальное значение
+ie.manual.entry.min_index=Самый низкий индекс
+ie.manual.entry.max_index=Самый высокий индекс
+ie.manual.entry.empty=Пустой
+ie.manual.entry.def_value=Значение по умолчанию
+ie.manual.entry.accepted_values=Принятые значения
+ie.manual.entry.max_length=Максимальная длина
+ie.manual.entry.tf=True/False
+ie.manual.entry.false=False
+ie.manual.entry.true=True
+
+ie.manual.entry.circuit_production.name=плата
+ie.manual.entry.circuit_production.subtext=Еще не совсем бип-буп
+ie.manual.entry.circuit_production0=Платы являются одними из самых важных и часто используемых электронных компонентов. Существует три типа схем: <link; circuit_production_basic; §n§obasic§r;> - сделанные с использованием электронных ламп и красного камня, <link; circuit_production_advanced; §o§nadvanced§r;> - сделанные с использованием Продвинутого Электронного Сплава™ и обновленные вакуумные трубки. Самыми сложными являются схемы <link; circuit_production_processor; §o§nprocessor§r;>, которые сделаны в основном из кремния в сложном процессе <link; precision_assembler; §o§nassembly§r;>.
+ie.manual.entry.circuit_production_basic=Базовые схемы - это обычные, первичные и дешевые схемы. Их можно переоборудовать для выполнения простых арифметических, логических и текстовых операций, но в основном они используются для создания различных машин. Для создания базовой схемы необработанная печатная плата должна быть <химическая_ ванна; §o§netched§r;> в кислоте, а затем микроплата из электронных ламп в <link; Precission_assembler; §o§nPrecision §o§nAssembler§r ;> должен быть установлен на них.
+ie.manual.entry.circuit_production_basic_usages=Базовые схемы используются для создания электронных устройств и машин базового уровня, таких как печатный станок, <link; arithmetic_logic_machine; §o§nArithmetic-Logic §o§nMachine§r;> и <link;precission_assembler;§o§nPrecision §o§nAssembler§r;>.
+ie.manual.entry.circuit_production_advanced=Усовершенствованные схемы являются прямым обновлением своих предшественников, они по-прежнему используют электронные лампы, но из-за используемого нового сплава их возможности намного лучше. Они состоят из модернизированной печатной платы и микросхемы, состоящей из модернизированных электронных ламп.
+ie.manual.entry.circuit_production_advanced_usages=Благодаря высокой скорости передачи их можно переоборудовать для выполнения более сложных арифметических, логических, текстовых и даже операций обработки элементов. Благодаря своей превосходной скорости они используются в беспроводной передаче и в современных вычислительных машинах.
+ie.manual.entry.circuit_production_processor=Процессорные платы - это самые передовые и мощные платы в мире, созданные с использованием кремния, современного электронного сплава и различных других материалов в ходе многоступенчатого процесса сборки.
+ie.manual.entry.circuit_production_processor_usages=В настоящее время процессоры не используются для производства чего-либо, поэтому создание их является больше проблемой, чем действительно необходимым элементом.
+
+#Отсылка к польскому сленговому слову мастеров-мастеров / баумейстеров, означающему doohickey, thingamabob, но в точном значении - устройство, издающее шум "bul bul" (всплеск?)
+ie.manual.entry.chemical_bath.name=Химическая ванна
+ie.manual.entry.chemical_bath.subtext=Бульбулятор
+ie.manual.entry.chemical_bath0=Химическая ванна - это машина, состоящая из стальной ванны промышленного размера и подвижной тележки с захватом. Машина обычно используется для травления сырых цепей в кислоте. Чтобы сформировать его, используйте молоток на среднем блоке из листового металла.
+
+#Отсылка к доктору Стоуну
+ie.manual.entry.precission_assembler.name=Прецизионный сборщик
+ie.manual.entry.precission_assembler.subtext=Благочестивый ремесленник
+ie.manual.entry.precission_assembler0=Прецизионный сборщик - это продвинутая машина, используемая для создания предметов с высокой точностью. Для работы требуется плата сборки и некоторые точные инструменты. Чтобы сформировать его, используйте молоток по деревянному блоку строительных лесов.
+ie.manual.entry.precission_assembler1=машина использует только необходимое количество и выводит лом вместе с произведенным изделием. Чаще всего он используется в производстве электронных компонентов.
+
+ie.manual.entry.electrolyzer.name=Электролизер
+ie.manual.entry.electrolyzer.subtext=Гидравлическая шоковая терапия
+ie.manual.entry.electrolyzer0=Электролизер - это машина, которая в процессе электролиза разделяет жидкость на две разные. Он может расщеплять воду на водород и кислород, а рассол - на хлор и водород. Для работы требуется электричество. Чтобы сформировать блок, используйте молоток по тяжелому инженерному блоку перед машиной.
+
+ie.manual.entry.printing_press.name=Печатный станок
+ie.manual.entry.printing_press.subtext=Книга и перо для инжинера
+ie.manual.entry.printing_press0=Печатный станок - это машина, которая может распечатывать текст по запросу при получении пакета данных. Для работы печатной машине требуются чернила и бумага. Чтобы сформировать его, используйте молоток по светотехническому блоку перед станком.
+ie.manual.entry.printing_press1= Бумага для печати - это специальный разбавленный вариант стандартной, используемой в книгах, создается путем прессования бумаги в металлическом прессе. Аппарату требуются чернила разных цветов в зависимости от значений CMYK текущего печатаемого цвета.
+ie.manual.entry.printing_press2=количество чернил в зависимости от цвета печатаемого символа. Напечатанные страницы должны быть немедленно удалены, так как печатная машина может хранить только 12 из них в своей корзине.
+ie.manual.entry.printing_press3=Stirng 't' - тип вывода (text(текст)/construction(конструкция)/code(код)) <br> Integer c - количество копий <br> String 's' - текст для печати (при использовании режима «текст») <br>
+
+ie.manual.entry.data_input_machine.name=Машина ввода данных
+ie.manual.entry.data_input_machine.subtext=Вход-выход
+ie.manual.entry.data_input_machine0=Машина ввода данных представляет собой электронное устройство, состоящее из деревянного стола с клавиатурой наверху и стального корпуса станка. Пользователь может вводить в него данные и отправлять их, применяя сигнал красного камня. После отправки пакета данных переменные остаются там, и машину можно снова использовать. Для работы устройству требуется электричество. Для его формирования используйте молоток по легкому инженерному блоку слева.
+ie.manual.entry.data_input_machine1=Интерфейс машины состоит из двух частей. Часть хранения, которая используется для хранения перфоленты с записанными на них данными, и часть данных. Перфолента может быть вставлена в прорезь для ее чтения (если перфолента записана) или для записи в него пакета данных машины (когда перфолента пуста). В разделе данных переменные могут быть добавлены с помощью кнопки «+». Затем их можно отредактировать или удалить (удерживайте Shift). При редактировании переменной
+
+#Отсылка к песне
+ie.manual.entry.arithmetic_logic_machine.name=Арифметическая логическая машина
+ie.manual.entry.arithmetic_logic_machine.subtext=Быстрая математика
+ie.manual.entry.arithmetic_logic_machine0=Арифметическая логическая машина - это электронное устройство, основной задачей которого является обработка и изменение данных. Это требует энергии и для работы.
+ie.manual.entry.arithmetic_logic_machine1=Когда пакет данных принимается с левой стороны машины, он использует функциональные схемы, помещенные в 4 слота в стойке, для соответствующего изменения переменных. Машина выполняет итерацию по всем платам, а затем перебирает переменные в алфавитном порядке и устанавливает их значения равными результату данного выражения. Выражение состоит из 2 значений и оператора (+, -, * и т. Д.). У каждой схемы есть список доступных выражений. Выражение также может иметь условную переменную (логическое значение),
+ie.manual.entry.arithmetic_logic_machine2=Машина также предлагает нестандартный тип данных, Аксессор, который не содержит никакого собственного значения, но может получить значение из переменной из полученного пакета. Переменная в выражении может быть переключена на Аксессор, нажав кнопку «@».
+ie.manual.entry.arithmetic_logic_machine_fcircuit_arithmetic=Арифметическая плата <br> Эта плата используется для вычисления основных математических выражений, таких как сложение, вычитание, умножение и деление.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_arithmetic=Продвинутая арифметическая плата. Эта плата позволяет вычислять более сложные математические выражения, такие как возведение числа в степень, получение квадратного корня или получение наименьшего или наибольшего числа из двух.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_logic=Логическая плата <br> Эта плата используется для основных логических выражений (таких как логический вентиль), таких как И, ИЛИ, НЕ.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_comparator=Плата сравнения <br> Эта плата позволяет сравнивать два целых числа и возвращает логическое значение.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_logic=Продвинутая логическая плата. Эта плата может выполнять расширенные логические операции, такие как НИ, НИЛИ, Искл. ИЛИ, НИскл. ИЛИ и базовые операции.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_text=Плата текстового процессора - эта плата может выполнять базовую обработку текста, в настоящее время позволяет объединить только две строки.
+ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_itemstack=Схема операций стека предметов <br> Эта схема может получать и управлять свойствами типа данных ItemStack, ее можно использовать для получения / установки NBT, метаданных и идентификатора стека. Может использоваться в сочетании с другими цепями для управления логистической системой.
+
+#Отсылка на Fullmetal Alchemist
+ie.manual.entry.redstone_interface.name=Краснокаменный интерфейс
+ie.manual.entry.redstone_interface.subtext=Эквивалентный обмен
+ie.manual.entry.redstone_interface0=Краснокаменный интерфейс - это мост между старым, но все еще используемым красным камнем и новой системой данных. Он может преобразовывать данные из сигнала красного камня и в него. Поскольку это всего лишь преобразователь, машина не потребляет никакой энергии.
+ie.manual.entry.redstone_interface1=Машина состоит из нескольких частей, нескольких катушек, кучи стальных пластин и нескольких электронных ламп, но наиболее важными из них являются порт ввода данных, на котором необходимо разместить разъем, и встроенный выходной разъем красного камня, к которому можно прикрепить проволоку. В пользовательском интерфейсе есть два раздела, данные для редстоуна и противоположный. После добавления записи необходимо указать букву переменной и соответствующий цвет красного камня.
+
+#Отсылка к мему
+ie.manual.entry.conveyor_scanner.name=Конвейрный сканер
+ie.manual.entry.conveyor_scanner.subtext=Бери камеру!
+ie.manual.entry.conveyor_scanner0=Конвейерный сканер - это устройство, состоящее из конвейера, камеры со специальной линзой и электронного устройства, обрабатывающего информацию. Затем элемент проходит через конвейерный сканер, его свойства считываются и отправляются в переменной типа стак преметов внутри пакета данных. Для работы машине требуется электричество. Для его формирования используйте молоток на конвейере.
+
+#Отсылка к Factorio
+ie.manual.entry.inserters.name=Установщики
+ie.manual.entry.inserters.subtext=На этот раз нет желтого!
+ie.manual.entry.inserters0=Устройство для точной вставки, также известное как установщик, - это устройство, используемое для передачи предметов из одного инвентаря в другой. Устройство для вставки предметов состоит из рычага и двигателей для вращения и обработки захвата предметов. В установках для вставки жидкости используются трубы и автоматические клапаны. Вставки могут снимать и выводить с любой горизонтальной стороны по желанию.
+ie.manual.entry.inserters1=Стороны установщика можно настроить с помощью молотка (подкрадитесь, чтобы настроить выход). Переносчикам требуется электричество для работы и данные, чтобы указывать им, что делать.
+ie.manual.entry.inserters_basic=Базовый установщик используется для простой, но контролируемой передачи элементов. Состоит из основных схем и механических компонентов, это дешевый и простой способ определить, сколько элементов следует перенести из одного блока в другой.
+ie.manual.entry.inserters_basic_desc=Переменные <br> String 'm' - режим получения элемента (установить / добавить) <br> Integer 'c' - количество элементов <br>
+ie.manual.entry.inserters_advanced=Продвинутый установщик - это обновленная версия, которая позволяет фильтровать сбор определенных предметов и позволяет забирать ящики и бочки с вагонеток. Продвинутый установщик намного быстрее, но он также потребляет больше энергии.
+ie.manual.entry.inserters_advanced_desc=Переменные <br> String 'm' - режим получения предметов (установка / добавление) <br> Integer 'c' - количество предметов <br> Логическое 'b' - можно брать блоки (из тележек) <br> String 'f' - режим фильтрации (whitelist(белый список), blacklist(черный список), none(нет)) <br> String 'g' - расширенный режим фильтрации (exact, item, oredict) <br> Строка 'w' - режим приема вагонетки (items(элементы) / block(блок)) <br> Стаки предметов '1 '-'0' - фильтры предметов
+ie.manual.entry.inserters_fluid=Устройство для ввода жидкости является точным ограничителем передачи жидкости. В некоторых ситуациях вы хотите вставить только необходимую сумму, это устройство делает именно это.
+ie.manual.entry.inserters_fluid_desc=Переменные<br>String 'm' - режим приема предметов (set(установить)/add(добавить))<br>Integer 'c' - кол-во жидкости (мВ)<br>
+
+#Отсылка на аддон для Industrial Craft на серены
+ie.manual.entry.alarm_siren.name=Сирена
+ie.manual.entry.alarm_siren.subtext=С реактором все нормально, было, по крайней мере.
+ie.manual.entry.alarm_siren0=Сигнальная сирена - это устройство, которое издает громкий шум при подаче сигнала красного камня. Проволоку из красного камня можно прикрепить с любой стороны. Сирену, как и любой соединитель красного камня, можно перенастроить для использования другого канала красного камня (по умолчанию белый).
+
+#Отсылка к событию в моей жизни
+ie.manual.entry.radio_station.name=Радио станция
+ie.manual.entry.radio_station.subtext=Беспроводной провод™
+ie.manual.entry.radio_station0=Радиостанция - это устройство для беспроводной передачи и приема данных. Радиостанции могут общаться только тогда, когда они находятся в пределах досягаемости (что ниже в плохую погоду), когда они работают на одной и той же частоте и когда обе башни получают достаточно электроэнергии.
+ie.manual.entry.radio_station1=Радиостанция - это усовершенствованный мультиблок, а это значит, что ее можно построить только с помощью Молота электрика в двухэтапном процессе. На первом этапе необходимо построить мультиблок, а затем использовать молоток на верхнем усовершенствованном электронном инженерном блоке, на втором этапе необходимо подать энергию (желоб с использованием электрического молота) для его завершения.
+ie.manual.entry.radio_station2=Частоту радиостанции можно установить с помощью радиотюнера. Есть 2 версии тюнера с разными диапазонами частот. Радиостанция может использовать только основной диапазон.
+
+#Ссылка на ... Описание проклятия Immersive Engineering
+ie.manual.entry.small_data_devices.name=Малые устройства данных
+ie.manual.entry.small_data_devices.subtext=Серые кубики будущего
+ie.manual.entry.data_merger=Объеденитель данных - это машина, которая может комбинировать два ввода данных с боковых сторон в вывод на лицевой стороне. У машины есть переключатель, с которого будет выбираться предпочтительная сторона. У каждой переменной также есть режим бокового переопределения, зеленый - слева, а красный - справа, более темные цвета удаляют переменную, если последний пакет с этой стороны не содержит переменную.
+ie.manual.entry.data_router=Маршрутизатор данных позволяет направить пакет на определенную сторону, которая определяется одной из переменных пакета (может быть установлена на маршрутизаторе путем скрытного использования молотка). Переменная должна быть целым числом. <br> Вверху - 0 <br> Внизу - 1 <br> Север - 2 <br> Юг - 3 <br> Восток - 4 <br> Запад - 5
+ie.manual.entry.redstone_buffer=Буфер красного камня - это устройство, которое может удерживать входящий пакет данных до тех пор, пока он не получит сигнал красного камня.
+ie.manual.entry.timed_buffer=Временной буфер - это устройство, которое может удерживать входящий пакет данных в течение заданного времени. Продолжительность устанавливается переменной «0» (количество тактов ожидания).
+ie.manual.entry.small_data_buffer=Небольшой буфер данных - это устройство, которое может удерживать до 4 пакетов и может выпускать их с использованием метода First-In-First-Out при получении сигнала красного камня.
+
+ie.manual.entry.data_wires.name=Подключение данных
+ie.manual.entry.data_wires.subtext=Не совсем линии электропередач
+ie.manual.entry.data_wires0=По проводам данные отправляются и принимаются немедленно. В некоторых случаях использование <link; radio_station; §o§nWireless §o§nTransmission§r;> может быть лучше, но провода обеспечивают лучшую стабильность в суровую погоду и дешевле.
+ie.manual.entry.data_wires1=Провода передачи данных, как и большинство других кабелей, имеют собственные реле и разъемы, которые разделяют и соединяют машины. Их можно использовать для создания отличных логистических, военных, разведывательных и производственных сетей.
+
+ie.manual.entry.tools.name=Подключение данных
+ie.manual.entry.tools.subtext=Не совсем линии электропередач
+ie.manual.entry.tools0=По проводам данные отправляются и принимаются немедленно. В некоторых случаях использование <link; radio_station; §o§nWireless §o§nTransmission§r;> может быть лучше, но провода обеспечивают лучшую стабильность в суровую погоду и дешевле.
+ie.manual.entry.tools1=Провода передачи данных, как и большинство других кабелей, имеют собственные реле и разъемы, которые разделяют и соединяют машины. Их можно использовать для создания отличных логистических, военных, разведывательных и производственных сетей.
+
+
+//Интеллект
+
+#Отсылка к доктору Стоуну
+ie.manual.entry.intel_main.name=Интеллект
+ie.manual.entry.intel_main.subtext=Самое мощное оружие науки
+ie.manual.entry.intel_main0=Разведка - это отрасль инженерии, ориентированная на шпионаж, проникновение, саботаж и разведку. <br> Разведка предлагает множество инструментов и машин для наблюдения и прогнозирования движений противника. К ним относятся простые, такие как бинокль, и продвинутые, такие как инфракрасный наблюдатель или стратегический командный стол.
+
+#Отсылка к доктору Стоуну
+ie.manual.entry.binoculars.name=Бинокль
+ie.manual.entry.binoculars.subtext=Глаза науки
+ie.manual.entry.binoculars0=Бинокль - это инструмент, позволяющий улучшить обзор. Они основаны на том же принципе увеличения, что и прицел <link; railgun; §o§nRailgun§r;>.
+ie.manual.entry.binoculars1=Инфракрасный бинокль - это усовершенствованная версия обычных. При подаче энергии, например, от <link; powerpack; §o§nCapacitor §o§nBackpack§r;> он обеспечивает ночное видение, не используйте их в освещенных местах, это может серьезно ослепить вас.
+
+#Отсылка к Супресолдатам из Wolfenstain
+ie.manual.entry.infiltrators_goggles.name=Очки разведчика
+ie.manual.entry.infiltrators_goggles.subtext=Übervision
+ie.manual.entry.infiltrators_goggles0=
+
+#Отсылка на 1984 Оруэлла
+ie.manual.entry.infrared_observer.name=Инфракрасный наблюдатель
+ie.manual.entry.infrared_observer.subtext=Большой брат
+ie.manual.entry.infrared_observer0=
+
+#Отсылка к битве за Британию во Второй мировой войне
+ie.manual.entry.radar.name=Радар
+ie.manual.entry.radar.subtext=Реликвия из Дувра
+ie.manual.entry.radar0=
+
+#Отсылка на книгу Сунь Цзы
+ie.manual.entry.strategic_command_table.name=Стратегический командный стол
+ie.manual.entry.strategic_command_table.subtext=Искусство войны
+ie.manual.entry.strategic_command_table0=
+
+//Военное дело
+
+#Отсылка на игру RTS
+ie.manual.entry.warfare_main.name=Военное дело
+ie.manual.entry.warfare_main.subtext=Инженер и завоеватель
+ie.manual.entry.warfare_main0=Военное дело - это отрасль инженерии, ориентированная на защиту и нападение на врагов. Инженерные изобретения произвели революцию в современном способе боя, мечи и щиты устарели, наступила эра метательного оружия. Современная война основана на точных и быстрых атаках, дальность которых превосходит любое оружие прошлого.
+
+#Отсылка на всем известную игру
+ie.manual.entry.machinegun.name=Пулемет
+ie.manual.entry.machinegun.subtext=Собственность Ганса
+ie.manual.entry.machinegun0=Пулемет - это новаторское, сложное новое изобретение, которое позволяет эффективно защищаться от всех видов угроз. В отличие от большинства видов пилотируемого оружия, из пулемета нельзя стрелять на ходу. Чтобы выстрелить, его нужно переместить на блок с достаточным пространством. ПМ использует одноразовые магазины, которые могут быть заряжены пулями в <link; packer; §o§nPacker§r;>.
+ie.manual.entry.machinegun1=При стрельбе гильзы падают на землю, чтобы их можно было подобрать. ПМ склонен к перегреву, что зависит от скорострельности. Оружие, как и большинство современного оборудования, допускает различные конфигурации с использованием обновлений, таких как водяное охлаждение, прицелы, замена сошек и многое другое.
+
+ie.manual.entry.machinegun_upgrade_heavy_barrel=Тяжелый ствол - это модификация, которая резко увеличивает скорострельность орудия, но за счет этого также увеличивает скорость его перегрева. Стрельба из пушки короткими очередями - лучшая тактика при использовании этого улучшения.
+ie.manual.entry.machinegun_upgrade_water_cooling=Охлаждающий ствол - модификация, позволяющая заправлять нижний бачок охлаждающей жидкостью (например, водой), что практически исключает перегрев пистолета. Ведение подавляющего огня с помощью этого обновления - хорошая идея, но вы должны делать это с высокой точностью из-за низкой скорости стрельбы.
+ie.manual.entry.machinegun_upgrade_belt_fed_loader=*В НАСТОЯЩЕЕ ВРЕМЯ НЕ ДОБАВЛЕНО* Зарядное устройство с ленточной подачей боеприпасов позволяет заряжать боеприпасы с ленты, расположенной в ящике с боеприпасами ниже огневой позиции.
+ie.manual.entry.machinegun_upgrade_second_magazine=Модернизация двойного магазина позволяет загружать в ружье два магазина, второй магазин может заряжаться с левой стороны.
+ie.manual.entry.machinegun_upgrade_hasty_bipod=Полевые сошки - это наспех замена штатным, они уменьшают скорость раскрытия пушки, но увеличивают отдачу.
+ie.manual.entry.machinegun_upgrade_precise_bipod=Прецизионные сошки заменяют стандартные, сделанные с высокой точностью, они увеличивают скорость раскрытия пушки, но уменьшают отдачу.
+ie.manual.entry.machinegun_upgrade_scope=Прицел для пулемета - это модифицированная версия прицела из <link; railgun; §o§nRailgun§r;>, которая позволяет увеличивать дальнюю цель.
+ie.manual.entry.machinegun_upgrade_infrared_scope=Инфракрасный прицел представляет собой модернизированную версию своего предшественника, который также может обеспечивать ночное видение с помощью инфракрасного отражателя и специального фильтра, для работы ему требуется энергия, обеспечиваемая конденсаторным рюкзаком.
+
+ie.manual.entry.grenade.name=Гранаты
+ie.manual.entry.grenade.subtext=Ахтунг, Граната!
+ie.manual.entry.grenade0=Ручная граната - это метательное оружие, содержащее взрывчатку или другой материал, срабатывающий при контакте.
+
+#Отсылка к пушке Дикер Берта
+ie.manual.entry.artillery_howitzer.name=Артирелийское орудие
+ie.manual.entry.artillery_howitzer.subtext=Сестра Берты
+ie.manual.entry.artillery_howitzer0=
+ie.manual.entry.artillery_howitzer1=Устройство высокоточной бомбардировки, широко известное как гаубица, является оружием непрямого огня, которое позволяет атаковать цели на расстоянии до 300 блоков. Он управляется с помощью информационной системы и заряжается специальными крупнокалиберными снарядами. Лучше всего использовать в наступательных операциях.
+ie.manual.entry.artillery_howitzer2=Гаубица состоит из бетонного бункера с пушкой, командных столов по бокам наверху и стальной двери, которую можно открыть, подав сигнал красного камня. Боеприпасы должны подаваться на спускающийся конвейер и заряжаться с помощью команды «загрузить», после выстрела пустой гильза пушки должна быть выгружена командой «разгрузить». Для работы машине требуется большое количество энергии. Чтобы сформировать его, используйте молоток по бетонному блоку, торчащему вверху.
+ie.manual.entry.artillery_howitzer3=Переменные<br>String 'm' - режим действия (load(заряжание)/unload(разгрузка)/fire(огонь)/stop(остановка)) <br> Integer 'p' - угол поворота пушки по тангажу <br> Integer 'y' - поворот пушки по рысканью <br> Integer 'f '- время срабатывания пули (в тиках), по истечении времени пуля срабатывает.
+
+ie.manual.entry.ballistic_computer.name=Баллистический компьютер
+ie.manual.entry.ballistic_computer.subtext=Рассчитайте это к этому
+ie.manual.entry.ballistic_computer0=Баллистический компьютер - это устройство, которое переводит вектор положения и массу пули в угол рыскания и тангажа, которые используются в большинстве видов оружия, управляемого данными.
+ie.manual.entry.ballistic_computer1=Входные переменные: <br> Integers 'x', 'y', 'z' - позиция для стрельбы <br> Integer 'm' - масса пули <br> Выходные данные переменных: <br> Integer 'p' - угол поворота пушки по тангажу <br> Integer 'y' - угол поворота пушки по рысканию
+
+#Отсылка на общую неприязнь BluSunrize к пулемету и ящику с боеприпасами
+ie.manual.entry.ammocrate.name=Ящик с боеприпасами
+ie.manual.entry.ammocrate.subtext=Зелёный, а не Синий
+ie.manual.entry.ammocrate0=Ящик с боеприпасами - это переносное хранилище для всех пуль и пустых гильз. Его можно использовать для заряжания револьвера или спидлоадера путем создания схемы заряжания и установки патронов внутрь. Чтобы извлечь револьвер из ящика, используйте его пустой рукой.
+
+#Отсылка к Blacknight, автору спрайтов для электрического молота и зажигалки, а также автору идеи химического дозатора.
+ie.manual.entry.chemdispenser.name=Химический дозатора
+ie.manual.entry.chemdispenser.subtext=Пламя в Черной ночи
+ie.manual.entry.chemdispenser0=Устройство, изобретенное тем же инженером, который разработал электрический молот, первоначально для полива сельскохозяйственных культур и тушения пожаров, его также можно использовать для точного опрыскивания позиции зажигательной жидкостью.
+ie.manual.entry.chemdispenser1=Для химического дозатора требуется питание, подаваемое через провод к разъему устройства, сигнал данных (или постоянный сигнал красного камня) для принятия решения о его действиях и жидкость для входа на задней панели.
+ie.manual.entry.chemdispenser2=Переменные: <br> Integer «a» - количество распыляемой жидкости <br> Boolean «i» - должна ли жидкость загореться <br> Integers «y», «p» - рыскание и наклон сопла <br>
+
+#Отсылка к польской копипасте о парнях, которые устанавливают режим в детском саду и заставляют детей работать над сборкой ручек, заставляя при этом секретную полицию из других детей присматривать за ними
+ie.manual.entry.ammunition_factory.name=Завод боеприпасов
+ie.manual.entry.ammunition_factory.subtext=Еще лучше, чем делать ручки!
+ie.manual.entry.ammunition_factory0=Завод боеприпасов - это тяжелая многосекционная машина, производящая боеприпасы всех типов. Здесь вы можете производить гранаты, пули и снаряды, и их действие зависит от используемых материалов.
+ie.manual.entry.ammunition_factory1=Машине требуется источник питания, и ей может быть предоставлен дополнительный сигнал данных для изменения времени срабатывания предохранителя, окраски и названия пуль. Основными составляющими боеприпасов являются: <br> Сердечник - из металла, например стали или латуни. <br> Компоненты - взрывчатые материалы, трассирующая пыль, зажигательные материалы, фейерверки и т. Д. <br> Порох - используемое количество зависит от калибра боеприпаса. <br> Чем больше калибр, тем больше емкость для компонентов, а значит, больше масса.
+ie.manual.entry.ammunition_factory2=Делая пули, помните: не существует такого понятия, как «лучший состав пули», добавляйте ингредиенты, соответствующие вашим потребностям. Нужна светошумовая граната? Используйте фейерверк. Нужна пуля, способная пробить сталь? Используйте урановые стержни. Имейте в виду, что сочетание этих двух приведет к более низкому модификатору подавления фейерверка, ядра изменяют силу эффектов. Некоторые материалы, такие как латунь, повышают его, а некоторые, например, вольфрам, сталь или уран, уменьшают его.
+ie.manual.entry.ammunition_factory3=Используйте систему данных, чтобы назвать и раскрасить свои маркеры. Это позволит вам легче различать их, поэтому вы не перепутаете бронебойный снаряд с фугасным. Для окраски аппарату требуется подача чернил в бак, аналогично <link; Printing_press; §o§nPrinting §o§nPress§r;>.
+ie.manual.entry.ammunition_factory4=Переменные: <br> Integer 'p'-процентное соотношение компонентов пули (0-100) <br> Ingeter или String' c'-цвет корпуса пули (Int - RGB, String - Hex) <br> String 'n' - название пули.
+
+//Логистика
+
+#Отсылка на Foxhole - это MMO игра с большой упорной войной, в которой логистика играет ключевую роль
+ie.manual.entry.logistics.name=Kjubcnbrf
+ie.manual.entry.logistics.subtext=Logi, bmats как можно скорее!
+ie.manual.entry.logistics0=Логистика - это уникальная отрасль машиностроения, ориентированная на хранение, доставку и управление путями передачи товаров. Хорошая логистическая система состоит из склада для хранения и близлежащих заводов и фабрик для быстрого изготовления необходимых вещей. Благодаря новейшим электронным и электрическим технологиям и некоторым старым роторным машинам создание хорошей системы доставки стало проще, чем когда-либо.
+
+#Отсылка на лень Чоромана, но также и на некоторую тяжелую работу над моделью упаковщика.
+ie.manual.entry.packer.name=Упаковщик
+ie.manual.entry.packer.subtext=Еще больше труб и туннелей!
+ie.manual.entry.packer0=Упаковщик - это машина, используемая для пакетной загрузки предметов в контейнеры, такие как ящики или пулевые магазины. Для работы требуется питание и один сигнал данных, определяющий, сколько предметов следует каждый раз класть. Чтобы сформировать его, используйте молоток по трубе над конвейерной лентой.
+ie.manual.entry.packer1= Упаковщик принимает предметы для упаковки сбоку и контейнеры на нижний конвейер.
+ie.manual.entry.packer2=Переменные: <br> Integer "c" -элементы для упаковки <br> Integer or String (one_by_one, one_of_all) режим упаковки "m-item" <br> Целое "q" - вставить количество <br> Boolean "i" - независимо от того, является ли машина должна игнорировать пустые стопки.
+
+#Цеппелины
+ie.manual.entry.skycrates.name=Небесные ящики
+ie.manual.entry.skycrates.subtext=Актуальные логистические линии!
+ie.manual.entry.skycrates0=Система небесных ящиков - это другой подход к доставке предметов. Его скорость превосходит скорость любого конвейера, а веревочные линии намного дешевле и компактнее. У него также есть некоторые недостатки: для этого требуются станции с обеих сторон, а ящики должны быть вставлены в вагонетку. Skycrates - лучший вариант, чем конвейеры на большие расстояния, их не рекомендуется использовать на коротких (0-30 м) расстояниях.
+ie.manual.entry.skycrates1=Станция небесных ящиков - это начальная и конечная точка линии небесных ящиков. Чтобы сформировать его, используйте молоток на лесах посередине. Для работы ему требуется вращательная сила, подаваемая на его сторону. Количество передач увеличивает его эффективность аналогично тому, как это работает с <link; rotary_power3; §o§nGearboxes§r;>.
+ie.manual.entry.skycrates2=Станция использует крепления для крепления скайкрейтов, крепления снимаются сзади, за установщиком. Минные вагоны могут заехать на станцию только тогда, когда железнодорожный шлагбаум поднят, вагонетку можно вытеснить со станции, подав сигнал красного камня. Станция автоматически выгружает вагонетки после загрузки / разгрузки.
+ie.manual.entry.skycrates3=Пост небесных ящиков - это ретранслятор между двумя точками в сети небесных ящиков. Можно подключить только два провода. Для его формирования используйте молоток по забору.
+ie.manual.entry.skycrates4=Тележки с ящиками - это безопасный способ перевозки предметов по железной дороге. Их можно создать, поместив ящик в вагонетку, предметы внутри не пропадут. В разобранном виде вагонетка разделяется на саму тележку и ящик.
+ie.manual.entry.skycrates5=Крепления небесных ящиков используются для транспортировки ящиков по зиплайну. Существует две модели: базовая и электрическая, которая использует энергию, получаемую на ходу <link; tesla_coil; §o§nTesla §o§nCoils§r;> рядом, поблизости.
+
+
+//Остальные
+
+#Ссылка на некую картинку, которую я видел на Reddit несколько лет назад
+ie.manual.entry.sawmill.name=Лесопилка
+ie.manual.entry.sawmill.subtext=Лучший фиджет спиннер!
+ie.manual.entry.sawmill0=Лесопилка - это автоматический плотницкий станок, работающий от энергии вращения. Он состоит из стола, механического устройства для вставки и крепления для пилы. Чтобы сформировать мультиблок, используйте молоток по средним деревянным подмосткам.
+ie.manual.entry.sawmill1=Возможна установка пил из разных материалов. Хотя любая пила эффективна при резке дерева, пилы из твердых материалов, таких как сталь и тунстен, могут резать даже металл в корытах.
+ie.manual.entry.sawmill2=Машине требуется постоянная подача вращающей силы на ее сторону. Ресурсы могут быть вставлены с правой стороны стола, а обработанные предметы отправлены в деревянный ящик для хранения на земле.
+
+ie.manual.entry.rotary_power.name=Энергия вращения
+ie.manual.entry.rotary_power.subtext=Вещи начинают вращаться!
+ie.manual.entry.rotary_power0=Энергия вращения - старомодная альтернатива электроэнергии. Вместо проводов и разъемов используются колеса и моторные ремни. В системе питания используются 2 фактора: крутящий момент - в Ньютон-метрах (Нм) и скорость в об / мин. Для эффективной работы машинам требуется разный крутящий момент и скорость.
+ie.manual.entry.rotary_power1=Если какое-либо из этих значений превышает предел, машина взрывается. Мощность может быть объединена и разделена с помощью <link; rotary_power3; §o§nGearboxes§r;>.
+ie.manual.entry.rotary_power2=Колесо используется для передачи механической (вращательной) мощности между устройствами. После установки его можно подключить к другому колесу с помощью ремня двигателя, так же как соединители соединяются с проводами.
+ie.manual.entry.rotary_power3=Ремни двигателя являются основным передаточным элементом каждой ротационной электрической сети. Они различаются величиной крутящего момента и скоростью, которую они могут передавать. Если крутящий момент или скорость у него слишком высоки для ремня, он отсоединяется от колеса и падает на землю. Используйте разные материалы для разных нужд - сталь может быть более устойчивой к крутящему моменту, но потери мощности выше.
+ie.manual.entry.rotary_power4=Коробки передач используются для соединения нескольких колес, их стороны могут быть изменены на вход, выход или ничего. Введенный крутящий момент со всех входов суммируется и затем поровну делится между всеми выходами. Вы можете использовать коробку передач, чтобы объединить крутящий момент, чтобы увеличить его или разделить между 2 или более колесами. Коробке передач требуются шестерни с определенным сопротивлением крутящему моменту и скорости для работы на полной мощности.
+ie.manual.entry.rotary_power5=Трансмиссионные коробки используются для соединения механических устройств с осями другого стандарта, их можно использовать для подключения ветряной мельницы или водяного колеса к сети ремня двигателя или вывода механической энергии на динамо-машину.
+ie.manual.entry.rotary_power6=Гаечный ключ и электрический гаечный ключ можно использовать для открытия люков механических устройств в целях технического обслуживания, например, для переключения передач в коробке передач.
+
