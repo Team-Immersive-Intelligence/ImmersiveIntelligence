@@ -16,11 +16,10 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 {
 	private static ModelElectrolyzer model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/electrolyzer.png";
-
 	@Override
 	public void render(TileEntityElectrolyzer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/electrolyzer.png";
 		if(te!=null)
 		{
 			if(te.isDummy())
@@ -57,7 +56,6 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

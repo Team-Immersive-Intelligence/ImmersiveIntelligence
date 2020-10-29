@@ -22,11 +22,11 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPrintingPress model;
 	private static ModelPrintingPress modelFlipped;
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/printing_press.png";
 
 	@Override
 	public void render(TileEntityPrintingPress te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/printing_press.png";
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);

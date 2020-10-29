@@ -21,11 +21,10 @@ public class AlarmSirenRenderer extends TileEntitySpecialRenderer<TileEntityAlar
 {
 	private static ModelAlarmSiren model = new ModelAlarmSiren();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/alarm_siren.png";
-
 	@Override
 	public void render(TileEntityAlarmSiren te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/alarm_siren.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -40,7 +39,6 @@ public class AlarmSirenRenderer extends TileEntitySpecialRenderer<TileEntityAlar
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -59,7 +57,6 @@ public class AlarmSirenRenderer extends TileEntitySpecialRenderer<TileEntityAlar
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

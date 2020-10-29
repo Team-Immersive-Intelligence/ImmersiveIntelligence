@@ -19,11 +19,10 @@ public class RedstoneBufferRenderer extends TileEntitySpecialRenderer<TileEntity
 {
 	private static ModelRedstoneBuffer model = new ModelRedstoneBuffer();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/redstone_buffer.png";
-
 	@Override
 	public void render(TileEntityRedstoneBuffer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/redstone_buffer.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -35,7 +34,6 @@ public class RedstoneBufferRenderer extends TileEntitySpecialRenderer<TileEntity
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -53,7 +51,6 @@ public class RedstoneBufferRenderer extends TileEntitySpecialRenderer<TileEntity
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

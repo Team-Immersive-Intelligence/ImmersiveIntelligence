@@ -151,7 +151,8 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 			int i_pos_y = (int)Math.floor((mouseY-guiTop-16)/20f);
 
 			if(!(mouseX <= guiLeft+(i_pos_x*20)+12+54&&mouseY <= guiTop+(i_pos_y*20)+12+16))
-				return;
+			{
+			}
 			else
 				switchMode(DataPacket.varCharacters[i_pos_y+(i_pos_x*6)], fw);
 		}

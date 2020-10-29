@@ -148,19 +148,15 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 		switch(stack.getMetadata())
 		{
 			case 0:
+			case 5:
+			case 3:
 				return "electronic_circuits";
 			case 1:
+			case 6:
+			case 4:
 				return "advanced_circuits";
 			case 2:
 				return "redstone_circuits";
-			case 3:
-				return "electronic_circuits";
-			case 4:
-				return "advanced_circuits";
-			case 5:
-				return "electronic_circuits";
-			case 6:
-				return "advanced_circuits";
 		}
 		return "";
 	}

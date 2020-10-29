@@ -31,7 +31,7 @@ import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_SmallCrate;
 
@@ -106,7 +106,7 @@ public class TileEntitySmallCrate extends TileEntityIEBase implements IIEInvento
 	@Nullable
 	public ITextComponent getDisplayName()
 	{
-		return name!=null?new TextComponentString(name): new TextComponentTranslation(ImmersiveIntelligence.proxy.BLOCK_KEY+"small_crate."+IIBlockTypes_SmallCrate.values()[getBlockMetadata()].getName()+".name");
+		return name!=null?new TextComponentString(name): new TextComponentTranslation(CommonProxy.BLOCK_KEY+"small_crate."+IIBlockTypes_SmallCrate.values()[getBlockMetadata()].getName()+".name");
 	}
 
 	@Override

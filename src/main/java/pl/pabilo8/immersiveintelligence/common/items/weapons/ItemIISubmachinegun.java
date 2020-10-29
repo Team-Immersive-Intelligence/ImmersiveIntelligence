@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -113,7 +114,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 			if(!playerIn.world.isRemote)
 			{
-				ItemStack stack = CommonProxy.item_bullet.getAmmoStack(1, "submachinegun_1bCal", "CoreSteel", "empty", "empty", 0, 0, 0);
+				ItemStack stack = ItemIIBullet.getAmmoStack(1, "submachinegun_1bCal", "CoreSteel", "empty", "empty", 0, 0, 0);
 
 				worldIn.playSound(null, playerIn.posX+vec.x, playerIn.posY+vec.y, playerIn.posZ+vec.z, IISounds.machinegun_shot, SoundCategory.PLAYERS, 0.5f, 0.85f);
 

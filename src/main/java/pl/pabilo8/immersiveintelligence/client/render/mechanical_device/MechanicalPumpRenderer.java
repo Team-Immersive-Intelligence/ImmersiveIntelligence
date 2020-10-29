@@ -28,8 +28,6 @@ public class MechanicalPumpRenderer extends TileEntitySpecialRenderer<TileEntity
 {
 	private static ModelMechanicalPumpTop model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/mechanical_device/pump/pump_top.png";
-
 	@Override
 	public void render(TileEntityMechanicalPump te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
@@ -39,6 +37,7 @@ public class MechanicalPumpRenderer extends TileEntitySpecialRenderer<TileEntity
 		model.pullThingy3Model[0].offsetY = 0;
 		model.pullThingy4Model[0].offsetY = 0;
 
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/mechanical_device/pump/pump_top.png";
 		if(te!=null)
 		{
 			if(!te.dummy)
@@ -120,7 +119,6 @@ public class MechanicalPumpRenderer extends TileEntitySpecialRenderer<TileEntity
 
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

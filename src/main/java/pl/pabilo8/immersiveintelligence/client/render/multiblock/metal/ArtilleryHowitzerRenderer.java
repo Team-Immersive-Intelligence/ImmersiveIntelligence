@@ -26,12 +26,12 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 	private static ModelArtilleryHowitzer modelFlipped;
 	private static ModelBullet modelBullet = new ModelBullet();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/artillery_howitzer.png";
 	private static String textureBullet = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 
 	@Override
 	public void render(TileEntityArtilleryHowitzer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/artillery_howitzer.png";
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);

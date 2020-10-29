@@ -36,11 +36,11 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 	private static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPrecissionAssembler model;
 	private static ModelPrecissionAssembler modelFlipped;
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";
 
 	@Override
 	public void render(TileEntityPrecissionAssembler te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);

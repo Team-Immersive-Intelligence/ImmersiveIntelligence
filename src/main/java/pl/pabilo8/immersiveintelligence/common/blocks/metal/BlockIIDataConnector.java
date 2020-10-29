@@ -117,7 +117,6 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 			{
 				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 				connector.getWorld().setBlockToAir(pos);
-				return;
 			}
 		}
 		else if(te instanceof TileEntityDataRelay)
@@ -127,7 +126,6 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 			{
 				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 				connector.getWorld().setBlockToAir(pos);
-				return;
 			}
 		}
 	}

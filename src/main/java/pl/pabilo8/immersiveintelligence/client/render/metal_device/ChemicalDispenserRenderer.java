@@ -22,11 +22,11 @@ public class ChemicalDispenserRenderer extends TileEntitySpecialRenderer<TileEnt
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelChemicalDispenser model = new ModelChemicalDispenser();
 	private static DirectionTransformerWallMountable t = new DirectionTransformerWallMountable();
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/chemical_dispenser.png";
 
 	@Override
 	public void render(TileEntityChemicalDispenser te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/chemical_dispenser.png";
 		if(te!=null)
 		{
 			t.startTileModel(x, y, z, texture);
@@ -104,7 +104,6 @@ public class ChemicalDispenserRenderer extends TileEntitySpecialRenderer<TileEnt
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

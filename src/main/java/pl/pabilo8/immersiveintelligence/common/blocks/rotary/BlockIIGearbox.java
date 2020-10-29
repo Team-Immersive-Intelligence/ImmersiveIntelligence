@@ -43,10 +43,9 @@ public class BlockIIGearbox extends BlockIITileProvider<IIBlockTypes_Gearbox>
 	@Override
 	public TileEntity createBasicTE(World world, IIBlockTypes_Gearbox type)
 	{
-		switch(type)
+		if(type==IIBlockTypes_Gearbox.WOODEN_GEARBOX)
 		{
-			case WOODEN_GEARBOX:
-				return new TileEntityGearbox();
+			return new TileEntityGearbox();
 		}
 		return null;
 	}

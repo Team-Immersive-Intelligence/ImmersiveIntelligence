@@ -45,7 +45,6 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
@@ -90,10 +89,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		float height = 0;
 		this.gun = stack.copy();
 		this.setSize(0.5f, 0.5f);
-		if(blusunrize.immersiveengineering.common.util.Utils.isBlockAt(world, pos, CommonProxy.block_stone_decoration, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta()))
-		{
-			height = -0.25f;
-		}
+		AxisAlignedBB aabb = world.getBlockState(pos).getBoundingBox(world, pos);
+		height -= 1f-(aabb.maxY-aabb.minY);
 		this.setPositionAndRotation(pos.getX()+0.5f, pos.getY()+1f+height, pos.getZ()+0.5f, yaw, pitch);
 		this.setYaw = yaw;
 

@@ -17,13 +17,12 @@ public class SkyCratePostRenderer extends TileEntitySpecialRenderer<TileEntitySk
 {
 	private static ModelSkyCratePost model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_post.png";
-
 	@Override
 	public void render(TileEntitySkyCratePost te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_post.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+1, (float)y-1, (float)z);

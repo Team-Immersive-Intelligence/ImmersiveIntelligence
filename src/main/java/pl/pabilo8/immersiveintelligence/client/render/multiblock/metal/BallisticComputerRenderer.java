@@ -43,13 +43,12 @@ public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEnt
 		}
 	}
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/ballistic_computer.png";
-
 	@Override
 	public void render(TileEntityBallisticComputer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/ballistic_computer.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y-1f, (float)z);

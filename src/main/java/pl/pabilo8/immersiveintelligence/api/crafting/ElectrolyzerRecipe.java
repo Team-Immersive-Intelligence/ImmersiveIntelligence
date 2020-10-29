@@ -30,8 +30,8 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 		this.fluidOutputs[1] = fluidOutput2;
 		this.fluidInput = fluidInput;
 
-		this.totalProcessEnergy = (int)Math.floor((double)((float)energy*energyModifier));
-		this.totalProcessTime = (int)Math.floor((double)((float)time*timeModifier));
+		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
+		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
 
 		this.fluidInputList = Collections.singletonList(this.fluidInput);
 		this.fluidOutputList = Arrays.asList(fluidOutputs);

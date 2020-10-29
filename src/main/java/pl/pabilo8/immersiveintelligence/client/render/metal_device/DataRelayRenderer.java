@@ -18,11 +18,10 @@ public class DataRelayRenderer extends TileEntitySpecialRenderer<TileEntityDataR
 {
 	private static ModelDataRelay model = new ModelDataRelay();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/data_connector.png";
-
 	@Override
 	public void render(TileEntityDataRelay te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/data_connector.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -40,7 +39,6 @@ public class DataRelayRenderer extends TileEntitySpecialRenderer<TileEntityDataR
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -60,7 +58,6 @@ public class DataRelayRenderer extends TileEntitySpecialRenderer<TileEntityDataR
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.items;
 
-/**
- * Created by Pabilo8 on 2019-05-07.
- * Huge thanks to AntiBlueQuirk, the author of Alternating Flux (https://github.com/AntiBlueQuirk/alternatingflux/)
- * for creating this really useful (and shortened) piece of code ^^
+/*
+  Created by Pabilo8 on 2019-05-07.
+  Huge thanks to AntiBlueQuirk, the author of Alternating Flux (https://github.com/AntiBlueQuirk/alternatingflux/)
+  for creating this really useful (and shortened) piece of code ^^
  */
 
 import blusunrize.immersiveengineering.common.IEContent;

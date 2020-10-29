@@ -63,7 +63,6 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	public float drawer1Angle = 0, drawer2Angle = 0;
 
 	IItemHandler insertionHandler = new IEInventoryHandler(5, this, 4, true, false);
-	private float timeMod;
 
 	public TileEntityPrecissionAssembler()
 	{
@@ -212,7 +211,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 				toolOrder = new String[]{t0, t1, t2};
 				animationOrder = recipe.animations;
 				effect = recipe.output;
-				timeMod = recipe.timeModifier;
+				float timeMod = recipe.timeModifier;
 				beginning = true;
 			}
 		}

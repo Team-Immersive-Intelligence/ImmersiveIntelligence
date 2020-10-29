@@ -17,11 +17,10 @@ public class PunchtapeReaderRenderer extends TileEntitySpecialRenderer<TileEntit
 {
 	private static ModelPunchtapeReader model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/punchtape_reader.png";
-
 	@Override
 	public void render(TileEntityPunchtapeReader te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/punchtape_reader.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -33,7 +32,6 @@ public class PunchtapeReaderRenderer extends TileEntitySpecialRenderer<TileEntit
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -51,7 +49,6 @@ public class PunchtapeReaderRenderer extends TileEntitySpecialRenderer<TileEntit
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

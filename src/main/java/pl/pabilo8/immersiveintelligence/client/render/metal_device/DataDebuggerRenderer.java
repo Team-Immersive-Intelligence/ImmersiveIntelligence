@@ -19,11 +19,10 @@ public class DataDebuggerRenderer extends TileEntitySpecialRenderer<TileEntityDa
 {
 	private static ModelDebugger model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/debugger.png";
-
 	@Override
 	public void render(TileEntityDataDebugger te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/debugger.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -76,7 +75,6 @@ public class DataDebuggerRenderer extends TileEntitySpecialRenderer<TileEntityDa
 			}
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -101,7 +99,6 @@ public class DataDebuggerRenderer extends TileEntitySpecialRenderer<TileEntityDa
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

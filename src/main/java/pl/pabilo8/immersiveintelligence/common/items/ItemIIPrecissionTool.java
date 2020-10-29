@@ -82,9 +82,6 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 				return Tools.precission_tool_solderer_durability;
 			}
 			case "precission_welder":
-			{
-				return Tools.precission_tool_welder_durability;
-			}
 			case "precission_hammer":
 			{
 				return Tools.precission_tool_welder_durability;
@@ -178,7 +175,6 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 			case "precission_hammer":
 			{
 				PrecissionAssemblerRenderer.modelHammer.renderProgress(progress, angle, maxProgress);
-				return;
 			}
 		}
 	}

@@ -20,11 +20,10 @@ public class TimedBufferRenderer extends TileEntitySpecialRenderer<TileEntityTim
 {
 	private static ModelTimedBuffer model = new ModelTimedBuffer();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/timed_buffer.png";
-
 	@Override
 	public void render(TileEntityTimedBuffer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/timed_buffer.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -38,7 +37,6 @@ public class TimedBufferRenderer extends TileEntitySpecialRenderer<TileEntityTim
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -56,7 +54,6 @@ public class TimedBufferRenderer extends TileEntitySpecialRenderer<TileEntityTim
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

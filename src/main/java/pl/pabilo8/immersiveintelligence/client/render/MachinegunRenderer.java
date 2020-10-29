@@ -19,7 +19,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
@@ -176,7 +176,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 						if(entity.currentlyLoaded==1)
 						{
 
-							float progress = entity.magazine1.isEmpty()?1f-Math.min(2*(float)entity.clipReload/(float)Weapons.machinegun.clipReloadTime, 1): (float)entity.clipReload/(float)Weapons.machinegun.clipReloadTime;
+							float progress = entity.magazine1.isEmpty()?1f-Math.min(2*(float)entity.clipReload/(float)Machinegun.clipReloadTime, 1): (float)entity.clipReload/(float)Machinegun.clipReloadTime;
 							GlStateManager.translate(0f, 0.375f*progress, 0f);
 							should_render = true;
 						}
@@ -192,7 +192,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 						if(entity.currentlyLoaded==2)
 						{
 
-							float progress = entity.magazine2.isEmpty()?1f-Math.min(2*(float)entity.clipReload/(float)Weapons.machinegun.clipReloadTime, 1): (float)entity.clipReload/(float)Weapons.machinegun.clipReloadTime;
+							float progress = entity.magazine2.isEmpty()?1f-Math.min(2*(float)entity.clipReload/(float)Machinegun.clipReloadTime, 1): (float)entity.clipReload/(float)Machinegun.clipReloadTime;
 							GlStateManager.translate(0f, 0.375f*progress, 0f);
 							should_render = true;
 						}
@@ -204,9 +204,9 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 					}
 					else if(nmod.getName().equals("slide"))
 					{
-						if(((entity.currentlyLoaded==1&&entity.magazine1.isEmpty())||(entity.currentlyLoaded==2&&entity.magazine2.isEmpty()))&&((float)entity.clipReload/(float)Weapons.machinegun.clipReloadTime) > 0.5)
+						if(((entity.currentlyLoaded==1&&entity.magazine1.isEmpty())||(entity.currentlyLoaded==2&&entity.magazine2.isEmpty()))&&((float)entity.clipReload/(float)Machinegun.clipReloadTime) > 0.5)
 						{
-							float curr = (((float)entity.clipReload/(float)Weapons.machinegun.clipReloadTime)-0.5f)/0.5f;
+							float curr = (((float)entity.clipReload/(float)Machinegun.clipReloadTime)-0.5f)/0.5f;
 							float progress;
 							if(curr > 0.65)
 								progress = 1f-((curr-0.65f)/0.35f);

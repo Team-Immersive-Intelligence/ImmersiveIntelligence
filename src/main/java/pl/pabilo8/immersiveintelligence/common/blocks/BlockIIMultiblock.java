@@ -18,6 +18,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+
 /**
  * @author Pabilo8
  * @since 25-06-2019
@@ -31,8 +33,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & BlockIIBase.IBlockEn
 	{
 		super(name, material, mainProperty, itemBlock, combineProperties(additionalProperties, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE));
 		this.hasMultiblockTile = new boolean[this.enumValues.length];
-		for(int i = 0; i < this.hasMultiblockTile.length; i++)
-			this.hasMultiblockTile[i] = true;
+		Arrays.fill(this.hasMultiblockTile, true);
 	}
 
 	@Override

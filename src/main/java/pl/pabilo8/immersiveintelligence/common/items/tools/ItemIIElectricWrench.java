@@ -189,8 +189,7 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 		{
 			if(state.getBlock().isToolEffective(CommonProxy.TOOL_WRENCH, state))
 				return true;
-			else if(state.getBlock().isToolEffective(CommonProxy.TOOL_ADVANCED_WRENCH, state))
-				return true;
+			else return state.getBlock().isToolEffective(CommonProxy.TOOL_ADVANCED_WRENCH, state);
 		}
 		return false;
 	}

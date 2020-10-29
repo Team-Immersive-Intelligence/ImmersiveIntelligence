@@ -103,17 +103,17 @@ public class IICommandHandler extends CommandTreeBase
 	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] args) throws CommandException
 	{
 		List<String> argsCleaned = new ArrayList<>(args.length);
-		String currentPart = null;
+		StringBuilder currentPart = null;
 		for(String s : args)
 		{
 			if(s.startsWith(start))
 			{
 				if(currentPart!=null)
 					throw new CommandException("String opens twice (once \""+currentPart+"\", once \""+s+"\")");
-				currentPart = s;
+				currentPart = new StringBuilder(s);
 			}
 			else if(currentPart!=null)
-				currentPart += " "+s;
+				currentPart.append(" ").append(s);
 			else
 				argsCleaned.add(s);
 			if(s.endsWith(end))

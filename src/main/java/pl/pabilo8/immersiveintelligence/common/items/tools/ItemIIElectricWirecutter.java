@@ -223,11 +223,9 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 		{
 			if(state.getBlock() instanceof BlockIEBase)
 			{
-				if(((BlockIEBase)state.getBlock()).allowWirecutterHarvest(state))
-					return true;
+				return ((BlockIEBase)state.getBlock()).allowWirecutterHarvest(state);
 			}
-			else if(state.getBlock().isToolEffective(TOOL_WIRECUTTER, state))
-				return true;
+			else return state.getBlock().isToolEffective(TOOL_WIRECUTTER, state);
 		}
 		return false;
 	}

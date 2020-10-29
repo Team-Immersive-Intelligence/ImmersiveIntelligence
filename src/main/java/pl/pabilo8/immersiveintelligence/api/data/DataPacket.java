@@ -59,10 +59,7 @@ public class DataPacket
 	{
 		if(ArrayUtils.contains(varCharacters, c))
 		{
-			if(variables.containsKey(c))
-			{
-				variables.remove(c);
-			}
+			variables.remove(c);
 			variables.put(c, type);
 			return true;
 		}
@@ -100,10 +97,7 @@ public class DataPacket
 	{
 		if(ArrayUtils.contains(varCharacters, c))
 		{
-			if(variables.containsKey(c))
-			{
-				variables.remove(c);
-			}
+			variables.remove(c);
 			return true;
 		}
 		return false;

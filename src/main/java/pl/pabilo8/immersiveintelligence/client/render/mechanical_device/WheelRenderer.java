@@ -19,11 +19,11 @@ public class WheelRenderer extends TileEntitySpecialRenderer<TileEntityMechanica
 {
 	private static ModelWheel model = new ModelWheel();
 	private static DirectionTransformerWheel t = new DirectionTransformerWheel();
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/mechanical_device/wooden_wheel.png";
 
 	@Override
 	public void render(TileEntityMechanicalWheel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/mechanical_device/wooden_wheel.png";
 		if(te!=null)
 		{
 			t.startTileModel(x, y, z, texture);
@@ -48,8 +48,6 @@ public class WheelRenderer extends TileEntitySpecialRenderer<TileEntityMechanica
 			GlStateManager.popMatrix();
 			ClientProxy.mech_con_renderer.render(te, x, y, z, partialTicks, destroyStage, alpha);
 
-			return;
-
 		}
 		else
 		{
@@ -65,7 +63,6 @@ public class WheelRenderer extends TileEntitySpecialRenderer<TileEntityMechanica
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

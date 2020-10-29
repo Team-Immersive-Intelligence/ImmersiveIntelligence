@@ -140,7 +140,6 @@ public class DataPacketTypeExpression implements IDataType
 			{
 				data = (DataOperator)DataOperation.operations.get(type).newInstance();
 				operation = data;
-				return;
 			} catch(InstantiationException e)
 			{
 				e.printStackTrace();

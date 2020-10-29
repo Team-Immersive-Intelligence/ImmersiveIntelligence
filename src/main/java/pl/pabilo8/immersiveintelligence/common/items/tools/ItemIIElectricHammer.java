@@ -156,7 +156,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 						if(mb.getUniqueName().equalsIgnoreCase(s))
 						{
 							b = true;
-							continue;
 						}
 				if(!b)
 					break;
@@ -165,7 +164,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 						if(mb.getUniqueName().equalsIgnoreCase(s))
 						{
 							b = false;
-							continue;
 						}
 				if(!b)
 					break;
@@ -298,8 +296,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		else if(tile instanceof IConfigurableSides&&!world.isRemote)
 		{
 			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
-			if(((IConfigurableSides)tile).toggleSide(iSide, player))
-				return true;
+			return ((IConfigurableSides)tile).toggleSide(iSide, player);
 		}
 		else if(CommonProxy.tileEntitiesWeDontLike.stream().noneMatch(tileEntityPredicate -> tileEntityPredicate.test(tile))
 				&& tile instanceof IDirectionalTile&&((IDirectionalTile)tile).canHammerRotate(side, hitX, hitY, hitZ, player)&&!world.isRemote)
@@ -360,13 +357,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		{
 			if(state.getBlock() instanceof BlockIEBase)
 			{
-				if(((BlockIEBase)state.getBlock()).allowHammerHarvest(state))
-					return true;
+				return ((BlockIEBase)state.getBlock()).allowHammerHarvest(state);
 			}
 			else if(state.getBlock().isToolEffective(TOOL_HAMMER, state))
 				return true;
-			else if(state.getBlock().isToolEffective(CommonProxy.TOOL_ADVANCED_HAMMER, state))
-				return true;
+			else return state.getBlock().isToolEffective(CommonProxy.TOOL_ADVANCED_HAMMER, state);
 		}
 		return false;
 	}

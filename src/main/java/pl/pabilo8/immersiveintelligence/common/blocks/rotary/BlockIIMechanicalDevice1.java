@@ -77,17 +77,16 @@ public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_M
 	{
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof TileEntityMechanicalPump)
-			return ((TileEntityMechanicalPump)te).dummy==false||side==EnumFacing.UP;
+			return !((TileEntityMechanicalPump)te).dummy||side==EnumFacing.UP;
 		return true;
 	}
 
 	@Override
 	public TileEntity createBasicTE(World world, IIBlockTypes_MechanicalDevice1 type)
 	{
-		switch(type)
+		if(type==IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP)
 		{
-			case MECHANICAL_PUMP:
-				return new TileEntityMechanicalPump();
+			return new TileEntityMechanicalPump();
 		}
 		return null;
 	}

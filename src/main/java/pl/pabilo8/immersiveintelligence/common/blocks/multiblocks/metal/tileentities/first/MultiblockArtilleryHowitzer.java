@@ -218,8 +218,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 				{
 					boolean valid = true;
 
-					int ww = w;
-					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
+					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), w).add(0, h, 0);
 
 					//I DON"T LIKE MANUAL POSITION INPUTTING! Once again, Blu please change the system to something easier (nbt structures maybe?)!
 					// 09.10 .2020 and so, I predicted the future ^^
@@ -245,7 +244,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 						tile.mirrored = mirrored;
 						tile.formed = true;
 						tile.pos = ((h+5)*81)+(l*9)+(w+4);
-						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
+						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
 						world.addBlockEvent(pos2, CommonProxy.block_metal_multiblock0, 255, 0);
 					}

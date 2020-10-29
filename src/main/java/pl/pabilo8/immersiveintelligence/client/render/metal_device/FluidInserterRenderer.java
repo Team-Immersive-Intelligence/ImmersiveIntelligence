@@ -8,13 +8,12 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FluidInserter;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelFluidInserter;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityFluidInserter;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.fluid_inserter;
 
 /**
  * @author Pabilo8
@@ -26,11 +25,10 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 {
 	private static ModelFluidInserter model = new ModelFluidInserter();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/fluid_inserter.png";
-
 	@Override
 	public void render(TileEntityFluidInserter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/fluid_inserter.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -122,21 +120,20 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 
 			model.render();
 
-			model.rotate(model.inserterGaugeArrow, 0, TmtUtil.AngleToTMT(45-(te.fluidToTake/((float)fluid_inserter.maxOutput*20f))*360f), 0);
+			model.rotate(model.inserterGaugeArrow, 0, TmtUtil.AngleToTMT(45-(te.fluidToTake/((float)FluidInserter.maxOutput*20f))*360f), 0);
 			for(ModelRendererTurbo mod : model.inserterGaugeArrow)
 				mod.render(f5);
 
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
-			if(te.conn_data!=null)
-				InserterRenderer.renderItem.renderItem(te.conn_data, TransformType.GROUND);
+			if(TileEntityFluidInserter.conn_data!=null)
+				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_data, TransformType.GROUND);
 			GlStateManager.translate(0.375f, 0.1875f, 0.375f);
 			GlStateManager.scale(0.65f, 0.65f, 0.65f);
-			if(te.conn_mv!=null)
-				InserterRenderer.renderItem.renderItem(te.conn_mv, TransformType.GROUND);
+			if(TileEntityFluidInserter.conn_mv!=null)
+				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_mv, TransformType.GROUND);
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -169,16 +166,15 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
-			if(te.conn_data!=null)
-				InserterRenderer.renderItem.renderItem(te.conn_data, TransformType.GROUND);
+			if(TileEntityFluidInserter.conn_data!=null)
+				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_data, TransformType.GROUND);
 			GlStateManager.translate(0.375f, 0.1875f, 0.375f);
 			GlStateManager.scale(0.65f, 0.65f, 0.65f);
-			if(te.conn_mv!=null)
-				InserterRenderer.renderItem.renderItem(te.conn_mv, TransformType.GROUND);
+			if(TileEntityFluidInserter.conn_mv!=null)
+				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_mv, TransformType.GROUND);
 
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

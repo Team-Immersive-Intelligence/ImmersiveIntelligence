@@ -20,8 +20,6 @@ public class ProgrammableSpeakerRenderer extends TileEntitySpecialRenderer<TileE
 {
 	private static ModelProgrammableSpeaker model = new ModelProgrammableSpeaker();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/alarm_siren.png";
-
 	@Override
 	public void render(TileEntityProgrammableSpeaker te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
@@ -30,6 +28,7 @@ public class ProgrammableSpeakerRenderer extends TileEntitySpecialRenderer<TileE
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/alarm_siren.png";
 		ClientUtils.bindTexture(texture);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 

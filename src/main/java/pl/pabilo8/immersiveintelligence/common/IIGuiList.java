@@ -150,12 +150,6 @@ public enum IIGuiList
 			(player, te) -> new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te)
 	),
 
-	GUI_AMMUNITION_FACTORY(TileEntityAmmunitionFactory.class,
-			(player, te) -> new ContainerAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te),
-			(player, te) -> new GuiAmmunitionFactory(player.inventory, (TileEntityAmmunitionFactory)te)
-	),
-
-
 	GUI_DATA_MERGER(TileEntityDataMerger.class,
 			(player, te) -> new ContainerDataMerger(player.inventory, (TileEntityDataMerger)te),
 			(player, te) -> new GuiDataMerger(player.inventory, (TileEntityDataMerger)te)

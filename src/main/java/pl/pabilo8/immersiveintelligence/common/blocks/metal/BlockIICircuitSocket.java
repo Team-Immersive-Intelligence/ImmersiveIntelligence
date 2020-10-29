@@ -101,7 +101,6 @@ public class BlockIICircuitSocket extends BlockIITileProvider<IIBlockTypes_Circu
 			{
 				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 				connector.getWorld().setBlockToAir(pos);
-				return;
 			}
 		}
 		else if(te instanceof TileEntityDataRelay)
@@ -111,7 +110,6 @@ public class BlockIICircuitSocket extends BlockIITileProvider<IIBlockTypes_Circu
 			{
 				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 				connector.getWorld().setBlockToAir(pos);
-				return;
 			}
 		}
 	}

@@ -151,7 +151,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 		if(world.isRemote)
 		{
-			if(processTimeLeft > 0&&active==true)
+			if(processTimeLeft > 0&&active)
 			{
 				processTimeLeft -= 1;
 				ImmersiveEngineering.proxy.handleTileSound(IISounds.printing_press, this, active, .5f, 1);
@@ -263,7 +263,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			case "text":
 			{
 				DataPacketTypeString toPrint = (DataPacketTypeString)DataOperationAdd.getVarInType(DataPacketTypeString.class, dataToPrint.getPacketVariable('t'), dataToPrint);
-				String printedChars = "";
+				StringBuilder printedChars = new StringBuilder();
 
 				int black_amount = 0, cyan_amount = 0, magenta_amount = 0, yellow_amount = 0;
 
@@ -312,12 +312,12 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 						//printedChars+="<";
 						String fragment = toPrint.value.substring(charnum-1);
 
-						if(fragment.length() > 3&&fragment.substring(0, 4).equals("<br>"))
+						if(fragment.length() > 3&&fragment.startsWith("<br>"))
 						{
 							shouldstartfrom = charnum+4;
-							printedChars += "<br>";
+							printedChars.append("<br>");
 						}
-						else if(fragment.length() > 7&&fragment.substring(0, 8).equals("<hexcol="))
+						else if(fragment.length() > 7&&fragment.startsWith("<hexcol="))
 						{
 							black_cost.get(black_cost.size()-1);
 
@@ -359,13 +359,13 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 							}
 
 							shouldstartfrom = charnum+15;
-							printedChars += "<hexcol="+fragment.substring(8, 14)+":";
+							printedChars.append("<hexcol=").append(fragment.substring(8, 14)).append(":");
 
 						}
 					}
 					else if(tag_endings_needed > 0&&c=='>')
 					{
-						printedChars += ">";
+						printedChars.append(">");
 						tag_endings_needed -= 1;
 						black_cost.remove(black_cost.size()-1);
 						cyan_cost.remove(cyan_cost.size()-1);
@@ -376,7 +376,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 					{
 						if(black_cost.get(black_cost.size()-1)==0&&cyan_cost.get(cyan_cost.size()-1)==0&&magenta_cost.get(magenta_cost.size()-1)==0&&yellow_cost.get(yellow_cost.size()-1)==0)
 						{
-							printedChars += " ";
+							printedChars.append(" ");
 							continue;
 						}
 						if(black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage <= black_amount&&
@@ -384,14 +384,13 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 								magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage <= magenta_amount&&
 								yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage <= yellow_amount)
 						{
-							printedChars += c;
+							printedChars.append(c);
 							black_amount -= black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage;
 							cyan_amount -= cyan_cost.get(cyan_cost.size()-1)*PrintingPress.printInkUsage;
 							magenta_amount -= magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage;
 							yellow_amount -= yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage;
 
 
-							continue;
 						}
 						else
 						{
@@ -417,14 +416,13 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 							if(black_cost.get(black_cost.size()-1)==0&&cyan_cost.get(cyan_cost.size()-1)==0&&magenta_cost.get(magenta_cost.size()-1)==0&&yellow_cost.get(yellow_cost.size()-1)==0)
 							{
-								printedChars += " ";
-								continue;
+								printedChars.append(" ");
 							}
 							else
 							{
-								printedChars += "> <hexcol=";
+								printedChars.append("> <hexcol=");
 								int[] colors = pl.pabilo8.immersiveintelligence.api.Utils.cmykToRgb(Math.round(cyan_cost.get(cyan_cost.size()-1)*255), Math.round(magenta_cost.get(magenta_cost.size()-1)*255), Math.round(yellow_cost.get(yellow_cost.size()-1)*255), Math.round(black_cost.get(black_cost.size()-1)*255));
-								printedChars += String.format("%02x%02x%02x:", Math.round(colors[0]), Math.round(colors[1]), Math.round(colors[2]));
+								printedChars.append(String.format("%02x%02x%02x:", Math.round(colors[0]), Math.round(colors[1]), Math.round(colors[2])));
 							}
 
 						}
@@ -433,7 +431,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 				while(tag_endings_needed > 0)
 				{
 					tag_endings_needed -= 1;
-					printedChars += ">";
+					printedChars.append(">");
 				}
 
 				tanks[0].drain(FluidRegistry.getFluidStack("ink", black_amount_start-black_amount), true);
@@ -443,7 +441,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 				//Finally! lol (i wrote this all without any debugging, so i count on you bug reporters ^^)
 				ItemStack stack = new ItemStack(CommonProxy.item_printed_page, 1, 1);
-				CommonProxy.item_printed_page.setText(stack, printedChars);
+				CommonProxy.item_printed_page.setText(stack, printedChars.toString());
 
 				stack = inventoryHandler.insertItem(1, stack, false);
 				if(!stack.isEmpty())

@@ -28,11 +28,6 @@ public class TmtTessellator extends Tessellator
 	private static boolean convertQuadsToTriangles = false;
 
 	/**
-	 * Boolean used to check if we should use vertex buffers. Initialized to false and never changed.
-	 */
-	private static boolean tryVBO = false;
-
-	/**
 	 * The byte buffer used for GL allocation.
 	 */
 	private static ByteBuffer byteBuffer = GLAllocation.createDirectByteBuffer(nativeBufferSize*4);
@@ -189,6 +184,10 @@ public class TmtTessellator extends Tessellator
 	static
 	{
 		instance.defaultTexture = true;
+		/**
+		 * Boolean used to check if we should use vertex buffers. Initialized to false and never changed.
+		 */
+		boolean tryVBO = false;
 		useVBO = tryVBO&&GLContext.getCapabilities().GL_ARB_vertex_buffer_object;
 
 		if(useVBO)
@@ -354,7 +353,6 @@ public class TmtTessellator extends Tessellator
 
 			int var1 = this.rawBufferIndex*4;
 			this.reset();
-			return;
 		}
 	}
 

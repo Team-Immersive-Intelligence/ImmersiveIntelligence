@@ -17,10 +17,7 @@ public interface ITabbedGui
 		BlockPos p = tile.getPos();
 		if(gdata.hasKey("x")&&gdata.hasKey("y")&&gdata.hasKey("z")&&gdata.hasKey("dim"))
 		{
-			if(p.getX()==gdata.getInteger("x")&&p.getY()==gdata.getInteger("y")&&p.getZ()==gdata.getInteger("z")&&tile.getWorld().provider.getDimension()==gdata.getInteger("dim"))
-			{
-				return true;
-			}
+			return p.getX()==gdata.getInteger("x")&&p.getY()==gdata.getInteger("y")&&p.getZ()==gdata.getInteger("z")&&tile.getWorld().provider.getDimension()==gdata.getInteger("dim");
 		}
 		return false;
 	}

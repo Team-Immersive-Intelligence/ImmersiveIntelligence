@@ -305,8 +305,6 @@ public class Config
 			@SubConfig
 			public static ArtilleryHowitzer artilleryHowitzer;
 			@SubConfig
-			public static AmmunitionFactory ammunitionFactory;
-			@SubConfig
 			public static BallisticComputer ballisticComputer;
 			@SubConfig
 			public static MissileSilo missileSilo;
@@ -610,50 +608,6 @@ public class Config
 
 				@Comment({"Time for the multiblock to open/close the lid."})
 				public static int lidTime = 240;
-			}
-
-			public static class AmmunitionFactory
-			{
-				@Comment({"Energy capacity of the ammunition factory (in IF)."})
-				public static int energyCapacity = 32000;
-
-				@Comment({"Energy usage per one tick of the bullet core making process (in IF)."})
-				public static int energyUsageCore = 120;
-
-				@Comment({"Energy usage per one tick of putting a core into a casing (in IF)."})
-				public static int energyUsageCasing = 120;
-
-				@Comment({"Energy usage per one tick of putting gunpowder into a casing (in IF)."})
-				public static int energyUsageGunpowder = 120;
-
-				@Comment({"Energy usage per one tick of the paint conveyor process (in IF)."})
-				public static int energyUsagePaint = 120;
-
-				@Comment({"Component capacity of the ammunition factory (in Pabilo8's Unit of Measurement™)."})
-				public static int componentCapacity = 48;
-
-				@Comment({"Max intake of the component per 20 ticks (in Pabilo8's Unit of Measurement™)."})
-				public static int componentIntake = 6;
-
-				@Comment({"Paint usage per one bullet making process (in mB)."})
-				public static int paintUsage = 120;
-
-				@Comment({"How long does it take to move a bullet to the next slot (in ticks)."})
-				public static int conveyorTime = 50;
-
-				@Comment({"Duration of filling a casing with gunpowder (in ticks)."})
-				public static int gunpowderTime = 120;
-
-				@Comment({"Duration of filling a core with components (in ticks)."})
-				public static int coreTime = 160;
-
-				@Comment({"Duration of one bullet making process (in ticks)."})
-				public static int casingTime = 120;
-
-				@Comment({"Duration of the bullet painting process (in ticks)."})
-				public static int paintTime = 180;
-
-
 			}
 
 			public static class Inserter

@@ -20,11 +20,10 @@ public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityD
 {
 	private static ModelDataConnector model = new ModelDataConnector();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/data_connector.png";
-
 	@Override
 	public void render(TileEntityDataConnector te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/data_connector.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -48,7 +47,6 @@ public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityD
 			model.baseModel[3].render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -68,7 +66,6 @@ public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityD
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

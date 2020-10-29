@@ -74,7 +74,7 @@ public class JEIHelper implements IModPlugin
 		categories.put(PrecissionAssemblerRecipe.class, new PrecissionAssemblerRecipeCategory(guiHelper));
 		categories.put(SawmillRecipe.class, new SawmillRecipeCategory(guiHelper));
 
-		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[categories.size()]));
+		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[0]));
 	}
 
 	@Override

@@ -67,7 +67,8 @@ public class MultiblockSkyCartStation implements IMultiblock
 						if(h==1&&w==1&&l==1)
 							structure[h][l][w] = new ItemStack(IEContent.blockWoodenDecoration, 1, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta());
 						else if(h==2&&l==2)
-							continue;
+						{
+						}
 						else if(h==2&&w==1&&l==1)
 							structure[h][l][w] = new ItemStack(IEContent.blockWoodenDecoration, 1, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta());
 						else

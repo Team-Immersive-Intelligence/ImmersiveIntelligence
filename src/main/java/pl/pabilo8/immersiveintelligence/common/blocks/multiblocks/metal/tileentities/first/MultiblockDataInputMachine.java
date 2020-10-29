@@ -118,8 +118,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 						continue;
 					}
 
-					int ww = w;
-					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
+					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), w).add(0, h, 0);
 
 					world.setBlockState(pos2, CommonProxy.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.DATA_INPUT_MACHINE.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
@@ -130,7 +129,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 						tile.mirrored = false;
 						tile.formed = true;
 						tile.pos = (h+1)*4+(l)*2+(w);
-						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
+						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
 						world.addBlockEvent(pos2, CommonProxy.block_metal_multiblock0, 255, 0);
 					}

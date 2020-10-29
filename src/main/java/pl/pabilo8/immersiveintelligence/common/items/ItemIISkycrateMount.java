@@ -24,10 +24,9 @@ public class ItemIISkycrateMount extends ItemIIBase implements ISkycrateMount
 	@Override
 	public double getMountEnergy(ItemStack stack)
 	{
-		switch(stack.getMetadata())
+		if(stack.getMetadata()==0)
 		{
-			case 0:
-				return Tools.skycrateMounts.mech_energy;
+			return Tools.skycrateMounts.mech_energy;
 		}
 		return 0;
 	}
@@ -53,7 +52,7 @@ public class ItemIISkycrateMount extends ItemIIBase implements ISkycrateMount
 			case 0:
 				return SkycrateMounts.mech_speed;
 			case 1:
-				return Tools.skycrateMounts.electric_speed;
+				return SkycrateMounts.electric_speed;
 		}
 		return 0;
 	}

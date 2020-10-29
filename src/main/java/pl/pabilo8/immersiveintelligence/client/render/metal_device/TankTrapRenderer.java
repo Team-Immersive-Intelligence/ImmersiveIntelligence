@@ -22,11 +22,10 @@ public class TankTrapRenderer extends TileEntitySpecialRenderer<TileEntityTankTr
 {
 	private static ModelTankTrap model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/fortification/tank_trap.png";
-
 	@Override
 	public void render(TileEntityTankTrap te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/fortification/tank_trap.png";
 		ClientUtils.bindTexture(texture);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float)x+0.5, (float)y-0.875, (float)z+0.5);

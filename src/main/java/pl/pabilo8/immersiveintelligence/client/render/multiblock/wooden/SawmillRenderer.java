@@ -25,11 +25,10 @@ public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill
 	private static ModelSawmill model;
 	private static ModelSawmill modelFlipped;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/table_saw.png";
-
 	@Override
 	public void render(TileEntitySawmill te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/table_saw.png";
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);
@@ -289,7 +288,6 @@ public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill
 			for(ModelRendererTurbo mod : model.sawdustModel)
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

@@ -17,7 +17,6 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 public class TachometerItemStackRenderer extends TileEntityItemStackRenderer
 {
 	public static TachometerItemStackRenderer instance = new TachometerItemStackRenderer();
-	private static String texture = ImmersiveIntelligence.MODID+":textures/items/tools/tachometer.png";
 	@SideOnly(Side.CLIENT)
 	private static ModelTachometer model = new ModelTachometer();
 
@@ -28,6 +27,7 @@ public class TachometerItemStackRenderer extends TileEntityItemStackRenderer
 		GlStateManager.rotate(180, 0, 1, 0);
 		GlStateManager.translate(-1f, 0f, 0f);
 
+		String texture = ImmersiveIntelligence.MODID+":textures/items/tools/tachometer.png";
 		ClientUtils.bindTexture(texture);
 		for(ModelRendererTurbo mod : model.baseModel)
 			mod.render(0.0625f);

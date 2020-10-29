@@ -105,8 +105,7 @@ public class MultiblockEmplacement implements IMultiblock
 				for(int w = -1; w < 2; w++)
 				{
 
-					int ww = w;
-					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
+					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), w).add(0, h, 0);
 
 					world.setBlockState(pos2, CommonProxy.block_metal_multiblock1.getStateFromMeta(IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
@@ -117,7 +116,7 @@ public class MultiblockEmplacement implements IMultiblock
 						tile.mirrored = false;
 						tile.formed = true;
 						tile.pos = (h+4)*9+(l)*3+(w+1);
-						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
+						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
 						world.addBlockEvent(pos2, CommonProxy.block_metal_multiblock1, 255, 0);
 					}

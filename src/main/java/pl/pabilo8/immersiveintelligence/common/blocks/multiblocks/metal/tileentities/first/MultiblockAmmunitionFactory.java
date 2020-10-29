@@ -12,15 +12,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 
 /**
  * @author Pabilo8
@@ -120,53 +117,8 @@ public class MultiblockAmmunitionFactory implements IMultiblock
 	@Override
 	public boolean createStructure(World world, BlockPos pos, EnumFacing side, EntityPlayer player)
 	{
-
-		side = side.getOpposite();
-		if(side==EnumFacing.UP||side==EnumFacing.DOWN)
-		{
-			side = EnumFacing.fromAngle(player.rotationYaw);
-		}
-
-		boolean bool = this.structureCheck(world, pos, side, false);
-
-		if(!bool)
-		{
-			return false;
-		}
-
-		for(int h = -1; h < 2; h++)
-			for(int l = 0; l < 5; l++)
-				for(int w = -2; w < 3; w++)
-				{
-
-					if(h==0&&w==2&&l==2)
-					{
-						continue;
-					}
-
-					if(h==1&&(w!=2||l!=4))
-					{
-						continue;
-					}
-
-					int ww = w;
-					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
-
-					world.setBlockState(pos2, CommonProxy.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta()));
-					TileEntity curr = world.getTileEntity(pos2);
-					if(curr instanceof TileEntityAmmunitionFactory)
-					{
-						TileEntityAmmunitionFactory tile = (TileEntityAmmunitionFactory)curr;
-						tile.facing = side;
-						tile.mirrored = false;
-						tile.formed = true;
-						tile.pos = (h+1)*25+(l)*5+(w+2);
-						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
-						tile.markDirty();
-						world.addBlockEvent(pos2, CommonProxy.block_metal_multiblock0, 255, 0);
-					}
-				}
-		return true;
+		//deprecated, build the new ammo production thingies instead
+		return false;
 	}
 
 	boolean structureCheck(World world, BlockPos startPos, EnumFacing dir, boolean mirror)

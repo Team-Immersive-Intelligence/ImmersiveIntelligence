@@ -7,6 +7,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -36,7 +37,7 @@ public class DataPacketTypeArray implements IDataType
 	@Override
 	public String valueToString()
 	{
-		return value.toString();
+		return Arrays.toString(value);
 	}
 
 	@Override

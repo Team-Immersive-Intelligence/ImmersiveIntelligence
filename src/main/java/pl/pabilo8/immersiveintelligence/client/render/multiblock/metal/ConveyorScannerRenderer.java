@@ -21,13 +21,12 @@ public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntit
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelConveyorScanner model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/conveyor_scanner.png";
-
 	@Override
 	public void render(TileEntityConveyorScanner te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/conveyor_scanner.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+1, (float)y-2, (float)z+2);

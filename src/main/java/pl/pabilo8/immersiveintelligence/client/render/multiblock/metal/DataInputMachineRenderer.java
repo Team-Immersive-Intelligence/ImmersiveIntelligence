@@ -17,13 +17,12 @@ public class DataInputMachineRenderer extends TileEntitySpecialRenderer<TileEnti
 {
 	private static ModelDataInputMachine model;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/data_input_machine.png";
-
 	@Override
 	public void render(TileEntityDataInputMachine te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/data_input_machine.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y, (float)z);

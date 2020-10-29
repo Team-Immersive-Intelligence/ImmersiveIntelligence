@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
@@ -14,7 +15,6 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerSawmill;
 
 import java.util.ArrayList;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.sawmill;
 import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.renderEnergyBars;
 
 /**
@@ -40,7 +40,7 @@ public class GuiSawmill extends GuiIEContainerBase
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		Utils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.sawmill.name"), 0, 0, getXSize(), 6, 0xd99747);
-		renderEnergyBars(148, 20, 7, 48, 2, tile.rotation, sawmill.rpmMin, sawmill.torqueMin);
+		renderEnergyBars(148, 20, 7, 48, 2, tile.rotation, Sawmill.rpmMin, Sawmill.torqueMin);
 
 		fontRenderer.drawString(tile.getCurrentEfficiency()*100+"%", 45, 48, 0xd99747);
 

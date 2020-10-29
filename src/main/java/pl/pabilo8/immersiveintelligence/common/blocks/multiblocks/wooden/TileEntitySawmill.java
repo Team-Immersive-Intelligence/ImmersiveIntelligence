@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
@@ -41,8 +41,6 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.sawmill;
 
 /**
  * @author Pabilo8
@@ -147,7 +145,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		if(!isDummy()&&!world.isRemote)
 		{
 			boolean b = false;
-			if(rotation.getRotationSpeed() > Machines.sawmill.rpmBreakingMax||rotation.getTorque() > Machines.sawmill.torqueBreakingMax)
+			if(rotation.getRotationSpeed() > Sawmill.rpmBreakingMax||rotation.getTorque() > Sawmill.torqueBreakingMax)
 			{
 				selfDestruct();
 			}
@@ -284,8 +282,8 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	public float getCurrentEfficiency()
 	{
 		float e1, e2;
-		e1 = MathHelper.clamp(this.rotation.getRotationSpeed()/(float)sawmill.rpmMin, 0, 1);
-		e2 = MathHelper.clamp(this.rotation.getTorque()/(float)sawmill.torqueMin, 0, 1);
+		e1 = MathHelper.clamp(this.rotation.getRotationSpeed()/(float)Sawmill.rpmMin, 0, 1);
+		e2 = MathHelper.clamp(this.rotation.getTorque()/(float)Sawmill.torqueMin, 0, 1);
 		return (e1+e2)/2f;
 	}
 

@@ -37,7 +37,6 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 	private static ModelSkyCartStation modelFlipped;
 	private static TileEntityBanner banner = new TileEntityBanner();
 	private static ModelBanner modelBanner = new ModelBanner();
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycart_station.png";
 
 	static
 	{
@@ -51,6 +50,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycart_station.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y, (float)z);

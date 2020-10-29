@@ -17,13 +17,13 @@ public class ArithmeticLogicMachineRenderer extends TileEntitySpecialRenderer<Ti
 {
 	private static ModelArithmeticLogicMachine model;
 	private static ModelArithmeticLogicMachine modelFlipped;
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/arithmetic_logic_machine.png";
 
 	@Override
 	public void render(TileEntityArithmeticLogicMachine te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/arithmetic_logic_machine.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y, (float)z);

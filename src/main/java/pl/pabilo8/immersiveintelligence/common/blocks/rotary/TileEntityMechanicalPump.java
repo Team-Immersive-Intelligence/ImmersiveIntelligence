@@ -528,11 +528,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 	public boolean canOutputPressurized(boolean consumePower)
 	{
 		int accelPower = IEConfig.Machines.pump_consumption_accelerate;
-		if(hasEnoughPower())
-		{
-			return true;
-		}
-		return false;
+		return hasEnoughPower();
 	}
 
 	private boolean hasEnoughPower()

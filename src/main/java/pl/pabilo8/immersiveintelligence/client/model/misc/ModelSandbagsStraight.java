@@ -9,264 +9,214 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ModelSandbagsStraight extends ModelBlockBase
 {
-	public ModelRendererTurbo[] rightModel, leftModel;
+	public ModelRendererTurbo[] reiforcementWood, reinforcementPlates, reinforcementWireMesh, rightFullModel, leftFullModel, rightDotModel, leftDotModel;
 
-	int textureX = 32;
+	int textureX = 64;
 	int textureY = 32;
 
 	public ModelSandbagsStraight() //Same as Filename
 	{
-		baseModel = new ModelRendererTurbo[36];
-		baseModel[0] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMain
-		baseModel[1] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-		baseModel[2] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-		baseModel[3] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMain
-		baseModel[4] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[5] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[6] = new ModelRendererTurbo(this, 10, 14, textureX, textureY); // SandbagMain
-		baseModel[7] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagSide
-		baseModel[8] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagSide
-		baseModel[9] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMain
-		baseModel[10] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-		baseModel[11] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-		baseModel[12] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMain
-		baseModel[13] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[14] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[15] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMain
-		baseModel[16] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-		baseModel[17] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-		baseModel[18] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMain
-		baseModel[19] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[20] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[21] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMain
-		baseModel[22] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[23] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[24] = new ModelRendererTurbo(this, 10, 14, textureX, textureY); // SandbagMain
-		baseModel[25] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagSide
-		baseModel[26] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagSide
-		baseModel[27] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMain
-		baseModel[28] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[29] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagSide
-		baseModel[30] = new ModelRendererTurbo(this, 10, 14, textureX, textureY); // SandbagMain
-		baseModel[31] = new ModelRendererTurbo(this, 10, 14, textureX, textureY); // SandbagSide
-		baseModel[32] = new ModelRendererTurbo(this, 10, 14, textureX, textureY); // SandbagSide
-		baseModel[33] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMain
-		baseModel[34] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-		baseModel[35] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagSide
-
-		baseModel[0].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[0].setRotationPoint(5F, -3F, 0F);
+		baseModel = new ModelRendererTurbo[12];
+		baseModel[0] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		baseModel[1] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		baseModel[2] = new ModelRendererTurbo(this, 40, 0, textureX, textureY); // Box 0
+		baseModel[3] = new ModelRendererTurbo(this, 40, 0, textureX, textureY); // Box 0
+		baseModel[4] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		baseModel[5] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		baseModel[6] = new ModelRendererTurbo(this, 40, 0, textureX, textureY); // Box 0
+		baseModel[7] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		baseModel[8] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		baseModel[9] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		baseModel[10] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		baseModel[11] = new ModelRendererTurbo(this, 40, 0, textureX, textureY); // Box 0
+
+		baseModel[0].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[0].setRotationPoint(0F, -4F, 0F);
 
-		baseModel[1].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[1].setRotationPoint(11F, -3F, 0F);
+		baseModel[1].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[1].setRotationPoint(8F, -4F, 1F);
+
+		baseModel[2].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[2].setRotationPoint(4F, -8F, 1F);
+
+		baseModel[3].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[3].setRotationPoint(0F, -4F, 4F);
+
+		baseModel[4].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[4].setRotationPoint(8F, -4F, 5F);
+
+		baseModel[5].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[5].setRotationPoint(4F, -8F, 5F);
 
-		baseModel[2].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[2].setRotationPoint(4F, -3F, 0F);
+		baseModel[6].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[6].setRotationPoint(0F, -12F, 0F);
+
+		baseModel[7].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[7].setRotationPoint(8F, -12F, 1F);
+
+		baseModel[8].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[8].setRotationPoint(0F, -12F, 4F);
 
-		baseModel[3].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[3].setRotationPoint(9F, -6F, 0F);
+		baseModel[9].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[9].setRotationPoint(8F, -12F, 5F);
 
-		baseModel[4].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[4].setRotationPoint(15F, -6F, 0F);
+		baseModel[10].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[10].setRotationPoint(4F, -16F, 0F);
 
-		baseModel[5].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[5].setRotationPoint(8F, -6F, 0F);
-
-		baseModel[6].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[6].setRotationPoint(1F, -6F, 0F);
-
-		baseModel[7].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[7].setRotationPoint(7F, -6F, 0F);
-
-		baseModel[8].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[8].setRotationPoint(0F, -6F, 0F);
-
-		baseModel[9].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[9].setRotationPoint(9F, -3F, 4F);
-
-		baseModel[10].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[10].setRotationPoint(15F, -3F, 4F);
-
-		baseModel[11].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[11].setRotationPoint(8F, -3F, 4F);
-
-		baseModel[12].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[12].setRotationPoint(1F, -3F, 4F);
+		baseModel[11].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		baseModel[11].setRotationPoint(4F, -16F, 4F);
 
-		baseModel[13].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[13].setRotationPoint(7F, -3F, 4F);
 
-		baseModel[14].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[14].setRotationPoint(0F, -3F, 4F);
+		reiforcementWood = new ModelRendererTurbo[3];
+		reiforcementWood[0] = new ModelRendererTurbo(this, 24, 14, textureX, textureY); // Box 16
+		reiforcementWood[1] = new ModelRendererTurbo(this, 40, 14, textureX, textureY); // Box 16
+		reiforcementWood[2] = new ModelRendererTurbo(this, 32, 14, textureX, textureY); // Box 16
 
-		baseModel[15].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[15].setRotationPoint(9F, -9F, 4F);
+		reiforcementWood[0].addBox(0F, 0F, 0F, 2, 16, 2, 0F); // Box 16
+		reiforcementWood[0].setRotationPoint(2F, -16F, -2F);
+		reiforcementWood[0].rotateAngleX = 0.08726646F;
 
-		baseModel[16].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[16].setRotationPoint(15F, -9F, 4F);
+		reiforcementWood[1].addBox(0F, 0F, 0F, 2, 16, 2, 0F); // Box 16
+		reiforcementWood[1].setRotationPoint(7F, -16F, -2F);
+		reiforcementWood[1].rotateAngleX = 0.12217305F;
 
-		baseModel[17].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[17].setRotationPoint(8F, -9F, 4F);
+		reiforcementWood[2].addBox(0F, 0F, 0F, 2, 16, 2, 0F); // Box 16
+		reiforcementWood[2].setRotationPoint(12F, -16F, -2F);
+		reiforcementWood[2].rotateAngleX = 0.08726646F;
 
-		baseModel[18].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[18].setRotationPoint(1F, -9F, 4F);
 
-		baseModel[19].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[19].setRotationPoint(7F, -9F, 4F);
+		reinforcementPlates = new ModelRendererTurbo[4];
+		reinforcementPlates[0] = new ModelRendererTurbo(this, 6, 23, textureX, textureY); // Box 19
+		reinforcementPlates[1] = new ModelRendererTurbo(this, 6, 14, textureX, textureY); // Box 19
+		reinforcementPlates[2] = new ModelRendererTurbo(this, 6, 14, textureX, textureY); // Box 19
+		reinforcementPlates[3] = new ModelRendererTurbo(this, 6, 23, textureX, textureY); // Box 19
 
-		baseModel[20].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[20].setRotationPoint(0F, -9F, 4F);
+		reinforcementPlates[0].addBox(0F, 0F, 0F, 8, 8, 1, 0F); // Box 19
+		reinforcementPlates[0].setRotationPoint(1F, -15F, -2F);
+		reinforcementPlates[0].rotateAngleX = 0.05235988F;
+		reinforcementPlates[0].rotateAngleZ = 0.06981317F;
 
-		baseModel[21].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[21].setRotationPoint(9F, -12F, 0F);
+		reinforcementPlates[1].addBox(0F, -1F, 0F, 8, 8, 1, 0F); // Box 19
+		reinforcementPlates[1].setRotationPoint(1F, -8F, -2F);
+		reinforcementPlates[1].rotateAngleX = 0.15707963F;
+		reinforcementPlates[1].rotateAngleZ = -0.15707963F;
 
-		baseModel[22].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[22].setRotationPoint(15F, -12F, 0F);
+		reinforcementPlates[2].addBox(0F, 0F, 0F, 8, 8, 1, 0F); // Box 19
+		reinforcementPlates[2].setRotationPoint(9F, -15F, -2F);
+		reinforcementPlates[2].rotateAngleX = -0.03490659F;
+		reinforcementPlates[2].rotateAngleZ = -0.19198622F;
 
-		baseModel[23].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[23].setRotationPoint(8F, -12F, 0F);
+		reinforcementPlates[3].addBox(0F, 0F, -1F, 8, 8, 1, 0F); // Box 19
+		reinforcementPlates[3].setRotationPoint(9F, -8F, -2F);
+		reinforcementPlates[3].rotateAngleX = 0.2443461F;
 
-		baseModel[24].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[24].setRotationPoint(1F, -12F, 0F);
 
-		baseModel[25].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[25].setRotationPoint(7F, -12F, 0F);
+		reinforcementWireMesh = new ModelRendererTurbo[6];
+		reinforcementWireMesh[0] = new ModelRendererTurbo(this, 48, 8, textureX, textureY); // Box 23
+		reinforcementWireMesh[1] = new ModelRendererTurbo(this, 48, 8, textureX, textureY); // Box 23
+		reinforcementWireMesh[2] = new ModelRendererTurbo(this, 36, 12, textureX, textureY); // Box 23
+		reinforcementWireMesh[3] = new ModelRendererTurbo(this, 30, 12, textureX, textureY); // Box 23
+		reinforcementWireMesh[4] = new ModelRendererTurbo(this, 24, 12, textureX, textureY); // Box 23
+		reinforcementWireMesh[5] = new ModelRendererTurbo(this, 42, 12, textureX, textureY); // Box 23
 
-		baseModel[26].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[26].setRotationPoint(0F, -12F, 0F);
+		reinforcementWireMesh[0].addBox(0F, 0F, 0F, 8, 16, 0, 0F); // Box 23
+		reinforcementWireMesh[0].setRotationPoint(0F, -16F, -2F);
+		reinforcementWireMesh[0].rotateAngleX = -0.12217305F;
 
-		baseModel[27].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[27].setRotationPoint(5F, -9F, 0F);
+		reinforcementWireMesh[1].addBox(0F, 0F, 0F, 8, 16, 0, 0F); // Box 23
+		reinforcementWireMesh[1].setRotationPoint(8F, -16F, -2F);
+		reinforcementWireMesh[1].rotateAngleX = -0.12217305F;
 
-		baseModel[28].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[28].setRotationPoint(11F, -9F, 0F);
+		reinforcementWireMesh[2].addBox(0F, -1F, 0F, 2, 1, 1, 0F); // Box 23
+		reinforcementWireMesh[2].setRotationPoint(8F, -16F, -2F);
+		reinforcementWireMesh[2].rotateAngleX = -0.12217305F;
 
-		baseModel[29].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[29].setRotationPoint(4F, -9F, 0F);
+		reinforcementWireMesh[3].addBox(0F, -1F, -0.25F, 2, 1, 1, 0F); // Box 23
+		reinforcementWireMesh[3].setRotationPoint(12F, -16F, -2F);
+		reinforcementWireMesh[3].rotateAngleX = -0.12217305F;
+		reinforcementWireMesh[3].rotateAngleY = 0.08726646F;
 
-		baseModel[30].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[30].setRotationPoint(5F, -6F, 4F);
+		reinforcementWireMesh[4].addBox(0F, -1F, 0F, 2, 1, 1, 0F); // Box 23
+		reinforcementWireMesh[4].setRotationPoint(2F, -16F, -2F);
+		reinforcementWireMesh[4].rotateAngleX = -0.12217305F;
+		reinforcementWireMesh[4].rotateAngleY = -0.08726646F;
 
-		baseModel[31].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[31].setRotationPoint(11F, -6F, 4F);
+		reinforcementWireMesh[5].addBox(0F, -1F, 0F, 2, 1, 1, 0F); // Box 23
+		reinforcementWireMesh[5].setRotationPoint(6F, -16F, -2F);
+		reinforcementWireMesh[5].rotateAngleX = -0.12217305F;
 
-		baseModel[32].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[32].setRotationPoint(4F, -6F, 4F);
 
-		baseModel[33].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMain
-		baseModel[33].setRotationPoint(5F, -12F, 4F);
+		leftFullModel = new ModelRendererTurbo[4];
+		leftFullModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		leftFullModel[1] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		leftFullModel[2] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		leftFullModel[3] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
 
-		baseModel[34].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagSide
-		baseModel[34].setRotationPoint(11F, -12F, 4F);
+		leftFullModel[0].addBox(0F, 0F, 1F, 8, 4, 4, 0F); // Box 0
+		leftFullModel[0].setRotationPoint(12F, -8F, 4F);
 
-		baseModel[35].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagSide
-		baseModel[35].setRotationPoint(4F, -12F, 4F);
+		leftFullModel[1].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		leftFullModel[1].setRotationPoint(12F, -8F, 0F);
 
+		leftFullModel[2].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		leftFullModel[2].setRotationPoint(12F, -16F, 4F);
 
-		rightModel = new ModelRendererTurbo[12];
-		rightModel[0] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMainAddonRight
-		rightModel[1] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonRight
-		rightModel[2] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonRight
-		rightModel[3] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMainAddonRight
-		rightModel[4] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagMainAddonRight
-		rightModel[5] = new ModelRendererTurbo(this, 0, 21, textureX, textureY); // SandbagMainAddonRight
-		rightModel[6] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMainAddonRight
-		rightModel[7] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMainAddonRight
-		rightModel[8] = new ModelRendererTurbo(this, 10, 21, textureX, textureY); // SandbagMainAddonRight
-		rightModel[9] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMainAddonRight
-		rightModel[10] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonRight
-		rightModel[11] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonRight
+		leftFullModel[3].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		leftFullModel[3].setRotationPoint(12F, -16F, 0F);
 
-		rightModel[0].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonRight
-		rightModel[0].setRotationPoint(-3F, -3F, 0F);
 
-		rightModel[1].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonRight
-		rightModel[1].setRotationPoint(3F, -3F, 0F);
+		rightFullModel = new ModelRendererTurbo[4];
+		rightFullModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
+		rightFullModel[1] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		rightFullModel[2] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		rightFullModel[3] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
 
-		rightModel[2].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonRight
-		rightModel[2].setRotationPoint(-4F, -3F, 0F);
+		rightFullModel[0].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		rightFullModel[0].setRotationPoint(-4F, -8F, 4F);
 
-		rightModel[3].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonRight
-		rightModel[3].setRotationPoint(-3F, -9F, 0F);
+		rightFullModel[1].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		rightFullModel[1].setRotationPoint(-4F, -8F, 0F);
 
-		rightModel[4].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonRight
-		rightModel[4].setRotationPoint(3F, -9F, 0F);
+		rightFullModel[2].addBox(0F, 0F, 1F, 8, 4, 4, 0F); // Box 0
+		rightFullModel[2].setRotationPoint(-4F, -16F, 4F);
 
-		rightModel[5].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonRight
-		rightModel[5].setRotationPoint(-4F, -9F, 0F);
+		rightFullModel[3].addBox(0F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		rightFullModel[3].setRotationPoint(-4F, -16F, 0F);
 
-		rightModel[6].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonRight
-		rightModel[6].setRotationPoint(-3F, -6F, 4F);
 
-		rightModel[7].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonRight
-		rightModel[7].setRotationPoint(3F, -6F, 4F);
+		leftDotModel = new ModelRendererTurbo[2];
+		leftDotModel[0] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
+		leftDotModel[1] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
 
-		rightModel[8].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonRight
-		rightModel[8].setRotationPoint(-4F, -6F, 4F);
+		leftDotModel[0].addBox(-8.5F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		leftDotModel[0].setRotationPoint(12F, -8F, 0F);
+		leftDotModel[0].rotateAngleY = -1.58824962F;
 
-		rightModel[9].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonRight
-		rightModel[9].setRotationPoint(-3F, -12F, 4F);
+		leftDotModel[1].addBox(-8.25F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		leftDotModel[1].setRotationPoint(12F, -16F, 0F);
+		leftDotModel[1].rotateAngleY = -1.6406095F;
 
-		rightModel[10].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonRight
-		rightModel[10].setRotationPoint(3F, -12F, 4F);
 
-		rightModel[11].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonRight
-		rightModel[11].setRotationPoint(-4F, -12F, 4F);
+		rightDotModel = new ModelRendererTurbo[2];
+		rightDotModel[0] = new ModelRendererTurbo(this, 40, 0, textureX, textureY); // Box 0
+		rightDotModel[1] = new ModelRendererTurbo(this, 20, 4, textureX, textureY); // Box 0
 
+		rightDotModel[0].addBox(-8.5F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		rightDotModel[0].setRotationPoint(0F, -8F, 0F);
+		rightDotModel[0].rotateAngleY = -1.58824962F;
 
-		leftModel = new ModelRendererTurbo[12];
-		leftModel[0] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[1] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[2] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[3] = new ModelRendererTurbo(this, 10, 14, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[4] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[5] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[6] = new ModelRendererTurbo(this, 10, 7, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[7] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[8] = new ModelRendererTurbo(this, 0, 7, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[9] = new ModelRendererTurbo(this, 10, 14, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[10] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagMainAddonLeft
-		leftModel[11] = new ModelRendererTurbo(this, 0, 14, textureX, textureY); // SandbagMainAddonLeft
-
-		leftModel[0].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonLeft
-		leftModel[0].setRotationPoint(13F, -3F, 0F);
-
-		leftModel[1].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonLeft
-		leftModel[1].setRotationPoint(19F, -3F, 0F);
-
-		leftModel[2].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonLeft
-		leftModel[2].setRotationPoint(12F, -3F, 0F);
-
-		leftModel[3].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonLeft
-		leftModel[3].setRotationPoint(13F, -9F, 0F);
-
-		leftModel[4].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonLeft
-		leftModel[4].setRotationPoint(19F, -9F, 0F);
-
-		leftModel[5].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonLeft
-		leftModel[5].setRotationPoint(12F, -9F, 0F);
-
-		leftModel[6].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonLeft
-		leftModel[6].setRotationPoint(13F, -6F, 4F);
-
-		leftModel[7].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonLeft
-		leftModel[7].setRotationPoint(19F, -6F, 4F);
-
-		leftModel[8].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonLeft
-		leftModel[8].setRotationPoint(12F, -6F, 4F);
-
-		leftModel[9].addBox(0F, 0F, 0F, 6, 3, 4, 0F); // SandbagMainAddonLeft
-		leftModel[9].setRotationPoint(13F, -12F, 4F);
-
-		leftModel[10].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F); // SandbagMainAddonLeft
-		leftModel[10].setRotationPoint(19F, -12F, 4F);
-
-		leftModel[11].addShapeBox(0F, 0F, 0F, 1, 3, 4, 0F, 0F, -0.5F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F); // SandbagMainAddonLeft
-		leftModel[11].setRotationPoint(12F, -12F, 4F);
+		rightDotModel[1].addBox(-8.25F, 0F, 0F, 8, 4, 4, 0F); // Box 0
+		rightDotModel[1].setRotationPoint(0F, -16F, 0F);
+		rightDotModel[1].rotateAngleY = -1.6406095F;
 
 		parts.put("base", baseModel);
-		parts.put("right", rightModel);
-		parts.put("left", leftModel);
+		parts.put("reinfWood", reiforcementWood);
+		parts.put("reinfPlates", reinforcementPlates);
+		parts.put("reinfWireMesh", reinforcementWireMesh);
+		parts.put("rightFull", rightFullModel);
+		parts.put("leftFull", leftFullModel);
+		parts.put("rightDot", rightDotModel);
+		parts.put("leftDot", leftDotModel);
 		flipAll();
 	}
 

@@ -87,7 +87,6 @@ public class RepairCrateRenderer extends TileEntitySpecialRenderer<TileEntityRep
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

@@ -274,16 +274,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			switch(((DataPacketTypeString)c).value)
 			{
 				case "reload":
-					break;
-				case "firepos":
-					break;
-				case "fireentity":
-					break;
-				case "fire":
-					break;
-				case "repair":
-					break;
 				case "rscontrol":
+				case "repair":
+				case "fire":
+				case "fireentity":
+				case "firepos":
 					break;
 			}
 		}

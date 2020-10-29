@@ -87,7 +87,6 @@ public class AmmunitionCrateRenderer extends TileEntitySpecialRenderer<TileEntit
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

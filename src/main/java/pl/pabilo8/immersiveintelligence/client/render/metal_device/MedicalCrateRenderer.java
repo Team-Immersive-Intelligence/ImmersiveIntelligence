@@ -68,8 +68,6 @@ public class MedicalCrateRenderer extends TileEntitySpecialRenderer<TileEntityMe
 				GlStateManager.popMatrix();
 			GlStateManager.disableBlend();
 
-			return;
-
 		}
 		else
 		{
@@ -90,7 +88,6 @@ public class MedicalCrateRenderer extends TileEntitySpecialRenderer<TileEntityMe
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

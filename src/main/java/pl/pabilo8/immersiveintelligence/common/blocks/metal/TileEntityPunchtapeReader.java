@@ -18,12 +18,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 /**
  * @author Pabilo8
@@ -96,7 +96,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(ImmersiveIntelligence.proxy.INFO_KEY+"debugger_mode", new TextComponentTranslation(ImmersiveIntelligence.proxy.INFO_KEY+"debugger_mode."+mode))), ((EntityPlayerMP)player));
+			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"debugger_mode", new TextComponentTranslation(CommonProxy.INFO_KEY+"debugger_mode."+mode))), ((EntityPlayerMP)player));
 		}
 		return true;
 	}

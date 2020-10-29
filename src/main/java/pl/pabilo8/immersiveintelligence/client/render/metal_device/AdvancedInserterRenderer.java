@@ -8,12 +8,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAdvancedInserter;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAdvancedInserter;
-
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.inserter;
 
 /**
  * @author Pabilo8
@@ -25,11 +24,10 @@ public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEnti
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelAdvancedInserter model = new ModelAdvancedInserter();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/advanced_inserter.png";
-
 	@Override
 	public void render(TileEntityAdvancedInserter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/advanced_inserter.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -121,8 +119,8 @@ public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEnti
 			//Fuck Minecraft direction system, really, fuck it
 			float dir = 180-te.armDirection, next_dir = 180-te.nextDirection;
 
-			float added = next_dir > dir?(100f/inserter.grabTime*(partialTicks/20f)):
-					(next_dir < dir?-(100f/inserter.grabTime*(partialTicks/20f)): 0);
+			float added = next_dir > dir?(100f/Inserter.grabTime*(partialTicks/20f)):
+					(next_dir < dir?-(100f/Inserter.grabTime*(partialTicks/20f)): 0);
 			float progress = 1f-(((float)te.pickProgress+(added))/100f);
 
 			dir += added;
@@ -181,15 +179,14 @@ public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEnti
 
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
-			if(te.conn_data!=null)
-				renderItem.renderItem(te.conn_data, TransformType.GROUND);
+			if(TileEntityAdvancedInserter.conn_data!=null)
+				renderItem.renderItem(TileEntityAdvancedInserter.conn_data, TransformType.GROUND);
 			GlStateManager.translate(0.375f, 0.1875f, 0.375f);
 			GlStateManager.scale(0.65f, 0.65f, 0.65f);
-			if(te.conn_mv!=null)
-				renderItem.renderItem(te.conn_mv, TransformType.GROUND);
+			if(TileEntityAdvancedInserter.conn_mv!=null)
+				renderItem.renderItem(TileEntityAdvancedInserter.conn_mv, TransformType.GROUND);
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -262,15 +259,14 @@ public class AdvancedInserterRenderer extends TileEntitySpecialRenderer<TileEnti
 
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
-			if(te.conn_data!=null)
-				renderItem.renderItem(te.conn_data, TransformType.GROUND);
+			if(TileEntityAdvancedInserter.conn_data!=null)
+				renderItem.renderItem(TileEntityAdvancedInserter.conn_data, TransformType.GROUND);
 			GlStateManager.translate(0.375f, 0.1875f, 0.375f);
 			GlStateManager.scale(0.65f, 0.65f, 0.65f);
-			if(te.conn_mv!=null)
-				renderItem.renderItem(te.conn_mv, TransformType.GROUND);
+			if(TileEntityAdvancedInserter.conn_mv!=null)
+				renderItem.renderItem(TileEntityAdvancedInserter.conn_mv, TransformType.GROUND);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

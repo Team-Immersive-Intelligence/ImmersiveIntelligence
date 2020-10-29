@@ -91,10 +91,9 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 	@Override
 	public TileEntity createBasicTE(World world, IIBlockTypes_MechanicalConnector type)
 	{
-		switch(type)
+		if(type==IIBlockTypes_MechanicalConnector.WOODEN_WHEEL)
 		{
-			case WOODEN_WHEEL:
-				return new TileEntityMechanicalWheel();
+			return new TileEntityMechanicalWheel();
 		}
 		return null;
 	}
@@ -111,7 +110,6 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 			{
 				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
 				connector.getWorld().setBlockToAir(pos);
-				return;
 			}
 		}
 	}

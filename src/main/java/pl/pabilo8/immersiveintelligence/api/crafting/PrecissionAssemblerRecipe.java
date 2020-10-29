@@ -129,8 +129,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 			if(jawohl)
 			{
-				ArrayList<String> neededTools = new ArrayList<>();
-				neededTools.addAll(Arrays.asList(recipe.tools));
+				ArrayList<String> neededTools = new ArrayList<>(Arrays.asList(recipe.tools));
 
 				ArrayList<String> availableTools = new ArrayList<>();
 				for(ItemStack toolstack : tools)

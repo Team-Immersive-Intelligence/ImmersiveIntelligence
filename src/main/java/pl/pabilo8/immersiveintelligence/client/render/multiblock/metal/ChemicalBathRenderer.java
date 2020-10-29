@@ -27,11 +27,10 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 	private static ModelChemicalBath model;
 	private static ModelChemicalBath modelFlipped;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_bath.png";
-
 	@Override
 	public void render(TileEntityChemicalBath te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_bath.png";
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);
@@ -319,7 +318,6 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 				mod.render(0.0625f);
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 

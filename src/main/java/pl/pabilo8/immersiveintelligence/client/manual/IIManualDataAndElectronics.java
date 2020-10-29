@@ -41,7 +41,7 @@ public class IIManualDataAndElectronics extends IIManual
 		);
 
 		String[][] intInfoTable = {{"ie.manual.entry.def_value", "0"}};
-		String[][] stringInfoTable = {{"ie.manual.entry.def_value", "\'\'"}, {"ie.manual.entry.max_length", "512"}};
+		String[][] stringInfoTable = {{"ie.manual.entry.def_value", "''"}, {"ie.manual.entry.max_length", "512"}};
 		String[][] boolInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.false"}, {"ie.manual.entry.accepted_values", "ie.manual.entry.tf"}};
 		String[][] itemstackInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
 		String[][] arrayInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.empty"}, {"ie.manual.entry.min_index", "0"}, {"ie.manual.entry.max_index", "255"}};

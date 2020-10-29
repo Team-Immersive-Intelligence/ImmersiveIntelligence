@@ -74,7 +74,8 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 						 @Nullable DamageSource dSource, ElectricSource eSource)
 	{
 		if(!(dSource instanceof ElectricDamageSource))
-			return;
+		{
+		}
 		// TODO: 13.09.2020 tesla coil interaction
 	}
 

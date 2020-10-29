@@ -1,0 +1,5 @@
+<root>
+    <item name='net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer void render(T, double, double, double, float, int, float) 0'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+</root>

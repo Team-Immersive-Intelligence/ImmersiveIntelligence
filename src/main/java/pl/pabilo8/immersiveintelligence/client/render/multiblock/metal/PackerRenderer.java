@@ -24,13 +24,12 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> 
 	private static ModelPacker model;
 	private static ModelPacker modelFlipped;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/packer.png";
-
 	@Override
 	public void render(TileEntityPacker te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/packer.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+1, (float)y-2, (float)z+2);

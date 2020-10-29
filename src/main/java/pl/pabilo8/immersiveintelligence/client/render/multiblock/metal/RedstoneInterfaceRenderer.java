@@ -21,13 +21,12 @@ public class RedstoneInterfaceRenderer extends TileEntitySpecialRenderer<TileEnt
 	private static ModelRedstoneInterface model;
 	private static ModelRedstoneInterface modelFlipped;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/redstone_interface.png";
-
 	@Override
 	public void render(TileEntityRedstoneInterface te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
+			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/redstone_interface.png";
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y, (float)z);

@@ -34,8 +34,8 @@ public class BathingRecipe extends MultiblockRecipe
 		this.itemOutput = itemOutput;
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
 		this.fluidInput = fluidInput;
-		this.totalProcessEnergy = (int)Math.floor((double)((float)energy*energyModifier));
-		this.totalProcessTime = (int)Math.floor((double)((float)time*timeModifier));
+		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
+		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
 
 		this.fluidInputList = Collections.singletonList(this.fluidInput);
 

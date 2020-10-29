@@ -1,7 +1,10 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
@@ -13,6 +16,8 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
+
+import java.util.Random;
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
@@ -94,6 +99,40 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 				GlStateManager.scale(1f, 0.85f+turretHeight, 1f);
 			if(te.currentWeapon!=null)
 				te.currentWeapon.render(te, partialTicks);
+
+			{
+				Tessellator tessellator = Tessellator.getInstance();
+				BufferBuilder bufferbuilder = tessellator.getBuffer();
+				RenderHelper.disableStandardItemLighting();
+				f = ((getWorld().getTotalWorldTime()+partialTicks)%240)/240f;
+				float f1 = 0.0F;
+
+				if(f > 0.8F)
+				{
+					f1 = (f-0.8F)/0.2F;
+				}
+
+				Random random = new Random(432L);
+				GlStateManager.disableTexture2D();
+				GlStateManager.shadeModel(7425);
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+				GlStateManager.disableAlpha();
+				GlStateManager.enableCull();
+				GlStateManager.depthMask(false);
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(0.0F, -1.0F, -2.0F);
+
+				GlStateManager.popMatrix();
+				GlStateManager.depthMask(true);
+				GlStateManager.disableCull();
+				GlStateManager.disableBlend();
+				GlStateManager.shadeModel(7424);
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+				GlStateManager.enableTexture2D();
+				GlStateManager.enableAlpha();
+				RenderHelper.enableStandardItemLighting();
+			}
 
 			GlStateManager.popMatrix();
 

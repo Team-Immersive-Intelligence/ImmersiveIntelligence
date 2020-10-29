@@ -14,7 +14,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
  */
 public class BulletRenderer extends Render<EntityBullet>
 {
-	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 
 	public BulletRenderer(RenderManager renderManagerIn)
 	{
@@ -57,6 +56,7 @@ public class BulletRenderer extends Render<EntityBullet>
 	@Override
 	protected ResourceLocation getEntityTexture(EntityBullet entity)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 		return new ResourceLocation(texture);
 	}
 }

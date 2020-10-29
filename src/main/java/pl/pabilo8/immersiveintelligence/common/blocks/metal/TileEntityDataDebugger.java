@@ -26,7 +26,6 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
@@ -125,7 +124,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"debugger_mode", new TextComponentTranslation(ImmersiveIntelligence.proxy.INFO_KEY+"debugger_mode."+mode))), ((EntityPlayerMP)player));
+			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"debugger_mode", new TextComponentTranslation(CommonProxy.INFO_KEY+"debugger_mode."+mode))), ((EntityPlayerMP)player));
 			markDirty();
 			markBlockForUpdate(pos, null);
 		}

@@ -74,8 +74,8 @@ public class EntityVehicleWheel extends EntityVehicleMultiPart
 				}
 
 				this.motionY *= 0.9800000190734863D;
-				this.motionX *= (double)f6;
-				this.motionZ *= (double)f6;
+				this.motionX *= f6;
+				this.motionZ *= f6;
 				blockpos$pooledmutableblockpos.release();
 
 			}
@@ -119,9 +119,9 @@ public class EntityVehicleWheel extends EntityVehicleMultiPart
 
 			this.moveRelative(strafe, vertical, forward, f2);
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-			this.motionX *= (double)f1;
+			this.motionX *= f1;
 			this.motionY *= 0.800000011920929D;
-			this.motionZ *= (double)f1;
+			this.motionZ *= f1;
 
 			if(!this.hasNoGravity())
 			{

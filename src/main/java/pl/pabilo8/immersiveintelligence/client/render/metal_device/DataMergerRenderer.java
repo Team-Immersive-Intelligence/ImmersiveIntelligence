@@ -19,11 +19,10 @@ public class DataMergerRenderer extends TileEntitySpecialRenderer<TileEntityData
 {
 	private static ModelDataMerger model = new ModelDataMerger();
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/small_data_buffer.png";
-
 	@Override
 	public void render(TileEntityDataMerger te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/small_data_buffer.png";
 		if(te!=null)
 		{
 			ClientUtils.bindTexture(texture);
@@ -35,7 +34,6 @@ public class DataMergerRenderer extends TileEntitySpecialRenderer<TileEntityData
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 		else
@@ -53,7 +51,6 @@ public class DataMergerRenderer extends TileEntitySpecialRenderer<TileEntityData
 			model.render();
 
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 }

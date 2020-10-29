@@ -226,8 +226,7 @@ public class Utils
 		double xx = (MathHelper.sin((float)yaw)*true_offset);
 		double zz = (MathHelper.cos((float)yaw)*true_offset);
 
-		Vec3d vec = new Vec3d(xx, yy, zz);
-		return vec;
+		return new Vec3d(xx, yy, zz);
 	}
 
 	//Based on https://stackoverflow.com/a/2262117/9876980

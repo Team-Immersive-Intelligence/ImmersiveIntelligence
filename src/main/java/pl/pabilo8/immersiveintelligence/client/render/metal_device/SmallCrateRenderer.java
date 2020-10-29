@@ -20,9 +20,6 @@ public class SmallCrateRenderer extends TileEntitySpecialRenderer<TileEntitySmal
 {
 	private static ModelSmallCrates model = new ModelSmallCrates();
 
-	private static String texture_wooden = ImmersiveIntelligence.MODID+":textures/blocks/small_crates/wooden";
-	private static String texture_metal = ImmersiveIntelligence.MODID+":textures/blocks/small_crates/metal";
-
 	@Override
 	public void render(TileEntitySmallCrate te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
@@ -35,7 +32,6 @@ public class SmallCrateRenderer extends TileEntitySpecialRenderer<TileEntitySmal
 			renderWithMeta(te.getBlockMetadata(), te.facing);
 
 			GlStateManager.popMatrix();
-			return;
 
 		}
 	}
@@ -43,6 +39,8 @@ public class SmallCrateRenderer extends TileEntitySpecialRenderer<TileEntitySmal
 	public static void renderWithMeta(int meta, EnumFacing facing)
 	{
 		ModelRendererTurbo[] mod = (meta==0||meta==3)?model.boxCrateModel: ((meta==1||meta==4)?model.cubeCrateModel: model.wideCrateModel);
+		String texture_metal = ImmersiveIntelligence.MODID+":textures/blocks/small_crates/metal";
+		String texture_wooden = ImmersiveIntelligence.MODID+":textures/blocks/small_crates/wooden";
 		ClientUtils.bindTexture(meta < 3?(texture_wooden+meta+".png"): (texture_metal+(meta-3)+".png"));
 		model.getBlockRotation(facing, false);
 		for(ModelRendererTurbo m : mod)

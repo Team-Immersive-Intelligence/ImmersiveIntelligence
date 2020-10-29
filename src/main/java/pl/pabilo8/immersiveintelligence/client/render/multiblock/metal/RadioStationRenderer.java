@@ -18,11 +18,10 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 	private static ModelRadioStation model;
 	private static ModelRadioStation modelFlipped;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/radio_station.png";
-
 	@Override
 	public void render(TileEntityRadioStation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
+		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/radio_station.png";
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(texture);

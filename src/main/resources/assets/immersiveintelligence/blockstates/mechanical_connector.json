@@ -201,13 +201,10 @@
     ],
     "type": {
       "wooden_wheel": {
-        //"model": "immersiveintelligence:smartmodel/conn_wheel"
       },
       "brass_wheel": {
-        //"model": "immersiveintelligence:smartmodel/conn_wheel"
       },
       "steel_wheel": {
-        //"model": "immersiveintelligence:smartmodel/conn_wheel"
       }
     },
     "facing": {

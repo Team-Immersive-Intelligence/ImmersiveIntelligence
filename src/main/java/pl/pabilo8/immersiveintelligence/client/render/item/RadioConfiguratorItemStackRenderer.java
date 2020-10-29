@@ -21,8 +21,6 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 public class RadioConfiguratorItemStackRenderer extends TileEntityItemStackRenderer
 {
 	public static RadioConfiguratorItemStackRenderer instance = new RadioConfiguratorItemStackRenderer();
-	private static String texture_basic = ImmersiveIntelligence.MODID+":textures/items/tools/radio_configurator.png";
-	private static String texture_advanced = ImmersiveIntelligence.MODID+":textures/items/tools/advanced_radio_configurator.png";
 	@SideOnly(Side.CLIENT)
 	private static ModelRadioConfigurator model_basic = new ModelRadioConfigurator();
 	@SideOnly(Side.CLIENT)
@@ -37,6 +35,7 @@ public class RadioConfiguratorItemStackRenderer extends TileEntityItemStackRende
 
 		if(CommonProxy.item_radio_configurator.isBasic(itemStackIn))
 		{
+			String texture_basic = ImmersiveIntelligence.MODID+":textures/items/tools/radio_configurator.png";
 			ClientUtils.bindTexture(texture_basic);
 			float rot1 = (ItemNBTHelper.getInt(itemStackIn, "Frequency")%5)/5f;
 			float rot2 = (float)Math.floor(ItemNBTHelper.getInt(itemStackIn, "Frequency")/5f)/((float)IIConfig.radioBasicMaxFrequency/5f);
@@ -58,6 +57,7 @@ public class RadioConfiguratorItemStackRenderer extends TileEntityItemStackRende
 		}
 		else
 		{
+			String texture_advanced = ImmersiveIntelligence.MODID+":textures/items/tools/advanced_radio_configurator.png";
 			ClientUtils.bindTexture(texture_advanced);
 			float num1 = IIConfig.radioBasicMaxFrequency/8, num2 = num1/8;
 
