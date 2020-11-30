@@ -8,7 +8,7 @@
       "translate": "advancement.immersiveintelligence.make_tungsten_drillhead"
     },
     "description": {
-      "translate": "advancement.immersiveintelligence.make_tungsten.desc"
+      "translate": "advancement.immersiveintelligence.make_tungsten_drillhead.desc"
     }
   },
   "parent": "immersiveintelligence:main/make_tungsten",
