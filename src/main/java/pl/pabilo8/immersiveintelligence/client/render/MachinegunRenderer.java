@@ -22,6 +22,9 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
@@ -186,6 +189,37 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 						if(should_render)
 							nmod.render(0.0625f);
 					}
+					else if(nmod.getName().equals("belt_fed_loader"))
+					{
+						nmod.render(0.0625f);
+						IBulletModel mm = BulletRegistry.INSTANCE.registeredModels.get("mg_2bCal");
+						GlStateManager.pushMatrix();
+						GlStateManager.translate(0.725f, 0.65f, -0.25f+(-0.0625f*1.5f));
+						GlStateManager.rotate(180, 0, 1, 0);
+						GlStateManager.rotate(90, 1, 0, 0);
+						GlStateManager.scale(0.5f, 0.5f, 0.5f);
+						GlStateManager.pushMatrix();
+						for(int i = 0; i < 3; i++)
+						{
+							mm.renderBulletUnused(0xbbbbbb, EnumCoreTypes.PIERCING, MathHelper.hsvToRGB(((i*15)%255)/255f, 0.65f, 0.45f));
+							GlStateManager.rotate(22.5f*3f, 0, 1, 0);
+							GlStateManager.translate(0, 0, -0.0625f/2f);
+						}
+						GlStateManager.popMatrix();
+
+						GlStateManager.translate(-0.25f, 0, 0.25);
+						GlStateManager.pushMatrix();
+						for(int i = 0; i < 20; i++)
+						{
+							mm.renderBulletUnused(0xbbbbbb, EnumCoreTypes.PIERCING, MathHelper.hsvToRGB(((i*15)%255)/255f, 0.65f, 0.45f));
+							GlStateManager.translate(0f, 0, 0.165f);
+							GlStateManager.rotate(i%15 < 5?5f: -5f, 0, 1, 0);
+
+						}
+						GlStateManager.popMatrix();
+
+						GlStateManager.popMatrix();
+					}
 					else if(nmod.getName().equals("second_magazine_mag"))
 					{
 						boolean should_render = false;
@@ -236,7 +270,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 
 				if(nmod.getName().equals("bipod"))
 				{
-					nmod.render(0.0625f, 0f);
+					nmod.render(0.0625f, 1f);
 					continue;
 				}
 				if(nmod.getName().equals("ammo")&&!(ItemNBTHelper.hasKey(stack, "magazine1")&&!(new ItemStack(ItemNBTHelper.getTagCompound(stack, "magazine1")).isEmpty())))

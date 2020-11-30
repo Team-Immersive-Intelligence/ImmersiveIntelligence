@@ -19,7 +19,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 
@@ -45,12 +49,19 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 	public double horizontalSpeedPowered = 0;
 	public double horizontalSpeedUnpowered = 0;
 	public double energy;
-
+	private Ticket ticket = null;
 
 	public EntitySkyCrate(World world)
 	{
 		super(world);
 		this.setSize(1f, 1f);
+
+		if(!world.isRemote)
+		{
+			ticket = ForgeChunkManager.requestTicket(ImmersiveIntelligence.INSTANCE, this.getEntityWorld(), Type.ENTITY);
+			if(ticket!=null)
+				ticket.bindEntity(this);
+		}
 	}
 
 	public EntitySkyCrate(World world, Connection connection, ItemStack mount, ItemStack crate, BlockPos firstPos)
@@ -117,6 +128,8 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 			else
 				nextPos();
 		}
+		if(!world.isRemote)
+			ForgeChunkManager.forceChunk(ticket, this.world.getChunkFromBlockCoords(this.getPosition()).getPos());
 
 	}
 

@@ -1,9 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -53,7 +56,6 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer
 	{
 		GlStateManager.pushMatrix();
 
-
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
 		String skin = CommonProxy.item_submachinegun.getSkinnableCurrentSkin(stack);
 		boolean drawText = true;
@@ -81,8 +83,76 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer
 
 		for(TmtNamedBoxGroup nmod : renderParts)
 		{
-			ClientUtils.bindTexture(nmod.getTexturePath());
-			nmod.render(0.0625f);
+			if(nmod.getName().equals("ammo"))
+			{
+				GlStateManager.pushMatrix();
+				int reloading = ItemNBTHelper.getInt(stack, "reloading");
+				ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
+
+				float reload = MathHelper.clamp(
+						reloading+(reloading > 0?partialTicks: 0),
+						0,
+						Submachinegun.clipReloadTime
+				);
+				reload /= Submachinegun.clipReloadTime;
+				float clipReload = magazine.isEmpty()?1f: 0f;
+
+				if(reloading==0)
+				{
+					if(!magazine.isEmpty())
+					{
+						ClientUtils.bindTexture(nmod.getTexturePath());
+						nmod.render(0.0625f);
+					}
+				}
+				else
+				{
+					GlStateManager.enableBlend();
+					if(magazine.isEmpty())
+					{
+						if(reload <= 0.33)
+							clipReload = 1f;
+						else if(reload <= 0.66)
+							clipReload = 1f-((reload-0.33f)/0.33f);
+						else
+							clipReload = 0f;
+					}
+					else
+					{
+						if(reload <= 0.33)
+							clipReload = 0f;
+						else if(reload <= 0.66)
+							clipReload = (reload-0.33f)/0.33f;
+						else
+							clipReload = 1f;
+
+					}
+					GlStateManager.color(1f, 1f, 1f, 1f-Math.min(clipReload/0.5f, 1f));
+					ClientUtils.bindTexture(nmod.getTexturePath());
+					GlStateManager.translate(0.65f*clipReload, 0, 0);
+					nmod.render(0.0625f);
+					GlStateManager.disableBlend();
+					GlStateManager.color(1f, 1f, 1f, 1f);
+
+				}
+
+				GlStateManager.popMatrix();
+			}
+			else if(nmod.getName().equals("slide"))
+			{
+				float delay = Math.max(ItemNBTHelper.getInt(stack, "fireDelay")-partialTicks, 0);
+				float movement = 1f-(Math.abs(delay/(float)Submachinegun.bulletFireTime-0.5f)/0.5f);
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(0, 0, 0.5f*movement);
+				ClientUtils.bindTexture(nmod.getTexturePath());
+				nmod.render(0.0625f);
+				GlStateManager.popMatrix();
+			}
+			else
+			{
+				ClientUtils.bindTexture(nmod.getTexturePath());
+				nmod.render(0.0625f);
+			}
 		}
 
 		GlStateManager.popMatrix();

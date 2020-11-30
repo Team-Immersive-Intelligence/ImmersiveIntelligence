@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.bullets.penhandlers;
 
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 
 /**
@@ -21,6 +22,12 @@ public class PenetrationHandlerConcretes
 		{
 			return 1f;
 		}
+
+		@Override
+		public PenMaterialTypes getPenetrationType()
+		{
+			return PenMaterialTypes.SOLID;
+		}
 	}
 
 	public static class PenetrationHandlerLeadedConcrete implements IPenetrationHandler
@@ -35,6 +42,12 @@ public class PenetrationHandlerConcretes
 		public float getDensity()
 		{
 			return 1.55f;
+		}
+
+		@Override
+		public PenMaterialTypes getPenetrationType()
+		{
+			return PenMaterialTypes.SOLID;
 		}
 	}
 }

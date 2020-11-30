@@ -8,13 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
 
 /**
  * @author Pabilo8
@@ -24,7 +24,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 {
 	private static ModelArtilleryHowitzer model;
 	private static ModelArtilleryHowitzer modelFlipped;
-	private static ModelBullet modelBullet = new ModelBullet();
+	private static ModelBullet8bCal modelBullet = new ModelBullet8bCal();
 
 	private static String textureBullet = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 
@@ -78,13 +78,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.translate(4.125f, 0.5, -6);
 
 				if(te.animation==1&&loadingProgress > 0.5&&!te.inventory.get(5).isEmpty())
-					modelBullet.renderBullet(ItemIIBullet.getCore(te.inventory.get(5)).getColour(), ItemIIBullet.getColour(te.inventory.get(5)));
+					modelBullet.renderBulletUnused(te.inventory.get(5));
 				else if(te.animation==2&&loadingProgress < 0.5)
 				{
-					if(te.bullet.getItem() instanceof ItemIIBullet)
-						modelBullet.renderBullet(ItemIIBullet.getCore(te.bullet).getColour(), ItemIIBullet.getColour(te.bullet));
-					else if(te.bullet.getItem() instanceof IBulletCasingType)
-						modelBullet.renderCasing(false, -1, 0);
+					if(te.bullet.getItem() instanceof ItemIIBulletBase)
+						modelBullet.renderBulletUnused(te.bullet);
+					else if(te.bullet.getItem() instanceof IBullet)
+						modelBullet.renderCasing(0, -1);
 				}
 			}
 			GlStateManager.popMatrix();
@@ -124,10 +124,10 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				}
 				GlStateManager.translate(1f, -2f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(6);
-				if(stack.getItem() instanceof ItemIIBullet)
-					modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				if(stack.getItem() instanceof ItemIIBulletBase)
+					modelBullet.renderBulletUnused(stack);
 				else
-					modelBullet.renderCasing(false, -1, 0);
+					modelBullet.renderCasing(0, -1);
 
 
 				GlStateManager.popMatrix();
@@ -143,10 +143,10 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.translate(1f-(0.5f*((is_moved)?prgrs: 0f)), -2f, -0.875f);
 
 				ItemStack stack = te.inventoryHandler.getStackInSlot(7);
-				if(stack.getItem() instanceof ItemIIBullet)
-					modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				if(stack.getItem() instanceof ItemIIBulletBase)
+					modelBullet.renderBulletUnused(stack);
 				else
-					modelBullet.renderCasing(false, -1, 0);
+					modelBullet.renderCasing(0, -1);
 
 				GlStateManager.popMatrix();
 			}
@@ -160,10 +160,10 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate((0.5f*((is_moved)?1f-prgrs: 0f)), -2f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(8);
-				if(stack.getItem() instanceof ItemIIBullet)
-					modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				if(stack.getItem() instanceof ItemIIBulletBase)
+					modelBullet.renderBulletUnused(stack);
 				else
-					modelBullet.renderCasing(false, -1, 0);
+					modelBullet.renderCasing(0, -1);
 
 				GlStateManager.popMatrix();
 			}
@@ -177,10 +177,10 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, -2f, -1.385+(0.5f*((is_moved)?1f-prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(9);
-				if(stack.getItem() instanceof ItemIIBullet)
-					modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				if(stack.getItem() instanceof ItemIIBulletBase)
+					modelBullet.renderBulletUnused(stack);
 				else
-					modelBullet.renderCasing(false, -1, 0);
+					modelBullet.renderCasing(0, -1);
 
 				GlStateManager.popMatrix();
 			}
@@ -194,10 +194,10 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, -2f, -2.185+(0.5f*((is_moved)?1f-prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(10);
-				if(stack.getItem() instanceof ItemIIBullet)
-					modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				if(stack.getItem() instanceof ItemIIBulletBase)
+					modelBullet.renderBulletUnused(stack);
 				else
-					modelBullet.renderCasing(false, -1, 0);
+					modelBullet.renderCasing(0, -1);
 
 				GlStateManager.popMatrix();
 			}
@@ -211,10 +211,10 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, -2f, -2.985-(1.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(11);
-				if(stack.getItem() instanceof ItemIIBullet)
-					modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				if(stack.getItem() instanceof ItemIIBulletBase)
+					modelBullet.renderBulletUnused(stack);
 				else
-					modelBullet.renderCasing(false, -1, 0);
+					modelBullet.renderCasing(0, -1);
 
 				GlStateManager.popMatrix();
 			}
@@ -231,7 +231,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				}
 				GlStateManager.translate(1f, 0f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(5);
-				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				modelBullet.renderBulletUnused(stack);
 
 				GlStateManager.popMatrix();
 			}
@@ -245,7 +245,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0.5f+(0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(4);
-				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				modelBullet.renderBulletUnused(stack);
 
 				GlStateManager.popMatrix();
 			}
@@ -259,7 +259,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate((0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(3);
-				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				modelBullet.renderBulletUnused(stack);
 
 				GlStateManager.popMatrix();
 			}
@@ -273,7 +273,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, 0f, -1.385+(0.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(2);
-				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				modelBullet.renderBulletUnused(stack);
 
 				GlStateManager.popMatrix();
 			}
@@ -287,7 +287,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, 0f, -2.185+(0.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(1);
-				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				modelBullet.renderBulletUnused(stack);
 
 				GlStateManager.popMatrix();
 			}
@@ -301,7 +301,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, 0f, -2.985+(0.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(0);
-				modelBullet.renderBullet(ItemIIBullet.getCore(stack).getColour(), ItemIIBullet.getColour(stack));
+				modelBullet.renderBulletUnused(stack);
 
 				GlStateManager.popMatrix();
 			}
@@ -417,13 +417,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(-0.4075f, -1.15f, 0.65f);
 				if(te.animation==1&&loadingProgress < 0.5&&!te.inventory.get(5).isEmpty())
-					modelBullet.renderBullet(ItemIIBullet.getCore(te.inventory.get(5)).getColour(), ItemIIBullet.getColour(te.inventory.get(5)));
+					modelBullet.renderBulletUnused(te.inventory.get(5));
 				else if(te.animation==2&&loadingProgress > 0.5)
 				{
-					if(te.bullet.getItem() instanceof ItemIIBullet)
-						modelBullet.renderBullet(ItemIIBullet.getCore(te.bullet).getColour(), ItemIIBullet.getColour(te.bullet));
-					else if(te.bullet.getItem() instanceof IBulletCasingType)
-						modelBullet.renderCasing(false, -1, 0);
+					if(te.bullet.getItem() instanceof ItemIIBulletBase)
+						modelBullet.renderBulletUnused(te.bullet);
+					else if(te.bullet.getItem() instanceof IBullet)
+						modelBullet.renderCasing(0, -1);
 				}
 
 				GlStateManager.popMatrix();

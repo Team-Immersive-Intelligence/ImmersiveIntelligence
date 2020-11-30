@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence;
 
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -12,6 +13,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
 import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
@@ -37,6 +39,7 @@ public class ImmersiveIntelligence
 	{
 		logger = event.getModLog();
 		proxy.preInit();
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, proxy);
 	}
 
 	@EventHandler
@@ -54,6 +57,12 @@ public class ImmersiveIntelligence
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit();
+	}
+
+	@Mod.EventHandler
+	public void loadComplete(FMLLoadCompleteEvent event)
+	{
+		IICompatModule.doModulesLoadComplete();
 	}
 
 	@EventHandler
@@ -85,5 +94,4 @@ public class ImmersiveIntelligence
 		if(event.getSide()==Side.CLIENT)
 			ClientCommandHandler.instance.registerCommand(new IICommandHandler("tmt"));
 	}
-
 }

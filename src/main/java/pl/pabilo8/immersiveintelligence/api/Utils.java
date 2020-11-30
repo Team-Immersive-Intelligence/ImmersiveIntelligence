@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -58,6 +59,9 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * @author Pabilo8
@@ -592,5 +596,39 @@ public class Utils
 		}
 
 		GlStateManager.scale(1/scale, 1/scale, 1/scale);
+	}
+
+	static double colorDistance(int a, int b)
+	{
+		float[] f1 = rgbIntToRGB(a);
+		float[] f2 = rgbIntToRGB(b);
+		return colorDistance(f1, f2);
+	}
+
+	static double colorDistance(float[] f1, float[] f2)
+	{
+		int deltaR = (int)(f1[0]*255-f2[0]*255);
+		int deltaG = (int)(f1[1]*255-f2[1]*255);
+		int deltaB = (int)(f1[2]*255-f2[2]*255);
+		return Math.abs((deltaR*deltaR+deltaG*deltaG+deltaB*deltaB)/3.0);
+	}
+
+	public static EnumDyeColor getRGBTextFormatting(int color)
+	{
+		float[] cc = rgbIntToRGB(color);
+		Optional<EnumDyeColor> min = Arrays.stream(EnumDyeColor.values()).min(Comparator.comparingDouble(value -> colorDistance(value.getColorComponentValues(), cc)));
+		return min.orElse(EnumDyeColor.BLACK);
+	}
+
+	/**
+	 * Creates a Vec3 using the pitch and yaw of the entities rotation.
+	 */
+	public static Vec3d getVectorForRotation(float pitch, float yaw)
+	{
+		float f = MathHelper.cos(-yaw*0.017453292F-(float)Math.PI);
+		float f1 = MathHelper.sin(-yaw*0.017453292F-(float)Math.PI);
+		float f2 = -MathHelper.cos(-pitch*0.017453292F);
+		float f3 = MathHelper.sin(-pitch*0.017453292F);
+		return new Vec3d((double)(f1*f2), (double)f3, (double)(f*f2));
 	}
 }

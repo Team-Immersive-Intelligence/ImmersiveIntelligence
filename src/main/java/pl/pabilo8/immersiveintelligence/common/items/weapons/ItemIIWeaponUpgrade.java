@@ -34,6 +34,8 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 
 	public enum WeaponUpgrades
 	{
+		///Machinegun
+
 		//Increases fire rate
 		HEAVY_BARREL(ImmutableSet.of("MACHINEGUN"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("water_cooling"),
@@ -65,20 +67,60 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				(upgrade, modifications) -> modifications.setBoolean("precise_bipod", true)),
 
 		//3 x Magnification
-		SCOPE(ImmutableSet.of("MACHINEGUN"), 1,
+		SCOPE(ImmutableSet.of("MACHINEGUN", "AUTOREVOLVER", "STORM_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("infrared_scope"),
 				(upgrade, modifications) -> modifications.setBoolean("scope", true)),
 
 		//Allows nightvision + 2 x magnification, uses energy from player's backpack
-		INFRARED_SCOPE(ImmutableSet.of("MACHINEGUN"), 1,
+		INFRARED_SCOPE(ImmutableSet.of("MACHINEGUN", "STORM_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("scope"),
 				(upgrade, modifications) -> modifications.setBoolean("infrared_scope", true)),
 
-		//Allows nightvision + 2 x magnification, uses energy from player's backpack
-		SHIELD(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("shield"),
-				(upgrade, modifications) -> modifications.setBoolean("shield", true));
+		///Submachinegun
 
+		//Deflects projectiles
+		STURDY_BARREL(ImmutableSet.of("SUBMACHINEGUN"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("sturdy_barrel"),
+				(upgrade, modifications) -> modifications.setBoolean("sturdy_barrel", true)),
+
+		//Deflects projectiles
+		SUPPRESSOR(ImmutableSet.of("SUBMACHINEGUN"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("suppressor"),
+				(upgrade, modifications) -> modifications.setBoolean("suppressor", true)),
+
+		//Deflects projectiles
+		BOTTOM_LOADING(ImmutableSet.of("SUBMACHINEGUN"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("bottom_loading"),
+				(upgrade, modifications) -> modifications.setBoolean("bottom_loading", true)),
+
+		//Deflects projectiles
+		FOLDING_STOCK(ImmutableSet.of("SUBMACHINEGUN"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("folding_stock"),
+				(upgrade, modifications) -> modifications.setBoolean("folding_stock", true)),
+
+		///Autorevolver
+
+		//Deflects projectiles
+		HEAVY_SPRINGBOX(ImmutableSet.of("AUTOREVOLVER"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("heavy_springbox"),
+				(upgrade, modifications) -> modifications.setBoolean("heavy_springbox", true)),
+
+		//Storm Rifle
+
+		//Shows yaw and pitch, allows to send a packet with player's yaw and pitch (+distance if a rangefinder is installed, +position data if player has a radio backpack)
+		RADIO_MARKER(ImmutableSet.of("STORM_RIFLE"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("radio_marker"),
+				(upgrade, modifications) -> modifications.setBoolean("radio_marker", true)),
+
+		//Shows distance to target
+		RIFLE_GRENADE_LAUNCHER(ImmutableSet.of("STORM_RIFLE"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("stereoscopic_rangefinder"),
+				(upgrade, modifications) -> modifications.setBoolean("rifle_grenade_launcher", true)),
+
+		//Deflects projectiles
+		STEREOSCOPIC_RANGEFINDER(ImmutableSet.of("STORM_RIFLE"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("rifle_grenade_launcher"),
+				(upgrade, modifications) -> modifications.setBoolean("stereoscopic_rangefinder", true));
 
 		private ImmutableSet<String> toolset;
 		private int stackSize = 1;

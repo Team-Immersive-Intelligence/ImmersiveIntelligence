@@ -64,9 +64,10 @@ public class CustomSkinHandler
 	 * Kuruma - author of Immersive Energy,
 	 * Muddykat and JStocke - members of Immersive Geology Team,
 	 * Kingcavespider1 - the first pull-request creator
-	 * Franz - new modeller of II,
-	 * Carver - a helpful idea giver,
+	 * Franz - wannabe modeller of II, retired
+	 * Carver - a helpful idea giver, now a modeller
 	 * Royal Jelly and MasterEnderman - the first stargivers on GitHub
+	 * Blackdragon - a Youtuber, tutorial maker and a helper for the community
 	 * And of course, thanks to all non mentioned II contributors,
 	 * no matter the size of contribution, you all deserve a reward ^^
 	 * - Pabilo8, 30-06-2020

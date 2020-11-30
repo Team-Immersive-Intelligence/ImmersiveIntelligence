@@ -19,6 +19,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBl
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
+import blusunrize.immersiveengineering.common.items.ItemIEBase;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -65,7 +66,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualDataAndElectronics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualIntelligence;
@@ -102,6 +103,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIDrillHead.DrillHeadPerm;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -223,9 +226,9 @@ public class ClientProxy extends CommonProxy
 		{
 			if(item instanceof ItemBlock)
 				continue;
-			if(item instanceof ItemIIBase)
+			if(item instanceof ItemIEBase)
 			{
-				ItemIIBase ieMetaItem = (ItemIIBase)item;
+				ItemIEBase ieMetaItem = (ItemIEBase)item;
 				if(ieMetaItem.registerSubModels&&ieMetaItem.getSubNames()!=null&&ieMetaItem.getSubNames().length > 0)
 				{
 					for(int meta = 0; meta < ieMetaItem.getSubNames().length; meta++)
@@ -237,11 +240,11 @@ public class ClientProxy extends CommonProxy
 				}
 				else
 				{
-					if(ieMetaItem.specialModelMap.containsKey(0))
+					if(item instanceof ItemIIBase&&((ItemIIBase)ieMetaItem).specialModelMap.containsKey(0))
 					{
-						ModelLoaderRegistry.registerLoader(ieMetaItem.specialModelMap.get(0).getInstance());
-						ModelLoader.setCustomMeshDefinition(ieMetaItem, stack -> ieMetaItem.specialModelMap.get(0).getLocation());
-						ModelBakery.registerItemVariants(ieMetaItem, ieMetaItem.specialModelMap.get(0).getLocation());
+						ModelLoaderRegistry.registerLoader(((ItemIIBase)ieMetaItem).specialModelMap.get(0).getInstance());
+						ModelLoader.setCustomMeshDefinition(ieMetaItem, stack -> ((ItemIIBase)ieMetaItem).specialModelMap.get(0).getLocation());
+						ModelBakery.registerItemVariants(ieMetaItem, ((ItemIIBase)ieMetaItem).specialModelMap.get(0).getLocation());
 					}
 					else
 					{
@@ -329,14 +332,47 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityVehicleSeat.class, EntityRenderNone::new);
 
-		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(item_bullet, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
+		for(IBullet bullet : BulletRegistry.INSTANCE.registeredCasings.values())
 		{
-			@Override
-			public IBakedModel createBakedModel(IBakedModel existingModel)
+			if(bullet instanceof ItemIIBulletBase)
 			{
-				return new ModelItemDynamicOverride(existingModel, null);
+				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIBulletBase)bullet, 1, ItemIIBulletBase.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
+				{
+					@Override
+					public IBakedModel createBakedModel(IBakedModel existingModel)
+					{
+						return new ModelItemDynamicOverride(existingModel, null);
+					}
+				}, ImmersiveIntelligence.MODID);
+				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIBulletBase)bullet, 1, ItemIIBulletBase.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
+				{
+					@Override
+					public IBakedModel createBakedModel(IBakedModel existingModel)
+					{
+						return new ModelItemDynamicOverride(existingModel, null);
+					}
+				}, ImmersiveIntelligence.MODID);
 			}
-		}, ImmersiveIntelligence.MODID);
+			else if(bullet instanceof ItemIIAmmoRevolver)
+			{
+				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
+				{
+					@Override
+					public IBakedModel createBakedModel(IBakedModel existingModel)
+					{
+						return new ModelItemDynamicOverride(existingModel, null);
+					}
+				}, ImmersiveIntelligence.MODID);
+				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
+				{
+					@Override
+					public IBakedModel createBakedModel(IBakedModel existingModel)
+					{
+						return new ModelItemDynamicOverride(existingModel, null);
+					}
+				}, ImmersiveIntelligence.MODID);
+			}
+		}
 
 		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(item_bullet_magazine, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
 		{
@@ -362,12 +398,10 @@ public class ClientProxy extends CommonProxy
 	@SubscribeEvent
 	public void textureStichPre(TextureStitchEvent.Pre event)
 	{
-		for(Map.Entry<String, IBulletCasingType> s : BulletRegistry.INSTANCE.registeredCasings.entrySet())
+		for(Map.Entry<String, IBullet> s : BulletRegistry.INSTANCE.registeredCasings.entrySet())
 		{
 			ImmersiveIntelligence.logger.info("registering sprite for bullet casing: "+s.getKey());
-			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_main");
-			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_core");
-			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/bullet_"+s.getKey().toLowerCase()+"_paint");
+			s.getValue().registerSprites(event.getMap());
 		}
 
 
@@ -691,12 +725,22 @@ public class ClientProxy extends CommonProxy
 			}
 		}
 		//Rightclick
-		if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun&&event.getButton()==1)
+		if(event.getButton()==1)
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setBoolean("clientMessage", true);
-			tag.setBoolean("shoot", event.isButtonstate());
-			IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
+			if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setBoolean("clientMessage", true);
+				tag.setBoolean("shoot", event.isButtonstate());
+				IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
+			}
+			/*
+			else if(ClientUtils.mc().player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemIISubmachinegun)
+			{
+				ItemStack heldItem = ClientUtils.mc().player.getHeldItem(EnumHand.MAIN_HAND);
+
+			}
+			 */
 		}
 	}
 

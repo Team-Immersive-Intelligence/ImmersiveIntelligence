@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
@@ -36,6 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
@@ -43,7 +44,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoArtillery;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
@@ -355,7 +356,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 					if(animationTime==Math.round(animationTimeMax*0.25f))
 					{
 
-						if(bullet.getItem() instanceof ItemIIBullet)
+						if(bullet.getItem() instanceof ItemIIAmmoArtillery)
 						{
 
 							double true_angle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
@@ -367,20 +368,15 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 							if(!world.isRemote)
 							{
-								EntityBullet a = new EntityBullet(world, getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, FakePlayerUtil.getFakePlayer(world), bullet);
-								//blocks per tick
-								float distance = 6f;
-								a.motionX = distance*(gun_end.x/3f);
-								a.motionY = distance*(gun_end.y/3f);
-								a.motionZ = distance*(gun_end.z/3f);
+								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f), 6f);
 								if(this.fuse > 0)
 								{
-									a.setFuse(this.fuse);
+									a.fuse = this.fuse;
 									this.fuse = -1;
 								}
 								a.world.spawnEntity(a);
 
-								bullet = ItemIIBullet.getCasing(bullet).getStack(1);
+								bullet = ((IBullet)bullet.getItem()).getCasingStack(1);
 							}
 
 						}
@@ -422,7 +418,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 				List<EntityItem> itemsIn = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(getTileForPos(mirrored?327: 329).getPos().offset(EnumFacing.UP)));
 				for(EntityItem ent : itemsIn)
 				{
-					if(!(ent.getItem().getItem() instanceof ItemIIBullet)||!(ItemIIBullet.getCasing(ent.getItem())).getName().equals("artillery_8bCal"))
+					if(!(ent.getItem().getItem() instanceof ItemIIAmmoArtillery))
 						continue;
 					//ImmersiveIntelligence.logger.info(ent);
 
@@ -661,7 +657,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		//Matches caliber
-		return stack.getItem() instanceof ItemIIBullet&&ItemIIBullet.getCasing(stack).getSize()==0.5f;
+		return stack.getItem() instanceof ItemIIAmmoArtillery;
 	}
 
 	@Override

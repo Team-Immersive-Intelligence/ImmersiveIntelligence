@@ -4,10 +4,10 @@ import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,7 +31,7 @@ public class ItemIITracerPowder extends ItemIIBase
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		int col = getColour(stack);
-		tooltip.add(I18n.translateToLocalFormatted(Lib.DESC_INFO+"colour", "<hexcol="+Integer.toHexString(col)+":#"+Integer.toHexString(col)+">"));
+		tooltip.add(I18n.format(Lib.DESC_INFO+"colour", "<hexcol="+Integer.toHexString(col)+":#"+Integer.toHexString(col)+">"));
 	}
 
 	@Override

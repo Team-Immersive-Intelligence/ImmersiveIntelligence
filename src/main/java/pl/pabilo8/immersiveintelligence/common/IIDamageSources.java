@@ -19,7 +19,7 @@ public class IIDamageSources
 		// TODO: 08.07.2020 integrate damage sources with bullet components
 		if(shooter==null)
 			return new DamageSource("iiBullet").setProjectile();
-		return new IEDamageSource_Indirect("iiBullet", shot, shooter).setProjectile();
+		return new IEDamageSource_Indirect("iiBullet", shot, shooter).setProjectile().setDamageBypassesArmor();
 	}
 
 	public static DamageSource causeShrapnelDamage(EntityShrapnel shot, Entity shooter)

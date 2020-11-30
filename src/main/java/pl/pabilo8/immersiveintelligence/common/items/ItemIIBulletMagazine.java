@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 {
 	public ItemIIBulletMagazine()
 	{
-		super("bullet_magazine", 1, "machinegun", "submachinegun", "automatic_revolver");
+		super("bullet_magazine", 1, "machinegun", "submachinegun", "automatic_revolver", "submachinegun_round", "assault_rifle");
 	}
 
 	public static void makeDefault(ItemStack stack)
@@ -65,7 +66,7 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 				if(!contains)
 				{
 					already.add(bullet);
-					ItemNBTHelper.setInt(stack, "colour"+i, ItemIIBullet.getColour(bullet));
+					ItemNBTHelper.setInt(stack, "colour"+i, ((IBullet)bullet.getItem()).getPaintColor(bullet));
 					ItemNBTHelper.setTagCompound(stack, "bullet"+i, bullet.serializeNBT());
 					i += 1;
 				}
@@ -138,22 +139,29 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 				return 24;
 			case 2:
 				return 16;
+			case 3:
+				return 64;
+			case 4:
+				return 32;
 		}
 		return 0;
 	}
 
-	public static boolean matchesMagazine(ItemStack stack, String casing)
+	public static IBullet getMatchingType(ItemStack stack)
 	{
 		switch(stack.getMetadata())
 		{
 			case 0:
-				return casing.equals("machinegun_2bCal");
+			default:
+				return CommonProxy.item_ammo_machinegun;
 			case 1:
-				return casing.equals("submachinegun_1bCal");
+			case 3:
+				return CommonProxy.item_ammo_submachinegun;
 			case 2:
-				return casing.equals("revolver_1bCal");
+				return CommonProxy.item_ammo_revolver;
+			case 4:
+				return CommonProxy.item_ammo_storm_rifle;
 		}
-		return false;
 	}
 
 	public static ItemStack getMagazine(String type, ItemStack bullet1, ItemStack bullet2, ItemStack bullet3, ItemStack bullet4)

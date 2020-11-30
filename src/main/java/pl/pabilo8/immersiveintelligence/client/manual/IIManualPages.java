@@ -10,13 +10,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCoreType;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
@@ -141,12 +140,12 @@ public class IIManualPages
 	{
 		float damageMod, penMod, blastMod;
 
-		public BulletCoreDisplay(ManualInstance manual, IBulletCoreType coreType)
+		public BulletCoreDisplay(ManualInstance manual, IBulletCore coreType)
 		{
 			super(manual, coreType.getName(), coreType.getMaterial().getExampleStack(), coreType.getRole(), coreType.getDensity());
 			this.text = "bullet_core."+name;
-			damageMod = coreType.getDamageModifier(new NBTTagCompound());
-			penMod = coreType.getPenetrationModifier(new NBTTagCompound());
+			damageMod = coreType.getDamageModifier();
+			penMod = coreType.getPenetrationHardness();
 			blastMod = coreType.getExplosionModifier();
 		}
 

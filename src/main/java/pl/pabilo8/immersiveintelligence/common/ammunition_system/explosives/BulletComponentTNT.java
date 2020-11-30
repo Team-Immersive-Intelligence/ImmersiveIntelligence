@@ -17,7 +17,7 @@ public class BulletComponentTNT implements IBulletComponent
 	@Override
 	public String getName()
 	{
-		return "TNT";
+		return "tnt";
 	}
 
 	@Override
@@ -36,18 +36,6 @@ public class BulletComponentTNT implements IBulletComponent
 	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
 	{
 		world.createExplosion(bullet, pos.getX(), pos.getY(), pos.getZ(), amount*8f, true);
-	}
-
-	@Override
-	public float getPenetrationModifier(NBTTagCompound tag)
-	{
-		return 0;
-	}
-
-	@Override
-	public float getDamageModifier(NBTTagCompound tag)
-	{
-		return 0;
 	}
 
 	@Override

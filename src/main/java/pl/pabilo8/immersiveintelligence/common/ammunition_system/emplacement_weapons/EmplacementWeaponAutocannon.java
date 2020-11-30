@@ -72,6 +72,11 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	{
 		if(reloadDelay > 0)
 			reloadDelay -= 1;
+
+		if(shootDelay > 0)
+			shootDelay -= 1;
+		else
+			shootDelay = Autocannon.bulletFireTime;
 	}
 
 	@Override
@@ -96,7 +101,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	@Override
 	public boolean willShoot(TileEntityEmplacement te)
 	{
-		return false;
+		return te.isDoorOpened;
 	}
 
 	@Override
@@ -129,13 +134,13 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		if(te.progress < Emplacement.lidTime)
 			cannonAnim = 0;
 		else
-			cannonAnim = Math.abs((((te.getWorld().getTotalWorldTime()+partialTicks)%6)/6d)-0.5)/0.5;
+			cannonAnim = Math.abs((((te.getWorld().getTotalWorldTime()+partialTicks)%Autocannon.bulletFireTime)/(double)Autocannon.bulletFireTime)-0.5)/0.5;
 
 		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks;
 		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks;
 
 		double b1 = 0, b2 = 0;
-		if(isShooting())
+		if(isShooting()&&te.progress > Emplacement.lidTime*0.98f)
 		{
 			if(cannonAnim < 0.5f)
 			{

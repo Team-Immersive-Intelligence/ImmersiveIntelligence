@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
+import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
@@ -41,18 +42,6 @@ public class BulletComponentTracerPowder implements IBulletComponent
 	}
 
 	@Override
-	public float getPenetrationModifier(NBTTagCompound tag)
-	{
-		return 0;
-	}
-
-	@Override
-	public float getDamageModifier(NBTTagCompound tag)
-	{
-		return 0;
-	}
-
-	@Override
 	public EnumComponentRole getRole()
 	{
 		return EnumComponentRole.TRACER;
@@ -71,9 +60,10 @@ public class BulletComponentTracerPowder implements IBulletComponent
 	}
 
 	@Override
-	public int getTrailColour(NBTTagCompound nbt)
+	public void spawnParticleTrail(EntityBullet bullet, NBTTagCompound nbt)
 	{
-		return nbt.hasKey("colour")?nbt.getInteger("colour"): 0xffffff;
+		int color = nbt.hasKey("colour")?nbt.getInteger("colour"): 0xffffff;
+		ParticleUtils.spawnTracerFX(bullet.posX, bullet.posY, bullet.posZ, bullet.motionX, bullet.motionY, bullet.motionZ, bullet.bulletCasing.getCaliber(), color);
 	}
 
 	@Override

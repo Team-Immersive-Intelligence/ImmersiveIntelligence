@@ -298,6 +298,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			if(!te.inventory.get(3).isEmpty())
 			{
 				GlStateManager.color(1f, 1f, 1f, 1f);
+				ClientUtils.bindTexture(texture);
 				for(ModelRendererTurbo model : model.schemeModel)
 					model.render(0.0625f);
 				ItemStack drawStack = CommonProxy.item_assembly_scheme.getProducedStack(te.inventory.get(3));
@@ -306,10 +307,10 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 				float lineWidth = playerDistanceSq < 25?1: playerDistanceSq < 40?.5f: .1f;
 				GlStateManager.color(0.65f, 0.65f, 0.65f);
 
-				GlStateManager.translate(0, 1, -2.25);
-				GlStateManager.rotate(90, 0, 1, 0);
-				GlStateManager.rotate(75, 1, 0, 0);
-				GlStateManager.translate(0, 0.15625, 0.0625/2f);
+				GlStateManager.translate(0, 1, -2.75);
+				GlStateManager.rotate(270, 0, 1, 0);
+				GlStateManager.rotate(30+75, 1, 0, 0);
+				GlStateManager.translate(0, -0.625, 0.0625/2f);
 				BlueprintLines blueprint = TileRenderAutoWorkbench.getBlueprintDrawable(drawStack, te.getWorld());
 				if(blueprint!=null&&playerDistanceSq < 120)
 				{

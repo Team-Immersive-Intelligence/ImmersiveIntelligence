@@ -62,9 +62,14 @@ public class MessagePlayerAimAnimationSync implements IMessage
 					if(entity instanceof EntityPlayer)
 					{
 						if(message.aiming)
-							ClientEventHandler.aimingPlayers.add((EntityPlayer)entity);
+						{
+							if(!ClientEventHandler.aimingPlayers.contains(entity))
+								ClientEventHandler.aimingPlayers.add((EntityPlayer)entity);
+						}
 						else
-							ClientEventHandler.aimingPlayers.remove(entity);
+						{
+							ClientEventHandler.aimingPlayers.removeIf(entityPlayer -> entityPlayer.equals(entity));
+						}
 					}
 				}
 			});

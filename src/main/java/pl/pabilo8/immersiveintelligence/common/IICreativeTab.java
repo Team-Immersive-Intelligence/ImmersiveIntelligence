@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
@@ -15,9 +16,10 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 
 import java.util.ArrayList;
@@ -77,30 +79,28 @@ public class IICreativeTab extends CreativeTabs
 
 	public void addExampleBullets(NonNullList list)
 	{
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "TNT", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "RDX", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "HMX", "", 1f));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_steel", "softpoint", "tnt"));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_steel", "softpoint", "rdx"));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_steel", "softpoint", "hmx"));
 
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "TNT", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "RDX", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreTungsten", "HMX", "", 1f));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_tungsten", "piercing", "tnt"));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_tungsten", "piercing", "rdx"));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_tungsten", "piercing", "hmx"));
 
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "TNT", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "RDX", "", 1f));
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "HMX", "", 1f));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "tnt"));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "rdx"));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "hmx"));
 
-		list.add(ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreBrass", "HMX", "white_phosphorus", 0.5f).setStackDisplayName("M65 White-Phosphorus Shell"));
+		list.add(CommonProxy.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("M65 White-Phosphorus Shell"));
 
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Stielhandgranate mk.1"));
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Phosphorgranate mk.1"));
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "RDX", "", 1f).setStackDisplayName("Sprenghandgranate mk.1"));
-		list.add(ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "HMX", "", 1f).setStackDisplayName("Sprenghandgranate mk.2"));
-		ItemStack grenade_firework = ItemIIBullet.getAmmoStack(1, "grenade_4bCal", "CoreBrass", "firework", "", 1f).setStackDisplayName("Feuerwerkhandgranate mk.1");
+		list.add(CommonProxy.item_grenade.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Stielhandgranate mk.1"));
+		list.add(CommonProxy.item_grenade.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Phosphorgranate mk.1"));
+		list.add(CommonProxy.item_grenade.getBulletWithParams("core_brass", "canister", "rdx").setStackDisplayName("Sprenghandgranate mk.1"));
+		list.add(CommonProxy.item_grenade.getBulletWithParams("core_brass", "canister", "hmx").setStackDisplayName("Sprenghandgranate mk.2"));
+		ItemStack grenade_firework = CommonProxy.item_grenade.getBulletWithParams("core_brass", "canister", "firework").setStackDisplayName("Feuerwerkhandgranate mk.1");
 		try
 		{
-			NBTTagCompound firework_nbt=JsonToNBT.getTagFromJson("{Explosion:{Type:0b,Colors:[I;3887386]}}");
-			ItemNBTHelper.setTagCompound(grenade_firework,"firstComponentNBT",firework_nbt);
-
+			((NBTTagList)ItemNBTHelper.getTag(grenade_firework).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{Explosion:{Type:0b,Colors:[I;3887386]}}"));
 		} catch(NBTException e)
 		{
 			e.printStackTrace();
@@ -108,18 +108,102 @@ public class IICreativeTab extends CreativeTabs
 
 		list.add(grenade_firework);
 
-		ItemStack bullet1 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "TNT", "", 1f).setStackDisplayName("Sprengpatrone mk.1");
-		ItemStack bullet2 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreTungsten", "shrapnel_tungsten", "", 1f).setStackDisplayName("Wolframpatrone mk.1");
-		ItemStack bullet3 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreSteel", "", "", 1f).setStackDisplayName("Stahlpatrone mk.1");
-		ItemStack bullet4 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreBrass", "white_phosphorus", "", 1f).setStackDisplayName("Phosphorpatrone mk.1");
+		list.add(CommonProxy.item_ammo_revolver.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Flammpatrone mk.1"));
+		list.add(CommonProxy.item_ammo_revolver.getBulletWithParams("core_tungsten", "piercing").setStackDisplayName("Wolframpatrone mk.1"));
+		ItemStack bullet_tracer = CommonProxy.item_ammo_revolver.getBulletWithParams("core_brass", "canister", "tracer_powder").setStackDisplayName("Markierungspatrone mk.1");
+		try
+		{
+			((NBTTagList)ItemNBTHelper.getTag(bullet_tracer).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{colour:3887386}"));
+		} catch(NBTException e)
+		{
+			e.printStackTrace();
+		}
+		list.add(bullet_tracer);
+
+		ItemStack bullet1 = CommonProxy.item_ammo_machinegun.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Sprengpatrone mk.1");
+		ItemStack bullet2 = CommonProxy.item_ammo_machinegun.getBulletWithParams("core_tungsten", "piercing", "shrapnel_tungsten").setStackDisplayName("Wolframpatrone mk.1");
+		ItemStack bullet3 = CommonProxy.item_ammo_machinegun.getBulletWithParams("core_steel", "piercing").setStackDisplayName("Stahlpatrone mk.1");
+		ItemStack bullet4 = CommonProxy.item_ammo_machinegun.getBulletWithParams("core_brass", "softpoint", "white_phosphorus").setStackDisplayName("Phosphorpatrone mk.1");
 		list.add(bullet1);
 		list.add(bullet2);
 		list.add(bullet3);
 		list.add(bullet4);
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet1, bullet2, bullet3, bullet4));
 
-		ItemStack bullet5 = ItemIIBullet.getAmmoStack(1, "machinegun_2bCal", "CoreUranium", "shrapnel_uranium", "", 1f).setStackDisplayName("M1A1 Uranium Bullet");
+		ItemStack bullet5 = CommonProxy.item_ammo_machinegun.getBulletWithParams("core_uranium", "piercing", "shrapnel_uranium").setStackDisplayName("M1A1 Uranium Bullet");
 		list.add(bullet5);
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet5, bullet5, bullet5, bullet5));
+
+
+		list.add(addColorBulletMagazine(CommonProxy.item_ammo_machinegun, "machinegun", 65327, 16711680, 25343, 16772608));
+		list.add(addColorBulletMagazine(CommonProxy.item_ammo_submachinegun, "submachinegun", 65327, 16711680, 25343, 16772608));
+
+	}
+
+	ItemStack addColorBulletMagazine(IBullet type, String magName, int... colors)
+	{
+		ArrayList<ItemStack> bullets = new ArrayList<>();
+		for(int color : colors)
+		{
+
+			ItemStack stack = type.getBulletWithParams("core_brass", "softpoint", "tracer_powder").setStackDisplayName(getGermanColorName(color)+"markierungspatrone");
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setInteger("colour", color);
+			type.setComponentNBT(stack, tag);
+			type.setPaintColour(stack, color);
+			bullets.add(stack);
+		}
+
+		ItemStack stack = new ItemStack(CommonProxy.item_bullet_magazine, 1, CommonProxy.item_bullet_magazine.getMetaBySubname(magName));
+		NonNullList<ItemStack> l = NonNullList.withSize(ItemIIBulletMagazine.getBulletCapactity(stack), ItemStack.EMPTY);
+		for(int i = 0; i < l.size(); i++)
+		{
+			l.set(i, bullets.get(i%(bullets.size())));
+		}
+		NBTTagList list = blusunrize.immersiveengineering.common.util.Utils.writeInventory(l);
+		ItemNBTHelper.getTag(stack).setTag("bullets", list);
+		ItemIIBulletMagazine.makeDefault(stack);
+		return stack;
+	}
+
+	//Deutsche Qualität
+	private String getGermanColorName(int color)
+	{
+		switch(Utils.getRGBTextFormatting(color))
+		{
+			case WHITE:
+				return "Weiß";
+			case ORANGE:
+				return "Orange";
+			case MAGENTA:
+				return "Magenta";
+			case LIGHT_BLUE:
+				return "Hellblau";
+			case YELLOW:
+				return "Gelb";
+			case LIME:
+				return "Lime";
+			case PINK:
+				return "Rosa";
+			case GRAY:
+				return "Grau";
+			case SILVER:
+				return "Silber";
+			case CYAN:
+				return "Cyan";
+			case PURPLE:
+				return "Purpur";
+			case BLUE:
+				return "Blau";
+			case BROWN:
+				return "Braun";
+			case GREEN:
+				return "Grün";
+			case RED:
+				return "Rot";
+			default:
+			case BLACK:
+				return "Schwarz";
+		}
 	}
 }

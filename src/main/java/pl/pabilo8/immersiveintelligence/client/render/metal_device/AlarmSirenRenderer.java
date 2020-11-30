@@ -27,6 +27,7 @@ public class AlarmSirenRenderer extends TileEntitySpecialRenderer<TileEntityAlar
 		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/alarm_siren.png";
 		if(te!=null)
 		{
+
 			ClientUtils.bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+1, (float)y, (float)z);

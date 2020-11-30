@@ -7,10 +7,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleExplosion;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleFlame;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleGunfire;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleTMTModel;
+import pl.pabilo8.immersiveintelligence.client.fx.*;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 import java.util.Random;
@@ -24,6 +21,12 @@ import java.util.Random;
  */
 public class ParticleUtils
 {
+	public static void spawnTracerFX(double x, double y, double z, double mx, double my, double mz, float size, int color)
+	{
+		Particle particle = new ParticleTracer(ClientUtils.mc().world, x, y, z, mx, my, mz, size, color);
+		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+	}
+
 	public static void spawnGunfireFX(double x, double y, double z, double mx, double my, double mz, float size)
 	{
 		Particle particle = new ParticleGunfire(ClientUtils.mc().world, x, y, z, mx, my, mz, size);

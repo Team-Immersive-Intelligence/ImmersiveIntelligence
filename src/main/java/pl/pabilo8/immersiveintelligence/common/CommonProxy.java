@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
+import blusunrize.immersiveengineering.api.tool.BulletHandler;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
@@ -47,6 +48,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -106,21 +109,23 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
 import pl.pabilo8.immersiveintelligence.common.items.*;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.*;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerBoots;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerChestplate;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerLeggings;
-import pl.pabilo8.immersiveintelligence.common.items.bullet_casings.*;
 import pl.pabilo8.immersiveintelligence.common.items.material.*;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -146,7 +151,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
  * how did you not notice that? ... that was really unexpected, didn't even consider such a thing being there
  */
 @Mod.EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
-public class CommonProxy implements IGuiHandler
+public class CommonProxy implements IGuiHandler, LoadingCallback
 {
 	public static final List<Block> blocks = new ArrayList<>();
 	public static final List<Item> items = new ArrayList<>();
@@ -223,13 +228,20 @@ public class CommonProxy implements IGuiHandler
 	public static ItemIILightEngineerLeggings item_light_engineer_leggings = new ItemIILightEngineerLeggings();
 	public static ItemIILightEngineerBoots item_light_engineer_boots = new ItemIILightEngineerBoots();
 
-	public static ItemIIBullet item_bullet = new ItemIIBullet();
-	public static ItemIICasingArtillery item_casing_artillery = new ItemIICasingArtillery();
-	public static ItemIICasingGrenade item_casing_grenade = new ItemIICasingGrenade();
+	//Ammunition
 
-	public static ItemIICasingMachinegun item_casing_machinegun = new ItemIICasingMachinegun();
-	public static ItemIICasingSubmachinegun item_casing_submachinegun = new ItemIICasingSubmachinegun();
-	public static ItemIICasingRevolver item_casing_revolver = new ItemIICasingRevolver();
+	public static ItemIIAmmoArtillery item_ammo_artillery = new ItemIIAmmoArtillery();
+	public static ItemIIAmmoAutocannon item_ammo_autocannon = new ItemIIAmmoAutocannon();
+
+	public static ItemIIAmmoGrenade item_grenade = new ItemIIAmmoGrenade();
+	public static ItemIIAmmoRailgunGrenade item_railgun_grenade = new ItemIIAmmoRailgunGrenade();
+
+	public static ItemIIAmmoMachinegun item_ammo_machinegun = new ItemIIAmmoMachinegun();
+	public static ItemIIAmmoSubmachinegun item_ammo_submachinegun = new ItemIIAmmoSubmachinegun();
+	public static ItemIIAmmoRevolver item_ammo_revolver = new ItemIIAmmoRevolver();
+	public static ItemIIAmmoStormRifle item_ammo_storm_rifle = new ItemIIAmmoStormRifle();
+
+	//
 
 	public static ItemIIBulletMagazine item_bullet_magazine = new ItemIIBulletMagazine();
 
@@ -311,7 +323,8 @@ public class CommonProxy implements IGuiHandler
 
 	public CommonProxy()
 	{
-
+		//Override
+		IEContent.itemRailgun = new ItemIIRailgunOverride();
 	}
 
 	private static ResourceLocation createRegistryName(String unlocalized)
@@ -644,30 +657,34 @@ public class CommonProxy implements IGuiHandler
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
 		CapabilityRotaryEnergy.register();
+		IICompatModule.doModulesPreInit();
 
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
 
-		BulletRegistry.INSTANCE.registerCasing(item_casing_artillery, "artillery_8bCal");
-		BulletRegistry.INSTANCE.registerCasing(item_casing_grenade, "grenade_4bCal");
+		BulletRegistry.INSTANCE.registerCasing(item_ammo_artillery);
+		BulletRegistry.INSTANCE.registerCasing(item_ammo_autocannon);
+		BulletRegistry.INSTANCE.registerCasing(item_grenade);
+		BulletRegistry.INSTANCE.registerCasing(item_railgun_grenade);
 
-		BulletRegistry.INSTANCE.registerCasing(item_casing_machinegun, "machinegun_2bCal");
-		BulletRegistry.INSTANCE.registerCasing(item_casing_submachinegun, "submachinegun_1bCal");
-		BulletRegistry.INSTANCE.registerCasing(item_casing_revolver, "revolver_1bCal");
+		BulletRegistry.INSTANCE.registerCasing(item_ammo_machinegun);
+		BulletRegistry.INSTANCE.registerCasing(item_ammo_submachinegun);
+		BulletRegistry.INSTANCE.registerCasing(item_ammo_storm_rifle);
+		BulletRegistry.INSTANCE.registerCasing(item_ammo_revolver);
 
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT(), "TNT");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX(), "RDX");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX(), "HMX");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus(), "white_phosphorus");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentFirework(), "firework");
-		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTracerPowder(), "tracer_powder");
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT());
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX());
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX());
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus());
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentFirework());
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTracerPowder());
 
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreSteel(), "CoreSteel");
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreTungsten(), "CoreTungsten");
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreBrass(), "CoreBrass");
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreLead(), "CoreLead");
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreUranium(), "CoreUranium");
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCorePabilium(), "CorePabilium");
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreSteel());
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreTungsten());
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreBrass());
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreLead());
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreUranium());
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCorePabilium());
 
 		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
 
@@ -691,12 +708,16 @@ public class CommonProxy implements IGuiHandler
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 		{
 			BulletComponentShrapnel shrapnel = new BulletComponentShrapnel(s.getKey());
-			BulletRegistry.INSTANCE.registerComponent(shrapnel, shrapnel.getName());
+			BulletRegistry.INSTANCE.registerComponent(shrapnel);
 		}
+
+		BulletHandler.registerBullet("ii_bullet", item_ammo_revolver);
 	}
 
 	public void init()
 	{
+		IICompatModule.doModulesInit();
+
 		//Blocks config
 		block_ore.setMiningLevels();
 
@@ -862,6 +883,8 @@ public class CommonProxy implements IGuiHandler
 
 	public void postInit()
 	{
+		IICompatModule.doModulesPostInit();
+
 		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.CRATE.getMeta()),
 				EntityMinecartCrateWooden::new);
 		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta()),
@@ -1022,5 +1045,11 @@ public class CommonProxy implements IGuiHandler
 	public static MachineUpgrade createMachineUpgrade(String name)
 	{
 		return new MachineUpgrade(new ResourceLocation(ImmersiveIntelligence.MODID, name), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name));
+	}
+
+	@Override
+	public void ticketsLoaded(List<Ticket> tickets, World world)
+	{
+
 	}
 }

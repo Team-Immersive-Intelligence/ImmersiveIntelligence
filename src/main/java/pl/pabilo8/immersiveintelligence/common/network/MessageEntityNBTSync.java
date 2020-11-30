@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 public class MessageEntityNBTSync implements IMessage
 {
@@ -63,7 +64,9 @@ public class MessageEntityNBTSync implements IMessage
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
 					Entity entity = world.getEntityByID(message.entityID);
-					if(entity instanceof EntityMachinegun)
+					if(entity instanceof EntityBullet)
+						((EntityBullet)entity).readEntityFromNBT(message.tag);
+					else if(entity instanceof EntityMachinegun)
 						((EntityMachinegun)entity).readEntityFromNBT(message.tag);
 				}
 			});

@@ -36,7 +36,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCasingType;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
@@ -45,8 +44,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -67,38 +64,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 
 	static
 	{
-		predicates.put(
-				stack -> stack.getItem() instanceof ItemIIBulletMagazine,
-				stack ->
-				{
-					if(!(stack.getSecond().getItem() instanceof ItemIIBullet))
-						return stack.getSecond();
-					IBulletCasingType casing = ItemIIBullet.getCasing(stack.getSecond());
-					boolean accepted = ItemIIBulletMagazine.matchesMagazine(stack.getFirst(), casing.getName());
-					if(accepted)
-					{
-						int bc = ItemIIBulletMagazine.getBulletCapactity(stack.getFirst());
-						NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(stack.getFirst()).getTagList("bullets", 10), bc);
-						for(int i = 0; i < bc; i += 1)
-						{
-							if(cartridge.get(i).isEmpty())
-							{
-								ItemStack n = stack.getSecond().copy();
-								n.setCount(1);
-								cartridge.set(i, n);
-								stack.getSecond().shrink(1);
-								ItemNBTHelper.getTag(stack.getFirst()).setTag("bullets", Utils.writeInventory(cartridge));
-								if(stack.getSecond().getCount() > 0)
-									return stack.getSecond();
-								else
-									return ItemStack.EMPTY;
-							}
-						}
-						return stack.getSecond();
-					}
-					else
-						return stack.getSecond();
-				});
+		// TODO: 30.10.2020 readd loading magazines
 		predicates.put(
 				stack -> stack.getItem() instanceof ItemBlockIEBase,
 				stack ->

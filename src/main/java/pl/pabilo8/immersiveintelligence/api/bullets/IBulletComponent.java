@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,11 +26,11 @@ public interface IBulletComponent
 	//Runs when a bullet is exploding
 	void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet);
 
-	//Penetration added by this component (0 - nothing added , 1 - add 1x penetration, 0.5 - add half the penetration)
-	float getPenetrationModifier(NBTTagCompound tag);
-
-	//Damage added by this component (0 - nothing added , 1 - add 1x damage, 0.5 - add half the damage)
-	float getDamageModifier(NBTTagCompound tag);
+	//Runs when a bullet hits an entity
+	default void onContact(float amount, NBTTagCompound tag, World world, Entity hit, EntityBullet bullet)
+	{
+		onExplosion(amount, tag, world, hit.getPosition(), bullet);
+	}
 
 	//Gets the component role
 	EnumComponentRole getRole();
@@ -47,8 +48,8 @@ public interface IBulletComponent
 		return false;
 	}
 
-	default int getTrailColour(NBTTagCompound nbt)
+	default void spawnParticleTrail(EntityBullet bullet, NBTTagCompound nbt)
 	{
-		return -1;
+
 	}
 }

@@ -1,118 +1,437 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import io.netty.buffer.ByteBuf;
+import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.SPacketSoundEffect;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer;
+import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer.MultipleTracerBuilder;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationHelper;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.*;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Pabilo8 on 30-08-2019.
  * Yes, I stole this one from Flan's Mod too! (Thanks Flan!)
  * Major update on 08-03-2020.
- * Also, I couldn't get the Immersive Engineering IEProjectile to work...
- * That's why I extend Entity
+ * Total rewrite on 31-10-2020, almost no old code left
  */
-public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
+@net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+public class EntityBullet extends Entity implements ILightProvider
 {
-	private static int fuse = 600; // Kill bullets after 30 seconds
-	public EntityLivingBase owner;
-	public ItemStack stack;
-	public String name;
-	public int colourCore = 0, colourPaint = 0, colourTrail = -1;
-	private float size = 0f, penetrationPower = 0f, mass = 0f;
-	@SideOnly(Side.CLIENT)
-	private boolean playedFlybySound;
+	public static final int MAX_TICKS = 600;
+	public static final float DRAG = 0.98f;
+	public static final float GRAVITY = 0.1f;
 
-	public EntityBullet(World world)
+	//For testing purposes
+	public static float DEV_SLOMO = 1f;
+	public static boolean DEV_DECAY = true;
+
+	public IBullet bulletCasing;
+	public IBulletCore bulletCore;
+	public EnumCoreTypes bulletCoreType;
+	public IBulletComponent[] components = new IBulletComponent[0];
+	public NBTTagCompound[] componentNBT = new NBTTagCompound[0];
+
+	private Entity shooter = null;
+
+	boolean isPainted = false;
+	//Set true only for artillery type bullets, forge can't give the mod unlimited tickets for each entity
+	boolean shouldLoadChunks = false;
+	//Additional motion variables, multiplied by force, that can decrease when the bullet hits an obstacle
+	public double baseMotionX = 0, baseMotionY = 0, baseMotionZ = 0;
+
+	public double gravityMotionY = 0;
+
+	/*
+	Paint color and fuse is -1 if not existant
+	Durability is
+	 */
+	public int paintColor = -1, fuse = -1, durability = 1;
+	/*
+	Penetration hardness is the base hardness the bullet core can penetrate
+	Base damage is density*initial damage (NOT MASS)
+	On hit, they are multiplied by core type bonuses, so a softpoint bullet has less penetration than an AP round, but has more damage vs unarmored targets
+	 */
+	public float penetrationHardness = 1, force = 1, baseDamage = 0, mass = 0;
+
+	ArrayList<Entity> hitEntities = new ArrayList<>();
+	ArrayList<BlockPos> hitPos = new ArrayList<>();
+
+	private boolean wasSynced;
+	private Ticket ticket = null;
+
+	public EntityBullet(World worldIn)
 	{
-		super(world);
-		setSize(0.5F, 0.5F);
-		stack = ItemIIBullet.getAmmoStack(1, "artillery_8bCal", "CoreSteel", "TNT", "", 1f);
+		super(worldIn);
+		hitEntities.add(this);
+		setSize(0.5f, 0.5f);
+		wasSynced = !worldIn.isRemote;
 	}
 
-	public EntityBullet(World world, double x, double y, double z, EntityLivingBase shooter, ItemStack stack)
+	/**
+	 * use $link{}
+	 */
+	public EntityBullet(World worldIn, ItemStack stack, double x, double y, double z, float force, double motionX, double motionY, double motionZ)
 	{
-		this(world);
-		owner = shooter;
-		this.stack = stack.copy();
-		setPosition(x, y, z);
-		setParams();
-		setEntityInvulnerable(false);
+		super(worldIn);
+
+		fromStack(stack);
+
+		this.setPosition(x, y, z);
+		this.force = force;
+		this.baseMotionX = motionX;
+		this.baseMotionY = motionY;
+		this.baseMotionZ = motionZ;
+		setMotion();
+
+		//Should not be called on client
+		if(!world.isRemote&&shouldLoadChunks)
+		{
+			ticket = ForgeChunkManager.requestTicket(ImmersiveIntelligence.INSTANCE, this.getEntityWorld(), Type.ENTITY);
+			if(ticket!=null)
+				ticket.bindEntity(this);
+		}
 	}
 
-
-	public float getSize()
+	public void setShooters(@Nonnull Entity shooter, Entity... others)
 	{
-		return size = ItemIIBullet.getCasing(this.stack).getSize();
+		this.shooter = shooter;
+		hitEntities.add(shooter);
+		hitEntities.addAll(Arrays.asList(others));
 	}
 
-	public void setFuse(int fuse)
+	public void setShootPos(BlockPos... others)
 	{
-		EntityBullet.fuse = fuse;
+		hitPos.addAll(Arrays.asList(others));
+	}
+
+	private void setMotion()
+	{
+		this.motionX = baseMotionX*DEV_SLOMO*force;
+		this.motionY = (baseMotionY*force+gravityMotionY)*DEV_SLOMO;
+		this.motionZ = baseMotionZ*DEV_SLOMO*force;
+	}
+
+	private void fromStack(ItemStack stack)
+	{
+		if(stack.getItem() instanceof IBullet)
+		{
+			bulletCasing = (IBullet)stack.getItem();
+			bulletCore = bulletCasing.getCore(stack);
+			bulletCoreType = bulletCasing.getCoreType(stack);
+			components = bulletCasing.getComponents(stack);
+			componentNBT = bulletCasing.getComponentsNBT(stack);
+			paintColor = bulletCasing.getPaintColor(stack);
+
+			refreshBullet();
+		}
+	}
+
+	private void refreshBullet()
+	{
+		penetrationHardness = bulletCore.getPenetrationHardness();
+		double compMass = 1d+Arrays.stream(components).mapToDouble(IBulletComponent::getDensity).sum();
+		compMass += bulletCore.getDensity();
+		baseDamage = (float)(bulletCasing.getDamage()*compMass*bulletCore.getDamageModifier());
+
+		shouldLoadChunks = bulletCasing.shouldLoadChunks();
+
+		mass = bulletCasing.getMass(bulletCore, components);
+
+		if(paintColor==-1)
+			isPainted = false;
+
+		setBulletSize();
+
 	}
 
 	@Override
-	protected void entityInit()
+	public void onUpdate()
 	{
+		super.onUpdate();
 
+		if(!world.isRemote&&ticksExisted==1)
+		{
+			if(this.shooter==null)
+				this.shooter = FakePlayerUtil.getFakePlayer(world);
+
+			NBTTagCompound nbt = new NBTTagCompound();
+			writeEntityToNBT(nbt);
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), Utils.targetPointFromEntity(this, 32));
+		}
+		else if(world.isRemote&&!wasSynced)
+			return;
+
+		if(world.isRemote)
+		{
+			prevRotationPitch = this.rotationPitch;
+			prevRotationYaw = this.rotationYaw;
+		}
+		else
+		{
+			if((!shouldLoadChunks&&ticksExisted > MAX_TICKS&&DEV_DECAY)||(posY < 0))
+			{
+				setDead();
+				return;
+			}
+		}
+
+		if(isDead)
+			return;
+
+
+		if(penetrationHardness==0)
+		{
+			baseMotionX = 0;
+			baseMotionY = 0;
+			baseMotionZ = 0;
+		}
+		else
+		{
+			// TODO: 21.11.2020 find a way of decreasing force, without making the bullet stop in midair
+			//current works, though
+			force *= DRAG;
+			gravityMotionY -= GRAVITY*this.mass*DEV_SLOMO;
+			setMotion();
+
+			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), this.getNextPositionVector())
+					.setAABB(this.getEntityBoundingBox().offset(this.getPositionVector().scale(-1)))
+					.setFilters(this.hitEntities, this.hitPos)
+					.volumetricTrace();
+
+			int i = 0;
+			penloop:
+			for(RayTraceResult hit : tracer.hits)
+			{
+				if(hit!=null)
+					switch(hit.typeOfHit)
+					{
+						case BLOCK:
+							BlockPos pos = hit.getBlockPos();
+							hitPos.add(pos);
+							if(!world.isRemote)
+							{
+								IPenetrationHandler penetrationHandler = PenetrationRegistry.getPenetrationHandler(world.getBlockState(pos));
+								PenMaterialTypes penType = penetrationHandler.getPenetrationType();
+								float pen = penetrationHardness*bulletCoreType.getPenMod(penType)*force;
+								float dmg = baseDamage*bulletCoreType.getDamageMod(penType)/4f;
+								float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
+								if(hardness < 0)
+									hardness = Integer.MAX_VALUE+hardness;
+
+								if(pen > hardness/penetrationHandler.getDensity())
+								{
+									if(!world.isRemote)
+										BulletHelper.dealBlockDamage(world, dmg, pos, penetrationHandler);
+									penetrationHardness *= ((hardness*1.5f)/pen);
+									force *= 0.85f;
+								}
+								else if(pen > 0)
+								{
+									if(!world.isRemote)
+									{
+										BulletHelper.dealBlockDamage(world, dmg*(hardness/penetrationHandler.getDensity()), pos, penetrationHandler);
+										if(fuse==-1)
+											performEffect();
+									}
+									stopAtPoint(hit);
+									penetrationHardness = 0;
+									break penloop;
+								}
+								else
+								{
+									//can't ricochet if penetrates multiple blocks
+									if(force > hardness&&penetrationHandler.getPenetrationType().canRicochetOff()&&i==0)
+										ricochet(hardness/2f, pos);
+									else
+									{
+										if(!world.isRemote)
+										{
+											if(fuse==-1)
+												performEffect();
+										}
+										stopAtPoint(hit);
+
+									}
+									break penloop;
+								}
+							}
+
+							break;
+						case ENTITY:
+							hitEntities.add(hit.entityHit);
+							//just to be sure
+							if(hit.entityHit!=null)
+							{
+								Entity e = hit.entityHit;
+								int armor = 0;
+								int toughness = 1;
+								if(e instanceof EntityLivingBase)
+								{
+									armor = MathHelper.floor(((EntityLivingBase)e).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue());
+									toughness += MathHelper.floor(((EntityLivingBase)e).getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+								}
+								PenMaterialTypes penType = (toughness > 0||armor > 0)?PenMaterialTypes.METAL: PenMaterialTypes.FLESH;
+								float pen = penetrationHardness*bulletCoreType.getPenMod(penType)*Math.min(force, 1.15f);
+								float dmg = baseDamage*bulletCoreType.getDamageMod(penType);
+
+								//overpenetration
+								if(pen > toughness*6f)
+								{
+									//armor not counted in
+									if(!world.isRemote)
+									{
+										BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/6f));
+										e.hurtResistantTime = 0;
+										e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), dmg);
+									}
+									penetrationHardness *= ((toughness*4f)/pen);
+									force *= 0.85f;
+								}
+								//penetration
+								else if(pen > 0)
+								{
+									if(!world.isRemote)
+									{
+										float depth = (pen-(toughness*6f))/pen;
+
+										BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/8f));
+										e.hurtResistantTime = 0;
+										e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), Math.max(dmg-(armor*depth), 0));
+										penetrationHardness = 0;
+										if(fuse==-1)
+											performEffect();
+									}
+									stopAtPoint(hit);
+									break penloop;
+								}
+								//underpenetration + ricochet
+								else
+								{
+									if(force > toughness*1.5f&&penType.canRicochetOff()&&i==0)
+									{
+										ricochet(toughness/2f, hit.getBlockPos());
+										hitEntities.add(hit.entityHit);
+									}
+									else if(!world.isRemote)
+									{
+										if(fuse==-1)
+											performEffect();
+									}
+									stopAtPoint(hit);
+									break penloop;
+								}
+
+
+							}
+							break;
+					}
+				i += 1;
+
+			}
+		}
+
+		if(fuse!=-1&&ticksExisted > fuse)
+		{
+			performEffect();
+			return;
+		}
+
+		setMotion();
+		posX += motionX;
+		posY += motionY;
+		posZ += motionZ;
+		setPosition(posX, posY, posZ);
+
+		if(world.isRemote)
+		{
+			if(penetrationHardness!=0)
+			{
+				float motionXZ = MathHelper.sqrt(baseMotionX*baseMotionX+baseMotionZ*baseMotionZ);
+				this.rotationYaw = (float)((Math.atan2(baseMotionX, baseMotionZ)*180D)/3.1415927410125732D);
+				this.rotationPitch = -(float)((Math.atan2(baseMotionY, motionXZ)*180D)/3.1415927410125732D);
+
+				for(int j = 0; j < components.length; j++)
+				{
+					IBulletComponent c = components[j];
+					if(c.hasTrail())
+						c.spawnParticleTrail(this, componentNBT[j]);
+				}
+			}
+		}
+		else
+			ForgeChunkManager.forceChunk(this.ticket, this.world.getChunkFromBlockCoords(this.getPosition()).getPos());
 	}
 
-	private void setParams()
+	private void stopAtPoint(RayTraceResult hit)
 	{
-		if(!stack.isEmpty()&&stack.getItem() instanceof ItemIIBullet)
-		{
-			this.mass = ItemIIBullet.getMass(stack);
+		gravityMotionY = 0;
+		penetrationHardness = 0;
+		baseMotionX = 0;
+		baseMotionY = 0;
+		baseMotionZ = 0;
+	}
 
-			float first_pen = 0f, second_pen = 0f, core_pen = 0f;
-			penetrationPower = ItemIIBullet.getCasing(stack).getPenetration();
-			if(ItemIIBullet.hasCore(stack))
-				core_pen = ItemIIBullet.getCore(stack).getPenetrationModifier(new NBTTagCompound());
-			if(ItemIIBullet.hasFirstComponent(stack))
-				first_pen = ItemIIBullet.getFirstComponent(stack).getPenetrationModifier(ItemIIBullet.getFirstComponentNBT(stack));
-			if(ItemIIBullet.hasSecondComponent(stack))
-				second_pen = ItemIIBullet.getSecondComponent(stack).getPenetrationModifier(ItemIIBullet.getSecondComponentNBT(stack));
-			penetrationPower = core_pen+first_pen+second_pen;
-			penetrationPower *= ItemIIBullet.getCasing(stack).getPenetration();
-			size = ItemIIBullet.getCasing(stack).getSize();
-			name = ItemIIBullet.getCasing(stack).getName();
-			colourCore = ItemIIBullet.getCore(stack).getColour();
-			colourPaint = ItemIIBullet.getColour(stack);
-			colourTrail = ItemIIBullet.getTrailColour(stack);
-			this.setSize(.625f*size, .625f*size);
+	private void ricochet(float force, BlockPos currentPos)
+	{
+		this.force = force;
+		baseMotionX *= -1;
+		baseMotionY *= -1;
+		hitEntities.clear();
+		hitEntities.add(this);
+		hitPos.clear();
+		hitPos.add(currentPos);
+	}
+
+	private void performEffect()
+	{
+		float str = bulletCasing.getComponentCapacity()*bulletCore.getExplosionModifier()*bulletCoreType.getComponentEffectivenessMod();
+		for(int i = 0; i < components.length; i++)
+		{
+			components[i].onExplosion(str, componentNBT[i], world, this.getPosition(), this);
 		}
+		setDead();
+	}
+
+	public Vec3d getNextPositionVector()
+	{
+		return getPositionVector().addVector(motionX, motionY, motionZ);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void onUpdateClient()
+	{
+		//TODO: Play flyby sound
 	}
 
 	@Override
@@ -122,385 +441,83 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 	}
 
 	@Override
-	public void setVelocity(double d, double d1, double d2)
+	protected void entityInit()
 	{
-		motionX = d;
-		motionY = d1;
-		motionZ = d2;
-		if(prevRotationPitch==0.0F&&prevRotationYaw==0.0F)
-		{
-			float f = MathHelper.sqrt(d*d+d2*d2);
-			prevRotationYaw = rotationYaw = (float)((Math.atan2(d, d2)*180D)/3.1415927410125732D);
-			prevRotationPitch = rotationPitch = (float)((Math.atan2(d1, f)*180D)/3.1415927410125732D);
-			setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-		}
+
 	}
 
 	@Override
-	public void onUpdate()
+	public void readEntityFromNBT(NBTTagCompound compound)
 	{
-		super.onUpdate();
-
-		if(ticksExisted > fuse)
+		if(compound.hasKey("basemotion_x"))
 		{
-			setDead();
+			this.baseMotionX = compound.getDouble("basemotion_x");
+			this.baseMotionY = compound.getDouble("basemotion_y");
+			this.baseMotionZ = compound.getDouble("basemotion_z");
+			this.force = compound.getFloat("force");
 		}
 
-		if(isDead)
-			return;
+		if(compound.hasKey("casing"))
+			this.bulletCasing = BulletRegistry.INSTANCE.getCasing(compound.getString("casing"));
+		if(compound.hasKey("core"))
+			this.bulletCore = BulletRegistry.INSTANCE.getCore(compound.getString("core"));
+		if(compound.hasKey("core_type"))
+			this.bulletCoreType = EnumCoreTypes.v(compound.getString("core_type"));
+
+		if(compound.hasKey("components"))
+		{
+			ArrayList<IBulletComponent> arrayList = new ArrayList<>();
+			NBTTagList components = (NBTTagList)compound.getTag("components");
+			for(int i = 0; i < components.tagCount(); i++)
+				arrayList.add(BulletRegistry.INSTANCE.getComponent(components.getStringTagAt(i)));
+			this.components = arrayList.toArray(new IBulletComponent[0]);
+		}
+
+		if(compound.hasKey("component_nbt"))
+		{
+			ArrayList<NBTTagCompound> arrayList = new ArrayList<>();
+			NBTTagList components = (NBTTagList)compound.getTag("component_nbt");
+			for(int i = 0; i < components.tagCount(); i++)
+				arrayList.add(components.getCompoundTagAt(i));
+			this.componentNBT = arrayList.toArray(new NBTTagCompound[0]);
+		}
+
+		if(compound.hasKey("paint_color"))
+			this.paintColor = compound.getInteger("paint_color");
+
+		refreshBullet();
 
 		if(world.isRemote)
-			onUpdateClient();
-
-		boolean canMove = true;
-
-
-		Vec3d currentPos = new Vec3d(this.posX, this.posY, this.posZ);
-		Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
-		RayTraceResult mop = this.world.rayTraceBlocks(currentPos, nextPos, false, true, false);
-
-		if(mop==null||mop.entityHit==null)
 		{
-			Entity entity = null;
-			List list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1), Entity::canBeCollidedWith);
-			double d0 = 0.0D;
-			for(int i = 0; i < list.size(); ++i)
-			{
-				Entity entity1 = (Entity)list.get(i);
-				if(entity1.canBeCollidedWith()&&(this.ticksExisted > 1))
-				{
-					float f = 0.3F;
-					AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow(f, f, f);
-					RayTraceResult movingobjectposition1 = axisalignedbb.calculateIntercept(currentPos, nextPos);
-
-					if(movingobjectposition1!=null)
-					{
-						double d1 = currentPos.distanceTo(movingobjectposition1.hitVec);
-						if(d1 < d0||d0==0.0D)
-						{
-							entity = entity1;
-							d0 = d1;
-						}
-					}
-				}
-			}
-			if(entity!=null)
-				mop = new RayTraceResult(entity);
-		}
-
-		if(mop!=null)
-		{
-			if(onImpact(mop))
-			{
-				setDead();
-			}
-		}
-
-		// Movement dampening variables
-		float drag = 0.99F;
-		float gravity_part = 0.02F;
-		// If the stack is in water, spawn particles and increase the drag
-		if(isInWater())
-		{
-			for(int i = 0; i < 4; i++)
-			{
-				float bubbleMotion = 0.25F;
-				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX-motionX*bubbleMotion,
-						posY-motionY*bubbleMotion, posZ-motionZ*bubbleMotion, motionX, motionY, motionZ);
-			}
-			drag = 0.8F;
-		}
-		motionX *= drag;
-		motionY *= drag;
-		motionZ *= drag;
-		//The higher the velocity, the lower the penetration loss
-		//Penetrating up is harder than down
-		penetrationPower *= 0.95*(motionY > 0?-1: 1);
-		motionY -= gravity_part*this.mass;
-
-		if(colourTrail!=-1)
-		{
-			float[] colors = Utils.rgbIntToRGB(colourTrail);
-			ImmersiveEngineering.proxy.spawnRedstoneFX(world, posX, posY, posZ, 0, 0, 0, size*4, colors[0], colors[1], colors[2]);
-		}
-
-		// Apply motion
-		if(canMove)
-		{
-			posX += motionX;
-			posY += motionY;
-			posZ += motionZ;
-		}
-
-		setPosition(posX, posY, posZ);
-
-		// Recalculate the angles from the new motion
-		float motionXZ = MathHelper.sqrt(motionX*motionX+motionZ*motionZ);
-		rotationYaw = (float)((Math.atan2(motionX, motionZ)*180D)/3.1415927410125732D);
-		rotationPitch = (float)((Math.atan2(motionY, motionXZ)*180D)/3.1415927410125732D);
-
-		rotationPitch = prevRotationPitch+(rotationPitch-prevRotationPitch)*0.2F;
-		rotationYaw = prevRotationYaw+(rotationYaw-prevRotationYaw)*0.2F;
-
-		// Temporary fire glitch fix
-		if(world.isRemote)
-			extinguish();
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void onUpdateClient()
-	{
-		if(getDistanceSq(ClientUtils.mc().player.getPosition()) < size*15&&!playedFlybySound)
-		{
-			playedFlybySound = true;
-			//TODO: Play flyby sound
+			wasSynced = true;
+			bulletCasing.doPuff(this);
 		}
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound tag)
+	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
-		tag.setTag("stack", stack.serializeNBT());
-		if(owner==null)
-			tag.setString("owner", "null");
-		else
-			tag.setString("owner", owner.getName());
-		tag.setString("name", name);
-		tag.setInteger("colourCore", colourCore);
-		tag.setInteger("colourPaint", colourPaint);
-	}
+		compound.setString("casing", bulletCasing.getName());
+		compound.setString("core", bulletCore.getName());
+		compound.setString("core_type", bulletCoreType.getName());
 
-	@Override
-	public void readEntityFromNBT(NBTTagCompound tag)
-	{
-		String ownerName = tag.getString("owner");
-		if(tag.hasKey("stack"))
-			stack = new ItemStack(tag.getCompoundTag("stack"));
-		if(ownerName!=null&&!ownerName.equals("null"))
-			owner = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(ownerName);
-		name = tag.getString("name");
-		colourCore = tag.getInteger("colourCore");
-		colourPaint = tag.getInteger("colourPaint");
-	}
+		NBTTagList tagList = new NBTTagList();
+		Arrays.stream(components).map(IBulletComponent::getName).map(NBTTagString::new).forEachOrdered(tagList::appendTag);
+		if(tagList.tagCount() > 0)
+			compound.setTag("components", tagList);
 
-	@Override
-	public void writeSpawnData(ByteBuf data)
-	{
-		setParams();
-		data.writeDouble(motionX);
-		data.writeDouble(motionY);
-		data.writeDouble(motionZ);
-		ByteBufUtils.writeItemStack(data, stack);
-		if(owner==null)
-			ByteBufUtils.writeUTF8String(data, "null");
-		else
-			ByteBufUtils.writeUTF8String(data, owner.getName());
+		tagList = new NBTTagList();
+		Arrays.stream(componentNBT).forEachOrdered(tagList::appendTag);
+		if(tagList.tagCount() > 0)
+			compound.setTag("component_nbt", tagList);
 
-		ByteBufUtils.writeUTF8String(data, name);
-		data.writeInt(colourCore);
-		data.writeInt(colourPaint);
-	}
+		compound.setInteger("paint_color", paintColor);
 
-	@Override
-	public void readSpawnData(ByteBuf data)
-	{
-		try
-		{
-			motionX = data.readDouble();
-			motionY = data.readDouble();
-			motionZ = data.readDouble();
-			stack = ByteBufUtils.readItemStack(data);
-			String name = ByteBufUtils.readUTF8String(data);
-			for(Object obj : world.loadedEntityList)
-			{
-				if(obj!=null&&((Entity)obj).getName().equals(name))
-				{
-					owner = (EntityLivingBase)obj;
-					break;
-				}
-			}
-			this.name = ByteBufUtils.readUTF8String(data);
-			colourCore = data.readInt();
-			colourPaint = data.readInt();
+		compound.setDouble("basemotion_x", this.baseMotionX);
+		compound.setDouble("basemotion_y", this.baseMotionY);
+		compound.setDouble("basemotion_z", this.baseMotionZ);
+		compound.setFloat("force", this.force);
 
-			if(world.isRemote)
-				ItemIIBullet.getCasing(stack).doPuff(this);
-		} catch(Exception e)
-		{
-			super.setDead();
-		}
-	}
-
-	@Override
-	public boolean isBurning()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canBePushed()
-	{
-		return false;
-	}
-
-	public boolean onImpact(RayTraceResult mop)
-	{
-		if(!this.world.isRemote&&!stack.isEmpty()&&stack.getItem() instanceof ItemIIBullet)
-		{
-			//Simulate the penetration
-
-			if(this.penetrationPower > 0)
-			{
-				if(mop.typeOfHit==Type.BLOCK)
-				{
-					BlockPos pos = mop.getBlockPos();
-					IPenetrationHandler pen = null;
-					for(Entry<Predicate<IBlockState>, IPenetrationHandler> e : PenetrationRegistry.registeredBlocks.entrySet())
-					{
-						if(e.getKey().test(world.getBlockState(pos)))
-						{
-							pen = e.getValue();
-							break;
-						}
-					}
-					if(pen==null)
-					{
-						for(Entry<Predicate<Material>, IPenetrationHandler> e : PenetrationRegistry.registeredMaterials.entrySet())
-						{
-							if(e.getKey().test(world.getBlockState(pos).getMaterial()))
-							{
-								pen = e.getValue();
-								break;
-							}
-						}
-					}
-
-					float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
-					float density = pen.getDensity();
-					float width = 1;
-
-					AxisAlignedBB aabb = world.getBlockState(pos).getBoundingBox(world, pos);
-					switch(EnumFacing.getFacingFromVector((float)motionX, (float)motionY, (float)motionZ))
-					{
-						case NORTH:
-						case SOUTH:
-							width = (float)Math.abs(aabb.maxX-aabb.minX);
-							break;
-						case EAST:
-						case WEST:
-							width = (float)Math.abs(aabb.maxZ-aabb.minZ);
-							break;
-						case UP:
-						case DOWN:
-							width = (float)Math.abs(aabb.maxY-aabb.minY);
-							break;
-					}
-
-
-					float hp = pen.getIntegrity()/pen.getDensity();
-
-					boolean done = false;
-					DamageBlockPos blockHitPos = new DamageBlockPos(pos, world, hp);
-					for(DamageBlockPos p : PenetrationRegistry.blockDamage)
-					{
-						if(p.equals(blockHitPos))
-						{
-							blockHitPos = p;
-							hp = p.damage;
-							done = true;
-							break;
-						}
-					}
-					if(!done)
-						PenetrationRegistry.blockDamage.add(blockHitPos);
-
-					float penFraction = penetrationPower/(hardness*width*density);
-
-					//Over Penetration
-					if(penFraction > 1)
-					{
-
-						PenetrationHelper.dealBlockDamage(world, size*50, blockHitPos, hp, pen);
-						penetrationPower -= hardness*width*density;
-						float supressionRadius = ItemIIBullet.getCasing(stack).getSupressionRadius();
-						int suppressionPower = ItemIIBullet.getCasing(stack).getSuppressionPower();
-						PenetrationHelper.supress(world, posX, posY, posZ, supressionRadius*(1f-penFraction), suppressionPower);
-						playHitSound(HitEffect.PENETRATION, world, pos, pen);
-
-					}
-					//Ricochet
-					else if(penetrationPower > 0.01f&&penFraction < 0.125f&&density >= 1f)
-					{
-						penetrationPower = 0.01f;
-
-						motionX *= -0.125f;
-						motionZ *= -0.125f;
-						motionY *= -0.25f;
-						double newPitch = (90-Math.abs(rotationPitch));
-
-						if(rotationPitch < 0)
-							rotationPitch -= 2*newPitch;
-						else if(rotationPitch > 0)
-							rotationPitch += 2*newPitch;
-
-						float supressionRadius = ItemIIBullet.getCasing(stack).getSupressionRadius();
-						int suppressionPower = ItemIIBullet.getCasing(stack).getSuppressionPower();
-						PenetrationHelper.supress(world, posX, posY, posZ, supressionRadius, suppressionPower);
-
-						playHitSound(HitEffect.PARTIAL_PENETRATION, world, pos, pen);
-						//TODO: Ricochet Sound
-
-					}
-					//Regular Penetration
-					else
-					{
-						PenetrationHelper.dealBlockDamage(world, size*penFraction*50, blockHitPos, hp, pen);
-						playHitSound(HitEffect.PENETRATION, world, pos, pen);
-						penetrationPower = 0;
-					}
-
-				}
-
-				if(mop.entityHit!=null)
-				{
-					boolean headshot = false;
-
-					float core_damage = ItemIIBullet.getCasing(stack).getDamage()*(ItemIIBullet.hasCore(stack)?ItemIIBullet.getCore(stack).getDamageModifier(null): 1f);
-					float first_dmg = ItemIIBullet.hasFirstComponent(stack)?ItemIIBullet.getFirstComponent(stack).getDamageModifier(ItemIIBullet.getFirstComponentNBT(stack)): 0f;
-					float second_dmg = ItemIIBullet.hasSecondComponent(stack)?ItemIIBullet.getSecondComponent(stack).getDamageModifier(ItemIIBullet.getSecondComponentNBT(stack)): 0f;
-
-					if(mop.entityHit instanceof EntityLivingBase)
-					{
-						headshot = blusunrize.immersiveengineering.common.util.Utils.isVecInEntityHead((EntityLivingBase)mop.entityHit, new Vec3d(posX, posY, posZ));
-
-						IAttributeInstance armor = ((EntityLivingBase)mop.entityHit).getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS);
-						PenetrationHelper.breakArmour(mop.entityHit, (int)Math.ceil((core_damage*0.125f)/armor.getAttributeValue()));
-
-					}
-
-					float damage = (float)(core_damage*(1+first_dmg+second_dmg)*(headshot?1.25: 1));
-
-					if(mop.entityHit.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.owner), damage))
-						mop.entityHit.hurtResistantTime = 0;
-					Vec3d nextPos = new Vec3d(this.posX+this.motionX, this.posY+this.motionY, this.posZ+this.motionZ);
-
-
-					penetrationPower = Math.max(0f, penetrationPower-damage/3f);
-					moveToBlockPosAndAngles(new BlockPos(nextPos), rotationYaw, rotationPitch);
-				}
-			}
-			if(penetrationPower <= 0)
-			{
-				if(ItemIIBullet.hasFirstComponent(stack))
-					ItemIIBullet.getFirstComponent(stack).onExplosion(ItemIIBullet.getCore(stack).getExplosionModifier()*ItemIIBullet.getCasing(stack).getComponentCapacity()*ItemIIBullet.getFirstComponentQuantity(stack), ItemIIBullet.getFirstComponentNBT(stack), world, getPosition(), this);
-				if(ItemIIBullet.hasSecondComponent(stack))
-				{
-					ItemIIBullet.getSecondComponent(stack).onExplosion(ItemIIBullet.getCore(stack).getExplosionModifier()*ItemIIBullet.getCasing(stack).getComponentCapacity()*ItemIIBullet.getSecondComponentQuantity(stack), ItemIIBullet.getSecondComponentNBT(stack), world, getPosition(), this);
-				}
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private void playHitSound(HitEffect effect, World world, BlockPos pos, IPenetrationHandler handler)
@@ -513,5 +530,34 @@ public class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 			event = effect==HitEffect.PENETRATION?type.getBreakSound(): type.getStepSound();
 		}
 		world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, posX, posY, posZ, 24D, this.world.provider.getDimension(), new SPacketSoundEffect(event, SoundCategory.BLOCKS, posX, posY, posZ, 1f, 1f));
+	}
+
+	public Vec3d getBaseMotion()
+	{
+		return new Vec3d(baseMotionX, baseMotionY, baseMotionZ);
+	}
+
+	private void setBulletSize()
+	{
+		float cal = bulletCasing.getCaliber();
+		this.width = cal;
+		this.height = cal;
+		cal *= 16f;
+		setEntityBoundingBox(new AxisAlignedBB(-cal, -cal, -cal, cal, cal, cal));
+	}
+
+	@Override
+	public Light provideLight()
+	{
+		if(this.wasSynced)
+			for(int j = 0; j < components.length; j++)
+			{
+				IBulletComponent c = components[j];
+				if(c.hasTrail())
+				{
+					return Light.builder().pos(this).radius(bulletCasing.getComponentCapacity()*16f).color(c.getNBTColour(componentNBT[j]), false).build();
+				}
+			}
+		return null;
 	}
 }

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
@@ -29,18 +30,21 @@ public class BulletRenderer extends Render<EntityBullet>
 
 		GlStateManager.pushMatrix();
 
-		float size = 1;
-		if(!entity.stack.isEmpty())
-			size = entity.getSize();
+		double yy, pp;
+		yy = entity.prevRotationYaw+((entity.rotationYaw-entity.prevRotationYaw)*partialTicks);
+		pp = entity.prevRotationPitch+((entity.prevRotationPitch-entity.prevRotationPitch)*partialTicks);
 
-		GlStateManager.translate(x, y+0.25, z);
-		GlStateManager.rotate(entityYaw, 0.0F, 1.0F, 0.0F);
-		GlStateManager.rotate(90+entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+		GlStateManager.translate(x, y, z);
+		GlStateManager.rotate((float)yy, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate((float)(90+pp), 1.0F, 0.0F, 0.0F);
 
-		GlStateManager.scale(size, size, size);
+		if(entity.bulletCasing!=null)
+		{
+			int coreColor = entity.bulletCore.getColour();
+			IBulletModel model = BulletRegistry.INSTANCE.registeredModels.get(entity.bulletCasing.getName());
 
-		if(entity.name!=null)
-			BulletRegistry.INSTANCE.registeredModels.get(entity.name).renderBullet(entity.colourCore, entity.colourPaint);
+			model.renderBulletUsed(coreColor, entity.bulletCoreType, entity.paintColor);
+		}
 
 		GlStateManager.popMatrix();
 

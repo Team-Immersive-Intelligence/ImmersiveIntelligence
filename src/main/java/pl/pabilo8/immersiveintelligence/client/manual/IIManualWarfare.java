@@ -7,7 +7,7 @@ import blusunrize.lib.manual.ManualPages.Crafting;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCoreType;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
@@ -47,7 +47,7 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ArrayList<ManualPages> bullet_cores = new ArrayList<>();
-		for(Entry<String, IBulletCoreType> entry : BulletRegistry.INSTANCE.registeredBulletCores.entrySet())
+		for(Entry<String, IBulletCore> entry : BulletRegistry.INSTANCE.registeredBulletCores.entrySet())
 		{
 			if(!entry.getValue().getMaterial().getExampleStack().isEmpty())
 				bullet_cores.add(new BulletCoreDisplay(ManualHelper.getManual(), entry.getValue()));

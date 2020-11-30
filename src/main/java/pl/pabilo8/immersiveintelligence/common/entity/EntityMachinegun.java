@@ -38,6 +38,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
@@ -46,7 +48,6 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
@@ -756,15 +757,15 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		if(stack.isEmpty())
 			return false;
-		EntityBullet a = new EntityBullet(world, posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z), (EntityLivingBase)getPassengers().get(0), stack);
-		//blocks per tick
-		float distance = 6.0f;
-		a.motionX = distance*(gun_end.x);
-		a.motionY = distance*(gun_end.y);
-		a.motionZ = distance*(gun_end.z);
-		a.world.spawnEntity(a);
 
-		ItemStack stack2 = ItemIIBullet.getCasing(stack).getStack(1);
+		//blocks per tick
+		float distance = 4f;
+		Vec3d vpos = new Vec3d(posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z));
+		EntityBullet b = BulletHelper.createBullet(world, stack, vpos, gun_end, distance);
+		b.setShooters(getPassengers().get(0), this);
+		world.spawnEntity(b);
+
+		ItemStack stack2 = ((IBullet)stack.getItem()).getCasingStack(1);
 		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
 
 		if(!world.isRemote)

@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeCrateConversion;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -213,10 +214,10 @@ public class IIRecipes
 
 	public static void addBulletPressRecipes()
 	{
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_artillery), new IngredientStack("ingotBrass", 4), Utils.getStackWithMetaName(CommonProxy.item_mold, "howitzer"), 2800);
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_grenade), new IngredientStack("nuggetBrass", 5), Utils.getStackWithMetaName(CommonProxy.item_mold, "grenade"), 1800);
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_machinegun, 3), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(CommonProxy.item_mold, "machinegun"), 1600);
-		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_casing_submachinegun, 6), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(CommonProxy.item_mold, "submachinegun"), 1200);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_ammo_artillery, 1, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass", 4), Utils.getStackWithMetaName(CommonProxy.item_mold, "howitzer"), 2800);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_grenade, 1, ItemIIBulletBase.CASING), new IngredientStack("nuggetBrass", 5), Utils.getStackWithMetaName(CommonProxy.item_mold, "grenade"), 1800);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_ammo_machinegun, 3, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(CommonProxy.item_mold, "machinegun"), 1600);
+		MetalPressRecipe.addRecipe(new ItemStack(CommonProxy.item_ammo_submachinegun, 6, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(CommonProxy.item_mold, "submachinegun"), 1200);
 
 		MetalPressRecipe.removeRecipes(new ItemStack(IEContent.itemBullet, 2, 0));
 		MetalPressRecipe.addRecipe(new ItemStack(IEContent.itemBullet, 2, 0), "ingotBrass", new ItemStack(IEContent.itemMold, 1, 3), 2800);

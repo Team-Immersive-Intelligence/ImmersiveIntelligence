@@ -147,7 +147,6 @@ public class MultiblockConveyorScanner implements IMultiblock
 	public ItemStack[][][] getStructureManual()
 	{
 		//h w l
-		structure[1][0][0]=ConveyorHandler.getConveyorStack(ImmersiveEngineering.MODID+":covered");
 		return structure;
 	}
 

@@ -1,24 +1,25 @@
 package pl.pabilo8.immersiveintelligence.common.util.commands.tmt;
 
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -43,7 +44,7 @@ public class CommandIIGiveBullet extends CommandBase
 	@Override
 	public String getUsage(@Nonnull ICommandSender sender)
 	{
-		return "Gives a bullet, usage: ii bullet <receiver> <casing> <core> <comp1> <comp2> <prop> [amount1] [amount2] [nbt1] [nbt2]";
+		return "Gives a bullet, usage: ii bullet <receiver> <casing> <core> <coreType> [comps]";
 	}
 
 	/**
@@ -52,42 +53,20 @@ public class CommandIIGiveBullet extends CommandBase
 	@Override
 	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
 	{
-		if(args.length > 5)
+		if(args.length > 3)
 		{
-			float p1 = Float.parseFloat(args[5]);
-			NBTTagCompound tag1 = new NBTTagCompound(), tag2 = new NBTTagCompound();
-			float amount1 = 1f, amount2 = 1f;
-
-			if(args.length > 6)
-				amount1 = (float)CommandBase.parseDouble(args[6]);
-			if(args.length > 7)
-				amount1 = (float)CommandBase.parseDouble(args[7]);
-
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			ItemStack bullet = ItemIIBullet.getAmmoStack(1, args[1], args[2], args[3], args[4], p1, amount1, amount2);
+			IBullet casing = BulletRegistry.INSTANCE.getCasing(args[1]);
+			IBulletCore core = BulletRegistry.INSTANCE.getCore(args[2]);
+			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
+			ArrayList<IBulletComponent> components = new ArrayList<>();
+			for(int i = 4; i < args.length; i++)
+				components.add(BulletRegistry.INSTANCE.getComponent(args[i]));
 
-			if(args.length > 8)
-			{
-				try
-				{
-					ItemNBTHelper.setTagCompound(bullet, "firstComponentNBT", JsonToNBT.getTagFromJson(args[8]));
-				} catch(NBTException nbtexception)
-				{
-					throw new CommandException("Incorrect bullet1 NBT");
-				}
-			}
-			if(args.length > 9)
-			{
-				try
-				{
-					ItemNBTHelper.setTagCompound(bullet, "secondComponentNBT", JsonToNBT.getTagFromJson(args[9]));
-				} catch(NBTException nbtexception)
-				{
-					throw new CommandException("Incorrect bullet2 NBT");
-				}
-			}
-
-			player.addItemStackToInventory(bullet);
+			if(casing!=null&&core!=null)
+				player.addItemStackToInventory(casing.getBulletWithParams(core, coreType, components.toArray(new IBulletComponent[0])));
+			else
+				throw new WrongUsageException(getUsage(sender));
 		}
 		else
 			throw new WrongUsageException(getUsage(sender));
@@ -120,7 +99,11 @@ public class CommandIIGiveBullet extends CommandBase
 		{
 			return getListOfStringsMatchingLastWord(args, BulletRegistry.INSTANCE.registeredBulletCores.keySet());
 		}
-		else if(args.length==4||args.length==5)
+		else if(args.length==4)
+		{
+			return getListOfStringsMatchingLastWord(args, Arrays.stream(EnumCoreTypes.values()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
+		}
+		else if(args.length > 4)
 		{
 			return getListOfStringsMatchingLastWord(args, BulletRegistry.INSTANCE.registeredComponents.keySet());
 		}

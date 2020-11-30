@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.model.armor;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -349,6 +348,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 
 	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, float scale, float ageInTicks)
 	{
+		/*
 		if(renderSlot==EntityEquipmentSlot.CHEST)
 		{
 			float pt = Math.abs((((ageInTicks+Minecraft.getMinecraft().getRenderPartialTicks())%160)/160f)-0.5f)/.5f;
@@ -356,6 +356,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 				mod.rotateAngleX = 0.0625f+(pt*0.125f);
 			renderChild(this.bipedBody, capeModel, scale);
 		}
+		 */
 	}
 
 	//yes, a bit weird mix of static and non-static methods here indeed

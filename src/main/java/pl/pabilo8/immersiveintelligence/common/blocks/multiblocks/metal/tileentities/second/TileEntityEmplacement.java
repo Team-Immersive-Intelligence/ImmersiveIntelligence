@@ -3,30 +3,56 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileent
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponAutocannon;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Optional;
 
 public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice
 {
 	public boolean isDoorOpened = false;
 	public int progress = 0;
 	public EmplacementWeapon currentWeapon = new EmplacementWeaponAutocannon();
+	BlockPos[] allBlocks = null;
+	static ItemStack s2;
+
+	static
+	{
+		s2 = CommonProxy.item_ammo_autocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
+		NBTTagCompound compound = new NBTTagCompound();
+		compound.setInteger("colour", 0xff0000);
+		((NBTTagList)ItemNBTHelper.getTag(s2).getTag("component_nbt")).set(1, new NBTTagCompound());
+	}
+
+//s2 = CommonProxy.item_ammo_autocannon.getBulletWithParams("core_pabilium", "piercing", "tnt");
 
 	public TileEntityEmplacement()
 	{
@@ -62,7 +88,33 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				{
 					currentWeapon.tick();
 					//currentWeapon.reloadFrom(this);
-					currentWeapon.aimAt(-5, 25);
+					Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(60f).expand(0, 40, 0), input -> input instanceof EntityDragon).stream().findFirst();
+					if(first.isPresent())
+					{
+						float force = 20.5f;
+						float mass = 0.4f;
+						BlockPos tpos = getBlockPosForPos(49).up(1);
+						Vec3d vv = new Vec3d(tpos).subtract(first.get().getPositionVector().addVector(-first.get().width/2f, first.get().height/2f, -first.get().width/2f));
+						float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
+						Vec3d motionVec = new Vec3d(first.get().motionX, first.get().motionY, first.get().motionZ).scale(2f).addVector(0, 0, 0f);
+						vv = vv.add(motionVec).normalize();
+						float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
+						float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
+						pp = MathHelper.clamp(pp, -90, 75);
+
+						currentWeapon.aimAt(pp, yy);
+
+						if(!world.isRemote)
+							if(currentWeapon.isAimedAt(pp, yy)&&world.getTotalWorldTime()%3==0)
+							{
+								world.playSound(null, tpos.getX(), tpos.getY(), tpos.getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
+								EntityBullet a = BulletHelper.createBullet(world, s2, new Vec3d(tpos), vv.scale(-1f), force);
+								a.setShootPos(getAllBlocks());
+								world.spawnEntity(a);
+							}
+					}
+					else
+						currentWeapon.aimAt(currentWeapon.pitch, currentWeapon.yaw);
 				}
 			}
 		}
@@ -75,6 +127,24 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		}
 
+	}
+
+	private BlockPos[] getAllBlocks()
+	{
+		TileEntityEmplacement master = master();
+		if(master==this||master==null)
+		{
+			if(allBlocks==null)
+			{
+				ArrayList<BlockPos> pp = new ArrayList<>();
+				for(int i = 0; i < structureDimensions[0]*structureDimensions[1]*structureDimensions[2]; i++)
+					pp.add(getBlockPosForPos(i));
+				allBlocks = pp.toArray(new BlockPos[0]);
+			}
+			return allBlocks;
+		}
+		else
+			return master.getAllBlocks();
 	}
 
 	@Override
@@ -327,9 +397,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			nextPitch = pitch;
 			nextYaw = yaw;
 			float p = pitch-this.pitch;
-			this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1);
+			this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.pitchTurnSpeed);
 			float y = yaw-this.yaw;
-			this.yaw += Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1);
+			this.yaw += Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.yawTurnSpeed);
 			this.pitch = this.pitch%180;
 			this.yaw = this.yaw%360;
 
@@ -368,7 +438,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		public boolean isShooting()
 		{
-			return shootDelay > 0;
+			return isAimedAt(nextPitch, nextYaw);
 		}
 
 		/**

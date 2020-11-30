@@ -190,7 +190,6 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void connectCable(WireType cableType, TargetingInfo target, IImmersiveConnectable other)
 	{
-		ImmersiveIntelligence.logger.info("Trying to connect "+cableType.toString());
 		if(Objects.equals(cableType.getCategory(), WireType.REDSTONE.getCategory())&& this.limitType==null)
 		{
 			RedstoneWireNetwork.updateConnectors(pos, world, redstoneNetwork);

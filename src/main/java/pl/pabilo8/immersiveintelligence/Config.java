@@ -2,11 +2,19 @@ package pl.pabilo8.immersiveintelligence;
 
 import blusunrize.immersiveengineering.common.Config.Mapped;
 import blusunrize.immersiveengineering.common.Config.SubConfig;
+import com.google.common.collect.Maps;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.RangeDouble;
+import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
+
+import java.util.Map;
 
 /**
  * @author Pabilo8
@@ -35,6 +43,9 @@ public class Config
 		public static Wires wires;
 		@SubConfig
 		public static Vehicles vehicles;
+
+		@Comment({"A list of all mods that IEn has integrated compatability for", "Setting any of these to false disables the respective compat"})
+		public static Map<String, Boolean> compat = Maps.newHashMap(Maps.toMap(IICompatModule.moduleClasses.keySet(), (s) -> Boolean.TRUE));
 
 		@Comment({"The maximum frequency for basic radios."})
 		public static int radioBasicMaxFrequency = 32;
@@ -695,6 +706,10 @@ public class Config
 			public static Machinegun machinegun;
 			@SubConfig
 			public static EmplacementWeapons emplacementWeapons;
+			@SubConfig
+			public static Railgun railgun;
+			@SubConfig
+			public static Grenade grenade;
 
 			public static class EmplacementWeapons
 			{
@@ -712,19 +727,49 @@ public class Config
 				}
 			}
 
+			public static class Railgun
+			{
+				@Comment({"Make standard railgun rods to be able to penetrate mobs (depending on metal)."})
+				public static boolean enablePenetration = true;
+			}
+
+			public static class Grenade
+			{
+				@Comment({
+						"Changes looks of the grenades",
+						"0 - new look",
+						"1 - old look, but cores are colored",
+						"2 - old look"
+				})
+				@RangeInt(min = 0, max = 2)
+				public static int classicGrenades = 0;
+			}
+
 			public static class Submachinegun
 			{
+				@Comment({"Whether the recoil is visible in first-person view."})
+				public static boolean cameraRecoil = true;
+
 				@Comment({"Time required to reload a magazine in SMG."})
 				public static int clipReloadTime = 45;
+
+				@Comment({"Time required to reload a magazine in SMG."})
+				public static int aimTime = 10;
 
 				@Comment({"Time required to fire a single bullet."})
 				public static int bulletFireTime = 2;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
-				public static float recoilHorizontal = 2f;
+				public static float recoilHorizontal = 3f;
 
 				@Comment({"Amount of vertical recoil after taking a shot."})
-				public static float recoilVertical = 6f;
+				public static float recoilVertical = 4f;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float maxRecoilHorizontal = 30f;
+
+				@Comment({"Maximum amount of vertical recoil."})
+				public static float maxRecoilVertical = 45f;
 			}
 
 			public static class Machinegun
@@ -918,6 +963,17 @@ public class Config
 			@Comment({"Default torque, used as a fallback, when IE rotational device is not recognised."})
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
 			public static float dynamo_watermill_torque = 12f;
+		}
+	}
+
+	@SubscribeEvent
+	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
+	{
+		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
+		{
+			ConfigManager.sync(ImmersiveIntelligence.MODID, net.minecraftforge.common.config.Config.Type.INSTANCE);
+			// TODO: 29.11.2020 add when required
+			//onConfigUpdate();
 		}
 	}
 }

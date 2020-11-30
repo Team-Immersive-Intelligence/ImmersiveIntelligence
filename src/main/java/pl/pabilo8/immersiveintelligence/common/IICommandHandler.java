@@ -6,10 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
-import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandIIGiveBullet;
-import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandReloadSkins;
-import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandTMTAnimControl;
-import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandTMTReloadModels;
+import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +33,9 @@ public class IICommandHandler extends CommandTreeBase
 				addSubcommand(new CommandTMTAnimControl());
 				break;
 			case "ii":
+				addSubcommand(new CommandIIDev());
 				addSubcommand(new CommandIIGiveBullet());
+				addSubcommand(new CommandIIGiveMagazine());
 				addSubcommand(new CommandReloadSkins());
 				//addSubcommand(new CommandIIToggleInstantBuild());
 				break;

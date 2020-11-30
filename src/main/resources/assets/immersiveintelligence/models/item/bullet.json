@@ -1,8 +1,0 @@
-{
-  "parent": "immersiveengineering:item/ie_item_base",
-  "textures": {
-    "layer0": "immersiveintelligence:items/bullets/bullet_main",
-    "layer1": "immersiveintelligence:items/bullets/bullet_core",
-    "layer2": "immersiveintelligence:items/bullets/bullet_paint"
-  }
-}

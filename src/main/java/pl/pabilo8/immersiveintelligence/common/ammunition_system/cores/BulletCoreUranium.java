@@ -1,23 +1,19 @@
 package pl.pabilo8.immersiveintelligence.common.ammunition_system.cores;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCoreType;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 
 /**
  * @author Pabilo8
  * @since 30-08-2019
  */
-public class BulletCoreUranium implements IBulletCoreType
+public class BulletCoreUranium implements IBulletCore
 {
 	@Override
 	public String getName()
 	{
-		return "CoreUranium";
+		return "core_uranium";
 	}
 
 	@Override
@@ -33,21 +29,9 @@ public class BulletCoreUranium implements IBulletCoreType
 	}
 
 	@Override
-	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public float getDamageModifier()
 	{
-
-	}
-
-	@Override
-	public float getPenetrationModifier(NBTTagCompound tag)
-	{
-		return 8f;
-	}
-
-	@Override
-	public float getDamageModifier(NBTTagCompound tag)
-	{
-		return 6.5f;
+		return 1.35f;
 	}
 
 	@Override
@@ -60,6 +44,12 @@ public class BulletCoreUranium implements IBulletCoreType
 	public float getExplosionModifier()
 	{
 		return 0.75f;
+	}
+
+	@Override
+	public float getPenetrationHardness()
+	{
+		return 36;
 	}
 
 	@Override

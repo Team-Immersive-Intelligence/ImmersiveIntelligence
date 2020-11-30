@@ -60,7 +60,14 @@ repositories {
         url "http://maven.tterrag.com/"
     }
 
-    repositories {//Curseforge maven, in case some other maven goes offline
+    //https://www.cursemaven.com/
+    //for Immersive Petroleum
+    maven {
+        url "https://www.cursemaven.com"
+    }
+
+    //Curseforge maven, in case some other maven goes offline
+    repositories {
         maven {
             name = "CurseForge"
             url = "https://minecraft.curseforge.com/api/maven/"
@@ -83,6 +90,8 @@ dependencies {
     //Maybe someday...
     //deobfCompile "albedo:albedo:1.12.2:1.1.0"
     deobfCompile 'baubles:Baubles:1.12:1.5.2'
+
+    compileOnly "curse.maven:immersive-petroleum:2544919"
 }
 
 reobf {

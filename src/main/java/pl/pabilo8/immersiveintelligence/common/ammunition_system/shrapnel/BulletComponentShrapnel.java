@@ -69,18 +69,6 @@ public class BulletComponentShrapnel implements IBulletComponent
 	}
 
 	@Override
-	public float getPenetrationModifier(NBTTagCompound tag)
-	{
-		return 0;
-	}
-
-	@Override
-	public float getDamageModifier(NBTTagCompound tag)
-	{
-		return 0;
-	}
-
-	@Override
 	public EnumComponentRole getRole()
 	{
 		return EnumComponentRole.SHRAPNEL;
