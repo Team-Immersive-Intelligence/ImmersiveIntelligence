@@ -262,6 +262,7 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 		return NAME;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public FontRenderer getFontRenderer(ItemStack stack)
 	{

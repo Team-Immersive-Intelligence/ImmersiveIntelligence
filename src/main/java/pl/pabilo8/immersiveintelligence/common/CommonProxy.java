@@ -717,6 +717,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public void init()
 	{
 		IICompatModule.doModulesInit();
+		reInitGui();
 
 		//Blocks config
 		block_ore.setMiningLevels();
@@ -914,6 +915,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public void reInitGui()
 	{
+
 	}
 
 	@Override

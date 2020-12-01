@@ -253,10 +253,6 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 				int cap = (int)Math.floor((Machines.teslacoil_consumption_active*(lowPower?0.5f: 1f))/SkycrateMounts.electric_energy_ratio);
 				energy = Math.min(energy+cap, ((ISkycrateMount)mount.getItem()).getMountMaxEnergy(mount));
 			}
-			else
-			{
-				setDead();
-			}
 		}
 	}
 

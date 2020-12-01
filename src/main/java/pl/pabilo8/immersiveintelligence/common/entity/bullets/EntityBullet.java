@@ -159,6 +159,11 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	private void refreshBullet()
 	{
+		if(bulletCore==null||bulletCasing==null||bulletCoreType==null)
+		{
+			setDead();
+			return;
+		}
 		penetrationHardness = bulletCore.getPenetrationHardness();
 		double compMass = 1d+Arrays.stream(components).mapToDouble(IBulletComponent::getDensity).sum();
 		compMass += bulletCore.getDensity();

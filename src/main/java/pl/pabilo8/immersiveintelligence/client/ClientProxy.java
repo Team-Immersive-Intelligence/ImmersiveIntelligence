@@ -68,6 +68,13 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.client.gui.*;
+import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualDataAndElectronics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualLogistics;
@@ -94,6 +101,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalPump;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalWheel;
@@ -443,6 +451,44 @@ public class ClientProxy extends CommonProxy
 	{
 		if(ClientUtils.mc().currentScreen!=null)
 			ClientUtils.mc().currentScreen.initGui();
+
+		IIGuiList.GUI_SAWMILL.setClientGui((player, te) -> new GuiSawmill(player.inventory, (TileEntitySawmill)te));
+		IIGuiList.GUI_PACKER.setClientGui((player, te) -> new GuiPacker(player.inventory, (TileEntityPacker)te));
+
+		IIGuiList.GUI_GEARBOX.setClientGui((player, te) -> new GuiGearbox(player.inventory, (TileEntityGearbox)te));
+
+		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA.setClientGui((player, te) -> new GuiDataRedstoneInterfaceData(player.inventory, (TileEntityRedstoneInterface)te));
+		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE.setClientGui((player, te) -> new GuiDataRedstoneInterfaceRedstone(player.inventory, (TileEntityRedstoneInterface)te));
+		IIGuiList.GUI_PRINTING_PRESS.setClientGui((player, te) -> new GuiPrintingPress(player.inventory, (TileEntityPrintingPress)te));
+		IIGuiList.GUI_CHEMICAL_BATH.setClientGui((player, te) -> new GuiChemicalBath(player.inventory, (TileEntityChemicalBath)te));
+		IIGuiList.GUI_ELECTROLYZER.setClientGui((player, te) -> new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer)te));
+		IIGuiList.GUI_PRECISSION_ASSEMBLER.setClientGui((player, te) -> new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te));
+		IIGuiList.GUI_DATA_MERGER.setClientGui((player, te) -> new GuiDataMerger(player.inventory, (TileEntityDataMerger)te));
+
+		IIGuiList.GUI_METAL_CRATE.setClientGui((player, te) -> new GuiMetalCrate(player.inventory, (TileEntityMetalCrate)te));
+		IIGuiList.GUI_AMMUNITION_CRATE.setClientGui((player, te) -> new GuiAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te));
+		IIGuiList.GUI_MEDICRATE.setClientGui((player, te) -> new GuiMedicalCrate(player.inventory, (TileEntityMedicalCrate)te));
+		IIGuiList.GUI_REPAIR_CRATE.setClientGui((player, te) -> new GuiRepairCrate(player.inventory, (TileEntityRepairCrate)te));
+		IIGuiList.GUI_SMALL_CRATE.setClientGui((player, te) -> new GuiSmallCrate(player.inventory, (TileEntitySmallCrate)te));
+		IIGuiList.GUI_SKYCRATE_STATION.setClientGui((player, te) -> new GuiSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te));
+		IIGuiList.GUI_SKYCART_STATION.setClientGui((player, te) -> new GuiSkycartStation(player.inventory, (TileEntitySkyCartStation)te));
+		IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE.setClientGui((player, te) -> new GuiDataInputMachineStorage(player.inventory, (TileEntityDataInputMachine)te));
+		IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES.setClientGui((player, te) -> new GuiDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te));
+		IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT.setClientGui((player, te) -> new GuiDataInputMachineEdit(player.inventory, (TileEntityDataInputMachine)te));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui((player, te) -> new GuiArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine)te));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 0));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 1));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 2));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 3));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 0));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 1));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 2));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 3));
+
+		IIGuiList.GUI_PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
+		IIGuiList.GUI_PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);
+		IIGuiList.GUI_PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
+		IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
 	}
 
 	@Override

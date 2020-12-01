@@ -90,7 +90,7 @@ public class ImmersiveIntelligence
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event)
 	{
-		ClientCommandHandler.instance.registerCommand(new IICommandHandler("ii"));
+		event.registerServerCommand(new IICommandHandler("ii"));
 		if(event.getSide()==Side.CLIENT)
 			ClientCommandHandler.instance.registerCommand(new IICommandHandler("tmt"));
 	}

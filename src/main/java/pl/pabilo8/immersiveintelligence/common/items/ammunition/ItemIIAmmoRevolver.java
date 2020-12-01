@@ -301,6 +301,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		return NAME;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public FontRenderer getFontRenderer(ItemStack stack)
 	{
