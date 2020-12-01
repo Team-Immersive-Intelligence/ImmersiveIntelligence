@@ -172,4 +172,10 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		super.breakBlock(world, pos, state);
 	}
 
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		// TODO: 01.12.2020 works
+		return true;
+	}
 }

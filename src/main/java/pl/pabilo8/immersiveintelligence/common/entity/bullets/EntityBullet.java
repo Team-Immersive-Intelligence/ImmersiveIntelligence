@@ -256,7 +256,8 @@ public class EntityBullet extends Entity implements ILightProvider
 
 								if(pen > hardness/penetrationHandler.getDensity())
 								{
-									if(!world.isRemote)
+									//thanks lgmrszd
+									if(!world.isRemote&&!world.getBlockState(pos).getMaterial().isLiquid())
 										BulletHelper.dealBlockDamage(world, dmg, pos, penetrationHandler);
 									penetrationHardness *= ((hardness*1.5f)/pen);
 									force *= 0.85f;
@@ -265,7 +266,8 @@ public class EntityBullet extends Entity implements ILightProvider
 								{
 									if(!world.isRemote)
 									{
-										BulletHelper.dealBlockDamage(world, dmg*(hardness/penetrationHandler.getDensity()), pos, penetrationHandler);
+										if(!world.getBlockState(pos).getMaterial().isLiquid())
+											BulletHelper.dealBlockDamage(world, dmg*(hardness/penetrationHandler.getDensity()), pos, penetrationHandler);
 										if(fuse==-1)
 											performEffect();
 									}

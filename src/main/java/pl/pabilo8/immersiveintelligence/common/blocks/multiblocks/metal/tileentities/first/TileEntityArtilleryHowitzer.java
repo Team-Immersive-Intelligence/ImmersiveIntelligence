@@ -350,15 +350,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 				if(plannedPitch==turretPitch&&plannedYaw==turretYaw)
 				{
-					if(animationTimeMax!=ArtilleryHowitzer.fireTime)
+					if(animationTimeMax!=ArtilleryHowitzer.fireTime&&bullet.getItem() instanceof ItemIIAmmoArtillery&&bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
 						animationTimeMax = ArtilleryHowitzer.fireTime;
 
 					if(animationTime==Math.round(animationTimeMax*0.25f))
 					{
 
-						if(bullet.getItem() instanceof ItemIIAmmoArtillery)
+						if(bullet.getItem() instanceof ItemIIAmmoArtillery&&bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
 						{
-
 							double true_angle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
 							double true_angle2 = Math.toRadians(-(-90-turretPitch));
 
@@ -368,7 +367,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 							if(!world.isRemote)
 							{
-								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f), 6f);
+								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f), 10f);
 								if(this.fuse > 0)
 								{
 									a.fuse = this.fuse;

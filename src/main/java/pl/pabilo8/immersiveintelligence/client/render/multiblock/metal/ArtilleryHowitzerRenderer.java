@@ -8,13 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoArtillery;
 
 /**
  * @author Pabilo8
@@ -81,10 +80,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 					modelBullet.renderBulletUnused(te.inventory.get(5));
 				else if(te.animation==2&&loadingProgress < 0.5)
 				{
-					if(te.bullet.getItem() instanceof ItemIIBulletBase)
-						modelBullet.renderBulletUnused(te.bullet);
-					else if(te.bullet.getItem() instanceof IBullet)
-						modelBullet.renderCasing(0, -1);
+					if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+					{
+						if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+							modelBullet.renderBulletUnused(te.bullet);
+						else
+							modelBullet.renderCasing(0, -1);
+					}
 				}
 			}
 			GlStateManager.popMatrix();
@@ -124,10 +126,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				}
 				GlStateManager.translate(1f, -2f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(6);
-				if(stack.getItem() instanceof ItemIIBulletBase)
-					modelBullet.renderBulletUnused(stack);
-				else
-					modelBullet.renderCasing(0, -1);
+				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+				{
+					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+						modelBullet.renderBulletUnused(te.bullet);
+					else
+						modelBullet.renderCasing(0, -1);
+				}
 
 
 				GlStateManager.popMatrix();
@@ -143,10 +148,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.translate(1f-(0.5f*((is_moved)?prgrs: 0f)), -2f, -0.875f);
 
 				ItemStack stack = te.inventoryHandler.getStackInSlot(7);
-				if(stack.getItem() instanceof ItemIIBulletBase)
-					modelBullet.renderBulletUnused(stack);
-				else
-					modelBullet.renderCasing(0, -1);
+				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+				{
+					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+						modelBullet.renderBulletUnused(te.bullet);
+					else
+						modelBullet.renderCasing(0, -1);
+				}
 
 				GlStateManager.popMatrix();
 			}
@@ -160,10 +168,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate((0.5f*((is_moved)?1f-prgrs: 0f)), -2f, -0.875f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(8);
-				if(stack.getItem() instanceof ItemIIBulletBase)
-					modelBullet.renderBulletUnused(stack);
-				else
-					modelBullet.renderCasing(0, -1);
+				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+				{
+					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+						modelBullet.renderBulletUnused(te.bullet);
+					else
+						modelBullet.renderCasing(0, -1);
+				}
 
 				GlStateManager.popMatrix();
 			}
@@ -177,10 +188,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, -2f, -1.385+(0.5f*((is_moved)?1f-prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(9);
-				if(stack.getItem() instanceof ItemIIBulletBase)
-					modelBullet.renderBulletUnused(stack);
-				else
-					modelBullet.renderCasing(0, -1);
+				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+				{
+					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+						modelBullet.renderBulletUnused(te.bullet);
+					else
+						modelBullet.renderCasing(0, -1);
+				}
 
 				GlStateManager.popMatrix();
 			}
@@ -194,10 +208,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, -2f, -2.185+(0.5f*((is_moved)?1f-prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(10);
-				if(stack.getItem() instanceof ItemIIBulletBase)
-					modelBullet.renderBulletUnused(stack);
-				else
-					modelBullet.renderCasing(0, -1);
+				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+				{
+					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+						modelBullet.renderBulletUnused(te.bullet);
+					else
+						modelBullet.renderCasing(0, -1);
+				}
 
 				GlStateManager.popMatrix();
 			}
@@ -211,10 +228,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 				GlStateManager.translate(0f, -2f, -2.985-(1.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(11);
-				if(stack.getItem() instanceof ItemIIBulletBase)
-					modelBullet.renderBulletUnused(stack);
-				else
-					modelBullet.renderCasing(0, -1);
+				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+				{
+					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+						modelBullet.renderBulletUnused(te.bullet);
+					else
+						modelBullet.renderCasing(0, -1);
+				}
 
 				GlStateManager.popMatrix();
 			}
@@ -357,7 +377,8 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 			{
 				platform_height = Math.min(5.25f, te.platformHeight+(partialTicks/20f));
 				float afloat = (float)te.animationTime/((float)te.animationTimeMax);
-				barrel_recoil = afloat <= 0.25f?(afloat/0.25f): 1f-((afloat-0.25f)/0.75f);
+				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery&&te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+					barrel_recoil = afloat <= 0.25f?(afloat/0.25f): 1f-((afloat-0.25f)/0.75f);
 			}
 
 
@@ -420,10 +441,13 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 					modelBullet.renderBulletUnused(te.inventory.get(5));
 				else if(te.animation==2&&loadingProgress > 0.5)
 				{
-					if(te.bullet.getItem() instanceof ItemIIBulletBase)
-						modelBullet.renderBulletUnused(te.bullet);
-					else if(te.bullet.getItem() instanceof IBullet)
-						modelBullet.renderCasing(0, -1);
+					if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
+					{
+						if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
+							modelBullet.renderBulletUnused(te.bullet);
+						else
+							modelBullet.renderCasing(0, -1);
+					}
 				}
 
 				GlStateManager.popMatrix();
