@@ -44,7 +44,7 @@ import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
@@ -704,9 +704,9 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		double true_angle = Math.toRadians(360f-rotationYaw);
 		double true_angle2 = Math.toRadians(-(rotationPitch));
 
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.BLOCKS, 1F, 1f);
-		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
+		else if(IIContent.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
 			world.playSound(null, getPosition(), IISounds.machinegun_shot_watercooled, SoundCategory.BLOCKS, 1F, 0.85f);
 		else
 			world.playSound(null, getPosition(), IISounds.machinegun_shot, SoundCategory.BLOCKS, 1F, 1f);
@@ -778,13 +778,13 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	{
 		gun = stack;
 		float setup_multiplier = 1;
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("precise_bipod"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("precise_bipod"))
 			setup_multiplier = Machinegun.preciseBipodSetupTimeMultiplier;
-		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("hasty_bipod"))
+		else if(IIContent.item_machinegun.getUpgrades(gun).hasKey("hasty_bipod"))
 			setup_multiplier = Machinegun.hastyBipodSetupTimeMultiplier;
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("belt_fed_loader"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("belt_fed_loader"))
 			setup_multiplier *= Machinegun.beltFedLoaderSetupTimeMultiplier;
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("shield"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("shield"))
 		{
 			shieldStrength = Machinegun.shieldStrengthInitial;
 			maxShieldStrength = Machinegun.shieldStrengthInitial;
@@ -795,31 +795,31 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		maxSetupTime = setupTime;
 
 		float bullet_delay_multiplier = 1;
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 			bullet_delay_multiplier = Machinegun.heavyBarrelFireRateMultiplier;
-		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
+		else if(IIContent.item_machinegun.getUpgrades(gun).hasKey("water_cooling"))
 			tankCapacity = Machinegun.waterCoolingTankCapacity;
 
 		bulletDelayMax = Math.round(bullet_delay_multiplier*Machinegun.bulletFireTime);
 		bulletDelay = 0;
 
 		float recoil_multiplier_h = 1, recoil_multiplier_w = 1;
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("precise_bipod"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("precise_bipod"))
 		{
 			recoil_multiplier_w *= Machinegun.preciseBipodRecoilMultiplier;
 			recoil_multiplier_h *= Machinegun.preciseBipodRecoilMultiplier;
 		}
-		else if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("hasty_bipod"))
+		else if(IIContent.item_machinegun.getUpgrades(gun).hasKey("hasty_bipod"))
 		{
 			recoil_multiplier_w *= Machinegun.hastyBipodRecoilMultiplier;
 			recoil_multiplier_h *= Machinegun.hastyBipodRecoilMultiplier;
 		}
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 		{
 			recoil_multiplier_w *= Machinegun.recoilHBHorizontal;
 			recoil_multiplier_h *= Machinegun.recoilHBVertical;
 		}
-		if(CommonProxy.item_machinegun.getUpgrades(gun).hasKey("second_magazine"))
+		if(IIContent.item_machinegun.getUpgrades(gun).hasKey("second_magazine"))
 		{
 			recoil_multiplier_w *= Machinegun.recoilSecondMagazine;
 			hasSecondMag = true;
@@ -843,8 +843,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(!magazine2.isEmpty())
 			bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
 
-		hasInfrared = CommonProxy.item_machinegun.getUpgrades(gun).hasKey("infrared_scope");
-		loadedFromCrate = CommonProxy.item_machinegun.getUpgrades(gun).hasKey("belt_fed_loader");
+		hasInfrared = IIContent.item_machinegun.getUpgrades(gun).hasKey("infrared_scope");
+		loadedFromCrate = IIContent.item_machinegun.getUpgrades(gun).hasKey("belt_fed_loader");
 
 		updateTank(false);
 
@@ -958,14 +958,14 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		@Override
 		public String getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
 		{
-			NBTTagCompound nbt = CommonProxy.item_machinegun.getUpgrades(stack);
+			NBTTagCompound nbt = IIContent.item_machinegun.getUpgrades(stack);
 			return ImmersiveIntelligence.MODID+":textures/gui/item/machinegun/"+(nbt.hasKey("scope")?"scope": "scope_infrared")+".png";
 		}
 
 		@Override
 		public boolean canZoom(ItemStack stack, EntityPlayer player)
 		{
-			NBTTagCompound nbt = CommonProxy.item_machinegun.getUpgrades(stack);
+			NBTTagCompound nbt = IIContent.item_machinegun.getUpgrades(stack);
 			return nbt.hasKey("scope")||nbt.hasKey("infrared_scope");
 		}
 

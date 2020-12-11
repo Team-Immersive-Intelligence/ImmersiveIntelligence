@@ -18,7 +18,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
  * @author Pabilo8
@@ -47,7 +47,7 @@ public class ItemIITrenchShovel extends ItemIEShovel
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		CommonProxy.items.add(this);
+		IIContent.items.add(this);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponAutocannon;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
@@ -46,7 +46,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	static
 	{
-		s2 = CommonProxy.item_ammo_autocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
+		s2 = IIContent.item_ammo_autocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setInteger("colour", 0xff0000);
 		((NBTTagList)ItemNBTHelper.getTag(s2).getTag("component_nbt")).set(1, new NBTTagCompound());

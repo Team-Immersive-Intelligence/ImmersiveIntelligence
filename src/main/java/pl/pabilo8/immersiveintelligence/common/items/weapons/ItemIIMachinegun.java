@@ -32,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 
 import javax.annotation.Nullable;
@@ -214,7 +214,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		CommonProxy.items.add(this);
+		IIContent.items.add(this);
 	}
 
 	@Override

@@ -49,7 +49,6 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		tesrMap.put(IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getName());
 		tesrMap.put(IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getName());
 
-
 	}
 
 	@Override

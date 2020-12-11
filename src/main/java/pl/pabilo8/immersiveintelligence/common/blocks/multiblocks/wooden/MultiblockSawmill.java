@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenMultiblock;
 
@@ -29,7 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenM
 public class MultiblockSawmill implements IMultiblock
 {
 	static final IngredientStack[] materials = new IngredientStack[]{
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 6, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 6, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockWoodenDecoration, 3, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta()))
 	};
 	public static MultiblockSawmill instance = new MultiblockSawmill();
@@ -53,12 +53,12 @@ public class MultiblockSawmill implements IMultiblock
 						else if(w < 3&&l==0)
 							structure[h][l][w] = new ItemStack(IEContent.blockWoodenDecoration, 1, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
 					}
 					else
 					{
 						if(w==3)
-							structure[h][l][w] = new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
 					}
 				}
 			}
@@ -116,7 +116,7 @@ public class MultiblockSawmill implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta()));
+					world.setBlockState(pos2, IIContent.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntitySawmill)
 					{
@@ -127,7 +127,7 @@ public class MultiblockSawmill implements IMultiblock
 						tile.pos = (h)*8+(l)*4+(w+2);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, CommonProxy.block_wooden_multiblock, 255, 0);
+						world.addBlockEvent(pos2, IIContent.block_wooden_multiblock, 255, 0);
 					}
 				}
 		return true;
@@ -164,14 +164,14 @@ public class MultiblockSawmill implements IMultiblock
 								if(!Utils.isBlockAt(world, pos, IEContent.blockWoodenDecoration, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta()))
 									return false;
 							}
-							else if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
+							else if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
 								return false;
 						}
 
 					}
 					else
 					{
-						if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
+						if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
 							return false;
 					}
 				}

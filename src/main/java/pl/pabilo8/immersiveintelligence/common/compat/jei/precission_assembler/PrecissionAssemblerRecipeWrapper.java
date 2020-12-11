@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class PrecissionAssemblerRecipeWrapper extends MultiblockRecipeWrapper
 				tools.add(PrecissionAssemblerRecipe.toolMap.get(tool).getToolPresentationStack(tool));
 			}
 		}
-		scheme = CommonProxy.item_assembly_scheme.getStackForRecipe(recipe);
+		scheme = IIContent.item_assembly_scheme.getStackForRecipe(recipe);
 	}
 
 	protected List<ItemStack> tools = new ArrayList<>();

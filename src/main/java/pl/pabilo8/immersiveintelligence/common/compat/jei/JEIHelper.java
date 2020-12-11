@@ -30,7 +30,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.GuiChemicalBath;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiElectrolyzer;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiSawmill;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer.ElectrolyzerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.precission_assembler.PrecissionAssemblerRecipeCategory;
@@ -82,9 +82,9 @@ public class JEIHelper implements IModPlugin
 		modRegistry = registryIn;
 		//Blacklist
 
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_printed_page, 1, 1));
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_printed_page, 1, 2));
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_printed_page, 1, 3));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.item_printed_page, 1, 1));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.item_printed_page, 1, 2));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.item_printed_page, 1, 3));
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_assembly_scheme, 1, OreDictionary.WILDCARD_VALUE));
 
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_bullet, 1, OreDictionary.WILDCARD_VALUE));

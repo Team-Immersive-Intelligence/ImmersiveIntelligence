@@ -22,7 +22,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
 import javax.annotation.Nonnull;
@@ -51,7 +51,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 		if(!world.isRemote&&this.world.getGameRules().getBoolean("doEntityDrops"))
 		{
 			ItemStack cart = new ItemStack(Items.MINECART, 1);
-			Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
+			Item drop = Item.getItemFromBlock(IIContent.block_metal_device);
 			ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 			NBTTagCompound nbt = new NBTTagCompound();
 
@@ -102,7 +102,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 	@Override
 	public IBlockState getDefaultDisplayTile()
 	{
-		return CommonProxy.block_metal_device.getStateFromMeta(IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+		return IIContent.block_metal_device.getStateFromMeta(IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 
 	public Tuple<ItemStack, EntityMinecart> getBlockForPickup()
 	{
-		Item drop = Item.getItemFromBlock(CommonProxy.block_metal_device);
+		Item drop = Item.getItemFromBlock(IIContent.block_metal_device);
 		ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 		NBTTagCompound nbt = new NBTTagCompound();
 
@@ -185,7 +185,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 	@Override
 	public void setMinecartBlock(ItemStack stack)
 	{
-		if(stack.getItem() instanceof ItemBlock&&((ItemBlock)stack.getItem()).getBlock()==CommonProxy.block_metal_device)
+		if(stack.getItem() instanceof ItemBlock&&((ItemBlock)stack.getItem()).getBlock()==IIContent.block_metal_device)
 		{
 			if(stack.hasTagCompound())
 			{

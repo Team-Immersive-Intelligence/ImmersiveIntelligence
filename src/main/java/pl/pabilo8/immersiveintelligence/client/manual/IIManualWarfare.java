@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.BulletComponentDisplay;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.BulletCoreDisplay;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesDisplay;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockAmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockBallisticComputer;
@@ -69,10 +69,10 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ArrayList<ManualPages> mg_pages = new ArrayList<>();
-		mg_pages.add(new ManualPages.Crafting(ManualHelper.getManual(), "machinegun0", new ItemStack(CommonProxy.item_machinegun)));
+		mg_pages.add(new ManualPages.Crafting(ManualHelper.getManual(), "machinegun0", new ItemStack(IIContent.item_machinegun)));
 		mg_pages.add(new ManualPages.Text(ManualHelper.getManual(), "machinegun1"));
-		for(int i = 0; i < CommonProxy.item_weapon_upgrade.getSubNames().length; i += 1)
-			mg_pages.add(new Crafting(ManualHelper.getManual(), "machinegun_upgrade_"+CommonProxy.item_weapon_upgrade.getSubNames()[i], new ItemStack(CommonProxy.item_weapon_upgrade, 1, i)));
+		for(int i = 0; i < IIContent.item_weapon_upgrade.getSubNames().length; i += 1)
+			mg_pages.add(new Crafting(ManualHelper.getManual(), "machinegun_upgrade_"+IIContent.item_weapon_upgrade.getSubNames()[i], new ItemStack(IIContent.item_weapon_upgrade, 1, i)));
 
 		ManualPages[] mg_array = mg_pages.toArray(new ManualPages[]{});
 
@@ -116,11 +116,11 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ManualHelper.addEntry("ammocrate", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "ammocrate0", new ItemStack(CommonProxy.block_metal_device, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta()))
+				new ManualPages.Crafting(ManualHelper.getManual(), "ammocrate0", new ItemStack(IIContent.block_metal_device, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta()))
 		);
 
 		ManualHelper.addEntry("chemdispenser", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "chemdispenser0", new ItemStack(CommonProxy.block_data_connector, 1, IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta())),
+				new ManualPages.Crafting(ManualHelper.getManual(), "chemdispenser0", new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta())),
 				new ManualPages.Text(ManualHelper.getManual(), "chemdispenser1"),
 				new DataVariablesDisplay(ManualHelper.getManual(), "chemdispenser", true)
 						.addEntry(new DataPacketTypeInteger(), 'a')

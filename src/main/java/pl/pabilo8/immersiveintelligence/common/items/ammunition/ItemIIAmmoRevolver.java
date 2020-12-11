@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCalRevolver;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nullable;
@@ -77,7 +78,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		CommonProxy.items.add(this);
+		IIContent.items.add(this);
 	}
 
 	@Override

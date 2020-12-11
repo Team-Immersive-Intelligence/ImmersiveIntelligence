@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 
 import javax.annotation.Nullable;
@@ -68,7 +69,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
 		boolean drawText = false;
 
-		String skin = CommonProxy.item_machinegun.getSkinnableCurrentSkin(stack);
+		String skin = IIContent.item_machinegun.getSkinnableCurrentSkin(stack);
 		if(!skin.isEmpty())
 		{
 			SpecialSkin s = CustomSkinHandler.specialSkins.get(skin);
@@ -83,7 +84,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 			}
 
 		}
-		skin = (skin.isEmpty()?CommonProxy.item_machinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
+		skin = (skin.isEmpty()?IIContent.item_machinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
 
 
 		ClientUtils.bindTexture(skin+texture);
@@ -342,7 +343,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 	@Override
 	protected ResourceLocation getEntityTexture(EntityMachinegun entity)
 	{
-		return new ResourceLocation(CommonProxy.item_machinegun.getSkinnableDefaultTextureLocation()+texture);
+		return new ResourceLocation(IIContent.item_machinegun.getSkinnableDefaultTextureLocation()+texture);
 	}
 
 }

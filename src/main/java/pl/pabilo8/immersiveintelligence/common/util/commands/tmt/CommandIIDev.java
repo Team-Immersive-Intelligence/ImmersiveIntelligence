@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nonnull;
@@ -115,7 +115,7 @@ public class CommandIIDev extends CommandBase
 							z1.setAIMoveSpeed(0.125f);
 							z1.setPosition(position.getX(), position.getY(), position.getZ());
 							z1.setCustomNameTag("Zombie #"+i);
-							z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(CommonProxy.item_light_engineer_helmet));
+							z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IIContent.item_light_engineer_helmet));
 							server.getEntityWorld().spawnEntity(z1);
 						}
 					break;

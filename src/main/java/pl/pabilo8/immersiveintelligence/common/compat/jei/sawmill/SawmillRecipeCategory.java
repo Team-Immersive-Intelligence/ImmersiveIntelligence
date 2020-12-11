@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenMultiblock;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
@@ -29,8 +29,8 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 
 	public SawmillRecipeCategory(IGuiHelper helper)
 	{
-		super("sawmill", "tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.sawmill.name", helper.createBlankDrawable(156, 60), SawmillRecipe.class, new ItemStack(CommonProxy.block_wooden_multiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta()));
-		machineStack = new ItemStack(CommonProxy.block_wooden_multiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta());
+		super("sawmill", "tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.sawmill.name", helper.createBlankDrawable(156, 60), SawmillRecipe.class, new ItemStack(IIContent.block_wooden_multiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta()));
+		machineStack = new ItemStack(IIContent.block_wooden_multiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta());
 	}
 
 	@Override

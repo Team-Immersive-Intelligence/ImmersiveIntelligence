@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelAdvancedRadioConfigurator;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelRadioConfigurator;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
  * @author Pabilo8
@@ -33,7 +33,7 @@ public class RadioConfiguratorItemStackRenderer extends TileEntityItemStackRende
 		GlStateManager.rotate(180, 0, 1, 0);
 		GlStateManager.translate(-1f, 0f, 0f);
 
-		if(CommonProxy.item_radio_configurator.isBasic(itemStackIn))
+		if(IIContent.item_radio_configurator.isBasic(itemStackIn))
 		{
 			String texture_basic = ImmersiveIntelligence.MODID+":textures/items/tools/radio_configurator.png";
 			ClientUtils.bindTexture(texture_basic);

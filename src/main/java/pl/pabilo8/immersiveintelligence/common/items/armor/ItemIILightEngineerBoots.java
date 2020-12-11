@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +30,7 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 {
 	public ItemIILightEngineerBoots()
 	{
-		super(CommonProxy.ARMOR_MATERIAL_LIGHT_ENGINEER, EntityEquipmentSlot.FEET, "LIGHT_ENGINEER_BOOTS");
+		super(IIContent.ARMOR_MATERIAL_LIGHT_ENGINEER, EntityEquipmentSlot.FEET, "LIGHT_ENGINEER_BOOTS");
 	}
 
 	@Nullable

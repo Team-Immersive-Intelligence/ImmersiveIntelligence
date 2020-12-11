@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 
@@ -32,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMu
 public class MultiblockConveyorScanner implements IMultiblock
 {
 	static IngredientStack[] materials = new IngredientStack[]{
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta())),
 			new IngredientStack(Utils.copyStackWithAmount(ConveyorHandler.getConveyorStack(ImmersiveEngineering.MODID+":covered"), 1)),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 	};
@@ -42,7 +42,7 @@ public class MultiblockConveyorScanner implements IMultiblock
 
 	static
 	{
-		structure[0][0][0] = new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta());
+		structure[0][0][0] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta());
 		structure[1][0][0] = conveyorStack;
 		structure[2][0][0] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta());
 	}
@@ -86,7 +86,7 @@ public class MultiblockConveyorScanner implements IMultiblock
 
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), w).add(0, h, 0);
 
-					world.setBlockState(pos2, CommonProxy.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.CONVEYOR_SCANNER.getMeta()));
+					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.CONVEYOR_SCANNER.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityConveyorScanner)
 					{
@@ -97,7 +97,7 @@ public class MultiblockConveyorScanner implements IMultiblock
 						tile.pos = h+1;
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, CommonProxy.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
 					}
 				}
 		return true;
@@ -117,7 +117,7 @@ public class MultiblockConveyorScanner implements IMultiblock
 
 					if(h==-1)
 					{
-						if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta()))
+						if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta()))
 						{
 							return false;
 						}

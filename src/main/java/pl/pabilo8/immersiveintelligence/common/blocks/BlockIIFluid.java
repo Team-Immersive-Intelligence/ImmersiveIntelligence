@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
  * @author Pabilo8
@@ -33,7 +33,7 @@ public class BlockIIFluid extends BlockFluidClassic
 		super(fluid, material);
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
-		CommonProxy.blocks.add(this);
+		IIContent.blocks.add(this);
 		isAcid = name.endsWith("acid");
 	}
 

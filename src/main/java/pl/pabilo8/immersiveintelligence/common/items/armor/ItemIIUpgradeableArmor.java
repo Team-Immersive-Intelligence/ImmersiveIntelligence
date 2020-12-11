@@ -33,7 +33,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIArmorItemStackHandler;
 
 import javax.annotation.Nullable;
@@ -63,7 +63,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 		this.setMaxStackSize(1);
-		CommonProxy.items.add(this);
+		IIContent.items.add(this);
 		//MinecraftForge.EVENT_BUS.register(this);
 	}
 

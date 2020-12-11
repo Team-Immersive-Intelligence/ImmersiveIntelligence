@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelMechanica
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalPump;
 
 /**
@@ -113,7 +113,7 @@ public class MechanicalPumpRenderer extends TileEntitySpecialRenderer<TileEntity
 				mod.render(0.0625f);
 
 			ClientUtils.bindAtlas();
-			IBlockState state = CommonProxy.block_mechanical_device1.getDefaultState().withProperty(IEProperties.MULTIBLOCKSLAVE, false);
+			IBlockState state = IIContent.block_mechanical_device1.getDefaultState().withProperty(IEProperties.MULTIBLOCKSLAVE, false);
 			GlStateManager.translate(0, -1, 0);
 			ClientUtils.mc().getBlockRendererDispatcher().renderBlockBrightness(state, 1f);
 

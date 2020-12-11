@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
@@ -235,13 +236,13 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 		if(world.isRemote)
 		{
-			if(hasUpgrade(CommonProxy.UPGRADE_INSERTER))
+			if(hasUpgrade(IIContent.UPGRADE_INSERTER))
 			{
 				inserterAnimation = calculateInserterAnimation(0);
 				inserterAngle = calculateInserterAngle(0);
 			}
 		}
-		else if(open&&hasUpgrade(CommonProxy.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
+		else if(open&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
 		{
 			//get all in range
 			//effect
@@ -315,7 +316,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	{
 		if(heldItem.getItem().getToolClasses(heldItem).contains(CommonProxy.TOOL_WRENCH))
 		{
-			return addUpgrade(CommonProxy.UPGRADE_INSERTER, false);
+			return addUpgrade(IIContent.UPGRADE_INSERTER, false);
 		}
 		else if(player.isSneaking())
 		{
@@ -335,7 +336,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
 	{
-		boolean b = !hasUpgrade(upgrade)&&upgrade.equals(CommonProxy.UPGRADE_INSERTER);
+		boolean b = !hasUpgrade(upgrade)&&upgrade.equals(IIContent.UPGRADE_INSERTER);
 		if(!test&&b)
 			upgrades.add(upgrade);
 		return b;
@@ -382,7 +383,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		return hasUpgrade(CommonProxy.UPGRADE_INSERTER)&&super.canConnectCable(cableType, target, offset);
+		return hasUpgrade(IIContent.UPGRADE_INSERTER)&&super.canConnectCable(cableType, target, offset);
 	}
 
 	@Override

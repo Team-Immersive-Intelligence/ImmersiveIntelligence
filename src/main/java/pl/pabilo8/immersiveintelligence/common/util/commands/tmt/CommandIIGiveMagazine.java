@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
 
 import javax.annotation.Nonnull;
@@ -63,7 +63,7 @@ public class CommandIIGiveMagazine extends CommandBase
 		if(args.length > 3)
 		{
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			ItemStack magazine = Utils.getStackWithMetaName(CommonProxy.item_bullet_magazine, args[1]);
+			ItemStack magazine = Utils.getStackWithMetaName(IIContent.item_bullet_magazine, args[1]);
 			IBullet casing = ItemIIBulletMagazine.getMatchingType(magazine);
 			IBulletCore core = BulletRegistry.INSTANCE.getCore(args[2]);
 			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
@@ -108,7 +108,7 @@ public class CommandIIGiveMagazine extends CommandBase
 		}
 		else if(args.length==2)
 		{
-			return getListOfStringsMatchingLastWord(args, CommonProxy.item_bullet_magazine.getSubNames());
+			return getListOfStringsMatchingLastWord(args, IIContent.item_bullet_magazine.getSubNames());
 		}
 		else if(args.length==3)
 		{

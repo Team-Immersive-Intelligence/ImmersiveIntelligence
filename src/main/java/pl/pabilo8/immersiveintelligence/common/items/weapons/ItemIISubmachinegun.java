@@ -37,7 +37,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
@@ -303,7 +303,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		CommonProxy.items.add(this);
+		IIContent.items.add(this);
 	}
 
 	@Override
@@ -356,7 +356,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 			return false;
 		if(stack.getItem() instanceof ItemIIBulletMagazine)
 		{
-			return ItemIIBulletMagazine.getMatchingType(stack)==CommonProxy.item_ammo_submachinegun&&!ItemIIBulletMagazine.hasNoBullets(stack);
+			return ItemIIBulletMagazine.getMatchingType(stack)==IIContent.item_ammo_submachinegun&&!ItemIIBulletMagazine.hasNoBullets(stack);
 		}
 		return false;
 	}

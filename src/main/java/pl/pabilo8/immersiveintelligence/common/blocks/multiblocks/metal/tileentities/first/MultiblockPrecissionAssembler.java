@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 
 /**
@@ -138,7 +138,7 @@ public class MultiblockPrecissionAssembler implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, CommonProxy.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta()));
+					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityPrecissionAssembler)
 					{
@@ -149,7 +149,7 @@ public class MultiblockPrecissionAssembler implements IMultiblock
 						tile.pos = (h*15)+(l*5)+(w+2);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, CommonProxy.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
 					}
 				}
 		return true;

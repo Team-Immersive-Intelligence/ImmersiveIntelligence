@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_ClothDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenMultiblock;
@@ -36,9 +36,9 @@ public class MultiblockSkyCrateStation implements IMultiblock
 
 			new IngredientStack(new ItemStack(IEContent.blockWoodenDecoration, 4, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta())),
 			new IngredientStack(Utils.copyStackWithAmount(ConveyorHandler.getConveyorStack("immersiveengineering:conveyor"), 3)),
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 8, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 2, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(CommonProxy.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 8, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 2, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta())),
 			new IngredientStack("blockIron")
 	};
 	public static MultiblockSkyCrateStation instance = new MultiblockSkyCrateStation();
@@ -56,9 +56,9 @@ public class MultiblockSkyCrateStation implements IMultiblock
 					if(h==0&&w==0)
 					{
 						if(l==1)
-							structure[h][l][w] = new ItemStack(CommonProxy.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
 					}
 					else if(h==0&&l==0)
 					{
@@ -79,7 +79,7 @@ public class MultiblockSkyCrateStation implements IMultiblock
 						else if(h==2&&w==1&&l==1)
 							structure[h][l][w] = new ItemStack(IEContent.blockWoodenDecoration, 1, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta());
 
 					}
 					else if(h==2&&l==0&&w!=0)
@@ -143,7 +143,7 @@ public class MultiblockSkyCrateStation implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, CommonProxy.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCRATE_STATION.getMeta()));
+					world.setBlockState(pos2, IIContent.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCRATE_STATION.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntitySkyCrateStation)
 					{
@@ -154,7 +154,7 @@ public class MultiblockSkyCrateStation implements IMultiblock
 						tile.pos = ((h+1)*9)+((l+1)*3)+(w+1);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, CommonProxy.block_wooden_multiblock, 255, 0);
+						world.addBlockEvent(pos2, IIContent.block_wooden_multiblock, 255, 0);
 					}
 				}
 		return true;
@@ -174,14 +174,14 @@ public class MultiblockSkyCrateStation implements IMultiblock
 					{
 						if(l==0)
 						{
-							if(!Utils.isBlockAt(world, pos, CommonProxy.block_cloth_decoration, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.block_cloth_decoration, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
 							{
 								return false;
 							}
 						}
 						else
 						{
-							if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
 							{
 								return false;
 							}
@@ -233,7 +233,7 @@ public class MultiblockSkyCrateStation implements IMultiblock
 						}
 						else
 						{
-							if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta()))
 							{
 								return false;
 							}

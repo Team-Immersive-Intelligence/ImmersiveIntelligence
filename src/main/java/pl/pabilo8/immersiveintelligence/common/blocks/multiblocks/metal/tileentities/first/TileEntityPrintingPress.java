@@ -41,7 +41,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
@@ -73,8 +73,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	public TileEntityPrintingPress()
 	{
 		super(MultiblockPrintingPress.instance, new int[]{3, 5, 3}, PrintingPress.energyCapacity, false);
-		renderStack0 = new ItemStack(CommonProxy.item_printed_page, 1, 0);
-		renderStack1 = new ItemStack(CommonProxy.item_printed_page, 1, 1);
+		renderStack0 = new ItemStack(IIContent.item_printed_page, 1, 0);
+		renderStack1 = new ItemStack(IIContent.item_printed_page, 1, 1);
 	}
 
 	@Override
@@ -440,8 +440,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 				tanks[0].drain(FluidRegistry.getFluidStack("ink_yellow", yellow_amount_start-yellow_amount), true);
 
 				//Finally! lol (i wrote this all without any debugging, so i count on you bug reporters ^^)
-				ItemStack stack = new ItemStack(CommonProxy.item_printed_page, 1, 1);
-				CommonProxy.item_printed_page.setText(stack, printedChars.toString());
+				ItemStack stack = new ItemStack(IIContent.item_printed_page, 1, 1);
+				IIContent.item_printed_page.setText(stack, printedChars.toString());
 
 				stack = inventoryHandler.insertItem(1, stack, false);
 				if(!stack.isEmpty())
@@ -450,17 +450,17 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			break;
 			case "blueprint":
 			{
-				inventoryHandler.insertItem(1, new ItemStack(CommonProxy.item_printed_page, 1, 3), false);
+				inventoryHandler.insertItem(1, new ItemStack(IIContent.item_printed_page, 1, 3), false);
 			}
 			break;
 			case "code":
 			{
-				inventoryHandler.insertItem(1, new ItemStack(CommonProxy.item_printed_page, 1, 2), false);
+				inventoryHandler.insertItem(1, new ItemStack(IIContent.item_printed_page, 1, 2), false);
 			}
 			break;
 			default:
 			{
-				inventoryHandler.insertItem(1, new ItemStack(CommonProxy.item_printed_page, 1, 0), false);
+				inventoryHandler.insertItem(1, new ItemStack(IIContent.item_printed_page, 1, 0), false);
 			}
 			break;
 		}

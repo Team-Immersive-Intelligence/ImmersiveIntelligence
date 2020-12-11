@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 
-@Mod(modid = MODID, version = VERSION, dependencies = "required-after:immersiveengineering@[0.12,);")
+@Mod(modid = MODID, version = VERSION, dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,)")
 public class ImmersiveIntelligence
 {
 	public static final String MODID = "immersiveintelligence";
@@ -33,6 +33,12 @@ public class ImmersiveIntelligence
 
 	@Instance(MODID)
 	public static ImmersiveIntelligence INSTANCE;
+
+	@Mod.EventHandler
+	public void modIDMapping(FMLModIdMappingEvent event)
+	{
+
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -83,8 +89,7 @@ public class ImmersiveIntelligence
 			}
 		}
 
-		CommonProxy.refreshFluidReferences();
-
+		//CommonProxy.refreshFluidReferences();
 	}
 
 	@Mod.EventHandler

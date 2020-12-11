@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.rotary.IModelMotorBelt;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt.MotorBelt;
 
 import java.util.ArrayList;
@@ -87,6 +87,6 @@ public class IIMotorBeltType extends MotorBeltType
 	@Override
 	public ItemStack getWireCoil()
 	{
-		return new ItemStack(CommonProxy.item_motor_belt, 1, type.ordinal());
+		return new ItemStack(IIContent.item_motor_belt, 1, type.ordinal());
 	}
 }

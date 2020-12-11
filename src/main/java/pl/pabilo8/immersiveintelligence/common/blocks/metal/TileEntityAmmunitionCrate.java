@@ -21,6 +21,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -71,7 +72,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	{
 		if(heldItem.getItem().getToolClasses(heldItem).contains(CommonProxy.TOOL_WRENCH))
 		{
-			return addUpgrade(CommonProxy.UPGRADE_INSERTER, false);
+			return addUpgrade(IIContent.UPGRADE_INSERTER, false);
 		}
 		else if(player.isSneaking())
 		{

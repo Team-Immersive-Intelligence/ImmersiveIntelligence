@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandl
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerWood.PenetrationHandlerLog;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerWood.PenetrationHandlerPlanks;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -52,8 +52,8 @@ public class PenetrationRegistry
 	{
 		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), IEContent.blockMetalDecoration0,
 				IEContent.blockMetalDevice0, IEContent.blockMetalDevice1, IEContent.blockMetalMultiblock);
-		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), CommonProxy.block_metal_decoration,
-				CommonProxy.block_metal_multiblock0, CommonProxy.block_metal_multiblock1);
+		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.block_metal_decoration,
+				IIContent.block_metal_multiblock0, IIContent.block_metal_multiblock1);
 		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "logWood"), new PenetrationHandlerLog());
 
 		BulletHelper.registerMetalMaterial(new PenetrationHandlerIron(), "iron");

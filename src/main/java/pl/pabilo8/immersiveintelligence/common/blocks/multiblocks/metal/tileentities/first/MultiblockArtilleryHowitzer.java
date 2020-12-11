@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 
@@ -47,8 +47,8 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 			new IngredientStack(new ItemStack(IEContent.blockStoneDecoration, 77, BlockTypes_StoneDecoration.CONCRETE.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 46, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 12, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 12, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 9, BlockTypes_MetalDecoration0.RADIATOR.getMeta())),
 			new IngredientStack("scaffoldingTreatedWood", 12),
@@ -98,7 +98,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 					else if(w < 2&&l <= 5&&l >= 3&&h < 5)
 						structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta());
 					else if(w >= 7&&l <= 8&&l >= 3&&h < 5)
-						structure[h][l][w] = new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta());
+						structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta());
 					else if(w >= 3&&w <= 5&&l <= 1&&h < 5)
 						structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta());
 					else if(w >= 3&&w <= 5&&l >= 7&&l <= 8&&h < 5)
@@ -142,7 +142,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 							if(l==4&&w==0)
 								structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta());
 							else if(l==4&&w==8)
-								structure[h][l][w] = new ItemStack(CommonProxy.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+								structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 							else
 								structure[h][l][w] = new ItemStack(IEContent.blockStorage, 1, BlockTypes_MetalsIE.STEEL.getMeta());
 						}
@@ -235,7 +235,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 						continue;
 					}
 
-					world.setBlockState(pos2, CommonProxy.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta()));
+					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityArtilleryHowitzer)
 					{
@@ -246,7 +246,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 						tile.pos = ((h+5)*81)+(l*9)+(w+4);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, CommonProxy.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
 					}
 				}
 		return true;
@@ -338,7 +338,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 					}
 					else if(w >= 3&&l <= 8&&l >= 3&&h < 0)
 					{
-						if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta()))
+						if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ADVANCED_ELECTRONIC_ENGINEERING.getMeta()))
 						{
 							return false;
 						}
@@ -452,7 +452,7 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 							}
 							else if(l==4&&w==4)
 							{
-								if(!Utils.isBlockAt(world, pos, CommonProxy.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
+								if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 								{
 									return false;
 								}

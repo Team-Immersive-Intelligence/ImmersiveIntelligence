@@ -8,7 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.item.Item;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,11 +61,11 @@ public class BlockIIBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends Blo
 		block.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		CommonProxy.blocks.add(block);
+		IIContent.blocks.add(block);
 		try
 		{
 			ItemBlockIEBase item = itemBlock.getConstructor(Block.class).newInstance(block);
-			CommonProxy.items.add(item);
+			IIContent.items.add(item);
 			//if (creative)
 			//CommonProxy.items.add(item);
 		} catch(Exception e)

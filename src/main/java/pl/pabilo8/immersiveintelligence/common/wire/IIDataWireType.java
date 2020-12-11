@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Wires;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
  * @author Pabilo8
@@ -71,7 +71,7 @@ public class IIDataWireType extends WireType
 	@Override
 	public ItemStack getWireCoil()
 	{
-		return new ItemStack(CommonProxy.item_data_wire_coil, 1, 0);
+		return new ItemStack(IIContent.item_data_wire_coil, 1, 0);
 	}
 
 	@Override

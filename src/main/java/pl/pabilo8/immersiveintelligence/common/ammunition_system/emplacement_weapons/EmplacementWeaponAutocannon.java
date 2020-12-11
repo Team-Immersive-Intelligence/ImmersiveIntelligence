@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
@@ -37,7 +37,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 				new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 15)),
 				new IngredientStack("blockSteel", 1),
 				new IngredientStack("plateSteel", 4),
-				new IngredientStack(new ItemStack(CommonProxy.block_metal_device, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())),
+				new IngredientStack(new ItemStack(IIContent.block_metal_device, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())),
 				new IngredientStack("engineElectricSmall", 2)
 		};
 	}

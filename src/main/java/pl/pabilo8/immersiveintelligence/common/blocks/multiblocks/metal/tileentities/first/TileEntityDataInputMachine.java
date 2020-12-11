@@ -29,7 +29,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -163,7 +163,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			{
 				if(productionProgress==0||inventoryHandler.getStackInSlot(1).isEmpty())
 				{
-					ItemStack test = new ItemStack(CommonProxy.item_punchtape, 1, 0);
+					ItemStack test = new ItemStack(IIContent.item_punchtape, 1, 0);
 
 					((ItemIIPunchtape)test.getItem()).writeDataToItem(this.storedData, test);
 
@@ -190,7 +190,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 					}
 					else
 					{
-						ItemStack output = new ItemStack(CommonProxy.item_punchtape, 1, 0);
+						ItemStack output = new ItemStack(IIContent.item_punchtape, 1, 0);
 
 						((ItemIIPunchtape)output.getItem()).writeDataToItem(this.storedData, output);
 

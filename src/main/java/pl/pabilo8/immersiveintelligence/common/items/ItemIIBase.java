@@ -12,7 +12,7 @@ import net.minecraft.item.Item;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelAbstractItem;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class ItemIIBase extends ItemIEBase
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		CommonProxy.items.add(this);
+		IIContent.items.add(this);
 	}
 
 	public int getMetaBySubname(String subname)

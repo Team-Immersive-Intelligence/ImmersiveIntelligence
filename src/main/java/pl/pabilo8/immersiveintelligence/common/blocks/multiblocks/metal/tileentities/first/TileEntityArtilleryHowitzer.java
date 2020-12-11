@@ -367,7 +367,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 							if(!world.isRemote)
 							{
-								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f), 10f);
+								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f), ArtilleryHowitzer.howitzerVelocity);
 								if(this.fuse > 0)
 								{
 									a.fuse = this.fuse;

@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelSubmachinegun;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,7 +57,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer
 		GlStateManager.pushMatrix();
 
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
-		String skin = CommonProxy.item_submachinegun.getSkinnableCurrentSkin(stack);
+		String skin = IIContent.item_submachinegun.getSkinnableCurrentSkin(stack);
 		boolean drawText = true;
 
 		if(!skin.isEmpty())

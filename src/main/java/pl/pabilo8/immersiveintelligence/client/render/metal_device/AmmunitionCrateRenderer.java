@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCrateInse
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.ModelPrecissionInserter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
 
 /**
@@ -51,7 +51,7 @@ public class AmmunitionCrateRenderer extends TileEntitySpecialRenderer<TileEntit
 				mod.render(0.0625f);
 			GlStateManager.popMatrix();
 
-			if(te.hasUpgrade(CommonProxy.UPGRADE_INSERTER))
+			if(te.hasUpgrade(IIContent.UPGRADE_INSERTER))
 			{
 				ClientUtils.bindTexture(ModelCrateInserterUpgrade.texture);
 				for(ModelRendererTurbo mod : modelUpgrade.baseModel)

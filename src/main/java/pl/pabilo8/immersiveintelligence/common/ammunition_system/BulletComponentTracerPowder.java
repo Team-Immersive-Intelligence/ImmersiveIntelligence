@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
@@ -26,7 +26,7 @@ public class BulletComponentTracerPowder implements IBulletComponent
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack(new ItemStack(CommonProxy.item_tracer_powder));
+		return new IngredientStack(new ItemStack(IIContent.item_tracer_powder));
 	}
 
 	@Override

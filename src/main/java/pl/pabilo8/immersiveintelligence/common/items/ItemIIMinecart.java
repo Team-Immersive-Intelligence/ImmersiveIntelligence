@@ -14,7 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
 
@@ -77,7 +77,7 @@ public class ItemIIMinecart extends ItemIIBase
 					break;
 					case META_MINECART_STEEL_CRATE:
 					{
-						blockStack = new ItemStack(CommonProxy.block_metal_device, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+						blockStack = new ItemStack(IIContent.block_metal_device, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 						ent = new EntityMinecartCrateSteel(world, (double)pos.getX()+0.5D, (double)pos.getY()+0.0625D+d0, (double)pos.getZ()+0.5D);
 					}
 					break;

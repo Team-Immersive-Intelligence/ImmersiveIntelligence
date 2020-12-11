@@ -9,7 +9,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
 
 /**
@@ -31,13 +31,13 @@ public class BlockIIOre extends BlockIIBase<IIBlockTypes_Ore>
 	{
 		if(getMetaFromState(state)==IIBlockTypes_Ore.FLUORITE.getMeta())
 		{
-			ItemStack out = Utils.getStackWithMetaName(CommonProxy.item_material_gem, "fluorite");
+			ItemStack out = Utils.getStackWithMetaName(IIContent.item_material_gem, "fluorite");
 			out.setCount((1+Math.round((float)Math.random()))*(1+fortune));
 			drops.add(out);
 		}
 		else if(getMetaFromState(state)==IIBlockTypes_Ore.PHOSPHORUS.getMeta())
 		{
-			ItemStack out = Utils.getStackWithMetaName(CommonProxy.item_material_gem, "phosphorus");
+			ItemStack out = Utils.getStackWithMetaName(IIContent.item_material_gem, "phosphorus");
 			out.setCount((2+Math.round((float)Math.random()))*(1+fortune));
 			drops.add(out);
 		}

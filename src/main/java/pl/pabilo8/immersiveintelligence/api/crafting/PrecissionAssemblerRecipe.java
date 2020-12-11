@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
 
 import java.util.*;
@@ -103,7 +103,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 		for(PrecissionAssemblerRecipe recipe : recipeList)
 		{
-			if(!Objects.equals(CommonProxy.item_assembly_scheme.getRecipeForStack(scheme), recipe))
+			if(!Objects.equals(IIContent.item_assembly_scheme.getRecipeForStack(scheme), recipe))
 				continue;
 
 			//Whether it should be accepted or not.
@@ -169,7 +169,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 		for(PrecissionAssemblerRecipe recipe : recipeList)
 		{
-			if(scheme.getItem() instanceof ItemIIAssemblyScheme&&CommonProxy.item_assembly_scheme.getRecipeForStack(scheme)!=null&&CommonProxy.item_assembly_scheme.getRecipeForStack(scheme).equals(recipe))
+			if(scheme.getItem() instanceof ItemIIAssemblyScheme&&IIContent.item_assembly_scheme.getRecipeForStack(scheme)!=null&&IIContent.item_assembly_scheme.getRecipeForStack(scheme).equals(recipe))
 			{
 				list.add(recipe);
 				continue;

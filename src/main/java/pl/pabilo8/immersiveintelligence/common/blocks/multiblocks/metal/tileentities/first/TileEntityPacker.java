@@ -41,7 +41,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
@@ -108,7 +108,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 				{
 					Block block = ((ItemBlockIEBase)stack.getFirst().getItem()).getBlock();
 					int s = stack.getFirst().getMetadata();
-					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==CommonProxy.block_metal_device&&(s==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()))
+					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==IIContent.block_metal_device&&(s==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()))
 					{
 						if(!ItemNBTHelper.hasKey(stack.getFirst(), "inventory"))
 						{
@@ -144,7 +144,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 				stack ->
 				{
 					Block block = ((ItemBlockIEBase)stack.getFirst().getItem()).getBlock();
-					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==CommonProxy.block_small_crate)
+					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==IIContent.block_small_crate)
 					{
 						if(!ItemNBTHelper.hasKey(stack.getFirst(), "inventory"))
 						{

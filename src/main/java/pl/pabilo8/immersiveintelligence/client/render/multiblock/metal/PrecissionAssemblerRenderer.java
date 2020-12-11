@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPreci
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
 
 /**
@@ -301,7 +301,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 				ClientUtils.bindTexture(texture);
 				for(ModelRendererTurbo model : model.schemeModel)
 					model.render(0.0625f);
-				ItemStack drawStack = CommonProxy.item_assembly_scheme.getProducedStack(te.inventory.get(3));
+				ItemStack drawStack = IIContent.item_assembly_scheme.getProducedStack(te.inventory.get(3));
 
 				double playerDistanceSq = ClientUtils.mc().player.getDistanceSq(te.getPos());
 				float lineWidth = playerDistanceSq < 25?1: playerDistanceSq < 40?.5f: .1f;

@@ -41,6 +41,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblockTileEntity;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -130,7 +131,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	{
 		ItemStack stack = player.getHeldItem(hand);
 		TileEntity tile = world.getTileEntity(pos);
-		ItemNBTHelper.setBoolean(stack, "forbidHammer", CommonProxy.tileEntitiesWeDontLike.stream().anyMatch(tileEntityPredicate -> tileEntityPredicate.test(tile)));
+		ItemNBTHelper.setBoolean(stack, "forbidHammer", IIContent.tileEntitiesWeDontLike.stream().anyMatch(tileEntityPredicate -> tileEntityPredicate.test(tile)));
 		String[] permittedMultiblocks = null;
 		String[] interdictedMultiblocks = null;
 		if(ItemNBTHelper.hasKey(stack, "multiblockPermission"))
@@ -298,8 +299,8 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
 			return ((IConfigurableSides)tile).toggleSide(iSide, player);
 		}
-		else if(CommonProxy.tileEntitiesWeDontLike.stream().noneMatch(tileEntityPredicate -> tileEntityPredicate.test(tile))
-				&& tile instanceof IDirectionalTile&&((IDirectionalTile)tile).canHammerRotate(side, hitX, hitY, hitZ, player)&&!world.isRemote)
+		else if(IIContent.tileEntitiesWeDontLike.stream().noneMatch(tileEntityPredicate -> tileEntityPredicate.test(tile))
+				&&tile instanceof IDirectionalTile&&((IDirectionalTile)tile).canHammerRotate(side, hitX, hitY, hitZ, player)&&!world.isRemote)
 		{
 			EnumFacing f = ((IDirectionalTile)tile).getFacing();
 			EnumFacing oldF = f;

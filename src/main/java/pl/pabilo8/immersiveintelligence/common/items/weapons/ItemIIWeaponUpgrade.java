@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -204,7 +205,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 	public static void addUpgradesToRender()
 	{
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("water_cooling")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("water_cooling")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
@@ -213,7 +214,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("heavy_barrel")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("heavy_barrel")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
@@ -222,7 +223,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("second_magazine")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("second_magazine")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.secondMagazineMainBox);
@@ -231,7 +232,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("belt_fed_loader")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("belt_fed_loader")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.ammoBox);
@@ -240,7 +241,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("scope")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("scope")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.scopeBox);
@@ -248,7 +249,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("infrared_scope")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("infrared_scope")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.infraredScopeBox);
@@ -256,7 +257,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("hasty_bipod")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("hasty_bipod")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
@@ -265,7 +266,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("precise_bipod")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("precise_bipod")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
@@ -274,7 +275,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (CommonProxy.item_machinegun.getUpgrades(stack).getBoolean("shield")),
+				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("shield")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox);

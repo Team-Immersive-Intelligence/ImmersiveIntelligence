@@ -31,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssem
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -425,7 +425,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 		{
 			if(inventory.get(3).getItem() instanceof ItemIIAssemblyScheme)
 			{
-				IngredientStack[] stacks = CommonProxy.item_assembly_scheme.getRecipeForStack(inventory.get(3)).inputs;
+				IngredientStack[] stacks = IIContent.item_assembly_scheme.getRecipeForStack(inventory.get(3)).inputs;
 				return stacks.length > slot-4&&stacks[slot-4].matchesItemStack(stack);
 			}
 			else

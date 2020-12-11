@@ -586,6 +586,9 @@ public class Config
 
 				@Comment({"How long does it take for the howitzer to move the shell by one item slot using conveyor (in ticks)"})
 				public static int conveyorTime = 40;
+
+				@Comment({"The speed of howitzer shells in blocks/tick"})
+				public static float howitzerVelocity = 10;
 			}
 
 			public static class BallisticComputer
