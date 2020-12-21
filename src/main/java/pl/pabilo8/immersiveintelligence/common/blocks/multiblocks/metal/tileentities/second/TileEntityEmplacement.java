@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -88,7 +88,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				{
 					currentWeapon.tick();
 					//currentWeapon.reloadFrom(this);
-					Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(60f).expand(0, 40, 0), input -> input instanceof EntityDragon).stream().findFirst();
+					Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(60f).expand(0, 40, 0), input -> input instanceof EntityPlayer).stream().findFirst();
 					if(first.isPresent())
 					{
 						float force = 20.5f;

@@ -344,6 +344,8 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityVehicleSeat.class, EntityRenderNone::new);
 
+		RenderingRegistry.registerEntityRenderingHandler(EntityAtomicBoom.class, AtomicBoomRenderer::new);
+
 		//Railgun overwrite
 		ImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IEContent.itemRailgun, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement_OBJ("immersiveengineering:models/item/railgun.obj", true)
 				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, new Matrix4().scale(.125, .125, .125).translate(-.5, 1.5, .5).rotate(Math.PI*.46875, 0, 1, 0))

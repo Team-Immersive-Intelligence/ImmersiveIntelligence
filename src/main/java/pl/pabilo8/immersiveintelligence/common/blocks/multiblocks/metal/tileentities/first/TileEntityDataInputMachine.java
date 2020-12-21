@@ -61,9 +61,11 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		if(!descPacket&&!isDummy())
+		if(!isDummy())
 		{
-			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 26);
+			if(!descPacket)
+				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 26);
+
 			storedData.variables.clear();
 			storedData.fromNBT(nbt.getCompoundTag("variables"));
 			productionProgress = nbt.getFloat("production_progress");
@@ -80,9 +82,10 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
-		if(!descPacket&&!isDummy())
+		if(!isDummy())
 		{
-			nbt.setTag("inventory", Utils.writeInventory(inventory));
+			if(!descPacket)
+				nbt.setTag("inventory", Utils.writeInventory(inventory));
 			nbt.setTag("variables", storedData.toNBT());
 			nbt.setFloat("production_progress", productionProgress);
 		}

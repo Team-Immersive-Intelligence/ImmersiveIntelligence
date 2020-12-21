@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -42,6 +41,8 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoArtillery;
@@ -362,7 +363,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 							double true_angle2 = Math.toRadians(-(-90-turretPitch));
 
 							Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(3f, true_angle, true_angle2);
-							world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, 0, 0, 0);
+							if(world.isRemote)
+								ParticleUtils.spawnGunfireFX(getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, 0, 0, 0, 8f);
+							//world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, 0, 0, 0);
 							world.playSound(null, getPos(), IISounds.howitzer_shot, SoundCategory.BLOCKS, 1F, 1);
 
 							if(!world.isRemote)
@@ -749,6 +752,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 						master.animation = 3;
 						master.animationTimeMax = ArtilleryHowitzer.fireTime;
 						master.animationTime = 0;
+						master.bullet = IIContent.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1");
 					}
 					break;
 					case "load":
@@ -880,6 +884,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	private Vec3d getGunPosition()
 	{
 		BlockPos shoot_pos = getBlockPosForPos(526).offset(EnumFacing.UP, 1);
-		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+1, shoot_pos.getZ()+.5);
+		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+1.5, shoot_pos.getZ()+.5);
 	}
 }

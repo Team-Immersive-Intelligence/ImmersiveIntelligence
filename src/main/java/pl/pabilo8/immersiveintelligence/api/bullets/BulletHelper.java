@@ -27,7 +27,12 @@ public class BulletHelper
 {
 	public static EntityBullet createBullet(World world, ItemStack stack, Vec3d pos, Vec3d dir, float force)
 	{
-		return new EntityBullet(world, stack, pos.x, pos.y, pos.z, force, dir.x, dir.y, dir.z);
+		return createBullet(world, stack, pos, dir, force, 1f);
+	}
+
+	public static EntityBullet createBullet(World world, ItemStack stack, Vec3d pos, Vec3d dir, float force, float velocity)
+	{
+		return new EntityBullet(world, stack, pos.x, pos.y, pos.z, force, velocity, dir.x, dir.y, dir.z);
 	}
 
 	public static void dealBlockDamage(World world, float bulletDamage, BlockPos pos, IPenetrationHandler pen)

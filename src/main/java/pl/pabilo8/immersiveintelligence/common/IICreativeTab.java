@@ -92,6 +92,7 @@ public class IICreativeTab extends CreativeTabs
 		list.add(IIContent.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "hmx"));
 
 		list.add(IIContent.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("M65 White-Phosphorus Shell"));
+		list.add(IIContent.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1"));
 
 		list.add(IIContent.item_grenade.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Stielhandgranate mk.1"));
 		list.add(IIContent.item_grenade.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Phosphorgranate mk.1"));

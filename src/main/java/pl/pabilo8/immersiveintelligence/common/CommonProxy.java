@@ -81,6 +81,7 @@ import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponent
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.cores.*;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentHMX;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentNuke;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentRDX;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentTNT;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.shrapnel.BulletComponentShrapnel;
@@ -482,6 +483,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX());
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentNuke());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentFirework());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTracerPowder());
@@ -687,6 +689,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "seat"),
 				EntityVehicleSeat.class, "seat", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "atomic_boom"),
+				EntityAtomicBoom.class, "atomic_boom", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 	}
 
 	public void postInit()

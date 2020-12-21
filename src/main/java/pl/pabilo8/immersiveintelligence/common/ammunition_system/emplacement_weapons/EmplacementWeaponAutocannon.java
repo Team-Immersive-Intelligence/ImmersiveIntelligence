@@ -167,7 +167,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.baseModel)
 			mod.render();
-		GlStateManager.rotate(yy, 0, 1, 0);
+		GlStateManager.rotate(180+yy, 0, 1, 0);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.turretModel)
 			mod.render();
 

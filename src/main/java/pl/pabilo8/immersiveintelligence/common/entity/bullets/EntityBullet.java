@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -49,7 +50,7 @@ import java.util.Arrays;
 public class EntityBullet extends Entity implements ILightProvider
 {
 	public static final int MAX_TICKS = 600;
-	public static final float DRAG = 0.98f;
+	public static final float DRAG = 0.02f;
 	public static final float GRAVITY = 0.1f;
 
 	//For testing purposes
@@ -82,7 +83,7 @@ public class EntityBullet extends Entity implements ILightProvider
 	Base damage is density*initial damage (NOT MASS)
 	On hit, they are multiplied by core type bonuses, so a softpoint bullet has less penetration than an AP round, but has more damage vs unarmored targets
 	 */
-	public float penetrationHardness = 1, force = 1, baseDamage = 0, mass = 0;
+	public float penetrationHardness = 1, force = 1, initalForce = 1, baseDamage = 0, mass = 0;
 
 	ArrayList<Entity> hitEntities = new ArrayList<>();
 	ArrayList<BlockPos> hitPos = new ArrayList<>();
@@ -101,14 +102,15 @@ public class EntityBullet extends Entity implements ILightProvider
 	/**
 	 * use $link{}
 	 */
-	public EntityBullet(World worldIn, ItemStack stack, double x, double y, double z, float force, double motionX, double motionY, double motionZ)
+	public EntityBullet(World worldIn, ItemStack stack, double x, double y, double z, float force, float velocity, double motionX, double motionY, double motionZ)
 	{
 		super(worldIn);
 
 		fromStack(stack);
 
 		this.setPosition(x, y, z);
-		this.force = force;
+		this.force = force*velocity;
+		this.initalForce = force;
 		this.baseMotionX = motionX;
 		this.baseMotionY = motionY;
 		this.baseMotionZ = motionZ;
@@ -225,7 +227,7 @@ public class EntityBullet extends Entity implements ILightProvider
 		{
 			// TODO: 21.11.2020 find a way of decreasing force, without making the bullet stop in midair
 			//current works, though
-			force *= DRAG;
+			force -= DRAG*force*DEV_SLOMO;
 			gravityMotionY -= GRAVITY*this.mass*DEV_SLOMO;
 			setMotion();
 
@@ -248,9 +250,12 @@ public class EntityBullet extends Entity implements ILightProvider
 							{
 								IPenetrationHandler penetrationHandler = PenetrationRegistry.getPenetrationHandler(world.getBlockState(pos));
 								PenMaterialTypes penType = penetrationHandler.getPenetrationType();
-								float pen = penetrationHardness*bulletCoreType.getPenMod(penType)*force;
+								float pen = penetrationHardness*bulletCoreType.getPenMod(penType);
 								float dmg = baseDamage*bulletCoreType.getDamageMod(penType)/4f;
 								float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
+								if(world.getBlockState(pos).getBlock()==Blocks.BEDROCK)
+									hardness = pen*20;
+
 								if(hardness < 0)
 									hardness = Integer.MAX_VALUE+hardness;
 
@@ -336,10 +341,10 @@ public class EntityBullet extends Entity implements ILightProvider
 										e.hurtResistantTime = 0;
 										e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), Math.max(dmg-(armor*depth), 0));
 										penetrationHardness = 0;
+										stopAtPoint(hit);
 										if(fuse==-1)
 											performEffect();
 									}
-									stopAtPoint(hit);
 									break penloop;
 								}
 								//underpenetration + ricochet
@@ -352,10 +357,10 @@ public class EntityBullet extends Entity implements ILightProvider
 									}
 									else if(!world.isRemote)
 									{
+										stopAtPoint(hit);
 										if(fuse==-1)
 											performEffect();
 									}
-									stopAtPoint(hit);
 									break penloop;
 								}
 
@@ -407,6 +412,7 @@ public class EntityBullet extends Entity implements ILightProvider
 		baseMotionX = 0;
 		baseMotionY = 0;
 		baseMotionZ = 0;
+		setPosition(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z);
 	}
 
 	private void ricochet(float force, BlockPos currentPos)
@@ -462,6 +468,7 @@ public class EntityBullet extends Entity implements ILightProvider
 			this.baseMotionY = compound.getDouble("basemotion_y");
 			this.baseMotionZ = compound.getDouble("basemotion_z");
 			this.force = compound.getFloat("force");
+			this.initalForce = compound.getFloat("initalForce");
 		}
 
 		if(compound.hasKey("casing"))
@@ -524,6 +531,7 @@ public class EntityBullet extends Entity implements ILightProvider
 		compound.setDouble("basemotion_y", this.baseMotionY);
 		compound.setDouble("basemotion_z", this.baseMotionZ);
 		compound.setFloat("force", this.force);
+		compound.setFloat("initalForce", this.initalForce);
 
 	}
 
