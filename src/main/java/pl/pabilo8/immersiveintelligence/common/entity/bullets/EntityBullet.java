@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 
 import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.block.SoundType;
@@ -75,9 +76,8 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	/*
 	Paint color and fuse is -1 if not existant
-	Durability is
 	 */
-	public int paintColor = -1, fuse = -1, durability = 1;
+	public int paintColor = -1, fuse = -1;
 	/*
 	Penetration hardness is the base hardness the bullet core can penetrate
 	Base damage is density*initial damage (NOT MASS)
@@ -129,6 +129,11 @@ public class EntityBullet extends Entity implements ILightProvider
 	{
 		this.shooter = shooter;
 		hitEntities.add(shooter);
+		if(shooter.isRiding())
+		{
+			hitEntities.add(shooter.getLowestRidingEntity());
+			hitEntities.addAll(shooter.getLowestRidingEntity().getRecursivePassengers());
+		}
 		hitEntities.addAll(Arrays.asList(others));
 	}
 
@@ -154,6 +159,9 @@ public class EntityBullet extends Entity implements ILightProvider
 			components = bulletCasing.getComponents(stack);
 			componentNBT = bulletCasing.getComponentsNBT(stack);
 			paintColor = bulletCasing.getPaintColor(stack);
+
+			if(ItemNBTHelper.hasKey(stack, "fuse"))
+				fuse = ItemNBTHelper.getInt(stack, "fuse");
 
 			refreshBullet();
 		}
@@ -225,8 +233,6 @@ public class EntityBullet extends Entity implements ILightProvider
 		}
 		else
 		{
-			// TODO: 21.11.2020 find a way of decreasing force, without making the bullet stop in midair
-			//current works, though
 			force -= DRAG*force*DEV_SLOMO;
 			gravityMotionY -= GRAVITY*this.mass*DEV_SLOMO;
 			setMotion();
@@ -274,7 +280,7 @@ public class EntityBullet extends Entity implements ILightProvider
 										if(!world.getBlockState(pos).getMaterial().isLiquid())
 											BulletHelper.dealBlockDamage(world, dmg*(hardness/penetrationHandler.getDensity()), pos, penetrationHandler);
 										if(fuse==-1)
-											performEffect();
+											performEffect(hit);
 									}
 									stopAtPoint(hit);
 									penetrationHardness = 0;
@@ -290,7 +296,7 @@ public class EntityBullet extends Entity implements ILightProvider
 										if(!world.isRemote)
 										{
 											if(fuse==-1)
-												performEffect();
+												performEffect(hit);
 										}
 										stopAtPoint(hit);
 
@@ -341,9 +347,9 @@ public class EntityBullet extends Entity implements ILightProvider
 										e.hurtResistantTime = 0;
 										e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), Math.max(dmg-(armor*depth), 0));
 										penetrationHardness = 0;
-										stopAtPoint(hit);
 										if(fuse==-1)
-											performEffect();
+											performEffect(hit);
+										stopAtPoint(hit);
 									}
 									break penloop;
 								}
@@ -357,9 +363,10 @@ public class EntityBullet extends Entity implements ILightProvider
 									}
 									else if(!world.isRemote)
 									{
-										stopAtPoint(hit);
 										if(fuse==-1)
-											performEffect();
+											performEffect(hit);
+										stopAtPoint(hit);
+
 									}
 									break penloop;
 								}
@@ -375,7 +382,7 @@ public class EntityBullet extends Entity implements ILightProvider
 
 		if(fuse!=-1&&ticksExisted > fuse)
 		{
-			performEffect();
+			performEffect(new RayTraceResult(this));
 			return;
 		}
 
@@ -426,12 +433,13 @@ public class EntityBullet extends Entity implements ILightProvider
 		hitPos.add(currentPos);
 	}
 
-	private void performEffect()
+	private void performEffect(RayTraceResult hit)
 	{
+		setPosition(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z);
 		float str = bulletCasing.getComponentCapacity()*bulletCore.getExplosionModifier()*bulletCoreType.getComponentEffectivenessMod();
 		for(int i = 0; i < components.length; i++)
 		{
-			components[i].onExplosion(str, componentNBT[i], world, this.getPosition(), this);
+			components[i].onEffect(str, componentNBT[i], world, hit.getBlockPos()!=null?hit.getBlockPos(): this.getPosition(), this);
 		}
 		setDead();
 	}

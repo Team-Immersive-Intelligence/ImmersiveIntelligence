@@ -59,9 +59,9 @@ public class IIWorldGen implements IWorldGenerator
 		for(OreGen gen : orespawnList)
 		{
 			EnumOreType type = gen.getType();
-			if(((type==EnumOreType.OVERWORLD&&!oreDimBlacklistOverworld.contains(dim))||
-					(type==EnumOreType.NETHER&&!oreDimBlacklistNether.contains(dim))||
-					(type==EnumOreType.END&&!oreDimBlacklistEnd.contains(dim))
+			if(((type==EnumOreType.OVERWORLD&&oreDimBlacklistOverworld.contains(dim))||
+					(type==EnumOreType.NETHER&&oreDimBlacklistNether.contains(dim))||
+					(type==EnumOreType.END&&oreDimBlacklistEnd.contains(dim))
 			))
 				break;
 			if(newGeneration||retrogenMap.get("retrogen_"+gen.name))

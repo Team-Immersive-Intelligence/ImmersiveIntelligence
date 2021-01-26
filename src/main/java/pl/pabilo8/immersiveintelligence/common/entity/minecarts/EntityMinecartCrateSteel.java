@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity.minecarts;
 
 import blusunrize.immersiveengineering.api.IEApi;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
@@ -20,6 +22,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -51,7 +54,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 		if(!world.isRemote&&this.world.getGameRules().getBoolean("doEntityDrops"))
 		{
 			ItemStack cart = new ItemStack(Items.MINECART, 1);
-			Item drop = Item.getItemFromBlock(IIContent.block_metal_device);
+			Item drop = Item.getItemFromBlock(IIContent.blockMetalDevice);
 			ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 			NBTTagCompound nbt = new NBTTagCompound();
 
@@ -102,7 +105,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 	@Override
 	public IBlockState getDefaultDisplayTile()
 	{
-		return IIContent.block_metal_device.getStateFromMeta(IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+		return IIContent.blockMetalDevice.getStateFromMeta(IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 	}
 
 	@Override
@@ -132,7 +135,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 
 	public Tuple<ItemStack, EntityMinecart> getBlockForPickup()
 	{
-		Item drop = Item.getItemFromBlock(IIContent.block_metal_device);
+		Item drop = Item.getItemFromBlock(IIContent.blockMetalDevice);
 		ItemStack drop2 = new ItemStack(drop, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 		NBTTagCompound nbt = new NBTTagCompound();
 
@@ -185,7 +188,7 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 	@Override
 	public void setMinecartBlock(ItemStack stack)
 	{
-		if(stack.getItem() instanceof ItemBlock&&((ItemBlock)stack.getItem()).getBlock()==IIContent.block_metal_device)
+		if(stack.getItem() instanceof ItemBlock&&((ItemBlock)stack.getItem()).getBlock()==IIContent.blockMetalDevice)
 		{
 			if(stack.hasTagCompound())
 			{
@@ -198,5 +201,35 @@ public class EntityMinecartCrateSteel extends EntityMinecartContainer implements
 					setCustomNameTag(s);
 			}
 		}
+	}
+
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target)
+	{
+		ItemStack drop2 = new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.CRATE.getMeta());
+		NBTTagCompound nbt = new NBTTagCompound();
+
+		NBTTagList invList = new NBTTagList();
+
+		for(int i = 0; i < itemHandler.getSlots(); i++)
+		{
+			ItemStack stack = itemHandler.extractItem(i, itemHandler.getStackInSlot(i).getCount(), false);
+
+			if(!stack.isEmpty())
+			{
+				NBTTagCompound itemTag = new NBTTagCompound();
+				itemTag.setByte("Slot", (byte)i);
+				stack.writeToNBT(itemTag);
+				invList.appendTag(itemTag);
+			}
+		}
+		if(this.hasCustomName())
+		{
+			nbt.setString("name", getCustomNameTag());
+		}
+
+		nbt.setTag("inventory", invList);
+		drop2.setTagCompound(nbt);
+		return drop2;
 	}
 }

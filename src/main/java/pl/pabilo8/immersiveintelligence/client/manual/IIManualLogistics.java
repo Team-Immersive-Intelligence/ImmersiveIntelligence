@@ -40,9 +40,9 @@ public class IIManualLogistics extends IIManual
 		);
 
 		ItemStack inserter0, inserter1, inserter2;
-		inserter0 = new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.INSERTER.getMeta());
-		inserter1 = new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta());
-		inserter2 = new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.FLUID_INSERTER.getMeta());
+		inserter0 = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.INSERTER.getMeta());
+		inserter1 = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta());
+		inserter2 = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.FLUID_INSERTER.getMeta());
 
 		ManualHelper.addEntry("inserters", getCategory(),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "inserters0", inserter0, inserter1, inserter2),
@@ -84,15 +84,15 @@ public class IIManualLogistics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "skycrates4"),
 				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates5", MultiblockSkyCratePost.instance),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "skycrates6",
-						Utils.getStackWithMetaName(IIContent.item_minecart, "wooden_crate"),
-						Utils.getStackWithMetaName(IIContent.item_minecart, "reinforced_crate"),
-						Utils.getStackWithMetaName(IIContent.item_minecart, "steel_crate"),
-						Utils.getStackWithMetaName(IIContent.item_minecart, "wooden_barrel"),
-						Utils.getStackWithMetaName(IIContent.item_minecart, "metal_barrel")
+						Utils.getStackWithMetaName(IIContent.itemMinecart, "wooden_crate"),
+						Utils.getStackWithMetaName(IIContent.itemMinecart, "reinforced_crate"),
+						Utils.getStackWithMetaName(IIContent.itemMinecart, "steel_crate"),
+						Utils.getStackWithMetaName(IIContent.itemMinecart, "wooden_barrel"),
+						Utils.getStackWithMetaName(IIContent.itemMinecart, "metal_barrel")
 				),
 				new ManualPages.CraftingMulti(ManualHelper.getManual(), "skycrates7",
-						Utils.getStackWithMetaName(IIContent.item_skycrate_mount, "mechanical"),
-						Utils.getStackWithMetaName(IIContent.item_skycrate_mount, "electric"))
+						Utils.getStackWithMetaName(IIContent.itemSkycrateMount, "mechanical"),
+						Utils.getStackWithMetaName(IIContent.itemSkycrateMount, "electric"))
 		);
 
 

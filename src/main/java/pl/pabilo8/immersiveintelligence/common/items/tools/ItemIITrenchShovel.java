@@ -47,7 +47,7 @@ public class ItemIITrenchShovel extends ItemIEShovel
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		IIContent.items.add(this);
+		IIContent.ITEMS.add(this);
 	}
 
 	@Override

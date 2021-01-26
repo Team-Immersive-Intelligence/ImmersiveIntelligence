@@ -24,7 +24,7 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 {
 	public ItemIIBulletMagazine()
 	{
-		super("bullet_magazine", 1, "machinegun", "submachinegun", "automatic_revolver", "submachinegun_round", "assault_rifle");
+		super("bullet_magazine", 1, "machinegun", "submachinegun", "automatic_revolver", "submachinegun_drum", "assault_rifle");
 	}
 
 	public static void makeDefault(ItemStack stack)
@@ -153,25 +153,25 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 		{
 			case 0:
 			default:
-				return IIContent.item_ammo_machinegun;
+				return IIContent.itemAmmoMachinegun;
 			case 1:
 			case 3:
-				return IIContent.item_ammo_submachinegun;
+				return IIContent.itemAmmoSubmachinegun;
 			case 2:
-				return IIContent.item_ammo_revolver;
+				return IIContent.itemAmmoRevolver;
 			case 4:
-				return IIContent.item_ammo_storm_rifle;
+				return IIContent.itemAmmoStormRifle;
 		}
 	}
 
-	public static ItemStack getMagazine(String type, ItemStack bullet1, ItemStack bullet2, ItemStack bullet3, ItemStack bullet4)
+	public static ItemStack getMagazine(String type, ItemStack... bullets)
 	{
-		ItemStack stack = new ItemStack(IIContent.item_bullet_magazine, 1, IIContent.item_bullet_magazine.getMetaBySubname(type));
+		ItemStack stack = new ItemStack(IIContent.itemBulletMagazine, 1, IIContent.itemBulletMagazine.getMetaBySubname(type));
 		NonNullList<ItemStack> l = NonNullList.withSize(getBulletCapactity(stack), ItemStack.EMPTY);
 		for(int i = 0; i < l.size(); i++)
 		{
-			int t = i%4;
-			l.set(i, t==0?bullet1: t==1?bullet2: t==2?bullet3: bullet4);
+			int t = i%bullets.length;
+			l.set(i, bullets[t]);
 		}
 		NBTTagList list = Utils.writeInventory(l);
 		ItemNBTHelper.getTag(stack).setTag("bullets", list);
@@ -207,6 +207,11 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 
 		if(ItemNBTHelper.getInt(stack, "colour0")!=-1)
 		{
+			if(getMetadata(stack)==1)
+			{
+				l.remove(l.size()-1);
+				l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/main_disp"));
+			}
 			l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/bullet0"));
 			l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint0"));
 			if(ItemNBTHelper.getInt(stack, "colour1")!=-1)

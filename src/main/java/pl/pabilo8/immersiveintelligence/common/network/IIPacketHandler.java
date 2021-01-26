@@ -33,6 +33,7 @@ public class IIPacketHandler
 		INSTANCE.registerMessage(MessageProgrammableSpeakerSync.Handler.class, MessageProgrammableSpeakerSync.class, 10, Side.CLIENT);
 		INSTANCE.registerMessage(MessagePlayerAimAnimationSync.HandlerClient.class, MessagePlayerAimAnimationSync.class, 11, Side.CLIENT);
 		INSTANCE.registerMessage(MessageItemReloadMagazine.Handler.class, MessageItemReloadMagazine.class, 12, Side.SERVER);
-
+		INSTANCE.registerMessage(MessageExplosion.HandlerClient.class, MessageExplosion.class, 13, Side.CLIENT);
+		INSTANCE.registerMessage(MessageParticleEffect.HandlerClient.class, MessageParticleEffect.class, 14, Side.CLIENT);
 	}
 }

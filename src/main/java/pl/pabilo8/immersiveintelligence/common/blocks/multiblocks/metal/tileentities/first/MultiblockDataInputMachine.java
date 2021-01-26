@@ -56,7 +56,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 					{
 						if(l==1)
 						{
-							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 						}
 						else
 						{
@@ -67,7 +67,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 					{
 						if(l==1)
 						{
-							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 						}
 					}
 
@@ -120,7 +120,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), w).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.DATA_INPUT_MACHINE.getMeta()));
+					world.setBlockState(pos2, IIContent.blockMetalMultiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.DATA_INPUT_MACHINE.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityDataInputMachine)
 					{
@@ -131,7 +131,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 						tile.pos = (h+1)*4+(l)*2+(w);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock0, 255, 0);
 					}
 				}
 		return true;
@@ -177,7 +177,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 						}
 						else
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
 								return false;
 							}
@@ -187,7 +187,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 					{
 						if(l==1)
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
 								return false;
 							}
@@ -216,7 +216,7 @@ public class MultiblockDataInputMachine implements IMultiblock
 	static final IngredientStack[] materials = new IngredientStack[]{
 			new IngredientStack("scaffoldingTreatedWood", 2),
 			new IngredientStack(new ItemStack(IEContent.blockSheetmetal, 2, BlockTypes_MetalsAll.STEEL.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 4, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 4, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta()))
 	};
 

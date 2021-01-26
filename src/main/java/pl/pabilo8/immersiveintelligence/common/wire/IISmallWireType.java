@@ -76,7 +76,7 @@ public class IISmallWireType extends WireType
 	@Override
 	public ItemStack getWireCoil()
 	{
-		return new ItemStack(IIContent.item_data_wire_coil, 1, meta);
+		return new ItemStack(IIContent.itemDataWireCoil, 1, meta);
 	}
 
 	@Override

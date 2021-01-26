@@ -61,11 +61,11 @@ public class BlockIIBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends Blo
 		block.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		IIContent.blocks.add(block);
+		IIContent.BLOCKS.add(block);
 		try
 		{
 			ItemBlockIEBase item = itemBlock.getConstructor(Block.class).newInstance(block);
-			IIContent.items.add(item);
+			IIContent.ITEMS.add(item);
 			//if (creative)
 			//CommonProxy.items.add(item);
 		} catch(Exception e)

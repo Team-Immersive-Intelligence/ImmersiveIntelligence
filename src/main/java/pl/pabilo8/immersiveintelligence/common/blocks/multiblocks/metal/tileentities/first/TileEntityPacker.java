@@ -108,7 +108,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 				{
 					Block block = ((ItemBlockIEBase)stack.getFirst().getItem()).getBlock();
 					int s = stack.getFirst().getMetadata();
-					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==IIContent.block_metal_device&&(s==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()))
+					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==IIContent.blockMetalDevice&&(s==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()))
 					{
 						if(!ItemNBTHelper.hasKey(stack.getFirst(), "inventory"))
 						{
@@ -144,7 +144,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 				stack ->
 				{
 					Block block = ((ItemBlockIEBase)stack.getFirst().getItem()).getBlock();
-					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==IIContent.block_small_crate)
+					if(IEApi.isAllowedInCrate(stack.getSecond())&&block==IIContent.blockSmallCrate)
 					{
 						if(!ItemNBTHelper.hasKey(stack.getFirst(), "inventory"))
 						{

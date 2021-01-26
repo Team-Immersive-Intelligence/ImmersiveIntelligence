@@ -1,19 +1,23 @@
 package pl.pabilo8.immersiveintelligence.client.fx.nuke;
 
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 17.07.2020
  */
-public class ParticleAtomFog extends Particle
+public class ParticleAtomFog extends IIParticle
 {
 	private float actualParticleScale;
 
@@ -102,5 +106,12 @@ public class ParticleAtomFog extends Particle
 		this.particleScale = this.actualParticleScale*f;
 		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 
+	}
+
+	@Nonnull
+	@Override
+	public ParticleRenderer.DrawingStages getDrawStage()
+	{
+		return DrawingStages.NORMAL;
 	}
 }

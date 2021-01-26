@@ -29,8 +29,8 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 
 	public SawmillRecipeCategory(IGuiHelper helper)
 	{
-		super("sawmill", "tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.sawmill.name", helper.createBlankDrawable(156, 60), SawmillRecipe.class, new ItemStack(IIContent.block_wooden_multiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta()));
-		machineStack = new ItemStack(IIContent.block_wooden_multiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta());
+		super("sawmill", "tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.sawmill.name", helper.createBlankDrawable(156, 60), SawmillRecipe.class, new ItemStack(IIContent.blockWoodenMultiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta()));
+		machineStack = new ItemStack(IIContent.blockWoodenMultiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta());
 	}
 
 	@Override

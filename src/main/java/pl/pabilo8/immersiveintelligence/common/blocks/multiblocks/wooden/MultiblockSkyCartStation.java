@@ -35,9 +35,9 @@ public class MultiblockSkyCartStation implements IMultiblock
 
 			new IngredientStack(new ItemStack(IEContent.blockWoodenDecoration, 4, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockStoneDecorationSlabs, 2, BlockTypes_StoneDecoration.CONCRETE.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 8, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 2, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 8, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 2, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockClothDecoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
 	};
 	public static MultiblockSkyCartStation instance = new MultiblockSkyCartStation();
 	static ItemStack[][][] structure = new ItemStack[3][3][3];
@@ -54,9 +54,9 @@ public class MultiblockSkyCartStation implements IMultiblock
 					if(h==0&&w==0)
 					{
 						if(l==1)
-							structure[h][l][w] = new ItemStack(IIContent.block_cloth_decoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockClothDecoration, 1, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta());
 					}
 					else if(h==0&&l==0)
 					{
@@ -72,7 +72,7 @@ public class MultiblockSkyCartStation implements IMultiblock
 						else if(h==2&&w==1&&l==1)
 							structure[h][l][w] = new ItemStack(IEContent.blockWoodenDecoration, 1, BlockTypes_WoodenDecoration.SCAFFOLDING.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta());
 
 					}
 					else if(h==2&&l==0&&w!=0)
@@ -137,7 +137,7 @@ public class MultiblockSkyCartStation implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.block_wooden_multiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCART_STATION.getMeta()));
+					world.setBlockState(pos2, IIContent.blockWoodenMultiblock.getStateFromMeta(IIBlockTypes_WoodenMultiblock.SKYCART_STATION.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntitySkyCartStation)
 					{
@@ -148,7 +148,7 @@ public class MultiblockSkyCartStation implements IMultiblock
 						tile.pos = ((h+1)*9)+((l+1)*3)+(w+1);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.block_wooden_multiblock, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockWoodenMultiblock, 255, 0);
 					}
 				}
 		return true;
@@ -168,14 +168,14 @@ public class MultiblockSkyCartStation implements IMultiblock
 					{
 						if(l==0)
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_cloth_decoration, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockClothDecoration, IIBlockTypes_ClothDecoration.COIL_ROPE.getMeta()))
 							{
 								return false;
 							}
 						}
 						else
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.MECHANICAL_ENGINEERING.getMeta()))
 							{
 								return false;
 							}
@@ -213,7 +213,7 @@ public class MultiblockSkyCartStation implements IMultiblock
 						}
 						else
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.HEAVY_MECHANICAL_ENGINEERING.getMeta()))
 							{
 								return false;
 							}

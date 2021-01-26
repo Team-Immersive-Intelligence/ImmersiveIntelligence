@@ -52,8 +52,8 @@ public class PenetrationRegistry
 	{
 		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), IEContent.blockMetalDecoration0,
 				IEContent.blockMetalDevice0, IEContent.blockMetalDevice1, IEContent.blockMetalMultiblock);
-		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.block_metal_decoration,
-				IIContent.block_metal_multiblock0, IIContent.block_metal_multiblock1);
+		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.blockMetalDecoration,
+				IIContent.blockMetalMultiblock0, IIContent.blockMetalMultiblock1);
 		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "logWood"), new PenetrationHandlerLog());
 
 		BulletHelper.registerMetalMaterial(new PenetrationHandlerIron(), "iron");

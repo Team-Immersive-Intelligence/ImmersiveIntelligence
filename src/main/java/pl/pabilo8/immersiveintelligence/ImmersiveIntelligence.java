@@ -18,7 +18,10 @@ import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
 
-@Mod(modid = MODID, version = VERSION, dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,)")
+@Mod(modid = MODID, version = VERSION,
+		//xaxaxa, trick! yuo can't steal mod if mod is steal-proof
+		certificateFingerprint = "770570c49a2652e64a9b29b9b9d9919ca68b7065",
+		dependencies = "required-after:forge@[14.23.5.2820,);required-after:immersiveengineering@[0.12,);after:immersiveengineering@[0.12,)")
 public class ImmersiveIntelligence
 {
 	public static final String MODID = "immersiveintelligence";
@@ -98,5 +101,33 @@ public class ImmersiveIntelligence
 		event.registerServerCommand(new IICommandHandler("ii"));
 		if(event.getSide()==Side.CLIENT)
 			ClientCommandHandler.instance.registerCommand(new IICommandHandler("tmt"));
+	}
+
+	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
+	private static final String[] alternativeCerts = {
+
+	};
+
+	@Mod.EventHandler
+	public void wrongSignature(FMLFingerprintViolationEvent event)
+	{
+		boolean loicense = false;
+		for(String altCert : alternativeCerts)
+			if(event.getFingerprints().contains(altCert))
+			{
+				System.out.println("[Immersive Intelligence/Error] "+altCert+" is considered a righteously loicensed certificate. "+
+						"The build may not be stable, thou shall be ware of the bugs lurking from the shadows.");
+				loicense = true;
+				break;
+			}
+		if(!loicense)
+		{
+			System.out.println("[Immersive Intelligence/Error]IT IS VERY PROBABLE, "+
+					"THE ENTITY WHO RELEASED THIS BUILD DOES NOT POSSESS A PROPER IMMERSIVE INTELLIGENCE LOICENSE! ");
+			System.out.println("[Immersive Intelligence/Error]"+
+					"CONTACT THE MINISTRY OF INTELLIGENCE IMMEDIATELLY! ");
+			System.out.println("[Immersive Intelligence/Error]"+
+					"FOUND THESE ILLEGAL FINGERPRINTS: "+event.getFingerprints());
+		}
 	}
 }

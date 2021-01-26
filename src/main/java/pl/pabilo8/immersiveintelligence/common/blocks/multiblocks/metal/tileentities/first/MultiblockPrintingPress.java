@@ -34,7 +34,7 @@ public class MultiblockPrintingPress implements IMultiblock
 	static final IngredientStack[] materials = new IngredientStack[]{
 			new IngredientStack("scaffoldingTreatedWood", 2),
 			new IngredientStack("blockSteel", 1),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 9, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 9, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 6, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 9, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.BARREL.getMeta())),
@@ -67,7 +67,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						}
 						else if(l < 4)
 						{
-							structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 						}
 						else
 							structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta());
@@ -160,7 +160,7 @@ public class MultiblockPrintingPress implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta()));
+					world.setBlockState(pos2, IIContent.blockMetalMultiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityPrintingPress)
 					{
@@ -171,7 +171,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						tile.pos = (h+1)*15+(l)*3+(w+1);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock0, 255, 0);
 					}
 				}
 		return true;
@@ -215,7 +215,7 @@ public class MultiblockPrintingPress implements IMultiblock
 						}
 						else if(l < 4)
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
 
 								return false;

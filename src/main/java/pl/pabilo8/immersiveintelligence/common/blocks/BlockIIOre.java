@@ -31,13 +31,13 @@ public class BlockIIOre extends BlockIIBase<IIBlockTypes_Ore>
 	{
 		if(getMetaFromState(state)==IIBlockTypes_Ore.FLUORITE.getMeta())
 		{
-			ItemStack out = Utils.getStackWithMetaName(IIContent.item_material_gem, "fluorite");
+			ItemStack out = Utils.getStackWithMetaName(IIContent.itemMaterialGem, "fluorite");
 			out.setCount((1+Math.round((float)Math.random()))*(1+fortune));
 			drops.add(out);
 		}
 		else if(getMetaFromState(state)==IIBlockTypes_Ore.PHOSPHORUS.getMeta())
 		{
-			ItemStack out = Utils.getStackWithMetaName(IIContent.item_material_gem, "phosphorus");
+			ItemStack out = Utils.getStackWithMetaName(IIContent.itemMaterialGem, "phosphorus");
 			out.setCount((2+Math.round((float)Math.random()))*(1+fortune));
 			drops.add(out);
 		}

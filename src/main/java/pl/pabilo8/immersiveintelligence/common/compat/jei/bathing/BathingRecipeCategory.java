@@ -36,9 +36,9 @@ public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, Bathi
 
 	public BathingRecipeCategory(IGuiHelper helper)
 	{
-		super("bathing", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name", helper.createBlankDrawable(140, 50), BathingRecipe.class, new ItemStack(IIContent.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()));
+		super("bathing", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name", helper.createBlankDrawable(140, 50), BathingRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()));
 		tankOverlay = helper.createDrawable(background, 0, 52, 20, 51, -2, 2, -2, 2);
-		machineStack = new ItemStack(IIContent.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta());
+		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta());
 	}
 
 	@Override

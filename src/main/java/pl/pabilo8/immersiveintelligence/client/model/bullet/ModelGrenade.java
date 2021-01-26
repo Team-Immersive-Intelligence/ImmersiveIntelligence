@@ -15,7 +15,6 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-// TODO: 21.11.2020 REWORK
 public class ModelGrenade extends ModelBlockBase implements IBulletModel
 {
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/grenade.png";
@@ -30,7 +29,6 @@ public class ModelGrenade extends ModelBlockBase implements IBulletModel
 
 		baseModel[0].addShapeBox(-1F, -11F, -1F, 2, 11, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
 		baseModel[0].setRotationPoint(0F, 0F, 0F);
-
 
 		coreModel = new ModelRendererTurbo[1];
 		coreModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0

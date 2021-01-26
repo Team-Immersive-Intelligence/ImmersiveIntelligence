@@ -22,6 +22,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 
@@ -197,5 +198,39 @@ public class EntityMinecartCrateReinforced extends EntityMinecartContainer imple
 					setCustomNameTag(s);
 			}
 		}
+	}
+
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target)
+	{
+		if(this instanceof IMinecartBlockPickable)
+		{
+			ItemStack drop2 = new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.CRATE.getMeta());
+			NBTTagCompound nbt = new NBTTagCompound();
+
+			NBTTagList invList = new NBTTagList();
+
+			for(int i = 0; i < itemHandler.getSlots(); i++)
+			{
+				ItemStack stack = itemHandler.extractItem(i, itemHandler.getStackInSlot(i).getCount(), false);
+
+				if(!stack.isEmpty())
+				{
+					NBTTagCompound itemTag = new NBTTagCompound();
+					itemTag.setByte("Slot", (byte)i);
+					stack.writeToNBT(itemTag);
+					invList.appendTag(itemTag);
+				}
+			}
+			if(this.hasCustomName())
+			{
+				nbt.setString("name", getCustomNameTag());
+			}
+
+			nbt.setTag("inventory", invList);
+			drop2.setTagCompound(nbt);
+			return drop2;
+		}
+		return ItemStack.EMPTY;
 	}
 }

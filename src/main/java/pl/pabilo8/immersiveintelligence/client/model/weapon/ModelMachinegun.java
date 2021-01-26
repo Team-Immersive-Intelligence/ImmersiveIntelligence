@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.weapon;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
@@ -22,7 +23,8 @@ public class ModelMachinegun extends ModelBlockBase
 	ModelRendererTurbo[] barrelModel, sightsModel, triggerModel, ammoModel, slideModel, gripModel, bipodModel;
 	public TmtNamedBoxGroup baseBox, barrelBox, sightsBox, triggerBox, ammoBox, slideBox, gripBox, bipodBox;
 	ModelRendererTurbo[] heavyBarrelModel, waterCoolingModel, secondMagazineMainModel, secondMagazineMagModel, beltFedLoaderModel, scopeModel, infraredScopeModel, hastyBipodModel, preciseBipodModel, shieldModel, baubleModel;
-	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox, baubleBox;
+	ModelRendererTurbo[] tripodBaseModel, tripodLeg1Model, tripodLeg2Model, tripodLeg3Model;
+	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox, baubleBox, tripodBox;
 
 	private static String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
 
@@ -605,6 +607,142 @@ public class ModelMachinegun extends ModelBlockBase
 
 		parts.put("bauble", baubleModel);
 
+		tripodBaseModel = new ModelRendererTurbo[4];
+		tripodBaseModel[0] = new ModelRendererTurbo(this, 47, 103, textureX, textureY); // Tripod02
+		tripodBaseModel[1] = new ModelRendererTurbo(this, 49, 100, textureX, textureY); // Tripod03
+		tripodBaseModel[2] = new ModelRendererTurbo(this, 49, 100, textureX, textureY); // Tripod04
+		tripodBaseModel[3] = new ModelRendererTurbo(this, 60, 107, textureX, textureY); // Tripod05
+
+		tripodBaseModel[0].addShapeBox(0F, 0F, 0F, 3, 1, 2, 0F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F); // Tripod02
+		tripodBaseModel[0].setRotationPoint(-1F, -21.01F, -2F);
+
+		tripodBaseModel[1].addShapeBox(0F, 0F, 0F, 3, 1, 2, 0F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F, 0.01F, 0F, 0.01F); // Tripod03
+		tripodBaseModel[1].setRotationPoint(0F, -21.02F, 1F);
+		tripodBaseModel[1].rotateAngleY = -0.78539816F;
+
+		tripodBaseModel[2].addShapeBox(0F, 0F, 0F, 3, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod04
+		tripodBaseModel[2].setRotationPoint(-1F, -21F, -1F);
+		tripodBaseModel[2].rotateAngleY = 0.78539816F;
+
+		tripodBaseModel[3].addShapeBox(0F, 0F, 0F, 1, 3, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod05
+		tripodBaseModel[3].setRotationPoint(0F, -22F, 0F);
+
+		parts.put("tripodBase", tripodBaseModel);
+
+		tripodLeg1Model = new ModelRendererTurbo[6];
+		tripodLeg1Model[0] = new ModelRendererTurbo(this, 54, 106, textureX, textureY); // Tripod14
+		tripodLeg1Model[1] = new ModelRendererTurbo(this, 50, 106, textureX, textureY); // Tripod15
+		tripodLeg1Model[2] = new ModelRendererTurbo(this, 50, 112, textureX, textureY); // Tripod16
+		tripodLeg1Model[3] = new ModelRendererTurbo(this, 60, 111, textureX, textureY); // Tripod15
+		tripodLeg1Model[4] = new ModelRendererTurbo(this, 56, 114, textureX, textureY); // Tripod15
+		tripodLeg1Model[5] = new ModelRendererTurbo(this, 52, 114, textureX, textureY); // Tripod15
+
+		tripodLeg1Model[0].addShapeBox(-2.7F, -0.5F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod14
+		tripodLeg1Model[0].setRotationPoint(0F, -20F, 2F);
+		tripodLeg1Model[0].rotateAngleX = 0.29670597F;
+		tripodLeg1Model[0].rotateAngleY = 0.78539816F;
+
+		tripodLeg1Model[1].addShapeBox(-0.7F, -0.5F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod15
+		tripodLeg1Model[1].setRotationPoint(0F, -20F, 2F);
+		tripodLeg1Model[1].rotateAngleX = 0.29670597F;
+		tripodLeg1Model[1].rotateAngleY = 0.78539816F;
+
+		tripodLeg1Model[2].addShapeBox(-3.2F, 4.5F, 0F, 4, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod16
+		tripodLeg1Model[2].setRotationPoint(0F, -20F, 2F);
+		tripodLeg1Model[2].rotateAngleX = 0.29670597F;
+		tripodLeg1Model[2].rotateAngleY = 0.78539816F;
+
+		tripodLeg1Model[3].addShapeBox(-1.7F, 7.5F, 0F, 1, 15, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod15
+		tripodLeg1Model[3].setRotationPoint(0F, -20F, 2F);
+		tripodLeg1Model[3].rotateAngleX = 0.29670597F;
+		tripodLeg1Model[3].rotateAngleY = 0.78539816F;
+
+		tripodLeg1Model[4].addShapeBox(-0.7F, 5.5F, 0F, 1, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod15
+		tripodLeg1Model[4].setRotationPoint(0F, -20F, 2F);
+		tripodLeg1Model[4].rotateAngleX = 0.29670597F;
+		tripodLeg1Model[4].rotateAngleY = 0.78539816F;
+
+		tripodLeg1Model[5].addShapeBox(-2.7F, 5.5F, 0F, 1, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod15
+		tripodLeg1Model[5].setRotationPoint(0F, -20F, 2F);
+		tripodLeg1Model[5].rotateAngleX = 0.29670597F;
+		tripodLeg1Model[5].rotateAngleY = 0.78539816F;
+
+		parts.put("tripodLeg1", tripodLeg1Model);
+
+		tripodLeg2Model = new ModelRendererTurbo[6];
+		tripodLeg2Model[0] = new ModelRendererTurbo(this, 60, 111, textureX, textureY); // Tripod01
+		tripodLeg2Model[1] = new ModelRendererTurbo(this, 50, 106, textureX, textureY); // Tripod07
+		tripodLeg2Model[2] = new ModelRendererTurbo(this, 50, 112, textureX, textureY); // Tripod08
+		tripodLeg2Model[3] = new ModelRendererTurbo(this, 54, 106, textureX, textureY); // Tripod09
+		tripodLeg2Model[4] = new ModelRendererTurbo(this, 52, 114, textureX, textureY); // Tripod01
+		tripodLeg2Model[5] = new ModelRendererTurbo(this, 56, 114, textureX, textureY); // Tripod01
+
+		tripodLeg2Model[0].addShapeBox(0F, 8F, 0F, 1, 15, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod01
+		tripodLeg2Model[0].setRotationPoint(0F, -21F, -2F);
+		tripodLeg2Model[0].rotateAngleX = -0.29670597F;
+
+		tripodLeg2Model[1].addShapeBox(0F, 0F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod07
+		tripodLeg2Model[1].setRotationPoint(-1F, -21F, -2F);
+		tripodLeg2Model[1].rotateAngleX = -0.29670597F;
+
+		tripodLeg2Model[2].addShapeBox(0F, 5F, 0F, 4, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod08
+		tripodLeg2Model[2].setRotationPoint(-1.5F, -21F, -2F);
+		tripodLeg2Model[2].rotateAngleX = -0.29670597F;
+
+		tripodLeg2Model[3].addShapeBox(0F, 0F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod09
+		tripodLeg2Model[3].setRotationPoint(1F, -21F, -2F);
+		tripodLeg2Model[3].rotateAngleX = -0.29670597F;
+
+		tripodLeg2Model[4].addShapeBox(1F, 6F, 0F, 1, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod01
+		tripodLeg2Model[4].setRotationPoint(0F, -21F, -2F);
+		tripodLeg2Model[4].rotateAngleX = -0.29670597F;
+
+		tripodLeg2Model[5].addShapeBox(-1F, 6F, 0F, 1, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod01
+		tripodLeg2Model[5].setRotationPoint(0F, -21F, -2F);
+		tripodLeg2Model[5].rotateAngleX = -0.29670597F;
+
+		parts.put("tripodLeg2", tripodLeg2Model);
+
+		tripodLeg3Model = new ModelRendererTurbo[6];
+		tripodLeg3Model[0] = new ModelRendererTurbo(this, 54, 106, textureX, textureY); // Tripod06
+		tripodLeg3Model[1] = new ModelRendererTurbo(this, 50, 106, textureX, textureY); // Tripod10
+		tripodLeg3Model[2] = new ModelRendererTurbo(this, 50, 112, textureX, textureY); // Tripod12
+		tripodLeg3Model[3] = new ModelRendererTurbo(this, 60, 111, textureX, textureY); // Tripod13
+		tripodLeg3Model[4] = new ModelRendererTurbo(this, 52, 114, textureX, textureY); // Tripod13
+		tripodLeg3Model[5] = new ModelRendererTurbo(this, 56, 114, textureX, textureY); // Tripod13
+
+		tripodLeg3Model[0].addShapeBox(0F, -0.8F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod06
+		tripodLeg3Model[0].setRotationPoint(1F, -20F, 2F);
+		tripodLeg3Model[0].rotateAngleX = 0.29670597F;
+		tripodLeg3Model[0].rotateAngleY = -0.78539816F;
+
+		tripodLeg3Model[1].addShapeBox(2F, -0.8F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod10
+		tripodLeg3Model[1].setRotationPoint(1F, -20F, 2F);
+		tripodLeg3Model[1].rotateAngleX = 0.29670597F;
+		tripodLeg3Model[1].rotateAngleY = -0.78539816F;
+
+		tripodLeg3Model[2].addShapeBox(-0.5F, 4F, 0.01F, 4, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod12
+		tripodLeg3Model[2].setRotationPoint(1F, -20F, 2F);
+		tripodLeg3Model[2].rotateAngleX = 0.29670597F;
+		tripodLeg3Model[2].rotateAngleY = -0.78539816F;
+
+		tripodLeg3Model[3].addShapeBox(1F, 7F, 0F, 1, 15, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod13
+		tripodLeg3Model[3].setRotationPoint(1F, -20F, 2F);
+		tripodLeg3Model[3].rotateAngleX = 0.29670597F;
+		tripodLeg3Model[3].rotateAngleY = -0.78539816F;
+
+		tripodLeg3Model[4].addShapeBox(0F, 5F, 0F, 1, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod13
+		tripodLeg3Model[4].setRotationPoint(1F, -20F, 2F);
+		tripodLeg3Model[4].rotateAngleX = 0.29670597F;
+		tripodLeg3Model[4].rotateAngleY = -0.78539816F;
+
+		tripodLeg3Model[5].addShapeBox(2F, 5F, 0F, 1, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tripod13
+		tripodLeg3Model[5].setRotationPoint(1F, -20F, 2F);
+		tripodLeg3Model[5].rotateAngleX = 0.29670597F;
+		tripodLeg3Model[5].rotateAngleY = -0.78539816F;
+
+		parts.put("tripodLeg3", tripodLeg3Model);
+
 		flipAll();
 
 		parts.remove("heavyBarrel");
@@ -618,6 +756,11 @@ public class ModelMachinegun extends ModelBlockBase
 		parts.remove("preciseBipod");
 		parts.remove("shield");
 		parts.remove("bauble");
+
+		parts.remove("tripodBase");
+		parts.remove("tripodLeg1");
+		parts.remove("tripodLeg2");
+		parts.remove("tripodLeg3");
 
 		baseBox = new TmtNamedBoxGroup("base", baseModel, MachinegunRenderer.texture);
 		barrelBox = new TmtNamedBoxGroup("barrel", barrelModel, MachinegunRenderer.texture);
@@ -689,6 +832,56 @@ public class ModelMachinegun extends ModelBlockBase
 				getModel()[0].render(scale);
 				GlStateManager.rotate(2*35f*(1f-legs), 0f, 0f, 1f);
 				getModel()[1].render(scale);
+				GlStateManager.popMatrix();
+			}
+		};
+		tripodBox = new TmtNamedBoxGroup("bipod", null, MachinegunRenderer.texture)
+		{
+			final ModelRendererTurbo[] tripodBaseModel = ModelMachinegun.this.tripodBaseModel;
+			final ModelRendererTurbo[] tripodLeg1Model = ModelMachinegun.this.tripodLeg1Model;
+			final ModelRendererTurbo[] tripodLeg2Model = ModelMachinegun.this.tripodLeg2Model;
+			final ModelRendererTurbo[] tripodLeg3Model = ModelMachinegun.this.tripodLeg3Model;
+
+			@Override
+			public void render(float scale, float animation)
+			{
+				GlStateManager.pushMatrix();
+
+				if(animation < 1)
+				{
+					float legs = 1f-(animation > 0.5f?(animation-0.5f)/0.5f: 0);
+					float tripodProgress = MathHelper.clamp(legs/0.75f, 0, 1);
+					float tripodLegProgress = (MathHelper.clamp(legs/0.95f, 0, 1)*0.5934119f)-0.29670597F;
+
+					GlStateManager.translate(8F*scale, 7.75F*scale, -26F*scale);
+
+
+					//GlStateManager.color(1f, 1f, 1f, Math.min(tripodProgress, 1));
+					GlStateManager.translate(0, (tripodProgress)*-24f*scale, 0);
+					for(ModelRendererTurbo mod : tripodBaseModel)
+						mod.render(scale);
+
+					for(ModelRendererTurbo mod : tripodLeg1Model)
+					{
+						mod.rotateAngleX = tripodLegProgress;
+						mod.render(scale);
+					}
+					for(ModelRendererTurbo mod : tripodLeg2Model)
+					{
+						mod.rotateAngleX = -tripodLegProgress;
+						mod.render(scale);
+					}
+					for(ModelRendererTurbo mod : tripodLeg3Model)
+					{
+						mod.rotateAngleX = tripodLegProgress;
+						mod.render(scale);
+					}
+				}
+				else
+				{
+
+				}
+
 				GlStateManager.popMatrix();
 			}
 		};

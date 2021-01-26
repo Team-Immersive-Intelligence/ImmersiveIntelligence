@@ -46,7 +46,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	static
 	{
-		s2 = IIContent.item_ammo_autocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
+		s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setInteger("colour", 0xff0000);
 		((NBTTagList)ItemNBTHelper.getTag(s2).getTag("component_nbt")).set(1, new NBTTagCompound());

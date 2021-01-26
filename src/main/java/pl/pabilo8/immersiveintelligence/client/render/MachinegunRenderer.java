@@ -40,10 +40,10 @@ import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-public class MachinegunRenderer extends Render<EntityMachinegun>
+public class MachinegunRenderer extends Render<EntityMachinegun> implements IReloadableModelContainer<MachinegunRenderer>
 {
 	public static final String texture = "machinegun.png";
-	public static ModelMachinegun model = new ModelMachinegun();
+	public static ModelMachinegun model;
 	public static HashMap<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> upgrades = new HashMap<>();
 	public static List<TmtNamedBoxGroup> defaultGunParts = new ArrayList<>();
 	public static List<TmtNamedBoxGroup> skinParts = new ArrayList<>();
@@ -51,16 +51,8 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 	public MachinegunRenderer(RenderManager renderManager)
 	{
 		super(renderManager);
-		defaultGunParts.add(model.baseBox);
-		defaultGunParts.add(model.barrelBox);
-		defaultGunParts.add(model.sightsBox);
-		defaultGunParts.add(model.triggerBox);
-		defaultGunParts.add(model.ammoBox);
-		defaultGunParts.add(model.slideBox);
-		defaultGunParts.add(model.gripBox);
-		defaultGunParts.add(model.bipodBox);
-
-		skinParts.add(model.baubleBox);
+		subscribeToList("machinegun");
+		reloadModels();
 	}
 
 	public static void renderMachinegun(ItemStack stack, @Nullable EntityMachinegun entity)
@@ -69,7 +61,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
 		boolean drawText = false;
 
-		String skin = IIContent.item_machinegun.getSkinnableCurrentSkin(stack);
+		String skin = IIContent.itemMachinegun.getSkinnableCurrentSkin(stack);
 		if(!skin.isEmpty())
 		{
 			SpecialSkin s = CustomSkinHandler.specialSkins.get(skin);
@@ -84,7 +76,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 			}
 
 		}
-		skin = (skin.isEmpty()?IIContent.item_machinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
+		skin = (skin.isEmpty()?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
 
 
 		ClientUtils.bindTexture(skin+texture);
@@ -119,7 +111,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 				else if(entity.gunPitch > true_head_angle2)
 					pitch -= ClientUtils.mc().getRenderPartialTicks();
 
-				yaw = MathHelper.clamp(yaw, -45, 45);
+				yaw = entity.tripod?MathHelper.clamp(yaw, -82.5F, 82.5F): MathHelper.clamp(yaw, -45.0F, 45.0F);
 				pitch = MathHelper.clamp(pitch, -20, 20);
 
 				yaw += entity.recoilYaw;
@@ -343,7 +335,24 @@ public class MachinegunRenderer extends Render<EntityMachinegun>
 	@Override
 	protected ResourceLocation getEntityTexture(EntityMachinegun entity)
 	{
-		return new ResourceLocation(IIContent.item_machinegun.getSkinnableDefaultTextureLocation()+texture);
+		return new ResourceLocation(IIContent.itemMachinegun.getSkinnableDefaultTextureLocation()+texture);
 	}
 
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelMachinegun();
+		defaultGunParts.clear();
+		defaultGunParts.add(model.baseBox);
+		defaultGunParts.add(model.barrelBox);
+		defaultGunParts.add(model.sightsBox);
+		defaultGunParts.add(model.triggerBox);
+		defaultGunParts.add(model.ammoBox);
+		defaultGunParts.add(model.slideBox);
+		defaultGunParts.add(model.gripBox);
+		defaultGunParts.add(model.bipodBox);
+
+		skinParts.clear();
+		skinParts.add(model.baubleBox);
+	}
 }

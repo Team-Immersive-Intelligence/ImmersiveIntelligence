@@ -77,7 +77,7 @@ public class ItemIIMinecart extends ItemIIBase
 					break;
 					case META_MINECART_STEEL_CRATE:
 					{
-						blockStack = new ItemStack(IIContent.block_metal_device, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
+						blockStack = new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta());
 						ent = new EntityMinecartCrateSteel(world, (double)pos.getX()+0.5D, (double)pos.getY()+0.0625D+d0, (double)pos.getZ()+0.5D);
 					}
 					break;

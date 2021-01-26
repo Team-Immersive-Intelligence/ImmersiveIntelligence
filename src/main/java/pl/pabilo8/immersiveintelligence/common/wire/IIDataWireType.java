@@ -71,7 +71,7 @@ public class IIDataWireType extends WireType
 	@Override
 	public ItemStack getWireCoil()
 	{
-		return new ItemStack(IIContent.item_data_wire_coil, 1, 0);
+		return new ItemStack(IIContent.itemDataWireCoil, 1, 0);
 	}
 
 	@Override

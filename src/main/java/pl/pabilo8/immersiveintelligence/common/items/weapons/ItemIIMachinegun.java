@@ -187,7 +187,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 					return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
 				}
 
-				EntityMachinegun maschinengewehr = new EntityMachinegun(worldIn, raytraceresult.getBlockPos(), yaw, pitch, itemstack.copy());
+				EntityMachinegun maschinengewehr = new EntityMachinegun(worldIn, raytraceresult.getBlockPos(), playerIn.getRotationYawHead(), pitch, itemstack.copy());
 
 				if(!worldIn.isRemote)
 				{
@@ -214,7 +214,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		IIContent.items.add(this);
+		IIContent.ITEMS.add(this);
 	}
 
 	@Override

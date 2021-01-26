@@ -33,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -98,11 +98,12 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	public int frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
 	public int untowingTries = 0;
 
-	String upgrade = "";
+	public String upgrade = "";
 
 	static AxisAlignedBB aabb = new AxisAlignedBB(-2.5, 0, -2.5, 2.5, 1.5, 2.5);
 	static AxisAlignedBB aabb_wheel = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
 	static AxisAlignedBB aabb_tank = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
+	static AxisAlignedBB aabb_storage = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
 	static AxisAlignedBB aabb_engine = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
 	static AxisAlignedBB aabb_woodgas = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
 	static AxisAlignedBB aabb_seat = new AxisAlignedBB(-0.3, -0.25d, 0.3, 0.3, 0.25d, -0.3);
@@ -786,6 +787,11 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		return null;
 	}
 
+	public void setUpgrade(String upgrade)
+	{
+		this.upgrade = upgrade;
+	}
+
 	static class NonSidedFluidHandler implements IFluidHandler
 	{
 		EntityMotorbike motorbike;
@@ -955,7 +961,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		{
 			this.partUpgradeSeat.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ, this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ));
 			if(!upgrade.isEmpty())
-				this.partUpgradeCargo.setEntityBoundingBox((upgrade.equals("woodgas")?aabb_woodgas: aabb_tank).offset(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
+				this.partUpgradeCargo.setEntityBoundingBox((upgrade.equals("woodgas")?aabb_woodgas: upgrade.equals("tank")?aabb_tank: aabb_storage).offset(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
 			else
 				this.partUpgradeCargo.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ, this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
 

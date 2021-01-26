@@ -41,8 +41,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoArtillery;
@@ -752,7 +751,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 						master.animation = 3;
 						master.animationTimeMax = ArtilleryHowitzer.fireTime;
 						master.animationTime = 0;
-						master.bullet = IIContent.item_ammo_artillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1");
 					}
 					break;
 					case "load":

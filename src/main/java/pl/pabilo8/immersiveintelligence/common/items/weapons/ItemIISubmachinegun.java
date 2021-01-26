@@ -155,16 +155,17 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 						}
 					}
 				}
-				else if(!findMagazine(entityIn).isEmpty())
+				else if(!findMagazine(entityIn, stack).isEmpty())
 				{
 					reloading += 1;
+					ItemNBTHelper.setBoolean(stack, "isDrum", findMagazine(entityIn, stack).getMetadata()==3);
 					if(reloading >= Submachinegun.clipReloadTime)
 					{
 						shouldReload = false;
 						reloading = 0;
 						if(!worldIn.isRemote)
 						{
-							magazine = findMagazine(entityIn);
+							magazine = findMagazine(entityIn, stack);
 							if(!magazine.isEmpty())
 							{
 								ItemNBTHelper.setItemStack(stack, "magazine", magazine);
@@ -213,7 +214,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		World worldIn = player.getEntityWorld();
 
 		ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
-		if(!isAmmo(magazine))
+		if(!isAmmo(magazine, stack))
 			return;
 
 		if(ItemNBTHelper.getInt(stack, "fireDelay")==0)
@@ -229,7 +230,11 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				Vec3d vec = Utils.getVectorForRotation(player.rotationPitch-recoilH, player.rotationYaw+recoilV);
 				Vec3d vv = player.getPositionVector().addVector(0, (double)player.getEyeHeight()-0.10000000149011612D, 0);
 				ItemStack s2 = ItemIIBulletMagazine.takeBullet(magazine);
-				worldIn.playSound(null, player.posX+vec.x, player.posY+vec.y, player.posZ+vec.z, IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.65f);
+
+				float noise = getUpgrades(stack).hasKey("suppressor")?0.25f: 1f;
+				blusunrize.immersiveengineering.common.util.Utils.attractEnemies(player, 36*noise);
+
+				worldIn.playSound(null, player.posX+vec.x, player.posY+vec.y, player.posZ+vec.z, IISounds.submachinegun_shot, SoundCategory.PLAYERS, 1.5f*noise, 0.125f);
 				EntityBullet a = BulletHelper.createBullet(worldIn, s2, vv, vec, 6.5f);
 				a.setShooters(player);
 				worldIn.spawnEntity(a);
@@ -279,7 +284,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		if(hand==EnumHand.MAIN_HAND)
 		{
 			player.setActiveHand(hand);
-			if(isAmmo(ItemNBTHelper.getItemStack(itemstack, "magazine")))
+			if(isAmmo(ItemNBTHelper.getItemStack(itemstack, "magazine"), itemstack))
 				return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
 
 		}
@@ -303,7 +308,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		IIContent.items.add(this);
+		IIContent.ITEMS.add(this);
 	}
 
 	@Override
@@ -331,32 +336,33 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		return ImmersiveIntelligence.MODID+":textures/items/weapons/";
 	}
 
-	public static ItemStack findMagazine(Entity entity)
+	public ItemStack findMagazine(Entity entity, ItemStack weapon)
 	{
 		if(!(entity instanceof EntityPlayer))
 			return ItemStack.EMPTY;
 		EntityPlayer player = (EntityPlayer)entity;
-		if(isAmmo(player.getHeldItem(EnumHand.OFF_HAND)))
+		if(isAmmo(player.getHeldItem(EnumHand.OFF_HAND), weapon))
 			return player.getHeldItem(EnumHand.OFF_HAND);
-		else if(isAmmo(player.getHeldItem(EnumHand.MAIN_HAND)))
+		else if(isAmmo(player.getHeldItem(EnumHand.MAIN_HAND), weapon))
 			return player.getHeldItem(EnumHand.MAIN_HAND);
 		else
 			for(int i = 0; i < player.inventory.getSizeInventory(); i++)
 			{
 				ItemStack itemstack = player.inventory.getStackInSlot(i);
-				if(isAmmo(itemstack))
+				if(isAmmo(itemstack, weapon))
 					return itemstack;
 			}
 		return ItemStack.EMPTY;
 	}
 
-	public static boolean isAmmo(ItemStack stack)
+	public boolean isAmmo(ItemStack stack, ItemStack weapon)
 	{
 		if(stack.isEmpty())
 			return false;
 		if(stack.getItem() instanceof ItemIIBulletMagazine)
 		{
-			return ItemIIBulletMagazine.getMatchingType(stack)==IIContent.item_ammo_submachinegun&&!ItemIIBulletMagazine.hasNoBullets(stack);
+			return ItemIIBulletMagazine.getMatchingType(stack)==IIContent.itemAmmoSubmachinegun&&!ItemIIBulletMagazine.hasNoBullets(stack)&&
+					(stack.getMetadata()!=3||getUpgrades(weapon).hasKey("bottom_loading"));
 		}
 		return false;
 	}

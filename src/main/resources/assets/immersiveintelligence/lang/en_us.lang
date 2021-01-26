@@ -150,6 +150,7 @@ item.immersiveintelligence.weapon_upgrade.hasty_bipod.name=Field Bipod
 item.immersiveintelligence.weapon_upgrade.scope.name=Scope
 item.immersiveintelligence.weapon_upgrade.infrared_scope.name=Infrared Scope
 item.immersiveintelligence.weapon_upgrade.shield.name=Attachable Shields
+item.immersiveintelligence.weapon_upgrade.tripod.name=Tripod
 
 item.immersiveintelligence.weapon_upgrade.sturdy_barrel.name=Sturdy Barrel
 item.immersiveintelligence.weapon_upgrade.suppressor.name=Suppressor
@@ -167,6 +168,14 @@ item.immersiveintelligence.tracer_powder.name=Tracer Dust
 item.immersiveintelligence.skycrate_mount.mechanical.name=Skycrate Mount
 item.immersiveintelligence.skycrate_mount.electric.name=Electric Skycrate Mount
 
+desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
+desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
+desc.immersiveintelligence.toolupgrade.item.machinegun=Machinegun
+desc.immersiveintelligence.toolupgrade.item.submachinegun=Submachinegun
+desc.immersiveintelligence.toolupgrade.item.storm_rifle=Storm Rifle
+desc.immersiveintelligence.toolupgrade.item.autorevolver=Autorevolver
+desc.immersiveintelligence.toolupgrade.item.spigot_mortar=Spigot Mortar
+
 desc.immersiveintelligence.toolupgrade.water_cooling=Uses water to cool down the MG. Increases the max amount of heat the MG can take.
 desc.immersiveintelligence.toolupgrade.heavy_barrel=Dramatically increases fire rate, has higher recoil and overheats faster.
 desc.immersiveintelligence.toolupgrade.second_magazine=Allows to use ammunition from two magazines, needs to be reloaded separately.
@@ -176,9 +185,10 @@ desc.immersiveintelligence.toolupgrade.hasty_bipod=Decreases setting up time, in
 desc.immersiveintelligence.toolupgrade.scope=Allows to aim at distant things
 desc.immersiveintelligence.toolupgrade.infrared_scope=Allows nightvision, requires a power source such as a capacitor backpack.
 desc.immersiveintelligence.toolupgrade.shield=Deflects projectiles and protects the gunner from melee damage. Increases setting up time.
+desc.immersiveintelligence.toolupgrade.tripod=Almost eliminates recoil, increases max angle and setting up time.
 
-desc.immersiveintelligence.toolupgrade.sturdy_barrel=Deflects projectiles and protects the gunner from melee damage. Increases setting up time.
-desc.immersiveintelligence.toolupgrade.suppressor=Silences the gun, allows for quick and stealthy action. Increases time between each shot.
+desc.immersiveintelligence.toolupgrade.sturdy_barrel=Increases bullet velocity and penetration in cost of fire rate.
+desc.immersiveintelligence.toolupgrade.suppressor=Silences the gun, allows for quick and stealthy action.
 desc.immersiveintelligence.toolupgrade.bottom_loading=Replaces the handle to make the gun loaded from the bottom. Allows loading drum magazines.
 desc.immersiveintelligence.toolupgrade.folding_stock=Decreases reload and aiming time. Less accuracy on the move.
 
@@ -240,13 +250,13 @@ item.immersiveintelligence.autocannon_3bCal.casing.name=Autocannon Shell Casing
 item.immersiveintelligence.autocannon_3bCal.core.name=Autocannon Shell Core
 item.immersiveintelligence.autocannon_3bCal.bullet.name=Autocannon Shell
 
-item.immersiveintelligence.grenade_6bCal.casing.name=Hand-Grenade Stick
-item.immersiveintelligence.grenade_6bCal.core.name=Hand-Grenade Core
-item.immersiveintelligence.grenade_6bCal.bullet.name=Hand-Grenade
+item.immersiveintelligence.grenade_5bCal.casing.name=Hand-Grenade Stick
+item.immersiveintelligence.grenade_5bCal.core.name=Hand-Grenade Core
+item.immersiveintelligence.grenade_5bCal.bullet.name=Hand-Grenade
 
-item.immersiveintelligence.railgun_grenade_5bCal.casing.name=Railgun Grenade Rod
-item.immersiveintelligence.railgun_grenade_5bCal.core.name=Railgun Grenade Core
-item.immersiveintelligence.railgun_grenade_5bCal.bullet.name=Railgun Grenade
+item.immersiveintelligence.railgun_grenade_4bCal.casing.name=Railgun Grenade Rod
+item.immersiveintelligence.railgun_grenade_4bCal.core.name=Railgun Grenade Core
+item.immersiveintelligence.railgun_grenade_4bCal.bullet.name=Railgun Grenade
 
 item.immersiveintelligence.mine_wired_8bCal.casing.name=Railgun Grenade Rod
 item.immersiveintelligence.mine_wired_8bCal.core.name=Railgun Grenade Core
@@ -549,7 +559,7 @@ skin.immersiveintelligence.old_glory.name=Old Glory
 skin.immersiveintelligence.old_glory.desc=Glory to Heroes
 
 skin.immersiveintelligence.vaterland.name=Vaterland
-skin.immersiveintelligence.vaterland.sec=And all that sacrifice just for an Iron Cross...
+skin.immersiveintelligence.vaterland.desc=And all that sacrifice just for an Iron Cross...
 
 skin.immersiveintelligence.pershing.name=Pershing
 skin.immersiveintelligence.pershing.desc=Whatever the weather, we'll win this war together
@@ -1144,7 +1154,7 @@ ie.manual.entry.machinegun_upgrade_precise_bipod=The precise bipod is a replacem
 ie.manual.entry.machinegun_upgrade_scope=The machinegun scope is a modified version of the scope from the <link;railgun;§o§nRailgun§r;> that allows magnification of the distant target.
 ie.manual.entry.machinegun_upgrade_infrared_scope=The infrared scope is an upgraded version of its predecessor, which can also provide nightvision using the infrared reflector and a special filter, to work it requires energy provided by a capacitor backpack.
 ie.manual.entry.machinegun_upgrade_shield=Shields are a simple and effective way of protecting the gunner's front from projectiles and melee damage. It can resist a limited amount of projectiles, after that no damage is deflected. Shield's resistance is regenerated over time until it hasn't been broken. Attaching the upgrade also increases gun's setting up time.
-ie.manual.entry.machinegun_upgrade_tripod=Tripods is a replacement for the stock machinegun bipod. It increases the horizontal firing angle to 165 degrees and almost removes the recoil. It is heavy and slow to set up, this makes it an ideal choice for static defence.
+ie.manual.entry.machinegun_upgrade_tripod=Tripod is a replacement for the stock machinegun bipod. It increases the horizontal firing angle to 165 degrees and almost removes the recoil. It is heavy and slow to set up, this makes it an ideal choice for static defence.
 
 ie.manual.entry.submachinegun_upgrade_sturdy_barrel=The sturdy barrel is a modification, which increases the gun's accuracy and bullet velocity in cost of the gun's firing rate.
 ie.manual.entry.submachinegun_upgrade_suppressor=The suppressor makes the gunshot noises almost silent, but the longer the burst, the lesser the effect. It doesn't influence firing speed.

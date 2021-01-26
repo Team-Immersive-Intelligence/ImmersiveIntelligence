@@ -4,9 +4,11 @@ import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
@@ -60,153 +62,171 @@ import static pl.pabilo8.immersiveintelligence.common.CommonProxy.makeFluid;
  */
 public class IIContent
 {
-	public static final List<Block> blocks = new ArrayList<>();
-	public static final List<Item> items = new ArrayList<>();
+	public static final List<Block> BLOCKS = new ArrayList<>();
+	public static final List<Item> ITEMS = new ArrayList<>();
+
+	//Shares code with Immersive Energy, long live II-IEn Cooperation!
+	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
+
 	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter"); //for crates
 	public static final MachineUpgrade UPGRADE_FASTER_ENGINE = CommonProxy.createMachineUpgrade("faster_engine"); //increases machine speed
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator"); //more sawdust for cost of planks
-	public static ItemIIMaterial item_material = new ItemIIMaterial();
-	public static ItemIIMaterialIngot item_material_ingot = new ItemIIMaterialIngot();
-	public static ItemIIMaterialPlate item_material_plate = new ItemIIMaterialPlate();
-	public static ItemIIMaterialDust item_material_dust = new ItemIIMaterialDust();
-	public static ItemIIMaterialNugget item_material_nugget = new ItemIIMaterialNugget();
-	public static ItemIIMaterialWire item_material_wire = new ItemIIMaterialWire();
-	public static ItemIIMaterialSpring item_material_spring = new ItemIIMaterialSpring();
-	public static ItemIIMaterialGem item_material_gem = new ItemIIMaterialGem();
-	public static ItemIIMaterialBoule item_material_boule = new ItemIIMaterialBoule();
-	public static ItemIIMetalPressMold item_mold = new ItemIIMetalPressMold();
-	public static ItemIIFunctionalCircuit item_circuit = new ItemIIFunctionalCircuit();
-	public static ItemIIMotorBelt item_motor_belt = new ItemIIMotorBelt();
-	public static ItemIIMotorGear item_motor_gear = new ItemIIMotorGear();
-	public static ItemIISkycrateMount item_skycrate_mount = new ItemIISkycrateMount();
-	public static ItemIILighter item_lighter = new ItemIILighter();
-	public static ItemIIElectricHammer item_hammer = new ItemIIElectricHammer();
-	public static ItemIITrenchShovel item_trench_shovel = new ItemIITrenchShovel();
-	//Shares code with Immersive Energy, long live II-IEn Cooperation!
-	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
-	public static ItemIIElectricWirecutter item_wirecutter = new ItemIIElectricWirecutter();
-	public static ItemIIWrench item_wrench = new ItemIIWrench();
-	public static ItemIIElectricWrench item_electric_wrench = new ItemIIElectricWrench();
-	public static ItemIIDrillHead item_drillhead = new ItemIIDrillHead();
+
+	public static ItemIIMaterial itemMaterial = new ItemIIMaterial();
+	public static ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
+	public static ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
+	public static ItemIIMaterialDust itemMaterialDust = new ItemIIMaterialDust();
+	public static ItemIIMaterialNugget itemMaterialNugget = new ItemIIMaterialNugget();
+	public static ItemIIMaterialWire itemMaterialWire = new ItemIIMaterialWire();
+	public static ItemIIMaterialSpring itemMaterialSpring = new ItemIIMaterialSpring();
+	public static ItemIIMaterialGem itemMaterialGem = new ItemIIMaterialGem();
+	public static ItemIIMaterialBoule itemMaterialBoule = new ItemIIMaterialBoule();
+	public static ItemIIMetalPressMold itemPressMold = new ItemIIMetalPressMold();
+	public static ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
+	public static ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
+	public static ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
+	public static ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
+	public static ItemIILighter itemLighter = new ItemIILighter();
+	public static ItemIIElectricHammer itemHammer = new ItemIIElectricHammer();
+	public static ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
+	public static ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
+
+	public static ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
+	public static ItemIIWrench itemWrench = new ItemIIWrench();
+	public static ItemIIElectricWrench itemElectricWrench = new ItemIIElectricWrench();
+	public static ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
 	//Don't know if i should make a seperate item for a torque meter
-	public static ItemIITachometer item_tachometer = new ItemIITachometer();
-	public static ItemIIDataWireCoil item_data_wire_coil = new ItemIIDataWireCoil();
-	public static ItemIISmallWireCoil item_small_wire_coil = new ItemIISmallWireCoil();
-	public static ItemIIMinecart item_minecart = new ItemIIMinecart();
-	public static ItemIIRadioConfigurator item_radio_configurator = new ItemIIRadioConfigurator();
-	public static ItemIIMeasuringCup item_measuring_cup = new ItemIIMeasuringCup();
-	public static ItemIIPrecissionTool item_precission_tool = new ItemIIPrecissionTool();
-	public static ItemIIAssemblyScheme item_assembly_scheme = new ItemIIAssemblyScheme();
-	public static ItemIISawblade item_sawblade = new ItemIISawblade();
-	public static ItemIIBinoculars item_binoculars = new ItemIIBinoculars();
-	public static ItemIIMachinegun item_machinegun = new ItemIIMachinegun();
-	public static ItemIISubmachinegun item_submachinegun = new ItemIISubmachinegun();
-	public static ItemIIWeaponUpgrade item_weapon_upgrade = new ItemIIWeaponUpgrade();
-	public static ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor", ImmersiveIntelligence.MODID+":light_engineer_armor", 42, new int[]{4, 7, 8, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
+	public static ItemIITachometer itemTachometer = new ItemIITachometer();
+	public static ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
+	public static ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
+	public static ItemIIMinecart itemMinecart = new ItemIIMinecart();
+	public static ItemIIRadioConfigurator itemRadioConfigurator = new ItemIIRadioConfigurator();
+	public static ItemIIMeasuringCup itemMeasuringCup = new ItemIIMeasuringCup();
+	public static ItemIIPrecissionTool itemPrecissionTool = new ItemIIPrecissionTool();
+	public static ItemIIAssemblyScheme itemAssemblyScheme = new ItemIIAssemblyScheme();
+	public static ItemIISawblade itemSawblade = new ItemIISawblade();
+	public static ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();
+	public static ItemIIMachinegun itemMachinegun = new ItemIIMachinegun();
+	public static ItemIISubmachinegun itemSubmachinegun = new ItemIISubmachinegun();
+	public static ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
+
 	//public static ItemIIArmorUpgrade item_armor_upgrade = new ItemIIArmorUpgrade();
-	public static ItemIILightEngineerHelmet item_light_engineer_helmet = new ItemIILightEngineerHelmet();
-	public static ItemIILightEngineerChestplate item_light_engineer_chestplate = new ItemIILightEngineerChestplate();
-	public static ItemIILightEngineerLeggings item_light_engineer_leggings = new ItemIILightEngineerLeggings();
-	public static ItemIILightEngineerBoots item_light_engineer_boots = new ItemIILightEngineerBoots();
-	public static ItemIIAmmoArtillery item_ammo_artillery = new ItemIIAmmoArtillery();
-	public static ItemIIAmmoAutocannon item_ammo_autocannon = new ItemIIAmmoAutocannon();
-	public static ItemIIAmmoGrenade item_grenade = new ItemIIAmmoGrenade();
-	public static ItemIIAmmoRailgunGrenade item_railgun_grenade = new ItemIIAmmoRailgunGrenade();
-	public static ItemIIAmmoMachinegun item_ammo_machinegun = new ItemIIAmmoMachinegun();
-	public static ItemIIAmmoSubmachinegun item_ammo_submachinegun = new ItemIIAmmoSubmachinegun();
-	public static ItemIIAmmoRevolver item_ammo_revolver = new ItemIIAmmoRevolver();
-	public static ItemIIAmmoStormRifle item_ammo_storm_rifle = new ItemIIAmmoStormRifle();
-	public static ItemIIBulletMagazine item_bullet_magazine = new ItemIIBulletMagazine();
-	public static ItemIIPunchtape item_punchtape = new ItemIIPunchtape();
-	public static ItemIIPrintedPage item_printed_page = new ItemIIPrintedPage();
-	public static ItemIITracerPowder item_tracer_powder = new ItemIITracerPowder();
-	public static BlockIIOre block_ore = new BlockIIOre();
-	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
+	public static ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor", ImmersiveIntelligence.MODID+":light_engineer_armor", 42, new int[]{4, 7, 8, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
+	public static ItemIILightEngineerHelmet itemLightEngineerHelmet = new ItemIILightEngineerHelmet();
+	public static ItemIILightEngineerChestplate itemLightEngineerChestplate = new ItemIILightEngineerChestplate();
+	public static ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
+	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
+
+	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
+	public static ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
+	public static ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
+	public static ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
+	public static ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
+	public static ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
+	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
+	public static ItemIIAmmoStormRifle itemAmmoStormRifle = new ItemIIAmmoStormRifle();
+
+	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
+
+	public static ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
+	public static ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
+	public static ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
+
+	public static BlockIIOre blockOre = new BlockIIOre();
+	public static BlockIIBase<IIBlockTypes_Metal> blockSheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIBase<IIBlockTypes_Metal> block_metal_storage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
+	public static BlockIIBase<IIBlockTypes_Metal> blockMetalStorage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
 			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
 			.setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIBase<IIBlockTypes_Metal> block_metal_slabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("storage_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIBase<IIBlockTypes_Metal> block_sheetmetal_slabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("sheetmetal_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIBase<IIBlockTypes_StoneDecoration> block_stone_decoration = new BlockIIStoneDecoration();
-	public static BlockIIBase<IIBlockTypes_ClothDecoration> block_cloth_decoration = new BlockIIClothDecoration();
-	public static BlockIIBase<IIBlockTypes_MetalDecoration> block_metal_decoration = new BlockIIMetalDecoration();
-	public static BlockIIBase<IIBlockTypes_ConcreteDecoration> block_concrete_decoration = new BlockIIConcreteDecoration();
-	public static BlockIIMetalFortification block_metal_fortification = new BlockIIMetalFortification();
-	public static BlockIIMetalFortification1 block_metal_fortification1 = new BlockIIMetalFortification1();
-	public static BlockIIWoodenFortification block_wooden_fortification = new BlockIIWoodenFortification();
-	public static BlockIIMetalDevice block_metal_device = new BlockIIMetalDevice();
-	public static BlockIIDataConnector block_data_connector = new BlockIIDataConnector();
-	public static BlockIISmallCrate block_small_crate = new BlockIISmallCrate();
-	public static BlockIIMechanicalDevice block_mechanical_device = new BlockIIMechanicalDevice();
-	public static BlockIIMechanicalDevice1 block_mechanical_device1 = new BlockIIMechanicalDevice1();
-	public static BlockIIGearbox block_gearbox = new BlockIIGearbox();
-	public static BlockIIMechanicalConnector block_mechanical_connector = new BlockIIMechanicalConnector();
-	public static BlockIIWoodenMultiblock block_wooden_multiblock = new BlockIIWoodenMultiblock();
-	public static BlockIIMetalMultiblock0 block_metal_multiblock0 = new BlockIIMetalMultiblock0();
-	public static BlockIIMetalMultiblock1 block_metal_multiblock1 = new BlockIIMetalMultiblock1();
-	public static BlockIIFluid block_fluid_ink_black;
-	public static BlockIIFluid block_fluid_ink_cyan;
-	public static BlockIIFluid block_fluid_ink_magenta;
-	public static BlockIIFluid block_fluid_ink_yellow;
-	public static BlockIIFluid block_fluid_etching_acid;
-	public static BlockIIFluid block_fluid_sulfuric_acid;
-	public static BlockIIFluid block_fluid_nitric_acid;
-	public static BlockIIFluid block_fluid_hydrofluoric_acid;
-	public static BlockIIFluid block_fluid_ammonia;
-	public static BlockIIFluid block_fluid_methanol;
-	public static BlockIIFluid block_fluid_brine;
-	public static BlockIIFluid block_gas_hydrogen;
-	public static BlockIIFluid block_gas_oxygen;
-	public static BlockIIFluid block_gas_chlorine;
-	public static Fluid fluid_ink_black;
-	public static Fluid fluid_ink_cyan;
-	public static Fluid fluid_ink_magenta;
-	public static Fluid fluid_ink_yellow;
-	public static Fluid fluid_etching_acid;
-	public static Fluid fluid_sulfuric_acid;
-	public static Fluid fluid_hydrofluoric_acid;
-	public static Fluid fluid_nitric_acid;
-	public static Fluid fluid_brine;
-	public static Fluid gas_hydrogen;
-	public static Fluid gas_oxygen;
-	public static Fluid gas_chlorine;
-	public static Fluid fluid_ammonia;
-	public static Fluid fluid_methanol;
+	public static BlockIIBase<IIBlockTypes_Metal> blockMetalSlabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("storage_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
+	public static BlockIIBase<IIBlockTypes_Metal> blockSheetmetalSlabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("sheetmetal_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
+	public static BlockIIBase<IIBlockTypes_StoneDecoration> blockStoneDecoration = new BlockIIStoneDecoration();
+	public static BlockIIBase<IIBlockTypes_ClothDecoration> blockClothDecoration = new BlockIIClothDecoration();
+	public static BlockIIBase<IIBlockTypes_MetalDecoration> blockMetalDecoration = new BlockIIMetalDecoration();
+	public static BlockIIBase<IIBlockTypes_ConcreteDecoration> blockConcreteDecoration = new BlockIIConcreteDecoration();
+	public static BlockIIMetalFortification blockMetalFortification = new BlockIIMetalFortification();
+	public static BlockIIMetalFortification1 blockMetalFortification1 = new BlockIIMetalFortification1();
+	public static BlockIIWoodenFortification blockWoodenFortification = new BlockIIWoodenFortification();
+	public static BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
+	public static BlockIIDataConnector blockDataConnector = new BlockIIDataConnector();
+	public static BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
+
+	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
+	public static BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();
+	public static BlockIIGearbox blockGearbox = new BlockIIGearbox();
+	public static BlockIIMechanicalConnector blockMechanicalConnector = new BlockIIMechanicalConnector();
+	public static BlockIIWoodenMultiblock blockWoodenMultiblock = new BlockIIWoodenMultiblock();
+
+	public static BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
+	public static BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
+
+	public static BlockIIFluid blockFluidInkBlack;
+	public static BlockIIFluid blockFluidInkCyan;
+	public static BlockIIFluid blockFluidInkMagenta;
+	public static BlockIIFluid blockFluidInkYellow;
+	public static BlockIIFluid blockFluidEtchingAcid;
+	public static BlockIIFluid blockFluidSulfuricAcid;
+	public static BlockIIFluid blockFluidNitricAcid;
+	public static BlockIIFluid blockFluidHydrofluoricAcid;
+	public static BlockIIFluid blockFluidAmmonia;
+	public static BlockIIFluid blockFluidMethanol;
+	public static BlockIIFluid blockFluidBrine;
+	public static BlockIIFluid blockGasHydrogen;
+	public static BlockIIFluid blockGasOxygen;
+	public static BlockIIFluid blockGasChlorine;
+
+	public static Fluid fluidInkBlack;
+	public static Fluid fluidInkCyan;
+	public static Fluid fluidInkMagenta;
+	public static Fluid fluidInkYellow;
+	public static Fluid fluidEtchingAcid;
+	public static Fluid fluidSulfuricAcid;
+	public static Fluid fluidHydrofluoricAcid;
+	public static Fluid fluidNitricAcid;
+	public static Fluid fluidBrine;
+	public static Fluid gasHydrogen;
+	public static Fluid gasOxygen;
+	public static Fluid gasChlorine;
+	public static Fluid fluidAmmonia;
+	public static Fluid fluidMethanol;
 
 	static
 	{
-		IIContent.fluid_ink_black = makeFluid("ink", 2000, 2250);
-		IIContent.fluid_ink_cyan = makeFluid("ink_cyan", 2000, 2250);
-		IIContent.fluid_ink_magenta = makeFluid("ink_magenta", 2000, 2250);
-		IIContent.fluid_ink_yellow = makeFluid("ink_yellow", 2000, 2250);
-		IIContent.fluid_etching_acid = makeFluid("etching_acid", 1500, 1500);
-		IIContent.fluid_sulfuric_acid = makeFluid("sulfuric_acid", 1500, 1500);
-		IIContent.fluid_hydrofluoric_acid = makeFluid("hydrofluoric_acid", 1500, 1500);
-		IIContent.fluid_nitric_acid = makeFluid("nitric_acid", 1500, 1500, "rdx_fluids/");
-		IIContent.fluid_brine = makeFluid("brine", 1000, 1500);
-		IIContent.gas_hydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
-		IIContent.gas_oxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
-		IIContent.gas_chlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
-		IIContent.fluid_ammonia = makeFluid("ammonia", 1500, 1000, "rdx_fluids/");
-		IIContent.fluid_methanol = makeFluid("methanol", 1500, 1000, "rdx_fluids/");
+		IIContent.fluidInkBlack = makeFluid("ink", 2000, 2250);
+		IIContent.fluidInkCyan = makeFluid("ink_cyan", 2000, 2250);
+		IIContent.fluidInkMagenta = makeFluid("ink_magenta", 2000, 2250);
+		IIContent.fluidInkYellow = makeFluid("ink_yellow", 2000, 2250);
+		IIContent.fluidEtchingAcid = makeFluid("etching_acid", 1500, 1500);
+		IIContent.fluidSulfuricAcid = makeFluid("sulfuric_acid", 1500, 1500);
+		IIContent.fluidHydrofluoricAcid = makeFluid("hydrofluoric_acid", 1500, 1500);
+		IIContent.fluidNitricAcid = makeFluid("nitric_acid", 1500, 1500, "rdx_fluids/");
+		IIContent.fluidBrine = makeFluid("brine", 1000, 1500);
+		IIContent.gasHydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
+		IIContent.gasOxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
+		IIContent.gasChlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
+		IIContent.fluidAmmonia = makeFluid("ammonia", 1500, 1000, "rdx_fluids/");
+		IIContent.fluidMethanol = makeFluid("methanol", 1500, 1000, "rdx_fluids/");
 
-		IIContent.block_fluid_ink_black = new BlockIIFluid("ink", IIContent.fluid_ink_black, Material.WATER);
-		IIContent.block_fluid_ink_cyan = new BlockIIFluid("ink_cyan", IIContent.fluid_ink_cyan, Material.WATER);
-		IIContent.block_fluid_ink_magenta = new BlockIIFluid("ink_magenta", IIContent.fluid_ink_magenta, Material.WATER);
-		IIContent.block_fluid_ink_yellow = new BlockIIFluid("ink_yellow", IIContent.fluid_ink_yellow, Material.WATER);
-		IIContent.block_fluid_etching_acid = new BlockIIFluid("etching_acid", IIContent.fluid_etching_acid, Material.WATER);
-		IIContent.block_fluid_sulfuric_acid = new BlockIIFluid("sulfuric_acid", IIContent.fluid_sulfuric_acid, Material.WATER);
-		IIContent.block_fluid_nitric_acid = new BlockIIFluid("nitric_acid", IIContent.fluid_nitric_acid, Material.WATER);
-		IIContent.block_fluid_hydrofluoric_acid = new BlockIIFluid("hydrofluoric_acid", IIContent.fluid_hydrofluoric_acid, Material.WATER);
-		IIContent.block_fluid_brine = new BlockIIFluid("brine", IIContent.fluid_brine, Material.WATER);
+		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
+		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
+		IIContent.blockFluidInkMagenta = new BlockIIFluid("ink_magenta", IIContent.fluidInkMagenta, Material.WATER);
+		IIContent.blockFluidInkYellow = new BlockIIFluid("ink_yellow", IIContent.fluidInkYellow, Material.WATER);
+		IIContent.blockFluidEtchingAcid = new BlockIIFluid("etching_acid", IIContent.fluidEtchingAcid, Material.WATER);
+		IIContent.blockFluidSulfuricAcid = new BlockIIFluid("sulfuric_acid", IIContent.fluidSulfuricAcid, Material.WATER);
+		IIContent.blockFluidNitricAcid = new BlockIIFluid("nitric_acid", IIContent.fluidNitricAcid, Material.WATER);
+		IIContent.blockFluidHydrofluoricAcid = new BlockIIFluid("hydrofluoric_acid", IIContent.fluidHydrofluoricAcid, Material.WATER);
+		IIContent.blockFluidBrine = new BlockIIFluid("brine", IIContent.fluidBrine, Material.WATER);
 
-		IIContent.block_fluid_ammonia = new BlockIIFluid("ammonia", IIContent.fluid_ammonia, Material.WATER);
-		IIContent.block_fluid_methanol = new BlockIIFluid("methanol", IIContent.fluid_methanol, Material.WATER);
+		IIContent.blockFluidAmmonia = new BlockIIFluid("ammonia", IIContent.fluidAmmonia, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 40, 0));
 
-		IIContent.block_gas_hydrogen = new BlockIIFluid("hydrogen", IIContent.gas_hydrogen, Material.WATER);
-		IIContent.block_gas_oxygen = new BlockIIFluid("oxygen", IIContent.gas_oxygen, Material.WATER);
-		IIContent.block_gas_chlorine = new BlockIIFluid("chlorine", IIContent.gas_chlorine, Material.WATER);
+		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
+		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 40, 0));
+		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 	}
 }

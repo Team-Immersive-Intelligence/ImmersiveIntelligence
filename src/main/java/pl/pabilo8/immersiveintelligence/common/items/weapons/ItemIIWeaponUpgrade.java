@@ -8,8 +8,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
@@ -31,6 +33,28 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 	public ItemIIWeaponUpgrade()
 	{
 		super("weapon_upgrade", 1, WeaponUpgrades.parse());
+	}
+
+	public static TextFormatting getFormattingForWeapon(String weapon)
+	{
+		switch(weapon)
+		{
+			case "MACHINEGUN":
+				return TextFormatting.YELLOW;
+			case "SUBMACHINEGUN":
+				return TextFormatting.GOLD;
+			case "RAILGUN":
+				return TextFormatting.DARK_GREEN;
+			case "REVOLVER":
+				return TextFormatting.BLUE;
+			case "AUTOREVOLVER":
+				return TextFormatting.DARK_BLUE;
+			case "STORM_RIFLE":
+				return TextFormatting.DARK_PURPLE;
+			case "SPIGOT_MORTAR":
+				return TextFormatting.DARK_PURPLE;
+		}
+		return TextFormatting.RESET;
 	}
 
 	public enum WeaponUpgrades
@@ -77,31 +101,41 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("scope"),
 				(upgrade, modifications) -> modifications.setBoolean("infrared_scope", true)),
 
+		//Deflects projectiles
+		SHIELD(ImmutableSet.of("MACHINEGUN"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("shield"),
+				(upgrade, modifications) -> modifications.setBoolean("shield", true)),
+
+		//Slows down mg setting up time, almost eliminates recoil, increases yaw and pitch angles
+		TRIPOD(ImmutableSet.of("MACHINEGUN"), 1,
+				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("tripod"),
+				(upgrade, modifications) -> modifications.setBoolean("tripod", true)),
+
 		///Submachinegun
 
-		//Deflects projectiles
+		//Adds a velocity, penetration and suppression boost, lowers the firerate
 		STURDY_BARREL(ImmutableSet.of("SUBMACHINEGUN"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("sturdy_barrel"),
 				(upgrade, modifications) -> modifications.setBoolean("sturdy_barrel", true)),
 
-		//Deflects projectiles
+		//Makes gunshots (almost) silent
 		SUPPRESSOR(ImmutableSet.of("SUBMACHINEGUN"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("suppressor"),
 				(upgrade, modifications) -> modifications.setBoolean("suppressor", true)),
 
-		//Deflects projectiles
+		//Allows using drum magazines
 		BOTTOM_LOADING(ImmutableSet.of("SUBMACHINEGUN"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("bottom_loading"),
 				(upgrade, modifications) -> modifications.setBoolean("bottom_loading", true)),
 
-		//Deflects projectiles
+		//Reduces aiming time
 		FOLDING_STOCK(ImmutableSet.of("SUBMACHINEGUN"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("folding_stock"),
 				(upgrade, modifications) -> modifications.setBoolean("folding_stock", true)),
 
 		///Autorevolver
 
-		//Deflects projectiles
+		//Increases velocity, penetration and suppression
 		HEAVY_SPRINGBOX(ImmutableSet.of("AUTOREVOLVER"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("heavy_springbox"),
 				(upgrade, modifications) -> modifications.setBoolean("heavy_springbox", true)),
@@ -113,12 +147,12 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("radio_marker"),
 				(upgrade, modifications) -> modifications.setBoolean("radio_marker", true)),
 
-		//Shows distance to target
+		//Allows shooting railgun grenades at a lower range, requires energy
 		RIFLE_GRENADE_LAUNCHER(ImmutableSet.of("STORM_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("stereoscopic_rangefinder"),
 				(upgrade, modifications) -> modifications.setBoolean("rifle_grenade_launcher", true)),
 
-		//Deflects projectiles
+		//Shows distance to target
 		STEREOSCOPIC_RANGEFINDER(ImmutableSet.of("STORM_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("rifle_grenade_launcher"),
 				(upgrade, modifications) -> modifications.setBoolean("stereoscopic_rangefinder", true));
@@ -170,6 +204,8 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 	{
 		if(stack.getItemDamage() < getSubNames().length)
 		{
+			for(String upgradeType : this.getUpgradeTypes(stack))
+				list.add(getFormattingForWeapon(upgradeType)+I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade.item."+upgradeType.toLowerCase()));
 			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]), 200);
 			list.addAll(Arrays.asList(flavour));
 		}
@@ -204,8 +240,10 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 
 	public static void addUpgradesToRender()
 	{
+		//mg
+
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("water_cooling")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("water_cooling")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
@@ -214,7 +252,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("heavy_barrel")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("heavy_barrel")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.barrelBox);
@@ -223,7 +261,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("second_magazine")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("second_magazine")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.secondMagazineMainBox);
@@ -232,7 +270,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("belt_fed_loader")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("belt_fed_loader")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.ammoBox);
@@ -241,7 +279,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("scope")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("scope")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.scopeBox);
@@ -249,7 +287,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("infrared_scope")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("infrared_scope")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.infraredScopeBox);
@@ -257,7 +295,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("hasty_bipod")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("hasty_bipod")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
@@ -266,7 +304,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("precise_bipod")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("precise_bipod")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
@@ -275,10 +313,50 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		);
 
 		MachinegunRenderer.upgrades.put(
-				stack -> (IIContent.item_machinegun.getUpgrades(stack).getBoolean("shield")),
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("tripod")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(MachinegunRenderer.model.bipodBox);
+					tmtNamedBoxGroups.add(MachinegunRenderer.model.tripodBox);
+				}
+		);
+
+		MachinegunRenderer.upgrades.put(
+				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("shield")),
 				(stack, tmtNamedBoxGroups) ->
 				{
 					tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox);
+				}
+		);
+
+		//smg
+
+		SubmachinegunItemStackRenderer.upgrades.put(
+				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("sturdy_barrel")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.barrelBox);
+					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.sturdyBarrelBox);
+				}
+		);
+
+		SubmachinegunItemStackRenderer.upgrades.put(
+				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("suppressor")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.silencerBox);
+				}
+		);
+
+		SubmachinegunItemStackRenderer.upgrades.put(
+				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("bottom_loading")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.ammoBox);
+					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.gripBox);
+					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.loaderBox);
+
+					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.bottomLoaderBox);
 				}
 		);
 	}

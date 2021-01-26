@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.blocks;
 
+import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
+import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler.ChemthrowerEffect_Potion;
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -33,7 +35,7 @@ public class BlockIIFluid extends BlockFluidClassic
 		super(fluid, material);
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
-		IIContent.blocks.add(this);
+		IIContent.BLOCKS.add(this);
 		isAcid = name.endsWith("acid");
 	}
 
@@ -85,6 +87,16 @@ public class BlockIIFluid extends BlockFluidClassic
 		}
 
 
+	}
+
+	public BlockIIFluid addToChemthrower()
+	{
+		if(potionEffects!=null)
+			ChemthrowerHandler.registerEffect(this.definedFluid,
+					new ChemthrowerEffect_Potion(null, 0, potionEffects));
+		if(flammability > 0)
+			ChemthrowerHandler.registerFlammable(this.definedFluid);
+		return this;
 	}
 
 }

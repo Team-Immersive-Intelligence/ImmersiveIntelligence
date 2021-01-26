@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet3bCal;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;

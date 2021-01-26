@@ -35,7 +35,7 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 
 	static final IngredientStack[] materials = new IngredientStack[]{
 			new IngredientStack("scaffoldingTreatedWood", 2),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 6, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 6, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RADIATOR.getMeta())),
@@ -59,7 +59,7 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 					}
 					else if(l==1)
 					{
-						structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+						structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 					}
 					else if(l==2)
 					{
@@ -93,7 +93,7 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 	@Override
 	public boolean isBlockTrigger(IBlockState state)
 	{
-		return state.getBlock()==IIContent.block_metal_decoration&&
+		return state.getBlock()==IIContent.blockMetalDecoration&&
 				(state.getBlock().getMetaFromState(state)==IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 	}
 
@@ -138,7 +138,7 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.ARITHMETIC_LOGIC_MACHINE.getMeta()));
+					world.setBlockState(pos2, IIContent.blockMetalMultiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.ARITHMETIC_LOGIC_MACHINE.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityArithmeticLogicMachine)
 					{
@@ -149,7 +149,7 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 						tile.pos = (h+1)*6+(l+1)*2+(w);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock0, 255, 0);
 					}
 				}
 		return true;
@@ -179,7 +179,7 @@ public class MultiblockArithmeticLogicMachine implements IMultiblock
 					}
 					else if(l==0)
 					{
-						if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
+						if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 						{
 							return false;
 						}

@@ -87,6 +87,6 @@ public class IIMotorBeltType extends MotorBeltType
 	@Override
 	public ItemStack getWireCoil()
 	{
-		return new ItemStack(IIContent.item_motor_belt, 1, type.ordinal());
+		return new ItemStack(IIContent.itemMotorBelt, 1, type.ordinal());
 	}
 }

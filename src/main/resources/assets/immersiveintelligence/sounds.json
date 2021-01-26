@@ -60,6 +60,15 @@
     ],
     "subtitle": "subtitle.immersiveintelligence.machinegun_reload"
   },
+  "submachinegun_shot": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:submachinegun/smg0",
+      "immersiveintelligence:submachinegun/smg1",
+      "immersiveintelligence:submachinegun/smg2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.submachinegun_shot"
+  },
   "howitzer_shot": {
     "category": "block",
     "sounds": [

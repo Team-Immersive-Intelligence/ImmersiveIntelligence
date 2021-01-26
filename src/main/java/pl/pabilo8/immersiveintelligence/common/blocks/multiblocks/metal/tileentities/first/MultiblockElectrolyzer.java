@@ -117,7 +117,7 @@ public class MultiblockElectrolyzer implements IMultiblock
 
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), w).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta()));
+					world.setBlockState(pos2, IIContent.blockMetalMultiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityElectrolyzer)
 					{
@@ -128,7 +128,7 @@ public class MultiblockElectrolyzer implements IMultiblock
 						tile.pos = (h+1)*9+(l)*3+(w+1);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?w: -w), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?w: -w)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock0, 255, 0);
 					}
 				}
 		return true;

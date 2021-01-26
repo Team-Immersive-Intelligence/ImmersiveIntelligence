@@ -82,9 +82,9 @@ public class JEIHelper implements IModPlugin
 		modRegistry = registryIn;
 		//Blacklist
 
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.item_printed_page, 1, 1));
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.item_printed_page, 1, 2));
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.item_printed_page, 1, 3));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 1));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 2));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 3));
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_assembly_scheme, 1, OreDictionary.WILDCARD_VALUE));
 
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_bullet, 1, OreDictionary.WILDCARD_VALUE));

@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 /**
  * @author Pabilo8
@@ -33,9 +34,15 @@ public class BulletComponentTNT implements IBulletComponent
 	}
 
 	@Override
-	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
 	{
-		world.createExplosion(bullet, pos.getX(), pos.getY(), pos.getZ(), amount*8f, true);
+		IIExplosion e = new IIExplosion(world, bullet, bullet.posX, bullet.posY, bullet.posZ, 8*amount, 4, false, true);
+		if(!net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, e))
+		{
+			e.doExplosionA();
+			e.doExplosionB(true);
+		}
+		//world.createExplosion(bullet, pos.getX(), pos.getY(), pos.getZ(), amount*8f, true);
 	}
 
 	@Override

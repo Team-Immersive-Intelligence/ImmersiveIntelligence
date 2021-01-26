@@ -77,6 +77,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentFirework;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentFlarePowder;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentTracerPowder;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.cores.*;
@@ -84,7 +85,8 @@ import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.Bull
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentNuke;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentRDX;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentTNT;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.shrapnel.BulletComponentShrapnel;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.factory.BulletComponentFluid;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.factory.BulletComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityChainFence;
@@ -105,6 +107,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIMinecart;
@@ -161,12 +164,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
-		for(Block block : IIContent.blocks)
+		for(Block block : IIContent.BLOCKS)
 			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getUnlocalizedName())));
 
 		registerFeedthroughForWiretype(IIDataWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/data_connector.obj"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/data_connector_feedtrough"), new float[]{4, 4, 12, 12},
-				0.09375, IIContent.block_data_connector.getStateFromMeta(IIBlockTypes_Connector.DATA_CONNECTOR.getMeta()),
+				0.09375, IIContent.blockDataConnector.getStateFromMeta(IIBlockTypes_Connector.DATA_CONNECTOR.getMeta()),
 				0, 0, (f) -> f);
 
 	}
@@ -176,7 +179,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 		ImmersiveIntelligence.logger.info("Registering Items");
 
-		for(Item item : IIContent.items)
+		for(Item item : IIContent.ITEMS)
 			event.getRegistry().register(item.setRegistryName(createRegistryName(item.getUnlocalizedName())));
 
 		registerOreDict();
@@ -187,10 +190,15 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 		/*POTIONS*/
 		IIPotions.init();
-		for(Block block : IIContent.blocks)
+		for(Block block : IIContent.BLOCKS)
 		{
-			if(block instanceof BlockIIFluid&&((BlockIIFluid)block).isAcid)
-				((BlockIIFluid)block).setPotionEffects(new PotionEffect(IIPotions.corrosion, 40, 1));
+			if(block instanceof BlockIIFluid)
+			{
+				BlockIIFluid b = (BlockIIFluid)block;
+				if(b.isAcid)
+					b.setPotionEffects(new PotionEffect(IIPotions.corrosion, 40, 1));
+				b.addToChemthrower();
+			}
 		}
 	}
 
@@ -236,83 +244,90 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public static void registerOreDict()
 	{
-		OreDictionary.registerOre("electronTubeAdvanced", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("advanced_electron_tube")));
-		OreDictionary.registerOre("transistor", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("transistor")));
+		OreDictionary.registerOre("electronTubeAdvanced", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_electron_tube")));
+
+		OreDictionary.registerOre("transistor", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("transistor")));
+		OreDictionary.registerOre("oc:materialTransistor", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("transistor")));
 
 		//Basic Circuit Board
 		OreDictionary.registerOre("circuitBasic", new ItemStack(IEContent.itemMaterial, 1, 27));
-		OreDictionary.registerOre("circuitBasicRaw", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("basic_circuit_board_raw")));
-		OreDictionary.registerOre("circuitBasicEtched", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("basic_circuit_board_etched")));
-		OreDictionary.registerOre("chipBasic", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("basic_electronic_element")));
+		OreDictionary.registerOre("circuitBasicRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_circuit_board_raw")));
+		OreDictionary.registerOre("oc:materialCircuitBoardRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_circuit_board_raw")));
+		OreDictionary.registerOre("circuitBasicEtched", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_circuit_board_etched")));
+		OreDictionary.registerOre("oc:materialCircuitBoardPrinted", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_circuit_board_etched")));
+		OreDictionary.registerOre("chipBasic", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_electronic_element")));
+		OreDictionary.registerOre("oc:circuitChip1", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_electronic_element")));
 
 		//Advanced Circuit Board
-		OreDictionary.registerOre("circuitAdvancedRaw", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("advanced_circuit_board_raw")));
-		OreDictionary.registerOre("circuitAdvancedEtched", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("advanced_circuit_board_etched")));
-		OreDictionary.registerOre("chipAdvanced", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("advanced_electronic_element")));
-		OreDictionary.registerOre("circuitAdvanced", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("advanced_circuit_board")));
+		OreDictionary.registerOre("circuitAdvancedRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_raw")));
+		OreDictionary.registerOre("circuitAdvancedEtched", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_etched")));
+		OreDictionary.registerOre("chipAdvanced", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_electronic_element")));
+		OreDictionary.registerOre("oc:circuitChip2", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_electronic_element")));
+		OreDictionary.registerOre("circuitAdvanced", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board")));
 
 		//Processor Circuit Board
-		OreDictionary.registerOre("circuitProcessorEtched", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_circuit_board_etched")));
-		OreDictionary.registerOre("circuitProcessorRaw", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_circuit_board_raw")));
-		OreDictionary.registerOre("chipProcessor", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_electronic_element")));
-		OreDictionary.registerOre("circuitProcessor", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_circuit_board")));
+		OreDictionary.registerOre("circuitProcessorEtched", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_etched")));
+		OreDictionary.registerOre("circuitProcessorRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_raw")));
+		OreDictionary.registerOre("chipProcessor", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_electronic_element")));
+		OreDictionary.registerOre("oc:circuitChip3", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_electronic_element")));
+		OreDictionary.registerOre("circuitProcessor", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board")));
 
-		OreDictionary.registerOre("circuitEliteEtched", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_circuit_board_etched")));
-		OreDictionary.registerOre("circuitEliteRaw", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_circuit_board_raw")));
-		OreDictionary.registerOre("circuitElite", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_circuit_board")));
-		OreDictionary.registerOre("chipElite", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("processor_electronic_element")));
+		OreDictionary.registerOre("circuitEliteEtched", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_etched")));
+		OreDictionary.registerOre("circuitEliteRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_raw")));
+		OreDictionary.registerOre("circuitElite", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board")));
+		OreDictionary.registerOre("chipElite", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_electronic_element")));
 
-		registerItemOredict(IIContent.item_material, "compact_electric_engine", "engineElectricSmall", "engineElectricCompact");
-		registerItemOredict(IIContent.item_material, "compact_electric_engine_advanced", "engineElectricSmallAdvanced", "engineElectricCompactAdvanced");
+		registerItemOredict(IIContent.itemMaterial, "compact_electric_engine", "engineElectricSmall", "engineElectricCompact");
+		registerItemOredict(IIContent.itemMaterial, "compact_electric_engine_advanced", "engineElectricSmallAdvanced", "engineElectricCompactAdvanced");
 
-		registerMetalOredict(IIContent.item_material_ingot, "ingot");
-		registerMetalOredict(IIContent.item_material_plate, "plate");
-		registerMetalOredict(IIContent.item_material_dust, "dust");
-		registerMetalOredict(IIContent.item_material_nugget, "nugget");
-		registerMetalOredict(IIContent.item_material_wire, "wire");
-		registerMetalOredict(IIContent.item_material_spring, "spring");
-		registerMetalOredict(IIContent.item_material_gem, "gem");
-		registerMetalOredict(IIContent.item_material_boule, "boule");
+		registerMetalOredict(IIContent.itemMaterialIngot, "ingot");
+		registerMetalOredict(IIContent.itemMaterialPlate, "plate");
+		registerMetalOredict(IIContent.itemMaterialDust, "dust");
+		registerMetalOredict(IIContent.itemMaterialNugget, "nugget");
+		registerMetalOredict(IIContent.itemMaterialWire, "wire");
+		registerMetalOredict(IIContent.itemMaterialSpring, "spring");
+		registerMetalOredict(IIContent.itemMaterialGem, "gem");
+		registerMetalOredict(IIContent.itemMaterialBoule, "boule");
 
-		registerMetalOredictBlock(IIContent.block_ore, "ore");
-		registerMetalOredictBlock(IIContent.block_sheetmetal, "sheetmetal");
-		registerMetalOredictBlock(IIContent.block_sheetmetal_slabs, "slabSheetmetal");
-		registerMetalOredictBlock(IIContent.block_metal_storage, "block");
-		registerMetalOredictBlock(IIContent.block_metal_slabs, "slab");
+		registerMetalOredictBlock(IIContent.blockOre, "ore");
+		registerMetalOredictBlock(IIContent.blockSheetmetal, "sheetmetal");
+		registerMetalOredictBlock(IIContent.blockSheetmetalSlabs, "slabSheetmetal");
+		registerMetalOredictBlock(IIContent.blockMetalStorage, "block");
+		registerMetalOredictBlock(IIContent.blockMetalSlabs, "slab");
 
 
 		//Punchtapes
-		OreDictionary.registerOre("punchtapeEmpty", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("punchtape_empty")));
-		OreDictionary.registerOre("punchtape", new ItemStack(IIContent.item_punchtape, 1, 0));
+		OreDictionary.registerOre("punchtapeEmpty", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("punchtape_empty")));
+		OreDictionary.registerOre("punchtape", new ItemStack(IIContent.itemPunchtape, 1, 0));
 
-		OreDictionary.registerOre("pageEmpty", new ItemStack(IIContent.item_printed_page, 1, 0));
-		OreDictionary.registerOre("pageText", new ItemStack(IIContent.item_printed_page, 1, 1));
-		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.item_printed_page, 1, 1));
+		OreDictionary.registerOre("pageEmpty", new ItemStack(IIContent.itemPrintedPage, 1, 0));
+		OreDictionary.registerOre("pageText", new ItemStack(IIContent.itemPrintedPage, 1, 1));
+		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.itemPrintedPage, 1, 1));
 
-		OreDictionary.registerOre("pageCode", new ItemStack(IIContent.item_printed_page, 1, 2));
-		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.item_printed_page, 1, 2));
-		OreDictionary.registerOre("pageBlueprint", new ItemStack(IIContent.item_printed_page, 1, 3));
-		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.item_printed_page, 1, 3));
+		OreDictionary.registerOre("pageCode", new ItemStack(IIContent.itemPrintedPage, 1, 2));
+		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.itemPrintedPage, 1, 2));
+		OreDictionary.registerOre("pageBlueprint", new ItemStack(IIContent.itemPrintedPage, 1, 3));
+		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.itemPrintedPage, 1, 3));
 
 		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT, 1, 0));
-		OreDictionary.registerOre("materialRDX", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("dust_rdx")));
-		OreDictionary.registerOre("materialHexogen", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("dust_rdx")));
-		OreDictionary.registerOre("materialHMX", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("dust_hmx")));
+		OreDictionary.registerOre("materialRDX", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_rdx")));
+		OreDictionary.registerOre("materialHexogen", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_rdx")));
+		OreDictionary.registerOre("materialHMX", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_hmx")));
 
-		OreDictionary.registerOre("dustWhitePhosphorus", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("white_phosphorus")));
-		OreDictionary.registerOre("whitePhosphorus", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("white_phosphorus")));
+		OreDictionary.registerOre("dustWhitePhosphorus", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("white_phosphorus")));
+		OreDictionary.registerOre("whitePhosphorus", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("white_phosphorus")));
 
-		OreDictionary.registerOre("dustSalt", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("dust_salt")));
-		OreDictionary.registerOre("dustWood", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("dust_wood")));
-		OreDictionary.registerOre("pulpWood", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("pulp_wood")));
-		OreDictionary.registerOre("pulpWoodTreated", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("pulp_wood_treated")));
-		OreDictionary.registerOre("dustHexamine", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("dust_hexamine")));
-		OreDictionary.registerOre("dustFormaldehyde", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("dust_formaldehyde")));
+		OreDictionary.registerOre("dustSalt", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_salt")));
+		OreDictionary.registerOre("dustWood", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_wood")));
+		OreDictionary.registerOre("pulpWood", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("pulp_wood")));
+		OreDictionary.registerOre("pulpWoodTreated", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("pulp_wood_treated")));
+		OreDictionary.registerOre("dustHexamine", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_hexamine")));
+		OreDictionary.registerOre("dustFormaldehyde", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_formaldehyde")));
 
-		OreDictionary.registerOre("leatherArtificial", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("artificial_leather")));
-		OreDictionary.registerOre("leather", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("artificial_leather")));
+		OreDictionary.registerOre("leatherArtificial", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("artificial_leather")));
+		OreDictionary.registerOre("leather", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("artificial_leather")));
 
-		OreDictionary.registerOre("brushCarbon", new ItemStack(IIContent.item_material, 1, IIContent.item_material.getMetaBySubname("carbon_brush")));
+		OreDictionary.registerOre("brushCarbon", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("carbon_brush")));
 
 		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
 		OreDictionary.registerOre("listAllMeatRaw", Items.BEEF);
@@ -321,8 +336,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		OreDictionary.registerOre("listAllMeatRaw", Items.RABBIT);
 		OreDictionary.registerOre("listAllMeatRaw", Items.MUTTON);
 
-		registerMetalOredict(IIContent.item_motor_gear, "gear");
-		registerMetalOredict(IIContent.item_motor_belt, "belt");
+		registerMetalOredict(IIContent.itemMotorGear, "gear");
+		registerMetalOredict(IIContent.itemMotorBelt, "belt");
 	}
 
 	private static void registerMetalOredictBlock(BlockIIBase block, String dict)
@@ -374,16 +389,16 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MachinegunCoolantHandler.addCoolant(FluidRegistry.WATER, 1);
 		// LighterFuelHandler.addFuel(FluidRegistry.getFluid("creosote"),100);
 
-		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.item_material_dust, "silicon"), new IngredientStack("plateSilicon"), 12000);
+		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterialDust, "silicon"), new IngredientStack("plateSilicon"), 12000);
 
-		final ItemStack powder = new ItemStack(IIContent.item_tracer_powder, 1, 0);
+		final ItemStack powder = new ItemStack(IIContent.itemTracerPowder, 1, 0);
 		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveEngineering.MODID, "tracer_powder_colour"));
 
 		IIRecipes.addMinecartRecipes(event.getRegistry());
 		IIRecipes.addSmallCrateRecipes(event.getRegistry());
 
-		for(int i = 0; i < IIContent.item_mold.getSubNames().length; i++)
-			BlueprintCraftingRecipe.addRecipe("molds", new ItemStack(IIContent.item_mold, 1, i), "plateSteel", "plateSteel", "plateSteel", "plateSteel", "plateSteel", new ItemStack(IEContent.itemTool, 1, 1));
+		for(int i = 0; i < IIContent.itemPressMold.getSubNames().length; i++)
+			BlueprintCraftingRecipe.addRecipe("molds", new ItemStack(IIContent.itemPressMold, 1, i), "plateSteel", "plateSteel", "plateSteel", "plateSteel", "plateSteel", new ItemStack(IEContent.itemTool, 1, 1));
 
 		//((IForgeRegistryModifiable)CraftingManager.REGISTRY).remove(new ResourceLocation(""));
 
@@ -411,11 +426,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		IIRecipes.addInkRecipes();
 
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluid_etching_acid, 1000), new FluidStack(IIContent.gas_chlorine, 500), new Object[]{"dustIron"}, 4800);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluid_sulfuric_acid, 500), new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustSulfur"}, 4800);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluid_hydrofluoric_acid, 500), new FluidStack(IIContent.fluid_sulfuric_acid, 1000), new Object[]{"dustFluorite"}, 5600);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluid_nitric_acid, 250), new FluidStack(IIContent.fluid_sulfuric_acid, 1000), new Object[]{"dustSaltpeter"}, 5600);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluid_brine, 750), new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidEtchingAcid, 1000), new FluidStack(IIContent.gasChlorine, 500), new Object[]{"dustIron"}, 4800);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidSulfuricAcid, 500), new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustSulfur"}, 4800);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidHydrofluoricAcid, 500), new FluidStack(IIContent.fluidSulfuricAcid, 1000), new Object[]{"dustFluorite"}, 5600);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidNitricAcid, 250), new FluidStack(IIContent.fluidSulfuricAcid, 1000), new Object[]{"dustSaltpeter"}, 5600);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidBrine, 750), new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
 	}
 
 	public static Fluid makeFluid(String name, int density, int viscosity)
@@ -440,22 +455,22 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public static void refreshFluidReferences()
 	{
-		IIContent.fluid_ink_black = FluidRegistry.getFluid("ink");
-		IIContent.fluid_ink_cyan = FluidRegistry.getFluid("ink_cyan");
-		IIContent.fluid_ink_magenta = FluidRegistry.getFluid("ink_magenta");
-		IIContent.fluid_ink_yellow = FluidRegistry.getFluid("ink_yellow");
+		IIContent.fluidInkBlack = FluidRegistry.getFluid("ink");
+		IIContent.fluidInkCyan = FluidRegistry.getFluid("ink_cyan");
+		IIContent.fluidInkMagenta = FluidRegistry.getFluid("ink_magenta");
+		IIContent.fluidInkYellow = FluidRegistry.getFluid("ink_yellow");
 
-		IIContent.fluid_brine = FluidRegistry.getFluid("brine");
-		IIContent.fluid_etching_acid = FluidRegistry.getFluid("etching_acid");
-		IIContent.fluid_hydrofluoric_acid = FluidRegistry.getFluid("hydrofluoric_acid");
-		IIContent.fluid_sulfuric_acid = FluidRegistry.getFluid("sulfuric_acid");
+		IIContent.fluidBrine = FluidRegistry.getFluid("brine");
+		IIContent.fluidEtchingAcid = FluidRegistry.getFluid("etching_acid");
+		IIContent.fluidHydrofluoricAcid = FluidRegistry.getFluid("hydrofluoric_acid");
+		IIContent.fluidSulfuricAcid = FluidRegistry.getFluid("sulfuric_acid");
 
-		IIContent.fluid_ammonia = FluidRegistry.getFluid("ammonia");
-		IIContent.fluid_methanol = FluidRegistry.getFluid("methanol");
+		IIContent.fluidAmmonia = FluidRegistry.getFluid("ammonia");
+		IIContent.fluidMethanol = FluidRegistry.getFluid("methanol");
 
-		IIContent.gas_chlorine = FluidRegistry.getFluid("chlorine");
-		IIContent.gas_hydrogen = FluidRegistry.getFluid("hydrogen");
-		IIContent.gas_oxygen = FluidRegistry.getFluid("oxygen");
+		IIContent.gasChlorine = FluidRegistry.getFluid("chlorine");
+		IIContent.gasHydrogen = FluidRegistry.getFluid("hydrogen");
+		IIContent.gasOxygen = FluidRegistry.getFluid("oxygen");
 	}
 
 
@@ -470,15 +485,15 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//ALWAYS REGISTER BULLETS IN PRE-INIT! (so they get their texture registered before TextureStitchEvent.Pre)
 		//Bullets
 
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_ammo_artillery);
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_ammo_autocannon);
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_grenade);
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_railgun_grenade);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoArtillery);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoAutocannon);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemGrenade);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemRailgunGrenade);
 
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_ammo_machinegun);
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_ammo_submachinegun);
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_ammo_storm_rifle);
-		BulletRegistry.INSTANCE.registerCasing(IIContent.item_ammo_revolver);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoMachinegun);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoSubmachinegun);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoStormRifle);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoRevolver);
 
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX());
@@ -487,6 +502,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentWhitePhosphorus());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentFirework());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTracerPowder());
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentFlarePowder());
 
 		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreSteel());
 		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreTungsten());
@@ -520,7 +536,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			BulletRegistry.INSTANCE.registerComponent(shrapnel);
 		}
 
-		BulletHandler.registerBullet("ii_bullet", IIContent.item_ammo_revolver);
+		BulletHandler.registerBullet("ii_bullet", IIContent.itemAmmoRevolver);
 	}
 
 	public void init()
@@ -528,8 +544,14 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IICompatModule.doModulesInit();
 		reInitGui();
 
+		for(Fluid f : FluidRegistry.getRegisteredFluids().values())
+		{
+			BulletComponentFluid comp = new BulletComponentFluid(f);
+			BulletRegistry.INSTANCE.registerComponent(comp);
+		}
+
 		//Blocks config
-		IIContent.block_ore.setMiningLevels();
+		IIContent.blockOre.setMiningLevels();
 
 		//Worldgen registration
 		IIWorldGen iiWorldGen = new IIWorldGen();
@@ -537,23 +559,23 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MinecraftForge.EVENT_BUS.register(iiWorldGen);
 
 		ImmersiveIntelligence.logger.info("Adding oregen");
-		addConfiguredWorldgen(IIContent.block_ore.getStateFromMeta(IIBlockTypes_Ore.PLATINUM.getMeta()), "platinum", Ores.ore_platinum, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.block_ore.getStateFromMeta(IIBlockTypes_Ore.ZINC.getMeta()), "zinc", Ores.ore_zinc, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.block_ore.getStateFromMeta(IIBlockTypes_Ore.TUNGSTEN.getMeta()), "tungsten", Ores.ore_tungsten, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.block_ore.getStateFromMeta(IIBlockTypes_Ore.SALT.getMeta()), "salt", Ores.ore_salt, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.block_ore.getStateFromMeta(IIBlockTypes_Ore.FLUORITE.getMeta()), "fluorite", Ores.ore_fluorite, EnumOreType.NETHER);
-		addConfiguredWorldgen(IIContent.block_ore.getStateFromMeta(IIBlockTypes_Ore.PHOSPHORUS.getMeta()), "phosphorus", Ores.ore_phosphorus, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(IIBlockTypes_Ore.PLATINUM.getMeta()), "platinum", Ores.ore_platinum, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(IIBlockTypes_Ore.ZINC.getMeta()), "zinc", Ores.ore_zinc, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(IIBlockTypes_Ore.TUNGSTEN.getMeta()), "tungsten", Ores.ore_tungsten, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(IIBlockTypes_Ore.SALT.getMeta()), "salt", Ores.ore_salt, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(IIBlockTypes_Ore.FLUORITE.getMeta()), "fluorite", Ores.ore_fluorite, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(IIBlockTypes_Ore.PHOSPHORUS.getMeta()), "phosphorus", Ores.ore_phosphorus, EnumOreType.NETHER);
 
 		RailgunHandler.registerProjectileProperties(new IngredientStack("stickTungsten"), 32, 1.3).setColourMap(new int[][]{{0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0x9EA2A7, 0x9EA2A7}});
 
 		//Disallow crates in crates
 		IEApi.forbiddenInCrates.add((stack) ->
 		{
-			if(OreDictionary.itemMatches(new ItemStack(IIContent.block_metal_device, 1, 0), stack, true))
+			if(OreDictionary.itemMatches(new ItemStack(IIContent.blockMetalDevice, 1, 0), stack, true))
 				return true;
-			if(stack.getItem()==IIContent.item_minecart&&stack.getMetadata() < ItemIIMinecart.META_MINECART_WOODEN_BARREL)
+			if(stack.getItem()==IIContent.itemMinecart&&stack.getMetadata() < ItemIIMinecart.META_MINECART_WOODEN_BARREL)
 				return true;
-			return OreDictionary.itemMatches(new ItemStack(IIContent.block_metal_device, 1, 1), stack, true);
+			return OreDictionary.itemMatches(new ItemStack(IIContent.blockMetalDevice, 1, 1), stack, true);
 		});
 
 		IIContent.tileEntitiesWeDontLike.add(tileEntity -> tileEntity instanceof TileEntityChargingStation);
@@ -635,7 +657,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MultiblockHandler.registerMultiblock(MultiblockConveyorScanner.instance);
 		MultiblockHandler.registerMultiblock(MultiblockPrecissionAssembler.instance);
 		MultiblockHandler.registerMultiblock(MultiblockArtilleryHowitzer.instance);
-		MultiblockHandler.registerMultiblock(MultiblockAmmunitionFactory.instance);
+		//MultiblockHandler.registerMultiblock(MultiblockAmmunitionFactory.instance);
 		MultiblockHandler.registerMultiblock(MultiblockBallisticComputer.instance);
 		MultiblockHandler.registerMultiblock(MultiblockPacker.instance);
 
@@ -672,6 +694,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "shrapnel"),
 				EntityShrapnel.class, "shrapnel", i++, ImmersiveIntelligence.INSTANCE, 16, 1, true);
 
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "white_phosphorus"),
+				EntityWhitePhosphorus.class, "white_phosphorus", i++, ImmersiveIntelligence.INSTANCE, 16, 1, true);
+
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "machinegun"),
 				EntityMachinegun.class, "machinegun", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 
@@ -690,8 +715,20 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "seat"),
 				EntityVehicleSeat.class, "seat", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "tripod_periscope"),
+				EntityTripodPeriscope.class, "tripod_periscope", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "atomic_boom"),
 				EntityAtomicBoom.class, "atomic_boom", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "gas_cloud"),
+				EntityGasCloud.class, "gas_cloud", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "hans"),
+				EntityHans.class, "hans", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "flare"),
+				EntityFlare.class, "flare", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
 	}
 
 	public void postInit()
@@ -702,7 +739,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				EntityMinecartCrateWooden::new);
 		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta()),
 				EntityMinecartCrateReinforced::new);
-		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IIContent.block_metal_device&&stack.getMetadata()==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()),
+		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IIContent.blockMetalDevice&&stack.getMetadata()==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()),
 				EntityMinecartCrateSteel::new);
 		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.BARREL.getMeta()),
 				EntityMinecartBarrelWooden::new);

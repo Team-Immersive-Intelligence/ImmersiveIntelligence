@@ -16,6 +16,7 @@ public class ModelMotorbike extends ModelBlockBase
 	int textureY = 128;
 
 	public ModelRendererTurbo[] accelerationModel, brakeModel, frontWheelModel, backWheelModel, frontThingyModel, frontThingyUpperModel, steeringGearModel, engineModel, exhaustPipesModel, trailerThingyModel;
+	public ModelRendererTurbo[] upgradeSeatModel, upgradeTankModel, upgradeStorageModel;
 
 	public ModelMotorbike() //Same as Filename
 	{
@@ -491,6 +492,127 @@ public class ModelMotorbike extends ModelBlockBase
 		accelerationModel[0].rotateAngleY = 2.00712864F;
 		accelerationModel[0].rotateAngleZ = 0.06981317F;
 
+
+		upgradeSeatModel = new ModelRendererTurbo[4];
+		upgradeSeatModel[0] = new ModelRendererTurbo(this, 47, 68, textureX, textureY); // Box 1
+		upgradeSeatModel[1] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeSeatModel[2] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeSeatModel[3] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+
+		upgradeSeatModel[0].addBox(0F, 0F, 0F, 10, 3, 8, 0F); // Box 1
+		upgradeSeatModel[0].setRotationPoint(4F, -14F, 15F);
+
+		upgradeSeatModel[1].addBox(0F, 0F, 0F, 8, 1, 6, 0F); // Box 1
+		upgradeSeatModel[1].setRotationPoint(5F, -11F, 16F);
+
+		upgradeSeatModel[2].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Box 1
+		upgradeSeatModel[2].setRotationPoint(5F, -10F, 18F);
+
+		upgradeSeatModel[3].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Box 1
+		upgradeSeatModel[3].setRotationPoint(12F, -10F, 18F);
+
+
+		upgradeStorageModel = new ModelRendererTurbo[12];
+		upgradeStorageModel[0] = new ModelRendererTurbo(this, 51, 79, textureX, textureY); // Box 1
+		upgradeStorageModel[1] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeStorageModel[2] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeStorageModel[3] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeStorageModel[4] = new ModelRendererTurbo(this, 53, 79, textureX, textureY); // Box 1
+		upgradeStorageModel[5] = new ModelRendererTurbo(this, 39, 86, textureX, textureY); // Box 1
+		upgradeStorageModel[6] = new ModelRendererTurbo(this, 39, 86, textureX, textureY); // Box 1
+		upgradeStorageModel[7] = new ModelRendererTurbo(this, 87, 79, textureX, textureY); // Box 1
+		upgradeStorageModel[8] = new ModelRendererTurbo(this, 27, 81, textureX, textureY); // Box 1
+		upgradeStorageModel[9] = new ModelRendererTurbo(this, 27, 81, textureX, textureY); // Box 1
+		upgradeStorageModel[10] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeStorageModel[11] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+
+		upgradeStorageModel[0].addBox(0F, 0F, 0F, 10, 6, 8, 0F); // Box 1
+		upgradeStorageModel[0].setRotationPoint(4F, -17F, 19F);
+
+		upgradeStorageModel[1].addBox(0F, 0F, 0F, 8, 1, 6, 0F); // Box 1
+		upgradeStorageModel[1].setRotationPoint(5F, -11F, 20F);
+
+		upgradeStorageModel[2].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Box 1
+		upgradeStorageModel[2].setRotationPoint(5F, -10F, 22F);
+
+		upgradeStorageModel[3].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Box 1
+		upgradeStorageModel[3].setRotationPoint(12F, -10F, 22F);
+
+		upgradeStorageModel[4].addBox(0F, 0F, 0F, 2, 2, 1, 0F); // Box 1
+		upgradeStorageModel[4].setRotationPoint(8F, -16F, 27F);
+
+		upgradeStorageModel[5].addBox(0F, 0F, 0F, 2, 8, 4, 0F); // Box 1
+		upgradeStorageModel[5].setRotationPoint(2F, -18F, 21F);
+
+		upgradeStorageModel[6].addBox(0F, 0F, 0F, 2, 8, 4, 0F); // Box 1
+		upgradeStorageModel[6].setRotationPoint(14F, -18F, 21F);
+
+		upgradeStorageModel[7].addBox(0F, 0F, 0F, 12, 5, 5, 0F); // Box 1
+		upgradeStorageModel[7].setRotationPoint(3F, -16F, 13.5F);
+
+		upgradeStorageModel[8].addBox(0F, 0F, 0F, 1, 1, 6, 0F); // Box 1
+		upgradeStorageModel[8].setRotationPoint(5F, -11F, 14F);
+
+		upgradeStorageModel[9].addBox(0F, 0F, 0F, 1, 1, 6, 0F); // Box 1
+		upgradeStorageModel[9].setRotationPoint(12F, -11F, 14F);
+
+		upgradeStorageModel[10].addBox(0F, 0F, -4F, 1, 2, 2, 0F); // Box 1
+		upgradeStorageModel[10].setRotationPoint(5F, -10F, 22F);
+
+		upgradeStorageModel[11].addBox(0F, 0F, -4F, 1, 2, 2, 0F); // Box 1
+		upgradeStorageModel[11].setRotationPoint(12F, -10F, 22F);
+
+
+		upgradeTankModel = new ModelRendererTurbo[12];
+		upgradeTankModel[0] = new ModelRendererTurbo(this, 71, 89, textureX, textureY); // Box 1
+		upgradeTankModel[1] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeTankModel[2] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeTankModel[3] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeTankModel[4] = new ModelRendererTurbo(this, 27, 81, textureX, textureY); // Box 1
+		upgradeTankModel[5] = new ModelRendererTurbo(this, 27, 81, textureX, textureY); // Box 1
+		upgradeTankModel[6] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeTankModel[7] = new ModelRendererTurbo(this, 98, 41, textureX, textureY); // Box 1
+		upgradeTankModel[8] = new ModelRendererTurbo(this, 58, 93, textureX, textureY); // Box 2
+		upgradeTankModel[9] = new ModelRendererTurbo(this, 78, 96, textureX, textureY); // Box 1
+		upgradeTankModel[10] = new ModelRendererTurbo(this, 78, 99, textureX, textureY); // Box 1
+		upgradeTankModel[11] = new ModelRendererTurbo(this, 65, 94, textureX, textureY); // Box 1
+
+		upgradeTankModel[0].addBox(0F, 0F, 0F, 10, 10, 16, 0F); // Box 1
+		upgradeTankModel[0].setRotationPoint(4F, -21F, 13F);
+
+		upgradeTankModel[1].addBox(0F, 0F, 0F, 8, 1, 6, 0F); // Box 1
+		upgradeTankModel[1].setRotationPoint(5F, -11F, 20F);
+
+		upgradeTankModel[2].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Box 1
+		upgradeTankModel[2].setRotationPoint(5F, -10F, 22F);
+
+		upgradeTankModel[3].addBox(0F, 0F, 0F, 1, 2, 2, 0F); // Box 1
+		upgradeTankModel[3].setRotationPoint(12F, -10F, 22F);
+
+		upgradeTankModel[4].addBox(0F, 0F, 0F, 1, 1, 6, 0F); // Box 1
+		upgradeTankModel[4].setRotationPoint(5F, -11F, 14F);
+
+		upgradeTankModel[5].addBox(0F, 0F, 0F, 1, 1, 6, 0F); // Box 1
+		upgradeTankModel[5].setRotationPoint(12F, -11F, 14F);
+
+		upgradeTankModel[6].addBox(0F, 0F, -4F, 1, 2, 2, 0F); // Box 1
+		upgradeTankModel[6].setRotationPoint(5F, -10F, 22F);
+
+		upgradeTankModel[7].addBox(0F, 0F, -4F, 1, 2, 2, 0F); // Box 1
+		upgradeTankModel[7].setRotationPoint(12F, -10F, 22F);
+
+		upgradeTankModel[8].addBox(0F, 0F, 0F, 4, 1, 4, 0F); // Box 2
+		upgradeTankModel[8].setRotationPoint(7F, -22F, 23F);
+
+		upgradeTankModel[9].addBox(0F, 0F, 0F, 2, 1, 2, 0F); // Box 1
+		upgradeTankModel[9].setRotationPoint(8F, -11F, 13F);
+
+		upgradeTankModel[10].addShapeBox(0F, 0F, 0F, 2, 2, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F); // Box 1
+		upgradeTankModel[10].setRotationPoint(8F, -10F, 13F);
+
+		upgradeTankModel[11].addBox(0F, 0F, 0F, 2, 2, 9, 0F); // Box 1
+		upgradeTankModel[11].setRotationPoint(8F, -10F, 4F);
+
 		parts.put("base", baseModel);
 		parts.put("steeringGear", steeringGearModel);
 		parts.put("acceleration", accelerationModel);
@@ -502,6 +624,10 @@ public class ModelMotorbike extends ModelBlockBase
 		parts.put("frontThingy", frontThingyModel);
 		parts.put("frontThingyUpper", frontThingyUpperModel);
 		parts.put("trailerThingy", trailerThingyModel);
+
+		parts.put("upgradeSeat", upgradeSeatModel);
+		parts.put("upgradeStorage", upgradeStorageModel);
+		parts.put("upgradeTank", upgradeTankModel);
 
 
 		flipAll();

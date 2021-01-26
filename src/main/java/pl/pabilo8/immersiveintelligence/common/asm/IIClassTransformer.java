@@ -43,6 +43,27 @@ public class IIClassTransformer implements IClassTransformer
 				})
 		});
 
+		/**
+		 * transformerMap.put("net.minecraft.client.renderer.entity.RenderPlayer", new MethodTransformer[]{
+		 * 				new MethodTransformer("setModelVisibilities", "func_177137_d", "(FFFFFFLnet/minecraft/entity/Entity;)V", methodNode ->
+		 *                                {
+		 * 					Iterator<AbstractInsnNode> iterator = methodNode.instructions.iterator();
+		 * 					while(iterator.hasNext())
+		 *                    {
+		 * 						AbstractInsnNode anode = iterator.next();
+		 * 						if(anode.getOpcode()==Opcodes.RETURN)
+		 *                        {
+		 * 							InsnList newInstructions = new InsnList();
+		 * 							newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+		 * 							newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 7));
+		 * 							newInstructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "pl/pabilo8/immersiveintelligence/client/ClientEventHandler", "handleBipedRotations", "(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;)V", false));
+		 * 							methodNode.instructions.insertBefore(anode, newInstructions);
+		 *                        }
+		 *                    }
+		 *                })
+		 *        });
+		 */
+
 		// TODO: 26.11.2020 night vision
 	}
 

@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.client.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 
 /**
  * @author Pabilo8

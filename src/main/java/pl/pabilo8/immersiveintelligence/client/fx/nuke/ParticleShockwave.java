@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.fx.nuke;
 
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -9,12 +8,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 17.07.2020
  */
-public class ParticleShockwave extends Particle
+public class ParticleShockwave extends IIParticle
 {
 	private float actualParticleScale;
 
@@ -92,7 +96,7 @@ public class ParticleShockwave extends Particle
 
 		this.setParticleTextureIndex(5);
 		setRBGColorF(1, 1, 1);
-		setAlphaF((1-f)*0.45f);
+		setAlphaF((1-f)*0.25f);
 		this.particleScale = this.actualParticleScale*f2*1.25f;
 
 		GlStateManager.translate(0, -0.25, 0);
@@ -101,9 +105,16 @@ public class ParticleShockwave extends Particle
 
 		this.setParticleTextureIndex(4);
 		setRBGColorF(0.85f, 0.85f, 0.85f);
-		setAlphaF((1-f)*0.25f);
+		setAlphaF((1-f)*0.15f);
 		this.particleScale = this.actualParticleScale*f2;
 		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 
+	}
+
+	@Nonnull
+	@Override
+	public ParticleRenderer.DrawingStages getDrawStage()
+	{
+		return DrawingStages.NORMAL;
 	}
 }

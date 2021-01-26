@@ -23,7 +23,7 @@ public class ItemIITracerPowder extends ItemIIBase
 {
 	public ItemIITracerPowder()
 	{
-		super("tracer_powder", 64);
+		super("tracer_powder", 64, "tracer_powder", "flare_powder");
 	}
 
 	@Override

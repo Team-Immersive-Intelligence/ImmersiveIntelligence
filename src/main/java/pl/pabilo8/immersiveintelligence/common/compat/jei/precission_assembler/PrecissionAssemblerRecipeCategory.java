@@ -29,8 +29,8 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 
 	public PrecissionAssemblerRecipeCategory(IGuiHelper helper)
 	{
-		super("precissionassembler", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name", helper.createBlankDrawable(156, 60), PrecissionAssemblerRecipe.class, new ItemStack(IIContent.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta()));
-		machineStack = new ItemStack(IIContent.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta());
+		super("precissionassembler", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name", helper.createBlankDrawable(156, 60), PrecissionAssemblerRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta()));
+		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta());
 	}
 
 	@Override

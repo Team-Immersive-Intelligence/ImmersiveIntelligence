@@ -42,7 +42,7 @@ public class ItemIIBase extends ItemIEBase
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		IIContent.items.add(this);
+		IIContent.ITEMS.add(this);
 	}
 
 	public int getMetaBySubname(String subname)

@@ -43,7 +43,7 @@ public class BulletComponentNuke implements IBulletComponent
 	}
 
 	@Override
-	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
 	{
 		Explosion[] explosions = new Explosion[]{
 				new Explosion(world, bullet, bullet.posX, bullet.posY, bullet.posZ, 32*amount, false, true),

@@ -40,7 +40,7 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	@Override
 	public float getComponentCapacity()
 	{
-		return 0.15f;
+		return 0.45f;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.ammunition_system.shrapnel;
+package pl.pabilo8.immersiveintelligence.common.ammunition_system.factory;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -20,14 +20,13 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 public class BulletComponentShrapnel implements IBulletComponent
 {
 	IngredientStack stack;
+	String name;
 
 	public BulletComponentShrapnel(String material)
 	{
 		name = material;
 		stack = new IngredientStack("dust"+Character.toUpperCase(name.charAt(0))+name.substring(1));
 	}
-
-	String name;
 
 	@Override
 	public String getName()
@@ -48,7 +47,7 @@ public class BulletComponentShrapnel implements IBulletComponent
 	}
 
 	@Override
-	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
 	{
 		int lower = 0;
 

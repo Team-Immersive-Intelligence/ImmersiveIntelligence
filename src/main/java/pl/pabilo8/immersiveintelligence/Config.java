@@ -141,6 +141,9 @@ public class Config
 			@SubConfig
 			public static SkycrateMounts skycrateMounts;
 
+			@SubConfig
+			public static TripodPeriscope tripodPeriscope;
+
 			@Comment({"A modifier to apply to the ammunition resupply time of the Ammunition Crate (weapons reload)."})
 			public static float ammunition_crate_resupply_time = 1.0f;
 
@@ -294,6 +297,23 @@ public class Config
 				@RequiresMcRestart
 				public static float electric_energy = 55;
 
+			}
+
+			public static class TripodPeriscope
+			{
+				@Comment({"Determines how fast the Tripod Periscope can be set up (in ticks)."})
+				@RangeInt(min = 0)
+				@RequiresMcRestart
+				public static int setup_time = 60;
+
+				@Comment({"The yaw turn speed of the Tripod Periscope (in degrees)."})
+				@RequiresMcRestart
+				public static float turn_speed = 2.5f;
+
+				@Comment({"Max zoom of a machinegun with a scope mounted (in Blu's Unit of Distance Measurement™)."})
+				@RequiresMcRestart
+				@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+				public static float[] tripod_zoom_steps = new float[]{0.01f, 0.02f, 0.04f, 0.0625f, 0.0833f, 0.125f, 0.25f, 0.5f};
 			}
 		}
 
@@ -809,6 +829,12 @@ public class Config
 
 				@Comment({"Coolant tank capacity of the water cooling upgrade."})
 				public static int waterCoolingTankCapacity = 4000;
+
+				@Comment({"Setup time multiplier when the mg is mounted on a tripod."})
+				public static float tripodSetupTimeMultiplier = 4f;
+
+				@Comment({"Recoil multiplier when the mg is mounted on a tripod."})
+				public static float tripodRecoilMultiplier = 0.125f;
 
 				@Comment({"Setup time multiplier when the precise bipod is mouted on mg."})
 				public static float preciseBipodSetupTimeMultiplier = 2f;

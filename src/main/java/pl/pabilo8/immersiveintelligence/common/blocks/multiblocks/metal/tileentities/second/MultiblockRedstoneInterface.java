@@ -33,18 +33,18 @@ public class MultiblockRedstoneInterface implements IMultiblock
 	public static MultiblockRedstoneInterface instance = new MultiblockRedstoneInterface();
 	public static ItemStack[][][] structure = new ItemStack[1][3][2];
 	static IngredientStack[] materials = new IngredientStack[]{
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 2, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 2, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_REDSTONE.getMeta()))
 	};
 
 	static
 	{
-		structure[0][0][0] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta());
-		structure[0][0][1] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+		structure[0][0][0] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta());
+		structure[0][0][1] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 		structure[0][1][0] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta());
-		structure[0][1][1] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+		structure[0][1][1] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 		structure[0][2][0] = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_REDSTONE.getMeta());
 	}
 
@@ -59,7 +59,7 @@ public class MultiblockRedstoneInterface implements IMultiblock
 	@Override
 	public boolean isBlockTrigger(IBlockState state)
 	{
-		return state.getBlock()==IIContent.block_metal_decoration&&
+		return state.getBlock()==IIContent.blockMetalDecoration&&
 				(state.getBlock().getMetaFromState(state)==IIBlockTypes_MetalDecoration.COIL_DATA.getMeta());
 	}
 
@@ -100,7 +100,7 @@ public class MultiblockRedstoneInterface implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.block_metal_multiblock1.getStateFromMeta(IIBlockTypes_MetalMultiblock1.REDSTONE_DATA_INTERFACE.getMeta()));
+					world.setBlockState(pos2, IIContent.blockMetalMultiblock1.getStateFromMeta(IIBlockTypes_MetalMultiblock1.REDSTONE_DATA_INTERFACE.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityRedstoneInterface)
 					{
@@ -111,7 +111,7 @@ public class MultiblockRedstoneInterface implements IMultiblock
 						tile.pos = w+(l*2);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.block_metal_multiblock1, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock1, 255, 0);
 					}
 				}
 		return true;
@@ -133,7 +133,7 @@ public class MultiblockRedstoneInterface implements IMultiblock
 					{
 						if(l==0)
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta()))
 							{
 								return false;
 							}
@@ -158,7 +158,7 @@ public class MultiblockRedstoneInterface implements IMultiblock
 					{
 						if(l!=2)
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 							{
 								return false;
 							}

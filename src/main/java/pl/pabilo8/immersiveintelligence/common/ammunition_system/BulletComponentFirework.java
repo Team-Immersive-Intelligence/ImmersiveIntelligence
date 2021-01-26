@@ -39,7 +39,7 @@ public class BulletComponentFirework implements IBulletComponent
 	}
 
 	@Override
-	public void onExplosion(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
 	{
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, (float)bullet.posX, (float)bullet.posY+1, (float)bullet.posZ), Utils.targetPointFromEntity(bullet, 96));
 		BulletHelper.suppress(world, pos.getX(), pos.getY(), pos.getZ(), 10f*amount, (int)(255*amount));

@@ -1,17 +1,19 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 17.07.2020
  */
-public class ParticleFlame extends Particle
+public class ParticleFlame extends IIParticle
 {
 	private float actualParticleScale;
 
@@ -89,5 +91,12 @@ public class ParticleFlame extends Particle
 		this.particleScale = this.actualParticleScale*(1-f);
 		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 
+	}
+
+	@Nonnull
+	@Override
+	public ParticleRenderer.DrawingStages getDrawStage()
+	{
+		return DrawingStages.NORMAL;
 	}
 }

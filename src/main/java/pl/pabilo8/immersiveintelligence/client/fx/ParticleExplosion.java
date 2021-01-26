@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -9,14 +8,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 17.07.2020
  */
-public class ParticleExplosion extends Particle
+public class ParticleExplosion extends IIParticle
 {
-	private float actualParticleScale;
+	protected float actualParticleScale;
 
 	public ParticleExplosion(World world, double x, double y, double z, double mx, double my, double mz, float size)
 	{
@@ -26,7 +28,7 @@ public class ParticleExplosion extends Particle
 		this.motionZ = mz*1.55;
 		this.particleScale = (float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f;
 		this.actualParticleScale = this.particleScale;
-		this.particleMaxAge = (int)(20+(10*Utils.RAND.nextGaussian()))+1;
+		this.particleMaxAge = (int)(40+(10*Utils.RAND.nextGaussian()))+1;
 		this.particleGravity = 0.25f;
 		this.setParticleTextureIndex(0);
 	}
@@ -100,18 +102,41 @@ public class ParticleExplosion extends Particle
 		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 		GlStateManager.translate(0, 0.25, 0);
 
-		this.setParticleTextureIndex(5);
-		setRBGColorF((0.9f+((1f-f)*0.1f))*f2, (0.5f+(0.25f*f))*f2, 0);
-		setAlphaF(0.45f*(1-f2));
-		this.particleScale = this.actualParticleScale*(1-f)*1.15f;
-		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
+	}
 
 
-		this.setParticleTextureIndex(3);
-		setRBGColorF((0.9f+((1f-f)*0.1f)), (0.5f+(0.25f*f)), 0);
-		setAlphaF(1-f);
-		this.particleScale = this.actualParticleScale*(1-f);
-		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
+	@Nonnull
+	@Override
+	public ParticleRenderer.DrawingStages getDrawStage()
+	{
+		return DrawingStages.NORMAL;
+	}
 
+	public static class ParticleExplosionWP extends ParticleExplosion
+	{
+		public ParticleExplosionWP(World world, double x, double y, double z, double mx, double my, double mz, float size)
+		{
+			super(world, x, y, z, mx, my, mz, size);
+		}
+
+		@Override
+		public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
+		{
+			float f = ((float)this.particleAge+partialTicks)/(float)this.particleMaxAge;
+			f = MathHelper.clamp(f, 0.0F, 1.0F);
+			float f2 = Math.abs(f-0.5f)/0.5f;
+			f2 = 1f-(f2*0.25f);
+
+
+			this.setParticleTextureIndex(4);
+			setRBGColorF(0.9f+(0.1f*f), 0.9f+(0.1f*f), 0.9f+(0.1f*f));
+			setAlphaF(1-f);
+			this.particleScale = this.actualParticleScale*f2*1.25f;
+
+			GlStateManager.translate(0, -0.25, 0);
+			super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
+			GlStateManager.translate(0, 0.25, 0);
+
+		}
 	}
 }

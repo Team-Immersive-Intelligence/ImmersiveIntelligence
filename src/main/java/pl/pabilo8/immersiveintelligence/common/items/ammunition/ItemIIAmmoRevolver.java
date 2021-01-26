@@ -78,7 +78,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 
 		//And add it to our registries.
-		IIContent.items.add(this);
+		IIContent.ITEMS.add(this);
 	}
 
 	@Override

@@ -35,9 +35,9 @@ public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRec
 
 	public ElectrolyzerRecipeCategory(IGuiHelper helper)
 	{
-		super("electrolyzer", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name", helper.createBlankDrawable(140, 50), ElectrolyzerRecipe.class, new ItemStack(IIContent.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta()));
+		super("electrolyzer", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name", helper.createBlankDrawable(140, 50), ElectrolyzerRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta()));
 		tankOverlay = helper.createDrawable(background, 0, 52, 20, 51, -2, 2, -2, 2);
-		machineStack = new ItemStack(IIContent.block_metal_multiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta());
+		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta());
 	}
 
 	@Override

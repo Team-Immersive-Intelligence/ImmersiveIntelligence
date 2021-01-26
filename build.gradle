@@ -20,7 +20,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2838"
+    version = "1.12.2-14.23.5.2847"
     runDir = "run"
 
     replace "@VERSION@", project.version
@@ -91,7 +91,7 @@ dependencies {
     //deobfCompile "albedo:albedo:1.12.2:1.1.0"
     deobfCompile 'baubles:Baubles:1.12:1.5.2'
 
-    compileOnly "curse.maven:immersive-petroleum:2544919"
+    compileOnly "curse.maven:immersive-petroleum-268250:2544919"
 }
 
 reobf {

@@ -32,8 +32,8 @@ public class MultiblockBallisticComputer implements IMultiblock
 	static final IngredientStack[] materials = new IngredientStack[]{
 
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 3, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 3, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta())),
 			new IngredientStack("blockSteel", 3)
 	};
 	public static MultiblockBallisticComputer instance = new MultiblockBallisticComputer();
@@ -50,7 +50,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 
 					if(h==0&&w==0&&l==0)
 					{
-						structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta());
+						structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta());
 					}
 					else if(l==0)
 					{
@@ -62,7 +62,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 					}
 					else
 					{
-						structure[h][l][w] = new ItemStack(IIContent.block_metal_decoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
+						structure[h][l][w] = new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta());
 					}
 
 				}
@@ -81,7 +81,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 	@Override
 	public boolean isBlockTrigger(IBlockState state)
 	{
-		return state.getBlock()==IIContent.block_metal_decoration&&
+		return state.getBlock()==IIContent.blockMetalDecoration&&
 				(state.getBlock().getMetaFromState(state)==IIBlockTypes_MetalDecoration.COIL_DATA.getMeta());
 	}
 
@@ -117,7 +117,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 					int ww = mirrored?-w: w;
 					BlockPos pos2 = pos.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.block_metal_multiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.BALLISTIC_COMPUTER.getMeta()));
+					world.setBlockState(pos2, IIContent.blockMetalMultiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.BALLISTIC_COMPUTER.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityBallisticComputer)
 					{
@@ -128,7 +128,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 						tile.pos = (h*4)+(l*2)+w;
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.block_metal_multiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock0, 255, 0);
 					}
 				}
 		return true;
@@ -146,7 +146,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 
 					if(h==0&&w==0&&l==0)
 					{
-						if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta()))
+						if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.COIL_DATA.getMeta()))
 						{
 							return false;
 						}
@@ -167,7 +167,7 @@ public class MultiblockBallisticComputer implements IMultiblock
 					}
 					else
 					{
-						if(!Utils.isBlockAt(world, pos, IIContent.block_metal_decoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
+						if(!Utils.isBlockAt(world, pos, IIContent.blockMetalDecoration, IIBlockTypes_MetalDecoration.ELECTRONIC_ENGINEERING.getMeta()))
 						{
 							return false;
 						}

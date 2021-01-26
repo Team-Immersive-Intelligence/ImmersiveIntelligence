@@ -3,9 +3,11 @@ package pl.pabilo8.immersiveintelligence.api.utils;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -222,5 +224,25 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 		{
 			return barrel.tank.getTankProperties();
 		}
+	}
+
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target)
+	{
+		if(this instanceof IMinecartBlockPickable)
+		{
+			IBlockState tile = getDefaultDisplayTile();
+			ItemStack drop2 = new ItemStack(tile.getBlock(), 1, tile.getBlock().getMetaFromState(tile));
+			NBTTagCompound nbt = new NBTTagCompound();
+
+			if(this.hasCustomName())
+			{
+				nbt.setString("name", getCustomNameTag());
+			}
+			writeTank(nbt, true);
+			drop2.setTagCompound(nbt);
+			return drop2;
+		}
+		return ItemStack.EMPTY;
 	}
 }

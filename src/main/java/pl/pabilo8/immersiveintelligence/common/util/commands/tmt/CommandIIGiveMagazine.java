@@ -63,7 +63,7 @@ public class CommandIIGiveMagazine extends CommandBase
 		if(args.length > 3)
 		{
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			ItemStack magazine = Utils.getStackWithMetaName(IIContent.item_bullet_magazine, args[1]);
+			ItemStack magazine = Utils.getStackWithMetaName(IIContent.itemBulletMagazine, args[1]);
 			IBullet casing = ItemIIBulletMagazine.getMatchingType(magazine);
 			IBulletCore core = BulletRegistry.INSTANCE.getCore(args[2]);
 			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
@@ -108,7 +108,7 @@ public class CommandIIGiveMagazine extends CommandBase
 		}
 		else if(args.length==2)
 		{
-			return getListOfStringsMatchingLastWord(args, IIContent.item_bullet_magazine.getSubNames());
+			return getListOfStringsMatchingLastWord(args, IIContent.itemBulletMagazine.getSubNames());
 		}
 		else if(args.length==3)
 		{

@@ -33,7 +33,7 @@ public class RadioConfiguratorItemStackRenderer extends TileEntityItemStackRende
 		GlStateManager.rotate(180, 0, 1, 0);
 		GlStateManager.translate(-1f, 0f, 0f);
 
-		if(IIContent.item_radio_configurator.isBasic(itemStackIn))
+		if(IIContent.itemRadioConfigurator.isBasic(itemStackIn))
 		{
 			String texture_basic = ImmersiveIntelligence.MODID+":textures/items/tools/radio_configurator.png";
 			ClientUtils.bindTexture(texture_basic);

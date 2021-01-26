@@ -113,7 +113,7 @@ public class MechanicalPumpRenderer extends TileEntitySpecialRenderer<TileEntity
 				mod.render(0.0625f);
 
 			ClientUtils.bindAtlas();
-			IBlockState state = IIContent.block_mechanical_device1.getDefaultState().withProperty(IEProperties.MULTIBLOCKSLAVE, false);
+			IBlockState state = IIContent.blockMechanicalDevice1.getDefaultState().withProperty(IEProperties.MULTIBLOCKSLAVE, false);
 			GlStateManager.translate(0, -1, 0);
 			ClientUtils.mc().getBlockRendererDispatcher().renderBlockBrightness(state, 1f);
 

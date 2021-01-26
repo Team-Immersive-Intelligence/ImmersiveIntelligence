@@ -96,6 +96,24 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		for(ModelRendererTurbo mod : model.baseModel)
 			mod.render(0.0625f);
 
+		switch(entity.upgrade)
+		{
+			case "storage":
+				for(ModelRendererTurbo mod : model.upgradeStorageModel)
+					mod.render();
+				break;
+			case "tank":
+				for(ModelRendererTurbo mod : model.upgradeTankModel)
+					mod.render();
+				break;
+			case "woodgas":
+				break;
+			case "seat":
+				for(ModelRendererTurbo mod : model.upgradeSeatModel)
+					mod.render();
+				break;
+		}
+
 		if(isTowing)
 			for(ModelRendererTurbo mod : model.trailerThingyModel)
 				mod.render(0.0625f);

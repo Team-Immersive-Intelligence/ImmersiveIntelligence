@@ -512,7 +512,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 	public void breakDummies(BlockPos pos, IBlockState state)
 	{
 		for(int i = 0; i <= 1; i++)
-			if(Utils.isBlockAt(world, getPos().add(0, dummy?-1: 0, 0).add(0, i, 0), IIContent.block_mechanical_device1, IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta()))
+			if(Utils.isBlockAt(world, getPos().add(0, dummy?-1: 0, 0).add(0, i, 0), IIContent.blockMechanicalDevice1, IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta()))
 				world.setBlockToAir(getPos().add(0, dummy?-1: 0, 0).add(0, i, 0));
 	}
 

@@ -32,7 +32,7 @@ public class PrecissionAssemblerRecipeWrapper extends MultiblockRecipeWrapper
 				tools.add(PrecissionAssemblerRecipe.toolMap.get(tool).getToolPresentationStack(tool));
 			}
 		}
-		scheme = IIContent.item_assembly_scheme.getStackForRecipe(recipe);
+		scheme = IIContent.itemAssemblyScheme.getStackForRecipe(recipe);
 	}
 
 	protected List<ItemStack> tools = new ArrayList<>();

@@ -37,7 +37,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 				new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 15)),
 				new IngredientStack("blockSteel", 1),
 				new IngredientStack("plateSteel", 4),
-				new IngredientStack(new ItemStack(IIContent.block_metal_device, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())),
+				new IngredientStack(new ItemStack(IIContent.blockMetalDevice, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())),
 				new IngredientStack("engineElectricSmall", 2)
 		};
 	}

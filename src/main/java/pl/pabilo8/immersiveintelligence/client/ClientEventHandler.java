@@ -11,13 +11,17 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageRequestBlockUpdate;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelBiped.ArmPose;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
@@ -43,6 +47,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import org.lwjgl.opengl.GLContext;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
@@ -53,15 +58,20 @@ import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -245,10 +255,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onFOVUpdate(FOVModifier event)
 	{
 		EntityPlayer player = ClientUtils.mc().player;
-		if(player.getRidingEntity() instanceof EntityMachinegun&&mgAiming)
+		if(player.getRidingEntity() instanceof IEntityZoomProvider&&mgAiming)
 		{
+			IEntityZoomProvider ridingEntity = (IEntityZoomProvider)player.getRidingEntity();
 
-			float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
+			float[] steps = ridingEntity.getZoom().getZoomSteps(ridingEntity.getZoomStack(), player);
 			if(steps!=null&&steps.length > 0)
 			{
 				int curStep = -1;
@@ -359,23 +370,26 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			return;
 		}
 
+		Entity ridingEntity = ClientUtils.mc().player.getRidingEntity();
+
 		dothing:
 		if(ZoomHandler.isZooming&&event.getType()==RenderGameOverlayEvent.ElementType.CROSSHAIRS)
 		{
-			if(ZoomHandler.isZooming&&(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun||(stack_m.getItem() instanceof IAdvancedZoomTool||stack_o.getItem() instanceof IAdvancedZoomTool)))
+			if(ZoomHandler.isZooming&&(ridingEntity instanceof IEntityZoomProvider||(stack_m.getItem() instanceof IAdvancedZoomTool||stack_o.getItem() instanceof IAdvancedZoomTool)))
 			{
 				event.setCanceled(true);
 
 				ItemStack stack = stack_m.getItem() instanceof IAdvancedZoomTool?stack_m: stack_o;
 
-				if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+				if(ridingEntity instanceof IEntityZoomProvider)
 				{
-					if(!EntityMachinegun.scope.canZoom(((EntityMachinegun)ClientUtils.mc().player.getRidingEntity()).gun, ClientUtils.mc().player))
+					IEntityZoomProvider entityZoomProvider = ((IEntityZoomProvider)ridingEntity);
+					if(!entityZoomProvider.getZoom().canZoom(entityZoomProvider.getZoomStack(), ClientUtils.mc().player))
 					{
 						ZoomHandler.isZooming = false;
 						break dothing;
 					}
-					ClientUtils.bindTexture(EntityMachinegun.scope.getZoomOverlayTexture(((EntityMachinegun)ClientUtils.mc().player.getRidingEntity()).gun, ClientUtils.mc().player));
+					ClientUtils.bindTexture(entityZoomProvider.getZoom().getZoomOverlayTexture(entityZoomProvider.getZoomStack(), ClientUtils.mc().player));
 				}
 				else
 					ClientUtils.bindTexture(((IAdvancedZoomTool)stack.getItem()).getZoomOverlayTexture(stack, ClientUtils.mc().player));
@@ -406,11 +420,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				ClientUtils.bindTexture("immersiveengineering:textures/gui/hud_elements.png");
 				ClientUtils.drawTexturedRect(218/256f*resMin, 64/256f*resMin, 24/256f*resMin, 128/256f*resMin, 64/256f, 88/256f, 96/256f, 224/256f);
 				ItemStack equipped = ClientUtils.mc().player.getHeldItem(EnumHand.MAIN_HAND);
-				if(!equipped.isEmpty()&&equipped.getItem() instanceof IZoomTool||(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun))
+				if(!equipped.isEmpty()&&equipped.getItem() instanceof IZoomTool||(ridingEntity instanceof IEntityZoomProvider))
 				{
 					IZoomTool tool;
-					if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
-						tool = EntityMachinegun.scope;
+					if(ridingEntity instanceof IEntityZoomProvider)
+						tool = ((IEntityZoomProvider)ridingEntity).getZoom();
 					else
 						tool = (IZoomTool)equipped.getItem();
 					float[] steps = tool.getZoomSteps(equipped, ClientUtils.mc().player);
@@ -454,64 +468,83 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}
 
-		if(ClientUtils.mc().player.getRidingEntity() instanceof EntityMachinegun)
+		if(ridingEntity instanceof IEntityZoomProvider)
 		{
-			ZoomHandler.isZooming = ClientProxy.keybind_machinegunScope.isKeyDown();
-			EntityMachinegun mg = (EntityMachinegun)ClientUtils.mc().player.getRidingEntity();
+			ZoomHandler.isZooming = ClientProxy.keybind_zoom.isKeyDown();
 
 			if(ZoomHandler.isZooming^mgAiming)
 			{
 				mgAiming = !mgAiming;
 
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("aiming", mgAiming);
-				IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
+				if(ridingEntity instanceof EntityMachinegun)
+				{
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setBoolean("clientMessage", true);
+					tag.setBoolean("aiming", mgAiming);
+					IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(ridingEntity, tag));
+				}
 			}
 
 			if(ZoomHandler.isZooming)
 			{
 				ClientUtils.mc().gameSettings.thirdPersonView = 0;
 
-				float px = (float)mg.posX, py = (float)mg.posY, pz = (float)mg.posZ;
 
-				float yaw = mg.gunYaw;
-				float pitch = mg.gunPitch;
+				if(ridingEntity instanceof EntityMachinegun)
+				{
+					EntityMachinegun mg = (EntityMachinegun)ridingEntity;
+					float px = (float)mg.posX, py = (float)mg.posY, pz = (float)mg.posZ;
 
-				EntityLivingBase psg = (EntityLivingBase)mg.getPassengers().get(0);
-				float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-mg.setYaw);
-				float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
+					float yaw = mg.gunYaw;
+					float pitch = mg.gunPitch;
 
-				if(mg.gunYaw < true_head_angle)
-					yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
-				else if(mg.gunYaw > true_head_angle)
-					yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
+					EntityLivingBase psg = (EntityLivingBase)mg.getPassengers().get(0);
+					float true_head_angle = MathHelper.wrapDegrees(psg.prevRotationYawHead-mg.setYaw);
+					float true_head_angle2 = MathHelper.wrapDegrees(psg.rotationPitch);
 
-				if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
-					yaw = true_head_angle;
+					if(mg.gunYaw < true_head_angle)
+						yaw += ClientUtils.mc().getRenderPartialTicks()*2f;
+					else if(mg.gunYaw > true_head_angle)
+						yaw -= ClientUtils.mc().getRenderPartialTicks()*2f;
 
-				if(mg.gunPitch < true_head_angle2)
-					pitch += ClientUtils.mc().getRenderPartialTicks();
-				else if(mg.gunPitch > true_head_angle2)
-					pitch -= ClientUtils.mc().getRenderPartialTicks();
+					if(Math.ceil(mg.gunYaw) <= Math.ceil(true_head_angle)+1f&&Math.ceil(mg.gunYaw) >= Math.ceil(true_head_angle)-1f)
+						yaw = true_head_angle;
 
-				yaw = MathHelper.clamp(yaw, -45, 45);
-				pitch = MathHelper.clamp(pitch, -20, 20);
+					if(mg.gunPitch < true_head_angle2)
+						pitch += ClientUtils.mc().getRenderPartialTicks();
+					else if(mg.gunPitch > true_head_angle2)
+						pitch -= ClientUtils.mc().getRenderPartialTicks();
 
-				yaw += mg.recoilYaw;
-				pitch += mg.recoilPitch;
+					yaw = mg.tripod?MathHelper.clamp(yaw, -82.5F, 82.5F): MathHelper.clamp(yaw, -45.0F, 45.0F);
+					pitch = MathHelper.clamp(pitch, -20, 20);
 
-				double true_angle = Math.toRadians(180-mg.setYaw-yaw);
-				double true_angle2 = Math.toRadians(pitch);
+					yaw += mg.recoilYaw;
+					pitch += mg.recoilPitch;
 
-				boolean hasScope = EntityMachinegun.scope.canZoom(mg.gun, null);
+					double true_angle = Math.toRadians(180-mg.setYaw-yaw);
+					double true_angle2 = Math.toRadians(pitch);
 
-				Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
-				Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
+					boolean hasScope = mg.getZoom().canZoom(mg.gun, null);
 
-				CameraHandler.INSTANCE.setCameraPos(px+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+(0.85*(gun_end.z+gun_height.z)));
-				CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
-				CameraHandler.INSTANCE.setEnabled(true);
+					Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
+					Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
+
+					CameraHandler.INSTANCE.setCameraPos(px+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+(0.85*(gun_end.z+gun_height.z)));
+					CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
+					CameraHandler.INSTANCE.setEnabled(true);
+				}
+				else if(ridingEntity instanceof EntityTripodPeriscope)
+				{
+					EntityTripodPeriscope mg = (EntityTripodPeriscope)ridingEntity;
+					float px = (float)mg.posX, py = (float)mg.posY, pz = (float)mg.posZ;
+
+					CameraHandler.INSTANCE.setCameraPos(px, py+1.25, pz);
+					ClientUtils.mc().player.rotationPitch = MathHelper.clamp(ClientUtils.mc().player.rotationPitch, -50, 50);
+					ClientUtils.mc().player.prevRotationPitch = MathHelper.clamp(ClientUtils.mc().player.prevRotationPitch, -50, 50);
+					CameraHandler.INSTANCE.setCameraAngle(mg.periscopeYaw, ClientUtils.mc().player.rotationPitch, 0);
+					CameraHandler.INSTANCE.setEnabled(true);
+				}
+
 			}
 			else
 				CameraHandler.INSTANCE.setEnabled(false);
@@ -611,9 +644,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		model.bipedHead.rotateAngleZ = 0f;
 		model.bipedHeadwear.rotateAngleZ = 0f;
 
-		if(entity instanceof EntityPlayer)
+		if(entity instanceof EntityLivingBase)
 		{
-			EntityPlayer player = (EntityPlayer)entity;
+			EntityLivingBase player = (EntityLivingBase)entity;
 
 			// TODO: 26.09.2020 Find a better way, or make an animation API!
 			if(aimingPlayers.contains(entity))
@@ -626,6 +659,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			if(ridingEntity instanceof EntityMachinegun)
 			{
 				EntityMachinegun mg = ((EntityMachinegun)ridingEntity);
+
 				float ff = (float)(-1.35f-(Math.toRadians(mg.gunPitch))*1.25);
 				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead-mg.setYaw);
 
@@ -643,6 +677,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					{
 						wtime = (Math.abs((((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%20)/20f)-0.5f)/0.5f);
 						wtime *= 0.25f;
+
+						if(mg.setupTime > 0)
+							wtime = 0;
 						if(mg.gunYaw < true_head_angle)
 						{
 							model.bipedRightLeg.rotateAngleY = -(wtime)*2f;
@@ -668,8 +705,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					model.bipedRightLeg.rotationPointZ = 12f;
 					model.bipedLeftLeg.rotationPointZ = 12f;
 
-					model.bipedRightLeg.rotateAngleY += (mg.gunYaw/45f);
-					model.bipedLeftLeg.rotateAngleY += (mg.gunYaw/45f);
+					float maxRotation = mg.tripod?82.5F: 45.0F;
+
+					model.bipedRightLeg.rotateAngleY += (mg.gunYaw/maxRotation);
+					model.bipedLeftLeg.rotateAngleY += (mg.gunYaw/maxRotation);
 
 					//model.bipedLeftLeg.rotateAngleY += ff+1f;
 
@@ -678,6 +717,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				{
 					wtime = (Math.abs((((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40)/40f)-0.5f)/0.5f)-0.5f;
 					wtime *= 0.65f;
+					if(mg.setupTime > 0)
+						wtime = 0;
 					model.bipedBody.rotateAngleX -= 0.0625f;
 					if(Math.abs(mg.gunYaw-true_head_angle) > 5)
 						if(mg.gunYaw < true_head_angle)
@@ -697,6 +738,32 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 
 				//model.bipedRightArm.rotateAngleY = -.08726f+model.bipedHead.rotateAngleY;
+			}
+			else if(ridingEntity instanceof EntityTripodPeriscope)
+			{
+				EntityTripodPeriscope mg = ((EntityTripodPeriscope)ridingEntity);
+				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead-mg.periscopeYaw);
+
+				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
+				float wtime = (Math.abs((((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40)/40f)-0.5f)/0.5f)-0.5f;
+				wtime *= 0.65f;
+
+				model.bipedHead.rotateAngleX = 0;
+				model.bipedHeadwear.rotateAngleX = 0;
+				model.bipedHead.rotateAngleY = 0;
+				model.bipedHeadwear.rotateAngleY = 0;
+				if(Math.abs(mg.periscopeYaw-true_head_angle) > 5)
+					if(mg.periscopeYaw < true_head_angle)
+					{
+						model.bipedRightLeg.rotateAngleZ = (wtime)*2f;
+						model.bipedLeftLeg.rotateAngleZ = -(wtime)*2f;
+					}
+					else if(mg.periscopeYaw > true_head_angle)
+					{
+						model.bipedRightLeg.rotateAngleZ = -(wtime)*2f;
+						model.bipedLeftLeg.rotateAngleZ = (wtime)*2f;
+					}
+
 			}
 			else if(ridingEntity instanceof EntityVehicleSeat)
 			{
@@ -764,10 +831,28 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								model.bipedLeftArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
 							}
 						}
+						else if(player.isSneaking()&&heldItem.getItem() instanceof ItemIIBinoculars)
+						{
+							model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
+							model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
+
+							model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
+							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+
+							int id = heldItem.getMetadata();
+							BinocularsRenderer.INSTANCE.render(id==1?(ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1): id, model.bipedHead, true);
+						}
 
 					}
 				}
 		}
+	}
+
+	public void setModelVisibilities(RenderPlayer renderPlayer, AbstractClientPlayer clientPlayer)
+	{
+		ModelPlayer mainModel = renderPlayer.getMainModel();
+		mainModel.rightArmPose = ArmPose.EMPTY;
+		mainModel.leftArmPose = ArmPose.EMPTY;
 	}
 
 	@SubscribeEvent
@@ -825,5 +910,17 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onWorldLoad(WorldEvent.Load event)
 	{
 		aimingPlayers.clear();
+	}
+
+	@SubscribeEvent
+	public void onTickClientTick(ClientTickEvent event)
+	{
+		ParticleUtils.particleRenderer.updateParticles();
+	}
+
+	@SubscribeEvent
+	public void onRenderWorldLast(RenderWorldLastEvent event)
+	{
+		ParticleUtils.particleRenderer.renderParticles(event.getPartialTicks());
 	}
 }

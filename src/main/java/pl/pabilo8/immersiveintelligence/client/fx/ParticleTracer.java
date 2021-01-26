@@ -1,23 +1,22 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 16-11-2019
  */
-public class ParticleTracer extends Particle
+public class ParticleTracer extends IIParticle
 {
 	private float actualParticleScale;
 	private final float[] color;
@@ -36,7 +35,7 @@ public class ParticleTracer extends Particle
 
 		this.particleScale = size*16f;
 		this.actualParticleScale = size;
-		this.particleMaxAge = 1;
+		this.particleMaxAge = (int)(1/EntityBullet.DEV_SLOMO);
 		this.color = Utils.rgbIntToRGB(color);
 		;
 	}
@@ -67,15 +66,7 @@ public class ParticleTracer extends Particle
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
 	{
-		GlStateManager.pushMatrix();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25f);
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableLighting();
-		GlStateManager.disableTexture2D();
-		GlStateManager.enableBlend();
-		GlStateManager.enableAlpha();
-		float i = (this.particleAge+partialTicks)/(float)this.particleMaxAge;
-
 		float x = (float)((float)posX-entityIn.posX);
 		float y = (float)((float)posY-entityIn.posY);
 		float z = (float)((float)posZ-entityIn.posZ);
@@ -86,7 +77,6 @@ public class ParticleTracer extends Particle
 
 		float exp = this.actualParticleScale/2f;
 
-		buffer.begin(GL11.GL_QUAD_STRIP, DefaultVertexFormats.POSITION_COLOR);
 		buffer.pos(x, y+exp, z).color(color[0], color[1], color[2], 1f).endVertex();
 		buffer.pos(x2, y2+exp, z2).color(color[0], color[1], color[2], 0.125f).endVertex();
 		buffer.pos(x, y-exp, z).color(color[0], color[1], color[2], 1f).endVertex();
@@ -105,12 +95,12 @@ public class ParticleTracer extends Particle
 		 */
 
 		//buffer.pos(x, y, z).color(color[0],color[1],color[2],0.5f).endVertex();
+	}
 
-		Tessellator.getInstance().draw();
-		GlStateManager.disableAlpha();
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
-		GlStateManager.popMatrix();
+	@Nonnull
+	@Override
+	public ParticleRenderer.DrawingStages getDrawStage()
+	{
+		return DrawingStages.TRACER;
 	}
 }

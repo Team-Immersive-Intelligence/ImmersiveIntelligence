@@ -70,7 +70,9 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleGasCloud;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
@@ -114,6 +116,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
@@ -158,7 +161,7 @@ public class ClientProxy extends CommonProxy
 	};
 
 	public static KeyBinding keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
-	public static KeyBinding keybind_machinegunScope = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
+	public static KeyBinding keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
 	public static KeyBinding keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
 	public static KeyBinding keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
 	public static MechanicalConnectorRenderer mech_con_renderer;
@@ -178,9 +181,9 @@ public class ClientProxy extends CommonProxy
 		WireApi.registerConnectorForRender("empty", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		//WireApi.registerConnectorForRender("conn_data", new ResourceLocation(ImmersiveIntelligence.MODID+":block/data_connector.obj"), null);
 
-		IIContent.item_measuring_cup.specialModelMap.put(0, ModelMeasuringCup.MODEL);
+		IIContent.itemMeasuringCup.specialModelMap.put(0, ModelMeasuringCup.MODEL);
 
-		for(Block block : IIContent.blocks)
+		for(Block block : IIContent.BLOCKS)
 		{
 			final ResourceLocation loc = Block.REGISTRY.getNameForObject(block);
 			Item blockItem = Item.getItemFromBlock(block);
@@ -234,7 +237,7 @@ public class ClientProxy extends CommonProxy
 				ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation(loc, "inventory"));
 		}
 
-		for(Item item : IIContent.items)
+		for(Item item : IIContent.ITEMS)
 		{
 			if(item instanceof ItemBlock)
 				continue;
@@ -274,9 +277,9 @@ public class ClientProxy extends CommonProxy
 			}
 		}
 
-		addModelToItemSubtype(IIContent.item_sawblade, 8, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "sawblade/iron_display"), "inventory"));
-		addModelToItemSubtype(IIContent.item_sawblade, 9, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "sawblade/steel_display"), "inventory"));
-		addModelToItemSubtype(IIContent.item_sawblade, 10, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "sawblade/tungsten_display"), "inventory"));
+		addModelToItemSubtype(IIContent.itemSawblade, 8, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "sawblade/iron_display"), "inventory"));
+		addModelToItemSubtype(IIContent.itemSawblade, 9, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "sawblade/steel_display"), "inventory"));
+		addModelToItemSubtype(IIContent.itemSawblade, 10, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "sawblade/tungsten_display"), "inventory"));
 	}
 
 	private static void mapFluidState(Block block, Fluid fluid)
@@ -337,14 +340,20 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShrapnel.class, ShrapnelRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityWhitePhosphorus.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityMachinegun.class, MachinegunRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityMotorbike.class, MotorbikeRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
 		//Thanks Blu!
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityVehicleSeat.class, EntityRenderNone::new);
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityAtomicBoom.class, AtomicBoomRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityGasCloud.class, EntityRenderNone::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFlare.class, EntityRenderNone::new);
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityHans.class, HansRenderer::new);
 
 		//Railgun overwrite
 		ImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IEContent.itemRailgun, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement_OBJ("immersiveengineering:models/item/railgun.obj", true)
@@ -399,7 +408,19 @@ public class ClientProxy extends CommonProxy
 			}
 		}
 
-		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.item_bullet_magazine, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
+		for(int i = 0; i < IIContent.itemBulletMagazine.getSubNames().length; i++)
+		{
+			EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBulletMagazine, 1, i), new ImmersiveModelRegistry.ItemModelReplacement()
+			{
+				@Override
+				public IBakedModel createBakedModel(IBakedModel existingModel)
+				{
+					return new ModelItemDynamicOverride(existingModel, null);
+				}
+			}, ImmersiveIntelligence.MODID);
+		}
+
+		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 1), new ImmersiveModelRegistry.ItemModelReplacement()
 		{
 			@Override
 			public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -408,16 +429,7 @@ public class ClientProxy extends CommonProxy
 			}
 		}, ImmersiveIntelligence.MODID);
 
-		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.item_binoculars, 1, 1), new ImmersiveModelRegistry.ItemModelReplacement()
-		{
-			@Override
-			public IBakedModel createBakedModel(IBakedModel existingModel)
-			{
-				return new ModelItemDynamicOverride(existingModel, null);
-			}
-		}, ImmersiveIntelligence.MODID);
-
-		IIContent.item_motor_belt.setRenderModels();
+		IIContent.itemMotorBelt.setRenderModels();
 	}
 
 	@SubscribeEvent
@@ -430,7 +442,7 @@ public class ClientProxy extends CommonProxy
 		}
 
 
-		for(String s : IIContent.item_bullet_magazine.getSubNames())
+		for(String s : IIContent.itemBulletMagazine.getSubNames())
 		{
 			ImmersiveIntelligence.logger.info("registering sprite for bullet magazine type: "+s);
 			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/main");
@@ -449,17 +461,21 @@ public class ClientProxy extends CommonProxy
 
 		}
 
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/submachinegun/main_disp");
+
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_off");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
 
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 			ApiUtils.getRegisterSprite(event.getMap(), s.getValue().texture.replace("textures/", ""));
 
-		for(DrillHeadPerm perm : IIContent.item_drillhead.perms)
+		for(DrillHeadPerm perm : IIContent.itemDrillhead.perms)
 			perm.sprite = ApiUtils.getRegisterSprite(event.getMap(), perm.texture);
 
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector_feedtrough");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector");
+
+		ParticleGasCloud.TEXTURE = ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":particle/gas");
 
 	}
 
@@ -518,34 +534,34 @@ public class ClientProxy extends CommonProxy
 		((IReloadableResourceManager)ClientUtils.mc().getResourceManager()).registerReloadListener(handler);
 
 		keybind_manualReload.setKeyConflictContext(passenger_action);
-		keybind_machinegunScope.setKeyConflictContext(passenger_action);
+		keybind_zoom.setKeyConflictContext(passenger_action);
 		keybind_motorbikeEngine.setKeyConflictContext(passenger_action);
 		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
 
 		ClientRegistry.registerKeyBinding(keybind_manualReload);
-		ClientRegistry.registerKeyBinding(keybind_machinegunScope);
+		ClientRegistry.registerKeyBinding(keybind_zoom);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);
 
 		ShaderUtil.init();
 
-		TileEntityInserter.conn_data = new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityInserter.conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
-		TileEntityAdvancedInserter.conn_data = new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityAdvancedInserter.conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityAdvancedInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
-		TileEntityFluidInserter.conn_data = new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityFluidInserter.conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityFluidInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
-		TileEntityChemicalDispenser.conn_data = new ItemStack(IIContent.block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityChemicalDispenser.conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityChemicalDispenser.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
 		//TODO:Advanced Fluid Inserter
 		//TileEntityInserter.conn_data = new ItemStack(block_data_connector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		//TileEntityInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
-		for(Item item : IIContent.items)
+		for(Item item : IIContent.ITEMS)
 			if(item instanceof IColouredItem&&((IColouredItem)item).hasCustomItemColours())
 				ClientUtils.mc().getItemColors().registerItemColorHandler(IEDefaultColourHandlers.INSTANCE, item);
 	}
@@ -555,7 +571,6 @@ public class ClientProxy extends CommonProxy
 	{
 		super.postInit();
 		ImmersiveIntelligence.logger.info("Registering II Manual Pages.");
-
 		IIManualDataAndElectronics.INSTANCE.addPages();
 		IIManualLogistics.INSTANCE.addPages();
 		IIManualWarfare.INSTANCE.addPages();
@@ -575,11 +590,11 @@ public class ClientProxy extends CommonProxy
 		ManualHelper.addEntry("rotary_power", ManualHelper.CAT_MACHINES,
 				new ManualPages.Image(ManualHelper.getManual(), "rotary_power0", ImmersiveIntelligence.MODID+":textures/misc/rotary.png;0;0;110;64"),
 				new ManualPages.Text(ManualHelper.getManual(), "rotary_power1"),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power2", new ItemStack(IIContent.block_mechanical_connector)),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power3", new ItemStack(IIContent.item_motor_belt, 1, 0), new ItemStack(IIContent.item_motor_belt, 1, 1)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power4", new ItemStack(IIContent.block_gearbox)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power5", new ItemStack(IIContent.block_mechanical_device, 1, IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX.getMeta())),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power6", new ItemStack(IIContent.item_wrench), new ItemStack(IIContent.item_electric_wrench))
+				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power2", new ItemStack(IIContent.blockMechanicalConnector)),
+				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power3", new ItemStack(IIContent.itemMotorBelt, 1, 0), new ItemStack(IIContent.itemMotorBelt, 1, 1)),
+				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power4", new ItemStack(IIContent.blockGearbox)),
+				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power5", new ItemStack(IIContent.blockMechanicalDevice, 1, IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX.getMeta())),
+				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power6", new ItemStack(IIContent.itemWrench), new ItemStack(IIContent.itemElectricWrench))
 		);
 
 		ManualHelper.addEntry("sawmill", ManualHelper.CAT_MACHINES,
@@ -592,14 +607,14 @@ public class ClientProxy extends CommonProxy
 
 
 		//Weapons (Items)
-		IIContent.item_machinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
-		IIContent.item_submachinegun.setTileEntityItemStackRenderer(SubmachinegunItemStackRenderer.instance);
+		IIContent.itemMachinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
+		IIContent.itemSubmachinegun.setTileEntityItemStackRenderer(SubmachinegunItemStackRenderer.instance);
 		ItemIIWeaponUpgrade.addUpgradesToRender();
 
-		IIContent.item_light_engineer_helmet.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
-		IIContent.item_light_engineer_chestplate.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
-		IIContent.item_light_engineer_leggings.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
-		IIContent.item_light_engineer_boots.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+		IIContent.itemLightEngineerHelmet.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+		IIContent.itemLightEngineerChestplate.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+		IIContent.itemLightEngineerLeggings.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
+		IIContent.itemLightEngineerBoots.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
 
 		//Block / ItemStack rendering
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionCrate.class, new AmmunitionCrateRenderer().subscribeToList("ammunition_crate"));
@@ -617,20 +632,20 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataDebugger.class, new DataDebuggerRenderer().subscribeToList("data_debugger"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPunchtapeReader.class, new PunchtapeReaderRenderer().subscribeToList("punchtape_reader"));
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), TileEntityAmmunitionCrate.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta(), TileEntityMedicalCrate.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta(), TileEntityRepairCrate.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), TileEntityAmmunitionCrate.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta(), TileEntityMedicalCrate.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta(), TileEntityRepairCrate.class);
 
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_device), IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getMeta(), TileEntityPunchtapeReader.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getMeta(), TileEntityPunchtapeReader.class);
 
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalPump.class, new MechanicalPumpRenderer().subscribeToList("mechanical_pump"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_mechanical_device1), IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta(), TileEntityMechanicalPump.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMechanicalDevice1), IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta(), TileEntityMechanicalPump.class);
 
 		//Data Connectors
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataConnector.class, new DataConnectorRenderer());
@@ -639,39 +654,39 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalDispenser.class, new ChemicalDispenserRenderer());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySandbags.class, new SandbagsRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_stone_decoration), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockStoneDecoration), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTankTrap.class, new TankTrapRenderer().subscribeToList("tank_trap"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_fortification1), IIBlockTypes_MetalFortification1.TANK_TRAP.getMeta(), TileEntityTankTrap.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalFortification1), IIBlockTypes_MetalFortification1.TANK_TRAP.getMeta(), TileEntityTankTrap.class);
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.DATA_CALLBACK_CONNECTOR.getMeta(), TileEntityDataCallbackConnector.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_CALLBACK_CONNECTOR.getMeta(), TileEntityDataCallbackConnector.class);
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), TileEntityAdvancedInserter.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), TileEntityChemicalDispenser.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.DATA_DEBUGGER.getMeta(), TileEntityDataDebugger.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), TileEntityAdvancedInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), TileEntityChemicalDispenser.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_DEBUGGER.getMeta(), TileEntityDataDebugger.class);
 		//ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
 
 		//Alarm Siren
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAlarmSiren.class, new AlarmSirenRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.ALARM_SIREN.getMeta(), TileEntityAlarmSiren.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.ALARM_SIREN.getMeta(), TileEntityAlarmSiren.class);
 
 		//Programmable Speaker
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProgrammableSpeaker.class, new ProgrammableSpeakerRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_data_connector), IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta(), TileEntityProgrammableSpeaker.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta(), TileEntityProgrammableSpeaker.class);
 
 		//Small Crate
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallCrate.class, new SmallCrateRenderer());
-		Item.getItemFromBlock(IIContent.block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
+		Item.getItemFromBlock(IIContent.blockSmallCrate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
-		Item.getItemFromBlock(IIContent.block_small_crate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
+		Item.getItemFromBlock(IIContent.blockSmallCrate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
 		//Tools
-		IIContent.item_tachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
-		IIContent.item_radio_configurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
+		IIContent.itemTachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
+		IIContent.itemRadioConfigurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
 
 		//Multiblocks
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer().subscribeToList("skycrate_station"));
@@ -679,47 +694,54 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCratePost.class, new SkyCratePostRenderer().subscribeToList("skycrate_post"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer().subscribeToList("radio_station"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.RADIO_STATION.getMeta(), TileEntityRadioStation.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.RADIO_STATION.getMeta(), TileEntityRadioStation.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataInputMachine.class, new DataInputMachineRenderer().subscribeToList("data_input_machine"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArithmeticLogicMachine.class, new ArithmeticLogicMachineRenderer().subscribeToList("arithmetic_logic_machine"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrintingPress.class, new PrintingPressRenderer().subscribeToList("printing_press"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta(), TileEntityPrintingPress.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta(), TileEntityPrintingPress.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer().subscribeToList("chemical_bath"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta(), TileEntityChemicalBath.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta(), TileEntityChemicalBath.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer().subscribeToList("electrolyzer"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), TileEntityElectrolyzer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), TileEntityElectrolyzer.class);
 
 		//TODO: Fix misspeling on 1.14, not now, it could break stuff
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer().subscribeToList("precision_assembler"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), TileEntityPrecissionAssembler.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), TileEntityPrecissionAssembler.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionFactory.class, new AmmunitionFactoryRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta(), TileEntityAmmunitionFactory.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta(), TileEntityAmmunitionFactory.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySawmill.class, new SawmillRenderer().subscribeToList("sawmill"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_wooden_multiblock), IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta(), TileEntitySawmill.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockWoodenMultiblock), IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta(), TileEntitySawmill.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer().subscribeToList("conveyor_scanner"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer().subscribeToList("artillery_howitzer"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock0), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), TileEntityArtilleryHowitzer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), TileEntityArtilleryHowitzer.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPacker.class, new PackerRenderer().subscribeToList("packer"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("redstone_data_interface"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEmplacement.class, new EmplacementRenderer().subscribeToList("emplacement"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_metal_multiblock1), IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
 
 
 		mech_con_renderer = new MechanicalConnectorRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalConnectable.class, mech_con_renderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalWheel.class, new WheelRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.block_mechanical_connector), IIBlockTypes_MechanicalConnector.WOODEN_WHEEL.getMeta(), TileEntityMechanicalWheel.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMechanicalConnector), IIBlockTypes_MechanicalConnector.WOODEN_WHEEL.getMeta(), TileEntityMechanicalWheel.class);
+
+		/*
+		//Doesn't work
+		//Fix for IE's Razor Wire
+		IEContent.blockMetalDecoration2.setMetaBlockLayer(BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta(),BlockRenderLayer.CUTOUT);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRazorWire.class, new RazorWireRenderer());
+		 */
 
 		reloadModels();
 	}
@@ -754,7 +776,7 @@ public class ClientProxy extends CommonProxy
 		if(event.getDwheel()!=0)
 		{
 			EntityPlayer player = ClientUtils.mc().player;
-			if(!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()||player.getRidingEntity() instanceof EntityMachinegun)
+			if(!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()||player.getRidingEntity() instanceof IEntityZoomProvider)
 			{
 				ItemStack equipped = player.getHeldItem(EnumHand.MAIN_HAND);
 
@@ -763,25 +785,30 @@ public class ClientProxy extends CommonProxy
 					IIPacketHandler.INSTANCE.sendToServer(new MessageItemScrollableSwitch(event.getDwheel() > 0));
 					event.setCanceled(true);
 				}
-				if(player.getRidingEntity() instanceof EntityMachinegun&&ZoomHandler.isZooming&&EntityMachinegun.scope.canZoom(((EntityMachinegun)player.getRidingEntity()).gun, player))
+				if(player.getRidingEntity() instanceof IEntityZoomProvider&&ZoomHandler.isZooming)
 				{
-					float[] steps = EntityMachinegun.scope.getZoomSteps(((EntityMachinegun)player.getRidingEntity()).gun, player);
-					if(steps!=null&&steps.length > 0)
+					IEntityZoomProvider zoomProvider = (IEntityZoomProvider)player.getRidingEntity();
+
+					if(zoomProvider.getZoom().canZoom(zoomProvider.getZoomStack(), player))
 					{
-						int curStep = -1;
-						float dist = 0;
-						for(int i = 0; i < steps.length; i++)
-							if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
-							{
-								curStep = i;
-								dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
-							}
-						if(curStep!=-1)
+						float[] steps = zoomProvider.getZoom().getZoomSteps(zoomProvider.getZoomStack(), player);
+						if(steps!=null&&steps.length > 0)
 						{
-							int newStep = curStep+(event.getDwheel() > 0?-1: 1);
-							if(newStep >= 0&&newStep < steps.length)
-								ZoomHandler.fovZoom = steps[newStep];
-							event.setCanceled(true);
+							int curStep = -1;
+							float dist = 0;
+							for(int i = 0; i < steps.length; i++)
+								if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
+								{
+									curStep = i;
+									dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
+								}
+							if(curStep!=-1)
+							{
+								int newStep = curStep+(event.getDwheel() > 0?-1: 1);
+								if(newStep >= 0&&newStep < steps.length)
+									ZoomHandler.fovZoom = steps[newStep];
+								event.setCanceled(true);
+							}
 						}
 					}
 				}

@@ -425,7 +425,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 		{
 			if(inventory.get(3).getItem() instanceof ItemIIAssemblyScheme)
 			{
-				IngredientStack[] stacks = IIContent.item_assembly_scheme.getRecipeForStack(inventory.get(3)).inputs;
+				IngredientStack[] stacks = IIContent.itemAssemblyScheme.getRecipeForStack(inventory.get(3)).inputs;
 				return stacks.length > slot-4&&stacks[slot-4].matchesItemStack(stack);
 			}
 			else

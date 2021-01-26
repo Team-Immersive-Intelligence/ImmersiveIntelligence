@@ -166,7 +166,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			{
 				if(productionProgress==0||inventoryHandler.getStackInSlot(1).isEmpty())
 				{
-					ItemStack test = new ItemStack(IIContent.item_punchtape, 1, 0);
+					ItemStack test = new ItemStack(IIContent.itemPunchtape, 1, 0);
 
 					((ItemIIPunchtape)test.getItem()).writeDataToItem(this.storedData, test);
 
@@ -193,7 +193,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 					}
 					else
 					{
-						ItemStack output = new ItemStack(IIContent.item_punchtape, 1, 0);
+						ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
 
 						((ItemIIPunchtape)output.getItem()).writeDataToItem(this.storedData, output);
 

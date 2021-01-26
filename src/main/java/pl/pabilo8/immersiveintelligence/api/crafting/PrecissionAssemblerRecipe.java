@@ -103,7 +103,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 		for(PrecissionAssemblerRecipe recipe : recipeList)
 		{
-			if(!Objects.equals(IIContent.item_assembly_scheme.getRecipeForStack(scheme), recipe))
+			if(!Objects.equals(IIContent.itemAssemblyScheme.getRecipeForStack(scheme), recipe))
 				continue;
 
 			//Whether it should be accepted or not.
@@ -169,7 +169,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 		for(PrecissionAssemblerRecipe recipe : recipeList)
 		{
-			if(scheme.getItem() instanceof ItemIIAssemblyScheme&&IIContent.item_assembly_scheme.getRecipeForStack(scheme)!=null&&IIContent.item_assembly_scheme.getRecipeForStack(scheme).equals(recipe))
+			if(scheme.getItem() instanceof ItemIIAssemblyScheme&&IIContent.itemAssemblyScheme.getRecipeForStack(scheme)!=null&&IIContent.itemAssemblyScheme.getRecipeForStack(scheme).equals(recipe))
 			{
 				list.add(recipe);
 				continue;
