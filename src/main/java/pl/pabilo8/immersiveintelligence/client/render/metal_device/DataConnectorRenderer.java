@@ -8,7 +8,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.model.connector.ModelDataConnector;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataConnector;
 
@@ -37,7 +37,7 @@ public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityD
 			//model.getBlockRotation(te.getFacing(),model);
 			//I didn't have a standardised model making system, so i used rotation and offset in this one
 			//And that's why it doesn't use getBlockRotation
-			ModelBlockBase.getCommonConnectorModelRotation(te.facing, model);
+			ModelIIBase.getCommonConnectorModelRotation(te.facing, model);
 			model.baseModel[0].render(0.0625f);
 			model.baseModel[2].render(0.0625f);
 
@@ -60,7 +60,7 @@ public class DataConnectorRenderer extends TileEntitySpecialRenderer<TileEntityD
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			ModelBlockBase.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
+			ModelIIBase.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
 			//model.getBlockRotation(EnumFacing.DOWN,model);
 
 			model.render();

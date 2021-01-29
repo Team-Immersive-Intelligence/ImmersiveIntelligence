@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelGrenade extends ModelBlockBase implements IBulletModel
+public class ModelGrenade extends ModelIIBase implements IBulletModel
 {
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/grenade.png";
 	int textureX = 32;

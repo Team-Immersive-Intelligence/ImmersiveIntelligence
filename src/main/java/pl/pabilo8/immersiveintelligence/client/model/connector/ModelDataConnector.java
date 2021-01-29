@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.connector;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
 
-public class ModelDataConnector extends ModelBlockBase
+public class ModelDataConnector extends ModelIIBase
 {
 	int textureX = 32;
 	int textureY = 32;

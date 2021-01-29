@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 30.09.2020
  */
-public class ModelAmmunitionAssembler extends ModelBlockBase
+public class ModelAmmunitionAssembler extends ModelIIBase
 {
 	int textureX = 128;
 	int textureY = 128;

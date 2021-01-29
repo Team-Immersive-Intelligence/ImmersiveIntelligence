@@ -8,7 +8,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.model.connector.ModelDataCallbackConnector;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataCallbackConnector;
 
@@ -37,7 +37,7 @@ public class DataCallbackConnectorRenderer extends TileEntitySpecialRenderer<Til
 			float[] colors_in = Utils.rgbIntToRGB(EnumDyeColor.byMetadata(te.colorIn).getColorValue());
 			float[] colors_out = Utils.rgbIntToRGB(EnumDyeColor.byMetadata(te.colorOut).getColorValue());
 
-			ModelBlockBase.getCommonConnectorModelRotation(te.facing, model);
+			ModelIIBase.getCommonConnectorModelRotation(te.facing, model);
 			model.baseModel[1].render(0.0625f);
 			model.baseModel[3].render(0.0625f);
 			model.baseModel[4].render(0.0625f);
@@ -63,7 +63,7 @@ public class DataCallbackConnectorRenderer extends TileEntitySpecialRenderer<Til
 			ClientUtils.bindTexture(texture);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			ModelBlockBase.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
+			ModelIIBase.getCommonConnectorModelRotation(EnumFacing.DOWN, model);
 			//model.getBlockRotation(EnumFacing.DOWN,model);
 
 			model.render();

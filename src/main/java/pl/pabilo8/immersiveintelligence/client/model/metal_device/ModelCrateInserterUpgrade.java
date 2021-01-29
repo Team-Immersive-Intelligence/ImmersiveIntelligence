@@ -1,14 +1,14 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 06.09.2020
  */
-public class ModelCrateInserterUpgrade extends ModelBlockBase
+public class ModelCrateInserterUpgrade extends ModelIIBase
 {
 	public static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/crate_inserter_upgrade.png";
 

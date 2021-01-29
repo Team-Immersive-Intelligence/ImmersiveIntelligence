@@ -6,14 +6,14 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 21.11.2020
  */
-public class ModelBullet3bCal extends ModelBlockBase implements IBulletModel
+public class ModelBullet3bCal extends ModelIIBase implements IBulletModel
 {
 	private static String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/3bcal_autocannon.png";
 	int textureX = 32;

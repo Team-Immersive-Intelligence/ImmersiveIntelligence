@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelSkyCartStation extends ModelBlockBase
+public class ModelSkyCartStation extends ModelIIBase
 {
 	int textureX = 256;
 	int textureY = 128;

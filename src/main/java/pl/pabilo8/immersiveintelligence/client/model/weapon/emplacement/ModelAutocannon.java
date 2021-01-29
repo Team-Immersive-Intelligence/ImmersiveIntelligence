@@ -1,11 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 
-public class ModelAutocannon extends ModelBlockBase
+public class ModelAutocannon extends ModelIIBase
 {
 	int textureX = 128;
 	int textureY = 128;

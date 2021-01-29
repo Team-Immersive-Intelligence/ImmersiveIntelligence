@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 15-06-2019
  */
-public class ModelTankTrap extends ModelBlockBase
+public class ModelTankTrap extends ModelIIBase
 {
 	int textureX = 32;
 	int textureY = 32;

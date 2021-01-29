@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  * @since 30.08.2020
  * Yes, it exists
  */
-public class ModelDebugger extends ModelBlockBase
+public class ModelDebugger extends ModelIIBase
 {
 	int textureX = 64;
 	int textureY = 64;

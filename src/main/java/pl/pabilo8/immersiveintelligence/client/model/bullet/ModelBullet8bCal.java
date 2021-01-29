@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
 // TODO: 21.11.2020 REWORK
-public class ModelBullet8bCal extends ModelBlockBase implements IBulletModel
+public class ModelBullet8bCal extends ModelIIBase implements IBulletModel
 {
 	private static String texture = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
 	int textureX = 64;

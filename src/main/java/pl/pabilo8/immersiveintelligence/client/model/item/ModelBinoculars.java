@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.item;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 20.01.2021
  */
-public class ModelBinoculars extends ModelBlockBase
+public class ModelBinoculars extends ModelIIBase
 {
 	int textureX = 16;
 	int textureY = 16;

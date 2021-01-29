@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 30.08.2020
  */
-public class ModelPunchtapeReader extends ModelBlockBase
+public class ModelPunchtapeReader extends ModelIIBase
 {
 	int textureX = 64;
 	int textureY = 32;

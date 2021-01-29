@@ -2,14 +2,14 @@ package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 16-07-2019
  */
-public class ModelTimedBuffer extends ModelBlockBase
+public class ModelTimedBuffer extends ModelIIBase
 {
 	int textureX = 64;
 	int textureY = 64;

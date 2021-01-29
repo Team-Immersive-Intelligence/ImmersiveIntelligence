@@ -12,14 +12,14 @@ import java.util.HashMap;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelBlockBase extends ModelBase
+public class ModelIIBase extends ModelBase
 {
 	//Base Model Part
 	public ModelRendererTurbo[] baseModel;
 	//List of parts for group flipping / translation / rotation
 	public HashMap<String, ModelRendererTurbo[]> parts = new HashMap<>();
 
-	public static void getCommonConnectorModelRotation(EnumFacing facing, ModelBlockBase model)
+	public static void getCommonConnectorModelRotation(EnumFacing facing, ModelIIBase model)
 	{
 		switch(facing)
 		{

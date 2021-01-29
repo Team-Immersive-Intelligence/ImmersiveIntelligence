@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelPrecissionBuzzsaw extends ModelBlockBase
+public class ModelPrecissionBuzzsaw extends ModelIIBase
 {
 	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterSaw;
 	int textureX = 64;

@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.item;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * @author Pabilo8
  * @since 28.01.2021
  */
-public class ModelMineDetector extends ModelBlockBase
+public class ModelMineDetector extends ModelIIBase
 {
 	int textureX = 32;
 	int textureY = 32;

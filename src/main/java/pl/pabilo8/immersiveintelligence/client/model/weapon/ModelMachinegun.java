@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.model.weapon;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelMachinegun extends ModelBlockBase
+public class ModelMachinegun extends ModelIIBase
 {
 	int textureX = 64;
 	int textureY = 128;

@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * @author Pabilo8
  * @since 17.07.2020
  */
-public class ModelFieldHowitzer extends ModelBlockBase
+public class ModelFieldHowitzer extends ModelIIBase
 {
 	int textureX = 128;
 	int textureY = 64;

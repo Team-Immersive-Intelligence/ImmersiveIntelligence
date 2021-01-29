@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 03.10.2020
  */
-public class ModelMechanicalPumpTop extends ModelBlockBase
+public class ModelMechanicalPumpTop extends ModelIIBase
 {
 	int textureX = 64;
 	int textureY = 64;

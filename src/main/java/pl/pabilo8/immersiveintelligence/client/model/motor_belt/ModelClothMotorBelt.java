@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.motor_belt;
 
 import pl.pabilo8.immersiveintelligence.api.rotary.IModelMotorBelt;
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  * Created using SMP-Toolbox 2.0 (Old stuff, probably considered dead ^^)
  * Thanks to The Flan's Mod Team for the Turbo Model Thingy used in there
  */
-public class ModelClothMotorBelt extends ModelBlockBase implements IModelMotorBelt
+public class ModelClothMotorBelt extends ModelIIBase implements IModelMotorBelt
 {
 	int textureX = 32;
 	int textureY = 16;

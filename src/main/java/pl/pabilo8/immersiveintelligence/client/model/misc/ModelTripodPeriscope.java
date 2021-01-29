@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
-import pl.pabilo8.immersiveintelligence.client.model.ModelBlockBase;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
  * @since 21.01.2021
  */
-public class ModelTripodPeriscope extends ModelBlockBase
+public class ModelTripodPeriscope extends ModelIIBase
 {
 	int textureX = 32;
 	int textureY = 32;
