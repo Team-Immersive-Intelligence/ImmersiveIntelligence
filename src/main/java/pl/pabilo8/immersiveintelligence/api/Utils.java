@@ -419,7 +419,7 @@ public class Utils
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x+((w/2)-(fontRenderer.getStringWidth(string)*scale/2)), y+h, 0);
 		GlStateManager.scale(scale, scale, 1);
-		fontRenderer.drawString(string, 0, 0, 0xd99747);
+		fontRenderer.drawString(string, 0, 0, colour);
 		GlStateManager.popMatrix();
 	}
 

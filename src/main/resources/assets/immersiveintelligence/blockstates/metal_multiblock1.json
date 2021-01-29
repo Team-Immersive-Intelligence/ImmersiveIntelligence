@@ -3,6 +3,8 @@
   "defaults": {
     "transform": "forge:default-block",
     "textures": {
+      "texture": "immersiveengineering:blocks/storage_steel",
+      "particle": "immersiveengineering:blocks/storage_steel"
     },
     "model": "immersiveengineering:ie_empty"
   },

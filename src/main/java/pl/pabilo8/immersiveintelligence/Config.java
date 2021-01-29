@@ -766,6 +766,10 @@ public class Config
 				})
 				@RangeInt(min = 0, max = 2)
 				public static int classicGrenades = 0;
+
+				@Comment({"Grenade's initial speed modifier."})
+				@RangeDouble(min = 0)
+				public static double throwSpeedModifier = 1.65f;
 			}
 
 			public static class Submachinegun

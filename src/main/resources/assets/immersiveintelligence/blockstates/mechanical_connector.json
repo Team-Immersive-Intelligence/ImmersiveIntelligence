@@ -3,6 +3,8 @@
   "defaults": {
     "transform": "forge:default-block",
     "textures": {
+      "texture": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden",
+      "particle": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden"
     },
     "custom": {
       "flip-v": true

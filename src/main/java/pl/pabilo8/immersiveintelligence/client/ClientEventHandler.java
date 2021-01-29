@@ -33,6 +33,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -355,7 +356,23 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				}
 			if(player.getRidingEntity() instanceof EntityMachinegun)
 				drawMachinegunGui((EntityMachinegun)player.getRidingEntity(), event);
+			if(ZoomHandler.isZooming&&player.getRidingEntity() instanceof EntityTripodPeriscope)
+				drawTripodGui(((EntityTripodPeriscope)player.getRidingEntity()), event);
 		}
+	}
+
+	private void drawTripodGui(EntityTripodPeriscope ridingEntity, RenderGameOverlayEvent.Post event)
+	{
+		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"yaw", CameraHandler.INSTANCE.getYaw()),
+				event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8, 0xffffff, true);
+		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"pitch", CameraHandler.INSTANCE.getPitch()),
+				event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+16, 0xffffff, true);
+
+		RayTraceResult traceResult = ClientUtils.mc().player.rayTrace(90, event.getPartialTicks());
+		BlockPos pos = ClientUtils.mc().player.getPosition();
+
+		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"distance", (traceResult==null||traceResult.typeOfHit==Type.MISS)?I18n.format(CommonProxy.INFO_KEY+"distance_unknown"): traceResult.getBlockPos().getDistance(pos.getX(), pos.getY(), pos.getZ())),
+				event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+24, 0xffffff, true);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

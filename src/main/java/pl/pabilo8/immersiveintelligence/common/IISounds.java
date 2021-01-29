@@ -38,6 +38,9 @@ public class IISounds
 	public static SoundEvent inserter_forward = registerSound("inserter_forward");
 	public static SoundEvent inserter_backward = registerSound("inserter_backward");
 
+	public static SoundEvent radio_noise = registerSound("radio_noise");
+	public static SoundEvent radio_beep = registerSound("radio_beep");
+
 	public static SoundEvent penetration_metal = registerSound("penetration_metal");
 	public static SoundEvent ricochet_metal = registerSound("ricochet_metal");
 

@@ -1,0 +1,49 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveintelligence:caution_sign"
+  },
+  "variants": {
+    "inventory,type=mine_sign": [
+      {
+        "model": "immersiveintelligence:caution_sign"
+      }
+    ],
+    "type": {
+      "mine_sign": {
+        "model": "immersiveintelligence:caution_sign"
+      }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    }
+  }
+}

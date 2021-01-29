@@ -5,6 +5,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
@@ -19,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
  */
 public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> implements IReloadableModelContainer<TripodPeriscopeRenderer>
 {
+	public static TripodPeriscopeItemstackRenderer instance = new TripodPeriscopeItemstackRenderer();
 	public static ModelTripodPeriscope model = new ModelTripodPeriscope();
 	public static final String texture = ImmersiveIntelligence.MODID+":textures/entity/tripod_periscope.png";
 
@@ -66,7 +69,7 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 			mod.render();
 
 		float yy = MathHelper.wrapDegrees(360+entity.periscopeNextYaw-entity.periscopeYaw);
-		float yaw = MathHelper.wrapDegrees(entity.periscopeYaw+(Math.signum(yy)*MathHelper.clamp(Math.abs(yy)*partialTicks, 0, TripodPeriscope.turn_speed)));
+		float yaw = MathHelper.wrapDegrees(entity.periscopeYaw+(Math.signum(yy)*MathHelper.clamp(Math.abs(yy), 0, TripodPeriscope.turn_speed*partialTicks)));
 
 		GlStateManager.popMatrix();
 		GlStateManager.rotate(-yaw+90, 0, 1, 0);
@@ -137,5 +140,37 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 	protected ResourceLocation getEntityTexture(EntityTripodPeriscope entity)
 	{
 		return null;
+	}
+
+	public static class TripodPeriscopeItemstackRenderer extends TileEntityItemStackRenderer
+	{
+		@Override
+		public void renderByItem(ItemStack itemStackIn, float partialTicks)
+		{
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(0.5f, 0f, 0.5f);
+			ClientUtils.bindTexture(texture);
+			for(ModelRendererTurbo mod : model.baseModel)
+				mod.render();
+
+			for(ModelRendererTurbo mod : model.leg1Model)
+			{
+				mod.rotateAngleX = 0.29670597F;
+				mod.render();
+			}
+			for(ModelRendererTurbo mod : model.leg2Model)
+			{
+				mod.rotateAngleX = -0.29670597F;
+				mod.render();
+			}
+			for(ModelRendererTurbo mod : model.leg3Model)
+			{
+				mod.rotateAngleX = 0.29670597F;
+				mod.render();
+			}
+
+			GlStateManager.popMatrix();
+		}
 	}
 }

@@ -3,7 +3,8 @@
   "defaults": {
     "transform": "forge:default-block",
     "textures": {
-      "all": "immersiveintelligence:blocks/metal/ore_platinum"
+      "texture": "immersiveintelligence:blocks/concrete_decoration/volksbeton",
+      "particle": "immersiveengineering:blocks/concrete_decoration/volksbeton"
     },
     "model": "cube_all"
   },

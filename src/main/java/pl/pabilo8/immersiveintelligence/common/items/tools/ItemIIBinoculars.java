@@ -193,4 +193,16 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 			};
 		return null;
 	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack)
+	{
+		return 1f-(this.getEnergyStored(stack)/(float)this.getMaxEnergyStored(stack));
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack)
+	{
+		return stack.getMetadata()==1&&this.getEnergyStored(stack) < this.getMaxEnergyStored(stack);
+	}
 }

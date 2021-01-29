@@ -596,7 +596,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlock
 			if(te instanceof IBlockBounds)
 			{
 				float[] bounds = ((IBlockBounds)te).getBlockBounds();
-				if(bounds!=null)
+				if(bounds!=null&&bounds.length > 5)
 					return new AxisAlignedBB(bounds[0], bounds[1], bounds[2], bounds[3], bounds[4], bounds[5]);
 			}
 		}

@@ -3,6 +3,8 @@
   "defaults": {
     "transform": "forge:default-block",
     "textures": {
+      "texture": "immersiveengineering:blocks/treated_wood",
+      "particle": "immersiveengineering:blocks/treated_wood"
     },
     "custom": {
       "flip-v": true

@@ -2,7 +2,10 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "textures": {},
+    "textures": {
+      "texture": "immersiveintelligence:blocks/sandbags",
+      "particle": "immersiveintelligence:blocks/sandbags"
+    },
     "custom": {
       "flip-v": true
     }

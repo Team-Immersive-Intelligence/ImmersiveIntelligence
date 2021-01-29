@@ -103,6 +103,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
@@ -391,8 +392,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterialDust, "silicon"), new IngredientStack("plateSilicon"), 12000);
 
-		final ItemStack powder = new ItemStack(IIContent.itemTracerPowder, 1, 0);
-		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveEngineering.MODID, "tracer_powder_colour"));
+		final ItemStack tracer_powder = new ItemStack(IIContent.itemTracerPowder, 1, 0);
+		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(tracer_powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveEngineering.MODID, "tracer_powder_colour"));
+		final ItemStack flare_powder = new ItemStack(IIContent.itemTracerPowder, 1, 1);
+		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(flare_powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveEngineering.MODID, "flare_powder_colour"));
 
 		IIRecipes.addMinecartRecipes(event.getRegistry());
 		IIRecipes.addSmallCrateRecipes(event.getRegistry());
@@ -610,6 +613,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerTile(TileEntityDataCallbackConnector.class);
 
 		registerTile(TileEntitySandbags.class);
+		registerTile(TileEntityMineSign.class);
 
 		registerTile(TileEntityMechanicalWheel.class);
 		registerTile(TileEntityGearbox.class);

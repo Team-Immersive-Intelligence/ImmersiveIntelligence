@@ -2,21 +2,17 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
+      "item": "immersiveintelligence:tracer_powder",
+      "data": 0
+    },
+    {
       "type": "forge:ore_dict",
       "ore": "dustWhitePhosphorus"
-    },
-    {
-      "type": "forge:ore_dict",
-      "ore": "dyeWhite"
-    },
-    {
-      "type": "forge:ore_dict",
-      "ore": "dyeWhite"
     }
   ],
   "result": {
     "item": "immersiveintelligence:tracer_powder",
-    "count": 2,
-    "data": 5
+    "count": 1,
+    "data": 1
   }
 }

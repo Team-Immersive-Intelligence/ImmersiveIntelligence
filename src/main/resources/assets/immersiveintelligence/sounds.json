@@ -149,5 +149,20 @@
       "immersiveintelligence:block_hit/metal_ricochet1"
     ],
     "subtitle": "subtitle.immersiveintelligence.ricochet_metal"
+  },
+  "radio_beep": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:radio/beep1"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.radio_beep"
+  },
+  "radio_noise": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:radio/noise1",
+      "immersiveintelligence:radio/noise2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.radio_noise"
   }
 }

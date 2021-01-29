@@ -18,6 +18,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.energy.CapabilityEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
@@ -51,6 +52,7 @@ public class CommandIIDev extends CommandBase
 		options.add("hans");
 		options.add("explosion");
 		options.add("nuke");
+		options.add("power");
 		//options.add("panzer");
 		//options.add("fallschirm");
 	}
@@ -111,6 +113,12 @@ public class CommandIIDev extends CommandBase
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doWeatherCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doMobSpawning", "false");
+					break;
+				case "power":
+					sender.getCommandSenderEntity().getHeldEquipment().forEach(stack -> {
+						if(stack.hasCapability(CapabilityEnergy.ENERGY, null))
+							stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(Integer.MAX_VALUE, false);
+					});
 					break;
 				case "explosion":
 				case "nuke":
@@ -224,7 +232,7 @@ public class CommandIIDev extends CommandBase
 								hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 0));
 								hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 1));
 							}
-							else if(num < 7)
+							else if(num > 2&&num < 7)
 							{
 								EntityMotorbike motorbike = new EntityMotorbike(server.getEntityWorld());
 								motorbike.setPositionAndRotation(position.getX()+0.5, position.getY(), position.getZ()+0.5, commandSenderEntity.getMirroredYaw(Mirror.FRONT_BACK), -commandSenderEntity.rotationPitch);

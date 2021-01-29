@@ -2,7 +2,11 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "cube_all"
+    "model": "cube_all",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_steel",
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
   },
   "variants": {
     "inventory,type=metal_crate": [

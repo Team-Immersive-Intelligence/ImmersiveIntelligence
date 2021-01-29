@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.network;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -56,7 +56,7 @@ public class MessageParticleEffect implements IMessage
 		{
 			Minecraft.getMinecraft().addScheduledTask(() ->
 			{
-				WorldClient world = ClientUtils.mc().world;
+				World world = ImmersiveEngineering.proxy.getClientWorld();
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
 					switch(message.id)

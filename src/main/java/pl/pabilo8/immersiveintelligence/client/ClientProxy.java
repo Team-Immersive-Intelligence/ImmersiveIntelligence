@@ -113,6 +113,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanica
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalWheel;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
@@ -655,6 +656,7 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySandbags.class, new SandbagsRenderer());
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockStoneDecoration), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMineSign.class, new MineSignRenderer());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTankTrap.class, new TankTrapRenderer().subscribeToList("tank_trap"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalFortification1), IIBlockTypes_MetalFortification1.TANK_TRAP.getMeta(), TileEntityTankTrap.class);
@@ -687,6 +689,8 @@ public class ClientProxy extends CommonProxy
 		//Tools
 		IIContent.itemTachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
 		IIContent.itemRadioConfigurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
+		IIContent.itemTripodPeriscope.setTileEntityItemStackRenderer(TripodPeriscopeRenderer.instance);
+		IIContent.itemMineDetector.setTileEntityItemStackRenderer(MineDetectorRenderer.instance);
 
 		//Multiblocks
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer().subscribeToList("skycrate_station"));

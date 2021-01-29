@@ -49,8 +49,8 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				return TextFormatting.BLUE;
 			case "AUTOREVOLVER":
 				return TextFormatting.DARK_BLUE;
-			case "STORM_RIFLE":
-				return TextFormatting.DARK_PURPLE;
+			case "ASSAULT_RIFLE":
+				return TextFormatting.RED;
 			case "SPIGOT_MORTAR":
 				return TextFormatting.DARK_PURPLE;
 		}
@@ -92,12 +92,12 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				(upgrade, modifications) -> modifications.setBoolean("precise_bipod", true)),
 
 		//3 x Magnification
-		SCOPE(ImmutableSet.of("MACHINEGUN", "AUTOREVOLVER", "STORM_RIFLE"), 1,
+		SCOPE(ImmutableSet.of("MACHINEGUN", "AUTOREVOLVER", "ASSAULT_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("infrared_scope"),
 				(upgrade, modifications) -> modifications.setBoolean("scope", true)),
 
 		//Allows nightvision + 2 x magnification, uses energy from player's backpack
-		INFRARED_SCOPE(ImmutableSet.of("MACHINEGUN", "STORM_RIFLE"), 1,
+		INFRARED_SCOPE(ImmutableSet.of("MACHINEGUN", "ASSAULT_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("scope"),
 				(upgrade, modifications) -> modifications.setBoolean("infrared_scope", true)),
 
@@ -131,7 +131,9 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		//Reduces aiming time
 		FOLDING_STOCK(ImmutableSet.of("SUBMACHINEGUN"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("folding_stock"),
-				(upgrade, modifications) -> modifications.setBoolean("folding_stock", true)),
+				(upgrade, modifications) -> modifications.setBoolean("folding_stock", true));
+
+		/*
 
 		///Autorevolver
 
@@ -143,19 +145,21 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		//Storm Rifle
 
 		//Shows yaw and pitch, allows to send a packet with player's yaw and pitch (+distance if a rangefinder is installed, +position data if player has a radio backpack)
-		RADIO_MARKER(ImmutableSet.of("STORM_RIFLE"), 1,
+		RADIO_MARKER(ImmutableSet.of("ASSAULT_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("radio_marker"),
 				(upgrade, modifications) -> modifications.setBoolean("radio_marker", true)),
 
 		//Allows shooting railgun grenades at a lower range, requires energy
-		RIFLE_GRENADE_LAUNCHER(ImmutableSet.of("STORM_RIFLE"), 1,
+		RIFLE_GRENADE_LAUNCHER(ImmutableSet.of("ASSAULT_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("stereoscopic_rangefinder"),
 				(upgrade, modifications) -> modifications.setBoolean("rifle_grenade_launcher", true)),
 
 		//Shows distance to target
-		STEREOSCOPIC_RANGEFINDER(ImmutableSet.of("STORM_RIFLE"), 1,
+		STEREOSCOPIC_RANGEFINDER(ImmutableSet.of("ASSAULT_RIFLE"), 1,
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("rifle_grenade_launcher"),
 				(upgrade, modifications) -> modifications.setBoolean("stereoscopic_rangefinder", true));
+
+		 */
 
 		private ImmutableSet<String> toolset;
 		private int stackSize = 1;

@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDe
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIMineSign;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.*;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerBoots;
@@ -90,6 +91,7 @@ public class IIContent
 	public static ItemIIElectricHammer itemHammer = new ItemIIElectricHammer();
 	public static ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
 	public static ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
+	public static ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
 
 	public static ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
 	public static ItemIIWrench itemWrench = new ItemIIWrench();
@@ -151,6 +153,7 @@ public class IIContent
 	public static BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
 	public static BlockIIDataConnector blockDataConnector = new BlockIIDataConnector();
 	public static BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
+	public static BlockIIMineSign blockMineSign = new BlockIIMineSign();
 
 	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
 	public static BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();

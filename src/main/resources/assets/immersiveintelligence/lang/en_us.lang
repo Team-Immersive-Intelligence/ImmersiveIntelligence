@@ -129,9 +129,10 @@ item.immersiveintelligence.electric_multitool.name=Engineer's Electric Multitool
 item.immersiveintelligence.radio_configurator.basic.name=Basic Radio Tuner
 item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
 item.immersiveintelligence.trench_shovel.name=Trench Shovel
+item.immersiveintelligence.tripod_periscope.name=Tripod Periscope
 item.immersiveintelligence.machinegun.name=Machinegun
 item.immersiveintelligence.submachinegun.name=Submachinegun
-item.immersiveintelligence.assault_rifle.name=Assault Rifle
+item.immersiveintelligence.assault_rifle.name=Storm Rifle
 item.immersiveintelligence.autorevolver.name=Autorevolver
 item.immersiveintelligence.spigot_mortar.name=Spigot Mortar
 
@@ -163,7 +164,8 @@ item.immersiveintelligence.weapon_upgrade.radio_marker.name=Radio Marker
 item.immersiveintelligence.weapon_upgrade.rifle_grenade_launcher.name=Rifle Grenade Launcher
 item.immersiveintelligence.weapon_upgrade.stereoscopic_rangefinder.name=Stereoscopic Rangefinder
 
-item.immersiveintelligence.tracer_powder.name=Tracer Dust
+item.immersiveintelligence.tracer_powder.tracer_powder.name=Tracer Powder
+item.immersiveintelligence.tracer_powder.flare_powder.name=Flare Powder
 
 item.immersiveintelligence.skycrate_mount.mechanical.name=Skycrate Mount
 item.immersiveintelligence.skycrate_mount.electric.name=Electric Skycrate Mount
@@ -172,7 +174,7 @@ desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
 desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
 desc.immersiveintelligence.toolupgrade.item.machinegun=Machinegun
 desc.immersiveintelligence.toolupgrade.item.submachinegun=Submachinegun
-desc.immersiveintelligence.toolupgrade.item.storm_rifle=Storm Rifle
+desc.immersiveintelligence.toolupgrade.item.assault_rifle=Storm Rifle
 desc.immersiveintelligence.toolupgrade.item.autorevolver=Autorevolver
 desc.immersiveintelligence.toolupgrade.item.spigot_mortar=Spigot Mortar
 
@@ -269,7 +271,8 @@ item.immersiveintelligence.bullet.component.rdx.name=RDX
 item.immersiveintelligence.bullet.component.hmx.name=HMX
 item.immersiveintelligence.bullet.component.white_phosphorus.name=White Phosphorus
 item.immersiveintelligence.bullet.component.firework.name=Fireworks
-item.immersiveintelligence.bullet.component.tracer_dust.name=Tracer Dust
+item.immersiveintelligence.bullet.component.tracer_powder.name=Tracer Powder
+item.immersiveintelligence.bullet.component.flare_powder.name=Flare Powder
 
 #Cores
 
@@ -283,7 +286,7 @@ item.immersiveintelligence.bullet_magazine.machinegun.name=Machinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun.name=Submachinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun_drum.name=Submachinegun Drum Magazine
 item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Automatic Revolver Magazine
-item.immersiveintelligence.bullet_magazine.storm_rifle.name=Storm Rifle Magazine
+item.immersiveintelligence.bullet_magazine.assault_rifle.name=Storm Rifle Magazine
 item.immersiveintelligence.bullet_magazine.autocannon_3bCal.name=3bCal Autocannon Magazine
 
 item.immersiveintelligence.motor_gear.copper.name=Copper Gear
@@ -345,6 +348,9 @@ tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Steel Mot
 
 tile.immersiveintelligence.cloth_decoration.coil_rope.name=Rope Coil
 tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Motor Belt Coil
+
+tile.immersiveintelligence.mine_sign.mine_sign.name=Mine Caution Sign
+tile.immersiveintelligence.mine_sign.mine_sign.desc=Mines;Ahead!
 
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
@@ -529,6 +535,9 @@ subtitle.immersiveintelligence.howitzer_door_close=Howitzer Doors Closing
 
 subtitle.immersiveintelligence.inserter=Inserter Noises
 
+subtitle.immersiveintelligence.radio_beep=Short Radio Beeps
+subtitle.immersiveintelligence.radio_noise=Radio Noise
+
 subtitle.immersiveintelligence.penetration_metal=Projectile breaking trough metal
 subtitle.immersiveintelligence.ricochet_metal=Projectile bouncing off metal
 
@@ -687,6 +696,9 @@ info.immersiveintelligence.requires_advanced_hammer=Advanced engineering require
 info.immersiveintelligence.gear_durability=Durability: %1$s / %2$s
 
 info.immersiveintelligence.yaw=Yaw: %s
+info.immersiveintelligence.pitch=Pitch: %s
+info.immersiveintelligence.distance=Distance: %s
+info.immersiveintelligence.distance_unknown=Unknown
 
 info.immersiveintelligence.debugger_mode=Debugger Mode: %s
 info.immersiveintelligence.debugger_mode.0=Transceiver
@@ -1163,9 +1175,9 @@ ie.manual.entry.submachinegun_upgrade_folding_stock=The folding stock makes the 
 
 ie.manual.entry.autorevolver_upgrade_heavy_springbox=The heavy springbox is an upgrade for the autorevolver. It uses mechanical power to compress the air in the bullet chamber, adding a lot of velocity to the bullets. The drawbacks are the slower reload speed and lower accuracy.
 
-ie.manual.entry.storm_rifle_upgrade_radio_marker=
-ie.manual.entry.storm_rifle_upgrade_rifle_grenade_launcher=
-ie.manual.entry.storm_rifle_upgrade_stereoscopic_rangefinder=
+ie.manual.entry.assault_rifle_upgrade_radio_marker=
+ie.manual.entry.assault_rifle_upgrade_rifle_grenade_launcher=
+ie.manual.entry.assault_rifle_upgrade_stereoscopic_rangefinder=
 
 ie.manual.entry.grenade.name=Grenades
 ie.manual.entry.grenade.subtext=Achtung, Granate!
@@ -1265,10 +1277,20 @@ ie.manual.entry.bullet_component.firework=Fireworks
 ie.manual.entry.bullet_component.firework.lore=And now, free the skies
 ie.manual.entry.bullet_component.firework.desc=Fireworks, while mostly known for their beautiful looks, can be used to suppress and blind enemies.
 
-ie.manual.entry.bullet_component.tracer_powder=Tracer Dust
 #Quote from Company of Heroes/Market Garden campaign
+ie.manual.entry.bullet_component.tracer_powder=Tracer Powder
 ie.manual.entry.bullet_component.tracer_powder.lore=Fill the sky with tracers!
 ie.manual.entry.bullet_component.tracer_powder.desc=Tracers are a good way to see which way your bullet flies, this can be used for purely decorative purposes or for correcting a gun's shot angle.
+
+#Reference to Codename Panzers: Cold War
+ie.manual.entry.bullet_component.flare_powder=Flare Powder
+ie.manual.entry.bullet_component.flare_powder.lore=Night became Day
+ie.manual.entry.bullet_component.flare_powder.desc=Flares can be used for illuminating or marking positions, this can be useful in directing artillery
+
+#Fallout reference
+ie.manual.entry.bullet_component.nuke=Nuke
+ie.manual.entry.bullet_component.nuke.lore=War Never Changes
+ie.manual.entry.bullet_component.nuke.desc=Nuclear Explosives are the most powerful and destructive known to man, only thick layers of reinforced concrete can protect against its force. Moreover, heat caused by it melts down enemies around and even if they survive that, they will die of radiation quickly.
 
 #Reference to a song
 ie.manual.entry.bullet_component.tnt=TNT

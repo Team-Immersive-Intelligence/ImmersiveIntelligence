@@ -2,7 +2,11 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "immersiveintelligence:ii_six_sides_all_overlay"
+    "model": "immersiveintelligence:ii_six_sides_all_overlay",
+    "textures": {
+      "texture": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden",
+      "particle": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden"
+    }
   },
   "variants": {
     "inventory,type=wooden_transmission_box": [
