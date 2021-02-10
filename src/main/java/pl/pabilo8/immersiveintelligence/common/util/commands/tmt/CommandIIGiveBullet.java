@@ -7,6 +7,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
@@ -63,8 +64,11 @@ public class CommandIIGiveBullet extends CommandBase
 			for(int i = 4; i < args.length; i++)
 				components.add(BulletRegistry.INSTANCE.getComponent(args[i]));
 
-			if(casing!=null&&core!=null)
+			if(casing!=null&&core!=null) {
+				
 				player.addItemStackToInventory(casing.getBulletWithParams(core, coreType, components.toArray(new IBulletComponent[0])));
+				sender.sendMessage(new TextComponentString("Bullets given!"));
+			}
 			else
 				throw new WrongUsageException(getUsage(sender));
 		}
