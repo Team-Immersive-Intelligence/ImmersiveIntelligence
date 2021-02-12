@@ -17,12 +17,14 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.*;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer.MultipleTracerBuilder;
@@ -182,6 +184,7 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void onUpdate()
 	{
@@ -228,7 +231,8 @@ public class EntityBullet extends Entity implements ILightProvider
 			// TODO: 21.11.2020 find a way of decreasing force, without making the bullet stop in midair
 			//current works, though
 			force -= DRAG*force*DEV_SLOMO;
-			gravityMotionY -= GRAVITY*this.mass*DEV_SLOMO;
+			gravityMotionY -= (GRAVITY*this.mass*DEV_SLOMO)/(ArtilleryHowitzer.howitzerRangeMP);
+			System.out.println(String.valueOf(gravityMotionY));
 			setMotion();
 
 			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), this.getNextPositionVector())
@@ -535,6 +539,7 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	}
 
+	@SuppressWarnings("unused")
 	private void playHitSound(HitEffect effect, World world, BlockPos pos, IPenetrationHandler handler)
 	{
 		IBlockState state = world.getBlockState(pos);
