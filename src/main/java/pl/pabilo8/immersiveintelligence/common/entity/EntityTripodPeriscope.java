@@ -1,12 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
@@ -20,7 +25,7 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeris
  * @author Pabilo8
  * @since 21.01.2021
  */
-public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
+public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider, IEntityAdditionalSpawnData
 {
 	public int setupTime = 0;
 	public float periscopeYaw = 0, periscopeNextYaw = 0;
@@ -92,7 +97,7 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 		if(this.isPassenger(passenger))
 		{
 			BlockPos pos = getPosition();
-			float headYaw = MathHelper.wrapDegrees(passenger.getRotationYawHead());
+			float headYaw = MathHelper.wrapDegrees(this.periscopeYaw);
 			double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
 			double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
 			Vec3d pos2 = Utils.offsetPosDirection(-0.5f, true_angle, 0);
@@ -148,6 +153,18 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 	public IAdvancedZoomTool getZoom()
 	{
 		return ZOOM;
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		buffer.writeInt(this.setupTime);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		this.setupTime=additionalData.readInt();
 	}
 
 	private static class TripodZoom implements IAdvancedZoomTool

@@ -86,6 +86,8 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualLogistics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualWarfare;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.render.*;
+import pl.pabilo8.immersiveintelligence.client.render.TellermineRenderer.TellermineItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.TripmineRenderer.TripmineItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.*;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.MechanicalPumpRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
@@ -115,12 +117,11 @@ import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityWhitePhosphorus;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.*;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletBase;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIDrillHead.DrillHeadPerm;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -340,6 +341,8 @@ public class ClientProxy extends CommonProxy
 		//But using TMT seems easier (and more weird).
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMine.class, NavalMineRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMineAnchor.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShrapnel.class, ShrapnelRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityWhitePhosphorus.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityMachinegun.class, MachinegunRenderer::new);
@@ -369,7 +372,11 @@ public class ClientProxy extends CommonProxy
 
 		for(IBullet bullet : BulletRegistry.INSTANCE.registeredCasings.values())
 		{
-			if(bullet instanceof ItemIIBulletBase)
+			if(bullet instanceof ItemIINavalMine)
+			{
+
+			}
+			else if(bullet instanceof ItemIIBulletBase)
 			{
 				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIBulletBase)bullet, 1, ItemIIBulletBase.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
 				{
@@ -691,6 +698,13 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemRadioConfigurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
 		IIContent.itemTripodPeriscope.setTileEntityItemStackRenderer(TripodPeriscopeRenderer.instance);
 		IIContent.itemMineDetector.setTileEntityItemStackRenderer(MineDetectorRenderer.instance);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTripMine.class, new TripmineRenderer().subscribeToList("tripmine"));
+		Item.getItemFromBlock(IIContent.blockTripmine).setTileEntityItemStackRenderer(new TripmineItemStackRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTellermine.class, new TellermineRenderer().subscribeToList("tellermine"));
+		Item.getItemFromBlock(IIContent.blockTripmine).setTileEntityItemStackRenderer(new TellermineItemStackRenderer());
+
+		IIContent.itemNavalMine.setTileEntityItemStackRenderer(NavalMineRenderer.instance);
 
 		//Multiblocks
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCrateStation.class, new SkyCrateStationRenderer().subscribeToList("skycrate_station"));

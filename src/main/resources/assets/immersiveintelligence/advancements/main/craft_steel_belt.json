@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:motor_belt",
+      "data": 1
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_steel_belt"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_steel_belt.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/connect_belt",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:motor_belt",
+            "data": 1
+          }
+        ]
+      }
+    }
+  }
+}

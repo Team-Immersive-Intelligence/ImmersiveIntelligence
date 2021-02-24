@@ -9,6 +9,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.item.Item;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIIMine.ItemBlockMineBase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
  */
 public class BlockIIBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends BlockIEBase<E>
 {
-
+	public ItemBlockIEBase itemBlock;
 	public Map<Integer, String> tesrMap = new HashMap<>();
 
 	public BlockIIBase(String name, Material material, PropertyEnum<E> mainProperty, Class<? extends ItemBlockIEBase> itemBlock, Object... additionalProperties)
@@ -65,6 +66,8 @@ public class BlockIIBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends Blo
 		try
 		{
 			ItemBlockIEBase item = itemBlock.getConstructor(Block.class).newInstance(block);
+			if(block instanceof BlockIIBase)
+				((BlockIIBase)block).itemBlock = item;
 			IIContent.ITEMS.add(item);
 			//if (creative)
 			//CommonProxy.items.add(item);

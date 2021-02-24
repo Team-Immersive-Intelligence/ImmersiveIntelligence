@@ -5,7 +5,8 @@ import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet3bCal;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
@@ -49,7 +50,7 @@ public class ItemIIAmmoAutocannon extends ItemIIBulletBase
 	}
 
 	@Override
-	public Class<? extends IBulletModel> getModel()
+	public @Nonnull Class<? extends IBulletModel> getModel()
 	{
 		return ModelBullet3bCal.class;
 	}

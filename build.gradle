@@ -77,13 +77,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly "team.chisel.ctm:CTM:MC1.12.2-0.3.2.18"
+    deobfCompile "team.chisel.ctm:CTM:MC1.12.2-1.0.2.31"
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
 
     // compile against the JEI API but do not include it at runtime
-    deobfProvided "mezz.jei:jei_1.12.2:4.15.+:api"
+    compileOnly "mezz.jei:jei_1.12.2:4.16.1.301:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.12.2:4.15.+"
+    runtimeOnly "mezz.jei:jei_1.12.2:4.16.1.301"
 
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.8.468"
     compileOnly "albedo:albedo:0.1.3"

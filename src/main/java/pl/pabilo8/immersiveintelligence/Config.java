@@ -733,6 +733,8 @@ public class Config
 			public static Railgun railgun;
 			@SubConfig
 			public static Grenade grenade;
+			@SubConfig
+			public static Mines mines;
 
 			public static class EmplacementWeapons
 			{
@@ -770,6 +772,18 @@ public class Config
 				@Comment({"Grenade's initial speed modifier."})
 				@RangeDouble(min = 0)
 				public static double throwSpeedModifier = 1.65f;
+			}
+
+			public static class Mines
+			{
+				@Comment({
+						"Changes color of the tripmine ",
+						"0 - steel",
+						"1 - green",
+						"2 - dull-yellow"
+				})
+				@RangeInt(min = 0, max = 2)
+				public static int tripmineColor = 0;
 			}
 
 			public static class Submachinegun

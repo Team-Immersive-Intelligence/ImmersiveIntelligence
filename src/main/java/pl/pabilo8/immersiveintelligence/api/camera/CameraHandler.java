@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.camera;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
@@ -85,5 +86,10 @@ public class CameraHandler
 	public void setCameraZoom(int zoom)
 	{
 
+	}
+
+	public RayTraceResult rayTrace(double blockReachDistance, float partialTicks)
+	{
+		return camera.rayTrace(blockReachDistance,partialTicks);
 	}
 }

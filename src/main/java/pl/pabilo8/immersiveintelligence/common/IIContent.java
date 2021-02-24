@@ -23,10 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.concrete.BlockIIConcreteDe
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.BlockIIMetalFortification;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.BlockIIMetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.BlockIIWoodenFortification;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIIDataConnector;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIIMetalDecoration;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIIMetalDevice;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIISmallCrate;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock1;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.BlockIIWoodenMultiblock;
@@ -153,7 +150,11 @@ public class IIContent
 	public static BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
 	public static BlockIIDataConnector blockDataConnector = new BlockIIDataConnector();
 	public static BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
+
 	public static BlockIIMineSign blockMineSign = new BlockIIMineSign();
+	public static BlockIITripmine blockTripmine = new BlockIITripmine();
+	public static BlockIITellermine blockTellermine = new BlockIITellermine();
+	public static ItemIINavalMine itemNavalMine = new ItemIINavalMine();
 
 	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
 	public static BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();

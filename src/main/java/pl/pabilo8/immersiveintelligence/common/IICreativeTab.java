@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,6 +135,13 @@ public class IICreativeTab extends CreativeTabs
 		list.add(bullet3);
 		list.add(bullet4);
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet1, bullet2, bullet3, bullet4));
+
+		list.add(ItemIIBulletMagazine.getMagazine("submachinegun",
+				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Sprengpatrone mk.1"),
+				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing", "shrapnel_tungsten").setStackDisplayName("Wolframpatrone mk.1"),
+				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_steel", "piercing").setStackDisplayName("Stahlpatrone mk.1"),
+				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "softpoint", "white_phosphorus").setStackDisplayName("Phosphorpatrone mk.1"))
+		);
 
 		ItemStack bullet5 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_uranium", "piercing", "shrapnel_uranium").setStackDisplayName("M1A1 Uranium Bullet");
 		list.add(bullet5);

@@ -55,7 +55,6 @@ public class ModelMineDetector extends ModelIIBase
 		baseModel[7].rotateAngleX = 1.57079633F;
 		baseModel[7].rotateAngleY = -3.14159265F;
 
-
 		poleModel = new ModelRendererTurbo[10];
 		poleModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 1
 		poleModel[1] = new ModelRendererTurbo(this, 4, 25, textureX, textureY); // Box 16
@@ -110,6 +109,7 @@ public class ModelMineDetector extends ModelIIBase
 
 		parts.put("base", baseModel);
 		parts.put("pole", poleModel);
+		translateAll(17,0,-0.5f);
 
 		flipAll();
 	}

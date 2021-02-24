@@ -40,10 +40,9 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemReloadMagazine;
-import pl.pabilo8.immersiveintelligence.common.network.MessagePlayerAimAnimationSync;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -194,14 +193,19 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 			if(reloading==0&&entityIn.isSneaking())
 			{
+				// TODO: 29.01.2021 reevaluate
+				/*
 				if(!worldIn.isRemote&&currentAim%10==0)
 					IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(entityIn, true), worldIn.provider.getDimension());
+				 */
 				ItemNBTHelper.setInt(stack, "aiming", MathHelper.clamp(currentAim+1, 0, Submachinegun.aimTime));
 			}
 			else if(currentAim > 0)
 			{
+				/*
 				if(!worldIn.isRemote&&currentAim%5==0)
 					IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(entityIn, false), worldIn.provider.getDimension());
+				 */
 				ItemNBTHelper.setInt(stack, "aiming", MathHelper.clamp(currentAim-3, 0, Submachinegun.aimTime));
 			}
 

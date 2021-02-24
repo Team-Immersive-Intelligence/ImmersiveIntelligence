@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:data_connector",
+      "data": 8
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_speaker"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_speaker.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_siren",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:data_connector",
+            "data": 8
+          }
+        ]
+      }
+    }
+  }
+}

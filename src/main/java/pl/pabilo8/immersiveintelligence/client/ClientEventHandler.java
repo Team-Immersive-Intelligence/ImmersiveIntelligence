@@ -63,6 +63,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -71,8 +72,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
+import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIMineDetector;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -368,7 +371,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"pitch", CameraHandler.INSTANCE.getPitch()),
 				event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+16, 0xffffff, true);
 
-		RayTraceResult traceResult = ClientUtils.mc().player.rayTrace(90, event.getPartialTicks());
+		RayTraceResult traceResult = CameraHandler.INSTANCE.rayTrace(90, event.getPartialTicks());
 		BlockPos pos = ClientUtils.mc().player.getPosition();
 
 		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"distance", (traceResult==null||traceResult.typeOfHit==Type.MISS)?I18n.format(CommonProxy.INFO_KEY+"distance_unknown"): traceResult.getBlockPos().getDistance(pos.getX(), pos.getY(), pos.getZ())),
@@ -759,11 +762,17 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			else if(ridingEntity instanceof EntityTripodPeriscope)
 			{
 				EntityTripodPeriscope mg = ((EntityTripodPeriscope)ridingEntity);
-				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead-mg.periscopeYaw);
+				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead);
 
 				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
 				float wtime = (Math.abs((((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40)/40f)-0.5f)/0.5f)-0.5f;
 				wtime *= 0.65f;
+
+				model.bipedRightArm.rotateAngleX = -1.75f;
+				model.bipedRightArm.rotateAngleY = -0.5f;
+
+				model.bipedLeftArm.rotateAngleX = -2.25f;
+				model.bipedLeftArm.rotateAngleY = 0.25f;
 
 				model.bipedHead.rotateAngleX = 0;
 				model.bipedHeadwear.rotateAngleX = 0;
@@ -859,6 +868,29 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							int id = heldItem.getMetadata();
 							BinocularsRenderer.INSTANCE.render(id==1?(ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1): id, model.bipedHead, true);
 						}
+						else if(heldItem.getItem() instanceof ItemIIMineDetector)
+						{
+							model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
+							model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
+
+							model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-1.35f;
+							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+
+							MineDetectorRenderer.instance.renderBase(player,2.125f,true);
+						}
+						else if(heldItem.getItem() instanceof ItemIINavalMine)
+						{
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX -= 0.5f;
+								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX -= 0.5f;
+								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							}
+						}
 
 					}
 				}
@@ -878,7 +910,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(event.getHand()==EnumHand.MAIN_HAND)
 		{
 			ItemStack stack = event.getItemStack();
-			if(stack.getItem() instanceof ItemIISubmachinegun)
+			if(stack.getItem() instanceof ItemIIMineDetector)
+			{
+				MineDetectorRenderer.instance.renderBase(ClientUtils.mc().player,2.125f,false);
+				event.setCanceled(true);
+			}
+			else if(stack.getItem() instanceof ItemIISubmachinegun)
 			{
 				int aiming = ItemNBTHelper.getInt(stack, "aiming");
 				int reloading = ItemNBTHelper.getInt(stack, "reloading");

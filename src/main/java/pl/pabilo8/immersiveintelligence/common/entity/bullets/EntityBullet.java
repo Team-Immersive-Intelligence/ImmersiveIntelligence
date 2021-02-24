@@ -64,7 +64,7 @@ public class EntityBullet extends Entity implements ILightProvider
 	public IBulletComponent[] components = new IBulletComponent[0];
 	public NBTTagCompound[] componentNBT = new NBTTagCompound[0];
 
-	private Entity shooter = null;
+	protected Entity shooter = null;
 
 	boolean isPainted = false;
 	//Set true only for artillery type bullets, forge can't give the mod unlimited tickets for each entity
@@ -88,7 +88,7 @@ public class EntityBullet extends Entity implements ILightProvider
 	ArrayList<Entity> hitEntities = new ArrayList<>();
 	ArrayList<BlockPos> hitPos = new ArrayList<>();
 
-	private boolean wasSynced;
+	protected boolean wasSynced;
 	private Ticket ticket = null;
 
 	public EntityBullet(World worldIn)
@@ -149,7 +149,7 @@ public class EntityBullet extends Entity implements ILightProvider
 		this.motionZ = baseMotionZ*DEV_SLOMO*force;
 	}
 
-	private void fromStack(ItemStack stack)
+	protected void fromStack(ItemStack stack)
 	{
 		if(stack.getItem() instanceof IBullet)
 		{
@@ -190,10 +190,15 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	}
 
+	public void onUpdateSuper()
+	{
+		super.onUpdate();
+	}
+
 	@Override
 	public void onUpdate()
 	{
-		super.onUpdate();
+		onUpdateSuper();
 
 		if(!world.isRemote&&ticksExisted==1)
 		{
@@ -433,7 +438,7 @@ public class EntityBullet extends Entity implements ILightProvider
 		hitPos.add(currentPos);
 	}
 
-	private void performEffect(RayTraceResult hit)
+	protected void performEffect(RayTraceResult hit)
 	{
 		setPosition(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z);
 		float str = bulletCasing.getComponentCapacity()*bulletCore.getExplosionModifier()*bulletCoreType.getComponentEffectivenessMod();

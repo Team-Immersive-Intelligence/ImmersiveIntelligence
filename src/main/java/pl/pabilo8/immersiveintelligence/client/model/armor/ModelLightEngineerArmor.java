@@ -209,7 +209,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		leftArmModel[1].addShapeBox(-5F, -3F, 0F, 4, 5, 5, 0F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F); // Box 29
 		leftArmModel[1].setRotationPoint(4F, 0.5F, -2.5F);
 
-		leftArmModel[2].addShapeBox(-5.5F, -3F, 0F, 2, 1, 2, 0F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F); // Box 29
+		leftArmModel[2].addShapeBox(-5.5F, -2.65F, 0F, 2, 1, 2, 0F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F); // Box 29
 		leftArmModel[2].setRotationPoint(7F, -1F, -1F);
 		leftArmModel[2].rotateAngleZ = -0.26179939F;
 
@@ -262,7 +262,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		leftLegModel[1].rotateAngleY = 0.03490659F;
 
 		leftLegModel[2].addShapeBox(-6F, -12.5F, 0F, 4, 4, 1, 0F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F); // Box 29
-		leftLegModel[2].setRotationPoint(4F, 16.25F, -3F);
+		leftLegModel[2].setRotationPoint(4F, 16.25F, -2F);
 		leftLegModel[2].rotateAngleX = 0.05235988F;
 		leftLegModel[2].rotateAngleY = 0.03490659F;
 
@@ -289,7 +289,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		rightLegModel[1].rotateAngleY = -0.03490659F;
 
 		rightLegModel[2].addShapeBox(2F, -12.5F, 0F, 4, 4, 1, 0F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F); // Box 29
-		rightLegModel[2].setRotationPoint(-4F, 16.25F, -3F);
+		rightLegModel[2].setRotationPoint(-4F, 16.25F, -2F);
 		rightLegModel[2].rotateAngleX = 0.05235988F;
 		rightLegModel[2].rotateAngleY = -0.03490659F;
 

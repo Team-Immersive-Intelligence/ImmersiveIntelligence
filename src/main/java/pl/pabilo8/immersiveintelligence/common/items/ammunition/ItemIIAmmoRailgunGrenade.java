@@ -8,8 +8,9 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelGrenade;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
+import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelRailgunGrenade;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,9 +56,9 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIBulletBase
 	}
 
 	@Override
-	public Class<? extends IBulletModel> getModel()
+	public @Nonnull Class<? extends IBulletModel> getModel()
 	{
-		return ModelGrenade.class;
+		return ModelRailgunGrenade.class;
 	}
 
 	@Override

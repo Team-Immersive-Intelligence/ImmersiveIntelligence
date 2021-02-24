@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -363,7 +364,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	}
 
 	@Override
-	public Class<? extends IBulletModel> getModel()
+	public @Nonnull Class<? extends IBulletModel> getModel()
 	{
 		return ModelBullet1bCalRevolver.class;
 	}

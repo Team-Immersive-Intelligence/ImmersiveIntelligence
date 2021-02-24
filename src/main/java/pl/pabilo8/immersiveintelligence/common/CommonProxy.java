@@ -69,6 +69,7 @@ import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
@@ -106,9 +107,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityWhitePhosphorus;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.*;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIMinecart;
@@ -498,6 +497,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoStormRifle);
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoRevolver);
 
+		BulletRegistry.INSTANCE.registerCasing((IBullet)IIContent.blockTripmine.itemBlock);
+		BulletRegistry.INSTANCE.registerCasing((IBullet)IIContent.blockTellermine.itemBlock);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemNavalMine);
+
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentRDX());
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentHMX());
@@ -623,6 +626,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		registerTile(TileEntityTankTrap.class);
 		registerTile(TileEntityChainFence.class);
+		registerTile(TileEntityTripMine.class);
+		registerTile(TileEntityTellermine.class);
 
 		registerTile(TileEntitySkyCratePost.class);
 		registerTile(TileEntitySkyCrateStation.class);
@@ -694,6 +699,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "bullet"),
 				EntityBullet.class, "bullet", i++, ImmersiveIntelligence.INSTANCE, 32, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "naval_mine"),
+				EntityNavalMine.class, "naval_mine", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "naval_mine_anchor"),
+				EntityNavalMineAnchor.class, "naval_mine_anchor", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "shrapnel"),
 				EntityShrapnel.class, "shrapnel", i++, ImmersiveIntelligence.INSTANCE, 16, 1, true);

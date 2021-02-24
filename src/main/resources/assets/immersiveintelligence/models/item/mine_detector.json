@@ -3,19 +3,19 @@
   "display": {
     "thirdperson_righthand": {
       "rotation": [
-        0,
-        0,
-        -5
+        55,
+        -90,
+        0
       ],
       "translation": [
-        -7,
         0,
-        2
+        0,
+        0
       ],
       "scale": [
-        0.85,
-        0.85,
-        0.85
+        1.0,
+        1.0,
+        1.0
       ]
     },
     "thirdperson_lefthand": {

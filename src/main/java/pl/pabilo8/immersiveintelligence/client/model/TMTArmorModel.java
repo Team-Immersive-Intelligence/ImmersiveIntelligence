@@ -175,9 +175,7 @@ public class TMTArmorModel extends ModelBiped
 
 			ClientUtils.bindTexture(this.texture);
 			for(ModelRendererTurbo model : models)
-			{
 				model.render(scale, false);
-			}
 
 			GlStateManager.popMatrix();
 		}

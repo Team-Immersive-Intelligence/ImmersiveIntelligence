@@ -7,6 +7,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
@@ -34,6 +35,7 @@ public interface IBullet
 	float getCaliber();
 
 	//Model name, client only
+	@Nonnull
 	Class<? extends IBulletModel> getModel();
 
 	//How much damage the bullet deals (in half-hearts)

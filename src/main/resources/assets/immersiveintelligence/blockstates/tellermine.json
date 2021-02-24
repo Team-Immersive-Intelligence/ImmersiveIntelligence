@@ -1,0 +1,28 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_aluminum",
+      "particle": "immersiveengineering:blocks/storage_aluminum"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "dummy": {
+      "main": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    }
+  }
+}

@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeCrateConversion;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBulletBase;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletBase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -207,8 +207,8 @@ public class IIRecipes
 	public static void addInkRecipes()
 	{
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkCyan, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeCyan"}, 3200);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkYellow, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeMagenta"}, 3200);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkMagenta, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeYellow"}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkYellow, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeYellow"}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkMagenta, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeMagenta"}, 3200);
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkBlack, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeBlack"}, 3200);
 	}
 

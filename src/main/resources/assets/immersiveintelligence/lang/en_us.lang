@@ -130,6 +130,7 @@ item.immersiveintelligence.radio_configurator.basic.name=Basic Radio Tuner
 item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
 item.immersiveintelligence.trench_shovel.name=Trench Shovel
 item.immersiveintelligence.tripod_periscope.name=Tripod Periscope
+item.immersiveintelligence.mine_detector.name=Mine Detector
 item.immersiveintelligence.machinegun.name=Machinegun
 item.immersiveintelligence.submachinegun.name=Submachinegun
 item.immersiveintelligence.assault_rifle.name=Storm Rifle
@@ -260,10 +261,6 @@ item.immersiveintelligence.railgun_grenade_4bCal.casing.name=Railgun Grenade Rod
 item.immersiveintelligence.railgun_grenade_4bCal.core.name=Railgun Grenade Core
 item.immersiveintelligence.railgun_grenade_4bCal.bullet.name=Railgun Grenade
 
-item.immersiveintelligence.mine_wired_8bCal.casing.name=Railgun Grenade Rod
-item.immersiveintelligence.mine_wired_8bCal.core.name=Railgun Grenade Core
-item.immersiveintelligence.mine_wired_8bCal.bullet.name=Railgun Grenade
-
 #Components
 
 item.immersiveintelligence.bullet.component.tnt.name=TNT
@@ -351,6 +348,16 @@ tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Mot
 
 tile.immersiveintelligence.mine_sign.mine_sign.name=Mine Caution Sign
 tile.immersiveintelligence.mine_sign.mine_sign.desc=Mines;Ahead!
+
+#due to how IE's base classes are designed, I had to use a "main" as only value in IIBlockTypes_Mine
+#redundant? yes, works? yes
+tile.immersiveintelligence.tripmine.main.name=Tripmine
+tile.immersiveintelligence.tellermine.main.name=Contact Mine
+tile.immersiveintelligence.radio_mine.main.name=Radio Mine
+
+item.immersiveintelligence.naval_mine.bullet.name=Naval Mine
+item.immersiveintelligence.naval_mine.core.name=Naval Mine Core
+item.immersiveintelligence.naval_mine.casing.name=Naval Mine Casing
 
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
@@ -548,14 +555,23 @@ entity.minecart_reinforced_crate.name=Minecart with Reinforced Crate
 entity.minecart_steel_crate.name=Minecart with Steel Crate
 entity.minecart_wooden_barrel.name=Minecart with Wooden Barrel
 entity.minecart_metal_barrel.name=Minecart with Metal Barrel
-
 entity.skycrate.name=Skycrate
+
 entity.bullet.name=Bullet
 entity.shrapnel.name=Shrapnel
+entity.flare.name=Flare
+entity.gas_cloud.name=Gas Cloud
+entity.white_phosphorus.name=White Phosphorus Explosion
+entity.atomic_boom.name=Nuclear Explosion
+
 entity.machinegun.name=Machinegun
 entity.motorbike.name=Motorbike
 entity.wheel.name=Wheel
+entity.seat.name=Seat
 entity.field_howitzer.name=Field Howitzer
+entity.tripod_periscope.name=Tripod Periscope
+
+entity.hans.name=Hans
 
 #Skins
 skin.immersiveintelligence.anno_1880.name=Anno 1880
@@ -602,6 +618,7 @@ desc.immersiveintelligence.radio_configurator_basic=Allows to set frequency for 
 desc.immersiveintelligence.radio_configurator_advanced=An upgraded model for setting higher frequencies.
 desc.immersiveintelligence.radio_configurator_frequency=Frequency: %s
 desc.immersiveintelligence.radio_configurator_max_frequency=Max Frequency: %s
+desc.immersiveintelligence.naval_mine_chain_length=Max Chain Length: %s
 desc.immersiveintelligence.measuring_cup_size=Capacity: %s / %s mB
 desc.immersiveintelligence.measuring_cup_cant_resize=Cannot change size when contains fluid.
 desc.immersiveintelligence.functional_circuit=Allows the machine to do operations such as:
@@ -820,6 +837,10 @@ advancement.immersiveintelligence.root.desc=RTFM?
 advancement.immersiveintelligence.connect_belt=Powerful Conveying
 advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
 
+#Reference to Tiger 1 tank memes
+advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission works again!
+advancement.immersiveintelligence.craft_steel_belt.desc=Craft a Steel Motor Belt
+
 advancement.immersiveintelligence.secret_connect_wire=Who dares wins
 advancement.immersiveintelligence.secret_connect_wire.desc=You had enough? Now give me a rest.
 
@@ -861,8 +882,13 @@ advancement.immersiveintelligence.craft_lighter.desc=Craft a Lighter
 advancement.immersiveintelligence.craft_mg=Property of Hans
 advancement.immersiveintelligence.craft_mg.desc=Craft the infamous Machinegun
 
+#Reference to Industrialcraft2's alarm siren addon
 advancement.immersiveintelligence.craft_siren=Is the reactor OK?
 advancement.immersiveintelligence.craft_siren.desc=Craft an Alarm Siren
+
+#Reference to a sidenote on one of Choroman's concept drawings
+advancement.immersiveintelligence.craft_speaker=Happy Engineer Noises
+advancement.immersiveintelligence.craft_speaker.desc=Craft a Programmable Speaker
 
 advancement.immersiveintelligence.electrolyzer=Fluid Shock Therapy
 advancement.immersiveintelligence.electrolyzer.desc=Create an Electrolyzer
@@ -902,11 +928,43 @@ advancement.immersiveintelligence.processor_circuit_board.desc=Produce an Proces
 advancement.immersiveintelligence.radio_station=Remote Control
 advancement.immersiveintelligence.radio_station.desc=Create a Radio Station
 
+#Tripod Periscope
+advancement.immersiveintelligence.craft_tripod_periscope=Can we have Infrared Observer at home?
+advancement.immersiveintelligence.craft_tripod_periscope.desc=Craft the Tripod Periscope
+
+#Reference to a chat with Carver
+advancement.immersiveintelligence.craft_mine_detector=NOT a Vacuum Cleaner
+advancement.immersiveintelligence.craft_mine_detector.desc=Craft the Mine Detector
+
+#Ground Zero is a centre of a nuclear explosion
+advancement.immersiveintelligence.secret_nuclear_tripmine=Planting seeds on ground zero
+advancement.immersiveintelligence.secret_nuclear_tripmine.desc=Deploy an atomic Tripmine
+
+#Reference to C&C
+advancement.immersiveintelligence.rad_cannon=Spreading the doom and eradication
+advancement.immersiveintelligence.rad_cannon.desc=Become a walking affront to the environmental stability
 
 #Reference to an old Polish meme, in which a certain cocoa brand is actually a story-rich book!
 #The cocoa was once put into a shop's shelf, mistaken as a book, that's where it started.
 advancement.immersiveintelligence.secret_cocoa=Stories of Deco Morreno
-advancement.immersiveintelligence.secret_cocoa.desc=The supreme quality has been achieved.
+advancement.immersiveintelligence.secret_cocoa.desc=The supreme quality has been achieved
+
+#Reference to Carver and C&C, though I left the mind control feature optional, was kinda op
+advancement.immersiveintelligence.secret_carvers_revenge=Carver's Revenge
+advancement.immersiveintelligence.secret_carvers_revenge.desc=What do you mean, we can't have mind controlled nuke silos?
+
+#URA! Reference to a youtube video by HRejterzy, check it out ^^
+advancement.immersiveintelligence.create_motorbike=Za vas, za nas, za neft' i gaz!
+advancement.immersiveintelligence.create_motorbike.desc=Construct the motorbike
+
+#Reference to Codename Panzers (name) and the secret name under which we talked about it with Kuruma
+#and Company of Heroes (description)
+advancement.immersiveintelligence.secret_create_panzer=Codename: Vehicle™
+advancement.immersiveintelligence.secret_create_panzer.desc=Kampfgruppe Lehr has proven its superiority once again!
+
+#Reference to a certain discord chat
+advancement.immersiveintelligence.secret_sorry_for_ceiling=Sorry for your ceiling!
+advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Experience a howitzer shell breaking a roof to distribute you propaganda.
 
 #Manual Categories
 

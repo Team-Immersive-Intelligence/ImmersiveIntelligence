@@ -13,6 +13,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -23,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import javax.annotation.Nonnull;
@@ -42,6 +44,7 @@ public class CommandIIDev extends CommandBase
 	static
 	{
 		options.add("slowmo");
+		options.add("zawarudo");
 		options.add("bulletspeed");
 		options.add("killbullets");
 		options.add("killvehicles");
@@ -90,6 +93,20 @@ public class CommandIIDev extends CommandBase
 				case "slowmo":
 					EntityBullet.DEV_SLOMO = 0.005f;
 					EntityBullet.DEV_DECAY = false;
+					break;
+				case "zawarudo":
+					if(EntityBullet.DEV_SLOMO == 0f)
+					{
+						sender.sendMessage(new TextComponentString("Toki wo tomatta."));
+						EntityBullet.DEV_SLOMO = 1f;
+						EntityBullet.DEV_DECAY = true;
+					}
+					else
+					{
+						sender.sendMessage(new TextComponentString("Za Warudo! Toki wo tomare!"));
+						EntityBullet.DEV_SLOMO = 0f;
+						EntityBullet.DEV_DECAY = false;
+					}
 					break;
 				case "bulletspeed":
 					if(args.length > 1)
@@ -209,6 +226,14 @@ public class CommandIIDev extends CommandBase
 								server.getEntityWorld().spawnEntity(hans);
 
 								ItemStack mgstack = new ItemStack(IIContent.itemMachinegun);
+
+								NonNullList<ItemStack> upgrades = NonNullList.withSize(3, ItemStack.EMPTY);
+								upgrades.set(0, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.TRIPOD.ordinal()));
+								upgrades.set(1, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.HEAVY_BARREL.ordinal()));
+								IIContent.itemSubmachinegun.setContainedItems(mgstack, upgrades);
+								IIContent.itemSubmachinegun.recalculateUpgrades(mgstack);
+								IIContent.itemSubmachinegun.finishUpgradeRecalculation(mgstack);
+
 								EntityMachinegun mg = new EntityMachinegun(server.getEntityWorld(), position.down(), commandSenderEntity.getMirroredYaw(Mirror.FRONT_BACK), -commandSenderEntity.rotationPitch, mgstack);
 								server.getEntityWorld().spawnEntity(mg);
 								hans.startRiding(mg);
