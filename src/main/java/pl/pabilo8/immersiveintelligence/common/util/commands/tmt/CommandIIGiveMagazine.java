@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
@@ -79,6 +80,7 @@ public class CommandIIGiveMagazine extends CommandBase
 				ItemNBTHelper.getTag(magazine).setTag("bullets", list);
 				ItemIIBulletMagazine.makeDefault(magazine);
 				player.addItemStackToInventory(magazine);
+				sender.sendMessage(new TextComponentString("Magazine given!"));
 			}
 			else
 				throw new WrongUsageException(getUsage(sender));

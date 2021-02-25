@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
@@ -76,17 +77,26 @@ public class CommandIIDev extends CommandBase
 				case "slowmo":
 					EntityBullet.DEV_SLOMO = 0.005f;
 					EntityBullet.DEV_DECAY = false;
+					sender.sendMessage(new TextComponentString("Slomo activated!"));
 					break;
 				case "bulletspeed":
-					if(args.length > 1)
+					if(args.length > 1) {
 						EntityBullet.DEV_SLOMO = Float.parseFloat(args[1]);
+						sender.sendMessage(new TextComponentString("Bullet speed set to " + args[1]));
+					}
+					else if (args.length == 1) {
+						sender.sendMessage(new TextComponentString(TextFormatting.RED + "Please enter a speed value, default 1, current " + (int)EntityBullet.DEV_SLOMO));
+					}
+
 					break;
 				case "killbullets":
 					server.getEntityWorld().getEntities(EntityBullet.class, input -> true).forEach(Entity::setDead);
+					sender.sendMessage(new TextComponentString("All bullets killed!"));
 					break;
 				case "killitems":
 					server.getEntityWorld().getEntities(EntityItem.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
 					server.getEntityWorld().getEntities(EntityXPOrb.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.sendMessage(new TextComponentString("Items Killed!"));
 					break;
 				case "decaybullets":
 					EntityBullet.DEV_DECAY = !EntityBullet.DEV_DECAY;
@@ -96,6 +106,7 @@ public class CommandIIDev extends CommandBase
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doWeatherCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doMobSpawning", "false");
+					sender.sendMessage(new TextComponentString("World setup done!"));
 					break;
 				case "test_enemies":
 					BlockPos position = sender.getPosition();
@@ -107,7 +118,7 @@ public class CommandIIDev extends CommandBase
 					{
 
 					}
-					if(!server.getEntityWorld().isRemote)
+					if(!server.getEntityWorld().isRemote) {
 						for(int i = 0; i < num; i++)
 						{
 							EntityZombie z1 = new EntityZombie(server.getEntityWorld());
@@ -118,7 +129,10 @@ public class CommandIIDev extends CommandBase
 							z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IIContent.item_light_engineer_helmet));
 							server.getEntityWorld().spawnEntity(z1);
 						}
+					}
+					sender.sendMessage(new TextComponentString("Test enemies summoned!"));
 					break;
+					
 			}
 		}
 		else
