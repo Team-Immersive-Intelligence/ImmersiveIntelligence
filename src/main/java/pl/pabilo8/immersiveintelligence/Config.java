@@ -609,6 +609,9 @@ public class Config
 
 				@Comment({"The speed of howitzer shells in blocks/tick"})
 				public static float howitzerVelocity = 10;
+				
+				@Comment({"the range modifier of the howitzer"})
+				public static float howitzerRangeMP = 1;
 			}
 
 			public static class BallisticComputer

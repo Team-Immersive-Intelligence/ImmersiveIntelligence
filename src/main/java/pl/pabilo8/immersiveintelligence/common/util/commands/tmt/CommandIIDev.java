@@ -21,6 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.energy.CapabilityEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
@@ -107,20 +108,32 @@ public class CommandIIDev extends CommandBase
 						EntityBullet.DEV_SLOMO = 0f;
 						EntityBullet.DEV_DECAY = false;
 					}
+					sender.sendMessage(new TextComponentString("Slomo activated!"));
 					break;
 				case "bulletspeed":
 					if(args.length > 1)
+					{
 						EntityBullet.DEV_SLOMO = Float.parseFloat(args[1]);
+						sender.sendMessage(new TextComponentString("Bullet speed set to "+args[1]));
+					}
+					else if(args.length==1)
+					{
+						sender.sendMessage(new TextComponentString(TextFormatting.RED+"Please enter a speed value, default 1, current "+(int)EntityBullet.DEV_SLOMO));
+					}
+
 					break;
 				case "killbullets":
 					server.getEntityWorld().getEntities(EntityBullet.class, input -> true).forEach(Entity::setDead);
+					sender.sendMessage(new TextComponentString("All bullets killed!"));
 					break;
 				case "killitems":
 					server.getEntityWorld().getEntities(EntityItem.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
 					server.getEntityWorld().getEntities(EntityXPOrb.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.sendMessage(new TextComponentString("Items Killed!"));
 					break;
 				case "killvehicles":
 					server.getEntityWorld().getEntities(Entity.class, input -> (input instanceof IVehicleMultiPart?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.sendMessage(new TextComponentString("Vehicles Killed!"));
 					break;
 				case "decaybullets":
 					EntityBullet.DEV_DECAY = !EntityBullet.DEV_DECAY;
@@ -130,6 +143,7 @@ public class CommandIIDev extends CommandBase
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doWeatherCycle", "false");
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doMobSpawning", "false");
+					sender.sendMessage(new TextComponentString("World setup done!"));
 					break;
 				case "power":
 					sender.getCommandSenderEntity().getHeldEquipment().forEach(stack -> {
@@ -310,11 +324,13 @@ public class CommandIIDev extends CommandBase
 								z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IIContent.itemLightEngineerHelmet));
 								server.getEntityWorld().spawnEntity(z1);
 							}
+							sender.sendMessage(new TextComponentString("Test enemies summoned!"));
 						}
 					}
-					break;
 				}
+				break;
 			}
+
 		}
 		else
 			throw new WrongUsageException(getUsage(sender));

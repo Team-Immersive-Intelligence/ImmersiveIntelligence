@@ -471,6 +471,7 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 									stack = cap.insertItem(i, stack, false);
 									if(stack.isEmpty())
 									{
+										System.out.println(itemTakeMode);
 										itemsToTake -= 1;
 										nextPickProgress = 100;
 										nextDirection = Math.round(inputFacing.getHorizontalAngle());
@@ -743,7 +744,8 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 		return stack;
 	}
 
-	//exact, item, oredict, nbt
+	//filterItemMode can have exact, item, oredict, nbt as values
+	//filterMode can have none, whitelist, blacklist as values
 
 	public boolean canTakeItem(ItemStack stack)
 	{
@@ -777,9 +779,9 @@ public class TileEntityAdvancedInserter extends TileEntityImmersiveConnectable i
 
 				if(equal)
 				{
-					if(filterItemMode.equals("whitelist"))
+					if(filterMode.equals("whitelist"))
 						return true;
-					else if(filterItemMode.equals("blacklist"))
+					else if(filterMode.equals("blacklist"))
 						return false;
 				}
 
