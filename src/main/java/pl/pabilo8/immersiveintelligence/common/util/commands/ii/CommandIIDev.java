@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.util.commands.tmt;
+package pl.pabilo8.immersiveintelligence.common.util.commands.ii;
 
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.command.CommandBase;
@@ -94,6 +94,7 @@ public class CommandIIDev extends CommandBase
 				case "slowmo":
 					EntityBullet.DEV_SLOMO = 0.005f;
 					EntityBullet.DEV_DECAY = false;
+					sender.sendMessage(new TextComponentString("Slomo activated!"));
 					break;
 				case "zawarudo":
 					if(EntityBullet.DEV_SLOMO == 0f)
@@ -108,7 +109,6 @@ public class CommandIIDev extends CommandBase
 						EntityBullet.DEV_SLOMO = 0f;
 						EntityBullet.DEV_DECAY = false;
 					}
-					sender.sendMessage(new TextComponentString("Slomo activated!"));
 					break;
 				case "bulletspeed":
 					if(args.length > 1)
@@ -327,6 +327,12 @@ public class CommandIIDev extends CommandBase
 							sender.sendMessage(new TextComponentString("Test enemies summoned!"));
 						}
 					}
+
+				}
+				break;
+				case "punchtape":
+				{
+
 				}
 				break;
 			}

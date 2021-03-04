@@ -3,26 +3,69 @@ package pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_we
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
+import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 public class EmplacementWeaponAutocannon extends EmplacementWeapon
 {
 	float flaps = 0;
+	float shootDelay = 0;
+	int reloadDelay = 0;
+	int bulletsShot = 0;
 	NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
+
+	// TODO: 28.02.2021 REMOVE
+	static ItemStack s2;
+	static
+	{
+		s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
+		NBTTagCompound compound = new NBTTagCompound();
+		compound.setInteger("colour", 0xff0000);
+		((NBTTagList)ItemNBTHelper.getTag(s2).getTag("component_nbt")).set(1, new NBTTagCompound());
+	}
+
+	@SideOnly(Side.CLIENT)
+	private static final Runnable INSERTER_ANIM_NONE = () -> {
+		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+	};
+	@SideOnly(Side.CLIENT)
+	private static final Runnable INSERTER_ANIM_LEFT = () -> {
+		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		GlStateManager.rotate(-55, 1, 0, 0);
+		GlStateManager.translate(0, 0, 0.0625f);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineLeftModel)
+			mod.render();
+	};
+	@SideOnly(Side.CLIENT)
+	private static final Runnable INSERTER_ANIM_RIGHT = () -> {
+		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		GlStateManager.rotate(-55, 1, 0, 0);
+		GlStateManager.translate(0, 0, 0.0625f);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineRightModel)
+			mod.render();
+	};
+	private Vec3d vv;
 
 	@Override
 	public String getName()
@@ -43,50 +86,68 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	}
 
 	@Override
-	public boolean isReloaded()
+	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-		return reloadDelay==0;
-	}
 
-	@Override
-	public boolean hasAmmunitionInTempStorage()
-	{
-		return false;
-	}
+		float force = 6f;
+		float mass = 0.5f;
 
-	@Override
-	public boolean canReloadFrom(TileEntityEmplacement te)
-	{
-		return false;
-	}
-
-	@Override
-	public int reloadFrom(TileEntityEmplacement te)
-	{
-		// TODO: 27.10.2020 check for inventory
-		return reloadDelay = 240;
+		vv = posTurret.subtract(posTarget);
+		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
+		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(2f).addVector(0, 0, 0f);
+		vv = vv.add(motionVec).normalize();
+		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
+		float pp = Utils.calculateBallisticAngle(motionXZ,posTurret.y-(posTarget.y+motion.y),force,0.03F*mass,0.9f);
+		pp = MathHelper.clamp(pp, -90, 75);
+		return new float[]{yy,pp};
 	}
 
 	@Override
 	public void tick()
 	{
-		if(reloadDelay > 0)
-			reloadDelay -= 1;
+		if(bulletsShot>=64)
+		{
+			reloadDelay++;
+			if(reloadDelay>=Autocannon.reloadTime)
+			{
+				bulletsShot=0;
+				reloadDelay=0;
+			}
+		}
 
 		if(shootDelay > 0)
-			shootDelay -= 1;
-		else
-			shootDelay = Autocannon.bulletFireTime;
+			shootDelay--;
 	}
 
 	@Override
-	public void aimAt(float pitch, float yaw)
+	public void shoot(TileEntityEmplacement te)
 	{
-		super.aimAt(pitch, yaw);
+		super.shoot(te);
+		if(!te.getWorld().isRemote)
+		{
+			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
+			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getPos().up(2)).addVector(-0.5,0,0.5), vv.scale(-1f), 6f);
+			a.setShootPos(te.getAllBlocks());
+			te.getWorld().spawnEntity(a);
+		}
+		shootDelay=3;
+		bulletsShot++;
+	}
+
+	@Override
+	public void aimAt(float yaw, float pitch)
+	{
+		super.aimAt(yaw, pitch);
 		if(this.pitch < -20&&this.pitch > -75)
 			flaps = Math.min(flaps+0.075f, 1);
 		else
 			flaps = Math.max(flaps-0.075f, 0);
+	}
+
+	@Override
+	public boolean isSetUp(boolean door)
+	{
+		return true;
 	}
 
 	@Override
@@ -99,9 +160,9 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	}
 
 	@Override
-	public boolean willShoot(TileEntityEmplacement te)
+	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return te.isDoorOpened;
+		return te.isDoorOpened&&shootDelay==0&&bulletsShot<64;
 	}
 
 	@Override
@@ -115,10 +176,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	@Override
 	public void render(TileEntityEmplacement te, float partialTicks)
 	{
-
-		float reloadAnim = 1;
-		if(!isReloaded())
-			reloadAnim = Math.min(1, (this.reloadDelay+partialTicks)/(float)Autocannon.reloadTime);
+		float reloadAnim = Math.min(1, (this.reloadDelay+(bulletsShot >= 64?partialTicks: 0))/(float)Autocannon.reloadTime);
 
 		GlStateManager.pushMatrix();
 		float p, pp, y, yy;
@@ -140,12 +198,12 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks;
 
 		double b1 = 0, b2 = 0;
-		if(isShooting()&&te.progress > Emplacement.lidTime*0.98f)
+		if(te.isShooting&&te.progress > Emplacement.lidTime*0.98f)
 		{
 			if(cannonAnim < 0.5f)
 			{
 				b1 = (float)(cannonAnim/0.5f);
-				if(willShoot(te))
+				if(canShoot(te))
 					b2 = 1f-(cannonAnim/0.5f);
 			}
 			else
@@ -167,9 +225,26 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.baseModel)
 			mod.render();
-		GlStateManager.rotate(180+yy, 0, 1, 0);
+		GlStateManager.rotate(yy, 0, 1, 0);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.turretModel)
 			mod.render();
+
+		GlStateManager.pushMatrix();
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.ammoBoxLidModel)
+		{
+			if(reloadAnim < 0.1)
+				mod.rotateAngleZ = (reloadAnim/0.1f)*-4.125f;
+			else if(reloadAnim < 0.9f)
+				mod.rotateAngleZ = -4.125f;
+			else if(reloadAnim < 1f)
+				mod.rotateAngleZ = (1f-((reloadAnim-0.9f)/0.1f))*-4.125f;
+			else
+				mod.rotateAngleZ = 0;
+			mod.render();
+		}
+		GlStateManager.popMatrix();
+
+		reloadAnim=Math.abs(reloadAnim-0.5f)*2;
 
 		EmplacementRenderer.modelAutocannon.turretTopFlapsModel[0].rotateAngleY = -flaps*1.55f;
 		EmplacementRenderer.modelAutocannon.turretTopFlapsModel[1].rotateAngleY = flaps*1.55f;
@@ -216,9 +291,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		GlStateManager.translate(-0.625f, 1f, -0.88125f);
 
 		float ins_y = 0f, ins_p1 = 15f, ins_p2 = 175f, ins_progress = 0f;
-		Runnable r = () -> {
-			ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
-		};
+		Runnable r = INSERTER_ANIM_NONE;
 
 		if(reloadAnim > 0.1&&reloadAnim < 0.9)
 		{
@@ -253,21 +326,9 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 
 				if(p_anim > 0.5)
 					if(reloadAnim > 0.5)
-						r = () -> {
-							ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
-							GlStateManager.rotate(-55, 1, 0, 0);
-							GlStateManager.translate(0, 0, 0.0625f);
-							for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineLeftModel)
-								mod.render();
-						};
+						r = INSERTER_ANIM_LEFT;
 					else
-						r = () -> {
-							ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
-							GlStateManager.rotate(-55, 1, 0, 0);
-							GlStateManager.translate(0, 0, 0.0625f);
-							for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineRightModel)
-								mod.render();
-						};
+						r = INSERTER_ANIM_RIGHT;
 			}
 			//right
 			else if(reloadAnim < 0.3)
@@ -400,22 +461,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 
 		 */
 
-		EmplacementRenderer.renderInserter(ins_y, ins_p1, ins_p2, ins_progress, r);
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.ammoBoxLidModel)
-		{
-			if(reloadAnim < 0.1)
-				mod.rotateAngleZ = (reloadAnim/0.1f)*-4.125f;
-			else if(reloadAnim < 0.9f)
-				mod.rotateAngleZ = -4.125f;
-			else if(reloadAnim < 1f)
-				mod.rotateAngleZ = (1f-((reloadAnim-0.9f)/0.1f))*-4.125f;
-			else
-				mod.rotateAngleZ = 0;
-			mod.render();
-		}
+		EmplacementRenderer.renderInserter(true, ins_y, ins_p1, ins_p2, ins_progress, r);
 		GlStateManager.popMatrix();
 
 		GlStateManager.popMatrix();

@@ -3,16 +3,13 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileent
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -20,40 +17,41 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponAutocannon;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponCPDS;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponHeavyChemthrower;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponInfraredObserver;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice
 {
-	public boolean isDoorOpened = false;
-	public int progress = 0;
-	public EmplacementWeapon currentWeapon = new EmplacementWeaponAutocannon();
-	BlockPos[] allBlocks = null;
-	static ItemStack s2;
+	public static final HashMap<String, Function<String, EmplacementWeapon>> weaponRegistry = new HashMap<>();
 
 	static
 	{
-		s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
-		NBTTagCompound compound = new NBTTagCompound();
-		compound.setInteger("colour", 0xff0000);
-		((NBTTagList)ItemNBTHelper.getTag(s2).getTag("component_nbt")).set(1, new NBTTagCompound());
+		weaponRegistry.put("autocannon", s -> new EmplacementWeaponAutocannon());
+		weaponRegistry.put("infrared_observer", s -> new EmplacementWeaponInfraredObserver());
+		weaponRegistry.put("cpds", s -> new EmplacementWeaponCPDS());
+		weaponRegistry.put("heavy_chemthrower", s -> new EmplacementWeaponHeavyChemthrower());
 	}
 
-//s2 = CommonProxy.item_ammo_autocannon.getBulletWithParams("core_pabilium", "piercing", "tnt");
+	public boolean isDoorOpened = false;
+	public int progress = 0;
+	public EmplacementWeapon currentWeapon = null;
+	BlockPos[] allBlocks = null;
+	public boolean isShooting = false;
 
 	public TileEntityEmplacement()
 	{
@@ -87,50 +85,65 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			{
 				if(currentWeapon!=null)
 				{
-					currentWeapon.tick();
-					//currentWeapon.reloadFrom(this);
-					Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(60f).expand(0, 40, 0), input -> input instanceof EntityBat).stream().findFirst();
-					if(first.isPresent())
+					if(currentWeapon.isSetUp(true))
 					{
-						float force = 20.5f;
-						float mass = 0.4f;
-						BlockPos tpos = getBlockPosForPos(49).up(1);
-						Vec3d vv = new Vec3d(tpos).subtract(first.get().getPositionVector().addVector(-first.get().width/2f, first.get().height/2f, -first.get().width/2f));
-						float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
-						Vec3d motionVec = new Vec3d(first.get().motionX, first.get().motionY, first.get().motionZ).scale(2f).addVector(0, 0, 0f);
-						vv = vv.add(motionVec).normalize();
-						float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-						float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
-						pp = MathHelper.clamp(pp, -90, 75);
+						currentWeapon.tick();
+						//currentWeapon.reloadFrom(this);
+						Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(5f).expand(0, 40, 0), input -> input instanceof EntityPlayer&&!input.isDead).stream().findFirst();
+						if(first.isPresent())
+						{
+							float[] target = currentWeapon.getAnglePrediction(new Vec3d(getBlockPosForPos(49).up(2)).subtract(-0.5, 0, -0.5),
+									first.get().getPositionVector().addVector(first.get().width/2f,first.get().height/2f,first.get().width/2f),
+									new Vec3d(first.get().motionX, first.get().motionY, first.get().motionZ)
+							);
+							currentWeapon.aimAt(target[0], target[1]);
 
-						currentWeapon.aimAt(pp, yy);
-
-						if(!world.isRemote)
-							if(currentWeapon.isAimedAt(pp, yy)&&world.getTotalWorldTime()%3==0)
+							if(currentWeapon.isAimedAt(target[0], target[1]))
 							{
-								world.playSound(null, tpos.getX(), tpos.getY(), tpos.getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-								EntityBullet a = BulletHelper.createBullet(world, s2, new Vec3d(tpos), vv.scale(-1f), force);
-								a.setShootPos(getAllBlocks());
-								world.spawnEntity(a);
+								if(currentWeapon.canShoot(this))
+								{
+									isShooting = true;
+									currentWeapon.shoot(this);
+								}
+								else
+									isShooting = false;
 							}
+							else
+								isShooting = false;
+						}
+						else
+						{
+							isShooting = false;
+							currentWeapon.aimAt(currentWeapon.yaw, currentWeapon.pitch);
+						}
 					}
 					else
-						currentWeapon.aimAt(currentWeapon.pitch, currentWeapon.yaw);
+					{
+						currentWeapon.doSetUp(true);
+					}
 				}
 			}
 		}
 		else
 		{
-			if(progress > 0)
-				progress--;
 			if(currentWeapon!=null)
-				currentWeapon.aimAt(-90, 0);
-
+			{
+				if(currentWeapon.isSetUp(false))
+				{
+					if(progress > 0)
+						progress--;
+					currentWeapon.aimAt(0, -90);
+				}
+				else
+					currentWeapon.doSetUp(false);
+			}
+			else if(progress > 0)
+				progress--;
 		}
 
 	}
 
-	private BlockPos[] getAllBlocks()
+	public BlockPos[] getAllBlocks()
 	{
 		TileEntityEmplacement master = master();
 		if(master==this||master==null)
@@ -146,6 +159,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		}
 		else
 			return master.getAllBlocks();
+	}
+
+	public boolean finishedDoorAction()
+	{
+		return isDoorOpened?(progress==Emplacement.lidTime): (progress==0);
 	}
 
 	@Override
@@ -288,9 +306,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		this.progress = nbt.getInteger("progress");
 		this.isDoorOpened = nbt.getBoolean("isDoorOpened");
 
-		if(nbt.hasKey("currentWeapon"))
+		if(!isDummy()&&nbt.hasKey("currentWeapon"))
 		{
-			// TODO: 11.10.2020 get weapon from nbt
+			currentWeapon = getWeaponFromName(nbt.getString("weaponName"));
+			if(currentWeapon!=null)
+				currentWeapon.readFromNBT(nbt.getCompoundTag("currentWeapon"));
 		}
 	}
 
@@ -301,8 +321,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		nbt.setBoolean("isDoorOpened", this.isDoorOpened);
 
 		nbt.setInteger("progress", this.progress);
-		if(currentWeapon!=null)
+
+		if(!isDummy()&&currentWeapon!=null)
+		{
+			nbt.setString("weaponName", currentWeapon.getName());
 			nbt.setTag("currentWeapon", currentWeapon.saveToNBT());
+		}
 	}
 
 	@Override
@@ -313,6 +337,39 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			this.isDoorOpened = message.getBoolean("isDoorOpened");
 		if(message.hasKey("progress"))
 			this.progress = message.getInteger("progress");
+
+		if(!isDummy())
+		{
+			currentWeapon = getWeaponFromName(message.getString("weaponName"));
+			if(currentWeapon!=null)
+				currentWeapon.readFromNBT(message.getCompoundTag("currentWeapon"));
+		}
+	}
+
+	private EmplacementWeapon getWeaponFromName(String weaponName)
+	{
+		if(weaponName==null)
+			return null;
+		if(weaponRegistry.containsKey(weaponName))
+			return weaponRegistry.get(weaponName).apply(weaponName);
+		return null;
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		if(!isDummy())
+		{
+			return new AxisAlignedBB(
+					getPos().getX()-1,
+					getPos().getY()+1,
+					getPos().getZ()-1,
+					getPos().getX()+1,
+					getPos().getY()-8,
+					getPos().getZ()+1
+			);
+		}
+		return super.getRenderBoundingBox();
 	}
 
 	@Override
@@ -340,6 +397,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		IDataType c = packet.variables.get('c');
+		IDataType w = packet.variables.get('w');
 		if(c instanceof DataPacketTypeString)
 		{
 			switch(((DataPacketTypeString)c).value)
@@ -351,6 +409,20 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				case "fireentity":
 				case "firepos":
 					break;
+				case "weapon":
+				{
+					// TODO: 25.02.2021 REMOVE CHEATS
+					TileEntityEmplacement master = master();
+					if(master==null)
+						break;
+					master.currentWeapon = getWeaponFromName(w.valueToString());
+					if(master.currentWeapon!=null)
+					{
+						master.markDirty();
+						master.markBlockForUpdate(master.getPos(), null);
+					}
+				}
+				break;
 			}
 		}
 	}
@@ -365,69 +437,102 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		protected float pitch = 0, yaw = 0;
 		protected float nextPitch = 0, nextYaw = 0;
-		protected float shootDelay = 0;
-		protected int reloadDelay = 0;
 
+		/**
+		 * @return name of the emplacement, must be the same as the name in the weapon registry
+		 */
 		public abstract String getName();
 
+		/**
+		 * @return ingredients required for constructing weapon in the emplacement
+		 */
 		public abstract IngredientStack[] getIngredientsRequired();
 
 		protected float yawTurnSpeed = 2, pitchTurnSpeed = 2;
 
-		public abstract boolean isReloaded();
-
 		/**
-		 *
+		 * @param yaw   destination
 		 * @param pitch destination
-		 * @param yaw destination
 		 * @return whether the gun is pointing to the pitch and yaw given
 		 */
-		public boolean isAimedAt(float pitch, float yaw)
+		public boolean isAimedAt(float yaw, float pitch)
 		{
-			return pitch==this.pitch&&yaw==this.yaw;
+			return pitch==this.pitch&&MathHelper.wrapDegrees(yaw)==this.yaw;
+		}
+
+		public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
+		{
+			// TODO: 28.02.2021 find out how to predict angles
+			Vec3d vv = posTurret.subtract(posTarget);
+			float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
+			Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(2f).addVector(0, 0, 0f);
+			vv = vv.add(motionVec).normalize();
+			float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
+			float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
+			pp = MathHelper.clamp(pp, -90, 75);
+
+			return new float[]{yy, pp};
 		}
 
 		/**
 		 * Rotate the gun
 		 *
+		 * @param yaw   destination
 		 * @param pitch destination
-		 * @param yaw destination
 		 */
-		public void aimAt(float pitch, float yaw)
+		public void aimAt(float yaw, float pitch)
 		{
+
+			/*
+			this.yaw = MathHelper.wrapDegrees(yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.yawTurnSpeed)));
+			 */
+
 			nextPitch = pitch;
-			nextYaw = yaw;
+			nextYaw = MathHelper.wrapDegrees(yaw);
 			float p = pitch-this.pitch;
 			this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.pitchTurnSpeed);
-			float y = yaw-this.yaw;
-			this.yaw += Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.yawTurnSpeed);
+			float y = MathHelper.wrapDegrees(360+nextYaw-this.yaw);
+			if(Math.abs(y) < 0.01)
+				this.yaw = this.nextYaw;
+			else
+				this.yaw = MathHelper.wrapDegrees(this.yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.yawTurnSpeed)));
 			this.pitch = this.pitch%180;
-			this.yaw = this.yaw%360;
+			//this.yaw = this.yaw%360;
 
 		}
 
-		//Whether has ammunition in temporary (platform) storage
-		public abstract boolean hasAmmunitionInTempStorage();
+		/**
+		 * @param door whether the emplacement door is open
+		 * @return whether turret is setup
+		 */
+		public abstract boolean isSetUp(boolean door);
 
+		/**
+		 * Used for turret setup
+		 *
+		 * @param door whether the emplacement door is open
+		 */
+		public void doSetUp(boolean door)
+		{
+
+		}
+
+		/**
+		 * Used for reloading and other actions
+		 * For setup delay use {@link #doSetUp(boolean)}
+		 */
 		public void tick()
 		{
 
 		}
 
 		/**
-		 *
-		 * @param te the weapon is mounted on
-		 * @return whether should perform {@link EmplacementWeapon#reloadFrom(TileEntityEmplacement)}
-		 *
+		 * Used for shooting action
 		 */
-		public abstract boolean canReloadFrom(TileEntityEmplacement te);
+		public void shoot(TileEntityEmplacement te)
+		{
 
-		/**
-		 *
-		 * @param te the weapon is mounted on
-		 * @return reload time (0 if no time needed, -1 if unable to reload)
-		 */
-		public abstract int reloadFrom(TileEntityEmplacement te);
+		}
 
 		/**
 		 * @return nbt tag with weapon's saved data
@@ -435,15 +540,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		@Nonnull
 		public abstract NBTTagCompound saveToNBT();
 
-		public abstract boolean willShoot(TileEntityEmplacement te);
-
-		public boolean isShooting()
-		{
-			return isAimedAt(nextPitch, nextYaw);
-		}
+		public abstract boolean canShoot(TileEntityEmplacement te);
 
 		/**
 		 * Reads from NBT tag
+		 *
 		 * @param tagCompound provided nbt tag (saved in tile's NBT tag "emplacement")
 		 */
 		public abstract void readFromNBT(NBTTagCompound tagCompound);

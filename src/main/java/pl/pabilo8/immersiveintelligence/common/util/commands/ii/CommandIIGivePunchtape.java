@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.util.commands.tmt;
+package pl.pabilo8.immersiveintelligence.common.util.commands.ii;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.command.CommandBase;
@@ -7,6 +7,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
@@ -18,6 +21,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 
@@ -33,7 +37,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8
  * @since 23-06-2020
  */
-public class CommandIIGiveMagazine extends CommandBase
+public class CommandIIGivePunchtape extends CommandBase
 {
 	/**
 	 * Gets the name of the command
@@ -42,7 +46,7 @@ public class CommandIIGiveMagazine extends CommandBase
 	@Override
 	public String getName()
 	{
-		return "magazine";
+		return "punchtape";
 	}
 
 	/**
@@ -52,7 +56,7 @@ public class CommandIIGiveMagazine extends CommandBase
 	@Override
 	public String getUsage(@Nonnull ICommandSender sender)
 	{
-		return "Gives a bullet, usage: ii magazine <receiver> <name> <core> <coreType> [comps]";
+		return "Gives a punchtape, usage: ii punchtape <receiver> <nbt>";
 	}
 
 	/**
@@ -61,29 +65,26 @@ public class CommandIIGiveMagazine extends CommandBase
 	@Override
 	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
 	{
-		if(args.length > 3)
+		if(args.length > 1)
 		{
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			ItemStack magazine = Utils.getStackWithMetaName(IIContent.itemBulletMagazine, args[1]);
-			IBullet casing = ItemIIBulletMagazine.getMatchingType(magazine);
-			IBulletCore core = BulletRegistry.INSTANCE.getCore(args[2]);
-			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
-			ArrayList<IBulletComponent> components = new ArrayList<>();
-			for(int i = 4; i < args.length; i++)
-				components.add(BulletRegistry.INSTANCE.getComponent(args[i]));
-
-			if(casing!=null&&core!=null)
+			try
 			{
-				ItemStack bulletWithParams = casing.getBulletWithParams(core, coreType, components.toArray(new IBulletComponent[0]));
-				NonNullList<ItemStack> l = NonNullList.withSize(ItemIIBulletMagazine.getBulletCapactity(magazine), bulletWithParams);
-				NBTTagList list = blusunrize.immersiveengineering.common.util.Utils.writeInventory(l);
-				ItemNBTHelper.getTag(magazine).setTag("bullets", list);
-				ItemIIBulletMagazine.makeDefault(magazine);
-				player.addItemStackToInventory(magazine);
-				sender.sendMessage(new TextComponentString("Magazine given!"));
-			}
-			else
+				StringBuilder builder = new StringBuilder();
+				for(int i = 1; i < args.length; i++)
+					builder.append(args[i]);
+				NBTTagCompound nbt = JsonToNBT.getTagFromJson(builder.toString());
+				ItemStack stack = new ItemStack(IIContent.itemPunchtape,1,1);
+				DataPacket dataPacket = new DataPacket();
+				dataPacket.fromNBT(nbt);
+				IIContent.itemPunchtape.writeDataToItem(dataPacket, stack);
+
+				player.addItemStackToInventory(stack);
+				sender.sendMessage(new TextComponentString("Punchtape given!"));
+			} catch(NBTException e)
+			{
 				throw new WrongUsageException(getUsage(sender));
+			}
 		}
 		else
 			throw new WrongUsageException(getUsage(sender));
@@ -107,22 +108,6 @@ public class CommandIIGiveMagazine extends CommandBase
 		if(args.length==1)
 		{
 			return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
-		}
-		else if(args.length==2)
-		{
-			return getListOfStringsMatchingLastWord(args, IIContent.itemBulletMagazine.getSubNames());
-		}
-		else if(args.length==3)
-		{
-			return getListOfStringsMatchingLastWord(args, BulletRegistry.INSTANCE.registeredBulletCores.keySet());
-		}
-		else if(args.length==4)
-		{
-			return getListOfStringsMatchingLastWord(args, Arrays.stream(EnumCoreTypes.values()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
-		}
-		else if(args.length > 4)
-		{
-			return getListOfStringsMatchingLastWord(args, BulletRegistry.INSTANCE.registeredComponents.keySet());
 		}
 		else
 			return Collections.emptyList();

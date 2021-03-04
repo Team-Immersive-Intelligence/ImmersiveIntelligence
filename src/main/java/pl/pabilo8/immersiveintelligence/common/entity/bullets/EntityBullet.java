@@ -242,7 +242,6 @@ public class EntityBullet extends Entity implements ILightProvider
 		{
 			force -= DRAG*force*DEV_SLOMO;
 			gravityMotionY -= (GRAVITY*this.mass*DEV_SLOMO)/(ArtilleryHowitzer.howitzerRangeMP);
-			System.out.println(String.valueOf(gravityMotionY));
 			setMotion();
 
 			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), this.getNextPositionVector())

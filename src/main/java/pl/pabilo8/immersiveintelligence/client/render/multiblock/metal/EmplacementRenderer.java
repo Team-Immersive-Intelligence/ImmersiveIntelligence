@@ -9,6 +9,9 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelEmplacement;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelAutocannon;
+import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelCPDS;
+import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelHeavyChemthrower;
+import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelInfraredObserver;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
@@ -18,11 +21,24 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 {
 	private static ModelEmplacement model;
 	public static ModelAutocannon modelAutocannon;
+	public static ModelInfraredObserver modelInfraredObserver;
+	public static ModelHeavyChemthrower modelHeavyChemthrower;
+	public static ModelCPDS modelCPDS;
 	public static ModelInserter modelInserter;
 
 	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement.png";
+	public static final String textureMachinegun = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/cpds.png";
 	public static final String textureAutocannon = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/flak.png";
-	public static final String textureInserter = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter.png";
+	public static final String textureCPDS = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/cpds.png";
+	public static final String textureHeavyRailgun = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/heavy_railgun.png";
+	public static final String textureHeavyChemthrower = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/heavy_chemthrower.png";
+	public static final String textureTeslaCoil = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/tesla_coil.png";
+	public static final String textureMortar = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/mortar.png";
+	public static final String textureLightHowitzer = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/light_howitzer.png";
+	public static final String textureInfraredObserver = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/infrared_observer.png";
+
+	public static final String textureInserterGreen = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_green.png";
+	public static final String textureInserterGray = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_gray.png";
 
 	private static final float doorAngle = TmtUtil.AngleToTMT(165f);
 
@@ -40,7 +56,7 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			//float f = ((getWorld().getTotalWorldTime()+partialTicks)%240)/240f;
-			float f = MathHelper.clamp((te.progress+(te.isDoorOpened?partialTicks: -partialTicks))/(float)Emplacement.lidTime, 0f, 1f);
+			float f = MathHelper.clamp((te.progress+(te.isDoorOpened?partialTicks: -((te.currentWeapon==null||te.currentWeapon.isSetUp(false))?partialTicks:0)))/(float)Emplacement.lidTime, 0f, 1f);
 			float door = 0;
 			float turretHeight = 0;
 			if(f <= 0.25f)
@@ -132,13 +148,16 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 	{
 		model = new ModelEmplacement();
 		modelAutocannon = new ModelAutocannon();
+		modelInfraredObserver = new ModelInfraredObserver();
+		modelHeavyChemthrower = new ModelHeavyChemthrower();
+		modelCPDS = new ModelCPDS();
 		modelInserter = new ModelInserter();
 	}
 
-	public static void renderInserter(float yaw, float pitch1, float pitch2, float progress, Runnable function)
+	public static void renderInserter(boolean green, float yaw, float pitch1, float pitch2, float progress, Runnable function)
 	{
 		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(textureInserter);
+		ClientUtils.bindTexture(green?textureInserterGreen:textureInserterGray);
 
 		GlStateManager.translate(-0.5, -0.5, 0.5);
 		modelInserter.baseModel[1].render();

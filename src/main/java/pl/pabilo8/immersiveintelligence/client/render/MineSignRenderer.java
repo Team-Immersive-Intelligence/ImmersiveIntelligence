@@ -27,7 +27,8 @@ public class MineSignRenderer extends TileEntitySpecialRenderer<TileEntityMineSi
 		GlStateManager.scale(-0.0625f, -0.0625f, -0.0625f);
 		GlStateManager.scale(0.25, 0.25, 0.25);
 
-		String[] str = I18n.format(KEY).split(";");
+		//String[] str = I18n.format(KEY).split(";");
+		String[] str = new String[]{"Pabilo's","House"};
 		for(int i = 0; i < str.length; i++)
 		{
 			Utils.drawStringCentered(getFontRenderer(), str[i], 8, i*12, 48, 12, 0xd99747);

@@ -45,7 +45,7 @@ public class BulletComponentFluid implements IBulletComponent
 	@Override
 	public float getDensity()
 	{
-		return fluid.getDensity()/1000f;
+		return Math.max(fluid.getDensity(),0)/1000f;
 	}
 
 	@Override
