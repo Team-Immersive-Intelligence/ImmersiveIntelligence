@@ -10,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -55,12 +56,24 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	}
 
 	@Override
+	public float getYawTurnSpeed()
+	{
+		return CPDS.yawRotateSpeed;
+	}
+
+	@Override
+	public float getPitchTurnSpeed()
+	{
+		return CPDS.pitchRotateSpeed;
+	}
+
+	@Override
 	public void aimAt(float yaw, float pitch)
 	{
 		//Only pitch, no yaw rotation
 		nextPitch = pitch;
 		float p = pitch-this.pitch;
-		this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.pitchTurnSpeed);
+		this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.getPitchTurnSpeed());
 		this.pitch = this.pitch%180;
 	}
 
@@ -106,8 +119,8 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		float p, pp, y, yy;
 		p = this.nextPitch-this.pitch;
 		y = this.nextYaw-this.yaw;
-		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*pitchTurnSpeed;
-		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*yawTurnSpeed;
+		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
+		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
 
 		//setupProgress = ((te.getWorld().getTotalWorldTime()+partialTicks)%100)/100f;
 		ClientUtils.bindTexture(EmplacementRenderer.textureCPDS);

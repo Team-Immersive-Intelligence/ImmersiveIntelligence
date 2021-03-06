@@ -18,7 +18,7 @@ public enum IIBlockTypes_MetalMultiblock1 implements IStringSerializable, BlockI
 	AMMUNITION_WORKSHOP(false),
 	FUEL_STATION(false),
 	VEHICLE_WORKSHOP(false),
-	INFRARED_OBSERVER(false),
+	FLAGPOLE(false),
 	RADAR(false),
 	EMPLACEMENT(false);
 

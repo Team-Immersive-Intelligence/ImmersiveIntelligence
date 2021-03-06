@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
@@ -150,6 +151,12 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			IDataConnector conn = Utils.findConnectorFacing(pos, world, facing.getOpposite());
 			if(conn!=null)
 				conn.sendPacket(packet);
+			else
+			{
+				final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
+				if(te instanceof IDataDevice)
+					((IDataDevice)te).onReceive(packet,facing);
+			}
 		}
 		return false;
 	}

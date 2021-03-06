@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second;
 
+import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
@@ -99,6 +101,10 @@ public class MultiblockEmplacement implements IMultiblock
 		{
 			return false;
 		}
+
+		ItemStack hammer = player.getHeldItemMainhand().getItem().getToolClasses(player.getHeldItemMainhand()).contains(Lib.TOOL_HAMMER)?player.getHeldItemMainhand(): player.getHeldItemOffhand();
+		if(MultiblockHandler.fireMultiblockFormationEventPost(player, this, pos, hammer).isCanceled())
+			return false;
 
 		for(int h = -4; h < 2; h++)
 			for(int l = 0; l < 3; l++)

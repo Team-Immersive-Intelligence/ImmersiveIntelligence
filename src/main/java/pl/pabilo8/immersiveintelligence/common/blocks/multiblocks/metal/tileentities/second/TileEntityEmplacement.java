@@ -4,6 +4,8 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -89,11 +91,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 					{
 						currentWeapon.tick();
 						//currentWeapon.reloadFrom(this);
-						Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(5f).expand(0, 40, 0), input -> input instanceof EntityPlayer&&!input.isDead).stream().findFirst();
+						Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(60f).expand(0, 40, 0), input -> input instanceof EntityMob&&!input.isDead).stream().findFirst();
 						if(first.isPresent())
 						{
-							float[] target = currentWeapon.getAnglePrediction(new Vec3d(getBlockPosForPos(49).up(2)).subtract(-0.5, 0, -0.5),
-									first.get().getPositionVector().addVector(first.get().width/2f,first.get().height/2f,first.get().width/2f),
+							float[] target = currentWeapon.getAnglePrediction(new Vec3d(getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
+									first.get().getPositionVector().addVector(first.get().width/2f,first.get().height,first.get().width/2f),
 									new Vec3d(first.get().motionX, first.get().motionY, first.get().motionZ)
 							);
 							currentWeapon.aimAt(target[0], target[1]);
@@ -448,7 +450,15 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		 */
 		public abstract IngredientStack[] getIngredientsRequired();
 
-		protected float yawTurnSpeed = 2, pitchTurnSpeed = 2;
+		public float getYawTurnSpeed()
+		{
+			return 2;
+		}
+
+		public float getPitchTurnSpeed()
+		{
+			return 2;
+		}
 
 		/**
 		 * @param yaw   destination
@@ -490,12 +500,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			nextPitch = pitch;
 			nextYaw = MathHelper.wrapDegrees(yaw);
 			float p = pitch-this.pitch;
-			this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.pitchTurnSpeed);
+			this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.getPitchTurnSpeed());
 			float y = MathHelper.wrapDegrees(360+nextYaw-this.yaw);
 			if(Math.abs(y) < 0.01)
 				this.yaw = this.nextYaw;
 			else
-				this.yaw = MathHelper.wrapDegrees(this.yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.yawTurnSpeed)));
+				this.yaw = MathHelper.wrapDegrees(this.yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.getYawTurnSpeed())));
 			this.pitch = this.pitch%180;
 			//this.yaw = this.yaw%360;
 

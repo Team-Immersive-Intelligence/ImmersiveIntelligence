@@ -108,6 +108,7 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			GlStateManager.translate(0.5, 3.0625f, -1.5);
 			if(turretHeight <= 0.25f)
 				GlStateManager.scale(1f, 0.85f+turretHeight, 1f);
+			GlStateManager.rotate(te.facing.getHorizontalAngle()-90, 0F, 1F, 0F);
 			if(te.currentWeapon!=null)
 				te.currentWeapon.render(te, partialTicks);
 

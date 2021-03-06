@@ -24,6 +24,7 @@ import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -38,14 +39,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -94,10 +99,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityCh
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockEmplacement;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
@@ -649,6 +651,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerTile(TileEntityPacker.class);
 		registerTile(TileEntityRedstoneInterface.class);
 		registerTile(TileEntityEmplacement.class);
+		registerTile(TileEntityFlagpole.class);
 
 		//Wooden
 		MultiblockHandler.registerMultiblock(MultiblockSkyCratePost.instance);
@@ -673,6 +676,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//Metal1
 		MultiblockHandler.registerMultiblock(MultiblockRedstoneInterface.instance);
 		MultiblockHandler.registerMultiblock(MultiblockEmplacement.instance);
+		MultiblockHandler.registerMultiblock(MultiblockFlagpole.instance);
 
 		int i = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
@@ -916,6 +920,18 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	@Override
 	public void ticketsLoaded(List<Ticket> tickets, World world)
 	{
-
+		for(Ticket ticket : tickets)
+		{
+			if(ticket.getType()==Type.NORMAL)
+			{
+				for(ChunkPos chunkPos : ticket.getChunkList())
+				{
+					ForgeChunkManager.forceChunk(ticket, chunkPos);
+				}
+				final MinecraftServer minecraftServer = world.getMinecraftServer();
+				if(minecraftServer!=null)
+					minecraftServer.addScheduledTask(() -> ForgeChunkManager.releaseTicket(ticket));
+			}
+		}
 	}
 }

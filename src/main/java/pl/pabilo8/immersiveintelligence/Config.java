@@ -744,14 +744,80 @@ public class Config
 
 				@SubConfig
 				public static Autocannon autocannon;
+				@SubConfig
+				public static InfraredObserver infraredObserver;
+				@SubConfig
+				public static CPDS cpds;
+				@SubConfig
+				public static HeavyChemthrower heavyChemthrower;
+				@SubConfig
+				public static HeavyRailgun heavyRailgun;
+
 
 				public static class Autocannon
 				{
-					@Comment({"Time required to reload all the magazines."})
-					public static int reloadTime = 340;
+					@Comment({"Yaw rotation speed (degrees/tick)"})
+					public static float yawRotateSpeed = 4;
 
-					@Comment({"Time required to fire a single bullet from all the cannons."})
-					public static int bulletFireTime = 10;
+					@Comment({"Pitch rotation speed (degrees/tick)"})
+					public static float pitchRotateSpeed = 4;
+
+					@Comment({"Time required to reload all the magazines."})
+					public static int reloadTime = 280;
+
+					@Comment({"Time required to fire a single bullet."})
+					public static int bulletFireTime = 3;
+				}
+
+				public static class InfraredObserver
+				{
+					@Comment({"Pitch rotation speed (degrees/tick)"})
+					public static float pitchRotateSpeed = 2;
+
+					@Comment({"Time needed for 90 degrees yaw rotation (in ticks)"})
+					public static int yawRotateTime = 120;
+
+					@Comment({"Time required for observer setup (lens attachment animation) (in ticks)."})
+					public static int setupTime = 300;
+				}
+
+				public static class CPDS
+				{
+					@Comment({"Yaw rotation speed (degrees/tick)"})
+					public static float yawRotateSpeed = 8;
+
+					@Comment({"Pitch rotation speed (degrees/tick)"})
+					public static float pitchRotateSpeed = 8;
+				}
+
+				public static class HeavyChemthrower
+				{
+					@Comment({"Time required for chemthrower setup (barrel extension animation) (in ticks)."})
+					public static int setupTime = 100;
+
+					@Comment({"Yaw rotation speed (degrees/tick)"})
+					public static float yawRotateSpeed = 2;
+
+					@Comment({"Pitch rotation speed (degrees/tick)"})
+					public static float pitchRotateSpeed = 1;
+				}
+
+				public static class HeavyRailgun
+				{
+					@Comment({"Time required to fire a single shot."})
+					public static int shotFireTime = 40;
+
+					@Comment({"Time required for loading a single projectile."})
+					public static int reloadConveyorTime = 20;
+
+					@Comment({"Time required for replacing the ammo box."})
+					public static int reloadAmmoBoxTime = 100;
+
+					@Comment({"Yaw rotation speed (degrees/tick)"})
+					public static float yawRotateSpeed = 1.75f;
+
+					@Comment({"Pitch rotation speed (degrees/tick)"})
+					public static float pitchRotateSpeed = 0.65f;
 				}
 			}
 
@@ -759,6 +825,9 @@ public class Config
 			{
 				@Comment({"Make standard railgun rods to be able to penetrate mobs (depending on metal)."})
 				public static boolean enablePenetration = true;
+
+				@Comment({"Whether the railgun has recoil (pushes the shooter to back, depending on projectile mass)."})
+				public static boolean railgunRecoil = true;
 			}
 
 			public static class Grenade

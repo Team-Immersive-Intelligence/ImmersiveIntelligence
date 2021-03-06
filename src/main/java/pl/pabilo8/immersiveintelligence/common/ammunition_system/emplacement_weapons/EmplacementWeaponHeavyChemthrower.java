@@ -10,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -52,6 +53,18 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	}
 
 	@Override
+	public float getYawTurnSpeed()
+	{
+		return HeavyChemthrower.yawRotateSpeed;
+	}
+
+	@Override
+	public float getPitchTurnSpeed()
+	{
+		return HeavyChemthrower.pitchRotateSpeed;
+	}
+
+	@Override
 	public void aimAt(float yaw, float pitch)
 	{
 		super.aimAt(yaw,pitch);
@@ -59,7 +72,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 
 	public boolean isSetUp(boolean door)
 	{
-		return setupDelay==(door?300: 0);
+		return setupDelay==(door?HeavyChemthrower.setupTime: 0);
 	}
 
 	@Override
@@ -67,7 +80,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	{
 		if(door)
 		{
-			if(setupDelay < 300)
+			if(setupDelay < HeavyChemthrower.setupTime)
 				setupDelay += 1;
 		}
 		else
@@ -120,9 +133,9 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		float p, pp, y, yy;
 		p = this.nextPitch-this.pitch;
 		y = this.nextYaw-this.yaw;
-		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*pitchTurnSpeed;
-		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*yawTurnSpeed;
-		float setupProgress = (MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, 300)/(float)300);
+		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
+		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
+		float setupProgress = (MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, HeavyChemthrower.setupTime)/(float)HeavyChemthrower.setupTime);
 
 		GlStateManager.enableBlend();
 

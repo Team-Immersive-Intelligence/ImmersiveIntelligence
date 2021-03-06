@@ -12,9 +12,6 @@
     "type": {
       "redstone_data_interface": {
         "model": "immersiveintelligence:smartmodel/conn_empty"
-      },
-      "emplacement": {
-        "model": "immersiveengineering:ie_empty"
       }
     },
     "facing": {

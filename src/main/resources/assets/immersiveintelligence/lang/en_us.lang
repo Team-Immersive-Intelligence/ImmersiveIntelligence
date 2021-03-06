@@ -500,6 +500,9 @@ desc.immersiveengineering.info.multiblock.II:AmmunitionAssembly=Ammunition Assem
 desc.immersiveengineering.info.multiblock.II:AmmunitionWorkshop=Ammunition Workshop
 desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Chemical Painter
 
+desc.immersiveengineering.info.multiblock.II:Emplacement=Emplacement
+desc.immersiveengineering.info.multiblock.II:Flagpole=Flagpole
+
 #Fluids
 fluid.ink=Ink
 fluid.ink_cyan=Cyan Ink

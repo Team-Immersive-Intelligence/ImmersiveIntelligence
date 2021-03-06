@@ -39,7 +39,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	static ItemStack s2;
 	static
 	{
-		s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "piercing", "tnt");
+		s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "shaped", "hmx","tracer_powder");
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setInteger("colour", 0xff0000);
 		((NBTTagList)ItemNBTHelper.getTag(s2).getTag("component_nbt")).set(1, new NBTTagCompound());
@@ -86,18 +86,30 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	}
 
 	@Override
+	public float getYawTurnSpeed()
+	{
+		return Autocannon.yawRotateSpeed;
+	}
+
+	@Override
+	public float getPitchTurnSpeed()
+	{
+		return Autocannon.pitchRotateSpeed;
+	}
+
+	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-
 		float force = 6f;
 		float mass = 0.5f;
 
 		vv = posTurret.subtract(posTarget);
 		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
-		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(2f).addVector(0, 0, 0f);
+		float motionTime = (float)Math.abs(vv.lengthSquared())/force/0.8f;
+		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(1f).addVector(0, 0, 0f);
 		vv = vv.add(motionVec).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = Utils.calculateBallisticAngle(motionXZ,posTurret.y-(posTarget.y+motion.y),force,0.03F*mass,0.9f);
+		float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
 		pp = MathHelper.clamp(pp, -90, 75);
 		return new float[]{yy,pp};
 	}
@@ -126,11 +138,11 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		if(!te.getWorld().isRemote)
 		{
 			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getPos().up(2)).addVector(-0.5,0,0.5), vv.scale(-1f), 6f);
+			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getBlockPosForPos(49).up()).addVector(0.5,0,0.5), vv.scale(-1f), 6f);
 			a.setShootPos(te.getAllBlocks());
 			te.getWorld().spawnEntity(a);
 		}
-		shootDelay=3;
+		shootDelay=Autocannon.bulletFireTime;
 		bulletsShot++;
 	}
 
@@ -192,7 +204,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		if(te.progress < Emplacement.lidTime)
 			cannonAnim = 0;
 		else
-			cannonAnim = Math.abs((((te.getWorld().getTotalWorldTime()+partialTicks)%Autocannon.bulletFireTime)/(double)Autocannon.bulletFireTime)-0.5)/0.5;
+			cannonAnim = Math.abs((((te.getWorld().getTotalWorldTime()+partialTicks)%(Autocannon.bulletFireTime*4))/(double)(Autocannon.bulletFireTime*4))-0.5)/0.5;
 
 		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks;
 		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks;

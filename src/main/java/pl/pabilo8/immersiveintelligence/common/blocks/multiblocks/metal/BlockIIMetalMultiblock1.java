@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal;
 
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
+import blusunrize.immersiveengineering.common.blocks.BlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -11,6 +12,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -21,6 +24,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFlagpole;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock1;
 
@@ -41,7 +45,8 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
 
-		//tesrMap.put(IIBlockTypes_MetalMultiblock1.REDSTONE_DATA_INTERFACE.getMeta(), IIBlockTypes_MetalMultiblock1.REDSTONE_DATA_INTERFACE.getName());
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.EMPLACEMENT);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.FLAGPOLE);
 
 	}
 
@@ -59,6 +64,19 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 		return null;
 	}
 
+	@Deprecated
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		switch(IIBlockTypes_MetalMultiblock1.values()[getMetaFromState(state)])
+		{
+			case EMPLACEMENT:
+			case FLAGPOLE:
+				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+			default:
+				return EnumBlockRenderType.MODEL;
+		}
+	}
+
 	@Override
 	public TileEntity createBasicTE(World world, IIBlockTypes_MetalMultiblock1 type)
 	{
@@ -71,6 +89,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			case EMPLACEMENT:
 			{
 				return new TileEntityEmplacement();
+			}
+			case FLAGPOLE:
+			{
+				return new TileEntityFlagpole();
 			}
 		}
 		return null;

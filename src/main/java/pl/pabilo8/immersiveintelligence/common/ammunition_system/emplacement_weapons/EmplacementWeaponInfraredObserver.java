@@ -10,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -52,18 +53,30 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	}
 
 	@Override
+	public float getYawTurnSpeed()
+	{
+		return InfraredObserver.yawRotateTime;
+	}
+
+	@Override
+	public float getPitchTurnSpeed()
+	{
+		return InfraredObserver.pitchRotateSpeed;
+	}
+
+	@Override
 	public void aimAt(float yaw, float pitch)
 	{
 		//Only pitch, no yaw rotation
 		nextPitch = pitch;
 		float p = pitch-this.pitch;
-		this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.pitchTurnSpeed);
+		this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.getPitchTurnSpeed());
 		this.pitch = this.pitch%180;
 	}
 
 	public boolean isSetUp(boolean door)
 	{
-		return setupDelay==(door?300: 0);
+		return setupDelay==(door?InfraredObserver.setupTime: 0);
 	}
 
 	@Override
@@ -71,7 +84,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	{
 		if(door)
 		{
-			if(setupDelay < 300)
+			if(setupDelay < InfraredObserver.setupTime)
 				setupDelay += 1;
 		}
 		else
@@ -126,9 +139,9 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		float p, pp, y, yy;
 		p = this.nextPitch-this.pitch;
 		y = this.nextYaw-this.yaw;
-		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*pitchTurnSpeed;
-		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*yawTurnSpeed;
-		float setupProgress = (MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, 300)/(float)300);
+		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
+		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
+		float setupProgress = (MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, InfraredObserver.setupTime)/(float)InfraredObserver.setupTime);
 
 		//setupProgress = ((te.getWorld().getTotalWorldTime()+partialTicks)%100)/100f;
 

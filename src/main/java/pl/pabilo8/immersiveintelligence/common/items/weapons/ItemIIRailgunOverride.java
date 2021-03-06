@@ -12,12 +12,14 @@ import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Railgun;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRailgunGrenade;
@@ -76,6 +78,7 @@ public class ItemIIRailgunOverride extends ItemRailgun
 				{
 					Vec3d vec = user.getLookVec();
 					float speed = 20;
+					float mass = 0.25f;
 
 					world.playSound(null, user.posX, user.posY, user.posZ, IESounds.railgunFire, SoundCategory.PLAYERS, 1, .5f+(.5f*user.getRNG().nextFloat()));
 					this.extractEnergy(stack, energy, false);
@@ -87,6 +90,7 @@ public class ItemIIRailgunOverride extends ItemRailgun
 							Vec3d vv = user.getPositionVector().addVector(0, (double)user.getEyeHeight()-0.10000000149011612D, 0);
 							EntityBullet a = BulletHelper.createBullet(world, Utils.copyStackWithAmount(ammo, 1), vv, vec, speed/4f);
 							a.setShooters(user);
+							mass = a.mass;
 							world.spawnEntity(a);
 						}
 						else
@@ -99,6 +103,9 @@ public class ItemIIRailgunOverride extends ItemRailgun
 					ammo.shrink(1);
 					if(ammo.getCount() <= 0)
 						((EntityPlayer)user).inventory.deleteStack(ammo);
+
+					if(Railgun.railgunRecoil)
+						user.move(MoverType.PISTON, -vec.x*mass*0.25f, 0, -vec.z*mass*0.25f);
 
 					Triple<ItemStack, ShaderRegistryEntry, ShaderCase> shader = ShaderRegistry.getStoredShaderAndCase(stack);
 					if(shader!=null)

@@ -87,9 +87,22 @@ public class ModelIIBase extends ModelBase
 			{
 				m.rotateAngleY *= -1;
 			}
-
 		}
+	}
 
+	public void flipAllX()
+	{
+		if(parts.isEmpty())
+			parts.put("base", baseModel);
+		for(ModelRendererTurbo[] mod : parts.values())
+		{
+			flipX(mod);
+			for(ModelRendererTurbo m : mod)
+			{
+				m.rotateAngleY *= -1;
+				m.rotateAngleZ *= -1;
+			}
+		}
 	}
 
 	public void flip(ModelRendererTurbo[] model)
@@ -111,6 +124,19 @@ public class ModelIIBase extends ModelBase
 				part.setRotationPoint(part.rotationPointX, part.rotationPointY, -part.rotationPointZ);
 			else
 				part.setRotationPoint(part.rotationPointX, -part.rotationPointY, part.rotationPointZ);
+
+		}
+	}
+
+	public void flipX(ModelRendererTurbo[] model)
+	{
+		for(ModelRendererTurbo part : model)
+		{
+			part.doMirror(true, false, false);
+			if(!part.flip)
+				part.setRotationPoint(-part.rotationPointX, part.rotationPointY, part.rotationPointZ);
+			else
+				part.setRotationPoint(-part.rotationPointX, -part.rotationPointY, part.rotationPointZ);
 
 		}
 	}

@@ -160,7 +160,7 @@ public class IICreativeTab extends CreativeTabs
 		for(int color : colors)
 		{
 
-			ItemStack stack = type.getBulletWithParams("core_brass", "softpoint", "flare_powder").setStackDisplayName(getGermanColorName(color)+"markierungspatrone");
+			ItemStack stack = type.getBulletWithParams("core_brass", "softpoint", "tracer_powder").setStackDisplayName(getGermanColorName(color)+"markierungspatrone");
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("colour", color);
 			type.setComponentNBT(stack, tag);
