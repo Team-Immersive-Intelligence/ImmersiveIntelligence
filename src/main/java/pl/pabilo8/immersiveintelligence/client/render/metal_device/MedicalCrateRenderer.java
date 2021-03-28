@@ -3,10 +3,12 @@ package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCrateInserterUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelMediCrate;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.ModelPrecissionSyringe;
@@ -97,5 +99,37 @@ public class MedicalCrateRenderer extends TileEntitySpecialRenderer<TileEntityMe
 		model = new ModelMediCrate();
 		modelUpgrade = new ModelCrateInserterUpgrade();
 		modelInserter = new ModelPrecissionSyringe();
+	}
+
+	public static void renderWithUpgrade(MachineUpgrade... upgrades)
+	{
+		ClientUtils.bindTexture(texture);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-0.5, 0, 0.5);
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+		//model.getBlockRotation(EnumFacing.NORTH, false);
+		for(ModelRendererTurbo mod : model.baseModel)
+			mod.render(0.0625f);
+		GlStateManager.translate(0.0625f, 0.5625f, -0.5f);
+		for(ModelRendererTurbo mod : model.lidModel)
+			mod.render(0.0625f);
+
+		for(MachineUpgrade upgrade : upgrades)
+		{
+			if(upgrade==IIContent.UPGRADE_INSERTER)
+			{
+				GlStateManager.pushMatrix();
+				ClientUtils.bindTexture(ModelCrateInserterUpgrade.texture);
+				GlStateManager.translate(-0.0625f, -0.5625f, 0.5f);
+				for(ModelRendererTurbo mod : modelUpgrade.baseModel)
+					mod.render(0.0625f);
+				GlStateManager.translate(0, 0.75f+0.125f, 0);
+				modelInserter.renderProgress(0.5f, 0.5f, 1);
+				GlStateManager.popMatrix();
+			}
+		}
+
+		GlStateManager.popMatrix();
 	}
 }

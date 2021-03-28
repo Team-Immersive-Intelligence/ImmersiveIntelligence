@@ -34,7 +34,6 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
@@ -61,6 +60,8 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public boolean open = false;
 	public float lidAngle = 0;
 	private ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
+	MachineUpgrade currentlyInstalled = null;
+	int upgradeProgress = 0;
 	public int energyStorage = 0;
 
 	//Client only
@@ -246,7 +247,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		{
 			//get all in range
 			//effect
-			List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).grow(getRange()));
+			List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).offset(0.5,0.5,0.5).grow(getRange()));
 			entitiesWithinAABB.removeIf(entity -> !checkEntity(entity));
 			if(entitiesWithinAABB.size() > 0)
 			{
@@ -314,11 +315,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(heldItem.getItem().getToolClasses(heldItem).contains(CommonProxy.TOOL_WRENCH))
-		{
-			return addUpgrade(IIContent.UPGRADE_INSERTER, false);
-		}
-		else if(player.isSneaking())
+		if(player.isSneaking())
 		{
 			open = !open;
 			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
@@ -349,6 +346,12 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	}
 
 	@Override
+	public boolean upgradeMatches(MachineUpgrade upgrade)
+	{
+		return upgrade==IIContent.UPGRADE_INSERTER;
+	}
+
+	@Override
 	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
 	{
 		return (T)this;
@@ -358,7 +361,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public void saveUpgradesToNBT(NBTTagCompound tag)
 	{
 		for(MachineUpgrade upgrade : upgrades)
-			tag.setBoolean(upgrade.getName().toString(), true);
+			tag.setBoolean(upgrade.getName(), true);
 	}
 
 	@Override
@@ -366,6 +369,50 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	{
 		upgrades.clear();
 		upgrades.addAll(MachineUpgrade.getUpgradesFromNBT(tag));
+	}
+
+	public ArrayList<MachineUpgrade> getUpgrades()
+	{
+		return upgrades;
+	}
+
+	@Nullable
+	@Override
+	public MachineUpgrade getCurrentlyInstalled()
+	{
+		return currentlyInstalled;
+	}
+
+	@Override
+	public int getInstallProgress()
+	{
+		return upgradeProgress;
+	}
+
+	@Override
+	public boolean addUpgradeInstallProgress(int toAdd)
+	{
+		upgradeProgress+=toAdd;
+		return true;
+	}
+
+	@Override
+	public boolean resetInstallProgress()
+	{
+		currentlyInstalled=null;
+		if(upgradeProgress>0)
+		{
+			upgradeProgress=0;
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
+	{
+		currentlyInstalled=upgrade;
+		upgradeProgress=0;
 	}
 
 	@Override

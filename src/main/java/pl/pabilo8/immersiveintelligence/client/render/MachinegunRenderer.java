@@ -1,11 +1,3 @@
-/*
- * BluSunrize
- * Copyright (c) 2017
- *
- * This code is licensed under "Blu's License of Common Sense"
- * Details can be found in the license file in the root folder of this project
- */
-
 package pl.pabilo8.immersiveintelligence.client.render;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
@@ -15,6 +7,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -60,6 +53,8 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 		GlStateManager.pushMatrix();
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
 		boolean drawText = false;
+		String specialText;
+		int textColor=0xffffff;
 
 		String skin = IIContent.itemMachinegun.getSkinnableCurrentSkin(stack);
 		if(!skin.isEmpty())
@@ -67,6 +62,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 			SpecialSkin s = CustomSkinHandler.specialSkins.get(skin);
 			if(s!=null)
 			{
+				textColor=s.textColor;
 				if(s.mods.contains("skin_mg_text"))
 					drawText = true;
 				skinParts.forEach(tmtNamedBoxGroup -> {
@@ -76,6 +72,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 			}
 
 		}
+		specialText=I18n.format("skin.immersiveintelligence."+skin+".name");
 		skin = (skin.isEmpty()?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
 
 
@@ -139,8 +136,10 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 				GlStateManager.translate(-0.93, -0.7, 0.44);
 				GlStateManager.rotate(-45, 1, 0, 0);
 				GlStateManager.scale(1/96f, 1/96f, 1/96f);
+				GlStateManager.disableLighting();
 
-				ClientUtils.font().drawString("Eisenheim", 0, 1, 0xce953c);
+				ClientUtils.font().drawString(specialText, 0, 1, MathHelper.multiplyColor(textColor, 0xffffff*(int)entity.world.getLightBrightness(entity.getPosition())));
+				GlStateManager.enableLighting();
 				GlStateManager.color(1, 1, 1);
 				GlStateManager.popMatrix();
 			}

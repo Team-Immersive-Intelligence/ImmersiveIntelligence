@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
@@ -136,6 +137,10 @@ public enum IIGuiList
 
 	GUI_SAWMILL(TileEntitySawmill.class,
 			(player, te) -> new ContainerSawmill(player.inventory, (TileEntitySawmill)te)
+	),
+
+	GUI_UPGRADE(TileEntity.class,
+			(player, te) -> new ContainerUpgrade(player.inventory, (TileEntity&IUpgradableMachine)te)
 	);
 
 	//GUI_PERISCOPE,

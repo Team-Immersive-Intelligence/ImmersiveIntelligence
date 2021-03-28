@@ -10,6 +10,10 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
@@ -100,5 +104,12 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderWithUpgrades(MachineUpgrade... upgrades)
+	{
+		MedicalCrateRenderer.renderWithUpgrade(upgrades);
 	}
 }

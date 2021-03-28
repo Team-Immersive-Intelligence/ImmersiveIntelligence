@@ -1,22 +1,24 @@
 package pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.CPDS;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 public class EmplacementWeaponCPDS extends EmplacementWeapon
 {
@@ -36,23 +38,16 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	 * Q: Isn't it OP? it's 8 barrels
 	 * A: It can't shoot at ground targets, only air, so yes, but it isn't invincible
 	 */
+	float shootDelay = 0;
+	int reloadDelay = 0;
+	int bulletsShot = 0;
+	private Vec3d vv;
+	static ItemStack s2=ItemStack.EMPTY;
 
 	@Override
 	public String getName()
 	{
 		return "cpds";
-	}
-
-	@Override
-	public IngredientStack[] getIngredientsRequired()
-	{
-		return new IngredientStack[]{
-				new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 15)),
-				new IngredientStack("blockSteel", 1),
-				new IngredientStack("plateSteel", 4),
-				new IngredientStack(new ItemStack(IIContent.blockMetalDevice, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())),
-				new IngredientStack("engineElectricSmall", 2)
-		};
 	}
 
 	@Override
@@ -68,13 +63,26 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	}
 
 	@Override
-	public void aimAt(float yaw, float pitch)
+	public void shoot(TileEntityEmplacement te)
 	{
-		//Only pitch, no yaw rotation
-		nextPitch = pitch;
-		float p = pitch-this.pitch;
-		this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.getPitchTurnSpeed());
-		this.pitch = this.pitch%180;
+		super.shoot(te);
+		if(!te.getWorld().isRemote)
+		{
+			if(s2.isEmpty())
+			{
+				s2 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_tungsten", "piercing","tracer_powder");
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setInteger("colour", 0xff0000);
+				IIContent.itemAmmoMachinegun.setComponentNBT(s2, new NBTTagCompound(), tag);
+			}
+
+			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
+			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5), vv.scale(-1f), 6f);
+			a.setShootPos(te.getAllBlocks());
+			te.getWorld().spawnEntity(a);
+		}
+		shootDelay = Autocannon.bulletFireTime;
+		//bulletsShot++;
 	}
 
 	public boolean isSetUp(boolean door)
@@ -83,9 +91,39 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	}
 
 	@Override
+	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
+	{
+		float force = 6f;
+		float mass = IIContent.itemAmmoMachinegun.getMass(s2);
+
+		vv = posTurret.subtract(posTarget);
+		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
+		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z);
+		float motionTime = (float)Math.abs(motionVec.lengthSquared())/force/0.98f;
+		motionVec = motionVec.scale(motionTime);
+		vv = vv.add(motionVec).subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
+		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
+		float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
+		//float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
+		pp = MathHelper.clamp(pp, -90, 75);
+		return new float[]{yy, pp};
+	}
+
+	@Override
 	public void tick()
 	{
+		if(bulletsShot >= 64)
+		{
+			reloadDelay++;
+			if(reloadDelay >= Autocannon.reloadTime)
+			{
+				bulletsShot = 0;
+				reloadDelay = 0;
+			}
+		}
 
+		if(shootDelay > 0)
+			shootDelay--;
 	}
 
 	@Override
@@ -122,16 +160,29 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
 		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
 
+		float f = ((te.getWorld().getTotalWorldTime()+partialTicks)%4)/4f;
+
+		//pp=((te.getWorld().getTotalWorldTime()+partialTicks)%40)/40f*90;
+
 		//setupProgress = ((te.getWorld().getTotalWorldTime()+partialTicks)%100)/100f;
 		ClientUtils.bindTexture(EmplacementRenderer.textureCPDS);
 
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.baseModel)
+		GlStateManager.rotate(yy, 0, 1, 0);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.baseModel)
+			mod.render();
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.internalsModel)
 			mod.render();
 
-		GlStateManager.translate(0, 24/16f, 3/16f);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.observeModel)
+			mod.render();
+
+		GlStateManager.translate(0, 19.5/16f, 7.5F/16f);
 		GlStateManager.rotate(pp, 1, 0, 0);
-		GlStateManager.rotate(yy, 0, 1, 0);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.observerModel)
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.gunModel)
+			mod.render();
+		GlStateManager.translate(0, -0.5f/16f, -0.5f/16f);
+		GlStateManager.rotate(f*180f, 0, 0, 1);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.barrelsModel)
 			mod.render();
 
 		GlStateManager.popMatrix();

@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -24,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 public class EntityNavalMine extends EntityBullet
 {
 	public int maxLength = 5;
+	boolean isNotRiding = false;
 	private static final DataParameter<Integer> dataMarkerMaxLength = EntityDataManager.createKey(EntityNavalMine.class, DataSerializers.VARINT);
 
 	public EntityNavalMine(World worldIn)
@@ -67,6 +69,18 @@ public class EntityNavalMine extends EntityBullet
 	public void onUpdate()
 	{
 		onUpdateSuper();
+
+		if(inWater)
+		{
+			//trick
+			isNotRiding = true;
+			if(getRidingEntity() instanceof EntityNavalMineAnchor)
+				getRidingEntity().noClip = true;
+			move(MoverType.SELF, 0, 0.0125f, 0);
+			if(getRidingEntity() instanceof EntityNavalMineAnchor)
+				getRidingEntity().noClip = false;
+			isNotRiding = false;
+		}
 
 		if(!world.isRemote)
 			world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().grow(0.35f), input -> !(input instanceof EntityNavalMineAnchor||input instanceof EntityNavalMine)).forEach(this::applyEntityCollision);
@@ -152,10 +166,18 @@ public class EntityNavalMine extends EntityBullet
 	{
 		if(isRiding())
 		{
-			double diff = Math.min(maxLength,Math.abs(getRidingEntity().posY-this.posY));
+			double diff = Math.min(maxLength, Math.abs(getRidingEntity().posY-this.posY));
 			return this.getCollisionBoundingBox().expand(0, diff, 0);
 		}
 		else
 			return super.getRenderBoundingBox();
+	}
+
+	@Override
+	public boolean isRiding()
+	{
+		if(isNotRiding)
+			return false;
+		return super.isRiding();
 	}
 }

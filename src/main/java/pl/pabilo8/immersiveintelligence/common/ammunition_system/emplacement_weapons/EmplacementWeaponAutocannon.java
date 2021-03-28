@@ -1,13 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
@@ -16,7 +12,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
-import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
@@ -24,7 +19,6 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 public class EmplacementWeaponAutocannon extends EmplacementWeapon
@@ -34,16 +28,8 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	int reloadDelay = 0;
 	int bulletsShot = 0;
 	NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
+	static ItemStack s2=ItemStack.EMPTY;
 
-	// TODO: 28.02.2021 REMOVE
-	static ItemStack s2;
-	static
-	{
-		s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "shaped", "hmx","tracer_powder");
-		NBTTagCompound compound = new NBTTagCompound();
-		compound.setInteger("colour", 0xff0000);
-		((NBTTagList)ItemNBTHelper.getTag(s2).getTag("component_nbt")).set(1, new NBTTagCompound());
-	}
 
 	@SideOnly(Side.CLIENT)
 	private static final Runnable INSERTER_ANIM_NONE = () -> {
@@ -74,18 +60,6 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	}
 
 	@Override
-	public IngredientStack[] getIngredientsRequired()
-	{
-		return new IngredientStack[]{
-				new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 15)),
-				new IngredientStack("blockSteel", 1),
-				new IngredientStack("plateSteel", 4),
-				new IngredientStack(new ItemStack(IIContent.blockMetalDevice, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())),
-				new IngredientStack("engineElectricSmall", 2)
-		};
-	}
-
-	@Override
 	public float getYawTurnSpeed()
 	{
 		return Autocannon.yawRotateSpeed;
@@ -101,17 +75,18 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
 		float force = 6f;
-		float mass = 0.5f;
+		float mass = IIContent.itemAmmoAutocannon.getMass(s2);
 
 		vv = posTurret.subtract(posTarget);
 		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
 		float motionTime = (float)Math.abs(vv.lengthSquared())/force/0.8f;
-		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(1f).addVector(0, 0, 0f);
-		vv = vv.add(motionVec).normalize();
+		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(1f).addVector(0, 0f, 0f);
+		vv = vv.subtract(motionVec).subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
+		float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
+		//float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
 		pp = MathHelper.clamp(pp, -90, 75);
-		return new float[]{yy,pp};
+		return new float[]{yy, pp};
 	}
 
 	@Override
@@ -120,10 +95,10 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		if(bulletsShot>=64)
 		{
 			reloadDelay++;
-			if(reloadDelay>=Autocannon.reloadTime)
+			if(reloadDelay >= 2)
 			{
-				bulletsShot=0;
-				reloadDelay=0;
+				bulletsShot = 0;
+				reloadDelay = 0;
 			}
 		}
 
@@ -137,12 +112,20 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		super.shoot(te);
 		if(!te.getWorld().isRemote)
 		{
+			if(s2.isEmpty())
+			{
+				s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "shaped", "hmx", "tracer_powder");
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setInteger("colour", 0xff0000);
+				IIContent.itemAmmoAutocannon.setComponentNBT(s2, new NBTTagCompound(), tag);
+			}
+
 			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getBlockPosForPos(49).up()).addVector(0.5,0,0.5), vv.scale(-1f), 6f);
+			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5), vv.scale(-1f), 6f);
 			a.setShootPos(te.getAllBlocks());
 			te.getWorld().spawnEntity(a);
 		}
-		shootDelay=Autocannon.bulletFireTime;
+		shootDelay = Autocannon.bulletFireTime;
 		bulletsShot++;
 	}
 

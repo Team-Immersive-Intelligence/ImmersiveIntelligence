@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
+import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 
@@ -79,6 +80,7 @@ public class ImmersiveIntelligence
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide()==Side.SERVER)
 		{
+			RadioNetwork.INSTANCE.clearDevices();
 			World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
 			if(!world.isRemote)
 			{

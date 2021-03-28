@@ -39,7 +39,6 @@ import pl.pabilo8.immersiveintelligence.api.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
-import pl.pabilo8.immersiveintelligence.api.utils.IWrenchGui;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
@@ -58,7 +57,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.STRUCTUR
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<TileEntitySkyCrateStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IWrenchGui, IRotationalEnergyBlock
+public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<TileEntitySkyCrateStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISkyCrateConnector, IPlayerInteraction, IGuiTile, IRotationalEnergyBlock
 {
 	//none, crate, crate in, crate out, crate load, crate unload
 	public int animation = 0;

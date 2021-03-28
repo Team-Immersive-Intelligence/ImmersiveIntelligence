@@ -58,13 +58,13 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	@Override
 	public float getInitialMass()
 	{
-		return 0.125f;
+		return 0.25f;
 	}
 
 	@Override
 	public float getCaliber()
 	{
-		return 5f/16f;
+		return 10f/16f;
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -381,12 +382,46 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 
-		if(pos==0)
+		if(pos==0||pos==1)
 		{
-			list.add(new AxisAlignedBB(1d/16d, 0, 1d/16d, 4d/16d, 13d/16d, 4d/16d).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			list.add(new AxisAlignedBB(0, 0.8125, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+
+			switch(mirrored^pos==1?facing.getOpposite():facing)
+			{
+				case NORTH:
+					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.0625+0.1875, 0.8125, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					list.add(new AxisAlignedBB(0.75, 0, 0.0625, 0.9375, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.75, 0, 0.75, 0.9375, 0.8125, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.75, 0, 0.0625, 1-0.0625, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					list.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.0625+0.1875, 0.8125, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.75, 0, 0.75, 1-0.0625, 0.8125, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
 		}
+		else if(pos==4)
+			list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 1-0.0625, 0.25, 1-0.0625)
+					//.shrink()
+					.offset(new Vec3d((mirrored?facing.rotateY(): facing.rotateYCCW()).getDirectionVec()).scale(0.0625f))
+					.expand(facing.getFrontOffsetX()*0.0625,0,facing.getFrontOffsetZ()*0.0625)
+					.contract(facing.rotateYCCW().getFrontOffsetX()*0.0625,0,facing.rotateYCCW().getFrontOffsetZ()*0.0625)
+					.contract(facing.rotateY().getFrontOffsetX()*0.0625,0,facing.rotateY().getFrontOffsetZ()*0.0625)
+					//.offset(new Vec3d(facing.getDirectionVec()).scale(0.0625f))
+					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		else if(pos==5)
+			list.add(new AxisAlignedBB(0.25, 0, 0.25, 1-0.25, 0.25, 1-0.25)
+					.offset(new Vec3d((mirrored?facing.rotateYCCW(): facing.rotateY()).getDirectionVec()).scale(0.125f))
+					.expand(facing.getFrontOffsetX()*-0.125,0,facing.getFrontOffsetZ()*-0.125)
+					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 		else
 			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 

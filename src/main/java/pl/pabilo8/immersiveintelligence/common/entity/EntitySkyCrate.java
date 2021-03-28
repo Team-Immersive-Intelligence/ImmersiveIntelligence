@@ -166,7 +166,8 @@ public class EntitySkyCrate extends Entity implements ITeslaEntity
 		compound.setTag("mount", mount.serializeNBT());
 		compound.setDouble("linePos", linePos);
 		compound.setDouble("energy", energy);
-		compound.setTag("connection", connection.writeToNBT());
+		if(connection!=null)
+			compound.setTag("connection", connection.writeToNBT());
 	}
 
 	public void setSkycrate(ItemStack mount, ItemStack crate)

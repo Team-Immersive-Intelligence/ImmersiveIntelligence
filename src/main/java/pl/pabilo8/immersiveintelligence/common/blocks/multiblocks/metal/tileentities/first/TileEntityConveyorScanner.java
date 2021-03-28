@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -306,10 +307,64 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		ArrayList<AxisAlignedBB> list = new ArrayList<>();
+		if(pos==2)
+		{
+			list.add(new AxisAlignedBB(0.1875, -0.125, 0.1875, 0.8125, 0.375, 0.8125)
+					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			if(facing.getAxis()==Axis.Z)
+			{
+				list.add(new AxisAlignedBB(0, 0.375, 0.1875, 1, 1, 0.8125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0, -0.0625, 0.5-0.125, 0.125, 0.375, 0.5+0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(1f-0.125, -0.0625, 0.5-0.125, 1, 0.375, 0.5+0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else
+			{
+				list.add(new AxisAlignedBB(0.1875, 0.375, 0, 0.8125, 1, 1)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
+				list.add(new AxisAlignedBB(0.5-0.125, -0.0625, 0, 0.5+0.125, 0.375, 0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0.5-0.125, -0.0625, 1f-0.125, 0.5+0.125, 0.375, 1)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+		}
+		else if(pos==1)
+		{
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 0.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+
+			if(facing.getAxis()==Axis.Z)
+			{
+				list.add(new AxisAlignedBB(0, 0.125, 0, 0.0625, 0.25, 1)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(1f-0.0625, 0.125, 0, 1, 0.25, 1)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+
+				list.add(new AxisAlignedBB(0, 0.25, 0.5-0.125, 0.0625, 1, 0.5+0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(1f-0.0625, 0.25, 0.5-0.125, 1, 1, 0.5+0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else
+			{
+				list.add(new AxisAlignedBB(0, 0.125, 0, 1, 0.25, 0.0625)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0, 0.125, 1f-0.0625, 1, 0.25, 1)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+
+				list.add(new AxisAlignedBB(0.5-0.125, 0.25, 0, 0.5+0.125, 1, 0.0625)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0.5-0.125, 0.25, 1f-0.0625, 0.5+0.125, 1, 1)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+		}
+		else
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1)
+					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 		return list;
 	}
 

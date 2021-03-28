@@ -56,7 +56,7 @@ public class IIExplosion extends Explosion
 
 		for(Entity entity : list)
 		{
-			if(!entity.isImmuneToExplosions())
+			if(!entity.isDead&&!entity.isImmuneToExplosions())
 			{
 				double d12 = entity.getDistance(this.x, this.y, this.z)/(double)f3;
 

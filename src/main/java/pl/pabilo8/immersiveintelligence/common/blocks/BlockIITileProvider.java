@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.shader.CapabilityShader;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
+import blusunrize.immersiveengineering.common.blocks.BlockIEBase.IBlockEnum;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
@@ -50,7 +51,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
-import pl.pabilo8.immersiveintelligence.api.utils.IWrenchGui;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -63,7 +65,7 @@ import java.util.Map;
  * @author Pabilo8
  * @since 2019-05-17
  */
-public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlockEnum> extends BlockIIBase<E> implements IColouredBlock
+public abstract class BlockIITileProvider<E extends Enum<E> & IBlockEnum> extends BlockIIBase<E> implements IColouredBlock
 {
 	private boolean hasColours = false;
 
@@ -453,27 +455,21 @@ public abstract class BlockIITileProvider<E extends Enum<E> & BlockIIBase.IBlock
 			if(b)
 				return b;
 		}
+		if(tile instanceof IUpgradableMachine&&pl.pabilo8.immersiveintelligence.api.Utils.isWrench(heldItem))
+		{
+			IUpgradableMachine u = ((IUpgradableMachine)tile);
+			if(u.getInstallProgress()==0)
+			{
+				pl.pabilo8.immersiveintelligence.common.CommonProxy.openUpgradeGuiForTile(player, (TileEntity & IUpgradableMachine)tile);
+				return true;
+			}
+		}
 		if(tile instanceof IGuiTile&&hand==EnumHand.MAIN_HAND&&!player.isSneaking())
 		{
 			TileEntity master = ((IGuiTile)tile).getGuiMaster();
 			if(!world.isRemote&&master!=null&&((IGuiTile)master).canOpenGui(player))
 			{
-				if(tile instanceof IWrenchGui&&!player.isCreative())
-				{
-					if(pl.pabilo8.immersiveintelligence.api.Utils.isWrench(heldItem))
-					{
-						IWrench wrench = (IWrench)heldItem.getItem();
-						if(wrench.canBeUsed(heldItem))
-						{
-							wrench.damageWrench(heldItem, player);
-							pl.pabilo8.immersiveintelligence.common.CommonProxy.openGuiForTile(player, (TileEntity & IGuiTile)master);
-							return true;
-						}
-					}
-					return false;
-				}
-				else
-					pl.pabilo8.immersiveintelligence.common.CommonProxy.openGuiForTile(player, (TileEntity & IGuiTile)master);
+				pl.pabilo8.immersiveintelligence.common.CommonProxy.openGuiForTile(player, (TileEntity & IGuiTile)master);
 			}
 			return true;
 		}

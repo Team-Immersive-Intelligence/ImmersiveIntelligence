@@ -148,7 +148,10 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 				}
 			}
 
-			modelCurrent.rotate(modelCurrent.rollerModel, 0, 1.57079633F, TmtUtil.AngleToTMT(te.rollerRotation+(te.active?partialTicks: 0f)));
+			for(ModelRendererTurbo mod : modelCurrent.rollerModel)
+			{
+				mod.rotateAngleZ = TmtUtil.AngleToTMT(te.rollerRotation+(te.active?partialTicks: 0f));
+			}
 
 			modelCurrent.parts.values().forEach(modelRendererTurbos ->
 			{

@@ -105,9 +105,9 @@ public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpo
 			ClientUtils.drawTexturedRect(0f,length/21f,1f,-length/21f, 0.015625f,21/64f,0.015625f+((i+1)*length/64f),(length*i)/64f);
 			GlStateManager.pushMatrix();
 			GlStateManager.rotate(90,0,1,0);
-			ClientUtils.drawTexturedRect(0f,0f,0.0625f,length/21f, 0.328125f, 0.328125f,0.015625f+(i*length/64f),(length*(i+1))/64f);
+			ClientUtils.drawTexturedRect(0f,0f,0.0625f,length/21f, 0.015625f, 0.015625f,0.015625f+(i*length/64f),(length*(i+1))/64f);
 			GlStateManager.translate(0f,0f,1f);
-			ClientUtils.drawTexturedRect(0f,length/21f,0.0625f,-length/21f, 0.015625f, 0.015625f,0.015625f+((i+1)*length/64f),(length*i)/64f);
+			ClientUtils.drawTexturedRect(0f,length/21f,0.0625f,-length/21f, 0.328125f, 0.328125f,0.015625f+((i+1)*length/64f),(length*i)/64f);
 
 			GlStateManager.popMatrix();
 			GlStateManager.translate(0f,length/24f,-0.0625f);

@@ -188,6 +188,7 @@ public class ItemIINavalMine extends ItemIIBulletBase implements IItemScrollable
 						anchor.setPosition(raytraceresult.hitVec.x, flag1 ? raytraceresult.hitVec.y - 0.12D : raytraceresult.hitVec.y, raytraceresult.hitVec.z);
 						mine.setMaxLength(ItemNBTHelper.hasKey(itemstack,"length")?ItemNBTHelper.getInt(itemstack, "length"):5);
 						worldIn.spawnEntity(anchor);
+						mine.setPosition(anchor.posX, anchor.posY+0.5f, anchor.posZ);
 						worldIn.spawnEntity(mine);
 						mine.startRiding(anchor);
 						worldIn.playSound(null, mine.posX, mine.posY, mine.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.75F, 0.8F);

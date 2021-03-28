@@ -2,6 +2,9 @@ package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -519,6 +522,70 @@ public class IIRecipes
 			BathingRecipe.addRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time);
 		if(allowHFl)
 			BathingRecipe.addRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2);
+	}
+
+	public static void addUpgradeRecipes()
+	{
+		IIContent.UPGRADE_INSERTER
+				.addStack(new IngredientStack(Utils.getStackWithMetaName(IIContent.itemPrecissionTool, "precission_inserter")))
+				.addStack(new IngredientStack("scaffoldingSteel"))
+				.setRequiredProgress(10000);
+
+		IIContent.UPGRADE_SAW_UNREGULATOR
+				.addStack(new IngredientStack(Utils.getStackWithMetaName(IIContent.itemMotorGear, "steel")))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)))
+				.addStack(new IngredientStack("stickSteel", 2))
+				.setRequiredProgress(20000);
+
+		IIContent.UPGRADE_IMPROVED_GEARBOX
+				.addStack(new IngredientStack(Utils.getStackWithMetaName(IIContent.itemMotorGear, "tungsten", 2)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.setRequiredProgress(20000);
+
+		//Weapons - Basic Tier
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
+				.addStack(new IngredientStack("blockGlassRed",1))
+				.addStack(new IngredientStack("blockGlass",1))
+				.addStack(new IngredientStack("blockSteel",2))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.addStack(new IngredientStack("circuitBasic",4))
+				.setRequiredProgress(40000);
+
+		//Weapons - Basic Tier
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
+				.addStack(new IngredientStack("blockSteel",2))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 10)))
+				.addStack(new IngredientStack("circuitAdvanced",4))
+				.setRequiredProgress(80000);
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
+				.addStack(new IngredientStack("blockSteel",1))
+				.addStack(new IngredientStack("circuitAdvanced",4))
+				.setRequiredProgress(80000);
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
+				.addStack(new IngredientStack("blockSteel",1))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 10)))
+				.addStack(new IngredientStack("circuitAdvanced",4))
+				.setRequiredProgress(80000);
+
+		//Weapons - Processor Tier
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 10)))
+				.addStack(new IngredientStack("blockSteel",3))
+				.addStack(new IngredientStack("circuitProcessor",4))
+				.setRequiredProgress(300000);
 	}
 
 }

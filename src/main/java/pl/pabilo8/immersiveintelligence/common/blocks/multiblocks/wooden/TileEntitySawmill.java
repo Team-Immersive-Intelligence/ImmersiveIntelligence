@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
@@ -10,10 +12,12 @@ import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.*;
@@ -40,13 +44,14 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 13-04-2020
  */
-public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmill, SawmillRecipe> implements IGuiTile, ISoundTile, IRotationalEnergyBlock
+public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmill, SawmillRecipe> implements IGuiTile, ISoundTile, IRotationalEnergyBlock, IAdvancedSelectionBounds, IAdvancedCollisionBounds
 {
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 	public int processTime, processTimeMax;
@@ -565,5 +570,201 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 				rotation.setTorque(torque);
 			}
 		}
+	}
+
+	@Override
+	public List<AxisAlignedBB> getAdvancedColisionBounds()
+	{
+		// TODO: 18.03.2021 fix scheiss for NORTH/mirrored
+		ArrayList<AxisAlignedBB> aabb = new ArrayList<>();
+		if(pos==4)
+		{
+			aabb.add(new AxisAlignedBB(0, 0, 0, 1, 0.0625, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			switch(facing)
+			{
+				case NORTH:
+					aabb.add(new AxisAlignedBB(0, 0.0625, 0, 0.0625, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(1-0.0625, 0.0625, 0, 1, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(0.0625, 0.0625, 0, 0.9375, 0.75, 0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					aabb.add(new AxisAlignedBB(0, 0.0625, 0, 0.0625, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(1-0.0625, 0.0625, 0, 1, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(0.0625, 0.0625, 1-0.0625, 0.9375, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					aabb.add(new AxisAlignedBB(0, 0.0625, 0, 1, 0.75, 0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(0, 0.0625, 1-0.0625, 1, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(1-0.0625, 0.0625, 0.0625, 1, 0.75, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					aabb.add(new AxisAlignedBB(0, 0.0625, 0, 1, 0.75, 0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(0, 0.0625, 1-0.0625, 1, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					aabb.add(new AxisAlignedBB(0, 0.0625, 0.0625, 0.0625, 0.75, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
+		}
+		else if(pos==11)
+		{
+			aabb.add(new AxisAlignedBB(0, 0, 0, 1, 0.0625, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			EnumFacing ff = mirrored?facing.rotateY():facing.rotateYCCW();
+			switch(facing)
+			{
+				case NORTH:
+					aabb.add(new AxisAlignedBB(0, 0.0625, 0.5-0.0625, 1, 0.1875, 0.75)
+							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					aabb.add(new AxisAlignedBB(0, 0.0625, 0.25, 1, 0.1875, 0.5+0.0625)
+							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					aabb.add(new AxisAlignedBB(0.25, 0.0625, 0, 0.5+0.0625, 0.1875, 1)
+							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					aabb.add(new AxisAlignedBB(0.5-0.0625, 0.0625, 0, 0.75, 0.1875, 1)
+							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
+		}
+		else if(pos==15)
+		{
+			switch(facing)
+			{
+				case NORTH:
+					aabb.add(new AxisAlignedBB(0.3125, 0, -0.375, 1-0.3125, 0.3125, 0.375)
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					aabb.add(new AxisAlignedBB(0.3125, 0, 1-0.3125, 1-0.3125, 0.375, 1+0.375)
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					aabb.add(new AxisAlignedBB(1-0.3125, 0, 0.3125, 1+0.375, 0.375, 1-0.3125)
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					aabb.add(new AxisAlignedBB(-0.375, 0, 0.3125, 0.375, 0.3125, 1-0.3125)
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
+		}
+		else if(offset[1]==0)
+		{
+			aabb.add(new AxisAlignedBB(0, 0.8125, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			if(pos==6)
+			{
+				switch(facing)
+				{
+					case WEST:
+						aabb.add(new AxisAlignedBB(0, 0.3125, 0.25, 0.35, 0.8125, 0.75).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case EAST:
+						aabb.add(new AxisAlignedBB(1-0.35, 0.3125, 0.25, 1, 0.8125, 0.75).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case SOUTH:
+						aabb.add(new AxisAlignedBB(0.25, 0.3125, 1-0.35, 0.75, 0.8125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case NORTH:
+						aabb.add(new AxisAlignedBB(0.25, 0.3125, 0, 0.75, 0.8125, 0.35).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+				}
+			}
+			int pp=pos;
+			if(mirrored)
+				pp=pos==3?1:(pos==1?3:pos==7?5:7);
+
+			if(pp==3)
+			{
+				switch(facing)
+				{
+					case SOUTH:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case NORTH:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.0625, 1-0.0625, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case WEST:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.0625, 1-0.0625, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case EAST:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.0625+0.1875, 0.8125, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+				}
+			}
+			else if(pp==5)
+			{
+				switch(facing)
+				{
+					case SOUTH:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.75, 1-0.0625, 0.8125, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case NORTH:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case WEST:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.0625+0.1875, 0.8125, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case EAST:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.0625, 1-0.0625, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+				}
+			}
+			else if(pp==7)
+			{
+				switch(facing)
+				{
+					case SOUTH:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.0625+0.1875, 0.8125, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case NORTH:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.75, 1-0.0625, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case WEST:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case EAST:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.75, 0.9375, 0.8125, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+				}
+			}
+			else if(pp==1)
+			{
+				switch(facing)
+				{
+					case SOUTH:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.0625, 1-0.0625, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case NORTH:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.0625+0.1875, 1-0.0625, 0.8125, 0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case WEST:
+						aabb.add(new AxisAlignedBB(0.75, 0, 0.75, 0.9375, 0.8125, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+					case EAST:
+						aabb.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+						break;
+				}
+			}
+
+		}
+		return aabb;
+	}
+
+	@Override
+	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	{
+		return getAdvancedColisionBounds();
+	}
+
+	@Override
+	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
+	{
+		return false;
 	}
 }

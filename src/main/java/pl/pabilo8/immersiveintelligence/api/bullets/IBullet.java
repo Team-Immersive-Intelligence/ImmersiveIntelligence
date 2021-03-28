@@ -82,6 +82,8 @@ public interface IBullet
 
 	default float getMass(ItemStack stack)
 	{
+		if(stack.isEmpty())
+			return 0.01f;
 		return getMass(getCore(stack), getComponents(stack));
 	}
 

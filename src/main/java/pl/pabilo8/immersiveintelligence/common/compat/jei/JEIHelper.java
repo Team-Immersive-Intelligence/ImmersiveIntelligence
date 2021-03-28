@@ -1,11 +1,3 @@
-/*
- * BluSunrize
- * Copyright (c) 2017
- *
- * This code is licensed under "Blu's License of Common Sense"
- * Details can be found in the license file in the root folder of this project
- */
-
 package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
 import blusunrize.immersiveengineering.client.gui.GuiFluidSorter;
@@ -20,16 +12,17 @@ import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiChemicalBath;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiElectrolyzer;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiPrecissionAssembler;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiSawmill;
+import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer.ElectrolyzerRecipeCategory;
@@ -123,6 +116,8 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipes(SawmillRecipe.recipeList, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 33, 42, 43, 4, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
+
+		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 	}
 
 	@Override

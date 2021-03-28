@@ -11,12 +11,15 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -592,7 +595,11 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	@Override
 	public float[] getBlockBounds()
 	{
-		return new float[]{0, 0, 0, 0, 0, 0};
+		if(isDoorOpened&&((pos >= 524&&pos <= 528)||(pos >= 533&&pos <= 537)||(pos >= 542&&pos <= 546)||(pos >= 515&&pos <= 519)||(pos >= 506&&pos <= 510)))
+		{
+			return new float[]{0, 0, 0, 0, 0, 0};
+		}
+		return new float[0];
 	}
 
 	@Override
@@ -810,9 +817,35 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		ArrayList<AxisAlignedBB> list = new ArrayList<>();
+		if((pos >= 524&&pos <= 528)||(pos >= 533&&pos <= 537)||(pos >= 542&&pos <= 546)||(pos >= 515&&pos <= 519)||(pos >= 506&&pos <= 510))
+		{
+			if(master().doorAngle > 5)
+			{
+				if(pos==544||pos==508)
+				{
+					double true_angle2 = Math.toRadians(pos==508?-master().doorAngle:master().doorAngle);
+					AxisAlignedBB aabb = new AxisAlignedBB(-0.125, -0.125, -0.125, 0.125, 0.125, 0.125)
+							.offset(facing.getFrontOffsetX(),0,facing.getFrontOffsetZ())
+							.grow(facing.rotateY().getFrontOffsetX()*3,0,facing.rotateY().getFrontOffsetZ()*3)
+							.offset(0.5,0,0.5);
+					Vec3d vv = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(1f, Math.toRadians(180-facing.getHorizontalAngle()), true_angle2);
+					for(float x = 0; x < 3f; x += 0.25)
+						list.add(aabb.offset(getPos().getX(), getPos().getY(), getPos().getZ()).offset(vv.scale(x)));
 
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					for(AxisAlignedBB axisAlignedBB : list)
+					{
+						world.getEntitiesWithinAABB(EntityLivingBase.class,axisAlignedBB,EntityLivingBase::canBePushed).forEach(entityLivingBase -> entityLivingBase.move(MoverType.PISTON,0,0.002,0));
+					}
+				}
+				else
+					list.add(new AxisAlignedBB(0, 0, 0, 0, 0, 0).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else
+				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		}
+		else
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 		return list;
 	}

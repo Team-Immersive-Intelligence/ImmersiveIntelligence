@@ -267,7 +267,26 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	{
 		List list = new ArrayList<AxisAlignedBB>();
 
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		if(pos==4)
+		{
+			switch(facing)
+			{
+				case NORTH:
+					list.add(new AxisAlignedBB(0.125, 0.125, 0, 0.875, 0.75, 0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					list.add(new AxisAlignedBB(0.125, 0.125, 0.9375, 0.875, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					list.add(new AxisAlignedBB(0.9375, 0.125, 0.125, 1, 0.75, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					list.add(new AxisAlignedBB(0, 0.125, 0.125, 0.0625, 0.75, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
+		}
+		else
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 		return list;
 	}

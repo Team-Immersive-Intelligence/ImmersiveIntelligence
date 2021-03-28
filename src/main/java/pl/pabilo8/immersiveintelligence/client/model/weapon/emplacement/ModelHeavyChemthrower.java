@@ -308,7 +308,9 @@ public class ModelHeavyChemthrower extends ModelIIBase
 		translate(baseModel,-16,0,-16);
 		translate(turretModel,-16,0,-16);
 
-		//translate(baseModel,-16,0,-16);
+		translate(barrelStartModel,-20.5F,14F,-13f);
+		translate(barrelMidModel,-20.5F,14F,-13f);
+		translate(barrelEndModel,-20.5F,14F,-13F);
 
 
 		flipAll();

@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -45,6 +46,12 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 	@Override
 	public void onUpdate()
 	{
+		if(!world.isRemote&&world.getTotalWorldTime()%20==0&&!world.getBlockState(getPosition().down()).isSideSolid(world,getPosition().down(), EnumFacing.UP))
+		{
+			setDead();
+			entityDropItem(this.getPickedResult(null), 0f);
+		}
+
 		//setupTime = 0;
 		if(setupTime < TripodPeriscope.setup_time)
 			setupTime += 1;

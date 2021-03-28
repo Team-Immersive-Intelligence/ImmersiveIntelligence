@@ -48,11 +48,16 @@ public class EntityNavalMineAnchor extends Entity
 	{
 		if (this.isPassenger(passenger))
 		{
-			double diff = Math.abs(passenger.posY-this.posY);
-			diff = passenger instanceof EntityNavalMine?Math.min(((EntityNavalMine)passenger).maxLength,diff):0;
-			if(diff>0)
-				ImmersiveIntelligence.logger.info("o");
-			passenger.setPosition(passenger.posX, passenger.posY-diff, passenger.posZ);
+			if(passenger instanceof EntityNavalMine)
+			{
+				double dd = 0;
+				double diff = Math.abs(passenger.posY-(this.posY)-0.5);
+				if(diff>((EntityNavalMine)passenger).maxLength)
+					dd=Math.min(diff-((EntityNavalMine)passenger).maxLength,0.125f);
+				passenger.setPosition(passenger.posX, passenger.posY-dd, passenger.posZ);
+			}
+			else
+				passenger.setPosition(passenger.posX, passenger.posY+0.5f, passenger.posZ);
 		}
 	}
 }

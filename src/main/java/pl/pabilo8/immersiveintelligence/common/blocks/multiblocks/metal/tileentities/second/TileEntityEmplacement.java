@@ -1,59 +1,55 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponAutocannon;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponCPDS;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponHeavyChemthrower;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponInfraredObserver;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.function.Function;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Supplier;
 
-public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice
+public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine
 {
-	public static final HashMap<String, Function<String, EmplacementWeapon>> weaponRegistry = new HashMap<>();
-
-	static
-	{
-		weaponRegistry.put("autocannon", s -> new EmplacementWeaponAutocannon());
-		weaponRegistry.put("infrared_observer", s -> new EmplacementWeaponInfraredObserver());
-		weaponRegistry.put("cpds", s -> new EmplacementWeaponCPDS());
-		weaponRegistry.put("heavy_chemthrower", s -> new EmplacementWeaponHeavyChemthrower());
-	}
+	public static final HashMap<String, Supplier<EmplacementWeapon>> weaponRegistry = new HashMap<>();
 
 	public boolean isDoorOpened = false;
-	public int progress = 0;
+	public int progress = 0, upgradeProgress = 0;
 	public EmplacementWeapon currentWeapon = null;
 	BlockPos[] allBlocks = null;
 	public boolean isShooting = false;
+	private MachineUpgrade currentlyInstalled = null;
 
 	public TileEntityEmplacement()
 	{
@@ -91,11 +87,17 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 					{
 						currentWeapon.tick();
 						//currentWeapon.reloadFrom(this);
-						Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).grow(60f).expand(0, 40, 0), input -> input instanceof EntityMob&&!input.isDead).stream().findFirst();
+						/*
+						!(((EntityBullet)input).getShooter() instanceof FakePlayer)
+								&&((EntityBullet)input).mass>0.25&&
+						 */
+						Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
+								input -> input instanceof EntityMob&&
+										((EntityMob)input).getHealth() > 0).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).findFirst();
 						if(first.isPresent())
 						{
 							float[] target = currentWeapon.getAnglePrediction(new Vec3d(getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
-									first.get().getPositionVector().addVector(first.get().width/2f,first.get().height,first.get().width/2f),
+									first.get().getPositionVector().addVector(first.get().width/2f, first.get().height/2f, first.get().width/2f),
 									new Vec3d(first.get().motionX, first.get().motionY, first.get().motionZ)
 							);
 							currentWeapon.aimAt(target[0], target[1]);
@@ -286,7 +288,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	@Override
 	public NonNullList<ItemStack> getInventory()
 	{
-		return null;
+		return NonNullList.create();
 	}
 
 	@Override
@@ -353,7 +355,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(weaponName==null)
 			return null;
 		if(weaponRegistry.containsKey(weaponName))
-			return weaponRegistry.get(weaponName).apply(weaponName);
+			return weaponRegistry.get(weaponName).get();
 		return null;
 	}
 
@@ -435,6 +437,127 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	}
 
+	@Override
+	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
+	{
+		if(upgrade instanceof MachineUpgradeEmplacementWeapon)
+		{
+			if(currentWeapon==null)
+			{
+				currentWeapon = getWeaponFromName(upgrade.getName());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean hasUpgrade(MachineUpgrade upgrade)
+	{
+		return currentWeapon!=null&&upgrade.getName().equals(currentWeapon.getName());
+	}
+
+	@Override
+	public boolean upgradeMatches(MachineUpgrade upgrade)
+	{
+		return currentWeapon==null&&upgrade instanceof MachineUpgradeEmplacementWeapon;
+	}
+
+	@Override
+	public <T extends TileEntity & IUpgradableMachine> T getUpgradeMaster()
+	{
+		return (T)master();
+	}
+
+	@Deprecated
+	@Override
+	public void saveUpgradesToNBT(NBTTagCompound tag)
+	{
+
+	}
+
+	@Deprecated
+	@Override
+	public void getUpgradesFromNBT(NBTTagCompound tag)
+	{
+
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderWithUpgrades(MachineUpgrade... upgrades)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.75, 0.75, 0.75);
+		ClientUtils.bindTexture(EmplacementRenderer.texture);
+		GlStateManager.translate(-0.5,-3.0625,1.5);
+		EmplacementRenderer.model.platformModel[0].render();
+		EmplacementRenderer.model.platformModel[2].render();
+		GlStateManager.translate(0.5,3.0625,-1.5);
+		for(MachineUpgrade upgrade : upgrades)
+		{
+			if(upgrade instanceof MachineUpgradeEmplacementWeapon)
+				((MachineUpgradeEmplacementWeapon)upgrade).render(this);
+		}
+		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public List<MachineUpgrade> getUpgrades()
+	{
+		if(isDummy())
+			return master().getUpgrades();
+
+		if(currentWeapon!=null)
+			return Collections.singletonList(weaponToUpgrade());
+		else
+			return new ArrayList<>();
+	}
+
+	@Nullable
+	@Override
+	public MachineUpgrade getCurrentlyInstalled()
+	{
+		return currentlyInstalled;
+	}
+
+	@Override
+	public int getInstallProgress()
+	{
+		return upgradeProgress;
+	}
+
+	@Override
+	public boolean addUpgradeInstallProgress(int toAdd)
+	{
+		upgradeProgress += toAdd;
+		return true;
+	}
+
+	@Override
+	public boolean resetInstallProgress()
+	{
+		currentlyInstalled = null;
+		if(upgradeProgress > 0)
+		{
+			upgradeProgress = 0;
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
+	{
+		currentlyInstalled = upgrade;
+		upgradeProgress = 0;
+	}
+
+	private MachineUpgradeEmplacementWeapon weaponToUpgrade()
+	{
+		return (MachineUpgradeEmplacementWeapon)MachineUpgrade.getUpgradeByID(currentWeapon.getName());
+	}
+
 	public static abstract class EmplacementWeapon
 	{
 		protected float pitch = 0, yaw = 0;
@@ -444,11 +567,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		 * @return name of the emplacement, must be the same as the name in the weapon registry
 		 */
 		public abstract String getName();
-
-		/**
-		 * @return ingredients required for constructing weapon in the emplacement
-		 */
-		public abstract IngredientStack[] getIngredientsRequired();
 
 		public float getYawTurnSpeed()
 		{
@@ -472,7 +590,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 		{
-			// TODO: 28.02.2021 find out how to predict angles
 			Vec3d vv = posTurret.subtract(posTarget);
 			float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
 			Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(2f).addVector(0, 0, 0f);
@@ -492,23 +609,20 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		 */
 		public void aimAt(float yaw, float pitch)
 		{
-
-			/*
-			this.yaw = MathHelper.wrapDegrees(yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.yawTurnSpeed)));
-			 */
-
 			nextPitch = pitch;
 			nextYaw = MathHelper.wrapDegrees(yaw);
 			float p = pitch-this.pitch;
 			this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.getPitchTurnSpeed());
 			float y = MathHelper.wrapDegrees(360+nextYaw-this.yaw);
-			if(Math.abs(y) < 0.01)
+
+			if(Math.abs(p) < this.getPitchTurnSpeed()*0.5f)
+				this.pitch = this.nextPitch;
+			if(Math.abs(y) < this.getYawTurnSpeed()*0.5f)
 				this.yaw = this.nextYaw;
 			else
 				this.yaw = MathHelper.wrapDegrees(this.yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.getYawTurnSpeed())));
-			this.pitch = this.pitch%180;
-			//this.yaw = this.yaw%360;
 
+			this.pitch = this.pitch%180;
 		}
 
 		/**
@@ -562,6 +676,31 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		public void render(TileEntityEmplacement te, float partialTicks)
 		{
 
+		}
+
+		public static MachineUpgrade register(Supplier<EmplacementWeapon> supplier)
+		{
+			//hacky way, but works
+			EmplacementWeapon w = supplier.get();
+			weaponRegistry.put(w.getName(), supplier);
+			return new MachineUpgradeEmplacementWeapon(w);
+		}
+
+		public static class MachineUpgradeEmplacementWeapon extends MachineUpgrade
+		{
+			private final EmplacementWeapon weapon;
+
+			public MachineUpgradeEmplacementWeapon(EmplacementWeapon weapon)
+			{
+				super(weapon.getName(), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+weapon.getName()+".png"));
+				this.weapon = weapon;
+			}
+
+			@SideOnly(Side.CLIENT)
+			public void render(TileEntityEmplacement te)
+			{
+				weapon.render(te, 0);
+			}
 		}
 	}
 }

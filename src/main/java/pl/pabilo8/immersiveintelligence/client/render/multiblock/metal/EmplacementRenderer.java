@@ -6,12 +6,10 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElectric;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelEmplacement;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelAutocannon;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelCPDS;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelHeavyChemthrower;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelInfraredObserver;
+import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
@@ -19,14 +17,16 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
-	private static ModelEmplacement model;
+	public static ModelEmplacement model;
 	public static ModelAutocannon modelAutocannon;
 	public static ModelInfraredObserver modelInfraredObserver;
 	public static ModelHeavyChemthrower modelHeavyChemthrower;
+	public static ModelHeavyRailgun modelHeavyRailgun;
 	public static ModelCPDS modelCPDS;
 	public static ModelInserter modelInserter;
+	public static ModelCraneElectric modelCrane;
 
-	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement.png";
+	public static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement.png";
 	public static final String textureMachinegun = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/cpds.png";
 	public static final String textureAutocannon = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/flak.png";
 	public static final String textureCPDS = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/cpds.png";
@@ -37,6 +37,7 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 	public static final String textureLightHowitzer = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/light_howitzer.png";
 	public static final String textureInfraredObserver = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/infrared_observer.png";
 
+	public static final String textureCraneGray = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/crane.png";
 	public static final String textureInserterGreen = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_green.png";
 	public static final String textureInserterGray = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_gray.png";
 
@@ -151,8 +152,35 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 		modelAutocannon = new ModelAutocannon();
 		modelInfraredObserver = new ModelInfraredObserver();
 		modelHeavyChemthrower = new ModelHeavyChemthrower();
+		modelHeavyRailgun = new ModelHeavyRailgun();
 		modelCPDS = new ModelCPDS();
 		modelInserter = new ModelInserter();
+		modelCrane = new ModelCraneElectric();
+	}
+
+	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(180+yaw,0,1,0);
+		ClientUtils.bindTexture(textureCraneGray);
+
+		for(ModelRendererTurbo mod : modelCrane.craneMainModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : modelCrane.shaftModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0,0,1f-distance);
+
+		for(ModelRendererTurbo mod : modelCrane.craneArmModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : modelCrane.craneArmShaftModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0,-drop,0);
+
+		for(ModelRendererTurbo mod : modelCrane.grabberModel)
+			mod.render(0.0625f);
+		GlStateManager.popMatrix();
 	}
 
 	public static void renderInserter(boolean green, float yaw, float pitch1, float pitch2, float progress, Runnable function)

@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import crafttweaker.api.item.IngredientStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -14,6 +15,7 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIOre;
@@ -26,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.fortification.BlockIIWoode
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.BlockIIWoodenMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIGearbox;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalConnector;
@@ -67,8 +70,14 @@ public class IIContent
 	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
 
 	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter"); //for crates
-	public static final MachineUpgrade UPGRADE_FASTER_ENGINE = CommonProxy.createMachineUpgrade("faster_engine"); //increases machine speed
+	public static final MachineUpgrade UPGRADE_IMPROVED_GEARBOX = CommonProxy.createMachineUpgrade("improved_gearbox"); //increases machine speed
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator"); //more sawdust for cost of planks
+
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
 
 	public static ItemIIMaterial itemMaterial = new ItemIIMaterial();
 	public static ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
@@ -153,7 +162,7 @@ public class IIContent
 
 	public static BlockIIMineSign blockMineSign = new BlockIIMineSign();
 	public static BlockIITripmine blockTripmine = new BlockIITripmine();
-	public static BlockIITellermine blockTellermine = new BlockIITellermine();
+	//public static BlockIITellermine blockTellermine = new BlockIITellermine();
 	public static ItemIINavalMine itemNavalMine = new ItemIINavalMine();
 
 	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();

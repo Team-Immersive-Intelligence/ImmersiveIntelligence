@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
@@ -89,10 +90,27 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-
+		if(world.getTileEntity(pos) instanceof IUpgradableMachine)
+		{
+			IUpgradableMachine te = ((IUpgradableMachine)world.getTileEntity(pos)).getUpgradeMaster();
+			if(te!=null&&te.getCurrentlyInstalled()!=null)
+			{
+				te.addUpgradeInstallProgress(Tools.electric_wrench_upgrade_progress);
+				if(te.getInstallProgress()>=te.getCurrentlyInstalled().getProgressRequired())
+				{
+					if(te.addUpgrade(te.getCurrentlyInstalled(), false))
+						te.resetInstallProgress();
+				}
+				damageWrench(player.getHeldItem(hand),player);
+				return EnumActionResult.SUCCESS;
+			}
+		}
 		return EnumActionResult.PASS;
 	}
 
+	/**
+	 * Called when a Block is right-clicked with this Item
+	 */
 	@Nonnull
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)

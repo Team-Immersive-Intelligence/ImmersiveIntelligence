@@ -100,7 +100,7 @@ public class ModelPrintingPress extends ModelIIBase
 		baseModel[3].setRotationPoint(1F, -13F, 12F);
 
 		baseModel[4].addBox(0F, 0F, 0F, 3, 13, 3, 0F); // TableLeg
-		baseModel[4].setRotationPoint(28F, -13F, 2F);
+		baseModel[4].setRotationPoint(28F, -13F, 1F);
 
 		baseModel[5].addBox(0F, 0F, 0F, 3, 13, 3, 0F); // TableLeg
 		baseModel[5].setRotationPoint(28F, -13F, 12F);
@@ -344,7 +344,7 @@ public class ModelPrintingPress extends ModelIIBase
 		rollerModel[2].setRotationPoint(32F, -26F, 34F);
 
 		rollerModel[3].addBox(0F, -1F, -1F, 1, 2, 2, 0F); // ProductionAxle4
-		rollerModel[4].setRotationPoint(32F, -21F, 40F);
+		rollerModel[3].setRotationPoint(32F, -21F, 40F);
 
 		rollerModel[4].addBox(0F, -1F, -1F, 1, 2, 2, 0F); // ProductionAxle5
 		rollerModel[4].setRotationPoint(32F, -26F, 46F);
@@ -405,6 +405,10 @@ public class ModelPrintingPress extends ModelIIBase
 		paperInserterDoorModel[0].addBox(0F, -1F, 0F, 2, 1, 10, 0F); // ProductionPaperInserterDoor
 		paperInserterDoorModel[0].setRotationPoint(32F, -31F, 54F);
 		paperInserterDoorModel[0].rotateAngleZ = -1.57079633F;
+
+		if(flipped)
+			for(ModelRendererTurbo mod : rollerModel)
+			mod.rotateAngleY*=-1;
 
 		parts.put("base", baseModel);
 		parts.put("rollerModel", rollerModel);

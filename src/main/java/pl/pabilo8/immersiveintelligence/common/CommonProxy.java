@@ -82,10 +82,8 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentFirework;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentFlarePowder;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentTracerPowder;
-import pl.pabilo8.immersiveintelligence.common.ammunition_system.BulletComponentWhitePhosphorus;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.*;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.cores.*;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentHMX;
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives.BulletComponentNuke;
@@ -111,6 +109,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.*;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.*;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIMinecart;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
@@ -137,13 +136,13 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireApi.registerF
 @Mod.EventBusSubscriber(modid = ImmersiveIntelligence.MODID)
 public class CommonProxy implements IGuiHandler, LoadingCallback
 {
-	public static final String DESCRIPTION_KEY = "desc."+ImmersiveIntelligence.MODID+".";
-	public static final String INFO_KEY = "info."+ImmersiveIntelligence.MODID+".";
-	public static final String DATA_KEY = "datasystem."+ImmersiveIntelligence.MODID+".";
-	public static final String ROTARY_KEY = "rotary."+ImmersiveIntelligence.MODID+".";
-	public static final String BLOCK_KEY = "tile."+ImmersiveIntelligence.MODID+".";
+	public static final String DESCRIPTION_KEY = "desc.immersiveintelligence.";
+	public static final String INFO_KEY = "info.immersiveintelligence.";
+	public static final String DATA_KEY = "datasystem.immersiveintelligence.";
+	public static final String ROTARY_KEY = "rotary.immersiveintelligence.";
+	public static final String BLOCK_KEY = "tile.immersiveintelligence.";
 
-	public static final String SKIN_LOCATION = ImmersiveIntelligence.MODID+":textures/skins/";
+	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
 
 	public static final String TOOL_ADVANCED_HAMMER = "II_ADVANCED_HAMMER";
 	public static final String TOOL_WRENCH = "II_WRENCH";
@@ -213,6 +212,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public static <T extends TileEntity & IGuiTile> void openSpecificGuiForEvenMoreSpecificTile(@Nonnull EntityPlayer player, @Nonnull T tile, int gui)
 	{
 		player.openGui(ImmersiveIntelligence.INSTANCE, gui, tile.getWorld(), tile.getPos().getX(),
+				tile.getPos().getY(), tile.getPos().getZ());
+	}
+
+	public static <T extends TileEntity & IUpgradableMachine> void openUpgradeGuiForTile(@Nonnull EntityPlayer player, @Nonnull T tile)
+	{
+		player.openGui(ImmersiveIntelligence.INSTANCE, IIGuiList.GUI_UPGRADE.ordinal(), tile.getWorld(), tile.getPos().getX(),
 				tile.getPos().getY(), tile.getPos().getZ());
 	}
 
@@ -416,6 +421,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIRecipes.addMiscIERecipes();
 
 		IIRecipes.addRotaryPowerRecipes();
+		IIRecipes.addUpgradeRecipes();
 
 		IIRecipes.addRDXProductionRecipes();
 		IIRecipes.addHMXProductionRecipes();
@@ -424,8 +430,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIRecipes.addChemicalBathCleaningRecipes();
 
 		//Immersive Engineering can into space???
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 3000), FluidRegistry.getFluidStack("oxygen", 1000), FluidRegistry.getFluidStack("hydrogen", 2000), 640, 320);
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 3000), FluidRegistry.getFluidStack("chlorine", 1500), FluidRegistry.getFluidStack("hydrogen", 1500), 640, 320);
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 750), FluidRegistry.getFluidStack("oxygen", 250), FluidRegistry.getFluidStack("hydrogen", 500), 160, 80);
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 750), FluidRegistry.getFluidStack("chlorine", 375), FluidRegistry.getFluidStack("hydrogen", 375), 160, 80);
 
 
 		IIRecipes.addInkRecipes();
@@ -500,7 +506,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoRevolver);
 
 		BulletRegistry.INSTANCE.registerCasing((IBullet)IIContent.blockTripmine.itemBlock);
-		BulletRegistry.INSTANCE.registerCasing((IBullet)IIContent.blockTellermine.itemBlock);
+		//BulletRegistry.INSTANCE.registerCasing((IBullet)IIContent.blockTellermine.itemBlock);
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemNavalMine);
 
 		BulletRegistry.INSTANCE.registerComponent(new BulletComponentTNT());
@@ -517,7 +523,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreBrass());
 		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreLead());
 		BulletRegistry.INSTANCE.registerBulletCore(new BulletCoreUranium());
-		BulletRegistry.INSTANCE.registerBulletCore(new BulletCorePabilium());
 
 		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
 
@@ -537,6 +542,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		ShrapnelHandler.addShrapnel("tungsten", 0x3b3e43, "immersiveintelligence:textures/blocks/metal/sheetmetal_tungsten", 8, 0.45f, 0f);
 		ShrapnelHandler.addShrapnel("HOPGraphite", 0x282828, "immersiveengineering:textures/blocks/stone_decoration_coke", 8, 0.45f, 0f);
 		ShrapnelHandler.addShrapnel("uranium", 0x659269, "immersiveengineering:textures/blocks/sheetmetal_uranium", 12, 0.45f, 8f);
+
+		//easter eggs
+		BulletRegistry.INSTANCE.registerComponent(new BulletComponentFish());
+		BulletRegistry.INSTANCE.registerBulletCore(new BulletCorePabilium());
 
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 		{
@@ -792,6 +801,16 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
 
+		if(ID==IIGuiList.GUI_UPGRADE.ordinal())
+		{
+			if(te instanceof IUpgradableMachine)
+			{
+				TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
+				if(upgradeMaster!=null)
+					return new ContainerUpgrade(player.inventory, (TileEntity & IUpgradableMachine)upgradeMaster);
+			}
+		}
+
 		Container gui;
 		if(IIGuiList.values().length > ID)
 		{
@@ -901,7 +920,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			if(!pl.pabilo8.immersiveintelligence.api.Utils.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"requires_advanced_hammer")), (EntityPlayerMP)event.getEntityPlayer());
+					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation("info.immersiveintelligence.requires_advanced_hammer")), (EntityPlayerMP)event.getEntityPlayer());
 				event.setCanceled(true);
 			}
 		}
@@ -914,7 +933,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public static MachineUpgrade createMachineUpgrade(String name)
 	{
-		return new MachineUpgrade(new ResourceLocation(ImmersiveIntelligence.MODID, name), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name));
+		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
 	}
 
 	@Override

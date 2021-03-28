@@ -8,7 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.metal_device.RepairCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
@@ -86,5 +91,12 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderWithUpgrades(MachineUpgrade... upgrades)
+	{
+		RepairCrateRenderer.renderWithUpgrade(upgrades);
 	}
 }

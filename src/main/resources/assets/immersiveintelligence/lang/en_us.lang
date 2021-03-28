@@ -616,6 +616,43 @@ skin.immersiveintelligence.magnate.desc=For noble support of engineering progres
 skin.immersiveintelligence.investor.name=Investor
 skin.immersiveintelligence.investor.desc=A little reward for big generosity
 
+#Machine Upgrades
+machineupgrade.immersiveintelligence.inserter=Inserter
+machineupgrade.immersiveintelligence.inserter.desc=Adding an inserter to a crate allows it to operate automatically in a 3 blocks radius if supplied with power.
+
+machineupgrade.immersiveintelligence.improved_gearbox=Improved Gearbox
+machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock gearbox with an improved model significantly increases machine speed, increases amount of energy required to operate.
+
+machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
+machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output.
+
+machineupgrade.immersiveintelligence.infrared_observer=Infrared Observer
+machineupgrade.immersiveintelligence.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
+
+machineupgrade.immersiveintelligence.cpds=CPDS
+machineupgrade.immersiveintelligence.cpds.desc=The Counter-Projectile Defense System is an advanced anti-air weapon, capable of destroying incoming artillery shells in mid-air.
+
+machineupgrade.immersiveintelligence.autocannon=Autocannon
+machineupgrade.immersiveintelligence.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
+
+machineupgrade.immersiveintelligence.heavy_chemthrower=Heavy Chemthrower
+machineupgrade.immersiveintelligence.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the regular one.
+
+machineupgrade.immersiveintelligence.heavy_railgun=Heavy Railgun
+machineupgrade.immersiveintelligence.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
+
+machineupgrade.immersiveintelligence.machinegun=Machinegun
+machineupgrade.immersiveintelligence.machinegun.desc=The Machinegun can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
+
+machineupgrade.immersiveintelligence.mortar=Mortar
+machineupgrade.immersiveintelligence.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from the top
+
+machineupgrade.immersiveintelligence.light_howitzer=Light Howitzer
+machineupgrade.immersiveintelligence.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
+
+machineupgrade.immersiveintelligence.tesla=Tesla Tower
+machineupgrade.immersiveintelligence.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
+
 #Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Allows to set frequency for basic radio devices.
 desc.immersiveintelligence.radio_configurator_advanced=An upgraded model for setting higher frequencies.
@@ -733,6 +770,9 @@ info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s
 info.immersiveintelligence.tachometer.external_speed=Enternal Speed: %s
 info.immersiveintelligence.tachometer.torque=Torque: %s
 info.immersiveintelligence.tachometer.speed=Speed: %s
+
+info.immersiveintelligence.machineupgrade.name=Installing: %s
+info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
 
 info.immersiveintelligence.towing.no=Can't find a towable vehicle
 info.immersiveintelligence.towing.towed=Successfully towed!
@@ -926,7 +966,7 @@ advancement.immersiveintelligence.printing_press.desc=Create a Printing Press
 
 #Ah, the good old Crysis 3
 advancement.immersiveintelligence.processor_circuit_board=Can it run Crysis?
-advancement.immersiveintelligence.processor_circuit_board.desc=Produce an Processor Circuit Board
+advancement.immersiveintelligence.processor_circuit_board.desc=Produce a Processor Circuit Board
 
 advancement.immersiveintelligence.radio_station=Remote Control
 advancement.immersiveintelligence.radio_station.desc=Create a Radio Station

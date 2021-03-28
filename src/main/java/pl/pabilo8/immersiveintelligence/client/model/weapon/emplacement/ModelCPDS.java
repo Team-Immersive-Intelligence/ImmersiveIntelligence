@@ -10,12 +10,12 @@ public class ModelCPDS extends ModelIIBase
 	int textureX = 128;
 	int textureY = 128;
 
-	//OBSERVE
+	//Counter-Projectile Defense System
 	public ModelRendererTurbo[] gunModel, barrelsModel, observeModel, internalsModel, hatchModel;
 
 	public ModelCPDS() //Same as Filename
 	{
-		baseModel = new ModelRendererTurbo[36];
+		baseModel = new ModelRendererTurbo[34];
 		baseModel[0] = new ModelRendererTurbo(this, 23, 110, textureX, textureY); // BASE01
 		baseModel[1] = new ModelRendererTurbo(this, 8, 59, textureX, textureY); // BASE03
 		baseModel[2] = new ModelRendererTurbo(this, 60, 28, textureX, textureY); // BASE04
@@ -45,13 +45,11 @@ public class ModelCPDS extends ModelIIBase
 		baseModel[26] = new ModelRendererTurbo(this, 8, 70, textureX, textureY); // COVER03
 		baseModel[27] = new ModelRendererTurbo(this, 86, 47, textureX, textureY); // COVER26
 		baseModel[28] = new ModelRendererTurbo(this, 36, 18, textureX, textureY); // COVER27
-		baseModel[29] = new ModelRendererTurbo(this, 98, 115, textureX, textureY); // Shape 133
-		baseModel[30] = new ModelRendererTurbo(this, 98, 115, textureX, textureY); // Shape 133
-		baseModel[31] = new ModelRendererTurbo(this, 18, 59, textureX, textureY); // COVER09
-		baseModel[32] = new ModelRendererTurbo(this, 60, 58, textureX, textureY); // COVER21
-		baseModel[33] = new ModelRendererTurbo(this, 8, 59, textureX, textureY); // BASE03
-		baseModel[34] = new ModelRendererTurbo(this, 23, 110, textureX, textureY); // BASE01
-		baseModel[35] = new ModelRendererTurbo(this, 38, 102, textureX, textureY); // COVER20
+		baseModel[29] = new ModelRendererTurbo(this, 18, 59, textureX, textureY); // COVER09
+		baseModel[30] = new ModelRendererTurbo(this, 60, 58, textureX, textureY); // COVER21
+		baseModel[31] = new ModelRendererTurbo(this, 8, 59, textureX, textureY); // BASE03
+		baseModel[32] = new ModelRendererTurbo(this, 23, 110, textureX, textureY); // BASE01
+		baseModel[33] = new ModelRendererTurbo(this, 38, 102, textureX, textureY); // COVER20
 
 		baseModel[0].addBox(0F, 0F, 0F, 30, 3, 15, 0F); // BASE01
 		baseModel[0].setRotationPoint(-15F, -3F, -15F);
@@ -154,33 +152,27 @@ public class ModelCPDS extends ModelIIBase
 		baseModel[28].setRotationPoint(7F, -19F, -15F);
 		baseModel[28].rotateAngleY = -1.57079633F;
 
-		baseModel[29].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2) }), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[] {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3}); // Shape 133
-		baseModel[29].setRotationPoint(3.5F, -15.5F, -33F);
+		baseModel[29].addShapeBox(0F, 0F, 0F, 20, 9, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // COVER09
+		baseModel[29].setRotationPoint(-15F, -28F, -5F);
+		baseModel[29].rotateAngleY = 1.57079633F;
 
-		baseModel[30].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2) }), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[] {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3}); // Shape 133
-		baseModel[30].setRotationPoint(3.5F, -15.5F, -24F);
+		baseModel[30].addShapeBox(0F, 0F, 0F, 29, 16, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // COVER21
+		baseModel[30].setRotationPoint(16F, -19F, -14F);
+		baseModel[30].rotateAngleY = 1.57079633F;
 
-		baseModel[31].addShapeBox(0F, 0F, 0F, 20, 9, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // COVER09
-		baseModel[31].setRotationPoint(-15F, -28F, -5F);
-		baseModel[31].rotateAngleY = 1.57079633F;
+		baseModel[31].addBox(0F, 0F, 0F, 2, 3, 3, 0F); // BASE03
+		baseModel[31].setRotationPoint(5F, -21F, -9F);
 
-		baseModel[32].addShapeBox(0F, 0F, 0F, 29, 16, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // COVER21
-		baseModel[32].setRotationPoint(16F, -19F, -14F);
-		baseModel[32].rotateAngleY = 1.57079633F;
+		baseModel[32].addBox(0F, 0F, 0F, 30, 3, 15, 0F); // BASE01
+		baseModel[32].setRotationPoint(15F, -3F, 15F);
+		baseModel[32].rotateAngleY = -3.14159265F;
 
-		baseModel[33].addBox(0F, 0F, 0F, 2, 3, 3, 0F); // BASE03
-		baseModel[33].setRotationPoint(5F, -21F, -9F);
-
-		baseModel[34].addBox(0F, 0F, 0F, 30, 3, 15, 0F); // BASE01
-		baseModel[34].setRotationPoint(15F, -3F, 15F);
-		baseModel[34].rotateAngleY = -3.14159265F;
-
-		baseModel[35].addShapeBox(0F, 0F, 0F, 12, 7, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // COVER20
-		baseModel[35].setRotationPoint(-16F, -24F, -2F);
-		baseModel[35].rotateAngleY = 1.57079633F;
+		baseModel[33].addShapeBox(0F, 0F, 0F, 12, 7, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // COVER20
+		baseModel[33].setRotationPoint(-16F, -24F, -2F);
+		baseModel[33].rotateAngleY = 1.57079633F;
 
 
-		gunModel = new ModelRendererTurbo[31];
+		gunModel = new ModelRendererTurbo[33];
 		gunModel[0] = new ModelRendererTurbo(this, 10, 69, textureX, textureY); // GUN01
 		gunModel[1] = new ModelRendererTurbo(this, 4, 17, textureX, textureY); // GUN02
 		gunModel[2] = new ModelRendererTurbo(this, 12, 95, textureX, textureY); // GUN03
@@ -212,6 +204,8 @@ public class ModelCPDS extends ModelIIBase
 		gunModel[28] = new ModelRendererTurbo(this, 64, 102, textureX, textureY); // GUN05
 		gunModel[29] = new ModelRendererTurbo(this, 116, 95, textureX, textureY); // GUN20
 		gunModel[30] = new ModelRendererTurbo(this, 4, 17, textureX, textureY); // GUN02
+		gunModel[31] = new ModelRendererTurbo(this, 98, 115, textureX, textureY); // Shape 133
+		gunModel[32] = new ModelRendererTurbo(this, 98, 115, textureX, textureY); // Shape 133
 
 		gunModel[0].addBox(0F, 0F, 0F, 10, 10, 16, 0F); // GUN01
 		gunModel[0].setRotationPoint(-5F, -24F, -15F);
@@ -330,6 +324,11 @@ public class ModelCPDS extends ModelIIBase
 		gunModel[30].setRotationPoint(5F, -17F, 1F);
 		gunModel[30].rotateAngleZ = 3.14159265F;
 
+		gunModel[31].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2) }), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[] {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3}); // Shape 133
+		gunModel[31].setRotationPoint(3.5F, -15.5F, -33F);
+
+		gunModel[32].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2) }), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[] {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3}); // Shape 133
+		gunModel[32].setRotationPoint(3.5F, -15.5F, -24F);
 
 		barrelsModel = new ModelRendererTurbo[16];
 		barrelsModel[0] = new ModelRendererTurbo(this, 120, 57, textureX, textureY); // BARRELS04
@@ -626,7 +625,9 @@ public class ModelCPDS extends ModelIIBase
 		parts.put("lens", internalsModel);
 		parts.put("hatch", hatchModel);
 
-		translateAll(0.5f,1,0);
+		translate(gunModel,0f, 19.50F, 7.5F);
+		translate(barrelsModel,0f, 19F, 6F);
+		//translateAll(0.5f,1,0);
 
 		flipAll();
 	}

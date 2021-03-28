@@ -1,11 +1,3 @@
-/*
- * BluSunrize
- * Copyright (c) 2017
- *
- * This code is licensed under "Blu's License of Common Sense"
- * Details can be found in the license file in the root folder of this project
- */
-
 package pl.pabilo8.immersiveintelligence.common.blocks.rotary;
 
 import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
@@ -32,7 +24,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.IWrenchGui;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
@@ -40,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IBlockOverlayText, IConfigurableSides, IComparatorOverride, ITileDrop, IGuiTile, IIEInventory, IWrenchGui, IRotationalEnergyBlock
+public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IBlockOverlayText, IConfigurableSides, IComparatorOverride, ITileDrop, IGuiTile, IIEInventory, IRotationalEnergyBlock
 {
 	public SideConfig[] sideConfig = {SideConfig.NONE, SideConfig.INPUT, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE};
 	public int comparatorOutput = 0;

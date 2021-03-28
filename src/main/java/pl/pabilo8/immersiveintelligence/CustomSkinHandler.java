@@ -94,7 +94,7 @@ public class CustomSkinHandler
 				ImmersiveIntelligence.logger.info("Attempting to download II special skin list from GitHub");
 				//URL url = new URL("https://raw.githubusercontent.com/Pabilo8/ImmersiveIntelligence/master/contributor_skins.json");
 				// TODO: 30-06-2020 change URL when pushing
-				URL url = new URL("https://gist.githubusercontent.com/Pabilo8/969aac40918e0a50df493ccb10ac2f0b/raw/09d6416bb536e115479e503ce4ed14960ff8dd4e/contributor_skins.json");
+				URL url = new URL("https://gist.githubusercontent.com/Pabilo8/969aac40918e0a50df493ccb10ac2f0b/raw/b12a0da9707f38668a28e5bc5093e0d4cdb506b3/contributor_skins.json");
 				specialSkins.clear();
 				specialSkinsByUUID.clear();
 				JsonStreamParser parser = new JsonStreamParser(new InputStreamReader(url.openStream()));

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
@@ -384,17 +385,19 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 
 			GlStateManager.pushMatrix();
 
+			float doorAngle = MathHelper.clamp(te.doorAngle+(te.isDoorOpened?partialTicks:-partialTicks),0,155);
+
 			GlStateManager.translate(0f, 5f, 0f);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(1.625f, 0f, -1.625f);
-			GlStateManager.rotate(te.doorAngle, 1f, 0f, 0f);
+			GlStateManager.rotate(doorAngle, 1f, 0f, 0f);
 			model.hatch[0].render(0.0625f);
 
 			GlStateManager.popMatrix();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(1.625f, 0.125f, -7.375f);
 
-			GlStateManager.rotate(-te.doorAngle, 1f, 0f, 0f);
+			GlStateManager.rotate(-doorAngle, 1f, 0f, 0f);
 			model.hatch[1].render(0.0625f);
 
 			GlStateManager.popMatrix();

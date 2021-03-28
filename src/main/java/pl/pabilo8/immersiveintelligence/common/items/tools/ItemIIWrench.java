@@ -18,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -27,6 +28,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
@@ -167,6 +169,21 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
+		if(world.getTileEntity(pos) instanceof IUpgradableMachine)
+		{
+			IUpgradableMachine te = ((IUpgradableMachine)world.getTileEntity(pos)).getUpgradeMaster();
+			if(te!=null&&te.getCurrentlyInstalled()!=null)
+			{
+				te.addUpgradeInstallProgress(Tools.wrench_upgrade_progress);
+				if(te.getInstallProgress() >= te.getCurrentlyInstalled().getProgressRequired())
+				{
+					if(te.addUpgrade(te.getCurrentlyInstalled(), false))
+						te.resetInstallProgress();
+				}
+				damageWrench(player.getHeldItem(hand), player);
+				return EnumActionResult.SUCCESS;
+			}
+		}
 		return EnumActionResult.PASS;
 	}
 

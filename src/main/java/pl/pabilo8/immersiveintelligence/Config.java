@@ -184,13 +184,21 @@ public class Config
 			@RequiresMcRestart
 			public static int electric_wirecutter_energy_per_use = 100;
 
-			@Comment({"The energy usage of the electric wrench (when destroying blocks / accessing GUIs)."})
+			@Comment({"The energy usage of the electric wrench (when destroying blocks / upgrading)."})
 			@RequiresMcRestart
 			public static int electric_wrench_energy_per_use = 100;
+
+			@Comment({"The upgrade progress added per use of the engineer's wrench (default 1IF=1 Point of Progress™)."})
+			@RequiresMcRestart
+			public static int electric_wrench_upgrade_progress = 100;
 
 			@Comment({"The durability of the engineer's wrench."})
 			@RequiresMcRestart
 			public static int wrench_durability = 256;
+
+			@Comment({"The upgrade progress added per use of the engineer's wrench."})
+			@RequiresMcRestart
+			public static int wrench_upgrade_progress = 50;
 
 			@Comment({"Max zoom of the binoculars (in Blu's unit of distance measurement™)."})
 			@RequiresMcRestart

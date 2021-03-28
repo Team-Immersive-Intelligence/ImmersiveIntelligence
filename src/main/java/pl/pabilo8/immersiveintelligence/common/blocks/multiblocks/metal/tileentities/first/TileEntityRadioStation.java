@@ -34,7 +34,7 @@ import java.util.List;
 public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblockTileEntity
 {
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(0, ItemStack.EMPTY);
-	public int frequency, construction = 0;
+	public int frequency, construction = 0, clientConstruction = 0;
 
 	public TileEntityRadioStation()
 	{
@@ -52,6 +52,18 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			if(nbt.hasKey("frequency"))
 				frequency = nbt.getInteger("frequency");
 			getConstructionNBT(nbt);
+			clientConstruction = construction;
+		}
+	}
+
+	@Override
+	public void update()
+	{
+		super.update();
+		if(!isDummy()&&world.isRemote&&clientConstruction < construction)
+		{
+			clientConstruction = (int)Math.min(clientConstruction+(getConstructionCost()/100f), construction);
+
 		}
 	}
 
@@ -326,9 +338,100 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		if(pos==0||pos==9||pos==7)
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		else
+		{
+			EnumFacing ff = mirrored?facing.rotateY():facing;
+			double off =pos<20?-0.125:(pos<35?0.125:(pos<45?0.375:0.5));
+			if(offset[1]==-1)
+			{
+				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.5, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				if(pos==2)
+					list.add(new AxisAlignedBB(0.3125, 0.5, 0.3125, 0.6875, 1, 0.6875)
+							.offset(ff.rotateY().getFrontOffsetX()*0.1875f,0,ff.rotateY().getFrontOffsetZ()*0.1875f)
+							.offset(ff.getOpposite().getFrontOffsetX()*0.1875f,0,ff.getOpposite().getFrontOffsetZ()*0.1875f)
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				else if(pos==6)
+					list.add(new AxisAlignedBB(0.3125, 0.5, 0.3125, 0.6875, 1, 0.6875)
+							.offset(ff.getOpposite().rotateY().getFrontOffsetX()*0.1875f,0,ff.getOpposite().rotateY().getFrontOffsetZ()*0.1875f)
+							.offset(ff.getFrontOffsetX()*0.1875f,0,ff.getFrontOffsetZ()*0.1875f)
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				else if(pos==8)
+					list.add(new AxisAlignedBB(0.3125, 0.5, 0.3125, 0.6875, 1, 0.6875)
+							.offset(ff.rotateY().getFrontOffsetX()*0.1875f,0,ff.rotateY().getFrontOffsetZ()*0.1875f)
+							.offset(ff.getFrontOffsetX()*0.1875f,0,ff.getFrontOffsetZ()*0.1875f)
+							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if (pos==67)
+			{
+				list.add(new AxisAlignedBB(0.25, 0.5+0.0625, 0.25, 0.75, 1.0625, 0.75).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.5+0.0625, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if(pos==58)
+			{
+				list.add(new AxisAlignedBB(0, 0, 0, 0.425, 1, 0.425).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0.575, 0, 0, 1, 1, 0.425).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0, 0, 0.575, 0.425, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				list.add(new AxisAlignedBB(0.575, 0, 0.575, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if (pos==26||pos==24||pos==18||pos==20)
+			{
+				list.add(new AxisAlignedBB(0.3125, 0, 0.3125, 0.6875, 1, 0.6875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				if(pos==18)
+					list.add(new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.25, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if(pos==45||pos==36||pos==27)
+			{
+				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
+						.offset(ff.rotateY().getFrontOffsetX()*off,0,ff.rotateY().getFrontOffsetZ()*off)
+						.offset(ff.getFrontOffsetX()*off,0,ff.getFrontOffsetZ()*off)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if(pos==47||pos==38||pos==29||pos==11)
+			{
+				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
+						.offset(ff.rotateYCCW().getFrontOffsetX()*off,0,ff.rotateYCCW().getFrontOffsetZ()*off)
+						.offset(ff.getFrontOffsetX()*off,0,ff.getFrontOffsetZ()*off)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if(pos==51||pos==42||pos==33||pos==15)
+			{
+				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
+						.offset(ff.rotateY().getFrontOffsetX()*off,0,ff.rotateY().getFrontOffsetZ()*off)
+						.offset(ff.getOpposite().getFrontOffsetX()*off,0,ff.getOpposite().getFrontOffsetZ()*off)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if(pos==53||pos==44||pos==35||pos==17)
+			{
+				list.add(new AxisAlignedBB(0.5-0.2125, 0, 0.5-0.2125, 0.5+0.2125, 1, 0.5+0.2125)
+						.offset(ff.rotateYCCW().getFrontOffsetX()*off,0,ff.rotateYCCW().getFrontOffsetZ()*off)
+						.offset(ff.getOpposite().getFrontOffsetX()*off,0,ff.getOpposite().getFrontOffsetZ()*off)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			}
+			else if(pos==28||pos==34)
+			{
+				EnumFacing g = pos==34?facing.getOpposite():facing;
+				list.add(new AxisAlignedBB(0, -0.1875, 0, 0, 0, 0)
+						.grow(facing.rotateY().getFrontOffsetX(),0,facing.rotateY().getFrontOffsetZ())
+						.grow(facing.getFrontOffsetX()*0.125,0,facing.getFrontOffsetZ()*0.125)
+						.offset(g.getFrontOffsetX()*0.1875,0,g.getFrontOffsetZ()*0.1875)
+						.offset(getPos().getX()+0.5, getPos().getY(), getPos().getZ()+0.5));
+			}
+			else if(pos==30||pos==32)
+			{
+				EnumFacing g = (pos==32?facing.getOpposite():facing).rotateY();
+				list.add(new AxisAlignedBB(0, -0.1875, 0, 0, 0, 0)
+						.grow(facing.getFrontOffsetX(),0,facing.getFrontOffsetZ())
+						.grow(facing.rotateY().getFrontOffsetX()*0.125,0,facing.rotateY().getFrontOffsetZ()*0.125)
+						.offset(g.getFrontOffsetX()*0.1875,0,g.getFrontOffsetZ()*0.1875)
+						.offset(getPos().getX()+0.5, getPos().getY(), getPos().getZ()+0.5));
+			}
+			else
+				list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		}
 
 		return list;
 	}

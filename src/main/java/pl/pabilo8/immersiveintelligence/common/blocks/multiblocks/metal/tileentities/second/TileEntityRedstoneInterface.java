@@ -309,7 +309,26 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	{
 		List list = new ArrayList<AxisAlignedBB>();
 
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		if(pos==4)
+		{
+			switch(facing)
+			{
+				case NORTH:
+					list.add(new AxisAlignedBB(0.3125, 0.3125, 0.35, 0.6875, 0.6875, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					list.add(new AxisAlignedBB(0.3125, 0.3125, 0, 0.6875, 0.6875, 0.65).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					list.add(new AxisAlignedBB(0, 0.3125, 0.3125, 0.65, 0.6875, 0.6875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					list.add(new AxisAlignedBB(0.35, 0.3125, 0.3125, 1, 0.6875, 0.6875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
+		}
+		else
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 		return list;
 	}

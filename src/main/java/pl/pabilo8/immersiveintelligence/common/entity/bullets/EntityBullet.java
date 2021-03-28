@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.SPacketSoundEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.*;
@@ -319,66 +320,81 @@ public class EntityBullet extends Entity implements ILightProvider
 							if(hit.entityHit!=null)
 							{
 								Entity e = hit.entityHit;
-								int armor = 0;
-								int toughness = 1;
-								if(e instanceof EntityLivingBase)
-								{
-									armor = MathHelper.floor(((EntityLivingBase)e).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue());
-									toughness += MathHelper.floor(((EntityLivingBase)e).getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
-								}
-								PenMaterialTypes penType = (toughness > 0||armor > 0)?PenMaterialTypes.METAL: PenMaterialTypes.FLESH;
-								float pen = penetrationHardness*bulletCoreType.getPenMod(penType)*Math.min(force, 1.15f);
-								float dmg = baseDamage*bulletCoreType.getDamageMod(penType);
 
-								//overpenetration
-								if(pen > toughness*6f)
+								if(e instanceof EntityBullet)
 								{
-									//armor not counted in
-									if(!world.isRemote)
+									if(((EntityBullet)e).shooter!=this.shooter)
 									{
-										BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/6f));
-										e.hurtResistantTime = 0;
-										e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), dmg);
+										//you are already dead
+										e.setDead();
+										this.setDead();
+										//nani?
+										((EntityBullet)e).performEffect(new RayTraceResult(e));
+										this.performEffect(new RayTraceResult(this));
+										break penloop;
 									}
-									penetrationHardness *= ((toughness*4f)/pen);
-									force *= 0.85f;
 								}
-								//penetration
-								else if(pen > 0)
-								{
-									if(!world.isRemote)
-									{
-										float depth = (pen-(toughness*6f))/pen;
-
-										BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/8f));
-										e.hurtResistantTime = 0;
-										e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), Math.max(dmg-(armor*depth), 0));
-										penetrationHardness = 0;
-										if(fuse==-1)
-											performEffect(hit);
-										stopAtPoint(hit);
-									}
-									break penloop;
-								}
-								//underpenetration + ricochet
 								else
 								{
-									if(force > toughness*1.5f&&penType.canRicochetOff()&&i==0)
+									int armor = 0;
+									int toughness = 1;
+									if(e instanceof EntityLivingBase)
 									{
-										ricochet(toughness/2f, hit.getBlockPos());
-										hitEntities.add(hit.entityHit);
+										armor = MathHelper.floor(((EntityLivingBase)e).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue());
+										toughness += MathHelper.floor(((EntityLivingBase)e).getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
 									}
-									else if(!world.isRemote)
-									{
-										if(fuse==-1)
-											performEffect(hit);
-										stopAtPoint(hit);
+									PenMaterialTypes penType = (toughness > 0||armor > 0)?PenMaterialTypes.METAL: PenMaterialTypes.FLESH;
+									float pen = penetrationHardness*bulletCoreType.getPenMod(penType)*Math.min(force, 1.15f);
+									float dmg = baseDamage*bulletCoreType.getDamageMod(penType);
 
+									//overpenetration
+									if(pen > toughness*6f)
+									{
+										//armor not counted in
+										if(!world.isRemote)
+										{
+											BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/6f));
+											e.hurtResistantTime = 0;
+											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), dmg);
+										}
+										penetrationHardness *= ((toughness*4f)/pen);
+										force *= 0.85f;
 									}
-									break penloop;
+									//penetration
+									else if(pen > 0)
+									{
+										if(!world.isRemote)
+										{
+											float depth = (pen-(toughness*6f))/pen;
+
+											BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/8f));
+											e.hurtResistantTime = 0;
+											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), Math.max(dmg-(armor*depth), 0));
+											penetrationHardness = 0;
+											if(fuse==-1)
+												performEffect(hit);
+											stopAtPoint(hit);
+										}
+										break penloop;
+									}
+									//underpenetration + ricochet
+									else
+									{
+										if(force > toughness*1.5f&&penType.canRicochetOff()&&i==0)
+										{
+											ricochet(toughness/2f, hit.getBlockPos());
+											hitEntities.add(hit.entityHit);
+										}
+										else if(!world.isRemote)
+										{
+											if(fuse==-1)
+												performEffect(hit);
+											stopAtPoint(hit);
+
+										}
+										break penloop;
+									}
 								}
-
-
 							}
 							break;
 					}
@@ -442,13 +458,19 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	protected void performEffect(RayTraceResult hit)
 	{
+		setDead();
 		setPosition(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z);
 		float str = bulletCasing.getComponentCapacity()*bulletCore.getExplosionModifier()*bulletCoreType.getComponentEffectivenessMod();
 		for(int i = 0; i < components.length; i++)
 		{
+			if(components[i]!=null&&i<componentNBT.length&&componentNBT[i]!=null)
 			components[i].onEffect(str, componentNBT[i], world, hit.getBlockPos()!=null?hit.getBlockPos(): this.getPosition(), this);
 		}
-		setDead();
+	}
+
+	public Entity getShooter()
+	{
+		return shooter;
 	}
 
 	public Vec3d getNextPositionVector()
@@ -590,5 +612,11 @@ public class EntityBullet extends Entity implements ILightProvider
 				}
 			}
 		return null;
+	}
+
+	@Override
+	public boolean canBeCollidedWith()
+	{
+		return true;
 	}
 }

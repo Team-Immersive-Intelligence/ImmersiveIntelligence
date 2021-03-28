@@ -1,10 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,10 +10,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
@@ -38,18 +33,6 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	public String getName()
 	{
 		return "infrared_observer";
-	}
-
-	@Override
-	public IngredientStack[] getIngredientsRequired()
-	{
-		return new IngredientStack[]{
-				new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 15)),
-				new IngredientStack("blockSteel", 1),
-				new IngredientStack("plateSteel", 4),
-				new IngredientStack(new ItemStack(IIContent.blockMetalDevice, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())),
-				new IngredientStack("engineElectricSmall", 2)
-		};
 	}
 
 	@Override

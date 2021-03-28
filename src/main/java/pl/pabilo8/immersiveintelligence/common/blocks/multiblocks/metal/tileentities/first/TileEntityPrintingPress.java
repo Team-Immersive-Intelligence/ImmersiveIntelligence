@@ -23,6 +23,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -701,9 +702,101 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		if(pos==0||pos==1)
+		{
+			list.add(new AxisAlignedBB(0, 0.8125, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+
+			switch(mirrored^pos==1?facing.getOpposite():facing)
+			{
+				case NORTH:
+					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.25, 0.8125, 0.25).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.25, 0.8125, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					list.add(new AxisAlignedBB(0.75, 0, 0.0625, 0.9375, 0.8125, 0.25).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.75, 0, 0.75, 0.9375, 0.8125, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.25, 0.8125, 0.25).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.75, 0, 0.0625, 0.9375, 0.8125, 0.25).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					list.add(new AxisAlignedBB(0.0625, 0, 0.75, 0.25, 0.8125, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.75, 0, 0.75, 0.9375, 0.8125, 0.9375).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
+		}
+		else if(pos==2)
+		{
+			list.add(new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.25, 0.875).expand(facing.getFrontOffsetX()*0.125, 0, facing.getFrontOffsetZ()*0.125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			switch(facing)
+			{
+				case NORTH:
+					list.add(new AxisAlignedBB(0, 0, 0.875, 1, 1.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0, 0, 0, 0.125, 1.125, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.875, 0, 0, 1, 1.125, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case SOUTH:
+					list.add(new AxisAlignedBB(0, 0, 0, 1, 1.125, 0.125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0, 0, 0.125, 0.125, 1.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.875, 0, 0.125, 1, 1.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case EAST:
+					list.add(new AxisAlignedBB(0, 0, 0, 0.125, 1.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.125, 0, 0, 1, 1.125, 0.125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0.125, 0, 0.875, 1, 1.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+				case WEST:
+					list.add(new AxisAlignedBB(0.875, 0, 0, 1, 1.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0, 0, 0, 0.875, 1.125, 0.125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					list.add(new AxisAlignedBB(0, 0, 0.875, 0.875, 1.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+					break;
+			}
+		}
+		else if(pos==15)
+			list.add(new AxisAlignedBB(0.125, 0, 0.125, 0.875, 0.4375, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		else if(pos==16)
+			list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 0.4375, 0.9375)
+					.offset(new Vec3d((mirrored?facing.rotateY(): facing.rotateYCCW()).getDirectionVec()).scale(0.0625f))
+					//.offset(new Vec3d(facing.getDirectionVec()).scale(-0.0625f))
+					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		else if(pos==34)
+		{
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 0.5, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			list.add(new AxisAlignedBB(0.125, 0.5, 0.125, 0.875, 1, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		}
+		else if(pos==27)
+		{
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).contract(facing.getFrontOffsetX()*0.0625, 0, facing.getFrontOffsetZ()*0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		}
+		else if(pos==28)
+		{
+			if(facing.getAxis()==Axis.X)
+				list.add(new AxisAlignedBB(0.125, 0, 0, 0.875, 0.875, 1)
+						.contract(0, 0, facing==EnumFacing.EAST^mirrored?-0.25: 0.25)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			else
+				list.add(new AxisAlignedBB(0, 0, 0.125, 1, 0.875, 0.875)
+						.contract(facing==EnumFacing.NORTH^mirrored?-0.25: 0.25, 0, 0)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		}
+		else if(pos==29)
+		{
+			if(facing.getAxis()==Axis.X)
+				list.add(new AxisAlignedBB(0.125, 0, 0, 0.875, 0.875, 1)
+						.contract(0, 0, facing==EnumFacing.EAST^mirrored?0.125: -0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+			else
+				list.add(new AxisAlignedBB(0, 0, 0.125, 1, 0.875, 0.875)
+						.contract(facing==EnumFacing.NORTH^mirrored?0.125: -0.125, 0, 0)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+
+			list.add(new AxisAlignedBB(0.25, 0.875, 0.25, 0.75, 1, 0.75).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		}
+		else
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 		return list;
 	}

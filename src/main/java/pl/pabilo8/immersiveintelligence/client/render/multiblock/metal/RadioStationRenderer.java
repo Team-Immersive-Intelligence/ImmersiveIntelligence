@@ -49,7 +49,8 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 				GlStateManager.pushMatrix();
 				GlStateManager.enableBlend();
 				GlStateManager.disableLighting();
-				float progress = Math.max(Math.min(te.getCurrentConstruction()/(float)te.getConstructionCost(), 1f), 0f);
+				float cc = (int)Math.min(te.clientConstruction+(te.getConstructionCost()/100f*partialTicks),te.construction);
+				float progress = Math.max(Math.min(cc/(float)te.getConstructionCost(), 1f), 0f);
 				GlStateManager.scale(0.98f, 0.98f, 0.98f);
 				GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
 				//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);

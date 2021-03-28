@@ -60,7 +60,7 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 
 		if(tile.active&&tile.processTimeMax!=0)
 		{
-			float progress = Math.min(1f, tile.processTime/tile.processTimeMax);
+			float progress = Math.min(1f, tile.processTime/(float)tile.processTimeMax);
 			this.drawTexturedModalRect(guiLeft+66, guiTop+42, 176, 71, Math.round(54*progress), 10);
 		}
 	}

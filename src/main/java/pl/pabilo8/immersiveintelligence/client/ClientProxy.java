@@ -72,6 +72,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleGasCloud;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
@@ -119,6 +120,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.*;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletBase;
@@ -307,6 +309,16 @@ public class ClientProxy extends CommonProxy
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
 
+		if(ID==IIGuiList.GUI_UPGRADE.ordinal())
+		{
+			if(te instanceof IUpgradableMachine)
+			{
+				TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
+				if(upgradeMaster!=null)
+					return new GuiUpgrade(player.inventory, (TileEntity & IUpgradableMachine)upgradeMaster);
+			}
+		}
+
 		GuiScreen gui;
 		if(IIGuiList.values().length > ID)
 		{
@@ -343,7 +355,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMine.class, NavalMineRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMineAnchor.class, EntityRenderNone::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMineAnchor.class, NavalMineAnchorRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShrapnel.class, ShrapnelRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityWhitePhosphorus.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityMachinegun.class, MachinegunRenderer::new);
@@ -531,6 +543,8 @@ public class ClientProxy extends CommonProxy
 		IIGuiList.GUI_PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);
 		IIGuiList.GUI_PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
 		IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
+
+		IIGuiList.GUI_UPGRADE.setClientGui((player, te) -> new GuiUpgrade(player.inventory, ((TileEntity& IUpgradableMachine)te)));
 	}
 
 	@Override

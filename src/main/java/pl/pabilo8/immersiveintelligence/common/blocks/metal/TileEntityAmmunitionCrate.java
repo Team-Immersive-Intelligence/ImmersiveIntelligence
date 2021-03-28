@@ -17,9 +17,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.client.render.metal_device.AmmunitionCrateRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -70,11 +75,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(heldItem.getItem().getToolClasses(heldItem).contains(CommonProxy.TOOL_WRENCH))
-		{
-			return addUpgrade(IIContent.UPGRADE_INSERTER, false);
-		}
-		else if(player.isSneaking())
+		if(player.isSneaking())
 		{
 			open = !open;
 			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
@@ -197,5 +198,12 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	public Vec3d getConnectionOffset(Connection con)
 	{
 		return new Vec3d(0.5, 0.5, 0.5);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderWithUpgrades(MachineUpgrade... upgrades)
+	{
+		AmmunitionCrateRenderer.renderWithUpgrade(upgrades);
 	}
 }

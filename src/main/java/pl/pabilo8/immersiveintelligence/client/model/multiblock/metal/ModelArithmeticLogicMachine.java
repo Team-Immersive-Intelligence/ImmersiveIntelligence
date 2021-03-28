@@ -74,7 +74,7 @@ public class ModelArithmeticLogicMachine extends ModelIIBase
 		baseModel[3].setRotationPoint(1F, -13F, 12F);
 
 		baseModel[4].addBox(0F, 0F, 0F, 3, 13, 3, 0F); // TableLeg
-		baseModel[4].setRotationPoint(28F, -13F, 2F);
+		baseModel[4].setRotationPoint(28F, -13F, 1F);
 
 		baseModel[5].addBox(0F, 0F, 0F, 3, 13, 3, 0F); // TableLeg
 		baseModel[5].setRotationPoint(28F, -13F, 12F);

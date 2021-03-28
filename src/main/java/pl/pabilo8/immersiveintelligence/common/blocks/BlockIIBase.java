@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.blocks;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.BlockIEBase;
+import blusunrize.immersiveengineering.common.blocks.BlockIEBase.IBlockEnum;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
  * Huge thanks to AntiBlueQuirk, the author of Alternating Flux (https://github.com/AntiBlueQuirk/alternatingflux/)
  * for creating this really useful (and shortened) piece of code ^^
  */
-public class BlockIIBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends BlockIEBase<E>
+public class BlockIIBase<E extends Enum<E> & IBlockEnum> extends BlockIEBase<E>
 {
 	public ItemBlockIEBase itemBlock;
 	public Map<Integer, String> tesrMap = new HashMap<>();

@@ -1,11 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.utils;
 
-import crafttweaker.api.item.IngredientStack;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -15,17 +18,24 @@ import java.util.List;
  */
 public class MachineUpgrade
 {
-	private static List<MachineUpgrade> registeredUpgrades = new ArrayList<>();
+	private static final List<MachineUpgrade> registeredUpgrades = new ArrayList<>();
 
-	private ResourceLocation name;
-	private ResourceLocation icon;
+	protected String name;
+	protected ResourceLocation icon;
+	private int progress=0;
 	private List<IngredientStack> requiredStacks = new ArrayList<>();
 
-	public MachineUpgrade(ResourceLocation name, ResourceLocation icon)
+	public MachineUpgrade(String name, ResourceLocation icon)
 	{
 		this.name = name;
 		this.icon = icon;
 		registeredUpgrades.add(this);
+	}
+
+	@Nullable
+	public static MachineUpgrade getUpgradeByID(String id)
+	{
+		return registeredUpgrades.stream().filter(machineUpgrade -> machineUpgrade.name.equals(id)).findFirst().orElse(null);
 	}
 
 	public MachineUpgrade addStack(IngredientStack stack)
@@ -34,7 +44,13 @@ public class MachineUpgrade
 		return this;
 	}
 
-	public ResourceLocation getName()
+	public MachineUpgrade setRequiredProgress(int progress)
+	{
+		this.progress=progress;
+		return this;
+	}
+
+	public String getName()
 	{
 		return name;
 	}
@@ -54,9 +70,19 @@ public class MachineUpgrade
 		List<MachineUpgrade> upgrades = new ArrayList<>();
 		for(MachineUpgrade machineUpgrade : registeredUpgrades)
 		{
-			if(tag.hasKey(machineUpgrade.name.toString()))
+			if(tag.hasKey(machineUpgrade.name))
 				upgrades.add(machineUpgrade);
 		}
 		return upgrades;
+	}
+
+	public static List<MachineUpgrade> getMatchingUpgrades(IUpgradableMachine machine)
+	{
+		return registeredUpgrades.stream().filter(machine::upgradeMatches).collect(Collectors.toList());
+	}
+
+	public int getProgressRequired()
+	{
+		return progress;
 	}
 }

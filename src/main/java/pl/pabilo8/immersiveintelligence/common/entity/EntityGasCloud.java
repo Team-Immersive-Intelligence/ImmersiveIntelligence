@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.util.IEFluid;
 import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -62,6 +63,7 @@ public class EntityGasCloud extends Entity
 	@Override
 	public void onUpdate()
 	{
+		move(MoverType.SELF,0.01f,0,0.01f);
 		super.onUpdate();
 		if(this.fluid==null&&this.world.isRemote)
 		{
@@ -78,7 +80,7 @@ public class EntityGasCloud extends Entity
 				if(effect!=null)
 				{
 					List<EntityLivingBase> entitiesWithinAABB = world.getEntitiesWithinAABB(EntityLivingBase.class,
-							new AxisAlignedBB(posX, posY, posZ, posX, posY, posZ).grow(radius*duration/maxDuration*0.5));
+							new AxisAlignedBB(posX, posY, posZ, posX, posY, posZ).grow(radius));
 					for(EntityLivingBase entityLivingBase : entitiesWithinAABB)
 					{
 						effect.applyToEntity(entityLivingBase, null, ItemStack.EMPTY, fluid);

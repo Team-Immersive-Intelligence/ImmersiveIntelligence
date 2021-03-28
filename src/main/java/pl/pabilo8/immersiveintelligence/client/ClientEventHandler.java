@@ -60,6 +60,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
@@ -294,37 +295,54 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(ClientUtils.mc().player!=null&&event.getType()==RenderGameOverlayEvent.ElementType.TEXT)
 		{
 			if(mop!=null)
-				if(mop.typeOfHit==Type.BLOCK&&!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()&&pl.pabilo8.immersiveintelligence.api.Utils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND)))
+				if(mop.typeOfHit==Type.BLOCK&&!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
 				{
 					int col = IEConfig.nixietubeFont?Lib.colour_nixieTubeText: 0xffffff;
 					String[] text = null;
 					TileEntity tileEntity = player.world.getTileEntity(mop.getBlockPos());
 
-					if(tileEntity!=null&&tileEntity.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite()))
+					if(pl.pabilo8.immersiveintelligence.api.Utils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND)))
 					{
-						IRotaryEnergy energy = tileEntity.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite());
-
-						if(energy!=null)
+						if(tileEntity!=null&&tileEntity.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite()))
 						{
-							float int_torque = energy.getTorque();
-							float ext_torque = energy.getOutputRotationSpeed();
-							float int_speed = energy.getRotationSpeed();
-							float ext_speed = energy.getOutputRotationSpeed();
-							if(int_torque!=ext_torque&&int_speed!=ext_speed)
-								text = new String[]{
-										I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_torque", int_torque),
-										I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_speed", int_speed),
-										I18n.format(CommonProxy.INFO_KEY+"tachometer.external_torque", ext_torque),
-										I18n.format(CommonProxy.INFO_KEY+"tachometer.external_speed", ext_speed)
-								};
-							else
-								text = new String[]{
-										I18n.format(CommonProxy.INFO_KEY+"tachometer.torque", int_torque),
-										I18n.format(CommonProxy.INFO_KEY+"tachometer.speed", int_speed)
-								};
+							IRotaryEnergy energy = tileEntity.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite());
+
+							if(energy!=null)
+							{
+								float int_torque = energy.getTorque();
+								float ext_torque = energy.getOutputRotationSpeed();
+								float int_speed = energy.getRotationSpeed();
+								float ext_speed = energy.getOutputRotationSpeed();
+								if(int_torque!=ext_torque&&int_speed!=ext_speed)
+									text = new String[]{
+											I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_torque", int_torque),
+											I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_speed", int_speed),
+											I18n.format(CommonProxy.INFO_KEY+"tachometer.external_torque", ext_torque),
+											I18n.format(CommonProxy.INFO_KEY+"tachometer.external_speed", ext_speed)
+									};
+								else
+									text = new String[]{
+											I18n.format(CommonProxy.INFO_KEY+"tachometer.torque", int_torque),
+											I18n.format(CommonProxy.INFO_KEY+"tachometer.speed", int_speed)
+									};
+							}
 						}
 					}
-
+					else if(pl.pabilo8.immersiveintelligence.api.Utils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND)))
+					{
+						if(tileEntity instanceof IUpgradableMachine)
+						{
+							IUpgradableMachine m = (IUpgradableMachine)tileEntity;
+							m=m.getUpgradeMaster();
+							if(m.getCurrentlyInstalled()!=null)
+							{
+								text = new String[]{
+										I18n.format(CommonProxy.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+m.getCurrentlyInstalled().getName())),
+										I18n.format(CommonProxy.INFO_KEY+"machineupgrade.progress", m.getInstallProgress(),m.getCurrentlyInstalled().getProgressRequired())
+								};
+							}
+						}
+					}
 					//here add new block types
 
 					if(text!=null)
