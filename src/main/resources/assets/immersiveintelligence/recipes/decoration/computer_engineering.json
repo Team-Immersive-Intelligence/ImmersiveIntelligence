@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "cbc",
+    " s ",
+    "cbc"
+  ],
+  "key": {
+    "b": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 2
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitProcessor"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingAluminum"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:metal_decoration",
+    "count": 3,
+    "data": 6
+  }
+}

@@ -61,6 +61,14 @@
         }
       }
     ],
+    "inventory,type=computer_engineering": [
+      {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/absolutelly_unconnected/computer_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/iron_overlay"
+        }
+      }
+    ],
 
     "type": {
       "coil_data": {
@@ -101,6 +109,12 @@
         "textures": {
           "block_all": "immersiveintelligence:blocks/metal_decoration/heavy_mechanical_engineering",
           "overlay_all": "immersiveintelligence:blocks/metal_decoration/brass_overlay"
+        }
+      },
+      "computer_engineering": {
+        "textures": {
+          "block_all": "immersiveintelligence:blocks/metal_decoration/computer_engineering",
+          "overlay_all": "immersiveintelligence:blocks/metal_decoration/iron_overlay"
         }
       }
     }

@@ -337,6 +337,7 @@ tile.immersiveintelligence.concrete_decoration.uberconcrete.name=Überconcrete B
 
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Electronic Engineering Block
 tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Advanced Electronic Engineering Block
+tile.immersiveintelligence.metal_decoration.computer_engineering.name=Computer Engineering Block
 tile.immersiveintelligence.metal_decoration.mechanical_engineering.name=Mechanical Engineering Block
 tile.immersiveintelligence.metal_decoration.heavy_mechanical_engineering.name=Heavy Mechanical Engineering Block
 
