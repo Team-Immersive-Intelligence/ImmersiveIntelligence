@@ -1,5 +1,24 @@
 {
   "parent": "immersiveengineering:item/ie_item_base",
   "textures": {
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+       0,
+        2.5,
+        -2.5
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
+    }
   }
 }

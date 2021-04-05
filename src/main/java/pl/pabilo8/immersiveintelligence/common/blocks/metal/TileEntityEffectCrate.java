@@ -30,6 +30,7 @@ import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
@@ -62,6 +63,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	private ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
 	int upgradeProgress = 0;
+	public int clientUpgradeProgress=0;
 	public int energyStorage = 0;
 
 	//Client only
@@ -242,6 +244,8 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 				inserterAnimation = calculateInserterAnimation(0);
 				inserterAngle = calculateInserterAngle(0);
 			}
+			else if(clientUpgradeProgress < upgradeProgress)
+				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), upgradeProgress);
 		}
 		else if(open&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
 		{
@@ -403,6 +407,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(upgradeProgress>0)
 		{
 			upgradeProgress=0;
+			clientUpgradeProgress=0;
 			return true;
 		}
 		return false;
@@ -413,6 +418,13 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	{
 		currentlyInstalled=upgrade;
 		upgradeProgress=0;
+		clientUpgradeProgress=0;
+	}
+
+	@Override
+	public void removeUpgrade(MachineUpgrade upgrade)
+	{
+		upgrades.remove(upgrade);
 	}
 
 	@Override

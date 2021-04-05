@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -79,7 +80,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 
 		if(!worldIn.isRemote&&entityIn instanceof EntityLivingBase)
 		{
-			if(!isSelected||!entityIn.isSneaking()&&do_tick)
+			if(!isSelected||!(entityIn.isSneaking()||entityIn.getLowestRidingEntity() instanceof EntityFieldHowitzer)&&do_tick)
 			{
 				if(isAdvanced(stack))
 				{
@@ -93,7 +94,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 			}
 			else
 			{
-				if(worldIn.getTotalWorldTime()%5==0&&entityIn.isSneaking()&&entityIn instanceof EntityPlayerMP)
+				if(worldIn.getTotalWorldTime()%5==0&&(entityIn.isSneaking()||entityIn.getLowestRidingEntity() instanceof EntityFieldHowitzer)&&entityIn instanceof EntityPlayerMP)
 				{
 					float yaw = (360+((EntityLivingBase)entityIn).rotationYawHead)%360;
 					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"yaw", yaw)), (EntityPlayerMP)entityIn);

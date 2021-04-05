@@ -2,25 +2,26 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileent
 
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -40,12 +41,12 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine
+public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds
 {
 	public static final HashMap<String, Supplier<EmplacementWeapon>> weaponRegistry = new HashMap<>();
 
 	public boolean isDoorOpened = false;
-	public int progress = 0, upgradeProgress = 0;
+	public int progress = 0, upgradeProgress = 0, clientUpgradeProgress = 0;
 	public EmplacementWeapon currentWeapon = null;
 	BlockPos[] allBlocks = null;
 	public boolean isShooting = false;
@@ -64,12 +65,18 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(isDummy())
 			return;
 
-		/*if(world.isRemote)
+		if(world.isRemote)
 		{
-			handleSounds();
-		}*/
-
-		if(!world.isRemote&&(isDoorOpened^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]))))
+			if(!isDummy()&&world.isRemote&&clientUpgradeProgress < upgradeProgress)
+				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), upgradeProgress);
+			//handleSounds();
+		}
+		if(currentlyInstalled!=null)
+		{
+			isDoorOpened = true;
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(true, 0, this.getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 48));
+		}
+		else if(!world.isRemote&&(isDoorOpened^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]))))
 		{
 			isDoorOpened = world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]));
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 48));
@@ -308,6 +315,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		super.readCustomNBT(nbt, descPacket);
 		this.progress = nbt.getInteger("progress");
+		this.upgradeProgress = nbt.getInteger("upgradeProgress");
 		this.isDoorOpened = nbt.getBoolean("isDoorOpened");
 
 		if(!isDummy()&&nbt.hasKey("currentWeapon"))
@@ -323,6 +331,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		super.writeCustomNBT(nbt, descPacket);
 		nbt.setBoolean("isDoorOpened", this.isDoorOpened);
+		nbt.setInteger("upgradeProgress",this.upgradeProgress);
 
 		nbt.setInteger("progress", this.progress);
 
@@ -530,8 +539,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
-		upgradeProgress += toAdd;
-		return true;
+		if(finishedDoorAction())
+		{
+			upgradeProgress += toAdd;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -541,6 +554,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(upgradeProgress > 0)
 		{
 			upgradeProgress = 0;
+			clientUpgradeProgress = 0;
 			return true;
 		}
 		return false;
@@ -551,11 +565,43 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		currentlyInstalled = upgrade;
 		upgradeProgress = 0;
+		clientUpgradeProgress = 0;
+	}
+
+	@Override
+	public void removeUpgrade(MachineUpgrade upgrade)
+	{
+		currentWeapon = null;
+		upgradeProgress = 0;
+		clientUpgradeProgress = 0;
 	}
 
 	private MachineUpgradeEmplacementWeapon weaponToUpgrade()
 	{
 		return (MachineUpgradeEmplacementWeapon)MachineUpgrade.getUpgradeByID(currentWeapon.getName());
+	}
+
+	@Override
+	public List<AxisAlignedBB> getAdvancedColisionBounds()
+	{
+		return getAdvancedSelectionBounds();
+	}
+
+	@Override
+	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	{
+		ArrayList<AxisAlignedBB> list = new ArrayList<>();
+		if(offset[1]==1)
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 0.0625f, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		else
+			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+		return list;
+	}
+
+	@Override
+	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
+	{
+		return false;
 	}
 
 	public static abstract class EmplacementWeapon
@@ -673,7 +719,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		 */
 		public abstract void readFromNBT(NBTTagCompound tagCompound);
 
+		@SideOnly(Side.CLIENT)
 		public void render(TileEntityEmplacement te, float partialTicks)
+		{
+
+		}
+
+		@SideOnly(Side.CLIENT)
+		public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
 		{
 
 		}
@@ -700,6 +753,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			public void render(TileEntityEmplacement te)
 			{
 				weapon.render(te, 0);
+			}
+
+			@SideOnly(Side.CLIENT)
+			public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
+			{
+				weapon.renderUpgradeProgress(clientProgress, serverProgress, partialTicks);
 			}
 		}
 	}

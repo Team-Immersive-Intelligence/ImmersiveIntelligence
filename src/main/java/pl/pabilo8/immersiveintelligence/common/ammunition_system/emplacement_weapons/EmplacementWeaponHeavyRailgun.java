@@ -19,6 +19,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
+import java.util.ArrayList;
+
 public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 {
 	/**
@@ -217,6 +219,27 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 
 		}
 		EmplacementRenderer.renderCrane(craneYaw, craneDist, craneDrop,craneGrab,()->{});
+
+		GlStateManager.popMatrix();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
+	{
+		GlStateManager.pushMatrix();
+
+		ClientUtils.bindTexture(EmplacementRenderer.textureHeavyRailgun);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyRailgun.baseModel)
+			mod.render();
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 20/16f, 13F/16f);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyRailgun.gunModel)
+			mod.render();
+		GlStateManager.popMatrix();
+		GlStateManager.translate(-0.75f,0.5f,-0.75f);
+		EmplacementRenderer.renderCrane(0, 0.75f, 0,0,()->{});
 
 		GlStateManager.popMatrix();
 	}

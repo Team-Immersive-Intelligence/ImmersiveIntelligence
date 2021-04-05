@@ -374,10 +374,9 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			}
 
 
-		//boolean canTowedMove = getRecursivePassengers().stream().noneMatch(entity -> entity instanceof ITowable && !((ITowable)entity).canMoveTowed());
-		//&&canTowedMove
+		boolean canTowedMove = getRecursivePassengers().stream().noneMatch(entity -> entity instanceof ITowable && !((ITowable)entity).canMoveTowed());
 
-		if(engineWorking&&accelerated)
+		if(engineWorking&&accelerated&&canTowedMove)
 		{
 			acceleration = Math.min(acceleration+0.1f, 1f);
 		}

@@ -126,13 +126,14 @@ public class IIContent
 	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
 
 	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
+	public static ItemIIAmmoLightArtillery itemAmmoLightArtillery = new ItemIIAmmoLightArtillery();
 	public static ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
 	public static ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
 	public static ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
 	public static ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
+	public static ItemIIAmmoStormRifle itemAmmoStormRifle = new ItemIIAmmoStormRifle();
 	public static ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
 	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
-	public static ItemIIAmmoStormRifle itemAmmoStormRifle = new ItemIIAmmoStormRifle();
 
 	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
 

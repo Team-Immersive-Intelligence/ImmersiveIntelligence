@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.RadioStation;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -61,10 +62,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	{
 		super.update();
 		if(!isDummy()&&world.isRemote&&clientConstruction < construction)
-		{
-			clientConstruction = (int)Math.min(clientConstruction+(getConstructionCost()/100f), construction);
-
-		}
+			clientConstruction = (int)Math.min(clientConstruction+(Tools.electric_hammer_energy_per_use_construction/2f), construction);
 	}
 
 	@Override

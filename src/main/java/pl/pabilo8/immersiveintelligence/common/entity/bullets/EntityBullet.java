@@ -316,6 +316,9 @@ public class EntityBullet extends Entity implements ILightProvider
 							break;
 						case ENTITY:
 							hitEntities.add(hit.entityHit);
+							if(hit.entityHit==this)
+								break;
+
 							//just to be sure
 							if(hit.entityHit!=null)
 							{

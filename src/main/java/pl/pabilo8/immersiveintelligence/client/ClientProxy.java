@@ -820,9 +820,9 @@ public class ClientProxy extends CommonProxy
 					IIPacketHandler.INSTANCE.sendToServer(new MessageItemScrollableSwitch(event.getDwheel() > 0));
 					event.setCanceled(true);
 				}
-				if(player.getRidingEntity() instanceof IEntityZoomProvider&&ZoomHandler.isZooming)
+				if(player.getLowestRidingEntity() instanceof IEntityZoomProvider&&ZoomHandler.isZooming)
 				{
-					IEntityZoomProvider zoomProvider = (IEntityZoomProvider)player.getRidingEntity();
+					IEntityZoomProvider zoomProvider = (IEntityZoomProvider)player.getLowestRidingEntity();
 
 					if(zoomProvider.getZoom().canZoom(zoomProvider.getZoomStack(), player))
 					{

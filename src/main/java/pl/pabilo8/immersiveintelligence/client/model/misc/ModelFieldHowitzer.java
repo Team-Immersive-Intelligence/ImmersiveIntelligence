@@ -189,10 +189,10 @@ public class ModelFieldHowitzer extends ModelIIBase
 		pitchThingyModel[1] = new ModelRendererTurbo(this, 0, 2, textureX, textureY); // Box 35
 
 		pitchThingyModel[0].addBox(-0.5F, 0F, -0.5F, 1, 1, 1, 0F); // Box 35
-		pitchThingyModel[0].setRotationPoint(2F, -3F, 17F);
+		pitchThingyModel[0].setRotationPoint(14F, -3F, 17F);
 
 		pitchThingyModel[1].addBox(-1.5F, -1F, -1.5F, 3, 1, 3, 0F); // Box 35
-		pitchThingyModel[1].setRotationPoint(2F, -3F, 17F);
+		pitchThingyModel[1].setRotationPoint(14F, -3F, 17F);
 
 		parts.put("base", baseModel);
 		parts.put("gun", gunModel);

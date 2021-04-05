@@ -42,6 +42,9 @@ public class EntityNavalMineAnchor extends Entity
 	{
 		handleWaterMovement();
 		move(MoverType.SELF,0,-0.0625f,0);
+
+		if(ticksExisted>400&&getPassengers().size()==0)
+			setDead();
 	}
 
 	public void updatePassenger(Entity passenger)

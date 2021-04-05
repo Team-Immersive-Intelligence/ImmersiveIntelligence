@@ -994,6 +994,9 @@ public class Config
 		{
 			@SubConfig
 			public static Motorbike motorbike;
+			@SubConfig
+			public static FieldHowitzer fieldHowitzer;
+
 
 			public static class Motorbike
 			{
@@ -1036,6 +1039,15 @@ public class Config
 
 				@Comment({"Time required to tow a field howitzer."})
 				public static int towingTime = 80;
+
+				@Comment({"Time required to set up field howitzer after moving it."})
+				public static int setupTime = 15;
+
+				@Comment({"Time required to reload a field howitzer."})
+				public static int reloadTime = 80;
+
+				@Comment({"Time required to fire a single shell using the field howitzer."})
+				public static int fireTime = 50;
 			}
 		}
 

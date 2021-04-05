@@ -24,11 +24,13 @@ import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 public class MessageBeginMachineUpgrade implements IMessage
 {
 	BlockPos pos;
+	boolean install;
 	String machineID;
 
-	public MessageBeginMachineUpgrade(TileEntity tile, String machineID)
+	public MessageBeginMachineUpgrade(TileEntity tile, String machineID, boolean install)
 	{
 		this.pos = tile.getPos();
+		this.install = install;
 		this.machineID = machineID;
 	}
 
@@ -40,6 +42,7 @@ public class MessageBeginMachineUpgrade implements IMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+		install = buf.readBoolean();
 		this.machineID = ByteBufUtils.readUTF8String(buf);
 	}
 
@@ -47,6 +50,7 @@ public class MessageBeginMachineUpgrade implements IMessage
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeInt(pos.getX()).writeInt(pos.getY()).writeInt(pos.getZ());
+		buf.writeBoolean(install);
 		ByteBufUtils.writeUTF8String(buf, machineID);
 	}
 
@@ -61,10 +65,21 @@ public class MessageBeginMachineUpgrade implements IMessage
 				{
 					TileEntity tile = world.getTileEntity(message.pos);
 					MachineUpgrade upgrade = MachineUpgrade.getUpgradeByID(message.machineID);
-					if(tile instanceof IUpgradableMachine&&((IUpgradableMachine)tile).getInstallProgress()==0&&upgrade!=null&&((IUpgradableMachine)tile).upgradeMatches(upgrade))
+					if(message.install)
 					{
-						((IUpgradableMachine)tile).startUpgrade(upgrade);
-						IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile,32));
+						if(tile instanceof IUpgradableMachine&&((IUpgradableMachine)tile).getInstallProgress()==0&&upgrade!=null&&((IUpgradableMachine)tile).upgradeMatches(upgrade))
+						{
+							((IUpgradableMachine)tile).startUpgrade(upgrade);
+							IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
+						}
+					}
+					else
+					{
+						if(tile instanceof IUpgradableMachine)
+						{
+							((IUpgradableMachine)tile).removeUpgrade(upgrade);
+							IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
+						}
 					}
 				}
 			});
@@ -83,10 +98,13 @@ public class MessageBeginMachineUpgrade implements IMessage
 				{
 					TileEntity tile = world.getTileEntity(message.pos);
 					MachineUpgrade upgrade = MachineUpgrade.getUpgradeByID(message.machineID);
-					if(tile instanceof IUpgradableMachine&&((IUpgradableMachine)tile).getInstallProgress()==0&&upgrade!=null)
+					if(message.install)
 					{
-						((IUpgradableMachine)tile).startUpgrade(upgrade);
+						if(tile instanceof IUpgradableMachine&&((IUpgradableMachine)tile).getInstallProgress()==0&&upgrade!=null&&((IUpgradableMachine)tile).upgradeMatches(upgrade))
+							((IUpgradableMachine)tile).startUpgrade(upgrade);
 					}
+					else if(tile instanceof IUpgradableMachine)
+						((IUpgradableMachine)tile).removeUpgrade(upgrade);
 				}
 			});
 			return null;

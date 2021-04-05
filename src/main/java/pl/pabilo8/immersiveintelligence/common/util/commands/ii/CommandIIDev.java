@@ -25,6 +25,7 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansHowitzer;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
@@ -221,12 +222,11 @@ public class CommandIIDev extends CommandBase
 									"Hans ist Einsatzbereit!",
 									"Ein neues Hans is Bereit zum Kampf",
 									"Hans - bereit zum Einsatz",
-									"Hans wartet auf deinem Befehle",
+									"Hans wartet auf deine Befehle",
 									"Hans ist Kampfbereit",
 									"Wir haben ein neues Hans!",
 									"Der Hans ist bereit!",
-									"Hans - bereit zum Angriff!",
-									"Hans - bereit zum Apel!",
+									"Hans - bereit zum Dienst!",
 									"Ein neues Hans ist Kriegsbereit!"
 							};
 
@@ -270,6 +270,8 @@ public class CommandIIDev extends CommandBase
 
 								hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 0));
 								hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 1));
+								hans1.tasks.addTask(1,new AIHansHowitzer(howi,0));
+								hans2.tasks.addTask(1,new AIHansHowitzer(howi,1));
 							}
 							else if(num > 2&&num < 7)
 							{

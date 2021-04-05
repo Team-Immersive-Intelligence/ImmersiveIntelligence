@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui;
 
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
@@ -10,9 +9,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
@@ -20,10 +19,12 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBeginMachineUpgrade;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,9 @@ public class GuiUpgrade extends GuiIEContainerBase
 	List<MachineUpgrade> upgrades;
 	MachineUpgrade previewed = null;
 	public boolean info = false;
-	GuiButtonIE buttonInfo=null, buttonUpgrade=null, buttonQuit=null;
+	public boolean previewInstalled = false;
+	GuiButtonIE buttonInfo = null, buttonUpgrade = null, buttonQuit = null;
+	private String textUpgradeMachine, textInfo, textUpgrade, textRemove, textBack;
 
 	public <T extends TileEntity & IUpgradableMachine> GuiUpgrade(InventoryPlayer inventoryPlayer, T tile)
 	{
@@ -49,6 +52,9 @@ public class GuiUpgrade extends GuiIEContainerBase
 		this.upgradableMachine = tile;
 		this.tileEntity = tile;
 		upgrades = MachineUpgrade.getMatchingUpgrades(upgradableMachine);
+		for(MachineUpgrade upgrade : upgradableMachine.getUpgrades())
+			if(!upgrades.contains(upgrade))
+				upgrades.add(upgrade);
 	}
 
 	public void initGui()
@@ -58,18 +64,24 @@ public class GuiUpgrade extends GuiIEContainerBase
 		boolean h = buttonUpgrade!=null&&buttonUpgrade.visible;
 		boolean j = buttonQuit!=null&&buttonQuit.visible;
 
-		addButton(buttonInfo=new GuiButtonIE(0, guiLeft+106, guiTop+23, 52, 12, "Info", TEXTURE, 49, 168));
-		addButton(buttonUpgrade=new GuiButtonIE(1, guiLeft+106, guiTop+38, 52, 12, "Upgrade", TEXTURE, 49, 180));
-		addButton(buttonQuit=new GuiButtonIE(2, guiLeft+106, guiTop+53, 52, 12, "Quit", TEXTURE, 49, 192));
+		textUpgradeMachine = I18n.format(CommonProxy.DESCRIPTION_KEY+"upgrade_gui.title");
+		textInfo = I18n.format(CommonProxy.DESCRIPTION_KEY+"upgrade_gui.info");
+		textUpgrade = I18n.format(CommonProxy.DESCRIPTION_KEY+"upgrade_gui.install");
+		textRemove = I18n.format(CommonProxy.DESCRIPTION_KEY+"upgrade_gui.remove");
+		textBack = I18n.format(CommonProxy.DESCRIPTION_KEY+"upgrade_gui.back");
 
-		buttonInfo.visible=g;
-		buttonUpgrade.visible=h;
-		buttonQuit.visible=j;
+		addButton(buttonInfo = new GuiButtonIE(0, guiLeft+106, guiTop+23, 52, 12, textInfo, TEXTURE, 49, 168));
+		addButton(buttonUpgrade = new GuiButtonIE(1, guiLeft+106, guiTop+38, 52, 12, textUpgrade, TEXTURE, 49, 180));
+		addButton(buttonQuit = new GuiButtonIE(2, guiLeft+106, guiTop+53, 52, 12, textBack, TEXTURE, 49, 192));
 
-		if(upgradableMachine.getInstallProgress()>0)
+		buttonInfo.visible = g;
+		buttonUpgrade.visible = h;
+		buttonQuit.visible = j;
+
+		if(upgradableMachine.getInstallProgress() > 0)
 		{
-			previewed=upgradableMachine.getCurrentlyInstalled();
-			buttonList.forEach(guiButton -> guiButton.visible=false);
+			previewed = upgradableMachine.getCurrentlyInstalled();
+			buttonList.forEach(guiButton -> guiButton.visible = false);
 		}
 	}
 
@@ -79,7 +91,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		Utils.drawStringCentered(fontRenderer, "Upgrade Machine", 0, -14, getXSize()+4, 6, 0xd99747);
+		Utils.drawStringCentered(fontRenderer, textUpgradeMachine, 0, -14, getXSize()+4, 6, 0xd99747);
 		//fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(), 3)*100)+"%", 76, 47, 0xd99747);
 	}
 
@@ -90,7 +102,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			info^=true;
 		else if(button.id==1)
 		{
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBeginMachineUpgrade(tileEntity,previewed.getName()));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(), !previewInstalled));
 			mc.player.closeScreen();
 		}
 		else if(button.id==2)
@@ -110,7 +122,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		ClientUtils.bindTexture(TEXTURE);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		int ww = ((fontRenderer.getStringWidth("Upgrade Machine")-4)/2);
+		int ww = ((fontRenderer.getStringWidth(textUpgradeMachine)-4)/2);
 		this.drawTexturedModalRect(guiLeft+(xSize/2-ww)-4, guiTop-11, 0, 168, 12, 11);
 		for(int w = 11; w < ww*2; w += 12)
 			this.drawTexturedModalRect(guiLeft+(xSize/2-ww)+w-4, guiTop-11, 12, 168, Math.min(12, (ww*2)-w), 11);
@@ -134,6 +146,8 @@ public class GuiUpgrade extends GuiIEContainerBase
 			if(id>-1&&id < upgrades.size())
 			{
 				previewed = upgrades.get(id);
+				previewInstalled = upgradableMachine.hasUpgrade(previewed);
+				buttonUpgrade.displayString = previewInstalled?textRemove: textUpgrade;
 			}
 		}
 		else
@@ -210,8 +224,12 @@ public class GuiUpgrade extends GuiIEContainerBase
 				int x = (i%4)*18;
 				int y = (int)(Math.floor(i/4f)*18);
 				ItemStack stack = previewed.getRequiredStacks().get(i).getExampleStack();
+				stack.setCount(previewed.getRequiredStacks().get(i).inputSize);
 				//drawString(fontRenderer,stack.getDisplayName(),guiLeft+xSize+x, guiTop+4-yy+y,0xffffff);
-				mc.getRenderItem().renderItemAndEffectIntoGUI(stack,guiLeft+xSize+x+2, guiTop+112-yy+y);
+				mc.getRenderItem().renderItemAndEffectIntoGUI(stack, guiLeft+xSize+x+2, guiTop+112-yy+y);
+				mc.getRenderItem().renderItemOverlayIntoGUI(fontRenderer, stack, guiLeft+xSize+x+2, guiTop+112-yy+y, null);
+				if(Utils.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mx, my))
+					tooltip.addAll(stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
 			}
 
 			boolean uni = fontRenderer.getUnicodeFlag();
@@ -258,9 +276,26 @@ public class GuiUpgrade extends GuiIEContainerBase
 						break;
 			}
 
-			if(reqSize>0)
+			if(reqSize > 0)
 				return false;
 		}
 		return true;
+	}
+
+	@Nullable
+	public ItemStack getPreviewedItem(int mouseX, int mouseY)
+	{
+		if(previewed!=null&&info)
+		{
+			int yy= (int)(Math.floor(previewed.getRequiredStacks().size()/4f)*18);
+			for(int i = 0; i < previewed.getRequiredStacks().size(); i++)
+			{
+				int x = (i%4)*18;
+				int y = (int)(Math.floor(i/4f)*18);
+				if(Utils.isPointInRectangle(guiLeft+xSize+x+2, guiTop+112-yy+y, guiLeft+xSize+x+18, guiTop+128-yy+y, mouseX, mouseY))
+					return previewed.getRequiredStacks().get(i).getExampleStack();
+			}
+		}
+		return null;
 	}
 }

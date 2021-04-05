@@ -56,7 +56,7 @@ public class IIManualWarfare extends IIManual
 		ArrayList<ManualPages> bullet_components = new ArrayList<>();
 		for(Entry<String, IBulletComponent> entry : BulletRegistry.INSTANCE.registeredComponents.entrySet())
 		{
-			if(!entry.getValue().getMaterial().getExampleStack().isEmpty())
+			if(entry.getValue().showInManual()&&!entry.getValue().getMaterial().getExampleStack().isEmpty())
 				bullet_components.add(new BulletComponentDisplay(ManualHelper.getManual(), entry.getValue()));
 		}
 

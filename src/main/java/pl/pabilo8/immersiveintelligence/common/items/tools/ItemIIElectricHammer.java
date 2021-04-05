@@ -198,7 +198,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 			{
 				int energy;
 				if(player.isCreative())
-					energy = 10000;
+					energy = Tools.electric_hammer_energy_per_use_construction;
 				else
 					energy = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Tools.electric_hammer_energy_per_use_construction, false);
 				if(energy > 0)

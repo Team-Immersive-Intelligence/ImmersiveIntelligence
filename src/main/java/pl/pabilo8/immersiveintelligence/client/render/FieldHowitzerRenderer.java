@@ -6,9 +6,11 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityFieldHowitzer;
 
 public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implements IReloadableModelContainer<FieldHowitzerRenderer>
@@ -38,28 +40,62 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 
 		float tt = entity.world.getTotalWorldTime()+f1;
 		float pitch = -entity.gunPitch;//Math.abs(((tt%120)/120f)-0.5f)*-155f;
-		float recoil = 0;//(tt%20)/20f;
-		float gun_recoil = 1f-Math.abs(Math.min(recoil/0.5f, 1f)-0.5f)/0.5f;
-		float plate_recoil = 1f-(Math.abs(Math.max((recoil-0.5f)/0.5f, 0f)-0.5f)/0.5f);
+		float firing = (entity.shootingProgress+(entity.shootingProgress > 0?f1: 0))/FieldHowitzer.fireTime;
+		float recoil = 0;
+		float gun_recoil = 0;
+		float plate_recoil = 0;
+
+		//firing = (tt%50)/50f;
+		float trigger = 0;
+		if(entity.reloadProgress > 0)
+		{
+			float reload = (entity.reloadProgress+f1)/FieldHowitzer.reloadTime;
+			trigger = (reload > 0.1f?(reload < 0.9f?(reload < 0.2f?(reload-0.1f)/0.1f: 1f): 1f-((reload-0.9f)/0.1f)): 0f);
+			plate_recoil = trigger*2f;
+		}
+		else if(firing > 0.1)
+		{
+			recoil = firing > 0.6?(firing-0.6f)/0.4f: 0;
+			gun_recoil = 1f-Math.abs(Math.min(recoil/0.5f, 1f)-0.5f)/0.5f;
+			plate_recoil = 1f-(Math.abs(Math.max((recoil-0.5f)/0.5f, 0f)-0.5f)/0.5f);
+			trigger = -(firing > 0.1f?(firing < 0.9f?(firing < 0.2f?(firing-0.1f)/0.1f: 1f): 1f-((firing-0.9f)/0.1f)): 0f);
+		}
+
 		float wheelRot = entity.wheelTraverse+(entity.speed > 0?(f1*entity.speed): 0);
 		float yaw = -entity.rotationYaw;//(tt%60)/60f*360f;
 
-
+		float towing = 0;
 		if(entity.isRiding())
 		{
 			GlStateManager.rotate(yaw, 0, 1, 0);
 			GlStateManager.translate(-0.45, 0.45, 1.65);
-
+			towing=entity.towingOperation?(entity.setupTime/(float)FieldHowitzer.towingTime):0;
 		}
 		else
 		{
 			GlStateManager.rotate(yaw, 0, 1, 0);
 			GlStateManager.translate(-0.45, 0.45, 0.5);
+			towing=1f-((entity.setupTime/(float)FieldHowitzer.setupTime)*1.75f);
 		}
 
 		ClientUtils.bindTexture(texture);
 
+		GlStateManager.rotate(towing*-8, 1, 0, 0);
 		for(ModelRendererTurbo mod : model.baseModel)
+			mod.render(0.0625f);
+
+		for(ModelRendererTurbo mod : model.triggerModel)
+		{
+			mod.rotateAngleX = trigger;
+			mod.render(0.0625f);
+		}
+
+		for(ModelRendererTurbo mod : model.pitchThingyModel)
+		{
+			mod.rotateAngleY = TmtUtil.AngleToTMT(pitch*8);
+			mod.render(0.0625f);
+		}
+		for(ModelRendererTurbo mod : model.wheelAxleModel)
 			mod.render(0.0625f);
 
 
@@ -70,6 +106,7 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 
 		for(ModelRendererTurbo mod : model.gunModel)
 			mod.render(0.0625f);
+
 		GlStateManager.translate(0, 0, -gun_recoil*0.25f);
 		for(ModelRendererTurbo mod : model.barrelModel)
 			mod.render(0.0625f);
@@ -81,16 +118,15 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 
 		GlStateManager.popMatrix();
 
-		for(ModelRendererTurbo mod : model.triggerModel)
-			mod.render(0.0625f);
+		GlStateManager.rotate(towing*8, 1, 0, 0);
 
-		for(ModelRendererTurbo mod : model.wheelAxleModel)
-			mod.render(0.0625f);
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(wheelRot, 1, 0, 0);
 		for(ModelRendererTurbo mod : model.leftWheelModel)
 			mod.render(0.0625f);
 		for(ModelRendererTurbo mod : model.rightWheelModel)
 			mod.render(0.0625f);
-
+		GlStateManager.popMatrix();
 
 		GlStateManager.disableBlend();
 		GlStateManager.disableRescaleNormal();

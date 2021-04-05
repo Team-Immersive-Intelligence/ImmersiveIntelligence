@@ -50,6 +50,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import org.lwjgl.opengl.GLContext;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -61,6 +62,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
@@ -69,10 +71,8 @@ import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStac
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.*;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
@@ -260,28 +260,34 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onFOVUpdate(FOVModifier event)
 	{
 		EntityPlayer player = ClientUtils.mc().player;
-		if(player.getRidingEntity() instanceof IEntityZoomProvider&&mgAiming)
+		if(player.getLowestRidingEntity() instanceof IEntityZoomProvider&&mgAiming)
 		{
-			IEntityZoomProvider ridingEntity = (IEntityZoomProvider)player.getRidingEntity();
+			IEntityZoomProvider ridingEntity = (IEntityZoomProvider)player.getLowestRidingEntity();
 
-			float[] steps = ridingEntity.getZoom().getZoomSteps(ridingEntity.getZoomStack(), player);
-			if(steps!=null&&steps.length > 0)
+			if(ridingEntity.getZoom()!=null)
 			{
-				int curStep = -1;
-				float dist = 0;
-				for(int i = 0; i < steps.length; i++)
-					if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
-					{
-						curStep = i;
-						dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
-					}
-				if(curStep!=-1)
-					ZoomHandler.fovZoom = steps[curStep];
-				else
-					ZoomHandler.fovZoom = event.getFOV();
-				event.setFOV(ZoomHandler.fovZoom*event.getFOV());
+				float[] steps = ridingEntity.getZoom().getZoomSteps(ridingEntity.getZoomStack(), player);
+				if(steps!=null&&steps.length > 0)
+				{
+					int curStep = -1;
+					float dist = 0;
+					for(int i = 0; i < steps.length; i++)
+						if(curStep==-1||Math.abs(steps[i]-ZoomHandler.fovZoom) < dist)
+						{
+							curStep = i;
+							dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
+						}
+					if(curStep!=-1)
+						ZoomHandler.fovZoom = steps[curStep];
+					else
+						ZoomHandler.fovZoom = event.getFOV();
+					event.setFOV(ZoomHandler.fovZoom*event.getFOV());
+				}
+				ZoomHandler.isZooming = true;
 			}
-			ZoomHandler.isZooming = true;
+			else
+				ZoomHandler.isZooming = false;
+
 		}
 
 	}
@@ -408,7 +414,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			return;
 		}
 
-		Entity ridingEntity = ClientUtils.mc().player.getRidingEntity();
+		Entity ridingEntity = ClientUtils.mc().player.getLowestRidingEntity();
 
 		dothing:
 		if(ZoomHandler.isZooming&&event.getType()==RenderGameOverlayEvent.ElementType.CROSSHAIRS)
@@ -422,16 +428,23 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				if(ridingEntity instanceof IEntityZoomProvider)
 				{
 					IEntityZoomProvider entityZoomProvider = ((IEntityZoomProvider)ridingEntity);
-					if(!entityZoomProvider.getZoom().canZoom(entityZoomProvider.getZoomStack(), ClientUtils.mc().player))
+					if(entityZoomProvider.getZoom()!=null)
 					{
-						ZoomHandler.isZooming = false;
-						break dothing;
+						if(!entityZoomProvider.getZoom().canZoom(entityZoomProvider.getZoomStack(), ClientUtils.mc().player))
+						{
+							ZoomHandler.isZooming = false;
+							break dothing;
+						}
+						ClientUtils.bindTexture(entityZoomProvider.getZoom().getZoomOverlayTexture(entityZoomProvider.getZoomStack(), ClientUtils.mc().player));
 					}
-					ClientUtils.bindTexture(entityZoomProvider.getZoom().getZoomOverlayTexture(entityZoomProvider.getZoomStack(), ClientUtils.mc().player));
+					else
+						ZoomHandler.isZooming = false;
 				}
 				else
 					ClientUtils.bindTexture(((IAdvancedZoomTool)stack.getItem()).getZoomOverlayTexture(stack, ClientUtils.mc().player));
 
+				if(!ZoomHandler.isZooming)
+					return;
 
 				int width = event.getResolution().getScaledWidth();
 				int height = event.getResolution().getScaledHeight();
@@ -812,6 +825,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			else if(ridingEntity instanceof EntityVehicleSeat)
 			{
 				EntityVehicleSeat seat = ((EntityVehicleSeat)ridingEntity);
+				((IVehicleMultiPart)seat.getRidingEntity()).getSeatRidingAngle(seat.seatID, entity);
+
 
 				if(player.getLowestRidingEntity() instanceof EntityMotorbike)
 				{
@@ -829,8 +844,163 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					model.bipedLeftLeg.rotateAngleX = -0.65f;
 
 				}
-				else
+				else if(player.getLowestRidingEntity() instanceof EntityFieldHowitzer)
 				{
+					EntityFieldHowitzer howitzer = (EntityFieldHowitzer)player.getLowestRidingEntity();
+					float partialTicks = ClientUtils.mc().getRenderPartialTicks();
+					float tt = entity.world.getTotalWorldTime()+partialTicks;
+					float firing = (howitzer.shootingProgress+(howitzer.shootingProgress > 0?partialTicks: 0))/FieldHowitzer.fireTime;
+					float reloading = (howitzer.reloadProgress+(howitzer.reloadProgress > 0?partialTicks: 0))/FieldHowitzer.reloadTime;
+					//float reloading = (tt%60)/60f;
+
+					if(howitzer.setupTime > 0)
+					{
+						float progress = MathHelper.clamp(((howitzer.setupTime+
+								(partialTicks*(howitzer.turnLeft||howitzer.turnRight||howitzer.forward||howitzer.backward?1: -1))
+						)/(FieldHowitzer.setupTime*0.2f)), 0, 1);
+
+						float wtime = (Math.abs((((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%30)/30f)-0.5f)/0.5f);
+						float stime = howitzer.setupTime/(float)FieldHowitzer.setupTime;
+						wtime*=(float)Math.floor(stime);
+
+						model.bipedRightLeg.rotationPointZ = progress*8f;
+						model.bipedLeftLeg.rotationPointZ = progress*8f;
+
+						//model.bipedBody.rotateAngleY=seat.seatID==0?0.25f:-0.25f;
+						model.bipedBody.rotateAngleX += progress*0.385f;
+						model.isSneak = true;
+						if(seat.seatID==1)
+						{
+							model.bipedRightArm.rotateAngleX = progress*-0.5f;
+							model.bipedRightArm.rotateAngleZ = progress*1.5f;
+							model.bipedLeftArm.rotateAngleX = progress*-0.55f;
+
+							if(howitzer.turnLeft)
+							{
+								model.bipedRightLeg.rotateAngleZ = (-(1f-wtime)*0.25f)*stime;
+								model.bipedLeftLeg.rotateAngleZ = (-(wtime)*0.25f-0.25f)*stime;
+							}
+							else if(howitzer.turnRight)
+							{
+								model.bipedRightLeg.rotateAngleZ = ((1f-wtime)*0.25f+0.25f)*stime;
+								model.bipedLeftLeg.rotateAngleZ = ((wtime)*0.25f)*stime;
+							}
+						}
+						else
+						{
+							model.bipedLeftArm.rotateAngleX = progress*-0.5f;
+							model.bipedLeftArm.rotateAngleZ = -progress*1.125f;
+							model.bipedRightArm.rotateAngleX = progress*0.125f;
+							model.bipedRightArm.rotateAngleZ = progress*0.5f;
+
+							if(howitzer.turnLeft)
+							{
+								model.bipedRightLeg.rotateAngleZ = (-(1f-wtime)*0.25f+0.25f)*stime;
+								model.bipedLeftLeg.rotateAngleZ = (-(wtime)*0.25f)*stime;
+							}
+							else if(howitzer.turnRight)
+							{
+								model.bipedRightLeg.rotateAngleZ = ((1f-wtime)*0.25f)*stime;
+								model.bipedLeftLeg.rotateAngleZ = ((wtime)*0.25f-0.25f)*stime;
+							}
+						}
+					}
+					else if(reloading>0)
+					{
+						if(seat.seatID==0)
+						{
+							if(reloading<0.2)
+								model.bipedLeftArm.rotateAngleZ = (1f-(reloading/0.2f))*-1.25f;
+
+							if(reloading>0.2f)
+							{
+								float ff=0;
+								if(reloading<0.4f)
+									ff = (((reloading-0.2f)/0.2f));
+								else if(reloading<0.5f)
+									ff = (1f-((reloading-0.4f)/0.1f));
+								model.bipedBody.rotateAngleX = ff*0.25f;
+								model.bipedLeftLeg.rotationPointZ = ff*3;
+								model.bipedRightLeg.rotationPointZ = ff*3;
+								model.bipedRightArm.rotateAngleX = ff*-1.25f;
+								model.bipedRightArm.rotateAngleZ = ff*-1.5f;
+							}
+
+							if(reloading<0.1)
+								model.bipedLeftArm.rotateAngleX = (reloading/0.1f)*-1.25f;
+							else if(reloading<0.9)
+								model.bipedLeftArm.rotateAngleX = -1.25f;
+							else
+								model.bipedLeftArm.rotateAngleX = (1f-((reloading-0.9f)/0.1f))*-1.25f;
+						}
+					}
+					else if(firing > 0)
+					{
+						if(seat.seatID==1)
+						{
+							float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-((firing-0.85f)/0.15f), 0, 1);
+							model.isSneak = true;
+							model.bipedHead.rotateAngleX = Math.min((progress/0.85f), 1f)*0.15f;
+							model.bipedHeadwear.rotateAngleX = Math.min((progress/0.85f), 1f)*0.15f;
+							model.bipedHead.rotateAngleY = 0;
+							model.bipedHeadwear.rotateAngleY = 0;
+
+							model.bipedBody.rotateAngleX += progress*0.25f;
+
+							model.bipedLeftArm.rotateAngleX = progress*-3f;
+							model.bipedRightArm.rotateAngleX = progress*-3f;
+							model.bipedLeftLeg.rotateAngleX = Math.min((progress/0.65f), 1f)*-0.35f;
+
+							model.bipedRightLeg.rotationPointZ = 5f+progress*2f;
+							model.bipedLeftLeg.rotationPointZ = 5f+progress*2f;
+
+							//model.bipedRightLeg.rotateAngleX = progress*0.25f;
+							//model.bipedLeftArm.rotateAngleY = progress*3.14f;
+						}
+						else
+						{
+							if(firing<0.3)
+								model.bipedRightArm.rotateAngleY = -0.385f;
+							if(firing < 0.1f)
+								model.bipedRightArm.rotateAngleX = -1.65f*(firing/0.1f);
+							else if(firing < 0.2f)
+								model.bipedRightArm.rotateAngleX = -1.65f+(0.8f*((firing-0.1f)/0.1f));
+							else if(firing<0.3)
+								model.bipedRightArm.rotateAngleX = -0.85f*(1f-((firing-0.2f)/0.1f));
+							else
+							{
+								firing=(firing-0.3f)/0.7f;
+								float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-((firing-0.85f)/0.15f), 0, 1);
+								model.isSneak = true;
+								model.bipedHead.rotateAngleX = Math.min((progress/0.85f), 1f)*0.15f;
+								model.bipedHeadwear.rotateAngleX = Math.min((progress/0.85f), 1f)*0.15f;
+								model.bipedHead.rotateAngleY = 0;
+								model.bipedHeadwear.rotateAngleY = 0;
+
+								model.bipedLeftArm.rotateAngleX = progress*-3f;
+								model.bipedRightArm.rotateAngleX = progress*-3f;
+								model.bipedRightLeg.rotateAngleX = Math.min((progress/0.65f), 1f)*0.35f;
+
+								model.bipedRightLeg.rotationPointZ = 5f;
+								model.bipedLeftLeg.rotationPointZ = 5f;
+							}
+
+						}
+					}
+					else if(seat.seatID==0&&(howitzer.gunPitchDown||howitzer.gunPitchUp))
+					{
+						float limbSwing = Math.abs(((tt%8)-4)/8f);
+						if(howitzer.gunPitchUp)
+							limbSwing=-limbSwing;
+						model.isSneak = true;
+						model.bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F)-1.125f;
+						model.bipedRightArm.rotateAngleY = MathHelper.cos(limbSwing * 0.6662F)-1f;
+						model.bipedRightArm.rotateAngleZ=0;
+
+						model.bipedLeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F)-2f;
+						model.bipedLeftArm.rotateAngleY = MathHelper.cos(limbSwing * 0.6662F)+0.5f;
+						model.bipedLeftArm.rotateAngleZ=0;
+					}
 
 				}
 
@@ -907,6 +1077,17 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							{
 								model.bipedLeftArm.rotateAngleX -= 0.5f;
 								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							}
+						}
+						else if(heldItem.getItem() instanceof ItemIIAmmoGrenade)
+						{
+							float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
+							if(right)
+							{
+								model.rightArmPose = ArmPose.EMPTY;
+								//model.leftArmPose=ArmPose.EMPTY;
+								float hh = -(4.5f-model.bipedHead.rotateAngleX);
+								model.bipedRightArm.rotateAngleX = use!=1?(use > 0f?(use < 0.35f?((use/0.35f)*hh): hh): 0f): 0f;
 							}
 						}
 

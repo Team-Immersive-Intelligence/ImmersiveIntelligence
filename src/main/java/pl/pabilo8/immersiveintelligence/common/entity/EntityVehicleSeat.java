@@ -95,7 +95,9 @@ public class EntityVehicleSeat extends Entity
 	{
 
 		if(getRidingEntity() instanceof IVehicleMultiPart)
+		{
 			((IVehicleMultiPart)getRidingEntity()).getSeatRidingAngle(seatID, passenger);
+		}
 		else
 			super.applyOrientationToEntity(passenger);
 	}

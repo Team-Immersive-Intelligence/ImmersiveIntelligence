@@ -498,6 +498,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//Bullets
 
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoArtillery);
+		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoLightArtillery);
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemAmmoAutocannon);
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemGrenade);
 		BulletRegistry.INSTANCE.registerCasing(IIContent.itemRailgunGrenade);

@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
@@ -112,8 +113,8 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			GlStateManager.rotate(te.facing.getHorizontalAngle()-90, 0F, 1F, 0F);
 			if(te.currentWeapon!=null)
 				te.currentWeapon.render(te, partialTicks);
-
-
+			else if(te.getCurrentlyInstalled() instanceof MachineUpgradeEmplacementWeapon)
+				((MachineUpgradeEmplacementWeapon)te.getCurrentlyInstalled()).renderUpgradeProgress(te.clientUpgradeProgress, te.upgradeProgress, partialTicks);
 
 			GlStateManager.popMatrix();
 

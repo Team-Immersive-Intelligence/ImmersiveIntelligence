@@ -165,7 +165,7 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 		{
 			Vec3d vec = entityLiving.getLookVec().scale(1f);
 			Vec3d vv = entityLiving.getPositionVector().addVector(0, (double)entityLiving.getEyeHeight()-0.10000000149011612D, 0);
-			float distance = (((float)this.getMaxItemUseDuration(stack)-timeLeft)/(float)this.getMaxItemUseDuration(stack))*1.65f;
+			float distance = Math.min((((float)this.getMaxItemUseDuration(stack)-timeLeft)/(float)this.getMaxItemUseDuration(stack)),35)*2.5f;
 			EntityBullet a = BulletHelper.createBullet(world, stack, vv, vec, distance);
 			a.setShooters(entityLiving);
 			a.fuse = (int)(60f/EntityBullet.DEV_SLOMO);

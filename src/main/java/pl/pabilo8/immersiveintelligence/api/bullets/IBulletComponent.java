@@ -31,6 +31,11 @@ public interface IBulletComponent
 	//Gets the component colour
 	int getColour();
 
+	default boolean showInManual()
+	{
+		return true;
+	}
+
 	default int getNBTColour(NBTTagCompound nbt)
 	{
 		return getColour();

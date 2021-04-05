@@ -2,7 +2,11 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadioStation;
@@ -46,25 +50,43 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 			}
 			else
 			{
+				float cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electric_hammer_energy_per_use_construction/2f))),te.construction);
+				float progress = Math.max(Math.min(cc/(float)te.getConstructionCost(), 1f), 0f);
+				//progress=((getWorld().getTotalWorldTime()+partialTicks)%300)/300f;
+
+				for(int i = 0; i < 50*progress; i++)
+				{
+					if(i+1>50*progress)
+					{
+						GlStateManager.pushMatrix();
+						float scale = 1f-(((progress*50f)%1f)/1f);
+						GlStateManager.color(1f, 1f, 1f, Math.min(scale*4f, 1));
+						GlStateManager.translate(0,scale*1.5f,0);
+
+						modelCurrent.baseModel[i].render(0.0625f);
+						GlStateManager.color(1f, 1f, 1f, 1f);
+						GlStateManager.popMatrix();
+					}
+					else
+					modelCurrent.baseModel[i].render(0.0625f);
+				}
+
 				GlStateManager.pushMatrix();
 				GlStateManager.enableBlend();
 				GlStateManager.disableLighting();
-				float cc = (int)Math.min(te.clientConstruction+(te.getConstructionCost()/100f*partialTicks),te.construction);
-				float progress = Math.max(Math.min(cc/(float)te.getConstructionCost(), 1f), 0f);
 				GlStateManager.scale(0.98f, 0.98f, 0.98f);
 				GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
 				//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
-				ShaderUtil.blueprint_static(0.55f-(progress*0.35f), ClientUtils.mc().player.ticksExisted+partialTicks);
-				for(int i = 50; i >= 50*progress; i--)
+
+				ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+				for(int i = 50; i >= Math.max((50*progress)-1,0); i--)
+				{
 					modelCurrent.baseModel[i].render(0.0625f);
+				}
 				ShaderUtil.releaseShader();
 				GlStateManager.disableBlend();
 				GlStateManager.enableLighting();
 				GlStateManager.popMatrix();
-
-				for(int i = 0; i < 50*progress; i++)
-					modelCurrent.baseModel[i].render(0.0625f);
-
 
 			}
 

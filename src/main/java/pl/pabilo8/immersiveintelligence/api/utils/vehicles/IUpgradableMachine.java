@@ -43,4 +43,6 @@ public interface IUpgradableMachine
 	boolean resetInstallProgress();
 
 	void startUpgrade(@Nonnull MachineUpgrade upgrade);
+
+	void removeUpgrade(MachineUpgrade upgrade);
 }

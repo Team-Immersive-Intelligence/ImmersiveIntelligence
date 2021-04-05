@@ -81,7 +81,8 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 			a.setShootPos(te.getAllBlocks());
 			te.getWorld().spawnEntity(a);
 		}
-		shootDelay = Autocannon.bulletFireTime;
+		if(shootDelay<20)
+		shootDelay+=6;
 		//bulletsShot++;
 	}
 
@@ -94,14 +95,13 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
 		float force = 6f;
-		float mass = IIContent.itemAmmoMachinegun.getMass(s2);
+		float mass = IIContent.itemAmmoAutocannon.getMass(s2);
 
 		vv = posTurret.subtract(posTarget);
 		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
-		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z);
-		float motionTime = (float)Math.abs(motionVec.lengthSquared())/force/0.98f;
-		motionVec = motionVec.scale(motionTime);
-		vv = vv.add(motionVec).subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
+		float motionTime = (float)Math.abs(vv.lengthSquared())/force/0.8f;
+		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(1f).addVector(0, 0f, 0f);
+		vv = vv.subtract(motionVec).subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
 		float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
 		//float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
@@ -160,7 +160,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
 		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
 
-		float f = ((te.getWorld().getTotalWorldTime()+partialTicks)%4)/4f;
+		float f = (((te.getWorld().getTotalWorldTime()+partialTicks)%4)/4f)*(shootDelay/20f);
 
 		//pp=((te.getWorld().getTotalWorldTime()+partialTicks)%40)/40f*90;
 
@@ -171,6 +171,8 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.baseModel)
 			mod.render();
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.internalsModel)
+			mod.render();
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.hatchModel)
 			mod.render();
 
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.observeModel)
@@ -186,5 +188,12 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 			mod.render();
 
 		GlStateManager.popMatrix();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
+	{
+
 	}
 }

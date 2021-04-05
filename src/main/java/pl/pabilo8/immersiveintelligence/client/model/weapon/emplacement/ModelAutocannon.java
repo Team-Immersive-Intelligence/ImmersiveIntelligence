@@ -5,6 +5,9 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class ModelAutocannon extends ModelIIBase
 {
 	int textureX = 128;
@@ -423,6 +426,16 @@ public class ModelAutocannon extends ModelIIBase
 		translate(magazineLeftTopModel, 0, 18f, 0);
 		translate(magazineRightBottomModel, 0, 18f, 0);
 		translate(magazineRightTopModel, 0, 18f, 0);
+
+		baseModel= Arrays.stream(baseModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+		turretModel= Arrays.stream(turretModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+		gunModel= Arrays.stream(gunModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+		turretTopFlapsModel= Arrays.stream(turretTopFlapsModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+
+		barrel1Model= Arrays.stream(barrel1Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
+		barrel2Model= Arrays.stream(barrel2Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
+		barrel3Model= Arrays.stream(barrel3Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
+		barrel4Model= Arrays.stream(barrel4Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
 
 		flipAll();
 	}

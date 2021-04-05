@@ -198,4 +198,11 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 
 		GlStateManager.popMatrix();
 	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
+	{
+
+	}
 }

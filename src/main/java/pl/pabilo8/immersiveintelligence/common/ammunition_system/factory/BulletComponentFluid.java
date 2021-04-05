@@ -98,4 +98,10 @@ public class BulletComponentFluid implements IBulletComponent
 	{
 		return fluid.getColor();
 	}
+
+	@Override
+	public boolean showInManual()
+	{
+		return false;
+	}
 }

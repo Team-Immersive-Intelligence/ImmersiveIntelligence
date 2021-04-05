@@ -4,6 +4,7 @@ import mezz.jei.api.gui.IAdvancedGuiHandler;
 import net.minecraft.client.gui.recipebook.GuiRecipeBook;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiUpgrade;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,4 +42,10 @@ public class UpgradeGuiHandler implements IAdvancedGuiHandler<GuiUpgrade>
 		return Collections.emptyList();
 	}
 
+	@Nullable
+	@Override
+	public Object getIngredientUnderMouse(GuiUpgrade guiContainer, int mouseX, int mouseY)
+	{
+		return guiContainer.getPreviewedItem(mouseX,mouseY);
+	}
 }

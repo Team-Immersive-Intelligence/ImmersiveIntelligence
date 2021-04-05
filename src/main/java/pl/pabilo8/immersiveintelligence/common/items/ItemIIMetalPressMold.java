@@ -12,7 +12,8 @@ public class ItemIIMetalPressMold extends ItemIIBase
 				"howitzer",
 				"machinegun",
 				"submachinegun",
-				"grenade"
+				"grenade",
+				"light_howitzer"
 		);
 	}
 }

@@ -74,4 +74,10 @@ public class BulletComponentFish implements IBulletComponent
 		return 0x6b778a;
 	}
 
+	@Override
+	public boolean showInManual()
+	{
+		return false;
+	}
+
 }

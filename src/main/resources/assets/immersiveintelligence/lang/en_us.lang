@@ -363,7 +363,6 @@ item.immersiveintelligence.naval_mine.casing.name=Naval Mine Casing
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
 tile.immersiveintelligence.metal_device.metal_crate.name=Steel Crate
-tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.small_data_buffer.name=Small Data Buffer
 tile.immersiveintelligence.metal_device.item_buffer.name=Item Buffer
 tile.immersiveintelligence.metal_device.timed_buffer.name=Timed Buffer
@@ -372,10 +371,9 @@ tile.immersiveintelligence.metal_device.punchtape_reader.name=Punchtape Reader
 tile.immersiveintelligence.metal_device.data_router.name=Data Router
 tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
 
+tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.medical_crate.name=Medical Crate
 tile.immersiveintelligence.metal_device.repair_crate.name=Repair Crate
-
-tile.immersiveintelligence.upgrade_toolbox.name=Maintenance Toolbox
 
 tile.immersiveintelligence.gearbox.wooden_gearbox.name=Wooden Gearbox
 tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden Transmission Box
@@ -691,6 +689,12 @@ desc.immersiveintelligence.storage_module=Storage
 desc.immersiveintelligence.variables_module=Variables
 desc.immersiveintelligence.data_module=Data
 desc.immersiveintelligence.redstone_module=Redstone
+
+desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
+desc.immersiveintelligence.upgrade_gui.info=Info
+desc.immersiveintelligence.upgrade_gui.install=Install
+desc.immersiveintelligence.upgrade_gui.remove=Remove
+desc.immersiveintelligence.upgrade_gui.back=Back
 
 desc.immersiveintelligence.variable_type=Type:
 desc.immersiveintelligence.variable_add_desc=Add a new variable

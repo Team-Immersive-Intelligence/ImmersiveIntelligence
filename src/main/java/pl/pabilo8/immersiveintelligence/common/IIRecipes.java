@@ -218,6 +218,7 @@ public class IIRecipes
 	public static void addBulletPressRecipes()
 	{
 		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoArtillery, 1, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass", 4), Utils.getStackWithMetaName(IIContent.itemPressMold, "howitzer"), 2800);
+		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoLightArtillery, 1, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass", 3), Utils.getStackWithMetaName(IIContent.itemPressMold, "light_howitzer"), 2200);
 		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemGrenade, 1, ItemIIBulletBase.CASING), new IngredientStack("nuggetBrass", 5), Utils.getStackWithMetaName(IIContent.itemPressMold, "grenade"), 1800);
 		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoMachinegun, 3, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "machinegun"), 1600);
 		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoSubmachinegun, 6, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "submachinegun"), 1200);
@@ -558,7 +559,7 @@ public class IIRecipes
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
 				.addStack(new IngredientStack("blockSteel",2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 10)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
 				.addStack(new IngredientStack("circuitAdvanced",4))
 				.setRequiredProgress(80000);
 
@@ -574,7 +575,7 @@ public class IIRecipes
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
 				.addStack(new IngredientStack("blockSteel",1))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 10)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
 				.addStack(new IngredientStack("circuitAdvanced",4))
 				.setRequiredProgress(80000);
 
@@ -582,7 +583,7 @@ public class IIRecipes
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 10)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
 				.addStack(new IngredientStack("blockSteel",3))
 				.addStack(new IngredientStack("circuitProcessor",4))
 				.setRequiredProgress(300000);
