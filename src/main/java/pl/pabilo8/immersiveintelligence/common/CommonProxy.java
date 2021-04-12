@@ -443,6 +443,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidHydrofluoricAcid, 500), new FluidStack(IIContent.fluidSulfuricAcid, 1000), new Object[]{"dustFluorite"}, 5600);
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidNitricAcid, 250), new FluidStack(IIContent.fluidSulfuricAcid, 1000), new Object[]{"dustSaltpeter"}, 5600);
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidBrine, 750), new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
+
+		VehicleFuelHandler.addVehicle(EntityMotorbike.class,
+				FluidRegistry.getFluid("diesel"),
+				FluidRegistry.getFluid("biodiesel")
+		);
 	}
 
 	public static Fluid makeFluid(String name, int density, int viscosity)
@@ -664,6 +669,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerTile(TileEntityRedstoneInterface.class);
 		registerTile(TileEntityEmplacement.class);
 		registerTile(TileEntityFlagpole.class);
+		registerTile(TileEntityFuelStation.class);
 
 		//Wooden
 		MultiblockHandler.registerMultiblock(MultiblockSkyCratePost.instance);
@@ -689,6 +695,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MultiblockHandler.registerMultiblock(MultiblockRedstoneInterface.instance);
 		MultiblockHandler.registerMultiblock(MultiblockEmplacement.instance);
 		MultiblockHandler.registerMultiblock(MultiblockFlagpole.instance);
+		MultiblockHandler.registerMultiblock(MultiblockFuelStation.instance);
 
 		int i = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),

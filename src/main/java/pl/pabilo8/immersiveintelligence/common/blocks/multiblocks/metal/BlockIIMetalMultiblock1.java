@@ -25,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFlagpole;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock1;
 
@@ -47,6 +48,9 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.EMPLACEMENT);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.FLAGPOLE);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.FUEL_STATION);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.VEHICLE_WORKSHOP);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.RADAR);
 
 	}
 
@@ -69,11 +73,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 	{
 		switch(IIBlockTypes_MetalMultiblock1.values()[getMetaFromState(state)])
 		{
-			case EMPLACEMENT:
-			case FLAGPOLE:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-			default:
+			case REDSTONE_DATA_INTERFACE:
 				return EnumBlockRenderType.MODEL;
+			default:
+				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 		}
 	}
 
@@ -93,6 +96,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			case FLAGPOLE:
 			{
 				return new TileEntityFlagpole();
+			}
+			case FUEL_STATION:
+			{
+				return new TileEntityFuelStation();
 			}
 		}
 		return null;

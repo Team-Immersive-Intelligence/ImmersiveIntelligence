@@ -26,14 +26,14 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelChemicalBath model;
 	private static ModelChemicalBath modelFlipped;
+	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_bath.png";
 
 	@Override
 	public void render(TileEntityChemicalBath te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
-		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_bath.png";
 		if(te!=null&&!te.isDummy())
 		{
-			ClientUtils.bindTexture(texture);
+			ClientUtils.bindTexture(TEXTURE);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+2, (float)y-2, (float)z);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
@@ -181,7 +181,7 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 					}
 					GlStateManager.popMatrix();
 				}
-				ClientUtils.bindTexture(texture);
+				ClientUtils.bindTexture(TEXTURE);
 			}
 
 			if(fprocess > 0)
@@ -209,7 +209,7 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 			GlStateManager.color(1f, 1f, 1f);
 
 			GlStateManager.popMatrix();
-			ClientUtils.bindTexture(texture);
+			ClientUtils.bindTexture(TEXTURE);
 
 			GlStateManager.translate(0f, -pickUp*0.625, 0f);
 
@@ -229,7 +229,7 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 			}
 
 
-			ClientUtils.bindTexture(texture);
+			ClientUtils.bindTexture(TEXTURE);
 			GlStateManager.translate(1.46875f, 1.5f, -0.375f*mirrorMod);
 
 			GlStateManager.pushMatrix();
@@ -301,7 +301,7 @@ public class ChemicalBathRenderer extends TileEntitySpecialRenderer<TileEntityCh
 			GlStateManager.scale(0.3, 0.3, 0.3);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			ClientUtils.bindTexture(texture);
+			ClientUtils.bindTexture(TEXTURE);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render(0.0625f);
 			for(ModelRendererTurbo mod : model.sliderModel)

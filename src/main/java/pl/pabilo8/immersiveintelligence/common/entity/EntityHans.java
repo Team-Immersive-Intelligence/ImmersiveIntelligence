@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
@@ -15,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansHowitzer;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 
@@ -28,6 +30,7 @@ public class EntityHans extends EntityCreature implements IRangedAttackMob
 	{
 		super(worldIn);
 		equipItems(2);
+		this.enablePersistence();
 	}
 
 	public void equipItems(int id)
@@ -74,5 +77,22 @@ public class EntityHans extends EntityCreature implements IRangedAttackMob
 	public void setSwingingArms(boolean swingingArms)
 	{
 
+	}
+
+	@Override
+	public boolean startRiding(Entity entityIn)
+	{
+		boolean b = super.startRiding(entityIn);
+		if(b)
+		{
+			if(entityIn instanceof EntityVehicleSeat)
+			{
+				if(entityIn.getRidingEntity() instanceof EntityFieldHowitzer)
+				{
+					tasks.addTask(1, new AIHansHowitzer((EntityFieldHowitzer)entityIn.getRidingEntity(), ((EntityVehicleSeat)entityIn).seatID));
+				}
+			}
+		}
+		return b;
 	}
 }

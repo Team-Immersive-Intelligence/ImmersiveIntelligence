@@ -109,6 +109,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFlagpole;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
@@ -517,6 +518,7 @@ public class ClientProxy extends CommonProxy
 		IIGuiList.GUI_CHEMICAL_BATH.setClientGui((player, te) -> new GuiChemicalBath(player.inventory, (TileEntityChemicalBath)te));
 		IIGuiList.GUI_ELECTROLYZER.setClientGui((player, te) -> new GuiElectrolyzer(player.inventory, (TileEntityElectrolyzer)te));
 		IIGuiList.GUI_PRECISSION_ASSEMBLER.setClientGui((player, te) -> new GuiPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te));
+		IIGuiList.GUI_FUEL_STATION.setClientGui((player, te) -> new GuiFuelStation(player.inventory, (TileEntityFuelStation)te));
 		IIGuiList.GUI_DATA_MERGER.setClientGui((player, te) -> new GuiDataMerger(player.inventory, (TileEntityDataMerger)te));
 
 		IIGuiList.GUI_METAL_CRATE.setClientGui((player, te) -> new GuiMetalCrate(player.inventory, (TileEntityMetalCrate)te));
@@ -765,6 +767,9 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFlagpole.class, new FlagpoleRenderer().subscribeToList("flagpole"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.FLAGPOLE.getMeta(), TileEntityFlagpole.class);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFuelStation.class, new FuelStationRenderer().subscribeToList("fuel_station"));
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.FUEL_STATION.getMeta(), TileEntityFuelStation.class);
 
 		mech_con_renderer = new MechanicalConnectorRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalConnectable.class, mech_con_renderer);

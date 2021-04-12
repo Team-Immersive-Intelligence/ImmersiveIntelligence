@@ -730,6 +730,21 @@ public class Config
 				@Comment({"Amount of data packets the machine can store."})
 				public static int packetCapacity = 4;
 			}
+
+			public static class FuelStation
+			{
+				@Comment({"Energy capacity of the fuel station."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Energy amount used per one mB of fluid transfered."})
+				public static int energyUsage = 4;
+
+				@Comment({"Amount of fluid transfered per tick."})
+				public static int fluidTransfer = 120;
+
+				@Comment({"Fluid capacity of the fuel station."})
+				public static int fluidCapacity = 64000;
+			}
 		}
 
 		public static class Weapons

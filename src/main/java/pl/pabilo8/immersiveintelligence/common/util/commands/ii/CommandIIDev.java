@@ -270,8 +270,6 @@ public class CommandIIDev extends CommandBase
 
 								hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 0));
 								hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 1));
-								hans1.tasks.addTask(1,new AIHansHowitzer(howi,0));
-								hans2.tasks.addTask(1,new AIHansHowitzer(howi,1));
 							}
 							else if(num > 2&&num < 7)
 							{

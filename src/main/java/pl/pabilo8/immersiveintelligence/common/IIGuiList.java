@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCartStation;
@@ -120,6 +121,10 @@ public enum IIGuiList
 
 	GUI_PRECISSION_ASSEMBLER(TileEntityPrecissionAssembler.class,
 			(player, te) -> new ContainerPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te)
+	),
+
+	GUI_FUEL_STATION(TileEntityFuelStation.class,
+			(player, te) -> new ContainerFuelStation(player.inventory, (TileEntityFuelStation)te)
 	),
 
 	GUI_DATA_MERGER(TileEntityDataMerger.class,
