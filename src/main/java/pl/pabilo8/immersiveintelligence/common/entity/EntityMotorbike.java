@@ -365,7 +365,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		if(tilt!=0&&speed > 0)
 		{
-			rotationYaw += tilt*(speed/3.5f);
+			rotationYaw += tilt*(speed/1.5f);
 		}
 		if(!engineWorking)
 			if(turnLeft||turnRight)

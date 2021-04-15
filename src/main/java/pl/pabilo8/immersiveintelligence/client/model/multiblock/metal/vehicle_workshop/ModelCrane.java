@@ -1,23 +1,19 @@
-package pl.pabilo8.immersiveintelligence.client.model.metal_device;
+package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_workshop;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 
 /**
  * @author Pabilo8
- * @since 17-07-2019
+ * @since 12.04.2021
  */
-public class ModelCraneElectric extends ModelIIBase
+public class ModelCrane extends ModelIIBase
 {
-	public ModelRendererTurbo[] craneMainModel, shaftModel, grabberModel, armTopModel, armBottomModel, craneArmModel, craneArmShaftModel;
+	public ModelRendererTurbo[] craneMainModel, shaftModel, exhaustModel, grabberModel, armTopModel, armBottomModel, craneArmModel, craneArmShaftModel;
 	int textureX = 64;
 	int textureY = 64;
 
-	public ModelCraneElectric() //Same as Filename
+	public ModelCrane()
 	{
 		baseModel = new ModelRendererTurbo[1];
 		baseModel[0] = new ModelRendererTurbo(this, 4, 17, textureX, textureY); // Box 0
@@ -26,7 +22,7 @@ public class ModelCraneElectric extends ModelIIBase
 		baseModel[0].setRotationPoint(0F, -1F, 0F);
 
 
-		craneMainModel = new ModelRendererTurbo[13];
+		craneMainModel = new ModelRendererTurbo[10];
 		craneMainModel[0] = new ModelRendererTurbo(this, 14, 7, textureX, textureY); // Box 0
 		craneMainModel[1] = new ModelRendererTurbo(this, 12, 26, textureX, textureY); // Box 0
 		craneMainModel[2] = new ModelRendererTurbo(this, 48, 35, textureX, textureY); // Box 0
@@ -37,9 +33,6 @@ public class ModelCraneElectric extends ModelIIBase
 		craneMainModel[7] = new ModelRendererTurbo(this, 52, 6, textureX, textureY); // Box 0
 		craneMainModel[8] = new ModelRendererTurbo(this, 4, 26, textureX, textureY); // Box 0
 		craneMainModel[9] = new ModelRendererTurbo(this, 16, 44, textureX, textureY); // Box 0
-		craneMainModel[10] = new ModelRendererTurbo(this, 2, 11, textureX, textureY); // Box 0
-		craneMainModel[11] = new ModelRendererTurbo(this, 2, 11, textureX, textureY); // Box 0
-		craneMainModel[12] = new ModelRendererTurbo(this, 4, 56, textureX, textureY); // Box 0
 
 		craneMainModel[0].addBox(-3F, 0F, -3F, 6, 4, 6, 0F); // Box 0
 		craneMainModel[0].setRotationPoint(0F, -5F, 0F);
@@ -71,21 +64,35 @@ public class ModelCraneElectric extends ModelIIBase
 		craneMainModel[9].addBox(-7F, 0F, -5F, 4, 8, 8, 0F); // Box 0
 		craneMainModel[9].setRotationPoint(0F, -32F, 0F);
 
-		craneMainModel[10].addBox(-3F, 0F, -5F, 5, 5, 1, 0F); // Box 0
-		craneMainModel[10].setRotationPoint(0.5F, -31.5F, -1F);
-
-		craneMainModel[11].addBox(-3F, 0F, -5F, 5, 5, 1, 0F); // Box 0
-		craneMainModel[11].setRotationPoint(0.5F, -31.5F, -6F);
-
-		craneMainModel[12].addBox(-3F, 0F, -5F, 4, 4, 4, 0F); // Box 0
-		craneMainModel[12].setRotationPoint(1F, -31F, -5F);
-
 
 		shaftModel = new ModelRendererTurbo[1];
 		shaftModel[0] = new ModelRendererTurbo(this, 36, 15, textureX, textureY); // Box 0
 
 		shaftModel[0].addBox(-1F, 0F, -1F, 2, 21, 2, 0F); // Box 0
 		shaftModel[0].setRotationPoint(0F, -26F, 0F);
+
+
+		exhaustModel = new ModelRendererTurbo[5];
+		exhaustModel[0] = new ModelRendererTurbo(this, 24, 1, textureX, textureY); // Box 0
+		exhaustModel[1] = new ModelRendererTurbo(this, 7, 58, textureX, textureY); // Box 0
+		exhaustModel[2] = new ModelRendererTurbo(this, 44, 13, textureX, textureY); // Box 0
+		exhaustModel[3] = new ModelRendererTurbo(this, 2, 52, textureX, textureY); // Box 0
+		exhaustModel[4] = new ModelRendererTurbo(this, 0, 34, textureX, textureY); // Box 0
+
+		exhaustModel[0].addBox(-6.5F, 0F, -8F, 3, 3, 3, 0F); // Box 0
+		exhaustModel[0].setRotationPoint(0F, -34.5F, 0F);
+
+		exhaustModel[1].addShapeBox(-6.5F, 0F, -8F, 3, 3, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		exhaustModel[1].setRotationPoint(0F, -31.5F, 0F);
+
+		exhaustModel[2].addBox(-2.5F, 0F, -8F, 3, 7, 3, 0F); // Box 0
+		exhaustModel[2].setRotationPoint(0F, -34.5F, 0F);
+
+		exhaustModel[3].addShapeBox(-3.5F, 0F, -8F, 4, 3, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F); // Box 0
+		exhaustModel[3].setRotationPoint(0F, -27.5F, 0F);
+
+		exhaustModel[4].addShapeBox(-6.5F, 0F, -8F, 3, 3, 3, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		exhaustModel[4].setRotationPoint(0F, -27.5F, 0F);
 
 
 		grabberModel = new ModelRendererTurbo[5];
@@ -154,6 +161,7 @@ public class ModelCraneElectric extends ModelIIBase
 		parts.put("base",baseModel);
 		parts.put("craneMain",craneMainModel);
 		parts.put("shaft",shaftModel);
+		parts.put("exhaust",exhaustModel);
 		parts.put("grabber",grabberModel);
 		parts.put("armTop",armTopModel);
 		parts.put("armBottom",armBottomModel);
@@ -162,5 +170,4 @@ public class ModelCraneElectric extends ModelIIBase
 
 		flipAll();
 	}
-
 }

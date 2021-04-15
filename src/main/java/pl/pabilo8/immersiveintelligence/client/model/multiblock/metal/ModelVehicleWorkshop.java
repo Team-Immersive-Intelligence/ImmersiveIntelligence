@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal;
 
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
@@ -9,13 +11,13 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ModelVehicleWorkshop extends ModelIIBase
 {
-	private final ModelRendererTurbo[] platformModel, scissor1Model, scissor2Model, drawer1Model, drawer2Model, engineModel, craneShaftModel, engineShaftModel, doorLeftModel, doorRightModel, railModel, winchModel;
+	public final ModelRendererTurbo[] platformModel, scissor1Model, scissor2Model, drawer1Model, drawer2Model, engineModel, craneShaftModel, engineShaftModel, doorLeftModel, doorRightModel, railModel, winchModel;
 	int textureX = 512;
 	int textureY = 256;
 
 	public ModelVehicleWorkshop() //Same as Filename
 	{
-		baseModel = new ModelRendererTurbo[139];
+		baseModel = new ModelRendererTurbo[140];
 		baseModel[0] = new ModelRendererTurbo(this, 258, 0, textureX, textureY); // Box 0
 		baseModel[1] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
 		baseModel[2] = new ModelRendererTurbo(this, 44, 162, textureX, textureY); // Box 0
@@ -155,6 +157,7 @@ public class ModelVehicleWorkshop extends ModelIIBase
 		baseModel[136] = new ModelRendererTurbo(this, 192, 87, textureX, textureY); // Box 4
 		baseModel[137] = new ModelRendererTurbo(this, 226, 77, textureX, textureY); // Box 4
 		baseModel[138] = new ModelRendererTurbo(this, 306, 0, textureX, textureY); // Box 4
+		baseModel[139] = new ModelRendererTurbo(this, 26, 44, textureX, textureY); // Box 4
 
 		baseModel[0].addBox(0F, 0F, 0F, 8, 12, 32, 0F); // Box 0
 		baseModel[0].setRotationPoint(0F, -4F, 0F);
@@ -581,6 +584,9 @@ public class ModelVehicleWorkshop extends ModelIIBase
 		baseModel[138].setRotationPoint(-10F, -48F, 64.05F);
 		baseModel[138].rotateAngleZ = 0.15707963F;
 
+		baseModel[139].addBox(0F, 0F, -0.5F, 24, 2, 2, 0F); // Box 4
+		baseModel[139].setRotationPoint(0F, -48F, 46.5F);
+
 
 		platformModel = new ModelRendererTurbo[2];
 		platformModel[0] = new ModelRendererTurbo(this, 222, 174, textureX, textureY); // Box 0
@@ -821,15 +827,13 @@ public class ModelVehicleWorkshop extends ModelIIBase
 		engineShaftModel[2].setRotationPoint(44F, -9F, 73F);
 
 
-		doorLeftModel = new ModelRendererTurbo[2];
+		doorLeftModel = new ModelRendererTurbo[1];
 		doorLeftModel[0] = new ModelRendererTurbo(this, 192, 57, textureX, textureY); // Box 4
-		doorLeftModel[1] = new ModelRendererTurbo(this, 26, 44, textureX, textureY); // Box 4
 
 		doorLeftModel[0].addBox(0F, 0F, -0.5F, 16, 29, 1, 0F); // Box 4
 		doorLeftModel[0].setRotationPoint(0F, -46F, 47.5F);
 
-		doorLeftModel[1].addBox(0F, 0F, -0.5F, 24, 2, 2, 0F); // Box 4
-		doorLeftModel[1].setRotationPoint(0F, -48F, 46.5F);
+
 
 
 		doorRightModel = new ModelRendererTurbo[8];
@@ -935,5 +939,38 @@ public class ModelVehicleWorkshop extends ModelIIBase
 		parts.put("winch",winchModel);
 
 		flipAll();
+	}
+
+	@Override
+	public void getBlockRotation(EnumFacing facing, boolean mirrored)
+	{
+		switch(facing)
+		{
+			case NORTH:
+			{
+				GlStateManager.translate(mirrored?3:-2, 0f, 3f);
+			}
+			break;
+			case SOUTH:
+			{
+				GlStateManager.rotate(180F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?2:-3, 0f, 2f);
+			}
+			break;
+			case EAST:
+			{
+				GlStateManager.rotate(270F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?3f:-2f, 0f, 2f);
+
+			}
+			break;
+			case WEST:
+			{
+				GlStateManager.rotate(90F, 0F, 1F, 0F);
+				GlStateManager.translate(mirrored?2f:-3f, 0f, 3f);
+
+			}
+			break;
+		}
 	}
 }

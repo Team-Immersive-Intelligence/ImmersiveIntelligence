@@ -22,7 +22,7 @@ public class TMTArmorModel extends ModelBiped
 	public HashMap<String, ModelRendererTurbo[]> parts = new HashMap<>();
 	private final String texture;
 	private ItemStack renderStack = ItemStack.EMPTY;
-	private EntityEquipmentSlot renderSlot = EntityEquipmentSlot.HEAD;
+	protected EntityEquipmentSlot renderSlot = EntityEquipmentSlot.HEAD;
 
 	public TMTArmorModel(int textureWidthIn, int textureHeightIn, String texture)
 	{

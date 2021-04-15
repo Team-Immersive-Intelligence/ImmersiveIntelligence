@@ -124,6 +124,9 @@ public class IIContent
 	public static ItemIILightEngineerChestplate itemLightEngineerChestplate = new ItemIILightEngineerChestplate();
 	public static ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
 	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
+	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
+	//Thanks, Blu
+	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 
 	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
 	public static ItemIIAmmoLightArtillery itemAmmoLightArtillery = new ItemIIAmmoLightArtillery();

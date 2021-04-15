@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.network;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import io.netty.buffer.ByteBuf;
@@ -69,6 +70,12 @@ public class MessageBeginMachineUpgrade implements IMessage
 					{
 						if(tile instanceof IUpgradableMachine&&((IUpgradableMachine)tile).getInstallProgress()==0&&upgrade!=null&&((IUpgradableMachine)tile).upgradeMatches(upgrade))
 						{
+							// TODO: 12.04.2021 *steal* items from player
+							for(IngredientStack requiredStack : upgrade.getRequiredStacks())
+							{
+
+							}
+
 							((IUpgradableMachine)tile).startUpgrade(upgrade);
 							IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
 						}

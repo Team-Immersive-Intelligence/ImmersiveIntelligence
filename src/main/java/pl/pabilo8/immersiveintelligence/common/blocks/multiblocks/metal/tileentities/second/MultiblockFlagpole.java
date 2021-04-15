@@ -138,7 +138,7 @@ public class MultiblockFlagpole implements IMultiblock
 						tile.pos = (h+3)*9+(l)*3+(w+1);
 						tile.offset = new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
-						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock0, 255, 0);
+						world.addBlockEvent(pos2, IIContent.blockMetalMultiblock1, 255, 0);
 					}
 				}
 		return true;

@@ -265,6 +265,9 @@ public class GuiUpgrade extends GuiIEContainerBase
 		if(upgrade==null)
 			return false;
 
+		if(mc.player.isCreative())
+			return true;
+
 		for(IngredientStack requiredStack : upgrade.getRequiredStacks())
 		{
 			int reqSize = requiredStack.inputSize;

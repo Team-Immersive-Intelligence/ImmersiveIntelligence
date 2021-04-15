@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.model.metal_device;
+package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_workshop;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;

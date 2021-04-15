@@ -323,6 +323,10 @@ public class Config
 				@Mapped(mapClass = Config.class, mapName = "manual_floatA")
 				public static float[] tripod_zoom_steps = new float[]{0.01f, 0.02f, 0.04f, 0.0625f, 0.0833f, 0.125f, 0.25f, 0.5f};
 			}
+
+			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
+			@RequiresMcRestart
+			public static int advanced_powerpack_capacity = 1000000;
 		}
 
 		public static class Machines
