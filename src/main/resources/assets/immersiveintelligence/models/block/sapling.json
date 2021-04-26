@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "immersiveintelligence:blocks/rubber_tree/sapling"
+  }
+}

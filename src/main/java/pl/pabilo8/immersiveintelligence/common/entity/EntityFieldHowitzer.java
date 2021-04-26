@@ -73,7 +73,6 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	public int setupTime = 0;
 	public boolean alreadyShoot = false;
 	public boolean towingOperation = false;
-	public int wheelTraverse = 0;
 	//Yes
 	public float acceleration = 0f, speed = 0f;
 	public ItemStack shell = ItemStack.EMPTY;
@@ -261,9 +260,17 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 					if(shootingProgress==0&&reloadProgress==0)
 					{
 						if(turnLeft)
+						{
+							partWheelLeft.wheelTraverse+=1.5f;
+							partWheelRight.wheelTraverse-=1.5f;
 							turn(-5, 0);
+						}
 						else if(turnRight)
+						{
+							partWheelRight.wheelTraverse+=1.5f;
+							partWheelLeft.wheelTraverse-=1.5f;
 							turn(5, 0);
+						}
 						else if(forward)
 							acceleration = Math.min(acceleration+0.1f, 1f);
 						else

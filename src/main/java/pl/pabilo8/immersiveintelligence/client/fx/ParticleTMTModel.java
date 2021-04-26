@@ -20,7 +20,7 @@ public class ParticleTMTModel extends Particle
 	public ParticleTMTModel(World world, double x, double y, double z, double mx, double my, double mz, float size, ModelRendererTurbo model, String texture)
 	{
 		super(world, x, y, z, mx, my, mz);
-		this.particleMaxAge = 64+(int)(rand.nextGaussian()*16d);
+		this.particleMaxAge = 100+(int)(rand.nextGaussian()*32d);
 		this.particleAngle = (float)(90f*rand.nextGaussian());
 		this.posX = x;
 		this.posY = y;

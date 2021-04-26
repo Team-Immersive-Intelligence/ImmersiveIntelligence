@@ -164,5 +164,26 @@
       "immersiveintelligence:radio/noise2"
     ],
     "subtitle": "subtitle.immersiveintelligence.radio_noise"
+  },
+  "motorbike_start": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:motorbike/start"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.motorbike_start"
+  },
+  "motorbike_engine": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:motorbike/engine"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.motorbike_engine"
+  },
+  "motorbike_horn": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:motorbike/horn"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.motorbike_horn"
   }
 }

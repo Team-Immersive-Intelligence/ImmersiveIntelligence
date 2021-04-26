@@ -8,6 +8,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_ConcreteDecoration;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 
 /**
  * @author Pabilo8
@@ -21,7 +22,10 @@ public class BlockIIConcreteDecoration extends BlockIIBase<IIBlockTypes_Concrete
 		setHardness(3.0F);
 		setResistance(15.0F);
 		lightOpacity = 0;
-		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
+
+		setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta(), 360).setHardness(2.0F).setResistance(10.0F);
+		setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta(), 1600).setHardness(2.0F).setResistance(10.0F);
+		setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.UBERCONCRETE.getMeta(), 2400).setHardness(2.0F).setResistance(10.0F);
 	}
 
 	@Override

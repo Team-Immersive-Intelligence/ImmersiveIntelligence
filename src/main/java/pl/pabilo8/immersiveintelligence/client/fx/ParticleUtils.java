@@ -204,7 +204,7 @@ public class ParticleUtils
 		{
 			Vec3d v = new Vec3d(1, 0, 0).rotateYaw(i/36f*360f);
 			ParticleAtomFog particle = new ParticleAtomFog(ClientUtils.mc().world, x, y, z, v.x*speed, yspeed, v.z*speed, size);
-			particle.setMaxAge((int)(40*(size/20)));
+			particle.setMaxAge((int)(20*(size/20)));
 			particleRenderer.addEffect(particle);
 		}
 	}
@@ -226,7 +226,7 @@ public class ParticleUtils
 		{
 			Vec3d v = new Vec3d(1, 0, 0).rotateYaw(i/36f*360f);
 			ParticleAtomicBoomRing particle = new ParticleAtomicBoomRing(ClientUtils.mc().world, x, y, z, v.x*speed, yspeed, v.z*speed, size);
-			particle.setMaxAge((int)(40*(size/20)));
+			particle.setMaxAge((int)(20*(size/20)));
 			particleRenderer.addEffect(particle);
 		}
 	}

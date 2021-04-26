@@ -3,9 +3,13 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.DieselHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.audio.MovingSoundMinecart;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.MultiPartEntityPart;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -33,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.carversound.sounds.MovingSoundMotorbikeEngine;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
@@ -40,6 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.network.MessageParticleEffect;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -92,9 +98,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	};
 	NonSidedFluidHandler fluidHandler = new NonSidedFluidHandler(this);
 
-	public float acceleration = 0f, speed = 0f, tilt = 0f, brakeProgress = 0f;
+	public float acceleration = 0f, speed = 0f, tilt = 0f, brakeProgress = 0f, engineProgress=0;
 	public boolean accelerated = false, brake = false, engineWorking = false, turnLeft = false, turnRight = false, engineKeyPress = false, towingKeyPress = false;
-	public int wheelTraverse = 0;
 	public int frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
 	public int untowingTries = 0;
 
@@ -142,6 +147,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		this.dataManager.register(dataMarkerYaw, 0f);
 
 		this.dataManager.register(dataMarkerUpgrade, "");
+		if(world.isRemote)
+			ClientUtils.mc().getSoundHandler().playSound(new MovingSoundMotorbikeEngine(this));
 	}
 
 	@Override
@@ -249,7 +256,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 			Vec3d pos_mtb = Utils.offsetPosDirection(-2.25f, true_angle, 0);
 
-			passenger.setPosition(posX+pos_mtb.x+motionX, posY+motionY, posZ+pos_mtb.z+motionZ);
+			passenger.setPositionAndUpdate(posX+pos_mtb.x+motionX, posY+motionY, posZ+pos_mtb.z+motionZ);
 			passenger.rotationYaw = this.rotationYaw+180;
 
 		}
@@ -322,7 +329,6 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			{
 				brakeProgress = Math.max(brakeProgress-0.25f, 0f);
 			}
-
 		}
 
 		if(!world.isRemote)
@@ -345,12 +351,14 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			accelerated = true;
 			destroyTimer -= 1;
 		}
-		if(destroyTimer==0)
+		if(!world.isRemote&&destroyTimer==0)
 			selfDestruct();
 
+		engineProgress=MathHelper.clamp(engineProgress+(engineWorking&&hasFuel()?1:-25),0,25);
+
 		engineWorking = engineWorking&&hasFuel();
-		if(engineWorking&&tank.getFluid()!=null&&world.getTotalWorldTime()%DieselHandler.getBurnTime(tank.getFluid().getFluid())/4==0)
-			tank.drain((int)Math.ceil(Motorbike.fuelBurnAmount*(speed/20f)), true);
+		if(engineWorking&&tank.getFluid()!=null&&world.getTotalWorldTime()%(DieselHandler.getBurnTime(tank.getFluid().getFluid())/20f)==0)
+			tank.drain((int)Math.ceil(Motorbike.fuelBurnAmount*(speed/4f)), true);
 		if(turnLeft)
 			tilt -= 0.1f;
 		else if(turnRight)
@@ -365,7 +373,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		if(tilt!=0&&speed > 0)
 		{
-			rotationYaw += tilt*(speed/1.5f);
+			rotationYaw += tilt*5f;
 		}
 		if(!engineWorking)
 			if(turnLeft||turnRight)
@@ -373,10 +381,9 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 				rotationYaw += tilt*0.35;
 			}
 
-
 		boolean canTowedMove = getRecursivePassengers().stream().noneMatch(entity -> entity instanceof ITowable && !((ITowable)entity).canMoveTowed());
 
-		if(engineWorking&&accelerated&&canTowedMove)
+		if(engineWorking&&engineProgress>=25&&accelerated&&canTowedMove)
 		{
 			acceleration = Math.min(acceleration+0.1f, 1f);
 		}
@@ -389,21 +396,25 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		if(brake)
 			speed *= 0.85;
 
-		wheelTraverse += speed;
+		partWheelFront.wheelTraverse += speed;
+		partWheelBack.wheelTraverse += speed;
 
 		if(world.isRemote)
 		{
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw)); //z
 			double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90)); //x
 
-			if(engineWorking)
+			if(engineWorking&&engineProgress>=25)
 				spawnExhaustParticle(true_angle, true_angle2);
 			if(hasFuel()&&engineDurability < Motorbike.engineDurability*0.85f)
 				spawnEngineDamageParticle(true_angle, true_angle2);
 		}
 
 
-		//updateParts(false);
+		/*
+		if(world.isRemote&&world.getTotalWorldTime()%60==0)
+		updateParts(false);
+		 */
 		//if(!world.isRemote)
 		handleMovement();
 		updateParts(true);
@@ -416,14 +427,24 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		float r = world.isRemote?rotationYaw: -rotationYaw;
 		double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
 		//ImmersiveIntelligence.logger.info(true_angle);
-
-		Vec3d pos1_x = Utils.offsetPosDirection(-1.25f, true_angle, 0);
+		this.prevRotationYaw=MathHelper.wrapDegrees(prevRotationYaw);
+		this.rotationYaw=MathHelper.wrapDegrees(rotationYaw);
+		Vec3d pos1_x = getLookVec().scale(-1.25f);
 
 		partWheelFront.rotationYaw = this.rotationYaw;
-		partWheelFront.travel(0, 0, 1f, -0.0125f, speed*0.0125*2f);
+		Vec3d dd = getForward().scale(speed*0.0125*2f);
+		/*
+		partWheelFront.move(MoverType.SELF,dd.x,dd.y+partWheelFront.stepHeight,dd.z);
+		partWheelFront.move(MoverType.SELF,0,(-0.5f+(Math.min(speed,1f)*0.125f))-partWheelFront.stepHeight,0);
+		 */
+		partWheelFront.travel(0, 0, world.isRemote?0f:1f, -0.0125f, speed*0.0125*2f);
 
 		partWheelBack.rotationYaw = this.rotationYaw;
-		partWheelBack.travel(0, 0, 1f, -0.015f, speed*0.0125*2f);
+		partWheelBack.travel(0, 0, world.isRemote?0f:1f, -0.0125f, speed*0.0125*2f);
+		/*
+		partWheelBack.move(MoverType.SELF,dd.x,dd.y+partWheelBack.stepHeight,dd.z);
+		partWheelBack.move(MoverType.SELF,0,-0.25f-partWheelBack.stepHeight,0);
+		 */
 
 		if(partWheelFront.collidedHorizontally&&destroyTimer!=-1)
 			destroyTimer = 1;
@@ -433,6 +454,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			Vec3d currentPos = new Vec3d(partWheelFront.posX+pos1_x.x, partWheelFront.posY, partWheelFront.posZ+pos1_x.z);
 			setPosition(currentPos.x, currentPos.y, currentPos.z);
 			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
+			//setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 		}
 
 		if(partWheelBack.isEntityInsideOpaqueBlock())
@@ -518,7 +540,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(this, updateKeys()));
 	}
 
-	private void selfDestruct()
+	public void selfDestruct()
 	{
 		if(!world.isRemote)
 		{
@@ -526,6 +548,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			{
 				world.newExplosion(null, posX, posY, posZ, tank.getFluidAmount()/12000f*4, false, false);
 			}
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(this.getEntityId(), 0, 0, "motorbike_explosion"), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromEntity(this,48));
 			setDead();
 		}
 		else
@@ -918,7 +941,12 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			if(tag.hasKey("turnRight"))
 				turnRight = tag.getBoolean("turnRight");
 			if(tag.hasKey("engineWorking"))
+			{
+				boolean ew = engineWorking;
 				engineWorking = tag.getBoolean("engineWorking");
+				if(ew^engineWorking&&engineWorking)
+					world.playSound(null,posX,posY,posZ,IISounds.motorbike_start,SoundCategory.NEUTRAL,1f,0f);
+			}
 		}
 
 	}

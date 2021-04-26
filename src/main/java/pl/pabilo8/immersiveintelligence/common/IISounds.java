@@ -44,6 +44,10 @@ public class IISounds
 	public static SoundEvent penetration_metal = registerSound("penetration_metal");
 	public static SoundEvent ricochet_metal = registerSound("ricochet_metal");
 
+	public static SoundEvent motorbike_start = registerSound("motorbike_start");
+	public static SoundEvent motorbike_engine = registerSound("motorbike_engine");
+	public static SoundEvent motorbike_horn = registerSound("motorbike_horn");
+
 	private static SoundEvent registerSound(String name)
 	{
 		ResourceLocation location = new ResourceLocation(ImmersiveIntelligence.MODID, name);

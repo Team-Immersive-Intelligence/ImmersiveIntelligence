@@ -37,6 +37,7 @@ item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Artillery 
 item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Machinegun Bullet Casing
 item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Submachinegun Bullet Casing
 item.immersiveintelligence.press_mold.grenade.name=Metal Press Mold: Grenade
+item.immersiveintelligence.press_mold.light_howitzer.name=Metal Press Mold: Light Howitzer Shell Casing
 
 item.immersiveintelligence.material_ingot.platinum.name=Platinum Ingot
 item.immersiveintelligence.material_ingot.zinc.name=Zinc Ingot
@@ -166,6 +167,8 @@ item.immersiveintelligence.weapon_upgrade.radio_marker.name=Radio Marker
 item.immersiveintelligence.weapon_upgrade.rifle_grenade_launcher.name=Rifle Grenade Launcher
 item.immersiveintelligence.weapon_upgrade.stereoscopic_rangefinder.name=Stereoscopic Rangefinder
 
+item.immersiveintelligence.armor_upgrade.gasmask.name=Gas Mask
+
 item.immersiveintelligence.tracer_powder.tracer_powder.name=Tracer Powder
 item.immersiveintelligence.tracer_powder.flare_powder.name=Flare Powder
 
@@ -201,6 +204,8 @@ desc.immersiveintelligence.toolupgrade.heavy_springbox=Increases bullet velocity
 desc.immersiveintelligence.toolupgrade.radio_marker=Allows to send data signals with the current player position.
 desc.immersiveintelligence.toolupgrade.rifle_grenade_launcher=Allows to shoot railgun grenades within a slightly lower range.
 desc.immersiveintelligence.toolupgrade.stereoscopic_rangefinder=Shows range to current target. Combined with radio marker, allows sending enemy positions trough data.
+
+desc.immersiveintelligence.toolupgrade.gasmask=Protects the user from hazardous gasses.
 
 item.immersiveintelligence.data_wire.name=Data Cable Coil
 
@@ -331,6 +336,10 @@ tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
 tile.immersiveintelligence.sheetmetal_slab.brass.name=Brass Sheetmetal Slab
 tile.immersiveintelligence.storage_slab.brass.name=Brass Slab
+
+tile.immersiveintelligence.rubber_log.rubber.name=Rubber Tree Wood
+tile.immersiveintelligence.rubber_leaves.rubber.name=Rubber Tree Leaves
+tile.immersiveintelligence.rubber_sapling.rubber.name=Rubber Tree Sapling
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Concrete Bricks
 tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Panzerconcrete Bricks
@@ -550,6 +559,10 @@ subtitle.immersiveintelligence.radio_noise=Radio Noise
 
 subtitle.immersiveintelligence.penetration_metal=Projectile breaking trough metal
 subtitle.immersiveintelligence.ricochet_metal=Projectile bouncing off metal
+
+subtitle.immersiveintelligence.motorbike_start=Starting a Motorbike
+subtitle.immersiveintelligence.motorbike_engine=Motorbike Engine Noise
+subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
 
 #Entities
 

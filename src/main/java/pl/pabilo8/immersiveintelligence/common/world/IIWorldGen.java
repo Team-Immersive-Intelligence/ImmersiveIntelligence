@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
@@ -39,6 +40,8 @@ public class IIWorldGen implements IWorldGenerator
 	public static HashMap<String, Boolean> retrogenMap = new HashMap();
 	public static ArrayListMultimap<Integer, ChunkPos> retrogenChunks = ArrayListMultimap.create();
 
+	public static IIWorldGenRubberTree worldGenRubberTree = new IIWorldGenRubberTree();
+
 	public static OreGen addOreGen(String name, IBlockState state, int maxVeinSize, int minY, int maxY, int chunkOccurence, int weight, EnumOreType type)
 	{
 		Block block = type==EnumOreType.OVERWORLD?Blocks.STONE: type==EnumOreType.NETHER?Blocks.NETHERRACK: Blocks.END_STONE;
@@ -51,6 +54,22 @@ public class IIWorldGen implements IWorldGenerator
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
 	{
 		this.generateOres(random, chunkX, chunkZ, world, true);
+		this.generateTrees(random, chunkX, chunkZ, world, true);
+	}
+
+	private void generateTrees(Random random, int chunkX, int chunkZ, World world, boolean newGeneration)
+	{
+		if(Ores.gen_rubber_trees&&random.nextInt(Ores.gen_rubber_trees_chance)==0)
+		{
+			final int x = chunkX * 16 + 8 + random.nextInt(16);
+			final int z = chunkZ * 16 + 8 + random.nextInt(16);
+			final BlockPos pos = new BlockPos(x, 64, z);
+			final Biome biome = world.getBiomeForCoordsBody(pos);
+
+			if(biome.isHighHumidity()&&biome.getTemperature(pos)>0.9)
+				IIWorldGen.worldGenRubberTree.generate(world,random,world.getTopSolidOrLiquidBlock(pos));
+
+		}
 	}
 
 	public void generateOres(Random random, int chunkX, int chunkZ, World world, boolean newGeneration)

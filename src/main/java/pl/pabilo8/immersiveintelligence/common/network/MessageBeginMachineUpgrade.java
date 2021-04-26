@@ -2,13 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.network;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
+import blusunrize.lib.manual.ManualUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,19 +17,22 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 
 public class MessageBeginMachineUpgrade implements IMessage
 {
+	int entityID;
 	BlockPos pos;
 	boolean install;
 	String machineID;
 
-	public MessageBeginMachineUpgrade(TileEntity tile, String machineID, boolean install)
+	public MessageBeginMachineUpgrade(TileEntity tile, String machineID, Entity user, boolean install)
 	{
+		this.entityID = user.getEntityId();
 		this.pos = tile.getPos();
 		this.install = install;
 		this.machineID = machineID;
@@ -42,6 +45,7 @@ public class MessageBeginMachineUpgrade implements IMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
+		this.entityID = buf.readInt();
 		this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 		install = buf.readBoolean();
 		this.machineID = ByteBufUtils.readUTF8String(buf);
@@ -50,6 +54,7 @@ public class MessageBeginMachineUpgrade implements IMessage
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
+		buf.writeInt(entityID);
 		buf.writeInt(pos.getX()).writeInt(pos.getY()).writeInt(pos.getZ());
 		buf.writeBoolean(install);
 		ByteBufUtils.writeUTF8String(buf, machineID);
@@ -62,33 +67,57 @@ public class MessageBeginMachineUpgrade implements IMessage
 		{
 			WorldServer world = ctx.getServerHandler().player.getServerWorld();
 			world.addScheduledTask(() -> {
-				if(world.isBlockLoaded(message.pos))
+				Entity entity = world.getEntityByID(message.entityID);
+				if(entity instanceof EntityLivingBase)
 				{
-					TileEntity tile = world.getTileEntity(message.pos);
-					MachineUpgrade upgrade = MachineUpgrade.getUpgradeByID(message.machineID);
-					if(message.install)
+					if(world.isBlockLoaded(message.pos))
 					{
-						if(tile instanceof IUpgradableMachine&&((IUpgradableMachine)tile).getInstallProgress()==0&&upgrade!=null&&((IUpgradableMachine)tile).upgradeMatches(upgrade))
+						TileEntity tile = world.getTileEntity(message.pos);
+						MachineUpgrade upgrade = MachineUpgrade.getUpgradeByID(message.machineID);
+						if(message.install)
 						{
-							// TODO: 12.04.2021 *steal* items from player
-							for(IngredientStack requiredStack : upgrade.getRequiredStacks())
+							if(tile instanceof IUpgradableMachine&&((IUpgradableMachine)tile).getInstallProgress()==0&&upgrade!=null&&((IUpgradableMachine)tile).upgradeMatches(upgrade))
 							{
+								IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+								if(capability!=null)
+								{
+									if(!(entity instanceof EntityPlayer&&((EntityPlayer)entity).isCreative()))
+									{
+										for(IngredientStack requiredStack : upgrade.getRequiredStacks())
+										{
+											int reqSize = requiredStack.inputSize;
+											for(int slot = 0; slot < capability.getSlots(); slot++)
+											{
+												ItemStack inSlot = capability.getStackInSlot(slot);
+												if(!inSlot.isEmpty()&&requiredStack.matchesItemStackIgnoringSize(inSlot))
+												{
+													int ii = Math.min(inSlot.getCount(),reqSize);
+													capability.extractItem(slot,ii,false);
+													if((reqSize -= ii) <= 0)
+														break;
+												}
+											}
+											if(reqSize>0)
+												return;
+										}
+									}
 
+									((IUpgradableMachine)tile).startUpgrade(upgrade);
+									IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
+								}
 							}
-
-							((IUpgradableMachine)tile).startUpgrade(upgrade);
-							IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
 						}
-					}
-					else
-					{
-						if(tile instanceof IUpgradableMachine)
+						else
 						{
-							((IUpgradableMachine)tile).removeUpgrade(upgrade);
-							IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
+							if(tile instanceof IUpgradableMachine)
+							{
+								((IUpgradableMachine)tile).removeUpgrade(upgrade);
+								IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
+							}
 						}
 					}
 				}
+
 			});
 			return null;
 		}

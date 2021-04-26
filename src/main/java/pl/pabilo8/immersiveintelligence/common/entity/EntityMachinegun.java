@@ -713,11 +713,11 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		double true_angle2 = Math.toRadians(-(rotationPitch));
 
 		if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("heavy_barrel"))
-			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.BLOCKS, 1F, 1f);
+			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.75f);
 		else if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("water_cooling"))
-			world.playSound(null, getPosition(), IISounds.machinegun_shot_watercooled, SoundCategory.BLOCKS, 1F, 0.85f);
+			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.25f);
 		else
-			world.playSound(null, getPosition(), IISounds.machinegun_shot, SoundCategory.BLOCKS, 1F, 1f);
+			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.55f);
 
 		blusunrize.immersiveengineering.common.util.Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
 

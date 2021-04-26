@@ -3,12 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.network;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
 
 /**
  * @author Pabilo8
@@ -66,6 +68,15 @@ public class MessageParticleEffect implements IMessage
 							ParticleUtils.spawnExplosionPhosphorusFX(message.x, message.y, message.z);
 						}
 						break;
+						case "motorbike_explosion":
+						{
+							Entity e = world.getEntityByID(((int)message.x));
+							if(e instanceof EntityMotorbike)
+							{
+								EntityMotorbike motorbike = (EntityMotorbike)e;
+								motorbike.selfDestruct();
+							}
+						}
 					}
 				}
 

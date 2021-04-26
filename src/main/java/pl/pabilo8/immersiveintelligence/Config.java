@@ -3,10 +3,7 @@ package pl.pabilo8.immersiveintelligence;
 import blusunrize.immersiveengineering.common.Config.Mapped;
 import blusunrize.immersiveengineering.common.Config.SubConfig;
 import com.google.common.collect.Maps;
-import net.minecraftforge.common.config.Config.Comment;
-import net.minecraftforge.common.config.Config.RangeDouble;
-import net.minecraftforge.common.config.Config.RangeInt;
-import net.minecraftforge.common.config.Config.RequiresMcRestart;
+import net.minecraftforge.common.config.Config.*;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -59,6 +56,14 @@ public class Config
 		@Comment({"Whether basic circuits should be produced in II or IE way"})
 		@RequiresMcRestart
 		public static boolean changeCircuitProduction = true;
+
+		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
+		@RequiresMcRestart
+		public static boolean smeltableTungsten = false;
+
+		@Comment({"Whether Advanced Electronic Alloy should be smeltable in the vanilla furnace"})
+		@RequiresMcRestart
+		public static boolean smeltableAEA = false;
 
 		public static class Ores
 		{
@@ -134,6 +139,15 @@ public class Config
 			@RequiresMcRestart
 			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
 			public static boolean retrogen_phosphorus = false;
+
+			@Comment({"Whether rubber trees should be generated."})
+			@RequiresWorldRestart
+			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
+			public static boolean gen_rubber_trees = true;
+
+			@RangeInt(min = 0,max = 100)
+			@RequiresWorldRestart
+			public static int gen_rubber_trees_chance = 15;
 		}
 
 		public static class Tools

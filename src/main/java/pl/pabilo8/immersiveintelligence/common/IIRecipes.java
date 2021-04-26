@@ -11,10 +11,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -22,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeCrateConversion;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
@@ -506,9 +509,7 @@ public class IIRecipes
 				1024, 160, true, false, false
 		);
 
-
 	}
-
 
 	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowHFl)
 	{
@@ -587,6 +588,66 @@ public class IIRecipes
 				.addStack(new IngredientStack("blockSteel",3))
 				.addStack(new IngredientStack("circuitProcessor",4))
 				.setRequiredProgress(300000);
+	}
+
+	public static void addSmeltingRecipes()
+	{
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
+				new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.ZINC.getMeta()),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"zinc"),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
+				Utils.getStackWithMetaName(IIContent.itemMaterialDust,"zinc"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"zinc"),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
+				Utils.getStackWithMetaName(IIContent.itemMaterialDust,"brass"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"brass"),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
+				new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.PLATINUM.getMeta()),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"platinum"),
+				0.5F);
+
+		FurnaceRecipes.instance().addSmeltingRecipe(
+				Utils.getStackWithMetaName(IIContent.itemMaterialDust,"platinum"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"platinum"),
+				0.5F);
+
+		if(IIConfig.smeltableTungsten)
+		{
+			FurnaceRecipes.instance().addSmeltingRecipe(
+					new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.TUNGSTEN.getMeta()),
+					Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"tungsten"),
+					0.5F);
+
+			FurnaceRecipes.instance().addSmeltingRecipe(
+					Utils.getStackWithMetaName(IIContent.itemMaterialDust,"tungsten"),
+					Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"tungsten"),
+					0.5F);
+		}
+
+		if(IIConfig.smeltableAEA)
+			FurnaceRecipes.instance().addSmeltingRecipe(
+					Utils.getStackWithMetaName(IIContent.itemMaterialDust,"advanced_electronic_alloy"),
+					Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"advanced_electronic_alloy"),
+					0.5F);
+	}
+
+	public static void addArcFurnaceRecyclingRecipes()
+	{
+		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.itemDrillhead, 1, OreDictionary.WILDCARD_VALUE));
+		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.itemSawblade, 1, OreDictionary.WILDCARD_VALUE));
+
+		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.blockMetalDecoration, 1, OreDictionary.WILDCARD_VALUE));
+		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.blockMetalDevice, 1, OreDictionary.WILDCARD_VALUE));
+		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.blockMetalFortification, 1, OreDictionary.WILDCARD_VALUE));
+		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.blockMetalFortification1, 1, OreDictionary.WILDCARD_VALUE));
+
 	}
 
 }

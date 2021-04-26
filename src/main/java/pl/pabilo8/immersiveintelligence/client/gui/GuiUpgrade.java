@@ -102,7 +102,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			info^=true;
 		else if(button.id==1)
 		{
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(), !previewInstalled));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(),mc.player, !previewInstalled));
 			mc.player.closeScreen();
 		}
 		else if(button.id==2)

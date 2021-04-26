@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -345,20 +346,21 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 	public ItemStack findMagazine(Entity entity, ItemStack weapon)
 	{
-		if(!(entity instanceof EntityPlayer))
+		if(!(entity instanceof EntityLivingBase))
 			return ItemStack.EMPTY;
-		EntityPlayer player = (EntityPlayer)entity;
-		if(isAmmo(player.getHeldItem(EnumHand.OFF_HAND), weapon))
-			return player.getHeldItem(EnumHand.OFF_HAND);
-		else if(isAmmo(player.getHeldItem(EnumHand.MAIN_HAND), weapon))
-			return player.getHeldItem(EnumHand.MAIN_HAND);
-		else
-			for(int i = 0; i < player.inventory.getSizeInventory(); i++)
+		if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			final IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(capability==null)
+				return ItemStack.EMPTY;
+
+			for(int i = 0; i < capability.getSlots(); i++)
 			{
-				ItemStack itemstack = player.inventory.getStackInSlot(i);
+				ItemStack itemstack = capability.getStackInSlot(i);
 				if(isAmmo(itemstack, weapon))
 					return itemstack;
 			}
+		}
 		return ItemStack.EMPTY;
 	}
 

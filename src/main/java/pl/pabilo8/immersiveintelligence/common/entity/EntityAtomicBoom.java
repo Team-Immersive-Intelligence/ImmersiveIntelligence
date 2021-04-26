@@ -41,26 +41,26 @@ public class EntityAtomicBoom extends Entity
 			}
 			if(ticksExisted > 10)
 			{
-				ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 12f, 0.85f, -0.125f);
+				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 12f, 0.85f, -0.125f);
 				if(ticksExisted < 30)
 					ParticleUtils.spawnAtomicBoomCore(posX, posY+(0.5*size), posZ, 10f, 0, 0.5f);
 			}
 			if(ticksExisted > 20)
 			{
-				ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 20f, 0.5f, -0.25f);
+				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 20f, 0.5f, -0.25f);
 				ParticleUtils.spawnAtomicBoomCore(posX, posY+(3.5*size), posZ, 20f, 0.05f, -0.25f);
 				ParticleUtils.spawnAtomicBoomCore(posX, posY+(1.5*size), posZ, 10f, 0, 0.5f);
 			}
 			if(ticksExisted > 20&&ticksExisted < 380)
 			{
-				ParticleUtils.spawnFog(posX, posY+(1.5*size), posZ, 25f, 0.125f, -0.25f);
+				//ParticleUtils.spawnFog(posX, posY+(1.5*size), posZ, 25f, 0.125f, -0.25f);
 				ParticleUtils.spawnAtomicBoomCore(posX, posY+(1.5*size), posZ, 20f, -0.01f, 0.25f);
 				if(ticksExisted < 35)
 					ParticleUtils.spawnAtomicBoomCore(posX, posY+(3.5*size), posZ, 10f, 0, 0.5f);
 			}
 			if(ticksExisted > 25&&ticksExisted < 360)
 			{
-				ParticleUtils.spawnFog(posX, posY+(6.5*size), posZ, 20f, 0.1f, -0.25f);
+				//ParticleUtils.spawnFog(posX, posY+(6.5*size), posZ, 20f, 0.1f, -0.25f);
 				ParticleUtils.spawnAtomicBoomCore(posX, posY+(6.5*size), posZ, 20f, -0.01f, 0.25f);
 				if(ticksExisted < 40)
 					ParticleUtils.spawnAtomicBoomCore(posX, posY+(6.5*size), posZ, 10f, 0, 0.5f);

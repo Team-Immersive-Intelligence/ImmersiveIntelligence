@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityFieldHowitzer;
@@ -61,7 +61,6 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 			trigger = -(firing > 0.1f?(firing < 0.9f?(firing < 0.2f?(firing-0.1f)/0.1f: 1f): 1f-((firing-0.9f)/0.1f)): 0f);
 		}
 
-		float wheelRot = entity.wheelTraverse+(entity.speed > 0?(f1*entity.speed): 0);
 		float yaw = -entity.rotationYaw;//(tt%60)/60f*360f;
 
 		float towing = 0;
@@ -121,9 +120,15 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		GlStateManager.rotate(towing*8, 1, 0, 0);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(wheelRot, 1, 0, 0);
+		GlStateManager.translate(0, 0, -0.5f);
+		GlStateManager.rotate(entity.partWheelLeft.wheelTraverse+(entity.turnLeft ?(f1*1.5f): 0)-(entity.turnRight ?(f1*1.5f): 0), 1, 0, 0);
 		for(ModelRendererTurbo mod : model.leftWheelModel)
 			mod.render(0.0625f);
+		GlStateManager.popMatrix();
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0, -0.5f);
+		GlStateManager.rotate(entity.partWheelRight.wheelTraverse+(entity.turnRight ?(f1*1.5f): 0)-(entity.turnLeft ?(f1*1.5f): 0), 1, 0, 0);
 		for(ModelRendererTurbo mod : model.rightWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();

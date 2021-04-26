@@ -19,15 +19,15 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.energy.CapabilityEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
-import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansHowitzer;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
+import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,6 +58,7 @@ public class CommandIIDev extends CommandBase
 		options.add("explosion");
 		options.add("nuke");
 		options.add("power");
+		options.add("tree");
 		//options.add("panzer");
 		//options.add("fallschirm");
 	}
@@ -92,13 +93,28 @@ public class CommandIIDev extends CommandBase
 		{
 			switch(args[0])
 			{
+				case "tree":
+				{
+					sender.sendMessage(new TextComponentString("Adding a happy little tree :)"));
+					Entity commandSenderEntity = sender.getCommandSenderEntity();
+					float blockReachDistance = 100f;
+					Vec3d vec3d = commandSenderEntity.getPositionEyes(0);
+					Vec3d vec3d1 = commandSenderEntity.getLook(0);
+					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
+					RayTraceResult traceResult = commandSenderEntity.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
+						return;
+
+					IIWorldGen.worldGenRubberTree.generate(commandSenderEntity.world, Utils.RAND,traceResult.getBlockPos());
+				}
+				break;
 				case "slowmo":
 					EntityBullet.DEV_SLOMO = 0.005f;
 					EntityBullet.DEV_DECAY = false;
 					sender.sendMessage(new TextComponentString("Slomo activated!"));
 					break;
 				case "zawarudo":
-					if(EntityBullet.DEV_SLOMO == 0f)
+					if(EntityBullet.DEV_SLOMO==0f)
 					{
 						sender.sendMessage(new TextComponentString("Toki wo tomatta."));
 						EntityBullet.DEV_SLOMO = 1f;
@@ -171,8 +187,8 @@ public class CommandIIDev extends CommandBase
 
 					if(args[0].equals("nuke"))
 					{
-						EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(server.getEntityWorld(), 0.65f);
-						entityAtomicBoom.setPosition(pos.getX(), pos.getY(), pos.getZ());
+						EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(server.getEntityWorld(), 0.5f);
+						entityAtomicBoom.setPosition(pos.getX(), pos.getY()+2, pos.getZ());
 						server.getEntityWorld().spawnEntity(entityAtomicBoom);
 						return;
 					}

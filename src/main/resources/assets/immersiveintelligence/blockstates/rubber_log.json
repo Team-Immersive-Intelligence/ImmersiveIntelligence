@@ -1,0 +1,46 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "top": "immersiveintelligence:blocks/rubber_tree/log_top",
+      "bottom": "immersiveintelligence:blocks/rubber_tree/log_top",
+      "side": "immersiveintelligence:blocks/rubber_tree/log"
+    },
+    "model": "immersiveengineering:ie_pillar"
+  },
+  "variants": {
+    "inventory,type=rubber": [
+      {
+        "textures": {
+          "top": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "bottom": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "side": "immersiveintelligence:blocks/rubber_tree/log"
+        }
+      }
+    ],
+    "type": {
+      "rubber": {
+        "textures": {
+          "top": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "bottom": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "side": "immersiveintelligence:blocks/rubber_tree/log"
+        }
+      }
+    },
+    "axis": {
+      "x": {
+        "x": 90, "y": 90
+      },
+      "y": {
+
+      },
+      "z": {
+        "x": 90
+      },
+      "none": {
+
+      }
+    }
+  }
+}

@@ -36,9 +36,12 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 		if(te!=null&&!te.isDummy())
 		{
 			ClientUtils.bindTexture(TEXTURE);
+			GlStateManager.enableLighting();
+
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y-1, (float)z);
 			GlStateManager.rotate(270f, 0F, 1F, 0F);
+
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			if(te.hasWorld())

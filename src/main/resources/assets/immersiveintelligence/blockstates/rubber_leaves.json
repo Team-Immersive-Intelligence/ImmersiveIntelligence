@@ -1,0 +1,34 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "all": "immersiveintelligence:blocks/rubber_tree/leaves"
+    },
+    "model": "leaves"
+  },
+  "variants": {
+    "inventory,type=rubber": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/rubber_tree/leaves"
+        }
+      }
+    ],
+    "type": {
+      "rubber": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/rubber_tree/leaves"
+        }
+      }
+    },
+    "check_decay": {
+      "false": {},
+      "true": {}
+    },
+    "decayable": {
+      "false": {},
+      "true": {}
+    }
+  }
+}

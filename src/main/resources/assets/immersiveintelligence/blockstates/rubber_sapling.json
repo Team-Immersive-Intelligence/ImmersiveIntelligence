@@ -1,0 +1,19 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveintelligence:sapling"
+  },
+  "variants": {
+    "type": {
+      "rubber": {
+      }
+    },
+    "stage": {
+      "0": {
+      },
+      "1": {
+      }
+    }
+  }
+}

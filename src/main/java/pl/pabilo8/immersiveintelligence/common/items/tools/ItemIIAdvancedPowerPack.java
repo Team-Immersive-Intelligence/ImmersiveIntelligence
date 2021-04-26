@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.items.tools;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.client.ClientProxy;
+import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.immersiveengineering.common.items.ItemPowerpack;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
@@ -64,6 +65,8 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	@Nullable
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
 	{
+		//Whatever you say, Blu, I know the real reason why you removed it
+		//return ImmersiveEngineering.MODID+":textures/models/maneuver_gear.png";
 		return ImmersiveIntelligence.MODID+":textures/armor/empty.png";
 	}
 
@@ -72,6 +75,8 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	@SideOnly(Side.CLIENT)
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)
 	{
+		//And yes, I really like AoT in its current state
+		//return ModelManeuverGear.getModel();
 		return ModelAdvancedPowerpackArmor.getModel(armorSlot, itemStack);
 	}
 
@@ -167,13 +172,14 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	}
 
 	@Override
-	public void onStrike(ItemStack s, EntityEquipmentSlot eqSlot, EntityLivingBase p, Map<String, Object> cache,
+	public void onStrike(ItemStack stack, EntityEquipmentSlot eqSlot, EntityLivingBase entity, Map<String, Object> cache,
 						 @Nullable DamageSource dSource, ElectricSource eSource)
 	{
 		if(!(dSource instanceof ElectricDamageSource))
-		{
-
-		}
+			return;
+		ElectricDamageSource dmg = (ElectricDamageSource)dSource;
+		receiveEnergy(stack, (int)(Math.floor(dmg.dmg)*Machines.teslacoil_consumption_active), false);
+		dmg.dmg = 0;
 	}
 
 	@Override

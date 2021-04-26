@@ -7,6 +7,8 @@ import blusunrize.immersiveengineering.api.tool.ZoomHandler.IZoomTool;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
+import blusunrize.immersiveengineering.common.items.ItemChemthrower;
+import blusunrize.immersiveengineering.common.items.ItemDrill;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageRequestBlockUpdate;
@@ -33,6 +35,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -40,6 +43,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Post;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.client.resource.VanillaResourceType;
@@ -49,6 +53,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.lwjgl.opengl.GLContext;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
@@ -70,6 +75,7 @@ import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoGrenade;
@@ -97,6 +103,57 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static boolean mgAiming = false;
 	public static ArrayList<EntityPlayer> aimingPlayers = new ArrayList<>();
 
+	public static void drawSubmachinegunGui(ItemStack stack, RenderGameOverlayEvent.Post event)
+	{
+		ClientUtils.bindTexture(texture_gui);
+		int width = event.getResolution().getScaledWidth();
+		int height = event.getResolution().getScaledHeight();
+
+		ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
+		//for drums
+		if(magazine.getMetadata()==3)
+		{
+
+		}
+		//for stick
+		else
+		{
+			int bullets = ItemIIBulletMagazine.getRemainingBulletCount(magazine);
+			ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
+			if(bullets > 0)
+			{
+				NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(magazine).getTagList("bullets", 10), ItemIIBulletMagazine.getBulletCapactity(magazine));
+				for(int i = 0; i < bullets; i++)
+				{
+					if(cartridge.get(i).isEmpty())
+						continue;
+					final int x = width-38+3+((64-i)%2==0?-1: 0);
+					ClientUtils.drawTexturedRect(x, height-17-(i*6), 30, 6, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
+					int cc = IIContent.itemAmmoMachinegun.getPaintColor(cartridge.get(i));
+					float[] rgb;
+					if(cc!=-1)
+					{
+						rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+						ClientUtils.drawTexturedRect(x+10, height-17-(i*6), 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
+					}
+					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+					ClientUtils.drawTexturedRect(x+24, height-17-(i*6), 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
+					GlStateManager.color(1f, 1f, 1f);
+
+				}
+			}
+			ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
+			pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+					String.valueOf(bullets),
+					width-38+12, height-27+12,
+					12, 0,
+					0xffffff
+			);
+		}
+	}
+
 	public static void drawMachinegunGui(EntityMachinegun mg, RenderGameOverlayEvent.Post event)
 	{
 		GlStateManager.pushMatrix();
@@ -108,35 +165,111 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		boolean drawWater = mg.tankCapacity > 0, hasShield = mg.maxShieldStrength > 0, hasSecondMag = mg.hasSecondMag;
 		int bars = 1+(hasShield?1: 0)+(drawWater?1: 0);
 
-		for(int i = 0; i < (hasSecondMag?2: 1); i += 1)
+		//Magazine 1
+		if(mg.hasSecondMag)
 		{
-			GlStateManager.pushMatrix();
-			ClientUtils.drawTexturedRect(width-26-(18*bars), height-36-(i*18), 16, 16, 16/256f, 32/256f, 16/256f, 32/256f);
-			for(int j = 0; j < bars+1; j += 1)
-				ClientUtils.drawTexturedRect(width-16-(j*16), height-36-(i*18), 16, 16, 32/256f, 48/256f, 16/256f, 32/256f);
-
-			if((i==0&&!mg.mag1Empty))
+			ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
+			if(mg.bullets2 > 0)
 			{
-				int tlen = ClientUtils.font().getStringWidth(String.valueOf(mg.bullets1));
-				ClientUtils.font().drawString(String.valueOf(mg.bullets1), width-tlen-(18*bars), height-32-(i*18), 0xffffff, false);
-				ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(mg.magazine1, width-44-(18*bars), height-36-(i*18));
-			}
-			else if((i==1&&!mg.mag2Empty))
-			{
-				int tlen = ClientUtils.font().getStringWidth(String.valueOf(mg.bullets2));
-				ClientUtils.font().drawString(String.valueOf(mg.bullets2), width-tlen-(18*bars), height-32-(i*18), Lib.COLOUR_I_ImmersiveOrange, false);
-				ClientUtils.mc().getRenderItem().renderItemAndEffectIntoGUI(mg.magazine2, width-44-(18*bars), height-36-(i*18));
-			}
+				NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(mg.magazine2).getTagList("bullets", 10), ItemIIBulletMagazine.getBulletCapactity(mg.magazine2));
+				for(int i = 0; i < mg.bullets2; i++)
+				{
+					if(cartridge.get(i).isEmpty())
+						continue;
+					final int x = width-38+3+((64-i)%2==0?-1: 0);
+					ClientUtils.drawTexturedRect(x, height-17-(i*6), 30, 6, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
+					int cc = IIContent.itemAmmoMachinegun.getPaintColor(cartridge.get(i));
+					float[] rgb;
+					if(cc!=-1)
+					{
+						rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+						ClientUtils.drawTexturedRect(x+10, height-17-(i*6), 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
+					}
+					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+					ClientUtils.drawTexturedRect(x+24, height-17-(i*6), 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
+					GlStateManager.color(1f, 1f, 1f);
 
-			GlStateManager.popMatrix();
+				}
+			}
+			ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
+			pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+					String.valueOf(mg.bullets2),
+					width-38+12, height-27+12,
+					12, 0,
+					0xffffff
+			);
+			width -= 38;
 			ClientUtils.bindTexture(texture_gui);
 		}
+
+		ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
+		if(mg.bullets1 > 0)
+		{
+			NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(mg.magazine1).getTagList("bullets", 10), ItemIIBulletMagazine.getBulletCapactity(mg.magazine1));
+			for(int i = 0; i < mg.bullets1; i++)
+			{
+				if(cartridge.get(i).isEmpty())
+					continue;
+				final int x = width-38+3+((64-i)%2==0?-1: 0);
+				ClientUtils.drawTexturedRect(x, height-17-(i*6), 30, 6, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
+				int cc = IIContent.itemAmmoMachinegun.getPaintColor(cartridge.get(i));
+				float[] rgb;
+				if(cc!=-1)
+				{
+					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+					ClientUtils.drawTexturedRect(x+10, height-17-(i*6), 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
+				}
+				rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+				GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+				ClientUtils.drawTexturedRect(x+24, height-17-(i*6), 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
+				GlStateManager.color(1f, 1f, 1f);
+
+			}
+		}
+		ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
+		pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+				String.valueOf(mg.bullets1),
+				width-38+12, height-27+12,
+				12, 0,
+				0xffffff
+		);
+		width -= 38;
+		ClientUtils.bindTexture(texture_gui);
+
 		GlStateManager.enableBlend();
 
-		ClientUtils.drawTexturedRect(width-19, height-18, 18, 18, 0/256f, 18/256f, 62/256f, 78/256f);
+		ClientUtils.drawTexturedRect(width-24, height-20, 22, 18, 0/256f, 22/256f, 62/256f, 80/256f);
+		ClientUtils.drawGradientRect(width-23, height-3-(int)((mg.overheating/100f)*16), width-20, height-3, 0xffdf9916, 0x0fba0f0f);
+		ClientUtils.drawTexturedRect(width-19, height-19, 16, 16, 16/256f, 32/256f, 0, 16/256f);
+		height -= 18;
+
+		if(drawWater)
+		{
+			FluidStack fluid = mg.tank.getFluid();
+			ClientUtils.drawTexturedRect(width-24, height-20, 22, 18, 0/256f, 22/256f, 62/256f, 80/256f);
+			if(fluid!=null)
+			{
+				float hh = 16*((float)mg.tank.getFluidAmount()/(float)mg.tankCapacity);
+				ClientUtils.drawRepeatedFluidSprite(fluid, width-23, height-3-hh, 3, hh);
+			}
+			ClientUtils.bindTexture(texture_gui);
+			ClientUtils.drawTexturedRect(width-19, height-19, 16, 16, 0, 16/256f, 0, 16/256f);
+			height -= 18;
+		}
+
+		if(hasShield)
+		{
+			ClientUtils.drawTexturedRect(width-24, height-20, 22, 18, 0/256f, 22/256f, 62/256f, 80/256f);
+			ClientUtils.drawGradientRect(width-23, height-3-(int)((mg.shieldStrength/mg.maxShieldStrength)*16), width-20, height-3, 0xcfcfcfcf, 0x0cfcfcfc);
+			ClientUtils.drawTexturedRect(width-19, height-19, 16, 16, 32/256f, 48/256f, 0, 16/256f);
+			//height-=18;
+		}
+
+		/*
 		ClientUtils.drawTexturedRect(width-16, height-64, 12, 46, 3/256f, 15/256f, 16/256f, 62/256f);
-		ClientUtils.drawTexturedRect(width-18, height-17, 16, 16, 16/256f, 32/256f, 0, 16/256f);
-		ClientUtils.drawGradientRect(width-14, height-19-(int)((mg.overheating/100f)*43), width-6, height-19, 0xffdf9916, 0x0fba0f0f);
 
 		FluidStack fluid = mg.tank.getFluid();
 		if(drawWater)
@@ -166,6 +299,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(drawWater)
 			GlStateManager.translate(18, 0, 0);
+		 */
 
 		//ClientUtils.drawTexturedRect(width-17,height-17,16,16,0,16/256f,0,16/256f);
 
@@ -381,11 +515,60 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					}
 
 				}
-			if(player.getRidingEntity() instanceof EntityMachinegun)
+			if(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemIISubmachinegun)
+				drawSubmachinegunGui(player.getHeldItem(EnumHand.MAIN_HAND), event);
+			else if(player.getRidingEntity() instanceof EntityMachinegun)
 				drawMachinegunGui((EntityMachinegun)player.getRidingEntity(), event);
-			if(ZoomHandler.isZooming&&player.getRidingEntity() instanceof EntityTripodPeriscope)
+			else if(player.getLowestRidingEntity() instanceof EntityMotorbike)
+				drawMotorbikeGui((EntityMotorbike)player.getLowestRidingEntity(), event);
+			else if(ZoomHandler.isZooming&&player.getRidingEntity() instanceof EntityTripodPeriscope)
 				drawTripodGui(((EntityTripodPeriscope)player.getRidingEntity()), event);
 		}
+	}
+
+	private void drawMotorbikeGui(EntityMotorbike motorbike, Post event)
+	{
+		int offset = 0;
+		EnumHand[] var3 = EnumHand.values();
+		EntityPlayer player = ClientUtils.mc().player;
+
+		for(EnumHand hand : var3)
+			if(!player.getHeldItem(hand).isEmpty())
+			{
+				ItemStack equipped = player.getHeldItem(hand);
+				if(equipped.getItem() instanceof ItemDrill||equipped.getItem() instanceof ItemChemthrower)
+					offset -= 85;
+			}
+
+		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png");
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		float dx = (float)(event.getResolution().getScaledWidth()-16);
+		float dy = (float)event.getResolution().getScaledHeight();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(dx, dy+(float)offset, 0.0D);
+		int w = 31;
+		int h = 62;
+		double uMin = 0;
+		double uMax = 53/256d;
+		double vMin = 80/256d;
+		double vMax = (80+72)/256d;
+		ClientUtils.drawTexturedRect(-41.0F+17f, -73.0F+5f, 31, 62, 54/256d, (54+31)/256d, 80/256d, (80+62)/256d);
+
+		int capacity = motorbike.tank.getCapacity();
+		int amount = motorbike.tank.getFluidAmount();
+		float cap = (float)capacity;
+		float angle = 83.0F-(float)(166*amount)/cap;
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-23.0D, -37.0D, 0.0D);
+		GlStateManager.rotate(angle, 0, 0, 1);
+		ClientUtils.drawTexturedRect(-3F+8, -1.5f, 24, 5, 0/256d, 32/256d, 152/256d, (152+7)/256d);
+		GlStateManager.popMatrix();
+
+		ClientUtils.drawTexturedRect(-41.0F, -73.0F, 53, 72, uMin, uMax, vMin, vMax);
+
+
+		GlStateManager.popMatrix();
 	}
 
 	private void drawTripodGui(EntityTripodPeriscope ridingEntity, RenderGameOverlayEvent.Post event)
@@ -1029,6 +1212,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						{
 							if(right)
 							{
+								//model.bipedBody.rotateAngleY=model.bipedHead.rotateAngleY;
 								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
 								model.bipedRightArm.rotateAngleY = -.08726f-TmtUtil.AngleToTMT(15f)+model.bipedHead.rotateAngleY;
 								// TODO: 26.09.2020 vector calculation
@@ -1166,9 +1350,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	}
 
 	@SubscribeEvent
-	public void onTickClientTick(ClientTickEvent event)
+	public void onPostClientTick(ClientTickEvent event)
 	{
-		ParticleUtils.particleRenderer.updateParticles();
+		if(event.phase==Phase.END)
+			ParticleUtils.particleRenderer.updateParticles();
 	}
 
 	@SubscribeEvent

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.model.misc;
+package pl.pabilo8.immersiveintelligence.client.model.vehicle;
 
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
@@ -160,7 +160,7 @@ public class ModelFieldHowitzer extends ModelIIBase
 		leftWheelModel[0] = new ModelRendererTurbo(this, 76, 0, textureX, textureY); // Shape 0
 
 		leftWheelModel[0].addShape3D(7F, -7F, -2F, new Shape2D(new Coord2D[]{new Coord2D(3, 0, 3, 0), new Coord2D(11, 0, 11, 0), new Coord2D(14, 3, 14, 3), new Coord2D(14, 11, 14, 11), new Coord2D(11, 14, 11, 14), new Coord2D(3, 14, 3, 14), new Coord2D(0, 11, 0, 11), new Coord2D(0, 3, 0, 3)}), 4, 14, 14, 52, 4, ModelRendererTurbo.MR_FRONT, new float[]{5, 8, 5, 8, 5, 8, 5, 8}); // Shape 0
-		leftWheelModel[0].setRotationPoint(20F, 0F, 8F);
+		leftWheelModel[0].setRotationPoint(20F, 0F, 0F);
 		leftWheelModel[0].rotateAngleY = -1.57079633F;
 
 
@@ -168,7 +168,7 @@ public class ModelFieldHowitzer extends ModelIIBase
 		rightWheelModel[0] = new ModelRendererTurbo(this, 76, 0, textureX, textureY); // Shape 0
 
 		rightWheelModel[0].addShape3D(7F, -7F, -2F, new Shape2D(new Coord2D[]{new Coord2D(3, 0, 3, 0), new Coord2D(11, 0, 11, 0), new Coord2D(14, 3, 14, 3), new Coord2D(14, 11, 14, 11), new Coord2D(11, 14, 11, 14), new Coord2D(3, 14, 3, 14), new Coord2D(0, 11, 0, 11), new Coord2D(0, 3, 0, 3)}), 4, 14, 14, 52, 4, ModelRendererTurbo.MR_FRONT, new float[]{5, 8, 5, 8, 5, 8, 5, 8}); // Shape 0
-		rightWheelModel[0].setRotationPoint(-4F, 0F, 8F);
+		rightWheelModel[0].setRotationPoint(-4F, 0F, 0F);
 		rightWheelModel[0].rotateAngleY = -1.57079633F;
 
 

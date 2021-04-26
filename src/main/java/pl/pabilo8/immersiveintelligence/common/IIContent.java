@@ -37,6 +37,9 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDe
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIMineSign;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLeaves;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberSapling;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.*;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerBoots;
@@ -47,6 +50,7 @@ import pl.pabilo8.immersiveintelligence.common.items.material.*;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIArmorUpgrade;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
@@ -124,8 +128,9 @@ public class IIContent
 	public static ItemIILightEngineerChestplate itemLightEngineerChestplate = new ItemIILightEngineerChestplate();
 	public static ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
 	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
-	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
+	public static ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
 	//Thanks, Blu
+	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 
 	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
@@ -143,6 +148,10 @@ public class IIContent
 	public static ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
 	public static ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
 	public static ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
+
+	public static BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();
+	public static BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
+	public static BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
 
 	public static BlockIIOre blockOre = new BlockIIOre();
 	public static BlockIIBase<IIBlockTypes_Metal> blockSheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.model.armor;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -10,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
  * @author Pabilo8
@@ -20,17 +22,19 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 {
 	static int textureX = 64;
 	static int textureY = 64;
-	private static final String texture = ImmersiveIntelligence.MODID+":textures/armor/engineer_light.png";
-	ModelRendererTurbo[] capeModel;
+	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/armor/engineer_light.png";
+	private static final String TEXTURE_GASMASK = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_gasmask.png";
+	ModelRendererTurbo[] capeModel, gasmaskModel;
 
 	static
 	{
 		modelInstance = new ModelLightEngineerArmor().subscribeToList("light_engineer_armor");
 	}
 
+
 	public ModelLightEngineerArmor()
 	{
-		super(textureX, textureY, texture);
+		super(textureX, textureY, TEXTURE);
 
 		headModel = new ModelRendererTurbo[25];
 		headModel[0] = new ModelRendererTurbo(this, 34, 40, textureX, textureY); // Box 0
@@ -232,7 +236,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		rightArmModel[0].setRotationPoint(-9F, 0.5F, -2F);
 		rightArmModel[0].rotateAngleZ = -0.03490659F;
 
-		rightArmModel[1].addShapeBox(4.5F, -3F, 0F, 2, 1, 2, 0F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F); // Box 29
+		rightArmModel[1].addShapeBox(4.5F, -2.65F, 0F, 2, 1, 2, 0F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F, 0.125F); // Box 29
 		rightArmModel[1].setRotationPoint(-8F, -1F, -1F);
 		rightArmModel[1].rotateAngleZ = 0.26179939F;
 
@@ -334,6 +338,60 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 
 		parts.put("cape", capeModel);
 
+		gasmaskModel = new ModelRendererTurbo[11];
+		gasmaskModel[0] = new ModelRendererTurbo(this, 12, 0, 32, 32); // Box 0
+		gasmaskModel[1] = new ModelRendererTurbo(this, 28, 10, 32, 32); // Box 1
+		gasmaskModel[2] = new ModelRendererTurbo(this, 2, 21, 32, 32); // Box 2
+		gasmaskModel[3] = new ModelRendererTurbo(this, 2, 21, 32, 32); // Box 3
+		gasmaskModel[4] = new ModelRendererTurbo(this, 8, 27, 32, 32); // Box 4
+		gasmaskModel[5] = new ModelRendererTurbo(this, 17, 20, 32, 32); // Box 5
+		gasmaskModel[6] = new ModelRendererTurbo(this, 17, 20, 32, 32); // Box 6
+		gasmaskModel[7] = new ModelRendererTurbo(this, 12, 23, 32, 32); // Box 7
+		gasmaskModel[8] = new ModelRendererTurbo(this, 22, 7, 32, 32); // Box 8
+		gasmaskModel[9] = new ModelRendererTurbo(this, 22, 16, 32, 32); // Box 9
+		gasmaskModel[10] = new ModelRendererTurbo(this, 20, 21, 32, 32); // Box 10
+
+		gasmaskModel[0].addShapeBox(0F, 0F, 0F, 9, 6, 1, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		gasmaskModel[0].setRotationPoint(-4.5F, -18F, -5F);
+
+		gasmaskModel[1].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 1
+		gasmaskModel[1].setRotationPoint(-0.5F, -18F, -5.5F);
+		gasmaskModel[1].rotateAngleX = 0.08726646F;
+
+		gasmaskModel[2].addShapeBox(0F, 0F, 0F, 1, 6, 4, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		gasmaskModel[2].setRotationPoint(3.5F, -18F, -4F);
+
+		gasmaskModel[3].addShapeBox(0F, 0F, 0F, 1, 6, 4, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 3
+		gasmaskModel[3].setRotationPoint(-4.5F, -18F, -4F);
+
+		gasmaskModel[4].addShapeBox(0F, 0F, 0F, 8, 1, 4, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 4
+		gasmaskModel[4].setRotationPoint(-4F, -12.8F, -4F);
+
+		gasmaskModel[5].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 5
+		gasmaskModel[5].setRotationPoint(1F, -16.5F, -5.5F);
+
+		gasmaskModel[6].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 6
+		gasmaskModel[6].setRotationPoint(-3F, -16.5F, -5.5F);
+
+		gasmaskModel[7].addBox(0F, 0F, 0F, 3, 3, 1, 0F); // Box 7
+		gasmaskModel[7].setRotationPoint(-1.5F, -14F, -6F);
+
+		gasmaskModel[8].addShapeBox(0F, 0F, 0F, 3, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F); // Box 8
+		gasmaskModel[8].setRotationPoint(-1.5F, -12F, -5F);
+
+		gasmaskModel[9].addShapeBox(0F, 0F, 0F, 2, 2, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 9
+		gasmaskModel[9].setRotationPoint(-1F, -12.2F, -8F);
+		gasmaskModel[9].rotateAngleX = 0.4712389F;
+
+		gasmaskModel[10].addShapeBox(0F, 0F, -1F, 3, 3, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 10
+		gasmaskModel[10].setRotationPoint(-1.5F, -12F, -9F);
+		gasmaskModel[10].rotateAngleX = 0.54105207F;
+
+		for(ModelRendererTurbo mod : gasmaskModel)
+			mod.rotationPointY += 12f;
+
+		parts.put("gasmask", gasmaskModel);
+
 		flipAll();
 		init();
 	}
@@ -346,8 +404,20 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	}
 
 
-	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, float scale, float ageInTicks)
+	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, float scale, float ageInTicks, boolean entity)
 	{
+		if(renderSlot==EntityEquipmentSlot.HEAD)
+		{
+			if(IIContent.itemLightEngineerHelmet.getUpgrades(renderStack).hasKey("gasmask"))
+			{
+				ClientUtils.bindTexture(TEXTURE_GASMASK);
+				if(entity)
+					renderChild(bipedHead, gasmaskModel, scale, TEXTURE_GASMASK);
+				else
+					for(ModelRendererTurbo mod : gasmaskModel)
+						mod.render();
+			}
+		}
 		/*
 		if(renderSlot==EntityEquipmentSlot.CHEST)
 		{

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.model.misc;
+package pl.pabilo8.immersiveintelligence.client.model.vehicle;
 
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
