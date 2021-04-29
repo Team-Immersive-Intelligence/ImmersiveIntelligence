@@ -418,6 +418,9 @@ public class Config
 				@Comment({"The amount of fluid a Medical Crate can store (in mB)"})
 				public static int mediCrateTankSize = 4000;
 
+				@Comment({"The amount of fluid a Medical Crate uses after applying the effect (in mB)"})
+				public static int mediCrateFluidDrain = 250;
+
 				@Comment({"The amount of energy an inserter upgraded Medical Crate takes per one heal (in IF/RF/FE)"})
 				public static int mediCrateEnergyPerAction = 50;
 

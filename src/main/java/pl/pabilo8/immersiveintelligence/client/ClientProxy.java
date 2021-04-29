@@ -20,6 +20,10 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IColoured
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
+import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorBasic;
+import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorDrop;
+import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorSplit;
+import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorVertical;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
@@ -110,6 +114,10 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubber;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubberDropper;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubberSplitter;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubberVertical;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
@@ -500,6 +508,14 @@ public class ClientProxy extends CommonProxy
 
 		ParticleGasCloud.TEXTURE = ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":particle/gas");
 
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubber.texture_on);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubber.texture_off);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberSplitter.texture_on);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberSplitter.texture_off);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberVertical.texture_on);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberVertical.texture_off);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberDropper.texture_on);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberDropper.texture_off);
 	}
 
 	@Override

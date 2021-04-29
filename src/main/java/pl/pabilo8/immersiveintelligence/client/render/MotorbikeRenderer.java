@@ -181,6 +181,9 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		for(ModelRendererTurbo mod : model.backWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();
+		GlStateManager.disableBlend();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.popMatrix();
 
 /*
 		GlStateManager.translate(0,0.25,0);
@@ -288,10 +291,6 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		RotaryUtils.tessellateMotorBelt(tracks,8*acceleration,world_rpm);
 		GlStateManager.translate(-5,0,0);
 		RotaryUtils.tessellateMotorBelt(tracks,8*acceleration,world_rpm);
-
-		GlStateManager.disableBlend();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.popMatrix();
 		*/
 	}
 

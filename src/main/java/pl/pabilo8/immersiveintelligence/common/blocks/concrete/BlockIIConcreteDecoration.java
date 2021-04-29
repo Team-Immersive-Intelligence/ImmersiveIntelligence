@@ -3,12 +3,11 @@ package pl.pabilo8.immersiveintelligence.common.blocks.concrete;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.blocks.BlockIISlab;
+import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIStairs;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_ConcreteDecoration;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_StoneDecoration;
 
 /**
  * @author Pabilo8
@@ -18,31 +17,45 @@ public class BlockIIConcreteDecoration extends BlockIIBase<IIBlockTypes_Concrete
 {
 	public BlockIIConcreteDecoration()
 	{
-		super("concrete_decoration", Material.IRON, PropertyEnum.create("type", IIBlockTypes_ConcreteDecoration.class), ItemBlockIEBase.class);
-		setHardness(3.0F);
-		setResistance(15.0F);
-		lightOpacity = 0;
-
-		setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta(), 360).setHardness(2.0F).setResistance(10.0F);
-		setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta(), 1600).setHardness(2.0F).setResistance(10.0F);
-		setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.UBERCONCRETE.getMeta(), 2400).setHardness(2.0F).setResistance(10.0F);
+		super("concrete_decoration", Material.ROCK, PropertyEnum.create("type", IIBlockTypes_ConcreteDecoration.class), ItemBlockIEBase.class);
+		setMiningLevels(this);
 	}
 
-	@Override
-	public boolean allowHammerHarvest(IBlockState state)
+	public static class BlockIIConcreteSlab extends BlockIISlab<IIBlockTypes_ConcreteDecoration>
 	{
-		return true;
+		public BlockIIConcreteSlab()
+		{
+			super("concrete_decoration_slab", Material.ROCK, PropertyEnum.create("type", IIBlockTypes_ConcreteDecoration.class));
+			setMiningLevels(this);
+		}
 	}
 
-	@Override
-	public BlockRenderLayer getBlockLayer()
+	public static BlockIIStairs[] getStairs()
 	{
-		return BlockRenderLayer.CUTOUT_MIPPED;
+		BlockIIStairs[] stairs = new BlockIIStairs[IIBlockTypes_ConcreteDecoration.values().length];
+		for(int i = 0; i < IIBlockTypes_ConcreteDecoration.values().length; i++)
+		{
+			final IIBlockTypes_ConcreteDecoration value = IIBlockTypes_ConcreteDecoration.values()[i];
+			stairs[i] = new BlockIIStairs("concrete_decoration_stairs_"+value.getName(), IIContent.blockConcreteDecoration.getStateFromMeta(i));
+		}
+		return stairs;
 	}
 
-	@Deprecated
-	public EnumBlockRenderType getRenderType(IBlockState state)
+	public static void setMiningLevels(BlockIIBase<IIBlockTypes_ConcreteDecoration> block)
 	{
-		return EnumBlockRenderType.MODEL;
+		block.setHardness(3.0F);
+		block.setResistance(15.0F);
+		block.setLightOpacity(0);
+
+		block.setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta(), 360);
+		block.setMetaHardness(IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta(), 2.0F);
+		block.setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta(), 1600);
+		block.setMetaHardness(IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta(), 6.0F);
+		block.setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.UBERCONCRETE.getMeta(), 2400);
+		block.setMetaHardness(IIBlockTypes_ConcreteDecoration.UBERCONCRETE.getMeta(), 10.0F);
+
+		block.setHarvestLevel("pickaxe", 1, block.getStateFromMeta((IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta())));
+		block.setHarvestLevel("pickaxe", 2, block.getStateFromMeta((IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta())));
+		block.setHarvestLevel("pickaxe", 3, block.getStateFromMeta((IIBlockTypes_ConcreteDecoration.UBERCONCRETE.getMeta())));
 	}
 }

@@ -1,10 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
+import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
@@ -12,7 +16,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.RepairCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -23,18 +26,22 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCr
  * @author Pabilo8
  * @since 06.07.2020
  */
-public class TileEntityRepairCrate extends TileEntityEffectCrate
+public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISoundTile
 {
+	public boolean repaired;
+	public boolean shouldRepairArmor = true;
+	public boolean shouldRepairVehicles = true;
+
 	public TileEntityRepairCrate()
 	{
-		inventory = NonNullList.withSize(9, ItemStack.EMPTY);
-		insertionHandler = new IEInventoryHandler(9, this);
+		inventory = NonNullList.withSize(16, ItemStack.EMPTY);
+		insertionHandler = new IEInventoryHandler(16, this);
 	}
 
 	@Override
 	boolean isSupplied()
 	{
-		return true;
+		return (shouldRepairArmor)||(shouldRepairVehicles);
 	}
 
 	@Override
@@ -44,11 +51,34 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 	}
 
 	@Override
+	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	{
+		super.readCustomNBT(nbt, descPacket);
+		shouldRepairArmor =nbt.getBoolean("shouldHeal");
+		shouldRepairVehicles =nbt.getBoolean("shouldBoost");
+	}
+
+	@Override
+	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
+		nbt.setBoolean("shouldHeal", shouldRepairArmor);
+		nbt.setBoolean("shouldBoost", shouldRepairVehicles);
+	}
+
+	@Override
+	public void update()
+	{
+		super.update();
+		ImmersiveEngineering.proxy.handleTileSound(IESounds.chargeSlow, this, repaired, .5f, 1);
+	}
+
+	@Override
 	void affectEntity(Entity entity, boolean upgraded)
 	{
 		if(!upgraded||(repairCrateEnergyPerAction <= energyStorage))
 		{
-			boolean repaired = false;
+			repaired = false;
 			if(entity instanceof IEntitySpecialRepairable)
 			{
 				IEntitySpecialRepairable repairable = (IEntitySpecialRepairable)entity;
@@ -64,7 +94,9 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 				}
 			}
 			if(!upgraded&&repaired)
+			{
 				energyStorage -= repairCrateEnergyPerAction;
+			}
 		}
 	}
 
@@ -99,4 +131,33 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate
 	{
 		RepairCrateRenderer.renderWithUpgrade(upgrades);
 	}
+
+	@Override
+	public boolean shoudlPlaySound(String sound)
+	{
+		return repaired;
+	}
+
+	@Override
+	public void onAnimationChangeClient(boolean state, int part)
+	{
+		if(part==1)
+			shouldRepairArmor = state;
+		else if(part==2)
+			shouldRepairVehicles = state;
+		else
+			super.onAnimationChangeClient(state, part);
+	}
+
+	@Override
+	public void onAnimationChangeServer(boolean state, int part)
+	{
+		if(part==1)
+			shouldRepairArmor = state;
+		else if(part==2)
+			shouldRepairVehicles = state;
+		else
+			super.onAnimationChangeServer(state, part);
+	}
+
 }

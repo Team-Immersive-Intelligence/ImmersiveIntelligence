@@ -1280,11 +1280,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}
 	}
 
-	public void setModelVisibilities(RenderPlayer renderPlayer, AbstractClientPlayer clientPlayer)
+	public static void setModelVisibilities()
 	{
-		ModelPlayer mainModel = renderPlayer.getMainModel();
-		mainModel.rightArmPose = ArmPose.EMPTY;
-		mainModel.leftArmPose = ArmPose.EMPTY;
+		ImmersiveIntelligence.logger.info("Otak");
 	}
 
 	@SubscribeEvent

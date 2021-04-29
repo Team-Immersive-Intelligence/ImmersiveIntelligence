@@ -1,14 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
+import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.INpc;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -17,7 +15,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMaga
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -96,26 +96,26 @@ public class EntityHans extends EntityCreature implements INpc
 		super.initEntityAI();
 
 		//Attack mobs
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityMob.class, true,true));
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 100, false, false,
+				input -> input instanceof IMob
+		));
 		//Attack players and Hanses with different team, stay neutral on default
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityHans.class, 40, true, true,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityHans.class, 100, false, false,
 				input -> input!=null&&input.getTeam()!=this.getTeam()
 		));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 40, true, true,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 100, false, false,
 				input -> input!=null&&input.getTeam()!=this.getTeam()
 		));
+		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, true));
 
-		this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true));
-		this.tasks.addTask(3, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6D, 0.6D));
-		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 15));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1f, true));
+		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 20));
+		//this.tasks.addTask(4, new EntityAIAttackMelee(this, 1f, true));
 
-		/*
+		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6D, 0.6D));
 		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityHans.class, 3.0F));
 		this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 0.3D, 1f));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
-		 */
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
 
@@ -230,24 +230,24 @@ public class EntityHans extends EntityCreature implements INpc
 			ItemStack heldItem = player.getHeldItem(hand);
 			if(heldItem.isEmpty())
 			{
-				player.sendMessage(new TextComponentString(
+				sendPlayerMessage(player,
 						String.format("Guten %1$s, %2$s!",
 								getGermanTimeName(world.getWorldTime()),
 								player.getName()
-						)));
+						));
 			}
 			else if(IIContent.itemSubmachinegun.isAmmo(heldItem, getActiveItemStack()))
 			{
 				int i = 0;
 				while(i < mainInventory.size()&&!heldItem.isEmpty())
 				{
-					heldItem = invHandler.insertItem(i, heldItem, true);
+					heldItem = invHandler.insertItem(i, heldItem.copy(), false);
 					i++;
 				}
 				if(heldItem.isEmpty())
-					player.sendMessage(new TextComponentString("Danke für diese neue Patronen. Meine Maschinenpistole war sehr hungrig!"));
+					sendPlayerMessage(player, "Danke für diese neue Patronen. Meine Maschinenpistole war sehr hungrig!");
 				else
-					player.sendMessage(new TextComponentString("Danke für diese neue Patronen, aber habe ich sie genug."));
+					sendPlayerMessage(player, "Danke für diese neue Patronen, aber habe ich sie genug.");
 			}
 			player.setHeldItem(EnumHand.MAIN_HAND, heldItem);
 			player.swingArm(hand);
@@ -268,6 +268,12 @@ public class EntityHans extends EntityCreature implements INpc
 
 	public boolean isValidTarget(Entity entity)
 	{
-		return entity instanceof EntityZombie||((entity instanceof EntityPlayer||entity instanceof EntityHans)&&entity.getTeam()!=this.getTeam());
+		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans)&&entity.getTeam()!=this.getTeam());
+	}
+
+	public void sendPlayerMessage(EntityPlayer player, String text)
+	{
+		ArrayList<ITextComponent> arr = new ArrayList<>();
+		ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks(text)));
 	}
 }

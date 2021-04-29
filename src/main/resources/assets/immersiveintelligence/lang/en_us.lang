@@ -342,8 +342,16 @@ tile.immersiveintelligence.rubber_leaves.rubber.name=Rubber Tree Leaves
 tile.immersiveintelligence.rubber_sapling.rubber.name=Rubber Tree Sapling
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Concrete Bricks
+tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Concrete Bricks Slab
+tile.immersiveintelligence.concrete_decoration_stairs_concrete_bricks.name=Concrete Bricks Slab
+
 tile.immersiveintelligence.concrete_decoration.sturdy_concrete_bricks.name=Panzerconcrete Bricks
+tile.immersiveintelligence.concrete_decoration_slab.sturdy_concrete_bricks.name=Panzerconcrete Bricks Slab
+tile.immersiveintelligence.concrete_decoration_stairs_sturdy_concrete_bricks.name=Panzerconcrete Bricks Stairs
+
 tile.immersiveintelligence.concrete_decoration.uberconcrete.name=Überconcrete Bricks
+tile.immersiveintelligence.concrete_decoration_slab.uberconcrete.name=Überconcrete Bricks Slab
+tile.immersiveintelligence.concrete_decoration_stairs_uberconcrete.name=Überconcrete Bricks Stairs
 
 tile.immersiveintelligence.metal_decoration.electronic_engineering.name=Electronic Engineering Block
 tile.immersiveintelligence.metal_decoration.advanced_electronic_engineering.name=Advanced Electronic Engineering Block
@@ -359,6 +367,18 @@ tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Mot
 
 tile.immersiveintelligence.mine_sign.mine_sign.name=Mine Caution Sign
 tile.immersiveintelligence.mine_sign.mine_sign.desc=Mines;Ahead!
+
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_conveyor.name=Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_uncontrolled.name=Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_uncontrolled.flavour=Ignores Redstone Control
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_dropper.name=Dropping Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_droppercovered.name=Dropping Covered Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_vertical.name=Vertical Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_splitter.name=Splitting Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_covered.name=Covered Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_verticalcovered.name=Vertical Covered Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extract.name=Extracting Rubber Conveyor Belt
+tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extractcovered.name=Covered Extracting Rubber Conveyor Belt
 
 #due to how IE's base classes are designed, I had to use a "main" as only value in IIBlockTypes_Mine
 #redundant? yes, works? yes
@@ -749,6 +769,12 @@ desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 desc.immersiveintelligence.data_merger.0=Both
 desc.immersiveintelligence.data_merger.1=Left
 desc.immersiveintelligence.data_merger.2=Right
+
+desc.immersiveintelligence.medical_crate.heal=Heal Wounded Entities
+desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
+
+desc.immersiveintelligence.repair_crate.repair_armor=Repair Worn Armor
+desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
 
 #Potion effects
 

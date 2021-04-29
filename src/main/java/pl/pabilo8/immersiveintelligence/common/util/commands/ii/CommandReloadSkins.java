@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.util.commands.tmt;
+package pl.pabilo8.immersiveintelligence.common.util.commands.ii;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;

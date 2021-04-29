@@ -184,9 +184,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			if(nbt.hasKey("lootTable", 8))
 				this.lootTable = new ResourceLocation(nbt.getString("lootTable"));
 			else
-				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 38);
-
-			open = !insertionHandler.getStackInSlot(37).isEmpty();
+				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), inventory.size());
 		}
 
 	}
@@ -239,7 +237,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 		if(world.isRemote)
 		{
-			if(hasUpgrade(IIContent.UPGRADE_INSERTER))
+			if(energyStorage>0&&hasUpgrade(IIContent.UPGRADE_INSERTER))
 			{
 				inserterAnimation = calculateInserterAnimation(0);
 				inserterAngle = calculateInserterAngle(0);
@@ -255,7 +253,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			entitiesWithinAABB.removeIf(entity -> !checkEntity(entity));
 			if(entitiesWithinAABB.size() > 0)
 			{
-				entitiesWithinAABB.forEach(this::affectEntityUpgraded);
+				affectEntityUpgraded(entitiesWithinAABB.get(0));
 				useSupplies();
 				if(!entitiesWithinAABB.contains(focusedEntity))
 				{

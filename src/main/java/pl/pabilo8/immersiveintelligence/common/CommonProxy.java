@@ -10,6 +10,8 @@ import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
+import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
+import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorTile;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
@@ -23,6 +25,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecor
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityChargingStation;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityRazorWire;
+import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorBasic;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
@@ -50,6 +53,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -106,9 +110,11 @@ import pl.pabilo8.immersiveintelligence.common.ammunition_system.factory.BulletC
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.factory.BulletComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.blocks.concrete.BlockIIConcreteDecoration;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityChainFence;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
@@ -599,6 +605,18 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		}
 
 		BulletHandler.registerBullet("ii_bullet", IIContent.itemAmmoRevolver);
+
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_conveyor"), ConveyorRubber.class, (tileEntity) -> new ConveyorRubber());
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_uncontrolled"), ConveyorRubberUncontrolled.class, (tileEntity) -> new ConveyorRubberUncontrolled());
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_dropper"), ConveyorRubberDropper.class, (tileEntity) -> new ConveyorRubberDropper());
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_droppercovered"), ConveyorRubberCoveredDropper.class, (tileEntity) -> new ConveyorRubberCoveredDropper());
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_vertical"), ConveyorRubberVertical.class, (tileEntity) -> new ConveyorRubberVertical());
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_splitter"), ConveyorRubberSplitter.class, (tileEntity) -> new ConveyorRubberSplitter(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_covered"), ConveyorRubberCovered.class, (tileEntity) -> new ConveyorRubberCovered());
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_verticalcovered"), ConveyorRubberCoveredVertical.class, (tileEntity) -> new ConveyorRubberCoveredVertical());
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extract"), ConveyorRubberExtract.class, (tileEntity) -> new ConveyorRubberExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
+		ConveyorHandler.registerConveyorHandler(new ResourceLocation(ImmersiveIntelligence.MODID, "rubber_extractcovered"), ConveyorRubberCoveredExtract.class, (tileEntity) -> new ConveyorRubberCoveredExtract(tileEntity instanceof IConveyorTile?((IConveyorTile)tileEntity).getFacing(): EnumFacing.NORTH));
+
 	}
 
 	public void init()
@@ -614,6 +632,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		//Blocks config
 		IIContent.blockOre.setMiningLevels();
+		//BlockIIConcreteDecoration.setMiningLevels(IIContent.blockConcreteDecoration);
+		//BlockIIConcreteDecoration.setMiningLevels(IIContent.blockConcreteSlabs);
 
 		//Worldgen registration
 		IIWorldGen iiWorldGen = new IIWorldGen();
@@ -864,7 +884,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		if(IIGuiList.values().length > ID)
 		{
 			IIGuiList guiBuilder = IIGuiList.values()[ID];
-			// TODO: 03.10.2020 items with server side container inventory
 			if(guiBuilder.item)
 				return null;
 			else if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))

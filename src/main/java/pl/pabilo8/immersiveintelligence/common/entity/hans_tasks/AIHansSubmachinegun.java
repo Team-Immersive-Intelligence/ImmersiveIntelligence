@@ -81,7 +81,7 @@ public class AIHansSubmachinegun extends EntityAIBase
 	 */
 	public boolean shouldContinueExecuting()
 	{
-		return this.shouldExecute()||!this.hans.getNavigator().noPath()||!(this.attackTarget!=null&&hans.getPositionVector().distanceTo(attackTarget.getPositionVector())<1.25f);
+		return this.shouldExecute()||!this.hans.getNavigator().noPath()||!(this.attackTarget==null||hans.getPositionVector().distanceTo(attackTarget.getPositionVector()) < 1.25f);
 	}
 
 	/**
@@ -99,6 +99,14 @@ public class AIHansSubmachinegun extends EntityAIBase
 	 */
 	public void updateTask()
 	{
+		if(attackTarget==null)
+			return;
+		if(attackTarget.isDead)
+		{
+			hans.setSneaking(false);
+			resetTask();
+			return;
+		}
 		double d0 = this.hans.getDistanceSq(this.attackTarget.posX, this.attackTarget.getEntityBoundingBox().minY, this.attackTarget.posZ);
 		boolean flag = this.hans.getEntitySenses().canSee(this.attackTarget)&&canShootEntity(this.attackTarget);
 
@@ -122,7 +130,7 @@ public class AIHansSubmachinegun extends EntityAIBase
 
 		//this.hans.getPositionVector().add(this.hans.getLookVec()).subtract();
 		final Vec3d add = this.attackTarget.getPositionVector().add(this.attackTarget.getLookVec());
-		this.hans.getLookHelper().setLookPosition(add.x, add.y, add.z,10,10);
+		this.hans.getLookHelper().setLookPosition(add.x, add.y, add.z,30,30);
 
 		if(!flag)
 		{
@@ -146,17 +154,18 @@ public class AIHansSubmachinegun extends EntityAIBase
 					if(!ItemNBTHelper.getBoolean(smg, "shouldReload"))
 					{
 						final ItemStack ammo = IIContent.itemSubmachinegun.findMagazine(hans, smg);
-						hans.hasAmmo=!ammo.isEmpty();
+						hans.hasAmmo = !ammo.isEmpty();
 						if(hans.hasAmmo)
 							ItemNBTHelper.setBoolean(smg, "shouldReload", true);
 
 					}
 					hans.setSneaking(false);
 				}
-				else if (!hans.getLookHelper().getIsLooking())
+				else
 				{
-					hans.hasAmmo=true;
+					hans.hasAmmo = true;
 					hans.setSneaking(true);
+					hans.faceEntity(attackTarget,30,0);
 					IIContent.itemSubmachinegun.onUsingTick(smg, this.hans, this.rangedAttackTime++);
 				}
 				IIContent.itemSubmachinegun.onUpdate(smg, this.hans.world, this.hans, 0, true);
@@ -169,12 +178,9 @@ public class AIHansSubmachinegun extends EntityAIBase
 
 	private boolean canShootEntity(EntityLivingBase entity)
 	{
-		Vec3d start = hans.getPositionVector();
+		Vec3d start = hans.getPositionEyes(0);
 		Vec3d end = entity.getPositionVector();
 
-		//Don't shoot through walls
-		if(Utils.rayTraceForFirst(start, end, hans.world, Collections.emptySet())!=null)
-			return false;
 		//Don't shoot non-targeted entities between the turret and the target
 		AxisAlignedBB potentialCollateralArea = entity.getEntityBoundingBox().union(hans.getEntityBoundingBox());
 		List<EntityLivingBase> potentialCollateral = hans.world.getEntitiesWithinAABB(EntityLivingBase.class, potentialCollateralArea);

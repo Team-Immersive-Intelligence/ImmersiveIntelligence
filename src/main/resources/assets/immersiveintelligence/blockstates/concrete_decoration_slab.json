@@ -1,0 +1,64 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "immersiveengineering:ie_slab",
+    "textures": {
+      "all": "immersiveintelligence:blocks/concrete_decoration/volksbeton",
+      "bottom": "#all",
+      "top": "#all",
+      "side": "#all",
+      "particle": "#all"
+    }
+  },
+  "variants": {
+    "inventory,type=concrete_bricks": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/volksbeton"
+        }
+      }
+    ],
+    "inventory,type=sturdy_concrete_bricks": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/panzerbeton"
+        }
+      }
+    ],
+    "inventory,type=uberconcrete": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/uberbeton"
+        }
+      }
+    ],
+    "type": {
+      "concrete_bricks": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/volksbeton"
+        }
+      },
+      "sturdy_concrete_bricks": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/panzerbeton"
+        }
+      },
+      "uberconcrete": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/concrete_decoration/uberbeton"
+        }
+      }
+    },
+    "slabtype": {
+      "0": {},
+      "1": {
+        "x": 180,
+        "uvlock": true
+      },
+      "2": {
+        "model": "cube_all"
+      }
+    }
+  }
+}
