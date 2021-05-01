@@ -38,7 +38,6 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderHelper.enableStandardItemLighting();
 
-		float tt = entity.world.getTotalWorldTime()+f1;
 		float pitch = -entity.gunPitch;//Math.abs(((tt%120)/120f)-0.5f)*-155f;
 		float firing = (entity.shootingProgress+(entity.shootingProgress > 0?f1: 0))/FieldHowitzer.fireTime;
 		float recoil = 0;

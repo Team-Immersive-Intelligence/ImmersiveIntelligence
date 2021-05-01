@@ -96,14 +96,14 @@ public class EntityHans extends EntityCreature implements INpc
 		super.initEntityAI();
 
 		//Attack mobs
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 100, false, false,
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
 				input -> input instanceof IMob
 		));
 		//Attack players and Hanses with different team, stay neutral on default
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityHans.class, 100, false, false,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityHans.class, 1, false, false,
 				input -> input!=null&&input.getTeam()!=this.getTeam()
 		));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 100, false, false,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 1, false, false,
 				input -> input!=null&&input.getTeam()!=this.getTeam()
 		));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, true));
@@ -118,6 +118,7 @@ public class EntityHans extends EntityCreature implements INpc
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
+		this.tasks.addTask(0, new EntityAIRestrictOpenDoor(this));
 
 		//this.tasks.addTask(4, new EntityAIAvoidEntity<>(this, EntityLivingBase.class, avEntity-> this.hasAmmunition()&&avEntity!=null&&avEntity.getRevengeTarget()==this, 8.0F, 0.6D, 0.6D));
 

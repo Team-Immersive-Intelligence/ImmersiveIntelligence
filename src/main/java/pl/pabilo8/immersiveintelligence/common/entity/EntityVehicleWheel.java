@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;

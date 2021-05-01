@@ -102,6 +102,9 @@ item.immersiveintelligence.material.dust_hexamine.name=Hexamine Dust
 item.immersiveintelligence.material.dust_formaldehyde.name=Formaldehyde Dust
 
 item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
+item.immersiveintelligence.material.natural_rubber.name=Natural Rubber
+item.immersiveintelligence.material.rubber_belt.name=Rubber Belt
+item.immersiveintelligence.material.rubber_tire.name=Rubber Tire
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
 item.immersiveintelligence.circuit_functional.advanced_arithmetic.name=Advanced Arithmetic Circuit
@@ -495,8 +498,13 @@ tile.immersiveintelligence.metal_multiblock.minecart_unpacker.name=Railway Unpac
 tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Redstone-Data Interface
 tile.immersiveintelligence.metal_multiblock1.vehicle_workshop.name=Vehicle Workshop
 tile.immersiveintelligence.metal_multiblock1.fuel_station.name=Fuel Station
-tile.immersiveintelligence.metal_multiblock1.ammunition_filler.name=Ammunition Filler
-tile.immersiveintelligence.metal_multiblock1.ammunition_assembly.name=Ammunition Assembly
+tile.immersiveintelligence.metal_multiblock1.emplacement.name=Emplacement
+tile.immersiveintelligence.metal_multiblock1.flagpole.name=Flagpole
+
+tile.immersiveintelligence.metal_multiblock1.casing_filler.name=Casing Filler
+tile.immersiveintelligence.metal_multiblock1.ammunition_core_forge.name=Ammunition Core Forge
+tile.immersiveintelligence.metal_multiblock1.ammunition_core_filler.name=Ammunition Core Filler
+tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name=Ammunition Assembler
 tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name=Ammunition Workshop
 tile.immersiveintelligence.metal_multiblock1.chemical_painter.name=Chemical Painter
 
@@ -524,13 +532,16 @@ desc.immersiveengineering.info.multiblock.II:MinecartUnpacker=Railway Unpacker
 desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data Interface
 desc.immersiveengineering.info.multiblock.II:VehicleWorkshop=Vehicle Workshop
 desc.immersiveengineering.info.multiblock.II:FuelStation=Fuel Station
-desc.immersiveengineering.info.multiblock.II:AmmunitionFiller=Ammunition Filler
-desc.immersiveengineering.info.multiblock.II:AmmunitionAssembly=Ammunition Assembly
-desc.immersiveengineering.info.multiblock.II:AmmunitionWorkshop=Ammunition Workshop
-desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Chemical Painter
 
 desc.immersiveengineering.info.multiblock.II:Emplacement=Emplacement
 desc.immersiveengineering.info.multiblock.II:Flagpole=Flagpole
+
+desc.immersiveengineering.info.multiblock.II:CasingFiller=Casing Filler
+desc.immersiveengineering.info.multiblock.II:AmmunitionCoreForge=Ammunition Core Forge
+desc.immersiveengineering.info.multiblock.II:AmmunitionCoreFiller=Ammunition Core Filler
+desc.immersiveengineering.info.multiblock.II:AmmunitionAssembler=Ammunition Assembler
+desc.immersiveengineering.info.multiblock.II:AmmunitionWorkshop=Ammunition Workshop
+desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Chemical Painter
 
 #Fluids
 fluid.ink=Ink
@@ -1585,3 +1596,16 @@ ie.manual.entry.rotary_power4=The Gearboxes are used to link multiple wheels tog
 ie.manual.entry.rotary_power5=The Transmission Boxes are used to connect mechanical devices using a different standard of axles, they can be used to connect a windmill or a waterwheel to a motor belt network or output mechanical energy to a dynamo.
 ie.manual.entry.rotary_power6=The wrench and the electric wrench can be used to open hatches of mechanical devices for maintenance purposes, such as changing gears in a gearbox.
 
+death.attack.iiBullet=%1$s was shot by %2$s
+death.attack.iiBulletNoShooter=%1$s was shot
+death.attack.iiBulletHeadShot=%1$s took a %2$s's bullet to their head
+death.attack.iiBulletHeadShotNoShooter=%1$s took a bullet to their head
+death.attack.iiShrapnel=%1$s was torn apart by %2$s's shrapnel
+death.attack.iiShrapnelNoShooter=%1$s was torn apart by shrapnel
+death.attack.iiSawmill=%1$s was sliced by the sawmill
+death.attack.iiMotorbike=%1$s was driven over by %2$s
+death.attack.iiMotorbikeNoRider=%1$s was driven over
+death.attack.iiMotorbikeExplicit=%2$s has made %1$s's ass his free parking spot
+death.attack.iiMotorbikeSuicide=%1$s decided to jump off a moving motorcycle
+death.attack.iiPanzer1=%1$s was crushed under the Panzer's threads
+death.attack.iiPanzer2=The indomitable Panzer's threads have pulverized %1$s

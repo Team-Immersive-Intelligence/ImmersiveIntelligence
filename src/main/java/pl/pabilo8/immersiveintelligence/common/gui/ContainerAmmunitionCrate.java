@@ -10,7 +10,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoMachinegun;
 
 /**
  * @author Pabilo8
@@ -59,8 +61,24 @@ public class ContainerAmmunitionCrate extends ContainerIEBase
 		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 35, 98, 45));
 		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 36, 106, 26));
 
+		boolean mg = tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
+		if(mg)
+		{
+			for(int i = 0; i < 12; i++)
+				this.addSlotToContainer(new Slot(this.inv, 38+i, 184+(i%2)*18, 18+(i/2)*18)
+				{
+					/**
+					 * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
+					 */
+					@Override
+					public boolean isItemValid(ItemStack stack)
+					{
+						return stack.getItem() instanceof ItemIIAmmoMachinegun;
+					}
+				});
+		}
 
-		this.slotCount = tile.getInventory().size();
+		this.slotCount = mg?50:38;
 		this.tile = tile;
 
 		for(int i = 0; i < 3; i++)

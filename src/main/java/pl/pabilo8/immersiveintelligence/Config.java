@@ -395,6 +395,8 @@ public class Config
 			public static ProgrammableSpeaker speaker;
 			@SubConfig
 			public static EffectCrates effectCrates;
+			@SubConfig
+			public static CasingFiller casingFiller;
 
 			public static class RedstoneInterface
 			{
@@ -411,6 +413,20 @@ public class Config
 			{
 				@Comment({"The distance the speaker can be heard from."})
 				public static int soundRange = 24;
+			}
+
+			public static class CasingFiller
+			{
+				@Comment({"Energy capacity of the glorious boxing device also known as The Packer."})
+				public static int energyCapacity = 16000;
+
+				@RequiresWorldRestart
+				@Comment({"Modifier of how much time should the filling process take."})
+				public static float timeModifier = 1f;
+
+				@RequiresWorldRestart
+				@Comment({"Modifier of how much energy should the filling process consume."})
+				public static float energyModifier = 1f;
 			}
 
 			public static class EffectCrates
@@ -844,6 +860,9 @@ public class Config
 
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 1;
+
+					@Comment({"Time required to fire a single chemthrower particle (in ticks)."})
+					public static int sprayTime = 0;
 				}
 
 				public static class HeavyRailgun

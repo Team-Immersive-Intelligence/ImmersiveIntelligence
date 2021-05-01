@@ -29,4 +29,6 @@ public interface IVehicleMultiPart extends IEntityMultiPart
 	void getSeatRidingAngle(int seatID, Entity passenger);
 
 	boolean shouldSeatPassengerSit(int seatID, Entity passenger);
+
+	void onSeatDismount(int seatID, Entity passenger);
 }

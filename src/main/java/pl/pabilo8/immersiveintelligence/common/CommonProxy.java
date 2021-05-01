@@ -378,6 +378,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("blockLeaves", new ItemStack(IIContent.blockRubberLeaves));
 
+		OreDictionary.registerOre("rubberRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("natural_rubber")));
+		OreDictionary.registerOre("beltRubber", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("rubber_belt")));
+		OreDictionary.registerOre("tireRubber", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("rubber_tire")));
 	}
 
 	private static void registerMetalOredictBlock(BlockIIBase block, String dict)
@@ -480,6 +483,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		IIRecipes.addSmeltingRecipes();
 		IIRecipes.addArcFurnaceRecyclingRecipes();
+
+		IIRecipes.addAmmunitionCasingRecipes();
+		IIRecipes.addRubberRecipes();
 
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidEtchingAcid, 1000), new FluidStack(IIContent.gasChlorine, 500), new Object[]{"dustIron"}, 4800);
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidSulfuricAcid, 500), new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustSulfur"}, 4800);
@@ -728,6 +734,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerTile(TileEntityFlagpole.class);
 		registerTile(TileEntityFuelStation.class);
 		registerTile(TileEntityVehicleWorkshop.class);
+		registerTile(TileEntityVulcanizer.class);
+
+		registerTile(TileEntityCasingFiller.class);
 
 		//Wooden
 		MultiblockHandler.registerMultiblock(MultiblockSkyCratePost.instance);
@@ -755,6 +764,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MultiblockHandler.registerMultiblock(MultiblockFlagpole.instance);
 		MultiblockHandler.registerMultiblock(MultiblockFuelStation.instance);
 		MultiblockHandler.registerMultiblock(MultiblockVehicleWorkshop.instance);
+
+		MultiblockHandler.registerMultiblock(MultiblockVulcanizer.instance);
+
+		MultiblockHandler.registerMultiblock(MultiblockCasingFiller.instance);
 
 		int i = -1;
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
@@ -826,6 +839,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "flare"),
 				EntityFlare.class, "flare", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
+
+		/*
+		Soon™
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "panzer"),
+				EntityMotorbike.class, "panzer", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
+		 */
 	}
 
 	public void postInit()

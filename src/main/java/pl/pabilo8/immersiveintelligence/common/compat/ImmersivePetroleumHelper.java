@@ -115,6 +115,15 @@ public class ImmersivePetroleumHelper extends IICompatModule
 							facing = event.getRotate().rotateYCCW();
 						}
 						break;
+					case "II:CasingFiller":
+						if(event.getH()==1)
+							rl = new ResourceLocation(ImmersiveEngineering.MODID+":conveyor");
+						else
+						{
+							rl = new ResourceLocation(ImmersiveEngineering.MODID+":chute_iron");
+						}
+						facing = event.getRotate().rotateYCCW();
+						break;
 					default:
 
 						break;

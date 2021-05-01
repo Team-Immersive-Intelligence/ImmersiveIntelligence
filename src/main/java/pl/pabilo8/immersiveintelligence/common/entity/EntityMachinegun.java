@@ -48,6 +48,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -279,7 +280,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 										}
 										else
 										{
-
+											shootFromCrate();
 										}
 
 									}
@@ -704,13 +705,10 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		gunPitch = MathHelper.clamp(gunPitch, -20, 20);
 	}
 
-	public boolean shoot(int magazine)
+	public boolean shootFromStack(ItemStack stack)
 	{
-		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
+		if(stack.isEmpty())
 			return false;
-
-		double true_angle = Math.toRadians(360f-rotationYaw);
-		double true_angle2 = Math.toRadians(-(rotationPitch));
 
 		if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.75f);
@@ -718,6 +716,29 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.25f);
 		else
 			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.55f);
+
+		double true_angle = Math.toRadians(360f-rotationYaw);
+		double true_angle2 = Math.toRadians(-(rotationPitch));
+		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.95f, true_angle, true_angle2);
+		Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
+
+		//blocks per tick
+		float distance = 4f;
+		Vec3d vpos = new Vec3d(posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z));
+		EntityBullet b = BulletHelper.createBullet(world, stack, vpos, gun_end, distance);
+		b.setShooters(getPassengers().get(0), this);
+		world.spawnEntity(b);
+
+		ItemStack stack2 = ((IBullet)stack.getItem()).getCasingStack(1);
+		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
+
+		return true;
+	}
+
+	public boolean shootFromCrate()
+	{
+		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
+			return false;
 
 		blusunrize.immersiveengineering.common.util.Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
 
@@ -738,8 +759,52 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setFloat("recoilPitch", recoilPitch);
 		tag.setFloat("overheating", overheating);
 
-		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.95f, true_angle, true_angle2);
-		Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
+		BlockPos cratePos = getPosition().offset(EnumFacing.fromAngle(setYaw).getOpposite()).down();
+		if(world.getTileEntity(cratePos) instanceof TileEntityAmmunitionCrate)
+		{
+			TileEntityAmmunitionCrate crate = ((TileEntityAmmunitionCrate)world.getTileEntity(cratePos));
+			assert crate!=null;
+			if(crate.hasUpgrade(IIContent.UPGRADE_MG_LOADER))
+			{
+				for(int i = 38; i < 50; i++)
+				{
+					ItemStack stack = crate.getInventory().get(i);
+					if(shootFromStack(stack))
+					{
+						stack.shrink(1);
+						if(!world.isRemote)
+							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean shoot(int magazine)
+	{
+		if(getPassengers().get(0)==null||!(getPassengers().get(0) instanceof EntityLivingBase))
+			return false;
+
+		blusunrize.immersiveengineering.common.util.Utils.attractEnemies((EntityLivingBase)getPassengers().get(0), 36, null);
+
+		bulletDelay = bulletDelayMax;
+		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
+		recoilPitch += maxRecoilPitch*Math.random();
+		if(((EntityLivingBase)getPassengers().get(0)).getActivePotionEffects().stream().anyMatch(potionEffect -> potionEffect.getPotion()==IIPotions.iron_will))
+		{
+			recoilYaw *= 0.1;
+			recoilPitch *= 0.1;
+		}
+
+		overheating += 8;
+
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setBoolean("forClient", true);
+		tag.setFloat("recoilYaw", recoilYaw);
+		tag.setFloat("recoilPitch", recoilPitch);
+		tag.setFloat("overheating", overheating);
 
 		ItemStack stack = magazine==1?ItemIIBulletMagazine.takeBullet(magazine1): ItemIIBulletMagazine.takeBullet(magazine2);
 
@@ -765,23 +830,10 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setBoolean("mag1Empty", mag1Empty);
 		tag.setBoolean("mag2Empty", mag2Empty);
 
-		if(stack.isEmpty())
-			return false;
-
-		//blocks per tick
-		float distance = 4f;
-		Vec3d vpos = new Vec3d(posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z));
-		EntityBullet b = BulletHelper.createBullet(world, stack, vpos, gun_end, distance);
-		b.setShooters(getPassengers().get(0), this);
-		world.spawnEntity(b);
-
-		ItemStack stack2 = ((IBullet)stack.getItem()).getCasingStack(1);
-		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
-
 		if(!world.isRemote)
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
 
-		return true;
+		return shootFromStack(stack);
 	}
 
 	public void getConfigFromItem(ItemStack stack)

@@ -10,6 +10,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
@@ -20,15 +22,16 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
 
+import javax.annotation.Nullable;
+
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 {
 	int setupDelay = 0;
 	float shootDelay = 0;
-	int reloadDelay = 0;
-	int bulletsShot = 0;
 	boolean shouldIgnite = false;
 	FluidTank tank = new FluidTank(8000);
 	private Vec3d vv;
+	SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
 
 	private static final Runnable INSERTER_ANIM_LENS = () -> {
 		ClientUtils.bindTexture(EmplacementRenderer.textureInfraredObserver);
@@ -111,16 +114,6 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	@Override
 	public void tick()
 	{
-		if(bulletsShot >= 64)
-		{
-			reloadDelay++;
-			if(reloadDelay >= Autocannon.reloadTime)
-			{
-				bulletsShot = 0;
-				reloadDelay = 0;
-			}
-		}
-
 		if(shootDelay > 0)
 			shootDelay--;
 	}
@@ -181,13 +174,14 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		tag.setFloat("yaw", yaw);
 		tag.setFloat("pitch", pitch);
 		tag.setInteger("setupDelay", setupDelay);
+		tag.setTag("tank",tank.writeToNBT(new NBTTagCompound()));
 		return tag;
 	}
 
 	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return te.isDoorOpened&&tank.getFluidAmount()>0;
+		return shootDelay<=0&&te.isDoorOpened&&tank.getFluidAmount()>0;
 	}
 
 	@Override
@@ -196,6 +190,14 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		yaw = tagCompound.getFloat("yaw");
 		pitch = tagCompound.getFloat("pitch");
 		setupDelay = tagCompound.getInteger("setupDelay");
+		tank.readFromNBT(tagCompound.getCompoundTag("tank"));
+	}
+
+	@Nullable
+	@Override
+	public IFluidHandler getFluidHandler(boolean in)
+	{
+		return in?fluidHandler:null;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -208,7 +210,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		y = this.nextYaw-this.yaw;
 		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
 		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
-		float setupProgress = (MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, HeavyChemthrower.setupTime)/(float)HeavyChemthrower.setupTime);
+		float setupProgress = 1f-(MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, HeavyChemthrower.setupTime)/(float)HeavyChemthrower.setupTime);
 
 		ClientUtils.bindTexture(EmplacementRenderer.textureHeavyChemthrower);
 
@@ -224,11 +226,21 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.barrelStartModel)
 			mod.render();
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.barrelMidModel)
+		{
+			mod.rotateAngleX=0.00000001f;
+			mod.hasOffset=true;
+			mod.offsetZ=(MathHelper.clamp((setupProgress-0.5f)/0.5f,0,1f)*-9);
 			mod.render();
+		}
 
 		GlStateManager.disableCull();
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.barrelEndModel)
+		{
+			mod.rotateAngleX=0.00000001f;
+			mod.hasOffset=true;
+			mod.offsetZ=(Math.min(setupProgress/0.5f,1f)*-9)+(MathHelper.clamp((setupProgress-0.5f)/0.5f,0,1f)*-9);
 			mod.render();
+		}
 		GlStateManager.enableCull();
 
 		GlStateManager.popMatrix();
@@ -244,8 +256,46 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	private double getStackMass()
 	{
 		if(tank.getFluid()!=null)
-		return (tank.getFluid().getFluid().isGaseous()?0.025F: 0.05F)*(float)(tank.getFluid().getFluid().getDensity(tank.getFluid()) < 0?-1: 1);
+			return (tank.getFluid().getFluid().isGaseous()?0.025F: 0.05F)*(float)(tank.getFluid().getFluid().getDensity(tank.getFluid()) < 0?-1: 1);
 		else
 			return 0;
+	}
+
+	static class SidedFluidHandler implements IFluidHandler
+	{
+		EmplacementWeaponHeavyChemthrower barrel;
+
+		SidedFluidHandler(EmplacementWeaponHeavyChemthrower barrel)
+		{
+			this.barrel = barrel;
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill)
+		{
+			if(resource==null)
+				return 0;
+			return barrel.tank.fill(resource, doFill);
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain)
+		{
+			if(resource==null)
+				return null;
+			return this.drain(resource.amount, doDrain);
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain)
+		{
+			return barrel.tank.drain(maxDrain, doDrain);
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties()
+		{
+			return barrel.tank.getTankProperties();
+		}
 	}
 }

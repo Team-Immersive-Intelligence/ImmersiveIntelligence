@@ -16,22 +16,27 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
@@ -51,6 +56,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	BlockPos[] allBlocks = null;
 	public boolean isShooting = false;
 	private MachineUpgrade currentlyInstalled = null;
+	EmplacementTarget task = new EmplacementTargetMobs();
 
 	public TileEntityEmplacement()
 	{
@@ -98,15 +104,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 						!(((EntityBullet)input).getShooter() instanceof FakePlayer)
 								&&((EntityBullet)input).mass>0.25&&
 						 */
-						Optional<Entity> first = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
-								input -> input instanceof EntityMob&&
-										((EntityMob)input).getHealth() > 0).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).findFirst();
-						if(first.isPresent())
+						float[] target = this.task.getPositionVector(this);
+						if(target!=null)
 						{
-							float[] target = currentWeapon.getAnglePrediction(new Vec3d(getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
-									first.get().getPositionVector().addVector(first.get().width/2f, first.get().height/2f, first.get().width/2f),
-									new Vec3d(first.get().motionX, first.get().motionY, first.get().motionZ)
-							);
 							currentWeapon.aimAt(target[0], target[1]);
 
 							if(currentWeapon.isAimedAt(target[0], target[1]))
@@ -115,6 +115,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 								{
 									isShooting = true;
 									currentWeapon.shoot(this);
+									task.onShot();
 								}
 								else
 									isShooting = false;
@@ -127,6 +128,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 							isShooting = false;
 							currentWeapon.aimAt(currentWeapon.yaw, currentWeapon.pitch);
 						}
+
+						if(!task.shouldContinue())
+							task = new EmplacementTargetMobs();
 					}
 					else
 					{
@@ -411,6 +415,16 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		IDataType c = packet.variables.get('c');
 		IDataType w = packet.variables.get('w');
+		IDataType e = packet.variables.get('e');
+		IDataType a = packet.variables.get('a');
+		IDataType x = packet.variables.get('x');
+		IDataType y = packet.variables.get('y');
+		IDataType z = packet.variables.get('z');
+
+		TileEntityEmplacement master = master();
+		if(master==null)
+			return;
+
 		if(c instanceof DataPacketTypeString)
 		{
 			switch(((DataPacketTypeString)c).value)
@@ -418,24 +432,44 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				case "reload":
 				case "rscontrol":
 				case "repair":
-				case "fire":
-				case "fireentity":
-				case "firepos":
 					break;
-				case "weapon":
-				{
-					// TODO: 25.02.2021 REMOVE CHEATS
-					TileEntityEmplacement master = master();
-					if(master==null)
-						break;
-					master.currentWeapon = getWeaponFromName(w.valueToString());
-					if(master.currentWeapon!=null)
+				case "fire":
+					if(e instanceof DataPacketTypeInteger)
 					{
-						master.markDirty();
-						master.markBlockForUpdate(master.getPos(), null);
+						Entity entityByID = world.getEntityByID(((DataPacketTypeInteger)e).value);
+						if(entityByID!=null)
+							master.task = new EmplacementTargetEntity(entityByID);
 					}
-				}
-				break;
+					else if(x instanceof DataPacketTypeInteger&&y instanceof DataPacketTypeInteger&&z instanceof DataPacketTypeInteger)
+					{
+						int xx = ((DataPacketTypeInteger)x).value;
+						int yy = ((DataPacketTypeInteger)y).value;
+						int zz = ((DataPacketTypeInteger)z).value;
+						int amount = a instanceof DataPacketTypeInteger?((DataPacketTypeInteger)a).value: 1;
+
+						master.task = new EmplacementTargetPosition(new BlockPos(xx, yy, zz), amount);
+					}
+
+					break;
+				case "fireentity":
+					if(e instanceof DataPacketTypeInteger)
+					{
+						Entity entityByID = world.getEntityByID(((DataPacketTypeInteger)e).value);
+						if(entityByID!=null)
+							master.task = new EmplacementTargetEntity(entityByID);
+					}
+					break;
+				case "firepos":
+					if(x instanceof DataPacketTypeInteger&&y instanceof DataPacketTypeInteger&&z instanceof DataPacketTypeInteger)
+					{
+						int xx = ((DataPacketTypeInteger)x).value;
+						int yy = ((DataPacketTypeInteger)y).value;
+						int zz = ((DataPacketTypeInteger)z).value;
+						int amount = a instanceof DataPacketTypeInteger?((DataPacketTypeInteger)a).value: 1;
+
+						master.task = new EmplacementTargetPosition(new BlockPos(xx, yy, zz), amount);
+					}
+					break;
 			}
 		}
 	}
@@ -604,6 +638,44 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		return false;
 	}
 
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		TileEntityEmplacement master = master();
+		if(master!=null&&master.currentWeapon!=null)
+		{
+			if(pos==2||pos==8)
+			{
+				boolean in = pos==2;
+				if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
+					return master.currentWeapon.getItemHandler(in)!=null;
+				else if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
+					return master.currentWeapon.getFluidHandler(in)!=null;
+			}
+		}
+
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	{
+		TileEntityEmplacement master = master();
+		if(master!=null&&master.currentWeapon!=null)
+		{
+			if(pos==2||pos==8)
+			{
+				boolean in = pos==2;
+				if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
+					return (T)master.currentWeapon.getItemHandler(in);
+				else if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY&&facing==this.facing.rotateY())
+					return (T)master.currentWeapon.getFluidHandler(in);
+			}
+		}
+
+		return super.getCapability(capability, facing);
+	}
+
 	public static abstract class EmplacementWeapon
 	{
 		protected float pitch = 0, yaw = 0;
@@ -719,6 +791,18 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		 */
 		public abstract void readFromNBT(NBTTagCompound tagCompound);
 
+		@Nullable
+		public IFluidHandler getFluidHandler(boolean in)
+		{
+			return null;
+		}
+
+		@Nullable
+		public IItemHandler getItemHandler(boolean in)
+		{
+			return null;
+		}
+
 		@SideOnly(Side.CLIENT)
 		public void render(TileEntityEmplacement te, float partialTicks)
 		{
@@ -760,6 +844,96 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			{
 				weapon.renderUpgradeProgress(clientProgress, serverProgress, partialTicks);
 			}
+		}
+	}
+
+	public abstract static class EmplacementTarget
+	{
+		public abstract float[] getPositionVector(TileEntityEmplacement emplacement);
+
+		public void onShot()
+		{
+
+		}
+
+		public abstract boolean shouldContinue();
+	}
+
+	private static class EmplacementTargetMobs extends EmplacementTarget
+	{
+
+		@Override
+		public float[] getPositionVector(TileEntityEmplacement emplacement)
+		{
+			Optional<Entity> first = emplacement.world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(emplacement.getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
+					input -> input instanceof EntityMob&&
+							((EntityMob)input).getHealth() > 0).stream().min((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10);
+
+			return first.map(entity -> emplacement.currentWeapon.getAnglePrediction(new Vec3d(emplacement.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
+					entity.getPositionVector().addVector(entity.width/2f, entity.height/2f, entity.width/2f),
+					new Vec3d(entity.motionX, entity.motionY, entity.motionZ))).orElse(null);
+		}
+
+		@Override
+		public boolean shouldContinue()
+		{
+			return true;
+		}
+	}
+
+	private static class EmplacementTargetEntity extends EmplacementTarget
+	{
+		Entity entity;
+
+		public EmplacementTargetEntity(Entity entity)
+		{
+			this.entity = entity;
+		}
+
+		@Override
+		public float[] getPositionVector(TileEntityEmplacement emplacement)
+		{
+			return emplacement.currentWeapon.getAnglePrediction(new Vec3d(emplacement.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
+					entity.getPositionVector().addVector(entity.width/2f, entity.height/2f, entity.width/2f),
+					new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+		}
+
+		@Override
+		public boolean shouldContinue()
+		{
+			return !entity.isDead;
+		}
+	}
+
+	private static class EmplacementTargetPosition extends EmplacementTarget
+	{
+		int shotAmount;
+		final BlockPos pos;
+
+		public EmplacementTargetPosition(BlockPos pos, int shotAmount)
+		{
+			this.pos = pos;
+			this.shotAmount = shotAmount;
+		}
+
+		@Override
+		public float[] getPositionVector(TileEntityEmplacement emplacement)
+		{
+			return emplacement.currentWeapon.getAnglePrediction(new Vec3d(emplacement.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
+					new Vec3d(pos).addVector(0.5, 0, 0.5),
+					Vec3d.ZERO);
+		}
+
+		@Override
+		public void onShot()
+		{
+			shotAmount--;
+		}
+
+		@Override
+		public boolean shouldContinue()
+		{
+			return shotAmount > 0;
 		}
 	}
 }

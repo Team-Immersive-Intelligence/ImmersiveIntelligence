@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -15,6 +16,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.api.utils.IGasmask;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 
 import java.util.List;
@@ -83,7 +85,16 @@ public class EntityGasCloud extends Entity
 							new AxisAlignedBB(posX, posY, posZ, posX, posY, posZ).grow(radius));
 					for(EntityLivingBase entityLivingBase : entitiesWithinAABB)
 					{
-						effect.applyToEntity(entityLivingBase, null, ItemStack.EMPTY, fluid);
+						boolean apply = true;
+						for(EntityEquipmentSlot slot : EntityEquipmentSlot.values())
+						{
+							ItemStack s = entityLivingBase.getItemStackFromSlot(slot);
+							if(!s.isEmpty()&&s.getItem() instanceof IGasmask)
+								if(apply)
+									apply = ((IGasmask)s.getItem()).protects(s);
+						}
+						if(apply)
+							effect.applyToEntity(entityLivingBase, null, ItemStack.EMPTY, fluid);
 					}
 				}
 

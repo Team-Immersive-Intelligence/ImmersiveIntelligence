@@ -12,15 +12,18 @@ import java.util.Locale;
 public enum IIBlockTypes_MetalMultiblock1 implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	REDSTONE_DATA_INTERFACE(false),
-	AMMUNITION_CASING_FILLER(false),
-	AMMUNITION_CORE_FILLER(false),
+	CASING_FILLER(false),
+	AMMUNITION_CORE_FORGE(false),
+	AMMUNTION_CORE_FILLER(false),
 	AMMUNITION_ASSEMBLER(false),
-	AMMUNITION_WORKSHOP(false),
 	FUEL_STATION(false),
 	VEHICLE_WORKSHOP(false),
 	FLAGPOLE(false),
 	RADAR(false),
-	EMPLACEMENT(false);
+	EMPLACEMENT(false),
+	AMMUNITION_WORKSHOP(false),
+	CHEMICAL_PAINTER(false),
+	VULCANIZER(false);
 
 
 	private boolean needsCustomState;

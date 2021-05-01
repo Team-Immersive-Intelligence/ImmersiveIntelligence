@@ -789,6 +789,8 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPacker.class, new PackerRenderer().subscribeToList("packer"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("redstone_data_interface"));
 
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCasingFiller.class, new CasingFillerRenderer().subscribeToList("casing_filler"));
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEmplacement.class, new EmplacementRenderer().subscribeToList("emplacement"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
 

@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
 
@@ -14,9 +15,11 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
  */
 public class GuiAmmunitionCrate extends GuiIEContainerBase
 {
+	boolean upgraded;
 	public GuiAmmunitionCrate(InventoryPlayer inventoryPlayer, TileEntityAmmunitionCrate tile)
 	{
 		super(new ContainerAmmunitionCrate(inventoryPlayer, tile));
+		upgraded=tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
 		this.ySize = 222;
 	}
 
@@ -38,5 +41,8 @@ public class GuiAmmunitionCrate extends GuiIEContainerBase
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/gui/ammunition_crate.png");
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+
+		if(upgraded)
+			this.drawTexturedModalRect(guiLeft+176, guiTop, 176, 0, 49, 133);
 	}
 }

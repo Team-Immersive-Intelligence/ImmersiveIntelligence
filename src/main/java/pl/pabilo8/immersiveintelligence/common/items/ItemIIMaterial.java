@@ -36,7 +36,10 @@ public class ItemIIMaterial extends ItemIIBase
 				"dust_hexamine",
 				"pulp_wood",
 				"pulp_wood_treated",
-				"artificial_leather"
+				"artificial_leather",
+				"natural_rubber",
+				"rubber_belt",
+				"rubber_tire"
 		);
 	}
 }

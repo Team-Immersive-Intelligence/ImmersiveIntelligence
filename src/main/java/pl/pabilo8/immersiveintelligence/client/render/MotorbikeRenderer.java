@@ -40,9 +40,12 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 	public void doRender(EntityMotorbike entity, double x, double y, double z, float f0, float f1)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-		//GlStateManager.translate(x-d0, y-d1, z-d2);
-		//GlStateManager.translate(entity.motionX*f1, 0, entity.motionZ*f1);
+		//GlStateManager.translate(x, y, z);
+		double d0 = (entity.lastTickPosX-entity.posX)*f1;
+		double d1 = (entity.lastTickPosY-entity.posY)*f1;
+		double d2 = (entity.lastTickPosZ-entity.posZ)*f1;
+		GlStateManager.translate(x+d0, y+d1, z+d2);
+		//GlStateManager.translate(-entity.motionX*f1, 0, -entity.motionZ*f1);
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -60,6 +63,7 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 				tilt = 0;
 		}
 		tilt = MathHelper.clamp(tilt, -1f, 1f);
+
 
 		float speed = 4, engineSpeed = speed/2;
 		float acceleration = entity.acceleration;
@@ -87,7 +91,7 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 
 		GlStateManager.rotate(stepAngle, 1, 0, 0);
 		GlStateManager.rotate(-plannedRotation, 0, 1, 0);
-		GlStateManager.rotate(-tilt*25, 0, 0, 1);
+		GlStateManager.rotate(-(tilt*(speed/15f))*25, 0, 0, 1);
 		GlStateManager.translate(-0.55, 0.5, 0);
 
 

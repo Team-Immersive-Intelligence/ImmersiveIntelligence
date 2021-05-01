@@ -99,7 +99,7 @@ public class ModelBullet8bCal extends ModelIIBase implements IBulletModel
 		{
 			GlStateManager.pushMatrix();
 			ClientUtils.bindTexture("minecraft:textures/blocks/concrete_powder_black.png");
-			GlStateManager.translate(0.3125f, 0.25*gunpowderPercentage, -0.6875f);
+			GlStateManager.translate(-0.25f+0.0625f, 0.3125*gunpowderPercentage, -0.25f+0.0625f);
 			GlStateManager.rotate(90, 1f, 0f, 0f);
 			ClientUtils.drawTexturedRect(0f, 0f, 6/16f, 6/16f, 0f, 6/16f, 0f, 6/16f);
 			GlStateManager.popMatrix();

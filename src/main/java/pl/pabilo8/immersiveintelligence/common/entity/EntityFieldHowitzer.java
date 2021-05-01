@@ -555,6 +555,12 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	}
 
 	@Override
+	public void onSeatDismount(int seatID, Entity passenger)
+	{
+
+	}
+
+	@Override
 	public void updatePassenger(Entity passenger)
 	{
 		if(isPassenger(passenger))

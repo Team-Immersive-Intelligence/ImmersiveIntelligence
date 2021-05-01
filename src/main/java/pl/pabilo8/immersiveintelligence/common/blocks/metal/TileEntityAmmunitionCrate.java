@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoMachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
@@ -42,8 +43,8 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 {
 	public TileEntityAmmunitionCrate()
 	{
-		inventory = NonNullList.withSize(38, ItemStack.EMPTY);
-		insertionHandler = new IEInventoryHandler(38, this);
+		inventory = NonNullList.withSize(50, ItemStack.EMPTY);
+		insertionHandler = new IEInventoryHandler(50, this);
 	}
 
 	@Override
@@ -69,7 +70,8 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 		}
 		if(slot==37)
 			return stack.getItem() instanceof ItemRevolver||stack.getItem() instanceof ItemSpeedloader;
-		return false;
+
+		return hasUpgrade(IIContent.UPGRADE_MG_LOADER)&&stack.getItem() instanceof ItemIIAmmoMachinegun;
 	}
 
 	@Override
@@ -184,6 +186,21 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 			}
 		}
 
+	}
+
+	@Override
+	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
+	{
+		boolean b = !hasUpgrade(upgrade)&&(upgrade.equals(IIContent.UPGRADE_INSERTER)||upgrade.equals(IIContent.UPGRADE_MG_LOADER));
+		if(!test&&b)
+			upgrades.add(upgrade);
+		return b;
+	}
+
+	@Override
+	public boolean upgradeMatches(MachineUpgrade upgrade)
+	{
+		return upgrade==IIContent.UPGRADE_INSERTER||upgrade==IIContent.UPGRADE_MG_LOADER;
 	}
 
 

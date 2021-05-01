@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal;
 
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.BlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -12,7 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -48,6 +46,8 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.FUEL_STATION);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.VEHICLE_WORKSHOP);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.RADAR);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.CASING_FILLER);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.VULCANIZER);
 
 	}
 
@@ -86,6 +86,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			{
 				return new TileEntityRedstoneInterface();
 			}
+			case CASING_FILLER:
+			{
+				return new TileEntityCasingFiller();
+			}
 			case EMPLACEMENT:
 			{
 				return new TileEntityEmplacement();
@@ -101,6 +105,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			case VEHICLE_WORKSHOP:
 			{
 				return new TileEntityVehicleWorkshop();
+			}
+			case VULCANIZER:
+			{
+				return new TileEntityVulcanizer();
 			}
 		}
 		return null;

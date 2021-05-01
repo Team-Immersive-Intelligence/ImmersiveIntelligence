@@ -74,6 +74,7 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter"); //for crates
 	public static final MachineUpgrade UPGRADE_IMPROVED_GEARBOX = CommonProxy.createMachineUpgrade("improved_gearbox"); //increases machine speed
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator"); //more sawdust for cost of planks
+	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader"); //allows to use belt fed upgrade for mg
 
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
@@ -100,6 +101,7 @@ public class IIContent
 	public static ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
 	public static ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
 	public static ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
+	public static ItemIIVulcanizerMold itemVulcanizerMold = new ItemIIVulcanizerMold();
 
 	public static ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
 	public static ItemIIWrench itemWrench = new ItemIIWrench();

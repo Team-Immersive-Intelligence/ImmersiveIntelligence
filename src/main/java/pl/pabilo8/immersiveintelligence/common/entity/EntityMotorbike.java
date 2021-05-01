@@ -3,13 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.DieselHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.audio.MovingSoundMinecart;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.MoverType;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -42,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MotorbikeRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
@@ -243,13 +241,13 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		{
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 			double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
-			float tylt = -tilt*45;
+			float tylt = -((tilt*0.5f)+(tilt*(speed/10f)*0.5f))*20;
 			double true_angle4 = Math.toRadians((tylt-90) > 180?360f-(tylt-90): (tylt-90));
 
 			Vec3d pos2 = Utils.offsetPosDirection(seatID==0?-0.55f: -1.35f, true_angle, 0);
 			Vec3d pos3 = Utils.offsetPosDirection(0.75f, true_angle2, -true_angle4);
 
-			passenger.setPosition(posX+pos2.x+pos3.x+motionX, posY+pos3.y+motionY, posZ+pos2.z+pos3.z+motionZ);
+			passenger.setPosition(posX+pos2.x+pos3.x, posY+pos3.y, posZ+pos2.z+pos3.z);
 		}
 		else if(seatID==2)
 		{
@@ -287,6 +285,13 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	public boolean shouldSeatPassengerSit(int seatID, Entity passenger)
 	{
 		return true;
+	}
+
+	@Override
+	public void onSeatDismount(int seatID, Entity passenger)
+	{
+		if(speed > 1f&&seatID < 2)
+			passenger.attackEntityFrom(IIDamageSources.causeMotorbikeDamageGetOut(this), 4.5f*speed);
 	}
 
 	@Override
@@ -371,16 +376,6 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		}
 		tilt = MathHelper.clamp(tilt, -1f, 1f);
 
-		if(tilt!=0&&speed > 0)
-		{
-			rotationYaw += tilt*5f;
-		}
-		if(!engineWorking)
-			if(turnLeft||turnRight)
-			{
-				rotationYaw += tilt*0.35;
-			}
-
 		boolean canTowedMove = getRecursivePassengers().stream().noneMatch(entity -> entity instanceof ITowable && !((ITowable)entity).canMoveTowed());
 
 		if(engineWorking&&engineProgress>=25&&accelerated&&canTowedMove)
@@ -396,15 +391,15 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		if(brake)
 			speed *= 0.85;
 
-		partWheelFront.wheelTraverse += speed;
-		partWheelBack.wheelTraverse += speed;
+		partWheelFront.wheelTraverse += speed*2*(1f-tilt);
+		partWheelBack.wheelTraverse += speed*2;
 
 		if(world.isRemote)
 		{
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw)); //z
 			double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90)); //x
 
-			if(engineWorking&&engineProgress>=25)
+			if(engineWorking&&engineProgress >= 25)
 				spawnExhaustParticle(true_angle, true_angle2);
 			if(hasFuel()&&engineDurability < Motorbike.engineDurability*0.85f)
 				spawnEngineDamageParticle(true_angle, true_angle2);
@@ -417,6 +412,17 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		 */
 		//if(!world.isRemote)
 		handleMovement();
+
+		if(tilt!=0&&speed > 0)
+		{
+			rotationYaw += tilt*(speed/10f)*3.5f;
+		}
+		if(!engineWorking)
+			if(turnLeft||turnRight)
+			{
+				rotationYaw += tilt*0.5;
+			}
+
 		updateParts(true);
 		super.onUpdate();
 
@@ -427,20 +433,21 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		float r = world.isRemote?rotationYaw: -rotationYaw;
 		double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
 		//ImmersiveIntelligence.logger.info(true_angle);
-		this.prevRotationYaw=MathHelper.wrapDegrees(prevRotationYaw);
-		this.rotationYaw=MathHelper.wrapDegrees(rotationYaw);
+		this.prevRotationYaw = MathHelper.wrapDegrees(prevRotationYaw);
+		this.rotationYaw = MathHelper.wrapDegrees(rotationYaw);
+
 		Vec3d pos1_x = getLookVec().scale(-1.25f);
 
-		partWheelFront.rotationYaw = this.rotationYaw;
+		partWheelFront.rotationYaw = this.rotationYaw+(tilt*5);
 		Vec3d dd = getForward().scale(speed*0.0125*2f);
 		/*
 		partWheelFront.move(MoverType.SELF,dd.x,dd.y+partWheelFront.stepHeight,dd.z);
 		partWheelFront.move(MoverType.SELF,0,(-0.5f+(Math.min(speed,1f)*0.125f))-partWheelFront.stepHeight,0);
 		 */
-		partWheelFront.travel(0, 0, world.isRemote?0f:1f, -0.0125f, speed*0.0125*2f);
+		partWheelFront.travel(0, 0, world.isRemote?0f: 1f, -0.0125f, speed*0.0125*2f);
 
 		partWheelBack.rotationYaw = this.rotationYaw;
-		partWheelBack.travel(0, 0, world.isRemote?0f:1f, -0.0125f, speed*0.0125*2f);
+		partWheelBack.travel(0, 0, world.isRemote?0f: 1f, -0.0125f, speed*0.0125*2f);
 		/*
 		partWheelBack.move(MoverType.SELF,dd.x,dd.y+partWheelBack.stepHeight,dd.z);
 		partWheelBack.move(MoverType.SELF,0,-0.25f-partWheelBack.stepHeight,0);
@@ -454,7 +461,17 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			Vec3d currentPos = new Vec3d(partWheelFront.posX+pos1_x.x, partWheelFront.posY, partWheelFront.posZ+pos1_x.z);
 			setPosition(currentPos.x, currentPos.y, currentPos.z);
 			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
-			//setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
+		}
+
+
+		if(speed > 1f)
+		{
+			List<EntityLivingBase> entitiesWithinAABB = world.getEntitiesWithinAABB(EntityLivingBase.class, partWheelFront.getEntityBoundingBox());
+			for(EntityLivingBase e : entitiesWithinAABB)
+			{
+				if(!isPassenger(e))
+					e.attackEntityFrom(IIDamageSources.causeMotorbikeDamage(this), 6f*speed);
+			}
 		}
 
 		if(partWheelBack.isEntityInsideOpaqueBlock())
@@ -1024,7 +1041,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	{
 		double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 		double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
-		float tylt = -tilt*45;
+		float tylt = -(tilt*(speed/15f))*45;
 		double true_angle4 = Math.toRadians((tylt-90) > 180?360f-(tylt-90): (tylt-90));
 
 		ArrayList<ModelRendererTurbo> models = new ArrayList<>();

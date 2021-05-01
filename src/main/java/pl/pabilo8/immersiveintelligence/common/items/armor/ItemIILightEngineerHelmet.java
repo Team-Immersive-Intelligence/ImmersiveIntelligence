@@ -15,6 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.utils.IGasmask;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
@@ -26,7 +27,7 @@ import java.util.Map;
  * @author Pabilo8
  * @since 13.09.2020
  */
-public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements IElectricEquipment
+public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements IElectricEquipment, IGasmask
 {
 	public ItemIILightEngineerHelmet()
 	{
@@ -83,5 +84,11 @@ public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements
 	public int getSlotCount()
 	{
 		return 3;
+	}
+
+	@Override
+	public boolean protects(ItemStack stack)
+	{
+		return getUpgrades(stack).hasKey("gasmask");
 	}
 }

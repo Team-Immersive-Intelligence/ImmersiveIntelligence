@@ -93,7 +93,6 @@ public class EntityVehicleSeat extends Entity
 	@Override
 	public void applyOrientationToEntity(Entity passenger)
 	{
-
 		if(getRidingEntity() instanceof IVehicleMultiPart)
 		{
 			((IVehicleMultiPart)getRidingEntity()).getSeatRidingAngle(seatID, passenger);
@@ -142,4 +141,13 @@ public class EntityVehicleSeat extends Entity
 
 	}
 
+	@Override
+	protected void removePassenger(Entity passenger)
+	{
+		super.removePassenger(passenger);
+		if(getRidingEntity() instanceof IVehicleMultiPart)
+		{
+			((IVehicleMultiPart)getRidingEntity()).onSeatDismount(seatID, passenger);
+		}
+	}
 }

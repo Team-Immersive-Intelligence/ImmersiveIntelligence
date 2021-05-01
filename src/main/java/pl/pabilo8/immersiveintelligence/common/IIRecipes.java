@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.api.ComparableItemStack;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
@@ -21,9 +22,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeCrateConversion;
@@ -545,6 +544,10 @@ public class IIRecipes
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
 				.setRequiredProgress(20000);
 
+		IIContent.UPGRADE_MG_LOADER
+				.addStack(new IngredientStack("plateSteel",8))
+				.setRequiredProgress(10000);
+
 		//Weapons - Basic Tier
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
@@ -648,6 +651,34 @@ public class IIRecipes
 		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.blockMetalFortification, 1, OreDictionary.WILDCARD_VALUE));
 		ArcFurnaceRecipe.allowItemForRecycling(new ItemStack(IIContent.blockMetalFortification1, 1, OreDictionary.WILDCARD_VALUE));
 
+	}
+
+	public static void addAmmunitionCasingRecipes()
+	{
+		CasingFillerRecipe.recipeList.clear();
+		CasingFillerRecipe.addRecipe(IIContent.itemAmmoArtillery, 160, 8000);
+		CasingFillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
+		CasingFillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
+		CasingFillerRecipe.addRecipe(IIContent.itemAmmoMachinegun, 60, 800);
+		CasingFillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
+		CasingFillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
+	}
+
+	public static void addRubberRecipes()
+	{
+		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_belt",4),
+				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemMaterial, "belt")),
+				new IngredientStack("rubberRaw",10),
+				new IngredientStack("dustSulfur",3),
+				20000
+		);
+
+		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_tire",3),
+				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemMaterial, "tire")),
+				new IngredientStack("rubberRaw",10),
+				new IngredientStack("dustSulfur",3),
+				20000
+		);
 	}
 
 }

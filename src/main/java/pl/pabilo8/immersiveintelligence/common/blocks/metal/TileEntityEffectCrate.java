@@ -60,7 +60,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public String name;
 	public boolean open = false;
 	public float lidAngle = 0;
-	private ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
+	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
 	int upgradeProgress = 0;
 	public int clientUpgradeProgress=0;
