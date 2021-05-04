@@ -237,7 +237,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 		if(world.isRemote)
 		{
-			if(energyStorage>0&&hasUpgrade(IIContent.UPGRADE_INSERTER))
+			if(energyStorage > 0&&hasUpgrade(IIContent.UPGRADE_INSERTER))
 			{
 				inserterAnimation = calculateInserterAnimation(0);
 				inserterAngle = calculateInserterAngle(0);
@@ -245,11 +245,11 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			else if(clientUpgradeProgress < upgradeProgress)
 				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), upgradeProgress);
 		}
-		else if(open&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
+		else if(energyStorage > energyDrain&&open&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
 		{
 			//get all in range
 			//effect
-			List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).offset(0.5,0.5,0.5).grow(getRange()));
+			List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).offset(0.5, 0.5, 0.5).grow(getRange()));
 			entitiesWithinAABB.removeIf(entity -> !checkEntity(entity));
 			if(entitiesWithinAABB.size() > 0)
 			{

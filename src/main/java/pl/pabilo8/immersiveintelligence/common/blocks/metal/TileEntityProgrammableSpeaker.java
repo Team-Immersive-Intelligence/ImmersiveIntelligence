@@ -24,6 +24,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ProgrammableSpeaker;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
@@ -68,7 +70,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 			{
 				if(sound!=null)
 				{
-					ImmersiveEngineering.proxy.handleTileSound(sound, this, this.active, soundVolume, tone);
+					ImmersiveEngineering.proxy.handleTileSound(sound, this, this.active, soundVolume*((ProgrammableSpeaker.soundRange+4)/20f), tone);
 				}
 
 			}

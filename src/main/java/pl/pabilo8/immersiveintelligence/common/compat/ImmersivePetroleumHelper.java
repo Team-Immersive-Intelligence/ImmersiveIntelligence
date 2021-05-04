@@ -205,7 +205,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		@Override
 		public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing enumFacing)
 		{
-			return (T)this;
+			return capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY?(T)this: null;
 		}
 
 		public FluidTank getTank()

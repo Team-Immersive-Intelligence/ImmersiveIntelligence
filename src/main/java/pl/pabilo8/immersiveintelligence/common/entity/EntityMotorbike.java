@@ -394,6 +394,13 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		partWheelFront.wheelTraverse += speed*2*(1f-tilt);
 		partWheelBack.wheelTraverse += speed*2;
 
+		List<Entity> towables = EntityVehicleSeat.getOrCreateSeat(this, 2).getPassengers();
+		if(towables.size() > 0)
+		{
+			if(towables.get(0) instanceof ITowable)
+				((ITowable)towables.get(0)).moveTowableWheels(speed);
+		}
+
 		if(world.isRemote)
 		{
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw)); //z

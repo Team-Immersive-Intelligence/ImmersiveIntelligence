@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans_tasks;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -17,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,15 +28,16 @@ import java.util.Optional;
  */
 public class AIHansHowitzer extends EntityAIBase
 {
-	private final EntityFieldHowitzer howitzer;
-	private final int seat;
+	private final EntityLiving hans;
+	private EntityFieldHowitzer howitzer=null;
+	private int seat=0;
 
 	private Optional<Entity> target = Optional.empty();
 
-	public AIHansHowitzer(EntityFieldHowitzer howitzer, int seat)
+	public AIHansHowitzer(EntityLiving hans)
 	{
-		this.howitzer = howitzer;
-		this.seat = seat;
+		this.hans=hans;
+		this.setMutexBits(3);
 	}
 
 	/**
@@ -41,9 +45,28 @@ public class AIHansHowitzer extends EntityAIBase
 	 */
 	public boolean shouldExecute()
 	{
-		target = this.howitzer.world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(howitzer.getPosition()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
-				input -> input instanceof EntityMob&&
-						((EntityMob)input).getHealth() > 0).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).findFirst();
+		if(hans.getRidingEntity() instanceof EntityVehicleSeat && hans.getRidingEntity().getRidingEntity() instanceof EntityFieldHowitzer)
+		{
+			seat= ((EntityVehicleSeat)hans.getRidingEntity()).seatID;
+			howitzer= ((EntityFieldHowitzer)hans.getRidingEntity().getRidingEntity());
+		}
+		else
+			return false;
+
+		if(howitzer==null||howitzer.isDead)
+			return false;
+
+		if(seat==0)
+			target= Optional.ofNullable(hans.getAttackTarget());
+		else
+		{
+			List<Entity> passengers = EntityVehicleSeat.getOrCreateSeat(howitzer, 0).getPassengers();
+			if(passengers.get(0) instanceof EntityLiving)
+			{
+				EntityLiving entityLiving = (EntityLiving)passengers.get(0);
+				target=Optional.ofNullable(entityLiving.getAttackTarget());
+			}
+		}
 		return true;
 	}
 
@@ -146,31 +169,5 @@ public class AIHansHowitzer extends EntityAIBase
 				1f-EntityBullet.DRAG));
 
 		return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
-	}
-
-	/**
-	 * Rotate the gun
-	 *
-	 * @param yaw   destination
-	 * @param pitch destination
-	 */
-	public void aimAt(float yaw, float pitch)
-	{
-		/*
-		float nextPitch = pitch;
-		float nextYaw = MathHelper.wrapDegrees(yaw);
-		float p = pitch-howitzer.gun;
-		howitzer.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.getPitchTurnSpeed());
-		float y = MathHelper.wrapDegrees(360+nextYaw-this.yaw);
-
-		if(Math.abs(p) < this.getPitchTurnSpeed()*0.5f)
-			this.pitch = this.nextPitch;
-		if(Math.abs(y) < this.getYawTurnSpeed()*0.5f)
-			this.yaw = this.nextYaw;
-		else
-			this.yaw = MathHelper.wrapDegrees(this.yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.getYawTurnSpeed())));
-
-		this.pitch = this.pitch%180;
-		 */
 	}
 }

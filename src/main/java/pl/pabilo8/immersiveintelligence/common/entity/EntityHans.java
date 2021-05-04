@@ -22,7 +22,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansHolsterWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansSubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
  */
 public class EntityHans extends EntityCreature implements INpc
 {
+	public boolean crewman = false;
 	public boolean hasAmmo = true;
 
 	public final NonNullList<ItemStack> mainInventory = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
@@ -79,6 +82,10 @@ public class EntityHans extends EntityCreature implements INpc
 			IIContent.itemLightEngineerHelmet.finishUpgradeRecalculation(helmet);
 			 */
 		}
+		else if(id==7)
+		{
+			crewman=true;
+		}
 		else if(id==8)
 		{
 			ItemStack stack = new ItemStack(IIContent.itemBinoculars);
@@ -94,52 +101,39 @@ public class EntityHans extends EntityCreature implements INpc
 	protected void initEntityAI()
 	{
 		super.initEntityAI();
+		//howi AI
+		tasks.addTask(0, new AIHansHowitzer(this));
+		tasks.addTask(0, new AIHansMachinegun(this));
 
 		//Attack mobs
 		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
-				input -> input instanceof IMob
+				input -> input instanceof IMob&&input.getHealth()>0
 		));
 		//Attack players and Hanses with different team, stay neutral on default
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityHans.class, 1, false, false,
-				input -> input!=null&&input.getTeam()!=this.getTeam()
+				input -> input!=null&&input.getTeam()!=this.getTeam()&&input.getHealth()>0
 		));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 1, false, false,
-				input -> input!=null&&input.getTeam()!=this.getTeam()
+				input -> input!=null&&input.getTeam()!=this.getTeam()&&input.getHealth()>0
 		));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, true));
 
+		this.tasks.addTask(2, new AIHansHolsterWeapon(this));
 		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 20));
 		//this.tasks.addTask(4, new EntityAIAttackMelee(this, 1f, true));
 
 		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6D, 0.6D));
 		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityHans.class, 3.0F));
-		this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 0.3D, 1f));
+		this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1D, 0f));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
+
+		//this.tasks.addTask(4, new AIHansEnterVehicle(this));
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(0, new EntityAIRestrictOpenDoor(this));
 
 		//this.tasks.addTask(4, new EntityAIAvoidEntity<>(this, EntityLivingBase.class, avEntity-> this.hasAmmunition()&&avEntity!=null&&avEntity.getRevengeTarget()==this, 8.0F, 0.6D, 0.6D));
-
-
-	}
-
-	@Override
-	public boolean startRiding(Entity entityIn)
-	{
-		boolean b = super.startRiding(entityIn);
-		if(b)
-		{
-			if(entityIn instanceof EntityVehicleSeat)
-			{
-				if(entityIn.getRidingEntity() instanceof EntityFieldHowitzer)
-				{
-					tasks.addTask(1, new AIHansHowitzer((EntityFieldHowitzer)entityIn.getRidingEntity(), ((EntityVehicleSeat)entityIn).seatID));
-				}
-			}
-		}
-		return b;
 	}
 
 	@Override
@@ -168,6 +162,7 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		super.readEntityFromNBT(compound);
 		readInventory(compound.getTagList("npc_inventory", 10));
+		crewman = compound.getBoolean("crewman");
 	}
 
 	@Override
@@ -175,6 +170,7 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		super.writeEntityToNBT(compound);
 		compound.setTag("npc_inventory", Utils.writeInventory(mainInventory));
+		compound.setBoolean("crewman", crewman);
 	}
 
 	private void readInventory(NBTTagList npc_inventory)
@@ -216,7 +212,7 @@ public class EntityHans extends EntityCreature implements INpc
 	@Override
 	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
-		return hand==EnumHand.MAIN_HAND&&player.getPositionVector().distanceTo(this.getPositionVector()) <= 1d;
+		return !player.isSpectator()&&hand==EnumHand.MAIN_HAND&&player.getPositionVector().distanceTo(this.getPositionVector()) <= 1d;
 	}
 
 	@Override

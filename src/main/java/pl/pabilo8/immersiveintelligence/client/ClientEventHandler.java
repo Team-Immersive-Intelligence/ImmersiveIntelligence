@@ -101,7 +101,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final String[] II_BULLET_TOOLTIP = {"\u00A0\u00A0II\u00A0", "\u00A0\u00A0AMMO\u00A0", "\u00A0\u00A0HERE\u00A0", "\u00A0\u00A0--\u00A0"};
 	private static final String texture_gui = ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png";
 	private static boolean mgAiming = false;
-	public static ArrayList<EntityPlayer> aimingPlayers = new ArrayList<>();
+	public static ArrayList<EntityLivingBase> aimingPlayers = new ArrayList<>();
 
 	public static void drawSubmachinegunGui(ItemStack stack, RenderGameOverlayEvent.Post event)
 	{
@@ -980,7 +980,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
 				float wtime = (Math.abs((((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40)/40f)-0.5f)/0.5f)-0.5f;
-				wtime *= 0.65f;
 
 				model.bipedRightArm.rotateAngleX = -1.75f;
 				model.bipedRightArm.rotateAngleY = -0.5f;
@@ -992,16 +991,18 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				model.bipedHeadwear.rotateAngleX = 0;
 				model.bipedHead.rotateAngleY = 0;
 				model.bipedHeadwear.rotateAngleY = 0;
+
+
 				if(Math.abs(mg.periscopeYaw-true_head_angle) > 5)
 					if(mg.periscopeYaw < true_head_angle)
 					{
-						model.bipedRightLeg.rotateAngleZ = (wtime)*2f;
-						model.bipedLeftLeg.rotateAngleZ = -(wtime)*2f;
+						model.bipedRightLeg.rotateAngleZ = (-(1f-wtime)*0.25f);
+						model.bipedLeftLeg.rotateAngleZ = (-(wtime)*0.25f-0.25f);
 					}
 					else if(mg.periscopeYaw > true_head_angle)
 					{
-						model.bipedRightLeg.rotateAngleZ = -(wtime)*2f;
-						model.bipedLeftLeg.rotateAngleZ = (wtime)*2f;
+						model.bipedRightLeg.rotateAngleZ = ((1f-wtime)*0.25f+0.25f);
+						model.bipedLeftLeg.rotateAngleZ = ((wtime)*0.25f);
 					}
 
 			}

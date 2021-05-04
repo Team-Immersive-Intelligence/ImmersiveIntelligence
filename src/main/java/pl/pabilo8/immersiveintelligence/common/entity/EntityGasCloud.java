@@ -91,7 +91,7 @@ public class EntityGasCloud extends Entity
 							ItemStack s = entityLivingBase.getItemStackFromSlot(slot);
 							if(!s.isEmpty()&&s.getItem() instanceof IGasmask)
 								if(apply)
-									apply = ((IGasmask)s.getItem()).protects(s);
+									apply = !((IGasmask)s.getItem()).protects(s);
 						}
 						if(apply)
 							effect.applyToEntity(entityLivingBase, null, ItemStack.EMPTY, fluid);

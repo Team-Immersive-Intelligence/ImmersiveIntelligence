@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
  */
 public class GuiAmmunitionCrate extends GuiIEContainerBase
 {
-	boolean upgraded;
+	public boolean upgraded;
 	public GuiAmmunitionCrate(InventoryPlayer inventoryPlayer, TileEntityAmmunitionCrate tile)
 	{
 		super(new ContainerAmmunitionCrate(inventoryPlayer, tile));

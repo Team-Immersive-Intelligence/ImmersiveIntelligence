@@ -45,7 +45,7 @@ public class BlockIIConcreteDecoration extends BlockIIBase<IIBlockTypes_Concrete
 	{
 		block.setHardness(3.0F);
 		block.setResistance(15.0F);
-		block.setLightOpacity(0);
+		block.setLightOpacity(255);
 
 		block.setMetaExplosionResistance(IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta(), 360);
 		block.setMetaHardness(IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta(), 2.0F);

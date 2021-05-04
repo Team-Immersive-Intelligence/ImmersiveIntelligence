@@ -15,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
@@ -264,7 +265,7 @@ public class CommandIIDev extends CommandBase
 								IIContent.itemSubmachinegun.recalculateUpgrades(mgstack);
 								IIContent.itemSubmachinegun.finishUpgradeRecalculation(mgstack);
 
-								EntityMachinegun mg = new EntityMachinegun(server.getEntityWorld(), position.down(), commandSenderEntity.getMirroredYaw(Mirror.FRONT_BACK), -commandSenderEntity.rotationPitch, mgstack);
+								EntityMachinegun mg = new EntityMachinegun(server.getEntityWorld(), position.down(), MathHelper.wrapDegrees(commandSenderEntity.getRotationYawHead()), -commandSenderEntity.rotationPitch, mgstack);
 								server.getEntityWorld().spawnEntity(mg);
 								hans.startRiding(mg);
 							}

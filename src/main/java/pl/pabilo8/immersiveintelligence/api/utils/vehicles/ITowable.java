@@ -15,4 +15,6 @@ public interface ITowable
 	boolean stopTowing();
 
 	boolean canMoveTowed();
+
+	void moveTowableWheels(float speed);
 }

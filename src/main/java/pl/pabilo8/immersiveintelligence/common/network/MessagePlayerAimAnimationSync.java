@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -51,12 +52,12 @@ public class MessagePlayerAimAnimationSync implements IMessage
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
 					Entity entity = world.getEntityByID(message.entityID);
-					if(entity instanceof EntityPlayer)
+					if(entity instanceof EntityLivingBase)
 					{
 						if(message.aiming)
 						{
 							if(!ClientEventHandler.aimingPlayers.contains(entity))
-								ClientEventHandler.aimingPlayers.add((EntityPlayer)entity);
+								ClientEventHandler.aimingPlayers.add((EntityLivingBase)entity);
 						}
 						else
 						{

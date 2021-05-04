@@ -26,6 +26,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageAlarmSirenSync;
@@ -47,11 +48,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	EnumFacing facing = EnumFacing.NORTH;
 
 	public boolean active = false;
-
-	public String soundID = "siren";
 	public float soundVolume = 1f;
-
-	SoundEvent sound = IISounds.siren;
 
 	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
@@ -62,7 +59,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 
 		if(world.isRemote)
 		{
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.siren, this, this.active, soundVolume, 1);
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.siren, this, this.active, soundVolume*((AlarmSiren.soundRange+8)/16f), 1);
 		}
 		else if(hasWorld())
 		{
@@ -191,12 +188,8 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	{
 		super.writeCustomNBT(nbt, descPacket);
 		nbt.setBoolean("active", active);
-
-		nbt.setString("sound", soundID);
 		nbt.setFloat("volume", soundVolume);
-
 		nbt.setInteger("facing", facing.ordinal());
-
 		nbt.setInteger("redstoneChannel", redstoneChannel);
 	}
 
@@ -205,12 +198,8 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	{
 		super.readCustomNBT(nbt, descPacket);
 		active = nbt.getBoolean("active");
-
-		soundID = nbt.getString("sound");
 		soundVolume = nbt.getFloat("volume");
-
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
-
 		redstoneChannel = nbt.getInteger("redstoneChannel");
 	}
 

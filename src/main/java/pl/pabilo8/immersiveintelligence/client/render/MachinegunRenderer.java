@@ -186,16 +186,16 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 						nmod.render(0.0625f);
 						IBulletModel mm = BulletRegistry.INSTANCE.registeredModels.get("mg_2bCal");
 						GlStateManager.pushMatrix();
-						GlStateManager.translate(0.725f, 0.65f, -0.25f+(-0.0625f*1.5f));
+						GlStateManager.translate(0.69f, 0.65f, -0.0625f+(-0.0625f*1.5f));
 						GlStateManager.rotate(180, 0, 1, 0);
 						GlStateManager.rotate(90, 1, 0, 0);
 						GlStateManager.scale(0.5f, 0.5f, 0.5f);
 						GlStateManager.pushMatrix();
-						for(int i = 0; i < 3; i++)
+						for(int i = 0; i < 4; i++)
 						{
 							mm.renderBulletUnused(0xbbbbbb, EnumCoreTypes.PIERCING, MathHelper.hsvToRGB(((i*15)%255)/255f, 0.65f, 0.45f));
-							GlStateManager.rotate(22.5f*3f, 0, 1, 0);
-							GlStateManager.translate(0, 0, -0.0625f/2f);
+							GlStateManager.rotate(180f/4f, 0, 1, 0);
+							GlStateManager.translate(0, 0, -0.1225f);
 						}
 						GlStateManager.popMatrix();
 
@@ -204,7 +204,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 						for(int i = 0; i < 20; i++)
 						{
 							mm.renderBulletUnused(0xbbbbbb, EnumCoreTypes.PIERCING, MathHelper.hsvToRGB(((i*15)%255)/255f, 0.65f, 0.45f));
-							GlStateManager.translate(0f, 0, 0.165f);
+							GlStateManager.translate(0f, 0, 0.125f);
 							GlStateManager.rotate(i%15 < 5?5f: -5f, 0, 1, 0);
 
 						}

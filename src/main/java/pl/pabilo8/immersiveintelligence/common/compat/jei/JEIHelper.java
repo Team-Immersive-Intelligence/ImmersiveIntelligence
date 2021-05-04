@@ -112,6 +112,7 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
+		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler());
 	}
 
 	@Override

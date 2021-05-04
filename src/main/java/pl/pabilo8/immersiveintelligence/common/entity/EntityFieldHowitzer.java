@@ -31,13 +31,11 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
-import pl.pabilo8.immersiveintelligence.common.network.MessageParticleEffect;
 
 import javax.annotation.Nullable;
 
@@ -488,6 +486,13 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	public boolean canMoveTowed()
 	{
 		return !towingOperation;
+	}
+
+	@Override
+	public void moveTowableWheels(float speed)
+	{
+		this.partWheelRight.wheelTraverse += speed*2;
+		this.partWheelLeft.wheelTraverse += speed*2;
 	}
 
 	@Override

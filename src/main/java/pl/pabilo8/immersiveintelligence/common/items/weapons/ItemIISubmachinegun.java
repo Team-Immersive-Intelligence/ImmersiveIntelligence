@@ -124,7 +124,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 			if(worldIn.isRemote)
 			{
-				if(!ItemNBTHelper.getBoolean(stack, "shouldReload")&&ClientProxy.keybind_motorbikeEngine.isKeyDown())
+				if(!ItemNBTHelper.getBoolean(stack, "shouldReload")&&ClientProxy.keybind_manualReload.isKeyDown())
 					IIPacketHandler.INSTANCE.sendToServer(new MessageItemReloadMagazine());
 			}
 

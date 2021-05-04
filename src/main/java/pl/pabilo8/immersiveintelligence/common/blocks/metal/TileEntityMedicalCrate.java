@@ -43,8 +43,8 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCr
  */
 public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITileDrop
 {
-	public static final Predicate<FluidStack> HEALTH_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag.getString("Potion").equals("minecraft:regeneration");
-	public static final Predicate<FluidStack> BOOST_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag.getString("Potion").equals("minecraft:absorption");
+	public static final Predicate<FluidStack> HEALTH_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:regeneration");
+	public static final Predicate<FluidStack> BOOST_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:absorption");
 
 	public TileEntityMedicalCrate()
 	{

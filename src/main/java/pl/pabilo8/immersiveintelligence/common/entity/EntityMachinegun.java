@@ -534,6 +534,10 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				hasSecondMag = compound.getBoolean("hasSecondMag");
 			if(compound.hasKey("tripod"))
 				tripod = compound.getBoolean("tripod");
+			if(compound.hasKey("loadedFromCrate"))
+				loadedFromCrate = compound.getBoolean("loadedFromCrate");
+			if(compound.hasKey("hasInfrared"))
+				hasInfrared = compound.getBoolean("hasInfrared");
 			if(compound.hasKey("setYaw"))
 				setYaw = compound.getFloat("setYaw");
 			if(compound.hasKey("gunYaw"))
@@ -579,6 +583,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		compound.setBoolean("mag1Empty", mag1Empty);
 		compound.setBoolean("mag2Empty", mag2Empty);
 		compound.setBoolean("hasSecondMag", hasSecondMag);
+		compound.setBoolean("hasInfrared", hasInfrared);
+		compound.setBoolean("loadedFromCrate", loadedFromCrate);
 		compound.setBoolean("tripod", tripod);
 		compound.setFloat("currentlyLoaded", currentlyLoaded);
 
@@ -764,6 +770,10 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		{
 			TileEntityAmmunitionCrate crate = ((TileEntityAmmunitionCrate)world.getTileEntity(cratePos));
 			assert crate!=null;
+
+			if(!crate.open)
+				return false;
+
 			if(crate.hasUpgrade(IIContent.UPGRADE_MG_LOADER))
 			{
 				for(int i = 38; i < 50; i++)
