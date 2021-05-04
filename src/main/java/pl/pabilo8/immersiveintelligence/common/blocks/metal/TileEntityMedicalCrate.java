@@ -107,8 +107,8 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 	public void update()
 	{
 		super.update();
-		boolean u = Utils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0, HEALTH_POTION);
-		u = Utils.handleBucketTankInteraction(tanks, inventory, 2, 3, 1, BOOST_POTION)||u;
+		boolean u = Utils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false,HEALTH_POTION);
+		u = Utils.handleBucketTankInteraction(tanks, inventory, 2, 3, 1, false,BOOST_POTION)||u;
 		if(u)
 		{
 			this.markContainingBlockForUpdate(null);

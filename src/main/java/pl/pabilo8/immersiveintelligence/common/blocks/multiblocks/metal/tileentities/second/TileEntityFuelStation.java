@@ -103,7 +103,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 		}
 		else
 		{
-			boolean update = pl.pabilo8.immersiveintelligence.api.Utils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0);
+			boolean update = pl.pabilo8.immersiveintelligence.api.Utils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0,false);
 			if(update)
 			{
 				this.markDirty();

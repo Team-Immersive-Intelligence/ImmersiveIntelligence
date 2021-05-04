@@ -40,9 +40,9 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitz
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -64,7 +64,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 	//0 - nothing, 1 - loading, 2 - unloading, 3 - shooting
 	public int animation = 0, fuse = -1;
-	public int animationTime, animationTimeMax, shellLoadTime, shellExpellTime;
+	public int animationTime = 0, animationTimeMax = 0, shellLoadTime = 0, shellExpellTime = 0;
 	public boolean isDoorOpened;
 	public float turretYaw = 0, turretPitch = 0, plannedYaw = 0, plannedPitch = 0, platformHeight = 0, doorAngle = 0;
 	public ItemStack bullet = ItemStack.EMPTY;
@@ -746,6 +746,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		TileEntityArtilleryHowitzer master = master();
 		if(pos==(mirrored?441: 449)&master!=null)
 		{
+			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(6), world, mirrored?facing.rotateY(): facing.rotateYCCW());
+			DataPacket p = new DataPacket();
 
 			//Command
 			if(!active&&packet.getPacketVariable('c') instanceof DataPacketTypeString)
@@ -787,6 +789,135 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 						master.animationTime = 0;
 					}
 					break;
+					//callback
+					case "get_energy":
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("energy"));
+						p.setVariable('g', new DataPacketTypeInteger(energyStorage.getEnergyStored()));
+						conn.sendPacket(p);
+						break;
+					case "get_state":
+					case "get_state_num":
+					{
+						//0 - nothing, 1 - loading, 2 - unloading, 3 - shooting
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("state"));
+						if(command.equals("get_state_num"))
+							p.setVariable('g', new DataPacketTypeInteger(animation));
+						else
+							p.setVariable('g', new DataPacketTypeString(new String[]{"idle","loading","unloading","shooting"}[animation]));
+						conn.sendPacket(p);
+					}
+					case "get_state_progress":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("state_progress"));
+						p.setVariable('g', new DataPacketTypeInteger((int)(animationTime/(float)animationTimeMax*100)));
+						conn.sendPacket(p);
+					}
+					case "get_yaw":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("yaw"));
+						p.setVariable('g', new DataPacketTypeInteger((int)turretYaw));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_pitch":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("pitch"));
+						p.setVariable('g', new DataPacketTypeInteger((int)turretPitch));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_planned_yaw":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("planned_yaw"));
+						p.setVariable('g', new DataPacketTypeInteger((int)plannedYaw));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_planned_pitch":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("planned_pitch"));
+						p.setVariable('g', new DataPacketTypeInteger((int)plannedPitch));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_platform_height":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("platform_height"));
+						p.setVariable('g', new DataPacketTypeInteger((int)platformHeight));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_door_opened":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("door_opened"));
+						p.setVariable('g', new DataPacketTypeBoolean(isDoorOpened&&doorAngle==155f));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_door_closed":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("door_closed"));
+						p.setVariable('g', new DataPacketTypeBoolean(!isDoorOpened&&doorAngle==0f));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_door_opening":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("door_opening"));
+						p.setVariable('g', new DataPacketTypeBoolean(doorAngle!=155f&&doorAngle!=0f));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_loaded_shell":
+					{
+						if(conn==null)
+							return;
+						p.setVariable('c', new DataPacketTypeString("loaded_shell"));
+						p.setVariable('g', new DataPacketTypeItemStack(bullet));
+						conn.sendPacket(p);
+					}
+					break;
+					case "get_stored_shell":
+					{
+						if(conn==null)
+							return;
+						IDataType i = packet.getPacketVariable('i');
+						if(i instanceof DataPacketTypeInteger)
+						{
+							int value = ((DataPacketTypeInteger)i).value;
+							if(value >= 0&&value <= 5)
+							{
+								p.setVariable('c', new DataPacketTypeString("stored_shell"));
+								p.setVariable('g', new DataPacketTypeItemStack(bullet));
+								conn.sendPacket(p);
+							}
+
+						}
+					}
+					break;
+
 				}
 			}
 

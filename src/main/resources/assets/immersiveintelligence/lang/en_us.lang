@@ -1167,7 +1167,7 @@ ie.manual.entry.arithmetic_logic_machine.name=Arithmetic-Logic Machine
 ie.manual.entry.arithmetic_logic_machine.subtext=Does Quick Maths
 ie.manual.entry.arithmetic_logic_machine0=The Arithmetic-Logic Machine is an electronic device, which primary task is to process and modify data. It requires energy and to operate.
 ie.manual.entry.arithmetic_logic_machine1=When a data packet is received at the left side of the machine, it uses functional circuits placed into 4 slots in the rack to change variables accordingly. The machine iterates trough all the circuits and then trough variables alphabetically and sets their values to the result of the given Expression. The expression consists of 2 values and an operator (+,-,*, etc.). Each circuit has a list of available expressions. The expression can also have a Conditional Variable (a Boolean),
-ie.manual.entry.arithmetic_logic_machine2=The machine also offers a non-standard datatype, the Accessor, which doesn't hold any value of its own, but can get a value from variable from the received packet. The variable in an expression can be toggled to an Accessor by clicking the '@' button.
+ie.manual.entry.arithmetic_logic_machine2=The machine also offers a non-standard datatype, the Accessor, which doesn't hold any value of its own, but can get the value most recently assigned to the variable from the received packet. The variable in an expression can be toggled to an Accessor by clicking the '@' button.
 ie.manual.entry.arithmetic_logic_machine_fcircuit_arithmetic=Arithmetic Circuit<br>This circuit  is used to calculate basic math expressions such as addition, subtraction, multiplication and division.
 ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_arithmetic=Advanced Arithmetic Circuit<br> This circuit allows to calculate more advanced math expressions such as raising a number to a power, getting a square root or getting the lowest or highest number from two.
 ie.manual.entry.arithmetic_logic_machine_fcircuit_logic=Logic Circuit<br> This circuit is used for basic logic expressions (like a logic gate) such as AND, OR, NOT.
@@ -1343,8 +1343,7 @@ ie.manual.entry.grenade0=The stick-hand-grenade is a thrown weapon that contains
 #Reference to Dicker Bertha cannon
 ie.manual.entry.artillery_howitzer.name=Artillery Howitzer
 ie.manual.entry.artillery_howitzer.subtext=Bertha's Sister
-ie.manual.entry.artillery_howitzer0=
-ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, that allows attacking targets as distant as 300 blocks. It is controlled using the data system and loaded with special high-caliber shells. It is best used in offensive operations.
+ie.manual.entry.artillery_howitzer1=The Precision Bombardment Device, commonly known as the Howitzer is an indirect fire weapon, which allows attacking targets at long distances.
 ie.manual.entry.artillery_howitzer2=The howitzer emplacement consists of a concrete bunker with the gun, command tables on the sides on the top and a steel door, thtat can be opened by providing a redstone signal. Ammunition has to be provided to the conveyor going down and loaded using the "load" command, after firing, the gun empty casing has to be unloaded with the "unload" command. The machine requires big amounts of power to operate. To form it use a hammer on the concrete block sticking out at the top.
 ie.manual.entry.artillery_howitzer.vars_in.c.main=Action mode
 ie.manual.entry.artillery_howitzer.vars_in.c.sub=Possible values: "load", "unload", "fire", "stop"
@@ -1354,6 +1353,24 @@ ie.manual.entry.artillery_howitzer.vars_in.y.main=Gun yaw
 ie.manual.entry.artillery_howitzer.vars_in.y.sub=Proper values from 0-360, but accepts any number and normalizes it
 ie.manual.entry.artillery_howitzer2.vars_in.p.main=Gun pitch
 ie.manual.entry.artillery_howitzer2.vars_in.p.sub=Possible values: from 0 (gun up) to -105 (gun down)
+
+ie.manual.entry.artillery_howitzer1.vars_callback.get_energy=Returns energy amount
+ie.manual.entry.artillery_howitzer1.vars_callback.get_state=Returns current state<br>§oPossible values: "idle","loading","unloading","shooting"§r
+ie.manual.entry.artillery_howitzer1.vars_callback.get_state_num=Returns current state<br>§oPossible values: 0,1,2,3§r
+ie.manual.entry.artillery_howitzer1.vars_callback.get_state_progress=Returns state progress in percentage
+
+ie.manual.entry.artillery_howitzer2.vars_callback.get_yaw=Returns current gun yaw
+ie.manual.entry.artillery_howitzer2.vars_callback.get_pitch=Returns current gun pitch
+ie.manual.entry.artillery_howitzer2.vars_callback.get_planned_yaw=Returns planned gun yaw
+ie.manual.entry.artillery_howitzer2.vars_callback.get_planned_pitch=Returns planned gun pitch
+ie.manual.entry.artillery_howitzer2.vars_callback.get_platform_height=Returns current platform height
+
+ie.manual.entry.artillery_howitzer3.vars_callback.get_door_opened=Returns whether the door is opened
+ie.manual.entry.artillery_howitzer3.vars_callback.get_door_closed=Returns whether the door is closed
+ie.manual.entry.artillery_howitzer3.vars_callback.get_door_opening=Returns whether the door is opening/closing
+
+ie.manual.entry.artillery_howitzer4.vars_callback.get_loaded_shell=Returns the currently loaded shell
+ie.manual.entry.artillery_howitzer4.vars_callback.get_stored_shell=Returns a shell waiting in the queue<br>§oRequires Integer 'i' with value 0-5§r
 
 ie.manual.entry.ballistic_computer.name=Ballistic Computer
 ie.manual.entry.ballistic_computer.subtext=Calculate this to that

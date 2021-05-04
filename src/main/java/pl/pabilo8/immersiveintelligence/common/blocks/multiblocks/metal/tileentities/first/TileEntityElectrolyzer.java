@@ -124,12 +124,12 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 
 		if(world.getTotalWorldTime()%8==0)
 		{
-			if(handleBucketTankInteraction(tanks, inventory, 0, 1, 0))
+			if(handleBucketTankInteraction(tanks, inventory, 0, 1, 0,false))
 				update = true;
 			//No, it's not a mistake - you can only put the fluid in into the first tank and get the output from the next
-			if(handleBucketTankInteraction(tanks, inventory, 3, 2, 1))
+			if(handleBucketTankInteraction(tanks, inventory, 2, 4, 1,true))
 				update = true;
-			if(handleBucketTankInteraction(tanks, inventory, 5, 3, 2))
+			if(handleBucketTankInteraction(tanks, inventory, 3, 5, 2,true))
 				update = true;
 		}
 

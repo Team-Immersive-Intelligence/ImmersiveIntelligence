@@ -10,10 +10,12 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.BulletComponentDisplay;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.BulletCoreDisplay;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesCallbackDisplay;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesDisplay;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockAmmunitionFactory;
@@ -86,15 +88,33 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ManualHelper.addEntry("artillery_howitzer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "artillery_howitzer0", MultiblockArtilleryHowitzer.instance),
-				new ManualPages.Text(ManualHelper.getManual(), "artillery_howitzer1"),
+				new ManualPageMultiblock(ManualHelper.getManual(), "artillery_howitzer1", MultiblockArtilleryHowitzer.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "artillery_howitzer2"),
 				new DataVariablesDisplay(ManualHelper.getManual(), "artillery_howitzer", true)
 						.addEntry(new DataPacketTypeString(), 'c')
 						.addEntry(new DataPacketTypeInteger(), 'f')
 						.addEntry(new DataPacketTypeInteger(), 'y'),
 				new DataVariablesDisplay(ManualHelper.getManual(), "artillery_howitzer2", true)
-						.addEntry(new DataPacketTypeInteger(), 'p')
+						.addEntry(new DataPacketTypeInteger(), 'p'),
+				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer1")
+						.addEntry(new DataPacketTypeInteger(), "get_energy")
+						.addEntry(new DataPacketTypeString(), "get_state")
+						.addEntry(new DataPacketTypeInteger(), "get_state_num")
+						.addEntry(new DataPacketTypeInteger(), "get_state_progress"),
+				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer2")
+						.addEntry(new DataPacketTypeInteger(), "get_yaw")
+						.addEntry(new DataPacketTypeInteger(), "get_pitch")
+						.addEntry(new DataPacketTypeInteger(), "get_planned_yaw")
+						.addEntry(new DataPacketTypeInteger(), "get_planned_pitch")
+						.addEntry(new DataPacketTypeInteger(), "get_platform_height"),
+
+				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer3")
+						.addEntry(new DataPacketTypeBoolean(), "get_door_opened")
+						.addEntry(new DataPacketTypeBoolean(), "get_door_closed")
+						.addEntry(new DataPacketTypeBoolean(), "get_door_opening"),
+				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer4")
+						.addEntry(new DataPacketTypeItemStack(), "get_loaded_shell")
+						.addEntry(new DataPacketTypeItemStack(), "get_stored_shell")
 		);
 
 		ManualHelper.addEntry("ballistic_computer", getCategory(),

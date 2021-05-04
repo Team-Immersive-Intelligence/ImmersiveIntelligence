@@ -139,6 +139,6 @@ public class HansRenderer extends RenderLivingBase<EntityHans>
 	@Override
 	protected void renderEntityName(EntityHans entityIn, double x, double y, double z, String name, double distanceSq)
 	{
-		super.renderEntityName(entityIn, x, y, z, "Hans", distanceSq);
+		super.renderEntityName(entityIn, x, y, z, entityIn.getDisplayName().getUnformattedText(), distanceSq);
 	}
 }

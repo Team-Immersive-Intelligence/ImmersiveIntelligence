@@ -174,7 +174,7 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 			IUpgradableMachine te = ((IUpgradableMachine)world.getTileEntity(pos)).getUpgradeMaster();
 			if(te!=null&&te.getCurrentlyInstalled()!=null)
 			{
-				te.addUpgradeInstallProgress(Tools.wrench_upgrade_progress);
+				te.addUpgradeInstallProgress(player.isCreative()?999999:Tools.wrench_upgrade_progress);
 				if(te.getInstallProgress() >= te.getCurrentlyInstalled().getProgressRequired())
 				{
 					if(te.addUpgrade(te.getCurrentlyInstalled(), false))

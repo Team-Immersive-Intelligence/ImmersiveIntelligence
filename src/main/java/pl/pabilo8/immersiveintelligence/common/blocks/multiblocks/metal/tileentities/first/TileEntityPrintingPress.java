@@ -231,7 +231,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			tag.setBoolean("active", active);
 		}
 
-		if(pl.pabilo8.immersiveintelligence.api.Utils.handleBucketTankInteraction(tanks, inventory, 2, 3, 0))
+		if(pl.pabilo8.immersiveintelligence.api.Utils.handleBucketTankInteraction(tanks, inventory, 2, 3, 0,false))
 		{
 			update = true;
 			tag.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));

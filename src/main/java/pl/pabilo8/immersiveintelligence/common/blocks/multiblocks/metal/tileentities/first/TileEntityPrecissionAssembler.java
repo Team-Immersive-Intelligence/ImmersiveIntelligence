@@ -18,6 +18,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
  */
 public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<TileEntityPrecissionAssembler, PrecissionAssemblerRecipe> implements IGuiTile, ISoundTile, IBooleanAnimatedPartsBlock
 {
+	private static final ITextComponent HANS_NAME = new TextComponentString("Hans");
 	//3 x tool slots, 1x scheme slot, 1x main component slot, 3 x secondary component slots, 1 x output slot, 1 x trash output slot
 	//0 1 2, 3, 4, 5 6 7, 8, 9
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(10, ItemStack.EMPTY);
@@ -218,11 +221,12 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 
 		if(world.getTotalWorldTime()%20==0)
 		{
-			BlockPos pos = getBlockPosForPos(5).offset(facing.rotateYCCW(), 1);
+			EnumFacing ff = mirrored?facing.rotateY():facing.rotateYCCW();
+			BlockPos pos = getBlockPosForPos(5).offset(ff, 1);
 			ItemStack output = inventory.get(8);
 			TileEntity inventoryTile = this.world.getTileEntity(pos);
 			if(inventoryTile!=null)
-				output = Utils.insertStackIntoInventory(inventoryTile, output, facing.rotateY());
+				output = Utils.insertStackIntoInventory(inventoryTile, output, ff.getOpposite());
 			inventory.set(8, output);
 
 			output = inventory.get(9);
@@ -562,5 +566,12 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	@Nullable
+	@Override
+	public ITextComponent getDisplayName()
+	{
+		return HANS_NAME;
 	}
 }
