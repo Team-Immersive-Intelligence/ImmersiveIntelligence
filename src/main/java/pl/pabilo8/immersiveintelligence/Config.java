@@ -919,6 +919,9 @@ public class Config
 				})
 				@RangeInt(min = 0, max = 2)
 				public static int tripmineColor = 0;
+
+				@Comment({"Time before colision is being detected for navy mine after placing it (in ticks)"})
+				public static int navalMineArmTime = 60;
 			}
 
 			public static class Submachinegun

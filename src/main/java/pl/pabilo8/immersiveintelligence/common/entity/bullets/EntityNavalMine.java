@@ -13,6 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -138,13 +139,14 @@ public class EntityNavalMine extends EntityBullet
 	public void applyEntityCollision(Entity entityIn)
 	{
 		super.applyEntityCollision(entityIn);
-		this.performEffect(new RayTraceResult(this));
+		if(ticksExisted > Mines.navalMineArmTime)
+			this.performEffect(new RayTraceResult(this));
 	}
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox()
 	{
-		return getEntityBoundingBox().grow(0.25f);
+		return getEntityBoundingBox().grow(0.3f);
 	}
 
 	@Override

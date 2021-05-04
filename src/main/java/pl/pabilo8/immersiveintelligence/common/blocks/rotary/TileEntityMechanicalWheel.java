@@ -35,7 +35,7 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 	@Override
 	public int getFacingLimitation()
 	{
-		return 2;
+		return 5;
 	}
 
 	@Override

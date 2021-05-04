@@ -121,7 +121,7 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 				if(conn!=null)
 				{
 					DataPacket packet = new DataPacket();
-					packet.setVariable('i', new DataPacketTypeItemStack(inventoryHandler.extractItem(0, 64, true)));
+					packet.setVariable('s', new DataPacketTypeItemStack(inventoryHandler.extractItem(0, 64, true)));
 					conn.sendPacket(packet);
 				}
 				Utils.dropStackAtPos(world, this.getPos().offset(facing), inventoryHandler.extractItem(0, 64, false));

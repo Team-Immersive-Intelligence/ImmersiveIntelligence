@@ -170,8 +170,6 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 	@Override
 	public void onChange()
 	{
-
-
 		markDirty();
 		IBlockState stateHere = world.getBlockState(pos);
 		markContainingBlockForUpdate(stateHere);
