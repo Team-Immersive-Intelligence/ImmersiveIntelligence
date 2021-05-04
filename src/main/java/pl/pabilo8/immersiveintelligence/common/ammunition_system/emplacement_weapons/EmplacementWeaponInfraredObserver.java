@@ -25,7 +25,6 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			mod.render();
 	};
 
-	@SideOnly(Side.CLIENT)
 	private static final Runnable INSERTER_ANIM_NONE = () -> {
 	};
 

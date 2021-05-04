@@ -32,11 +32,9 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	static ItemStack s2=ItemStack.EMPTY;
 
 
-	@SideOnly(Side.CLIENT)
 	private static final Runnable INSERTER_ANIM_NONE = () -> {
 		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
 	};
-	@SideOnly(Side.CLIENT)
 	private static final Runnable INSERTER_ANIM_LEFT = () -> {
 		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
 		GlStateManager.rotate(-55, 1, 0, 0);
@@ -44,7 +42,6 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineLeftModel)
 			mod.render();
 	};
-	@SideOnly(Side.CLIENT)
 	private static final Runnable INSERTER_ANIM_RIGHT = () -> {
 		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
 		GlStateManager.rotate(-55, 1, 0, 0);

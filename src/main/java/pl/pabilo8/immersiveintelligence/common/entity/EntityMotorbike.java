@@ -146,7 +146,13 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		this.dataManager.register(dataMarkerUpgrade, "");
 		if(world.isRemote)
-			ClientUtils.mc().getSoundHandler().playSound(new MovingSoundMotorbikeEngine(this));
+			playEngineSound();
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void playEngineSound()
+	{
+		ClientUtils.mc().getSoundHandler().playSound(new MovingSoundMotorbikeEngine(this));
 	}
 
 	@Override
@@ -446,7 +452,6 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		Vec3d pos1_x = getLookVec().scale(-1.25f);
 
 		partWheelFront.rotationYaw = this.rotationYaw+(tilt*5);
-		Vec3d dd = getForward().scale(speed*0.0125*2f);
 		/*
 		partWheelFront.move(MoverType.SELF,dd.x,dd.y+partWheelFront.stepHeight,dd.z);
 		partWheelFront.move(MoverType.SELF,0,(-0.5f+(Math.min(speed,1f)*0.125f))-partWheelFront.stepHeight,0);
@@ -467,8 +472,9 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		{
 			Vec3d currentPos = new Vec3d(partWheelFront.posX+pos1_x.x, partWheelFront.posY, partWheelFront.posZ+pos1_x.z);
 			setPosition(currentPos.x, currentPos.y, currentPos.z);
-			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 		}
+		if(world.isRemote)
+			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 
 
 		if(speed > 1f)
@@ -994,13 +1000,16 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		this.partSeat.setLocationAndAngles(posX+pos4_x.x, posY+1.175, posZ+pos4_x.z, 0.0F, 0);
 		this.partSeat.setEntityBoundingBox(aabb_seat.offset(this.partSeat.posX, this.partSeat.posY, this.partSeat.posZ));
+		if(world.isRemote)
 		this.partSeat.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partSeat.onUpdate();
 
 		this.partUpgradeSeat.setLocationAndAngles(posX+pos5_x.x, posY+1.175, posZ+pos5_x.z, 0.0F, 0);
+		if(world.isRemote)
 		this.partUpgradeSeat.setVelocity(this.motionX, this.motionY, this.motionZ);
 
 		this.partUpgradeCargo.setLocationAndAngles(posX+pos5_x.x, posY+1, posZ+pos5_x.z, 0.0F, 0);
+		if(world.isRemote)
 		this.partUpgradeCargo.setVelocity(this.motionX, this.motionY, this.motionZ);
 
 		if(upgrade.equals("seat"))
@@ -1022,22 +1031,26 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		this.partWheelFront.setLocationAndAngles(posX+pos1_x.x, wheelHandle?partWheelFront.posY: posY, posZ+pos1_x.z, 0.0F, 0);
 		this.partWheelFront.setEntityBoundingBox(aabb_wheel.offset(this.partWheelFront.posX, this.partWheelFront.posY, this.partWheelFront.posZ));
+		if(world.isRemote)
 		this.partWheelFront.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partWheelFront.onUpdate();
 
 		this.partWheelBack.setLocationAndAngles(posX+pos2_x.x, wheelHandle?partWheelBack.posY: posY, posZ+pos2_x.z, 0.0F, 0);
 		this.partWheelBack.setEntityBoundingBox(aabb_wheel.offset(this.partWheelBack.posX, this.partWheelBack.posY, this.partWheelBack.posZ));
-		this.partWheelBack.setVelocity(this.motionX, this.motionY, this.motionZ);
+		if(world.isRemote)
+			this.partWheelBack.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partWheelBack.onUpdate();
 
 		this.partEngine.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
 		this.partEngine.setEntityBoundingBox(aabb_engine.offset(this.partEngine.posX, this.partEngine.posY, this.partEngine.posZ));
-		this.partEngine.setVelocity(this.motionX, this.motionY, this.motionZ);
+		if(world.isRemote)
+			this.partEngine.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partEngine.onUpdate();
 
 		this.partFuelTank.setLocationAndAngles(posX+pos3_x.x, posY+1, posZ+pos3_x.z, 0.0F, 0);
 		this.partFuelTank.setEntityBoundingBox(aabb_tank.offset(this.partFuelTank.posX, this.partFuelTank.posY, this.partFuelTank.posZ));
-		this.partFuelTank.setVelocity(this.motionX, this.motionY, this.motionZ);
+		if(world.isRemote)
+			this.partFuelTank.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partFuelTank.onUpdate();
 
 

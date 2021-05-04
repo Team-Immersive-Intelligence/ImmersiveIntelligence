@@ -233,11 +233,13 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@SideOnly(Side.CLIENT)
 	private void spawnDustParticleLast()
 	{
-		BlockPos pos = getBlockPosForPos(2);
+		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5,0.75,0.5);
+		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
+		facing = facing.scale(0.65f);
 
 		float mod = (float)(Math.random()*2f);
 
-		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.getX()+0.5, pos.getY()+0.75, pos.getZ()+0.5, 0, -4, 0);
+		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(),pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
 		if(particle!=null)
 		{
 			//particle.setMaxAge(25);
@@ -251,17 +253,15 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	private void spawnDustParticle()
 	{
 		//Hardcoded for now :D, might make it configurable later on.
-		BlockPos pos = getBlockPosForPos(2);
+		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5,0,0.5);
 		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
-		Vec3d facing2 = new Vec3d(getFacing().rotateY().getDirectionVec());
-		facing = facing.scale(1.15f);
-		facing2 = facing2.scale(-0.5f);
+		facing = facing.scale(0.65f);
 
 		float mod = (float)(Math.random()*2f);
 
-		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.getX()+facing.x+facing2.x, pos.getY()+1.125+facing.y+facing2.y, pos.getZ()+facing.z+facing2.z, 0, -4, 0);
-		ParticleRedstone particle2 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.getX()+facing.x+facing2.x, pos.getY()+0.65+facing.y+facing2.y, pos.getZ()+facing.z+facing2.z, 0, -4, 0);
-		ParticleRedstone particle3 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.getX()+facing.x+facing2.x, pos.getY()+facing.y+facing2.y, pos.getZ()+facing.z+facing2.z, 0, -4, 0);
+		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+1.125+facing.y, pos.z+facing.z, 0, -4, 0);
+		ParticleRedstone particle2 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+0.65+facing.y, pos.z+facing.z, 0, -4, 0);
+		ParticleRedstone particle3 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
 
 
 		if(particle!=null)
