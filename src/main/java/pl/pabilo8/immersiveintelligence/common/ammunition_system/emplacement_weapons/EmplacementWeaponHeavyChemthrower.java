@@ -105,7 +105,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 
 		vv = vv.add(motionVec).subtract(0, getStackMass()*motionXZ, 0).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
+		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0,vv.y,0)))));
 		pp = MathHelper.clamp(pp, -90, 75);
 		return new float[]{yy, pp};
 	}

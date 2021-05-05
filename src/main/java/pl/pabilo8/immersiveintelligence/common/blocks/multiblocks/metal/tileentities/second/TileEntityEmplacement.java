@@ -7,7 +7,9 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -866,8 +868,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		public float[] getPositionVector(TileEntityEmplacement emplacement)
 		{
 			Optional<Entity> first = emplacement.world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(emplacement.getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
-					input -> input instanceof EntityMob&&
-							((EntityMob)input).getHealth() > 0).stream().min((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10);
+					input -> input instanceof EntityLivingBase&& input instanceof IMob&&
+							((EntityLivingBase)input).getHealth() > 0).stream().min((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10);
 
 			return first.map(entity -> emplacement.currentWeapon.getAnglePrediction(new Vec3d(emplacement.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
 					entity.getPositionVector().addVector(entity.width/2f, entity.height/2f, entity.width/2f),

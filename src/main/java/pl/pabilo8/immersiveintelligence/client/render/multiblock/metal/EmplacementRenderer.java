@@ -106,6 +106,12 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			{
 				mod.render();
 			}
+			if(turretHeight>0.5)
+			{
+				GlStateManager.translate(0,-2.75*turretHeight,0);
+				model.platformModel[1].render();
+				GlStateManager.translate(0,2.75*turretHeight,0);
+			}
 
 			GlStateManager.translate(0.5, 3.0625f, -1.5);
 			if(turretHeight <= 0.25f)

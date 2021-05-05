@@ -94,7 +94,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 		motionVec = motionVec.scale(motionTime);
 		vv = vv.add(motionVec).subtract(0, EntityBullet.GRAVITY/mass/force*motionXZ, 0).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = (float)((Math.atan2(vv.y, motionXZ)*180D));
+		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0,vv.y,0)))));
 		//float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
 		pp = MathHelper.clamp(pp, -90, 75);
 		return new float[]{yy, pp};

@@ -109,10 +109,13 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 				{
 					MultiblockProcessInMachine<ElectrolyzerRecipe> process = new MultiblockProcessInMachine(recipe);
 					process.setInputTanks(0);
-					this.addProcessToQueue(process, false);
 					processTime = 0;
 					processTimeMax = recipe.getTotalProcessTime();
-					update = true;
+					if(this.addProcessToQueue(process, true))
+					{
+						this.addProcessToQueue(process, false);
+						update = true;
+					}
 				}
 			}
 		}
