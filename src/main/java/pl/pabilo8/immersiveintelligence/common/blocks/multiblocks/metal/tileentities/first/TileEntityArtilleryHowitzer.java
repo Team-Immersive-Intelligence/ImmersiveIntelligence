@@ -948,14 +948,15 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
+		TileEntityArtilleryHowitzer master = master();
 		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 		if((pos >= 524&&pos <= 528)||(pos >= 533&&pos <= 537)||(pos >= 542&&pos <= 546)||(pos >= 515&&pos <= 519)||(pos >= 506&&pos <= 510))
 		{
-			if(master().doorAngle > 5)
+			if(master!=null&&master.doorAngle > 5)
 			{
 				if(pos==544||pos==508)
 				{
-					double true_angle2 = Math.toRadians(pos==508?-master().doorAngle:master().doorAngle);
+					double true_angle2 = Math.toRadians(pos==508?-master.doorAngle: master.doorAngle);
 					AxisAlignedBB aabb = new AxisAlignedBB(-0.125, -0.125, -0.125, 0.125, 0.125, 0.125)
 							.offset(facing.getFrontOffsetX(),0,facing.getFrontOffsetZ())
 							.grow(facing.rotateY().getFrontOffsetX()*3,0,facing.rotateY().getFrontOffsetZ()*3)

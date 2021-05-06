@@ -421,9 +421,10 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		/*
 		if(world.isRemote&&world.getTotalWorldTime()%60==0)
-		updateParts(false);
+
 		 */
 		//if(!world.isRemote)
+		updateParts(false);
 		handleMovement();
 
 		if(tilt!=0&&speed > 0)
@@ -443,8 +444,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	private void handleMovement()
 	{
-		float r = world.isRemote?rotationYaw: -rotationYaw;
-		double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
+		//float r = world.isRemote?rotationYaw: -rotationYaw;
+		//double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
 		//ImmersiveIntelligence.logger.info(true_angle);
 		this.prevRotationYaw = MathHelper.wrapDegrees(prevRotationYaw);
 		this.rotationYaw = MathHelper.wrapDegrees(rotationYaw);
@@ -468,11 +469,17 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		if(partWheelFront.collidedHorizontally&&destroyTimer!=-1)
 			destroyTimer = 1;
 
-		if(!world.isRemote&&!partWheelFront.isEntityInsideOpaqueBlock())
+		if(!partWheelFront.isEntityInsideOpaqueBlock())
 		{
+			motionX= partWheelFront.motionX;
+			motionY= partWheelFront.motionY;
+			motionZ= partWheelFront.motionZ;
+			markVelocityChanged();
 			Vec3d currentPos = new Vec3d(partWheelFront.posX+pos1_x.x, partWheelFront.posY, partWheelFront.posZ+pos1_x.z);
 			setPosition(currentPos.x, currentPos.y, currentPos.z);
 		}
+
+
 		if(world.isRemote)
 			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 

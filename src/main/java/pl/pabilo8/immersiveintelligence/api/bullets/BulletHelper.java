@@ -53,6 +53,7 @@ public class BulletHelper
 			if(newHp <= 0)
 			{
 				PenetrationRegistry.blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos));
+				world.getBlockState(pos).getBlock().breakBlock(world,pos,world.getBlockState(pos));
 				world.destroyBlock(dimensionBlockPos, false);
 				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, 0f)), Utils.targetPointFromPos(dimensionBlockPos, world, 32));
 			}
