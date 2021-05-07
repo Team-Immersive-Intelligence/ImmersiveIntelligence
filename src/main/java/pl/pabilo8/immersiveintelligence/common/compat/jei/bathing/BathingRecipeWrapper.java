@@ -6,8 +6,9 @@ import blusunrize.immersiveengineering.common.util.compat.jei.MultiblockRecipeWr
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 
-public class BathingRecipeWrapper extends MultiblockRecipeWrapper
+public class BathingRecipeWrapper extends IIMultiblockRecipeWrapper
 {
 	public BathingRecipeWrapper(MultiblockRecipe recipe)
 	{

@@ -117,12 +117,14 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					}
 				}
 			}
-			if(!world.isRemote&&amount > 6)
+			/*
+			if(!world.isRemote&&amount > 10)
 			{
 				dropItem();
 				if(shoot&&(!mag1Empty||!mag2Empty))
 					world.createExplosion(source.getTrueSource(), this.posX, this.posY+0.5, this.posZ, 1, true);
 			}
+			 */
 		}
 		return super.attackEntityFrom(source, amount);
 	}

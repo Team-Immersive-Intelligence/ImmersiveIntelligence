@@ -119,7 +119,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			}
 
 			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5), vv.scale(-1f), 6f);
+			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 6f);
 			a.setShootPos(te.getAllBlocks());
 			te.getWorld().spawnEntity(a);
 		}

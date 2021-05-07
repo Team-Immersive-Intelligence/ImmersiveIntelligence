@@ -65,6 +65,11 @@ public class Config
 		@RequiresMcRestart
 		public static boolean smeltableAEA = false;
 
+		@Comment({"A list of all entities for which a fakeplayer should be used when shooter is not a player"})
+		public static String[] bulletFakeplayerWhitelist = new String[]{
+				"minecraft:ender_dragon"
+		};
+
 		public static class Ores
 		{
 			@Comment({"A blacklist of dimensions in which IE ores won't spawn. By default this is Nether (-1) and End (1)"})

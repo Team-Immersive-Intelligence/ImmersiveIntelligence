@@ -120,7 +120,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	@Override
 	public void shoot(TileEntityEmplacement te)
 	{
-		Vec3d gun = new Vec3d(te.getBlockPosForPos(49).up()).addVector(0.5, 0.5, 0.5).add(vv.scale(-3));
+		Vec3d gun = te.getWeaponCenter().add(vv.scale(-3));
 		super.shoot(te);
 		float range = 5;
 		float scatter = 0.025f;

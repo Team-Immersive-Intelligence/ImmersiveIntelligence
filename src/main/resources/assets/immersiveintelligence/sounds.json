@@ -60,6 +60,20 @@
     ],
     "subtitle": "subtitle.immersiveintelligence.machinegun_reload"
   },
+  "submachinegun_reload": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:machinegun/mg_reload"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.submachinegun_reload"
+  },
+  "submachinegun_unload": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:machinegun/mg_unload"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.submachinegun_reload"
+  },
   "submachinegun_shot": {
     "category": "block",
     "sounds": [

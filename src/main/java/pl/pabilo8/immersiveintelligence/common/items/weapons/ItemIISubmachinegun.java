@@ -137,7 +137,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 			{
 				ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
 				if(reloading==1)
-					worldIn.playSound(null, entityIn.posX, entityIn.posY, entityIn.posZ, magazine.isEmpty()?IISounds.machinegun_reload: IISounds.machinegun_unload, SoundCategory.PLAYERS, 0.35f, 1f);
+					worldIn.playSound(null, entityIn.posX, entityIn.posY, entityIn.posZ, magazine.isEmpty()?IISounds.submachinegun_reload: IISounds.submachinegun_unload, SoundCategory.PLAYERS, 0.35f, 1f);
 
 				if(!magazine.isEmpty())
 				{

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 
-import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
@@ -15,11 +14,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.SPacketSoundEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.*;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -205,8 +202,11 @@ public class EntityBullet extends Entity implements ILightProvider
 
 		if(!world.isRemote&&ticksExisted==1)
 		{
+
+			/*
 			if(this.shooter==null)
 				this.shooter = FakePlayerUtil.getFakePlayer(world);
+			 */
 
 			NBTTagCompound nbt = new NBTTagCompound();
 			writeEntityToNBT(nbt);
@@ -358,7 +358,7 @@ public class EntityBullet extends Entity implements ILightProvider
 										{
 											BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/6f));
 											e.hurtResistantTime = 0;
-											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), dmg);
+											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter,e), dmg);
 										}
 										penetrationHardness *= ((toughness*4f)/pen);
 										force *= 0.85f;
@@ -372,7 +372,7 @@ public class EntityBullet extends Entity implements ILightProvider
 
 											BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/8f));
 											e.hurtResistantTime = 0;
-											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter), Math.max(dmg-(armor*depth), 0));
+											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter,e), Math.max(dmg-(armor*depth), 0));
 											penetrationHardness = 0;
 											if(fuse==-1)
 												performEffect(hit);

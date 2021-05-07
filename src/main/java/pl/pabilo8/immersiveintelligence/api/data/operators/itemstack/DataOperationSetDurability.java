@@ -33,7 +33,7 @@ public class DataOperationSetDurability extends DataOperator
 
 		t1 = ((DataPacketTypeItemStack)getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet));
 		t2 = ((DataPacketTypeInteger)getVarInType(DataPacketTypeInteger.class, data.getType2(), packet));
-		ItemStack stack = t1.value;
+		ItemStack stack = t1.value.copy();
 		stack.setItemDamage(t2.value);
 
 		//Yes

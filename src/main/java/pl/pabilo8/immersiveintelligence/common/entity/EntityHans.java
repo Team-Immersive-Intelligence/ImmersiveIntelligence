@@ -22,10 +22,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansHolsterWeapon;
-import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansHowitzer;
-import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.AIHansSubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 
@@ -116,11 +113,11 @@ public class EntityHans extends EntityCreature implements INpc
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 1, false, false,
 				input -> input!=null&&input.getTeam()!=this.getTeam()&&input.getHealth()>0
 		));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, true));
+		this.targetTasks.addTask(2, new AIHansAlertOthers(this, true));
 
 		this.tasks.addTask(2, new AIHansHolsterWeapon(this));
 		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 20));
-		//this.tasks.addTask(4, new EntityAIAttackMelee(this, 1f, true));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1f, true));
 
 		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6D, 0.6D));
 		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
@@ -191,7 +188,7 @@ public class EntityHans extends EntityCreature implements INpc
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20f);
-		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(24f);
+		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(52f);
 	}
 
 	public boolean attackEntityAsMob(Entity entityIn)

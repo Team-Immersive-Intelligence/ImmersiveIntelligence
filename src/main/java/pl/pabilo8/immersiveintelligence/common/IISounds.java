@@ -26,6 +26,8 @@ public class IISounds
 	public static SoundEvent machinegun_unload = registerSound("machinegun_unload");
 
 	public static SoundEvent submachinegun_shot = registerSound("submachinegun_shot");
+	public static SoundEvent submachinegun_reload = registerSound("submachinegun_reload");
+	public static SoundEvent submachinegun_unload = registerSound("submachinegun_unload");
 
 	public static SoundEvent howitzer_shot = registerSound("howitzer_shot");
 	public static SoundEvent howitzer_load = registerSound("howitzer_load");

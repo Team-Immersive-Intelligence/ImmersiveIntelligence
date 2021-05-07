@@ -8,10 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOp
 import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationNOR;
 import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationXNOR;
 import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationXOR;
-import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationAdd;
-import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationDivide;
-import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationMultiply;
-import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationSubtract;
+import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.*;
 import pl.pabilo8.immersiveintelligence.api.data.operators.comparators.*;
 import pl.pabilo8.immersiveintelligence.api.data.operators.itemstack.*;
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationAND;
@@ -36,6 +33,7 @@ public class DataOperation
 		operations.put("subtract", DataOperationSubtract.class);
 		operations.put("multiply", DataOperationMultiply.class);
 		operations.put("divide", DataOperationDivide.class);
+		operations.put("modulo", DataOperationModulo.class);
 
 		operations.put("power", DataOperationPower.class);
 		operations.put("root", DataOperationRoot.class);

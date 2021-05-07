@@ -105,7 +105,7 @@ public class EntityShrapnel extends EntityIEProjectile implements ILightProvider
 			Shrapnel s = ShrapnelHandler.registry.get(shrapnel);
 			if(mop.entityHit!=null)
 			{
-				mop.entityHit.attackEntityFrom(causeShrapnelDamage(this, shootingEntity), s.damage);
+				mop.entityHit.attackEntityFrom(causeShrapnelDamage(this, shootingEntity,mop.entityHit), s.damage);
 				mop.entityHit.hurtResistantTime *= .5;
 				if(this.isBurning())
 				{

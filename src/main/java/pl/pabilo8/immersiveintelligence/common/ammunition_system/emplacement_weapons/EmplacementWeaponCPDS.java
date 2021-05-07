@@ -36,7 +36,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	 * Decided to choose it because of the unique design
 	 *
 	 * Q: Isn't it OP? it's 8 barrels
-	 * A: It can't shoot at ground targets, only air, so yes, but it isn't invincible
+	 * A: Yes, but it costs a lot
 	 */
 	float shootDelay = 0;
 	int reloadDelay = 0;
@@ -77,7 +77,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 			}
 
 			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, new Vec3d(te.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5), vv.scale(-1f), 6f);
+			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 6f);
 			a.setShootPos(te.getAllBlocks());
 			te.getWorld().spawnEntity(a);
 		}
@@ -95,7 +95,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
 		float force = 6f;
-		float mass = IIContent.itemAmmoAutocannon.getMass(s2);
+		float mass = IIContent.itemAmmoMachinegun.getMass(s2);
 
 		vv = posTurret.subtract(posTarget);
 		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);

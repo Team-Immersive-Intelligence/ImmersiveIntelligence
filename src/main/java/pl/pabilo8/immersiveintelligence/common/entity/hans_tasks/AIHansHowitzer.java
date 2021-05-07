@@ -61,7 +61,7 @@ public class AIHansHowitzer extends EntityAIBase
 		else
 		{
 			List<Entity> passengers = EntityVehicleSeat.getOrCreateSeat(howitzer, 0).getPassengers();
-			if(passengers.get(0) instanceof EntityLiving)
+			if(passengers.size()>0&&passengers.get(0) instanceof EntityLiving)
 			{
 				EntityLiving entityLiving = (EntityLiving)passengers.get(0);
 				target=Optional.ofNullable(entityLiving.getAttackTarget());

@@ -576,6 +576,9 @@ subtitle.immersiveintelligence.machinegun_shot_hb=Heavy Barrel Machinegun Noises
 subtitle.immersiveintelligence.machinegun_shot_wc=Water Cooled Machinegun Noises
 subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
 
+subtitle.immersiveintelligence.submachinegun_shot=Submachinegun Shots
+subtitle.immersiveintelligence.submachinegun_reload=Submachinegun Reloading
+
 subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
 subtitle.immersiveintelligence.howitzer_load=Howitzer Loading
 subtitle.immersiveintelligence.howitzer_unload=Howitzer Unloading

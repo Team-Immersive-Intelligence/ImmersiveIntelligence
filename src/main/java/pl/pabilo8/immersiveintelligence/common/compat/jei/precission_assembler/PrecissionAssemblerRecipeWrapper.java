@@ -2,17 +2,23 @@ package pl.pabilo8.immersiveintelligence.common.compat.jei.precission_assembler;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.compat.jei.MultiblockRecipeWrapper;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
+import mezz.jei.api.recipe.IIngredientType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class PrecissionAssemblerRecipeWrapper extends MultiblockRecipeWrapper
+public class PrecissionAssemblerRecipeWrapper extends IIMultiblockRecipeWrapper
 {
 	public PrecissionAssemblerRecipeWrapper(PrecissionAssemblerRecipe recipe)
 	{

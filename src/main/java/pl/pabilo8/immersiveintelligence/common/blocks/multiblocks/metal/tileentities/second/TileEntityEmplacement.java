@@ -18,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -30,6 +31,7 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
@@ -867,13 +869,35 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		@Override
 		public float[] getPositionVector(TileEntityEmplacement emplacement)
 		{
+			final BlockPos[] allBlocks = emplacement.getAllBlocks();
+			final Vec3d vEmplacement = emplacement.getWeaponCenter();
+
 			Optional<Entity> first = emplacement.world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(emplacement.getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
 					input -> input instanceof EntityLivingBase&& input instanceof IMob&&
+							canEntityBeSeen(input,vEmplacement,allBlocks,2)&&
 							((EntityLivingBase)input).getHealth() > 0).stream().min((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10);
 
-			return first.map(entity -> emplacement.currentWeapon.getAnglePrediction(new Vec3d(emplacement.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
-					entity.getPositionVector().addVector(entity.width/2f, entity.height/2f, entity.width/2f),
+			return first.map(entity -> emplacement.currentWeapon.getAnglePrediction(vEmplacement,
+					entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f),
 					new Vec3d(entity.motionX, entity.motionY, entity.motionZ))).orElse(null);
+		}
+
+		private boolean canEntityBeSeen(Entity entity,Vec3d vEmplacement, BlockPos[] allBlocks, int maxBlocks)
+		{
+			Vec3d vEntity = entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f);
+
+			ArrayList<RayTraceResult> hits = MultipleRayTracer.volumetricTrace(entity.world, vEmplacement, vEntity, new AxisAlignedBB(-0.00625, -0.00625, -0.00625, 0.00625, 0.00625, 0.00625), true, false, false, Collections.singletonList(entity), Arrays.asList(allBlocks)).hits;
+			int h=0;
+			for(RayTraceResult hit : hits)
+			{
+				if(hit.typeOfHit==Type.BLOCK)
+					h++;
+
+				if(h>maxBlocks)
+					return false;
+			}
+
+			return true;
 		}
 
 		@Override
@@ -881,6 +905,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			return true;
 		}
+	}
+
+	public Vec3d getWeaponCenter()
+	{
+		return new Vec3d(this.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5);
 	}
 
 	private static class EmplacementTargetEntity extends EmplacementTarget
@@ -895,7 +924,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		@Override
 		public float[] getPositionVector(TileEntityEmplacement emplacement)
 		{
-			return emplacement.currentWeapon.getAnglePrediction(new Vec3d(emplacement.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
+			return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
 					entity.getPositionVector().addVector(entity.width/2f, entity.height/2f, entity.width/2f),
 					new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 		}
@@ -921,7 +950,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		@Override
 		public float[] getPositionVector(TileEntityEmplacement emplacement)
 		{
-			return emplacement.currentWeapon.getAnglePrediction(new Vec3d(emplacement.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5),
+			return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
 					new Vec3d(pos).addVector(0.5, 0, 0.5),
 					Vec3d.ZERO);
 		}

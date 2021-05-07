@@ -70,8 +70,6 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 				{
 					if(h==0)
 					{
-
-
 						if((l==2&&w==2)||(l==2&&w==6)||(l==6&&w==2)||(l==6&&w==6))
 							structure[h][l][w] = new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE.getMeta());
 							//Schweres Ingenieuring
