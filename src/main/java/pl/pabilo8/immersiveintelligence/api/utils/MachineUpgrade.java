@@ -23,6 +23,7 @@ public class MachineUpgrade
 	protected String name;
 	protected ResourceLocation icon;
 	private int progress=0;
+	private int steps=1;
 	private List<IngredientStack> requiredStacks = new ArrayList<>();
 
 	public MachineUpgrade(String name, ResourceLocation icon)
@@ -47,6 +48,12 @@ public class MachineUpgrade
 	public MachineUpgrade setRequiredProgress(int progress)
 	{
 		this.progress=progress;
+		return this;
+	}
+
+	public MachineUpgrade setRequiredSteps(int steps)
+	{
+		this.steps=steps;
 		return this;
 	}
 
@@ -84,5 +91,10 @@ public class MachineUpgrade
 	public int getProgressRequired()
 	{
 		return progress;
+	}
+
+	public int getSteps()
+	{
+		return steps;
 	}
 }

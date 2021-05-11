@@ -12,7 +12,7 @@ public class ModelHeavyRailgun extends ModelIIBase
 
 	public ModelRendererTurbo[] gunModel;
 
-	public ModelHeavyRailgun() //Same as Filename
+	public ModelHeavyRailgun(boolean doOffsets) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[30];
 		baseModel[0] = new ModelRendererTurbo(this, 4, 87, textureX, textureY); // base01
@@ -800,12 +800,14 @@ public class ModelHeavyRailgun extends ModelIIBase
 		gunModel[152].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // GUN09
 		gunModel[152].setRotationPoint(19F, -21F, 30.99F);
 
-		translate(baseModel,-16,0,-16);
-		translate(gunModel,-16,20,-3);
-
 		parts.put("base",  baseModel);
 		parts.put("gun", gunModel);
-		translateAll(0,-1,0);
+		translateAll(-16,-1,-16);
+
+		if(doOffsets)
+		{
+			translate(gunModel,0,20,13);
+		}
 
 		flipAll();
 	}

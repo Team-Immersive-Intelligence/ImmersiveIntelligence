@@ -4,7 +4,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,4 +47,11 @@ public interface IUpgradableMachine
 	void startUpgrade(@Nonnull MachineUpgrade upgrade);
 
 	void removeUpgrade(MachineUpgrade upgrade);
+
+	default float getMaxClientProgress()
+	{
+		if(getCurrentlyInstalled()!=null)
+			return Utils.getMaxClientProgress(getInstallProgress(), getCurrentlyInstalled().getProgressRequired(), getCurrentlyInstalled().getSteps());
+		return getInstallProgress();
+	}
 }

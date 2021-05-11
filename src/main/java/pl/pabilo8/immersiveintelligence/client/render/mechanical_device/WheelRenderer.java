@@ -36,7 +36,7 @@ public class WheelRenderer extends TileEntitySpecialRenderer<TileEntityMechanica
 			GlStateManager.translate(0.5f, 0.5f, 0f);
 
 			//(te.getFacing().getAxisDirection()==AxisDirection.NEGATIVE?-1f:1)*
-			double world_rpm = (te.getConnectorWorld().getTotalWorldTime()+partialTicks%RotaryUtils.getRPMMax())/RotaryUtils.getRPMMax();
+			double world_rpm = (te.getConnectorWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
 			GlStateManager.rotate((float)(world_rpm*360f*te.getOutputRPM()), 0, 0, 1);
 
 			for(ModelRendererTurbo mod : model.wheel)

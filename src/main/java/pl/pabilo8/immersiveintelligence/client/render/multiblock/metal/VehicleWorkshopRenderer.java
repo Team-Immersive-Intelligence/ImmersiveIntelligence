@@ -77,7 +77,7 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 			for(ModelRendererTurbo mod : model.winchModel)
 				mod.render();
 
-			double ff = Math.abs((((te.getWorld().getTotalWorldTime()+partialTicks)%50)/50f)-0.5f)/0.5f;
+			double ff = Math.abs((((te.getWorld().getTotalWorldTime()%50)+partialTicks)/50f)-0.5f)/0.5f;
 
 			GlStateManager.pushMatrix();
 

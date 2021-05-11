@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -118,8 +119,7 @@ public class EntityNavalMine extends EntityBullet
 	public void readEntityFromNBT(NBTTagCompound compound)
 	{
 		super.readEntityFromNBT(compound);
-		if(compound.hasKey("maxLength"))
-			this.maxLength = compound.getInteger(compound.getString("maxLength"));
+		setMaxLength(compound.getInteger("maxLength"));
 	}
 
 	@Override
@@ -138,9 +138,15 @@ public class EntityNavalMine extends EntityBullet
 	@Override
 	public void applyEntityCollision(Entity entityIn)
 	{
+		//for less annoyance
+		if(entityIn instanceof EntitySquid)
+			return;
+
 		super.applyEntityCollision(entityIn);
 		if(ticksExisted > Mines.navalMineArmTime)
+		{
 			this.performEffect(new RayTraceResult(this));
+		}
 	}
 
 	@Override

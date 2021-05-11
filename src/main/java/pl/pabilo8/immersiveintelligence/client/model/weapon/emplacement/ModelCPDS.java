@@ -13,7 +13,7 @@ public class ModelCPDS extends ModelIIBase
 	//Counter-Projectile Defense System
 	public ModelRendererTurbo[] gunModel, barrelsModel, observeModel, internalsModel, hatchModel;
 
-	public ModelCPDS() //Same as Filename
+	public ModelCPDS(boolean doOffsets) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[34];
 		baseModel[0] = new ModelRendererTurbo(this, 23, 110, textureX, textureY); // BASE01
@@ -619,15 +619,17 @@ public class ModelCPDS extends ModelIIBase
 		hatchModel[0].setRotationPoint(-15F, -9F, 16F);
 
 		parts.put("base",  baseModel);
+		parts.put("hatch", hatchModel);
+		parts.put("internals", internalsModel);
+		parts.put("observe", observeModel);
 		parts.put("gun", gunModel);
 		parts.put("barrels", barrelsModel);
-		parts.put("observe", observeModel);
-		parts.put("lens", internalsModel);
-		parts.put("hatch", hatchModel);
 
-		translate(gunModel,0f, 19.50F, 7.5F);
-		translate(barrelsModel,0f, 19F, 6F);
-		//translateAll(0.5f,1,0);
+		if(doOffsets)
+		{
+			translate(gunModel,0f, 19.50F, 7.5F);
+			translate(barrelsModel,0f, 19F, 6F);
+		}
 
 		flipAll();
 	}

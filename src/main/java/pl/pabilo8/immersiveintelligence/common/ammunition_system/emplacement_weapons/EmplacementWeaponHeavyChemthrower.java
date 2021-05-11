@@ -15,10 +15,13 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
+import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
 
@@ -249,7 +252,56 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	@Override
 	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
 	{
+		GlStateManager.pushMatrix();
 
+		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER.getProgressRequired();
+		final int l = EmplacementRenderer.modelHeavyChemthrowerConstruction.length;
+		double maxClientProgress = pl.pabilo8.immersiveintelligence.api.Utils.getMaxClientProgress(serverProgress, req, l);
+
+		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrench_upgrade_progress/2f))), maxClientProgress);
+		double progress = MathHelper.clamp(cc/req, 0, 1);
+
+		ClientUtils.bindTexture(EmplacementRenderer.textureHeavyChemthrower);
+		for(int i = 0; i < l*progress; i++)
+		{
+			if(1+i > Math.round(l*progress))
+			{
+				GlStateManager.pushMatrix();
+				double scale = 1f-(((progress*l)%1f)/1f);
+				GlStateManager.enableBlend();
+				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
+				GlStateManager.translate(0, scale*1.5f, 0);
+
+				EmplacementRenderer.modelHeavyChemthrowerConstruction[i].render(0.0625f);
+				GlStateManager.color(1f, 1f, 1f, 1f);
+				GlStateManager.popMatrix();
+			}
+			else
+				EmplacementRenderer.modelHeavyChemthrowerConstruction[i].render(0.0625f);
+		}
+
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		GlStateManager.disableLighting();
+		GlStateManager.scale(0.98f, 0.98f, 0.98f);
+		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
+		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
+
+		ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
+		{
+			EmplacementRenderer.modelHeavyChemthrowerConstruction[i].render(0.0625f);
+		}
+
+		ShaderUtil.releaseShader();
+		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+		GlStateManager.popMatrix();
+
+		GlStateManager.disableBlend();
+
+		GlStateManager.enableLighting();
+		GlStateManager.popMatrix();
 	}
 
 	private double getStackMass()

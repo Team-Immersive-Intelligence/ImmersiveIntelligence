@@ -41,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
@@ -49,6 +50,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds
 {
@@ -77,8 +79,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		if(world.isRemote)
 		{
-			if(!isDummy()&&world.isRemote&&clientUpgradeProgress < upgradeProgress)
-				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), upgradeProgress);
+			if(!isDummy()&&world.isRemote&&clientUpgradeProgress < getMaxClientProgress())
+				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), getMaxClientProgress());
 			//handleSounds();
 		}
 		if(currentlyInstalled!=null)
@@ -865,6 +867,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	private static class EmplacementTargetMobs extends EmplacementTarget
 	{
+		Entity currentTarget = null;
 
 		@Override
 		public float[] getPositionVector(TileEntityEmplacement emplacement)
@@ -872,14 +875,26 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			final BlockPos[] allBlocks = emplacement.getAllBlocks();
 			final Vec3d vEmplacement = emplacement.getWeaponCenter();
 
-			Optional<Entity> first = emplacement.world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(emplacement.getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
-					input -> input instanceof EntityLivingBase&& input instanceof IMob&&
-							canEntityBeSeen(input,vEmplacement,allBlocks,2)&&
-							((EntityLivingBase)input).getHealth() > 0).stream().min((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10);
+			if(currentTarget!=null)
+			{
+				if(currentTarget.isEntityAlive()&&canEntityBeSeen(currentTarget, vEmplacement, allBlocks, 2))
+					return getPosForEntityTask(emplacement, currentTarget);
+			}
 
-			return first.map(entity -> emplacement.currentWeapon.getAnglePrediction(vEmplacement,
-					entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f),
-					new Vec3d(entity.motionX, entity.motionY, entity.motionZ))).orElse(null);
+			Entity[] entities = emplacement.world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(emplacement.getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
+					input -> input instanceof EntityLivingBase&&input instanceof IMob&&
+							input.isEntityAlive()).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
+
+			for(Entity entity : entities)
+			{
+				if(canEntityBeSeen(entity, vEmplacement, allBlocks, 2))
+				{
+					currentTarget = entity;
+					return getPosForEntityTask(emplacement, entity);
+				}
+			}
+
+			return null;
 		}
 
 		private boolean canEntityBeSeen(Entity entity,Vec3d vEmplacement, BlockPos[] allBlocks, int maxBlocks)
@@ -924,15 +939,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		@Override
 		public float[] getPositionVector(TileEntityEmplacement emplacement)
 		{
-			return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
-					entity.getPositionVector().addVector(entity.width/2f, entity.height/2f, entity.width/2f),
-					new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+			return getPosForEntityTask(emplacement, entity);
 		}
 
 		@Override
 		public boolean shouldContinue()
 		{
-			return !entity.isDead;
+			return entity.isEntityAlive();
 		}
 	}
 
@@ -966,5 +979,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			return shotAmount > 0;
 		}
+	}
+
+	private static float[] getPosForEntityTask(TileEntityEmplacement emplacement, Entity entity)
+	{
+		return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
+				entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f),
+				new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 	}
 }

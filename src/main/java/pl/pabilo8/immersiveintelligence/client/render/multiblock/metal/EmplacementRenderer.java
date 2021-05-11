@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElectric;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelEmplacement;
@@ -13,8 +15,11 @@ import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
+
+import java.util.Arrays;
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
@@ -24,6 +29,13 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 	public static ModelHeavyChemthrower modelHeavyChemthrower;
 	public static ModelHeavyRailgun modelHeavyRailgun;
 	public static ModelCPDS modelCPDS;
+
+	public static ModelRendererTurbo[] modelAutocannonConstruction;
+	public static ModelRendererTurbo[] modelInfraredObserverConstruction;
+	public static ModelRendererTurbo[] modelHeavyChemthrowerConstruction;
+	public static ModelRendererTurbo[] modelHeavyRailgunConstruction;
+	public static ModelRendererTurbo[]modelCPDSConstruction;
+
 	public static ModelInserter modelInserter;
 	public static ModelCraneElectric modelCrane;
 
@@ -156,19 +168,45 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 	public void reloadModels()
 	{
 		model = new ModelEmplacement();
-		modelAutocannon = new ModelAutocannon();
-		modelInfraredObserver = new ModelInfraredObserver();
-		modelHeavyChemthrower = new ModelHeavyChemthrower();
-		modelHeavyRailgun = new ModelHeavyRailgun();
-		modelCPDS = new ModelCPDS();
+		modelAutocannon = new ModelAutocannon(true);
+		modelInfraredObserver = new ModelInfraredObserver(true);
+		modelHeavyChemthrower = new ModelHeavyChemthrower(true);
+		modelHeavyRailgun = new ModelHeavyRailgun(true);
+		modelCPDS = new ModelCPDS(true);
+
+		modelAutocannonConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, new ModelAutocannon(false));
+		modelInfraredObserverConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, new ModelInfraredObserver(false));
+		modelHeavyChemthrowerConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, new ModelHeavyChemthrower(false));
+		modelHeavyRailgunConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, new ModelHeavyRailgun(false));
+		modelCPDSConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, new ModelCPDS(false));
+
 		modelInserter = new ModelInserter();
 		modelCrane = new ModelCraneElectric();
+	}
+
+	private ModelRendererTurbo[] createConstructionModel(MachineUpgrade upgrade, ModelIIBase model)
+	{
+		int partCount = model.parts.values().stream().mapToInt(modelRendererTurbos -> modelRendererTurbos.length).sum();
+		upgrade.setRequiredSteps(partCount);
+		ModelRendererTurbo[] output = new ModelRendererTurbo[partCount];
+		int i = 0;
+		for(ModelRendererTurbo[] value : model.parts.values())
+		{
+			Arrays.sort(value,(o1, o2) -> (int)(o1.rotationPointY-o2.rotationPointY));
+			for(ModelRendererTurbo mod : value)
+			{
+				output[i] = mod;
+				i++;
+			}
+		}
+
+		return output;
 	}
 
 	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(180+yaw,0,1,0);
+		GlStateManager.rotate(180+yaw, 0, 1, 0);
 		ClientUtils.bindTexture(textureCraneGray);
 
 		for(ModelRendererTurbo mod : modelCrane.craneMainModel)
@@ -176,7 +214,7 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 		for(ModelRendererTurbo mod : modelCrane.shaftModel)
 			mod.render(0.0625f);
 
-		GlStateManager.translate(0,0,1f-distance);
+		GlStateManager.translate(0, 0, 1f-distance);
 
 		for(ModelRendererTurbo mod : modelCrane.craneArmModel)
 			mod.render(0.0625f);

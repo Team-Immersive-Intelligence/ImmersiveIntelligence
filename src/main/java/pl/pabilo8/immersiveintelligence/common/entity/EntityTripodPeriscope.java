@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
+import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,6 +18,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -66,6 +69,17 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 		}
 
 		super.onUpdate();
+	}
+
+	@Override
+	protected void removePassenger(Entity passenger)
+	{
+		if(world.isRemote&&passenger instanceof EntityPlayerSP)
+		{
+			CameraHandler.INSTANCE.setEnabled(false);
+			ZoomHandler.isZooming = false;
+		}
+		super.removePassenger(passenger);
 	}
 
 	@Override

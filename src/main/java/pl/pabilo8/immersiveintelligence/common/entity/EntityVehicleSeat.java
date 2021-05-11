@@ -1,11 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
+import blusunrize.immersiveengineering.api.tool.ZoomHandler;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 
 import java.util.Optional;
@@ -144,6 +147,11 @@ public class EntityVehicleSeat extends Entity
 	@Override
 	protected void removePassenger(Entity passenger)
 	{
+		if(world.isRemote&&passenger instanceof EntityPlayerSP)
+		{
+			CameraHandler.INSTANCE.setEnabled(false);
+			ZoomHandler.isZooming = false;
+		}
 		super.removePassenger(passenger);
 		if(getRidingEntity() instanceof IVehicleMultiPart)
 		{

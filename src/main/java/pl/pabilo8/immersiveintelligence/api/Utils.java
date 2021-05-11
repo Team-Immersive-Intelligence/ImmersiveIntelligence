@@ -55,6 +55,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
@@ -652,6 +653,11 @@ public class Utils
 		float f1 = MathHelper.sin(-yaw*0.017453292F-(float)Math.PI);
 		float f2 = -MathHelper.cos(-pitch*0.017453292F);
 		float f3 = MathHelper.sin(-pitch*0.017453292F);
-		return new Vec3d((double)(f1*f2), (double)f3, (double)(f*f2));
+		return new Vec3d(f1*f2, f3, f*f2);
+	}
+
+	public static float getMaxClientProgress(float current, float required, int parts)
+	{
+		return current-(current%(required/parts));
 	}
 }

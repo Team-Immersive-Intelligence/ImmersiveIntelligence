@@ -45,7 +45,7 @@ public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill
 				RenderHelper.enableStandardItemLighting();
 				//RenderHelper.enableGUIStandardItemLighting();
 
-				world_rpm = (te.getWorld().getTotalWorldTime()+partialTicks%RotaryUtils.getRPMMax())/RotaryUtils.getRPMMax();
+				world_rpm = (te.getWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
 				;
 			}
 			ModelSawmill modelCurrent = te.mirrored?modelFlipped: model;

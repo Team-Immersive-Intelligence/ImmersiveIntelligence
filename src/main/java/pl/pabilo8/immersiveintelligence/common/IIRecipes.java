@@ -530,23 +530,25 @@ public class IIRecipes
 		IIContent.UPGRADE_INSERTER
 				.addStack(new IngredientStack(Utils.getStackWithMetaName(IIContent.itemPrecissionTool, "precission_inserter")))
 				.addStack(new IngredientStack("scaffoldingSteel"))
-				.setRequiredProgress(10000);
+				.setRequiredProgress(20000)
+				.setRequiredSteps(12);
 
 		IIContent.UPGRADE_SAW_UNREGULATOR
 				.addStack(new IngredientStack(Utils.getStackWithMetaName(IIContent.itemMotorGear, "steel")))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)))
 				.addStack(new IngredientStack("stickSteel", 2))
-				.setRequiredProgress(20000);
+				.setRequiredProgress(32000);
 
 		IIContent.UPGRADE_IMPROVED_GEARBOX
 				.addStack(new IngredientStack(Utils.getStackWithMetaName(IIContent.itemMotorGear, "tungsten", 2)))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.setRequiredProgress(20000);
+				.setRequiredProgress(32000);
 
 		IIContent.UPGRADE_MG_LOADER
-				.addStack(new IngredientStack("plateSteel",8))
-				.setRequiredProgress(10000);
+				.addStack(new IngredientStack("plateSteel", 8))
+				.setRequiredProgress(20000)
+				.setRequiredSteps(10);
 
 		//Weapons - Basic Tier
 

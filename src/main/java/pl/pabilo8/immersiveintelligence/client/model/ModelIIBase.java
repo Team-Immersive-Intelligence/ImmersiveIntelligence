@@ -6,6 +6,7 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Pabilo8 on 2019-06-01.
@@ -17,7 +18,7 @@ public class ModelIIBase extends ModelBase
 	//Base Model Part
 	public ModelRendererTurbo[] baseModel;
 	//List of parts for group flipping / translation / rotation
-	public HashMap<String, ModelRendererTurbo[]> parts = new HashMap<>();
+	public LinkedHashMap<String, ModelRendererTurbo[]> parts = new LinkedHashMap<>();
 
 	public static void getCommonConnectorModelRotation(EnumFacing facing, ModelIIBase model)
 	{

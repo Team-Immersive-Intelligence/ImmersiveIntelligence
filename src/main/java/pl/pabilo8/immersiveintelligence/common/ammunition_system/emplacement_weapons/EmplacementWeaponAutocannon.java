@@ -11,9 +11,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCrateInserterUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -185,7 +188,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		if(te.progress < Emplacement.lidTime)
 			cannonAnim = 0;
 		else
-			cannonAnim = Math.abs((((te.getWorld().getTotalWorldTime()+partialTicks)%(Autocannon.bulletFireTime*4))/(double)(Autocannon.bulletFireTime*4))-0.5)/0.5;
+			cannonAnim = Math.abs((((te.getWorld().getTotalWorldTime())%(Autocannon.bulletFireTime*4)+partialTicks)/(double)(Autocannon.bulletFireTime*4))-0.5)/0.5;
 
 		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks;
 		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks;
@@ -465,100 +468,53 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
 	{
 		GlStateManager.pushMatrix();
+
+		final int req = IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON.getProgressRequired();
+		final int l = EmplacementRenderer.modelAutocannonConstruction.length;
+		double maxClientProgress = Utils.getMaxClientProgress(serverProgress, req, l);
+
+		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrench_upgrade_progress/2f))), maxClientProgress);
+		double progress = MathHelper.clamp(cc/req, 0, 1);
+
 		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
-
-		int all = EmplacementRenderer.modelAutocannon.baseModel.length+EmplacementRenderer.modelAutocannon.turretModel.length+
-				EmplacementRenderer.modelAutocannon.ammoBoxLidModel.length+EmplacementRenderer.modelAutocannon.turretTopFlapsModel.length+
-				EmplacementRenderer.modelAutocannon.gunModel.length+EmplacementRenderer.modelAutocannon.barrel1Model.length+
-				EmplacementRenderer.modelAutocannon.barrel2Model.length+EmplacementRenderer.modelAutocannon.barrel3Model.length+
-				EmplacementRenderer.modelAutocannon.barrel4Model.length-1;
-
-		int left = (int)((clientProgress/(float)IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON.getProgressRequired())*all);
-
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.baseModel.length); i++)
-			EmplacementRenderer.modelAutocannon.baseModel[i].render();
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.turretModel.length); i++)
-			EmplacementRenderer.modelAutocannon.turretModel[i].render();
-
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.ammoBoxLidModel.length); i++)
+		for(int i = 0; i < l*progress; i++)
 		{
-			EmplacementRenderer.modelAutocannon.ammoBoxLidModel[i].rotateAngleZ = 0;
-			EmplacementRenderer.modelAutocannon.ammoBoxLidModel[i].render();
-		}
+			if(1+i > Math.round(l*progress))
+			{
+				GlStateManager.pushMatrix();
+				double scale = 1f-(((progress*l)%1f)/1f);
+				GlStateManager.enableBlend();
+				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
+				GlStateManager.translate(0, scale*1.5f, 0);
 
-		EmplacementRenderer.modelAutocannon.turretTopFlapsModel[0].rotateAngleY = 0;
-		EmplacementRenderer.modelAutocannon.turretTopFlapsModel[1].rotateAngleY = 0;
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.turretTopFlapsModel.length); i++)
-			EmplacementRenderer.modelAutocannon.turretTopFlapsModel[i].render();
-
-		GlStateManager.translate(0, 1.125f, 0);
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.gunModel.length); i++)
-			EmplacementRenderer.modelAutocannon.gunModel[i].render();
-
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.barrel1Model.length); i++)
-		{
-			EmplacementRenderer.modelAutocannon.barrel1Model[i].rotationPointZ = 0;
-			EmplacementRenderer.modelAutocannon.barrel1Model[i].render();
+				EmplacementRenderer.modelAutocannonConstruction[i].render(0.0625f);
+				GlStateManager.color(1f, 1f, 1f, 1f);
+				GlStateManager.popMatrix();
+			}
+			else
+				EmplacementRenderer.modelAutocannonConstruction[i].render(0.0625f);
 		}
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.barrel2Model.length); i++)
-		{
-			EmplacementRenderer.modelAutocannon.barrel2Model[i].rotationPointZ = 0;
-			EmplacementRenderer.modelAutocannon.barrel2Model[i].render();
-		}
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.barrel3Model.length); i++)
-		{
-			EmplacementRenderer.modelAutocannon.barrel3Model[i].rotationPointZ = 0;
-			EmplacementRenderer.modelAutocannon.barrel3Model[i].render();
-		}
-		for(int i = 0; i < Math.min(left--, EmplacementRenderer.modelAutocannon.barrel4Model.length); i++)
-		{
-			EmplacementRenderer.modelAutocannon.barrel4Model[i].rotationPointZ = 0;
-			EmplacementRenderer.modelAutocannon.barrel4Model[i].render();
-		}
-
-		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		GlStateManager.scale(0.98f, 0.98f, 0.98f);
-		//GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
+		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
 		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 
 		ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.baseModel)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.turretModel)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.ammoBoxLidModel)
-			mod.render();
-
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.ammoBoxLidModel)
+		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
 		{
-			mod.rotateAngleZ = 0;
-			mod.render();
+			EmplacementRenderer.modelAutocannonConstruction[i].render(0.0625f);
 		}
-
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.turretTopFlapsModel)
-			mod.render();
-
-		GlStateManager.translate(0, 1.125f, 0);
-
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.gunModel)
-			mod.render();
-
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel1Model)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel2Model)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel3Model)
-			mod.render();
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel4Model)
-			mod.render();
 
 		ShaderUtil.releaseShader();
 		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+		GlStateManager.popMatrix();
+
+		GlStateManager.disableBlend();
+
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}

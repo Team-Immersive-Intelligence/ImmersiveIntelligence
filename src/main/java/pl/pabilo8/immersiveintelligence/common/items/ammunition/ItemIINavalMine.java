@@ -4,29 +4,27 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.network.play.server.SPacketTitle.Type;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.BlockFluidBase;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityNavalMineAnchor;
 
@@ -185,10 +183,10 @@ public class ItemIINavalMine extends ItemIIBulletBase implements IItemScrollable
 					if (!worldIn.isRemote)
 					{
 						EntityNavalMineAnchor anchor = new EntityNavalMineAnchor(worldIn);
-						anchor.setPosition(raytraceresult.hitVec.x, flag1 ? raytraceresult.hitVec.y - 0.12D : raytraceresult.hitVec.y, raytraceresult.hitVec.z);
+						anchor.setPosition(raytraceresult.hitVec.x, flag1 ? raytraceresult.hitVec.y - 0.12D : raytraceresult.hitVec.y-1.5, raytraceresult.hitVec.z);
 						mine.setMaxLength(ItemNBTHelper.hasKey(itemstack,"length")?ItemNBTHelper.getInt(itemstack, "length"):5);
 						worldIn.spawnEntity(anchor);
-						mine.setPosition(anchor.posX, anchor.posY+0.5f, anchor.posZ);
+						mine.setPosition(anchor.posX, anchor.posY-0.5, anchor.posZ);
 						worldIn.spawnEntity(mine);
 						mine.startRiding(anchor);
 						worldIn.playSound(null, mine.posX, mine.posY, mine.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.75F, 0.8F);

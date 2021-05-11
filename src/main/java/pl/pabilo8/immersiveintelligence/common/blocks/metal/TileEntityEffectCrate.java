@@ -242,8 +242,8 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 				inserterAnimation = calculateInserterAnimation(0);
 				inserterAngle = calculateInserterAngle(0);
 			}
-			else if(clientUpgradeProgress < upgradeProgress)
-				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), upgradeProgress);
+			else if(clientUpgradeProgress < getMaxClientProgress())
+				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), getMaxClientProgress());
 		}
 		else if(energyStorage > energyDrain&&open&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
 		{

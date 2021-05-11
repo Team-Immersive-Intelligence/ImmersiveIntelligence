@@ -50,13 +50,13 @@ public class MechanicalPumpRenderer extends TileEntitySpecialRenderer<TileEntity
 				RenderHelper.enableStandardItemLighting();
 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-				double world_rpm = (te.getWorld().getTotalWorldTime()+partialTicks%RotaryUtils.getRPMMax())/RotaryUtils.getRPMMax();
+				double world_rpm = (te.getWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
 
 				boolean b = te.getWorld().isBlockIndirectlyGettingPowered(te.getPos()) > 0;
 				int a = (int)(30-(25*(te.rotation.getRotationSpeed()/(float)MechanicalPump.rpmBreakingMax)));
 				float progress = 0;
 				if(te.rotation.getRotationSpeed() > 0)
-					progress = ((te.getWorld().getTotalWorldTime()+partialTicks)%a)/(float)a*(b?1f: 0f);
+					progress = ((te.getWorld().getTotalWorldTime()%a)+partialTicks)/(float)a*(b?1f: 0f);
 
 				model.getBlockRotation(te.facing, false);
 

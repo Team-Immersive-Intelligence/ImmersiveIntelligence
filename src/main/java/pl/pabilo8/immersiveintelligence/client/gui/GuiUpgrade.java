@@ -169,7 +169,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 		GlStateManager.translate(guiLeft+51, guiTop+70, 0);
 		GlStateManager.rotate(-15, 1, 0, 0);
 		GlStateManager.scale(-24, -24, -1);
-		GlStateManager.rotate(360*((mc.world.getTotalWorldTime()+partial)%120)/120f, 0, 1, 0);
+		GlStateManager.rotate(360*(((mc.world.getTotalWorldTime()%120)+partial)/120f), 0, 1, 0);
 		MachineUpgrade[] u = previewed!=null?(new MachineUpgrade[]{previewed}): new MachineUpgrade[0];
 		upgradableMachine.renderWithUpgrades(u);
 		GlStateManager.disableLighting();

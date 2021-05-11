@@ -15,7 +15,7 @@ public class ModelAutocannon extends ModelIIBase
 
 	public ModelRendererTurbo[] turretModel, barrel1Model, barrel2Model, barrel3Model, barrel4Model, magazineLeftBottomModel, magazineLeftTopModel, magazineRightTopModel, magazineRightBottomModel, ammoBoxLidModel, turretTopFlapsModel, gunModel, magazineLeftModel, magazineRightModel;
 
-	public ModelAutocannon() //Same as Filename
+	public ModelAutocannon(boolean doOffsets) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[1];
 		baseModel[0] = new ModelRendererTurbo(this, 2, 73, textureX, textureY); // Box 0
@@ -399,33 +399,37 @@ public class ModelAutocannon extends ModelIIBase
 
 		parts.put("base", baseModel);
 		parts.put("turret", turretModel);
+		parts.put("gun", gunModel);
 		parts.put("barrel1", barrel1Model);
 		parts.put("barrel2", barrel2Model);
 		parts.put("barrel3", barrel3Model);
 		parts.put("barrel4", barrel4Model);
-		parts.put("magazineLeftBottom", magazineLeftBottomModel);
-		parts.put("magazineLeftTop", magazineLeftTopModel);
-		parts.put("magazineRightTop", magazineRightTopModel);
-		parts.put("magazineRightBottom", magazineRightBottomModel);
 		parts.put("ammoBoxLid", ammoBoxLidModel);
 		parts.put("turretTopFlaps", turretTopFlapsModel);
-		parts.put("gun", gunModel);
 
-		parts.put("magRight", magazineRightModel);
-		parts.put("magLeft", magazineLeftModel);
+		if(doOffsets)
+		{
+			parts.put("magazineLeftBottom", magazineLeftBottomModel);
+			parts.put("magazineLeftTop", magazineLeftTopModel);
+			parts.put("magazineRightTop", magazineRightTopModel);
+			parts.put("magazineRightBottom", magazineRightBottomModel);
 
-		translate(gunModel, 0, 18f, 0);
-		//translate(turretTopFlapsModel, 0, 24f, 0);
+			parts.put("magRight", magazineRightModel);
+			parts.put("magLeft", magazineLeftModel);
 
-		translate(barrel1Model, 0, 18f, 0);
-		translate(barrel2Model, 0, 18f, 0);
-		translate(barrel3Model, 0, 18f, 0);
-		translate(barrel4Model, 0, 18f, 0);
+			translate(gunModel, 0, 18f, 0);
+			//translate(turretTopFlapsModel, 0, 24f, 0);
 
-		translate(magazineLeftBottomModel, 0, 18f, 0);
-		translate(magazineLeftTopModel, 0, 18f, 0);
-		translate(magazineRightBottomModel, 0, 18f, 0);
-		translate(magazineRightTopModel, 0, 18f, 0);
+			translate(barrel1Model, 0, 18f, 0);
+			translate(barrel2Model, 0, 18f, 0);
+			translate(barrel3Model, 0, 18f, 0);
+			translate(barrel4Model, 0, 18f, 0);
+
+			translate(magazineLeftBottomModel, 0, 18f, 0);
+			translate(magazineLeftTopModel, 0, 18f, 0);
+			translate(magazineRightBottomModel, 0, 18f, 0);
+			translate(magazineRightTopModel, 0, 18f, 0);
+		}
 
 		baseModel= Arrays.stream(baseModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
 		turretModel= Arrays.stream(turretModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);

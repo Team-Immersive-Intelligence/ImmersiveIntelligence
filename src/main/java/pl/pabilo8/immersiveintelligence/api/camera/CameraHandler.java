@@ -3,12 +3,15 @@ package pl.pabilo8.immersiveintelligence.api.camera;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 
 /**
  * @author Pabilo8
  * @since 10-11-2019
  */
+@SideOnly(Side.CLIENT)
 public class CameraHandler
 {
 	public static CameraHandler INSTANCE = new CameraHandler();

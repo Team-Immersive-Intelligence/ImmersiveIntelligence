@@ -17,13 +17,13 @@ public class ConveyorRubberCoveredDropper extends ConveyorDropCovered
 	@Override
 	public ResourceLocation getActiveTexture()
 	{
-		return ConveyorDrop.texture_on;
+		return ConveyorRubberDropper.texture_on;
 	}
 
 	@Override
 	public ResourceLocation getInactiveTexture()
 	{
-		return ConveyorDrop.texture_off;
+		return ConveyorRubberDropper.texture_off;
 	}
 
 	@Override

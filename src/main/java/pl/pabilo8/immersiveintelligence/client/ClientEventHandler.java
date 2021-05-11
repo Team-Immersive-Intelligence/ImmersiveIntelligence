@@ -13,17 +13,14 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageRequestBlockUpdate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
@@ -863,6 +860,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				event.setRoll((MathHelper.clamp(tilt, -1f, 1f)*15f));
 			}
 		}
+		if(CameraHandler.INSTANCE.isEnabled()&&!ClientUtils.mc().player.isRiding())
+			CameraHandler.INSTANCE.setEnabled(false);
 
 		if(CameraHandler.INSTANCE.isEnabled())
 		{

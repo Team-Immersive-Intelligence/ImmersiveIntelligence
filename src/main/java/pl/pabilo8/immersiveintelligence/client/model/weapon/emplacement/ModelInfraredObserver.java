@@ -12,7 +12,7 @@ public class ModelInfraredObserver extends ModelIIBase
 
 	public ModelRendererTurbo[] observerModel, hatchModel, lensModel;
 
-	public ModelInfraredObserver() //Same as Filename
+	public ModelInfraredObserver(boolean doOffsets) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[53];
 		baseModel[0] = new ModelRendererTurbo(this, 120, 68, textureX, textureY); // PLATFORM04
@@ -404,9 +404,12 @@ public class ModelInfraredObserver extends ModelIIBase
 		parts.put("lens", lensModel);
 
 		translateAll(0.5f,1,0);
-		translate(observerModel,0,24,3);
-		translate(hatchModel,0,24,3);
-		translate(lensModel,0,24,3);
+		if(doOffsets)
+		{
+			translate(observerModel,0,24,3);
+			translate(hatchModel,0,24,3);
+			translate(lensModel,0,24,3);
+		}
 
 		flipAll();
 	}

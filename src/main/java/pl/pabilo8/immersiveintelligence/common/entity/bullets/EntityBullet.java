@@ -622,4 +622,16 @@ public class EntityBullet extends Entity implements ILightProvider
 	{
 		return true;
 	}
+
+	@Override
+	public boolean isBurning()
+	{
+		return false;
+	}
+
+	@Override
+	public void setFire(int seconds)
+	{
+
+	}
 }

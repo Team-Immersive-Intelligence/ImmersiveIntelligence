@@ -5,9 +5,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadioStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -50,17 +52,18 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 			}
 			else
 			{
-				float cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electric_hammer_energy_per_use_construction/2f))),te.construction);
-				float progress = Math.max(Math.min(cc/(float)te.getConstructionCost(), 1f), 0f);
-				//progress=((getWorld().getTotalWorldTime()+partialTicks)%300)/300f;
+				int l = modelCurrent.baseModel.length;
+				double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electric_hammer_energy_per_use_construction/4.25f))), Utils.getMaxClientProgress(te.construction, te.getConstructionCost(), l));
+				double progress = MathHelper.clamp(cc/(float)te.getConstructionCost(), 0f, 1f);
 
-				for(int i = 0; i < 50*progress; i++)
+				for(int i = 0; i < l*progress; i++)
 				{
-					if(i+1>50*progress)
+					if(1+i>Math.round(l*progress))
 					{
 						GlStateManager.pushMatrix();
-						float scale = 1f-(((progress*50f)%1f)/1f);
-						GlStateManager.color(1f, 1f, 1f, Math.min(scale*4f, 1));
+						double scale = 1f-(((progress*l)%1f)/1f);
+						GlStateManager.enableBlend();
+						GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale*2, 1));
 						GlStateManager.translate(0,scale*1.5f,0);
 
 						modelCurrent.baseModel[i].render(0.0625f);
@@ -68,7 +71,7 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 						GlStateManager.popMatrix();
 					}
 					else
-					modelCurrent.baseModel[i].render(0.0625f);
+						modelCurrent.baseModel[i].render(0.0625f);
 				}
 
 				GlStateManager.pushMatrix();

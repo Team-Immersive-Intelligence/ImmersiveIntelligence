@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
@@ -83,18 +84,19 @@ public class RepairCrateRenderer extends TileEntitySpecialRenderer<TileEntityRep
 			}
 			else if(te.getInstallProgress()>0)
 			{
-				float cc = (int)Math.min(te.clientUpgradeProgress+((partialTicks*(Tools.electric_wrench_upgrade_progress/2f))),te.getCurrentlyInstalled().getProgressRequired());
-				float progress = Math.max(Math.min(cc/(float)te.getCurrentlyInstalled().getProgressRequired(), 1f), 0f);
+				float cc = (int)Math.min(te.clientUpgradeProgress+((partialTicks*(Tools.wrench_upgrade_progress/2f))),te.getMaxClientProgress());
+				float progress = MathHelper.clamp(cc/(float)te.getCurrentlyInstalled().getProgressRequired(),0,1);
 				int l = modelUpgrade.baseModel.length;
 
 				ClientUtils.bindTexture(ModelCrateInserterUpgrade.texture);
 				for(int i = 0; i < l*progress; i++)
 				{
-					if(i+1>l*progress)
+					if(1+i>Math.round(l*progress))
 					{
 						GlStateManager.pushMatrix();
 						float scale = 1f-(((progress*l)%1f)/1f);
-						GlStateManager.color(1f, 1f, 1f, Math.min(scale*4f, 1));
+						GlStateManager.enableBlend();
+						GlStateManager.color(1f, 1f, 1f, Math.min(scale, 1));
 						GlStateManager.translate(0,scale*1.5f,0);
 
 						modelUpgrade.baseModel[i].render(0.0625f);

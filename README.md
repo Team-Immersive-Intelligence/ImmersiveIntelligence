@@ -1,7 +1,8 @@
 <p align="center"><img src="https://github.com/Pabilo8/ImmersiveIntelligence/blob/master/logos/logofullhq.png?raw=true"></p>
 
 [![](http://cf.way2muchnoise.eu/versions/immersive-intelligence.svg)](https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence) 
-[![Join Here!](https://img.shields.io/discord/610912351142674434?style=flat-square)](https://discord.gg/teMfm3R)
+[![Join Here!](https://img.shields.io/discord/610912351142674434?color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
+[![Jitpack](https://jitpack.io/v/Pabilo8/ImmersiveIntelligence.svg)](https://jitpack.io/#Pabilo8/ImmersiveIntelligence)
 [![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?style=flat-square&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)  
 
 **Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so **most of the planned features are not added**. There are four main categories of the mod's content: 
@@ -10,18 +11,16 @@
   
  - **Logistics** - great storage and crafting system based on multiblocks, data transmission and drones, it will be customizable while staying as immersive as possible. Includes skycrates!
  
- - **Warfare** - weapons of all sorts - machineguns, autocannons, combat drones, howitzers, missiles and much more
+ - **Warfare** - weapons of all sorts - machineguns, submachineguns, autocannons, railguns, chemthrowers, combat drones, howitzers, mines, missiles and much more
  
- - **Intelligence** - espionage - stealth - sabotage - this category contains various devices which will allow you to spy on other players and monitor the world
+ - **Intelligence** - espionage - stealth - sabotage - this category contains surveillance devices, such as the Infrared Observer and Tripod Periscope which allow you to spy on other players and monitor the world
  
  The mod also features the new rotary power system.
  
 Some GIFs / Screenshots on [Imgur](https://imgur.com/a/kiyUFdk)
 
 Short videos on Youtube:
-
  - [Circuit Production](https://www.youtube.com/watch?v=jDmpZ4gAknE)
-
  - [Artillery Howitzer Test](https://youtu.be/o3mt9exEfL0)
 
 The mod author, the developer:
@@ -31,18 +30,18 @@ The mod author, the developer:
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
   
 Special thanks to:
-- [@Choroman](https://github.com/Choroman) - Concept Artist, multiblock sketch and blueprint creator, general helper, modeller, currently retired
-  - [Curseforge](https://www.curseforge.com/members/choroman1/)
-- [@Krystiano0306](https://github.com/Krystiano0306) - Newbie Modeller, helped at various model-related jobs, currently retired
-- @Blacknight - Texture artist, created some textures for the mod's items
+- [@Carver](https://github.com/Carvercarver1) - Current Modeller, general helper, also a fellow howitzer enthusiast and world destroyer
+  - [Curseforge](https://www.curseforge.com/members/john__carver/)
+- [@Choroman](https://github.com/Choroman) - Retired Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
+- [@Krystiano0306](https://github.com/Krystiano0306) - Helped at various model-related jobs as a part of his practice, currently retired
+- [@Blacknight]() - Texture artist, created some textures for the mod's items
 - [@Kingcavespider1](https://github.com/kingcavespider1) - added a damage effect for the acid blocks
-- @Carver - A lot of great ideas for new content, *a lot*, also helped with sounds
+- [@CrimsonTwilight](https://github.com/NightmareTwilight) - author of [Immersive Energy](https://www.curseforge.com/minecraft/mc-mods/immersive-energy), an allied modder from Team IG, also a *Swede*
+  - [Curseforge](https://www.curseforge.com/members/crimsondragonrider)
 
 Proudly powered by Turbo Model Thingy (TMT):
-- Original author: [@GaryCXJk](https://github.com/GaryCXJk)
+- The original author: [@GaryCXJk](https://github.com/GaryCXJk)
 - Maintainers of the version II uses: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)
 
-Permission: ![Imgur](https://i.imgur.com/xd9rUrM.png)
-
-Please report any bugs you find in the 'issues' tab. Don't do that on Curseforge / DM however ^^.
-Feek free to join mod's discord
+Please report any bugs you find in the 'issues' tab. Also, don't do that on Curseforge / DM ^^.  
+Feel free to join the mod's [Discord Server](https://discord.gg/teMfm3R) to have a chat with the devs and community.

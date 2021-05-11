@@ -8,11 +8,14 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Pabilo8
  * @since 10-11-2019
  */
+@SideOnly(Side.CLIENT)
 public class EntityCamera extends EntityLivingBase
 {
 	public float rotationRoll = 0;

@@ -83,9 +83,12 @@ public class ModelBullet8bCal extends ModelIIBase implements IBulletModel
 
 		coreModel[0].mirror = true;
 		coreModel[0].flip = true;
+
 		parts.put("base", baseModel);
 		parts.put("core", coreModel);
 		flipAll();
+
+		translateAll(0,1,0);
 	}
 
 	@Override

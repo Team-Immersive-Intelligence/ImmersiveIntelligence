@@ -61,8 +61,12 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	public void update()
 	{
 		super.update();
-		if(!isDummy()&&world.isRemote&&clientConstruction < construction)
-			clientConstruction = (int)Math.min(clientConstruction+(Tools.electric_hammer_energy_per_use_construction/2f), construction);
+		if(!isDummy()&&world.isRemote)
+		{
+			float maxConstruction = Utils.getMaxClientProgress(construction, getConstructionCost(), 51);
+			if(clientConstruction < maxConstruction)
+				clientConstruction = (int)Math.min(clientConstruction+(Tools.electric_hammer_energy_per_use_construction/4.25f), maxConstruction);
+		}
 	}
 
 	@Override
