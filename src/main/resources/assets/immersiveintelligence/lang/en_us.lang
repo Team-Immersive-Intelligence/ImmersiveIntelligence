@@ -821,6 +821,15 @@ info.immersiveintelligence.debugger_mode.0=Transceiver
 info.immersiveintelligence.debugger_mode.1=Transmitter
 info.immersiveintelligence.debugger_mode.2=Receiver
 
+info.immersiveintelligence.punchtape_reader_mode=Punchtape Reader Mode: %s
+info.immersiveintelligence.punchtape_reader_mode.0=Redstone Indifferent
+info.immersiveintelligence.punchtape_reader_mode.1=Packet on Redstone
+info.immersiveintelligence.punchtape_reader_mode.2=Redstone on Packet
+
+info.immersiveintelligence.redstone_buffer_mode=Redstone Buffer Mode: %s
+info.immersiveintelligence.redstone_buffer_mode.passtrough=Passtrough
+info.immersiveintelligence.redstone_buffer_mode.signal=On Signal
+
 info.immersiveintelligence.tachometer_message.basic=Internal: speed %s RPM / torque %s Nm.
 info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s RPM / torque %s Nm. External: speed %s RPM / torque %s Nm.
 info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s
@@ -867,6 +876,7 @@ datasystem.immersiveintelligence.function.add=Addition
 datasystem.immersiveintelligence.function.subtract=Subtraction
 datasystem.immersiveintelligence.function.multiply=Multiplication
 datasystem.immersiveintelligence.function.divide=Division
+datasystem.immersiveintelligence.function.modulo=Mod
 datasystem.immersiveintelligence.function.power=Power
 datasystem.immersiveintelligence.function.root=Root
 datasystem.immersiveintelligence.function.max=Max

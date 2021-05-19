@@ -199,5 +199,47 @@
       "immersiveintelligence:motorbike/horn"
     ],
     "subtitle": "subtitle.immersiveintelligence.motorbike_horn"
+  },
+  "welding_start": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:welding/start"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.welding"
+  },
+  "welding_mid": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:welding/mid"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.welding"
+  },
+  "welding_end": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:welding/end"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.welding"
+  },
+  "fuel_station_start": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:fuel_station/start"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.fuel_station"
+  },
+  "fuel_station_mid": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:fuel_station/mid"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.fuel_station"
+  },
+  "fuel_station_end": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:fuel_station/end"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.fuel_station"
   }
 }

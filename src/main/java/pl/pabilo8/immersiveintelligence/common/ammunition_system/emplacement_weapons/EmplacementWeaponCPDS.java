@@ -80,7 +80,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 			}
 
 			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 6f);
+			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 12f);
 			a.setShootPos(te.getAllBlocks());
 			te.getWorld().spawnEntity(a);
 		}
@@ -97,14 +97,14 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-		float force = 6f;
+		float force = 12f;
 		float mass = IIContent.itemAmmoMachinegun.getMass(s2);
 
-		vv = posTurret.subtract(posTarget);
+		vv = posTurret.subtract(posTarget.add(motion));
 		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
 		float motionTime = (float)Math.abs(vv.lengthSquared())/force/0.8f;
 		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(1f).addVector(0, 0f, 0f);
-		vv = vv.subtract(motionVec).subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
+		vv = vv.subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
 		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0,vv.y,0)))));
 		//float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);

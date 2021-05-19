@@ -27,13 +27,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -150,7 +153,70 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 
 		if(!isDummy()&&!world.isRemote)
 		{
+			/*
+			if(this.productionProgress > 0&&energyStorage.getEnergyStored() > DataInputMachine.energyUsagePunchtape&&productionProgress < DataInputMachine.timePunchtapeProduction)
+			{
+				this.productionProgress += 1;
+			}
+			if((Utils.compareToOreName(inventoryHandler.getStackInSlot(0), "punchtapeEmpty")||inventoryHandler.getStackInSlot(0).getItem() instanceof ItemIIPunchtape))
+			{
+				if(productionProgress==0||inventoryHandler.getStackInSlot(1).isEmpty())
+				{
+					ItemStack test = new ItemStack(IIContent.itemPunchtape, 1, 0);
 
+					((ItemIIPunchtape)test.getItem()).writeDataToItem(this.storedData, test);
+
+					if(!inventoryHandler.insertItem(1, test, true).isEmpty())
+						return;
+				}
+				productionProgress += 1;
+
+				if(productionProgress >= DataInputMachine.timePunchtapeProduction)
+				{
+					productionProgress = 0;
+					ItemStack input = inventoryHandler.extractItem(0, 1, false);
+
+					if(input.getItem() instanceof ItemIIPunchtape)
+					{
+						this.storedData = ((ItemIIPunchtape)input.getItem()).getStoredData(input);
+						inventoryHandler.insertItem(1, input, false);
+
+						NBTTagCompound nbt = new NBTTagCompound();
+						nbt.setTag("inventory", Utils.writeInventory(inventory));
+						nbt.setTag("variables", storedData.toNBT());
+						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+					}
+					else
+					{
+						ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
+
+						((ItemIIPunchtape)output.getItem()).writeDataToItem(this.storedData, output);
+
+						inventoryHandler.insertItem(1, output, false);
+
+						NBTTagCompound nbt = new NBTTagCompound();
+						nbt.setTag("inventory", Utils.writeInventory(inventory));
+						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+
+					}
+
+				}
+
+				if(productionProgress==0||productionProgress==1)
+				{
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setFloat("production_progress", productionProgress);
+					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+				}
+			}
+			else if(productionProgress!=0f)
+			{
+				productionProgress = 0;
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setFloat("production_progress", productionProgress);
+				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+			}
+			 */
 		}
 	}
 
@@ -224,7 +290,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public NonNullList<ItemStack> getInventory()
 	{
-		return master().inventory;
+		return inventory;
 	}
 
 	@Override
@@ -411,6 +477,10 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public void onReceive(DataPacket packet, @Nullable EnumFacing side)
 	{
+		TileEntityRedstoneInterface master = master();
+		if(master==null)
+			return;
+
 		if(pos==0&&side==facing.getOpposite())
 		{
 			for(char c : packet.variables.keySet())
@@ -429,9 +499,10 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 						storedData.removeVariable(c);
 				}
 			}
-			master().redstoneChanged = true;
-			getTileForPos(4).getNetwork().updateValues();
-			master().redstoneChanged = false;
+			master.redstoneChanged = true;
+			if(getTileForPos(4)!=null)
+				getTileForPos(4).getNetwork().updateValues();
+			master.redstoneChanged = false;
 		}
 	}
 
@@ -575,7 +646,8 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public void onChange()
 	{
-		if(!master().redstoneChanged)
+		TileEntityRedstoneInterface master = master();
+		if(master!=null&&!master.redstoneChanged)
 		{
 			dataToRedstone();
 		}
@@ -590,11 +662,13 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public void updateInput(byte[] signals)
 	{
-		for(int i = 0; i < 16; i += 1)
-		{
-			if(signals[i] < master().redstoneOutput[i])
-				signals[i] = master().redstoneOutput[i];
-		}
+		TileEntityRedstoneInterface m = master();
+		if(m!=null)
+			for(int i = 0; i < 16; i += 1)
+			{
+				if(signals[i] < m.redstoneOutput[i])
+					signals[i] = m.redstoneOutput[i];
+			}
 
 	}
 
@@ -616,14 +690,16 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 				int i1 = ((DataPacketTypeInteger)a.value[0]).value;
 				int i2 = ((DataPacketTypeInteger)a.value[1]).value;
 
-				out.setVariable(c, getTypeFromRedstone((byte)getTileForPos(4).getNetwork().getPowerOutput(i1), i2));
+				TileEntityRedstoneInterface m4 = getTileForPos(4);
+				if(m4!=null)
+					out.setVariable(c, getTypeFromRedstone((byte)m4.getNetwork().getPowerOutput(i1), i2));
 			}
 		}
 
 		if(out.variables.size() < 1)
 			return;
 
-		IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(master().getPos(), world, facing.getOpposite());
+		IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(m.getPos(), world, facing.getOpposite());
 
 		if(conn!=null)
 			conn.sendPacket(out);

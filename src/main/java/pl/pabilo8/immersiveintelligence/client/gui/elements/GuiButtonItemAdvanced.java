@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.elements;
 
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,7 @@ public class GuiButtonItemAdvanced extends GuiButtonIE
 
 		if(!item.isEmpty())
 		{
+			GlStateManager.pushMatrix();
 			this.zLevel = 200.0F;
 			RenderItem itemRender = mc.getRenderItem();
 			itemRender.zLevel = 200.0F;
@@ -40,6 +42,7 @@ public class GuiButtonItemAdvanced extends GuiButtonIE
 			this.zLevel = 0.0F;
 			itemRender.zLevel = 0.0F;
 			RenderHelper.disableStandardItemLighting();
+			GlStateManager.popMatrix();
 		}
 	}
 }

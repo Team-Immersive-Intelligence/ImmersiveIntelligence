@@ -375,11 +375,13 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
 			}
 			//
-			IDataConnector conn;
-			if(side==EnumFacing.DOWN)
-				conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(3).getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
-			else
-				conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(2).getPos(), world, mirrored?facing.rotateY(): facing.rotateYCCW());
+			IDataConnector conn=null;
+			TileEntityArithmeticLogicMachine tile1 = getTileForPos(3);
+			TileEntityArithmeticLogicMachine tile2 = getTileForPos(2);
+			if(side==EnumFacing.DOWN&&tile1!=null)
+				conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(tile1.getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
+			else if(tile2!=null)
+				conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(tile2.getPos(), world, mirrored?facing.rotateY(): facing.rotateYCCW());
 
 			if(conn!=null)
 			{

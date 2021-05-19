@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.entity.hans_tasks;
+package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;

@@ -1,15 +1,12 @@
-package pl.pabilo8.immersiveintelligence.common.entity.hans_tasks;
+package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.Utils;
@@ -93,7 +90,7 @@ public class AIHansHowitzer extends EntityAIBase
 							//it should be
 							if(entity instanceof EntityHans&&((EntityHans)entity).getHeldItemMainhand().isEmpty())
 							{
-								ItemStack shell = IIContent.itemAmmoLightArtillery.getBulletWithParams("core_brass", "canister", "hmx", "tracer_powder");
+								ItemStack shell = IIContent.itemAmmoLightArtillery.getBulletWithParams("core_brass", "canister", "firework", "tracer_powder");
 								NBTTagCompound tag = new NBTTagCompound();
 								tag.setInteger("colour", 0xff0000);
 								IIContent.itemAmmoMachinegun.setComponentNBT(shell, new NBTTagCompound(), tag);

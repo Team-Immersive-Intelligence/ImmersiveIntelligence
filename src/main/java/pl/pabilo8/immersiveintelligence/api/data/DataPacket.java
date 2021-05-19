@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +47,11 @@ public class DataPacket
 		varTypes.put("array", DataPacketTypeArray.class);
 
 		//varTypes.put("pair", DataPacketTypePair.class);
+	}
+
+	public boolean hasVariables()
+	{
+		return variables.size()>0;
 	}
 
 	public IDataType getPacketVariable(Character name)
@@ -121,7 +127,7 @@ public class DataPacket
 		return nbt;
 	}
 
-	public void fromNBT(NBTTagCompound nbt)
+	public DataPacket fromNBT(NBTTagCompound nbt)
 	{
 		variables.clear();
 		for(Character c : varCharacters)
@@ -153,6 +159,7 @@ public class DataPacket
 			this.packetColor = EnumDyeColor.byMetadata(nbt.getInteger("color"));
 		if(nbt.hasKey("address"))
 			this.packetAddress = nbt.getInteger("address");
+		return this;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import blusunrize.immersiveengineering.common.items.ItemRailgun;
 import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Triple;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Railgun;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
@@ -47,7 +50,7 @@ public class ItemIIRailgunOverride extends ItemRailgun
 		int energy = IEConfig.Tools.railgun_consumption;
 		float energyMod = 1+this.getUpgrades(stack).getFloat("consumption");
 		energy = (int)(energy*energyMod);
-		if(this.extractEnergy(stack, energy, true)==energy&&!findAmmo(player).isEmpty())
+		if(this.extractEnergy(stack, energy, true)==energy&&!findAmmo(((EntityLivingBase)player)).isEmpty())
 		{
 			player.setActiveHand(hand);
 			player.world.playSound(null, player.posX, player.posY, player.posZ, getChargeTime(stack) <= 20?IESounds.chargeFast: IESounds.chargeSlow, SoundCategory.PLAYERS, 1.5f, 1f);
@@ -62,9 +65,8 @@ public class ItemIIRailgunOverride extends ItemRailgun
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase user, int timeLeft)
 	{
-		if(user instanceof EntityPlayer)
-		{
-			int inUse = this.getMaxItemUseDuration(stack)-timeLeft;
+
+		int inUse = this.getMaxItemUseDuration(stack)-timeLeft;
 			ItemNBTHelper.remove(stack, "inUse");
 			if(inUse < getChargeTime(stack))
 				return;
@@ -73,7 +75,7 @@ public class ItemIIRailgunOverride extends ItemRailgun
 			energy = (int)(energy*energyMod);
 			if(this.extractEnergy(stack, energy, true)==energy)
 			{
-				ItemStack ammo = findAmmo((EntityPlayer)user);
+				ItemStack ammo = findAmmo(user);
 				if(!ammo.isEmpty())
 				{
 					Vec3d vec = user.getLookVec();
@@ -101,8 +103,6 @@ public class ItemIIRailgunOverride extends ItemRailgun
 					}
 
 					ammo.shrink(1);
-					if(ammo.getCount() <= 0)
-						((EntityPlayer)user).inventory.deleteStack(ammo);
 
 					if(Railgun.railgunRecoil)
 						user.move(MoverType.PISTON, -vec.x*mass*0.25f, 0, -vec.z*mass*0.25f);
@@ -115,22 +115,27 @@ public class ItemIIRailgunOverride extends ItemRailgun
 					}
 				}
 			}
-		}
 	}
 
-	public static ItemStack findAmmo(EntityPlayer player)
+	public static ItemStack findAmmo(EntityLivingBase entity)
 	{
-		if(isAmmo(player.getHeldItem(EnumHand.OFF_HAND)))
-			return player.getHeldItem(EnumHand.OFF_HAND);
-		else if(isAmmo(player.getHeldItem(EnumHand.MAIN_HAND)))
-			return player.getHeldItem(EnumHand.MAIN_HAND);
-		else
-			for(int i = 0; i < player.inventory.getSizeInventory(); i++)
+		if(isAmmo(entity.getHeldItem(EnumHand.OFF_HAND)))
+			return entity.getHeldItem(EnumHand.OFF_HAND);
+		else if(isAmmo(entity.getHeldItem(EnumHand.MAIN_HAND)))
+			return entity.getHeldItem(EnumHand.MAIN_HAND);
+		else if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			final IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(capability==null)
+				return ItemStack.EMPTY;
+
+			for(int i = 0; i < capability.getSlots(); i++)
 			{
-				ItemStack itemstack = player.inventory.getStackInSlot(i);
+				ItemStack itemstack = capability.getStackInSlot(i);
 				if(isAmmo(itemstack))
 					return itemstack;
 			}
+		}
 		return ItemStack.EMPTY;
 	}
 

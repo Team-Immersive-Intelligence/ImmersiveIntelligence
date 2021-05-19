@@ -137,8 +137,6 @@ public class ParticleGasCloud extends IIParticle
 
 	public float[] getFluidColor(Fluid fluid)
 	{
-		CACHED_COLORS.remove(fluid);
-
 		if(CACHED_COLORS.containsKey(fluid))
 			return CACHED_COLORS.get(fluid);
 

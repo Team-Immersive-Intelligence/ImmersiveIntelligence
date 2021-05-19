@@ -13,7 +13,10 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.model.misc.ModelHansBiped;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 
 /**
@@ -22,17 +25,19 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
  * <p>
  * Zhe Renderer for zhe Hans
  */
-public class HansRenderer extends RenderLivingBase<EntityHans>
+public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloadableModelContainer<HansRenderer>
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/entity/hans.png");
 
 	public HansRenderer(RenderManager renderManagerIn)
 	{
 		super(renderManagerIn, new ModelPlayer(0.0f, false), 0.5F);
+		this.addLayer(new LayerHansEmotions(this));
 		this.addLayer(new LayerHansTeamOverlay(this));
 		this.addLayer(new LayerArrow(this));
 		this.addLayer(new LayerBipedArmor(this));
 		this.addLayer(new LayerHeldItem(this));
+		subscribeToList("hans");
 	}
 
 	@Override
@@ -43,8 +48,10 @@ public class HansRenderer extends RenderLivingBase<EntityHans>
 
 	public void doRender(EntityHans entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
+		/*
 		if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.RenderLivingEvent.Pre<>(entity, this, partialTicks, x, y, z)))
 			return;
+		 */
 
 		double d0 = y;
 
@@ -54,19 +61,19 @@ public class HansRenderer extends RenderLivingBase<EntityHans>
 		}
 
 		this.setModelVisibilities(entity);
+
 		super.doRender(entity, x, d0, z, entityYaw, partialTicks);
-		if(net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.RenderLivingEvent.Pre<>(entity, this, partialTicks, x, y, z)))
-			return;
+
 	}
 
 	private void setModelVisibilities(EntityHans clientPlayer)
 	{
-		ModelPlayer modelplayer = this.getMainModel();
+		ModelPlayer model = this.getMainModel();
 
 		ItemStack itemstack = clientPlayer.getHeldItemMainhand();
 		ItemStack itemstack1 = clientPlayer.getHeldItemOffhand();
-		modelplayer.setVisible(true);
-		modelplayer.isSneak = clientPlayer.isSneaking();
+		model.setVisible(true);
+		model.isSneak = clientPlayer.isSneaking();
 		ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
 		ModelBiped.ArmPose modelbiped$armpose1 = ModelBiped.ArmPose.EMPTY;
 
@@ -111,13 +118,13 @@ public class HansRenderer extends RenderLivingBase<EntityHans>
 
 		if(clientPlayer.getPrimaryHand()==EnumHandSide.RIGHT)
 		{
-			modelplayer.rightArmPose = modelbiped$armpose;
-			modelplayer.leftArmPose = modelbiped$armpose1;
+			model.rightArmPose = modelbiped$armpose;
+			model.leftArmPose = modelbiped$armpose1;
 		}
 		else
 		{
-			modelplayer.rightArmPose = modelbiped$armpose1;
-			modelplayer.leftArmPose = modelbiped$armpose;
+			model.rightArmPose = modelbiped$armpose1;
+			model.leftArmPose = modelbiped$armpose;
 		}
 	}
 
@@ -140,5 +147,17 @@ public class HansRenderer extends RenderLivingBase<EntityHans>
 	protected void renderEntityName(EntityHans entityIn, double x, double y, double z, String name, double distanceSq)
 	{
 		super.renderEntityName(entityIn, x, y, z, entityIn.getDisplayName().getUnformattedText(), distanceSq);
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		this.mainModel= new ModelHansBiped(0.0f, false);
+		this.layerRenderers.clear();
+		this.addLayer(new LayerHansEmotions(this));
+		this.addLayer(new LayerHansTeamOverlay(this));
+		this.addLayer(new LayerArrow(this));
+		this.addLayer(new LayerBipedArmor(this));
+		this.addLayer(new LayerHeldItem(this));
 	}
 }

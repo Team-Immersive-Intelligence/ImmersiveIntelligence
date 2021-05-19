@@ -34,6 +34,7 @@ public class IICommandHandler extends CommandTreeBase
 				break;
 			case "ii":
 				addSubcommand(new CommandIIDev());
+				addSubcommand(new CommandIIHans());
 				addSubcommand(new CommandIIGiveBullet());
 				addSubcommand(new CommandIIGiveMagazine());
 				addSubcommand(new CommandIIGivePunchtape());

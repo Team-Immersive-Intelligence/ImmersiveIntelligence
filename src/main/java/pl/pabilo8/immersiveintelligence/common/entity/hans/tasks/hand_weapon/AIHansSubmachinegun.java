@@ -1,7 +1,6 @@
-package pl.pabilo8.immersiveintelligence.common.entity.hans_tasks;
+package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -13,7 +12,6 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,7 +63,7 @@ public class AIHansSubmachinegun extends EntityAIBase
 		else
 		{
 			this.attackTarget = entitylivingbase;
-			return hasAnyAmmo();
+			return hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() instanceof ItemIISubmachinegun&&hasAnyAmmo();
 		}
 	}
 

@@ -437,10 +437,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 		{
 			return;
 		}
-		if(!list.toNBT().hasNoTags())
-		{
-			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
-		}
+		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
 	}
 
 	//Stolen from Flaxbeard (https://github.com/Flaxbeard/QuestionablyImmersive/blob/dev/src/main/java/flaxbeard/questionablyimmersive/client/gui/GuiCokeOvenBattery.java)

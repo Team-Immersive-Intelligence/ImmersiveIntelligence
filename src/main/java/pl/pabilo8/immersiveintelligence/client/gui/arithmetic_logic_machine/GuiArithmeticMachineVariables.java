@@ -21,6 +21,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
@@ -245,7 +246,12 @@ public class GuiArithmeticMachineVariables extends GuiIEContainerBase implements
 
 				GL11.glPopMatrix();
 
-				this.fontRenderer.drawString(I18n.format(CommonProxy.DATA_KEY+"datatype."+data.getName()), drawx+38, drawy+6, data.getTypeColour(), true);
+				String name = CommonProxy.DATA_KEY+"datatype."+data.getName();
+				if(data instanceof DataPacketTypeExpression)
+				{
+					name = CommonProxy.DATA_KEY+"function."+((DataPacketTypeExpression)data).getOperation().name;
+				}
+				this.fontRenderer.drawString(I18n.format(name), drawx+38, drawy+6, data.getTypeColour(), false);
 
 				//Draw variable name (single character)
 				this.fontRenderer.drawString(String.valueOf(c), drawx+8, drawy+5, Lib.COLOUR_I_ImmersiveOrange, true);

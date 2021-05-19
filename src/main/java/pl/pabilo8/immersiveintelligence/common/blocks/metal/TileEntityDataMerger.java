@@ -141,18 +141,20 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		DataPacket newpacket = packet.clone();
-		boolean send = false;
+		boolean send = mode==0;
 
 		//Left -2 -1 (1)
 		if(side==facing.rotateYCCW())
 		{
 			packetLeft = packet.clone();
+			send=send||mode==1;
 		}
 
 		//Right 1 2 (2)
 		if(side==facing.rotateY())
 		{
 			packetRight = packet.clone();
+			send=send||mode==2;
 		}
 
 		for(char c : DataPacket.varCharacters)
@@ -204,7 +206,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 				}
 			}
 		}
-		if(world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataConnector)
+		if(send&&world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataConnector)
 			{
 				IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(facing));
 				d.sendPacket(newpacket);

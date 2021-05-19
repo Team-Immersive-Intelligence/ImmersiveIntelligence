@@ -6,15 +6,20 @@ import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOve
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -42,6 +47,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Pabilo8
@@ -49,6 +55,8 @@ import java.util.List;
  */
 public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, IIEEnergyItem, ITextureOverride
 {
+	public static UUID visionUUID = Utils.generateNewUUID();
+
 	public ItemIIBinoculars()
 	{
 		super("binoculars", 1, "binoculars", "infrared_binoculars");
@@ -205,5 +213,14 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 	public boolean showDurabilityBar(ItemStack stack)
 	{
 		return stack.getMetadata()==1&&this.getEnergyStored(stack) < this.getMaxEnergyStored(stack);
+	}
+
+	@Override
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
+	{
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+		if(slot==EntityEquipmentSlot.MAINHAND)
+			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID,"Increased Sight Range (Mobs)", 20.0D, 0));
+		return multimap;
 	}
 }

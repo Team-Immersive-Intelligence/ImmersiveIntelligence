@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -30,6 +29,7 @@ import net.minecraftforge.common.IRarity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -64,7 +64,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	@Override
 	public int getSlotCount(ItemStack stack)
 	{
-		return 2;
+		return 3;
 	}
 
 	@Override
@@ -80,7 +80,8 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		return new Slot[]
 				{
 						new IESlot.Upgrades(container, inv, 0, 80, 32, "SUBMACHINEGUN", stack, true),
-						new IESlot.Upgrades(container, inv, 1, 100, 32, "SUBMACHINEGUN", stack, true)
+						new IESlot.Upgrades(container, inv, 1, 100, 32, "SUBMACHINEGUN", stack, true),
+						new IESlot.Upgrades(container, inv, 2, 120, 32, "SUBMACHINEGUN", stack, true)
 				};
 	}
 
@@ -149,10 +150,12 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 						if(!worldIn.isRemote)
 						{
 							ItemIIBulletMagazine.makeDefault(magazine);
-							boolean c = false;
-							if(entityIn instanceof EntityPlayer)
-								c = ((EntityPlayer)entityIn).addItemStackToInventory(magazine);
-							if(!c)
+							if(entityIn.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+							{
+								IItemHandler capability = entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+								magazine = ItemHandlerHelper.insertItem(capability, magazine, false);
+							}
+							if(!magazine.isEmpty())
 								blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(worldIn, entityIn.getPosition(), magazine);
 							ItemNBTHelper.remove(stack, "magazine");
 						}
@@ -262,11 +265,13 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 					ItemNBTHelper.setFloat(stack, "recoilH", recoilH);
 				}
 
-				boolean c = false;
 				ItemStack cc = ((IBullet)s2.getItem()).getCasingStack(1);
-				if(player instanceof EntityPlayer)
-					c = ((EntityPlayer)player).addItemStackToInventory(cc);
-				if(!c)
+				if(player.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+				{
+					IItemHandler capability = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+					cc = ItemHandlerHelper.insertItem(capability, cc, false);
+				}
+				if(!cc.isEmpty())
 					blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(worldIn, player.getPosition(), cc);
 			}
 

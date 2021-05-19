@@ -84,6 +84,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 				ops.add("subtract");
 				ops.add("multiply");
 				ops.add("divide");
+				ops.add("modulo");
 				ops.add("power");
 				ops.add("root");
 				ops.add("min");

@@ -51,7 +51,10 @@ public class RadioNetwork
 	public void sendPacket(DataPacket packet, IRadioDevice sender, ArrayList<IRadioDevice> list)
 	{
 		if(!list.contains(sender))
+		{
+			sender.onRadioSend(packet);
 			list.add(sender);
+		}
 		for(IRadioDevice dev : getDevices())
 		{
 			if(!list.contains(dev))

@@ -269,6 +269,7 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 	public void drawScreen(int mx, int my, float partial)
 	{
 		super.drawScreen(mx, my, partial);
+		GlStateManager.enableBlend();
 
 		ArrayList<String> tooltip = new ArrayList<String>();
 

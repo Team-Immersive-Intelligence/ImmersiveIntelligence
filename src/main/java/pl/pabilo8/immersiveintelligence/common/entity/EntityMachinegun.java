@@ -69,7 +69,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 	private static final MachinegunZoom SCOPE = new MachinegunZoom();
 	//Second magazine is an upgrade
-	public ItemStack gun, magazine1 = ItemStack.EMPTY, magazine2 = ItemStack.EMPTY;
+	public ItemStack gun = ItemStack.EMPTY, magazine1 = ItemStack.EMPTY, magazine2 = ItemStack.EMPTY;
 	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0, tankCapacity = 0, bullets1 = 0, bullets2 = 0;
 	public float setYaw = 0, recoilYaw = 0, recoilPitch = 0, gunYaw = 0, gunPitch = 0, maxRecoilPitch = Machinegun.recoilHorizontal, maxRecoilYaw = Machinegun.recoilVertical, currentlyLoaded = -1, shieldStrength = 0f, maxShieldStrength = 0f;
 	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated = false, tripod = false;
@@ -138,7 +138,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	@Override
 	public AxisAlignedBB getEntityBoundingBox()
 	{
-		return aabb.offset(getPosition());
+		return aabb.offset(getPositionVector());
 	}
 
 	@Nullable
@@ -180,10 +180,16 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		if(!world.isRemote&&world.getTotalWorldTime()%10==0)
 		{
-			if(world.getBlockState(getPosition().offset(EnumFacing.DOWN, tripod?2: 1)).getMaterial().equals(Material.AIR))
+			if(getRidingEntity()==null&&world.getBlockState(getPosition().offset(EnumFacing.DOWN, tripod?2: 1)).getMaterial().equals(Material.AIR))
 			{
 				dropItem();
 				return;
+			}
+			else if(getRidingEntity()!=null)
+			{
+				this.setYaw = getRidingEntity().getRotationYawHead();
+				setEntityBoundingBox(aabb);
+				setPositionAndUpdate(posX,posY,posZ);
 			}
 		}
 
@@ -1121,5 +1127,11 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		{
 			return machinegun.tank.getTankProperties();
 		}
+	}
+
+	@Override
+	public double getYOffset()
+	{
+		return isRiding()?1D: super.getYOffset();
 	}
 }

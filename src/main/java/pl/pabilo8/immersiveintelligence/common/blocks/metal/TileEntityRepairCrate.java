@@ -17,8 +17,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.RepairCrateRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.repairCrateEnergyPerAction;
 
@@ -28,7 +30,7 @@ import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCr
  */
 public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISoundTile
 {
-	public boolean repaired;
+	public boolean repaired = false;
 	public boolean shouldRepairArmor = true;
 	public boolean shouldRepairVehicles = true;
 
@@ -70,7 +72,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	public void update()
 	{
 		super.update();
-		ImmersiveEngineering.proxy.handleTileSound(IESounds.chargeSlow, this, repaired, .5f, 1);
+		ImmersiveEngineering.proxy.handleTileSound(IISounds.welding_mid, this, hasUpgrade(IIContent.UPGRADE_INSERTER)&&focusedEntity!=null, .5f, 1);
 	}
 
 	@Override

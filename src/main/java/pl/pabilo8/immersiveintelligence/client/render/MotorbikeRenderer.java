@@ -78,9 +78,9 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		else
 			brake = Math.max(brake-(0.25f*f1), 0f);
 
-		float totalWorldTime = entity.getEntityWorld().getTotalWorldTime()+f1;
-		float engineMove = entity.engineWorking?Math.abs((totalWorldTime%engineSpeed/engineSpeed)-0.5f): 0;
-		float pipesMove = entity.engineWorking?Math.abs((totalWorldTime%speed/speed)-0.5f): 0;
+		float totalWorldTime = entity.getEntityWorld().getTotalWorldTime();
+		float engineMove = entity.engineWorking?Math.abs(((totalWorldTime%engineSpeed+f1)/engineSpeed)-0.5f): 0;
+		float pipesMove = entity.engineWorking?Math.abs(((totalWorldTime%speed+f1)/speed)-0.5f): 0;
 		float plannedRotation = entity.rotationYaw-(tilt!=0?f1*tilt*(speed/5f): 0);
 		if(!entity.engineWorking&&(entity.turnLeft||entity.turnRight))
 			plannedRotation += tilt*0.25*f1;

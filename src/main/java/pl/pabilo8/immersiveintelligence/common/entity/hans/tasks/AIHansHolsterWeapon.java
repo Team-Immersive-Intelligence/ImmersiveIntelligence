@@ -1,9 +1,14 @@
-package pl.pabilo8.immersiveintelligence.common.entity.hans_tasks;
+package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks;
 
+import blusunrize.immersiveengineering.common.items.ItemChemthrower;
+import blusunrize.immersiveengineering.common.items.ItemRevolver;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 
 /**
@@ -42,6 +47,12 @@ public class AIHansHolsterWeapon extends EntityAIBase
 
 	public boolean isWeapon(ItemStack stack)
 	{
-		return stack.getItem() instanceof ItemIISubmachinegun;
+		return stack.getItem() instanceof ItemIISubmachinegun
+				||stack.getItem() instanceof ItemIIMachinegun
+				||stack.getItem() instanceof ItemIIBinoculars
+				||stack.getItem() instanceof ItemIIRailgunOverride
+				||stack.getItem() instanceof ItemChemthrower
+				||stack.getItem() instanceof ItemRevolver
+				;
 	}
 }

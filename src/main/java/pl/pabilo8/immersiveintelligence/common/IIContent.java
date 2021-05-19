@@ -48,10 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.items.material.*;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIArmorUpgrade;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.*;
 
 import java.util.ArrayList;
 import java.util.List;

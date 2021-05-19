@@ -93,8 +93,6 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-
 		if(button.id==0)
 		{
 			syncDataToServer();
@@ -119,6 +117,7 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 	public void drawScreen(int mx, int my, float partial)
 	{
 		super.drawScreen(mx, my, partial);
+		GlStateManager.enableBlend();
 
 		ArrayList<String> tooltip = new ArrayList<String>();
 
@@ -204,7 +203,7 @@ public class GuiDataInputMachineVariables extends GuiIEContainerBase implements 
 
 				GL11.glPopMatrix();
 
-				this.fontRenderer.drawString(I18n.format(CommonProxy.DATA_KEY+"datatype."+data.getName()), drawx+38, drawy+6, data.getTypeColour(), true);
+				this.fontRenderer.drawString(I18n.format(CommonProxy.DATA_KEY+"datatype."+data.getName()), drawx+38, drawy+6, data.getTypeColour(), false);
 
 				//Draw variable name (single character)
 				this.fontRenderer.drawString(String.valueOf(c), drawx+8, drawy+5, Lib.COLOUR_I_ImmersiveOrange, true);

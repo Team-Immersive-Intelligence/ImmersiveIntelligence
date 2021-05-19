@@ -32,14 +32,41 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
  */
 public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITickable, IRedstoneOutput, IDataDevice, IPlayerInteraction, IHammerInteraction, IDirectionalTile
 {
-	public boolean toggle = false;
-	public int mode = 0;
+	public boolean hadRedstone = false;
+	//no redstone
+	//send signal on redstone
+	//redstone when signal is sent
+	public int mode = 0, rsTime = 0;
 	EnumFacing facing = EnumFacing.NORTH;
+	DataPacket received = null;
 
 	@Override
 	public void update()
 	{
-
+		if(mode==1)
+		{
+			if(hadRedstone^world.isBlockPowered(pos))
+			{
+				if(received!=null&&!hadRedstone)
+				{
+					IDataConnector conn = Utils.findConnectorFacing(pos, world, facing.getOpposite());
+					if(conn!=null)
+						conn.sendPacket(received.clone());
+					else
+					{
+						final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
+						if(te instanceof IDataDevice)
+							((IDataDevice)te).onReceive(received.clone(), facing);
+					}
+				}
+				hadRedstone = world.isBlockPowered(pos);
+			}
+		}
+		else if(mode==2)
+		{
+			if(rsTime > 0)
+				rsTime--;
+		}
 	}
 
 	@Override
@@ -51,13 +78,13 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	@Override
 	public int getStrongRSOutput(IBlockState state, EnumFacing side)
 	{
-		return 0;
+		return mode==2?(side!=facing&&rsTime > 0?15: 0): 0;
 	}
 
 	@Override
 	public boolean canConnectRedstone(IBlockState state, EnumFacing side)
 	{
-		return false;
+		return mode > 0;
 	}
 
 	@Override
@@ -65,6 +92,8 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	{
 		mode = nbt.getInteger("mode");
 		setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
+		if(nbt.hasKey("received"))
+			received = new DataPacket().fromNBT(nbt.getCompoundTag("received"));
 	}
 
 	@Override
@@ -72,15 +101,14 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	{
 		nbt.setInteger("mode", mode);
 		nbt.setInteger("facing", facing.ordinal());
+		if(received!=null)
+			nbt.setTag("received", received.toNBT());
 	}
 
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		if(mode==0||mode==2)
-		{
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageNoSpamChatComponents(new TextComponentString(packet.toNBT().toString())), Utils.targetPointFromTile(this, 256));
-		}
+
 	}
 
 	@Override
@@ -97,7 +125,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"debugger_mode", new TextComponentTranslation(CommonProxy.INFO_KEY+"debugger_mode."+mode))), ((EntityPlayerMP)player));
+			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"punchtape_reader_mode", new TextComponentTranslation(CommonProxy.INFO_KEY+"punchtape_reader_mode."+mode))), ((EntityPlayerMP)player));
 		}
 		return true;
 	}
@@ -132,7 +160,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	@Override
 	public boolean canHammerRotate(EnumFacing side, float hitX, float hitY, float hitZ, EntityLivingBase entity)
 	{
-		return true;
+		return !entity.isSneaking();
 	}
 
 	@Override
@@ -148,6 +176,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 		{
 			IDataStorageItem storage = (IDataStorageItem)heldItem.getItem();
 			DataPacket packet = storage.getStoredData(heldItem);
+			received = packet.clone();
 			IDataConnector conn = Utils.findConnectorFacing(pos, world, facing.getOpposite());
 			if(conn!=null)
 				conn.sendPacket(packet);
@@ -155,7 +184,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			{
 				final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
 				if(te instanceof IDataDevice)
-					((IDataDevice)te).onReceive(packet,facing);
+					((IDataDevice)te).onReceive(packet, facing);
 			}
 		}
 		return false;

@@ -821,6 +821,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "flare"),
 				EntityFlare.class, "flare", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
 
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "parachute"),
+				EntityParachute.class, "parachute", i++, ImmersiveIntelligence.INSTANCE, 64, 4, true);
+
 		/*
 		Soon™
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "panzer"),

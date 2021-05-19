@@ -1,0 +1,18 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:material_boule",
+    "data": 0
+  },
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
+  ],
+  "key": {
+    "N": {
+      "item": "immersiveintelligence:material_nugget",
+      "data": 5
+    }
+  }
+}

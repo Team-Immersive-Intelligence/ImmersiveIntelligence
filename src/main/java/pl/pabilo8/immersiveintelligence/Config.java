@@ -557,11 +557,11 @@ public class Config
 				public static int energyUsageIdle = 512;
 
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
-				public static int radioRange = 64;
+				public static int radioRange = 128;
 
 				@RangeDouble(min = 0, max = 1)
 				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 0 - full range, 0.5 - half range, 1 - no range, etc.)"})
-				public static double weatherHarshness = 0.5;
+				public static double weatherHarshness = 0.75;
 			}
 
 			public static class DataInputMachine
@@ -576,7 +576,7 @@ public class Config
 				public static int energyUsagePunchtape = 128;
 
 				@Comment({"Duration of tape punching process in ticks (1 tick = 1/20 Second)."})
-				public static int timePunchtapeProduction = 160;
+				public static int timePunchtapeProduction = 80;
 			}
 
 			public static class ArithmeticLogicMachine

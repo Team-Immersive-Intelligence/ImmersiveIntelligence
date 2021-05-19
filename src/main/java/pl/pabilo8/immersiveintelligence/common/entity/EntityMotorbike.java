@@ -484,7 +484,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 
 
-		if(speed > 1f)
+		if(!world.isRemote&&speed > 1f)
 		{
 			List<EntityLivingBase> entitiesWithinAABB = world.getEntitiesWithinAABB(EntityLivingBase.class, partWheelFront.getEntityBoundingBox());
 			for(EntityLivingBase e : entitiesWithinAABB)

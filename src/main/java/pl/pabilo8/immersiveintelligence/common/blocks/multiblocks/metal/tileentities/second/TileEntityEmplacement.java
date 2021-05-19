@@ -8,7 +8,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockM
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +18,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.world.ServerWorldEventHandler;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -41,20 +42,30 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds
 {
 	public static final HashMap<String, Supplier<EmplacementWeapon>> weaponRegistry = new HashMap<>();
+	public static final HashMap<String, BiFunction<NBTTagCompound, TileEntityEmplacement, EmplacementTarget>> targetRegistry = new HashMap<>();
+
+	static
+	{
+		targetRegistry.put("target_mobs", (tagCompound, emplacement) -> new EmplacementTargetMobs());
+		targetRegistry.put("target_shells", (tagCompound, emplacement) -> new EmplacementTargetShells());
+		targetRegistry.put("target_position", (tagCompound, emplacement) -> new EmplacementTargetPosition(tagCompound));
+		targetRegistry.put("target_entity", (tagCompound, emplacement) -> new EmplacementTargetEntity(emplacement, tagCompound));
+	}
 
 	public boolean isDoorOpened = false;
 	public int progress = 0, upgradeProgress = 0, clientUpgradeProgress = 0;
@@ -107,12 +118,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 						currentWeapon.tick();
 						//currentWeapon.reloadFrom(this);
 						/*
-						!(((EntityBullet)input).getShooter() instanceof FakePlayer)
-								&&((EntityBullet)input).mass>0.25&&
+						!
 						 */
 						float[] target = this.task.getPositionVector(this);
 						if(target!=null)
 						{
+							target[0] = MathHelper.wrapDegrees(target[0]);
+							target[1] = MathHelper.wrapDegrees(target[1]);
+
 							currentWeapon.aimAt(target[0], target[1]);
 
 							if(currentWeapon.isAimedAt(target[0], target[1]))
@@ -328,11 +341,22 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		this.upgradeProgress = nbt.getInteger("upgradeProgress");
 		this.isDoorOpened = nbt.getBoolean("isDoorOpened");
 
-		if(!isDummy()&&nbt.hasKey("currentWeapon"))
+		if(!isDummy())
 		{
-			currentWeapon = getWeaponFromName(nbt.getString("weaponName"));
-			if(currentWeapon!=null)
-				currentWeapon.readFromNBT(nbt.getCompoundTag("currentWeapon"));
+			if(nbt.hasKey("currentWeapon"))
+			{
+				currentWeapon = getWeaponFromName(nbt.getString("weaponName"));
+				if(currentWeapon!=null)
+					currentWeapon.readFromNBT(nbt.getCompoundTag("currentWeapon"));
+			}
+
+			if(nbt.hasKey("task"))
+			{
+				NBTTagCompound taskNBT = nbt.getCompoundTag("task");
+				BiFunction<NBTTagCompound, TileEntityEmplacement, EmplacementTarget> name = targetRegistry.get(taskNBT.getString("name"));
+				if(name!=null)
+					this.task=name.apply(taskNBT,this);
+			}
 		}
 	}
 
@@ -345,10 +369,17 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		nbt.setInteger("progress", this.progress);
 
-		if(!isDummy()&&currentWeapon!=null)
+		if(!isDummy())
 		{
-			nbt.setString("weaponName", currentWeapon.getName());
-			nbt.setTag("currentWeapon", currentWeapon.saveToNBT());
+			if(currentWeapon!=null)
+			{
+				nbt.setString("weaponName", currentWeapon.getName());
+				nbt.setTag("currentWeapon", currentWeapon.saveToNBT());
+			}
+			if(task!=null)
+			{
+				nbt.setTag("task",task.saveToNBT());
+			}
 		}
 	}
 
@@ -366,6 +397,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			currentWeapon = getWeaponFromName(message.getString("weaponName"));
 			if(currentWeapon!=null)
 				currentWeapon.readFromNBT(message.getCompoundTag("currentWeapon"));
+
+			if(message.hasKey("task"))
+			{
+				NBTTagCompound taskNBT = message.getCompoundTag("task");
+				BiFunction<NBTTagCompound, TileEntityEmplacement, EmplacementTarget> name = targetRegistry.get(taskNBT.getString("name"));
+				if(name!=null)
+					this.task=name.apply(taskNBT,this);
+			}
 		}
 	}
 
@@ -438,6 +477,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				case "reload":
 				case "rscontrol":
 				case "repair":
+					break;
+				case "targetmobs":
+					master.task = new EmplacementTargetMobs();
+					break;
+				case "targetshells":
+					master.task = new EmplacementTargetShells();
 					break;
 				case "fire":
 					if(e instanceof DataPacketTypeInteger)
@@ -863,10 +908,26 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		}
 
 		public abstract boolean shouldContinue();
+
+		public abstract String getName();
+
+		public NBTTagCompound saveToNBT()
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("name", getName());
+			return nbt;
+		}
 	}
 
-	private static class EmplacementTargetMobs extends EmplacementTarget
+	private static abstract class EmplacementTargetEntities extends EmplacementTarget
 	{
+		private final com.google.common.base.Predicate<Entity> predicate;
+
+		public EmplacementTargetEntities(com.google.common.base.Predicate<Entity> predicate)
+		{
+			this.predicate = predicate;
+		}
+
 		Entity currentTarget = null;
 
 		@Override
@@ -881,9 +942,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 					return getPosForEntityTask(emplacement, currentTarget);
 			}
 
-			Entity[] entities = emplacement.world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(emplacement.getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0),
-					input -> input instanceof EntityLivingBase&&input instanceof IMob&&
-							input.isEntityAlive()).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
+			Entity[] entities = emplacement.world.getEntitiesWithinAABB(Entity.class,new AxisAlignedBB(emplacement.getPos()).offset(-0.5, 0, -0.5).grow(40f).expand(0, 40, 0), predicate).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
 
 			for(Entity entity : entities)
 			{
@@ -920,11 +979,49 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			return true;
 		}
+
+		@Override
+		public NBTTagCompound saveToNBT()
+		{
+			return super.saveToNBT();
+		}
 	}
 
-	public Vec3d getWeaponCenter()
+	private static class EmplacementTargetMobs extends EmplacementTargetEntities
 	{
-		return new Vec3d(this.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5);
+		public EmplacementTargetMobs()
+		{
+			super(input -> input instanceof EntityLivingBase&&input instanceof IMob&&
+					input.isEntityAlive());
+		}
+
+		@Override
+		public String getName()
+		{
+			return "target_mobs";
+		}
+	}
+
+	private static class EmplacementTargetShells extends EmplacementTargetEntities
+	{
+		public EmplacementTargetShells()
+		{
+			/*
+			&&
+					(
+							((EntityBullet)input).getShooter()==null//||(((EntityBullet)input).getShooter() instanceof EntityPlayer)
+					)
+			 */
+			super(input -> input instanceof EntityBullet
+					&&!input.isDead
+					&&((EntityBullet)input).mass > 0.4);
+		}
+
+		@Override
+		public String getName()
+		{
+			return "target_shells";
+		}
 	}
 
 	private static class EmplacementTargetEntity extends EmplacementTarget
@@ -934,6 +1031,11 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		public EmplacementTargetEntity(Entity entity)
 		{
 			this.entity = entity;
+		}
+
+		public EmplacementTargetEntity(TileEntityEmplacement emplacement, NBTTagCompound tagCompound)
+		{
+			this(emplacement.world.getMinecraftServer().getEntityFromUuid(UUID.fromString(tagCompound.getString("target_uuid"))));
 		}
 
 		@Override
@@ -947,6 +1049,20 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			return entity.isEntityAlive();
 		}
+
+		@Override
+		public String getName()
+		{
+			return "target_entity";
+		}
+
+		@Override
+		public NBTTagCompound saveToNBT()
+		{
+			NBTTagCompound compound = super.saveToNBT();
+			compound.setString("target_uuid",entity.getUniqueID().toString());
+			return compound;
+		}
 	}
 
 	private static class EmplacementTargetPosition extends EmplacementTarget
@@ -958,6 +1074,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			this.pos = pos;
 			this.shotAmount = shotAmount;
+		}
+
+		public EmplacementTargetPosition(NBTTagCompound tagCompound)
+		{
+			this(new BlockPos(tagCompound.getInteger("x"), tagCompound.getInteger("y"), tagCompound.getInteger("z")),
+					tagCompound.getInteger("shotAmount")
+			);
 		}
 
 		@Override
@@ -979,6 +1102,28 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			return shotAmount > 0;
 		}
+
+		@Override
+		public String getName()
+		{
+			return "target_position";
+		}
+
+		@Override
+		public NBTTagCompound saveToNBT()
+		{
+			NBTTagCompound compound = super.saveToNBT();
+			compound.setInteger("x",pos.getX());
+			compound.setInteger("y",pos.getY());
+			compound.setInteger("z",pos.getZ());
+			compound.setInteger("shotAmount",shotAmount);
+			return compound;
+		}
+	}
+
+	public Vec3d getWeaponCenter()
+	{
+		return new Vec3d(this.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5);
 	}
 
 	private static float[] getPosForEntityTask(TileEntityEmplacement emplacement, Entity entity)

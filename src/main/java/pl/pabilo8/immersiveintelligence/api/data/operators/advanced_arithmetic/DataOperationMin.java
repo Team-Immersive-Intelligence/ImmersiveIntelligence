@@ -14,8 +14,8 @@ public class DataOperationMin extends DataOperator
 {
 	public DataOperationMin()
 	{
-		name = "divide";
-		sign = "/";
+		name = "min";
+		sign = "min";
 		allowedType1 = DataPacketTypeInteger.class;
 		allowedType2 = DataPacketTypeInteger.class;
 		expectedResult = DataPacketTypeInteger.class;

@@ -244,6 +244,20 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			else
 			{
 				handleServerKeyInput();
+				if(EntityVehicleSeat.getOrCreateSeat(this, 0).getPassengers().size()==0)
+				{
+					gunPitchUp=false;
+					gunPitchDown=false;
+					reloadProgress=0;
+					shootingProgress=0;
+				}
+				if(EntityVehicleSeat.getOrCreateSeat(this, 1).getPassengers().size()==0)
+				{
+					forward=false;
+					backward=false;
+					turnLeft=false;
+					turnRight=false;
+				}
 			}
 		}
 

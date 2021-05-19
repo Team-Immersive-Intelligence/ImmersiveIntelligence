@@ -1,12 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
 import blusunrize.immersiveengineering.common.util.ChatUtils;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -15,16 +15,25 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.hans_tasks.*;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.EyeEmotions;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthEmotions;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthShapes;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansAlertOthers;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansHolsterWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansChemthrower;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansRailgun;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansSubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -37,6 +46,12 @@ public class EntityHans extends EntityCreature implements INpc
 {
 	public boolean crewman = false;
 	public boolean hasAmmo = true;
+
+	public EyeEmotions eyeEmotion = HansEmotions.EyeEmotions.NEUTRAL;
+	public MouthEmotions mouthEmotion = HansEmotions.MouthEmotions.NEUTRAL;
+	public MouthShapes mouthShape = HansEmotions.MouthShapes.CLOSED;
+	public ArrayList<Tuple<Integer, MouthShapes>> mouthShapeQueue = new ArrayList<>();
+	public int speechProgress = 0;
 
 	public final NonNullList<ItemStack> mainInventory = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
 
@@ -53,45 +68,48 @@ public class EntityHans extends EntityCreature implements INpc
 
 	public void equipItems(int id)
 	{
-		ItemStack helmet = new ItemStack(IIContent.itemLightEngineerHelmet);
-		if(id < 2)
+
+	}
+
+	@Override
+	public void onUpdate()
+	{
+		super.onUpdate();
+		if(world.isRemote)
 		{
-			ItemStack stack = new ItemStack(IIContent.itemSubmachinegun);
-			NonNullList<ItemStack> upgrades = NonNullList.withSize(2, ItemStack.EMPTY);
-			upgrades.set(0, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.SUPPRESSOR.ordinal()));
-			upgrades.set(1, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.BOTTOM_LOADING.ordinal()));
-			IIContent.itemSubmachinegun.setContainedItems(stack, upgrades);
-			IIContent.itemSubmachinegun.recalculateUpgrades(stack);
-			IIContent.itemSubmachinegun.finishUpgradeRecalculation(stack);
-			ItemStack magazine = ItemIIBulletMagazine.getMagazine(id==0?"submachinegun": "submachinegun_drum", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
-			ItemNBTHelper.setItemStack(stack, "magazine", magazine);
-			mainInventory.set(0, magazine.copy());
-			mainInventory.set(1, magazine.copy());
-			mainInventory.set(2, magazine.copy());
+			if(mouthShapeQueue.size() > 0)
+			{
+				if(speechProgress++ >= mouthShapeQueue.get(0).getFirst())
+				{
+					this.mouthShape = mouthShapeQueue.get(0).getSecond();
+					this.mouthShapeQueue.remove(0);
+					this.speechProgress = 0;
+				}
+			}
+			else
+			{
+				this.mouthShape = MouthShapes.CLOSED;
+				this.speechProgress = 0;
+			}
 
-			setHeldItem(EnumHand.MAIN_HAND, stack);
+			if(this.getAttackTarget()!=null)
+			{
+				eyeEmotion = EyeEmotions.FROWNING;
+				mouthEmotion = MouthEmotions.ANGRY;
+			}
+			else
+			{
+				mouthEmotion = MouthEmotions.ANGRY;
 
-			/*
-			upgrades = NonNullList.withSize(3, ItemStack.EMPTY);
-			upgrades.set(0, new ItemStack(IIContent.itemArmorUpgrade, 1, ArmorUpgrades.GASMASK.ordinal()));
-			IIContent.itemLightEngineerHelmet.setContainedItems(helmet, upgrades);
-			IIContent.itemLightEngineerHelmet.recalculateUpgrades(helmet);
-			IIContent.itemLightEngineerHelmet.finishUpgradeRecalculation(helmet);
-			 */
+				float hp = getHealth()/getMaxHealth();
+				if(hp > 0.75)
+					eyeEmotion = EyeEmotions.HAPPY;
+				else if(hp > 0.5)
+					eyeEmotion = EyeEmotions.NEUTRAL;
+				else
+					eyeEmotion = EyeEmotions.FROWNING;
+			}
 		}
-		else if(id==7)
-		{
-			crewman=true;
-		}
-		else if(id==8)
-		{
-			ItemStack stack = new ItemStack(IIContent.itemBinoculars);
-			setHeldItem(EnumHand.MAIN_HAND, stack);
-			setSneaking(true);
-		}
-
-		setItemStackToSlot(EntityEquipmentSlot.HEAD, helmet);
-
 	}
 
 	@Override
@@ -104,24 +122,23 @@ public class EntityHans extends EntityCreature implements INpc
 
 		//Attack mobs
 		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
-				input -> input instanceof IMob&&input.getHealth()>0
+				input -> input instanceof IMob&&input.isEntityAlive()
 		));
-		//Attack players and Hanses with different team, stay neutral on default
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityHans.class, 1, false, false,
-				input -> input!=null&&input.getTeam()!=this.getTeam()&&input.getHealth()>0
+		//Attack entities with different team, stay neutral on default
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
+				input -> input!=null&&isValidTarget(input)
 		));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 1, false, false,
-				input -> input!=null&&input.getTeam()!=this.getTeam()&&input.getHealth()>0
-		));
+		//Call other hanses for help when attacked
 		this.targetTasks.addTask(2, new AIHansAlertOthers(this, true));
 
 		this.tasks.addTask(2, new AIHansHolsterWeapon(this));
 		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 20));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1f, true));
+		this.tasks.addTask(3, new AIHansRailgun(this, 0.95f, 50, 30));
+		this.tasks.addTask(3, new AIHansChemthrower(this, 0.95f, 50, 8));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.125f, true));
 
 		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6D, 0.6D));
-		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityHans.class, 3.0F));
+		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityLiving.class, 6.0F));
 		this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1D, 0f));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 
@@ -215,7 +232,7 @@ public class EntityHans extends EntityCreature implements INpc
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand)
 	{
-		if(hand==EnumHand.OFF_HAND)
+		if(player.isSpectator()||hand==EnumHand.OFF_HAND)
 			return EnumActionResult.FAIL;
 		if(!world.isRemote)
 		{
@@ -247,6 +264,77 @@ public class EntityHans extends EntityCreature implements INpc
 			player.swingArm(hand);
 
 		}
+		else
+		{
+			if(mouthShapeQueue.size() > 0)
+				return EnumActionResult.PASS;
+
+
+			//Uses Rhubarb, the voice to lip shapes thingy, if you want to see how it works, check out their github
+			//Disabled for now, might see service Soon™
+
+			/*
+			//German Test
+			//Text: Guten Tag, mein Name ist Hans.
+			this.speechProgress=0;
+			HansEmotions.putMouthShape(this, 'X', 0.00, 0.35);
+			HansEmotions.putMouthShape(this, 'F', 0.35, 0.63);
+			HansEmotions.putMouthShape(this, 'B', 0.63, 0.70);
+			HansEmotions.putMouthShape(this, 'C', 0.70, 0.84);
+			HansEmotions.putMouthShape(this, 'B', 0.84, 0.98);
+			HansEmotions.putMouthShape(this, 'X', 0.98, 1.27);
+			HansEmotions.putMouthShape(this, 'B', 1.27, 1.34);
+			HansEmotions.putMouthShape(this, 'A', 1.34, 1.40);
+			HansEmotions.putMouthShape(this, 'C', 1.40, 1.45);
+			HansEmotions.putMouthShape(this, 'B', 1.45, 0.63);
+			HansEmotions.putMouthShape(this, 'E', 1.56, 0.63);
+			HansEmotions.putMouthShape(this, 'A', 1.63, 1.72);
+			HansEmotions.putMouthShape(this, 'E', 1.72, 1.84);
+			HansEmotions.putMouthShape(this, 'D', 1.84, 2.12);
+			HansEmotions.putMouthShape(this, 'C', 2.12, 2.19);
+			HansEmotions.putMouthShape(this, 'B', 2.19, 2.40);
+			HansEmotions.putMouthShape(this, 'X', 2.40, 2.97);
+			HansEmotions.putMouthShape(this, 'A', 2.97, 3.10);
+			world.playSound(ClientUtils.mc().player, posX, posY, posZ, IISounds.hans_test_de, SoundCategory.NEUTRAL, 0.5f, 1f);
+			 */
+
+			/*
+			//Polish Test
+			//Text: Dzien dobry! Nazywam sie Grzegorz Brzeczyszczykiewicz i mieszkam w Chrzeszczyrzewoszycach w powiecie Lekolodzkim
+			HansEmotions.putMouthShape(this, 'X',0.00, 0.44);
+			HansEmotions.putMouthShape(this, 'B',0.44, 0.61);
+			HansEmotions.putMouthShape(this, 'A',0.61, 0.69);
+			HansEmotions.putMouthShape(this, 'E',0.69, 0.97);
+			HansEmotions.putMouthShape(this, 'X',0.97, 1.42);
+			HansEmotions.putMouthShape(this, 'B',1.42, 1.48);
+			HansEmotions.putMouthShape(this, 'C',1.48, 1.54);
+			HansEmotions.putMouthShape(this, 'F',1.54, 1.68);
+			HansEmotions.putMouthShape(this, 'E',1.68, 1.89);
+			HansEmotions.putMouthShape(this, 'F',1.89, 2.24);
+			HansEmotions.putMouthShape(this, 'G',2.24, 2.31);
+			HansEmotions.putMouthShape(this, 'B',2.31, 2.87);
+			HansEmotions.putMouthShape(this, 'A',2.87, 2.95);
+			HansEmotions.putMouthShape(this, 'B',2.95, 3.43);
+			HansEmotions.putMouthShape(this, 'C',3.43, 3.76);
+			HansEmotions.putMouthShape(this, 'G',3.76, 3.97);
+			HansEmotions.putMouthShape(this, 'C',3.97, 4.04);
+			HansEmotions.putMouthShape(this, 'F',4.04, 4.25);
+			HansEmotions.putMouthShape(this, 'B',4.25, 4.32);
+			HansEmotions.putMouthShape(this, 'G',4.32, 4.39);
+			HansEmotions.putMouthShape(this, 'F',4.39, 4.46);
+			HansEmotions.putMouthShape(this, 'B',4.46, 4.67);
+			HansEmotions.putMouthShape(this, 'C',4.67, 4.74);
+			HansEmotions.putMouthShape(this, 'B',4.74, 4.81);
+			HansEmotions.putMouthShape(this, 'A',4.81, 4.95);
+			HansEmotions.putMouthShape(this, 'B',4.95, 5.23);
+			HansEmotions.putMouthShape(this, 'F',5.23, 5.30);
+			HansEmotions.putMouthShape(this, 'B',5.30, 5.51);
+			HansEmotions.putMouthShape(this, 'F',5.51, 5.72);
+			HansEmotions.putMouthShape(this, 'B',5.72, 5.86);
+			HansEmotions.putMouthShape(this, 'X',5.86, 6.93);
+			world.playSound(ClientUtils.mc().player, posX, posY, posZ, IISounds.hans_test_pl, SoundCategory.NEUTRAL, 1f, 1f);
+			 */
+		}
 		return EnumActionResult.PASS;
 	}
 
@@ -262,12 +350,54 @@ public class EntityHans extends EntityCreature implements INpc
 
 	public boolean isValidTarget(Entity entity)
 	{
-		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans)&&entity.getTeam()!=this.getTeam());
+		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
 	}
 
 	public void sendPlayerMessage(EntityPlayer player, String text)
 	{
-		ArrayList<ITextComponent> arr = new ArrayList<>();
-		ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks(text)));
+		ItemStack helmet = getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		if(helmet.getItem() instanceof ItemIILightEngineerHelmet&&IIContent.itemLightEngineerHelmet.getUpgrades(helmet).hasKey("gasmask"))
+			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks("*Hans Gasmask Noises*")));
+		else
+			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks(text)));
 	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn)
+	{
+		if(damageSourceIn==DamageSource.ON_FIRE)
+		{
+			return SoundEvents.ENTITY_PLAYER_HURT_ON_FIRE;
+		}
+		else
+		{
+			return damageSourceIn==DamageSource.DROWN?SoundEvents.ENTITY_PLAYER_HURT_DROWN: SoundEvents.ENTITY_PLAYER_HURT;
+		}
+	}
+
+	protected SoundEvent getDeathSound()
+	{
+		return SoundEvents.ENTITY_PLAYER_DEATH;
+	}
+
+	protected SoundEvent getSwimSound()
+	{
+		return SoundEvents.ENTITY_PLAYER_SWIM;
+	}
+
+	protected SoundEvent getSplashSound()
+	{
+		return SoundEvents.ENTITY_PLAYER_SPLASH;
+	}
+
+	protected SoundEvent getFallSound(int heightIn)
+	{
+		return heightIn > 4?SoundEvents.ENTITY_PLAYER_BIG_FALL: SoundEvents.ENTITY_PLAYER_SMALL_FALL;
+	}
+
+	@Override
+	public HoverEvent getHoverEvent()
+	{
+		return super.getHoverEvent();
+	}
+
 }

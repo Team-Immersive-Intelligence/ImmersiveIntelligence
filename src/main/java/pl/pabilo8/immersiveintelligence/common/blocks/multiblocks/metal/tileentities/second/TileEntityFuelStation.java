@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -25,10 +27,12 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FuelStation;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -38,7 +42,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityFuelStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile
+public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityFuelStation, IMultiblockRecipe> implements IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, ISoundTile
 {
 	public MultiFluidTank[] tanks = {new MultiFluidTank(FuelStation.fluidCapacity)};
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
@@ -100,6 +104,8 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 		{
 			inserterAnimation = calculateInserterAnimation(0);
 			inserterAngle = calculateInserterAngle(0);
+
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.fuel_station_mid, this, this.inserterAnimation>0.35&&focusedEntity!=null, 0.5f, 1);
 		}
 		else
 		{
@@ -129,6 +135,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 				IFluidHandler capability = focusedEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 				if(capability!=null)
 				{
+					boolean canFill=false;
 					for(FluidStack fluid : tanks[0].fluids)
 					{
 						if(!VehicleFuelHandler.isFuelValidForVehicle(focusedEntity,fluid.getFluid()))
@@ -139,22 +146,58 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 						i = (energyStorage.extractEnergy(i*FuelStation.energyUsage, false)/FuelStation.energyUsage);
 						capability.fill(new FluidStack(fs, i), true);
 						tanks[0].drain(new FluidStack(fs,i),true);
+						if(i>0)
+							canFill=true;
+
 						break;
+					}
+
+					if(!canFill)
+					{
+						focusedEntity = null;
+						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
+						world.playSound(null,getPos().up(),IISounds.fuel_station_end, SoundCategory.BLOCKS,0.5f,1f);
 					}
 				}
 			}
 			else
 			{
-				focusedEntity = entitiesWithinAABB.get(0);
-				inserterAnimation = 0f;
-				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
+				for(Entity entity : entitiesWithinAABB)
+				{
+					IFluidHandler capability = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+					if(capability==null)
+						break;
+					boolean canFill=false;
+
+					for(FluidStack fluid : tanks[0].fluids)
+					{
+						if(!VehicleFuelHandler.isFuelValidForVehicle(entity,fluid.getFluid()))
+							continue;
+						FluidStack fs = new FluidStack(fluid,Math.min(fluid.amount,FuelStation.fluidTransfer));
+						if(capability.fill(fs, false)>0)
+						{
+							canFill=true;
+							break;
+						}
+					}
+
+					if(canFill)
+					{
+						focusedEntity = entity;
+						inserterAnimation = 0f;
+						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
+						world.playSound(null,getPos().up(),IISounds.fuel_station_start, SoundCategory.BLOCKS,0.5f,1f);
+						break;
+					}
+				}
 			}
 		}
-		else
+		else if(focusedEntity!=null)
 		{
 			focusedEntity = null;
 			inserterAnimation = 0f;
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
+			world.playSound(null,getPos().up(),IISounds.fuel_station_end, SoundCategory.BLOCKS,0.5f,1f);
 		}
 	}
 
@@ -434,5 +477,11 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 	public TileEntity getGuiMaster()
 	{
 		return master();
+	}
+
+	@Override
+	public boolean shoudlPlaySound(String sound)
+	{
+		return true;
 	}
 }

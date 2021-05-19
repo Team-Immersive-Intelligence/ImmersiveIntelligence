@@ -12,21 +12,23 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraftforge.energy.CapabilityEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.*;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
@@ -46,20 +48,22 @@ public class CommandIIDev extends CommandBase
 
 	static
 	{
+		options.add("help");
 		options.add("slowmo");
 		options.add("zawarudo");
 		options.add("bulletspeed");
 		options.add("killbullets");
 		options.add("killvehicles");
 		options.add("killitems");
+		options.add("killhanses");
 		options.add("world_setup");
 		options.add("decaybullets");
 		options.add("test_enemies");
-		options.add("hans");
 		options.add("explosion");
 		options.add("nuke");
 		options.add("power");
 		options.add("tree");
+		options.add("parachute");
 		//options.add("panzer");
 		//options.add("fallschirm");
 	}
@@ -81,7 +85,7 @@ public class CommandIIDev extends CommandBase
 	@Override
 	public String getUsage(@Nonnull ICommandSender sender)
 	{
-		return "Executes a cp,,amd, usage: ii dev <option>";
+		return "Executes an Immersive Intelligence command, for more info use /ii dev help";
 	}
 
 	/**
@@ -94,6 +98,27 @@ public class CommandIIDev extends CommandBase
 		{
 			switch(args[0])
 			{
+				case "help":
+				{
+					sender.sendMessage(new TextComponentString("Executes an Immersive Intelligence command, usage /ii dev <option>").setStyle(new Style().setColor(TextFormatting.GOLD)));
+					sender.sendMessage(getMessageForCommand("slowmo", "toggles bullets slowmo"));
+					sender.sendMessage(getMessageForCommand("zawarudo", "toggles bullets slowmo, but it was me, D I O"));
+					sender.sendMessage(getMessageForCommand("bulletspeed", "sets bullets slowmo speed", "<0.0-1.0>"));
+					sender.sendMessage(getMessageForCommand("killbullets", "removes all bullets in 20 block radius"));
+					sender.sendMessage(getMessageForCommand("killvehicles", "removes all vehicles (II multipart entities) in 20 block radius"));
+					sender.sendMessage(getMessageForCommand("killitems", "removes all items in 20 block radius"));
+					sender.sendMessage(getMessageForCommand("killhanses", "removes all ze Hanses in 20 block radius"));
+					sender.sendMessage(getMessageForCommand("world_setup", "disables day and night and weather cycles, disables mob spawning"));
+					sender.sendMessage(getMessageForCommand("decaybullets", "removes bullets decaying (despawning after x amount of ticks existing)"));
+					sender.sendMessage(getMessageForCommand("test_enemies", "spawns enemies", "<amount>"));
+					sender.sendMessage(getMessageForCommand("explosion", "spawns an II explosion", "<size>"));
+					sender.sendMessage(getMessageForCommand("nuke", "plants a seed on ground zero"));
+					sender.sendMessage(getMessageForCommand("power", "charges held item with IF, absolutely free"));
+					sender.sendMessage(getMessageForCommand("tree", "created a happy little [R E B B U R] tree"));
+					sender.sendMessage(getMessageForCommand("parachute", "spawns and mounts the command user on a parachute"));
+
+				}
+				break;
 				case "tree":
 				{
 					sender.sendMessage(new TextComponentString("Adding a happy little tree :)"));
@@ -153,6 +178,10 @@ public class CommandIIDev extends CommandBase
 					server.getEntityWorld().getEntities(Entity.class, input -> (input instanceof IVehicleMultiPart?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
 					sender.sendMessage(new TextComponentString("Vehicles Killed!"));
 					break;
+				case "killhanses":
+					server.getEntityWorld().getEntities(EntityHans.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.sendMessage(new TextComponentString("All Hanses killed :("));
+					break;
 				case "decaybullets":
 					EntityBullet.DEV_DECAY = !EntityBullet.DEV_DECAY;
 					sender.sendMessage(new TextComponentString(String.valueOf(EntityBullet.DEV_DECAY)));
@@ -207,7 +236,6 @@ public class CommandIIDev extends CommandBase
 				}
 				break;
 				case "test_enemies":
-				case "hans":
 				{
 					Entity commandSenderEntity = sender.getCommandSenderEntity();
 					if(commandSenderEntity==null||server.getEntityWorld().isRemote)
@@ -233,123 +261,31 @@ public class CommandIIDev extends CommandBase
 					}
 					if(!server.getEntityWorld().isRemote)
 					{
-						if(args[0].equals("hans"))
+						for(int i = 0; i < num; i++)
 						{
-							String[] hansLines = {
-									"Hans ist Einsatzbereit!",
-									"Ein neues Hans is Bereit zum Kampf",
-									"Hans - bereit zum Einsatz",
-									"Hans wartet auf deine Befehle",
-									"Hans ist Kampfbereit",
-									"Wir haben ein neues Hans!",
-									"Der Hans ist bereit!",
-									"Hans - bereit zum Dienst!",
-									"Ein neues Hans ist Kriegsbereit!"
-							};
-
-							commandSenderEntity.sendMessage(new TextComponentString(
-									hansLines[(int)((hansLines.length-1)*Utils.RAND.nextDouble())]
-							));
-							if(num==2)
-							{
-								EntityHans hans = new EntityHans(server.getEntityWorld());
-								hans.setPosition(position.getX()+0.5, position.getY(), position.getZ()+0.5);
-								server.getEntityWorld().spawnEntity(hans);
-
-								ItemStack mgstack = new ItemStack(IIContent.itemMachinegun);
-
-								NonNullList<ItemStack> upgrades = NonNullList.withSize(3, ItemStack.EMPTY);
-								upgrades.set(0, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.TRIPOD.ordinal()));
-								upgrades.set(1, new ItemStack(IIContent.itemWeaponUpgrade, 1, WeaponUpgrades.HEAVY_BARREL.ordinal()));
-								IIContent.itemSubmachinegun.setContainedItems(mgstack, upgrades);
-								IIContent.itemSubmachinegun.recalculateUpgrades(mgstack);
-								IIContent.itemSubmachinegun.finishUpgradeRecalculation(mgstack);
-
-								EntityMachinegun mg = new EntityMachinegun(server.getEntityWorld(), position.down(), MathHelper.wrapDegrees(commandSenderEntity.getRotationYawHead()), -commandSenderEntity.rotationPitch, mgstack);
-								server.getEntityWorld().spawnEntity(mg);
-								hans.startRiding(mg);
-							}
-							else if(num==3)
-							{
-								EntityFieldHowitzer howi = new EntityFieldHowitzer(server.getEntityWorld());
-								howi.setPositionAndRotation(position.getX()+0.5, position.getY(), position.getZ()+0.5, commandSenderEntity.getMirroredYaw(Mirror.FRONT_BACK), -commandSenderEntity.rotationPitch);
-								server.getEntityWorld().spawnEntity(howi);
-
-								EntityHans hans1 = new EntityHans(server.getEntityWorld());
-								hans1.equipItems(num);
-								hans1.setPosition(position.getX()+0.5, position.getY()+4, position.getZ()+0.5);
-								server.getEntityWorld().spawnEntity(hans1);
-
-								EntityHans hans2 = new EntityHans(server.getEntityWorld());
-								hans2.equipItems(num);
-								hans2.setPosition(position.getX()+0.5, position.getY()+2, position.getZ()+0.5);
-								server.getEntityWorld().spawnEntity(hans2);
-
-								hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 0));
-								hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(howi, 1));
-							}
-							else if(num > 2&&num < 7)
-							{
-								EntityMotorbike motorbike = new EntityMotorbike(server.getEntityWorld());
-								motorbike.setPositionAndRotation(position.getX()+0.5, position.getY(), position.getZ()+0.5, commandSenderEntity.getMirroredYaw(Mirror.FRONT_BACK), -commandSenderEntity.rotationPitch);
-								motorbike.setUpgrade(num==4?"seat": (num==5?"storage": "tank"));
-								server.getEntityWorld().spawnEntity(motorbike);
-
-								EntityHans hans1 = new EntityHans(server.getEntityWorld());
-								hans1.equipItems(2);
-								hans1.setPosition(position.getX()+0.5, position.getY()+4, position.getZ()+0.5);
-								server.getEntityWorld().spawnEntity(hans1);
-								hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(motorbike, 0));
-
-								if(num==4)
-								{
-									EntityHans hans2 = new EntityHans(server.getEntityWorld());
-									hans2.equipItems(1);
-									hans2.setPosition(position.getX()+0.5, position.getY()+2, position.getZ()+0.5);
-									server.getEntityWorld().spawnEntity(hans2);
-									hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(motorbike, 1));
-								}
-							}
-							else if(num==9)
-							{
-								EntityHans hans = new EntityHans(server.getEntityWorld());
-								hans.setPosition(position.getX()+0.5, position.getY()+2, position.getZ()+0.5);
-								server.getEntityWorld().spawnEntity(hans);
-
-								EntityTripodPeriscope tripodPeriscope = new EntityTripodPeriscope(server.getEntityWorld());
-								tripodPeriscope.setPosition(position.getX()+0.5, position.getY(), position.getZ()+0.5);
-								server.getEntityWorld().spawnEntity(tripodPeriscope);
-								hans.startRiding(tripodPeriscope);
-							}
-							else
-							{
-								EntityHans hans = new EntityHans(server.getEntityWorld());
-								hans.equipItems(num);
-								hans.setPosition(position.getX()+0.5, position.getY(), position.getZ()+0.5);
-								server.getEntityWorld().spawnEntity(hans);
-							}
+							EntityZombie z1 = new EntityZombie(server.getEntityWorld());
+							z1.setArmsRaised(false);
+							z1.setAIMoveSpeed(0.125f);
+							z1.setPosition(position.getX(), position.getY(), position.getZ());
+							z1.setCustomNameTag("Zombie #"+i);
+							z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IIContent.itemLightEngineerHelmet));
+							server.getEntityWorld().spawnEntity(z1);
 						}
-						else
-						{
-							for(int i = 0; i < num; i++)
-							{
-								EntityZombie z1 = new EntityZombie(server.getEntityWorld());
-								z1.setArmsRaised(false);
-								z1.setAIMoveSpeed(0.125f);
-								z1.setPosition(position.getX(), position.getY(), position.getZ());
-								z1.setCustomNameTag("Zombie #"+i);
-								z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IIContent.itemLightEngineerHelmet));
-								server.getEntityWorld().spawnEntity(z1);
-							}
-							sender.sendMessage(new TextComponentString("Test enemies summoned!"));
-						}
+						sender.sendMessage(new TextComponentString("Test enemies summoned!"));
 					}
 
 				}
 				break;
-				case "punchtape":
+				case "parachute":
 				{
-
+					Entity senderEntity = sender.getCommandSenderEntity();
+					if(senderEntity!=null)
+					{
+						EntityParachute para = new EntityParachute(senderEntity.getEntityWorld());
+						para.setPosition(senderEntity.posX, senderEntity.posY, senderEntity.posZ);
+						senderEntity.world.spawnEntity(para);
+						senderEntity.startRiding(para);
+					}
 				}
 				break;
 			}
@@ -384,5 +320,17 @@ public class CommandIIDev extends CommandBase
 	public boolean isUsernameIndex(String[] args, int index)
 	{
 		return index==0;
+	}
+
+	public ITextComponent getMessageForCommand(String subcommand, String description)
+	{
+		return getMessageForCommand(subcommand, description, "");
+	}
+
+	public ITextComponent getMessageForCommand(String subcommand, String description, String arguments)
+	{
+		return new TextComponentString("/ii dev ").appendText(subcommand).appendText(arguments.isEmpty()?arguments: (" "+arguments))
+				.setStyle(new Style().setColor(TextFormatting.GOLD).setClickEvent(new ClickEvent(Action.SUGGEST_COMMAND, "/ii dev "+subcommand)))
+				.appendSibling(new TextComponentString(" - ").appendText(description).setStyle(new Style().setColor(TextFormatting.RESET)));
 	}
 }

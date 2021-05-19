@@ -152,10 +152,10 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 		if(world.isRemote)
 		{
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.printing_press, this, active, .5f, 1);
 			if(processTimeLeft > 0&&active)
 			{
 				processTimeLeft -= 1;
-				ImmersiveEngineering.proxy.handleTileSound(IISounds.printing_press, this, active, .5f, 1);
 				rollerRotation += 6;
 				if(rollerRotation > 360)
 					rollerRotation = 0;
@@ -263,7 +263,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 		{
 			case "text":
 			{
-				DataPacketTypeString toPrint = (DataPacketTypeString)DataOperationAdd.getVarInType(DataPacketTypeString.class, dataToPrint.getPacketVariable('t'), dataToPrint);
+				String toPrint = dataToPrint.getPacketVariable('s').valueToString();
 				StringBuilder printedChars = new StringBuilder();
 
 				int black_amount = 0, cyan_amount = 0, magenta_amount = 0, yellow_amount = 0;
@@ -302,7 +302,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 				int charnum = 0, shouldstartfrom = 0, tag_endings_needed = 0;
 
-				for(char c : toPrint.value.toCharArray())
+				for(char c : toPrint.toCharArray())
 				{
 					charnum += 1;
 					if(charnum < shouldstartfrom)
@@ -311,7 +311,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 					if(c=='<')
 					{
 						//printedChars+="<";
-						String fragment = toPrint.value.substring(charnum-1);
+						String fragment = toPrint.substring(charnum-1);
 
 						if(fragment.length() > 3&&fragment.startsWith("<br>"))
 						{
@@ -888,6 +888,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	@Override
 	public boolean shoudlPlaySound(String sound)
 	{
-		return active;
+		return true;
 	}
 }

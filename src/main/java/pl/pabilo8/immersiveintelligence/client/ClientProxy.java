@@ -368,6 +368,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
 		//Thanks Blu!
+		RenderingRegistry.registerEntityRenderingHandler(EntityCamera.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityVehicleSeat.class, EntityRenderNone::new);
 
@@ -376,6 +377,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityFlare.class, EntityRenderNone::new);
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityHans.class, HansRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, ParachuteRenderer::new);
 
 		//Railgun overwrite
 		ImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IEContent.itemRailgun, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement_OBJ("immersiveengineering:models/item/railgun.obj", true)

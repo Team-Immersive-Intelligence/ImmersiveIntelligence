@@ -1,10 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +18,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.Utils;
@@ -24,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblockTileEntity;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +37,12 @@ import java.util.List;
  * @author Pabilo8
  * @since 20-06-2019
  */
-public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblockTileEntity
+public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblockTileEntity, ISoundTile
 {
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(0, ItemStack.EMPTY);
 	public int frequency, construction = 0, clientConstruction = 0;
+	private int soundDelay = 0;
+	private boolean sountIn=false;
 
 	public TileEntityRadioStation()
 	{
@@ -63,6 +70,12 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 		super.update();
 		if(!isDummy()&&world.isRemote)
 		{
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_noise, getTileForPos(9), this.soundDelay > 0, 0.125f/4f, 1);
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_beep, getTileForPos(0), this.soundDelay > 0, 0.5f/4f, sountIn?1f:0.5f);
+
+			if(soundDelay > 0)
+				soundDelay--;
+
 			float maxConstruction = Utils.getMaxClientProgress(construction, getConstructionCost(), 51);
 			if(clientConstruction < maxConstruction)
 				clientConstruction = (int)Math.min(clientConstruction+(Tools.electric_hammer_energy_per_use_construction/4.25f), maxConstruction);
@@ -106,6 +119,11 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 		if(message.hasKey("frequency"))
 		{
 			frequency = message.getInteger("frequency");
+		}
+		else if(message.hasKey("beep"))
+		{
+			this.sountIn=message.getBoolean("beep");
+			this.soundDelay = sountIn?20:25;
 		}
 	}
 
@@ -250,7 +268,9 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public void onRadioSend(DataPacket packet)
 	{
-
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setBoolean("beep", false);
+		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), Utils.targetPointFromTile(this, 6));
 	}
 
 	@Override
@@ -263,6 +283,9 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			if(conn!=null)
 			{
 				conn.sendPacket(packet);
+				NBTTagCompound nbt = new NBTTagCompound();
+				nbt.setBoolean("beep", true);
+				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), Utils.targetPointFromTile(this, 6));
 			}
 			return true;
 		}
@@ -472,5 +495,11 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	public void onConstructionFinish()
 	{
 
+	}
+
+	@Override
+	public boolean shoudlPlaySound(String sound)
+	{
+		return true;
 	}
 }

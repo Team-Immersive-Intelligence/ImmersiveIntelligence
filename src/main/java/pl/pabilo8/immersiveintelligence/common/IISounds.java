@@ -50,6 +50,17 @@ public class IISounds
 	public static SoundEvent motorbike_engine = registerSound("motorbike_engine");
 	public static SoundEvent motorbike_horn = registerSound("motorbike_horn");
 
+	public static SoundEvent welding_start = registerSound("welding_start");
+	public static SoundEvent welding_mid = registerSound("welding_mid");
+	public static SoundEvent welding_end = registerSound("welding_end");
+
+	public static SoundEvent fuel_station_start = registerSound("fuel_station_start");
+	public static SoundEvent fuel_station_mid = registerSound("fuel_station_mid");
+	public static SoundEvent fuel_station_end = registerSound("fuel_station_end");
+
+	//public static SoundEvent hans_test_de = registerSound("hans_test_de");
+	//public static SoundEvent hans_test_pl = registerSound("hans_test_pl");
+
 	private static SoundEvent registerSound(String name)
 	{
 		ResourceLocation location = new ResourceLocation(ImmersiveIntelligence.MODID, name);

@@ -81,6 +81,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIMineDetector;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
@@ -1005,6 +1006,14 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					}
 
 			}
+			else if(ridingEntity instanceof EntityParachute)
+			{
+				model.bipedLeftArm.rotateAngleX-=2.75;
+				model.bipedLeftArm.rotateAngleZ+=0.35;
+
+				model.bipedRightArm.rotateAngleX+=3.5;
+				model.bipedRightArm.rotateAngleZ-=0.35;
+			}
 			else if(ridingEntity instanceof EntityVehicleSeat)
 			{
 				EntityVehicleSeat seat = ((EntityVehicleSeat)ridingEntity);
@@ -1212,16 +1221,36 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						{
 							if(right)
 							{
-								//model.bipedBody.rotateAngleY=model.bipedHead.rotateAngleY;
 								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
 								model.bipedRightArm.rotateAngleY = -.08726f-TmtUtil.AngleToTMT(15f)+model.bipedHead.rotateAngleY;
-								// TODO: 26.09.2020 vector calculation
 								float v = model.bipedBody.rotateAngleY-model.bipedRightArm.rotateAngleY;
 
 								model.bipedLeftArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
 								model.bipedLeftArm.rotateAngleY = 1.25f-model.bipedBody.rotateAngleY-v;
-								//model.bipedLeftArm.rotateAngleZ = -v;
-								//model.bipedLeftArm.rotateAngleY = -.08726f+v+model.bipedHead.rotateAngleY;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
+								model.bipedLeftArm.rotateAngleY = -.08726f-TmtUtil.AngleToTMT(15f)+model.bipedHead.rotateAngleY;
+								float v = model.bipedBody.rotateAngleY-model.bipedLeftArm.rotateAngleY;
+
+								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
+								model.bipedRightArm.rotateAngleY = 1.25f-model.bipedBody.rotateAngleY-v;
+							}
+						}
+						// TODO: 19.05.2021 change railgun and chemthrower animation
+						/*
+						else if(heldItem.getItem() instanceof ItemIIRailgunOverride&&hand!=EnumHand.OFF_HAND)
+						{
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
+								model.bipedRightArm.rotateAngleY = -0.25f;
+								model.bipedLeftArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
+								model.bipedLeftArm.rotateAngleY = 0.75f;
+								model.bipedLeftArm.rotationPointZ = -1.25F;
+								//model.bipedRightArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
+
 							}
 							else
 							{
@@ -1229,6 +1258,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								model.bipedLeftArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
 							}
 						}
+						 */
 						else if(player.isSneaking()&&heldItem.getItem() instanceof ItemIIBinoculars)
 						{
 							model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;

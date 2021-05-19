@@ -45,7 +45,7 @@ public class PrintingPressRenderer extends TileEntitySpecialRenderer<TileEntityP
 			modelCurrent.getBlockRotation(te.facing, te.mirrored);
 			modelCurrent.rotate(modelCurrent.paperInserterDoorModel, 0, 0, -1.57079633F);
 
-			float time = (PrintingPress.printTime-(te.processTimeLeft+partialTicks/20))/((float)PrintingPress.printTime);
+			float time = (PrintingPress.printTime-(te.processTimeLeft-partialTicks))/((float)PrintingPress.printTime);
 			float product_x = 0f, product_y = 0f, product_z = 0f, rotation_x = 0f, rotation_y = 0f;
 			if(te.processTimeLeft!=0)
 			{
