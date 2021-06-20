@@ -235,7 +235,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		if(canAccept <= 0)
 			return 0;
 
-		int accelPower = IEConfig.Machines.pump_consumption_accelerate;
 		final int fluidForSort = canAccept;
 		int sum = 0;
 		HashMap<DirectionalFluidOutput, Integer> sorting = new HashMap<DirectionalFluidOutput, Integer>();

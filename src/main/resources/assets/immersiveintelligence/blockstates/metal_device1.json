@@ -1,0 +1,41 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "cube_all",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_steel",
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "type": {
+      "co2_filter": {
+
+      }
+    },
+    "facing": {
+      "down": {
+      },
+      "up": {
+      },
+      "north": {
+      },
+      "south": {
+
+      },
+      "west": {
+
+      },
+      "east": {
+
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    }
+  }
+}

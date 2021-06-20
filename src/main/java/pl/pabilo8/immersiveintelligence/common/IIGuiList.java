@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityVulcanizer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
@@ -146,6 +147,10 @@ public enum IIGuiList
 
 	GUI_UPGRADE(TileEntity.class,
 			(player, te) -> new ContainerUpgrade(player.inventory, (TileEntity&IUpgradableMachine)te)
+	),
+
+	GUI_VULCANIZER(TileEntityVulcanizer.class,
+			(player, te) -> new ContainerVulcanizer(player.inventory, (TileEntityVulcanizer)te)
 	);
 
 	//GUI_PERISCOPE,

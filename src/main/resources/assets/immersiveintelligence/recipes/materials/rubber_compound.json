@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustZinc"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustSteel"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustCoke"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustCoke"
+    }
+  ],
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 4,
+    "data": 31
+  }
+}

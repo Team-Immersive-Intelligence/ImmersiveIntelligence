@@ -18,7 +18,7 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog.IIBlockTypesRubberLog;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog.IIBlockTypesRubberStuff;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nullable;
@@ -28,15 +28,16 @@ import java.util.Random;
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class BlockIIRubberSapling extends BlockIIBase<IIBlockTypesRubberLog> implements IGrowable, IPlantable
+public class BlockIIRubberSapling extends BlockIIBase<IIBlockTypesRubberStuff> implements IGrowable, IPlantable
 {
 	private static final AxisAlignedBB SAPLING_AABB = new AxisAlignedBB(0.09999999403953552D, 0.0D, 0.09999999403953552D, 0.8999999761581421D, 0.800000011920929D, 0.8999999761581421D);
 
 	public BlockIIRubberSapling()
 	{
-		super("rubber_sapling", Material.PLANTS, PropertyEnum.create("type", IIBlockTypesRubberLog.class), ItemBlockIEBase.class,BlockSapling.STAGE);
+		super("rubber_sapling", Material.PLANTS, PropertyEnum.create("type", IIBlockTypesRubberStuff.class), ItemBlockIEBase.class,BlockSapling.STAGE);
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 		lightOpacity = 0;
+		setAllNotNormalBlock();
 	}
 
 	@Override
@@ -54,13 +55,13 @@ public class BlockIIRubberSapling extends BlockIIBase<IIBlockTypesRubberLog> imp
 	@Override
 	protected IBlockState getInitDefaultState()
 	{
-		return super.getInitDefaultState().withProperty(property,IIBlockTypesRubberLog.RUBBER).withProperty(BlockSapling.STAGE,0);
+		return super.getInitDefaultState().withProperty(property, IIBlockTypesRubberStuff.RUBBER).withProperty(BlockSapling.STAGE,0);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(property, IIBlockTypesRubberLog.RUBBER).withProperty(BlockSapling.STAGE, meta);
+		return this.getDefaultState().withProperty(property, IIBlockTypesRubberStuff.RUBBER).withProperty(BlockSapling.STAGE, meta);
 	}
 
 	@Override

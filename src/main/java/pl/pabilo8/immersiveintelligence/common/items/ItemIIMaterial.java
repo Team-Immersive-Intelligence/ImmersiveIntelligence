@@ -39,7 +39,8 @@ public class ItemIIMaterial extends ItemIIBase
 				"artificial_leather",
 				"natural_rubber",
 				"rubber_belt",
-				"rubber_tire"
+				"rubber_tire",
+				"rubber_compound"
 		);
 	}
 }

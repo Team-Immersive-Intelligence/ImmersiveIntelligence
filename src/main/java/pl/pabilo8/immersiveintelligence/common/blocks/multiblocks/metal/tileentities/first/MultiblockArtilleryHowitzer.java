@@ -68,6 +68,8 @@ public class MultiblockArtilleryHowitzer implements IMultiblock
 			{
 				for(int w = 0; w < 9; w++)
 				{
+					structure[h][l][w] = ItemStack.EMPTY;
+
 					if(h==0)
 					{
 						if((l==2&&w==2)||(l==2&&w==6)||(l==6&&w==2)||(l==6&&w==6))

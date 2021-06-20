@@ -10,19 +10,14 @@ import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
-import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiChemicalBath;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiElectrolyzer;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiPrecissionAssembler;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiSawmill;
+import pl.pabilo8.immersiveintelligence.api.crafting.*;
+import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer.ElectrolyzerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.precission_assembler.PrecissionAssemblerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.sawmill.SawmillRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.vulcanizer.VulcanizerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
 
 import java.util.LinkedHashMap;
@@ -61,6 +56,7 @@ public class JEIHelper implements IModPlugin
 		categories.put(ElectrolyzerRecipe.class, new ElectrolyzerRecipeCategory(guiHelper));
 		categories.put(PrecissionAssemblerRecipe.class, new PrecissionAssemblerRecipeCategory(guiHelper));
 		categories.put(SawmillRecipe.class, new SawmillRecipeCategory(guiHelper));
+		categories.put(VulcanizerRecipe.class, new VulcanizerRecipeCategory(guiHelper));
 
 		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[0]));
 	}
@@ -110,6 +106,9 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipes(SawmillRecipe.recipeList, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 33, 42, 43, 4, "ii.sawmill");
 		modRegistry.addRecipeClickArea(GuiSawmill.class, 76, 38, 6, 12, "ii.sawmill");
+
+		modRegistry.addRecipes(VulcanizerRecipe.recipeList.values(), "ii.vulcanizer");
+		modRegistry.addRecipeClickArea(GuiVulcanizer.class, 71, 24, 30, 30, "ii.vulcanizer");
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler());

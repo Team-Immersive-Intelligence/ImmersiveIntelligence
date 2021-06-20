@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C",
+    "T"
+  ],
+  "key": {
+    "C": {
+      "type": "minecraft:item_nbt",
+      "item": "immersiveengineering:conveyor",
+      "nbt": {
+        "conveyorType": "immersiveintelligence:rubber_conveyor"
+      }
+    },
+    "T": {
+      "item": "minecraft:iron_trapdoor"
+    }
+  },
+  "result": {
+    "item": "immersiveengineering:conveyor",
+    "count": 1,
+    "nbt": {
+      "conveyorType": "immersiveintelligence:rubber_dropper"
+    }
+  }
+}

@@ -110,10 +110,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubber;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubberDropper;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubberSplitter;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.ConveyorRubberVertical;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
@@ -135,7 +132,6 @@ import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemScrollableSwitch;
-import pl.pabilo8.immersiveintelligence.common.util.SkyCrateSound;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -513,6 +509,7 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberVertical.texture_off);
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberDropper.texture_on);
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberDropper.texture_off);
+		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberExtract.texture_casing);
 	}
 
 	@Override
@@ -561,6 +558,8 @@ public class ClientProxy extends CommonProxy
 		IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
 
 		IIGuiList.GUI_UPGRADE.setClientGui((player, te) -> new GuiUpgrade(player.inventory, ((TileEntity& IUpgradableMachine)te)));
+
+		IIGuiList.GUI_VULCANIZER.setClientGui((player, te) -> new GuiVulcanizer(player.inventory, (TileEntityVulcanizer)te));
 	}
 
 	@Override
@@ -681,6 +680,8 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataDebugger.class, new DataDebuggerRenderer().subscribeToList("data_debugger"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPunchtapeReader.class, new PunchtapeReaderRenderer().subscribeToList("punchtape_reader"));
 
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLatexCollector.class, new LatexCollectorRenderer().subscribeToList("latex_collector"));
+
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), TileEntityAmmunitionCrate.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta(), TileEntityMedicalCrate.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta(), TileEntityRepairCrate.class);
@@ -767,7 +768,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer().subscribeToList("electrolyzer"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), TileEntityElectrolyzer.class);
 
-		//TODO: Fix misspeling on 1.14, not now, it could break stuff
+		//TODO: Fix misspeling during the Split, it could break stuff
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer().subscribeToList("precision_assembler"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), TileEntityPrecissionAssembler.class);
 
@@ -800,17 +801,12 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVehicleWorkshop.class, new VehicleWorkshopRenderer().subscribeToList("vehicle_workshop"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.VEHICLE_WORKSHOP.getMeta(), TileEntityVehicleWorkshop.class);
 
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVulcanizer.class, new VulcanizerRenderer().subscribeToList("vulcanizer"));
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.VULCANIZER.getMeta(), TileEntityVulcanizer.class);
 		mech_con_renderer = new MechanicalConnectorRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalConnectable.class, mech_con_renderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalWheel.class, new WheelRenderer());
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMechanicalConnector), IIBlockTypes_MechanicalConnector.WOODEN_WHEEL.getMeta(), TileEntityMechanicalWheel.class);
-
-		/*
-		//Doesn't work
-		//Fix for IE's Razor Wire
-		IEContent.blockMetalDecoration2.setMetaBlockLayer(BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta(),BlockRenderLayer.CUTOUT);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRazorWire.class, new RazorWireRenderer());
-		 */
 
 		reloadModels();
 	}
@@ -821,13 +817,6 @@ public class ClientProxy extends CommonProxy
 		TileEntitySpecialRenderer<TileEntity> tesr = TileEntityRendererDispatcher.instance.getRenderer(te);
 
 		tesr.render(te, 0, 0, 0, 0, 0, 0);
-	}
-
-	@Override
-	public void startSkyhookSound(EntitySkyCrate hook)
-	{
-		ClientUtils.mc().getSoundHandler().playSound(new SkyCrateSound(hook,
-				new ResourceLocation(ImmersiveEngineering.MODID, "skyhook")));
 	}
 
 	@Override

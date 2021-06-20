@@ -26,7 +26,7 @@ public class RotaryInputTweaker
 					(tileEntity -> tileEntity.getClass().equals(c)),
 					(aFloat -> aFloat*torqueMod)
 			);
-			CraftTweakerAPI.getLogger().logError("Transmission box will now recognise "+classPath+" as a rotary power source");
+			CraftTweakerAPI.getLogger().logInfo("Transmission box will now recognise "+classPath+" as a rotary power source");
 		} catch(ClassNotFoundException e)
 		{
 			CraftTweakerAPI.getLogger().logError("Couldn't add "+classPath+" as a rotary power source, class doesn't exist");

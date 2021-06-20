@@ -10,11 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
@@ -28,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog.IIBlockTypesRubberLog;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog.IIBlockTypesRubberStuff;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,14 +35,14 @@ import java.util.Random;
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class BlockIIRubberLeaves extends BlockIIBase<IIBlockTypesRubberLog> implements IShearable, IColouredBlock, IColouredItem
+public class BlockIIRubberLeaves extends BlockIIBase<IIBlockTypesRubberStuff> implements IShearable, IColouredBlock, IColouredItem
 {
 	protected boolean leavesFancy;
 	int[] surroundings;
 
 	public BlockIIRubberLeaves()
 	{
-		super("rubber_leaves", Material.LEAVES, PropertyEnum.create("type", IIBlockTypesRubberLog.class), ItemBlockIILeaves.class, BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE);
+		super("rubber_leaves", Material.LEAVES, PropertyEnum.create("type", IIBlockTypesRubberStuff.class), ItemBlockIILeaves.class, BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE);
 		this.setTickRandomly(true);
 		this.setHardness(0.2F);
 		this.setLightOpacity(1);
@@ -57,7 +53,7 @@ public class BlockIIRubberLeaves extends BlockIIBase<IIBlockTypesRubberLog> impl
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(property,IIBlockTypesRubberLog.RUBBER).withProperty(BlockLeaves.CHECK_DECAY,meta==1).withProperty(BlockLeaves.DECAYABLE,meta==1);
+		return this.getDefaultState().withProperty(property, IIBlockTypesRubberStuff.RUBBER).withProperty(BlockLeaves.CHECK_DECAY,meta==1).withProperty(BlockLeaves.DECAYABLE,meta==1);
 	}
 
 	@Override
@@ -320,7 +316,7 @@ public class BlockIIRubberLeaves extends BlockIIBase<IIBlockTypesRubberLog> impl
 		if(fortune > 0)
 		{
 			chance -= 2<<fortune;
-			if(chance < 10) chance = 10;
+			if(chance < 30) chance = 30;
 		}
 
 		if(rand.nextInt(chance)==0)

@@ -9,6 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog.IIBlockTypesRubberLog;
 
 import java.util.Random;
 
@@ -19,6 +21,7 @@ import java.util.Random;
 public class IIWorldGenRubberTree extends WorldGenAbstractTree
 {
 	private static final IBlockState TRUNK = IIContent.blockRubberLog.getDefaultState().withProperty(BlockLog.LOG_AXIS, EnumAxis.Y);
+	private static final IBlockState TRUNK_REBBUR = IIContent.blockRubberLog.getDefaultState().withProperty(IIContent.blockRubberLog.property, IIBlockTypesRubberLog.REBBUR).withProperty(BlockLog.LOG_AXIS, EnumAxis.Y);
 	private static final IBlockState LEAF = IIContent.blockRubberLeaves.getDefaultState().withProperty(BlockLeaves.DECAYABLE, true).withProperty(BlockLeaves.CHECK_DECAY, true);
 
 	public IIWorldGenRubberTree()
@@ -143,7 +146,7 @@ public class IIWorldGenRubberTree extends WorldGenAbstractTree
 
 						if(state.getBlock().isAir(state, worldIn, upN)||state.getBlock().isLeaves(state, worldIn, upN))
 						{
-							this.setBlockAndNotifyAdequately(worldIn, position.up(i3), TRUNK);
+							this.setBlockAndNotifyAdequately(worldIn, position.up(i3), i3==1?TRUNK_REBBUR:TRUNK);
 						}
 					}
 

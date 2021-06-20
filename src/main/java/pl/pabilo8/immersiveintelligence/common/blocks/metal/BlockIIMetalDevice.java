@@ -107,6 +107,10 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 			{
 				return new TileEntityRepairCrate();
 			}
+			case LATEX_COLLECTOR:
+			{
+				return new TileEntityLatexCollector();
+			}
 		}
 		return null;
 	}
@@ -158,15 +162,16 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 	@Deprecated
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		if(getMetaFromState(state)==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta())
+		switch(state.getValue(property))
 		{
-			return EnumBlockRenderType.MODEL;
+			case METAL_CRATE:
+			case DATA_ROUTER:
+			case LATEX_COLLECTOR:
+				return EnumBlockRenderType.MODEL;
+			default:
+				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 		}
-		else if(getMetaFromState(state)==IIBlockTypes_MetalDevice.DATA_ROUTER.getMeta())
-		{
-			return EnumBlockRenderType.MODEL;
-		}
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+
 	}
 
 	@Override

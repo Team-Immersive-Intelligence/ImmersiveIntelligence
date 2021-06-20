@@ -242,10 +242,11 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				Vec3d vv = player.getPositionVector().addVector(0, (double)player.getEyeHeight()-0.10000000149011612D, 0);
 				ItemStack s2 = ItemIIBulletMagazine.takeBullet(magazine);
 
-				float noise = getUpgrades(stack).hasKey("suppressor")?0.25f: 1f;
+				boolean supressor = getUpgrades(stack).hasKey("suppressor");
+				float noise = supressor?0.25f: 1f;
 				blusunrize.immersiveengineering.common.util.Utils.attractEnemies(player, 36*noise);
 
-				worldIn.playSound(null, player.posX+vec.x, player.posY+vec.y, player.posZ+vec.z, IISounds.submachinegun_shot, SoundCategory.PLAYERS, 1.5f*noise, 0.125f);
+				worldIn.playSound(null, player.posX+vec.x, player.posY+vec.y, player.posZ+vec.z, IISounds.submachinegun_shot, SoundCategory.PLAYERS, 1.5f*noise, supressor?0.75f:0f);
 				EntityBullet a = BulletHelper.createBullet(worldIn, s2, vv, vec, 6.5f);
 				a.setShooters(player);
 				worldIn.spawnEntity(a);

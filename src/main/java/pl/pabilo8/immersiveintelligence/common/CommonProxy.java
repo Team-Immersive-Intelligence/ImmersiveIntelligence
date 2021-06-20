@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
+import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent;
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
@@ -25,6 +26,7 @@ import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
+import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.Block;
@@ -96,6 +98,7 @@ import pl.pabilo8.immersiveintelligence.common.ammunition_system.factory.BulletC
 import pl.pabilo8.immersiveintelligence.common.ammunition_system.factory.BulletComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.blocks.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityChainFence;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
@@ -339,6 +342,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		OreDictionary.registerOre("pulpWoodTreated", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("pulp_wood_treated")));
 		OreDictionary.registerOre("dustHexamine", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_hexamine")));
 		OreDictionary.registerOre("dustFormaldehyde", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("dust_formaldehyde")));
+
+		OreDictionary.registerOre("dustVulcanizationCompound", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("rubber_compound")));
 
 		OreDictionary.registerOre("leatherArtificial", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("artificial_leather")));
 		OreDictionary.registerOre("leather", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("artificial_leather")));
@@ -617,6 +622,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			BulletRegistry.INSTANCE.registerComponent(comp);
 		}
 
+		IIContent.blockFluidInkBlack.setPotionEffects(new PotionEffect(IEPotions.sticky, 60, 0));
+		IIContent.blockFluidInkCyan.setPotionEffects(new PotionEffect(IEPotions.sticky, 60, 0));
+		IIContent.blockFluidInkMagenta.setPotionEffects(new PotionEffect(IEPotions.sticky, 60, 0));
+		IIContent.blockFluidInkYellow.setPotionEffects(new PotionEffect(IEPotions.sticky, 60, 0));
+		IIContent.blockFluidLatex.setPotionEffects(new PotionEffect(IEPotions.sticky, 60, 0));
+
 		//Blocks config
 		IIContent.blockOre.setMiningLevels();
 		//BlockIIConcreteDecoration.setMiningLevels(IIContent.blockConcreteDecoration);
@@ -660,6 +671,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerTile(TileEntityProgrammableSpeaker.class);
 		registerTile(TileEntityMedicalCrate.class);
 		registerTile(TileEntityRepairCrate.class);
+		registerTile(TileEntityLatexCollector.class);
+		registerTile(TileEntityCO2Filter.class);
 
 		registerTile(TileEntityInserter.class);
 		registerTile(TileEntityAdvancedInserter.class);
@@ -860,6 +873,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_CHESTPLATE));
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_LEGGINGS));
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_BOOTS));
+
+		for(IMultiblock mb : MultiblockHandler.getMultiblocks())
+		{
+			if(mb instanceof MultiblockStuctureBase)
+				((MultiblockStuctureBase)mb).updateStructure();
+		}
 	}
 
 	public void reInitGui()
@@ -910,10 +929,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	}
 
 	public void renderTile(TileEntity te)
-	{
-	}
-
-	public void startSkyhookSound(EntitySkyCrate entitySkyCrate)
 	{
 	}
 

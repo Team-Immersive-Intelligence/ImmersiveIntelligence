@@ -95,6 +95,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 			{
 				case "ammo":
 				case "bottomLoader":
+				{
 					GlStateManager.pushMatrix();
 					int reloading = ItemNBTHelper.getInt(stack, "reloading");
 					ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
@@ -105,7 +106,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 							Submachinegun.clipReloadTime
 					);
 					reload /= Submachinegun.clipReloadTime;
-					float clipReload = magazine.isEmpty()?1f: 0f;
+					float clipReload;
 
 					if(reloading==0)
 					{
@@ -144,17 +145,18 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 								clipReload = 1f;
 
 						}
-						GlStateManager.color(1f, 1f, 1f, 1f-Math.min(clipReload/0.5f, 1f));
 						ClientUtils.bindTexture(nmod.getTexturePath());
 						if(IIContent.itemSubmachinegun.getUpgrades(stack).hasKey("bottom_loading"))
 						{
 							nmod.render(0.0625f);
 							GlStateManager.translate(0, -clipReload, 0);
+							GlStateManager.color(1f, 1f, 1f, 1f-Math.min(clipReload/0.5f, 1f));
 							(ItemNBTHelper.getBoolean(stack, "isDrum")?model.magDrumBox: model.magBottomBox).render(0.0625f);
 						}
 						else
 						{
 							GlStateManager.translate(0.65f*clipReload, 0, 0);
+							GlStateManager.color(1f, 1f, 1f, 1f-Math.min(clipReload/0.5f, 1f));
 							nmod.render(0.0625f);
 						}
 
@@ -162,10 +164,11 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 						GlStateManager.color(1f, 1f, 1f, 1f);
 
 					}
-
 					GlStateManager.popMatrix();
-					break;
+				}
+				break;
 				case "slide":
+				{
 					float delay = Math.max(ItemNBTHelper.getInt(stack, "fireDelay")-partialTicks, 0);
 					float movement = 1f-(Math.abs(delay/(float)Submachinegun.bulletFireTime-0.5f)/0.5f);
 					GlStateManager.pushMatrix();
@@ -173,11 +176,15 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 					ClientUtils.bindTexture(nmod.getTexturePath());
 					nmod.render(0.0625f);
 					GlStateManager.popMatrix();
-					break;
+				}
+				break;
 				default:
+				{
 					ClientUtils.bindTexture(nmod.getTexturePath());
 					nmod.render(0.0625f);
-					break;
+
+				}
+				break;
 			}
 		}
 

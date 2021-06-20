@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "immersiveengineering:conveyor",
+    "nbt": {
+      "conveyorType": "immersiveintelligence:rubber_vertical"
+    },
+    "count": 3
+  },
+  "pattern": [
+    "CI",
+    "C ",
+    "CI"
+  ],
+  "key": {
+    "C": {
+      "type": "minecraft:item_nbt",
+      "item": "immersiveengineering:conveyor",
+      "nbt": {
+        "conveyorType": "immersiveintelligence:rubber_conveyor"
+      }
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotSteel"
+    }
+  }
+}

@@ -351,6 +351,8 @@ public class Config
 		public static class Machines
 		{
 			@SubConfig
+			public static LatexCollector latexCollector;
+			@SubConfig
 			public static RadioStation radioStation;
 			@SubConfig
 			public static DataInputMachine dataInputMachine;
@@ -786,6 +788,33 @@ public class Config
 
 				@Comment({"Fluid capacity of the fuel station."})
 				public static int fluidCapacity = 64000;
+			}
+
+			public static class LatexCollector
+			{
+				@Comment({"Collection time of a single bucket (in ticks)."})
+				public static int collectTime = 12000;
+			}
+
+			public static class CO2Collector
+			{
+				@Comment({"CO2 collection time (in ticks)."})
+				public static int blastFurnaceCollectTime = 20;
+
+				@Comment({"CO2 amount collected (in mB)."})
+				public static int blastFurnaceCollectAmount = 5;
+
+				@Comment({"CO2 collection time (in ticks)."})
+				public static int fermenterCollectTime = 20;
+
+				@Comment({"CO2 amount collected (in mB)."})
+				public static int fermenterCollectAmount = 2;
+			}
+
+			public static class Vulcanizer
+			{
+				@Comment({"Energy capacity of the vulcanizer."})
+				public static int energyCapacity = 16000;
 			}
 		}
 

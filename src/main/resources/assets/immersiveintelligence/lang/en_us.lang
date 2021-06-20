@@ -39,6 +39,9 @@ item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Subma
 item.immersiveintelligence.press_mold.grenade.name=Metal Press Mold: Grenade
 item.immersiveintelligence.press_mold.light_howitzer.name=Metal Press Mold: Light Howitzer Shell Casing
 
+item.immersiveintelligence.vulcanizer_mold.belt.name=Vulcanizer Mold: Belt
+item.immersiveintelligence.vulcanizer_mold.tire.name=Vulcanizer Mold: Tire
+
 item.immersiveintelligence.material_ingot.platinum.name=Platinum Ingot
 item.immersiveintelligence.material_ingot.zinc.name=Zinc Ingot
 item.immersiveintelligence.material_ingot.tungsten.name=Tungsten Ingot
@@ -64,6 +67,7 @@ item.immersiveintelligence.material_plate.tungsten.name=Tungsten Plate
 item.immersiveintelligence.material_plate.brass.name=Brass Plate
 item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Advanced Electronic Alloy Plate
 item.immersiveintelligence.material_plate.silicon.name=Silicon Wafer
+item.immersiveintelligence.material_plate.rubber.name=Natural Rubber Sheet
 
 item.immersiveintelligence.material_nugget.platinum.name=Platinum Nugget
 item.immersiveintelligence.material_nugget.zinc.name=Zinc Nugget
@@ -100,6 +104,7 @@ item.immersiveintelligence.material.pulp_wood.name=Wood Pulp
 item.immersiveintelligence.material.pulp_wood_treated.name=Treated Wood Pulp
 item.immersiveintelligence.material.dust_hexamine.name=Hexamine Dust
 item.immersiveintelligence.material.dust_formaldehyde.name=Formaldehyde Dust
+item.immersiveintelligence.material.rubber_compound.name=Vulcanization Compound
 
 item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
 item.immersiveintelligence.material.natural_rubber.name=Natural Rubber
@@ -340,7 +345,9 @@ tile.immersiveintelligence.storage.brass.name=Brass Block
 tile.immersiveintelligence.sheetmetal_slab.brass.name=Brass Sheetmetal Slab
 tile.immersiveintelligence.storage_slab.brass.name=Brass Slab
 
-tile.immersiveintelligence.rubber_log.rubber.name=Rubber Tree Wood
+tile.immersiveintelligence.rubber_log.raw.name=Rubber Tree Wood
+tile.immersiveintelligence.rubber_log.rebbur.name=Latex Extraction Hole
+tile.immersiveintelligence.rubber_log.stripped.name=Stripped Latex Extraction Point
 tile.immersiveintelligence.rubber_leaves.rubber.name=Rubber Tree Leaves
 tile.immersiveintelligence.rubber_sapling.rubber.name=Rubber Tree Sapling
 
@@ -407,6 +414,10 @@ tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
 tile.immersiveintelligence.metal_device.medical_crate.name=Medical Crate
 tile.immersiveintelligence.metal_device.repair_crate.name=Repair Crate
+
+tile.immersiveintelligence.metal_device.latex_collector.name=Latex Collector
+
+tile.immersiveintelligence.metal_device1.co2_filter.name=Carbon Dioxide Filter
 
 tile.immersiveintelligence.gearbox.wooden_gearbox.name=Wooden Gearbox
 tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden Transmission Box
@@ -497,6 +508,8 @@ tile.immersiveintelligence.metal_multiblock.minecart_unpacker.name=Railway Unpac
 
 tile.immersiveintelligence.metal_multiblock1.redstone_data_interface.name=Redstone-Data Interface
 tile.immersiveintelligence.metal_multiblock1.vehicle_workshop.name=Vehicle Workshop
+tile.immersiveintelligence.metal_multiblock1.vulcanizer.name=Vulcanizer
+
 tile.immersiveintelligence.metal_multiblock1.fuel_station.name=Fuel Station
 tile.immersiveintelligence.metal_multiblock1.emplacement.name=Emplacement
 tile.immersiveintelligence.metal_multiblock1.flagpole.name=Flagpole
@@ -530,8 +543,10 @@ desc.immersiveengineering.info.multiblock.II:Unacker=Unpacker
 desc.immersiveengineering.info.multiblock.II:MinecartUnpacker=Railway Unpacker
 
 desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data Interface
+
 desc.immersiveengineering.info.multiblock.II:VehicleWorkshop=Vehicle Workshop
 desc.immersiveengineering.info.multiblock.II:FuelStation=Fuel Station
+desc.immersiveengineering.info.multiblock.II:Vulcanizer=Vulcanizer
 
 desc.immersiveengineering.info.multiblock.II:Emplacement=Emplacement
 desc.immersiveengineering.info.multiblock.II:Flagpole=Flagpole
@@ -553,16 +568,20 @@ fluid.etching_acid=Etching Acid
 fluid.hydrofluoric_acid=Hydrofluoric Acid
 fluid.sulfuric_acid=Sulfuric Acid
 fluid.nitric_acid=Nitric Acid
+fluid.formic_acid=Formic Acid
 
 fluid.oxygen=Oxygen
 fluid.hydrogen=Hydrogen
 fluid.chlorine=Chlorine
+fluid.carbon_dioxide=Carbon Dioxide
 
 fluid.brine=Brine
 
 fluid.ammonia=Ammonia
 fluid.hexamine=Hexamine
 fluid.methanol=Methanol
+
+fluid.latex=Latex
 
 
 #Sounds
@@ -597,6 +616,12 @@ subtitle.immersiveintelligence.ricochet_metal=Projectile bouncing off metal
 subtitle.immersiveintelligence.motorbike_start=Starting a Motorbike
 subtitle.immersiveintelligence.motorbike_engine=Motorbike Engine Noise
 subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
+
+subtitle.immersiveintelligence.fuel_station=Fuel pumping
+subtitle.immersiveintelligence.welding=Welding
+
+subtitle.immersiveintelligence.vulcanizer_heating=Vulcanizer Heater Noise
+subtitle.immersiveintelligence.vulcanizer_motor=Vulcanizer Rotates
 
 #Entities
 

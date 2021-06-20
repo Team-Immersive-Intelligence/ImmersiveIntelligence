@@ -132,6 +132,8 @@ public class MultiblockVehicleWorkshop implements IMultiblock
 		if(MultiblockHandler.fireMultiblockFormationEventPost(player, this, pos, hammer).isCanceled())
 			return false;
 
+		//(h+hoff)*(lsize*wsize)+(l+loff)*wsize+(w+woff)
+
 		for(int h = -1; h < 3; h++)
 			for(int l = -2; l < 2; l++)
 				for(int w = -2; w < 3; w++)

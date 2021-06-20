@@ -1,8 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.ComparableItemStack;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockMetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
@@ -205,6 +207,8 @@ public class IIRecipes
 				ItemStack.EMPTY,
 				400, 512
 		);
+
+		CrusherRecipe.removeRecipesForInput(new ItemStack(Items.QUARTZ));
 
 
 	}
@@ -550,6 +554,13 @@ public class IIRecipes
 				.setRequiredProgress(20000)
 				.setRequiredSteps(10);
 
+		IIContent.UPGRADE_lATEX_DRAIN
+				.addStack(new IngredientStack("plateTungsten", 2))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
+				.setRequiredProgress(40000)
+				.setRequiredSteps(10);
+
 		//Weapons - Basic Tier
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
@@ -668,18 +679,28 @@ public class IIRecipes
 
 	public static void addRubberRecipes()
 	{
+		ComparableItemStack compMoldPlate = ApiUtils.createComparableItemStack(new ItemStack(IEContent.itemMold, 1, 0), false);
+
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterialPlate, "rubber"),
+				new IngredientStack("rubberRaw"),
+				compMoldPlate,
+				2400
+				);
+
 		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_belt",4),
-				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemMaterial, "belt")),
-				new IngredientStack("rubberRaw",10),
+				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemVulcanizerMold, "belt")),
+				new IngredientStack("plateRubber",10),
+				new IngredientStack("dustVulcanizationCompound",4),
 				new IngredientStack("dustSulfur",3),
-				20000
+				24000
 		);
 
 		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_tire",3),
-				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemMaterial, "tire")),
-				new IngredientStack("rubberRaw",10),
+				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemVulcanizerMold, "tire")),
+				new IngredientStack("plateRubber",10),
+				new IngredientStack("dustVulcanizationCompound",8),
 				new IngredientStack("dustSulfur",3),
-				20000
+				32000
 		);
 	}
 

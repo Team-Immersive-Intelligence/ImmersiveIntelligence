@@ -102,6 +102,27 @@
             "fluid": "nitric_acid"
           }
         }
+      ],
+      "latex": [
+        {
+          "custom": {
+            "fluid": "latex"
+          }
+        }
+      ],
+      "carbon_dioxide": [
+        {
+          "custom": {
+            "fluid": "carbon_dioxide"
+          }
+        }
+      ],
+      "formic_acid": [
+        {
+          "custom": {
+            "fluid": "formic_acid"
+          }
+        }
       ]
     }
 }

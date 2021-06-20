@@ -26,6 +26,11 @@
     "inventory,type=ammunition_crate": [
       {}
     ],
+    "inventory,type=latex_collector": [
+      {
+        "model": "immersiveintelligence:metal_device/latex_collector"
+      }
+    ],
     "type": {
       "metal_crate": {
         "textures": {
@@ -36,55 +41,48 @@
         "textures": {
           "all": "immersiveintelligence:blocks/metal_device/data_router"
         }
+      },
+      "latex_collector": {
+        "model": "immersiveintelligence:metal_device/latex_collector"
       }
     },
     "facing": {
       "down": {
-        "transform": {
-          "rotation": {
-            "x": 180
-          }
-        }
+
       },
       "up": {
-        "transform": {
-          "rotation": {
-            "x": 0
-          }
-        }
+
       },
       "north": {
         "transform": {
           "rotation": {
-            "x": -90
+            "y": 180
           }
         }
       },
       "south": {
-        "transform": {
-          "rotation": {
-            "x": 90
-          }
-        }
+
       },
       "west": {
         "transform": {
           "rotation": {
-            "z": 90
+            "y": -90
           }
         }
       },
       "east": {
         "transform": {
           "rotation": {
-            "z": -90
+            "y": 90
           }
         }
       }
     },
     "boolean0": {
       "false": {},
-      "true": {}
+      "true": {
+        "model": "immersiveintelligence:metal_device/latex_collector_bucket"
+      }
     },
     "boolean1": {
       "false": {},

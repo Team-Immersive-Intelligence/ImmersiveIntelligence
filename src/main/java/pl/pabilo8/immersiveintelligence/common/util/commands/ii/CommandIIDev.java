@@ -131,7 +131,7 @@ public class CommandIIDev extends CommandBase
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
-					IIWorldGen.worldGenRubberTree.generate(commandSenderEntity.world, Utils.RAND,traceResult.getBlockPos());
+					IIWorldGen.worldGenRubberTree.generate(commandSenderEntity.world, Utils.RAND,traceResult.getBlockPos().up());
 				}
 				break;
 				case "slowmo":

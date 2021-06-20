@@ -58,6 +58,10 @@ public class IISounds
 	public static SoundEvent fuel_station_mid = registerSound("fuel_station_mid");
 	public static SoundEvent fuel_station_end = registerSound("fuel_station_end");
 
+	public static SoundEvent vulcanizer_heating = registerSound("vulcanizer_heating");
+	public static SoundEvent vulcanizer_pull_start = registerSound("vulcanizer_pull_start");
+	public static SoundEvent vulcanizer_pull_end = registerSound("vulcanizer_pull_end");
+
 	//public static SoundEvent hans_test_de = registerSound("hans_test_de");
 	//public static SoundEvent hans_test_pl = registerSound("hans_test_pl");
 

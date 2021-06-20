@@ -210,7 +210,7 @@ public class CommandIIHans extends CommandBase
 				new HansSquadFieldHowitzer()
 		);
 
-		/*
+
 		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "eselschreck"),
 				new HansSquadTeamWeapon<EntityDonkey>()
 				{
@@ -259,7 +259,7 @@ public class CommandIIHans extends CommandBase
 					}
 				}
 		);
-		 */
+		 
 	}
 
 	/**
@@ -360,7 +360,7 @@ public class CommandIIHans extends CommandBase
 	@Override
 	public int getRequiredPermissionLevel()
 	{
-		return 4;
+		return 2;
 	}
 
 	/**

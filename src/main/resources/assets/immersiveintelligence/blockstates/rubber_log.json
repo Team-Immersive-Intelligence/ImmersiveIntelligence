@@ -10,7 +10,7 @@
     "model": "immersiveengineering:ie_pillar"
   },
   "variants": {
-    "inventory,type=rubber": [
+    "inventory,type=raw": [
       {
         "textures": {
           "top": "immersiveintelligence:blocks/rubber_tree/log_top",
@@ -19,13 +19,37 @@
         }
       }
     ],
+    "inventory,type=rebbur": [
+      {
+        "textures": {
+          "top": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "bottom": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "side": "immersiveintelligence:blocks/rubber_tree/log_rebbur"
+        }
+      }
+    ],
+    "inventory,type=stripped": [
+      {
+        "model": "immersiveintelligence:rubber_log_stripped"
+      }
+    ],
     "type": {
-      "rubber": {
+      "raw": {
         "textures": {
           "top": "immersiveintelligence:blocks/rubber_tree/log_top",
           "bottom": "immersiveintelligence:blocks/rubber_tree/log_top",
           "side": "immersiveintelligence:blocks/rubber_tree/log"
         }
+      },
+      "rebbur": {
+        "textures": {
+          "top": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "bottom": "immersiveintelligence:blocks/rubber_tree/log_top",
+          "side": "immersiveintelligence:blocks/rubber_tree/log_rebbur"
+        }
+      },
+      "stripped": {
+        "model": "immersiveintelligence:rubber_log_stripped"
       }
     },
     "axis": {

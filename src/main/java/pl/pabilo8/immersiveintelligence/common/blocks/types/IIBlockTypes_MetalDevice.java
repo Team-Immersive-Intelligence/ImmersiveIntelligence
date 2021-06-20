@@ -16,7 +16,8 @@ public enum IIBlockTypes_MetalDevice implements IStringSerializable, BlockIEBase
 	DATA_ROUTER,
 	DATA_MERGER,
 	MEDICAL_CRATE,
-	REPAIR_CRATE;
+	REPAIR_CRATE,
+	LATEX_COLLECTOR;
 
 	/**
 	 * @author Pabilo8

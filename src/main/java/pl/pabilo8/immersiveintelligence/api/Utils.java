@@ -660,4 +660,30 @@ public class Utils
 	{
 		return current-(current%(required/parts));
 	}
+
+	/**
+	 * Makes an integer color from the given red, green, and blue float (0-1) values
+	 * Stolen from MathHelper because of Side=Client annotation
+	 */
+	public static int rgb(float rIn, float gIn, float bIn)
+	{
+		return rgb(MathHelper.floor(rIn * 255.0F), MathHelper.floor(gIn * 255.0F), MathHelper.floor(bIn * 255.0F));
+	}
+
+	/**
+	 * Makes a single int color with the given red, green, and blue (0-255) values.
+	 * Stolen from MathHelper because of Side=Client annotation
+	 */
+	public static int rgb(int rIn, int gIn, int bIn)
+	{
+		int lvt_3_1_ = (rIn << 8) + gIn;
+		lvt_3_1_ = (lvt_3_1_ << 8) + bIn;
+		return lvt_3_1_;
+	}
+
+	public static boolean inRange(int value,int maxValue, double min,double max)
+	{
+		double vv = value/(double)maxValue;
+		return vv>=min&&vv<=max;
+	}
 }

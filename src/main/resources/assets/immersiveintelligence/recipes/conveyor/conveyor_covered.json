@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S",
+    "C"
+  ],
+  "key": {
+    "C": {
+      "type": "minecraft:item_nbt",
+      "item": "immersiveengineering:conveyor",
+      "nbt": {
+        "conveyorType": "immersiveintelligence:rubber_conveyor"
+      }
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveengineering:conveyor",
+    "count": 1,
+    "nbt": {
+      "conveyorType": "immersiveintelligence:rubber_covered"
+    }
+  }
+}

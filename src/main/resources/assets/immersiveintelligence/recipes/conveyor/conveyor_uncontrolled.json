@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "result": {
+    "item": "immersiveengineering:conveyor",
+    "nbt": {
+      "conveyorType": "immersiveintelligence:rubber_uncontrolled"
+    },
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "type": "minecraft:item_nbt",
+      "item": "immersiveengineering:conveyor",
+      "nbt": {
+        "conveyorType": "immersiveintelligence:rubber_conveyor"
+      }
+    }
+  ]
+}

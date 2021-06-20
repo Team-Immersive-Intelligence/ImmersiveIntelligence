@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "immersiveengineering:conveyor",
+    "nbt": {
+      "conveyorType": "immersiveintelligence:rubber_extract"
+    },
+    "count": 1
+  },
+  "pattern": [
+    "WS",
+    "MC"
+  ],
+  "key": {
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "blockSheetmetalSteel"
+    },
+    "S": {
+      "item": "immersiveengineering:cloth_device",
+      "data": 2
+    },
+    "M": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "C": {
+      "type": "minecraft:item_nbt",
+      "item": "immersiveengineering:conveyor",
+      "nbt": {
+        "conveyorType": "immersiveintelligence:rubber_conveyor"
+      }
+    }
+  }
+}

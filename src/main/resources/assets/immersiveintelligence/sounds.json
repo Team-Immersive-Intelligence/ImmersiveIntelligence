@@ -241,5 +241,26 @@
       "immersiveintelligence:fuel_station/end"
     ],
     "subtitle": "subtitle.immersiveintelligence.fuel_station"
+  },
+  "vulcanizer_heating": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:vulcanizer/heating"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.vulcanizer_heating"
+  },
+  "vulcanizer_pull_start": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:vulcanizer/pull_start"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.vulcanizer_motor"
+  },
+  "vulcanizer_pull_end": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:vulcanizer/pull_end"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.vulcanizer_motor"
   }
 }

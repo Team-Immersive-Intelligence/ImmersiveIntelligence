@@ -1888,8 +1888,8 @@ public class ModelRendererTurbo extends ModelRenderer
 	{
 		vertices = new PositionTextureVertex[0];
 		faces = new TexturedPolygon[0];
-		transformGroup.clear();
-		currentGroup = transformGroup.get("0");
+		//transformGroup.clear();
+		//currentGroup = transformGroup.get("0");
 	}
 
 	/**

@@ -233,18 +233,19 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@SideOnly(Side.CLIENT)
 	private void spawnDustParticleLast()
 	{
-		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5,0.75,0.5);
+		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5, 0.75, 0.5);
 		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
 		facing = facing.scale(0.65f);
 
 		float mod = (float)(Math.random()*2f);
+		float[] rgb = getCurrentProcessColor();
 
-		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(),pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
+		ParticleRedstone particle = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
 		if(particle!=null)
 		{
 			//particle.setMaxAge(25);
 			particle.reddustParticleScale = 3.25f;
-			particle.setRBGColorF(0.22392157f*mod*1.15f, 0.21372549019607842f*mod*1.15f, 0.15176470588235294f*mod);
+			particle.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
 		}
 		spawnLast = false;
 	}
@@ -253,7 +254,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	private void spawnDustParticle()
 	{
 		//Hardcoded for now :D, might make it configurable later on.
-		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5,0,0.5);
+		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5, 0, 0.5);
 		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
 		facing = facing.scale(0.65f);
 
@@ -263,25 +264,40 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		ParticleRedstone particle2 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+0.65+facing.y, pos.z+facing.z, 0, -4, 0);
 		ParticleRedstone particle3 = (ParticleRedstone)ClientUtils.mc().effectRenderer.spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), pos.x+facing.x, pos.y+facing.y, pos.z+facing.z, 0, -4, 0);
 
+		float[] rgb = getCurrentProcessColor();
+		final float dmod = 1.3043479f;
 
 		if(particle!=null)
 		{
 			particle.reddustParticleScale = 3;
-			particle.setRBGColorF(0.22392157f*mod*1.15f, 0.21372549019607842f*mod*1.15f, 0.15176470588235294f*mod);
+			particle.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
 		}
 		if(particle2!=null)
 		{
 			particle2.reddustParticleScale = 4;
-			particle2.setRBGColorF(0.22392157f*mod*1.5f, 0.21372549019607842f*mod*1.5f, 0.15176470588235294f*mod*1.5f);
+			particle2.setRBGColorF(rgb[0]*dmod*mod, rgb[1]*dmod*mod, rgb[2]*dmod*mod);
 		}
 		if(particle3!=null)
 		{
 			particle3.reddustParticleScale = 3;
-			particle3.setRBGColorF(0.22392157f*mod*1.15f, 0.21372549019607842f*mod*1.15f, 0.15176470588235294f*mod);
+			particle3.setRBGColorF(rgb[0]*mod, rgb[1]*mod, rgb[2]*mod);
 		}
 
 
 		active = false;
+	}
+
+	private float[] getCurrentProcessColor()
+	{
+		if(!processPrimary.isEmpty())
+		{
+			SawmillRecipe recipe = SawmillRecipe.findRecipe(inventory.get(0));
+			if(recipe!=null)
+			{
+				return recipe.getDustColor();
+			}
+		}
+		return new float[]{1, 1, 1};
 	}
 
 	public float getCurrentEfficiency()

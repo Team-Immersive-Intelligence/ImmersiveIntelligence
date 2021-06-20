@@ -17,7 +17,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 import java.util.*;
 import java.util.function.Function;
@@ -33,40 +35,39 @@ public class VulcanizerRecipe extends MultiblockRecipe
 	public static float timeModifier = 1;
 
 	public final IngredientStack input;
-	public final IngredientStack input2;
+	public final IngredientStack compoundInput;
+	public final IngredientStack sulfurInput;
 	public final ComparableItemStack mold;
 	public final ItemStack output;
 	int totalProcessTime;
 	int totalProcessEnergy;
 
-	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack input, IngredientStack input2, int energy)
+	public final ResourceLocation resIn, resOut;
+	public static final ResourceLocation TEXTURE_LATEX = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/latex_strip.png");
+	public static final ResourceLocation TEXTURE_RUBBER = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/rubber_strip.png");
+
+	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput, int energy, ResourceLocation resIn, ResourceLocation resOut)
 	{
 		this.output = output;
 		this.mold = mold;
-		this.input = ApiUtils.createIngredientStack(input);
-		this.input2 = ApiUtils.createIngredientStack(input2);
+		this.input = ApiUtils.createIngredientStack(mainInput);
+		this.compoundInput = ApiUtils.createIngredientStack(compoundInput);
+		this.sulfurInput = ApiUtils.createIngredientStack(sulfurInput);
 
 		this.totalProcessEnergy = (int)Math.floor(energy*energyModifier);
-		this.totalProcessTime = (int)Math.floor(120*timeModifier);
+		this.totalProcessTime = (int)Math.floor(1000*timeModifier);
 
-		this.inputList = Lists.newArrayList(this.input);
+		this.inputList = Lists.newArrayList(this.input, this.compoundInput, this.sulfurInput,new IngredientStack(this.mold.stack));
 		this.outputList = ListUtils.fromItem(this.output);
+
+		this.resIn = resIn;
+		this.resOut = resOut;
 	}
 
 	public VulcanizerRecipe setInputSize(int size)
 	{
 		this.input.inputSize = size;
 		return this;
-	}
-
-	@Override
-	public void setupJEI()
-	{
-		super.setupJEI();
-		this.jeiItemInputList = new ArrayList[2];
-		this.jeiItemInputList[0] = Lists.newArrayList(jeiTotalItemInputList);
-		this.jeiItemInputList[1] = Lists.newArrayList(mold.stack);
-		this.jeiTotalItemInputList.add(mold.stack);
 	}
 
 	public boolean matches(ItemStack mold, ItemStack input)
@@ -81,9 +82,14 @@ public class VulcanizerRecipe extends MultiblockRecipe
 
 	public static ArrayListMultimap<ComparableItemStack, VulcanizerRecipe> recipeList = ArrayListMultimap.create();
 
-	public static VulcanizerRecipe addRecipe(ItemStack output, ComparableItemStack mold, IngredientStack input, IngredientStack input2, int energy)
+	public static VulcanizerRecipe addRecipe(ItemStack output, ComparableItemStack mold, IngredientStack input, IngredientStack compound, IngredientStack sulfur, int energy)
 	{
-		VulcanizerRecipe r = new VulcanizerRecipe(output, mold, input, input2, energy);
+		return addRecipe(output, mold, input, compound, sulfur, energy, TEXTURE_LATEX, TEXTURE_RUBBER);
+	}
+
+	public static VulcanizerRecipe addRecipe(ItemStack output, ComparableItemStack mold, IngredientStack input, IngredientStack compound, IngredientStack sulfur, int energy, ResourceLocation resIn, ResourceLocation resOut)
+	{
+		VulcanizerRecipe r = new VulcanizerRecipe(output, mold, input, compound, sulfur, energy, resIn, resOut);
 		recipeList.put(mold, r);
 		return r;
 	}
@@ -139,6 +145,7 @@ public class VulcanizerRecipe extends MultiblockRecipe
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setTag("mold", mold.writeToNBT(new NBTTagCompound()));
+		nbt.setTag("input", input.writeToNBT(new NBTTagCompound()));
 		return nbt;
 	}
 

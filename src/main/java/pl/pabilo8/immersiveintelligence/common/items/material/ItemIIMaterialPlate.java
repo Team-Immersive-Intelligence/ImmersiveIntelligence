@@ -16,7 +16,8 @@ public class ItemIIMaterialPlate extends ItemIIBase
 				"platinum",
 				"tungsten",
 				"zinc",
-				"silicon"
+				"silicon",
+				"rubber"
 		);
 	}
 }

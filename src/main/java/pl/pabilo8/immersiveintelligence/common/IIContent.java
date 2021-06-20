@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import blusunrize.immersiveengineering.common.util.IEPotions;
+import blusunrize.immersiveengineering.common.util.IEPotions.IEPotion;
 import crafttweaker.api.item.IngredientStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -72,6 +74,7 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_IMPROVED_GEARBOX = CommonProxy.createMachineUpgrade("improved_gearbox"); //increases machine speed
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator"); //more sawdust for cost of planks
 	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader"); //allows to use belt fed upgrade for mg
+	public static final MachineUpgrade UPGRADE_lATEX_DRAIN = CommonProxy.createMachineUpgrade("latex_drain"); //instead of placing a bucket, it collects the latex to a pipe underneath
 
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
@@ -169,6 +172,7 @@ public class IIContent
 	public static BlockIIMetalFortification1 blockMetalFortification1 = new BlockIIMetalFortification1();
 	public static BlockIIWoodenFortification blockWoodenFortification = new BlockIIWoodenFortification();
 	public static BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
+	public static BlockIIMetalDevice1 blockMetalDevice1 = new BlockIIMetalDevice1();
 	public static BlockIIDataConnector blockDataConnector = new BlockIIDataConnector();
 	public static BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
 
@@ -194,12 +198,15 @@ public class IIContent
 	public static BlockIIFluid blockFluidSulfuricAcid;
 	public static BlockIIFluid blockFluidNitricAcid;
 	public static BlockIIFluid blockFluidHydrofluoricAcid;
+	public static BlockIIFluid blockFluidFormicAcid;
 	public static BlockIIFluid blockFluidAmmonia;
 	public static BlockIIFluid blockFluidMethanol;
 	public static BlockIIFluid blockFluidBrine;
 	public static BlockIIFluid blockGasHydrogen;
 	public static BlockIIFluid blockGasOxygen;
 	public static BlockIIFluid blockGasChlorine;
+	public static BlockIIFluid blockGasCO2;
+	public static BlockIIFluid blockFluidLatex;
 
 	public static Fluid fluidInkBlack;
 	public static Fluid fluidInkCyan;
@@ -209,29 +216,35 @@ public class IIContent
 	public static Fluid fluidSulfuricAcid;
 	public static Fluid fluidHydrofluoricAcid;
 	public static Fluid fluidNitricAcid;
+	public static Fluid fluidFormicAcid;
 	public static Fluid fluidBrine;
 	public static Fluid gasHydrogen;
 	public static Fluid gasOxygen;
 	public static Fluid gasChlorine;
+	public static Fluid gasCO2;
 	public static Fluid fluidAmmonia;
 	public static Fluid fluidMethanol;
+	public static Fluid fluidLatex;
 
 	static
 	{
-		IIContent.fluidInkBlack = makeFluid("ink", 2000, 2250);
-		IIContent.fluidInkCyan = makeFluid("ink_cyan", 2000, 2250);
-		IIContent.fluidInkMagenta = makeFluid("ink_magenta", 2000, 2250);
-		IIContent.fluidInkYellow = makeFluid("ink_yellow", 2000, 2250);
-		IIContent.fluidEtchingAcid = makeFluid("etching_acid", 1500, 1500);
-		IIContent.fluidSulfuricAcid = makeFluid("sulfuric_acid", 1500, 1500);
-		IIContent.fluidHydrofluoricAcid = makeFluid("hydrofluoric_acid", 1500, 1500);
-		IIContent.fluidNitricAcid = makeFluid("nitric_acid", 1500, 1500, "rdx_fluids/");
-		IIContent.fluidBrine = makeFluid("brine", 1000, 1500);
-		IIContent.gasHydrogen = makeFluid("hydrogen", 0, 2250).setGaseous(true);
-		IIContent.gasOxygen = makeFluid("oxygen", 0, 2250).setGaseous(true);
-		IIContent.gasChlorine = makeFluid("chlorine", 0, 2250).setGaseous(true);
-		IIContent.fluidAmmonia = makeFluid("ammonia", 1500, 1000, "rdx_fluids/");
-		IIContent.fluidMethanol = makeFluid("methanol", 1500, 1000, "rdx_fluids/");
+		IIContent.fluidInkBlack = makeFluid("ink", 6000, 2250);
+		IIContent.fluidInkCyan = makeFluid("ink_cyan", 6000, 2250);
+		IIContent.fluidInkMagenta = makeFluid("ink_magenta", 6000, 2250);
+		IIContent.fluidInkYellow = makeFluid("ink_yellow", 6000, 2250);
+		IIContent.fluidEtchingAcid = makeFluid("etching_acid", 2900, 1200);
+		IIContent.fluidSulfuricAcid = makeFluid("sulfuric_acid", 1830, 2670);
+		IIContent.fluidHydrofluoricAcid = makeFluid("hydrofluoric_acid", 1170, 981);
+		IIContent.fluidFormicAcid = makeFluid("formic_acid", 1221, 1784);
+		IIContent.fluidNitricAcid = makeFluid("nitric_acid", 1510, 2500, "rdx_fluids/");
+		IIContent.fluidBrine = makeFluid("brine", 1030, 1002);
+		IIContent.gasHydrogen = makeFluid("hydrogen", -1000+100, 88).setGaseous(true);
+		IIContent.gasOxygen = makeFluid("oxygen", -1000+200, 204).setGaseous(true);
+		IIContent.gasCO2 = makeFluid("carbon_dioxide", -1000+100, 147).setGaseous(true);
+		IIContent.gasChlorine = makeFluid("chlorine", -1000+100, 132).setGaseous(true);
+		IIContent.fluidAmmonia = makeFluid("ammonia", 771, 1007, "rdx_fluids/");
+		IIContent.fluidMethanol = makeFluid("methanol", 792, 553, "rdx_fluids/");
+		IIContent.fluidLatex = makeFluid("latex", 4300, 3500);
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
@@ -241,17 +254,19 @@ public class IIContent
 		IIContent.blockFluidSulfuricAcid = new BlockIIFluid("sulfuric_acid", IIContent.fluidSulfuricAcid, Material.WATER);
 		IIContent.blockFluidNitricAcid = new BlockIIFluid("nitric_acid", IIContent.fluidNitricAcid, Material.WATER);
 		IIContent.blockFluidHydrofluoricAcid = new BlockIIFluid("hydrofluoric_acid", IIContent.fluidHydrofluoricAcid, Material.WATER);
+		IIContent.blockFluidFormicAcid = new BlockIIFluid("formic_acid", IIContent.fluidFormicAcid, Material.WATER);
 		IIContent.blockFluidBrine = new BlockIIFluid("brine", IIContent.fluidBrine, Material.WATER);
+		IIContent.blockFluidLatex = new BlockIIFluid("latex", IIContent.fluidLatex, Material.WATER);
 
-		IIContent.blockFluidAmmonia = new BlockIIFluid("ammonia", IIContent.fluidAmmonia, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
-		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 40, 0));
+		IIContent.blockFluidAmmonia = new BlockIIFluid("ammonia", IIContent.fluidAmmonia, Material.WATER);
+		IIContent.blockFluidMethanol = new BlockIIFluid("methanol", IIContent.fluidMethanol, Material.WATER);
 
 		IIContent.blockGasHydrogen = new BlockIIFluid("hydrogen", IIContent.gasHydrogen, Material.WATER);
 		IIContent.blockGasOxygen = new BlockIIFluid("oxygen", IIContent.gasOxygen, Material.WATER)
-				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 40, 0));
+				.setPotionEffects(new PotionEffect(MobEffects.WATER_BREATHING, 20, 0));
 		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
+		IIContent.blockGasCO2 = new BlockIIFluid("carbon_dioxide", IIContent.gasCO2, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 	}
 }
