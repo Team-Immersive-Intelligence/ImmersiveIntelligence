@@ -22,6 +22,7 @@ public class BathingRecipe extends MultiblockRecipe
 	public static float timeModifier = 1.0F;
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
+	public final boolean isWashing;
 
 	public final FluidStack fluidInput;
 
@@ -29,13 +30,14 @@ public class BathingRecipe extends MultiblockRecipe
 	int totalProcessTime;
 	int totalProcessEnergy;
 
-	public BathingRecipe(ItemStack itemOutput, Object itemInput, FluidStack fluidInput, int energy, int time)
+	public BathingRecipe(ItemStack itemOutput, Object itemInput, FluidStack fluidInput, int energy, int time, boolean isWashing)
 	{
 		this.itemOutput = itemOutput;
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
 		this.fluidInput = fluidInput;
 		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
 		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
+		this.isWashing = isWashing;
 
 		this.fluidInputList = Collections.singletonList(this.fluidInput);
 
@@ -45,7 +47,14 @@ public class BathingRecipe extends MultiblockRecipe
 
 	public static BathingRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
 	{
-		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time);
+		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time,false);
+		recipeList.add(r);
+		return r;
+	}
+
+	public static BathingRecipe addWashingRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
+	{
+		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time,true);
 		recipeList.add(r);
 		return r;
 	}

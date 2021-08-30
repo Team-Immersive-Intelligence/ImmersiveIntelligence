@@ -2,11 +2,11 @@ package pl.pabilo8.immersiveintelligence.common.ammunition_system.explosives;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 /**
@@ -34,9 +34,9 @@ public class BulletComponentHMX implements IBulletComponent
 	}
 
 	@Override
-	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
-		IIExplosion e = new IIExplosion(world, bullet, bullet.posX, bullet.posY, bullet.posZ, 12*amount, 16, false, true);
+		IIExplosion e = new IIExplosion(world, null, pos.x, pos.y, pos.z, 12*amount, 16, false, true);
 		if(!net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, e))
 		{
 			e.doExplosionA();

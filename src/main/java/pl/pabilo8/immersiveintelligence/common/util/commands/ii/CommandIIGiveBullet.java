@@ -16,10 +16,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +42,7 @@ public class CommandIIGiveBullet extends CommandBase
 	@Override
 	public String getUsage(@Nonnull ICommandSender sender)
 	{
-		return "Gives a bullet, usage: ii bullet <receiver> <casing> <core> <coreType> [comps]";
+		return "Gives a bullet, usage: ii bullet <receiver> <casing> <core> <coreType> <fuse> [component] [nbt]";
 	}
 
 	/**
@@ -57,7 +54,7 @@ public class CommandIIGiveBullet extends CommandBase
 		if(args.length > 3)
 		{
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			IBullet casing = BulletRegistry.INSTANCE.getCasing(args[1]);
+			IBullet casing = BulletRegistry.INSTANCE.getBulletItem(args[1]);
 			IBulletCore core = BulletRegistry.INSTANCE.getCore(args[2]);
 			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
 			ArrayList<IBulletComponent> components = new ArrayList<>();
@@ -97,7 +94,7 @@ public class CommandIIGiveBullet extends CommandBase
 		}
 		else if(args.length==2)
 		{
-			return getListOfStringsMatchingLastWord(args, BulletRegistry.INSTANCE.registeredCasings.keySet());
+			return getListOfStringsMatchingLastWord(args, BulletRegistry.INSTANCE.registeredBulletItems.keySet());
 		}
 		else if(args.length==3)
 		{
@@ -105,7 +102,8 @@ public class CommandIIGiveBullet extends CommandBase
 		}
 		else if(args.length==4)
 		{
-			return getListOfStringsMatchingLastWord(args, Arrays.stream(EnumCoreTypes.values()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
+			IBullet bullet = BulletRegistry.INSTANCE.registeredBulletItems.get(args[1]);
+			return getListOfStringsMatchingLastWord(args,bullet==null?Collections.emptyList():Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
 		}
 		else if(args.length > 4)
 		{

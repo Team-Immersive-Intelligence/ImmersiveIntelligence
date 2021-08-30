@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 
@@ -141,7 +143,7 @@ public class AIHansRailgun extends EntityAIBase
 		{
 			//int extracted = EnergyHelper.extractFlux(backpack,4000,false);
 			//extracted =
-			EnergyHelper.insertFlux(railgun,99999,false);
+			EnergyHelper.insertFlux(railgun, 99999, false);
 			//EnergyHelper.insertFlux(backpack,extracted,false);
 		}
 
@@ -155,22 +157,36 @@ public class AIHansRailgun extends EntityAIBase
 			hans.setActiveHand(EnumHand.MAIN_HAND);
 			if(railgun.getItem() instanceof ItemIIRailgunOverride)
 			{
-				if(ItemIIRailgunOverride.isAmmo(ItemIIRailgunOverride.findAmmo(hans)))
+				ItemStack ammo = ItemIIRailgunOverride.findAmmo(hans);
+				if(ItemIIRailgunOverride.isAmmo(ammo))
 				{
 					hans.hasAmmo = true;
 					hans.setSneaking(true);
 					hans.faceEntity(attackTarget, 30, 0);
 					IEContent.itemRailgun.onUsingTick(railgun, this.hans, this.rangedAttackTime++);
 				}
+				hans.rotationPitch = calculateBallisticAngle(ammo, attackTarget);
 				IEContent.itemRailgun.onUpdate(railgun, this.hans.world, this.hans, 0, true);
 
 				if(rangedAttackTime >= burstTime)
 				{
-					// TODO: 13.05.2021 add balistic calculation
-					IEContent.itemRailgun.onPlayerStoppedUsing(railgun, this.hans.world, this.hans,IEContent.itemRailgun.getMaxItemUseDuration(railgun)-rangedAttackTime);
+
+					IEContent.itemRailgun.onPlayerStoppedUsing(railgun, this.hans.world, this.hans, IEContent.itemRailgun.getMaxItemUseDuration(railgun)-rangedAttackTime);
 					rangedAttackTime = -10;
 				}
 			}
+		}
+	}
+
+	private float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
+	{
+		if(ammo.getItem()==IIContent.itemRailgunGrenade)
+		{
+			return Utils.getDirectFireAngle(IIContent.itemRailgunGrenade.getDefaultVelocity(), IIContent.itemRailgunGrenade.getMass(ammo), hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(attackTarget.getPositionVector()));
+		}
+		else
+		{
+			return Utils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(attackTarget.getPositionVector()));
 		}
 	}
 

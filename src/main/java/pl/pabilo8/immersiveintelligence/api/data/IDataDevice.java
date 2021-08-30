@@ -10,7 +10,15 @@ import javax.annotation.Nullable;
  */
 public interface IDataDevice
 {
+	/**
+	 * Called when received a packet.
+	 *
+	 * @param packet which has been received
+	 */
 	void onReceive(DataPacket packet, @Nullable EnumFacing side);
 
+	/**
+	 * Can be called after sending a packet to a connector. Unused.
+	 */
 	void onSend();
 }

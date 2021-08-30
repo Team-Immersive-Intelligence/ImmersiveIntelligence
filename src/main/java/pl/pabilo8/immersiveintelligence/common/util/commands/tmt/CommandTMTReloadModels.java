@@ -45,16 +45,20 @@ public class CommandTMTReloadModels extends CommandBase
 	@Override
 	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args)
 	{
+		boolean success = false;
 		if(args.length > 0)
 		{
 			for(String arg : args)
 			{
-				EvenMoreImmersiveModelRegistry.instance.reloadModel(new ResourceLocation(arg));
+				success = EvenMoreImmersiveModelRegistry.instance.reloadModel(new ResourceLocation(arg))||success;
 			}
 		}
 		else
+		{
 			ImmersiveIntelligence.proxy.reloadModels();
-		sender.sendMessage(new TextComponentString("Succesfully reloaded "+(args.length==1?args[0]: "all models")));
+			success = true;
+		}
+		sender.sendMessage(new TextComponentString((success?"Succesfully reloaded ": "Couldn't reload ")+(args.length==1?args[0]: "all models")));
 	}
 
 	/**

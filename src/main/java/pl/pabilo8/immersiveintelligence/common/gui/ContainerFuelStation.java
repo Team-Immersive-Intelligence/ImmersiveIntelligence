@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
  * @author Pabilo8
  * @since 10-07-2019
  */
-public class ContainerFuelStation extends ContainerIEBase
+public class ContainerFuelStation extends ContainerIEBase<TileEntityFuelStation>
 {
 	public ContainerFuelStation(InventoryPlayer inventoryPlayer, TileEntityFuelStation tile)
 	{

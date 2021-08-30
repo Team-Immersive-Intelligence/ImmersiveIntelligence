@@ -75,7 +75,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.translate(0f, 0, 2.5f*progress2);
 				for(ModelRendererTurbo mod : model.ammo_door)
 					mod.render(0.0625f);
-				GlStateManager.translate(4.125f, 0.5, -6);
+				GlStateManager.translate(4.125f+0.5, 0.5, -6-0.5);
 
 				if(te.animation==1&&loadingProgress > 0.5&&!te.inventory.get(5).isEmpty())
 					modelBullet.renderBulletUnused(te.inventory.get(5));
@@ -125,7 +125,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 					GlStateManager.translate(0f, 1f-prgrs, 0f);
 					is_moved = true;
 				}
-				GlStateManager.translate(1f, -2f, -0.875f);
+				GlStateManager.translate(1f-0.5f, -2f, -0.875f+0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(6);
 				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
 				{
@@ -146,7 +146,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[8])
 					is_moved = true;
 
-				GlStateManager.translate(1f-(0.5f*((is_moved)?prgrs: 0f)), -2f, -0.875f);
+				GlStateManager.translate(1f-(0.5f*((is_moved)?prgrs: 0f))+0.5f, -2f, -0.875f-0.5f);
 
 				ItemStack stack = te.inventoryHandler.getStackInSlot(7);
 				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
@@ -167,7 +167,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[9])
 					is_moved = true;
 
-				GlStateManager.translate((0.5f*((is_moved)?1f-prgrs: 0f)), -2f, -0.875f);
+				GlStateManager.translate((0.5f*((is_moved)?1f-prgrs: 0f))+0.5f, -2f, -0.875f-0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(8);
 				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
 				{
@@ -187,7 +187,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[10])
 					is_moved = true;
 
-				GlStateManager.translate(0f, -2f, -1.385+(0.5f*((is_moved)?1f-prgrs: 0f)));
+				GlStateManager.translate(0.5f, -2f, -1.385+(0.5f*((is_moved)?1f-prgrs: 0f))-0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(9);
 				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
 				{
@@ -207,7 +207,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[11])
 					is_moved = true;
 
-				GlStateManager.translate(0f, -2f, -2.185+(0.5f*((is_moved)?1f-prgrs: 0f)));
+				GlStateManager.translate(0.5f, -2f, -2.185+(0.5f*((is_moved)?1f-prgrs: 0f))-0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(10);
 				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
 				{
@@ -227,7 +227,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[1])
 					is_moved = true;
 
-				GlStateManager.translate(0f, -2f, -2.985-(1.5f*((is_moved)?prgrs: 0f)));
+				GlStateManager.translate(0.5f, -2f, -2.985-(1.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(11);
 				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
 				{
@@ -250,7 +250,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 					GlStateManager.translate(0f, -prgrs, 0f);
 					is_moved = true;
 				}
-				GlStateManager.translate(1f, 0f, -0.875f);
+				GlStateManager.translate(1f+0.5f, 0f, -0.875f-0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(5);
 				modelBullet.renderBulletUnused(stack);
 
@@ -264,7 +264,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[5])
 					is_moved = true;
 
-				GlStateManager.translate(0.5f+(0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f);
+				GlStateManager.translate(0.5f+0.5f+(0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f-0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(4);
 				modelBullet.renderBulletUnused(stack);
 
@@ -278,7 +278,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[4])
 					is_moved = true;
 
-				GlStateManager.translate((0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f);
+				GlStateManager.translate((0.5f*((is_moved)?prgrs: 0f))+0.5f, 0f, -0.875f-0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(3);
 				modelBullet.renderBulletUnused(stack);
 
@@ -292,7 +292,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[3])
 					is_moved = true;
 
-				GlStateManager.translate(0f, 0f, -1.385+(0.5f*((is_moved)?prgrs: 0f)));
+				GlStateManager.translate(0.5f, 0f, -1.385+(0.5f*((is_moved)?prgrs: 0f))-0.5f);
 				ItemStack stack = te.inventoryHandler.getStackInSlot(2);
 				modelBullet.renderBulletUnused(stack);
 
@@ -306,7 +306,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[2])
 					is_moved = true;
 
-				GlStateManager.translate(0f, 0f, -2.185+(0.5f*((is_moved)?prgrs: 0f)));
+				GlStateManager.translate(0.5f, 0f, -2.185+(0.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(1);
 				modelBullet.renderBulletUnused(stack);
 
@@ -320,7 +320,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 				if(shell_can_move[1])
 					is_moved = true;
 
-				GlStateManager.translate(0f, 0f, -2.985+(0.5f*((is_moved)?prgrs: 0f)));
+				GlStateManager.translate(0.5f, 0f, -2.985+(0.5f*((is_moved)?prgrs: 0f)));
 				ItemStack stack = te.inventoryHandler.getStackInSlot(0);
 				modelBullet.renderBulletUnused(stack);
 
@@ -439,7 +439,7 @@ public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEnt
 			{
 				GlStateManager.pushMatrix();
 
-				GlStateManager.translate(-0.4075f, -1.15f, 0.65f);
+				GlStateManager.translate(-0.4075f+0.5, -1.15f, 0.15f);
 				if(te.animation==1&&loadingProgress < 0.5&&!te.inventory.get(5).isEmpty())
 					modelBullet.renderBulletUnused(te.inventory.get(5));
 				else if(te.animation==2&&loadingProgress > 0.5)

@@ -7,6 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -15,19 +17,23 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
+import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+
+import java.util.stream.StreamSupport;
 
 /**
  * @author Pabilo8
- * @since 10-07-2019.
  * @author Kingcavespider1
+ * @since 10-07-2019.
  * @since 07-05-2020
  */
 public class BlockIIFluid extends BlockFluidClassic
 {
 	private int flammability = 0;
 	private int fireSpread = 0;
-	public boolean isAcid = false;
+	public boolean isAcid;
 	private PotionEffect[] potionEffects;
 
 	public BlockIIFluid(String name, Fluid fluid, Material material)
@@ -82,7 +88,15 @@ public class BlockIIFluid extends BlockFluidClassic
 
 			if(isAcid)
 			{
-				entity.attackEntityFrom(IEDamageSources.acid, 2);
+				for(ItemStack stack1 : entity.getArmorInventoryList())
+				{
+					if(!(stack1.getItem() instanceof IAcidProtectionEquipment)||
+							!((IAcidProtectionEquipment)stack1.getItem()).protectsFromAcid(stack1))
+					{
+						entity.attackEntityFrom(IEDamageSources.acid, 2);
+						break;
+					}
+				}
 			}
 		}
 
@@ -93,7 +107,7 @@ public class BlockIIFluid extends BlockFluidClassic
 	{
 		if(potionEffects!=null)
 			ChemthrowerHandler.registerEffect(this.definedFluid,
-					new ChemthrowerEffect_Potion(null, 0, potionEffects));
+					new ChemthrowerEffect_Potion(isAcid?IEDamageSources.acid: null, isAcid?2: 0, potionEffects));
 		if(flammability > 0)
 			ChemthrowerHandler.registerFlammable(this.definedFluid);
 		return this;

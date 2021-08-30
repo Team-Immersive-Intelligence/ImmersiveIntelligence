@@ -25,7 +25,8 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 {
 	public ItemIIBulletMagazine()
 	{
-		super("bullet_magazine", 1, "machinegun", "submachinegun", "automatic_revolver", "submachinegun_drum", "assault_rifle");
+		super("bullet_magazine", 1, "machinegun", "submachinegun", "automatic_revolver", "submachinegun_drum", "assault_rifle", "autocannon", "cpds_drum");
+		setMetaHidden(2); //Hide automatic revolver
 	}
 
 	public static void makeDefault(ItemStack stack)
@@ -96,6 +97,26 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 		}
 	}
 
+
+	public static NonNullList<ItemStack> takeAll(ItemStack stack)
+	{
+		if(ItemNBTHelper.hasKey(stack, "bullets"))
+		{
+			int bc = getBulletCapactity(stack);
+			NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(stack).getTagList("bullets", 10), bc);
+
+			ItemNBTHelper.getTag(stack).setTag("bullets", Utils.writeInventory(NonNullList.withSize(getBulletCapactity(stack), ItemStack.EMPTY)));
+
+			return cartridge;
+		}
+		else
+		{
+			makeDefault(stack);
+			return NonNullList.create();
+		}
+	}
+
+
 	public static ItemStack takeBullet(ItemStack stack)
 	{
 		if(ItemNBTHelper.hasKey(stack, "bullets"))
@@ -144,6 +165,10 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 				return 64;
 			case 4:
 				return 32;
+			case 5:
+				return 16;
+			case 6:
+				return 64;
 		}
 		return 0;
 	}
@@ -153,6 +178,7 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 		switch(stack.getMetadata())
 		{
 			case 0:
+			case 6:
 			default:
 				return IIContent.itemAmmoMachinegun;
 			case 1:
@@ -161,7 +187,9 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 			case 2:
 				return IIContent.itemAmmoRevolver;
 			case 4:
-				return IIContent.itemAmmoStormRifle;
+				return IIContent.itemAmmoAssaultRifle;
+			case 5:
+				return IIContent.itemAmmoAutocannon;
 		}
 	}
 
@@ -183,50 +211,80 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return subNames[stack.getMetadata()]+"_"+checkColours(stack);
+		return subNames[stack.getMetadata()]+"_"+checkBullets(stack)+"_"+checkColors(stack);
 	}
 
-	public int checkColours(ItemStack stack)
+	public int checkBullets(ItemStack stack)
 	{
 		makeDefault(stack);
-		int num = 0;
-		num += ItemNBTHelper.getInt(stack, "colour0")!=-1?1: 0;
-		num += ItemNBTHelper.getInt(stack, "colour1")!=-1?1: 0;
-		num += ItemNBTHelper.getInt(stack, "colour2")!=-1?1: 0;
-		num += ItemNBTHelper.getInt(stack, "colour3")!=-1?1: 0;
+		int num = ItemNBTHelper.hasKey(stack, "bullet0")?1: 0;
+		num += ItemNBTHelper.hasKey(stack, "bullet1")?1: 0;
+		num += ItemNBTHelper.hasKey(stack, "bullet2")?1: 0;
+		num += ItemNBTHelper.hasKey(stack, "bullet3")?1: 0;
 		return num;
+	}
+
+	public String checkColors(ItemStack stack)
+	{
+		StringBuilder ss = new StringBuilder();
+		if(ItemNBTHelper.hasKey(stack, "colour0")&&ItemNBTHelper.getInt(stack, "colour0")!=-1)
+			ss.append("0");
+		if(ItemNBTHelper.hasKey(stack, "colour1")&&ItemNBTHelper.getInt(stack, "colour1")!=-1)
+			ss.append("1");
+		if(ItemNBTHelper.hasKey(stack, "colour2")&&ItemNBTHelper.getInt(stack, "colour2")!=-1)
+			ss.append("2");
+		if(ItemNBTHelper.hasKey(stack, "colour3")&&ItemNBTHelper.getInt(stack, "colour3")!=-1)
+			ss.append("3");
+		return ss.toString();
 	}
 
 	@Override
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
+		//ItemNBTHelper.getInt(stack, "bullet1")!=-1
 		ArrayList<ResourceLocation> l = new ArrayList<>();
 
 		String name = getSubNames()[stack.getMetadata()];
 
 		l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/main"));
 
-		if(ItemNBTHelper.getInt(stack, "colour0")!=-1)
+		if(ItemNBTHelper.hasKey(stack, "bullet0"))
 		{
-			if(getMetadata(stack)==1)
+			if(getMetadata(stack)==1||getMetadata(stack)==4)
 			{
-				l.remove(l.size()-1);
+				l.remove(0);
 				l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/main_disp"));
 			}
+
 			l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/bullet0"));
-			l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint0"));
-			if(ItemNBTHelper.getInt(stack, "colour1")!=-1)
+			if(ItemNBTHelper.hasKey(stack, "colour0")&&ItemNBTHelper.getInt(stack, "colour0")!=-1)
+				l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint0"));
+			else
+				l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/empty"));
+
+			if(ItemNBTHelper.hasKey(stack, "bullet1"))
 			{
 				l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/bullet1"));
-				l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint1"));
-				if(ItemNBTHelper.getInt(stack, "colour2")!=-1)
+				if(ItemNBTHelper.hasKey(stack, "colour1")&&ItemNBTHelper.getInt(stack, "colour1")!=-1)
+					l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint1"));
+				else
+					l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/empty"));
+
+				if(ItemNBTHelper.hasKey(stack, "bullet2"))
 				{
 					l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/bullet2"));
-					l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint2"));
-					if(ItemNBTHelper.getInt(stack, "colour3")!=-1)
+					if(ItemNBTHelper.hasKey(stack, "colour2")&&ItemNBTHelper.getInt(stack, "colour2")!=-1)
+						l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint2"));
+					else
+						l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/empty"));
+
+					if(ItemNBTHelper.hasKey(stack, "bullet3"))
 					{
 						l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/bullet3"));
-						l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint3"));
+						if(ItemNBTHelper.hasKey(stack, "colour3")&&ItemNBTHelper.getInt(stack, "colour3")!=-1)
+							l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint3"));
+						else
+							l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/empty"));
 					}
 				}
 			}
@@ -247,6 +305,7 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 	{
 		if(!stack.hasTagCompound())
 			makeDefault(stack);
+
 		switch(pass)
 		{
 			case 2:

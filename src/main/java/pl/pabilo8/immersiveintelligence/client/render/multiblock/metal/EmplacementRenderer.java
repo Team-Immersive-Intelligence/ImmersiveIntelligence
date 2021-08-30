@@ -1,58 +1,69 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElectric;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelEmplacement;
+import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.client.render.ParachuteRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 
-import java.util.Arrays;
+import static pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.VehicleWorkshopRenderer.drawRope;
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
 	public static ModelEmplacement model;
+	public static ModelEmplacementWeaponMachinegun modelMachinegun;
 	public static ModelAutocannon modelAutocannon;
 	public static ModelInfraredObserver modelInfraredObserver;
 	public static ModelHeavyChemthrower modelHeavyChemthrower;
 	public static ModelHeavyRailgun modelHeavyRailgun;
 	public static ModelCPDS modelCPDS;
+	public static ModelEmplacementWeaponTeslaCoil modelTeslaCoil;
 
+	public static ModelRendererTurbo[] modelMachinegunConstruction;
 	public static ModelRendererTurbo[] modelAutocannonConstruction;
 	public static ModelRendererTurbo[] modelInfraredObserverConstruction;
 	public static ModelRendererTurbo[] modelHeavyChemthrowerConstruction;
 	public static ModelRendererTurbo[] modelHeavyRailgunConstruction;
-	public static ModelRendererTurbo[]modelCPDSConstruction;
+	public static ModelRendererTurbo[] modelCPDSConstruction;
+	public static ModelRendererTurbo[] modelTeslaCoilConstruction;
 
 	public static ModelInserter modelInserter;
 	public static ModelCraneElectric modelCrane;
 
-	public static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement.png";
-	public static final String textureMachinegun = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/cpds.png";
-	public static final String textureAutocannon = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/flak.png";
-	public static final String textureCPDS = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/cpds.png";
-	public static final String textureHeavyRailgun = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/heavy_railgun.png";
-	public static final String textureHeavyChemthrower = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/heavy_chemthrower.png";
-	public static final String textureTeslaCoil = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/tesla_coil.png";
-	public static final String textureMortar = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/mortar.png";
-	public static final String textureLightHowitzer = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/light_howitzer.png";
-	public static final String textureInfraredObserver = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/infrared_observer.png";
+	public static final ResourceLocation texture = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement.png");
+	public static final ResourceLocation textureMachinegun = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/machinegun.png");
+	public static final ResourceLocation textureAutocannon = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/flak.png");
+	public static final ResourceLocation textureCPDS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/cpds.png");
+	public static final ResourceLocation textureHeavyRailgun = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/heavy_railgun.png");
+	public static final ResourceLocation textureHeavyChemthrower = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/heavy_chemthrower.png");
+	public static final ResourceLocation textureTeslaCoil = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/tesla_coil.png");
+	public static final ResourceLocation textureMortar = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/mortar.png");
+	public static final ResourceLocation textureLightHowitzer = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/light_howitzer.png");
+	public static final ResourceLocation textureInfraredObserver = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/infrared_observer.png");
 
-	public static final String textureCraneGray = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/crane.png";
-	public static final String textureInserterGreen = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_green.png";
-	public static final String textureInserterGray = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_gray.png";
+	public static final ResourceLocation textureCraneGray = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/crane.png");
+	public static final ResourceLocation textureInserterGreen = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_green.png");
+	public static final ResourceLocation textureInserterGray = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_gray.png");
 
 	private static final float doorAngle = TmtUtil.AngleToTMT(165f);
 
@@ -63,14 +74,14 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 		{
 			if(te.isDummy())
 				return;
-			ClientUtils.bindTexture(texture);
+			bindTexture(texture);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x, y-2, z);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 			//float f = ((getWorld().getTotalWorldTime()+partialTicks)%240)/240f;
-			float f = MathHelper.clamp((te.progress+(te.isDoorOpened?partialTicks: -((te.currentWeapon==null||te.currentWeapon.isSetUp(false))?partialTicks:0)))/(float)Emplacement.lidTime, 0f, 1f);
+			float f = MathHelper.clamp((te.progress+(te.isDoorOpened?partialTicks: -((te.currentWeapon==null||te.currentWeapon.isSetUp(false))?partialTicks: 0)))/(float)Emplacement.lidTime, 0f, 1f);
 			float door = 0;
 			float turretHeight = 0;
 			if(f <= 0.25f)
@@ -132,7 +143,13 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			if(te.currentWeapon!=null)
 				te.currentWeapon.render(te, partialTicks);
 			else if(te.getCurrentlyInstalled() instanceof MachineUpgradeEmplacementWeapon)
+			{
+				RenderHelper.disableStandardItemLighting();
+				GlStateManager.disableLighting();
 				((MachineUpgradeEmplacementWeapon)te.getCurrentlyInstalled()).renderUpgradeProgress(te.clientUpgradeProgress, te.upgradeProgress, partialTicks);
+				GlStateManager.enableLighting();
+				RenderHelper.enableStandardItemLighting();
+			}
 
 			GlStateManager.popMatrix();
 
@@ -147,7 +164,7 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			GlStateManager.scale(0.4, 0.4, 0.4);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			ClientUtils.bindTexture(texture);
+			bindTexture(texture);
 			model.render();
 			for(ModelRendererTurbo mod : model.doorLeftModel)
 			{
@@ -168,46 +185,31 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 	public void reloadModels()
 	{
 		model = new ModelEmplacement();
+		modelMachinegun = new ModelEmplacementWeaponMachinegun(true);
 		modelAutocannon = new ModelAutocannon(true);
 		modelInfraredObserver = new ModelInfraredObserver(true);
 		modelHeavyChemthrower = new ModelHeavyChemthrower(true);
 		modelHeavyRailgun = new ModelHeavyRailgun(true);
 		modelCPDS = new ModelCPDS(true);
+		modelTeslaCoil = new ModelEmplacementWeaponTeslaCoil(true);
 
-		modelAutocannonConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, new ModelAutocannon(false));
-		modelInfraredObserverConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, new ModelInfraredObserver(false));
-		modelHeavyChemthrowerConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, new ModelHeavyChemthrower(false));
-		modelHeavyRailgunConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, new ModelHeavyRailgun(false));
-		modelCPDSConstruction = createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, new ModelCPDS(false));
+		modelMachinegunConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, new ModelEmplacementWeaponMachinegun(false));
+		modelAutocannonConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, new ModelAutocannon(false));
+		modelInfraredObserverConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, new ModelInfraredObserver(false));
+		modelHeavyChemthrowerConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, new ModelHeavyChemthrower(false));
+		modelHeavyRailgunConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, new ModelHeavyRailgun(false));
+		modelCPDSConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, new ModelCPDS(false));
+		modelTeslaCoilConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA, new ModelEmplacementWeaponTeslaCoil(false));
 
 		modelInserter = new ModelInserter();
 		modelCrane = new ModelCraneElectric();
-	}
-
-	private ModelRendererTurbo[] createConstructionModel(MachineUpgrade upgrade, ModelIIBase model)
-	{
-		int partCount = model.parts.values().stream().mapToInt(modelRendererTurbos -> modelRendererTurbos.length).sum();
-		upgrade.setRequiredSteps(partCount);
-		ModelRendererTurbo[] output = new ModelRendererTurbo[partCount];
-		int i = 0;
-		for(ModelRendererTurbo[] value : model.parts.values())
-		{
-			Arrays.sort(value,(o1, o2) -> (int)(o1.rotationPointY-o2.rotationPointY));
-			for(ModelRendererTurbo mod : value)
-			{
-				output[i] = mod;
-				i++;
-			}
-		}
-
-		return output;
 	}
 
 	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(180+yaw, 0, 1, 0);
-		ClientUtils.bindTexture(textureCraneGray);
+		ClientUtils.mc().getTextureManager().bindTexture(textureCraneGray);
 
 		for(ModelRendererTurbo mod : modelCrane.craneMainModel)
 			mod.render(0.0625f);
@@ -225,13 +227,25 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 
 		for(ModelRendererTurbo mod : modelCrane.grabberModel)
 			mod.render(0.0625f);
+
+		GlStateManager.translate(0,1.25+0.0625,0);
+
+		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
+		GlStateManager.disableCull();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		drawRope(buffer,0,0,-1.59375,0,drop+0.25,-1.59375,0.0625,0);
+		drawRope(buffer,0,0,-1.59375,0,drop+0.25, -1.59375,0,0.0625);
+		Tessellator.getInstance().draw();
+		GlStateManager.enableCull();
+
 		GlStateManager.popMatrix();
 	}
 
 	public static void renderInserter(boolean green, float yaw, float pitch1, float pitch2, float progress, Runnable function)
 	{
 		GlStateManager.pushMatrix();
-		ClientUtils.bindTexture(green?textureInserterGreen:textureInserterGray);
+		ClientUtils.mc().getTextureManager().bindTexture(green?textureInserterGreen: textureInserterGray);
 
 		GlStateManager.translate(-0.5, -0.5, 0.5);
 		modelInserter.baseModel[1].render();

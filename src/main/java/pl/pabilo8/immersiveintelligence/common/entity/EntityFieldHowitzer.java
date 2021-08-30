@@ -89,18 +89,21 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	public EntityVehicleMultiPart partShieldLeft = new EntityVehicleMultiPart(this, "shield_left", 1F, 1.0F);
 
 	public int destroyTimer = -1;
-
-
-	static AxisAlignedBB aabb = new AxisAlignedBB(-1.5, 0, -1.5, 1.5, 1.75, 1.5);
-	static AxisAlignedBB aabb_wheel = new AxisAlignedBB(-0.25, 0d, 0.25, 0.25, 1d, -0.25);
-	static AxisAlignedBB aabb_main = new AxisAlignedBB(-0.5, 0.125d, 0.5, 0.5, 0.625, -1.25);
-	static AxisAlignedBB aabb_gun = new AxisAlignedBB(-0.25, 0d, 0.75, 0.25, 1d, -0.75);
-	static AxisAlignedBB aabb_shield = new AxisAlignedBB(-0.25, 0d, 0.25, 0.25, 0.45d, -0.25);
+	static final AxisAlignedBB AABB = new AxisAlignedBB(-1.5, 0, -1.5, 1.5, 1.75, 1.5);
+	static final AxisAlignedBB AABB_WHEEL = new AxisAlignedBB(-0.25, 0d, 0.25, 0.25, 1d, -0.25);
+	static final AxisAlignedBB AABB_MAIN = new AxisAlignedBB(-0.5, 0.125d, -0.5, 0.5, 0.625, 0.5);
+	static final AxisAlignedBB AABB_GUN = new AxisAlignedBB(-0.35, 0.25d, 0.35, 0.35, 1d, -0.35);
+	static final AxisAlignedBB AABB_SHIELD = new AxisAlignedBB(-0.35, 0d, -0.35, 0.35, 1.25d, 0.35);
 
 	public EntityFieldHowitzer(World worldIn)
 	{
 		super(worldIn);
 		partArray = new EntityVehicleMultiPart[]{partWheelRight, partWheelLeft, partMain, partMain2, partGun, partShieldRight, partShieldLeft};
+		rightWheelDurability = FieldHowitzer.wheelDurability;
+		leftWheelDurability = FieldHowitzer.wheelDurability;
+		mainDurability = FieldHowitzer.mainDurability;
+		gunDurability = FieldHowitzer.gunDurability;
+		shieldDurability = FieldHowitzer.shieldDurability;
 	}
 
 	@Override
@@ -185,7 +188,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	@Override
 	public AxisAlignedBB getEntityBoundingBox()
 	{
-		return aabb.offset(posX, posY, posZ);
+		return AABB.offset(posX, posY, posZ);
 	}
 
 	@Nullable
@@ -214,6 +217,9 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			EntityVehicleSeat.getOrCreateSeat(this, 1);
 		}
 		//super.onUpdate();
+		// TODO: 06.08.2021 death animation
+		if(!world.isRemote&&mainDurability <= 0)
+			setDead();
 
 		if(towingOperation)
 		{
@@ -233,7 +239,6 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 					int seat = ((EntityVehicleSeat)pre).seatID;
 					handleClientKeyInput(seat);
 					handleClientKeyOutput(seat);
-					//handleClientKeyOutput(seat);
 				}
 				else
 				{
@@ -293,6 +298,9 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			else
 			{
 				setupTime = Math.max(setupTime-1, 0);
+				acceleration *= 0.25f;
+				if(Math.abs(acceleration) < 0.15)
+					acceleration = 0;
 				if(setupTime==0)
 				{
 					if(gunPitchUp)
@@ -331,7 +339,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 					else
 					{
 						world.playSound(null, posX, posY, posZ, IISounds.howitzer_shot, SoundCategory.PLAYERS, 1.25f, 0.5f);
-						EntityBullet a = BulletHelper.createBullet(world, shell.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize(), 5f);
+						EntityBullet a = BulletHelper.createBullet(world, shell.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize());
 						a.setShooters(this, getParts());
 						world.spawnEntity(a);
 					}
@@ -396,32 +404,32 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 
 		speed = 0;
 
-		//handleMovement();
 		updateParts();
+		handleMovement();
 
 	}
 
 	private void handleMovement()
 	{
-		float r = rotationYaw;
-		double true_angle = Math.toRadians((r) > 180?360f-(r): (r));
-		//ImmersiveIntelligence.logger.info(true_angle);
+		float r = MathHelper.wrapDegrees(rotationYaw);
 
-		Vec3d pos1_x = Utils.offsetPosDirection(-0.5f, true_angle, 0);
+		double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
+		Vec3d pos1_z = Utils.offsetPosDirection(-0.75f, true_angle2, 0);
+		//Vec3d pos2_z = Utils.offsetPosDirection(0.75f, true_angle2, 0);
 
 		partWheelLeft.rotationYaw = this.rotationYaw;
-		partWheelLeft.travel(0, 0, 1f, -0.0125f, speed*0.0125*2f);
+		partWheelLeft.travel(0, 0, 1f, -0.0125f, acceleration*0.015);
 
-		/*
 		partWheelRight.rotationYaw = this.rotationYaw;
-		partWheelRight.travel(0, 0, 1f, -0.0125f, speed*0.0125*2f);
-		 */
+		partWheelRight.travel(0, 0, 1f, -0.0125f, acceleration*0.015);
 
-		if(!world.isRemote&&!partWheelLeft.isEntityInsideOpaqueBlock()&&!partWheelLeft.isEntityInsideOpaqueBlock())
+		if(!partWheelLeft.isEntityInsideOpaqueBlock()&&!partWheelLeft.isEntityInsideOpaqueBlock()&&!partWheelRight.isEntityInsideOpaqueBlock()&&!partWheelRight.isEntityInsideOpaqueBlock())
 		{
-			Vec3d currentPos = new Vec3d(partWheelRight.posX+pos1_x.x, partWheelRight.posY, partWheelRight.posZ+pos1_x.z);
+			partWheelRight.wheelTraverse+=acceleration*2.5f;
+			partWheelLeft.wheelTraverse+=acceleration*2.5f;
+			Vec3d currentPos = new Vec3d(partWheelLeft.posX+pos1_z.x, partWheelLeft.posY, partWheelLeft.posZ+pos1_z.z);
 			setPosition(currentPos.x, currentPos.y, currentPos.z);
-			setVelocity(partWheelRight.motionX, partWheelRight.motionY, partWheelRight.motionZ);
+			setVelocity(partWheelLeft.motionX, partWheelLeft.motionY, partWheelLeft.motionZ);
 		}
 	}
 
@@ -625,16 +633,30 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	@Override
 	public boolean attackEntityFromPart(MultiPartEntityPart part, DamageSource source, float amount)
 	{
-		if(part==partGun&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
+		boolean isValidSource = source.isProjectile()||source.isExplosion()||source.isFireDamage();
+		if(part==partGun)
 		{
-			gunDurability -= amount*0.85;
-			dataManager.set(dataMarkerGunDurability, gunDurability);
+			if(isValidSource)
+			{
+				gunDurability -= amount*0.85;
+				dataManager.set(dataMarkerGunDurability, gunDurability);
+				world.playSound(null, posX, posY, posZ, IISounds.impact_metal, SoundCategory.BLOCKS, 1.5f, 1f);
+			}
+			else
+				world.playSound(null, posX, posY, posZ, IISounds.ricochet_metal, SoundCategory.NEUTRAL, 1.5f, 8/amount);
 			return true;
 		}
-		else if((part==partMain||part==partMain2)&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
+		else if((part==partMain||part==partMain2))
 		{
-			mainDurability -= amount*0.85;
-			dataManager.set(dataMarkerMainDurability, mainDurability);
+			if(isValidSource)
+			{
+				mainDurability -= amount;
+				dataManager.set(dataMarkerMainDurability, mainDurability);
+				world.playSound(null, posX, posY, posZ, IISounds.impact_metal, SoundCategory.BLOCKS, 1.5f, 1f);
+			}
+			else
+				world.playSound(null, posX, posY, posZ, IISounds.ricochet_metal, SoundCategory.NEUTRAL, 1.5f, 8/amount);
+
 		}
 		else if(part==partWheelRight)
 		{
@@ -646,10 +668,24 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			leftWheelDurability -= amount;
 			dataManager.set(dataMarkerWheelLeftDurability, leftWheelDurability);
 		}
-		else if((part==partShieldLeft||part==partShieldRight)&&(source.isProjectile()||source.isExplosion()||source.isFireDamage())&&amount > 8)
+		else if((part==partShieldLeft||part==partShieldRight))
 		{
-			shieldDurability -= amount;
-			dataManager.set(dataMarkerShieldDurability, shieldDurability);
+			if(isValidSource&&amount > 8)
+			{
+				if(shieldDurability < 0)
+				{
+					mainDurability -= amount*0.85;
+					dataManager.set(dataMarkerMainDurability, mainDurability);
+				}
+				else
+				{
+					shieldDurability -= amount*0.85;
+					dataManager.set(dataMarkerShieldDurability, shieldDurability);
+				}
+				world.playSound(null, posX, posY, posZ, IISounds.impact_metal, SoundCategory.BLOCKS, 1.5f, 1f);
+			}
+			else
+				world.playSound(null, posX, posY, posZ, IISounds.ricochet_metal, SoundCategory.NEUTRAL, 1.5f, 8/amount);
 		}
 		else
 			return false;
@@ -678,42 +714,38 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 		Vec3d pos1_z = Utils.offsetPosDirection(0.75f, true_angle2, 0);
 		Vec3d pos2_z = Utils.offsetPosDirection(-0.75f, true_angle2, 0);
 
-		aabb_shield = new AxisAlignedBB(-0.35, 0d, -0.35, 0.35, 1.25d, 0.35);
-		aabb_gun = new AxisAlignedBB(-0.35, 0.25d, 0.35, 0.35, 1d, -0.35);
-		aabb_main = new AxisAlignedBB(-0.5, 0.125d, -0.5, 0.5, 0.625, 0.5);
-
 		this.partWheelLeft.setLocationAndAngles(posX+pos1_z.x, posY, posZ+pos1_z.z, 0.0F, 0);
-		this.partWheelLeft.setEntityBoundingBox(aabb_wheel.offset(this.partWheelLeft.posX, this.partWheelLeft.posY, this.partWheelLeft.posZ));
+		this.partWheelLeft.setEntityBoundingBox(AABB_WHEEL.offset(this.partWheelLeft.posX, this.partWheelLeft.posY, this.partWheelLeft.posZ));
 		this.partWheelLeft.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partWheelLeft.onUpdate();
 
 		this.partWheelRight.setLocationAndAngles(posX+pos2_z.x, posY, posZ+pos2_z.z, 0.0F, 0);
-		this.partWheelRight.setEntityBoundingBox(aabb_wheel.offset(this.partWheelRight.posX, this.partWheelRight.posY, this.partWheelRight.posZ));
+		this.partWheelRight.setEntityBoundingBox(AABB_WHEEL.offset(this.partWheelRight.posX, this.partWheelRight.posY, this.partWheelRight.posZ));
 		this.partWheelRight.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partWheelRight.onUpdate();
 
 		this.partMain.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
-		this.partMain.setEntityBoundingBox(aabb_main.offset(this.partMain.posX, this.partMain.posY, this.partMain.posZ));
+		this.partMain.setEntityBoundingBox(AABB_MAIN.offset(this.partMain.posX, this.partMain.posY, this.partMain.posZ));
 		this.partMain.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partMain.onUpdate();
 
 		this.partMain2.setLocationAndAngles(posX+pos3.x, posY+pos3.y, posZ+pos3.z, 0.0F, 0);
-		this.partMain2.setEntityBoundingBox(aabb_main.offset(this.partMain2.posX, this.partMain2.posY, this.partMain2.posZ));
+		this.partMain2.setEntityBoundingBox(AABB_MAIN.offset(this.partMain2.posX, this.partMain2.posY, this.partMain2.posZ));
 		this.partMain2.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partMain2.onUpdate();
 
 		this.partGun.setLocationAndAngles(posX+pos1_x.x, posY+0.65, posZ+pos1_x.z, 0.0F, 0);
-		this.partGun.setEntityBoundingBox(aabb_gun.offset(this.partGun.posX, this.partGun.posY, this.partGun.posZ));
+		this.partGun.setEntityBoundingBox(AABB_GUN.offset(this.partGun.posX, this.partGun.posY, this.partGun.posZ));
 		this.partGun.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partGun.onUpdate();
 
 		this.partShieldLeft.setLocationAndAngles(posX+pos1_z.x+pos2_x.x, posY+0.375, posZ+pos1_z.z+pos2_x.z, 0.0F, 0);
-		this.partShieldLeft.setEntityBoundingBox(aabb_shield.offset(this.partShieldLeft.posX, this.partShieldLeft.posY, this.partShieldLeft.posZ));
+		this.partShieldLeft.setEntityBoundingBox(AABB_SHIELD.offset(this.partShieldLeft.posX, this.partShieldLeft.posY, this.partShieldLeft.posZ));
 		this.partShieldLeft.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partShieldLeft.onUpdate();
 
 		this.partShieldRight.setLocationAndAngles(posX+pos2_z.x+pos2_x.x, posY+0.375, posZ+pos2_z.z+pos2_x.z, 0.0F, 0);
-		this.partShieldRight.setEntityBoundingBox(aabb_shield.offset(this.partShieldRight.posX, this.partShieldRight.posY, this.partShieldRight.posZ));
+		this.partShieldRight.setEntityBoundingBox(AABB_SHIELD.offset(this.partShieldRight.posX, this.partShieldRight.posY, this.partShieldRight.posZ));
 		this.partShieldRight.setVelocity(this.motionX, this.motionY, this.motionZ);
 		this.partShieldRight.onUpdate();
 	}

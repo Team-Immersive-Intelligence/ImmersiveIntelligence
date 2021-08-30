@@ -142,7 +142,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("heavy_springbox"),
 				(upgrade, modifications) -> modifications.setBoolean("heavy_springbox", true)),
 
-		//Storm Rifle
+		//Assault Rifle
 
 		//Shows yaw and pitch, allows to send a packet with player's yaw and pitch (+distance if a rangefinder is installed, +position data if player has a radio backpack)
 		RADIO_MARKER(ImmutableSet.of("ASSAULT_RIFLE"), 1,

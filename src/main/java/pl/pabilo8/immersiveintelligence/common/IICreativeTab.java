@@ -79,17 +79,20 @@ public class IICreativeTab extends CreativeTabs
 
 	public void addExampleBullets(NonNullList list)
 	{
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_steel", "softpoint", "tnt"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_steel", "softpoint", "rdx"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_steel", "softpoint", "hmx"));
+		for(IBullet bullet : new IBullet[]{IIContent.itemAmmoArtillery,IIContent.itemAmmoLightArtillery,IIContent.itemAmmoMortar})
+		{
+			list.add(bullet.getBulletWithParams("core_brass", "canister", "tnt","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_brass", "canister", "rdx","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_brass", "canister", "hmx","tracer_powder"));
 
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_tungsten", "piercing", "tnt"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_tungsten", "piercing", "rdx"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_tungsten", "piercing", "hmx"));
+			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "tnt","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "rdx","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "hmx","tracer_powder"));
 
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "tnt"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "rdx"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "hmx"));
+			list.add(bullet.getBulletWithParams("core_steel", "shaped", "tnt","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_steel", "shaped", "rdx","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_steel", "shaped", "hmx","tracer_powder"));
+		}
 
 		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("Phosphorgranate mk. 1"));
 		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmpatrone mk. 1"));
@@ -109,8 +112,8 @@ public class IICreativeTab extends CreativeTabs
 			e.printStackTrace();
 		}
 
-		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "gas_chlorine"));
-		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "rdx"));
+		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "gas_chlorine").setStackDisplayName("Schienenkanone Chemgranate mk.1"));
+		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "rdx").setStackDisplayName("Schienenkanone Sprenggranate mk.1"));
 
 		list.add(grenade_firework);
 
@@ -143,12 +146,15 @@ public class IICreativeTab extends CreativeTabs
 				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "softpoint", "white_phosphorus").setStackDisplayName("Phosphorpatrone mk.1"))
 		);
 
-		ItemStack bullet5 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_uranium", "piercing", "shrapnel_uranium").setStackDisplayName("M1A1 Uranium Bullet");
+		ItemStack bullet5 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_uranium", "piercing", "shrapnel_uranium").setStackDisplayName("Uraniumpatrone mk.1");
 		list.add(bullet5);
 		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet5, bullet5, bullet5, bullet5));
 
 
+		list.add(addColorBulletMagazine(IIContent.itemAmmoMachinegun, "cpds_drum", 65327, 16711680, 25343, 16772608));
+		list.add(addColorBulletMagazine(IIContent.itemAmmoAutocannon, "autocannon", 65327, 16711680, 25343, 16772608));
 		list.add(addColorBulletMagazine(IIContent.itemAmmoMachinegun, "machinegun", 65327, 16711680, 25343, 16772608));
+		list.add(addColorBulletMagazine(IIContent.itemAmmoAssaultRifle, "assault_rifle", 65327, 16711680, 25343, 16772608));
 		list.add(addColorBulletMagazine(IIContent.itemAmmoSubmachinegun, "submachinegun", 65327, 16711680, 25343, 16772608));
 		list.add(addColorBulletMagazine(IIContent.itemAmmoSubmachinegun, "submachinegun_drum", 65327, 16711680, 25343, 16772608));
 

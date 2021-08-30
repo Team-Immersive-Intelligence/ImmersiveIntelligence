@@ -27,7 +27,5 @@ public interface IBulletCore
 	//The the hardness level this bullet core can penetrate (6-stone)
 	float getPenetrationHardness();
 
-	EnumComponentRole getRole();
-
 	int getColour();
 }

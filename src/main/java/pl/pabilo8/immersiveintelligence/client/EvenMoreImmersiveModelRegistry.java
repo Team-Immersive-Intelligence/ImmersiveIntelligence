@@ -79,13 +79,14 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 		reloadableModels.values().forEach(IReloadableModelContainer::reloadModels);
 	}
 
-	public void reloadModel(ResourceLocation modelName)
+	public boolean reloadModel(ResourceLocation modelName)
 	{
 		reloadableModels.forEach((s, iReloadableModelContainer) ->
 		{
 			if(s.equals(modelName))
 				iReloadableModelContainer.reloadModels();
 		});
+		return reloadableModels.keySet().stream().anyMatch(resourceLocation -> resourceLocation.equals(modelName));
 	}
 
 	public Set<ResourceLocation> getReloadableModels()

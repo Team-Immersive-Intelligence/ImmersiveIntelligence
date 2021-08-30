@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.items.tools;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
@@ -27,6 +28,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -85,6 +87,9 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 
 		boolean do_tick = worldIn.getTotalWorldTime()%20==0;
+
+		if(worldIn.isRemote)
+			ItemNBTHelper.setBoolean(stack, "sneaking", entityIn.isSneaking()&&isSelected);
 
 		if(!worldIn.isRemote&&entityIn instanceof EntityLivingBase)
 		{
@@ -154,17 +159,20 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 		return ImmersiveIntelligence.MODID+":textures/gui/item/binoculars.png";
 	}
 
+	// TODO: 15.07.2021 make it properly, not the current lazy way 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return "infrared_binoculars_"+((isEnabled(stack))?"on": "off");
+		return ItemNBTHelper.getBoolean(stack, "sneaking")?"invisible": (isAdvanced(stack)?("infrared_binoculars_"+((isEnabled(stack))?"on": "off")):"binoculars");
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
+		if(key.equals("invisible"))
+			return Collections.emptyList();
 		return Collections.singletonList(
 				new ResourceLocation(ImmersiveIntelligence.MODID+":items/binoculars/"+key)
 		);

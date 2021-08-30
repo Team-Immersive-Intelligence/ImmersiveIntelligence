@@ -4,8 +4,8 @@
     "transform": "forge:default-block",
     "model": "immersiveengineering:smartmodel/conf_sides_hv_metal_device0_fluid_pump",
     "textures": {
-      "texture": "mmersiveintelligence:blocks/mechanical_device/pump/pump",
-      "particle": "mmersiveintelligence:blocks/mechanical_device/pump/pump"
+      "texture": "immersiveintelligence:blocks/mechanical_device/pump/pump_up_none",
+      "particle": "immersiveintelligence:blocks/mechanical_device/pump/pump_up_none"
     }
   },
   "variants": {

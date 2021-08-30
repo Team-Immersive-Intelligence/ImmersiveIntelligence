@@ -1,7 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.bullets.penhandlers;
 
+import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+
+import javax.annotation.Nullable;
+
+import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
 
 /**
  * @author Pabilo8
@@ -25,5 +32,12 @@ public class PenetrationHandlerDirt implements IPenetrationHandler
 	public PenMaterialTypes getPenetrationType()
 	{
 		return PenMaterialTypes.GROUND;
+	}
+
+	@Nullable
+	@Override
+	public SoundEvent getSpecialSound(HitEffect effect)
+	{
+		return effect==RICOCHET?IISounds.ricochet_dirt: IISounds.impact_dirt;
 	}
 }

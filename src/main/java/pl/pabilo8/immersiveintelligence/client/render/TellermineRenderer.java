@@ -11,6 +11,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityTellermine;
 
@@ -20,16 +21,16 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityTellermine
  */
 public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTellermine> implements IReloadableModelContainer<TellermineRenderer>
 {
-	private static ModelTripMine model;
+	private static ModelTellermine model;
 
 	@Override
 	public void render(TileEntityTellermine te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z+1);
+		GlStateManager.translate(x+0.5, y, z+0.5);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-		GlStateManager.translate(0, 0.03125f*(15-te.digLevel), 0);
+		GlStateManager.translate(0, 0.0325f-(te.digLevel*0.0625f), 0);
 		model.renderCasing(0f, 0xffffff);
 		model.renderCore(te.coreColor, EnumCoreTypes.CANISTER);
 
@@ -37,7 +38,7 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 		{
 			ClientUtils.bindAtlas();
 
-			GlStateManager.translate(0f, 0, -1f);
+			GlStateManager.translate(-0.5f, 0, -0.5f);
 			int color = getWorld().getBiome(te.getPos()).getGrassColorAtPos(te.getPos())&0x7FFFFFFF;
 			float[] colors = Utils.rgbIntToRGB(color);
 			GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -56,9 +57,9 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 	@Override
 	public void reloadModels()
 	{
-		model = new ModelTripMine();
-		BulletRegistry.INSTANCE.registeredModels.remove("tripmine");
-		BulletRegistry.INSTANCE.registeredModels.put("tripmine", model);
+		model = new ModelTellermine();
+		BulletRegistry.INSTANCE.registeredModels.remove("tellermine");
+		BulletRegistry.INSTANCE.registeredModels.put("tellermine", model);
 	}
 
 	public static class TellermineItemStackRenderer extends TileEntityItemStackRenderer
@@ -67,7 +68,8 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 		public void renderByItem(ItemStack itemStackIn, float partialTicks)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 0, 1);
+			GlStateManager.translate(0.5, 0.25, 0.5);
+			GlStateManager.scale(1.5,1.5,1.5f);
 
 			assert itemStackIn.getItem() instanceof IBullet;
 			IBullet bullet = (IBullet)itemStackIn.getItem();

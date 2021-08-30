@@ -122,10 +122,10 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		ArrayList<String> tooltip = new ArrayList<String>();
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
-			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"data_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"data_to_redstone_module"));
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+28&&my < guiTop+56)
-			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"redstone_module"));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"redstone_to_data_module"));
 
 		//Draw the punchcard progress bar
 		GlStateManager.pushMatrix();

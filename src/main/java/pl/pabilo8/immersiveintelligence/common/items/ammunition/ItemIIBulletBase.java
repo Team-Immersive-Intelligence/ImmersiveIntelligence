@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
@@ -38,33 +39,27 @@ import java.util.stream.Collectors;
 public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, ITextureOverride
 {
 	public static final int BULLET = 0;
-	public static final int CASING = 1;
-	public static final int CORE = 2;
+	public static final int CORE = 1;
 	public final String NAME;
 
 	public ItemIIBulletBase(String name, int stacksize)
 	{
-		super("bullet_"+name.toLowerCase(), stacksize, "bullet", "casing", "core");
+		super("bullet_"+name.toLowerCase(), stacksize, "bullet", "core");
 		setMetaHidden(BULLET, CORE);
 		this.NAME = name;
 	}
 
 	public void makeDefault(ItemStack stack)
 	{
-		if(stack.getMetadata()!=CASING)
-		{
-			if(!ItemNBTHelper.hasKey(stack, "core"))
-				ItemNBTHelper.setString(stack, "core", "core_brass");
-			if(!ItemNBTHelper.hasKey(stack, "core_type"))
-				ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
-		}
+		if(!ItemNBTHelper.hasKey(stack, "core"))
+			ItemNBTHelper.setString(stack, "core", "core_brass");
+		if(!ItemNBTHelper.hasKey(stack, "core_type"))
+			ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
 	}
 
 	@Override
 	public IBulletCore getCore(ItemStack stack)
 	{
-		if(stack.getMetadata()==CASING)
-			return null;
 		if(!ItemNBTHelper.hasKey(stack, "core"))
 			makeDefault(stack);
 		return BulletRegistry.INSTANCE.getCore(ItemNBTHelper.getString(stack, "core"));
@@ -73,8 +68,6 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 	@Override
 	public EnumCoreTypes getCoreType(ItemStack stack)
 	{
-		if(stack.getMetadata()==CASING)
-			return null;
 		if(!ItemNBTHelper.hasKey(stack, "core_type"))
 			makeDefault(stack);
 		return EnumCoreTypes.v(ItemNBTHelper.getString(stack, "core_type"));
@@ -91,10 +84,11 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 	@Override
 	public void registerSprites(TextureMap map)
 	{
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+getName().toLowerCase()+"/base");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/base");
 		for(EnumCoreTypes coreType : getAllowedCoreTypes())
-			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+getName().toLowerCase()+"/core_"+coreType.getName());
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+getName().toLowerCase()+"/paint");
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/"+coreType.getName());
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/paint");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/core");
 	}
 
 	@Override
@@ -147,18 +141,26 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
 			//tooltip.add(getPenetrationTable(stack));
 		}
-		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", getCaliber()*16f));
+		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(),"#.#")));
 	}
 
 	private String getFormattedBulletTypeName(ItemStack stack)
 	{
 		Set<EnumComponentRole> collect = new HashSet<>();
-		collect.add(getCore(stack).getRole());
+		if(getCoreType(stack).getRole()!=null)
+			collect.add(getCoreType(stack).getRole());
 		collect.addAll(Arrays.stream(getComponents(stack)).map(IBulletComponent::getRole).collect(Collectors.toSet()));
 		StringBuilder builder = new StringBuilder();
 		for(EnumComponentRole enumComponentRole : collect)
 		{
+			if(enumComponentRole==EnumComponentRole.GENERAL_PURPOSE)
+				continue;
 			builder.append(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName()));
+			builder.append(" - ");
+		}
+		if(builder.toString().isEmpty())
+		{
+			builder.append(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
 			builder.append(" - ");
 		}
 		String s = builder.toString();
@@ -173,8 +175,6 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 		{
 			case BULLET:
 				return I18n.format("item.immersiveintelligence."+NAME+".bullet.name");
-			case CASING:
-				return I18n.format("item.immersiveintelligence."+NAME+".casing.name");
 			case CORE:
 				return I18n.format("item.immersiveintelligence."+NAME+".core.name");
 		}
@@ -252,12 +252,6 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 	}
 
 	@Override
-	public ItemStack getCasingStack(int amount)
-	{
-		return new ItemStack(this, amount, CASING);
-	}
-
-	@Override
 	public String getName()
 	{
 		return NAME;
@@ -282,14 +276,17 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 		ArrayList<ResourceLocation> a = new ArrayList<>();
 		if(stack.getMetadata()==BULLET)
 		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/base"));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_"+getCoreType(stack).getName()));
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
 			if(getPaintColor(stack)!=-1)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/paint"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 
 		}
 		else if(stack.getMetadata()==CORE)
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_"+getCoreType(stack).getName()));
+		{
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+		}
 		return a;
 	}
 }

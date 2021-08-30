@@ -55,7 +55,11 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 
 		double d0 = y;
 
-		if(entity.isSneaking())
+		if(entity.isKneeling)
+		{
+			d0 = y-0.25D;
+		}
+		else if(entity.isSneaking())
 		{
 			d0 = y-0.125D;
 		}
@@ -158,6 +162,6 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 		this.addLayer(new LayerHansTeamOverlay(this));
 		this.addLayer(new LayerArrow(this));
 		this.addLayer(new LayerBipedArmor(this));
-		this.addLayer(new LayerHeldItem(this));
+		this.addLayer(new LayerHansHeldItem(this));
 	}
 }

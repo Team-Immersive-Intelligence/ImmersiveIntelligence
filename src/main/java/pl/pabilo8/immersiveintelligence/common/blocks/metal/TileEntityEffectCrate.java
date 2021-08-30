@@ -232,8 +232,11 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public void update()
 	{
 		updateLid();
-		if(!open)
+		if(!open&&focusedEntity!=null)
+		{
 			focusedEntity = null;
+			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
+		}
 
 		if(world.isRemote)
 		{
@@ -262,7 +265,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
 				}
 			}
-			else
+			else if(focusedEntity!=null)
 			{
 				focusedEntity = null;
 				inserterAnimation = 0f;
@@ -304,7 +307,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		return inserterAngle;
 	}
 
-	private NBTTagCompound makeSyncEntity()
+	protected NBTTagCompound makeSyncEntity()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		if(focusedEntity!=null)
@@ -495,6 +498,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 	abstract boolean checkEntity(Entity entity);
 
+	@Nonnull
 	@Override
 	public float[] getBlockBounds()
 	{
@@ -523,7 +527,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	}
 
 	@Override
-	public void onGuiOpened(EntityPlayer player, boolean clientside)
+	public void onGuiOpened(@Nullable EntityPlayer player, boolean clientside)
 	{
 		if(this.lootTable!=null&&!clientside)
 		{

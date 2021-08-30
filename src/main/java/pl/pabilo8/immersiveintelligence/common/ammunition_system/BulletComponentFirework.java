@@ -4,13 +4,13 @@ import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageFireworks;
 
@@ -39,10 +39,10 @@ public class BulletComponentFirework implements IBulletComponent
 	}
 
 	@Override
-	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, (float)bullet.posX, (float)bullet.posY+1, (float)bullet.posZ), Utils.targetPointFromEntity(bullet, 96));
-		BulletHelper.suppress(world, pos.getX(), pos.getY(), pos.getZ(), 10f*amount, (int)(255*amount));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, (float)pos.x, (float)pos.y+1, (float)pos.z), Utils.targetPointFromPos(pos, world,96));
+		BulletHelper.suppress(world, pos.x, pos.y, pos.z, 10f*amount, (int)(255*amount));
 	}
 
 	@Override

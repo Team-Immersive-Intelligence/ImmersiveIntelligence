@@ -18,9 +18,9 @@ public class LayerHansTeamOverlay implements LayerRenderer<EntityHans>
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/entity/hans_team_overlay.png");
 	private final HansRenderer hansRenderer;
 
-	public LayerHansTeamOverlay(HansRenderer spiderRendererIn)
+	public LayerHansTeamOverlay(HansRenderer renderer)
 	{
-		this.hansRenderer = spiderRendererIn;
+		this.hansRenderer = renderer;
 	}
 
 	public void doRenderLayer(EntityHans hans, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)

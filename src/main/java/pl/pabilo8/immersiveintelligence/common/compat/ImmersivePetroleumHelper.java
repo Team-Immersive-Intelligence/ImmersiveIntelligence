@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -28,6 +29,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
+import pl.pabilo8.immersiveintelligence.common.blocks.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -101,33 +103,31 @@ public class ImmersivePetroleumHelper extends IICompatModule
 				EnumFacing facing = null;
 				ResourceLocation rl = null;
 
-				switch(mb.getUniqueName())
+				if(mb instanceof MultiblockStuctureBase)
 				{
-					case "II:ConveyorScanner":
-						rl = new ResourceLocation(ImmersiveEngineering.MODID+":covered");
-						break;
-					case "II:Packer":
-						if(event.getH()==0)
-							rl = new ResourceLocation(ImmersiveEngineering.MODID+":covered");
-						else
-						{
-							rl = new ResourceLocation(ImmersiveEngineering.MODID+":conveyor");
-							facing = event.getRotate().rotateYCCW();
-						}
-						break;
-					case "II:CasingFiller":
-						if(event.getH()==1)
-							rl = new ResourceLocation(ImmersiveEngineering.MODID+":conveyor");
-						else
-						{
-							rl = new ResourceLocation(ImmersiveEngineering.MODID+":chute_iron");
-						}
-						facing = event.getRotate().rotateYCCW();
-						break;
-					default:
-
-						break;
+					Tuple<ResourceLocation, EnumFacing> key = ((MultiblockStuctureBase<?>)mb).getConveyorKey(event.getH(), event.getL(), event.getW(), event.getRotate());
+					rl = key.getFirst();
+					facing = key.getSecond();
 				}
+				else
+					switch(mb.getUniqueName())
+					{
+						case "II:ConveyorScanner":
+							rl = new ResourceLocation(ImmersiveEngineering.MODID+":covered");
+							break;
+						case "II:Packer":
+							if(event.getH()==0)
+								rl = new ResourceLocation(ImmersiveEngineering.MODID+":covered");
+							else
+							{
+								rl = new ResourceLocation(ImmersiveEngineering.MODID+":conveyor");
+								facing = event.getRotate().rotateYCCW();
+							}
+							break;
+						default:
+
+							break;
+					}
 
 				if(rl==null)
 					rl = new ResourceLocation("immersiveengineering", "conveyor");

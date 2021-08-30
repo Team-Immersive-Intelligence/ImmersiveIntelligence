@@ -17,11 +17,23 @@ public class CorrosionHandler
 
 	public static boolean canCorrode(ItemStack stack)
 	{
+		if(stack.getItem() instanceof ICorrosionProtectionEquipment)
+			return ((ICorrosionProtectionEquipment)stack.getItem()).canCorrode(stack);
 		return corrosionBlacklist.stream().noneMatch(stack1 -> ItemHandlerHelper.canItemStacksStack(stack, stack1));
 	}
 
 	public static void addItemToBlacklist(ItemStack stack)
 	{
 		corrosionBlacklist.add(stack);
+	}
+
+	public interface ICorrosionProtectionEquipment
+	{
+		boolean canCorrode(ItemStack stack);
+	}
+
+	public interface IAcidProtectionEquipment
+	{
+		boolean protectsFromAcid(ItemStack stack);
 	}
 }

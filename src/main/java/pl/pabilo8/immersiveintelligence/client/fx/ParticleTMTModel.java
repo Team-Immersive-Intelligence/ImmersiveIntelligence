@@ -5,6 +5,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
@@ -14,10 +15,10 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ParticleTMTModel extends Particle
 {
-	ModelRendererTurbo model;
-	String texture;
+	private final ModelRendererTurbo model;
+	private final ResourceLocation texture;
 
-	public ParticleTMTModel(World world, double x, double y, double z, double mx, double my, double mz, float size, ModelRendererTurbo model, String texture)
+	public ParticleTMTModel(World world, double x, double y, double z, double mx, double my, double mz, float size, ModelRendererTurbo model, ResourceLocation texture)
 	{
 		super(world, x, y, z, mx, my, mz);
 		this.particleMaxAge = 100+(int)(rand.nextGaussian()*32d);
@@ -60,7 +61,7 @@ public class ParticleTMTModel extends Particle
 		float oz = (model.rotationPointZ-model.offsetZ);
 		GlStateManager.translate(f5-(ox*0.0625f), f6-(oy*0.0625f)+0.125, f7-(oz*0.0625f));
 		GlStateManager.rotate(particleAngle, 1, 0, 0);
-		ClientUtils.bindTexture(texture);
+		ClientUtils.mc().getTextureManager().bindTexture(texture);
 		float age = 1f-(particleAge/(float)particleMaxAge);
 		GlStateManager.color(age, age, age, 1f-Math.max(0, ((particleAge/(float)particleMaxAge)-0.75f)/0.25f));
 		model.render(0.0625f);

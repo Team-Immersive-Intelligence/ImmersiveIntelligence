@@ -32,8 +32,8 @@ public class DataOperationSetNBT extends DataOperator
 		DataPacketTypeItemStack t1;
 		DataPacketTypeString t2;
 
-		t1 = ((DataPacketTypeItemStack)getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet));
-		t2 = ((DataPacketTypeString)getVarInType(DataPacketTypeString.class, data.getType2(), packet));
+		t1 = getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet);
+		t2 = getVarInType(DataPacketTypeString.class, data.getType2(), packet);
 		ItemStack stack = t1.value.copy();
 
 		try

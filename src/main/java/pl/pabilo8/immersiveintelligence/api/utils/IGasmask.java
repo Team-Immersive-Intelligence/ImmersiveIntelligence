@@ -8,5 +8,5 @@ import net.minecraft.item.ItemStack;
  */
 public interface IGasmask
 {
-	boolean protects(ItemStack stack);
+	boolean protectsFromGasses(ItemStack stack);
 }

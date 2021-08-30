@@ -3,7 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -178,5 +180,21 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return getMetaFromState(state)!=IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta();
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
+	{
+		super.neighborChanged(state, world, pos, blockIn, fromPos);
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof TileEntityLatexCollector)
+		{
+			TileEntityLatexCollector connector = (TileEntityLatexCollector)te;
+			if(world.isAirBlock(pos.offset((connector.facing))))
+			{
+				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
+				connector.getWorld().setBlockToAir(pos);
+			}
+		}
 	}
 }

@@ -1,16 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
-import blusunrize.immersiveengineering.api.IEProperties;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
-import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
-import blusunrize.immersiveengineering.common.blocks.ItemBlockIEStairs;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,22 +13,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Mine;
 
@@ -47,15 +37,14 @@ import java.util.Arrays;
  */
 public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 {
-	public BlockIIMine(String name, Class<? extends ItemBlockMineBase> itemBlock)
+	public BlockIIMine(String name, Class<? extends ItemBlockMineBase> itemBlock, Object... additionalProperties)
 	{
-		super(name, Material.IRON, PropertyEnum.create("dummy", IIBlockTypes_Mine.class), itemBlock, IOBJModelCallback.PROPERTY, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1]);
-		setHardness(3.0F);
-		setResistance(15.0F);
+		super(name, Material.CIRCUITS, PropertyEnum.create("dummy", IIBlockTypes_Mine.class), itemBlock, additionalProperties);
+		setHardness(0.25F);
+		setResistance(1.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
 		tesrMap.put(0, name);
-
 	}
 
 	@Override
@@ -119,6 +108,18 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		public ItemBlockMineBase(Block b)
 		{
 			super(b);
+		}
+
+		@Override
+		public ItemStack getCasingStack(int amount)
+		{
+			return Utils.getStackWithMetaName(IIContent.itemAmmoCasing, getName(), amount);
+		}
+
+		@Override
+		public float getDefaultVelocity()
+		{
+			return 1f;
 		}
 
 		@Override

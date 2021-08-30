@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Pabilo8
@@ -32,7 +33,6 @@ public class DataPacket
 		//varTypes.put("range", DataPacketTypeRange.class);
 
 		varTypes.put("string", DataPacketTypeString.class);
-		//varTypes.put("formatted_text", DataPacketTypeFormattedText.class);
 		//varTypes.put("character", DataPacketTypeCharacter.class);
 
 		varTypes.put("boolean", DataPacketTypeBoolean.class);
@@ -45,6 +45,8 @@ public class DataPacket
 		//varTypes.put("crafting_recipe", DataPacketTypeCraftingRecipe.class);
 
 		varTypes.put("array", DataPacketTypeArray.class);
+
+		varTypes.put("entity", DataPacketTypeEntity.class);
 
 		//varTypes.put("pair", DataPacketTypePair.class);
 	}
@@ -139,7 +141,6 @@ public class DataPacket
 				if(varTypes.containsKey(type))
 				{
 					IDataType data = null;
-					//ImmersiveIntelligence.logger.info("A "+type+" named " + "\" "+c+"\" has been added to a device");
 					try
 					{
 						data = (IDataType)varTypes.get(type).newInstance();
@@ -174,5 +175,27 @@ public class DataPacket
 	public String toString()
 	{
 		return this.toNBT().toString();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj)
+			return true;
+		if(obj instanceof DataPacket)
+		{
+			DataPacket other = (DataPacket)obj;
+
+			if(!variables.keySet().equals(other.variables.keySet()))
+				return false;
+			if(!matchesConnector(other.packetColor, other.packetAddress))
+				return false;
+			for(Entry<Character, IDataType> entry : variables.entrySet())
+				if(!other.getPacketVariable(entry.getKey()).valueToString().equals(entry.getValue().valueToString()))
+					return false;
+
+			return true;
+		}
+		return false;
 	}
 }

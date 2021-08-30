@@ -1,9 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
+import blusunrize.immersiveengineering.common.IEContent;
+import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet2bCal;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nonnull;
@@ -20,7 +24,7 @@ public class ItemIIAmmoMachinegun extends ItemIIBulletBase
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
 		return 0.125f;
 	}
@@ -28,7 +32,7 @@ public class ItemIIAmmoMachinegun extends ItemIIBulletBase
 	@Override
 	public int getGunpowderNeeded()
 	{
-		return 6;
+		return 25;
 	}
 
 	@Override
@@ -44,9 +48,15 @@ public class ItemIIAmmoMachinegun extends ItemIIBulletBase
 	}
 
 	@Override
+	public float getDefaultVelocity()
+	{
+		return 4f;
+	}
+
+	@Override
 	public float getCaliber()
 	{
-		return 0.125f;
+		return 2f;
 	}
 
 	@Override
@@ -62,16 +72,15 @@ public class ItemIIAmmoMachinegun extends ItemIIBulletBase
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public ItemStack getCasingStack(int amount)
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.SOFTPOINT, EnumCoreTypes.PIERCING};
+		return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"mg_2bcal",amount);
 	}
 
 	@Override
-	public void doPuff(EntityBullet bullet)
+	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
-		for(int i = 1; i < 5; i++)
-			ParticleUtils.spawnGunfireFX(bullet.posX, bullet.posY, bullet.posZ, bullet.motionX/i, bullet.motionY/i, bullet.motionZ/i, 8*bullet.bulletCasing.getCaliber()*(i/2.5f));
+		return new EnumCoreTypes[]{EnumCoreTypes.SOFTPOINT, EnumCoreTypes.PIERCING};
 	}
 
 	@Override

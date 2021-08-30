@@ -2,27 +2,50 @@ package pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_we
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.utils.IInfraredProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
+	private AxisAlignedBB vision;
 	int setupDelay = 0;
+	boolean requiresPlatformRefill = false;
 
 	private static final Runnable INSERTER_ANIM_LENS = () -> {
-		ClientUtils.bindTexture(EmplacementRenderer.textureInfraredObserver);
+		Utils.bindTexture(EmplacementRenderer.textureInfraredObserver);
 		GlStateManager.translate(-0.3125, 0.4225, 1.375);
 		GlStateManager.rotate(180, 1, 0, 0);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.lensModel)
@@ -70,9 +93,9 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	{
 		if(door)
 		{
-			if(!isAimedAt(0, -90))
+			if(!isAimedAt(yaw, -90))
 			{
-				aimAt(0, -90);
+				aimAt(yaw, -90);
 				return;
 			}
 			if(setupDelay < InfraredObserver.setupTime)
@@ -80,9 +103,9 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		}
 		else
 		{
-			if(!isAimedAt(0, -90))
+			if(!isAimedAt(yaw, -90))
 			{
-				aimAt(0, -90);
+				aimAt(yaw, -90);
 				return;
 			}
 			if(setupDelay > 0)
@@ -91,19 +114,46 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	}
 
 	@Override
-	public void tick()
+	public boolean requiresPlatformRefill()
+	{
+		return requiresPlatformRefill;
+	}
+
+	@Override
+	public void init(TileEntityEmplacement te, boolean firstTime)
+	{
+		super.init(te, firstTime);
+		EnumFacing facing = EnumFacing.fromAngle(yaw).getOpposite();
+		Vec3i vv = facing.getDirectionVec();
+		Vec3i vv2 = facing.rotateY().getDirectionVec();
+		vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5)
+				.expand(vv.getX()*InfraredObserver.detectionRadius, 0, vv.getZ()*InfraredObserver.detectionRadius)
+				.grow(vv2.getX()*InfraredObserver.detectionRadius, InfraredObserver.detectionRadius, vv2.getZ()*InfraredObserver.detectionRadius);
+		if(firstTime)
+			te.sendAttackSignal = true;
+	}
+
+	@Override
+	public void tick(TileEntityEmplacement te)
 	{
 
 	}
 
 	@Override
-	public NBTTagCompound saveToNBT()
+	public NBTTagCompound saveToNBT(boolean forClient)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setFloat("yaw", yaw);
-		tag.setFloat("pitch", pitch);
+		NBTTagCompound tag = super.saveToNBT(forClient);
 		tag.setInteger("setupDelay", setupDelay);
+		tag.setBoolean("requiresPlatformRefill", requiresPlatformRefill);
 		return tag;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tagCompound)
+	{
+		super.readFromNBT(tagCompound);
+		setupDelay = tagCompound.getInteger("setupDelay");
+		requiresPlatformRefill = tagCompound.getBoolean("requiresPlatformRefill");
 	}
 
 	@Override
@@ -113,11 +163,25 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
+	public void handleDataPacket(DataPacket packet)
 	{
-		yaw = tagCompound.getFloat("yaw");
-		pitch = tagCompound.getFloat("pitch");
-		setupDelay = tagCompound.getInteger("setupDelay");
+		super.handleDataPacket(packet);
+		String c = packet.getPacketVariable('c').valueToString();
+		if(c.equals("facing"))
+		{
+			IDataType f = packet.getPacketVariable('f');
+			if(f instanceof DataPacketTypeInteger)
+				nextYaw = EnumFacing.getHorizontal(((DataPacketTypeInteger)f).value).getHorizontalAngle();
+			else if(f instanceof DataPacketTypeString)
+			{
+				EnumFacing facing = EnumFacing.byName(f.valueToString());
+				if(facing!=null)
+					nextYaw = facing.getHorizontalAngle();
+			}
+
+			if(nextYaw!=yaw)
+				requiresPlatformRefill = true;
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -128,22 +192,23 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		float p, pp, y, yy;
 		p = this.nextPitch-this.pitch;
 		y = this.nextYaw-this.yaw;
-		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
-		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
+		boolean power = te.energyStorage.getEnergyStored() >= getEnergyUpkeepCost();
+		pp = pitch+(power?(Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed()): 0);
+		yy = yaw;//+(power?(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed()):0);
 		float setupProgress = (MathHelper.clamp(setupDelay+(pitch==-90?(te.isDoorOpened?(te.progress==Emplacement.lidTime?partialTicks: 0): -partialTicks): 0), 0, InfraredObserver.setupTime)/(float)InfraredObserver.setupTime);
 
 		float setupHalf = 1f-(Math.abs(0.5f-setupProgress)*2f);
 		GlStateManager.enableBlend();
 
 
-		ClientUtils.bindTexture(EmplacementRenderer.textureInfraredObserver);
+		Utils.bindTexture(EmplacementRenderer.textureInfraredObserver);
 
+		GlStateManager.rotate(yy, 0, 1, 0);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.baseModel)
 			mod.render();
 
 		GlStateManager.translate(0, 24/16f, 3/16f);
 		GlStateManager.rotate(pp, 1, 0, 0);
-		GlStateManager.rotate(yy, 0, 1, 0);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.observerModel)
 			mod.render();
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.hatchModel)
@@ -165,29 +230,29 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.lensModel)
 				mod.render();
 
-		float p1 = 95, p2 = 255, prog = 0.75f, h=0;
+		float p1 = 95, p2 = 255, prog = 0.75f, h = 0;
 		if(setupProgress > 0.1f&&setupProgress < 0.9f)
 		{
-			if(setupHalf<0.4f)
+			if(setupHalf < 0.4f)
 			{
-				p1=(1f-((setupHalf-0.2f)/0.2f))*95;
-				p2=p1+160;
+				p1 = (1f-((setupHalf-0.2f)/0.2f))*95;
+				p2 = p1+160;
 			}
-			else if(setupHalf<0.6f)
+			else if(setupHalf < 0.6f)
 			{
-				p1=0;
-				h=(setupHalf-0.4f)/0.2f*0.75f;
-				p2=p1+160;
+				p1 = 0;
+				h = (setupHalf-0.4f)/0.2f*0.75f;
+				p2 = p1+160;
 			}
 			else
 			{
-				p1=((setupHalf-0.6f)/0.4f)*95;
-				h=0.75f;
-				p2=p1+160-(((setupHalf-0.6f)/0.4f)*85);
+				p1 = ((setupHalf-0.6f)/0.4f)*95;
+				h = 0.75f;
+				p2 = p1+160-(((setupHalf-0.6f)/0.4f)*85);
 
 			}
 
-			prog=(1f-(setupProgress>0.45f?(setupProgress<0.65f?((setupProgress-0.45f)/0.2f):1f):0f))*0.75f;
+			prog = (1f-(setupProgress > 0.45f?(setupProgress < 0.65f?((setupProgress-0.45f)/0.2f): 1f): 0f))*0.75f;
 			//0.2, 0.2, 0.2, 0.4
 		}
 
@@ -198,7 +263,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		//-100, 90, 165
 		//0 95
 
-		EmplacementRenderer.renderInserter(false, 0, p1, p2, prog, setupProgress>0.5?INSERTER_ANIM_NONE:INSERTER_ANIM_LENS);
+		EmplacementRenderer.renderInserter(false, 0, p1, p2, prog, setupProgress > 0.5?INSERTER_ANIM_NONE: INSERTER_ANIM_LENS);
 
 		GlStateManager.popMatrix();
 	}
@@ -216,7 +281,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrench_upgrade_progress/2f))), maxClientProgress);
 		double progress = MathHelper.clamp(cc/req, 0, 1);
 
-		ClientUtils.bindTexture(EmplacementRenderer.textureInfraredObserver);
+		Utils.bindTexture(EmplacementRenderer.textureInfraredObserver);
 		for(int i = 0; i < l*progress; i++)
 		{
 			if(1+i > Math.round(l*progress))
@@ -257,5 +322,87 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public AxisAlignedBB getVisionAABB()
+	{
+		return vision;
+	}
+
+	@Override
+	public EmplacementHitboxEntity[] getCollisionBoxes()
+	{
+		if(entity==null)
+			return new EmplacementHitboxEntity[0];
+
+		//new Vec3d(0,0,0)
+		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
+		list.add(new EmplacementHitboxEntity(entity, "baseBox", 1f, 0.25f,
+				new Vec3d(0, 0.25, 0), Vec3d.ZERO, 4));
+		list.add(new EmplacementHitboxEntity(entity, "backBox", 0.5f, 0.75f,
+				new Vec3d(0.75, 0.75, 0), Vec3d.ZERO, 4));
+
+		list.add(new EmplacementHitboxEntity(entity, "observeBox", 1.25f, 1.25f,
+				new Vec3d(-0.25, 1.5, 0), Vec3d.ZERO, 4));
+		list.add(new EmplacementHitboxEntity(entity, "observeBox", 0.5f, 0.5f,
+				new Vec3d(-0.25, 1.5, 0), new Vec3d(-1, 0, -0.25), 4));
+		list.add(new EmplacementHitboxEntity(entity, "observeBox", 0.25f, 0.25f,
+				new Vec3d(-0.25, 1.5, 0), new Vec3d(-1.325, 0, -0.25), 4));
+
+		return list.toArray(new EmplacementHitboxEntity[0]);
+	}
+
+	@Override
+	public NonNullList<ItemStack> getBaseInventory()
+	{
+		return NonNullList.create();
+	}
+
+	@Override
+	public void renderStorageInventory(GuiEmplacementPageStorage gui, int mx, int my, float partialTicks, boolean first)
+	{
+
+	}
+
+	@Override
+	public void performPlatformRefill(TileEntityEmplacement te)
+	{
+		float y = MathHelper.wrapDegrees(360+nextYaw-this.yaw);
+		if(Math.abs(y) < this.getYawTurnSpeed()*0.5f)
+			this.yaw = this.nextYaw;
+		else
+			this.yaw = MathHelper.wrapDegrees(this.yaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, this.getYawTurnSpeed())));
+
+		if(yaw==nextYaw)
+		{
+			requiresPlatformRefill = false;
+			syncWithClient(te);
+		}
+	}
+
+	@Override
+	public int getEnergyUpkeepCost()
+	{
+		return InfraredObserver.energyUpkeepCost;
+	}
+
+	@Override
+	public int getMaxHealth()
+	{
+		return InfraredObserver.maxHealth;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	protected Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris()
+	{
+		return new Tuple<>(EmplacementRenderer.textureInfraredObserver, Arrays.asList(EmplacementRenderer.modelInfraredObserverConstruction));
+	}
+
+	@Override
+	public boolean canSeeEntity(Entity entity)
+	{
+		return StreamSupport.stream(entity.getArmorInventoryList().spliterator(), false).noneMatch(stack -> stack.getItem() instanceof IInfraredProtectionEquipment&&((IInfraredProtectionEquipment)stack.getItem()).invisibleToInfrared(stack));
 	}
 }

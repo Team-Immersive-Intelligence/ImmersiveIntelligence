@@ -25,7 +25,7 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 	public static ModelPanzer modelPanzer;
 	public static MotorBeltData tracks;
 
-	public static final String texture = ImmersiveIntelligence.MODID+":textures/entity/motorbike.png";
+	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/motorbike.png");
 
 	public MotorbikeRenderer(RenderManager renderManager)
 	{
@@ -95,7 +95,7 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		GlStateManager.translate(-0.55, 0.5, 0);
 
 
-		ClientUtils.bindTexture(texture);
+		bindTexture(TEXTURE);
 		for(ModelRendererTurbo mod : model.baseModel)
 			mod.render(0.0625f);
 
@@ -304,7 +304,7 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 	@Override
 	protected ResourceLocation getEntityTexture(EntityMotorbike entity)
 	{
-		return new ResourceLocation(texture);
+		return TEXTURE;
 	}
 
 	@Override

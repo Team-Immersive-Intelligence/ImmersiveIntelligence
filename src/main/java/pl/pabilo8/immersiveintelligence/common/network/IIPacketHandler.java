@@ -37,5 +37,7 @@ public class IIPacketHandler
 		INSTANCE.registerMessage(MessageParticleEffect.HandlerClient.class, MessageParticleEffect.class, 14, Side.CLIENT);
 		INSTANCE.registerMessage(MessageBeginMachineUpgrade.HandlerClient.class, MessageBeginMachineUpgrade.class, 15, Side.CLIENT);
 		INSTANCE.registerMessage(MessageBeginMachineUpgrade.HandlerServer.class, MessageBeginMachineUpgrade.class, 16, Side.SERVER);
+		INSTANCE.registerMessage(MessageParticleGunfire.HandlerClient.class, MessageParticleGunfire.class, 17, Side.CLIENT);
+		INSTANCE.registerMessage(MessageManualClose.HandlerServer.class, MessageManualClose.class, 18, Side.SERVER);
 	}
 }

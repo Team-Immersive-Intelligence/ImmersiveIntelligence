@@ -12,7 +12,7 @@ import java.util.Locale;
 public enum IIBlockTypes_MetalMultiblock1 implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	REDSTONE_DATA_INTERFACE(false),
-	CASING_FILLER(false),
+	FILLER(false),
 	AMMUNITION_CORE_FORGE(false),
 	AMMUNTION_CORE_FILLER(false),
 	AMMUNITION_ASSEMBLER(false),

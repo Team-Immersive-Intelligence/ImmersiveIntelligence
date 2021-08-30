@@ -26,6 +26,11 @@ public abstract class IICompatModule
 	static
 	{
 		moduleClasses.put("immersivepetroleum", ImmersivePetroleumHelper.class);
+		moduleClasses.put("immersiveposts", ImmersivePostsHelper.class);
+		moduleClasses.put("immersivetech", ImmersiveTechnologyHelper.class);
+		//it is the only IE addon which has a _ between words
+		moduleClasses.put("immersive_energy", ImmersiveEnergyHelper.class);
+		moduleClasses.put("tfc", TerrafirmaHelper.class);
 	}
 
 	public static void doModulesPreInit()

@@ -1,15 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
+import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelGrenade;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nonnull;
@@ -38,15 +37,9 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
 		return 0.45f;
-	}
-
-	@Override
-	public int getGunpowderNeeded()
-	{
-		return 0;
 	}
 
 	@Override
@@ -62,13 +55,20 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	}
 
 	@Override
-	public float getCaliber()
+	public float getDefaultVelocity()
 	{
-		return 10f/16f;
+		return 2.5f;
 	}
 
 	@Override
-	public @Nonnull Class<? extends IBulletModel> getModel()
+	public float getCaliber()
+	{
+		return 5f;
+	}
+
+	@Override
+	public @Nonnull
+	Class<? extends IBulletModel> getModel()
 	{
 		return ModelGrenade.class;
 	}
@@ -80,20 +80,26 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	}
 
 	@Override
+	public ItemStack getCasingStack(int amount)
+	{
+		return new ItemStack(IEContent.itemMaterial, amount, 0);
+	}
+
+	@Override
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.CANISTER, EnumCoreTypes.DOUBLE_CANISTER};
+		return new EnumCoreTypes[]{EnumCoreTypes.CANISTER};
 	}
 
 	@Override
 	public void registerSprites(TextureMap map)
 	{
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/base");
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core");
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_classic");
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_disp");
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/paint");
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_disp_classic");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_classic");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp_classic");
 	}
 
 	@Override
@@ -118,21 +124,21 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 		ArrayList<ResourceLocation> a = new ArrayList<>();
 		if(stack.getMetadata()==BULLET)
 		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/base"));
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
 			if(Grenade.classicGrenades < 2)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_disp"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp"));
 			else
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_disp_classic"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp_classic"));
 			if(getPaintColor(stack)!=-1)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/paint"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 
 		}
 		else if(stack.getMetadata()==CORE)
 		{
 			if(Grenade.classicGrenades < 2)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
 			else
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_classic"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_classic"));
 		}
 		return a;
 	}
@@ -163,10 +169,11 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	{
 		if(!world.isRemote)
 		{
+			world.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, IISounds.grenade_throw, SoundCategory.PLAYERS, 1f, 1f);
+
 			Vec3d vec = entityLiving.getLookVec().scale(1f);
 			Vec3d vv = entityLiving.getPositionVector().addVector(0, (double)entityLiving.getEyeHeight()-0.10000000149011612D, 0);
-			float distance = Math.min((((float)this.getMaxItemUseDuration(stack)-timeLeft)/(float)this.getMaxItemUseDuration(stack)),35)*2.5f;
-			EntityBullet a = BulletHelper.createBullet(world, stack, vv, vec, distance);
+			EntityBullet a = BulletHelper.createBullet(world, stack, vv, vec, Math.min((((float)this.getMaxItemUseDuration(stack)-timeLeft)/(float)this.getMaxItemUseDuration(stack)), 35)*Grenade.throwSpeedModifier);
 			a.setShooters(entityLiving);
 			a.fuse = (int)(60f/EntityBullet.DEV_SLOMO);
 			world.spawnEntity(a);

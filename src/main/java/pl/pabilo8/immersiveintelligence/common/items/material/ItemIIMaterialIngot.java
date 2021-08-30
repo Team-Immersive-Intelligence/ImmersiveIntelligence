@@ -17,7 +17,8 @@ public class ItemIIMaterialIngot extends ItemIIBase
 				"tungsten",
 				"zinc",
 				"magnet",
-				"silicon"
+				"silicon",
+				"duraluminium"
 		);
 	}
 }

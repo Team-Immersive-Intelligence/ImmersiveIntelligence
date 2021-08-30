@@ -2,9 +2,13 @@ package pl.pabilo8.immersiveintelligence.client.manual;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
+import blusunrize.lib.manual.IManualPage;
 import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualPages.Crafting;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler.ThreadContributorSpecialsDownloader;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
@@ -13,10 +17,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.BulletComponentDisplay;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.BulletCoreDisplay;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesCallbackDisplay;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesDisplay;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockAmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockArtilleryHowitzer;
@@ -52,14 +53,14 @@ public class IIManualWarfare extends IIManual
 		for(Entry<String, IBulletCore> entry : BulletRegistry.INSTANCE.registeredBulletCores.entrySet())
 		{
 			if(!entry.getValue().getMaterial().getExampleStack().isEmpty())
-				bullet_cores.add(new BulletCoreDisplay(ManualHelper.getManual(), entry.getValue()));
+				bullet_cores.add(new IIManualPageBulletCore(ManualHelper.getManual(), entry.getValue()));
 		}
 
 		ArrayList<ManualPages> bullet_components = new ArrayList<>();
 		for(Entry<String, IBulletComponent> entry : BulletRegistry.INSTANCE.registeredComponents.entrySet())
 		{
 			if(entry.getValue().showInManual()&&!entry.getValue().getMaterial().getExampleStack().isEmpty())
-				bullet_components.add(new BulletComponentDisplay(ManualHelper.getManual(), entry.getValue()));
+				bullet_components.add(new IIManualPageBulletComponent(ManualHelper.getManual(), entry.getValue()));
 		}
 
 		ManualHelper.addEntry("bullet_cores", getCategory(),
@@ -90,39 +91,39 @@ public class IIManualWarfare extends IIManual
 		ManualHelper.addEntry("artillery_howitzer", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "artillery_howitzer1", MultiblockArtilleryHowitzer.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "artillery_howitzer2"),
-				new DataVariablesDisplay(ManualHelper.getManual(), "artillery_howitzer", true)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer", true)
 						.addEntry(new DataPacketTypeString(), 'c')
 						.addEntry(new DataPacketTypeInteger(), 'f')
 						.addEntry(new DataPacketTypeInteger(), 'y'),
-				new DataVariablesDisplay(ManualHelper.getManual(), "artillery_howitzer2", true)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer2", true)
 						.addEntry(new DataPacketTypeInteger(), 'p'),
-				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer1")
+				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer1")
 						.addEntry(new DataPacketTypeInteger(), "get_energy")
 						.addEntry(new DataPacketTypeString(), "get_state")
 						.addEntry(new DataPacketTypeInteger(), "get_state_num")
 						.addEntry(new DataPacketTypeInteger(), "get_state_progress"),
-				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer2")
+				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer2")
 						.addEntry(new DataPacketTypeInteger(), "get_yaw")
 						.addEntry(new DataPacketTypeInteger(), "get_pitch")
 						.addEntry(new DataPacketTypeInteger(), "get_planned_yaw")
 						.addEntry(new DataPacketTypeInteger(), "get_planned_pitch")
 						.addEntry(new DataPacketTypeInteger(), "get_platform_height"),
 
-				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer3")
+				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer3")
 						.addEntry(new DataPacketTypeBoolean(), "get_door_opened")
 						.addEntry(new DataPacketTypeBoolean(), "get_door_closed")
 						.addEntry(new DataPacketTypeBoolean(), "get_door_opening"),
-				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "artillery_howitzer4")
+				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer4")
 						.addEntry(new DataPacketTypeItemStack(), "get_loaded_shell")
 						.addEntry(new DataPacketTypeItemStack(), "get_stored_shell")
 		);
 
 		ManualHelper.addEntry("ballistic_computer", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "ballistic_computer0", MultiblockBallisticComputer.instance),
-				new DataVariablesDisplay(ManualHelper.getManual(), "ballistic_computer", true)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "ballistic_computer", true)
 						.addEntry(new DataPacketTypeInteger(), 'x', 'y', 'z')
 						.addEntry(new DataPacketTypeInteger(), 'm'),
-				new DataVariablesDisplay(ManualHelper.getManual(), "ballistic_computer", false)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "ballistic_computer", false)
 						.addEntry(new DataPacketTypeInteger(), 'y')
 						.addEntry(new DataPacketTypeInteger(), 'p')
 		);
@@ -142,7 +143,7 @@ public class IIManualWarfare extends IIManual
 		ManualHelper.addEntry("chemdispenser", getCategory(),
 				new ManualPages.Crafting(ManualHelper.getManual(), "chemdispenser0", new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta())),
 				new ManualPages.Text(ManualHelper.getManual(), "chemdispenser1"),
-				new DataVariablesDisplay(ManualHelper.getManual(), "chemdispenser", true)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "chemdispenser", true)
 						.addEntry(new DataPacketTypeInteger(), 'a')
 						.addEntry(new DataPacketTypeBoolean(), 'i')
 						.addEntry(new DataPacketTypeInteger(), 'y')

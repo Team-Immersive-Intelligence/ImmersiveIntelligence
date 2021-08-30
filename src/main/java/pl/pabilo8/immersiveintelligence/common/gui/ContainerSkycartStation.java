@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEnt
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerSkycartStation extends ContainerIEBase
+public class ContainerSkycartStation extends ContainerIEBase<TileEntitySkyCartStation>
 {
 	public ContainerSkycartStation(InventoryPlayer inventoryPlayer, TileEntitySkyCartStation tile)
 	{

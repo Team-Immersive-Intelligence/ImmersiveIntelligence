@@ -19,10 +19,9 @@ public enum IIBlockTypes_MetalMultiblock0 implements IStringSerializable, BlockI
 	PERISCOPE(false),
 	CONVEYOR_SCANNER(false),
 	AMMUNITION_FACTORY(false),
+	PACKER_OLD(true),
 	PACKER(true),
-	UNPACKER(true),
-	MINECART_PACKER(false),
-	MINECART_UNPACKER(false);
+	RAILWAY_PACKER(false);
 
 	/**
 	 * @author Pabilo8

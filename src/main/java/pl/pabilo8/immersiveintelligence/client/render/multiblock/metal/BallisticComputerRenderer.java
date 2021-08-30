@@ -88,9 +88,15 @@ public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEnt
 				int iH = sprite.getIconHeight();
 
 				GlStateManager.rotate(90, 1, 0, 0);
+
 				GlStateManager.scale(0.0625f, 0.0625f, 0.0625f);
-				GlStateManager.translate(26, -7, -12);
-				GlStateManager.rotate(13, 0, 0, 1);
+				if(te.mirrored)
+					GlStateManager.translate(26, 5, -12);
+				else
+					GlStateManager.translate(26, -7, -12);
+				GlStateManager.rotate(-13, 0, 0, 1);
+				GlStateManager.translate(-1, 0, 0);
+
 				if(iW > 0&&iH > 0)
 					ClientUtils.drawRepeatedSprite(0, 0, 3, 2, iW, iH, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
 
@@ -114,6 +120,14 @@ public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEnt
 		modelFlipped.baseModel[2].setRotationPoint(16F, -8F, 0F);
 		modelFlipped.baseModel[2].rotateAngleY = 1.57079633F;
 
+		modelFlipped.baseModel[4].doMirror(true, false, true);
+
 		modelFlipped.flipAllZ();
+
+		for(ModelRendererTurbo[] mod : modelFlipped.parts.values())
+		{
+			for(ModelRendererTurbo m : mod)
+				m.rotateAngleY *= -1;
+		}
 	}
 }

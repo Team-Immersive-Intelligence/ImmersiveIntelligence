@@ -46,7 +46,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.FUEL_STATION);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.VEHICLE_WORKSHOP);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.RADAR);
-		addToTESRMap(IIBlockTypes_MetalMultiblock1.CASING_FILLER);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.FILLER);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.VULCANIZER);
 
 	}
@@ -86,9 +86,9 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			{
 				return new TileEntityRedstoneInterface();
 			}
-			case CASING_FILLER:
+			case FILLER:
 			{
-				return new TileEntityCasingFiller();
+				return new TileEntityFiller();
 			}
 			case EMPLACEMENT:
 			{
@@ -109,6 +109,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			case VULCANIZER:
 			{
 				return new TileEntityVulcanizer();
+			}
+			case RADAR:
+			{
+				return new TileEntityRadar();
 			}
 		}
 		return null;

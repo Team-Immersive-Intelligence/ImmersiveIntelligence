@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
 import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationAdd;
@@ -133,12 +133,12 @@ public class DataPacketTypeExpression implements IDataType
 		requiredVariable = nbt.getString("requiredVariable").charAt(0);
 
 		String type = nbt.getString("Operation");
-		if(DataOperation.operations.containsKey(type))
+		if(DataOperations.operations.containsKey(type))
 		{
 			DataOperator data;
 			try
 			{
-				data = (DataOperator)DataOperation.operations.get(type).newInstance();
+				data = (DataOperator)DataOperations.operations.get(type).newInstance();
 				operation = data;
 			} catch(InstantiationException e)
 			{
@@ -154,8 +154,7 @@ public class DataPacketTypeExpression implements IDataType
 	@Override
 	public NBTTagCompound valueToNBT()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("Type", "expression");
+		NBTTagCompound nbt = getHeaderTag();
 
 		nbt.setTag("Value1", type1.valueToNBT());
 		nbt.setTag("Value2", type2.valueToNBT());

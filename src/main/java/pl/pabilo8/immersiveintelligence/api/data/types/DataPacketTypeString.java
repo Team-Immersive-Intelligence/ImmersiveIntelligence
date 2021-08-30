@@ -48,8 +48,7 @@ public class DataPacketTypeString implements IDataType
 	@Override
 	public NBTTagCompound valueToNBT()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("Type", "string");
+		NBTTagCompound nbt = getHeaderTag();
 		nbt.setString("Value", value);
 		return nbt;
 	}

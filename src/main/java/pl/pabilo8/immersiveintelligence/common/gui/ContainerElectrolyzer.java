@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
  * @author Pabilo8
  * @since 10-07-2019
  */
-public class ContainerElectrolyzer extends ContainerIEBase
+public class ContainerElectrolyzer extends ContainerIEBase<TileEntityElectrolyzer>
 {
 	public ContainerElectrolyzer(InventoryPlayer inventoryPlayer, TileEntityElectrolyzer tile)
 	{

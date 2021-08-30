@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.SPacketSoundEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.*;
@@ -21,9 +23,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer.MultipleTracerBuilder;
@@ -34,10 +37,12 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTy
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -48,19 +53,19 @@ import java.util.Arrays;
  * Total rewrite on 31-10-2020, almost no old code left
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityBullet extends Entity implements ILightProvider
+public class EntityBullet extends Entity implements ILightProvider, IEntityAdditionalSpawnData
 {
 	public static final int MAX_TICKS = 600;
-	public static final float DRAG = 0.02f;
+	public static final float DRAG = 0.01f;
 	public static final float GRAVITY = 0.1f;
 
 	//For testing purposes
 	public static float DEV_SLOMO = 1f;
 	public static boolean DEV_DECAY = true;
 
-	public IBullet bulletCasing;
-	public IBulletCore bulletCore;
-	public EnumCoreTypes bulletCoreType;
+	public IBullet bullet;
+	public IBulletCore core;
+	public EnumCoreTypes coreType;
 	public IBulletComponent[] components = new IBulletComponent[0];
 	public NBTTagCompound[] componentNBT = new NBTTagCompound[0];
 
@@ -83,7 +88,7 @@ public class EntityBullet extends Entity implements ILightProvider
 	Base damage is density*initial damage (NOT MASS)
 	On hit, they are multiplied by core type bonuses, so a softpoint bullet has less penetration than an AP round, but has more damage vs unarmored targets
 	 */
-	public float penetrationHardness = 1, force = 1, initalForce = 1, baseDamage = 0, mass = 0;
+	public float penetrationHardness = 1, force = 1, initialForce = 1, baseDamage = 0, mass = 0;
 
 	ArrayList<Entity> hitEntities = new ArrayList<>();
 	ArrayList<BlockPos> hitPos = new ArrayList<>();
@@ -100,20 +105,21 @@ public class EntityBullet extends Entity implements ILightProvider
 	}
 
 	/**
-	 * use $link{}
+	 * This is a general method, use {@link BulletHelper#createBullet(World, ItemStack, Vec3d, Vec3d, float)} inside your code
 	 */
-	public EntityBullet(World worldIn, ItemStack stack, double x, double y, double z, float force, float velocity, double motionX, double motionY, double motionZ)
+	public EntityBullet(World worldIn, ItemStack stack, double x, double y, double z, float velocityMod, double motionX, double motionY, double motionZ)
 	{
 		super(worldIn);
 
 		fromStack(stack);
 
 		this.setPosition(x, y, z);
-		this.force = force*velocity;
-		this.initalForce = force;
+		this.force = bullet.getDefaultVelocity()*velocityMod;
+		this.initialForce = bullet.getDefaultVelocity();
 		this.baseMotionX = motionX;
 		this.baseMotionY = motionY;
 		this.baseMotionZ = motionZ;
+
 		setMotion();
 
 		//Should not be called on client
@@ -153,12 +159,12 @@ public class EntityBullet extends Entity implements ILightProvider
 	{
 		if(stack.getItem() instanceof IBullet)
 		{
-			bulletCasing = (IBullet)stack.getItem();
-			bulletCore = bulletCasing.getCore(stack);
-			bulletCoreType = bulletCasing.getCoreType(stack);
-			components = bulletCasing.getComponents(stack);
-			componentNBT = bulletCasing.getComponentsNBT(stack);
-			paintColor = bulletCasing.getPaintColor(stack);
+			bullet = (IBullet)stack.getItem();
+			core = bullet.getCore(stack);
+			coreType = bullet.getCoreType(stack);
+			components = bullet.getComponents(stack);
+			componentNBT = bullet.getComponentsNBT(stack);
+			paintColor = bullet.getPaintColor(stack);
 
 			if(ItemNBTHelper.hasKey(stack, "fuse"))
 				fuse = ItemNBTHelper.getInt(stack, "fuse");
@@ -169,19 +175,19 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	private void refreshBullet()
 	{
-		if(bulletCore==null||bulletCasing==null||bulletCoreType==null)
+		if(core==null||bullet==null||coreType==null)
 		{
 			setDead();
 			return;
 		}
-		penetrationHardness = bulletCore.getPenetrationHardness();
+		penetrationHardness = core.getPenetrationHardness();
 		double compMass = 1d+Arrays.stream(components).mapToDouble(IBulletComponent::getDensity).sum();
-		compMass += bulletCore.getDensity();
-		baseDamage = (float)(bulletCasing.getDamage()*compMass*bulletCore.getDamageModifier());
+		compMass += core.getDensity();
+		baseDamage = (float)(bullet.getDamage()*compMass*core.getDamageModifier());
 
-		shouldLoadChunks = bulletCasing.shouldLoadChunks();
+		shouldLoadChunks = bullet.shouldLoadChunks();
 
-		mass = bulletCasing.getMass(bulletCore, components);
+		mass = bullet.getCoreMass(core, components);
 
 		if(paintColor==-1)
 			isPainted = false;
@@ -229,6 +235,12 @@ public class EntityBullet extends Entity implements ILightProvider
 			}
 		}
 
+		if(world.getTotalWorldTime()%6==0)
+		{
+			world.playSound(null,posX,posY,posZ,IISounds.bullet_wind,getSoundCategory(),1,1);
+			//playFlySound(0);
+		}
+
 		if(isDead)
 			return;
 
@@ -242,7 +254,7 @@ public class EntityBullet extends Entity implements ILightProvider
 		else
 		{
 			force -= DRAG*force*DEV_SLOMO;
-			gravityMotionY -= (GRAVITY*this.mass*DEV_SLOMO)/(ArtilleryHowitzer.howitzerRangeMP);
+			gravityMotionY -= GRAVITY*this.mass*DEV_SLOMO;
 			setMotion();
 
 			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), this.getNextPositionVector())
@@ -264,8 +276,8 @@ public class EntityBullet extends Entity implements ILightProvider
 							{
 								IPenetrationHandler penetrationHandler = PenetrationRegistry.getPenetrationHandler(world.getBlockState(pos));
 								PenMaterialTypes penType = penetrationHandler.getPenetrationType();
-								float pen = penetrationHardness*bulletCoreType.getPenMod(penType);
-								float dmg = baseDamage*bulletCoreType.getDamageMod(penType)/4f;
+								float pen = penetrationHardness*coreType.getPenMod(penType);
+								float dmg = baseDamage*coreType.getDamageMod(penType)/4f;
 								float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
 								if(world.getBlockState(pos).getBlock()==Blocks.BEDROCK)
 									hardness = pen*20;
@@ -277,7 +289,10 @@ public class EntityBullet extends Entity implements ILightProvider
 								{
 									//thanks lgmrszd
 									if(!world.isRemote&&!world.getBlockState(pos).getMaterial().isLiquid())
+									{
 										BulletHelper.dealBlockDamage(world, dmg, pos, penetrationHandler);
+										playHitSound(HitEffect.IMPACT, world, hit.getBlockPos(), penetrationHandler);
+									}
 									penetrationHardness *= ((hardness*1.5f)/pen);
 									force *= 0.85f;
 								}
@@ -286,7 +301,10 @@ public class EntityBullet extends Entity implements ILightProvider
 									if(!world.isRemote)
 									{
 										if(!world.getBlockState(pos).getMaterial().isLiquid())
+										{
 											BulletHelper.dealBlockDamage(world, dmg*(hardness/penetrationHandler.getDensity()), pos, penetrationHandler);
+											playHitSound(HitEffect.IMPACT, world, hit.getBlockPos(), penetrationHandler);
+										}
 										if(fuse==-1)
 											performEffect(hit);
 									}
@@ -298,7 +316,11 @@ public class EntityBullet extends Entity implements ILightProvider
 								{
 									//can't ricochet if penetrates multiple blocks
 									if(force > hardness&&penetrationHandler.getPenetrationType().canRicochetOff()&&i==0)
+									{
 										ricochet(hardness/2f, pos);
+										if(!world.isRemote)
+											playHitSound(HitEffect.RICOCHET, world, hit.getBlockPos(), penetrationHandler);
+									}
 									else
 									{
 										if(!world.isRemote)
@@ -347,8 +369,8 @@ public class EntityBullet extends Entity implements ILightProvider
 										toughness += MathHelper.floor(((EntityLivingBase)e).getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
 									}
 									PenMaterialTypes penType = (toughness > 0||armor > 0)?PenMaterialTypes.METAL: PenMaterialTypes.FLESH;
-									float pen = penetrationHardness*bulletCoreType.getPenMod(penType)*Math.min(force, 1.15f);
-									float dmg = baseDamage*bulletCoreType.getDamageMod(penType);
+									float pen = penetrationHardness*coreType.getPenMod(penType)*Math.min(force, 1.15f);
+									float dmg = baseDamage*coreType.getDamageMod(penType);
 
 									//overpenetration
 									if(pen > toughness*6f)
@@ -356,10 +378,14 @@ public class EntityBullet extends Entity implements ILightProvider
 										//armor not counted in
 										if(!world.isRemote)
 										{
-											BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/6f));
+											BulletHelper.breakArmour(e, (int)(baseDamage*coreType.getPenMod(penType)/6f));
 											e.hurtResistantTime = 0;
-											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter,e), dmg);
+											if(!e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter, e), dmg))
+											{
+												performEffect(hit);
+											}
 										}
+										stopAtPoint(hit);
 										penetrationHardness *= ((toughness*4f)/pen);
 										force *= 0.85f;
 									}
@@ -370,14 +396,17 @@ public class EntityBullet extends Entity implements ILightProvider
 										{
 											float depth = (pen-(toughness*6f))/pen;
 
-											BulletHelper.breakArmour(e, (int)(baseDamage*bulletCoreType.getPenMod(penType)/8f));
+											BulletHelper.breakArmour(e, (int)(baseDamage*coreType.getPenMod(penType)/8f));
 											e.hurtResistantTime = 0;
-											e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter,e), Math.max(dmg-(armor*depth), 0));
+											if(!e.attackEntityFrom(IIDamageSources.causeBulletDamage(this, this.shooter, e), dmg))
+											{
+												performEffect(hit);
+											}
 											penetrationHardness = 0;
 											if(fuse==-1)
 												performEffect(hit);
-											stopAtPoint(hit);
 										}
+										stopAtPoint(hit);
 										break penloop;
 									}
 									//underpenetration + ricochet
@@ -392,9 +421,8 @@ public class EntityBullet extends Entity implements ILightProvider
 										{
 											if(fuse==-1)
 												performEffect(hit);
-											stopAtPoint(hit);
-
 										}
+										stopAtPoint(hit);
 										break penloop;
 									}
 								}
@@ -422,9 +450,10 @@ public class EntityBullet extends Entity implements ILightProvider
 		{
 			if(penetrationHardness!=0)
 			{
-				float motionXZ = MathHelper.sqrt(baseMotionX*baseMotionX+baseMotionZ*baseMotionZ);
-				this.rotationYaw = (float)((Math.atan2(baseMotionX, baseMotionZ)*180D)/3.1415927410125732D);
-				this.rotationPitch = -(float)((Math.atan2(baseMotionY, motionXZ)*180D)/3.1415927410125732D);
+				Vec3d normalized = new Vec3d(motionX, motionY, motionZ).normalize();
+				float motionXZ = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
+				this.rotationYaw = (float)((Math.atan2(normalized.x, normalized.z)*180D)/3.1415927410125732D);
+				this.rotationPitch = -(float)((Math.atan2(normalized.y, motionXZ)*180D)/3.1415927410125732D);
 
 				for(int j = 0; j < components.length; j++)
 				{
@@ -445,7 +474,16 @@ public class EntityBullet extends Entity implements ILightProvider
 		baseMotionX = 0;
 		baseMotionY = 0;
 		baseMotionZ = 0;
-		setPosition(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z);
+		setPositionAndUpdate(hit.hitVec.x, hit.hitVec.y+height, hit.hitVec.z);
+		setMotion();
+
+		if(!world.isRemote)
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			writeEntityToNBT(nbt);
+			nbt.setBoolean("stopped", true);
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), Utils.targetPointFromEntity(this, 32));
+		}
 	}
 
 	private void ricochet(float force, BlockPos currentPos)
@@ -463,11 +501,12 @@ public class EntityBullet extends Entity implements ILightProvider
 	{
 		setDead();
 		setPosition(hit.hitVec.x, hit.hitVec.y, hit.hitVec.z);
-		float str = bulletCasing.getComponentCapacity()*bulletCore.getExplosionModifier()*bulletCoreType.getComponentEffectivenessMod();
+		float str = bullet.getComponentMultiplier()*core.getExplosionModifier()*coreType.getComponentEffectivenessMod();
 		for(int i = 0; i < components.length; i++)
 		{
-			if(components[i]!=null&&i<componentNBT.length&&componentNBT[i]!=null)
-			components[i].onEffect(str, componentNBT[i], world, hit.getBlockPos()!=null?hit.getBlockPos(): this.getPosition(), this);
+			if(components[i]!=null&&i < componentNBT.length&&componentNBT[i]!=null)
+				components[i].onEffect(str, coreType, componentNBT[i], hit.hitVec, new Vec3d(baseMotionX, baseMotionY, baseMotionZ).normalize(), world
+				);
 		}
 	}
 
@@ -508,15 +547,19 @@ public class EntityBullet extends Entity implements ILightProvider
 			this.baseMotionY = compound.getDouble("basemotion_y");
 			this.baseMotionZ = compound.getDouble("basemotion_z");
 			this.force = compound.getFloat("force");
-			this.initalForce = compound.getFloat("initalForce");
+			this.initialForce = compound.getFloat("initalForce");
+
+			float motionXZ = MathHelper.sqrt(baseMotionX*baseMotionX+baseMotionZ*baseMotionZ);
+			this.rotationYaw = (float)((Math.atan2(baseMotionX, baseMotionZ)*180D)/3.1415927410125732D);
+			this.rotationPitch = -(float)((Math.atan2(baseMotionY, motionXZ)*180D)/3.1415927410125732D);
 		}
 
 		if(compound.hasKey("casing"))
-			this.bulletCasing = BulletRegistry.INSTANCE.getCasing(compound.getString("casing"));
+			this.bullet = BulletRegistry.INSTANCE.getBulletItem(compound.getString("casing"));
 		if(compound.hasKey("core"))
-			this.bulletCore = BulletRegistry.INSTANCE.getCore(compound.getString("core"));
+			this.core = BulletRegistry.INSTANCE.getCore(compound.getString("core"));
 		if(compound.hasKey("core_type"))
-			this.bulletCoreType = EnumCoreTypes.v(compound.getString("core_type"));
+			this.coreType = EnumCoreTypes.v(compound.getString("core_type"));
 
 		if(compound.hasKey("components"))
 		{
@@ -541,19 +584,27 @@ public class EntityBullet extends Entity implements ILightProvider
 
 		refreshBullet();
 
+		if(compound.hasKey("stopped"))
+		{
+			gravityMotionY = 0;
+			penetrationHardness = 0;
+			baseMotionX = 0;
+			baseMotionY = 0;
+			baseMotionZ = 0;
+		}
+
 		if(world.isRemote)
 		{
 			wasSynced = true;
-			bulletCasing.doPuff(this);
 		}
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
-		compound.setString("casing", bulletCasing.getName());
-		compound.setString("core", bulletCore.getName());
-		compound.setString("core_type", bulletCoreType.getName());
+		compound.setString("casing", bullet.getName());
+		compound.setString("core", core.getName());
+		compound.setString("core_type", coreType.getName());
 
 		NBTTagList tagList = new NBTTagList();
 		Arrays.stream(components).map(IBulletComponent::getName).map(NBTTagString::new).forEachOrdered(tagList::appendTag);
@@ -571,11 +622,10 @@ public class EntityBullet extends Entity implements ILightProvider
 		compound.setDouble("basemotion_y", this.baseMotionY);
 		compound.setDouble("basemotion_z", this.baseMotionZ);
 		compound.setFloat("force", this.force);
-		compound.setFloat("initalForce", this.initalForce);
+		compound.setFloat("initalForce", this.initialForce);
 
 	}
 
-	@SuppressWarnings("unused")
 	private void playHitSound(HitEffect effect, World world, BlockPos pos, IPenetrationHandler handler)
 	{
 		IBlockState state = world.getBlockState(pos);
@@ -583,9 +633,11 @@ public class EntityBullet extends Entity implements ILightProvider
 		if(event==null)
 		{
 			SoundType type = state.getBlock().getSoundType(state, world, pos, this);
-			event = effect==HitEffect.PENETRATION?type.getBreakSound(): type.getStepSound();
+			event = effect==HitEffect.IMPACT?type.getBreakSound(): type.getStepSound();
 		}
-		world.getMinecraftServer().getPlayerList().sendToAllNearExcept(null, posX, posY, posZ, 24D, this.world.provider.getDimension(), new SPacketSoundEffect(event, SoundCategory.BLOCKS, posX, posY, posZ, 1f, 1f));
+		MinecraftServer server = world.getMinecraftServer();
+		if(server!=null)
+			server.getPlayerList().sendToAllNearExcept(null, posX, posY, posZ, 8D, this.world.provider.getDimension(), new SPacketSoundEffect(event, SoundCategory.BLOCKS, posX, posY, posZ, 0.5f, 1f));
 	}
 
 	public Vec3d getBaseMotion()
@@ -595,13 +647,15 @@ public class EntityBullet extends Entity implements ILightProvider
 
 	private void setBulletSize()
 	{
-		float cal = bulletCasing.getCaliber();
+		float cal = bullet.getCaliber()/16f;
 		this.width = cal;
 		this.height = cal;
 		cal *= 16f;
 		setEntityBoundingBox(new AxisAlignedBB(-cal, -cal, -cal, cal, cal, cal));
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Nullable
 	@Override
 	public Light provideLight()
 	{
@@ -611,7 +665,7 @@ public class EntityBullet extends Entity implements ILightProvider
 				IBulletComponent c = components[j];
 				if(c.hasTrail())
 				{
-					return Light.builder().pos(this).radius(bulletCasing.getComponentCapacity()*16f).color(c.getNBTColour(componentNBT[j]), false).build();
+					return Light.builder().pos(this).radius(bullet.getComponentMultiplier()*16f).color(c.getNBTColour(componentNBT[j]), false).build();
 				}
 			}
 		return null;
@@ -633,5 +687,34 @@ public class EntityBullet extends Entity implements ILightProvider
 	public void setFire(int seconds)
 	{
 
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		NBTTagCompound compound = new NBTTagCompound();
+		writeEntityToNBT(compound);
+		ByteBufUtils.writeTag(buffer, compound);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		NBTTagCompound compound = ByteBufUtils.readTag(additionalData);
+		if(compound!=null)
+			readEntityFromNBT(compound);
+	}
+
+	@Override
+	protected boolean makeFlySound()
+	{
+		return true;
+	}
+
+	@Override
+	protected float playFlySound(float delay)
+	{
+		this.playSound(IISounds.bullet_wind, 2F, (1/this.bullet.getCaliber()));
+		return delay+5;
 	}
 }

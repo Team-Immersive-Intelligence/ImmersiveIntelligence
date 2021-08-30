@@ -58,7 +58,7 @@ public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpo
 			if(!te.flag.isEmpty())
 			{
 				banner.setItemValues(te.flag, false);
-				float f = ((Math.abs((((getWorld().getTotalWorldTime()+partialTicks)%200)/200f)-0.5f)/0.5f)-0.5f)/0.5f;
+				double f = ((Math.abs((((getWorld().getTotalWorldTime()+partialTicks)%200)/200f)-0.5f)/0.5f)-0.5f)/0.5f;
 				ResourceLocation res = BannerTextures.BANNER_DESIGNS.getResourceLocation(banner.getPatternResourceLocation(), banner.getPatternList(), banner.getColorList());
 				if(res!=null)
 				{
@@ -93,13 +93,13 @@ public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpo
 		}
 	}
 
-	private void drawFlag(int n, float rot)
+	private void drawFlag(int n, double rot)
 	{
-		// TODO: 04.03.2021 make it work like it should
+		// TODO: 27.07.2021 fix uv
 		float length=40/(float)n;
 		for(int i = 0; i < n; i++)
 		{
-			GlStateManager.rotate(rot*6.5f*n*(n%2==0?1:-1),1,0,0);
+			GlStateManager.rotate((float)(rot*6.5f*n*(n%2==0?1:-1)),1,0,0);
 			ClientUtils.drawTexturedRect(0f,0f,1f,length/21f, 0.015625f,21/64f,0.015625f+(i*length/64f),(length*(i+1))/64f);
 			GlStateManager.translate(0f,0f,0.0625f);
 			ClientUtils.drawTexturedRect(0f,length/21f,1f,-length/21f, 0.015625f,21/64f,0.015625f+((i+1)*length/64f),(length*i)/64f);

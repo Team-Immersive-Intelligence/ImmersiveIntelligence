@@ -1,15 +1,19 @@
 package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleExplosion;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet6bCal;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nonnull;
@@ -26,7 +30,7 @@ public class ItemIIAmmoLightArtillery extends ItemIIBulletBase
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
 		return 0.65f;
 	}
@@ -34,7 +38,7 @@ public class ItemIIAmmoLightArtillery extends ItemIIBulletBase
 	@Override
 	public int getGunpowderNeeded()
 	{
-		return 4;
+		return 450;
 	}
 
 	@Override
@@ -50,15 +54,21 @@ public class ItemIIAmmoLightArtillery extends ItemIIBulletBase
 	}
 
 	@Override
+	public float getDefaultVelocity()
+	{
+		return 10f;
+	}
+
+	@Override
 	public float getCaliber()
 	{
-		return 0.375f;
+		return 6f;
 	}
 
 	@Override
 	public @Nonnull Class<? extends IBulletModel> getModel()
 	{
-		return ModelBullet8bCal.class;
+		return ModelBullet6bCal.class;
 	}
 
 	@Override
@@ -68,9 +78,15 @@ public class ItemIIAmmoLightArtillery extends ItemIIBulletBase
 	}
 
 	@Override
+	public ItemStack getCasingStack(int amount)
+	{
+		return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"light_artillery_6bcal",amount);
+	}
+
+	@Override
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER, EnumCoreTypes.DOUBLE_CANISTER};
+		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER};
 	}
 
 	@Override
@@ -91,8 +107,6 @@ public class ItemIIAmmoLightArtillery extends ItemIIBulletBase
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
 	public void doPuff(EntityBullet bullet)
 	{
 		for(int i = 0; i < 20; i += 1)

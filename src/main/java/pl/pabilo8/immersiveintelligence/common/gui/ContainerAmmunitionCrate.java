@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoMachin
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerAmmunitionCrate extends ContainerIEBase
+public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmunitionCrate>
 {
 	public ContainerAmmunitionCrate(InventoryPlayer inventoryPlayer, TileEntityAmmunitionCrate tile)
 	{

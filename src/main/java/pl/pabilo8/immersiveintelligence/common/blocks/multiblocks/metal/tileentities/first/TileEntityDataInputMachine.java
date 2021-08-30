@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
@@ -32,13 +33,20 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIIRadioExplosives.ItemBlockRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIITripmine.ItemBlockTripmine;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author Pabilo8
@@ -46,6 +54,32 @@ import java.util.List;
  */
 public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEntityDataInputMachine, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IBooleanAnimatedPartsBlock
 {
+	public static HashMap<Predicate<ItemStack>, BiFunction<TileEntityDataInputMachine, ItemStack, ItemStack>> dataOperations = new HashMap<>();
+
+	static
+	{
+		dataOperations.put(stack -> Utils.compareToOreName(stack, "punchtapeEmpty"),
+				(tile, stack) -> {
+					ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
+					((ItemIIPunchtape)output.getItem()).writeDataToItem(tile.storedData, output);
+					return output;
+				});
+
+		dataOperations.put(stack -> stack.getItem() instanceof ItemIIPunchtape,
+				(tile, stack) -> {
+					tile.storedData = ((ItemIIPunchtape)stack.getItem()).getStoredData(stack);
+					return stack;
+				});
+
+		dataOperations.put(stack -> stack.getItem() instanceof ItemBlockRadioExplosives,
+				(tile, stack) -> {
+					ItemNBTHelper.setTagCompound(stack, "programmed_data", tile.storedData.clone().toNBT());
+					return stack;
+				});
+
+		// TODO: 20.08.2021 radio explosives
+	}
+
 	public boolean toggle = false;
 	public float productionProgress = 0f;
 	public DataPacket storedData = new DataPacket();
@@ -121,7 +155,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	{
 		super.update();
 
-		if(world.isRemote&&pos==4)
+		if(world.isRemote&&!isDummy())
 		{
 			if(isDrawerOpened&&drawerAngle < 5f)
 				drawerAngle = Math.min(drawerAngle+0.4f, 5f);
@@ -140,7 +174,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			}
 		}
 
-		if(!world.isRemote&&pos==4)
+		if(!world.isRemote&&!isDummy())
 		{
 			if(toggle^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0])))
 			{
@@ -162,62 +196,37 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 				}
 			}
 
-			if((Utils.compareToOreName(inventoryHandler.getStackInSlot(0), "punchtapeEmpty")||inventoryHandler.getStackInSlot(0).getItem() instanceof ItemIIPunchtape)
+			if(dataOperations.keySet().stream().anyMatch(itemStackPredicate -> itemStackPredicate.test(inventoryHandler.getStackInSlot(0)))
 					&&energyStorage.getEnergyStored() >= DataInputMachine.energyUsagePunchtape)
 			{
-				if(productionProgress==0||inventoryHandler.getStackInSlot(1).isEmpty())
-				{
-					ItemStack test = new ItemStack(IIContent.itemPunchtape, 1, 0);
-
-					((ItemIIPunchtape)test.getItem()).writeDataToItem(this.storedData, test);
-
-					if(!inventoryHandler.insertItem(1, test, true).isEmpty())
-						return;
-				}
-				energyStorage.extractEnergy(DataInputMachine.energyUsagePunchtape, false);
-				productionProgress += 1;
-
 				if(productionProgress >= DataInputMachine.timePunchtapeProduction)
 				{
 					productionProgress = 0f;
-					ItemStack input = inventoryHandler.extractItem(0, 1, false);
-
-					if(input.getItem() instanceof ItemIIPunchtape)
+					Optional<Predicate<ItemStack>> first = dataOperations.keySet().stream().filter(itemStackPredicate -> itemStackPredicate.test(inventoryHandler.getStackInSlot(0))).findFirst();
+					if(first.isPresent())
 					{
-						this.storedData = ((ItemIIPunchtape)input.getItem()).getStoredData(input);
-						inventoryHandler.insertItem(1, input, false);
+						ItemStack input = inventoryHandler.extractItem(0, 1, true);
+						ItemStack written = dataOperations.get(first.get()).apply(this, input);
+						if(inventoryHandler.insertItem(1, written, true).isEmpty())
+						{
+							inventoryHandler.extractItem(0, 1, false);
+							inventoryHandler.insertItem(1, written, false);
 
-						NBTTagCompound nbt = new NBTTagCompound();
-						nbt.setTag("inventory", Utils.writeInventory(inventory));
-						nbt.setTag("variables", storedData.toNBT());
-						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+							NBTTagCompound nbt = new NBTTagCompound();
+							nbt.setTag("inventory", Utils.writeInventory(inventory));
+							nbt.setTag("variables", storedData.toNBT());
+							ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+						}
 					}
-					else
-					{
-						ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
-
-						((ItemIIPunchtape)output.getItem()).writeDataToItem(this.storedData, output);
-
-						inventoryHandler.insertItem(1, output, false);
-
-						NBTTagCompound nbt = new NBTTagCompound();
-						nbt.setTag("inventory", Utils.writeInventory(inventory));
-						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
-
-					}
-
 				}
-
-				if(productionProgress==0||productionProgress==1||productionProgress==.5*DataInputMachine.energyUsagePunchtape)
+				else
 				{
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setFloat("production_progress", productionProgress);
-					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+					energyStorage.extractEnergy(DataInputMachine.energyUsagePunchtape, false);
+					productionProgress += 1;
 				}
 			}
-			else if(productionProgress!=0f)
+			if(productionProgress%4==0)
 			{
-				productionProgress = 0f;
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setFloat("production_progress", productionProgress);
 				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
@@ -229,7 +238,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	@Override
 	public float[] getBlockBounds()
 	{
-		return new float[]{0, 0, 0, 0, 0, 0};
+		return new float[]{0, 0, 0, 1, 1, 1};
 	}
 
 	@Override
@@ -294,13 +303,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return stack.getItem() instanceof ItemIIPunchtape;
+		return dataOperations.keySet().stream().anyMatch(p -> p.test(stack));
 	}
 
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return 26;
+		return 64;
 	}
 
 	@Override

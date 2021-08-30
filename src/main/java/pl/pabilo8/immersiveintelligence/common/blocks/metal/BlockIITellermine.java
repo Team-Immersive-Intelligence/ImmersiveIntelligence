@@ -16,18 +16,18 @@ public class BlockIITellermine extends BlockIIMine
 {
 	public BlockIITellermine()
 	{
-		super("tellermine", ItemBlockTripmine.class);
+		super("tellermine", ItemBlockTellermine.class);
 	}
 
 	@Override
 	protected TileEntity getMineTileEntity()
 	{
-		return new TileEntityTripMine();
+		return new TileEntityTellermine();
 	}
 
-	public static class ItemBlockTripmine extends ItemBlockMineBase
+	public static class ItemBlockTellermine extends ItemBlockMineBase
 	{
-		public ItemBlockTripmine(Block b)
+		public ItemBlockTellermine(Block b)
 		{
 			super(b);
 		}
@@ -40,15 +40,9 @@ public class BlockIITellermine extends BlockIIMine
 		}
 
 		@Override
-		public float getComponentCapacity()
+		public float getComponentMultiplier()
 		{
 			return 0.45f;
-		}
-
-		@Override
-		public int getGunpowderNeeded()
-		{
-			return 0;
 		}
 
 		@Override
@@ -66,7 +60,7 @@ public class BlockIITellermine extends BlockIIMine
 		@Override
 		public float getCaliber()
 		{
-			return 0.625f;
+			return 10f;
 		}
 
 		@Override

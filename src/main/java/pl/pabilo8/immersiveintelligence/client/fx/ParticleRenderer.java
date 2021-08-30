@@ -25,11 +25,10 @@ import java.util.*;
  * @since 23.12.2020
  * <p>
  * Based on Embers' Particle Renderer
- * Thanks:
  */
 public class ParticleRenderer
 {
-	private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
+	public static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
 
 	private final Map<DrawingStages, Queue<IIParticle>> particles = new HashMap<>();
 	private static final int MAX_PARTICLES = 2000;

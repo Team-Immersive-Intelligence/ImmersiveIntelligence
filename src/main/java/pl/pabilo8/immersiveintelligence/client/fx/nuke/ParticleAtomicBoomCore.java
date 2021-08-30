@@ -9,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
 
 import javax.annotation.Nonnull;
 
@@ -26,9 +27,9 @@ public class ParticleAtomicBoomCore extends IIParticle
 		this.motionX = mx*1.55;
 		this.motionY = my*0.65;
 		this.motionZ = mz*1.55;
-		this.particleScale = (float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f;
+		this.particleScale = ((float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f)*0.45f;
 		this.actualParticleScale = this.particleScale;
-		this.particleMaxAge = (int)(20+(10*Utils.RAND.nextGaussian()))+1;
+		this.particleMaxAge = (int)(5+(10*Utils.RAND.nextGaussian()))+1;
 		this.particleGravity = 0.25f;
 		this.setParticleTextureIndex(0);
 	}
@@ -48,6 +49,9 @@ public class ParticleAtomicBoomCore extends IIParticle
 		this.motionX *= 0.98D;
 		this.motionY *= 0.98D;
 		this.motionZ *= 0.98D;
+		if(world==null)
+			return;
+
 		EntityPlayer entityplayer = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 2.0D, false);
 
 		if(entityplayer!=null)
@@ -89,7 +93,9 @@ public class ParticleAtomicBoomCore extends IIParticle
 	{
 		float f = ((float)this.particleAge+partialTicks)/(float)this.particleMaxAge;
 		f = MathHelper.clamp(f, 0.0F, 1.0F);
-		setRBGColorF(1f, 0.3f+(0.55f*f), 0);
+		setRBGColorF(0.8f+(0.2f*f), 0.3f+(0.7f*f), (0.4f*f));
+
+		this.setParticleTextureIndex((int)(2+3-(3*f)));
 
 		setAlphaF(0.25f-((1f-f)*0.1f));
 

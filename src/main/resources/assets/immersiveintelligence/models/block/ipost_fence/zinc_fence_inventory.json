@@ -1,0 +1,6 @@
+{
+  "parent": "block/fence_inventory",
+  "textures": {
+    "texture": "immersiveintelligence:blocks/metal/storage_zinc"
+  }
+}

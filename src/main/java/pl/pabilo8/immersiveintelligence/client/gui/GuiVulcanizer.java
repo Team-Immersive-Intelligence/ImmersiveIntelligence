@@ -8,15 +8,19 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityVulcanizer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerVulcanizer;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
@@ -26,7 +30,7 @@ import java.util.ArrayList;
 public class GuiVulcanizer extends GuiIEContainerBase
 {
 	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/vulcanizer.png";
-	TileEntityVulcanizer tile;
+	public TileEntityVulcanizer tile;
 
 	public GuiVulcanizer(InventoryPlayer inventoryPlayer, TileEntityVulcanizer tile)
 	{
@@ -89,8 +93,7 @@ public class GuiVulcanizer extends GuiIEContainerBase
 		GlStateManager.translate(-36,0,0);
 		GlStateManager.rotate(-rotato*180,0,0,1);
 		this.drawTexturedModalRect(-12, -14, 64, 168, 24, 23);
-		int o = (int)(16*prog1);
-		ClientUtils.drawGradientRect(8, -9+(16-o), 10, 7, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(8, -9,2,16,prog1);
 
 		mc.getRenderItem().renderItemIntoGUI(s1, -10,-9);
 
@@ -101,8 +104,7 @@ public class GuiVulcanizer extends GuiIEContainerBase
 		GlStateManager.translate(36,0,0);
 		GlStateManager.rotate(-rotato*180,0,0,1);
 		this.drawTexturedModalRect(-12, -14, 64, 168, 24, 23);
-		o = (int)(16*prog2);
-		ClientUtils.drawGradientRect(8, -9+(16-o), 10, 7, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(8, -9,2,16,prog2);
 		mc.getRenderItem().renderItemIntoGUI(s2, -10,-9);
 
 		GlStateManager.popMatrix();
@@ -110,9 +112,8 @@ public class GuiVulcanizer extends GuiIEContainerBase
 
 		GlStateManager.popMatrix();
 
+		Utils.drawPowerBar(guiLeft+157, guiTop+24, 7,47,prog2);
 
-		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		ClientUtils.drawGradientRect(guiLeft+157, guiTop+24+(47-stored), guiLeft+164, guiTop+71, 0xffb51500, 0xff600b00);
 	}
 
 	@Override
@@ -121,15 +122,49 @@ public class GuiVulcanizer extends GuiIEContainerBase
 		super.drawScreen(mx, my, partial);
 		this.renderHoveredToolTip(mx, my);
 
-		ArrayList<String> tooltip = new ArrayList();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx > guiLeft+157&&mx < guiLeft+164&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(tile.getEnergyStored(null)+"/"+tile.getMaxEnergyStored(null)+" IF");
-
+			tooltip.add(Utils.getPowerLevelString(tile));
+		ItemStack previewedItem = getPreviewedItem(mx, my);
+		if(previewedItem!=null)
+			tooltip.addAll(previewedItem.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
 		if(!tooltip.isEmpty())
 		{
 			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, guiLeft+xSize, -1);
 			RenderHelper.enableGUIStandardItemLighting();
 		}
+	}
+
+	@Nullable
+	public ItemStack getPreviewedItem(int mouseX, int mouseY)
+	{
+		if(tile.processQueue.size() > 0)
+		{
+			MultiblockProcess<VulcanizerRecipe> process0 = tile.processQueue.get(0);
+			float rotato;
+			double processTime = ((process0.processTick)/(double)process0.maxTicks);
+			if(processTime < 0.78)
+				rotato = 0;
+			else if(processTime < 0.84)
+				rotato = Math.min((float)((processTime-0.78)/0.05), 1);
+			else
+				rotato = 1;
+			double angle = rotato*180f;
+
+			{
+				float xx = (float)(guiLeft+86+Math.cos(Math.toRadians(angle))*-36), yy = (float)(guiTop+39+Math.sin(Math.toRadians(angle))*-36);
+				if(Utils.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
+					return tile.processQueue.get(0).recipe.output;
+			}
+			if(tile.processQueue.size()>1)
+			{
+				angle = MathHelper.wrapDegrees(180+angle);
+				float xx = (float)(guiLeft+86+Math.cos(Math.toRadians(angle))*-36), yy = (float)(guiTop+39+Math.sin(Math.toRadians(angle))*-36);
+				if(Utils.isPointInRectangle(xx-8, yy-8, xx+8, yy+8, mouseX, mouseY))
+					return tile.processQueue.get(1).recipe.output;
+			}
+		}
+		return null;
 	}
 }

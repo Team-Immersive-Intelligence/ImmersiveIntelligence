@@ -16,17 +16,17 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
  * @author Pabilo8
  * @since 30-06-2019
  */
-public class ContainerDataInputMachine extends ContainerIEBase
+public class ContainerDataInputMachine extends ContainerIEBase<TileEntityDataInputMachine>
 {
 	public ContainerDataInputMachine(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile)
 	{
 		super(inventoryPlayer, tile);
 
-		this.addSlotToContainer(new FilteredPunchtape(this, this.inv, 0, 5, 21));
+		this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 5, 21));
 		this.addSlotToContainer(new Output(this, this.inv, 1, 5, 100));
 
 		for(int i=2; i<26; i++)
-			this.addSlotToContainer(new FilteredPunchtape(this, this.inv, i, 30+((i-2)%8)*18, 20+((i-2)/8)*18));
+			this.addSlotToContainer(new FilteredDataInput(this, this.inv, i, 30+((i-2)%8)*18, 20+((i-2)/8)*18));
 
 		this.slotCount=0;
 		this.tile = tile;
@@ -38,9 +38,9 @@ public class ContainerDataInputMachine extends ContainerIEBase
 			addSlotToContainer(new Slot(inventoryPlayer, i, 8+i*18, 199));
 	}
 
-	public static class FilteredPunchtape extends IESlot
+	public static class FilteredDataInput extends IESlot
 	{
-		public FilteredPunchtape(Container container, IInventory inv, int id, int x, int y)
+		public FilteredDataInput(Container container, IInventory inv, int id, int x, int y)
 		{
 			super(container, inv, id, x, y);
 		}
@@ -48,21 +48,7 @@ public class ContainerDataInputMachine extends ContainerIEBase
 		@Override
 		public boolean isItemValid(ItemStack stack)
 		{
-			return stack.getItem() instanceof ItemIIPunchtape || Utils.compareToOreName(stack,"punchtapeEmpty");
-		}
-	}
-
-	public static class FilteredEmptyPunchtape extends IESlot
-	{
-		public FilteredEmptyPunchtape(Container container, IInventory inv, int id, int x, int y)
-		{
-			super(container, inv, id, x, y);
-		}
-
-		@Override
-		public boolean isItemValid(ItemStack stack)
-		{
-			return Utils.compareToOreName(stack,"punchtapeEmpty");
+			return TileEntityDataInputMachine.dataOperations.keySet().stream().anyMatch(p -> p.test(stack));
 		}
 	}
 }

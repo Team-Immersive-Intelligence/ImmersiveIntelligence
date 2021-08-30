@@ -9,6 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Pls don't sue me, CoH BKMod.
+ * Most of the sounds provided by ZapSplat.
+ * Printing press uses a sound from a youtube video.
+ * Siren sound from Factorio.
+ * Explosion-related sounds provided by Carver (source unsure) or from CoH BKMod.
+ *
  * @author Pabilo8
  * @since 15-06-2019
  */
@@ -42,11 +48,9 @@ public class IISounds
 
 	public static SoundEvent radio_noise = registerSound("radio_noise");
 	public static SoundEvent radio_beep = registerSound("radio_beep");
-
-	public static SoundEvent penetration_metal = registerSound("penetration_metal");
-	public static SoundEvent ricochet_metal = registerSound("ricochet_metal");
-
+	
 	public static SoundEvent motorbike_start = registerSound("motorbike_start");
+	public static SoundEvent motorbike_start_no_fuel = registerSound("motorbike_start_no_fuel");
 	public static SoundEvent motorbike_engine = registerSound("motorbike_engine");
 	public static SoundEvent motorbike_horn = registerSound("motorbike_horn");
 
@@ -61,6 +65,51 @@ public class IISounds
 	public static SoundEvent vulcanizer_heating = registerSound("vulcanizer_heating");
 	public static SoundEvent vulcanizer_pull_start = registerSound("vulcanizer_pull_start");
 	public static SoundEvent vulcanizer_pull_end = registerSound("vulcanizer_pull_end");
+
+	public static SoundEvent autocannon_firing = registerSound("autocannon_firing");
+	public static SoundEvent autocannon_reload = registerSound("autocannon_reload");
+	public static SoundEvent autocannon_unload = registerSound("autocannon_unload");
+
+	public static SoundEvent explosion_flare = registerSound("explosion_flare");
+	public static SoundEvent explosion_incendiary_high = registerSound("explosion_incendiary_high");
+	public static SoundEvent explosion_incendiary_low = registerSound("explosion_incendiary_low");
+	public static SoundEvent explosion_nuke_high = registerSound("explosion_nuke_high");
+	public static SoundEvent explosion_nuke_low = registerSound("explosion_nuke_low");
+
+	public static SoundEvent mine_detector = registerSound("mine_detector");
+
+	public static SoundEvent mortar_shot = registerSound("mortar_shot");
+	public static SoundEvent mortar_load = registerSound("mortar_load");
+
+	public static SoundEvent bullet_wind = registerSound("bullet_wind");
+	public static SoundEvent grenade_throw = registerSound("grenade_throw");
+	
+	public static SoundEvent impact_grass = registerSound("impact_grass");
+	public static SoundEvent ricochet_grass = registerSound("ricochet_grass");
+	public static SoundEvent impact_metal = registerSound("impact_metal");
+	public static SoundEvent ricochet_metal = registerSound("ricochet_metal");
+	public static SoundEvent impact_stone = registerSound("impact_stone");
+	public static SoundEvent ricochet_stone = registerSound("ricochet_stone");
+	public static SoundEvent impact_sand = registerSound("impact_sand");
+	public static SoundEvent ricochet_sand = registerSound("ricochet_sand");
+	public static SoundEvent impact_dirt = registerSound("impact_dirt");
+	public static SoundEvent ricochet_dirt = registerSound("ricochet_dirt");
+	public static SoundEvent impact_foliage = registerSound("impact_foliage");
+	//public static SoundEvent ricochet_foliage = registerSound("ricochet_foliage");
+	public static SoundEvent impact_wood = registerSound("impact_wood");
+	//public static SoundEvent ricochet_wood = registerSound("ricochet_wood");
+	public static SoundEvent impact_flesh = registerSound("impact_flesh");
+	//public static SoundEvent ricochet_flesh = registerSound("ricochet_flesh");
+
+	public static SoundEvent construction_hammer = registerSound("construction_hammer");
+
+	public static SoundEvent emplacement_rotation_h = registerSound("emplacement_rotation_h");
+	public static SoundEvent emplacement_rotation_v = registerSound("emplacement_rotation_v");
+	public static SoundEvent emplacement_platform = registerSound("emplacement_platform");
+	public static SoundEvent emplacement_door_open = registerSound("emplacement_door_open");
+	public static SoundEvent emplacement_door_close = registerSound("emplacement_door_close");
+	public static SoundEvent emplacement_door_pull = registerSound("emplacement_door_pull");
+	public static SoundEvent emplacement_door_push = registerSound("emplacement_door_push");
 
 	//public static SoundEvent hans_test_de = registerSound("hans_test_de");
 	//public static SoundEvent hans_test_pl = registerSound("hans_test_pl");

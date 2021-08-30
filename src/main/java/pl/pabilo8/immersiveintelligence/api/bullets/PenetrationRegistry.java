@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.*;
-import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.PenetrationHandlerConcrete;
+import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerWood.PenetrationHandlerLog;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerWood.PenetrationHandlerPlanks;
@@ -19,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
@@ -32,7 +33,7 @@ public class PenetrationRegistry
 	//Blocks first
 	public static HashMap<Predicate<IBlockState>, IPenetrationHandler> registeredBlocks = new HashMap<>();
 	//Materials second
-	public static HashMap<Predicate<Material>, IPenetrationHandler> registeredMaterials = new HashMap<>();
+	public static LinkedHashMap<Predicate<Material>, IPenetrationHandler> registeredMaterials = new LinkedHashMap<>();
 
 	public static ArrayList<DamageBlockPos> blockDamage = new ArrayList<>();
 	public static ArrayList<DamageBlockPos> blockDamageClient = new ArrayList<DamageBlockPos>()
@@ -75,7 +76,11 @@ public class PenetrationRegistry
 		BulletHelper.registerMetalMaterial(new PenetrationHandlerAluminium(), "tin");
 		BulletHelper.registerMetalMaterial(new PenetrationHandlerAluminium(), "zinc");
 
-		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "leadedConcrete"), new PenetrationHandlerConcrete());
+		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "uberConcrete"), new PenetrationHandlerUberConcrete());
+		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "sturdyBricksConcrete"), new PenetrationHandlerPanzerConcrete());
+		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "bricksConcrete"), new PenetrationHandlerConcreteBricks());
+
+		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "leadedConcrete"), new PenetrationHandlerLeadedConcrete());
 		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "concrete"), new PenetrationHandlerConcrete());
 
 		registeredMaterials.put(material -> material==Material.GLASS, new PenetrationHandlerGlass());
@@ -90,7 +95,7 @@ public class PenetrationRegistry
 		registeredMaterials.put(material -> material==Material.SAND, new PenetrationHandlerSand());
 		registeredMaterials.put(material -> material==Material.LEAVES, new PenetrationHandlerLeaves());
 		registeredMaterials.put(material -> material==Material.WOOD, new PenetrationHandlerPlanks());
-		registeredMaterials.put(material -> true, DEFAULT);
+		//registeredMaterials.put(material -> true, DEFAULT);
 	}
 
 	public interface IPenetrationHandler
@@ -116,8 +121,7 @@ public class PenetrationRegistry
 
 	public enum HitEffect
 	{
-		PENETRATION,
-		PARTIAL_PENETRATION,
+		IMPACT,
 		RICOCHET
 	}
 

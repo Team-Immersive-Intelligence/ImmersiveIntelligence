@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import blusunrize.lib.manual.ManualUtils;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -12,6 +13,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
@@ -145,6 +147,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			int id = (int)(Math.floor(xx/20f)+(3*Math.floor(yy/20f)));
 			if(id>-1&&id < upgrades.size())
 			{
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				previewed = upgrades.get(id);
 				previewInstalled = upgradableMachine.hasUpgrade(previewed);
 				buttonUpgrade.displayString = previewInstalled?textRemove: textUpgrade;
@@ -170,8 +173,10 @@ public class GuiUpgrade extends GuiIEContainerBase
 		GlStateManager.rotate(-15, 1, 0, 0);
 		GlStateManager.scale(-24, -24, -1);
 		GlStateManager.rotate(360*(((mc.world.getTotalWorldTime()%120)+partial)/120f), 0, 1, 0);
-		MachineUpgrade[] u = previewed!=null?(new MachineUpgrade[]{previewed}): new MachineUpgrade[0];
-		upgradableMachine.renderWithUpgrades(u);
+		ArrayList<MachineUpgrade> upgrades = new ArrayList<>(upgradableMachine.getUpgrades());
+		if(previewed!=null&&!upgrades.contains(previewed))
+			upgrades.add(previewed);
+		upgradableMachine.renderWithUpgrades(upgrades.toArray(new MachineUpgrade[0]));
 		GlStateManager.disableLighting();
 		GlStateManager.popMatrix();
 
@@ -179,17 +184,17 @@ public class GuiUpgrade extends GuiIEContainerBase
 		if(previewed==null)
 		{
 			int i = 0;
-			for(MachineUpgrade upgrade : upgrades)
+			for(MachineUpgrade upgrade : this.upgrades)
 			{
 				int xx = (i%3)*20, yy = (int)Math.floor(i/3f)*20;
 				ClientUtils.bindTexture(TEXTURE);
-				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy,101,168,20,20);
-				if(Utils.isPointInRectangle(guiLeft+100+xx, guiTop+9+yy,	 guiLeft+100+xx+16, guiTop+9+yy+16, mx, my))
+				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy, 101, 168, 20, 20);
+				if(Utils.isPointInRectangle(guiLeft+100+xx, guiTop+9+yy, guiLeft+100+xx+16, guiTop+9+yy+16, mx, my))
 					tooltip.add(getUpgradeNameTranslation(upgrade));
 				i++;
 			}
 			i = 0;
-			for(MachineUpgrade upgrade : upgrades)
+			for(MachineUpgrade upgrade : this.upgrades)
 			{
 				int xx = (i%3)*20, yy = (int)Math.floor(i/3f)*20;
 				GlStateManager.color(1f, 1f, 1f, 1f);

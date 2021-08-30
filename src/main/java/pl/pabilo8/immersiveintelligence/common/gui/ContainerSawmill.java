@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEnt
  * @author Pabilo8
  * @since 10-07-2019
  */
-public class ContainerSawmill extends ContainerIEBase
+public class ContainerSawmill extends ContainerIEBase<TileEntitySawmill>
 {
 	public ContainerSawmill(InventoryPlayer inventoryPlayer, TileEntitySawmill tile)
 	{

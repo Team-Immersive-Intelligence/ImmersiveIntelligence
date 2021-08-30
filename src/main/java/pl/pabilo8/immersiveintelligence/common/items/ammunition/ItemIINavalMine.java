@@ -20,11 +20,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityNavalMineAnchor;
 
@@ -46,15 +48,9 @@ public class ItemIINavalMine extends ItemIIBulletBase implements IItemScrollable
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
 		return 0.55f;
-	}
-
-	@Override
-	public int getGunpowderNeeded()
-	{
-		return 0;
 	}
 
 	@Override
@@ -70,9 +66,15 @@ public class ItemIINavalMine extends ItemIIBulletBase implements IItemScrollable
 	}
 
 	@Override
+	public float getDefaultVelocity()
+	{
+		return 0f;
+	}
+
+	@Override
 	public float getCaliber()
 	{
-		return 1f;
+		return 16f;
 	}
 
 	@Override
@@ -86,6 +88,12 @@ public class ItemIINavalMine extends ItemIIBulletBase implements IItemScrollable
 	public float getDamage()
 	{
 		return 5;
+	}
+
+	@Override
+	public ItemStack getCasingStack(int amount)
+	{
+		return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"naval_mine",amount);
 	}
 
 	@Override

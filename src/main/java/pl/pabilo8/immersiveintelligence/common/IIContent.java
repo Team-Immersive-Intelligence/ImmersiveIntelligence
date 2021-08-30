@@ -1,9 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
-import blusunrize.immersiveengineering.common.util.IEPotions;
-import blusunrize.immersiveengineering.common.util.IEPotions.IEPotion;
-import crafttweaker.api.item.IngredientStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -34,7 +31,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIGearbox;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalConnector;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDevice;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDevice1;
-import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIIStoneDecoration;
+import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIISandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIMineSign;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLeaves;
@@ -42,15 +39,13 @@ import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberSapling;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.*;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerBoots;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerChestplate;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerLeggings;
+import pl.pabilo8.immersiveintelligence.common.items.armor.*;
 import pl.pabilo8.immersiveintelligence.common.items.material.*;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.*;
+import pl.pabilo8.immersiveintelligence.common.world.BiomeWasteland;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,15 +71,33 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader"); //allows to use belt fed upgrade for mg
 	public static final MachineUpgrade UPGRADE_lATEX_DRAIN = CommonProxy.createMachineUpgrade("latex_drain"); //instead of placing a bucket, it collects the latex to a pipe underneath
 
+	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators"); //allows the radar to detect radio signal emitters and send their positions
+
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
+
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = EmplacementWeapon.register(EmplacementWeaponSpotlightTower::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = EmplacementWeapon.register(EmplacementWeaponTeslaCoil::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = EmplacementWeapon.register(EmplacementWeaponMortar::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = EmplacementWeapon.register(EmplacementWeaponLightHowitzer::new);
+
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
+
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = CommonProxy.createMachineUpgrade("emplacement_grenades");
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = CommonProxy.createMachineUpgrade("emplacement_bearings");
+
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_HEAVYBARREL = CommonProxy.createMachineUpgrade("mg_heavy_barrel");
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = CommonProxy.createMachineUpgrade("mg_watercooled");
+	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = CommonProxy.createMachineUpgrade("mg_bunker");
 
 	public static ItemIIMaterial itemMaterial = new ItemIIMaterial();
 	public static ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
 	public static ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
+	public static ItemIIMaterialRod itemMaterialRod = new ItemIIMaterialRod();
 	public static ItemIIMaterialDust itemMaterialDust = new ItemIIMaterialDust();
 	public static ItemIIMaterialNugget itemMaterialNugget = new ItemIIMaterialNugget();
 	public static ItemIIMaterialWire itemMaterialWire = new ItemIIMaterialWire();
@@ -92,25 +105,28 @@ public class IIContent
 	public static ItemIIMaterialGem itemMaterialGem = new ItemIIMaterialGem();
 	public static ItemIIMaterialBoule itemMaterialBoule = new ItemIIMaterialBoule();
 	public static ItemIIMetalPressMold itemPressMold = new ItemIIMetalPressMold();
+	public static ItemIIVulcanizerMold itemVulcanizerMold = new ItemIIVulcanizerMold();
 	public static ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
 	public static ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
 	public static ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
+
 	public static ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
 	public static ItemIILighter itemLighter = new ItemIILighter();
 	public static ItemIIElectricHammer itemHammer = new ItemIIElectricHammer();
 	public static ItemIITrenchShovel itemTrenchShovel = new ItemIITrenchShovel();
-	public static ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
-	public static ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
-	public static ItemIIVulcanizerMold itemVulcanizerMold = new ItemIIVulcanizerMold();
-
 	public static ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
 	public static ItemIIWrench itemWrench = new ItemIIWrench();
 	public static ItemIIElectricWrench itemElectricWrench = new ItemIIElectricWrench();
+
+	public static ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
+	public static ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
+
 	public static ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
 	//Don't know if i should make a seperate item for a torque meter
 	public static ItemIITachometer itemTachometer = new ItemIITachometer();
 	public static ItemIIDataWireCoil itemDataWireCoil = new ItemIIDataWireCoil();
 	public static ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
+	public static ItemIITripWireCoil itemTripWireCoil = new ItemIITripWireCoil();
 	public static ItemIIMinecart itemMinecart = new ItemIIMinecart();
 	public static ItemIIRadioConfigurator itemRadioConfigurator = new ItemIIRadioConfigurator();
 	public static ItemIIMeasuringCup itemMeasuringCup = new ItemIIMeasuringCup();
@@ -120,6 +136,7 @@ public class IIContent
 	public static ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();
 	public static ItemIIMachinegun itemMachinegun = new ItemIIMachinegun();
 	public static ItemIISubmachinegun itemSubmachinegun = new ItemIISubmachinegun();
+	public static ItemIIMortar itemMortar = new ItemIIMortar();
 	public static ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
 
 	//public static ItemIIArmorUpgrade item_armor_upgrade = new ItemIIArmorUpgrade();
@@ -133,13 +150,15 @@ public class IIContent
 	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 
+	public static ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
 	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
+	public static ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
 	public static ItemIIAmmoLightArtillery itemAmmoLightArtillery = new ItemIIAmmoLightArtillery();
 	public static ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
 	public static ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
 	public static ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
 	public static ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
-	public static ItemIIAmmoStormRifle itemAmmoStormRifle = new ItemIIAmmoStormRifle();
+	public static ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
 	public static ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
 	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
 
@@ -162,7 +181,7 @@ public class IIContent
 			.setHardness(3.0F).setResistance(10.0F);
 	public static BlockIIBase<IIBlockTypes_Metal> blockMetalSlabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("storage_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
 	public static BlockIIBase<IIBlockTypes_Metal> blockSheetmetalSlabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("sheetmetal_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIStoneDecoration blockStoneDecoration = new BlockIIStoneDecoration();
+	public static BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
 	public static BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
 	public static BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
@@ -178,7 +197,8 @@ public class IIContent
 
 	public static BlockIIMineSign blockMineSign = new BlockIIMineSign();
 	public static BlockIITripmine blockTripmine = new BlockIITripmine();
-	//public static BlockIITellermine blockTellermine = new BlockIITellermine();
+	public static BlockIITellermine blockTellermine = new BlockIITellermine();
+	public static BlockIIRadioExplosives blockRadioExplosives = new BlockIIRadioExplosives();
 	public static ItemIINavalMine itemNavalMine = new ItemIINavalMine();
 
 	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
@@ -225,6 +245,7 @@ public class IIContent
 	public static Fluid fluidAmmonia;
 	public static Fluid fluidMethanol;
 	public static Fluid fluidLatex;
+	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
 	static
 	{

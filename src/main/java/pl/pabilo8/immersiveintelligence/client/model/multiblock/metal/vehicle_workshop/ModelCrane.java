@@ -22,7 +22,7 @@ public class ModelCrane extends ModelIIBase
 		baseModel[0].setRotationPoint(0F, -1F, 0F);
 
 
-		craneMainModel = new ModelRendererTurbo[10];
+		craneMainModel = new ModelRendererTurbo[11];
 		craneMainModel[0] = new ModelRendererTurbo(this, 14, 7, textureX, textureY); // Box 0
 		craneMainModel[1] = new ModelRendererTurbo(this, 12, 26, textureX, textureY); // Box 0
 		craneMainModel[2] = new ModelRendererTurbo(this, 48, 35, textureX, textureY); // Box 0
@@ -33,6 +33,7 @@ public class ModelCrane extends ModelIIBase
 		craneMainModel[7] = new ModelRendererTurbo(this, 52, 6, textureX, textureY); // Box 0
 		craneMainModel[8] = new ModelRendererTurbo(this, 4, 26, textureX, textureY); // Box 0
 		craneMainModel[9] = new ModelRendererTurbo(this, 16, 44, textureX, textureY); // Box 0
+		craneMainModel[10] = new ModelRendererTurbo(this, 24, 44, textureX, textureY); // Box 0
 
 		craneMainModel[0].addBox(-3F, 0F, -3F, 6, 4, 6, 0F); // Box 0
 		craneMainModel[0].setRotationPoint(0F, -5F, 0F);
@@ -63,6 +64,9 @@ public class ModelCrane extends ModelIIBase
 
 		craneMainModel[9].addBox(-7F, 0F, -5F, 4, 8, 8, 0F); // Box 0
 		craneMainModel[9].setRotationPoint(0F, -32F, 0F);
+
+		craneMainModel[10].addBox(-2F, 0F, -4F, 4, 4, 16, 0.25F); // Box 0
+		craneMainModel[10].setRotationPoint(0F, -31F, 0F);
 
 
 		shaftModel = new ModelRendererTurbo[1];

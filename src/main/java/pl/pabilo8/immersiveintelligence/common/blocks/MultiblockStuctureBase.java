@@ -4,14 +4,19 @@ import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.datafix.DataFixesManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -108,7 +113,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	@Override
 	public boolean isBlockTrigger(IBlockState state)
 	{
-		return checkState(state, checkStructure[offset.getY()][offset.getZ()][offset.getX()]);
+		return checkState(state, checkStructure[offset.getY()][offset.getZ()][offset.getX()], null, null);
 	}
 
 	@Override
@@ -178,7 +183,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 					int ww = mirror?-w: w;
 					BlockPos pos = startPos.offset(dir, l).offset(dir.rotateY(), ww).add(0, h, 0);
 
-					if(!checkState(world.getBlockState(pos), checkStructure[h+offset.getY()][l+offset.getZ()][w+offset.getX()]))
+					if(!checkState(world.getBlockState(pos), checkStructure[h+offset.getY()][l+offset.getZ()][w+offset.getX()], world, pos))
 						return false;
 				}
 		return true;
@@ -242,16 +247,36 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 *
 	 * @param state blockstate
 	 * @param stack to be compared to, uses stack's logic (ore/itemstack)
+	 * @param world
+	 * @param pos
 	 * @return whether is equal
 	 */
-	private boolean checkState(IBlockState state, IngredientStack stack)
+	private boolean checkState(IBlockState state, IngredientStack stack, @Nullable World world, @Nullable BlockPos pos)
 	{
+		// TODO: 08.08.2021 conveyor facing check
+		if(stack.stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.stack.getItem()).getBlock()==IEContent.blockConveyor)
+		{
+			if(world!=null)
+				return ConveyorHandler.isConveyor(world, pos, ItemNBTHelper.getString(stack.stack, "conveyorType"), null);
+			else
+				return state.getBlock()==IEContent.blockConveyor;
+		}
+
 		return stack.matchesItemStackIgnoringSize(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)));
 	}
 
 	private IngredientStack getIngredientStackForBlockInfo(BlockInfo info)
 	{
 		IBlockState state = info.blockState;
+
+		if(state.getBlock()==IEContent.blockConveyor)
+		{
+			// TODO: 08.08.2021 direction
+			ItemStack conveyorStack = ConveyorHandler.getConveyorStack(info.tileentityData.getString("conveyorBeltSubtype"));
+			ItemNBTHelper.setInt(conveyorStack, "conveyorFacing",info.tileentityData.getInteger("facing"));
+			return new IngredientStack(conveyorStack).setUseNBT(true);
+		}
+
 		int meta = state.getBlock().getMetaFromState(state);
 		ItemStack stack = new ItemStack(state.getBlock(), 1, meta);
 
@@ -288,5 +313,28 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 			return new IngredientStack(new ItemStack(state.getBlock(), 1, meta));
 		 */
+	}
+
+	/**
+	 * @return size in int array, values are swapped to HLW
+	 */
+	public int[] getSize()
+	{
+		return new int[]{size.getY(), size.getZ(), size.getX()};
+	}
+
+	/**
+	 * @param h height (y)
+	 * @param l length (z)
+	 * @param w width (x)
+	 * @return resource location in string format if tile is a conveyor or empty string
+	 */
+	public Tuple<ResourceLocation,EnumFacing> getConveyorKey(int h, int l, int w, EnumFacing facing)
+	{
+		IngredientStack is = checkStructure[h][l][w];
+		ResourceLocation rl = new ResourceLocation(ItemNBTHelper.getString(is.stack, "conveyorType"));
+		EnumFacing sf = EnumFacing.getFront(ItemNBTHelper.getInt(is.stack, "conveyorFacing"));
+		EnumFacing ff = EnumFacing.getHorizontal(sf.getHorizontalIndex()+facing.getHorizontalIndex());//
+		return new Tuple<>(rl,ff);
 	}
 }

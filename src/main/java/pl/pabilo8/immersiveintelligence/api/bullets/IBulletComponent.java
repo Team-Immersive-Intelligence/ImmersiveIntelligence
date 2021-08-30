@@ -2,9 +2,10 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
@@ -23,7 +24,7 @@ public interface IBulletComponent
 	float getDensity();
 
 	//Runs when a bullet is exploding
-	void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet);
+	void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world);
 
 	//Gets the component role
 	EnumComponentRole getRole();

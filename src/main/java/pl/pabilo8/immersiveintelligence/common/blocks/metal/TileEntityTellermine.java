@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -26,7 +29,9 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIITrenchShovel;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,6 +40,8 @@ import java.util.List;
  */
 public class TileEntityTellermine extends TileEntityIEBase implements IBlockBounds, IAdvancedCollisionBounds, ITileDrop, IPlayerInteraction
 {
+	public static final Material[] MATCHING_MATERIALS = new Material[]{Material.GROUND, Material.GRASS, Material.SAND, Material.GOURD};
+
 	public int coreColor = 0xffffff;
 	public ItemStack mineStack = ItemStack.EMPTY;
 	private static final ArrayList<AxisAlignedBB> AABB = new ArrayList<>();
@@ -45,12 +52,14 @@ public class TileEntityTellermine extends TileEntityIEBase implements IBlockBoun
 		AABB.add(new AxisAlignedBB(0.25f, 0, 0.25f, 0.75f, 0.125f, 0.75f));
 	}
 
-	private boolean triggered = false;
+	private boolean armed = true;
 	public boolean grass = false;
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
+		digLevel = nbtTagCompound.getInteger("digLevel");
+		armed = nbtTagCompound.getBoolean("armed");
 		grass = nbtTagCompound.getBoolean("grass");
 		this.readOnPlacement(null, new ItemStack(nbtTagCompound.getCompoundTag("mineStack")));
 	}
@@ -58,16 +67,21 @@ public class TileEntityTellermine extends TileEntityIEBase implements IBlockBoun
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
+		nbtTagCompound.setInteger("digLevel", digLevel);
+		nbtTagCompound.setBoolean("armed", armed);
 		nbtTagCompound.setBoolean("grass", grass);
 		nbtTagCompound.setTag("mineStack", mineStack.serializeNBT());
 	}
 
 	public void explode()
 	{
+		if(!armed)
+			return;
+
 		if(!world.isRemote&&mineStack.getItem() instanceof IBullet)
 		{
-			EntityBullet bullet = BulletHelper.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 1, 0), 0.125f);
-			bullet.fuse = 3;
+			EntityBullet bullet = BulletHelper.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 0, 0), 1f);
+			bullet.fuse = 1;
 			world.spawnEntity(bullet);
 		}
 		world.setBlockToAir(this.getPos());
@@ -82,31 +96,38 @@ public class TileEntityTellermine extends TileEntityIEBase implements IBlockBoun
 	@Override
 	public float[] getBlockBounds()
 	{
-		return new float[]{0.25f, 0, 0.25f,
-				0.75f, 0.125f, 0.75f};
+		return new float[]{0.125f, -0.0625f*digLevel, 0.125f,
+				0.875f, 0.1875f-0.0625f*digLevel, 0.875f};
 	}
 
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(this.digLevel < 15&&heldItem.getItem().getToolClasses(heldItem).contains("shovel"))
+		if(this.digLevel < 3&&heldItem.getItem().getToolClasses(heldItem).contains("shovel"))
 		{
 			heldItem.damageItem(1, player);
 			Material material = world.getBlockState(pos.down()).getMaterial();
-			if(!(material==Material.GROUND||material==Material.GRASS))
+			if(Arrays.stream(MATCHING_MATERIALS).noneMatch(material1 -> material1==material))
 				return true;
-			digLevel += heldItem.getItem() instanceof ItemIITrenchShovel?5: 1;
+			digLevel += heldItem.getItem() instanceof ItemIITrenchShovel?3: 1;
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, false);
 
 			return true;
 		}
-		else if(digLevel==15&&heldItem.getItem() instanceof ItemBlock&&((ItemBlock)heldItem.getItem()).getBlock()==Blocks.TALLGRASS)
+		else if(digLevel==3&&heldItem.getItem() instanceof ItemBlock&&((ItemBlock)heldItem.getItem()).getBlock()==Blocks.TALLGRASS)
 		{
 			grass = true;
 			if(!player.isCreative())
 				heldItem.shrink(1);
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, false);
 			return true;
+		}
+		else if(armed&&heldItem.getItem().getToolClasses(heldItem).contains(Lib.TOOL_WIRECUTTER))
+		{
+			heldItem.damageItem(8, player);
+			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.BLOCKS, 1f, 1f, false);
+			armed = false;
+			grass = false;
 		}
 		return false;
 	}
@@ -127,5 +148,18 @@ public class TileEntityTellermine extends TileEntityIEBase implements IBlockBoun
 			this.mineStack = stack;
 			this.coreColor = ((IBullet)item).getCore(stack).getColour();
 		}
+	}
+
+	@Override
+	public ItemStack getTileDrop(@Nullable EntityPlayer player, IBlockState state)
+	{
+		return mineStack;
+	}
+
+	@Override
+	public NonNullList<ItemStack> getTileDrops(@Nullable EntityPlayer player, IBlockState state)
+	{
+		explode();
+		return NonNullList.from(armed?ItemStack.EMPTY: mineStack);
 	}
 }

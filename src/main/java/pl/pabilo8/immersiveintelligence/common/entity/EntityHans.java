@@ -46,6 +46,7 @@ public class EntityHans extends EntityCreature implements INpc
 {
 	public boolean crewman = false;
 	public boolean hasAmmo = true;
+	public boolean isKneeling = false;
 
 	public EyeEmotions eyeEmotion = HansEmotions.EyeEmotions.NEUTRAL;
 	public MouthEmotions mouthEmotion = HansEmotions.MouthEmotions.NEUTRAL;
@@ -64,6 +65,7 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		super(worldIn);
 		this.enablePersistence();
+		setSneaking(false);
 	}
 
 	public void equipItems(int id)
@@ -116,8 +118,10 @@ public class EntityHans extends EntityCreature implements INpc
 	protected void initEntityAI()
 	{
 		super.initEntityAI();
+
 		//howi AI
 		tasks.addTask(0, new AIHansHowitzer(this));
+		//tasks.addTask(0, new AIHAnsMortar(this));
 		tasks.addTask(0, new AIHansMachinegun(this));
 
 		//Attack mobs
@@ -177,6 +181,7 @@ public class EntityHans extends EntityCreature implements INpc
 		super.readEntityFromNBT(compound);
 		readInventory(compound.getTagList("npc_inventory", 10));
 		crewman = compound.getBoolean("crewman");
+		isKneeling = compound.getBoolean("isKneeling");
 	}
 
 	@Override
@@ -185,6 +190,7 @@ public class EntityHans extends EntityCreature implements INpc
 		super.writeEntityToNBT(compound);
 		compound.setTag("npc_inventory", Utils.writeInventory(mainInventory));
 		compound.setBoolean("crewman", crewman);
+		compound.setBoolean("isKneeling", isKneeling);
 	}
 
 	private void readInventory(NBTTagList npc_inventory)
@@ -350,7 +356,7 @@ public class EntityHans extends EntityCreature implements INpc
 
 	public boolean isValidTarget(Entity entity)
 	{
-		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
+		return entity instanceof IMob||((entity instanceof EntityPlayer||entity instanceof EntityHans||entity instanceof EntityEmplacementWeapon||entity instanceof EntityIronGolem)&&entity.getTeam()!=this.getTeam());
 	}
 
 	public void sendPlayerMessage(EntityPlayer player, String text)
@@ -400,4 +406,9 @@ public class EntityHans extends EntityCreature implements INpc
 		return super.getHoverEvent();
 	}
 
+	@Override
+	public boolean isSneaking()
+	{
+		return super.isSneaking();
+	}
 }

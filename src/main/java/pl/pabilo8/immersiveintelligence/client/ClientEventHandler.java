@@ -2,18 +2,27 @@ package pl.pabilo8.immersiveintelligence.client;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.api.ManualPageMultiblock;
+import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler.IZoomTool;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemChemthrower;
 import blusunrize.immersiveengineering.common.items.ItemDrill;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageRequestBlockUpdate;
+import blusunrize.lib.manual.IManualPage;
+import blusunrize.lib.manual.ManualInstance;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
+import blusunrize.lib.manual.gui.GuiManual;
+import flaxbeard.immersivepetroleum.common.network.IPPacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -51,10 +60,16 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GLContext;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
@@ -66,6 +81,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
@@ -81,10 +97,12 @@ import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIMineDetector;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMortar;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.network.MessageManualClose;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -100,6 +118,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final String texture_gui = ImmersiveIntelligence.MODID+":textures/gui/hud_elements.png";
 	private static boolean mgAiming = false;
 	public static ArrayList<EntityLivingBase> aimingPlayers = new ArrayList<>();
+	public static GuiScreen lastGui = null;
 
 	public static void drawSubmachinegunGui(ItemStack stack, RenderGameOverlayEvent.Post event)
 	{
@@ -111,7 +130,69 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//for drums
 		if(magazine.getMetadata()==3)
 		{
-
+			int bullets = ItemIIBulletMagazine.getRemainingBulletCount(magazine);
+			ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
+			if(bullets > 0)
+			{
+				NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(magazine).getTagList("bullets", 10), ItemIIBulletMagazine.getBulletCapactity(magazine));
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(width-38+3, height-17, 0);
+				for(int i = 0; i < bullets; i++)
+				{
+					if(cartridge.get(i).isEmpty())
+						continue;
+					final int x = ((bullets-i)%2==0?-1: 0);
+					ClientUtils.drawTexturedRect(x, 0, 30, 6, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
+					int cc = IIContent.itemAmmoMachinegun.getPaintColor(cartridge.get(i));
+					float[] rgb;
+					if(cc!=-1)
+					{
+						rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+						ClientUtils.drawTexturedRect(10, 0, 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
+					}
+					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+					ClientUtils.drawTexturedRect(24, 0, 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
+					GlStateManager.color(1f, 1f, 1f);
+					if(i < 6)
+					{
+						GlStateManager.translate(0, -6, 0);
+					}
+					else if(i < 16)
+					{
+						GlStateManager.rotate(-9f, 0, 0, 1);
+						GlStateManager.translate(0, -4, 0);
+					}
+					else if(i < 20)
+					{
+						GlStateManager.translate(0, -5, 0);
+					}
+					else if(i < 40)
+					{
+						GlStateManager.rotate(-9f, 0, 0, 1);
+						GlStateManager.translate(0, -4, 0);
+					}
+					else if(i < 52)
+					{
+						GlStateManager.rotate(-9f, 0, 0, 1);
+						GlStateManager.translate(0, -3, 0);
+					}
+					else if(i < 65)
+					{
+						GlStateManager.rotate(-15f, 0, 0, 1);
+						GlStateManager.translate(0, -3, 0);
+					}
+				}
+				GlStateManager.popMatrix();
+			}
+			ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
+			pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+					String.valueOf(bullets),
+					width-38+12, height-27+12,
+					12, 0,
+					0xffffff
+			);
 		}
 		//for stick
 		else
@@ -240,7 +321,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		GlStateManager.enableBlend();
 
 		ClientUtils.drawTexturedRect(width-24, height-20, 22, 18, 0/256f, 22/256f, 62/256f, 80/256f);
-		ClientUtils.drawGradientRect(width-23, height-3-(int)((mg.overheating/100f)*16), width-20, height-3, 0xffdf9916, 0x0fba0f0f);
+		ClientUtils.drawGradientRect(width-23, height-3-(int)((mg.overheating/(float)Machinegun.maxOverheat)*16), width-20, height-3, 0xffdf9916, 0x0fba0f0f);
 		ClientUtils.drawTexturedRect(width-19, height-19, 16, 16, 16/256f, 32/256f, 0, 16/256f);
 		height -= 18;
 
@@ -261,7 +342,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(hasShield)
 		{
 			ClientUtils.drawTexturedRect(width-24, height-20, 22, 18, 0/256f, 22/256f, 62/256f, 80/256f);
-			ClientUtils.drawGradientRect(width-23, height-3-(int)((mg.shieldStrength/mg.maxShieldStrength)*16), width-20, height-3, 0xcfcfcfcf, 0x0cfcfcfc);
+			pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(width-23, height-3, 3, 16,
+					mg.shieldStrength/mg.maxShieldStrength);
 			ClientUtils.drawTexturedRect(width-19, height-19, 16, 16, 32/256f, 48/256f, 0, 16/256f);
 			//height-=18;
 		}
@@ -332,35 +414,51 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent()
 	public void onFogUpdate(EntityViewRenderEvent.RenderFogEvent event)
 	{
-		if(event.getEntity() instanceof EntityLivingBase&&((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression)!=null)
+		if(event.getEntity() instanceof EntityLivingBase)
 		{
-			PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression);
-			int timeLeft = effect.getDuration();
-			int amplifier = effect.getAmplifier();
-			if(amplifier < 0)
-				amplifier = 254+amplifier;
+			if(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclear_heat)!=null)
+			{
+				PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclear_heat);
+				assert effect!=null;
 
-			float f1 = MathHelper.clamp((float)amplifier/255f, 0f, 1f);
-			//if(timeLeft < 20)
-			//f1 += (event.getFarPlaneDistance()/4)*(1-timeLeft/20f);
+				GlStateManager.setFog(FogMode.EXP2);
+				GlStateManager.setFogStart(20); //(
+				GlStateManager.setFogEnd(24);
+				GlStateManager.setFogDensity(.015f);
+			}
+			if(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression)!=null)
+			{
+				PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression);
+				assert effect!=null;
+				int timeLeft = effect.getDuration();
+				int amplifier = effect.getAmplifier();
+				if(amplifier < 0)
+					amplifier = 254+amplifier;
 
-			GlStateManager.setFog(FogMode.LINEAR);
-			GlStateManager.setFogStart((float)Math.pow((1f-f1), 2)*12); //(
-			GlStateManager.setFogEnd((float)Math.pow((1f-f1), 2)*16);
-			GlStateManager.setFogDensity(.00625f+(.00625f*f1));
+				float f1 = MathHelper.clamp((float)amplifier/255f, 0f, 1f);
+				//if(timeLeft < 20)
+				//f1 += (event.getFarPlaneDistance()/4)*(1-timeLeft/20f);
 
-			if(GLContext.getCapabilities().GL_NV_fog_distance)
-				GlStateManager.glFogi(34138, 34139);
+				GlStateManager.setFog(FogMode.LINEAR);
+				GlStateManager.setFogStart((float)Math.pow((1f-f1), 2)*12); //(
+				GlStateManager.setFogEnd((float)Math.pow((1f-f1), 2)*16);
+				GlStateManager.setFogDensity(.00625f+(.00625f*f1));
+
+				if(GLContext.getCapabilities().GL_NV_fog_distance)
+					GlStateManager.glFogi(34138, 34139);
+			}
+
 		}
 	}
 
 	@SubscribeEvent()
 	public void onFogColourUpdate(EntityViewRenderEvent.FogColors event)
 	{
-		if(event.getEntity() instanceof EntityLivingBase&&((EntityLivingBase)event.getEntity()).isPotionActive(IIPotions.infrared_vision))
+		Entity entity = event.getEntity();
+		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.infrared_vision))
 		{
 			float r = event.getRed(), g = event.getGreen(), b = event.getBlue();
-			float f15 = Math.min(Objects.requireNonNull(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.infrared_vision)).getAmplifier(), 4)/4f;
+			float f15 = Math.min(Objects.requireNonNull(((EntityLivingBase)entity).getActivePotionEffect(IIPotions.infrared_vision)).getAmplifier(), 4)/4f;
 			float f6 = 1.0F/event.getRed();
 
 			if(f6 > 1.0F/event.getGreen())
@@ -380,11 +478,19 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			event.setGreen(g*(1.0F-f15)+g*f6*f15);
 			event.setBlue(b*(1.0F-f15)+b*f6*f15);
 		}
-		if(event.getEntity() instanceof EntityLivingBase&&((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.suppression)!=null)
+		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).getActivePotionEffect(IIPotions.suppression)!=null)
 		{
 			event.setRed(0);
 			event.setGreen(0);
 			event.setBlue(0);
+		}
+		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).getActivePotionEffect(IIPotions.nuclear_heat)!=null)
+		{
+			float v = event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0);
+			//float min = Math.min(Math.min(event.getRed(), event.getGreen()), event.getBlue());
+			event.setRed(v);
+			event.setGreen(v);
+			event.setBlue(v);
 		}
 	}
 
@@ -472,11 +578,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						{
 							IUpgradableMachine m = (IUpgradableMachine)tileEntity;
 							m=m.getUpgradeMaster();
-							if(m.getCurrentlyInstalled()!=null)
+							if(m!=null&&m.getCurrentlyInstalled()!=null)
 							{
 								text = new String[]{
 										I18n.format(CommonProxy.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+m.getCurrentlyInstalled().getName())),
-										I18n.format(CommonProxy.INFO_KEY+"machineupgrade.progress", m.getInstallProgress(),m.getCurrentlyInstalled().getProgressRequired())
+										I18n.format(CommonProxy.INFO_KEY+"machineupgrade.progress", m.getInstallProgress(), m.getCurrentlyInstalled().getProgressRequired())
 								};
 							}
 						}
@@ -564,6 +670,26 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		GlStateManager.popMatrix();
 
 		ClientUtils.drawTexturedRect(-41.0F, -73.0F, 53, 72, uMin, uMax, vMin, vMax);
+
+		ClientUtils.drawTexturedRect(-51.0F, -73.0F, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
+		ClientUtils.drawTexturedRect(-51.0F+5, -73.0F+1, 16, 16, 48/256f, 64/256f, 0/256f, 16/256f);
+		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-51+1, -73+1, 3, 16,
+				motorbike.frontWheelDurability/(float)Motorbike.wheelDurability);
+
+		ClientUtils.drawTexturedRect(-59.0F, -73.0F+18, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
+		ClientUtils.drawTexturedRect(-59.0F+5, -73.0F+18+1, 16, 16, 80/256f, 96/256f, 0/256f, 16/256f);
+		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-59+1, -73+18+1, 3, 16,
+				motorbike.engineDurability/(float)Motorbike.engineDurability);
+
+		ClientUtils.drawTexturedRect(-59.0F, -73.0F+18*2, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
+		ClientUtils.drawTexturedRect(-59.0F+5, -73.0F+18*2+1, 16, 16, 96/256f, 112/256f, 0/256f, 16/256f);
+		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-59+1, -73+18*2+1, 3, 16,
+				motorbike.fuelTankDurability/(float)Motorbike.fuelTankDurability);
+
+		ClientUtils.drawTexturedRect(-51.0F, -73.0F+18*3, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
+		ClientUtils.drawTexturedRect(-51.0F+5, -73.0F+18*3+1, 16, 16, 64/256f, 80/256f, 0/256f, 16/256f);
+		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-51+1, -73+18*3+1, 3, 16,
+				motorbike.backWheelDurability/(float)Motorbike.wheelDurability);
 
 
 		GlStateManager.popMatrix();
@@ -765,6 +891,19 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
 					CameraHandler.INSTANCE.setEnabled(true);
 				}
+				else if(ridingEntity instanceof EntityMortar)
+				{
+					EntityMortar mg = (EntityMortar)ridingEntity;
+					if(mg.shootingProgress!=0)
+					{
+						ZoomHandler.isZooming = false;
+						ZoomHandler.fovZoom = 0;
+					}
+
+					CameraHandler.INSTANCE.setCameraPos(mg.posX, mg.posY+0.75, mg.posZ);
+					CameraHandler.INSTANCE.setCameraAngle(mg.rotationYaw, 1+(((1f-(mg.rotationPitch/-90f))*-1.5f)), 0);
+					CameraHandler.INSTANCE.setEnabled(mg.shootingProgress==0);
+				}
 				else if(ridingEntity instanceof EntityTripodPeriscope)
 				{
 					EntityTripodPeriscope mg = (EntityTripodPeriscope)ridingEntity;
@@ -786,6 +925,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent
 	public void onItemTooltip(ItemTooltipEvent event)
 	{
+		if(ItemNBTHelper.hasKey(event.getItemStack(), "ii_FilledCasing"))
+			event.getToolTip().add(I18n.format(CommonProxy.DESCRIPTION_KEY+"filled_casing"));
 		if(event.getItemStack().getItem() instanceof ItemIIBulletMagazine)
 		{
 			if(ItemNBTHelper.hasKey(event.getItemStack(), "bullets"))
@@ -872,6 +1013,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	public static void handleBipedRotations(ModelBiped model, Entity entity)
 	{
+		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.concealed))
+		{
+			model.setVisible(false);
+		}
+
 		if(!Config.IEConfig.fancyItemHolding)
 			return;
 
@@ -973,6 +1119,75 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				//model.bipedRightArm.rotateAngleY = -.08726f+model.bipedHead.rotateAngleY;
 			}
+			else if(ridingEntity instanceof EntityMortar)
+			{
+				EntityMortar mortar = ((EntityMortar)ridingEntity);
+
+				float ff = 1;
+				if(mortar.shootingProgress > 0)
+				{
+					float v = mortar.shootingProgress/Mortar.shootTime;
+					if(v < 0.1)
+					{
+						//rise up
+						ff = 1f-(v/0.1f);
+					}
+					else if(v < 0.2)
+					{
+						//turn, put shell
+						ff = 0;
+						float firing = (v-0.1f)/0.1f;
+
+						model.bipedLeftArm.rotateAngleY = firing*0.15f;
+						model.bipedRightArm.rotateAngleY = firing*-0.65f;
+						model.bipedRightArm.rotationPointX += 1*firing;
+						model.bipedRightArm.rotationPointZ -= 2*firing;
+
+						model.bipedLeftArm.rotateAngleX = firing*-2.15f;
+						model.bipedRightArm.rotateAngleX = firing*-2.15f;
+					}
+					else if(v < 0.3)
+					{
+						//unturn
+						ff = 0;
+
+						float firing = 1f-((v-0.2f)/0.1f);
+
+						model.bipedLeftArm.rotateAngleY = firing*0.15f;
+						model.bipedRightArm.rotateAngleY = firing*-0.65f;
+						model.bipedRightArm.rotationPointX += 1*firing;
+						model.bipedRightArm.rotationPointZ -= 2*firing;
+
+						model.bipedLeftArm.rotateAngleX = firing*-2.15f;
+						model.bipedRightArm.rotateAngleX = firing*-2.15f;
+					}
+					else if(v < 0.4)
+					{
+						//get down
+						ff = (v-0.3f)/0.1f;
+					}
+					else
+					{
+						float firing = (v-0.4f)/0.6f;
+						float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-((firing-0.85f)/0.15f), 0, 1);
+						model.bipedHead.rotateAngleX = Math.min((progress/0.85f), 1f)*0.85f;
+						model.bipedHeadwear.rotateAngleX = Math.min((progress/0.85f), 1f)*0.85f;
+						model.bipedHead.rotateAngleY = 0;
+						model.bipedHeadwear.rotateAngleY = 0;
+
+						model.bipedLeftArm.rotateAngleZ = progress*-0.15f;
+						model.bipedRightArm.rotateAngleZ = progress*0.15f;
+						model.bipedLeftArm.rotateAngleX = progress*-2.55f;
+						model.bipedRightArm.rotateAngleX = progress*-2.55f;
+					}
+				}
+
+				model.bipedLeftLeg.rotateAngleX = 1.45f*ff;
+				model.bipedLeftLeg.rotateAngleY = 0.125f*ff;
+				model.bipedRightLeg.rotateAngleX = 1.45f*ff;
+				model.bipedRightLeg.rotateAngleY = -0.25f*ff;
+
+			}
 			else if(ridingEntity instanceof EntityTripodPeriscope)
 			{
 				EntityTripodPeriscope mg = ((EntityTripodPeriscope)ridingEntity);
@@ -1024,9 +1239,19 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				{
 					if(seat.seatID==0)
 					{
-						model.bipedRightArm.rotateAngleX = -1.5f;
+						model.bipedBody.rotateAngleX += 0.25;
+						model.bipedRightLeg.rotationPointZ = 2;
+						model.bipedLeftLeg.rotationPointZ = 2;
+
+						model.bipedRightArm.rotateAngleZ = 0;
+						model.bipedLeftArm.rotateAngleZ = 0;
+
+						model.bipedRightArm.rotationPointZ = -1.5f;
+						model.bipedLeftArm.rotationPointZ = -1.5f;
+
+						model.bipedRightArm.rotateAngleX = -1.35f;
 						model.bipedRightArm.rotateAngleY = 0.5f;
-						model.bipedLeftArm.rotateAngleX = -1.5f;
+						model.bipedLeftArm.rotateAngleX = -1.35f;
 						model.bipedLeftArm.rotateAngleY = -0.5f;
 					}
 
@@ -1067,12 +1292,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							model.bipedRightArm.rotateAngleZ = progress*1.5f;
 							model.bipedLeftArm.rotateAngleX = progress*-0.55f;
 
-							if(howitzer.turnLeft)
+							if(howitzer.turnLeft||howitzer.forward)
 							{
 								model.bipedRightLeg.rotateAngleZ = (-(1f-wtime)*0.25f)*stime;
 								model.bipedLeftLeg.rotateAngleZ = (-(wtime)*0.25f-0.25f)*stime;
 							}
-							else if(howitzer.turnRight)
+							else if(howitzer.turnRight||howitzer.backward)
 							{
 								model.bipedRightLeg.rotateAngleZ = ((1f-wtime)*0.25f+0.25f)*stime;
 								model.bipedLeftLeg.rotateAngleZ = ((wtime)*0.25f)*stime;
@@ -1085,12 +1310,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							model.bipedRightArm.rotateAngleX = progress*0.125f;
 							model.bipedRightArm.rotateAngleZ = progress*0.5f;
 
-							if(howitzer.turnLeft)
+							if(howitzer.turnLeft||howitzer.backward)
 							{
 								model.bipedRightLeg.rotateAngleZ = (-(1f-wtime)*0.25f+0.25f)*stime;
 								model.bipedLeftLeg.rotateAngleZ = (-(wtime)*0.25f)*stime;
 							}
-							else if(howitzer.turnRight)
+							else if(howitzer.turnRight||howitzer.forward)
 							{
 								model.bipedRightLeg.rotateAngleZ = ((1f-wtime)*0.25f)*stime;
 								model.bipedLeftLeg.rotateAngleZ = ((wtime)*0.25f-0.25f)*stime;
@@ -1217,8 +1442,23 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
 							}
 						}
+						else if(heldItem.getItem() instanceof ItemIIMortar)
+						{
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX *= 0.25f;
+								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX-0.25f;
+								model.bipedLeftArm.rotateAngleZ = -0.35f;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX *= 0.25f;
+								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							}
+						}
 						else if(heldItem.getItem() instanceof ItemIISubmachinegun&&hand!=EnumHand.OFF_HAND)
 						{
+							//model.bipedBody.rotateAngleY=model.bipedHead.rotateAngleY;
 							if(right)
 							{
 								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
@@ -1272,13 +1512,13 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						}
 						else if(heldItem.getItem() instanceof ItemIIMineDetector)
 						{
+							float v = MineDetectorRenderer.instance.renderBase(player, 2.125f, true);
+
 							model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
 							model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
 
-							model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-1.35f;
+							model.bipedRightArm.rotateAngleX = -1.25f-((1f-v)*0.5f);
 							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-
-							MineDetectorRenderer.instance.renderBase(player,2.125f,true);
 						}
 						else if(heldItem.getItem() instanceof ItemIINavalMine)
 						{
@@ -1312,7 +1552,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	public static void setModelVisibilities()
 	{
-		ImmersiveIntelligence.logger.info("Otak");
+
 	}
 
 	@SubscribeEvent
@@ -1367,6 +1607,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 				event.setCanceled(true);
 				GlStateManager.popMatrix();
+			}
+			else if(stack.getItem() instanceof ItemIIMineDetector)
+			{
+				MineDetectorRenderer.instance.renderBase(ClientUtils.mc().player, 2.125f, true);
 			}
 		}
 	}

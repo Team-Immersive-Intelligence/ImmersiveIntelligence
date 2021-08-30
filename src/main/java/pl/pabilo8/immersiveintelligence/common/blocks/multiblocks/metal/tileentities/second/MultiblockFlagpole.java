@@ -5,8 +5,6 @@ import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsAll;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockMetalDecoration2;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration2;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDecoration;
@@ -23,7 +21,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
 
 public class MultiblockFlagpole implements IMultiblock
@@ -31,7 +28,7 @@ public class MultiblockFlagpole implements IMultiblock
 	static final IngredientStack[] materials = new IngredientStack[]{
 			new IngredientStack(new ItemStack(IIContent.blockConcreteDecoration, 9, IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 3, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.blockStoneDecoration, 16+4, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockSandbags, 16+4, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta())),
 			new IngredientStack(new ItemStack(IIContent.blockWoodenFortification, 1, IIBlockTypes_WoodenFortification.WOODEN_STEEL_CHAIN_FENCE.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration2, 3, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())),
 			new IngredientStack("fenceTreatedWood", 4)
@@ -57,7 +54,7 @@ public class MultiblockFlagpole implements IMultiblock
 						if(w==1&&l==1)
 							structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(IIContent.blockStoneDecoration, 1, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockSandbags, 1, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta());
 					}
 					else
 					{
@@ -70,7 +67,7 @@ public class MultiblockFlagpole implements IMultiblock
 							else if(l==0)
 								structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration2, 1, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta());
 							else
-								structure[h][l][w] = new ItemStack(IIContent.blockStoneDecoration, 1, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta());
+								structure[h][l][w] = new ItemStack(IIContent.blockSandbags, 1, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta());
 						}
 					}
 				}
@@ -171,7 +168,7 @@ public class MultiblockFlagpole implements IMultiblock
 						}
 						else
 						{
-							if(!Utils.isBlockAt(world, pos, IIContent.blockStoneDecoration, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta()))
+							if(!Utils.isBlockAt(world, pos, IIContent.blockSandbags, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta()))
 							{
 								return false;
 							}
@@ -204,7 +201,7 @@ public class MultiblockFlagpole implements IMultiblock
 							}
 							else
 							{
-								if(!Utils.isBlockAt(world, pos, IIContent.blockStoneDecoration, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta()))
+								if(!Utils.isBlockAt(world, pos, IIContent.blockSandbags, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta()))
 								{
 									return false;
 								}

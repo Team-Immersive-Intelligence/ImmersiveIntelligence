@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -137,7 +138,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	@Override
 	public boolean shoudlPlaySound(String sound)
 	{
-		return repaired;
+		return focusedEntity!=null;
 	}
 
 	@Override
@@ -162,4 +163,13 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 			super.onAnimationChangeServer(state, part);
 	}
 
+	@Override
+	protected NBTTagCompound makeSyncEntity()
+	{
+		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
+		{
+			world.playSound(null,getPos(),focusedEntity!=null?IISounds.welding_start:IISounds.welding_end, SoundCategory.BLOCKS,1f,1f);
+		}
+		return super.makeSyncEntity();
+	}
 }

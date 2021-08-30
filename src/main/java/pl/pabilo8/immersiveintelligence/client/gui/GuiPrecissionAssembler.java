@@ -7,6 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -69,7 +70,7 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		ClientUtils.drawGradientRect(guiLeft+159, guiTop+22+(47-stored), guiLeft+166, guiTop+70, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(guiLeft+159, guiTop+22, 7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		if(tile.active&&tile.processTimeMax!=0)
 		{
@@ -84,10 +85,10 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 		super.drawScreen(mx, my, partial);
 		this.renderHoveredToolTip(mx, my);
 
-		ArrayList<String> tooltip = new ArrayList();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx > guiLeft+161&&mx < guiLeft+168&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(tile.getEnergyStored(null)+"/"+tile.getMaxEnergyStored(null)+" IF");
+			tooltip.add(Utils.getPowerLevelString(tile));
 
 		if(!tooltip.isEmpty())
 		{

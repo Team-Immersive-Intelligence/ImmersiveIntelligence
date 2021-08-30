@@ -5,48 +5,96 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.Tuple;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCrateInserterUpgrade;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EmplacementWeaponAutocannon extends EmplacementWeapon
 {
+	private AxisAlignedBB vision;
 	float flaps = 0;
 	float shootDelay = 0;
 	int reloadDelay = 0;
 	int bulletsShot = 0;
-	NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
-	static ItemStack s2=ItemStack.EMPTY;
 
+	private NonNullList<ItemStack> inventory = NonNullList.withSize(18, ItemStack.EMPTY);
+	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(8, ItemStack.EMPTY);
+	private int casingsToDrop = 0;
+	private boolean requiresPlatformRefill = false;
+
+	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
+	private ItemStack s2 = ItemStack.EMPTY;
+
+	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
+	{
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack)
+		{
+			if(!OreDictionary.itemMatches(stack, Utils.getStackWithMetaName(IIContent.itemBulletMagazine, "autocannon"), false))
+				return false;
+			return super.isItemValid(slot, stack);
+		}
+
+		@Nonnull
+		@Override
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+		{
+			if(!isItemValid(slot, stack))
+				return stack;
+			ItemStack itemStack = super.insertItem(slot, stack, simulate);
+			inventory.set(slot, stacks.get(slot));
+			return itemStack;
+		}
+	};
+
+	private static final int[] reloadTimers = new int[]{
+			(int)(0.15*Autocannon.reloadTime), (int)(0.25*Autocannon.reloadTime), (int)(0.35*Autocannon.reloadTime), (int)(0.45*Autocannon.reloadTime),
+			(int)(0.55*Autocannon.reloadTime), (int)(0.65*Autocannon.reloadTime), (int)(0.75*Autocannon.reloadTime), (int)(0.85*Autocannon.reloadTime)
+	};
 
 	private static final Runnable INSERTER_ANIM_NONE = () -> {
-		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		Utils.bindTexture(EmplacementRenderer.textureAutocannon);
 	};
 	private static final Runnable INSERTER_ANIM_LEFT = () -> {
-		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		Utils.bindTexture(EmplacementRenderer.textureAutocannon);
 		GlStateManager.rotate(-55, 1, 0, 0);
 		GlStateManager.translate(0, 0, 0.0625f);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineLeftModel)
 			mod.render();
 	};
 	private static final Runnable INSERTER_ANIM_RIGHT = () -> {
-		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		Utils.bindTexture(EmplacementRenderer.textureAutocannon);
 		GlStateManager.rotate(-55, 1, 0, 0);
 		GlStateManager.translate(0, 0, 0.0625f);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineRightModel)
@@ -75,31 +123,82 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-		float force = 6f;
-		float mass = IIContent.itemAmmoAutocannon.getMass(s2);
+		float force = IIContent.itemAmmoAutocannon.getDefaultVelocity();
+		s2 = magazine.size() > 0?magazine.peekFirst(): ItemStack.EMPTY;
+		float mass = s2.isEmpty()?0: IIContent.itemAmmoAutocannon.getMass(s2);
 
-		vv = posTurret.subtract(posTarget);
-		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
-		float motionTime = (float)Math.abs(vv.lengthSquared())/force/0.8f;
-		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(1f).addVector(0, 0f, 0f);
-		vv = vv.subtract(motionVec).subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
+		vv = posTurret.subtract(posTarget.add(motion));
+
+		double dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
+		double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC;
+		while(dist > 0)
+		{
+			force -= EntityBullet.DRAG*force*EntityBullet.DEV_SLOMO;
+			gravityMotionY -= EntityBullet.GRAVITY*mass*EntityBullet.DEV_SLOMO;
+			baseMotionYC = baseMotionY*(force/IIContent.itemAmmoAutocannon.getDefaultVelocity());
+			motionY += (baseMotionYC+gravityMotionY)*EntityBullet.DEV_SLOMO;
+			dist -= EntityBullet.DEV_SLOMO*force;
+		}
+
+		vv = vv.addVector(0, motionY-baseMotionY, 0).normalize();
+
+
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0,vv.y,0)))));
-		//float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
-		pp = MathHelper.clamp(pp, -90, 75);
+		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))));
+
 		return new float[]{yy, pp};
 	}
 
 	@Override
-	public void tick()
+	public void init(TileEntityEmplacement te, boolean firstTime)
 	{
-		if(bulletsShot>=64)
+		super.init(te, firstTime);
+		vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5).grow(Autocannon.detectionRadius);
+	}
+
+	@Override
+	public void tick(TileEntityEmplacement te)
+	{
+		if(magazine.isEmpty())
 		{
-			reloadDelay++;
-			if(reloadDelay >= 2)
+			if(reloadDelay==0)
 			{
-				bulletsShot = 0;
+				if(inventoryPlatform.stream().anyMatch(stack -> OreDictionary.itemMatches(stack, Utils.getStackWithMetaName(IIContent.itemBulletMagazine, "autocannon"), false)
+						&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0))
+					reloadDelay = 1;
+				else
+					requiresPlatformRefill = true;
+			}
+			else
+			{
+				reloadDelay++;
+			}
+
+			if(reloadDelay >= Autocannon.reloadTime)
+			{
+
+				int magsLoaded = 0;
+				for(ItemStack stack : inventoryPlatform)
+				{
+					if(magsLoaded >= 4)
+						break;
+					if(OreDictionary.itemMatches(stack, Utils.getStackWithMetaName(IIContent.itemBulletMagazine, "autocannon"), false)
+							&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0)
+					{
+						magazine.addAll(ItemIIBulletMagazine.takeAll(stack));
+						magsLoaded++;
+					}
+				}
+
 				reloadDelay = 0;
+				syncWithClient(te);
+			}
+			else if(te.getWorld().isRemote)
+			{
+				if(reloadDelay==reloadTimers[0]||reloadDelay==reloadTimers[1]||reloadDelay==reloadTimers[2]||reloadDelay==reloadTimers[3])
+					te.getWorld().playSound(ClientUtils.mc().player, te.getBlockPosForPos(49), IISounds.autocannon_unload, SoundCategory.NEUTRAL, 1, 0.75f);
+				if(reloadDelay==reloadTimers[4]||reloadDelay==reloadTimers[5]||reloadDelay==reloadTimers[6]||reloadDelay==reloadTimers[7])
+					te.getWorld().playSound(ClientUtils.mc().player, te.getBlockPosForPos(49), IISounds.autocannon_reload, SoundCategory.NEUTRAL, 1, 0.75f);
 			}
 		}
 
@@ -113,21 +212,31 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		super.shoot(te);
 		if(!te.getWorld().isRemote)
 		{
-			if(s2.isEmpty())
+			s2 = magazine.size() > 0?magazine.removeFirst(): ItemStack.EMPTY;
+			if(!s2.isEmpty())
 			{
-				s2 = IIContent.itemAmmoAutocannon.getBulletWithParams("core_tungsten", "shaped", "hmx", "tracer_powder");
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setInteger("colour", 0xff0000);
-				IIContent.itemAmmoAutocannon.setComponentNBT(s2, new NBTTagCompound(), tag);
+				te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.autocannon_firing, SoundCategory.PLAYERS, 2f, 0.5f);
+				EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f));
+				a.setShootPos(te.getAllBlocks());
+				if(entity!=null)
+					a.setShooters(entity, entity.partArray);
+				te.getWorld().spawnEntity(a);
 			}
+		}
+		else if(magazine.size() > 0)
+		{
+			Vec3d weaponCenter = te.getWeaponCenter().add(vv.scale(-1.85));
+			weaponCenter = weaponCenter.add(vv.rotateYaw(bulletsShot%2==0?90:-90).scale(0.55));
+			weaponCenter = weaponCenter.add(vv.rotatePitch(bulletsShot<2?90:-90).scale(0.25));
 
-			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 6f);
-			a.setShootPos(te.getAllBlocks());
-			te.getWorld().spawnEntity(a);
+			Vec3d vg = vv.scale(3f);
+			ParticleUtils.spawnGunfireFX(weaponCenter.x, weaponCenter.y, weaponCenter.z, vg.x, vg.y, vg.z, 4f);
+
+			magazine.removeFirst();
 		}
 		shootDelay = Autocannon.bulletFireTime;
-		bulletsShot++;
+		casingsToDrop++;
+		bulletsShot = (bulletsShot+1)%4;
 	}
 
 	@Override
@@ -147,36 +256,63 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	}
 
 	@Override
-	public NBTTagCompound saveToNBT()
+	public boolean requiresPlatformRefill()
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setFloat("yaw", yaw);
-		tag.setFloat("pitch", pitch);
-		return tag;
+		return requiresPlatformRefill;
 	}
 
 	@Override
-	public boolean canShoot(TileEntityEmplacement te)
+	public NBTTagCompound saveToNBT(boolean forClient)
 	{
-		return te.isDoorOpened&&shootDelay==0&&bulletsShot<64;
+		NBTTagCompound nbt = super.saveToNBT(forClient);
+		nbt.setFloat("flaps", flaps);
+
+		nbt.setFloat("shootDelay", shootDelay);
+		nbt.setInteger("reloadDelay", reloadDelay);
+
+		nbt.setTag("inventory", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventory));
+		nbt.setTag("inventoryPlatform", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventoryPlatform));
+		if(!forClient)
+			nbt.setTag("magazine", blusunrize.immersiveengineering.common.util.Utils.writeInventory(magazine));
+		nbt.setInteger("magazine_amount", magazine.size());
+
+		nbt.setBoolean("requiresPlatformRefill", requiresPlatformRefill);
+		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
-		yaw = tagCompound.getFloat("yaw");
-		pitch = tagCompound.getFloat("pitch");
+		super.readFromNBT(tagCompound);
+		flaps = tagCompound.getInteger("flaps");
+
+		shootDelay = tagCompound.getFloat("shootDelay");
+		reloadDelay = tagCompound.getInteger("reloadDelay");
+
+		inventory = blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("inventory", 10), inventory.size());
+		inventoryPlatform = blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("inventoryPlatform", 10), inventoryPlatform.size());
+		magazine = new ArrayDeque<>(blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("magazine", 10), tagCompound.getInteger("magazine_amount")));
+
+		requiresPlatformRefill = tagCompound.getBoolean("requiresPlatformRefill");
+	}
+
+	@Override
+	public boolean canShoot(TileEntityEmplacement te)
+	{
+		return vv!=null&&te.isDoorOpened&&shootDelay==0&&magazine.size() > 0;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void render(TileEntityEmplacement te, float partialTicks)
 	{
-		float reloadAnim = Math.min(1, (this.reloadDelay+(bulletsShot >= 64?partialTicks: 0))/(float)Autocannon.reloadTime);
+		float reloadAnim = reloadDelay > 0?Math.min(1, (this.reloadDelay+(magazine.size()==0?partialTicks: 0))/(float)Autocannon.reloadTime): 0;
 
 		GlStateManager.pushMatrix();
 		float p, pp, y, yy;
-		double cannonAnim;
+		double cannonAnim = 0;
+		double b1 = 0, b2 = 0, b3 = 0, b4 = 0;
+
 		p = this.nextPitch-this.pitch;
 		y = this.nextYaw-this.yaw;
 		float flaps = this.flaps;
@@ -185,40 +321,44 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		else
 			flaps = Math.max(flaps-(0.075f*partialTicks), 0);
 
-		if(te.progress < Emplacement.lidTime)
-			cannonAnim = 0;
-		else
-			cannonAnim = Math.abs((((te.getWorld().getTotalWorldTime())%(Autocannon.bulletFireTime*4)+partialTicks)/(double)(Autocannon.bulletFireTime*4))-0.5)/0.5;
-
-		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks;
-		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks;
-
-		double b1 = 0, b2 = 0;
-		if(te.isShooting&&te.progress > Emplacement.lidTime*0.98f)
+		if(te.finishedDoorAction())
 		{
-			if(cannonAnim < 0.5f)
+			cannonAnim = 1d-Math.min(((shootDelay+partialTicks)/(double)Autocannon.bulletFireTime), 1d);
+			switch(bulletsShot)
 			{
-				b1 = (float)(cannonAnim/0.5f);
-				if(canShoot(te))
-					b2 = 1f-(cannonAnim/0.5f);
-			}
-			else
-			{
-				b1 = 1f-((cannonAnim-0.5f)/0.5f);
-				b2 = ((cannonAnim-0.5f)/0.5f);
+				case 0:
+					b1 = te.isShooting?Math.min(cannonAnim/0.5f, 1f): 0;
+					//b4 = 1f-b1;
+					break;
+				case 1:
+					b2 = Math.min(cannonAnim/0.5f, 1f);
+					//b1 = 1f-b2;
+					break;
+				case 2:
+					b3 = Math.min(cannonAnim/0.5f, 1f);
+					//b2 = 1f-b3;
+					break;
+				case 3:
+					b4 = Math.min(cannonAnim/0.5f, 1f);
+					//b3 = 1f-b4;
+					break;
 			}
 		}
+
+		boolean power = te.energyStorage.getEnergyStored() >= getEnergyUpkeepCost();
+		pp = pitch+(power?(Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed()): 0);
+		yy = yaw+(power?(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed()): 0);
 
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel1Model)
 			mod.rotationPointZ = (float)(-8f*b1);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel2Model)
 			mod.rotationPointZ = (float)(-8f*b2);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel3Model)
-			mod.rotationPointZ = (float)(-8f*b1);
+			mod.rotationPointZ = (float)(-8f*b3);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.barrel4Model)
-			mod.rotationPointZ = (float)(-8f*b2);
+			mod.rotationPointZ = (float)(-8f*b4);
 
-		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		Utils.bindTexture(EmplacementRenderer.textureAutocannon);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.baseModel)
 			mod.render();
 		GlStateManager.rotate(yy, 0, 1, 0);
@@ -240,7 +380,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		}
 		GlStateManager.popMatrix();
 
-		reloadAnim=Math.abs(reloadAnim-0.5f)*2;
+		reloadAnim = Math.abs(reloadAnim-0.5f)*2;
 
 		EmplacementRenderer.modelAutocannon.turretTopFlapsModel[0].rotateAngleY = -flaps*1.55f;
 		EmplacementRenderer.modelAutocannon.turretTopFlapsModel[1].rotateAngleY = flaps*1.55f;
@@ -476,7 +616,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrench_upgrade_progress/2f))), maxClientProgress);
 		double progress = MathHelper.clamp(cc/req, 0, 1);
 
-		ClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		Utils.bindTexture(EmplacementRenderer.textureAutocannon);
 		for(int i = 0; i < l*progress; i++)
 		{
 			if(1+i > Math.round(l*progress))
@@ -518,4 +658,115 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
+
+	@Override
+	public AxisAlignedBB getVisionAABB()
+	{
+		return vision;
+	}
+
+	@Override
+	public EmplacementHitboxEntity[] getCollisionBoxes()
+	{
+		if(entity==null)
+			return new EmplacementHitboxEntity[0];
+
+		//new Vec3d(0,0,0)
+		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
+		list.add(new EmplacementHitboxEntity(entity, "baseBox", 1f, 1.5f,
+				new Vec3d(0, 1, 0), Vec3d.ZERO, 4));
+		list.add(new EmplacementHitboxEntity(entity, "ammoBox", 0.625f, 0.75f,
+				new Vec3d(1, 0.625, 0), Vec3d.ZERO, 2));
+
+		list.add(new EmplacementHitboxEntity(entity, "shieldRight", 0.75f, 2f,
+				new Vec3d(-0.5, 1, -0.625), Vec3d.ZERO, 12));
+		list.add(new EmplacementHitboxEntity(entity, "shieldLeft", 0.75f, 2f,
+				new Vec3d(-0.5, 1, 0.625), Vec3d.ZERO, 12));
+
+		list.add(new EmplacementHitboxEntity(entity, "barrelRight", 0.5f, 0.5f,
+				new Vec3d(-0.5, 1.125, -0.625), new Vec3d(-0.5, 0, 0), 12));
+		list.add(new EmplacementHitboxEntity(entity, "barrelRight", 0.5f, 0.5f,
+				new Vec3d(-0.5, 1.125, -0.625), new Vec3d(-1, 0, 0), 12));
+
+		list.add(new EmplacementHitboxEntity(entity, "barrelLeft", 0.5f, 0.5f,
+				new Vec3d(-0.5, 1, 0.625), new Vec3d(-0.5, 0, 0), 12));
+		list.add(new EmplacementHitboxEntity(entity, "barrelLeft", 0.5f, 0.5f,
+				new Vec3d(-0.5, 1, 0.625), new Vec3d(-1, 0, 0), 12));
+
+		return list.toArray(new EmplacementHitboxEntity[0]);
+	}
+
+	@Override
+	public NonNullList<ItemStack> getBaseInventory()
+	{
+		return inventory;
+	}
+
+	@Override
+	public void renderStorageInventory(GuiEmplacementPageStorage gui, int mx, int my, float partialTicks, boolean first)
+	{
+
+	}
+
+	@Override
+	public void performPlatformRefill(TileEntityEmplacement te)
+	{
+		while(casingsToDrop > 0)
+		{
+			te.doProcessOutput(IIContent.itemAmmoAutocannon.getCasingStack(Math.min(casingsToDrop, 24)));
+			casingsToDrop = Math.max(casingsToDrop-24, 0);
+		}
+		for(int i = 0; i < inventoryPlatform.size(); i++)
+		{
+			te.doProcessOutput(inventoryPlatform.get(i));
+			inventoryPlatform.set(i, ItemStack.EMPTY);
+		}
+		int moved = 0;
+		for(int i = 0; i < inventory.size(); i++)
+		{
+			if(moved >= inventoryPlatform.size())
+				break;
+
+			ItemStack s = inventory.get(i);//Magazines shouldn't stack, but why not
+			if(!s.isEmpty())
+			{
+				inventoryPlatform.set(moved, s);
+				inventory.set(i, ItemStack.EMPTY);
+				moved++;
+			}
+		}
+
+		if(inventoryPlatform.stream().anyMatch(stack -> !stack.isEmpty()))
+		{
+			requiresPlatformRefill = false;
+			syncWithClient(te);
+		}
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(boolean in)
+	{
+		return in?inventoryHandler: super.getItemHandler(in);
+	}
+
+	@Override
+	public int getEnergyUpkeepCost()
+	{
+		return Autocannon.energyUpkeepCost;
+	}
+
+	@Override
+	public int getMaxHealth()
+	{
+		return Autocannon.maxHealth;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	protected Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris()
+	{
+		return new Tuple<>(EmplacementRenderer.textureAutocannon, Arrays.asList(EmplacementRenderer.modelAutocannonConstruction));
+	}
+
 }

@@ -28,8 +28,8 @@ public class MultiblockEmplacement implements IMultiblock
 {
 	static final IngredientStack[] materials = new IngredientStack[]{
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 12, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.blockConcreteDecoration, 8, IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta())),
-			new IngredientStack(new ItemStack(IIContent.blockStoneDecoration, 16, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockConcreteDecoration, 8, IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta())),
+			new IngredientStack(new ItemStack(IIContent.blockSandbags, 16, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta())),
 			new IngredientStack("slabSheetmetalIron", 9)
 	};
 	public static MultiblockEmplacement instance = new MultiblockEmplacement();
@@ -53,14 +53,14 @@ public class MultiblockEmplacement implements IMultiblock
 						if(w==1&&l==1)
 							structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(IIContent.blockConcreteDecoration, 1, IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockConcreteDecoration, 1, IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta());
 					}
 					else if(h < 5)
 					{
 						if(w==1&&l==1)
 							structure[h][l][w] = new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta());
 						else
-							structure[h][l][w] = new ItemStack(IIContent.blockStoneDecoration, 16, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta());
+							structure[h][l][w] = new ItemStack(IIContent.blockSandbags, 16, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta());
 					}
 					else
 						structure[h][l][w] = new ItemStack(IEContent.blockSheetmetalSlabs, 1, BlockTypes_MetalsAll.IRON.getMeta());
@@ -80,7 +80,7 @@ public class MultiblockEmplacement implements IMultiblock
 	@Override
 	public boolean isBlockTrigger(IBlockState state)
 	{
-		return state.getBlock()==IIContent.blockStoneDecoration&&
+		return state.getBlock()==IIContent.blockSandbags&&
 				(state.getBlock().getMetaFromState(state)==IIBlockTypes_StoneDecoration.SANDBAGS.getMeta());
 	}
 
@@ -160,14 +160,14 @@ public class MultiblockEmplacement implements IMultiblock
 						{
 							if(h > -2)
 							{
-								if(!Utils.isBlockAt(world, pos, IIContent.blockStoneDecoration, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta()))
+								if(!Utils.isBlockAt(world, pos, IIContent.blockSandbags, IIBlockTypes_StoneDecoration.SANDBAGS.getMeta()))
 								{
 									return false;
 								}
 							}
 							else
 							{
-								if(!Utils.isBlockAt(world, pos, IIContent.blockConcreteDecoration, IIBlockTypes_ConcreteDecoration.STURDY_CONCRETE_BRICKS.getMeta()))
+								if(!Utils.isBlockAt(world, pos, IIContent.blockConcreteDecoration, IIBlockTypes_ConcreteDecoration.CONCRETE_BRICKS.getMeta()))
 								{
 									return false;
 								}

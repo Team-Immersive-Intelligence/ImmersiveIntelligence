@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
@@ -31,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCalRevolver;
+import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
 public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHandler.IBullet
 {
 	//I hope Blu starts designing things that are extendable, unlike this bullet system
-	public static final int CASING = 0;
+	public static final int UNUSED = 0;
 	public static final int CORE = 1;
 	public static final int BULLET = 2;
 	public final String NAME = "revolver_1bCal";
@@ -91,7 +92,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 
 	public void makeDefault(ItemStack stack)
 	{
-		if(stack.getMetadata()!=CASING)
+		if(stack.getMetadata()!=UNUSED)
 		{
 			if(!ItemNBTHelper.hasKey(stack, "core"))
 				ItemNBTHelper.setString(stack, "core", "core_brass");
@@ -103,7 +104,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	@Override
 	public IBulletCore getCore(ItemStack stack)
 	{
-		if(stack.getMetadata()==CASING)
+		if(stack.getMetadata()==UNUSED)
 			return null;
 		if(!ItemNBTHelper.hasKey(stack, "core"))
 			makeDefault(stack);
@@ -113,7 +114,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	@Override
 	public EnumCoreTypes getCoreType(ItemStack stack)
 	{
-		if(stack.getMetadata()==CASING)
+		if(stack.getMetadata()==UNUSED)
 			return null;
 		if(!ItemNBTHelper.hasKey(stack, "core_type"))
 			makeDefault(stack);
@@ -131,10 +132,11 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	@Override
 	public void registerSprites(TextureMap map)
 	{
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+getName().toLowerCase()+"/base");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/base");
 		for(EnumCoreTypes coreType : getAllowedCoreTypes())
-			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+getName().toLowerCase()+"/core_"+coreType.getName());
-		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/"+getName().toLowerCase()+"/paint");
+			ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/"+coreType.getName());
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/paint");
+		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+getName().toLowerCase()+"/core");
 	}
 
 	@Override
@@ -180,20 +182,25 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
 			//tooltip.add(getPenetrationTable(stack));
 		}
-		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", getCaliber()*16f));
+		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(),"#.#")));
 	}
 
 	private String getFormattedBulletTypeName(ItemStack stack)
 	{
 		Set<EnumComponentRole> collect = new HashSet<>();
-		collect.add(getCore(stack).getRole());
+		if(getCoreType(stack).getRole()!=null)
+			collect.add(getCoreType(stack).getRole());
 		collect.addAll(Arrays.stream(getComponents(stack)).map(IBulletComponent::getRole).collect(Collectors.toSet()));
 		StringBuilder builder = new StringBuilder();
 		for(EnumComponentRole enumComponentRole : collect)
 		{
+			if(enumComponentRole==EnumComponentRole.GENERAL_PURPOSE)
+				continue;
 			builder.append(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName()));
 			builder.append(" - ");
 		}
+		if(builder.toString().isEmpty())
+			builder.append(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
 		String s = builder.toString();
 		return I18n.format(s.substring(0, Math.max(s.length()-3, 0)));
 	}
@@ -206,7 +213,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		{
 			case BULLET:
 				return I18n.format("item.immersiveintelligence."+NAME+".bullet.name");
-			case CASING:
+			case UNUSED:
 				return I18n.format("item.immersiveintelligence."+NAME+".casing.name");
 			case CORE:
 				return I18n.format("item.immersiveintelligence."+NAME+".core.name");
@@ -322,19 +329,22 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		ArrayList<ResourceLocation> a = new ArrayList<>();
 		if(stack.getMetadata()==BULLET)
 		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/base"));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_"+getCoreType(stack).getName()));
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
 			if(getPaintColor(stack)!=-1)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/paint"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 
 		}
 		else if(stack.getMetadata()==CORE)
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/"+NAME.toLowerCase()+"/core_"+getCoreType(stack).getName()));
+		{
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
+			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+		}
 		return a;
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
 		return 0.125f;
 	}
@@ -342,7 +352,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	@Override
 	public int getGunpowderNeeded()
 	{
-		return 6;
+		return 25;
 	}
 
 	@Override
@@ -358,15 +368,21 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	}
 
 	@Override
+	public float getDefaultVelocity()
+	{
+		return 6f;
+	}
+
+	@Override
 	public float getCaliber()
 	{
-		return 0.0625f;
+		return 1f;
 	}
 
 	@Override
 	public @Nonnull Class<? extends IBulletModel> getModel()
 	{
-		return ModelBullet1bCalRevolver.class;
+		return ModelBullet1bCal.class;
 	}
 
 	@Override
@@ -399,7 +415,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	{
 		Vec3d vec = new Vec3d(projectile.motionX, projectile.motionY, projectile.motionZ).normalize();
 		Vec3d vv = projectile.getPositionVector();
-		EntityBullet e = BulletHelper.createBullet(projectile.world, cartridge, vv, vec, 6f);
+		EntityBullet e = BulletHelper.createBullet(projectile.world, cartridge, vv, vec);
 		if(shooter!=null)
 			e.setShooters(shooter);
 		return e;
@@ -414,7 +430,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	@Override
 	public ItemStack getCasing(ItemStack stack)
 	{
-		return BulletHandler.emptyCasing;
+		return BulletHandler.emptyCasing.copy();
 	}
 
 	@Override

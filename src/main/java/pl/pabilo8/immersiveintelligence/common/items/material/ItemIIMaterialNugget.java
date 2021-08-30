@@ -16,7 +16,8 @@ public class ItemIIMaterialNugget extends ItemIIBase
 				"platinum",
 				"tungsten",
 				"zinc",
-				"silicon"
+				"silicon",
+				"duraluminium"
 		);
 	}
 }

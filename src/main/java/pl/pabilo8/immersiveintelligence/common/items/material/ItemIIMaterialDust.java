@@ -20,7 +20,8 @@ public class ItemIIMaterialDust extends ItemIIBase
 				"fluorite",
 				"quartz",
 				"quartz_dirty",
-				"phosphorus"
+				"phosphorus",
+				"duraluminium"
 		);
 	}
 }

@@ -3,12 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.ammunition_system;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityFlare;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
  * @author Pabilo8
@@ -35,12 +37,13 @@ public class BulletComponentFlarePowder extends BulletComponentTracerPowder
 	}
 
 	@Override
-	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
 		if(world.isRemote)
 			return;
+		world.playSound(null,pos.x, pos.y+1f, pos.z, IISounds.explosion_flare, SoundCategory.NEUTRAL,4,0.5f);
 		EntityFlare flare = new EntityFlare(world, getNBTColour(tag));
-		flare.setPosition(bullet.posX, bullet.posY+1f, bullet.posZ);
+		flare.setPosition(pos.x, pos.y+1f, pos.z);
 		world.spawnEntity(flare);
 	}
 }

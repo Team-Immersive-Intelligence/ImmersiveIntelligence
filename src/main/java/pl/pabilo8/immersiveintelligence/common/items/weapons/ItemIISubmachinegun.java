@@ -38,12 +38,14 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemReloadMagazine;
+import pl.pabilo8.immersiveintelligence.common.network.MessageParticleGunfire;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -240,16 +242,26 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 				Vec3d vec = Utils.getVectorForRotation(player.rotationPitch-recoilH, player.rotationYaw+recoilV);
 				Vec3d vv = player.getPositionVector().addVector(0, (double)player.getEyeHeight()-0.10000000149011612D, 0);
+
+
 				ItemStack s2 = ItemIIBulletMagazine.takeBullet(magazine);
+
+				EntityBullet a = BulletHelper.createBullet(worldIn, s2, vv, vec);
+				a.setShooters(player);
+				worldIn.spawnEntity(a);
 
 				boolean supressor = getUpgrades(stack).hasKey("suppressor");
 				float noise = supressor?0.25f: 1f;
 				blusunrize.immersiveengineering.common.util.Utils.attractEnemies(player, 36*noise);
 
 				worldIn.playSound(null, player.posX+vec.x, player.posY+vec.y, player.posZ+vec.z, IISounds.submachinegun_shot, SoundCategory.PLAYERS, 1.5f*noise, supressor?0.75f:0f);
-				EntityBullet a = BulletHelper.createBullet(worldIn, s2, vv, vec, 6.5f);
-				a.setShooters(player);
-				worldIn.spawnEntity(a);
+
+				//.add(vec.addVector(0,0.10000000149011612D,0).normalize().scale(1.5f))
+				IIPacketHandler.INSTANCE.sendToAllAround(
+						new MessageParticleGunfire(vv.add(vv.normalize().rotateYaw(90f).scale(-0.25)), vec),
+						Utils.targetPointFromEntity(player,32));
+
+
 
 				if(count%3==0)
 				{
@@ -274,6 +286,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				}
 				if(!cc.isEmpty())
 					blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(worldIn, player.getPosition(), cc);
+
 			}
 
 		}

@@ -14,6 +14,7 @@ public class RadioNetwork
 	public static RadioNetwork INSTANCE = new RadioNetwork();
 
 	ArrayList<IRadioDevice> devices = new ArrayList<>();
+	ArrayList<IRadioDevice> toRemove = new ArrayList<>();
 
 	public boolean addDevice(IRadioDevice pos)
 	{
@@ -27,9 +28,9 @@ public class RadioNetwork
 
 	public boolean removeDevice(IRadioDevice pos)
 	{
-		if(devices.contains(pos))
+		if(!toRemove.contains(pos))
 		{
-			devices.remove(pos);
+			toRemove.add(pos);
 			return true;
 		}
 		return false;
@@ -50,6 +51,12 @@ public class RadioNetwork
 	//Simulates radio transmission in a recursive way
 	public void sendPacket(DataPacket packet, IRadioDevice sender, ArrayList<IRadioDevice> list)
 	{
+		if(toRemove.size() > 0)
+		{
+			//prevents crashing by recursion
+			list.addAll(toRemove);
+			devices.removeAll(toRemove);
+		}
 		if(!list.contains(sender))
 		{
 			sender.onRadioSend(packet);

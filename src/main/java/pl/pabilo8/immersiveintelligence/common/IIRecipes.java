@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.ComparableItemStack;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockMetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
@@ -25,11 +24,11 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Ore;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_SmallCrate;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeCrateConversion;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletBase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -223,11 +222,27 @@ public class IIRecipes
 
 	public static void addBulletPressRecipes()
 	{
-		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoArtillery, 1, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass", 4), Utils.getStackWithMetaName(IIContent.itemPressMold, "howitzer"), 2800);
-		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoLightArtillery, 1, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass", 3), Utils.getStackWithMetaName(IIContent.itemPressMold, "light_howitzer"), 2200);
-		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemGrenade, 1, ItemIIBulletBase.CASING), new IngredientStack("nuggetBrass", 5), Utils.getStackWithMetaName(IIContent.itemPressMold, "grenade"), 1800);
-		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoMachinegun, 3, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "machinegun"), 1600);
-		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemAmmoSubmachinegun, 6, ItemIIBulletBase.CASING), new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "submachinegun"), 1200);
+
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "artillery_8bcal", 1),
+				new IngredientStack("plateSteel", 4), Utils.getStackWithMetaName(IIContent.itemPressMold, "howitzer"), 2800);
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "mortar_6bCal", 1),
+				new IngredientStack("plateSteel", 3), Utils.getStackWithMetaName(IIContent.itemPressMold, "mortar"), 2500);
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "light_artillery_6bcal", 1),
+				new IngredientStack("plateSteel", 3), Utils.getStackWithMetaName(IIContent.itemPressMold, "light_howitzer"), 2200);
+
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "mg_2bcal", 1),
+				new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "machinegun"), 1600);
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "stg_1bcal", 1),
+				new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "submachinegun"), 1400);
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "submachinegun_1bcal", 1),
+				new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "submachinegun"), 1200);
+
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "naval_mine", 1),
+				new IngredientStack("plateSteel", 4), Utils.getStackWithMetaName(IIContent.itemPressMold, "naval_mine"), 4800);
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "tripmine", 1),
+				new IngredientStack("plateBrass", 2), Utils.getStackWithMetaName(IIContent.itemPressMold, "tripmine"), 3600);
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "tellermine", 1),
+				new IngredientStack("plateBrass", 2), Utils.getStackWithMetaName(IIContent.itemPressMold, "tellermine"), 3600);
 
 		MetalPressRecipe.removeRecipes(new ItemStack(IEContent.itemBullet, 2, 0));
 		MetalPressRecipe.addRecipe(new ItemStack(IEContent.itemBullet, 2, 0), "ingotBrass", new ItemStack(IEContent.itemMold, 1, 3), 2800);
@@ -522,11 +537,11 @@ public class IIRecipes
 	private static void addBathingCleaningRecipe(ItemStack out, IngredientStack in, int amount, int energy, int time, boolean allowWater, boolean allowSulfuric, boolean allowHFl)
 	{
 		if(allowWater)
-			BathingRecipe.addRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time);
+			BathingRecipe.addWashingRecipe(out, in, new FluidStack(FluidRegistry.WATER, amount), energy, time);
 		if(allowSulfuric)
-			BathingRecipe.addRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time);
+			BathingRecipe.addWashingRecipe(out, in, new FluidStack(IIContent.fluidSulfuricAcid, allowWater?amount/2: amount), allowWater?energy/2: energy, allowWater?time/2: time);
 		if(allowHFl)
-			BathingRecipe.addRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2);
+			BathingRecipe.addWashingRecipe(out, in, new FluidStack(IIContent.fluidHydrofluoricAcid, amount/2), allowWater?energy/4: energy/2, allowWater?time/4: time/2);
 	}
 
 	public static void addUpgradeRecipes()
@@ -561,48 +576,98 @@ public class IIRecipes
 				.setRequiredProgress(40000)
 				.setRequiredSteps(10);
 
+		IIContent.UPGRADE_RADIO_LOCATORS
+				.addStack(new IngredientStack("plateSteel", 4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemRadioConfigurator, 2, 1)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
+				.setRequiredProgress(250000)
+				.setRequiredSteps(1);
+
 		//Weapons - Basic Tier
 
-		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
-				.addStack(new IngredientStack("blockGlassRed",1))
-				.addStack(new IngredientStack("blockGlass",1))
-				.addStack(new IngredientStack("blockSteel",2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
-				.addStack(new IngredientStack("circuitBasic",4))
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN
+				.addStack(new IngredientStack(new ItemStack(IIContent.blockSandbags, 4))) //Sandbags
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemMachinegun, 2)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.addStack(new IngredientStack("circuitBasic", 4))
 				.setRequiredProgress(40000);
 
-		//Weapons - Basic Tier
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER
+				.addStack(new IngredientStack("blockGlassRed", 1))
+				.addStack(new IngredientStack("blockGlass", 1))
+				.addStack(new IngredientStack("blockSteel", 2))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.addStack(new IngredientStack("circuitBasic", 6))
+				.setRequiredProgress(40000);
+
+		//Weapons - Advanced Tier
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 14)))
-				.addStack(new IngredientStack("blockSteel",2))
+				.addStack(new IngredientStack("blockSteel", 2))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
-				.addStack(new IngredientStack("circuitAdvanced",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.addStack(new IngredientStack("circuitAdvanced", 6))
 				.setRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)))
-				.addStack(new IngredientStack("blockSteel",1))
-				.addStack(new IngredientStack("circuitAdvanced",4))
+				.addStack(new IngredientStack("blockSteel", 1))
+				.addStack(new IngredientStack("circuitAdvanced", 6))
 				.setRequiredProgress(80000);
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 1, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
-				.addStack(new IngredientStack("blockSteel",1))
+				.addStack(new IngredientStack("blockSteel", 1))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
-				.addStack(new IngredientStack("circuitAdvanced",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.addStack(new IngredientStack("circuitAdvanced", 6))
 				.setRequiredProgress(80000);
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 8, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 8, BlockTypes_MetalDecoration0.COIL_HV.getMeta())))
+				.addStack(new IngredientStack("circuitAdvanced", 6))
+				.setRequiredProgress(120000);
+
+		/*
+		IIContent.UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 4, BlockTypes_MetalDevice1.FLOODLIGHT.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration1, 3, BlockTypes_MetalDecoration1.STEEL_SCAFFOLDING_0.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 4, 9)))
+				.addStack(new IngredientStack("circuitAdvanced",6))
+				.setRequiredProgress(80000);
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_MORTAR
+				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.addStack(new IngredientStack("blockSteel",2))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
+				.addStack(new IngredientStack("circuitBasic",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 2, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.addStack(new IngredientStack("circuitAdvanced",4))
+				.setRequiredProgress(160000);
+
+		IIContent.UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER
+				.addStack(new IngredientStack((new ItemStack(IEContent.blockMetalDevice1, 2, BlockTypes_MetalDevice1.FLUID_PIPE.getMeta()))))
+				.addStack(new IngredientStack("blockSteel",2))
+				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 3, 9)))
+				.addStack(new IngredientStack("circuitBasic",4))
+				.addStack(new IngredientStack(new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta())))
+				.addStack(new IngredientStack("circuitAdvanced",4))
+				.setRequiredProgress(160000);
+		 */
 
 		//Weapons - Processor Tier
 
 		IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 8, 14)))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 9)))
-				.addStack(new IngredientStack("blockSteel",3))
-				.addStack(new IngredientStack("circuitProcessor",4))
+				.addStack(new IngredientStack("blockSteel", 3))
+				.addStack(new IngredientStack("circuitProcessor", 6))
 				.setRequiredProgress(300000);
 	}
 
@@ -611,46 +676,46 @@ public class IIRecipes
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
 				new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.ZINC.getMeta()),
-				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"zinc"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "zinc"),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				Utils.getStackWithMetaName(IIContent.itemMaterialDust,"zinc"),
-				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"zinc"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialDust, "zinc"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "zinc"),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				Utils.getStackWithMetaName(IIContent.itemMaterialDust,"brass"),
-				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"brass"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialDust, "brass"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "brass"),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
 				new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.PLATINUM.getMeta()),
-				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"platinum"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "platinum"),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				Utils.getStackWithMetaName(IIContent.itemMaterialDust,"platinum"),
-				Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"platinum"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialDust, "platinum"),
+				Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "platinum"),
 				0.5F);
 
 		if(IIConfig.smeltableTungsten)
 		{
 			FurnaceRecipes.instance().addSmeltingRecipe(
 					new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.TUNGSTEN.getMeta()),
-					Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"tungsten"),
+					Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "tungsten"),
 					0.5F);
 
 			FurnaceRecipes.instance().addSmeltingRecipe(
-					Utils.getStackWithMetaName(IIContent.itemMaterialDust,"tungsten"),
-					Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"tungsten"),
+					Utils.getStackWithMetaName(IIContent.itemMaterialDust, "tungsten"),
+					Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "tungsten"),
 					0.5F);
 		}
 
 		if(IIConfig.smeltableAEA)
 			FurnaceRecipes.instance().addSmeltingRecipe(
-					Utils.getStackWithMetaName(IIContent.itemMaterialDust,"advanced_electronic_alloy"),
-					Utils.getStackWithMetaName(IIContent.itemMaterialIngot,"advanced_electronic_alloy"),
+					Utils.getStackWithMetaName(IIContent.itemMaterialDust, "advanced_electronic_alloy"),
+					Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "advanced_electronic_alloy"),
 					0.5F);
 	}
 
@@ -668,13 +733,14 @@ public class IIRecipes
 
 	public static void addAmmunitionCasingRecipes()
 	{
-		CasingFillerRecipe.recipeList.clear();
-		CasingFillerRecipe.addRecipe(IIContent.itemAmmoArtillery, 160, 8000);
-		CasingFillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
-		CasingFillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
-		CasingFillerRecipe.addRecipe(IIContent.itemAmmoMachinegun, 60, 800);
-		CasingFillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
-		CasingFillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
+		FillerRecipe.recipeList.clear();
+		FillerRecipe.addRecipe(IIContent.itemAmmoArtillery, 160, 8000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoMachinegun, 60, 800);
+		FillerRecipe.addRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
+		FillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
+		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
 	}
 
 	public static void addRubberRecipes()
@@ -685,21 +751,21 @@ public class IIRecipes
 				new IngredientStack("rubberRaw"),
 				compMoldPlate,
 				2400
-				);
+		);
 
-		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_belt",4),
+		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_belt", 4),
 				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemVulcanizerMold, "belt")),
-				new IngredientStack("plateRubber",10),
-				new IngredientStack("dustVulcanizationCompound",4),
-				new IngredientStack("dustSulfur",3),
+				new IngredientStack("plateRubber", 10),
+				new IngredientStack("dustVulcanizationCompound", 4),
+				new IngredientStack("dustSulfur", 3),
 				24000
 		);
 
-		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_tire",3),
+		VulcanizerRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_tire", 3),
 				new ComparableItemStack(Utils.getStackWithMetaName(IIContent.itemVulcanizerMold, "tire")),
-				new IngredientStack("plateRubber",10),
-				new IngredientStack("dustVulcanizationCompound",8),
-				new IngredientStack("dustSulfur",3),
+				new IngredientStack("plateRubber", 10),
+				new IngredientStack("dustVulcanizationCompound", 8),
+				new IngredientStack("dustSulfur", 3),
 				32000
 		);
 	}

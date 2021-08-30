@@ -40,9 +40,7 @@ public class DataPacketTypeNull implements IDataType
 	@Override
 	public NBTTagCompound valueToNBT()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("Type", "null");
-		return nbt;
+		return getHeaderTag();
 	}
 
 	@Override

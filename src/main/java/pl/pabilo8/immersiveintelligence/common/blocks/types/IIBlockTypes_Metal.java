@@ -10,7 +10,8 @@ public enum IIBlockTypes_Metal implements IStringSerializable, BlockIEBase.IBloc
 	PLATINUM,
 	ZINC,
 	TUNGSTEN,
-	BRASS;
+	BRASS,
+	DURALUMINIUM;
 
 	/**
 	 * @author Pabilo8

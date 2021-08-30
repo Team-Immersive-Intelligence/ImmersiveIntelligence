@@ -49,10 +49,9 @@ public class DataPacketTypeItemStack implements IDataType
 	@Override
 	public NBTTagCompound valueToNBT()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound nbt = getHeaderTag();
 		NBTTagCompound item_nbt = new NBTTagCompound();
 		value.writeToNBT(item_nbt);
-		nbt.setString("Type", "itemstack");
 		nbt.setTag("Value", item_nbt);
 		return nbt;
 	}

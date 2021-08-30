@@ -7,7 +7,9 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
+import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 
 /**
  * @author Pabilo8
@@ -17,102 +19,69 @@ public class ModelTellermine extends ModelIIBase implements IBulletModel
 {
 	int textureX = 32;
 	int textureY = 32;
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine.png";
+	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/mine/tellermine.png";
 
 	public ModelRendererTurbo[] coreModel;
 
 	public ModelTellermine() //Same as Filename
 	{
-		baseModel = new ModelRendererTurbo[9];
-		baseModel[0] = new ModelRendererTurbo(this, 8, 23, textureX, textureY); // Canister02
-		baseModel[1] = new ModelRendererTurbo(this, 0, 16, textureX, textureY); // Canister03
-		baseModel[2] = new ModelRendererTurbo(this, 12, 9, textureX, textureY); // Canister04
-		baseModel[3] = new ModelRendererTurbo(this, 8, 9, textureX, textureY); // Canister05
-		baseModel[4] = new ModelRendererTurbo(this, 4, 9, textureX, textureY); // Canister06
-		baseModel[5] = new ModelRendererTurbo(this, 0, 9, textureX, textureY); // Canister07
-		baseModel[6] = new ModelRendererTurbo(this, 0, 23, textureX, textureY); // Canister08
-		baseModel[7] = new ModelRendererTurbo(this, 8, 16, textureX, textureY); // Canister09
-		baseModel[8] = new ModelRendererTurbo(this, 4, 5, textureX, textureY); // Canister10
+		baseModel = new ModelRendererTurbo[10];
+		baseModel[0] = new ModelRendererTurbo(this, 0, 18, textureX, textureY); // Shape 1
+		baseModel[1] = new ModelRendererTurbo(this, 12, 18, textureX, textureY); // Box 2
+		baseModel[2] = new ModelRendererTurbo(this, 12, 23, textureX, textureY); // Box 2
+		baseModel[3] = new ModelRendererTurbo(this, 12, 20, textureX, textureY); // Box 2
+		baseModel[4] = new ModelRendererTurbo(this, 12, 20, textureX, textureY); // Box 2
+		baseModel[5] = new ModelRendererTurbo(this, 12, 18, textureX, textureY); // Box 2
+		baseModel[6] = new ModelRendererTurbo(this, 12, 23, textureX, textureY); // Box 2
+		baseModel[7] = new ModelRendererTurbo(this, 12, 20, textureX, textureY); // Box 2
+		baseModel[8] = new ModelRendererTurbo(this, 12, 20, textureX, textureY); // Box 2
+		baseModel[9] = new ModelRendererTurbo(this, 0, 18, textureX, textureY); // Shape 1
 
-		baseModel[0].addShapeBox(0F, 0F, 0F, 1, 6, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Canister02
-		baseModel[0].setRotationPoint(6F, 0F, 5.9F);
+		baseModel[0].addShape3D(0F, -6F, -2F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(6, 2, 6, 2), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12) }), 2, 6, 12, 34, 2, ModelRendererTurbo.MR_FRONT, new float[] {12 ,4 ,3 ,8 ,3 ,4}); // Shape 1
+		baseModel[0].setRotationPoint(0F, 0F, 0F);
+		baseModel[0].rotateAngleX = 1.57079633F;
 
-		baseModel[1].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Canister03
-		baseModel[1].setRotationPoint(7F, 0F, 8.9F);
+		baseModel[1].addShapeBox(1F, -3F, -2F, 4, 1, 1, 0F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F); // Box 2
+		baseModel[1].setRotationPoint(-3F, 0F, -4F);
 
-		baseModel[2].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Canister04
-		baseModel[2].setRotationPoint(6F, 0F, 4.9F);
+		baseModel[2].addBox(0F, -0.65F, -2.25F, 2, 1, 1, 0F); // Box 2
+		baseModel[2].setRotationPoint(-1F, -2.5F, -5.5F);
+		baseModel[2].rotateAngleX = 0.45378561F;
 
-		baseModel[3].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F); // Canister05
-		baseModel[3].setRotationPoint(10F, 0F, 4.9F);
+		baseModel[3].addShapeBox(0F, -0.65F, -2.25F, 1, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		baseModel[3].setRotationPoint(1F, -2.5F, -5.5F);
+		baseModel[3].rotateAngleX = 0.45378561F;
 
-		baseModel[4].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F); // Canister06
-		baseModel[4].setRotationPoint(10F, 0F, 8.9F);
+		baseModel[4].addShapeBox(0F, -0.65F, -2.25F, 1, 1, 2, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		baseModel[4].setRotationPoint(-2F, -2.5F, -5.5F);
+		baseModel[4].rotateAngleX = 0.45378561F;
 
-		baseModel[5].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F); // Canister07
-		baseModel[5].setRotationPoint(6F, 0F, 8.9F);
+		baseModel[5].addShapeBox(1F, -3F, -2F, 4, 1, 1, 0F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F, 0.01F); // Box 2
+		baseModel[5].setRotationPoint(-3F, 0F, 7F);
 
-		baseModel[6].addShapeBox(0F, 0F, 0F, 1, 6, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Canister08
-		baseModel[6].setRotationPoint(10F, 0F, 5.9F);
+		baseModel[6].addBox(0F, -0.35F, -2.25F, 2, 1, 1, 0F); // Box 2
+		baseModel[6].setRotationPoint(-1F, -2.5F, 5.5F);
+		baseModel[6].rotateAngleX = -3.47320521F;
 
-		baseModel[7].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Canister09
-		baseModel[7].setRotationPoint(7F, 0F, 4.9F);
+		baseModel[7].addShapeBox(0F, -0.35F, -2.25F, 1, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		baseModel[7].setRotationPoint(1F, -2.5F, 5.5F);
+		baseModel[7].rotateAngleX = -3.47320521F;
 
-		baseModel[8].addShapeBox(0F, 0F, 0F, 3, 1, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Canister10
-		baseModel[8].setRotationPoint(7F, 5F, 5.9F);
+		baseModel[8].addShapeBox(0F, -0.35F, -2.25F, 1, 1, 2, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		baseModel[8].setRotationPoint(-2F, -2.5F, 5.5F);
+		baseModel[8].rotateAngleX = -3.47320521F;
+
+		baseModel[9].addShape3D(0F, -6F, -2F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(6, 2, 6, 2), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12) }), 2, 6, 12, 34, 2, ModelRendererTurbo.MR_FRONT, new float[] {12 ,4 ,3 ,8 ,3 ,4}); // Shape 1
+		baseModel[9].setRotationPoint(0F, 0F, 0F);
+		baseModel[9].rotateAngleX = 1.57079633F;
+		baseModel[9].rotateAngleY = -3.14159265F;
 
 
-		coreModel = new ModelRendererTurbo[11];
-		coreModel[0] = new ModelRendererTurbo(this, 20, 23, textureX, textureY); // MineItself02
-		coreModel[1] = new ModelRendererTurbo(this, 16, 19, textureX, textureY); // MineItself03
-		coreModel[2] = new ModelRendererTurbo(this, 16, 27, textureX, textureY); // MineItself04
-		coreModel[3] = new ModelRendererTurbo(this, 28, 21, textureX, textureY); // MineItself05
-		coreModel[4] = new ModelRendererTurbo(this, 28, 21, textureX, textureY); // MineItself06
-		coreModel[5] = new ModelRendererTurbo(this, 28, 21, textureX, textureY); // MineItself07
-		coreModel[6] = new ModelRendererTurbo(this, 17, 24, textureX, textureY); // MineItself09
-		coreModel[7] = new ModelRendererTurbo(this, 17, 24, textureX, textureY); // MineItself10
-		coreModel[8] = new ModelRendererTurbo(this, 28, 21, textureX, textureY); // MineItself11
-		coreModel[9] = new ModelRendererTurbo(this, 28, 21, textureX, textureY); // MineItself05
-		coreModel[10] = new ModelRendererTurbo(this, 17, 24, textureX, textureY); // MineItself10
+		coreModel = new ModelRendererTurbo[1];
+		coreModel[0] = new ModelRendererTurbo(this, 0, 8, textureX, textureY); // Box 2
 
-		coreModel[0].addShapeBox(0F, 0F, 0F, 3, 6, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself02
-		coreModel[0].setRotationPoint(7F, -0.01F, 6F);
-
-		coreModel[1].addShapeBox(0F, 0F, 0F, 3, 1, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself03
-		coreModel[1].setRotationPoint(7F, -1F, 5.9F);
-
-		coreModel[2].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself04
-		coreModel[2].setRotationPoint(8F, -4.2F, 6.9F);
-
-		coreModel[3].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself05
-		coreModel[3].setRotationPoint(8F, -1.2F, 5.8F);
-
-		coreModel[4].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself06
-		coreModel[4].setRotationPoint(9.1F, -1.2F, 6.9F);
-
-		coreModel[5].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself07
-		coreModel[5].setRotationPoint(6.9F, -1.2F, 6.9F);
-
-		coreModel[6].addShapeBox(0F, 0F, 0F, 2, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself09
-		coreModel[6].setRotationPoint(8F, -4.2F, 7.2F);
-		coreModel[6].rotateAngleY = -0.78539816F;
-		coreModel[6].rotateAngleZ = 0.78539816F;
-
-		coreModel[7].addShapeBox(0F, 0F, 0F, 2, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself10
-		coreModel[7].setRotationPoint(8.4F, -4.2F, 7.9F);
-		coreModel[7].rotateAngleY = 3.66519143F;
-		coreModel[7].rotateAngleZ = 0.78539816F;
-
-		coreModel[8].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself11
-		coreModel[8].setRotationPoint(8F, -5F, 6.9F);
-
-		coreModel[9].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself05
-		coreModel[9].setRotationPoint(8F, -1.2F, 8F);
-
-		coreModel[10].addShapeBox(0F, 0F, -0.5F, 2, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // MineItself10
-		coreModel[10].setRotationPoint(8.5F, -4.2F, 7.4F);
-		coreModel[10].rotateAngleY = 1.53588974F;
-		coreModel[10].rotateAngleZ = 0.78539816F;
+		coreModel[0].addBox(0F, -3F, 0F, 8, 2, 8, 0F); // Box 2
+		coreModel[0].setRotationPoint(-4F, 0F, -4F);
 
 		parts.put("base",baseModel);
 		parts.put("core",coreModel);
@@ -138,5 +107,12 @@ public class ModelTellermine extends ModelIIBase implements IBulletModel
 		GlStateManager.color(c[0], c[1], c[2]);
 		for(ModelRendererTurbo mod : coreModel)
 			mod.render();
+	}
+
+	public void reloadModels()
+	{
+		ModelTellermine newModel = new ModelTellermine();
+		this.baseModel = newModel.baseModel;
+		this.coreModel = newModel.coreModel;
 	}
 }

@@ -39,12 +39,6 @@ public class BulletCorePabilium implements IBulletCore
 	}
 
 	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.SPECIAL;
-	}
-
-	@Override
 	public float getExplosionModifier()
 	{
 		return 6.5f;

@@ -6,7 +6,9 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerElectrolyzer;
 
@@ -55,8 +57,7 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 
 		this.drawTexturedModalRect(guiLeft+50, guiTop+21, 196, 0, 15, 51);
 
-		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		ClientUtils.drawGradientRect(guiLeft+161, guiTop+24+(47-stored), guiLeft+168, guiTop+71, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(guiLeft+161, guiTop+24,7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		if(tile.active&&tile.processTimeMax!=0)
 		{
@@ -71,7 +72,7 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 		super.drawScreen(mx, my, partial);
 		this.renderHoveredToolTip(mx, my);
 
-		ArrayList<String> tooltip = new ArrayList();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+32, guiTop+23, 16, 47, 176, 0, 20, 51, mx, my, texture_electrolyzer, tooltip);
 
@@ -79,7 +80,7 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 		ClientUtils.handleGuiTank(tile.tanks[2], guiLeft+90, guiTop+55, 45, 16, 176, 51, 49, 20, mx, my, texture_electrolyzer, tooltip);
 
 		if(mx > guiLeft+161&&mx < guiLeft+168&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(tile.getEnergyStored(null)+"/"+tile.getMaxEnergyStored(null)+" IF");
+			tooltip.add(Utils.getPowerLevelString(tile));
 
 		if(!tooltip.isEmpty())
 		{

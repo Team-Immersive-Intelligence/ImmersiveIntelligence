@@ -5,19 +5,19 @@ import blusunrize.immersiveengineering.common.gui.IESlot.Output;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine.FilteredPunchtape;
+import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine.FilteredDataInput;
 
 /**
  * @author Pabilo8
  * @since 30-06-2019
  */
-public class ContainerDataInputMachineVariables extends ContainerIEBase
+public class ContainerDataInputMachineVariables extends ContainerIEBase<TileEntityDataInputMachine>
 {
 	public ContainerDataInputMachineVariables(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile)
 	{
 		super(inventoryPlayer, tile);
 
-		this.addSlotToContainer(new FilteredPunchtape(this, this.inv, 0, 5, 21));
+		this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 5, 21));
 		this.addSlotToContainer(new Output(this, this.inv, 1, 5, 100));
 
 		this.slotCount=tile.getInventory().size();

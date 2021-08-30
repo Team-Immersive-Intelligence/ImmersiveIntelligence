@@ -34,10 +34,15 @@ item.immersiveintelligence.binoculars.infrared_binoculars.name=Infrared Binocula
 item.immersiveintelligence.assembly_scheme.name=Assembly Scheme
 
 item.immersiveintelligence.press_mold.howitzer.name=Metal Press Mold: Artillery Shell Casing
+item.immersiveintelligence.press_mold.light_howitzer.name=Metal Press Mold: Light Artillery Shell Casing
+item.immersiveintelligence.press_mold.mortar.name=Metal Press Mold: Mortar Shell Casing
+item.immersiveintelligence.press_mold.autocannon.name=Metal Press Mold: Autocannon Shell Casing
 item.immersiveintelligence.press_mold.machinegun.name=Metal Press Mold: Machinegun Bullet Casing
+item.immersiveintelligence.press_mold.assault_rifle.name=Metal Press Mold: Assault Rifle Bullet Casing
 item.immersiveintelligence.press_mold.submachinegun.name=Metal Press Mold: Submachinegun Bullet Casing
-item.immersiveintelligence.press_mold.grenade.name=Metal Press Mold: Grenade
-item.immersiveintelligence.press_mold.light_howitzer.name=Metal Press Mold: Light Howitzer Shell Casing
+item.immersiveintelligence.press_mold.naval_mine.name=Metal Press Mold: Naval Mine Casing
+item.immersiveintelligence.press_mold.tripmine.name=Metal Press Mold: Tripmine Casing
+item.immersiveintelligence.press_mold.tellermine.name=Metal Press Mold: Landmine Casing
 
 item.immersiveintelligence.vulcanizer_mold.belt.name=Vulcanizer Mold: Belt
 item.immersiveintelligence.vulcanizer_mold.tire.name=Vulcanizer Mold: Tire
@@ -49,6 +54,13 @@ item.immersiveintelligence.material_ingot.brass.name=Brass Ingot
 item.immersiveintelligence.material_ingot.advanced_electronic_alloy.name=Advanced Electronic Alloy Ingot
 item.immersiveintelligence.material_ingot.silicon.name=Silicon Ingot
 item.immersiveintelligence.material_ingot.magnet.name=Magnet
+item.immersiveintelligence.material_ingot.duraluminium.name=Duraluminium Ingot
+
+item.immersiveintelligence.material_rod.brass.name=Brass Rod
+item.immersiveintelligence.material_rod.tungsten.name=Tungsten Rod
+item.immersiveintelligence.material_rod.zinc.name=Zinc Rod
+item.immersiveintelligence.material_rod.platinum.name=Platinum Rod
+item.immersiveintelligence.material_rod.duraluminium.name=Duraluminium Rod
 
 item.immersiveintelligence.material_dust.platinum.name=Platinum Grit
 item.immersiveintelligence.material_dust.zinc.name=Zinc Grit
@@ -60,6 +72,7 @@ item.immersiveintelligence.material_dust.fluorite.name=Fluorite Dust
 item.immersiveintelligence.material_dust.quartz.name=Quartz Dust
 item.immersiveintelligence.material_dust.quartz_dirty.name=Dirty Quartz Dust
 item.immersiveintelligence.material_dust.phosphorus.name=Phosphorus Dust
+item.immersiveintelligence.material_dust.duraluminium.name=Duraluminium Grit
 
 item.immersiveintelligence.material_plate.platinum.name=Platinum Plate
 item.immersiveintelligence.material_plate.zinc.name=Zinc Plate
@@ -68,6 +81,7 @@ item.immersiveintelligence.material_plate.brass.name=Brass Plate
 item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Advanced Electronic Alloy Plate
 item.immersiveintelligence.material_plate.silicon.name=Silicon Wafer
 item.immersiveintelligence.material_plate.rubber.name=Natural Rubber Sheet
+item.immersiveintelligence.material_plate.duraluminium.name=Duraluminium Plate
 
 item.immersiveintelligence.material_nugget.platinum.name=Platinum Nugget
 item.immersiveintelligence.material_nugget.zinc.name=Zinc Nugget
@@ -75,6 +89,7 @@ item.immersiveintelligence.material_nugget.tungsten.name=Tungsten Nugget
 item.immersiveintelligence.material_nugget.brass.name=Brass Nugget
 item.immersiveintelligence.material_nugget.advanced_electronic_alloy.name=Advanced Electronic Alloy Nugget
 item.immersiveintelligence.material_nugget.silicon.name=Silicon Piece
+item.immersiveintelligence.material_nugget.duraluminium.name=Duraluminium Nugget
 
 item.immersiveintelligence.material_wire.tungsten.name=Tungsten Wire
 
@@ -118,6 +133,10 @@ item.immersiveintelligence.circuit_functional.comparator.name=Comparator Circuit
 item.immersiveintelligence.circuit_functional.advanced_logic.name=Advanced Logic Circuit
 item.immersiveintelligence.circuit_functional.text.name=Text Processor Circuit
 item.immersiveintelligence.circuit_functional.itemstack.name=ItemStack Operations Circuit
+item.immersiveintelligence.circuit_functional.array.name=Array Operations Circuit
+item.immersiveintelligence.circuit_functional.entity.name=Entity Operations Circuit
+item.immersiveintelligence.circuit_functional.document.name=Document Circuit
+item.immersiveintelligence.circuit_functional.type_conversion.name=Type Conversion Circuit
 
 item.immersiveintelligence.minecart.wooden_crate.name=Minecart with Wooden Crate
 item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforced Crate
@@ -141,11 +160,11 @@ item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
 item.immersiveintelligence.trench_shovel.name=Trench Shovel
 item.immersiveintelligence.tripod_periscope.name=Tripod Periscope
 item.immersiveintelligence.mine_detector.name=Mine Detector
+item.immersiveintelligence.mortar.name=Mortar
 item.immersiveintelligence.machinegun.name=Machinegun
+item.immersiveintelligence.assault_rifle.name=Assault Rifle
 item.immersiveintelligence.submachinegun.name=Submachinegun
-item.immersiveintelligence.assault_rifle.name=Storm Rifle
 item.immersiveintelligence.autorevolver.name=Autorevolver
-item.immersiveintelligence.spigot_mortar.name=Spigot Mortar
 
 #Drillheads
 item.immersiveintelligence.drillhead.tungsten.name=Tungsten Drill Head
@@ -176,6 +195,22 @@ item.immersiveintelligence.weapon_upgrade.rifle_grenade_launcher.name=Rifle Gren
 item.immersiveintelligence.weapon_upgrade.stereoscopic_rangefinder.name=Stereoscopic Rangefinder
 
 item.immersiveintelligence.armor_upgrade.gasmask.name=Gas Mask
+item.immersiveintelligence.armor_upgrade.infiltrator_gear.name=Infiltrator's Headgear
+item.immersiveintelligence.armor_upgrade.technician_gear.name=Technician's Headgear
+item.immersiveintelligence.armor_upgrade.engineer_gear.name=Engineer's Headgear
+item.immersiveintelligence.armor_upgrade.steel_armor_plates.name=Steel Armor Plates
+item.immersiveintelligence.armor_upgrade.composite_armor_plates.name=Composite Armor Plates
+item.immersiveintelligence.armor_upgrade.hazmat_coating.name=Hazmat Coating
+item.immersiveintelligence.armor_upgrade.heat_resistant_coating.name=Heat-Resistant Coating
+item.immersiveintelligence.armor_upgrade.anti_static_mesh.name=Anti-Static Mesh
+item.immersiveintelligence.armor_upgrade.camouflage_mesh.name=Camouflage Mesh
+item.immersiveintelligence.armor_upgrade.infrared_absorbing_mesh.name=Infrared-Absorbing Mesh
+item.immersiveintelligence.armor_upgrade.scuba_tank.name=Scuba Tank
+item.immersiveintelligence.armor_upgrade.helipack.name=Helipack
+item.immersiveintelligence.armor_upgrade.exoskeleton.name=Exoskeleton
+item.immersiveintelligence.armor_upgrade.boot_reinforcement.name=Boots Reinforcement
+item.immersiveintelligence.armor_upgrade.snow_rackets.name=Snow Rackets
+item.immersiveintelligence.armor_upgrade.internal_springs.name=Internal Springs
 
 item.immersiveintelligence.tracer_powder.tracer_powder.name=Tracer Powder
 item.immersiveintelligence.tracer_powder.flare_powder.name=Flare Powder
@@ -187,9 +222,17 @@ desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
 desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
 desc.immersiveintelligence.toolupgrade.item.machinegun=Machinegun
 desc.immersiveintelligence.toolupgrade.item.submachinegun=Submachinegun
-desc.immersiveintelligence.toolupgrade.item.assault_rifle=Storm Rifle
+desc.immersiveintelligence.toolupgrade.item.mortar=Mortar
+desc.immersiveintelligence.toolupgrade.item.assault_rifle=Assault Rifle
 desc.immersiveintelligence.toolupgrade.item.autorevolver=Autorevolver
-desc.immersiveintelligence.toolupgrade.item.spigot_mortar=Spigot Mortar
+
+desc.immersiveintelligence.filled_casing=Filled with Gunpowder
+desc.immersiveintelligence.explosives_programmed=Programmed with a Data Packet
+
+desc.immersiveintelligence.toolupgrade.item.light_engineer_helmet=Engineer's Light Helmet
+desc.immersiveintelligence.toolupgrade.item.light_engineer_chestplate=Engineer's Light Chestplate
+desc.immersiveintelligence.toolupgrade.item.light_engineer_leggings=Engineer's Light Leggings
+desc.immersiveintelligence.toolupgrade.item.light_engineer_boots=Engineer's Light Boots
 
 desc.immersiveintelligence.toolupgrade.water_cooling=Uses water to cool down the MG. Increases the max amount of heat the MG can take.
 desc.immersiveintelligence.toolupgrade.heavy_barrel=Dramatically increases fire rate, has higher recoil and overheats faster.
@@ -215,7 +258,26 @@ desc.immersiveintelligence.toolupgrade.stereoscopic_rangefinder=Shows range to c
 
 desc.immersiveintelligence.toolupgrade.gasmask=Protects the user from hazardous gasses.
 
+desc.immersiveintelligence.toolupgrade.infiltrator_gear=Allows nightvision and magnification, requires energy to operate.
+desc.immersiveintelligence.toolupgrade.technician_gear=Displays tooltips, which normally require a hammer, a voltmeter or a wrench to be held, requires energy to operate.
+desc.immersiveintelligence.toolupgrade.engineer_gear=Combines the effects of Infiltrator's and Technician's headgears into one device. Increased energy consumption.
+desc.immersiveintelligence.toolupgrade.steel_armor_plates=Slightly increase armor thickness. Can deflect arrows and other light projectiles. Up to 3 can be installed per one armor piece.
+desc.immersiveintelligence.toolupgrade.composite_armor_plates=Significantly increase armor thickness. Deflects projectiles and damages enemy melee weapons when they aren't capable of dealing enough damage to armor wearer. Up to 3 can be installed per one armor piece.
+desc.immersiveintelligence.toolupgrade.hazmat_coating=Makes the armor resistant to radiation and corrosion.
+desc.immersiveintelligence.toolupgrade.heat_resistant_coating=When combined with reinforced boots, allows for swimming in hot liquids.
+desc.immersiveintelligence.toolupgrade.anti_static_mesh=Makes wearer immune to electric damage and makes proximity fuses unable to target it. Sensitive to EMP.
+desc.immersiveintelligence.toolupgrade.camouflage_mesh=Makes wearer invisible when sneaking through foliage. Sensitive to fire.
+desc.immersiveintelligence.toolupgrade.infrared_absorbing_mesh=Makes wearer invisible to infrared-based devices. Sensitive to EMP.
+desc.immersiveintelligence.toolupgrade.scuba_tank=Can be filled with oxygen for breathing underwater and additional fuel for operating powered tools.
+desc.immersiveintelligence.toolupgrade.helipack=Allows slow, albeit stable flight. Requires gasoline.
+desc.immersiveintelligence.toolupgrade.exoskeleton=Allows faster running. Requires energy to operate.
+desc.immersiveintelligence.toolupgrade.boot_reinforcement=Makes wearer immune to fire damage. When combined with Heat-Resistant Coating, allows the wearer to swim in hot liquids.
+desc.immersiveintelligence.toolupgrade.snow_rackets=Increases walk speed on snow and stability on ice.
+desc.immersiveintelligence.toolupgrade.internal_springs=Protects wearer from falling damage. Silences wearer's steps.
+
 item.immersiveintelligence.data_wire.name=Data Cable Coil
+
+item.immersiveintelligence.trip_wire.name=Tripwire Coil
 
 item.immersiveintelligence.small_wirecoil.data.name=Small Data Cable Coil
 item.immersiveintelligence.small_wirecoil.redstone.name=Small Redstone Cable Coil
@@ -239,39 +301,40 @@ item.immersiveintelligence.sawblade.tungsten.name=Tungsten Saw Blade
 
 #bCal - Block-Caliber (1/16 Block = 1 bCal)
 #Casings
-item.immersiveintelligence.artillery_8bCal.casing.name=Artillery Shell Casing
+item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Artillery Shell Casing
 item.immersiveintelligence.artillery_8bCal.core.name=Artillery Shell Core
 item.immersiveintelligence.artillery_8bCal.bullet.name=Artillery Shell
 
-item.immersiveintelligence.mg_2bCal.casing.name=Machinegun Bullet Casing
-item.immersiveintelligence.mg_2bCal.core.name=Machinegun Bullet Core
-item.immersiveintelligence.mg_2bCal.bullet.name=Machinegun Bullet
+item.immersiveintelligence.ammo_casing.mortar_6bCal.name=Mortar Shell Casing
+item.immersiveintelligence.mortar_6bCal.core.name=Mortar Shell Core
+item.immersiveintelligence.mortar_6bCal.bullet.name=Mortar Shell
 
-item.immersiveintelligence.stg_1bCal.casing.name=Storm Rifle Bullet Casing
-item.immersiveintelligence.stg_1bCal.core.name=Storm Rifle Bullet Core
-item.immersiveintelligence.stg_1bCal.bullet.name=Storm Rifle Bullet
-
-item.immersiveintelligence.smg_1bCal.casing.name=Submachinegun Bullet Casing
-item.immersiveintelligence.smg_1bCal.core.name=Submachinegun Bullet Core
-item.immersiveintelligence.smg_1bCal.bullet.name=Submachinegun Bullet
-
-item.immersiveintelligence.revolver_1bCal.casing.name=Revolver Bullet Casing
-item.immersiveintelligence.revolver_1bCal.core.name=Revolver Bullet Core
-item.immersiveintelligence.revolver_1bCal.bullet.name=Revolver Bullet
-
-item.immersiveintelligence.artillery_6bCal.casing.name=Light Artillery Shell Casing
+item.immersiveintelligence.ammo_casing.light_artillery_6bcal.name=Light Artillery Shell Casing
 item.immersiveintelligence.artillery_6bCal.core.name=Light Artillery Shell Core
 item.immersiveintelligence.artillery_6bCal.bullet.name=Light Artillery Shell
 
-item.immersiveintelligence.autocannon_3bCal.casing.name=Autocannon Shell Casing
+item.immersiveintelligence.ammo_casing.mg_2bcal.name=Machinegun Bullet Casing
+item.immersiveintelligence.mg_2bCal.core.name=Machinegun Bullet Core
+item.immersiveintelligence.mg_2bCal.bullet.name=Machinegun Bullet
+
+item.immersiveintelligence.ammo_casing.stg_1bcal.name=Assault Rifle Bullet Casing
+item.immersiveintelligence.stg_1bCal.core.name=Assault Rifle Bullet Core
+item.immersiveintelligence.stg_1bCal.bullet.name=Assault Rifle Bullet
+
+item.immersiveintelligence.ammo_casing.smg_1bcal.name=Submachinegun Bullet Casing
+item.immersiveintelligence.smg_1bCal.core.name=Submachinegun Bullet Core
+item.immersiveintelligence.smg_1bCal.bullet.name=Submachinegun Bullet
+
+item.immersiveintelligence.revolver_1bCal.core.name=Revolver Bullet Core
+item.immersiveintelligence.revolver_1bCal.bullet.name=Revolver Bullet
+
+item.immersiveintelligence.ammo_casing.autocannon_3bcal.name=Autocannon Shell Casing
 item.immersiveintelligence.autocannon_3bCal.core.name=Autocannon Shell Core
 item.immersiveintelligence.autocannon_3bCal.bullet.name=Autocannon Shell
 
-item.immersiveintelligence.grenade_5bCal.casing.name=Hand-Grenade Stick
 item.immersiveintelligence.grenade_5bCal.core.name=Hand-Grenade Core
 item.immersiveintelligence.grenade_5bCal.bullet.name=Hand-Grenade
 
-item.immersiveintelligence.railgun_grenade_4bCal.casing.name=Railgun Grenade Rod
 item.immersiveintelligence.railgun_grenade_4bCal.core.name=Railgun Grenade Core
 item.immersiveintelligence.railgun_grenade_4bCal.bullet.name=Railgun Grenade
 
@@ -282,6 +345,7 @@ item.immersiveintelligence.bullet.component.rdx.name=RDX
 item.immersiveintelligence.bullet.component.hmx.name=HMX
 item.immersiveintelligence.bullet.component.white_phosphorus.name=White Phosphorus
 item.immersiveintelligence.bullet.component.firework.name=Fireworks
+item.immersiveintelligence.bullet.component.tesla.name=Electrostatic Charge Emitters
 item.immersiveintelligence.bullet.component.tracer_powder.name=Tracer Powder
 item.immersiveintelligence.bullet.component.flare_powder.name=Flare Powder
 
@@ -297,8 +361,9 @@ item.immersiveintelligence.bullet_magazine.machinegun.name=Machinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun.name=Submachinegun Magazine
 item.immersiveintelligence.bullet_magazine.submachinegun_drum.name=Submachinegun Drum Magazine
 item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Automatic Revolver Magazine
-item.immersiveintelligence.bullet_magazine.assault_rifle.name=Storm Rifle Magazine
-item.immersiveintelligence.bullet_magazine.autocannon_3bCal.name=3bCal Autocannon Magazine
+item.immersiveintelligence.bullet_magazine.assault_rifle.name=Assault Rifle Magazine
+item.immersiveintelligence.bullet_magazine.autocannon.name=Autocannon Magazine
+item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS Drum Magazine
 
 item.immersiveintelligence.motor_gear.copper.name=Copper Gear
 item.immersiveintelligence.motor_gear.brass.name=Brass Gear
@@ -310,7 +375,7 @@ item.immersiveintelligence.motor_belt.cloth.name=Cloth Motor Belt
 item.immersiveintelligence.motor_belt.steel.name=Steel Motor Belt
 
 item.immersiveintelligence.wrench.name=Engineer's Wrench
-item.immersiveintelligence.electric_wrench.name=Electric Wrench
+item.immersiveintelligence.electric_wrench.name=Engineer's Electric Wrench
 
 item.immersiveintelligence.tachometer.name=Engineer's Tachometer
 item.immersiveintelligence.torque_meter.name=Engineer's Torque Meter
@@ -344,6 +409,17 @@ tile.immersiveintelligence.sheetmetal.brass.name=Brass Sheetmetal
 tile.immersiveintelligence.storage.brass.name=Brass Block
 tile.immersiveintelligence.sheetmetal_slab.brass.name=Brass Sheetmetal Slab
 tile.immersiveintelligence.storage_slab.brass.name=Brass Slab
+
+tile.immersiveintelligence.sheetmetal.duraluminium.name=Duraluminium Sheetmetal
+tile.immersiveintelligence.storage.duraluminium.name=Duraluminium Block
+tile.immersiveintelligence.sheetmetal_slab.duraluminium.name=Duraluminium Sheetmetal Slab
+tile.immersiveintelligence.storage_slab.duraluminium.name=Duraluminium Slab
+
+tile.immersiveintelligence.fence_brass.name=Brass Fence
+tile.immersiveintelligence.fence_tungsten.name=Tungsten Fence
+tile.immersiveintelligence.fence_zinc.name=Zinc Fence
+tile.immersiveintelligence.fence_platinum.name=Platinum Fence
+tile.immersiveintelligence.fence_duraluminium.name=Duraluminium Fence
 
 tile.immersiveintelligence.rubber_log.raw.name=Rubber Tree Wood
 tile.immersiveintelligence.rubber_log.rebbur.name=Latex Extraction Hole
@@ -393,12 +469,20 @@ tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extractcovered.n
 #due to how IE's base classes are designed, I had to use a "main" as only value in IIBlockTypes_Mine
 #redundant? yes, works? yes
 tile.immersiveintelligence.tripmine.main.name=Tripmine
-tile.immersiveintelligence.tellermine.main.name=Contact Mine
-tile.immersiveintelligence.radio_mine.main.name=Radio Mine
+tile.immersiveintelligence.tripmine.core.name=Tripmine Core
+item.immersiveintelligence.ammo_casing.tripmine.name=Tripmine Casing
+
+tile.immersiveintelligence.tellermine.main.name=Landmine
+tile.immersiveintelligence.tellermine.core.name=Landmine Core
+item.immersiveintelligence.ammo_casing.tellermine.name=Landmine Casing
+
+tile.immersiveintelligence.radio_explosives.main.name=Radio Explosives
+tile.immersiveintelligence.radio_explosives.core.name=Radio Explosives Core
+item.immersiveintelligence.ammo_casing.radio_explosives.name=Radio-Equipped Satchel
 
 item.immersiveintelligence.naval_mine.bullet.name=Naval Mine
 item.immersiveintelligence.naval_mine.core.name=Naval Mine Core
-item.immersiveintelligence.naval_mine.casing.name=Naval Mine Casing
+item.immersiveintelligence.ammo_casing.naval_mine.name=Naval Mine Casing
 
 tile.immersiveintelligence.stone_decoration.sandbags.name=Sandbags
 
@@ -462,7 +546,6 @@ tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Ari
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Arithmetic Logic Machine - Programming
 tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithmetic Logic Machine - Editing an Expression
 
-
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
 tile.immersiveintelligence.data_connector.data_callback_connector.name=Data Callback Connector
@@ -512,9 +595,39 @@ tile.immersiveintelligence.metal_multiblock1.vulcanizer.name=Vulcanizer
 
 tile.immersiveintelligence.metal_multiblock1.fuel_station.name=Fuel Station
 tile.immersiveintelligence.metal_multiblock1.emplacement.name=Emplacement
+tile.immersiveintelligence.metal_multiblock1.radar.name=Radar
+
+desc.immersiveintelligence.metal_multiblock1.emplacement.storage=Emplacement - Storage
+desc.immersiveintelligence.metal_multiblock1.emplacement.tasks=Emplacement - Tasks
+desc.immersiveintelligence.metal_multiblock1.emplacement.status=Emplacement - Status
+desc.immersiveintelligence.metal_multiblock1.emplacement.base_inventory=Base Inventory
+desc.immersiveintelligence.metal_multiblock1.emplacement.weapon=Mounted: %s
+desc.immersiveintelligence.metal_multiblock1.emplacement.weapon_none=None
+desc.immersiveintelligence.metal_multiblock1.emplacement.upgrades=Installed Upgrades
+desc.immersiveintelligence.metal_multiblock1.emplacement.settings=Settings
+desc.immersiveintelligence.metal_multiblock1.emplacement.redstone_control=Redstone Controlled
+desc.immersiveintelligence.metal_multiblock1.emplacement.data_control=Data Controlled
+desc.immersiveintelligence.metal_multiblock1.emplacement.send_attack_signal=Output target(s) trough data
+desc.immersiveintelligence.metal_multiblock1.emplacement.auto_repair_threshold=Repair when health is below:
+desc.immersiveintelligence.metal_multiblock1.emplacement.task_enabled=Enabled
+desc.immersiveintelligence.metal_multiblock1.emplacement.task_negation=Negation
+desc.immersiveintelligence.metal_multiblock1.emplacement.add=Add
+desc.immersiveintelligence.metal_multiblock1.emplacement.remove=Remove
+desc.immersiveintelligence.metal_multiblock1.emplacement.duplicate=Duplicate
+desc.immersiveintelligence.metal_multiblock1.emplacement.clear=Clear
+
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Animals
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.players=Players
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.npcs=NPCs
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.vehicles=Vehicles
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.shells=Shells
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.team=Team
+desc.immersiveintelligence.metal_multiblock1.emplacement.target.name=Name
+
 tile.immersiveintelligence.metal_multiblock1.flagpole.name=Flagpole
 
-tile.immersiveintelligence.metal_multiblock1.casing_filler.name=Casing Filler
+tile.immersiveintelligence.metal_multiblock1.filler.name=Filler
 tile.immersiveintelligence.metal_multiblock1.ammunition_core_forge.name=Ammunition Core Forge
 tile.immersiveintelligence.metal_multiblock1.ammunition_core_filler.name=Ammunition Core Filler
 tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name=Ammunition Assembler
@@ -549,9 +662,10 @@ desc.immersiveengineering.info.multiblock.II:FuelStation=Fuel Station
 desc.immersiveengineering.info.multiblock.II:Vulcanizer=Vulcanizer
 
 desc.immersiveengineering.info.multiblock.II:Emplacement=Emplacement
+desc.immersiveengineering.info.multiblock.II:Radar=Radar
 desc.immersiveengineering.info.multiblock.II:Flagpole=Flagpole
 
-desc.immersiveengineering.info.multiblock.II:CasingFiller=Casing Filler
+desc.immersiveengineering.info.multiblock.II:Filler=Filler
 desc.immersiveengineering.info.multiblock.II:AmmunitionCoreForge=Ammunition Core Forge
 desc.immersiveengineering.info.multiblock.II:AmmunitionCoreFiller=Ammunition Core Filler
 desc.immersiveengineering.info.multiblock.II:AmmunitionAssembler=Ammunition Assembler
@@ -583,6 +697,10 @@ fluid.methanol=Methanol
 
 fluid.latex=Latex
 
+#Dusts
+dust.gunpowder=Gunpowder
+dust.sulfur=Sulfur
+
 
 #Sounds
 
@@ -610,8 +728,11 @@ subtitle.immersiveintelligence.inserter=Inserter Noises
 subtitle.immersiveintelligence.radio_beep=Short Radio Beeps
 subtitle.immersiveintelligence.radio_noise=Radio Noise
 
-subtitle.immersiveintelligence.penetration_metal=Projectile breaking trough metal
+subtitle.immersiveintelligence.impact_metal=Projectile breaking trough metal
 subtitle.immersiveintelligence.ricochet_metal=Projectile bouncing off metal
+
+subtitle.immersiveintelligence.bullet_impact=Projectile impact
+subtitle.immersiveintelligence.bullet_ricochet=Projectile ricocheting off
 
 subtitle.immersiveintelligence.motorbike_start=Starting a Motorbike
 subtitle.immersiveintelligence.motorbike_engine=Motorbike Engine Noise
@@ -619,9 +740,29 @@ subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
 
 subtitle.immersiveintelligence.fuel_station=Fuel pumping
 subtitle.immersiveintelligence.welding=Welding
+subtitle.immersiveintelligence.sawmill=Saw in action
 
 subtitle.immersiveintelligence.vulcanizer_heating=Vulcanizer Heater Noise
 subtitle.immersiveintelligence.vulcanizer_motor=Vulcanizer Rotates
+
+subtitle.immersiveintelligence.autocannon_shot=Autocannon Firing
+subtitle.immersiveintelligence.autocannon_reload=Autocannon Reloading
+
+subtitle.immersiveintelligence.explosion_flare=Flare Deploying
+subtitle.immersiveintelligence.explosion_incendiary=Incendiary Explosion
+subtitle.immersiveintelligence.explosion_nuke=Nuclear Explosion
+
+subtitle.immersiveintelligence.mortar_shot=Mortar Firing
+subtitle.immersiveintelligence.mortar_load=Mortar Loading
+
+subtitle.immersiveintelligence.mine_detector=Mine Detector Beeps
+
+subtitle.immersiveintelligence.construction=Hammer-Assisted Construction
+
+subtitle.immersiveintelligence.emplacement_rotation=Emplacement Weapon Rotation
+subtitle.immersiveintelligence.emplacement_platform=Emplacement Platform Moving
+subtitle.immersiveintelligence.emplacement_door_open=Emplacement Doors Opening
+subtitle.immersiveintelligence.emplacement_door_close=Emplacement Doors Closing
 
 #Entities
 
@@ -640,6 +781,7 @@ entity.white_phosphorus.name=White Phosphorus Explosion
 entity.atomic_boom.name=Nuclear Explosion
 
 entity.machinegun.name=Machinegun
+entity.mortar.name=Mortar
 entity.motorbike.name=Motorbike
 entity.wheel.name=Wheel
 entity.seat.name=Seat
@@ -651,52 +793,74 @@ entity.hans.name=Hans
 #Skins
 skin.immersiveintelligence.anno_1880.name=Anno 1880
 skin.immersiveintelligence.anno_1880.desc=Refined, precise, ornamental
+skin.immersiveintelligence.anno_1880.text=Rewarded to BluSunrize and Hazard for their great work on Immersive Engineering.
 
 skin.immersiveintelligence.royal.name=Royal
 skin.immersiveintelligence.royal.desc=A relic from an old empire
+skin.immersiveintelligence.royal.text=An retrofuturistic imperial skin. Originally meant to be a skin for the Patreons, now granted as a reward for contribution.
 
 skin.immersiveintelligence.old_glory.name=Old Glory
 skin.immersiveintelligence.old_glory.desc=Glory to Heroes
+skin.immersiveintelligence.old_glory.text=A Poland themed skin, granted as a reward for contribution.
 
 skin.immersiveintelligence.vaterland.name=Vaterland
 skin.immersiveintelligence.vaterland.desc=And all that sacrifice just for an Iron Cross...
+skin.immersiveintelligence.vaterland.text=A Germany themed skin, granted as a reward for contribution.
 
 skin.immersiveintelligence.pershing.name=Pershing
 skin.immersiveintelligence.pershing.desc=Whatever the weather, we'll win this war together
+skin.immersiveintelligence.pershing.text=A Western Allies themed skin, granted as a reward for contribution.
 
 skin.immersiveintelligence.zvezda.name=Zvezda
 skin.immersiveintelligence.zvezda.desc=Reward for the great sacrifice
+skin.immersiveintelligence.zvezda.text=A Soviet themed skin, granted as a reward for contribution.
 
 skin.immersiveintelligence.stormwind.name=Stormwind
 skin.immersiveintelligence.stormwind.desc=A tribute to defenders of the sea fortress
+skin.immersiveintelligence.stormwind.text=A skin inspired by the old awesome flash game "Storm Winds"
 
 skin.immersiveintelligence.flakmeister.name=Flakmeister
 skin.immersiveintelligence.flakmeister.desc=For a renown artillerist
+skin.immersiveintelligence.flakmeister.text=A skin granted to Carver, who contributed a lot and howitzized a bit more.
 
 skin.immersiveintelligence.blackdragon.name=Blackdragon
 skin.immersiveintelligence.blackdragon.desc=For contribution, effort and content, an award
+skin.immersiveintelligence.blackdragon.text=A skin granted to Blackdragon, who made great II tutorial videos on YouTube.
 
 skin.immersiveintelligence.eisenheim.name=Eisenheim
 skin.immersiveintelligence.eisenheim.desc=The warpaint of heroes from the mountain fortress
+skin.immersiveintelligence.eisenheim.text=A skin themed with Engineer faction of the upcoming Engineered Adventures: Tales from the Front modpack.
 
 skin.immersiveintelligence.vanguard.name=Vanguard
 skin.immersiveintelligence.vanguard.desc=For the elite of engineering supporters
+skin.immersiveintelligence.vanguard.text=A skin rewarded for donating $5 or more on Patreon.
 
 skin.immersiveintelligence.magnate.name=Magnate
 skin.immersiveintelligence.magnate.desc=For noble support of engineering progress
+skin.immersiveintelligence.magnate.text=A skin rewarded for donating $10 or more on Patreon.
 
 skin.immersiveintelligence.investor.name=Investor
 skin.immersiveintelligence.investor.desc=A little reward for big generosity
+skin.immersiveintelligence.investor.text=A skin rewarded for donating $15 on Patreon.
 
 #Machine Upgrades
 machineupgrade.immersiveintelligence.inserter=Inserter
 machineupgrade.immersiveintelligence.inserter.desc=Adding an inserter to a crate allows it to operate automatically in a 3 blocks radius if supplied with power.
 
+machineupgrade.immersiveintelligence.mg_loader=Belt Feeder
+machineupgrade.immersiveintelligence.mg_loader.desc=Expanding the ammo compartments allows to feed bullets directly to a machinegun after some modifications. Crate must be open to provide ammunition.
+
 machineupgrade.immersiveintelligence.improved_gearbox=Improved Gearbox
 machineupgrade.immersiveintelligence.improved_gearbox.desc=Replacing the stock gearbox with an improved model significantly increases machine speed, increases amount of energy required to operate.
 
 machineupgrade.immersiveintelligence.saw_unregulator=Saw Unregulator
-machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output.
+machineupgrade.immersiveintelligence.saw_unregulator.desc=Unregulating the saw leads to higher sawdust output in cost of main output amount.
+
+machineupgrade.immersiveintelligence.emplacement_grenades=Emergency Smoke Dischargers
+machineupgrade.immersiveintelligence.emplacement_grenades.desc=When emplacement's weapon is heavily damaged, smoke will be discharged to provide cover.
+
+machineupgrade.immersiveintelligence.emplacement_bearings=Sturdy Bearings
+machineupgrade.immersiveintelligence.emplacement_bearings.desc=Higher quality bearings increase the maximum weapon rotation speed, to work at full capacity lubrication is required
 
 machineupgrade.immersiveintelligence.infrared_observer=Infrared Observer
 machineupgrade.immersiveintelligence.infrared_observer.desc=The Infrared Observer allows surveillance of distant enemies and sending their coordinates via data cables.
@@ -708,16 +872,25 @@ machineupgrade.immersiveintelligence.autocannon=Autocannon
 machineupgrade.immersiveintelligence.autocannon.desc=Four 3bCal Automatic Cannons provide lots of firepower making the weapon a universal defense against air and ground targets.
 
 machineupgrade.immersiveintelligence.heavy_chemthrower=Heavy Chemthrower
-machineupgrade.immersiveintelligence.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the regular one.
+machineupgrade.immersiveintelligence.heavy_chemthrower.desc=A heavier version of the well known Chemthrower, higher pressure allows for attacking enemies at ranges 4 times longer than the portable one.
 
 machineupgrade.immersiveintelligence.heavy_railgun=Heavy Railgun
 machineupgrade.immersiveintelligence.heavy_railgun.desc=Heavy Railgun provides direct fire support. It can launch metal rods or grenades with high velocity, allowing piercing of enemies and materiel.
 
-machineupgrade.immersiveintelligence.machinegun=Machinegun
-machineupgrade.immersiveintelligence.machinegun.desc=The Machinegun can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
+machineupgrade.immersiveintelligence.machinegun=Machinegun Nest
+machineupgrade.immersiveintelligence.machinegun.desc=The Machinegun Nest can provide suppressive automatic fire, allowing crowd control. Due to its construction, it is unable to fight airborne enemies.
+
+machineupgrade.immersiveintelligence.mg_heavy_barrel=Heavy Barrel
+machineupgrade.immersiveintelligence.mg_heavy_barrel.desc=The heavy barrels allow for much faster firing rate and slightly increase the maximum permitted overheat.
+
+machineupgrade.immersiveintelligence.mg_watercooled=Water Cooled Barrel
+machineupgrade.immersiveintelligence.mg_watercooled.desc=A replacement for the stock barrels. When mounted, barrels do not overheat when a coolant is provided.
+
+machineupgrade.immersiveintelligence.mg_bunker=Additional Fortifications
+machineupgrade.immersiveintelligence.mg_bunker.desc=Placing additional sandbags around the machinegun nest gives it additional armor and increases its durability.
 
 machineupgrade.immersiveintelligence.mortar=Mortar
-machineupgrade.immersiveintelligence.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from the top
+machineupgrade.immersiveintelligence.mortar.desc=Mortar provides indirect fire support on close range, the vertical firing angle and high shell caliber allow it to pierce trough roofs and decimate enemies from above
 
 machineupgrade.immersiveintelligence.light_howitzer=Light Howitzer
 machineupgrade.immersiveintelligence.light_howitzer.desc=Light Howitzer provides indirect fire support on medium range, its mobility allows for quick and precise barrage of enemy positions
@@ -762,6 +935,12 @@ desc.immersiveintelligence.storage_module=Storage
 desc.immersiveintelligence.variables_module=Variables
 desc.immersiveintelligence.data_module=Data
 desc.immersiveintelligence.redstone_module=Redstone
+desc.immersiveintelligence.data_to_redstone_module=Data
+desc.immersiveintelligence.redstone_to_data_module=Redstone
+desc.immersiveintelligence.tasks_module=Tasks
+desc.immersiveintelligence.status_module=Status
+
+desc.immersiveintelligence.tooltip.armor=Armor %f%%
 
 desc.immersiveintelligence.upgrade_gui.title=Upgrade Machine
 desc.immersiveintelligence.upgrade_gui.info=Info
@@ -785,6 +964,7 @@ desc.immersiveintelligence.variable=Variable:
 
 #Bullets
 
+desc.immersiveintelligence.bullet_type.general_purpose=General Purpose
 desc.immersiveintelligence.bullet_type.shrapnel=Shrapnel
 desc.immersiveintelligence.bullet_type.piercing=Armor Piercing
 desc.immersiveintelligence.bullet_type.explosive=High Explosive
@@ -797,9 +977,8 @@ desc.immersiveintelligence.bullet_type.special=Special Purpose
 desc.immersiveintelligence.bullet_core_type.softpoint=Soft Point
 desc.immersiveintelligence.bullet_core_type.shaped=Shaped
 desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
-desc.immersiveintelligence.bullet_core_type.piercing_fin_stabilized=Armor-Piercing Fin Stabilized
+desc.immersiveintelligence.bullet_core_type.piercing_sabot=Armor-Piercing Discarding Sabot
 desc.immersiveintelligence.bullet_core_type.canister=Canister
-desc.immersiveintelligence.bullet_core_type.double_canister=Double Canister
 
 desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s
 desc.immersiveintelligence.bullets.mass=Mass: %s
@@ -815,6 +994,8 @@ desc.immersiveintelligence.medical_crate.boost=Apply Effects to Entities
 desc.immersiveintelligence.repair_crate.repair_armor=Repair Worn Armor
 desc.immersiveintelligence.repair_crate.repair_vehicles=Repair Vehicles
 
+desc.immersiveintelligence.jei.washing_recipe=Chemical Washing
+
 #Potion effects
 
 potion.immersiveintelligence.suppression=Suppressed
@@ -824,8 +1005,11 @@ potion.immersiveintelligence.infrared_vision=Infrared Vision
 potion.immersiveintelligence.iron_will=Iron Will
 potion.immersiveintelligence.well_supplied=Well Supplied
 potion.immersiveintelligence.concealed=Concealed
+potion.immersiveintelligence.exposed=Exposed
 potion.immersiveintelligence.medical_treatment=Medical Treatment
 potion.immersiveintelligence.undergoing_repairs=Undergoing Repairs
+potion.immersiveintelligence.radiation=Radiation
+potion.immersiveintelligence.nuclear_heat=Nuclear Heat
 
 #Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
@@ -866,6 +1050,8 @@ info.immersiveintelligence.tachometer.speed=Speed: %s
 
 info.immersiveintelligence.machineupgrade.name=Installing: %s
 info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
+
+info.immersiveintelligence.machineupgrade.mg_loader.gui_tooltip=MG
 
 info.immersiveintelligence.towing.no=Can't find a towable vehicle
 info.immersiveintelligence.towing.towed=Successfully towed!
@@ -921,14 +1107,22 @@ datasystem.immersiveintelligence.function.greater_or_equal=Greater or Equal
 datasystem.immersiveintelligence.function.less_or_equal=Less or Equal
 datasystem.immersiveintelligence.function.equal=Equal
 
-datasystem.immersiveintelligence.function.join=Join
-datasystem.immersiveintelligence.function.filter=Filter
-datasystem.immersiveintelligence.function.format=Format
-
-datasystem.immersiveintelligence.function.construct_null=Conditional Construct - Null
-datasystem.immersiveintelligence.function.construct_boolean=Conditional Construct - Boolean
-datasystem.immersiveintelligence.function.construct_integer=Conditional Construct - Integer
-datasystem.immersiveintelligence.function.construct_string=Conditional Construct - String
+datasystem.immersiveintelligence.function.string_join=Join
+datasystem.immersiveintelligence.function.string_equal=Equal
+datasystem.immersiveintelligence.function.string_split=Split
+datasystem.immersiveintelligence.function.string_length=Length
+datasystem.immersiveintelligence.function.string_char_at=Character At
+datasystem.immersiveintelligence.function.string_substring=Substring
+datasystem.immersiveintelligence.function.string_trim=Trim
+datasystem.immersiveintelligence.function.string_hexcol=Format using Hexcol
+datasystem.immersiveintelligence.function.string_format=Format using TextFormatting
+datasystem.immersiveintelligence.function.string_contains=Contains
+datasystem.immersiveintelligence.function.string_contains_count=Contained Amount
+datasystem.immersiveintelligence.function.string_lowercase=To Lowercase
+datasystem.immersiveintelligence.function.string_uppercase=To Uppercase
+datasystem.immersiveintelligence.function.string_snake_case=To snake_case
+datasystem.immersiveintelligence.function.string_camel_case=To camelCase
+datasystem.immersiveintelligence.function.string_reverse=Reverse
 
 datasystem.immersiveintelligence.function.get_quantity=Get Quantity
 datasystem.immersiveintelligence.function.set_quantity=Set Quantity
@@ -939,6 +1133,29 @@ datasystem.immersiveintelligence.function.set_nbt=Set NBT
 datasystem.immersiveintelligence.function.can_stack_with=Can Stack With
 datasystem.immersiveintelligence.function.matches_oredict=Matches OreDictionary
 
+datasystem.immersiveintelligence.function.array_get=Get
+datasystem.immersiveintelligence.function.array_push=Push
+datasystem.immersiveintelligence.function.array_pop=Pop
+
+datasystem.immersiveintelligence.function.entity_get_id=Get ID
+datasystem.immersiveintelligence.function.entity_get_type=Get Type
+datasystem.immersiveintelligence.function.entity_get_name=Get Name
+datasystem.immersiveintelligence.function.entity_get_dimension_id=Get Dimension
+datasystem.immersiveintelligence.function.entity_get_x=Get X
+datasystem.immersiveintelligence.function.entity_get_y=Get Y
+datasystem.immersiveintelligence.function.entity_get_z=Get Z
+
+datasystem.immersiveintelligence.function.document_read_page=Read Page
+datasystem.immersiveintelligence.function.document_read_all_pages_array=Read All Pages (Array)
+datasystem.immersiveintelligence.function.document_read_all_pages_string=Read All Pages (String)
+datasystem.immersiveintelligence.function.document_get_author=Get Author
+datasystem.immersiveintelligence.function.document_get_title=Get Title
+
+datasystem.immersiveintelligence.function.is_null=Is Null
+datasystem.immersiveintelligence.function.to_integer=To Integer
+datasystem.immersiveintelligence.function.to_string=To String
+datasystem.immersiveintelligence.function.to_boolean=To Boolean
+
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
 datasystem.immersiveintelligence.datatype.integer=Integer
@@ -946,6 +1163,8 @@ datasystem.immersiveintelligence.datatype.string=String
 datasystem.immersiveintelligence.datatype.expression=Expression
 datasystem.immersiveintelligence.datatype.accessor=Accessor
 datasystem.immersiveintelligence.datatype.itemstack=ItemStack
+datasystem.immersiveintelligence.datatype.array=Array
+datasystem.immersiveintelligence.datatype.entity=Entity
 
 datasystem.immersiveintelligence.datatype.boolean.true=True
 datasystem.immersiveintelligence.datatype.boolean.false=False
@@ -975,7 +1194,7 @@ advancement.immersiveintelligence.connect_belt=Powerful Conveying
 advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
 
 #Reference to Tiger 1 tank memes
-advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission works again!
+advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission Works!
 advancement.immersiveintelligence.craft_steel_belt.desc=Craft a Steel Motor Belt
 
 advancement.immersiveintelligence.secret_connect_wire=Who dares wins
@@ -1066,7 +1285,7 @@ advancement.immersiveintelligence.radio_station=Remote Control
 advancement.immersiveintelligence.radio_station.desc=Create a Radio Station
 
 #Tripod Periscope
-advancement.immersiveintelligence.craft_tripod_periscope=Can we have Infrared Observer at home?
+advancement.immersiveintelligence.craft_tripod_periscope=Spectacles on Sticks
 advancement.immersiveintelligence.craft_tripod_periscope.desc=Craft the Tripod Periscope
 
 #Reference to a chat with Carver
@@ -1274,8 +1493,12 @@ ie.manual.entry.programmable_speaker.name=Programmable Speaker
 ie.manual.entry.programmable_speaker.subtext=Happy Engineer Noises
 ie.manual.entry.programmable_speaker0=The Programmable Speaker is a device, which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side. Data can be used to set the sound and its pitch, while redstone sets the volume.
 
+ie.manual.entry.programmable_speaker.vars_in.o.main=Play Once
+ie.manual.entry.programmable_speaker.vars_in.o.sub=If true, sound is played once, regardless of redstone signal
 ie.manual.entry.programmable_speaker.vars_in.s.main=ID of the sound to play
 ie.manual.entry.programmable_speaker.vars_in.s.sub=Example "immersiveintelligence:siren"
+ie.manual.entry.programmable_speaker.vars_in.v.main=Volume
+ie.manual.entry.programmable_speaker.vars_in.v.sub=Value must be between 0 and 100
 ie.manual.entry.programmable_speaker.vars_in.t.main=Tone/Pitch
 ie.manual.entry.programmable_speaker.vars_in.t.sub=Value must be between -100 and 100
 
@@ -1345,6 +1568,11 @@ ie.manual.entry.strategic_command_table0=
 ie.manual.entry.warfare_main.name=Warfare
 ie.manual.entry.warfare_main.subtext=Engineer & Conquer
 ie.manual.entry.warfare_main0=Warfare is a branch of engineering focused on defense and offense against enemies. Engineered inventions have revolutionised the modern way of combat, swords and shields have become obsolete, the era of projectile weapons has come. Modern warfare is based on both precise and fast attacks with range superior to any weapon of the past.
+
+
+ie.manual.entry.contributor_skins.name=Contributor Skins
+ie.manual.entry.contributor_skins.subtext=For Support of Engineered Cause!
+ie.manual.entry.contributor_skins=Contributors of Immersive Intelligence, whether trough direct help by providing assets, code, translations, recording tutorial videos, donations trough Patreon or simply contributing to II community can not be overlooked and have to be rewarded.<br> For that, a collection of skins has been added to the game, these are applicable to various weapons, ranging from machineguns to howitzers. Huge thanks to all of you, without you this project would take much longer than Soon™.
 
 #Reference to the well known meme
 ie.manual.entry.machinegun.name=Machinegun
@@ -1658,6 +1886,8 @@ death.attack.iiBulletHeadShotNoShooter=%1$s took a bullet to their head
 death.attack.iiShrapnel=%1$s was torn apart by %2$s's shrapnel
 death.attack.iiShrapnelNoShooter=%1$s was torn apart by shrapnel
 death.attack.iiSawmill=%1$s was sliced by the sawmill
+death.attack.iiRadiation=%1$s experienced intensive radiation
+death.attack.iiNuclearHeat=%1$s was decimated by a nuclear explosion
 death.attack.iiMotorbike=%1$s was driven over by %2$s
 death.attack.iiMotorbikeNoRider=%1$s was driven over
 death.attack.iiMotorbikeExplicit=%2$s has made %1$s's ass his free parking spot

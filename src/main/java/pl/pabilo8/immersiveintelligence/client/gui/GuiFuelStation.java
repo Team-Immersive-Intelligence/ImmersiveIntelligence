@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FuelStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFuelStation;
 
@@ -60,8 +61,7 @@ public class GuiFuelStation extends GuiIEContainerBase
 			}
 		}
 
-		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		ClientUtils.drawGradientRect(guiLeft+137, guiTop+22+(46-stored), guiLeft+137+7, guiTop+22+46, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(guiLeft+137, guiTop+22, 7,46,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class GuiFuelStation extends GuiIEContainerBase
 		}
 
 		if(mx > guiLeft+137&&mx < guiLeft+144&&my > guiTop+22&&my < guiTop+68)
-			tooltip.add(tile.getEnergyStored(null)+"/"+tile.getMaxEnergyStored(null)+" IF");
+			tooltip.add(Utils.getPowerLevelString(tile));
 
 		if(!tooltip.isEmpty())
 		{

@@ -27,8 +27,8 @@ public class DataOperationNOT extends DataOperator
 		DataPacketTypeBoolean t1, t2;
 		boolean i1, i2;
 
-		t1 = ((DataPacketTypeBoolean)getVarInType(DataPacketTypeBoolean.class, data.getType1(), packet));
-		t2 = ((DataPacketTypeBoolean)getVarInType(DataPacketTypeBoolean.class, data.getType2(), packet));
+		t1 = getVarInType(DataPacketTypeBoolean.class, data.getType1(), packet);
+		t2 = getVarInType(DataPacketTypeBoolean.class, data.getType2(), packet);
 		i1 = t1.value;
 		i2 = t2.value;
 

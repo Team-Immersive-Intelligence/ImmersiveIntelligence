@@ -3,14 +3,12 @@ package pl.pabilo8.immersiveintelligence.common.ammunition_system.factory;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityShrapnel;
 
 /**
@@ -47,12 +45,10 @@ public class BulletComponentShrapnel implements IBulletComponent
 	}
 
 	@Override
-	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
-		int lower = 0;
-
 		Vec3d v = new Vec3d(0, -1, 0);
-		Vec3d throwerPos = new Vec3d(pos.offset(EnumFacing.UP, 3));
+		Vec3d throwerPos = pos.addVector(0, 3, 0);
 		for(int i = 0; i < 50*amount; i++)
 		{
 			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);

@@ -9,12 +9,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
 
 /**
  * @author Pabilo8
@@ -22,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
  */
 public class IIPotions
 {
-	public static Potion suppression, broken_armor, corrosion, infrared_vision, iron_will, well_supplied, concealed, medical_treatment, undergoing_repairs;
+	public static Potion suppression, broken_armor, corrosion, infrared_vision, iron_will, well_supplied, concealed, exposed, medical_treatment, undergoing_repairs, radiation, nuclear_heat;
 
 	public static void init()
 	{
@@ -56,7 +60,39 @@ public class IIPotions
 		iron_will.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), 0.007843138f, 2);
 
 		well_supplied = new IIPotion("well_supplied", false, 0xa49e66, 0, false, 5, true, true);
-		concealed = new IIPotion("concealed", false, 0x558858, 0, false, 6, true, true);
+
+		concealed = new IIPotion("concealed", false, 0x558858, 0, false, 6, true, true)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(!living.isPotionActive(IIPotions.concealed))
+					living.setInvisible(true);
+			}
+		};
+		exposed = new IIPotion("exposed", true, 0x558858, 0, false, 12, true, true)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				living.setGlowing(true);
+				living.setInvisible(false);
+				living.removePotionEffect(MobEffects.INVISIBILITY);
+				living.removePotionEffect(IIPotions.concealed);
+			}
+
+			@Override
+			public void removeAttributesModifiersFromEntity(EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier)
+			{
+				super.removeAttributesModifiersFromEntity(entityLivingBaseIn, attributeMapIn, amplifier);
+				entityLivingBaseIn.setGlowing(false);
+			}
+		};
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.05f, 1);
+		exposed.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), -1f, 1);
+		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.007843138f, 2);
+
+
 		medical_treatment = new IIPotion("medical_treatment", false, 0xe13eb8, 0, false, 7, true, true)
 		{
 			@Override
@@ -98,7 +134,51 @@ public class IIPotions
 					}
 			}
 		};
+
+		radiation = new IIPotion("radiation", true, 0xd2a846, 0, false, 9, true, true)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				if(living.ticksExisted%20!=0)
+					return;
+				boolean apply = false;
+				for(ItemStack s : living.getArmorInventoryList())
+				{
+					if(!(s.getItem() instanceof IRadiationProtectionEquipment))
+						apply = true;
+					else if(!((IRadiationProtectionEquipment)s.getItem()).protectsFromRadiation(s))
+						apply = true;
+				}
+				if(apply)
+				{
+					living.hurtResistantTime = 0;
+					living.attackEntityFrom(IIDamageSources.RADIATION_DAMAGE, 2);
+				}
+			}
+		};
+		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+
+		nuclear_heat = new IIPotion("nuclear_heat", true, 0x9d5919, 0, false, 10, true, true)
+		{
+			@Override
+			public void performEffect(EntityLivingBase living, int amplifier)
+			{
+				living.hurtResistantTime = 0;
+				living.getArmorInventoryList().forEach(stack -> {
+					stack.damageItem(stack.getMaxDamage(), living);
+				});
+				living.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
+			}
+		};
+		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -1, 2);
+		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -1, 2);
+		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
+
 	}
+
 
 	public static class IIPotion extends IEPotion
 	{

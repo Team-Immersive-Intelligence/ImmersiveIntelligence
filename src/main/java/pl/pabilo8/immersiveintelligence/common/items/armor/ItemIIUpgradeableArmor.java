@@ -1,7 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.items.armor;
 
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.IUpgrade;
 import blusunrize.immersiveengineering.api.tool.IUpgradeableTool;
+import blusunrize.immersiveengineering.client.ClientProxy;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.gui.IESlot.Upgrades;
 import blusunrize.immersiveengineering.common.util.IELogger;
@@ -9,6 +12,8 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -53,13 +58,14 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 {
 	static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 	String upgradeType;
+	public static final String NBT_Colour = "colour";
 
 	public ItemIIUpgradeableArmor(ArmorMaterial materialIn, EntityEquipmentSlot equipmentSlotIn, String upgradeType)
 	{
 		super(materialIn, -1, equipmentSlotIn);
 		this.upgradeType = upgradeType;
 
-		String name = (materialIn.toString()+"_"+getNameForPart(equipmentSlotIn)).replace(ImmersiveIntelligence.MODID+":", "");
+		String name = (materialIn.getName()+"_"+getNameForPart(equipmentSlotIn)).replace(ImmersiveIntelligence.MODID+":", "");
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 		this.setMaxStackSize(1);
@@ -71,7 +77,22 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
+		float durability = 100-(float)getDurabilityForDisplay(stack)*100f;
+		tooltip.add(I18n.format(Lib.DESC_INFO+"durability", durability+"%"));
 
+		if(ItemNBTHelper.hasKey(stack, NBT_Colour))
+		{
+			String hexCol = Integer.toHexString(getColor(stack));
+			tooltip.add(I18n.format(Lib.DESC_INFO+"colour", "<hexcol="+hexCol+":#"+hexCol+">"));
+		}
+	}
+
+	@Override
+	public int getColor(ItemStack stack)
+	{
+		if(ItemNBTHelper.hasKey(stack, NBT_Colour))
+			return ItemNBTHelper.getInt(stack, NBT_Colour);
+		return 0xffffff;
 	}
 
 	protected String getNameForPart(EntityEquipmentSlot equipmentSlotIn)
@@ -238,8 +259,8 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		{
 			NBTTagCompound nbt = getUpgrades(stack);
 
-			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", damageReduceAmount+nbt.getInteger("armor_increase"), 0));
-			multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Toughness modifier", toughness, 0));
+			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", damageReduceAmount+nbt.getDouble("armor_increase"), 0));
+			multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Toughness modifier", toughness+nbt.getDouble("toughness_increase"), 0));
 
 		}
 		return multimap;
@@ -256,5 +277,12 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	public boolean hasOverlay(ItemStack stack)
 	{
 		return false;
+	}
+
+	@Nullable
+	@Override
+	public FontRenderer getFontRenderer(ItemStack stack)
+	{
+		return ClientProxy.itemFont;
 	}
 }

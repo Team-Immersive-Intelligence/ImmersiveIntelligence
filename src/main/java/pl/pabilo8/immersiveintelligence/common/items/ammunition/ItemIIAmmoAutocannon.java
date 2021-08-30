@@ -1,9 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
+import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet3bCal;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nonnull;
@@ -20,7 +23,7 @@ public class ItemIIAmmoAutocannon extends ItemIIBulletBase
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
 		return 0.125f;
 	}
@@ -44,9 +47,15 @@ public class ItemIIAmmoAutocannon extends ItemIIBulletBase
 	}
 
 	@Override
+	public float getDefaultVelocity()
+	{
+		return 6f;
+	}
+
+	@Override
 	public float getCaliber()
 	{
-		return 3f/16f;
+		return 3f;
 	}
 
 	@Override
@@ -62,16 +71,15 @@ public class ItemIIAmmoAutocannon extends ItemIIBulletBase
 	}
 
 	@Override
-	public EnumCoreTypes[] getAllowedCoreTypes()
+	public ItemStack getCasingStack(int amount)
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.SOFTPOINT, EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED};
+		return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"autocannon_3bcal",amount);
 	}
 
 	@Override
-	public void doPuff(EntityBullet bullet)
+	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
-		for(int i = 1; i < 5; i++)
-			ParticleUtils.spawnGunfireFX(bullet.posX, bullet.posY, bullet.posZ, bullet.motionX/i, bullet.motionY/i, bullet.motionZ/i, 8*bullet.bulletCasing.getCaliber()*(i/2.5f));
+		return new EnumCoreTypes[]{EnumCoreTypes.SOFTPOINT, EnumCoreTypes.PIERCING};
 	}
 
 	@Override

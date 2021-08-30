@@ -40,6 +40,13 @@
         }
       }
     ],
+    "inventory,type=duraluminium": [
+      {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/sheetmetal_duraluminium"
+        }
+      }
+    ],
     "type": {
       "platinum": {
         "textures": {
@@ -59,6 +66,11 @@
       "brass": {
         "textures": {
           "all": "immersiveintelligence:blocks/metal/sheetmetal_brass"
+        }
+      },
+      "duraluminium": {
+        "textures": {
+          "all": "immersiveintelligence:blocks/metal/sheetmetal_duraluminium"
         }
       }
     },

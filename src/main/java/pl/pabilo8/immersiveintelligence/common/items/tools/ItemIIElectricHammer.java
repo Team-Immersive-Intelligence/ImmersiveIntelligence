@@ -28,6 +28,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -42,6 +43,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblockTileEntity;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -204,6 +206,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				if(energy > 0)
 				{
 					mb.setCurrentConstruction(mb.getCurrentConstruction()+energy);
+					world.playSound(null,pos, IISounds.construction_hammer, SoundCategory.PLAYERS,0.5f,1);
 					return doAction(player, hand);
 				}
 				else

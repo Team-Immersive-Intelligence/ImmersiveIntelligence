@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityGasCloud;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
  * @author Pabilo8
@@ -49,13 +49,14 @@ public class BulletComponentFluid implements IBulletComponent
 	}
 
 	@Override
-	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
 		if(world.isRemote)
 			return;
 
 		Vec3d v = new Vec3d(0, -1, 0);
-		Vec3d throwerPos = new Vec3d(pos.offset(EnumFacing.UP, 3));
+		BlockPos p = new BlockPos(pos);
+		Vec3d throwerPos = new Vec3d(p.offset(EnumFacing.UP, 3));
 		if(fluid.isGaseous())
 		{
 			EntityGasCloud gasCloud = new EntityGasCloud(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
@@ -67,12 +68,8 @@ public class BulletComponentFluid implements IBulletComponent
 			//greater/equal to howi shell
 			if(amount >= 0.5&&fluid.canBePlacedInWorld())
 				for(int i = 0; i < 5; i++)
-					if(world.isAirBlock(pos.up(i)))
-					{
-						world.setBlockState(pos.up(i), fluid.getBlock().getDefaultState());
-						//world.addBlockEvent(pos.up(i),fluid.getBlock(), 255, 0);
-						// break;
-					}
+					if(world.isAirBlock(p.up(i)))
+						world.setBlockState(p.up(i), fluid.getBlock().getDefaultState());
 			for(int i = 0; i < 100*amount; i++)
 			{
 				Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);

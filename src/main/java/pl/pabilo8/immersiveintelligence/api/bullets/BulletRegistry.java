@@ -19,7 +19,7 @@ public class BulletRegistry
 	public static BulletRegistry INSTANCE = new BulletRegistry();
 	public LinkedHashMap<String, IBulletComponent> registeredComponents = new LinkedHashMap<>();
 	public LinkedHashMap<String, IBulletCore> registeredBulletCores = new LinkedHashMap<>();
-	public LinkedHashMap<String, IBullet> registeredCasings = new LinkedHashMap<>();
+	public LinkedHashMap<String, IBullet> registeredBulletItems = new LinkedHashMap<>();
 
 	public HashMap<String, IBulletModel> registeredModels = new HashMap<>();
 
@@ -45,18 +45,20 @@ public class BulletRegistry
 		return false;
 	}
 
-	public boolean registerCasing(IBullet casing)
+	public boolean registerBulletItem(IBullet casing)
 	{
 		String name = casing.getName();
-		if(!registeredCasings.containsKey(name))
+		if(!registeredBulletItems.containsKey(name))
 		{
-			registeredCasings.put(name, casing);
+			registeredBulletItems.put(name, casing);
 
 			if(FMLCommonHandler.instance().getSide().isClient())
 			{
 				try
 				{
-					registeredModels.put(casing.getName(), casing.getModel().newInstance());
+					IBulletModel iBulletModel = casing.getModel().newInstance();
+					iBulletModel.subscribeToList(casing.getName());
+					registeredModels.put(casing.getName(), iBulletModel);
 				} catch(InstantiationException|IllegalAccessException e)
 				{
 					e.printStackTrace();
@@ -74,9 +76,9 @@ public class BulletRegistry
 	}
 
 	@Nullable
-	public IBullet getCasing(String name)
+	public IBullet getBulletItem(String name)
 	{
-		return registeredCasings.get(name);
+		return registeredBulletItems.get(name);
 	}
 
 	@Nullable
@@ -87,6 +89,7 @@ public class BulletRegistry
 
 	public enum EnumComponentRole implements IStringSerializable
 	{
+		GENERAL_PURPOSE,
 		SHRAPNEL,
 		PIERCING,
 		EXPLOSIVE,
@@ -105,7 +108,7 @@ public class BulletRegistry
 
 	public enum EnumCoreTypes implements IStringSerializable
 	{
-		SOFTPOINT(1, 0.5f, 1f, 1f)
+		SOFTPOINT(2, 0.5f, 1f, 1f, EnumComponentRole.GENERAL_PURPOSE)
 				{
 					@Override
 					public float getDamageMod(PenMaterialTypes p)
@@ -113,7 +116,7 @@ public class BulletRegistry
 						return p==PenMaterialTypes.FLESH?1.65f: 1f;
 					}
 				},
-		SHAPED(2, 0.5f, 1.25f, 1f)
+		SHAPED(3, 0.5f, 1.25f, 1f, EnumComponentRole.GENERAL_PURPOSE)
 				{
 					@Override
 					public float getPenMod(PenMaterialTypes p)
@@ -127,8 +130,8 @@ public class BulletRegistry
 						return p==PenMaterialTypes.METAL?1.85f: 1f;
 					}
 				},
-		PIERCING(1, 1.35f, 0.75f, 1f),
-		PIERCING_FIN_STABILIZED(0, 2f, 0f, 0.85f)
+		PIERCING(1, 1.35f, 0.75f, 1f, EnumComponentRole.PIERCING),
+		PIERCING_SABOT(0, 2f, 0f, 0.85f, EnumComponentRole.PIERCING)
 				{
 					@Override
 					public float getPenMod(PenMaterialTypes p)
@@ -136,15 +139,7 @@ public class BulletRegistry
 						return p==PenMaterialTypes.GROUND||p==PenMaterialTypes.SOLID?1.15f: 2f;
 					}
 				},
-		CANISTER(2, 0.125f, 1.25f, 0.125f)
-				{
-					@Override
-					public float getPenMod(PenMaterialTypes p)
-					{
-						return p==PenMaterialTypes.LIGHT?1f: 0.125f;
-					}
-				},
-		DOUBLE_CANISTER(4, 0.125f, 1.5f, 0.125f)
+		CANISTER(4, 0.125f, 1.25f, 0.125f, EnumComponentRole.GENERAL_PURPOSE)
 				{
 					@Override
 					public float getPenMod(PenMaterialTypes p)
@@ -157,13 +152,16 @@ public class BulletRegistry
 		private final float componentEffectivenessMod;
 		private final Function<PenMaterialTypes, Float> getPenEffectiveness;
 		private final Function<PenMaterialTypes, Float> getDamageMod;
+		@Nullable
+		private final EnumComponentRole role;
 
-		EnumCoreTypes(int componentSlots, float penHardnessMod, float componentEffectivenessMod, float damageMod)
+		EnumCoreTypes(int componentSlots, float penHardnessMod, float componentEffectivenessMod, float damageMod, @Nullable EnumComponentRole role)
 		{
 			this.componentSlots = componentSlots;
 			this.getPenEffectiveness = penMaterialTypes -> penHardnessMod;
 			this.componentEffectivenessMod = componentEffectivenessMod;
 			this.getDamageMod = penMaterialTypes -> damageMod;
+			this.role = role;
 		}
 
 		public float getPenMod(PenMaterialTypes p)
@@ -190,6 +188,12 @@ public class BulletRegistry
 		public String getName()
 		{
 			return this.toString().toLowerCase(Locale.ENGLISH);
+		}
+
+		@Nullable
+		public EnumComponentRole getRole()
+		{
+			return role;
 		}
 
 		public static EnumCoreTypes v(String s)

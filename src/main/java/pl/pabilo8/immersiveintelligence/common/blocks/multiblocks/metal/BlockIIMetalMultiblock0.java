@@ -120,9 +120,9 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 			{
 				return new TileEntityBallisticComputer();
 			}
-			case PACKER:
+			case PACKER_OLD:
 			{
-				return new TileEntityPacker();
+				return new TileEntityPackerOld();
 			}
 		}
 		return null;

@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPackerOld;
 
 /**
  * @author Pabilo8
@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
  */
 public class ContainerPacker extends ContainerIEBase
 {
-	public ContainerPacker(InventoryPlayer inventoryPlayer, TileEntityPacker tile)
+	public ContainerPacker(InventoryPlayer inventoryPlayer, TileEntityPackerOld tile)
 	{
 		super(inventoryPlayer, tile);
 		for(int i = 0; i < tile.getInventory().size()-1; i++)

@@ -23,14 +23,15 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
 import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationAdd;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiButtonItemAdvanced;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonItemAdvanced;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiMultiLineTextField;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
@@ -59,7 +60,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 	public int editingPage = 0;
 	public ContainerIEBase container;
 	public IDataType currentlyEditeddataType;
-	IItemHandler handler;
+	public IItemHandler handler;
 	int page;
 	DataPacket list;
 	IDataType mainType, type1, type2;
@@ -169,11 +170,10 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				break;
 				case "boolean":
 				{
+					GuiButtonState b1, b2;
 					editedstate = ((DataPacketTypeBoolean)currentlyEditeddataType).value;
-					this.buttonList.add(new GuiButtonState(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
-					this.buttonList.add(new GuiButtonState(12, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
-					GuiButtonState b1 = ((GuiButtonState)buttonList.get(11));
-					GuiButtonState b2 = ((GuiButtonState)buttonList.get(12));
+					this.buttonList.add((b1 = new GuiButtonState(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0)).setHoverOffset(48, 0));
+					this.buttonList.add((b2 = new GuiButtonState(12, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0)).setHoverOffset(48, 0));
 
 					b1.textOffset = new int[]{(b1.width/2)-(fontRenderer.getStringWidth(b1.displayString)/2), b1.height/2-4};
 					b2.textOffset = new int[]{(b2.width/2)-(fontRenderer.getStringWidth(b1.displayString)/2), b2.height/2-4};
@@ -188,7 +188,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 				break;
 				case "string":
 				{
-					this.valueEdit = new GuiTextField(11, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
+					this.valueEdit = new GuiMultiLineTextField(11, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
 					this.valueEdit.setFocused(true);
 					this.valueEdit.setMaxStringLength(512);
 					this.valueEdit.setText(currentlyEditeddataType.valueToString());
@@ -491,16 +491,14 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		{
 			this.mainType = list.getPacketVariable(expressionToEdit);
 
-			this.mainType = new DataOperationAdd().getVarInType(DataPacketTypeExpression.class, mainType, list);
+			this.mainType = DataOperator.getVarInType(DataPacketTypeExpression.class, mainType, list);
 
 			ArrayList<String> ops = new ArrayList<>(((ItemIIFunctionalCircuit)handler.getStackInSlot(page).getItem()).getOperationsList(handler.getStackInSlot(page)));
 			try
 			{
-				((DataPacketTypeExpression)mainType).setOperation((DataOperator)(DataOperation.operations.get(ops.get(0))).newInstance());
-			} catch(InstantiationException e)
-			{
-				e.printStackTrace();
-			} catch(IllegalAccessException e)
+				((DataPacketTypeExpression)mainType).setOperation((DataOperator)(DataOperations.operations.get(ops.get(0))).newInstance());
+			}
+			catch(InstantiationException|IllegalAccessException e)
 			{
 				e.printStackTrace();
 			}
@@ -509,11 +507,11 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			type2 = ((DataPacketTypeExpression)mainType).getType2();
 			if(!Objects.equals(type1.getName(), "accessor")||type1.getClass()!=((DataPacketTypeExpression)mainType).getOperation().allowedType1)
 			{
-				type1 = new DataOperationAdd().getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType1, mainType, list);
+				type1 = DataOperator.getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType1, mainType, list);
 			}
 			if(!Objects.equals(type2.getName(), "accessor")||type2.getClass()!=((DataPacketTypeExpression)mainType).getOperation().allowedType2)
 			{
-				type2 = new DataOperationAdd().getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType2, mainType, list);
+				type2 = DataOperator.getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType2, mainType, list);
 			}
 
 		}
@@ -629,17 +627,15 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 
 		try
 		{
-			((DataPacketTypeExpression)mainType).setOperation((DataOperator)(DataOperation.operations.get(ops.get(index))).newInstance());
+			((DataPacketTypeExpression)mainType).setOperation((DataOperator)(DataOperations.operations.get(ops.get(index))).newInstance());
 
 			if(type1.getName()!="accessor")
-				type1 = new DataOperationAdd().getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType1, type1, list);
+				type1 = DataOperator.getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType1, type1, list);
 			if(type2.getName()!="accessor")
-				type2 = new DataOperationAdd().getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType2, type2, list);
+				type2 = DataOperator.getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType2, type2, list);
 
-		} catch(InstantiationException e)
-		{
-			e.printStackTrace();
-		} catch(IllegalAccessException e)
+		}
+		catch(InstantiationException|IllegalAccessException e)
 		{
 			e.printStackTrace();
 		}
@@ -653,12 +649,12 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			{
 				if(editingPage==1)
 				{
-					currentlyEditeddataType = new DataOperationAdd().getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType1, type1, list);
+					currentlyEditeddataType = DataOperator.getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType1, type1, list);
 					type1 = currentlyEditeddataType;
 				}
 				if(editingPage==2)
 				{
-					currentlyEditeddataType = new DataOperationAdd().getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType2, type2, list);
+					currentlyEditeddataType = DataOperator.getVarInType(((DataPacketTypeExpression)mainType).getOperation().allowedType2, type2, list);
 					type2 = currentlyEditeddataType;
 				}
 			}

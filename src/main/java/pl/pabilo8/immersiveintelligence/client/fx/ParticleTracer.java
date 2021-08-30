@@ -18,9 +18,8 @@ import javax.annotation.Nonnull;
  */
 public class ParticleTracer extends IIParticle
 {
-	private float actualParticleScale;
+	private final float actualParticleScale;
 	private final float[] color;
-	private static final VertexFormat VERTEX_FORMAT = (new VertexFormat()).addElement(DefaultVertexFormats.POSITION_3F).addElement(DefaultVertexFormats.COLOR_4UB);
 
 	public ParticleTracer(World world, double x, double y, double z, double mx, double my, double mz, float size, int color)
 	{
@@ -37,7 +36,6 @@ public class ParticleTracer extends IIParticle
 		this.actualParticleScale = size;
 		this.particleMaxAge = (int)(1/EntityBullet.DEV_SLOMO);
 		this.color = Utils.rgbIntToRGB(color);
-		;
 	}
 
 	public void onUpdate()

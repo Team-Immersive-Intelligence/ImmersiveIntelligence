@@ -372,12 +372,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 							if(!world.isRemote)
 							{
-								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f), ArtilleryHowitzer.howitzerVelocity);
+								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f));
 								if(this.fuse > 0)
 								{
 									a.fuse = this.fuse;
 									this.fuse = -1;
 								}
+								ArrayList<BlockPos> pp = new ArrayList<>();
+								for(int i = 0; i < structureDimensions[0]*structureDimensions[1]*structureDimensions[2]; i++)
+									pp.add(getBlockPosForPos(i));
+								a.setShootPos(pp.toArray(new BlockPos[0]));
 								a.world.spawnEntity(a);
 
 								bullet = ((IBullet)bullet.getItem()).getCasingStack(1);
@@ -597,7 +601,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	{
 		if(isDoorOpened&&((pos >= 524&&pos <= 528)||(pos >= 533&&pos <= 537)||(pos >= 542&&pos <= 546)||(pos >= 515&&pos <= 519)||(pos >= 506&&pos <= 510)))
 		{
-			return new float[]{0, 0, 0, 0, 0, 0};
+			return new float[]{0, 0, 0, 1, 1, 1};
 		}
 		return new float[0];
 	}

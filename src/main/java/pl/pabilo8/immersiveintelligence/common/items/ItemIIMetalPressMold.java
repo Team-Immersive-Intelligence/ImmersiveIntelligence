@@ -10,10 +10,15 @@ public class ItemIIMetalPressMold extends ItemIIBase
 	{
 		super("press_mold", 1,
 				"howitzer",
+				"light_howitzer",
+				"mortar",
+				"autocannon",
 				"machinegun",
+				"assault_rifle",
 				"submachinegun",
-				"grenade",
-				"light_howitzer"
+				"naval_mine",
+				"tripmine",
+				"tellermine"
 		);
 	}
 }

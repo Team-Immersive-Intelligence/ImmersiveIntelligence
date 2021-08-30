@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerGearbox extends ContainerIEBase
+public class ContainerGearbox extends ContainerIEBase<TileEntityGearbox>
 {
 	public ContainerGearbox(InventoryPlayer inventoryPlayer, TileEntityGearbox tile)
 	{

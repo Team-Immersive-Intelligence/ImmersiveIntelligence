@@ -1,7 +1,13 @@
 package pl.pabilo8.immersiveintelligence;
 
+import blusunrize.immersiveengineering.api.ManualHelper;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
+import blusunrize.lib.manual.ManualPages;
 import com.google.gson.*;
 import net.minecraft.item.EnumRarity;
+import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -14,9 +20,9 @@ import java.util.*;
 public class CustomSkinHandler
 {
 	//Ordered by name
-	public static final Map<String, SpecialSkin> specialSkins = new HashMap<>();
+	public static final LinkedHashMap<String, SpecialSkin> specialSkins = new LinkedHashMap<>();
 	//For each UUID
-	public static final Map<String, ArrayList<SpecialSkin>> specialSkinsByUUID = new HashMap<>();
+	public static final LinkedHashMap<String, ArrayList<SpecialSkin>> specialSkinsByUUID = new LinkedHashMap<>();
 
 	public static class SpecialSkin
 	{
@@ -94,7 +100,7 @@ public class CustomSkinHandler
 				ImmersiveIntelligence.logger.info("Attempting to download II special skin list from GitHub");
 				//URL url = new URL("https://raw.githubusercontent.com/Pabilo8/ImmersiveIntelligence/master/contributor_skins.json");
 				// TODO: 30-06-2020 change URL when pushing
-				URL url = new URL("https://gist.githubusercontent.com/Pabilo8/969aac40918e0a50df493ccb10ac2f0b/raw/b12a0da9707f38668a28e5bc5093e0d4cdb506b3/contributor_skins.json");
+				URL url = new URL("https://gist.githubusercontent.com/Pabilo8/969aac40918e0a50df493ccb10ac2f0b/raw/e4bae6b584cc9539b077686859fe412a15530076/contributor_skins.json");
 				specialSkins.clear();
 				specialSkinsByUUID.clear();
 				JsonStreamParser parser = new JsonStreamParser(new InputStreamReader(url.openStream()));
@@ -141,6 +147,24 @@ public class CustomSkinHandler
 			}
 
 		}
+	}
+
+	public static void getManualPages()
+	{
+		ManualHelper.getManual().manualContents.removeAll("contributor_skins");
+		ArrayList<ManualPages> skin_pages = new ArrayList<>();
+		skin_pages.add(new ManualPages.Text(ManualHelper.getManual(), "contributor_skins"));
+		for(SpecialSkin skin : CustomSkinHandler.specialSkins.values())
+			skin_pages.add(new IIManualPageContributorSkin(ManualHelper.getManual(), skin));
+
+		ManualEntry contributor_skins = ManualHelper.getManual().getEntry("contributor_skins");
+		if(contributor_skins==null)
+		{
+			contributor_skins = new ManualEntry("contributor_skins", ClientProxy.CAT_WARFARE);
+			ManualHelper.getManual().manualContents.put(ClientProxy.CAT_WARFARE,contributor_skins);
+		}
+
+		contributor_skins.setPages(skin_pages.toArray(new ManualPages[]{}));
 	}
 
 

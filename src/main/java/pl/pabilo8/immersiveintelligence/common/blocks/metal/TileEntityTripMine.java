@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
+import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.TargetingInfo;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
@@ -8,8 +10,8 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +24,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -29,14 +32,17 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIITripWireCoil;
+import pl.pabilo8.immersiveintelligence.common.items.ItemIITripWireCoil.IITripWireType;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIITrenchShovel;
-import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.DoubleStream;
+
+import static pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityTellermine.MATCHING_MATERIALS;
 
 /**
  * @author Pabilo8
@@ -58,7 +64,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		}
 	}
 
-	private boolean triggered = false;
+	private boolean armed = true;
 	public boolean grass = false;
 	public int digLevel = 0;
 
@@ -66,6 +72,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
 		super.readCustomNBT(nbtTagCompound, b);
+		armed = nbtTagCompound.getBoolean("armed");
 		grass = nbtTagCompound.getBoolean("grass");
 		digLevel = nbtTagCompound.getInteger("digLevel");
 		this.readOnPlacement(null,new ItemStack(nbtTagCompound.getCompoundTag("mineStack")));
@@ -75,6 +82,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	public void writeCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
 	{
 		super.writeCustomNBT(nbtTagCompound, b);
+		nbtTagCompound.setBoolean("armed", armed);
 		nbtTagCompound.setBoolean("grass", grass);
 		nbtTagCompound.setInteger("digLevel", digLevel);
 		nbtTagCompound.setTag("mineStack", mineStack.serializeNBT());
@@ -94,10 +102,13 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 
 	public void explode()
 	{
+		if(!armed)
+			return;
+
 		if(!world.isRemote&&mineStack.getItem() instanceof IBullet)
 		{
-			EntityBullet bullet = BulletHelper.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 1, 0), 0.125f);
-			bullet.fuse=3;
+			EntityBullet bullet = BulletHelper.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 1, 0), 0.5f);
+			bullet.fuse=20;
 			world.spawnEntity(bullet);
 		}
 		/*
@@ -114,7 +125,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	@Override
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
-		return WireType.STRUCTURE_CATEGORY.equals(cableType.getCategory());
+		return ItemIITripWireCoil.TRIPWIRE_CATEGORY.equals(cableType.getCategory());
 	}
 
 	@Override
@@ -141,11 +152,10 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		{
 			heldItem.damageItem(1, player);
 			Material material = world.getBlockState(pos.down()).getMaterial();
-			if(!(material==Material.GROUND||material==Material.GRASS))
+			if(Arrays.stream(MATCHING_MATERIALS).noneMatch(material1 -> material1==material))
 				return true;
 			digLevel += heldItem.getItem() instanceof ItemIITrenchShovel?5: 1;
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, false);
-
 			return true;
 		}
 		else if(digLevel==15&&heldItem.getItem() instanceof ItemBlock&&((ItemBlock)heldItem.getItem()).getBlock()==Blocks.TALLGRASS)
@@ -156,6 +166,14 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, false);
 			return true;
 		}
+		else if(armed&&heldItem.getItem().getToolClasses(heldItem).contains(Lib.TOOL_WIRECUTTER))
+		{
+			heldItem.damageItem(8,player);
+			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.BLOCKS, 1f, 1f, false);
+			armed=false;
+			grass=false;
+		}
+
 		return false;
 	}
 
@@ -191,5 +209,18 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 			this.mineStack = stack;
 			this.coreColor = ((IBullet)item).getCore(stack).getColour();
 		}
+	}
+
+	@Override
+	public ItemStack getTileDrop(@Nullable EntityPlayer player, IBlockState state)
+	{
+		return mineStack;
+	}
+
+	@Override
+	public NonNullList<ItemStack> getTileDrops(@Nullable EntityPlayer player, IBlockState state)
+	{
+		explode();
+		return NonNullList.from(armed?ItemStack.EMPTY:mineStack);
 	}
 }

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPackerOld;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
 
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ import java.util.ArrayList;
 public class GuiPacker extends GuiIEContainerBase
 {
 	public static final String texture_packer = ImmersiveIntelligence.MODID+":textures/gui/packer.png";
-	TileEntityPacker tile;
+	TileEntityPackerOld tile;
 
-	public GuiPacker(InventoryPlayer inventoryPlayer, TileEntityPacker tile)
+	public GuiPacker(InventoryPlayer inventoryPlayer, TileEntityPackerOld tile)
 	{
 		super(new ContainerPacker(inventoryPlayer, tile));
 		this.ySize = 184;
@@ -48,8 +48,7 @@ public class GuiPacker extends GuiIEContainerBase
 		ClientUtils.bindTexture(texture_packer);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		ClientUtils.drawGradientRect(guiLeft+157, guiTop+26+(47-stored), guiLeft+164, guiTop+74, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(guiLeft+157, guiTop+26, 7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 	}
 
@@ -60,10 +59,10 @@ public class GuiPacker extends GuiIEContainerBase
 		this.renderHoveredToolTip(mx, my);
 
 		//Thanks Flaxbeard!
-		ArrayList<String> tooltip = new ArrayList();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx > guiLeft+157&&mx < guiLeft+164&&my > guiTop+26&&my < guiTop+74)
-			tooltip.add(tile.getEnergyStored(null)+"/"+tile.getMaxEnergyStored(null)+" IF");
+			tooltip.add(Utils.getPowerLevelString(tile));
 
 		if(!tooltip.isEmpty())
 		{

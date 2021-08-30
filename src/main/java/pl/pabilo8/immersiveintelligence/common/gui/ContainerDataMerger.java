@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataMerger
  * @author Pabilo8
  * @since 30-06-2019
  */
-public class ContainerDataMerger extends ContainerIEBase
+public class ContainerDataMerger extends ContainerIEBase<TileEntityDataMerger>
 {
 	public ContainerDataMerger(InventoryPlayer inventoryPlayer, TileEntityDataMerger tile)
 	{

@@ -263,7 +263,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 		{
 			case "text":
 			{
-				String toPrint = dataToPrint.getPacketVariable('s').valueToString();
+				String toPrint = dataToPrint.getPacketVariable('t').valueToString();
 				StringBuilder printedChars = new StringBuilder();
 
 				int black_amount = 0, cyan_amount = 0, magenta_amount = 0, yellow_amount = 0;
@@ -470,7 +470,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	@Override
 	public float[] getBlockBounds()
 	{
-		return new float[]{0, 0, 0, 0, 0, 0};
+		return new float[]{0, 0, 0, 1, 1, 1};
 	}
 
 	@Override

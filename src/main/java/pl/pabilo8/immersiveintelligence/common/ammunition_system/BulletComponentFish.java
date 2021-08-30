@@ -6,17 +6,14 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 /**
  * @author Pabilo8
@@ -44,10 +41,10 @@ public class BulletComponentFish implements IBulletComponent
 	}
 
 	@Override
-	public void onEffect(float amount, NBTTagCompound tag, World world, BlockPos pos, EntityBullet bullet)
+	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
 		Vec3d v = new Vec3d(0, -1, 0);
-		Vec3d throwerPos = new Vec3d(pos.offset(EnumFacing.UP, 3));
+		Vec3d throwerPos = pos.addVector(0,3,0);
 		for(int i = 0; i < 100*amount; i++)
 		{
 			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
@@ -59,7 +56,7 @@ public class BulletComponentFish implements IBulletComponent
 			shot.motionZ = vecDir.z*2;
 			world.spawnEntity(shot);
 		}
-		Utils.dropStackAtPos(world,pos.up(),new ItemStack(Items.FISH));
+		Utils.dropStackAtPos(world,new BlockPos(pos).up(),new ItemStack(Items.FISH));
 	}
 
 	@Override

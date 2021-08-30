@@ -253,7 +253,6 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@SideOnly(Side.CLIENT)
 	private void spawnDustParticle()
 	{
-		//Hardcoded for now :D, might make it configurable later on.
 		Vec3d pos = new Vec3d(getBlockPosForPos(2)).addVector(0.5, 0, 0.5);
 		Vec3d facing = new Vec3d(getFacing().getDirectionVec());
 		facing = facing.scale(0.65f);

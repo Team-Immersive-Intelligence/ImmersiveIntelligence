@@ -33,3 +33,4 @@ libs/
 *.classpath
 .settings/
 custom.gradle
+*Thumbs.db

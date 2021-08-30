@@ -4,48 +4,96 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.Tuple;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EmplacementWeaponCPDS extends EmplacementWeapon
 {
 	/**
 	 * CPDS Q&A
-	 *
+	 * <p>
 	 * Q: Is CPDS a real life thing?
 	 * A: Not really, it's based on CIWS, but in II it performs a counter-projectile role with anti-aircraft as secondary task
-	 *
+	 * <p>
 	 * Q: What does CPDS stand for?
 	 * A: Counter-Projectile Defense System
-	 *
+	 * <p>
 	 * Q: Why gatling?
 	 * A: It's the most high-tech II can get ^^ Historically, gatling guns were used since the US Civil War, so yes, they existed in interwar/ww2
 	 * Decided to choose it because of the unique design
-	 *
+	 * <p>
 	 * Q: Isn't it OP? it's 8 barrels
 	 * A: Yes, but it costs a lot
 	 */
-	float shootDelay = 0;
+	private AxisAlignedBB vision;
 	int reloadDelay = 0;
 	int bulletsShot = 0;
 	private Vec3d vv;
-	static ItemStack s2=ItemStack.EMPTY;
+	float shootDelay = 0;
+
+	NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
+	NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(3, ItemStack.EMPTY);
+	private int casingsToDrop = 0;
+	private boolean requiresPlatformRefill = false;
+
+	ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
+	private ItemStack s2 = ItemStack.EMPTY;
+
+	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
+	{
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack)
+		{
+			if(!OreDictionary.itemMatches(stack, Utils.getStackWithMetaName(IIContent.itemBulletMagazine, "cpds_drum"), false))
+				return false;
+			return super.isItemValid(slot, stack);
+		}
+
+		@Nonnull
+		@Override
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+		{
+			if(!isItemValid(slot, stack))
+				return stack;
+			ItemStack itemStack = super.insertItem(slot, stack, simulate);
+			inventory.set(slot, stacks.get(slot));
+			return itemStack;
+		}
+	};
 
 	@Override
 	public String getName()
@@ -71,22 +119,30 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		super.shoot(te);
 		if(!te.getWorld().isRemote)
 		{
-			if(s2.isEmpty())
+			s2 = magazine.size() > 0?magazine.removeFirst(): ItemStack.EMPTY;
+			if(!s2.isEmpty())
 			{
-				s2 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_tungsten", "piercing","tracer_powder");
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setInteger("colour", 0xff0000);
-				IIContent.itemAmmoMachinegun.setComponentNBT(s2, new NBTTagCompound(), tag);
+				te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.autocannon_firing, SoundCategory.PLAYERS, 2f, 1.25f);
+				EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 3f);
+				a.setShootPos(te.getAllBlocks());
+				if(entity!=null)
+					a.setShooters(entity, entity.partArray);
+				te.getWorld().spawnEntity(a);
 			}
-
-			te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.machinegun_shot, SoundCategory.PLAYERS, 1.25f, 0.25f);
-			EntityBullet a = BulletHelper.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 12f);
-			a.setShootPos(te.getAllBlocks());
-			te.getWorld().spawnEntity(a);
 		}
-		if(shootDelay<20)
-		shootDelay+=6;
-		//bulletsShot++;
+		else if(magazine.size() > 0)
+		{
+			Vec3d weaponCenter = te.getWeaponCenter().add(vv.scale(-2.5));
+			Vec3d vg = vv.scale(4f);
+			ParticleUtils.spawnGunfireFX(weaponCenter.x, weaponCenter.y, weaponCenter.z, vg.x, vg.y, vg.z, 4f);
+
+			magazine.removeFirst();
+		}
+		casingsToDrop++;
+		bulletsShot = (bulletsShot+1)%4;
+
+		if(magazine.size() > 0&&shootDelay < 20)
+			shootDelay += 6;
 	}
 
 	public boolean isSetUp(boolean door)
@@ -95,61 +151,122 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	}
 
 	@Override
+	public boolean requiresPlatformRefill()
+	{
+		return requiresPlatformRefill;
+	}
+
+	@Override
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-		float force = 12f;
-		float mass = IIContent.itemAmmoMachinegun.getMass(s2);
+		float force = IIContent.itemAmmoMachinegun.getDefaultVelocity()*3;
+		s2 = magazine.size() > 0?magazine.peekFirst(): ItemStack.EMPTY;
+		float mass = s2.isEmpty()?0: IIContent.itemAmmoMachinegun.getMass(s2);
 
 		vv = posTurret.subtract(posTarget.add(motion));
-		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
-		float motionTime = (float)Math.abs(vv.lengthSquared())/force/0.8f;
-		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(1f).addVector(0, 0f, 0f);
-		vv = vv.subtract(0, EntityBullet.GRAVITY/mass*motionXZ/force, 0).normalize();
+
+		double dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
+		double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC = baseMotionY;
+		while(dist > 0)
+		{
+			force -= EntityBullet.DRAG*force*EntityBullet.DEV_SLOMO;
+			gravityMotionY -= EntityBullet.GRAVITY*mass*EntityBullet.DEV_SLOMO;
+			baseMotionYC = baseMotionY*(force/(IIContent.itemAmmoMachinegun.getDefaultVelocity()*3));
+			motionY += (baseMotionYC+gravityMotionY)*EntityBullet.DEV_SLOMO;
+			dist -= EntityBullet.DEV_SLOMO*force;
+		}
+
+		vv = vv.addVector(0, motionY-baseMotionY, 0).normalize();
+
+
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0,vv.y,0)))));
-		//float pp = Utils.calculateBallisticAngle(Math.abs(vv.lengthSquared()),posTurret.y-(posTarget.y+motion.y),force,EntityBullet.GRAVITY/mass,0.98f);
-		pp = MathHelper.clamp(pp, -90, 75);
+		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))));
+
 		return new float[]{yy, pp};
 	}
 
 	@Override
-	public void tick()
+	public void init(TileEntityEmplacement te, boolean firstTime)
 	{
-		if(bulletsShot >= 64)
+		super.init(te, firstTime);
+		vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5).grow(CPDS.detectionRadius);
+	}
+
+	@Override
+	public void tick(TileEntityEmplacement te)
+	{
+		if(magazine.isEmpty())
 		{
-			reloadDelay++;
-			if(reloadDelay >= Autocannon.reloadTime)
+			if(reloadDelay==0)
 			{
-				bulletsShot = 0;
+				if(inventoryPlatform.stream().anyMatch(stack -> OreDictionary.itemMatches(stack, Utils.getStackWithMetaName(IIContent.itemBulletMagazine, "cpds_drum"), false)
+						&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0))
+					reloadDelay = 1;
+				else
+					requiresPlatformRefill = true;
+			}
+			else
+			{
+				reloadDelay++;
+			}
+
+			if(reloadDelay >= CPDS.reloadTime)
+			{
+
+				for(ItemStack stack : inventoryPlatform)
+				{
+					if(OreDictionary.itemMatches(stack, Utils.getStackWithMetaName(IIContent.itemBulletMagazine, "cpds_drum"), false)
+							&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0)
+					{
+						magazine.addAll(ItemIIBulletMagazine.takeAll(stack));
+						break;
+					}
+				}
+
 				reloadDelay = 0;
+				syncWithClient(te);
 			}
 		}
-
 		if(shootDelay > 0)
 			shootDelay--;
 	}
 
 	@Override
-	public NBTTagCompound saveToNBT()
+	public NBTTagCompound saveToNBT(boolean forClient)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setFloat("yaw", yaw);
-		tag.setFloat("pitch", pitch);
-		return tag;
+		NBTTagCompound nbt = super.saveToNBT(forClient);
+
+		nbt.setInteger("reloadDelay", reloadDelay);
+
+		nbt.setTag("inventory", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventory));
+		nbt.setTag("inventoryPlatform", blusunrize.immersiveengineering.common.util.Utils.writeInventory(inventoryPlatform));
+		if(!forClient)
+			nbt.setTag("magazine", blusunrize.immersiveengineering.common.util.Utils.writeInventory(magazine));
+		nbt.setInteger("magazine_amount", magazine.size());
+
+		nbt.setBoolean("requiresPlatformRefill", requiresPlatformRefill);
+		return nbt;
+	}
+
+
+	@Override
+	public void readFromNBT(NBTTagCompound tagCompound)
+	{
+		super.readFromNBT(tagCompound);
+
+		reloadDelay = tagCompound.getInteger("reloadDelay");
+
+		inventory = blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("inventory", 10), inventory.size());
+		inventoryPlatform = blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("inventoryPlatform", 10), inventoryPlatform.size());
+		magazine = new ArrayDeque<>(blusunrize.immersiveengineering.common.util.Utils.readInventory(tagCompound.getTagList("magazine", 10), tagCompound.getInteger("magazine_amount")));
+
+		requiresPlatformRefill = tagCompound.getBoolean("requiresPlatformRefill");
 	}
 
 	@Override
 	public boolean canShoot(TileEntityEmplacement te)
 	{
-		return te.isDoorOpened;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
-	{
-		yaw = tagCompound.getFloat("yaw");
-		pitch = tagCompound.getFloat("pitch");
-
+		return vv!=null&&te.isDoorOpened&&magazine.size() > 0;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -160,12 +277,13 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		float p, pp, y, yy;
 		p = this.nextPitch-this.pitch;
 		y = this.nextYaw-this.yaw;
-		pp = pitch+Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed();
-		yy = yaw+Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed();
+		boolean power = te.energyStorage.getEnergyStored() >= getEnergyUpkeepCost();
+		pp = pitch+(power?(Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed()): 0);
+		yy = yaw+(power?(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed()): 0);
 
 		float f = (((te.getWorld().getTotalWorldTime()%4+partialTicks))/4f)*(shootDelay/20f);
 
-		ClientUtils.bindTexture(EmplacementRenderer.textureCPDS);
+		Utils.bindTexture(EmplacementRenderer.textureCPDS);
 
 		GlStateManager.rotate(yy, 0, 1, 0);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.baseModel)
@@ -203,7 +321,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		double cc = (int)Math.min(clientProgress+((partialTicks*(Tools.wrench_upgrade_progress/2f))), maxClientProgress);
 		double progress = MathHelper.clamp(cc/req, 0, 1);
 
-		ClientUtils.bindTexture(EmplacementRenderer.textureCPDS);
+		Utils.bindTexture(EmplacementRenderer.textureCPDS);
 		for(int i = 0; i < l*progress; i++)
 		{
 			if(1+i > Math.round(l*progress))
@@ -244,5 +362,118 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public AxisAlignedBB getVisionAABB()
+	{
+		return vision;
+	}
+
+	@Override
+	public void syncWithEntity(EntityEmplacementWeapon entity)
+	{
+		super.syncWithEntity(entity);
+		if(entity==this.entity)
+			entity.aabb = new AxisAlignedBB(-3, 0, -3, 3, 3, 3);
+	}
+
+	@Override
+	public EmplacementHitboxEntity[] getCollisionBoxes()
+	{
+		if(entity==null)
+			return new EmplacementHitboxEntity[0];
+
+		//new Vec3d(0,0,0)
+		ArrayList<EmplacementHitboxEntity> list = new ArrayList<>();
+		list.add(new EmplacementHitboxEntity(entity, "baseBox", 2f, 0.75f,
+				new Vec3d(0, 0.75, 0), Vec3d.ZERO, 12));
+		list.add(new EmplacementHitboxEntity(entity, "topBox", 1.75f, 0.75f+0.5f,
+				new Vec3d(0.25, 0.75+0.5, 0), Vec3d.ZERO, 12));
+		list.add(new EmplacementHitboxEntity(entity, "camera", 0.75f, 0.75f,
+				new Vec3d(-0.125, 2.25, -0.625), Vec3d.ZERO, 6));
+
+		list.add(new EmplacementHitboxEntity(entity, "barrel1", 0.5f, 0.5f,
+				new Vec3d(0, 1, 0), new Vec3d(-1.25, 0, -0.25), 20));
+		list.add(new EmplacementHitboxEntity(entity, "barrel2", 0.5f, 0.5f,
+				new Vec3d(0, 1, 0), new Vec3d(-1.75, 0, -0.25), 20));
+		list.add(new EmplacementHitboxEntity(entity, "barrel3", 0.5f, 0.5f,
+				new Vec3d(0, 1, 0), new Vec3d(-2.25, 0, -0.25), 20));
+
+
+		return list.toArray(new EmplacementHitboxEntity[0]);
+	}
+
+	@Override
+	public NonNullList<ItemStack> getBaseInventory()
+	{
+		return inventory;
+	}
+
+	@Override
+	public void performPlatformRefill(TileEntityEmplacement te)
+	{
+		while(casingsToDrop > 0)
+		{
+			te.doProcessOutput(IIContent.itemAmmoMachinegun.getCasingStack(Math.min(casingsToDrop, 24)));
+			casingsToDrop = Math.max(casingsToDrop-24, 0);
+		}
+		for(int i = 0; i < inventoryPlatform.size(); i++)
+		{
+			te.doProcessOutput(inventoryPlatform.get(i));
+			inventoryPlatform.set(i, ItemStack.EMPTY);
+		}
+		int moved = 0;
+		for(int i = 0; i < inventory.size(); i++)
+		{
+			if(moved >= inventoryPlatform.size())
+				break;
+
+			ItemStack s = inventory.get(i);//Magazines shouldn't stack, but why not
+			if(!s.isEmpty())
+			{
+				inventoryPlatform.set(moved, s);
+				inventory.set(i, ItemStack.EMPTY);
+				moved++;
+			}
+		}
+
+		if(inventoryPlatform.stream().anyMatch(stack -> !stack.isEmpty()))
+		{
+			requiresPlatformRefill = false;
+			syncWithClient(te);
+		}
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(boolean in)
+	{
+		return in?inventoryHandler: super.getItemHandler(in);
+	}
+
+	@Override
+	public void renderStorageInventory(GuiEmplacementPageStorage gui, int mx, int my, float partialTicks, boolean first)
+	{
+
+	}
+
+	@Override
+	public int getEnergyUpkeepCost()
+	{
+		return CPDS.energyUpkeepCost;
+	}
+
+	@Override
+	public int getMaxHealth()
+	{
+		return CPDS.maxHealth;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	protected Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris()
+	{
+		return new Tuple<>(EmplacementRenderer.textureCPDS, Arrays.asList(EmplacementRenderer.modelCPDSConstruction));
 	}
 }

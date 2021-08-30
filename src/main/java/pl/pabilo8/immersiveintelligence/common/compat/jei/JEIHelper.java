@@ -1,7 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
+import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.compat.jei.IEFluidTooltipCallback;
+import com.google.common.collect.LinkedHashMultimap;
 import mezz.jei.api.*;
+import mezz.jei.api.ISubtypeRegistry.ISubtypeInterpreter;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.ITooltipCallback;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
@@ -9,19 +14,23 @@ import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.bathing.BathingRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer.ElectrolyzerRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.precission_assembler.PrecissionAssemblerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.sawmill.SawmillRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.vulcanizer.VulcanizerGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.vulcanizer.VulcanizerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @JEIPlugin
 public class JEIHelper implements IModPlugin
@@ -34,7 +43,11 @@ public class JEIHelper implements IModPlugin
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
 	{
-
+		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemBulletMagazine, stack -> {
+			if(!stack.isEmpty())
+				return ItemNBTHelper.hasKey(stack, "bullets")?ISubtypeInterpreter.NONE:IIContent.itemBulletMagazine.getSubNames()[stack.getMetadata()];
+			return ISubtypeInterpreter.NONE;
+		});
 	}
 
 	@Override
@@ -43,7 +56,7 @@ public class JEIHelper implements IModPlugin
 
 	}
 
-	Map<Class, IIRecipeCategory> categories = new LinkedHashMap<>();
+	LinkedHashMultimap<Class<? extends MultiblockRecipe>, IIRecipeCategory> categories = LinkedHashMultimap.create();
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry)
@@ -52,7 +65,8 @@ public class JEIHelper implements IModPlugin
 		//Recipes
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 		slotDrawable = guiHelper.getSlotDrawable();
-		categories.put(BathingRecipe.class, new BathingRecipeCategory(guiHelper));
+		categories.put(BathingRecipe.class, new BathingRecipeCategory(guiHelper, false));
+		categories.put(BathingRecipe.class, new BathingRecipeCategory(guiHelper, true));
 		categories.put(ElectrolyzerRecipe.class, new ElectrolyzerRecipeCategory(guiHelper));
 		categories.put(PrecissionAssemblerRecipe.class, new PrecissionAssemblerRecipeCategory(guiHelper));
 		categories.put(SawmillRecipe.class, new SawmillRecipeCategory(guiHelper));
@@ -67,12 +81,22 @@ public class JEIHelper implements IModPlugin
 		modRegistry = registryIn;
 		//Blacklist
 
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPunchtape, 1, 0));
+
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 1));
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 2));
 		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemPrintedPage, 1, 3));
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.item_assembly_scheme, 1, OreDictionary.WILDCARD_VALUE));
 
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver, 1, ItemIIAmmoRevolver.CASING));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.itemAmmoRevolver, 1, ItemIIAmmoRevolver.UNUSED));
+
+
+		for(IBullet bullet : BulletRegistry.INSTANCE.registeredBulletItems.values())
+		{
+			ItemStack stack = bullet.getBulletWithParams("", "", "");
+			stack.setTagCompound(new NBTTagCompound());
+			jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
+		}
 
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_wooden_multiblock, 1, OreDictionary.WILDCARD_VALUE));
 		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_metal_multiblock0, 1, OreDictionary.WILDCARD_VALUE));
@@ -88,9 +112,10 @@ public class JEIHelper implements IModPlugin
 			modRegistry.handleRecipes(cat.getRecipeClass(), cat, cat.getRecipeCategoryUid());
 		}
 
-		modRegistry.addRecipes(BathingRecipe.recipeList, "ii.bathing");
-		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 16, 58, 19, 12, "ii.bathing");
-		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 131, 57, 19, 13, "ii.bathing");
+		modRegistry.addRecipes(BathingRecipe.recipeList.stream().filter(bathingRecipe -> !bathingRecipe.isWashing).collect(Collectors.toList()), "ii.bathing");
+		modRegistry.addRecipes(BathingRecipe.recipeList.stream().filter(bathingRecipe -> bathingRecipe.isWashing).collect(Collectors.toList()), "ii.washing");
+		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 16, 58, 19, 12, "ii.bathing", "ii.washing");
+		modRegistry.addRecipeClickArea(GuiChemicalBath.class, 131, 57, 19, 13, "ii.bathing", "ii.washing");
 
 		modRegistry.addRecipes(ElectrolyzerRecipe.recipeList, "ii.electrolyzer");
 		modRegistry.addRecipeClickArea(GuiElectrolyzer.class, 66, 45, 47, 4, "ii.electrolyzer");
@@ -109,25 +134,25 @@ public class JEIHelper implements IModPlugin
 
 		modRegistry.addRecipes(VulcanizerRecipe.recipeList.values(), "ii.vulcanizer");
 		modRegistry.addRecipeClickArea(GuiVulcanizer.class, 71, 24, 30, 30, "ii.vulcanizer");
+		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiHandler());
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
-		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler());
+		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler(),
+				new ArithmeticLogicMachineGuiHandler.Variables(),
+				new ArithmeticLogicMachineGuiHandler.Edit(),
+				new ArithmeticLogicMachineGuiHandler.Storage(),
+				new DataInputMachineGuiHandler.Variables(),
+				new DataInputMachineGuiHandler.Edit(),
+				new DataInputMachineGuiHandler.Storage(),
+				new RedstoneInterfaceGuiHandler.Data(),
+				new RedstoneInterfaceGuiHandler.Redstone(),
+				new EmplacementGuiHandler()
+		);
 	}
 
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime)
 	{
 
-	}
-
-
-	private IIRecipeCategory getFactory(Class recipeClass)
-	{
-		IIRecipeCategory factory = this.categories.get(recipeClass);
-
-		if(factory==null&&recipeClass!=Object.class)
-			factory = getFactory(recipeClass.getSuperclass());
-
-		return factory;
 	}
 }

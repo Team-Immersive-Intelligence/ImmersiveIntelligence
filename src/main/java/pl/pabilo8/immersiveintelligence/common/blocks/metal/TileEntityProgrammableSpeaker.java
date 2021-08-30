@@ -16,10 +16,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -68,6 +66,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 			this.updateSound();
 			if (!soundID.equals(""))
 			{
+
 				if(sound!=null)
 				{
 					ImmersiveEngineering.proxy.handleTileSound(sound, this, this.active, soundVolume*((ProgrammableSpeaker.soundRange+4)/20f), tone);
@@ -138,14 +137,31 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
+		//once
+		boolean once = packet.getPacketVariable('o') instanceof DataPacketTypeBoolean&&((DataPacketTypeBoolean)packet.getPacketVariable('o')).value;
+
+		if(packet.getPacketVariable('t') instanceof DataPacketTypeInteger)
+			tone = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('t')).value/100f, -2, 2);
+
+		if(packet.getPacketVariable('v') instanceof DataPacketTypeInteger)
+			soundVolume = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('v')).value/100f, 0, 1);
+
 		if(packet.variables.containsKey('s'))
 		{
-			soundID = packet.getPacketVariable('s').valueToString();
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageProgrammableSpeakerSync(active, this.getPos(),tone,soundVolume,soundID), this.world.provider.getDimension());
+			if(once)
+			{
+				SoundEvent s = SoundEvent.REGISTRY.getObject(new ResourceLocation(packet.getPacketVariable('s').valueToString()));
+				if(s!=null)
+					world.playSound(null, getPos(), s, SoundCategory.BLOCKS, 1f*((ProgrammableSpeaker.soundRange+4)/20f), tone);
+			}
+			else
+			{
+				soundID = packet.getPacketVariable('s').valueToString();
+				IIPacketHandler.INSTANCE.sendToDimension(new MessageProgrammableSpeakerSync(active, this.getPos(), tone, soundVolume, soundID), this.world.provider.getDimension());
+			}
+
 		}
 
-		if(packet.variables.containsKey('t')&&packet.getPacketVariable('t') instanceof DataPacketTypeInteger)
-			tone = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('t')).value/100f, -2, 2);
 	}
 
 	@SideOnly(Side.CLIENT)

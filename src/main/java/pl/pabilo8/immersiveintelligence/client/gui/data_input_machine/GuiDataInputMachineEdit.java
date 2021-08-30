@@ -26,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiMultiLineTextField;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityDataInputMachine;
@@ -134,7 +135,7 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 			break;
 			case "string":
 			{
-				this.valueEdit = new GuiTextField(5, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
+				this.valueEdit = new GuiMultiLineTextField(5, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
 				this.valueEdit.setFocused(true);
 				this.valueEdit.setMaxStringLength(512);
 				this.valueEdit.setText(dataType.valueToString());

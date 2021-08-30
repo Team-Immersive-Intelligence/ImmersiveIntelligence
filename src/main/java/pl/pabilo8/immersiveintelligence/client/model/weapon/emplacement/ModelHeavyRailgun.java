@@ -806,7 +806,7 @@ public class ModelHeavyRailgun extends ModelIIBase
 
 		if(doOffsets)
 		{
-			translate(gunModel,0,20,13);
+			translate(gunModel,0,20,4);
 		}
 
 		flipAll();

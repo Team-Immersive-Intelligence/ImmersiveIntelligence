@@ -123,6 +123,7 @@ public class EntityShrapnel extends EntityIEProjectile implements ILightProvider
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
 	public Light provideLight()
@@ -132,7 +133,7 @@ public class EntityShrapnel extends EntityIEProjectile implements ILightProvider
 		{
 			int light = this.isBurning()?15: Math.round(s.brightness*15f);
 			if(light > 0)
-				return Light.builder().pos(this).radius(.05f*light).color(1, 1, 1).build();
+				return Light.builder().pos(this).radius(.05f*light).color(s.color,false).build();
 		}
 		return null;
 	}

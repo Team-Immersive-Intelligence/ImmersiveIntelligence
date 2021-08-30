@@ -187,10 +187,16 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[17].setRotationPoint(102F, -56F, 40F);
 		baseModel[17].rotateAngleY = 0.78539816F;
 
-		baseModel[18].flip = false;
+		baseModel[18].flip = flip;
 		baseModel[18].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(8, 4, 8, 4), new Coord2D(8, 0, 8, 0)}), 4, 8, 4, 23, 4, ModelRendererTurbo.MR_FRONT, new float[]{8, 4, 6, 5}, true); // Wire2_2
 		baseModel[18].setRotationPoint(99F, -56F, 43F);
 		baseModel[18].rotateAngleY = 2.35619449F;
+		if(flip)
+		{
+			baseModel[18].rotateAngleY+=3.14f;
+			baseModel[18].rotationPointX+=3;
+			baseModel[18].rotationPointZ+=2.65;
+		}
 
 		baseModel[19].addBox(0F, 0F, 0F, 2, 14, 2, 0F); // TableLeg
 		baseModel[19].setRotationPoint(110F, -78F, 16F);
@@ -233,36 +239,78 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[30].setRotationPoint(32F, -56F, 48F);
 		baseModel[30].rotateAngleX = 1.57079633F;
 		baseModel[30].rotateAngleY = 2.35619449F;
+		if(flip)
+		{
+			baseModel[30].rotateAngleY+=3.14f/2f;
+			baseModel[30].hasOffset=true;
+			baseModel[30].offsetX=4;
+			baseModel[30].offsetY=-4.5f;
+		}
 
 		baseModel[31].flip = !flip;
 		baseModel[31].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[31].setRotationPoint(47F, -48F, 39F);
 		baseModel[31].rotateAngleX = 1.57079633F;
 		baseModel[31].rotateAngleY = 0.78539816F;
+		if(flip)
+		{
+			baseModel[31].rotateAngleY+=3.14f/2f;
+			baseModel[31].hasOffset=true;
+			baseModel[31].offsetX=4;
+			baseModel[31].offsetY=-4.25f;
+		}
 
 		baseModel[32].flip = !flip;
 		baseModel[32].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[32].setRotationPoint(32F, -40F, 48F);
 		baseModel[32].rotateAngleX = 1.57079633F;
 		baseModel[32].rotateAngleY = 2.35619449F;
+		if(flip)
+		{
+			baseModel[32].rotateAngleY+=3.14f/2f;
+			baseModel[32].hasOffset=true;
+			baseModel[32].offsetX=4;
+			baseModel[32].offsetY=-4f;
+		}
 
 		baseModel[33].flip = !flip;
 		baseModel[33].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[33].setRotationPoint(32F, -48F, 48F);
 		baseModel[33].rotateAngleX = 1.57079633F;
 		baseModel[33].rotateAngleY = 2.35619449F;
+		if(flip)
+		{
+			baseModel[33].rotateAngleY+=3.14f/2f;
+			baseModel[33].hasOffset=true;
+			baseModel[33].offsetX=4;
+			baseModel[33].offsetY=-4.25f;
+		}
 
 		baseModel[34].flip = !flip;
 		baseModel[34].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 4, 2, 4), new Coord2D(4, 4, 4, 4), new Coord2D(4, 0, 4, 0)}), 4, 4, 4, 15, 4, ModelRendererTurbo.MR_FRONT, new float[]{4, 4, 2, 5}); // Wire3_2
 		baseModel[34].setRotationPoint(49F, -40F, 37F);
 		baseModel[34].rotateAngleX = 1.57079633F;
 		baseModel[34].rotateAngleY = 0.78539816F;
+		if(flip)
+		{
+			baseModel[34].rotateAngleY+=3.14f/2f;
+			baseModel[34].hasOffset=true;
+			baseModel[34].offsetX=4;
+			baseModel[34].offsetY=-4.25f;
+		}
 
 		baseModel[35].flip = !flip;
 		baseModel[35].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 3, 0, 3), new Coord2D(2, 8, 2, 8), new Coord2D(4, 8, 4, 8), new Coord2D(4, 0, 4, 0)}), 4, 4, 8, 21, 4, ModelRendererTurbo.MR_FRONT, new float[]{5, 8, 2, 6}); // Wire3_2
 		baseModel[35].setRotationPoint(47F, -56F, 35F);
 		baseModel[35].rotateAngleX = 1.57079633F;
 		baseModel[35].rotateAngleY = 1.57079633F;
+		if(flip)
+		{
+			baseModel[35].rotateAngleY-=3.14f/2;
+			baseModel[35].hasOffset=true;
+			baseModel[35].offsetX=0;
+			baseModel[35].offsetY=-0;
+		}
 
 		baseModel[36].addBox(0F, 0F, 0F, 14, 10, 10, 0F); // BoxWooden1
 		baseModel[36].setRotationPoint(30F, -74F, 98F);

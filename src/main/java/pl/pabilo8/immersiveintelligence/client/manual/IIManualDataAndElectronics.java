@@ -6,12 +6,13 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesCallbackDisplay;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualPages.DataVariablesDisplay;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
@@ -124,7 +125,7 @@ public class IIManualDataAndElectronics extends IIManual
 		);
 		ManualHelper.addEntry("conveyor_scanner", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.instance),
-				new DataVariablesDisplay(ManualHelper.getManual(), "conveyor_scanner", false)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "conveyor_scanner", false)
 						.addEntry(new DataPacketTypeItemStack(), 's')
 		);
 
@@ -132,11 +133,11 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPageMultiblock(ManualHelper.getManual(), "printing_press0", MultiblockPrintingPress.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press1"),
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press2"),
-				new DataVariablesDisplay(ManualHelper.getManual(), "printing_press", true)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "printing_press", true)
 						.addEntry(new DataPacketTypeInteger(), 'a')
 						.addEntry(new DataPacketTypeString(), 'm')
 						.addEntry(new DataPacketTypeString(), 't'),
-				new DataVariablesCallbackDisplay(ManualHelper.getManual(), "printing_press")
+				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "printing_press")
 						.addEntry(new DataPacketTypeInteger(), "get_ink", "get_ink_black")
 						.addEntry(new DataPacketTypeInteger(), "get_ink_cyan")
 						.addEntry(new DataPacketTypeInteger(), "get_ink_magenta")
@@ -166,8 +167,10 @@ public class IIManualDataAndElectronics extends IIManual
 
 		ManualHelper.addEntry("programmable_speaker", getCategory(),
 				new ManualPages.Crafting(ManualHelper.getManual(), "programmable_speaker0", new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta())),
-				new DataVariablesDisplay(ManualHelper.getManual(), "programmable_speaker", true)
+				new IIManualPageDataVariables(ManualHelper.getManual(), "programmable_speaker", true)
+						.addEntry(new DataPacketTypeBoolean(), 'o')
 						.addEntry(new DataPacketTypeString(), 's')
+						.addEntry(new DataPacketTypeInteger(), 'v')
 						.addEntry(new DataPacketTypeInteger(), 't')
 		);
 	}

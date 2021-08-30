@@ -52,7 +52,7 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 		model = new ModelMineDetector();
 	}
 
-	public void renderBase(EntityLivingBase player, float distance, boolean flipY)
+	public float renderBase(EntityLivingBase player, float distance, boolean flipY)
 	{
 		GlStateManager.pushMatrix();
 		int i = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
@@ -60,33 +60,47 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 
 		if(flipY)
 		{
-			distance*=2f;
-
 			float v = 0.5f;
-			RayTraceResult traceResult = player.rayTrace(distance, 0);
+
+			RayTraceResult traceResult = player.rayTrace(distance*2, 0);
 			if(traceResult!=null&&traceResult.typeOfHit!=null)
 			{
 				v= (float)traceResult.hitVec.subtract(player.getPositionVector()).distanceTo(Vec3d.ZERO);
 				if(player.world.getBlockState(traceResult.getBlockPos()).equals(Blocks.AIR.getDefaultState()))
 					v=0.5f;
 			}
-			v= (float)MathHelper.clamp(v,0.5,distance*0.5f);
+			v= (float)MathHelper.clamp(v,0.5,distance);
+			if(player.isSneaking())
+			{
+				GlStateManager.translate(0,-0.15f,0);
+				v*=1.125f;
+			}
+
+			//v=distance;
+			//v=distance-(((player.world.getTotalWorldTime()%100)/100f)*distance);
 
 			//GlStateManager.rotate(player.cameraPitch,1,0,0);
 			GlStateManager.translate(0,1,-v);
 			GlStateManager.rotate(90,0,1,0);
 			GlStateManager.scale(-1,-1,1);
 			//GlStateManager.rotate(player.rotationYawHead,0,1,0);
+			//GlStateManager.rotate(180,0,1,0);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render();
 
-			float angle = -0.125F-(1.9f*Math.max((v*6)/distance,1f));
+			v-=0.5;
+			distance-=0.5;
+
+			float angle = -((v/distance));
 
 			for(ModelRendererTurbo mod : model.poleModel)
 			{
 				mod.rotateAngleZ = angle;
 				mod.render();
 			}
+			GlStateManager.bindTexture(i);
+			GlStateManager.popMatrix();
+			return v/distance;
 		}
 		else
 		{
@@ -95,9 +109,9 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 			GlStateManager.rotate(8.5f, 0, 1, 0);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render();
+			GlStateManager.bindTexture(i);
+			GlStateManager.popMatrix();
+			return 0;
 		}
-
-		GlStateManager.bindTexture(i);
-		GlStateManager.popMatrix();
 	}
 }

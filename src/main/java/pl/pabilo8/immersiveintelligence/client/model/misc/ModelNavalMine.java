@@ -448,4 +448,13 @@ public class ModelNavalMine extends ModelIIBase implements IBulletModel
 			mod.render();
 
 	}
+
+	@Override
+	public void reloadModels()
+	{
+		ModelNavalMine newModel = new ModelNavalMine();
+		this.baseModel=newModel.baseModel;
+		this.coreModel=newModel.coreModel;
+		this.topModel=newModel.topModel;
+	}
 }

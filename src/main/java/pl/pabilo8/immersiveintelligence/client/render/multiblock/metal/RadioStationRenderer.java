@@ -52,16 +52,15 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 			}
 			else
 			{
-				int l = modelCurrent.baseModel.length;
-				double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electric_hammer_energy_per_use_construction/4.25f))), Utils.getMaxClientProgress(te.construction, te.getConstructionCost(), l));
+				double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electric_hammer_energy_per_use_construction/4.25f))), Utils.getMaxClientProgress(te.construction, te.getConstructionCost(), TileEntityRadioStation.PART_AMOUNT));
 				double progress = MathHelper.clamp(cc/(float)te.getConstructionCost(), 0f, 1f);
 
-				for(int i = 0; i < l*progress; i++)
+				for(int i = 0; i < TileEntityRadioStation.PART_AMOUNT*progress; i++)
 				{
-					if(1+i>Math.round(l*progress))
+					if(1+i>Math.round(TileEntityRadioStation.PART_AMOUNT*progress))
 					{
 						GlStateManager.pushMatrix();
-						double scale = 1f-(((progress*l)%1f)/1f);
+						double scale = 1f-(((progress*TileEntityRadioStation.PART_AMOUNT)%1f));
 						GlStateManager.enableBlend();
 						GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale*2, 1));
 						GlStateManager.translate(0,scale*1.5f,0);
@@ -116,5 +115,7 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 		model = new ModelRadioStation();
 		modelFlipped = new ModelRadioStation();
 		modelFlipped.flipAllZ();
+
+		TileEntityRadioStation.PART_AMOUNT=model.baseModel.length;
 	}
 }

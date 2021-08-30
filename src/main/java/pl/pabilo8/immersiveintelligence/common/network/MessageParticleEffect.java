@@ -77,6 +77,12 @@ public class MessageParticleEffect implements IMessage
 								motorbike.selfDestruct();
 							}
 						}
+						break;
+						case "gunfire":
+						{
+							ParticleUtils.spawnGunfireFX(message.x, message.y, message.z, 0, 0, 0, 8f);
+						}
+						break;
 					}
 				}
 

@@ -154,7 +154,7 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 	@Override
 	public float[] getBlockBounds()
 	{
-		return new float[]{0, 0, 0, 0, 0, 0};
+		return new float[]{0, 0, 0, 1, 1, 1};
 	}
 
 	@Override

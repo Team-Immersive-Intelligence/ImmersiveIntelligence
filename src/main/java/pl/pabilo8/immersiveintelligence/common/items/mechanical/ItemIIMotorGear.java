@@ -24,7 +24,7 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 {
 	public ItemIIMotorGear()
 	{
-		super("motor_gear", 8, MotorGear.getNames());
+		super("motor_gear", 16, MotorGear.getNames());
 	}
 
 	@Override

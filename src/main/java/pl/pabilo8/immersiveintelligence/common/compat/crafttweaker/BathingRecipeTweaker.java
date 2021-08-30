@@ -31,6 +31,23 @@ public class BathingRecipeTweaker
 	}
 
 	@ZenMethod
+	public static void addWashingRecipe(IIngredient itemInput, IItemStack itemOutput, ILiquidStack fluidInput, int energy, int time)
+	{
+		Object oItemInput = CraftTweakerHelper.toObject(itemInput);
+		if(oItemInput==null)
+		{
+			CraftTweakerAPI.getLogger().logError("Did not add chemical bath washing recipe for "+itemOutput.getDisplayName()+", input was null");
+			return;
+		}
+
+		FluidStack mcFluidInputStack = CraftTweakerMC.getLiquidStack(fluidInput);
+
+		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time,true);
+
+		CraftTweakerAPI.apply(new Add(r));
+	}
+
+	@ZenMethod
 	public static void addRecipe(IIngredient itemInput, IItemStack itemOutput, ILiquidStack fluidInput, int energy, int time)
 	{
 
@@ -43,7 +60,7 @@ public class BathingRecipeTweaker
 
 		FluidStack mcFluidInputStack = CraftTweakerMC.getLiquidStack(fluidInput);
 
-		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time);
+		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time,false);
 
 		CraftTweakerAPI.apply(new Add(r));
 	}

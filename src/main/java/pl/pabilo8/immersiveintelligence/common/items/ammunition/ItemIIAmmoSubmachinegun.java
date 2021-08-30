@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
+import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCalRevolver;
+import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +21,7 @@ public class ItemIIAmmoSubmachinegun extends ItemIIBulletBase
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
 		return 0.0625f;
 	}
@@ -26,7 +29,7 @@ public class ItemIIAmmoSubmachinegun extends ItemIIBulletBase
 	@Override
 	public int getGunpowderNeeded()
 	{
-		return 3;
+		return 10;
 	}
 
 	@Override
@@ -42,21 +45,33 @@ public class ItemIIAmmoSubmachinegun extends ItemIIBulletBase
 	}
 
 	@Override
+	public float getDefaultVelocity()
+	{
+		return 6.5f;
+	}
+
+	@Override
 	public float getCaliber()
 	{
-		return 0.0625f;
+		return 1f;
 	}
 
 	@Override
 	public @Nonnull Class<? extends IBulletModel> getModel()
 	{
-		return ModelBullet1bCalRevolver.class;
+		return ModelBullet1bCal.class;
 	}
 
 	@Override
 	public float getDamage()
 	{
 		return 3;
+	}
+
+	@Override
+	public ItemStack getCasingStack(int amount)
+	{
+		return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"smg_1bcal",amount);
 	}
 
 	@Override

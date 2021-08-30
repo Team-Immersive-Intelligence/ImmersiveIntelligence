@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityMedicalCra
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerMedicalCrate extends ContainerIEBase
+public class ContainerMedicalCrate extends ContainerIEBase<TileEntityMedicalCrate>
 {
 	public ContainerMedicalCrate(InventoryPlayer inventoryPlayer, TileEntityMedicalCrate tile)
 	{

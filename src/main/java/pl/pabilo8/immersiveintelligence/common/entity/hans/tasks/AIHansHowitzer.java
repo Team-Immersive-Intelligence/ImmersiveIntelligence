@@ -77,7 +77,9 @@ public class AIHansHowitzer extends EntityAIBase
 				if(!(howitzer.turnLeft||howitzer.turnRight||howitzer.forward||howitzer.backward)&&target.isPresent())
 				{
 					Entity t = target.get();
-					float pp = getAnglePrediction(howitzer.getPositionVector(), t.getPositionVector(), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
+					this.hans.faceEntity(t,10,10);
+
+					float pp = getAnglePrediction(howitzer.getPositionVector().addVector(0, 1, 0), t.getPositionVector(), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
 
 					howitzer.gunPitchUp = howitzer.gunPitch-pp < 0;
 					howitzer.gunPitchDown = howitzer.gunPitch-pp > 0;
@@ -90,10 +92,12 @@ public class AIHansHowitzer extends EntityAIBase
 							//it should be
 							if(entity instanceof EntityHans&&((EntityHans)entity).getHeldItemMainhand().isEmpty())
 							{
-								ItemStack shell = IIContent.itemAmmoLightArtillery.getBulletWithParams("core_brass", "canister", "firework", "tracer_powder");
+								ItemStack shell = IIContent.itemAmmoLightArtillery.getBulletWithParams("core_brass", "canister", "hmx", "tracer_powder");
 								NBTTagCompound tag = new NBTTagCompound();
 								tag.setInteger("colour", 0xff0000);
-								IIContent.itemAmmoMachinegun.setComponentNBT(shell, new NBTTagCompound(), tag);
+								//NBTTagCompound tag2 = new NBTTagCompound();
+								//tag2.setString("text", "Das ist die Propaganda des Kriegsministeriums!\nGegen die Macht der Ingenieure hast du keine Chance!\nGib sofort auf, bis du kannst!");
+								//IIContent.itemAmmoMachinegun.setComponentNBT(shell, tag2, tag);
 								entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND,shell);
 							}
 							else if(howitzer.reloadProgress==0&&!howitzer.reloadKeyPress)
@@ -117,7 +121,9 @@ public class AIHansHowitzer extends EntityAIBase
 				if(target.isPresent())
 				{
 					Entity entity = target.get();
-					float[] yp = getAnglePrediction(howitzer.getPositionVector(),entity.getPositionVector(),new Vec3d(entity.motionX,entity.motionY,entity.motionZ));
+					this.hans.faceEntity(entity,10,10);
+
+					float[] yp = getAnglePrediction(howitzer.getPositionVector().addVector(0, 1, 0),entity.getPositionVector(),new Vec3d(entity.motionX,entity.motionY,entity.motionZ));
 					if(!isAimedAt(yp[0],yp[1]))
 					{
 						float y =  MathHelper.wrapDegrees(360+yp[0]-this.howitzer.rotationYaw);
@@ -153,15 +159,12 @@ public class AIHansHowitzer extends EntityAIBase
 
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-		Vec3d vv = posTurret.subtract(posTarget);
-		float motionXZ = MathHelper.sqrt(vv.x*vv.x+vv.z*vv.z);
-		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(2f).addVector(0, 0, 0f);
-		vv = vv.add(motionVec).normalize();
+		Vec3d vv = posTurret.subtract(posTarget).add(motion).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
 		float pp = Math.round(Utils.calculateBallisticAngle(
 				posTurret.distanceTo(posTarget.add(motion))+10
 				, (posTarget.y+motion.y)-posTurret.y,
-				5f,
+				10f,
 				EntityBullet.GRAVITY*3.4f,
 				1f-EntityBullet.DRAG));
 

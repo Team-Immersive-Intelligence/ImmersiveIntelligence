@@ -27,8 +27,8 @@ public class DataOperationMatchesOreDictionary extends DataOperator
 		DataPacketTypeItemStack t1;
 		DataPacketTypeString t2;
 
-		t1 = ((DataPacketTypeItemStack)getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet));
-		t2 = ((DataPacketTypeString)getVarInType(DataPacketTypeString.class, data.getType2(), packet));
+		t1 = getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet);
+		t2 = getVarInType(DataPacketTypeString.class, data.getType2(), packet);
 
 		//Yes
 		return new DataPacketTypeBoolean(Utils.compareToOreName(t1.value, t2.value));

@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +32,6 @@ public class ParticleAtomFog extends IIParticle
 		this.actualParticleScale = this.particleScale;
 		this.particleMaxAge = (int)(20+(10*Utils.RAND.nextGaussian()))+1;
 		this.particleGravity = 0.25f;
-		this.setParticleTextureIndex(0);
 	}
 
 	public void onUpdate()
@@ -49,7 +49,10 @@ public class ParticleAtomFog extends IIParticle
 		this.motionX *= 0.9599999785423279D;
 		this.motionY *= 0.9599999785423279D;
 		this.motionZ *= 0.9599999785423279D;
-		EntityPlayer entityplayer = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 2.0D, false);
+		if(world==null)
+			return;
+
+		EntityPlayer entityplayer =this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 2.0D, false);
 
 		if(entityplayer!=null)
 		{
@@ -90,19 +93,18 @@ public class ParticleAtomFog extends IIParticle
 	{
 		float f = ((float)this.particleAge+partialTicks)/(float)this.particleMaxAge;
 		f = f > 0.9f?(1f-((f-0.9f)/0.1f)): 1f;
-
-		this.setParticleTextureIndex(5);
-		setRBGColorF(0.43529412f, 0.43529412f, 0.43529412f);
-		setAlphaF(1f);
+		this.setParticleTextureIndex(6);
+		setRBGColorF(0.2f*0.75f, 0.08627451f*0.75f, 0.05882353f*0.75f);
+		setAlphaF(0.5f);
 		this.particleScale = this.actualParticleScale*f*1.25f;
 
 		GlStateManager.translate(0, -0.25, 0);
 		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 		GlStateManager.translate(0, 0.25, 0);
 
-		this.setParticleTextureIndex(4);
-		setRBGColorF(0.3372549f, 0.3372549f, 0.3372549f);
-		setAlphaF(0.95f);
+		this.setParticleTextureIndex(6);
+		setRBGColorF(0.2f*0.5f, 0.08627451f*0.5f, 0.05882353f*0.5f);
+		setAlphaF(0.25f);
 		this.particleScale = this.actualParticleScale*f;
 		super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 

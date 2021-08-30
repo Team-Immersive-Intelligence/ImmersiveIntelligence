@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
  * @author Pabilo8
  * @since 10-07-2019
  */
-public class ContainerVulcanizer extends ContainerIEBase
+public class ContainerVulcanizer extends ContainerIEBase<TileEntityVulcanizer>
 {
 	public ContainerVulcanizer(InventoryPlayer inventoryPlayer, TileEntityVulcanizer tile)
 	{

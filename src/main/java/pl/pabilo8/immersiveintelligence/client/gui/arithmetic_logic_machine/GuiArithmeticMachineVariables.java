@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiButtonItemAdvanced;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonItemAdvanced;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
@@ -53,7 +53,7 @@ public class GuiArithmeticMachineVariables extends GuiIEContainerBase implements
 	public TileEntityArithmeticLogicMachine tile;
 	public InventoryPlayer playerInv;
 	public ContainerIEBase container;
-	IItemHandler handler;
+	public IItemHandler handler;
 	ItemStack item;
 	int page;
 	DataPacket list;

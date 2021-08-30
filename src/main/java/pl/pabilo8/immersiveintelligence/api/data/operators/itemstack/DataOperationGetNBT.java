@@ -28,7 +28,7 @@ public class DataOperationGetNBT extends DataOperator
 		DataPacketTypeItemStack t1;
 		int i1;
 
-		t1 = ((DataPacketTypeItemStack)getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet));
+		t1 = getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet);
 		ItemStack stack = t1.value;
 		NBTTagCompound tag;
 		if(stack.hasTagCompound())

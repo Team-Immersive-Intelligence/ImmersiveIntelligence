@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.DieselHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,6 +27,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
@@ -54,7 +57,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 07.07.2020
  */
-public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntitySpecialRepairable
+public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntitySpecialRepairable, IEntityAdditionalSpawnData
 {
 	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.COMPOUND_TAG);
 	private static final DataParameter<Integer> dataMarkerFluidCap = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.VARINT);
@@ -250,10 +253,10 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			float tylt = -((tilt*0.5f)+(tilt*(speed/10f)*0.5f))*20;
 			double true_angle4 = Math.toRadians((tylt-90) > 180?360f-(tylt-90): (tylt-90));
 
-			Vec3d pos2 = Utils.offsetPosDirection(seatID==0?-0.55f: -1.35f, true_angle, 0);
-			Vec3d pos3 = Utils.offsetPosDirection(0.75f, true_angle2, -true_angle4);
+			Vec3d pos2 = Utils.offsetPosDirection(seatID==0?-0.4f: -1.35f, true_angle, 0);
+			Vec3d pos3 = Utils.offsetPosDirection(seatID==0?0.7f: 0.75f, true_angle2, -true_angle4);
 
-			passenger.setPosition(posX+pos2.x+pos3.x, posY+pos3.y, posZ+pos2.z+pos3.z);
+			passenger.setPosition(posX+pos2.x+pos3.x+motionX, posY+pos3.y, posZ+pos2.z+pos3.z+motionZ);
 		}
 		else if(seatID==2)
 		{
@@ -320,15 +323,11 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		if(world.isRemote)
 		{
 			Entity pre = ClientUtils.mc().player.getRidingEntity();
+			handleClientKeyOutput();
 			if(pre instanceof EntityVehicleSeat&&pre.getRidingEntity()==this&&((EntityVehicleSeat)pre).seatID==0)
 			{
-				//Handle, send to server
+				updateParts(false);
 				handleClientKeyInput();
-			}
-			else
-			{
-				//Get from server
-				handleClientKeyOutput();
 			}
 
 			//for animation only, not synced
@@ -685,14 +684,14 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			engineDurability -= amount*0.85;
 			dataManager.set(dataMarkerEngineDurability, engineDurability);
 			if(world.isRemote)
-				playSound(IISounds.penetration_metal, Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.impact_metal, Math.min(amount/16f, 1f), 1f);
 		}
 		else if((part==partFuelTank||part==partSeat)&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
 		{
 			fuelTankDurability -= amount*0.85;
 			dataManager.set(dataMarkerFuelTankDurability, fuelTankDurability);
 			if(world.isRemote)
-				playSound(IISounds.penetration_metal, Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.impact_metal, Math.min(amount/16f, 1f), 1f);
 		}
 		else if(part==partWheelFront)
 		{
@@ -851,6 +850,22 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		this.upgrade = upgrade;
 	}
 
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		writeEntityToNBT(tag);
+		ByteBufUtils.writeTag(buffer, tag);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf additionalData)
+	{
+		NBTTagCompound tag = ByteBufUtils.readTag(additionalData);
+		if(tag!=null)
+			readEntityFromNBT(tag);
+	}
+
 	static class NonSidedFluidHandler implements IFluidHandler
 	{
 		EntityMotorbike motorbike;
@@ -982,7 +997,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 				boolean ew = engineWorking;
 				engineWorking = tag.getBoolean("engineWorking");
 				if(ew^engineWorking&&engineWorking)
-					world.playSound(null,posX,posY,posZ,IISounds.motorbike_start,SoundCategory.NEUTRAL,1f,0f);
+					world.playSound(null, posX, posY, posZ, hasFuel()?IISounds.motorbike_start: IISounds.motorbike_start_no_fuel, SoundCategory.NEUTRAL, 1f, 0f);
 			}
 		}
 
@@ -1091,7 +1106,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 					.add(vz);
 			Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.25, rand.nextGaussian()*0.25, rand.nextGaussian()*0.025);
 
-			ParticleUtils.spawnTMTModelFX(vo.x, vo.y, vo.z, (vx.x+vz.x+vecDir.x)/1.5f, (0.25+vecDir.y)/1.5f, (vx.z+vz.z+vecDir.z)/1.5f, 0.0625f, mod, MotorbikeRenderer.texture);
+			ParticleUtils.spawnTMTModelFX(vo.x, vo.y, vo.z, (vx.x+vz.x+vecDir.x)/1.5f, (0.25+vecDir.y)/1.5f, (vx.z+vz.z+vecDir.z)/1.5f, 0.0625f, mod, MotorbikeRenderer.TEXTURE);
 		}
 	}
 

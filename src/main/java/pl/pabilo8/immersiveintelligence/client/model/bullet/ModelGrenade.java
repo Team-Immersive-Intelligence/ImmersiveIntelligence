@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
+import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
 /**
@@ -72,8 +73,11 @@ public class ModelGrenade extends ModelIIBase implements IBulletModel
 	@Override
 	public void renderBulletUsed(int coreColour, EnumCoreTypes coreType, int paintColour)
 	{
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0,-0.5,-0.125 );
 		renderCasing(1f, paintColour);
 		renderCore(coreColour, coreType);
+		GlStateManager.popMatrix();
 	}
 
 	@Override
@@ -117,5 +121,16 @@ public class ModelGrenade extends ModelIIBase implements IBulletModel
 			}
 			break;
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		ModelGrenade newModel = new ModelGrenade();
+		this.baseModel = newModel.baseModel;
+		this.coreModel = newModel.coreModel;
+		this.coreClassicModel = newModel.coreClassicModel;
+		this.coreMoreClassicModel = newModel.coreMoreClassicModel;
+		this.paintModel = newModel.paintModel;
 	}
 }

@@ -38,9 +38,9 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 	private final float[] TEETH_COLOUR = Utils.rgbIntToRGB(0xc1c1c1);
 	private final float[] TONGUE_COLOUR = Utils.rgbIntToRGB(0xc58686);
 
-	public LayerHansEmotions(HansRenderer spiderRendererIn)
+	public LayerHansEmotions(HansRenderer renderer)
 	{
-		this.hansRenderer = spiderRendererIn;
+		this.hansRenderer = renderer;
 		this.modelHans = (ModelBiped)hansRenderer.mainModel;
 	}
 

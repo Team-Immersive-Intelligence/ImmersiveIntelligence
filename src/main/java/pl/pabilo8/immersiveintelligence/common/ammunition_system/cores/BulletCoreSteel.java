@@ -35,12 +35,6 @@ public class BulletCoreSteel implements IBulletCore
 	}
 
 	@Override
-	public EnumComponentRole getRole()
-	{
-		return EnumComponentRole.PIERCING;
-	}
-
-	@Override
 	public float getExplosionModifier()
 	{
 		return 0.65f;

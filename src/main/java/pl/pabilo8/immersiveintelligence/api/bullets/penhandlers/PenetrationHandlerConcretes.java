@@ -1,7 +1,14 @@
 package pl.pabilo8.immersiveintelligence.api.bullets.penhandlers;
 
+import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+
+import javax.annotation.Nullable;
+
+import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
 
 /**
  * @author Pabilo8
@@ -28,6 +35,13 @@ public class PenetrationHandlerConcretes
 		{
 			return PenMaterialTypes.SOLID;
 		}
+
+		@Nullable
+		@Override
+		public SoundEvent getSpecialSound(HitEffect effect)
+		{
+			return effect==RICOCHET?IISounds.ricochet_stone: IISounds.impact_stone;
+		}
 	}
 
 	public static class PenetrationHandlerLeadedConcrete implements IPenetrationHandler
@@ -48,6 +62,97 @@ public class PenetrationHandlerConcretes
 		public PenMaterialTypes getPenetrationType()
 		{
 			return PenMaterialTypes.SOLID;
+		}
+
+		@Nullable
+		@Override
+		public SoundEvent getSpecialSound(HitEffect effect)
+		{
+			return effect==RICOCHET?IISounds.ricochet_stone: IISounds.impact_stone;
+		}
+	}
+
+	public static class PenetrationHandlerConcreteBricks implements IPenetrationHandler
+	{
+		@Override
+		public float getIntegrity()
+		{
+			return 400f;
+		}
+
+		@Override
+		public float getDensity()
+		{
+			return 1.25f;
+		}
+
+		@Override
+		public PenMaterialTypes getPenetrationType()
+		{
+			return PenMaterialTypes.SOLID;
+		}
+
+		@Nullable
+		@Override
+		public SoundEvent getSpecialSound(HitEffect effect)
+		{
+			return effect==RICOCHET?IISounds.ricochet_stone: IISounds.impact_stone;
+		}
+	}
+
+	public static class PenetrationHandlerPanzerConcrete implements IPenetrationHandler
+	{
+		@Override
+		public float getIntegrity()
+		{
+			return 540f;
+		}
+
+		@Override
+		public float getDensity()
+		{
+			return 1.75f;
+		}
+
+		@Override
+		public PenMaterialTypes getPenetrationType()
+		{
+			return PenMaterialTypes.SOLID;
+		}
+
+		@Nullable
+		@Override
+		public SoundEvent getSpecialSound(HitEffect effect)
+		{
+			return effect==RICOCHET?IISounds.ricochet_stone: IISounds.impact_stone;
+		}
+	}
+
+	public static class PenetrationHandlerUberConcrete implements IPenetrationHandler
+	{
+		@Override
+		public float getIntegrity()
+		{
+			return 700f;
+		}
+
+		@Override
+		public float getDensity()
+		{
+			return 2.5f;
+		}
+
+		@Override
+		public PenMaterialTypes getPenetrationType()
+		{
+			return PenMaterialTypes.SOLID;
+		}
+
+		@Nullable
+		@Override
+		public SoundEvent getSpecialSound(HitEffect effect)
+		{
+			return effect==RICOCHET?IISounds.ricochet_stone: IISounds.impact_stone;
 		}
 	}
 }

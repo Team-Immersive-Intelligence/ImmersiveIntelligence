@@ -84,8 +84,7 @@ public class DataPacketTypeArray implements IDataType
 	@Override
 	public NBTTagCompound valueToNBT()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("Type", "array");
+		NBTTagCompound nbt = getHeaderTag();
 		NBTTagList list = new NBTTagList();
 		for(IDataType type : value)
 			list.appendTag(type.valueToNBT());

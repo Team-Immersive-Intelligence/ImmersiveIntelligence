@@ -3,8 +3,8 @@
   "defaults": {
     "transform": "forge:default-block",
     "textures": {
-      "texture": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden",
-      "particle": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden"
+      "texture": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden_side_none",
+      "particle": "immersiveintelligence:blocks/mechanical_device/gearbox/wooden_side_none"
     },
     "model": "immersiveengineering:smartmodel/conf_sides_hud_metal_device0_capacitor_creative"
   },

@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.commands.ii;
 
+import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -9,9 +10,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -23,9 +26,16 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer;
+import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer.MultipleTracerBuilder;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
@@ -34,9 +44,7 @@ import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Pabilo8
@@ -64,8 +72,7 @@ public class CommandIIDev extends CommandBase
 		options.add("power");
 		options.add("tree");
 		options.add("parachute");
-		//options.add("panzer");
-		//options.add("fallschirm");
+		options.add("deth");
 	}
 
 	/**
@@ -96,6 +103,7 @@ public class CommandIIDev extends CommandBase
 	{
 		if(args.length > 0)
 		{
+			Entity senderEntity = sender.getCommandSenderEntity();
 			switch(args[0])
 			{
 				case "help":
@@ -116,22 +124,48 @@ public class CommandIIDev extends CommandBase
 					sender.sendMessage(getMessageForCommand("power", "charges held item with IF, absolutely free"));
 					sender.sendMessage(getMessageForCommand("tree", "created a happy little [R E B B U R] tree"));
 					sender.sendMessage(getMessageForCommand("parachute", "spawns and mounts the command user on a parachute"));
+					sender.sendMessage(getMessageForCommand("deth", "removes the entity player is looking at"));
+
+				}
+				break;
+				case "deth":
+				{
+					if(senderEntity==null)
+						return;
+					float blockReachDistance = 100f;
+					Vec3d vec3d = senderEntity.getPositionEyes(0);
+					Vec3d vec3d1 = senderEntity.getLook(0);
+					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
+
+					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), true, false, true, Collections.singletonList(senderEntity), Collections.emptyList());
+					for(RayTraceResult hit : rayTracer.hits)
+					{
+						if(hit.typeOfHit==Type.ENTITY)
+						{
+							hit.entityHit.setDead();
+							sender.sendMessage(new TextComponentString(hit.entityHit.getDisplayName().getFormattedText()+" is dead, no big surprise."));
+							break;
+						}
+					}
 
 				}
 				break;
 				case "tree":
 				{
-					sender.sendMessage(new TextComponentString("Adding a happy little tree :)"));
-					Entity commandSenderEntity = sender.getCommandSenderEntity();
+					if(senderEntity==null)
+						return;
+
 					float blockReachDistance = 100f;
-					Vec3d vec3d = commandSenderEntity.getPositionEyes(0);
-					Vec3d vec3d1 = commandSenderEntity.getLook(0);
+					Vec3d vec3d = senderEntity.getPositionEyes(0);
+					Vec3d vec3d1 = senderEntity.getLook(0);
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-					RayTraceResult traceResult = commandSenderEntity.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+					RayTraceResult traceResult = sender.getEntityWorld().rayTraceBlocks(vec3d, vec3d2, false, false, true);
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
-					IIWorldGen.worldGenRubberTree.generate(commandSenderEntity.world, Utils.RAND,traceResult.getBlockPos().up());
+					IIWorldGen.worldGenRubberTree.generate(sender.getEntityWorld(), Utils.RAND, traceResult.getBlockPos().up());
+					sender.sendMessage(new TextComponentString("Adding a happy little tree :)"));
+
 				}
 				break;
 				case "slowmo":
@@ -159,27 +193,28 @@ public class CommandIIDev extends CommandBase
 						EntityBullet.DEV_SLOMO = Float.parseFloat(args[1]);
 						sender.sendMessage(new TextComponentString("Bullet speed set to "+args[1]));
 					}
-					else if(args.length==1)
+					else
 					{
 						sender.sendMessage(new TextComponentString(TextFormatting.RED+"Please enter a speed value, default 1, current "+(int)EntityBullet.DEV_SLOMO));
 					}
 
 					break;
 				case "killbullets":
-					server.getEntityWorld().getEntities(EntityBullet.class, input -> true).forEach(Entity::setDead);
+					sender.getEntityWorld().getEntities(EntityBullet.class, input -> true).forEach(Entity::setDead);
 					sender.sendMessage(new TextComponentString("All bullets killed!"));
 					break;
 				case "killitems":
-					server.getEntityWorld().getEntities(EntityItem.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
-					server.getEntityWorld().getEntities(EntityXPOrb.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.getEntityWorld().getEntities(EntityItem.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.getEntityWorld().getEntities(EntityXPOrb.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.getEntityWorld().getEntities(EntityArrow.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
 					sender.sendMessage(new TextComponentString("Items Killed!"));
 					break;
 				case "killvehicles":
-					server.getEntityWorld().getEntities(Entity.class, input -> (input instanceof IVehicleMultiPart?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.getEntityWorld().getEntities(Entity.class, input -> (input instanceof IVehicleMultiPart?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
 					sender.sendMessage(new TextComponentString("Vehicles Killed!"));
 					break;
 				case "killhanses":
-					server.getEntityWorld().getEntities(EntityHans.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
+					sender.getEntityWorld().getEntities(EntityHans.class, input -> (input!=null?input.getPositionVector().distanceTo(sender.getPositionVector()): 25) < 25f).forEach(Entity::setDead);
 					sender.sendMessage(new TextComponentString("All Hanses killed :("));
 					break;
 				case "decaybullets":
@@ -193,23 +228,45 @@ public class CommandIIDev extends CommandBase
 					sender.sendMessage(new TextComponentString("World setup done!"));
 					break;
 				case "power":
-					sender.getCommandSenderEntity().getHeldEquipment().forEach(stack -> {
+				{
+					if(senderEntity==null)
+						return;
+
+					senderEntity.getHeldEquipment().forEach(stack -> {
+						if(stack.getItem() instanceof IAdvancedFluidItem)
+						{
+							IAdvancedFluidItem item = (IAdvancedFluidItem)stack.getItem();
+							for(Fluid f : FluidRegistry.getRegisteredFluids().values())
+							{
+								FluidStack fluidStack = new FluidStack(f, 10000000);
+								if(item.allowFluid(stack, fluidStack))
+								{
+									IFluidHandler capability = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+									if(capability!=null)
+									{
+										capability.fill(fluidStack, true);
+										break;
+									}
+								}
+
+							}
+						}
 						if(stack.hasCapability(CapabilityEnergy.ENERGY, null))
 							stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(Integer.MAX_VALUE, false);
 					});
-					break;
+				}
+				break;
 				case "explosion":
 				case "nuke":
 				{
-					Entity commandSenderEntity = sender.getCommandSenderEntity();
-					if(commandSenderEntity==null||server.getEntityWorld().isRemote)
+					if(senderEntity==null||server.getEntityWorld().isRemote)
 						return;
 
 					float blockReachDistance = 100f;
-					Vec3d vec3d = commandSenderEntity.getPositionEyes(0);
-					Vec3d vec3d1 = commandSenderEntity.getLook(0);
+					Vec3d vec3d = senderEntity.getPositionEyes(0);
+					Vec3d vec3d1 = senderEntity.getLook(0);
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-					RayTraceResult traceResult = commandSenderEntity.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+					RayTraceResult traceResult = senderEntity.getEntityWorld().rayTraceBlocks(vec3d, vec3d2, false, false, true);
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
@@ -217,9 +274,14 @@ public class CommandIIDev extends CommandBase
 
 					if(args[0].equals("nuke"))
 					{
+						ItemStack s2 = IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "nuke");
+						EntityBullet a = BulletHelper.createBullet(senderEntity.getEntityWorld(), s2, new Vec3d(pos).addVector(0, 2, 0), new Vec3d(0, -1, 0));
+						senderEntity.getEntityWorld().spawnEntity(a);
+						/*
 						EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(server.getEntityWorld(), 0.5f);
 						entityAtomicBoom.setPosition(pos.getX(), pos.getY()+2, pos.getZ());
 						server.getEntityWorld().spawnEntity(entityAtomicBoom);
+						 */
 						return;
 					}
 					int num = 0;
@@ -230,22 +292,21 @@ public class CommandIIDev extends CommandBase
 					{
 
 					}
-					IIExplosion exp = new IIExplosion(server.getEntityWorld(), commandSenderEntity, pos.getX(), pos.getY()+1, pos.getZ(), num, 1f, false, true);
+					IIExplosion exp = new IIExplosion(server.getEntityWorld(), senderEntity, pos.getX(), pos.getY()+1, pos.getZ(), num, 1f, false, true);
 					exp.doExplosionA();
 					exp.doExplosionB(true);
 				}
 				break;
 				case "test_enemies":
 				{
-					Entity commandSenderEntity = sender.getCommandSenderEntity();
-					if(commandSenderEntity==null||server.getEntityWorld().isRemote)
+					if(senderEntity==null||server.getEntityWorld().isRemote)
 						return;
 
 					float blockReachDistance = 100f;
-					Vec3d vec3d = commandSenderEntity.getPositionEyes(0);
-					Vec3d vec3d1 = commandSenderEntity.getLook(0);
+					Vec3d vec3d = senderEntity.getPositionEyes(0);
+					Vec3d vec3d1 = senderEntity.getLook(0);
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-					RayTraceResult traceResult = commandSenderEntity.world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+					RayTraceResult traceResult = senderEntity.getEntityWorld().rayTraceBlocks(vec3d, vec3d2, false, false, true);
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
@@ -263,13 +324,13 @@ public class CommandIIDev extends CommandBase
 					{
 						for(int i = 0; i < num; i++)
 						{
-							EntityZombie z1 = new EntityZombie(server.getEntityWorld());
+							EntityZombie z1 = new EntityZombie(senderEntity.getEntityWorld());
 							z1.setArmsRaised(false);
 							z1.setAIMoveSpeed(0.125f);
 							z1.setPosition(position.getX(), position.getY(), position.getZ());
 							z1.setCustomNameTag("Zombie #"+i);
 							z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IIContent.itemLightEngineerHelmet));
-							server.getEntityWorld().spawnEntity(z1);
+							senderEntity.getEntityWorld().spawnEntity(z1);
 						}
 						sender.sendMessage(new TextComponentString("Test enemies summoned!"));
 					}
@@ -278,12 +339,11 @@ public class CommandIIDev extends CommandBase
 				break;
 				case "parachute":
 				{
-					Entity senderEntity = sender.getCommandSenderEntity();
 					if(senderEntity!=null)
 					{
 						EntityParachute para = new EntityParachute(senderEntity.getEntityWorld());
 						para.setPosition(senderEntity.posX, senderEntity.posY, senderEntity.posZ);
-						senderEntity.world.spawnEntity(para);
+						senderEntity.getEntityWorld().spawnEntity(para);
 						senderEntity.startRiding(para);
 					}
 				}

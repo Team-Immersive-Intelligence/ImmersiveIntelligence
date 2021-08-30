@@ -11,7 +11,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
@@ -64,7 +63,7 @@ public class EntityNavalMine extends EntityBullet
 		fromStack(stack);
 		this.setPosition(x, y, z);
 		this.force = 0;
-		this.initalForce = 0;
+		this.initialForce = 0;
 	}
 
 	@Override

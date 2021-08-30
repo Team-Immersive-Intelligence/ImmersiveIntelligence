@@ -51,7 +51,7 @@ public class IISmallWireType extends WireType
 	@Override
 	public int getColour(Connection connection)
 	{
-		return Wires.dataWireColouration;
+		return meta==0?Wires.smallDataWireColouration:Wires.smallRedstoneWireColouration;
 	}
 
 	@Override
@@ -70,13 +70,13 @@ public class IISmallWireType extends WireType
 	@Override
 	public int getMaxLength()
 	{
-		return Wires.dataWireLength;
+		return meta==0?Wires.smallDataWireLength:Wires.smallRedstoneWireLength;
 	}
 
 	@Override
 	public ItemStack getWireCoil()
 	{
-		return new ItemStack(IIContent.itemDataWireCoil, 1, meta);
+		return new ItemStack(IIContent.itemSmallWireCoil, 1, meta);
 	}
 
 	@Override

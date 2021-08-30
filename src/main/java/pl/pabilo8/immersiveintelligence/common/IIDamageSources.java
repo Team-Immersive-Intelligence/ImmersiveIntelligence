@@ -22,7 +22,9 @@ import java.util.Arrays;
  */
 public class IIDamageSources
 {
-	public static final DamageSource SAWMILL_DAMAGE = (new DamageSource("iiSawmill"));
+	public static final DamageSource SAWMILL_DAMAGE = new DamageSource("iiSawmill");
+	public static final DamageSource RADIATION_DAMAGE = new DamageSource("iiRadiation").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource NUCLEAR_HEAT_DAMAGE = new DamageSource("iiNuclearHeat").setDamageBypassesArmor().setDamageIsAbsolute();
 
 	public static DamageSource causeMotorbikeDamage(EntityMotorbike motorbike)
 	{

@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.api;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import blusunrize.immersiveengineering.api.tool.RailgunHandler;
+import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -54,9 +57,13 @@ import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
+import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -72,6 +79,9 @@ import java.util.function.Predicate;
  */
 public class Utils
 {
+	public static final int COLOR_POWERBAR_1 = 0xffb51500, COLOR_POWERBAR_2 = 0xff600b00;
+	public static final int COLOR_ARMORBAR_1 = 0xcfcfcfcf, COLOR_ARMORBAR_2 = 0x0cfcfcfc;
+
 	public static double getDistanceBetweenPos(BlockPos pos1, BlockPos pos2, boolean center)
 	{
 		double deltaX = (pos1.getX()+(center?0d: 0.5d))-(pos2.getX()+(center?0d: 0.5d));
@@ -133,6 +143,11 @@ public class Utils
 		return new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range);
 	}
 
+	public static TargetPoint targetPointFromPos(Vec3d pos, World world, int range)
+	{
+		return new TargetPoint(world.provider.getDimension(), pos.x, pos.y, pos.z, range);
+	}
+
 	public static TargetPoint targetPointFromEntity(Entity entity, int range)
 	{
 		return new TargetPoint(entity.world.provider.getDimension(), entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), range);
@@ -143,7 +158,9 @@ public class Utils
 		return new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), range);
 	}
 
-	//https://stackoverflow.com/a/52284357/9876980
+	/**
+	 * <a href="https://stackoverflow.com/a/52284357/9876980">https://stackoverflow.com/a/52284357/9876980</a>
+	 */
 	public static double root(double num, double root)
 	{
 		double d = Math.pow(num, 1.0/root);
@@ -257,7 +274,12 @@ public class Utils
 		return new Vec3d(xx, yy, zz);
 	}
 
-	//Based on https://stackoverflow.com/a/2262117/9876980
+	/**
+	 * based on <a href="https://stackoverflow.com/a/2262117/9876980">https://stackoverflow.com/a/2262117/9876980</a>
+	 *
+	 * @param rgb color in rgbInt
+	 * @return color in rgbFloats format
+	 */
 	public static float[] rgbIntToRGB(int rgb)
 	{
 		float r = (rgb/256/256%256)/255f;
@@ -307,8 +329,19 @@ public class Utils
 		return current;
 	}
 
-	//Pitch calculation for artillery stolen from Pneumaticcraft (https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java)
-	//Huge thanks to desht and MineMaarten for this amazing code!
+	/**
+	 * Pitch calculation for artillery stolen from Pneumaticcraft. Huge thanks to desht and MineMaarten for this amazing code!
+	 * <a href="https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java">https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java</a>
+	 *
+	 * @param distance
+	 * @param height
+	 * @param force
+	 * @param gravity
+	 * @param drag
+	 * @return
+	 * @author desht
+	 * @author MineMaarten
+	 */
 	public static float calculateBallisticAngle(double distance, double height, float force, double gravity, double drag)
 	{
 		double bestAngle = 0;
@@ -667,7 +700,7 @@ public class Utils
 	 */
 	public static int rgb(float rIn, float gIn, float bIn)
 	{
-		return rgb(MathHelper.floor(rIn * 255.0F), MathHelper.floor(gIn * 255.0F), MathHelper.floor(bIn * 255.0F));
+		return rgb(MathHelper.floor(rIn*255.0F), MathHelper.floor(gIn*255.0F), MathHelper.floor(bIn*255.0F));
 	}
 
 	/**
@@ -676,14 +709,151 @@ public class Utils
 	 */
 	public static int rgb(int rIn, int gIn, int bIn)
 	{
-		int lvt_3_1_ = (rIn << 8) + gIn;
-		lvt_3_1_ = (lvt_3_1_ << 8) + bIn;
+		int lvt_3_1_ = (rIn<<8)+gIn;
+		lvt_3_1_ = (lvt_3_1_<<8)+bIn;
 		return lvt_3_1_;
 	}
 
-	public static boolean inRange(int value,int maxValue, double min,double max)
+	/**
+	 * @param colour1    in 3 float array format
+	 * @param colour2    in 3 float array format
+	 * @param proportion how much of second color is mixed to the first one
+	 * @return color in between
+	 */
+	public static float[] medColour(float[] colour1, float[] colour2, float proportion)
+	{
+		float rev = 1f-proportion;
+		return new float[]{
+				(colour1[0]*rev+colour2[0]*proportion),
+				(colour1[1]*rev+colour2[1]*proportion),
+				(colour1[2]*rev+colour2[2]*proportion)
+		};
+	}
+
+	public static boolean inRange(int value, int maxValue, double min, double max)
 	{
 		double vv = value/(double)maxValue;
-		return vv>=min&&vv<=max;
+		return vv >= min&&vv <= max;
+	}
+
+	public static void drawArmorBar(int x, int y, int w, int h, float progress)
+	{
+		drawGradientBar(x, y, w, h, COLOR_ARMORBAR_1, COLOR_ARMORBAR_2, progress);
+	}
+
+	public static void drawPowerBar(int x, int y, int w, int h, float progress)
+	{
+		drawGradientBar(x, y, w, h, COLOR_POWERBAR_1, COLOR_POWERBAR_2, progress);
+	}
+
+	public static void drawGradientBar(int x, int y, int w, int h, int color1, int color2, float progress)
+	{
+		int stored = (int)(h*progress);
+		ClientUtils.drawGradientRect(x, y+(h-stored), x+w, y+h, color1, color2);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static String getPowerLevelString(TileEntityMultiblockMetal tile)
+	{
+		return getPowerLevelString(tile.getEnergyStored(null), tile.getMaxEnergyStored(null));
+	}
+
+	public static String getPowerLevelString(int min, int max)
+	{
+		return String.format("%s/%s IF", min, max);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void bindTexture(ResourceLocation path)
+	{
+		Minecraft.getMinecraft().getTextureManager().bindTexture(path);
+	}
+
+	/**
+	 * Rightfully stolen from StackOverflow
+	 * <a href="https://stackoverflow.com/a/35833800/9876980">https://stackoverflow.com/a/35833800/9876980</a>
+	 *
+	 * @param number   to be rounded
+	 * @param decimals after the separator
+	 * @return a (efficiently) rounded number
+	 */
+	public static float roundFloat(float number, int decimals)
+	{
+		int pow = 10;
+		for(int i = 1; i < decimals; i++)
+			pow *= 10;
+		float tmp = number*pow;
+		return ((float)((int)((tmp-(int)tmp) >= 0.5f?tmp+1: tmp)))/pow;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static ModelRendererTurbo[] createConstructionModel(@Nullable MachineUpgrade upgrade, ModelIIBase model)
+	{
+		int partCount = model.parts.values().stream().mapToInt(modelRendererTurbos -> modelRendererTurbos.length).sum();
+		if(upgrade!=null)
+			upgrade.setRequiredSteps(partCount);
+		ModelRendererTurbo[] output = new ModelRendererTurbo[partCount];
+		int i = 0;
+		for(ModelRendererTurbo[] value : model.parts.values())
+		{
+			Arrays.sort(value, (o1, o2) -> (int)(o1.rotationPointY-o2.rotationPointY));
+			for(ModelRendererTurbo mod : value)
+			{
+				output[i] = mod;
+				i++;
+			}
+		}
+
+		return output;
+	}
+
+	public static String toSnakeCase(String value)
+	{
+		return value.replaceAll("([a-z])([A-Z]+)", "$1_$2").toLowerCase();
+	}
+
+	public static float getDirectFireAngle(float initialForce, float mass, Vec3d toTarget)
+	{
+		float force = initialForce;
+		double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
+		double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC;
+
+		while(dist > 0)
+		{
+			force -= EntityBullet.DRAG*force*EntityBullet.DEV_SLOMO;
+			gravityMotionY -= EntityBullet.GRAVITY*mass*EntityBullet.DEV_SLOMO;
+			baseMotionYC = baseMotionY*(force/(initialForce));
+			motionY += (baseMotionYC+gravityMotionY)*EntityBullet.DEV_SLOMO;
+			dist -= EntityBullet.DEV_SLOMO*force;
+		}
+
+		toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
+
+		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
+	}
+
+	public static float getIEDirectRailgunAngle(ItemStack ammo, Vec3d toTarget)
+	{
+		RailgunProjectileProperties p = RailgunHandler.getProjectileProperties(ammo);
+		if(p!=null)
+		{
+			float force = 20;
+			float gravity = (float)p.gravity;
+
+			double gravityMotionY = 0, motionY = 0, baseMotionY = toTarget.normalize().y, baseMotionYC = baseMotionY;
+			double dist = toTarget.distanceTo(new Vec3d(0, toTarget.y, 0));
+			while(dist > 0)
+			{
+				dist -= force;
+				force *= 0.99;
+				baseMotionYC *= 0.99f;
+				gravityMotionY -= gravity;
+				motionY += (baseMotionYC+gravityMotionY);
+			}
+
+			toTarget = toTarget.addVector(0, motionY-baseMotionY, 0).normalize();
+		}
+
+		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
 	}
 }

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
@@ -22,8 +21,13 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
+import blusunrize.lib.manual.IManualPage;
+import blusunrize.lib.manual.ManualInstance;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import blusunrize.lib.manual.ManualPages;
+import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -51,6 +55,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -68,6 +73,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
@@ -84,12 +90,17 @@ import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiA
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageStatus;
+import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageTasks;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualDataAndElectronics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualLogistics;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualWarfare;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.render.*;
+import pl.pabilo8.immersiveintelligence.client.render.RadioExplosivesRenderer.RadioExplosivesItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.TellermineRenderer.TellermineItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.TripmineRenderer.TripmineItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.hans.HansRenderer;
@@ -132,11 +143,13 @@ import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemScrollableSwitch;
+import pl.pabilo8.immersiveintelligence.common.network.MessageManualClose;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * @author Pabilo8
@@ -363,6 +376,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityMotorbike.class, MotorbikeRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityMortar.class, MortarRenderer::new);
 		//Thanks Blu!
 		RenderingRegistry.registerEntityRenderingHandler(EntityCamera.class, EntityRenderNone::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
@@ -374,8 +388,9 @@ public class ClientProxy extends CommonProxy
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityHans.class, HansRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, ParachuteRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityEmplacementWeapon.class, EntityRenderNone::new);
 
-		//Railgun overwrite
+		//<s>Railgun overwrite</s> <b>Sunlight Railgun Overdrive!</b>
 		ImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IEContent.itemRailgun, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement_OBJ("immersiveengineering:models/item/railgun.obj", true)
 				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, new Matrix4().scale(.125, .125, .125).translate(-.5, 1.5, .5).rotate(Math.PI*.46875, 0, 1, 0))
 				.setTransformations(TransformType.FIRST_PERSON_LEFT_HAND, new Matrix4().scale(.125, .125, .125).translate(-1.75, 1.625, .875).rotate(-Math.PI*.46875, 0, 1, 0))
@@ -386,7 +401,7 @@ public class ClientProxy extends CommonProxy
 				.setTransformations(TransformType.GROUND, new Matrix4().translate(.125, .125, .0625).scale(.125, .125, .125)));
 		IEContent.itemRailgun.setTileEntityItemStackRenderer(ItemRendererIEOBJ.INSTANCE);
 
-		for(IBullet bullet : BulletRegistry.INSTANCE.registeredCasings.values())
+		for(IBullet bullet : BulletRegistry.INSTANCE.registeredBulletItems.values())
 		{
 			if(bullet instanceof ItemIINavalMine)
 			{
@@ -444,6 +459,15 @@ public class ClientProxy extends CommonProxy
 			}, ImmersiveIntelligence.MODID);
 		}
 
+
+		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
+		{
+			@Override
+			public IBakedModel createBakedModel(IBakedModel existingModel)
+			{
+				return new ModelItemDynamicOverride(existingModel, null);
+			}
+		}, ImmersiveIntelligence.MODID);
 		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 1), new ImmersiveModelRegistry.ItemModelReplacement()
 		{
 			@Override
@@ -459,7 +483,7 @@ public class ClientProxy extends CommonProxy
 	@SubscribeEvent
 	public void textureStichPre(TextureStitchEvent.Pre event)
 	{
-		for(Map.Entry<String, IBullet> s : BulletRegistry.INSTANCE.registeredCasings.entrySet())
+		for(Map.Entry<String, IBullet> s : BulletRegistry.INSTANCE.registeredBulletItems.entrySet())
 		{
 			ImmersiveIntelligence.logger.info("registering sprite for bullet casing: "+s.getKey());
 			s.getValue().registerSprites(event.getMap());
@@ -486,7 +510,9 @@ public class ClientProxy extends CommonProxy
 		}
 
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/submachinegun/main_disp");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/assault_rifle/main_disp");
 
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/binoculars");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_off");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
 
@@ -519,7 +545,7 @@ public class ClientProxy extends CommonProxy
 			ClientUtils.mc().currentScreen.initGui();
 
 		IIGuiList.GUI_SAWMILL.setClientGui((player, te) -> new GuiSawmill(player.inventory, (TileEntitySawmill)te));
-		IIGuiList.GUI_PACKER.setClientGui((player, te) -> new GuiPacker(player.inventory, (TileEntityPacker)te));
+		IIGuiList.GUI_PACKER.setClientGui((player, te) -> new GuiPacker(player.inventory, (TileEntityPackerOld)te));
 
 		IIGuiList.GUI_GEARBOX.setClientGui((player, te) -> new GuiGearbox(player.inventory, (TileEntityGearbox)te));
 
@@ -557,9 +583,15 @@ public class ClientProxy extends CommonProxy
 		IIGuiList.GUI_PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
 		IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
 
-		IIGuiList.GUI_UPGRADE.setClientGui((player, te) -> new GuiUpgrade(player.inventory, ((TileEntity& IUpgradableMachine)te)));
+		IIGuiList.GUI_UPGRADE.setClientGui((player, te) -> new GuiUpgrade(player.inventory, ((TileEntity & IUpgradableMachine)te)));
 
 		IIGuiList.GUI_VULCANIZER.setClientGui((player, te) -> new GuiVulcanizer(player.inventory, (TileEntityVulcanizer)te));
+		IIGuiList.GUI_EMPLACEMENT_STORAGE.setClientGui((player, te) -> new GuiEmplacementPageStorage(player.inventory, (TileEntityEmplacement)te));
+		IIGuiList.GUI_EMPLACEMENT_TASKS.setClientGui((player, te) -> new GuiEmplacementPageTasks(player.inventory, (TileEntityEmplacement)te));
+		IIGuiList.GUI_EMPLACEMENT_STATUS.setClientGui((player, te) -> new GuiEmplacementPageStatus(player.inventory, (TileEntityEmplacement)te));
+
+		IIGuiList.GUI_FILLER.setClientGui((player, te) -> new GuiFiller(player.inventory, (TileEntityFiller)te));
+
 	}
 
 	@Override
@@ -704,7 +736,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalDispenser.class, new ChemicalDispenserRenderer());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySandbags.class, new SandbagsRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockStoneDecoration), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockSandbags), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMineSign.class, new MineSignRenderer());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTankTrap.class, new TankTrapRenderer().subscribeToList("tank_trap"));
@@ -739,13 +771,15 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemTachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
 		IIContent.itemRadioConfigurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
 		IIContent.itemTripodPeriscope.setTileEntityItemStackRenderer(TripodPeriscopeRenderer.instance);
+		IIContent.itemMortar.setTileEntityItemStackRenderer(MortarRenderer.instance);
 		IIContent.itemMineDetector.setTileEntityItemStackRenderer(MineDetectorRenderer.instance);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTripMine.class, new TripmineRenderer().subscribeToList("tripmine"));
 		Item.getItemFromBlock(IIContent.blockTripmine).setTileEntityItemStackRenderer(new TripmineItemStackRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTellermine.class, new TellermineRenderer().subscribeToList("tellermine"));
-		Item.getItemFromBlock(IIContent.blockTripmine).setTileEntityItemStackRenderer(new TellermineItemStackRenderer());
-
+		Item.getItemFromBlock(IIContent.blockTellermine).setTileEntityItemStackRenderer(new TellermineItemStackRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioExplosives.class, new RadioExplosivesRenderer().subscribeToList("radio_explosives"));
+		Item.getItemFromBlock(IIContent.blockRadioExplosives).setTileEntityItemStackRenderer(new RadioExplosivesItemStackRenderer());
 		IIContent.itemNavalMine.setTileEntityItemStackRenderer(NavalMineRenderer.instance);
 
 		//Multiblocks
@@ -784,13 +818,16 @@ public class ClientProxy extends CommonProxy
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), TileEntityArtilleryHowitzer.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPacker.class, new PackerRenderer().subscribeToList("packer"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPackerOld.class, new PackerRenderer().subscribeToList("packer"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("redstone_data_interface"));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCasingFiller.class, new CasingFillerRenderer().subscribeToList("casing_filler"));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFiller.class, new FillerRenderer().subscribeToList("casing_filler"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEmplacement.class, new EmplacementRenderer().subscribeToList("emplacement"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadar.class, new RadarRenderer().subscribeToList("radar"));
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.RADAR.getMeta(), TileEntityRadar.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFlagpole.class, new FlagpoleRenderer().subscribeToList("flagpole"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.FLAGPOLE.getMeta(), TileEntityFlagpole.class);
@@ -815,7 +852,6 @@ public class ClientProxy extends CommonProxy
 	public void renderTile(TileEntity te)
 	{
 		TileEntitySpecialRenderer<TileEntity> tesr = TileEntityRendererDispatcher.instance.getRenderer(te);
-
 		tesr.render(te, 0, 0, 0, 0, 0, 0);
 	}
 
@@ -883,6 +919,59 @@ public class ClientProxy extends CommonProxy
 				IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(ClientUtils.mc().player.getRidingEntity(), tag));
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void guiOpen(GuiOpenEvent event)
+	{
+		// TODO: 26.08.2021 investigate
+		if(event.getGui() instanceof GuiManual)
+		{
+			CustomSkinHandler.getManualPages();
+		}
+		else if(ClientEventHandler.lastGui instanceof GuiManual)
+		{
+			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
+			String name = null;
+
+			ManualInstance inst = gui.getManual();
+			if(inst!=null)
+			{
+				ManualEntry entry = inst.getEntry(gui.getSelectedEntry());
+				if(entry!=null)
+				{
+					IManualPage page = entry.getPages()[gui.page];
+					if(page instanceof IIManualPageContributorSkin)
+					{
+						name = ((IIManualPageContributorSkin)page).skin.name;
+					}
+				}
+			}
+			EntityPlayer p = ClientUtils.mc().player;
+
+			ItemStack mainItem = p.getHeldItemMainhand();
+			ItemStack offItem = p.getHeldItemOffhand();
+
+			boolean main = !mainItem.isEmpty()&&mainItem.getItem()==IEContent.itemTool&&mainItem.getItemDamage()==3;
+			boolean off = !offItem.isEmpty()&&offItem.getItem()==IEContent.itemTool&&offItem.getItemDamage()==3;
+			ItemStack target = main?mainItem: offItem;
+
+			if(main||off)
+			{
+				IIPacketHandler.INSTANCE.sendToServer(new MessageManualClose(name==null?"":name));
+
+				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
+				{
+					ItemNBTHelper.remove(target, "lastSkin");
+				}
+				else if(name!=null)
+				{
+					ItemNBTHelper.setString(target, "lastSkin", name);
+				}
+			}
+		}
+
+		ClientEventHandler.lastGui = event.getGui();
 	}
 
 	@Override

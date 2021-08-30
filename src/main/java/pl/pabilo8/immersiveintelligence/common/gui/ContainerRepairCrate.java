@@ -11,7 +11,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityRepairCrat
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerRepairCrate extends ContainerIEBase
+public class ContainerRepairCrate extends ContainerIEBase<TileEntityRepairCrate>
 {
 	public ContainerRepairCrate(InventoryPlayer inventoryPlayer, TileEntityRepairCrate tile)
 	{

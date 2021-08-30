@@ -48,8 +48,7 @@ public class DataPacketTypeBoolean implements IDataType
 	@Override
 	public NBTTagCompound valueToNBT()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("Type", "boolean");
+		NBTTagCompound nbt = getHeaderTag();
 		nbt.setBoolean("Value", value);
 		return nbt;
 	}

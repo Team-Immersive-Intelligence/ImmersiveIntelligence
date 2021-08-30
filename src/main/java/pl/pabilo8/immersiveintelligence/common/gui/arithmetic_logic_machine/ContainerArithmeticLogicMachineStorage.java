@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
  * @author Pabilo8
  * @since 30-06-2019
  */
-public class ContainerArithmeticLogicMachineStorage extends ContainerIEBase
+public class ContainerArithmeticLogicMachineStorage extends ContainerIEBase<TileEntityArithmeticLogicMachine>
 {
 	public ContainerArithmeticLogicMachineStorage(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile)
 	{

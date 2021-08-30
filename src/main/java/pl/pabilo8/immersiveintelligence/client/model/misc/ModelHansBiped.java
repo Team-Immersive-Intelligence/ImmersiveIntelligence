@@ -2,7 +2,10 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumHandSide;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 
 /**
  * @author Pabilo8
@@ -11,6 +14,7 @@ import net.minecraft.entity.Entity;
 public class ModelHansBiped extends ModelPlayer
 {
 	public ModelRenderer leftHand, rightHand, leftFoot, rightFoot;
+	public ModelRenderer leftHandWear, rightHandWear, leftFootWear, rightFootWear;
 
 	public ModelHansBiped(float expand)
 	{
@@ -19,21 +23,35 @@ public class ModelHansBiped extends ModelPlayer
 
 	public ModelHansBiped(float expand, boolean slimArms)
 	{
-		this(expand, slimArms, new BipedTextureUVs(40, 16, 40, 16, 0, 16, 0, 16));
+		this(expand, slimArms,
+				new BipedTextureUVs(40, 16, 40, 16,
+						48, 48, 40, 32,
+						0, 16, 0, 16,
+						0, 48, 0, 32,
+						16, 16
+				)
+		);
 	}
 
 	public ModelHansBiped(float expand, boolean slimArms, BipedTextureUVs uvs)
 	{
 		super(expand, slimArms);
 
-
 		this.leftHand = addLimb(this.bipedLeftArm, true, uvs.armLeftU, uvs.armLeftV, -1.0F, -2.0F, -2.0F, expand);
 		this.rightHand = addLimb(this.bipedRightArm, false, uvs.armRightU, uvs.armRightV, -3.0F, -2.0F, -2.0F, expand);
+		this.leftHandWear = addLimb(this.bipedLeftArmwear, true, uvs.armWearLeftU, uvs.armWearLeftV, -1.0F, -2.0F, -2.0F, expand+0.25F);
+		this.rightHandWear = addLimb(this.bipedRightArmwear, false, uvs.armWearRightU, uvs.armWearRightV, -3.0F, -2.0F, -2.0F, expand+0.25F);
 
 		this.leftFoot = addLimb(this.bipedLeftLeg, true, uvs.legLeftU, uvs.legLeftV, -2.0F, 0.0F, -2.0F, expand);
-		this.leftFoot.rotationPointY+=2;
+		this.leftFoot.rotationPointY += 2;
 		this.rightFoot = addLimb(this.bipedRightLeg, false, uvs.legRightU, uvs.legRightV, -2.0F, 0.0F, -2.0F, expand);
-		this.rightFoot.rotationPointY+=2;
+		this.rightFoot.rotationPointY += 2;
+
+
+		this.leftFootWear = addLimb(this.bipedLeftLegwear, true, uvs.legWearLeftU, uvs.legWearLeftV, -2.0F, 0.0F, -2.0F, expand+0.25F);
+		this.leftFootWear.rotationPointY += 2;
+		this.rightFootWear = addLimb(this.bipedRightLegwear, false, uvs.legWearRightU, uvs.legWearRightV, -2.0F, 0.0F, -2.0F, expand+0.25F);
+		this.rightFootWear.rotationPointY += 2;
 
 	}
 
@@ -47,7 +65,7 @@ public class ModelHansBiped extends ModelPlayer
 
 		ModelRenderer mod = new ModelRenderer(this);
 		mod.rotationPointY = 4f;
-		mod.cubeList.add(new ModelBoxCustomizable(mod, u, v+5,x, -1, z, 4, 7, 4, expand, -5, 0));
+		mod.cubeList.add(new ModelBoxCustomizable(mod, u, v+5, x, -1, z, 4, 7, 4, expand, -5, 0));
 		bipedLeftArm.addChild(mod);
 		return mod;
 	}
@@ -56,28 +74,73 @@ public class ModelHansBiped extends ModelPlayer
 	{
 		int armLeftU, armLeftV;
 		int armRightU, armRightV;
+
+		int armWearLeftU, armWearLeftV;
+		int armWearRightU, armWearRightV;
+
 		int legLeftU, legLeftV;
 		int legRightU, legRightV;
+
+		int legWearLeftU, legWearLeftV;
+		int legWearRightU, legWearRightV;
+
 		int bodyU, bodyV;
 
-		public BipedTextureUVs(int armLeftU, int armLeftV, int armRightU, int armRightV, int legLeftU, int legLeftV, int legRightU, int legRightV)
-		{
-			this(armLeftU, armLeftV, armRightU, armRightV, legLeftU, legLeftV, legRightU, legRightV, 16, 16);
-		}
-
-		public BipedTextureUVs(int armLeftU, int armLeftV, int armRightU, int armRightV, int legLeftU, int legLeftV, int legRightU, int legRightV, int bodyU, int bodyV)
+		public BipedTextureUVs(int armLeftU, int armLeftV, int armRightU, int armRightV,
+							   int armWearLeftU, int armWearLeftV, int armWearRightU, int armWearRightV,
+							   int legLeftU, int legLeftV, int legRightU, int legRightV,
+							   int legWearLeftU, int legWearLeftV, int legWearRightU, int legWearRightV,
+							   int bodyU, int bodyV)
 		{
 			this.armLeftU = armLeftU;
 			this.armLeftV = armLeftV;
 			this.armRightU = armRightU;
 			this.armRightV = armRightV;
+			this.armWearLeftU = armWearLeftU;
+			this.armWearLeftV = armWearLeftV;
+			this.armWearRightU = armWearRightU;
+			this.armWearRightV = armWearRightV;
 			this.legLeftU = legLeftU;
 			this.legLeftV = legLeftV;
 			this.legRightU = legRightU;
 			this.legRightV = legRightV;
+			this.legWearLeftU = legWearLeftU;
+			this.legWearLeftV = legWearLeftV;
+			this.legWearRightU = legWearRightU;
+			this.legWearRightV = legWearRightV;
 			this.bodyU = bodyU;
 			this.bodyV = bodyV;
 		}
+	}
+
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
+	{
+		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+
+		leftFoot.rotateAngleX = 0;
+		rightFoot.rotateAngleX = 0;
+		leftHand.rotateAngleX = 0;
+		rightHand.rotateAngleX = 0;
+
+		if(entityIn instanceof EntityHans)
+		{
+			EntityHans hans = (EntityHans)entityIn;
+			if(hans.isKneeling)
+			{
+				bipedLeftLeg.rotateAngleX = -1.57f;
+				bipedLeftLegwear.rotateAngleX = -1.57f;
+				leftFoot.rotateAngleX = 1.65f;
+
+				bipedRightLeg.rotateAngleX = 0.25f;
+				rightFoot.rotateAngleX = 1.65f-0.25f;
+			}
+		}
+
+		copyModelAngles(leftFoot, leftFootWear);
+		copyModelAngles(rightFoot, rightFootWear);
+		copyModelAngles(leftHand, leftHandWear);
+		copyModelAngles(rightHand, rightHandWear);
 	}
 
 	@Override
@@ -89,8 +152,22 @@ public class ModelHansBiped extends ModelPlayer
 		this.leftHand.rotationPointY = 3f+(float)(wTime);
 		this.leftHand.rotateAngleX = (float)(wTime*-2);
 		 */
-		super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
+		GlStateManager.pushMatrix();
+		/*
+		if(entityIn instanceof EntityHans&&((EntityHans)entityIn).isKneeing)
+			GlStateManager.translate(0.0F, 0.2F, 0.0F);
+		 */
+
+		super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		GlStateManager.popMatrix();
+
+	}
+
+	@Override
+	public void postRenderArm(float scale, EnumHandSide side)
+	{
+		super.postRenderArm(scale, side);
 	}
 
 	//stolen from the Betweenlands,

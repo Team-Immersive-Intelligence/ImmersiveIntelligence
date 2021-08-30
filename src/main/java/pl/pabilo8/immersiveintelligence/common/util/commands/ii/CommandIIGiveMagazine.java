@@ -118,7 +118,9 @@ public class CommandIIGiveMagazine extends CommandBase
 		}
 		else if(args.length==4)
 		{
-			return getListOfStringsMatchingLastWord(args, Arrays.stream(EnumCoreTypes.values()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
+			ItemStack magazine = Utils.getStackWithMetaName(IIContent.itemBulletMagazine, args[1]);
+			IBullet matchingType = ItemIIBulletMagazine.getMatchingType(magazine);
+			return getListOfStringsMatchingLastWord(args,matchingType==null?Collections.emptyList():Arrays.stream(matchingType.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
 		}
 		else if(args.length > 4)
 		{

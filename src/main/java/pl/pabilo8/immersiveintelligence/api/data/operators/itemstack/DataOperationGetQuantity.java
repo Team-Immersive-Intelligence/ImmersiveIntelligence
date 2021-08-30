@@ -26,7 +26,7 @@ public class DataOperationGetQuantity extends DataOperator
 	{
 		DataPacketTypeItemStack t1;
 
-		t1 = ((DataPacketTypeItemStack)getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet));
+		t1 = getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet);
 		ItemStack stack = t1.value;
 
 		//Yes

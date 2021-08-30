@@ -1,8 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
+import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
 
@@ -18,15 +22,15 @@ public class ItemIIAmmoArtillery extends ItemIIBulletBase
 	}
 
 	@Override
-	public float getComponentCapacity()
+	public float getComponentMultiplier()
 	{
-		return 0.65f;
+		return 1f;
 	}
 
 	@Override
 	public int getGunpowderNeeded()
 	{
-		return 6;
+		return 600;
 	}
 
 	@Override
@@ -42,9 +46,15 @@ public class ItemIIAmmoArtillery extends ItemIIBulletBase
 	}
 
 	@Override
+	public float getDefaultVelocity()
+	{
+		return ArtilleryHowitzer.howitzerVelocity;
+	}
+
+	@Override
 	public float getCaliber()
 	{
-		return 0.5f;
+		return 8f;
 	}
 
 	@Override
@@ -60,15 +70,21 @@ public class ItemIIAmmoArtillery extends ItemIIBulletBase
 	}
 
 	@Override
+	public ItemStack getCasingStack(int amount)
+	{
+		return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"artillery_8bcal",amount);
+	}
+
+	@Override
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
-		return new EnumCoreTypes[]{EnumCoreTypes.SOFTPOINT, EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER, EnumCoreTypes.DOUBLE_CANISTER};
+		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER};
 	}
 
 	@Override
 	public float getSupressionRadius()
 	{
-		return 4;
+		return 10;
 	}
 
 	@Override

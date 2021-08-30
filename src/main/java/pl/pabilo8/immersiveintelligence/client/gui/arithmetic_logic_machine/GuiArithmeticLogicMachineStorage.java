@@ -15,7 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiButtonItemAdvanced;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonItemAdvanced;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineStorage;
@@ -36,7 +36,7 @@ public class GuiArithmeticLogicMachineStorage extends GuiIEContainerBase
 
 	public TileEntityArithmeticLogicMachine tile;
 	public InventoryPlayer playerInv;
-	IItemHandler handler;
+	public IItemHandler handler;
 	public ContainerArithmeticLogicMachineStorage container;
 
 	DataPacket list;

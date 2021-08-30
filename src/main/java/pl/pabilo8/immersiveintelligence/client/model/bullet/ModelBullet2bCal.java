@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
  */
 public class ModelBullet2bCal extends ModelIIBase implements IBulletModel
 {
-	private static String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/2bcal_machinegun.png";
+	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/2bcal_machinegun.png";
 	int textureX = 32;
 	int textureY = 16;
 
@@ -120,5 +120,16 @@ public class ModelBullet2bCal extends ModelIIBase implements IBulletModel
 				break;
 		}
 		GlStateManager.color(1f, 1f, 1f, 1f);
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		ModelBullet2bCal newModel = new ModelBullet2bCal();
+		this.baseModel = newModel.baseModel;
+		this.casingModel = newModel.casingModel;
+		this.corePiercingModel = newModel.corePiercingModel;
+		this.coreSoftpointModel = newModel.coreSoftpointModel;
+		this.paintModel = newModel.paintModel;
 	}
 }

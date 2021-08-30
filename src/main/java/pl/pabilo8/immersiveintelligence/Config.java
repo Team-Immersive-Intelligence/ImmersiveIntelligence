@@ -205,11 +205,11 @@ public class Config
 
 			@Comment({"The energy usage of the electric wrench (when destroying blocks / upgrading)."})
 			@RequiresMcRestart
-			public static int electric_wrench_energy_per_use = 100;
+			public static int electric_wrench_energy_per_use = 1000;
 
 			@Comment({"The upgrade progress added per use of the engineer's wrench (default 1IF=1 Point of Progress™)."})
 			@RequiresMcRestart
-			public static int electric_wrench_upgrade_progress = 100;
+			public static int electric_wrench_upgrade_progress = 1000;
 
 			@Comment({"The durability of the engineer's wrench."})
 			@RequiresMcRestart
@@ -217,17 +217,17 @@ public class Config
 
 			@Comment({"The upgrade progress added per use of the engineer's wrench."})
 			@RequiresMcRestart
-			public static int wrench_upgrade_progress = 50;
+			public static int wrench_upgrade_progress = 350;
 
-			@Comment({"Max zoom of the binoculars (in Blu's unit of distance measurement™)."})
+			@Comment({"Max zoom of the binoculars (in Blu's Unit of Magnification Measurement™)."})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
 			public static float[] binoculars_max_zoom = new float[]{0.1f, 0.125f, 0.167f, 0.25f, 0.5f};
 
-			@Comment({"Max zoom of the advanced binoculars (in Blu's Unit of Distance Measurement™)."})
+			@Comment({"Max zoom of the advanced binoculars (in Blu's Unit of Magnification Measurement™)."})
 			@RequiresMcRestart
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-			public static float[] advanced_binoculars_max_zoom = new float[]{0.05f, 0.0625f, 0.0833f, 0.1f, 0.25f};
+			public static float[] advanced_binoculars_max_zoom = new float[]{0.05f, 0.0625f, 0.0833f, 0.1f, 0.25f, 0.5f};
 
 			@Comment({"The energy capacity of advanced binoculars (when using Infrared Sight)."})
 			@RequiresMcRestart
@@ -403,7 +403,9 @@ public class Config
 			@SubConfig
 			public static EffectCrates effectCrates;
 			@SubConfig
-			public static CasingFiller casingFiller;
+			public static Emplacement emplacement;
+			@SubConfig
+			public static Filler filler;
 
 			public static class RedstoneInterface
 			{
@@ -422,18 +424,14 @@ public class Config
 				public static int soundRange = 24;
 			}
 
-			public static class CasingFiller
+			public static class Filler
 			{
-				@Comment({"Energy capacity of the glorious boxing device also known as The Packer."})
+				@Comment({"Energy capacity of the the Filler (in IF)."})
 				public static int energyCapacity = 16000;
 
 				@RequiresWorldRestart
-				@Comment({"Modifier of how much time should the filling process take."})
-				public static float timeModifier = 1f;
-
-				@RequiresWorldRestart
-				@Comment({"Modifier of how much energy should the filling process consume."})
-				public static float energyModifier = 1f;
+				@Comment({"Dust capacity of the the Filler (in mB, 1 dustStack is 100mB)."})
+				public static int dustCapacity = 32000;
 			}
 
 			public static class EffectCrates
@@ -549,11 +547,14 @@ public class Config
 
 			public static class RadioStation
 			{
-				@Comment({"Energy capacity of the radio station."})
+				@Comment({"Energy required to construct the radio station (in IF)."})
+				public static int constructionEnergy = 200000;
+
+				@Comment({"Energy capacity of the radio station (in IF)."})
 				public static int energyCapacity = 32000;
 
-				@Comment({"Energy usage when sending a signal."})
-				public static int energyUsage = 8192;
+				@Comment({"Energy usage when sending a signal (in IF)."})
+				public static int energyUsage = 2048;
 
 				@Comment({"Energy usage when a radio station is working."})
 				public static int energyUsageIdle = 512;
@@ -562,7 +563,7 @@ public class Config
 				public static int radioRange = 128;
 
 				@RangeDouble(min = 0, max = 1)
-				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 0 - full range, 0.5 - half range, 1 - no range, etc.)"})
+				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 1 - full range, 0.5 - half range, 0 - no range, etc.)"})
 				public static double weatherHarshness = 0.75;
 			}
 
@@ -610,6 +611,7 @@ public class Config
 				@Comment({"Energy capacity of the chemical bath."})
 				public static int energyCapacity = 16000;
 
+				@RequiresWorldRestart
 				@Comment({"Fluid capacity of the chemical bath."})
 				public static int fluidCapacity = 24000;
 			}
@@ -619,6 +621,7 @@ public class Config
 				@Comment({"Energy capacity of the electrolyzer."})
 				public static int energyCapacity = 16000;
 
+				@RequiresWorldRestart
 				@Comment({"Fluid capacity of the electrolyzer."})
 				public static int fluidCapacity = 12000;
 			}
@@ -645,25 +648,22 @@ public class Config
 				public static int energyUsageLoader = 3192;
 
 				@Comment({"Time needed for the platform to ascend/descend (in ticks."})
-				public static int platformTime = 240;
+				public static int platformTime = 180;
 
 				@Comment({"Time needed for the howitzer to fire (in ticks."})
 				public static int fireTime = 35;
 
 				@Comment({"How long does it take for the howitzer to rotate 90 degrees (in ticks)"})
-				public static int rotateTime = 160;
+				public static int rotateTime = 140;
 
 				@Comment({"How long does it take for the howitzer to load a shell (in ticks)"})
-				public static int loadTime = 140;
+				public static int loadTime = 100;
 
 				@Comment({"How long does it take for the howitzer to move the shell by one item slot using conveyor (in ticks)"})
 				public static int conveyorTime = 40;
 
 				@Comment({"The speed of howitzer shells in blocks/tick"})
-				public static float howitzerVelocity = 10;
-				
-				@Comment({"the range modifier of the howitzer"})
-				public static float howitzerRangeMP = 1;
+				public static float howitzerVelocity = 20;
 			}
 
 			public static class BallisticComputer
@@ -686,17 +686,41 @@ public class Config
 
 			public static class MissileSilo
 			{
-				@Comment({"Energy capacity of the missile silo (per one block of height)."})
+				@Comment({"Energy capacity of the missile silo (per one block of height) (in IF)."})
 				public static int energyCapacity = 2500000;
+			}
+
+			public static class Radar
+			{
+				@Comment({"Energy required to construct the radar (in IF)."})
+				public static int constructionEnergy = 200000;
+
+				@Comment({"Energy capacity of the radar (in IF)."})
+				public static int energyCapacity = 64000;
+
+				@Comment({"Energy usage of the radar per tick (in IF)."})
+				public static int energyUsage = 2048;
 			}
 
 			public static class Emplacement
 			{
-				@Comment({"Energy capacity of the emplacement."})
-				public static int energyCapacity = 16000;
+				@Comment({"Energy capacity of the emplacement (in IF)."})
+				public static int energyCapacity = 32000;
 
-				@Comment({"Time for the multiblock to open/close the lid."})
+				@Comment({"Time for the multiblock to open/close the lid (in ticks)."})
 				public static int lidTime = 240;
+
+				@Comment({"Interval for the multiblock weapon to update sighted targets (in ticks)."})
+				public static int sightUpdateTime = 10;
+
+				@Comment({"Energy required to perform a single repair action (in IF)."})
+				public static int repairCost = 1024;
+
+				@Comment({"Time for a single repair action (in ticks)."})
+				public static int repairDelay = 40;
+
+				@Comment({"Amount of turret health restored during single repair action (in half-hearts)."})
+				public static int repairAmount = 4;
 			}
 
 			public static class Inserter
@@ -786,6 +810,7 @@ public class Config
 				@Comment({"Amount of fluid transfered per tick."})
 				public static int fluidTransfer = 120;
 
+				@RequiresWorldRestart
 				@Comment({"Fluid capacity of the fuel station."})
 				public static int fluidCapacity = 64000;
 			}
@@ -825,6 +850,8 @@ public class Config
 			@SubConfig
 			public static Machinegun machinegun;
 			@SubConfig
+			public static Mortar mortar;
+			@SubConfig
 			public static EmplacementWeapons emplacementWeapons;
 			@SubConfig
 			public static Railgun railgun;
@@ -833,11 +860,32 @@ public class Config
 			@SubConfig
 			public static Mines mines;
 
+			public static class Mortar
+			{
+				@Comment({"Determines how fast the Mortar can be set up (in ticks)."})
+				@RangeInt(min = 0)
+				@RequiresMcRestart
+				public static int setupTime = 100;
+
+				@Comment({"Determines how fast the Mortar can be fired (in ticks)."})
+				@RangeInt(min = 0)
+				@RequiresMcRestart
+				public static int shootTime = 80;
+
+				@Comment({"The pitch turn speed of the Mortar (in degrees)."})
+				@RequiresMcRestart
+				public static float pitch_speed = 1f;
+			}
+
 			public static class EmplacementWeapons
 			{
 
 				@SubConfig
 				public static Autocannon autocannon;
+				@SubConfig
+				public static Machinegun machinegun;
+				@SubConfig
+				public static TeslaCoil teslaCoil;
 				@SubConfig
 				public static InfraredObserver infraredObserver;
 				@SubConfig
@@ -861,6 +909,66 @@ public class Config
 
 					@Comment({"Time required to fire a single bullet."})
 					public static int bulletFireTime = 3;
+
+					@Comment({"Starting/max health of the turret (in half-hearts)"})
+					public static int maxHealth = 200;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float detectionRadius = 24;
+
+					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 2048;
+				}
+
+				public static class Machinegun
+				{
+					@Comment({"Yaw rotation speed (degrees/tick)"})
+					public static float yawRotateSpeed = 4;
+
+					@Comment({"Pitch rotation speed (degrees/tick)"})
+					public static float pitchRotateSpeed = 4;
+
+					@Comment({"Time required to reload all the magazines."})
+					public static int reloadTime = 200;
+
+					@Comment({"Time required to fire a single bullet."})
+					public static int bulletFireTime = 2;
+
+					@Comment({"Time required for machinegun nest setup (barrel attachment animation) (in ticks)"})
+					public static int setupTime = 150;
+
+					@Comment({"Starting/max health of the turret (in half-hearts)"})
+					public static int maxHealth = 150;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float detectionRadius = 24;
+
+					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 1024;
+				}
+
+				public static class TeslaCoil
+				{
+					@Comment({" \"reload\" time after dealing damage (in ticks)."})
+					public static int damageDelay = 10;
+
+					@Comment({"Damage dealt to enemies (in half-hearts)."})
+					public static int damage = 10;
+
+					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 3096;
+
+					@Comment({"Energy used per shot (in IF)"})
+					public static int energyUsage = 2048;
+
+					@Comment({"Starting/max health of the turret (in half-hearts)"})
+					public static int maxHealth = 200;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float detectionRadius = 0;
+
+					@Comment({"Enemy attack range (in blocks)"})
+					public static float attackRadius = 16;
 				}
 
 				public static class InfraredObserver
@@ -868,11 +976,21 @@ public class Config
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 2;
 
-					@Comment({"Time needed for 90 degrees yaw rotation (in ticks)"})
-					public static int yawRotateTime = 120;
+					@Comment({"Yaw rotation speed (degrees/tick, rotates only if sent a data packet, requires lowering the platform)"})
+					public static int yawRotateTime = 1;
+
+					@Comment({"Starting/max health of the turret (in half-hearts)"})
+					public static int maxHealth = 100;
 
 					@Comment({"Time required for observer setup (lens attachment animation) (in ticks)."})
 					public static int setupTime = 300;
+
+					//3.5 chunks
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float detectionRadius = 56;
+
+					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 1024;
 				}
 
 				public static class CPDS
@@ -882,6 +1000,18 @@ public class Config
 
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 8;
+
+					@Comment({"Starting/max health of the turret (in half-hearts)"})
+					public static int maxHealth = 350;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float detectionRadius = 16;
+
+					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 4096;
+
+					@Comment({"Time required to reload the magazine."})
+					public static int reloadTime = 120;
 				}
 
 				public static class HeavyChemthrower
@@ -889,14 +1019,26 @@ public class Config
 					@Comment({"Time required for chemthrower setup (barrel extension animation) (in ticks)."})
 					public static int setupTime = 100;
 
+					@Comment({"Fluid tank capacity of the heavy chemthrower (in mB)."})
+					public static int tankCapacity = 8000;
+
 					@Comment({"Yaw rotation speed (degrees/tick)"})
 					public static float yawRotateSpeed = 2;
 
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 1;
 
+					@Comment({"Starting/max health of the turret (in half-hearts)"})
+					public static int maxHealth = 120;
+
 					@Comment({"Time required to fire a single chemthrower particle (in ticks)."})
 					public static int sprayTime = 0;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float detectionRadius = 16;
+
+					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 2048;
 				}
 
 				public static class HeavyRailgun
@@ -910,21 +1052,36 @@ public class Config
 					@Comment({"Time required for replacing the ammo box."})
 					public static int reloadAmmoBoxTime = 100;
 
+					@Comment({"Starting/max health of the turret (in half-hearts)"})
+					public static int maxHealth = 350;
+
 					@Comment({"Yaw rotation speed (degrees/tick)"})
 					public static float yawRotateSpeed = 1.75f;
 
 					@Comment({"Pitch rotation speed (degrees/tick)"})
 					public static float pitchRotateSpeed = 0.65f;
+
+					@Comment({"Enemy detection range (in blocks)"})
+					public static float detectionRadius = 16;
+
+					@Comment({"Base energy usage per tick (in IF)."})
+					public static int energyUpkeepCost = 2048;
 				}
 			}
 
 			public static class Railgun
 			{
+				@Comment({"If disabled, II will not make any changes to IE railgun. This also disables using railgun grenades (as they use a custom entity)."})
+				public static boolean enableRailgunOverride = true;
+
 				@Comment({"Make standard railgun rods to be able to penetrate mobs (depending on metal)."})
 				public static boolean enablePenetration = true;
 
 				@Comment({"Whether the railgun has recoil (pushes the shooter to back, depending on projectile mass)."})
 				public static boolean railgunRecoil = true;
+
+				@Comment({"Whether the railgun can only be used when in mainhand."})
+				public static boolean disableRailgunOffhand = true;
 			}
 
 			public static class Grenade
@@ -940,7 +1097,7 @@ public class Config
 
 				@Comment({"Grenade's initial speed modifier."})
 				@RangeDouble(min = 0)
-				public static double throwSpeedModifier = 1.65f;
+				public static float throwSpeedModifier = 1.65f;
 			}
 
 			public static class Mines
@@ -949,13 +1106,28 @@ public class Config
 						"Changes color of the tripmine ",
 						"0 - steel",
 						"1 - green",
-						"2 - dull-yellow"
+						"2 - dull-yellow (makes your tripmine a true S-Mine straight out of ze [REDACTED])"
 				})
 				@RangeInt(min = 0, max = 2)
 				public static int tripmineColor = 0;
 
 				@Comment({"Time before colision is being detected for navy mine after placing it (in ticks)"})
 				public static int navalMineArmTime = 60;
+
+
+				@Comment({"Energy capacity of radio explosives (in IF)."})
+				public static int energyCapacity = 240000;
+
+				@Comment({"Energy usage by radio explosives per tick (in IF)."})
+				public static int energyUsage = 10;
+
+				@Comment({"Radio signal range of the radio explosives (radius)."})
+				public static int radioRange = 32;
+
+				@RangeDouble(min = 0, max = 1)
+				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 1 - full range, 0.5 - half range, 0 - no range, etc.)"})
+				public static double weatherHarshness = 0.35;
+
 			}
 
 			public static class Submachinegun
@@ -1017,6 +1189,7 @@ public class Config
 				@Comment({"Water usage when water cooling upgrade is mounted on mg (in mB)."})
 				public static int waterCoolingFluidUsage = 10;
 
+				@RequiresMcRestart
 				@Comment({"Coolant tank capacity of the water cooling upgrade."})
 				public static int waterCoolingTankCapacity = 4000;
 
@@ -1080,6 +1253,12 @@ public class Config
 
 			@Comment({"The maximum length of a single small data wire. Should not be much."})
 			public static int smallDataWireLength = 4;
+
+			@Comment({"The RGB color of the data wire."})
+			public static int tripwireColouration = 0x967e6d;
+
+			@Comment({"The maximum length of the tripwire. Should be medium range at best."})
+			public static int tripwireLength = 8;
 		}
 
 		public static class Vehicles
@@ -1157,6 +1336,9 @@ public class Config
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] gear_max_torque = new int[]{6, 24, 32, 256, 512};
 
+			@Comment({"If enabled, gears will be damaged inside machines and durability will be set according to the setting below. Disabled by default."})
+			public static boolean gear_durability_enabled = false;
+
 			//20 mins, 40 mins 1h, 2h, 4h
 			@Comment({"Durability of the gear (decreases by 1 every 20 ticks (1 second)).", GEARS})
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
@@ -1179,21 +1361,21 @@ public class Config
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
 			public static int[] belt_length = new int[]{8, 16};
 
-			@Comment({"Immersive Flux to Rotary Flux conversion ratio (default 1 RoF = 1 RF)."})
+			@Comment({"Immersive Flux to Rotary Flux conversion ratio (default 4 RoF = 1 IF)."})
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-			public static float rof_conversion_ratio = 1f;
+			public static float rof_conversion_ratio = 4f;
 
 			@Comment({"Default torque, used as a fallback, when IE rotational device is not recognised."})
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-			public static float dynamo_default_torque = 2f;
+			public static float dynamo_default_torque = 16f;
 
 			@Comment({"Torque multiplier for the windmill."})
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-			public static float dynamo_windmill_torque = 8f;
+			public static float dynamo_windmill_torque = 20f;
 
-			@Comment({"Default torque, used as a fallback, when IE rotational device is not recognised."})
+			@Comment({"Torque multiplier for the windmill."})
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-			public static float dynamo_watermill_torque = 12f;
+			public static float dynamo_watermill_torque = 24f;
 		}
 	}
 

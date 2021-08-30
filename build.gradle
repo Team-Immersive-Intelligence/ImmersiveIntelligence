@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.2.0.2"
+version = "0.2.1"
 group= "pl.pabilo8"
 def archiveGroup = "pl.pabilo8"
 archivesBaseName = "immersiveintelligence"
@@ -48,7 +48,7 @@ repositories {
 
     maven { // ModMaven, there is a bunch of stuff on there
         name 'ModMaven'
-        url "https://modmaven.k-4u.nl/"
+        url "http://modmaven.k-4u.nl/"
     }
 
     maven { // Albedo Lights
@@ -61,7 +61,7 @@ repositories {
     }
 
     //https://www.cursemaven.com/
-    //for Immersive Petroleum
+    //for Immersive Petroleum, Posts and Technology
     maven {
         url "https://www.cursemaven.com"
     }
@@ -92,6 +92,8 @@ dependencies {
     deobfCompile 'baubles:Baubles:1.12:1.5.2'
 
     compileOnly "curse.maven:immersive-petroleum-268250:2544919"
+    compileOnly "curse.maven:immersive-posts-314645:2951672"
+    compileOnly "curse.maven:immersive-technology-359407:3251902"
 }
 
 reobf {
@@ -152,7 +154,7 @@ def libPrefix = 'META-INF/libraries'
 jar {
     manifest {
         attributes 'ContainedDeps': libPrefix + '/' + coreJar.archivePath.name
-        attributes "FMLAT": "ImmersiveIntelligence_at.cfg"
+        attributes "FMLAT": "immersiveintelligence_at.cfg"
         attributes 'Maven-Artifact': archiveGroup + ':' + archivesBaseName + ':' + version
     }
 

@@ -12,20 +12,20 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPacker;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPackerOld;
 
 /**
  * @author Pabilo8
  * @since 21-06-2019
  */
-public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> implements IReloadableModelContainer<PackerRenderer>
+public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPackerOld> implements IReloadableModelContainer<PackerRenderer>
 {
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPacker model;
 	private static ModelPacker modelFlipped;
 
 	@Override
-	public void render(TileEntityPacker te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(TileEntityPackerOld te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
@@ -45,8 +45,10 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> 
 			ModelPacker modelCurrent = te.mirrored?modelFlipped: model;
 
 			modelCurrent.getBlockRotation(te.facing, te.mirrored);
-			modelCurrent.render();
-
+			for(ModelRendererTurbo mod : modelCurrent.baseModel)
+				mod.render();
+			for(ModelRendererTurbo mod : modelCurrent.doorModel)
+				mod.render();
 
 			ClientUtils.bindTexture("textures/atlas/blocks.png");
 			GlStateManager.pushMatrix();

@@ -65,7 +65,7 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 
 	public TileEntityVulcanizer()
 	{
-		super(MultiblockVulcanizer.instance, new int[]{4, 4, 6}, Vulcanizer.energyCapacity, true);
+		super(MultiblockVulcanizer.instance, MultiblockVulcanizer.instance.getSize(), Vulcanizer.energyCapacity, true);
 	}
 
 	@Override

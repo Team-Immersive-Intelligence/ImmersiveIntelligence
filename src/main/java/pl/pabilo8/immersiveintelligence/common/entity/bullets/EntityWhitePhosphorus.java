@@ -16,11 +16,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import javax.annotation.Nullable;
 
@@ -90,8 +92,9 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightP
 	{
 		if(!this.world.isRemote&&mop.typeOfHit!=Type.MISS&&world!=null&&mop.getBlockPos()!=null)
 		{
-			if(this.world.isAirBlock(mop.getBlockPos()))
-				world.setBlockState(mop.getBlockPos(), Blocks.FIRE.getDefaultState());
+			Explosion explosion = new Explosion(world, this, posX, posY, posZ, 1, true, false);
+			explosion.doExplosionA();
+			explosion.doExplosionB(false);
 
 			world.playSound(null, mop.getBlockPos(), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.125f, 1f);
 
@@ -117,6 +120,7 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightP
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
 	public Light provideLight()

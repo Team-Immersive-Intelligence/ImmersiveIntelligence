@@ -7,8 +7,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
 
@@ -49,8 +51,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 		ClientUtils.bindTexture(texture_printing_press);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		ClientUtils.drawGradientRect(guiLeft+112, guiTop+23+(47-stored), guiLeft+119, guiTop+70, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(guiLeft+112, guiTop+23, 7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		float capacity = tile.tanks[0].getCapacity();
 		int yy = guiTop+21+51;
@@ -80,7 +81,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 		this.renderHoveredToolTip(mx, my);
 
 		//Thanks Flaxbeard!
-		ArrayList<String> tooltip = new ArrayList();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx >= guiLeft+125&&mx <= guiLeft+125+16&&my >= guiTop+21&&my <= guiTop+21+47)
 		{
@@ -103,7 +104,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 		}
 
 		if(mx > guiLeft+112&&mx < guiLeft+119&&my > guiTop+23&&my < guiTop+70)
-			tooltip.add(tile.getEnergyStored(null)+"/"+tile.getMaxEnergyStored(null)+" IF");
+			tooltip.add(Utils.getPowerLevelString(tile));
 
 		if(!tooltip.isEmpty())
 		{

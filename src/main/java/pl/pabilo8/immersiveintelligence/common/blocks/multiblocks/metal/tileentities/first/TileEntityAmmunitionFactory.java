@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.IFluidTank;
  * @author Pabilo8
  * @since 28-06-2019
  */
+@Deprecated
 public class TileEntityAmmunitionFactory extends TileEntityMultiblockMetal<TileEntityAmmunitionFactory, IMultiblockRecipe>
 {
 	public boolean active = false;

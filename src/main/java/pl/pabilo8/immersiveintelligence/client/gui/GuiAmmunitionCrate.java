@@ -2,9 +2,12 @@ package pl.pabilo8.immersiveintelligence.client.gui;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionCrate;
@@ -29,7 +32,7 @@ public class GuiAmmunitionCrate extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_device.ammunition_crate.name"), 8, 6, 0x0a0a0a);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_device.ammunition_crate.name"), 8, 6, 0x0a0a0a);
 	}
 
 	/**
@@ -43,6 +46,9 @@ public class GuiAmmunitionCrate extends GuiIEContainerBase
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		if(upgraded)
+		{
 			this.drawTexturedModalRect(guiLeft+176, guiTop, 176, 0, 49, 133);
+			Utils.drawStringCentered(fontRenderer, I18n.format(CommonProxy.INFO_KEY+"machineupgrade.mg_loader.gui_tooltip"), guiLeft+176,guiTop+6,49,0,0x0a0a0a);
+		}
 	}
 }

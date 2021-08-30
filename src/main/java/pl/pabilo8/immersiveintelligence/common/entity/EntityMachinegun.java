@@ -75,7 +75,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public boolean shoot = false, aiming = false, hasSecondMag = false, mag1Empty = false, mag2Empty = false, hasInfrared = false, loadedFromCrate = false, overheated = false, tripod = false;
 	public FluidTank tank = new FluidTank(tankCapacity);
 
-	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d);
+	AxisAlignedBB aabb = new AxisAlignedBB(0.15d, 0d, 0.15d, 0.85d, 0.65d, 0.85d).offset(-0.5, 0, -0.5);
 	NonSidedFluidHandler fluidHandler = new NonSidedFluidHandler(this);
 
 
@@ -330,6 +330,11 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		}
 		else
 		{
+			if(!world.isRemote&&setupTime>0)
+			{
+				dropItem();
+				return;
+			}
 			gunPitch = Math.max(gunPitch-1, -25);
 		}
 
@@ -366,6 +371,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	{
 		if(isEmpty)
 		{
+			ItemStack playerMag = entity.getItemStackFromSlot(takeFrom);
 			if(!magazine.isEmpty())
 			{
 				if(clipReload >= Machinegun.clipReloadTime)
@@ -398,9 +404,9 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			{
 				if(clipReload==0)
 				{
-					if(entity.getItemStackFromSlot(takeFrom).getItem() instanceof ItemIIBulletMagazine)
+					if(playerMag.getItem() instanceof ItemIIBulletMagazine&&playerMag.getMetadata()==0)
 					{
-						if(ItemIIBulletMagazine.hasNoBullets(entity.getItemStackFromSlot(takeFrom)))
+						if(ItemIIBulletMagazine.hasNoBullets(playerMag))
 						{
 							currentlyLoaded = -1;
 							return false;
@@ -412,7 +418,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				}
 				else if(clipReload < Machinegun.clipReloadTime)
 				{
-					if(entity.getItemStackFromSlot(takeFrom).getItem() instanceof ItemIIBulletMagazine)
+					if(playerMag.getItem() instanceof ItemIIBulletMagazine&&playerMag.getMetadata()==0)
 					{
 						clipReload += 1;
 						currentlyLoaded = setTo;
@@ -429,10 +435,10 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				}
 				else
 				{
-					if(entity.getItemStackFromSlot(takeFrom).getItem() instanceof ItemIIBulletMagazine)
+					if(playerMag.getItem() instanceof ItemIIBulletMagazine&&playerMag.getMetadata()==0)
 					{
 						clipReload = 0;
-						setMagazineToSlot(setTo, entity.getItemStackFromSlot(takeFrom).copy());
+						setMagazineToSlot(setTo, playerMag.copy());
 						entity.setItemStackToSlot(takeFrom, ItemStack.EMPTY);
 						setEmpty(setTo, false);
 						currentlyLoaded = -1;
@@ -736,10 +742,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.95f, true_angle, true_angle2);
 		Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
 
-		//blocks per tick
-		float distance = 4f;
 		Vec3d vpos = new Vec3d(posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z));
-		EntityBullet b = BulletHelper.createBullet(world, stack, vpos, gun_end, distance);
+		EntityBullet b = BulletHelper.createBullet(world, stack, vpos, gun_end);
 		b.setShooters(getPassengers().get(0), this);
 		world.spawnEntity(b);
 

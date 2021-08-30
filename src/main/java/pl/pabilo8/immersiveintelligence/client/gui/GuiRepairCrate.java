@@ -108,7 +108,6 @@ public class GuiRepairCrate extends GuiIEContainerBase
 		this.drawTexturedModalRect(guiLeft, guiTop+79, 0, 79, xSize, ySize-79);
 		this.drawTexturedModalRect(guiLeft+ww, guiTop, 9, 0, upgraded?167: 102, 79);
 
-		int stored = (int)(47*(tile.energyStorage/(float)EffectCrates.maxEnergyStored));
-		ClientUtils.drawGradientRect(guiLeft+153, guiTop+24+(47-stored), guiLeft+153+7, guiTop+24+47, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(guiLeft+153, guiTop+24, 7,47,tile.energyStorage/(float)EffectCrates.maxEnergyStored);
 	}
 }

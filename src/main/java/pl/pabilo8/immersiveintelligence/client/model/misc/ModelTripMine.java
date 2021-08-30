@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.model.misc;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
@@ -17,7 +18,11 @@ public class ModelTripMine extends ModelIIBase implements IBulletModel
 {
 	int textureX = 32;
 	int textureY = 32;
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine.png";
+	public static final ResourceLocation[] TEXTURES = new ResourceLocation[]{
+			new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine.png"), //IE steel gray, default option
+			new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine_alt.png"), //green
+			new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine_alt2.png") //dull-yellow, S-Mine original color
+	};
 
 	public ModelRendererTurbo[] coreModel;
 
@@ -117,7 +122,7 @@ public class ModelTripMine extends ModelIIBase implements IBulletModel
 		parts.put("base",baseModel);
 		parts.put("core",coreModel);
 
-		translateAll(0f,1f,0.5f);
+		translateAll(-8, 1f, -8);
 
 		flipAll();
 	}
@@ -125,7 +130,7 @@ public class ModelTripMine extends ModelIIBase implements IBulletModel
 	@Override
 	public void renderCasing(float gunpowderPercentage, int paintColour)
 	{
-		ClientUtils.bindTexture(TEXTURE);
+		Utils.bindTexture(TEXTURES[Mines.tripmineColor]);
 		for(ModelRendererTurbo mod : baseModel)
 			mod.render();
 	}
@@ -133,10 +138,17 @@ public class ModelTripMine extends ModelIIBase implements IBulletModel
 	@Override
 	public void renderCore(int coreColour, EnumCoreTypes coreType)
 	{
-		ClientUtils.bindTexture(TEXTURE);
+		Utils.bindTexture(TEXTURES[Mines.tripmineColor]);
 		float[] c = Utils.rgbIntToRGB(coreColour);
 		GlStateManager.color(c[0], c[1], c[2]);
 		for(ModelRendererTurbo mod : coreModel)
 			mod.render();
+	}
+
+	public void reloadModels()
+	{
+		ModelTripMine newModel = new ModelTripMine();
+		this.baseModel = newModel.baseModel;
+		this.coreModel = newModel.coreModel;
 	}
 }

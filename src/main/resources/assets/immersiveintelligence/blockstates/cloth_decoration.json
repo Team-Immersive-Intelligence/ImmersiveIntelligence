@@ -4,8 +4,8 @@
     "transform": "forge:default-block",
     "model": "immersiveengineering:ie_six_sides_overlay_all",
     "textures": {
-      "texture": "immersiveengineering:blocks/cloth_decoration/coil_rope_side",
-      "particle": "immersiveengineering:blocks/cloth_decoration/coil_rope_side"
+      "texture": "immersiveintelligence:blocks/cloth_decoration/coil_rope_side",
+      "particle": "immersiveintelligence:blocks/cloth_decoration/coil_rope_side"
     }
   },
   "variants": {

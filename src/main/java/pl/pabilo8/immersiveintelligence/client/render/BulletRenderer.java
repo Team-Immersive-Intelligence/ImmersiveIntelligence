@@ -15,7 +15,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
  */
 public class BulletRenderer extends Render<EntityBullet>
 {
-
 	public BulletRenderer(RenderManager renderManagerIn)
 	{
 		super(renderManagerIn);
@@ -32,18 +31,18 @@ public class BulletRenderer extends Render<EntityBullet>
 
 		double yy, pp;
 		yy = entity.prevRotationYaw+((entity.rotationYaw-entity.prevRotationYaw)*partialTicks);
-		pp = entity.prevRotationPitch+((entity.prevRotationPitch-entity.prevRotationPitch)*partialTicks);
+		pp = entity.prevRotationPitch+((entity.rotationPitch-entity.prevRotationPitch)*partialTicks);
 
 		GlStateManager.translate(x, y, z);
 		GlStateManager.rotate((float)yy, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate((float)(90+pp), 1.0F, 0.0F, 0.0F);
 
-		if(entity.bulletCasing!=null)
+		if(entity.bullet!=null)
 		{
-			int coreColor = entity.bulletCore.getColour();
-			IBulletModel model = BulletRegistry.INSTANCE.registeredModels.get(entity.bulletCasing.getName());
+			int coreColor = entity.core.getColour();
+			IBulletModel model = BulletRegistry.INSTANCE.registeredModels.get(entity.bullet.getName());
 
-			model.renderBulletUsed(coreColor, entity.bulletCoreType, entity.paintColor);
+			model.renderBulletUsed(coreColor, entity.coreType, entity.paintColor);
 		}
 
 		GlStateManager.popMatrix();

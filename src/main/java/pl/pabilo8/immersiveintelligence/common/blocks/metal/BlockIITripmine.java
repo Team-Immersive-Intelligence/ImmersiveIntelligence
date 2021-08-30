@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
+import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -27,7 +28,7 @@ public class BlockIITripmine extends BlockIIMine
 {
 	public BlockIITripmine()
 	{
-		super("tripmine", ItemBlockTripmine.class);
+		super("tripmine", ItemBlockTripmine.class, IOBJModelCallback.PROPERTY, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1]);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class BlockIITripmine extends BlockIIMine
 		}
 
 		@Override
-		public float getComponentCapacity()
+		public float getComponentMultiplier()
 		{
 			return 0.45f;
 		}
@@ -84,7 +85,7 @@ public class BlockIITripmine extends BlockIIMine
 		@Override
 		public int getGunpowderNeeded()
 		{
-			return 2;
+			return 200;
 		}
 
 		@Override
@@ -102,7 +103,7 @@ public class BlockIITripmine extends BlockIIMine
 		@Override
 		public float getCaliber()
 		{
-			return 0.625f;
+			return 10f;
 		}
 
 		@Override

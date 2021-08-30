@@ -126,6 +126,8 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			if(mode > 2)
 				mode = 0;
 			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"punchtape_reader_mode", new TextComponentTranslation(CommonProxy.INFO_KEY+"punchtape_reader_mode."+mode))), ((EntityPlayerMP)player));
+			markDirty();
+			markBlockForUpdate(getPos(), null);
 		}
 		return true;
 	}
@@ -185,6 +187,9 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 				final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
 				if(te instanceof IDataDevice)
 					((IDataDevice)te).onReceive(packet, facing);
+
+				if(mode==2)
+					rsTime=20;
 			}
 		}
 		return false;

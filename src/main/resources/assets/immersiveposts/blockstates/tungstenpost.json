@@ -1,0 +1,54 @@
+{
+  "forge_marker":1,
+  "defaults":{
+    "textures":{
+      "#immersiveposts:blocks/posts/post_wood":"immersiveintelligence:blocks/metal/iposts_compat/post_tungsten",
+      "particle":"immersiveintelligence:blocks/metal/iposts_compat/post_tungsten"
+    }
+  },
+  "variants": {
+    "type":{
+      "post":{"model":"immersiveposts:post/obj/post.obj"},
+      "post_top":{"model":"immersiveposts:post/obj/post_top.obj"},
+      "arm":{"model":"immersiveposts:post/obj/arm.obj"},
+      "arm_double":{"model":"immersiveposts:post/obj/arm_double.obj"},
+      "empty":{"model":"immersiveposts:empty"}
+    },
+    "parm_north":{
+      "true":{"submodel":"immersiveposts:post/obj/post_arm.obj"},
+      "false":{}
+    },
+    "parm_east":{
+      "true":{"submodel":"immersiveposts:post/obj/post_arm.obj", "transform":{"rotation":{"y":-90}}},
+      "false":{}
+    },
+    "parm_south":{
+      "true":{"submodel":"immersiveposts:post/obj/post_arm.obj", "transform":{"rotation":{"y":180}}},
+      "false":{}
+    },
+    "parm_west":{
+      "true":{"submodel":"immersiveposts:post/obj/post_arm.obj", "transform":{"rotation":{"y":90}}},
+      "false":{}
+    },
+    "facing":{
+      "north":{"transform":{"rotation":{"y":0}}},
+      "east": {"transform":{"rotation":{"y":-90}}},
+      "south":{"transform":{"rotation":{"y":180}}},
+      "west": {"transform":{"rotation":{"y":90}}}
+    },
+    "flipstate":{
+      "up":  {
+        "__comment": "Already taken care of by type=arm."
+      },
+      "down":{
+        "__comment": "Having to be specific with this one. See below!"
+      },
+      "both":{ "model":"immersiveposts:post/obj/arm_twoway.obj" }
+    },
+
+    "facing=north,flipstate=down,parm_east=false,parm_north=false,parm_south=false,parm_west=false,type=arm": { "model":"immersiveposts:post/obj/arm.obj", "x":180, "y":180 },
+    "facing=east,flipstate=down,parm_east=false,parm_north=false,parm_south=false,parm_west=false,type=arm": { "model":"immersiveposts:post/obj/arm.obj", "x":180 , "y":270 },
+    "facing=south,flipstate=down,parm_east=false,parm_north=false,parm_south=false,parm_west=false,type=arm": { "model":"immersiveposts:post/obj/arm.obj", "x":180 , "y":0 },
+    "facing=west,flipstate=down,parm_east=false,parm_north=false,parm_south=false,parm_west=false,type=arm": { "model":"immersiveposts:post/obj/arm.obj", "x":180 , "y":90 }
+  }
+}

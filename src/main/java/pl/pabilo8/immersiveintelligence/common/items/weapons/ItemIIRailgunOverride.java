@@ -28,10 +28,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRailgunGrenade;
 
 /**
- * The man that did the code
- * @author BluSunrize
- * The man that added grenades
  * @author Pabilo8
+ * The man that added grenades
+ * @author BluSunrize
+ * The man that did the rest of the code
  * @since 27.11.2020
  */
 public class ItemIIRailgunOverride extends ItemRailgun
@@ -47,6 +47,10 @@ public class ItemIIRailgunOverride extends ItemRailgun
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
 		ItemStack stack = player.getHeldItem(hand);
+
+		if(Railgun.disableRailgunOffhand&&hand==EnumHand.OFF_HAND)
+			return new ActionResult<>(EnumActionResult.PASS, stack);
+		
 		int energy = IEConfig.Tools.railgun_consumption;
 		float energyMod = 1+this.getUpgrades(stack).getFloat("consumption");
 		energy = (int)(energy*energyMod);
@@ -90,7 +94,7 @@ public class ItemIIRailgunOverride extends ItemRailgun
 						if(ammo.getItem() instanceof ItemIIAmmoRailgunGrenade)
 						{
 							Vec3d vv = user.getPositionVector().addVector(0, (double)user.getEyeHeight()-0.10000000149011612D, 0);
-							EntityBullet a = BulletHelper.createBullet(world, Utils.copyStackWithAmount(ammo, 1), vv, vec, speed/4f);
+							EntityBullet a = BulletHelper.createBullet(world, Utils.copyStackWithAmount(ammo, 1), vv, vec);
 							a.setShooters(user);
 							mass = a.mass;
 							world.spawnEntity(a);

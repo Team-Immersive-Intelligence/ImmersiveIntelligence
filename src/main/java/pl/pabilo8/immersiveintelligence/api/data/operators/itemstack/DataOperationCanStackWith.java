@@ -29,8 +29,8 @@ public class DataOperationCanStackWith extends DataOperator
 	{
 		DataPacketTypeItemStack t1, t2;
 
-		t1 = ((DataPacketTypeItemStack)getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet));
-		t2 = ((DataPacketTypeItemStack)getVarInType(DataPacketTypeItemStack.class, data.getType2(), packet));
+		t1 = getVarInType(DataPacketTypeItemStack.class, data.getType1(), packet);
+		t2 = getVarInType(DataPacketTypeItemStack.class, data.getType2(), packet);
 
 		//Yes
 		return new DataPacketTypeBoolean(ItemStack.areItemStacksEqual(t1.value, t2.value));

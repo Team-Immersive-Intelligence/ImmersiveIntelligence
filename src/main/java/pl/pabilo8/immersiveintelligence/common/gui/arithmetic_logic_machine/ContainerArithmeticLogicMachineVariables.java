@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.Cont
  * @author Pabilo8
  * @since 30-06-2019
  */
-public class ContainerArithmeticLogicMachineVariables extends ContainerIEBase
+public class ContainerArithmeticLogicMachineVariables extends ContainerIEBase<TileEntityArithmeticLogicMachine>
 {
 	public ContainerArithmeticLogicMachineVariables(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, int page)
 	{

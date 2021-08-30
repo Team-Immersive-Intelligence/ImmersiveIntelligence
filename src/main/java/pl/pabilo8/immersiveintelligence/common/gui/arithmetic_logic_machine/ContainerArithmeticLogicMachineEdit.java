@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
  * @author Pabilo8
  * @since 30-06-2019
  */
-public class ContainerArithmeticLogicMachineEdit extends ContainerIEBase
+public class ContainerArithmeticLogicMachineEdit extends ContainerIEBase<TileEntityArithmeticLogicMachine>
 {
 	public ContainerArithmeticLogicMachineEdit(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile)
 	{

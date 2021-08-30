@@ -1,15 +1,20 @@
 package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAlarmSiren;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAlarmSiren;
+
+import java.util.Random;
 
 /**
  * @author Pabilo8

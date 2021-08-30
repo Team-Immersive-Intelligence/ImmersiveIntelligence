@@ -62,7 +62,7 @@ public class GuiSkycrateStation extends GuiIEContainerBase
 		this.renderHoveredToolTip(mx, my);
 
 		//Thanks Flaxbeard!
-		ArrayList<String> tooltip = new ArrayList();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		RotaryUtils.renderEnergyTooltip(tooltip, mx, my, guiLeft+148, guiTop+20, tile.rotation);
 

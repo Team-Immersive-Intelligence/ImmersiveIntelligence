@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerPrecissionAssembler extends ContainerIEBase
+public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrecissionAssembler>
 {
 	public ContainerPrecissionAssembler(InventoryPlayer inventoryPlayer, TileEntityPrecissionAssembler tile)
 	{

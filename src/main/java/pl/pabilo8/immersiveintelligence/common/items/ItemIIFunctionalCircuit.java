@@ -5,17 +5,19 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.api.data.operators.document.*;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Pabilo8
@@ -25,7 +27,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 {
 	public ItemIIFunctionalCircuit()
 	{
-		super("circuit_functional", 1, "arithmetic", "advanced_arithmetic", "logic", "comparator", "advanced_logic", "text", "itemstack");
+		super("circuit_functional", 1, Arrays.stream(Circuit.values()).map(Circuit::getName).toArray(String[]::new));
 	}
 
 	@Override
@@ -64,102 +66,136 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 
 	public List<String> getOperationsList(ItemStack stack)
 	{
-		ArrayList<String> ops = new ArrayList<>();
-		switch(stack.getMetadata())
+		if(stack.getMetadata() < Circuit.values().length)
 		{
-			//Arithmetical
-			case 0:
-			{
-				ops.add("add");
-				ops.add("subtract");
-				ops.add("multiply");
-				ops.add("divide");
-				ops.add("modulo");
-			}
-			break;
-			//Advanced Arithmetical
-			case 1:
-			{
-				ops.add("add");
-				ops.add("subtract");
-				ops.add("multiply");
-				ops.add("divide");
-				ops.add("modulo");
-				ops.add("power");
-				ops.add("root");
-				ops.add("min");
-				ops.add("max");
-			}
-			break;
-			//Logic
-			case 2:
-			{
-				ops.add("and");
-				ops.add("or");
-				ops.add("not");
-			}
-			break;
-			case 3:
-			{
-				ops.add("greater");
-				ops.add("less");
-				ops.add("greater_or_equal");
-				ops.add("less_or_equal");
-				ops.add("equal");
-			}
-			break;
-			//Advanced Logic
-			case 4:
-			{
-				ops.add("and");
-				ops.add("or");
-				ops.add("not");
-				ops.add("nand");
-				ops.add("nor");
-				ops.add("xor");
-				ops.add("xnor");
-			}
-			break;
-			//Text Processing
-			case 5:
-			{
-				ops.add("join");
-				//ops.add("filter");
-				//ops.add("format");
-			}
-			break;
-			//ItemStack
-			case 6:
-			{
-				ops.add("get_quantity");
-				ops.add("set_quantity");
-				ops.add("get_durability");
-				ops.add("set_durability");
-				ops.add("get_nbt");
-				ops.add("set_nbt");
-				ops.add("can_stack_with");
-				ops.add("matches_oredict");
-			}
-			break;
+			Circuit circuit = Circuit.values()[stack.getMetadata()];
+			return Arrays.asList(circuit.functions);
 		}
-		return ops;
+		return Collections.emptyList();
 	}
 
 	public String getTESRRenderTexture(ItemStack stack)
 	{
-		switch(stack.getMetadata())
-		{
-			case 0:
-			case 5:
-			case 3:
-				return "electronic_circuits";
-			case 1:
-			case 6:
-			case 4:
-				return "advanced_circuits";
-			case 2:
-				return "redstone_circuits";
-		}
+		if(stack.getMetadata() < Circuit.values().length)
+			switch(Circuit.values()[stack.getMetadata()].tier)
+			{
+				case 0:
+					return "redstone_circuits";
+				case 1:
+					return "electronic_circuits";
+				case 2:
+					return "advanced_circuits";
+			}
 		return "";
+	}
+
+	enum Circuit implements IStringSerializable
+	{
+		ARITHMETIC(1,
+				"add",
+				"subtract",
+				"multiply",
+				"divide",
+				"modulo"
+		),
+		ADVANCED_ARITHMETIC(2, ARITHMETIC,
+				"power",
+				"root",
+				"min",
+				"max"
+		),
+		LOGIC(0,
+				"and",
+				"or",
+				"not"
+		),
+		COMPARATOR(1,
+				"greater",
+				"less",
+				"greater_or_equal",
+				"less_or_equal",
+				"equal"
+		),
+		ADVANCED_LOGIC(2, LOGIC,
+				"nand",
+				"nor",
+				"xor",
+				"xnor"
+		),
+		TEXT(1,
+				"string_join",
+				"string_equal",
+				"string_split",
+				"string_length",
+				"string_char_at",
+				"string_substring",
+				"string_trim",
+				"string_hexcol",
+				"string_format",
+				"string_contains",
+				"string_contains_count",
+				"string_lowercase",
+				"string_uppercase",
+				"string_snake_case",
+				"string_camel_case",
+				"string_reverse"
+		),
+		ITEMSTACK(2,
+				"get_quantity",
+				"set_quantity",
+				"get_durability",
+				"set_durability",
+				"get_nbt",
+				"set_nbt",
+				"can_stack_with",
+				"matches_oredict"
+		),
+		ARRAY(1,
+				"array_get",
+				"array_pop",
+				"array_push"
+		),
+		ENTITY(2,
+				"entity_get_id",
+				"entity_get_type",
+				"entity_get_name",
+				"entity_get_dimension_id",
+				"entity_get_x",
+				"entity_get_y",
+				"entity_get_z"
+		),
+		DOCUMENT(2,
+				"document_read_page",
+				"document_read_all_pages_array",
+				"document_read_all_pages_string",
+				"document_get_author",
+				"document_get_title"
+		),
+		TYPE_CONVERSION(1,
+				"is_null",
+				"to_integer",
+				"to_string",
+				"to_boolean"
+		);
+
+		private final String[] functions;
+		private final int tier;
+
+		Circuit(int tier, String... functions)
+		{
+			this.tier = tier;
+			this.functions = functions;
+		}
+
+		Circuit(int tier, Circuit parent, String... functions)
+		{
+			this(tier, ArrayUtils.addAll(parent.functions, functions));
+		}
+
+		@Override
+		public String getName()
+		{
+			return this.toString().toLowerCase(Locale.ENGLISH);
+		}
 	}
 }

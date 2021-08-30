@@ -44,6 +44,7 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static pl.pabilo8.immersiveintelligence.Config.IIConfig.mechanicalDevices;
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.rpmRealTime;
 
 /**
@@ -301,6 +302,9 @@ public class RotaryUtils
 
 	public static void damageGears(NonNullList<ItemStack> inventory, IRotaryEnergy energy)
 	{
+		if(!MechanicalDevices.gear_durability_enabled)
+			return;
+
 		for(ItemStack stack : inventory)
 		{
 			if(stack.getItem() instanceof IMotorGear)

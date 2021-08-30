@@ -1,10 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFuelStation;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelVehicleWorkshop;
@@ -132,7 +137,7 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 			else
 			{
 				GlStateManager.translate(2.5,1f,-3.375);
-				renderCrane(0,1,0,0,() -> {});
+				renderCrane(0,1.25f,0,0,() -> {});
 				GlStateManager.translate(1f,0,0);
 				renderInserter(0,0,0,0,() -> {});
 			}
@@ -180,6 +185,18 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 
 		for(ModelRendererTurbo mod : modelCrane.grabberModel)
 			mod.render(0.0625f);
+
+		GlStateManager.translate(0,1.25+0.0625,0);
+
+		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
+		GlStateManager.disableCull();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		drawRope(buffer,0,0,-1.59375,0,drop+0.25,-1.59375,0.0625,0);
+		drawRope(buffer,0,0,-1.59375,0,drop+0.25, -1.59375,0,0.0625);
+		Tessellator.getInstance().draw();
+		GlStateManager.enableCull();
+
 		GlStateManager.popMatrix();
 	}
 
@@ -221,5 +238,13 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 		function.run();
 
 		GlStateManager.popMatrix();
+	}
+
+	public static void drawRope(BufferBuilder buff, double x, double y, double z, double xx, double yy, double zz, double xdiff, double zdiff)
+	{
+		buff.pos(x+xdiff, y, z-zdiff).tex(0f, 0f).endVertex();
+		buff.pos(xx+xdiff, yy, zz-zdiff).tex(0f, 1f).endVertex();
+		buff.pos(xx-xdiff, yy, zz+zdiff).tex(0.125f, 1f).endVertex();
+		buff.pos(x-xdiff, y, z+zdiff).tex(0.125f, 0f).endVertex();
 	}
 }

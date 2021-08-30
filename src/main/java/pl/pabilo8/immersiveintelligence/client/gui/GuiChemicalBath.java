@@ -7,6 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityChemicalBath;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalBath;
 
@@ -63,8 +64,7 @@ public class GuiChemicalBath extends GuiIEContainerBase
 
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		ClientUtils.drawGradientRect(guiLeft+161, guiTop+24+(47-stored), guiLeft+168, guiTop+71, 0xffb51500, 0xff600b00);
+		Utils.drawPowerBar(guiLeft+161, guiTop+24,7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		if(tile.active)
 		{
@@ -83,10 +83,10 @@ public class GuiChemicalBath extends GuiIEContainerBase
 		this.renderHoveredToolTip(mx, my);
 
 		//Thanks Flaxbeard!
-		ArrayList<String> tooltip = new ArrayList();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx > guiLeft+161&&mx < guiLeft+168&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(tile.getEnergyStored(null)+"/"+tile.getMaxEnergyStored(null)+" IF");
+			tooltip.add(Utils.getPowerLevelString(tile));
 
 		if(!tooltip.isEmpty())
 		{

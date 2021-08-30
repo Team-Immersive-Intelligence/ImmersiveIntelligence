@@ -8,6 +8,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -22,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomicBoomCore;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomicBoomRing;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleShockwave;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.HashSet;
@@ -115,11 +117,11 @@ public class ParticleUtils
 
 	public static void spawnGunfireFX(double x, double y, double z, double mx, double my, double mz, float size)
 	{
-		Particle particle = new ParticleGunfire(ClientUtils.mc().world, x, y, z, mx, my, mz, size);
-		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+		ParticleGunfire particle = new ParticleGunfire(ClientUtils.mc().world, x, y, z, mx, my, mz, size);
+		particleRenderer.addEffect(particle);
 	}
 
-	public static void spawnTMTModelFX(double x, double y, double z, double mx, double my, double mz, float size, ModelRendererTurbo model, String texture)
+	public static void spawnTMTModelFX(double x, double y, double z, double mx, double my, double mz, float size, ModelRendererTurbo model, ResourceLocation texture)
 	{
 		Particle particle = new ParticleTMTModel(ClientUtils.mc().world, x, y, z, mx, my, mz, size, model, texture);
 		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
@@ -191,7 +193,6 @@ public class ParticleUtils
 
 	public static void spawnGasCloud(double x, double y, double z, float size, Fluid fluid)
 	{
-
 		Vec3d v = new Vec3d(Utils.RAND.nextFloat()-0.5, 0, Utils.RAND.nextFloat()-0.5).scale(size);
 		ParticleGasCloud particle = new ParticleGasCloud(ClientUtils.mc().world, x+v.x, y, z+v.z, size*16, fluid);
 		particle.setMaxAge((int)(80*size));
@@ -204,30 +205,34 @@ public class ParticleUtils
 		{
 			Vec3d v = new Vec3d(1, 0, 0).rotateYaw(i/36f*360f);
 			ParticleAtomFog particle = new ParticleAtomFog(ClientUtils.mc().world, x, y, z, v.x*speed, yspeed, v.z*speed, size);
-			particle.setMaxAge((int)(20*(size/20)));
+			particle.setMaxAge((int)(40*(size/20)));
 			particleRenderer.addEffect(particle);
 		}
 	}
 
-	public static void spawnAtomicBoomCore(double x, double y, double z, float size, float speed, float yspeed)
+	public static void spawnAtomicBoomCore(EntityAtomicBoom atomicBoom, double x, double y, double z, float size, float speed, float yspeed)
 	{
 		for(int i = 0; i < 36*(size/20); i += 1)
 		{
 			Vec3d v = new Vec3d(1.5, 0, 0).rotateYaw(i/36f*360f);
 			ParticleAtomicBoomCore particle = new ParticleAtomicBoomCore(ClientUtils.mc().world, x+v.x, y, z+v.z, v.x*speed, yspeed, v.z*speed, size);
 			particle.setMaxAge((int)(120*(size/20)));
-			particleRenderer.addEffect(particle);
+			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			//particleRenderer.addEffect(particle);
+			//atomicBoom.particles.add(particle);
 		}
 	}
 
-	public static void spawnAtomicBoomRing(double x, double y, double z, float size, float speed, float yspeed)
+	public static void spawnAtomicBoomRing(EntityAtomicBoom atomicBoom, double x, double y, double z, float size, float speed, float yspeed)
 	{
 		for(int i = 0; i < 36*(size/20); i += 1)
 		{
 			Vec3d v = new Vec3d(1, 0, 0).rotateYaw(i/36f*360f);
 			ParticleAtomicBoomRing particle = new ParticleAtomicBoomRing(ClientUtils.mc().world, x, y, z, v.x*speed, yspeed, v.z*speed, size);
-			particle.setMaxAge((int)(20*(size/20)));
-			particleRenderer.addEffect(particle);
+			particle.setMaxAge((int)(40*(size/20)));
+			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			//particleRenderer.addEffect(particle);
+			//atomicBoom.particles.add(particle);
 		}
 	}
 

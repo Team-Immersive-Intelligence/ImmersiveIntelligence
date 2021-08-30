@@ -39,10 +39,12 @@ import java.util.List;
  */
 public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntityRadioStation, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IRadioDevice, IAdvancedMultiblockTileEntity, ISoundTile
 {
+	public static int PART_AMOUNT = 1;
+
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(0, ItemStack.EMPTY);
 	public int frequency, construction = 0, clientConstruction = 0;
 	private int soundDelay = 0;
-	private boolean sountIn=false;
+	private boolean sountIn = false;
 
 	public TileEntityRadioStation()
 	{
@@ -70,13 +72,15 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 		super.update();
 		if(!isDummy()&&world.isRemote)
 		{
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_noise, getTileForPos(9), this.soundDelay > 0, 0.125f/4f, 1);
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_beep, getTileForPos(0), this.soundDelay > 0, 0.5f/4f, sountIn?1f:0.5f);
+			if(getTileForPos(9)!=null)
+				ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_noise, getTileForPos(9), this.soundDelay > 0, 0.125f/4f, 1);
+			if(getTileForPos(0)!=null)
+				ImmersiveEngineering.proxy.handleTileSound(IISounds.radio_beep, getTileForPos(0), this.soundDelay > 0, 0.5f/4f, sountIn?1f:0.5f);
 
 			if(soundDelay > 0)
 				soundDelay--;
 
-			float maxConstruction = Utils.getMaxClientProgress(construction, getConstructionCost(), 51);
+			float maxConstruction = Utils.getMaxClientProgress(construction, getConstructionCost(), PART_AMOUNT);
 			if(clientConstruction < maxConstruction)
 				clientConstruction = (int)Math.min(clientConstruction+(Tools.electric_hammer_energy_per_use_construction/4.25f), maxConstruction);
 		}
@@ -130,7 +134,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public float[] getBlockBounds()
 	{
-		return new float[]{0, 0, 0, 0, 0, 0};
+		return new float[]{0, 0, 0, 1, 1, 1};
 	}
 
 	@Override
@@ -476,7 +480,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public int getConstructionCost()
 	{
-		return 200000;
+		return RadioStation.constructionEnergy;
 	}
 
 	@Override

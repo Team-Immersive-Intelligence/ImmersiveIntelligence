@@ -28,8 +28,8 @@ public class DataOperationGreater extends DataOperator
 		DataPacketTypeInteger t1, t2;
 		int i1, i2;
 
-		t1 = ((DataPacketTypeInteger)getVarInType(DataPacketTypeInteger.class, data.getType1(), packet));
-		t2 = ((DataPacketTypeInteger)getVarInType(DataPacketTypeInteger.class, data.getType2(), packet));
+		t1 = getVarInType(DataPacketTypeInteger.class, data.getType1(), packet);
+		t2 = getVarInType(DataPacketTypeInteger.class, data.getType2(), packet);
 		i1 = t1.value;
 		i2 = t2.value;
 

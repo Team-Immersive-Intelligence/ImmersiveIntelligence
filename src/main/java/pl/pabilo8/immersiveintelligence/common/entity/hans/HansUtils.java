@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIArmorUpgrade.ArmorUpgrades;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 
 /**

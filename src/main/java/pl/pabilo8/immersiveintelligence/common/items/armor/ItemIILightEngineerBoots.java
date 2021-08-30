@@ -1,20 +1,22 @@
 package pl.pabilo8.immersiveintelligence.common.items.armor;
 
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.ICorrosionProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
@@ -26,7 +28,7 @@ import java.util.Map;
  * @author Pabilo8
  * @since 13.09.2020
  */
-public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements IElectricEquipment
+public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements IElectricEquipment, ICorrosionProtectionEquipment, IRadiationProtectionEquipment, IAcidProtectionEquipment
 {
 	public ItemIILightEngineerBoots()
 	{
@@ -45,8 +47,6 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		float integrity = 100-(float)getDurabilityForDisplay(stack)*100f;
-		list.add(String.format("%s %.2f %%", I18n.format(Lib.DESC_INFO+"integrity"), integrity));
 		super.addInformation(stack, world, list, flag);
 	}
 
@@ -59,14 +59,22 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot, ItemStack stack)
 	{
-
-		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
 		if(equipmentSlot==this.armorType)
 		{
+			//if(getUpgrades(stack).hasKey(""))
+			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
 			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
 		}
 		return multimap;
+	}
+
+	@Override
+	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
+	{
+		super.onArmorTick(world, player, itemStack);
+
 	}
 
 	@Override
@@ -83,5 +91,23 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 	public int getSlotCount()
 	{
 		return 3;
+	}
+
+	@Override
+	public boolean canCorrode(ItemStack stack)
+	{
+		return !getUpgrades(stack).hasKey("hazmat");
+	}
+
+	@Override
+	public boolean protectsFromRadiation(ItemStack stack)
+	{
+		return getUpgrades(stack).hasKey("hazmat");
+	}
+
+	@Override
+	public boolean protectsFromAcid(ItemStack stack)
+	{
+		return getUpgrades(stack).hasKey("hazmat");
 	}
 }

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.util.commands.ii;
 
-import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemToolUpgrade.ToolUpgrades;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
@@ -17,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIArmorUpgrade.ArmorUpgrades;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 
@@ -120,7 +118,7 @@ public class CommandIIHans extends CommandBase
 					public void setItems(EntityHans hans, int id)
 					{
 						HansUtils.setHelmet(hans);
-						ItemStack stack = new ItemStack(IEContent.itemChemthrower);
+						ItemStack stack = new ItemStack(IEContent.itemRevolver);
 						hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
 					}
 				}
