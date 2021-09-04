@@ -319,14 +319,14 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		{
 			if(button.id==11)
 			{
-				((GuiButtonState)buttonList.get(11)).state = false;
-				((GuiButtonState)buttonList.get(12)).state = true;
+				((GuiButtonState)this.getGuiButtonById(11)).state = false;
+				((GuiButtonState)this.getGuiButtonById(12)).state = true;
 				editedstate = true;
 			}
 			else if(button.id==12)
 			{
-				((GuiButtonState)buttonList.get(11)).state = true;
-				((GuiButtonState)buttonList.get(12)).state = false;
+				((GuiButtonState)this.getGuiButtonById(11)).state = true;
+				((GuiButtonState)this.getGuiButtonById(12)).state = false;
 				editedstate = false;
 			}
 		}
@@ -733,6 +733,17 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			else
 				expressionAllowed = DataPacket.varCharacters[current_char];
 		}
+	}
+
+	private GuiButton getGuiButtonById(int targetId) {
+		for (GuiButton button:this.buttonList) {
+			if (button.id == targetId) {
+				return button;
+			}
+		}
+
+		// Probably should be an exception
+		return null;
 	}
 
 }
