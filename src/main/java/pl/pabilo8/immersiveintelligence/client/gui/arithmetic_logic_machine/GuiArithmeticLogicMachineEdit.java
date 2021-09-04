@@ -172,8 +172,9 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 					editedstate = ((DataPacketTypeBoolean)currentlyEditeddataType).value;
 					this.buttonList.add(new GuiButtonState(11, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
 					this.buttonList.add(new GuiButtonState(12, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
-					GuiButtonState b1 = ((GuiButtonState)buttonList.get(11));
-					GuiButtonState b2 = ((GuiButtonState)buttonList.get(12));
+
+					GuiButtonState b1 = ((GuiButtonState)this.getGuiButtonById(11));
+					GuiButtonState b2 = ((GuiButtonState)this.getGuiButtonById(12));
 
 					b1.textOffset = new int[]{(b1.width/2)-(fontRenderer.getStringWidth(b1.displayString)/2), b1.height/2-4};
 					b2.textOffset = new int[]{(b2.width/2)-(fontRenderer.getStringWidth(b1.displayString)/2), b2.height/2-4};
@@ -319,14 +320,14 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 		{
 			if(button.id==11)
 			{
-				((GuiButtonState)buttonList.get(11)).state = false;
-				((GuiButtonState)buttonList.get(12)).state = true;
+				((GuiButtonState)this.getGuiButtonById(11)).state = false;
+				((GuiButtonState)this.getGuiButtonById(12)).state = true;
 				editedstate = true;
 			}
 			else if(button.id==12)
 			{
-				((GuiButtonState)buttonList.get(11)).state = true;
-				((GuiButtonState)buttonList.get(12)).state = false;
+				((GuiButtonState)this.getGuiButtonById(11)).state = true;
+				((GuiButtonState)this.getGuiButtonById(12)).state = false;
 				editedstate = false;
 			}
 		}
@@ -737,6 +738,17 @@ public class GuiArithmeticLogicMachineEdit extends GuiIEContainerBase implements
 			else
 				expressionAllowed = DataPacket.varCharacters[current_char];
 		}
+	}
+
+	private GuiButton getGuiButtonById(int targetId) {
+		for (GuiButton button:this.buttonList) {
+			if (button.id == targetId) {
+				return button;
+			}
+		}
+
+		// Probably should be an exception
+		return null;
 	}
 
 }
