@@ -26,10 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.EyeEmotions;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthEmotions;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthShapes;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansAlertOthers;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansHolsterWeapon;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansHowitzer;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.*;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansChemthrower;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansRailgun;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansSubmachinegun;
@@ -121,7 +118,7 @@ public class EntityHans extends EntityCreature implements INpc
 
 		//howi AI
 		tasks.addTask(0, new AIHansHowitzer(this));
-		//tasks.addTask(0, new AIHAnsMortar(this));
+		tasks.addTask(0, new AIHansMortar(this));
 		tasks.addTask(0, new AIHansMachinegun(this));
 
 		//Attack mobs

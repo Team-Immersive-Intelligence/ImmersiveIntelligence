@@ -17,11 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEnt
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineEdit;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineStorage;
-import pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine.ContainerArithmeticLogicMachineVariables;
-import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
 
 import javax.annotation.Nonnull;
 import java.util.function.BiFunction;
@@ -58,42 +55,32 @@ public enum IIGuiList
 	),
 
 	GUI_DATA_INPUT_MACHINE_STORAGE(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te)
+			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te, true)
 	),
 	GUI_DATA_INPUT_MACHINE_VARIABLES(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te)
+			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te, false)
 	),
 	GUI_DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te)
+			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te, false)
 	),
 
 	GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine)te)
+			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 0)
+	),
+	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 0)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 0)
+			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 1)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 1)
+			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 2)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 2)
+			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 3)
 	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 3)
-	),
-
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te)
-	),
-	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te)
+	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT(TileEntityArithmeticLogicMachine.class,
+			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te,2)
 	),
 
 	GUI_PRINTED_PAGE_BLANK(),

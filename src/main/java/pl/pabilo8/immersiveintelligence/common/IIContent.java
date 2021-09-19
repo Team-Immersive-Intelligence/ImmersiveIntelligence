@@ -69,7 +69,9 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_IMPROVED_GEARBOX = CommonProxy.createMachineUpgrade("improved_gearbox"); //increases machine speed
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator"); //more sawdust for cost of planks
 	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader"); //allows to use belt fed upgrade for mg
-	public static final MachineUpgrade UPGRADE_lATEX_DRAIN = CommonProxy.createMachineUpgrade("latex_drain"); //instead of placing a bucket, it collects the latex to a pipe underneath
+
+	public static final MachineUpgrade UPGRADE_UNPACKER_CONVERSION = CommonProxy.createMachineUpgrade("unpacker_conversion"); //converts a packer to an unpacker
+	public static final MachineUpgrade UPGRADE_PACKER_CONVERSION = CommonProxy.createMachineUpgrade("packer_conversion"); //converts an unpacker to a packer
 
 	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators"); //allows the radar to detect radio signal emitters and send their positions
 
@@ -226,6 +228,7 @@ public class IIContent
 	public static BlockIIFluid blockGasOxygen;
 	public static BlockIIFluid blockGasChlorine;
 	public static BlockIIFluid blockGasCO2;
+	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 
 	public static Fluid fluidInkBlack;
@@ -242,6 +245,7 @@ public class IIContent
 	public static Fluid gasOxygen;
 	public static Fluid gasChlorine;
 	public static Fluid gasCO2;
+	public static Fluid gasMustardGas;
 	public static Fluid fluidAmmonia;
 	public static Fluid fluidMethanol;
 	public static Fluid fluidLatex;
@@ -266,6 +270,7 @@ public class IIContent
 		IIContent.fluidAmmonia = makeFluid("ammonia", 771, 1007, "rdx_fluids/");
 		IIContent.fluidMethanol = makeFluid("methanol", 792, 553, "rdx_fluids/");
 		IIContent.fluidLatex = makeFluid("latex", 4300, 3500);
+		IIContent.gasMustardGas = makeFluid("mustard_gas", 127, 340); //heavier than water
 
 		IIContent.blockFluidInkBlack = new BlockIIFluid("ink", IIContent.fluidInkBlack, Material.WATER);
 		IIContent.blockFluidInkCyan = new BlockIIFluid("ink_cyan", IIContent.fluidInkCyan, Material.WATER);
@@ -289,5 +294,8 @@ public class IIContent
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
 		IIContent.blockGasCO2 = new BlockIIFluid("carbon_dioxide", IIContent.gasCO2, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+		IIContent.blockGasHydrogen = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
+
 	}
 }

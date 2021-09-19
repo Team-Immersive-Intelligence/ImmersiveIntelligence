@@ -8,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -31,7 +32,7 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 		super.initGui();
 		if(tile.currentWeapon!=null&&tile.currentWeapon.getBaseInventory().size() > 0)
 		{
-			addLabel(xSize/2, 8+16, 0x0a0a0a, I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.base_inventory"))
+			addLabel(xSize/2, 8+16, Utils.COLOR_H1, I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.base_inventory"))
 					.setCentered();
 		}
 	}

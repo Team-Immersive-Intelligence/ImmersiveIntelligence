@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 
 /**
  * @author Pabilo8
@@ -51,6 +52,6 @@ public class GuiPrintedPage extends GuiScreen
 		String text_processed = text.replace("<br>", "\n");
 		text_processed = text_processed.replace("\\n", "\n");
 
-		ClientProxy.itemFont.drawSplitString(text_processed, i+8, j+24, pageImageWidth-8, 0x0a0a0a);
+		ClientProxy.itemFont.drawSplitString(text_processed, i+8, j+24, pageImageWidth-8, Utils.COLOR_H1);
 	}
 }

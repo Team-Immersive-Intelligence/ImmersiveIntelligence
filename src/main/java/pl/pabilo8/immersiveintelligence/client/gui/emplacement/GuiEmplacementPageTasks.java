@@ -7,24 +7,34 @@ import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.INpc;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.GameData;
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiEmplacementTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonCheckboxII;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 /**
  * @author Pabilo8
@@ -33,9 +43,12 @@ import java.util.Locale;
 public class GuiEmplacementPageTasks extends GuiEmplacement
 {
 	int currentTab = 0;
-	int prevScrollPos = 0;
 	private GuiButtonIE[] taskTabButtons = new GuiButtonIE[0];
+
+	@Nullable
 	private GuiTextField valueEdit;
+	@Nullable
+	private GuiButtonDropdownList valueList;
 
 	private GuiButtonSwitch buttonEnabled;
 	private GuiButtonCheckboxII buttonInverted;
@@ -46,7 +59,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	private TaskFilter selected = null;
 
 	private boolean tasksModified = false;
-	private ArrayList<TaskFilter> taskFilters = new ArrayList<>();
+	private final ArrayList<TaskFilter> taskFilters = new ArrayList<>();
 
 	public GuiEmplacementPageTasks(InventoryPlayer inventoryPlayer, TileEntityEmplacement tile)
 	{
@@ -66,14 +79,14 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 				addTaskTabButton(3),
 		};
 
-		buttonEnabled = addSwitch(122+11, 17, 60, 0x0a0a0a, 0xb51500, 0x95ed00, currentTab==tile.defaultTargetMode,
+		buttonEnabled = addSwitch(122+11, 17, 60, Utils.COLOR_H1, 0xb51500, 0x95ed00, currentTab==tile.defaultTargetMode,
 				I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_enabled"), tasksModified);
 
-		addLabel(122, 32+16-12, 83, 0, 0x0a0a0a, "Selector Preset").setCentered();
+		addLabel(122, 32+16-12, 83, 0, Utils.COLOR_H1, I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();
 		buttonInverted = addButton(new GuiButtonCheckboxII(buttonList.size(), guiLeft+122, guiTop+32+33-6+44, I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_negation"), !tile.redstoneControl));
 		if(selected!=null)
 			buttonInverted.state = selected.negation;
-		addLabel(122, 32+33+16, 83, 0, 0x0a0a0a, "Filter").setCentered();
+		addLabel(122, 32+33+16, 83, 0, Utils.COLOR_H1, I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.filter")).setCentered();
 
 		buttonAdd = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4, guiTop+32+2+96, 48, 12, I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.add"), TEXTURE_ICONS.toString(), 0, 89));
 		buttonRemove = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48, guiTop+32+2+96, 48, 12, I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.remove"), TEXTURE_ICONS.toString(), 0, 89));
@@ -85,18 +98,29 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		buttonTypePrev = addButton(new GuiButtonIE(buttonList.size(), guiLeft+120, guiTop+32+8, 12, 12, "", TEXTURE_ICONS.toString(), 96, 89)).setHoverOffset(12, 0);
 		buttonTypeNext = addButton(new GuiButtonIE(buttonList.size(), guiLeft+192, guiTop+32+8, 12, 12, "", TEXTURE_ICONS.toString(), 120, 89)).setHoverOffset(12, 0);
 
-		valueEdit = new GuiTextField(buttonList.size(), this.fontRenderer, guiLeft+120, guiTop+86, 84, 13);
-		//this.valueEdit.setFocused(true);
+		String[] entries = selected!=null?selected.type.getDropdownEntries(): new String[0];
+
+		valueEdit = null;
+		if(entries.length > 0)
+		{
+			valueList = addButton(new GuiButtonDropdownList(buttonList.size(), guiLeft+120, guiTop+87, 84, 13, 4, entries));
+			if(!selected.filter.isEmpty())
+				valueList.selectedEntry = ArrayUtils.indexOf(entries, selected.filter);
+		}
+		else
+		{
+			valueEdit = new GuiTextField(buttonList.size(), this.fontRenderer, guiLeft+120, guiTop+86, 84, 13);
+			valueEdit.setEnabled(selected!=null);
+			if(selected!=null)
+				valueEdit.setText(selected.filter);
+		}
 
 		if(selected!=null)
-			addLabel(120+12, 32+15, 60, 0, 0x0a0a0a, CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+selected.type.getName()).setCentered();
+			addLabel(120+12, 32+15, 60, 0, Utils.COLOR_H1, CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+selected.type.getName()).setCentered();
 
 		buttonInverted.enabled = (selected!=null);
 		buttonTypePrev.enabled = (selected!=null);
 		buttonTypeNext.enabled = (selected!=null);
-		valueEdit.setEnabled(selected!=null);
-		if(selected!=null)
-			valueEdit.setText(selected.filter);
 
 		if(!tasksModified)
 			loadTaskIntoList();
@@ -130,6 +154,11 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 			tasksModified = false;
 			selected = null;
 			initGui();
+		}
+		else if(valueList!=null&&button==valueList)
+		{
+			if(selected!=null)
+				selected.filter = valueList.getEntry(this.valueList.selectedEntry);
 		}
 		else if(button==buttonAdd)
 		{
@@ -191,12 +220,12 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		NBTTagCompound nbt = new NBTTagCompound();
 		if(buttonEnabled.state)
 		{
-			tile.defaultTargetMode=currentTab;
+			tile.defaultTargetMode = currentTab;
 			nbt.setInteger("defaultTargetMode", currentTab);
 		}
 		else if(tile.defaultTargetMode==currentTab)
 		{
-			tile.defaultTargetMode=-1;
+			tile.defaultTargetMode = -1;
 			nbt.setInteger("defaultTargetMode", -1);
 		}
 
@@ -235,7 +264,8 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		this.valueEdit.mouseClicked(mouseX, mouseY, mouseButton);
+		if(valueEdit!=null)
+			this.valueEdit.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -278,7 +308,8 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		bindIcons();
 		//this.drawTexturedModalRect(guiLeft+101, guiTop+33+80, 153, 101, 9, 14);
 
-		this.valueEdit.drawTextBox();
+		if(valueEdit!=null)
+			this.valueEdit.drawTextBox();
 
 	}
 
@@ -307,21 +338,72 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		}
 	}
 
+	//Yes, this had to be done
+	//Else I'd have to do ATs on internal classes and get it somehow
 	public enum EnumTaskType implements IStringSerializable
 	{
-		MOBS,
-		ANIMALS,
+		MOBS(() ->
+				ArrayUtils.add(
+						GameData.getEntityClassMap().values().stream()
+								.filter(entityEntry -> IMob.class.isAssignableFrom(entityEntry.getEntityClass()))
+								.map(entityEntry -> entityEntry.delegate.name())
+								.map(ResourceLocation::toString)
+								.toArray(String[]::new),
+						0,
+						""
+				)
+
+		),
+		ANIMALS(() ->
+				ArrayUtils.add(
+						GameData.getEntityClassMap().values().stream()
+								.filter(entityEntry -> EntityAnimal.class.isAssignableFrom(entityEntry.getEntityClass()))
+								.map(entityEntry -> entityEntry.delegate.name())
+								.map(ResourceLocation::toString)
+								.toArray(String[]::new),
+						0,
+						""
+				)
+		),
 		PLAYERS,
-		NPCS,
+		NPCS(() ->
+				ArrayUtils.add(
+						GameData.getEntityClassMap().values().stream()
+								.filter(entityEntry -> INpc.class.isAssignableFrom(entityEntry.getEntityClass()))
+								.map(entityEntry -> entityEntry.delegate.name())
+								.map(ResourceLocation::toString)
+								.toArray(String[]::new),
+						0,
+						""
+				)
+		),
 		VEHICLES,
 		SHELLS,
 		TEAM,
 		NAME;
 
+		EnumTaskType()
+		{
+			this(() -> new String[0]);
+		}
+
+		EnumTaskType(Supplier<String[]> entries)
+		{
+			this.entries = entries;
+		}
+
+		private final Supplier<String[]> entries;
+
+		@Nonnull
 		@Override
 		public String getName()
 		{
 			return this.toString().toLowerCase(Locale.ENGLISH);
+		}
+
+		public String[] getDropdownEntries()
+		{
+			return entries.get();
 		}
 	}
 }

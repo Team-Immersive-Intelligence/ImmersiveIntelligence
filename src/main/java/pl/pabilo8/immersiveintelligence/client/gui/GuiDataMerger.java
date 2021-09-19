@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -86,7 +87,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	public void drawScreen(int mx, int my, float partial)
 	{
 		super.drawScreen(mx, my, partial);
-		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"data_merger."+tile.mode), guiLeft+14, guiTop+19, 0x0a0a0a);
+		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"data_merger."+tile.mode), guiLeft+14, guiTop+19, Utils.COLOR_H1);
 
 		ArrayList<String> tooltip = new ArrayList<String>();
 

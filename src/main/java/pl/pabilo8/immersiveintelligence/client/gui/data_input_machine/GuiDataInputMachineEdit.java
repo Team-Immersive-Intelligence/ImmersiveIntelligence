@@ -1,147 +1,106 @@
 package pl.pabilo8.immersiveintelligence.client.gui.data_input_machine;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
+import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
+import blusunrize.lib.manual.IManualPage;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
+import blusunrize.lib.manual.ManualPages;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiMultiLineTextField;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataEditor;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.gui.data_input_machine.ContainerDataInputMachineVariables;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * Created by Pabilo8 on 30-06-2019.
- * Some code you write, some you steal, but in most cases you adapt the existing solutions...
+ * Rework on 31.08.2021.
  */
-public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabbedGui
+public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 {
-	public static final String texture_storage = ImmersiveIntelligence.MODID+":textures/gui/data_input_machine_inventory.png";
-	public static final String texture_edit = ImmersiveIntelligence.MODID+":textures/gui/data_input_machine_editing.png";
-
-	public TileEntityDataInputMachine tile;
-	public InventoryPlayer playerInv;
-	private boolean wasDown = false;
-
 	public char variableToEdit = 'a';
 	public IDataType dataType;
+	public GuiButtonDataLetterList buttonLetter;
+	public GuiButtonIE buttonApply;
+	public GuiButtonIE buttonTypeNext, buttonTypePrev;
+	private GuiButtonII buttonVariableHelp;
+	@Nullable
+	private GuiDataEditor<? extends IDataType> editor = null;
 
-	private GuiTextField valueEdit;
-	private boolean editedstate = true;
-	public ContainerDataInputMachineVariables container;
-
-	DataPacket list;
-
-	//It was necessary to make the Gui control the Container
 	public GuiDataInputMachineEdit(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile)
 	{
-		//Tricky, but definitely doable!
-		super(new ContainerDataInputMachineVariables(inventoryPlayer, tile));
-
-		this.ySize = 222;
-		this.playerInv = inventoryPlayer;
-		this.tile = tile;
-
-		this.list = tile.storedData;
-		this.container = (ContainerDataInputMachineVariables)this.inventorySlots;
-
-		ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
-		if(positionEqual(proxy, tile))
-		{
-			if(proxy.storedGuiData.hasKey("variableToEdit"))
-				variableToEdit = proxy.storedGuiData.getString("variableToEdit").charAt(0);
-		}
-
+		super(inventoryPlayer, tile, IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT);
+		title = I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.edit");
 		refreshStoredData();
 	}
 
 	@Override
 	public void initGui()
 	{
-		valueEdit = null;
-
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(true, 1, tile.getPos()));
-
 		super.initGui();
-		Keyboard.enableRepeatEvents(true);
-		refreshStoredData();
-		this.buttonList.clear();
 
-		this.buttonList.add(new GuiButtonIE(0, guiLeft-28, guiTop+4, 28, 24, "", texture_storage, 176, 0).setHoverOffset(28, 0));
-		this.buttonList.add(new GuiButtonIE(1, guiLeft-28, guiTop+28, 28, 24, "", texture_storage, 204, 24));
+		//Properties
+		addLabel(43, 40, 115, 0, false, Utils.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_properties")).setCentered();
+		//Type:
+		addLabel(61, 24, Utils.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
+		//Variable Type
+		addLabel(152-10-fontRenderer.getStringWidth(I18n.format(CommonProxy.DATA_KEY+"datatype."+dataType.getName())),
+				24, MathHelper.multiplyColor(dataType.getTypeColour(), 0xcacaca),
+				I18n.format(CommonProxy.DATA_KEY+"datatype."+dataType.getName())
+		);
 
-		this.buttonList.add(new GuiButtonIE(2, guiLeft+96, guiTop+121, 64, 12, I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_apply"), texture_edit, 0, 222).setHoverOffset(64, 0));
+		//Apply Button
+		buttonApply = addButton(new GuiButtonIE(buttonList.size(), guiLeft+96, guiTop+121, 64, 12, I18n.format("desc.immersiveintelligence.variable_apply"), TEXTURE_EDIT.toString(), 0, 222).setHoverOffset(64, 0));
 
-		//Type Change Buttons
-		this.buttonList.add(new GuiButtonIE(3, guiLeft+52, guiTop+15, 8, 6, "", texture_edit, 128, 222).setHoverOffset(8, 0));
-		this.buttonList.add(new GuiButtonIE(4, guiLeft+52, guiTop+26, 8, 6, "", texture_edit, 128, 228).setHoverOffset(8, 0));
+		//Displays Manual Page for Type
+		buttonVariableHelp = addButton(new GuiButtonII(buttonList.size(), guiLeft+152-10, guiTop+15, 16, 16, String.format("immersiveintelligence:textures/gui/data_types/%s.png", dataType.getName()), 0, 0, 1, 1));
 
-		//Type dependant variable buttons / text fields
+		buttonTypeNext = addButton(new GuiButtonIE(0, guiLeft+159, guiTop+14+2, 8, 6, "",
+				ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png", 128, 77)
+				.setHoverOffset(8, 0));
 
-		switch(dataType.getName())
+		buttonTypePrev = addButton(new GuiButtonIE(0, guiLeft+159, guiTop+14+10, 8, 6, "",
+				ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png", 128, 77+6)
+				.setHoverOffset(8, 0));
+
+		editor = null;
+		for(Entry<Class<? extends IDataType>, BiFunction<Integer, IDataType, GuiDataEditor<? extends IDataType>>> entry : GuiDataEditor.editors.entrySet())
 		{
-			case "null":
+			if(entry.getKey()==dataType.getClass())
 			{
-
+				this.editor = addButton(entry.getValue().apply(buttonList.size(), dataType));
+				this.editor.setBounds(guiLeft+35, guiTop+46, 131, 80);
+				break;
 			}
-			break;
-			case "boolean":
-			{
-				editedstate = ((DataPacketTypeBoolean)dataType).value;
-				this.buttonList.add(new GuiButtonState(5, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.true"), !editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
-				this.buttonList.add(new GuiButtonState(6, guiLeft+90+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 48, 12, I18n.format(CommonProxy.DATA_KEY+"datatype.boolean.false"), editedstate, texture_edit, 0, 234, 0).setHoverOffset(48, 0));
-				GuiButtonState b1 = ((GuiButtonState)buttonList.get(5));
-				GuiButtonState b2 = ((GuiButtonState)buttonList.get(6));
-
-				b1.textOffset = new int[]{(b1.width/2)-(fontRenderer.getStringWidth(b1.displayString)/2), b1.height/2-4};
-				b2.textOffset = new int[]{(b2.width/2)-(fontRenderer.getStringWidth(b1.displayString)/2), b2.height/2-4};
-			}
-			break;
-			case "integer":
-			{
-				this.valueEdit = new GuiTextField(5, this.fontRenderer, guiLeft+42+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), guiTop+48, 121-fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value")), 20);
-				this.valueEdit.setFocused(true);
-				this.valueEdit.setText(dataType.valueToString());
-			}
-			break;
-			case "string":
-			{
-				this.valueEdit = new GuiMultiLineTextField(5, this.fontRenderer, guiLeft+36, guiTop+60, 128, 60);
-				this.valueEdit.setFocused(true);
-				this.valueEdit.setMaxStringLength(512);
-				this.valueEdit.setText(dataType.valueToString());
-			}
-			break;
 		}
+
+		//Letter Change Buttons
+		buttonLetter = addButton(new GuiButtonDataLetterList(buttonList.size(), guiLeft+42-10, guiTop+14, false, variableToEdit, ArrowsAlignment.LEFT));
+		buttonLetter.setAvoidGetter(() -> list);
 
 	}
 
@@ -149,324 +108,126 @@ public class GuiDataInputMachineEdit extends GuiIEContainerBase implements ITabb
 	public void updateScreen()
 	{
 		super.updateScreen();
-		if(valueEdit!=null)
-			this.valueEdit.updateCursorCounter();
+		if(editor!=null)
+			editor.update();
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button)
+	protected void keyTyped(char typedChar, int keyCode) throws IOException
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-
-		if(button.id==0)
-		{
-			syncDataToServer();
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE, tile.getPos(), playerInv.player));
-		}
-		else if(button.id==1)
-		{
-			syncDataToServer();
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile.getPos(), playerInv.player));
-		}
-
-		else if(button.id==2)
-		{
-			switch(dataType.getName())
-			{
-				case "null":
-				{
-					list.setVariable(variableToEdit, new DataPacketTypeNull());
-				}
-				break;
-				case "boolean":
-				{
-					list.setVariable(variableToEdit, new DataPacketTypeBoolean(editedstate));
-				}
-				break;
-				case "integer":
-				{
-					if(NumberUtils.isParsable(valueEdit.getText()))
-					{
-						list.setVariable(variableToEdit, new DataPacketTypeInteger((int)Math.round(Double.parseDouble(valueEdit.getText()))));
-					}
-					else
-					{
-						list.setVariable(variableToEdit, new DataPacketTypeInteger(0));
-					}
-				}
-				break;
-				case "string":
-				{
-					list.setVariable(variableToEdit, new DataPacketTypeString(valueEdit.getText()));
-				}
-				break;
-			}
-
-			syncDataToServer();
-			initGui();
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile.getPos(), playerInv.player));
-		}
-		else if(button.id==3)
-		{
-			if(!isShiftKeyDown())
-				switchType(true);
-			else
-			{
-				switchLetter(true);
-			}
-		}
-		else if(button.id==4)
-		{
-			if(!isShiftKeyDown())
-				switchType(false);
-			else
-			{
-				switchLetter(false);
-			}
-		}
-
-		if(dataType.getName()=="boolean")
-		{
-			if(button.id==5)
-			{
-				((GuiButtonState)buttonList.get(5)).state = false;
-				((GuiButtonState)buttonList.get(6)).state = true;
-				editedstate = true;
-			}
-			else if(button.id==6)
-			{
-				((GuiButtonState)buttonList.get(5)).state = true;
-				((GuiButtonState)buttonList.get(6)).state = false;
-				editedstate = false;
-			}
-		}
-	}
-
-	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
-	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.data_input_machine.edit"), 4, 2, 0x0a0a0a);
-	}
-
-	@Override
-	protected void keyTyped(char par1, int par2) throws IOException
-	{
-		if(valueEdit!=null)
-		{
-			this.valueEdit.textboxKeyTyped(par1, par2);
-			if(!(par2==Keyboard.KEY_E&&this.valueEdit.isFocused()))
-				super.keyTyped(par1, par2);
-		}
+		if(editor!=null&&editor.isFocused())
+			editor.keyTyped(typedChar, keyCode);
 		else
-		{
-			super.keyTyped(par1, par2);
-		}
+			super.keyTyped(typedChar, keyCode);
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float partial)
+	protected void actionPerformed(@Nonnull GuiButton button) throws IOException
 	{
-		super.drawScreen(mx, my, partial);
-		GlStateManager.enableBlend();
-
-		ArrayList<String> tooltip = new ArrayList<String>();
-
-		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
-			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"storage_module"));
-
-		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+28&&my < guiTop+56)
-			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"variables_module"));
-
-		//Draw the punchcard progress bar
-		GlStateManager.pushMatrix();
-
-		mc.getTextureManager().bindTexture(new ResourceLocation(texture_storage));
-		//ClientUtils.bindTexture();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.disableLighting();
-
-		this.drawTexturedModalRect(guiLeft+5, guiTop+44, 176, 48, 16, Math.round(48*(tile.productionProgress/DataInputMachine.timePunchtapeProduction)));
-
-		GlStateManager.popMatrix();
-
-		wasDown = Mouse.isButtonDown(0);
-
-		GlStateManager.pushMatrix();
-		GlStateManager.disableLighting();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		GlStateManager.enableAlpha();
-
-		ClientUtils.bindTexture(dataType.textureLocation());
-
-		this.drawTexturedModalRect(guiLeft+152, guiTop+15, 40, dataType.getFrameOffset()*20, 16, 16);
-
-		ClientUtils.bindTexture(texture_edit);
-
-		//Variable name
-		this.fontRenderer.drawString(String.valueOf(variableToEdit), guiLeft+38, guiTop+19, Lib.COLOUR_I_ImmersiveOrange, true);
-
-		//Type:
-		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_type"), guiLeft+62, guiTop+19, 0x0a0a0a, false);
-
-		//Variable type
-		this.fontRenderer.drawString(" "+I18n.format(CommonProxy.DATA_KEY+"datatype."+dataType.getName()), guiLeft+62+fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_type")), guiTop+19, dataType.getTypeColour(), true);
-
-		//Title
-		this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_properties"), guiLeft+100-(fontRenderer.getStringWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_properties"))/2), guiTop+36, 0x0a0a0a, false);
-
-		//Type Dependant
-		switch(dataType.getName())
+		super.actionPerformed(button);
+		if(button==buttonLetter)
 		{
-			case "null":
-			{
+			if(buttonLetter.selectedEntry!=variableToEdit)
+				switchLetter();
+		}
+		else if(button==buttonTypeNext||button==buttonTypePrev)
+		{
+			switchType(button==buttonTypeNext);
+		}
+		else if(button==buttonApply)
+		{
+			if(this.editor!=null)
+				this.dataType = this.editor.outputType();
+			saveBasicData();
+			syncDataToServer();
+			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile.getPos(), playerInv.player));
+		}
+		else if(button==buttonVariableHelp)
+		{
+			sideManual.selectedCategory = ClientProxy.CAT_DATA;
+			sideManual.setSelectedEntry("data_variable_types");
+			sideManual.page = 0;
 
-			}
-			break;
-			case "boolean":
+			final String pp = "data_variable_types_"+dataType.getName();
+
+			List<ManualEntry> entries = ManualHelper.getManual().manualContents.get(ClientProxy.CAT_DATA);
+			Optional<ManualEntry> first = entries.stream().filter(manualEntry -> manualEntry.getName().equals("data_variable_types")).findFirst();
+			if(first.isPresent())
 			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
+				IManualPage[] pages = first.get().getPages();
+				int i = 0;
+				for(IManualPage page : pages)
+				{
+					if(page instanceof ManualPages)
+					{
+						if(ReflectionHelper.getPrivateValue(ManualPages.class, ((ManualPages)page), "text").equals(pp))
+						{
+							sideManual.page = i;
+							break;
+						}
+					}
+					i++;
+				}
 			}
-			break;
-			case "integer":
-			case "string":
-			{
-				this.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value"), guiLeft+40, guiTop+50, 0x0a0a0a, false);
-				this.valueEdit.drawTextBox();
-			}
-			break;
+
+			manualButton.state = true;
+
+			sideManual.initGui();
+
 		}
 
-		GlStateManager.popMatrix();
-
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, -1, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
-	}
-
-	@Override
-	public void onGuiClosed()
-	{
-		syncDataToServer();
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
-		super.onGuiClosed();
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-	{
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		if(dataType.getName().equals("string")||dataType.getName().equals("integer"))
-			this.valueEdit.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	/**
-	 * Draws the background layer of this container (behind the items).
-	 */
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(texture_edit);
-
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
 
 	//Used to refresh gui variables after one of the variables is changed
 	void refreshStoredData()
 	{
-		wasDown = false;
-
-		tile = (TileEntityDataInputMachine)tile.getWorld().getTileEntity(tile.getPos());
+		super.refreshStoredData();
 		this.list = tile.storedData;
-
+		if(positionEqual(proxy, tile))
+		{
+			if(proxy.storedGuiData.hasKey("variableToEdit"))
+				variableToEdit = proxy.storedGuiData.getString("variableToEdit").charAt(0);
+		}
 		this.dataType = list.getPacketVariable(variableToEdit);
-	}
-
-	void syncDataToServer()
-	{
-		NBTTagCompound tag = new NBTTagCompound();
-
-		tag.setTag("variables", this.list.toNBT());
-
-		if(tile==null)
-		{
-			return;
-		}
-		if(!list.toNBT().hasNoTags())
-		{
-			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
-		}
 	}
 
 	void switchType(boolean forward)
 	{
-		if(forward)
+		try
 		{
-			if(dataType.getName()=="null")
-				list.setVariable(variableToEdit, new DataPacketTypeBoolean());
-			else if(dataType.getName()=="boolean")
-				list.setVariable(variableToEdit, new DataPacketTypeInteger());
-			else if(dataType.getName()=="integer")
-				list.setVariable(variableToEdit, new DataPacketTypeString());
-			else if(dataType.getName()=="string")
-				list.setVariable(variableToEdit, new DataPacketTypeNull());
+			ArrayList<Class<? extends IDataType>> types = new ArrayList<>(GuiDataEditor.editors.keySet());
+			int i = Utils.cycleInt(forward, types.indexOf(this.dataType.getClass()), 0, types.size()-1);
+			list.setVariable(variableToEdit, DataOperator.getVarInType(types.get(i), new DataPacketTypeNull(), new DataPacket()));
+			this.dataType = list.getPacketVariable(variableToEdit);
+			this.dataType.setDefaultValue();
 		}
-		else
+		catch(Exception ignored)
 		{
-			if(dataType.getName()=="null")
-				list.setVariable(variableToEdit, new DataPacketTypeString());
-			else if(dataType.getName()=="boolean")
-				list.setVariable(variableToEdit, new DataPacketTypeNull());
-			else if(dataType.getName()=="integer")
-				list.setVariable(variableToEdit, new DataPacketTypeBoolean());
-			else if(dataType.getName()=="string")
-				list.setVariable(variableToEdit, new DataPacketTypeInteger());
-		}
 
-		list.getPacketVariable(variableToEdit).setDefaultValue();
+		}
 
 		syncDataToServer();
 		initGui();
 	}
 
-	void switchLetter(boolean forward)
+	void switchLetter()
 	{
-		boolean done = false;
-
-		int current_char = ArrayUtils.indexOf(DataPacket.varCharacters, variableToEdit);
-		int repeats = DataPacket.varCharacters.length;
-
-		for(int i = 0; i < repeats; i++)
+		if(!list.variables.containsKey(buttonLetter.selectedEntry))
 		{
-			if(!done)
-			{
-				current_char += forward?1: -1;
-				if(current_char >= repeats)
-					current_char = 0;
-				if(current_char < 0)
-					current_char = repeats-1;
-
-				char c = DataPacket.varCharacters[current_char];
-
-				if(!list.variables.containsKey(c))
-				{
-					done = true;
-					list.setVariable(c, list.getPacketVariable(variableToEdit));
-					list.removeVariable(variableToEdit);
-					variableToEdit = c;
-				}
-			}
+			list.setVariable(buttonLetter.selectedEntry, list.getPacketVariable(variableToEdit));
+			list.removeVariable(variableToEdit);
+			variableToEdit = buttonLetter.selectedEntry;
 		}
 
 		syncDataToServer();
 		initGui();
 	}
 
+	@Override
+	protected void syncDataToServer()
+	{
+		proxy.storedGuiData.setString("variableToEdit", String.valueOf(variableToEdit));
+		tile.storedData.setVariable(variableToEdit, dataType);
+		super.syncDataToServer();
+	}
 }

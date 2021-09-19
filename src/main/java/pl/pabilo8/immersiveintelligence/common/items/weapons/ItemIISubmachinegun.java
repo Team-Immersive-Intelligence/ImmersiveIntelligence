@@ -258,7 +258,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 				//.add(vec.addVector(0,0.10000000149011612D,0).normalize().scale(1.5f))
 				IIPacketHandler.INSTANCE.sendToAllAround(
-						new MessageParticleGunfire(vv.add(vv.normalize().rotateYaw(90f).scale(-0.25)), vec),
+						new MessageParticleGunfire(vv.addVector(0,player.isSneaking()?-0.2f:0f,0).add(vec.scale(1.4f)), vec.scale(-1),supressor?0.5f:1.5f),
 						Utils.targetPointFromEntity(player,32));
 
 

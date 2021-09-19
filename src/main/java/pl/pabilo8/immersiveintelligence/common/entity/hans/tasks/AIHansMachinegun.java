@@ -107,7 +107,7 @@ public class AIHansMachinegun extends EntityAIBase
 		float pp = Math.round(Utils.calculateBallisticAngle(
 				posTurret.distanceTo(posTarget.add(motion))+10
 				, (posTarget.y+motion.y)-posTurret.y,
-				5f,
+				IIContent.itemAmmoMachinegun.getDefaultVelocity(),
 				EntityBullet.GRAVITY*0.2f,
 				1f-EntityBullet.DRAG));
 

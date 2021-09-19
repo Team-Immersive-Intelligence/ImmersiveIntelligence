@@ -106,11 +106,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 
 			if(shootingProgress==0)
 			{
-				if(gunPitchUp)
-					rotationPitch = MathHelper.clamp(rotationPitch+0.5f, -80, -55);
-				else if(gunPitchDown)
-					rotationPitch = MathHelper.clamp(rotationPitch-0.5f, -80, -55);
-				else if(fireKeyPress&&getPassengers().size() > 0)
+				if(fireKeyPress&&getPassengers().size() > 0)
 				{
 					Entity entity = getPassengers().get(0);
 					if(entity instanceof EntityLivingBase)
@@ -123,6 +119,10 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 						}
 					}
 				}
+				else if(gunPitchUp)
+					rotationPitch = MathHelper.clamp(rotationPitch+0.5f, -80, -55);
+				else if(gunPitchDown)
+					rotationPitch = MathHelper.clamp(rotationPitch-0.5f, -80, -55);
 			}
 			else
 			{
@@ -290,7 +290,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 			double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
 			double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
 			Vec3d pos2 = Utils.offsetPosDirection(0.25f, true_angle, 0);
-			Vec3d pos3 = Utils.offsetPosDirection(-0.75f, true_angle2, 0);
+			Vec3d pos3 = Utils.offsetPosDirection(-0.25f, true_angle2, 0);
 			float ff = 1;
 			if(shootingProgress > 0)
 			{
@@ -315,6 +315,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 			}
 
 			passenger.setPosition(pos.getX()+0.5+pos2.x+pos3.x, pos.getY()-0.5*ff, pos.getZ()+0.5+pos2.z+pos3.z);
+			applyOrientationToEntity(passenger);
 		}
 	}
 

@@ -251,7 +251,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	{
 		EnumFacing side = facing.getOpposite();
 		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5+side.getFrontOffsetX()*(.5-conRadius), 0.5+side.getFrontOffsetY()*(.5-conRadius), .5+side.getFrontOffsetZ()*(.5-conRadius));
+		return new Vec3d(.5+side.getFrontOffsetX()*0.8*(.5-conRadius), 0.95, .5+side.getFrontOffsetZ()*0.8*(.5-conRadius));
 	}
 
 	@Override

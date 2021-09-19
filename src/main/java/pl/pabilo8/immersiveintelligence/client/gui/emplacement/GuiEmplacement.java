@@ -66,7 +66,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		addTab(IIGuiList.GUI_EMPLACEMENT_TASKS, "tasks_module");
 		addTab(IIGuiList.GUI_EMPLACEMENT_STATUS, "status_module");
 
-		addLabel(8, 10, 0x0a0a0a, title);
+		addLabel(8, 10, Utils.COLOR_H1, title);
 
 		barEnergy = GuiElementProgressBar.createEnergyBar(guiLeft+213, guiTop+22, 7, 48);
 		barArmor = GuiElementProgressBar.createArmorBar(guiLeft+222, guiTop+22, 7, 48);

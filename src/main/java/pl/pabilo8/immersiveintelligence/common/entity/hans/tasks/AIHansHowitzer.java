@@ -164,7 +164,7 @@ public class AIHansHowitzer extends EntityAIBase
 		float pp = Math.round(Utils.calculateBallisticAngle(
 				posTurret.distanceTo(posTarget.add(motion))+10
 				, (posTarget.y+motion.y)-posTurret.y,
-				10f,
+				IIContent.itemAmmoMortar.getDefaultVelocity(),
 				EntityBullet.GRAVITY*3.4f,
 				1f-EntityBullet.DRAG));
 

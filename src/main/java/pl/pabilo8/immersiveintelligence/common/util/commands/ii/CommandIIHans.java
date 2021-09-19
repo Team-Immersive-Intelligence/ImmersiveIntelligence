@@ -30,10 +30,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityFieldHowitzer;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIArmorUpgrade.ArmorUpgrades;
@@ -204,6 +201,10 @@ public class CommandIIHans extends CommandBase
 				new HansSquadMG()
 		);
 
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "mortar"),
+				new HansSquadMortar()
+		);
+
 		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "field_howi"),
 				new HansSquadFieldHowitzer()
 		);
@@ -235,7 +236,7 @@ public class CommandIIHans extends CommandBase
 							world.getScoreboard().addPlayerToTeam(donkey.getUniqueID().toString(), team.getName());
 
 						world.spawnEntity(donkey);
-						mg.startRiding(donkey,true);
+						mg.startRiding(donkey, true);
 
 						return donkey;
 					}
@@ -250,14 +251,14 @@ public class CommandIIHans extends CommandBase
 
 						if(teamWeapon.getPassengers().size() > 0)
 						{
-							hans.startRiding(teamWeapon.getPassengers().get(0),true);
+							hans.startRiding(teamWeapon.getPassengers().get(0), true);
 						}
 
 						return hans;
 					}
 				}
 		);
-		 
+
 	}
 
 	/**
@@ -508,8 +509,28 @@ public class CommandIIHans extends CommandBase
 			hans.startRiding(teamWeapon);
 			return hans;
 		}
+	}
 
+	private static class HansSquadMortar extends HansSquadTeamWeapon<EntityMortar>
+	{
+		@Override
+		protected EntityMortar spawnTeamWeapon(World world, Vec3d pos, Team team, boolean parachute, float yaw, float pitch)
+		{
+			EntityMortar mortar = new EntityMortar(world);
+			mortar.setPositionAndRotation(pos.x, pos.y, pos.z, yaw, 80);
+			world.spawnEntity(mortar);
+			return mortar;
+		}
 
+		@Override
+		protected EntityHans addCrewmen(World world, Vec3d pos, Team team, boolean parachute, EntityMortar teamWeapon)
+		{
+			EntityHans hans = createCrewman(world, pos, team, parachute);
+			hans.startRiding(teamWeapon);
+			hans.setPositionAndRotation(pos.x, pos.y, pos.z, teamWeapon.rotationYaw, 0);
+			hans.setRotationYawHead(teamWeapon.rotationYaw);
+			return hans;
+		}
 	}
 
 	private static class HansSquadFieldHowitzer extends HansSquadTeamWeapon<EntityFieldHowitzer>

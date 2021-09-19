@@ -13,11 +13,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
-import pl.pabilo8.immersiveintelligence.api.data.operators.document.*;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Pabilo8
@@ -32,7 +35,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, @Nonnull ITooltipFlag flag)
 	{
 		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"functional_circuit"));
 		for(String s : getOperationsList(stack))
@@ -44,7 +47,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 	@Override
 	public DataPacket getStoredData(ItemStack stack)
 	{
-		NBTTagCompound tag = stack.serializeNBT();
+		stack.serializeNBT();
 		NBTTagCompound realtag = ItemNBTHelper.getTagCompound(stack, "operations");
 		DataPacket data = new DataPacket();
 		data.fromNBT(realtag);
@@ -192,6 +195,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 			this(tier, ArrayUtils.addAll(parent.functions, functions));
 		}
 
+		@Nonnull
 		@Override
 		public String getName()
 		{

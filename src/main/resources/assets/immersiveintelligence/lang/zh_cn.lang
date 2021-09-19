@@ -712,9 +712,9 @@ ie.manual.entry.data_variable_types.subtext=结果可能不同
 ie.manual.entry.data_variable_types=一个数据包可以包含多种类型的变量，每个变量都有一个默认值和其他特定于其类型的参数。<br>(不要对这个感到困惑：<link;data_variable_types_null;§o§nNull§r;>)。<br>基本变量类型有：<link;data_variable_types_null;§o§nNull§r;>, <link;data_variable_types_int;§o§nInteger§r;>, <link;data_variable_types_string;§o§nString§r;>, <link;data_variable_types_bool;§o§nBoolean§r;>，也有一些更高级的变量类型，比如： <link;data_variable_types_itemstack;§o§nItemStack§r;>, <link;data_variable_types_array;§o§nArray§r;>, <link;data_variable_types_pair;§o§nPair§r;> 和 <link;data_variable_types_range;§o§nRange§r;>.
 
 ie.manual.entry.data_variable_types_null=Null（空值）是一种特殊的变量类型，它没有值。它是未定义变量的默认类型。
-ie.manual.entry.data_variable_types_int=Integer（整数）（通常简称为Int）是一种数字变量类型，主要用于计算和比较。
+ie.manual.entry.data_variable_types_integer=Integer（整数）（通常简称为Int）是一种数字变量类型，主要用于计算和比较。
 ie.manual.entry.data_variable_types_string=String（字符串）是一种文本变量类型，它可以容纳各种不同的字符。
-ie.manual.entry.data_variable_types_bool=Boolean（布尔值）（通常简称为Bool）是一种逻辑变量类型，它可以保存两个值中的一个（真或假），并可用于逻辑函数中。
+ie.manual.entry.data_variable_types_boolean=Boolean（布尔值）（通常简称为Bool）是一种逻辑变量类型，它可以保存两个值中的一个（真或假），并可用于逻辑函数中。
 ie.manual.entry.data_variable_types_itemstack=物品数据是一种高级变量类型，可以保存有关特定物品（而不是物品类型）的信息，如id、元数据（伤害）和NBT。
 ie.manual.entry.data_variable_types_array=Array（数组）是变量的集合，变量按其序号（从0开始）排序，它可以保存除另一个数组之外的任何变量类型。
 ie.manual.entry.data_variable_types_pair=Pair是一种变量类型，由两种基本变量类型组成，常用于比较。

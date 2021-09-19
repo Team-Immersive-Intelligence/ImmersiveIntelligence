@@ -35,7 +35,7 @@ public class GuiPacker extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		Utils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.packer.name"), 0, 4, getXSize(), 6, 0x0a0a0a);
+		Utils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.packer.name"), 0, 4, getXSize(), 6, Utils.COLOR_H1);
 	}
 
 	/**

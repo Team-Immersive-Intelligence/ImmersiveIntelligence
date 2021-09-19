@@ -1,14 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.compat.jei;
 
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.compat.jei.IEFluidTooltipCallback;
 import com.google.common.collect.LinkedHashMultimap;
 import mezz.jei.api.*;
 import mezz.jei.api.ISubtypeRegistry.ISubtypeInterpreter;
 import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.ITooltipCallback;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
@@ -30,28 +28,30 @@ import pl.pabilo8.immersiveintelligence.common.compat.jei.vulcanizer.VulcanizerG
 import pl.pabilo8.immersiveintelligence.common.compat.jei.vulcanizer.VulcanizerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
 
+import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
 
 @JEIPlugin
+@SuppressWarnings("unused")
 public class JEIHelper implements IModPlugin
 {
 	public static IJeiHelpers jeiHelpers;
 	public static IModRegistry modRegistry;
 	public static IDrawable slotDrawable;
-	public static ITooltipCallback fluidTooltipCallback = new IEFluidTooltipCallback();
+	public static IEFluidTooltipCallback fluidTooltipCallback = new IEFluidTooltipCallback();
 
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
 	{
 		subtypeRegistry.registerSubtypeInterpreter(IIContent.itemBulletMagazine, stack -> {
 			if(!stack.isEmpty())
-				return ItemNBTHelper.hasKey(stack, "bullets")?ISubtypeInterpreter.NONE:IIContent.itemBulletMagazine.getSubNames()[stack.getMetadata()];
+				return ItemNBTHelper.hasKey(stack, "bullets")?ISubtypeInterpreter.NONE: IIContent.itemBulletMagazine.getSubNames()[stack.getMetadata()];
 			return ISubtypeInterpreter.NONE;
 		});
 	}
 
 	@Override
-	public void registerIngredients(IModIngredientRegistration registry)
+	public void registerIngredients(@Nonnull IModIngredientRegistration registry)
 	{
 
 	}
@@ -76,7 +76,7 @@ public class JEIHelper implements IModPlugin
 	}
 
 	@Override
-	public void register(IModRegistry registryIn)
+	public void register(@Nonnull IModRegistry registryIn)
 	{
 		modRegistry = registryIn;
 		//Blacklist
@@ -138,12 +138,8 @@ public class JEIHelper implements IModPlugin
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler(),
-				new ArithmeticLogicMachineGuiHandler.Variables(),
-				new ArithmeticLogicMachineGuiHandler.Edit(),
-				new ArithmeticLogicMachineGuiHandler.Storage(),
-				new DataInputMachineGuiHandler.Variables(),
-				new DataInputMachineGuiHandler.Edit(),
-				new DataInputMachineGuiHandler.Storage(),
+				new ArithmeticLogicMachineGuiHandler(),
+				new DataInputMachineGuiHandler(),
 				new RedstoneInterfaceGuiHandler.Data(),
 				new RedstoneInterfaceGuiHandler.Redstone(),
 				new EmplacementGuiHandler()
@@ -151,7 +147,7 @@ public class JEIHelper implements IModPlugin
 	}
 
 	@Override
-	public void onRuntimeAvailable(IJeiRuntime jeiRuntime)
+	public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime)
 	{
 
 	}

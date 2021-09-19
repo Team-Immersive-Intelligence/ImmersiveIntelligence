@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.gui.data_input_machine;
+package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
@@ -18,23 +18,24 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
  */
 public class ContainerDataInputMachine extends ContainerIEBase<TileEntityDataInputMachine>
 {
-	public ContainerDataInputMachine(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile)
+	public ContainerDataInputMachine(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile, boolean storage)
 	{
 		super(inventoryPlayer, tile);
 
 		this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 5, 21));
 		this.addSlotToContainer(new Output(this, this.inv, 1, 5, 100));
 
-		for(int i=2; i<26; i++)
-			this.addSlotToContainer(new FilteredDataInput(this, this.inv, i, 30+((i-2)%8)*18, 20+((i-2)/8)*18));
+		if(storage)
+			for(int i = 2; i < 26; i++)
+				this.addSlotToContainer(new FilteredDataInput(this, this.inv, i, 30+((i-2)%8)*18, 28+((i-2)/8)*18));
 
-		this.slotCount=0;
+		this.slotCount = storage?tile.getInventory().size(): 2;
 		this.tile = tile;
 
-		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 9; j++)
+		for(int i = 0; i < 3; i++)
+			for(int j = 0; j < 9; j++)
 				addSlotToContainer(new Slot(inventoryPlayer, j+i*9+9, 8+j*18, 141+i*18));
-		for (int i = 0; i < 9; i++)
+		for(int i = 0; i < 9; i++)
 			addSlotToContainer(new Slot(inventoryPlayer, i, 8+i*18, 199));
 	}
 

@@ -5,13 +5,17 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBulletMortar6bCal;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMortar;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
@@ -23,7 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 public class MortarRenderer extends Render<EntityMortar> implements IReloadableModelContainer<MortarRenderer>
 {
 	public static MortarItemstackRenderer instance = new MortarItemstackRenderer();
-	public static ModelMortar model = new ModelMortar();
+	public static ModelMortar model;
+	public static ModelBulletMortar6bCal modelShell;
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/mortar.png");
 
 	public MortarRenderer(RenderManager renderManager)
@@ -48,7 +53,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 		GlStateManager.rotate(-entityYaw+90, 0, 1, 0);
 
 		if(progress==1)
-			renderNormal(entity, entityYaw, partialTicks, progress);
+			renderNormal(entity, entityYaw, partialTicks, (entity.shootingProgress+partialTicks)/Mortar.shootTime);
 		else
 			renderProgress(entity, entityYaw, partialTicks, progress);
 
@@ -61,11 +66,11 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 	{
 		GlStateManager.pushMatrix();
 
-		float pitch = MathHelper.clamp((((entity.rotationPitch)+80)/25f),0,1);
+		float pitch = MathHelper.clamp((((entity.rotationPitch)+80)/25f), 0, 1);
 
 		//0.0625f, 35f, 0.60625f, 0.25f
 		//-0.25f, 10f, 0f, 0.125f
-		float baseDistance = -0.25f+(pitch*0.875f), tubeAngle = 10f+(pitch*25), tubeDistance = 0.60625f*Math.min((pitch/1.025f),1);
+		float baseDistance = -0.25f+(pitch*0.875f), tubeAngle = 10f+(pitch*25), tubeDistance = 0.60625f*Math.min((pitch/1.025f), 1);
 		float bipodHeight = 0.125f+(0.125f*pitch);
 
 		GlStateManager.pushMatrix();
@@ -90,6 +95,26 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 		GlStateManager.translate(0, tubeDistance, 0);
 		for(ModelRendererTurbo mod : model.tubeRodsModel)
 			mod.render();
+
+		if(progress > 0.2f&&progress < 0.5f)
+		{
+			float f = (progress-0.2f)/0.3f;
+
+			if(entity.getPassengers().size() > 0)
+			{
+				Entity psg = entity.getPassengers().get(0);
+				if(psg instanceof EntityLivingBase)
+				{
+					GlStateManager.pushMatrix();
+					GlStateManager.translate(0,1.25*(1f-f),0);
+					GlStateManager.scale(0.8f,0.8f,0.8f);
+					modelShell.renderBulletUnused(((EntityLivingBase)psg).getHeldItem(EnumHand.MAIN_HAND));
+					bindTexture(TEXTURE);
+					GlStateManager.popMatrix();
+				}
+			}
+		}
+
 		GlStateManager.popMatrix();
 
 		GlStateManager.popMatrix();
@@ -99,7 +124,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 
 		for(ModelRendererTurbo mod : model.heightKnobModel)
 		{
-			mod.rotateAngleX= (1f-pitch)*12.56f;
+			mod.rotateAngleX = (1f-pitch)*12.56f;
 			mod.render();
 		}
 
@@ -111,7 +136,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 			mod.render();
 		for(ModelRendererTurbo mod : model.horizontalKnobModel)
 		{
-			mod.rotateAngleZ= pitch*6.28f;
+			mod.rotateAngleZ = pitch*6.28f;
 			mod.render();
 		}
 		for(ModelRendererTurbo mod : model.sightsHolderModel)
@@ -155,7 +180,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 			}
 			GlStateManager.popMatrix();
 
-			if(bipodProgress>0)
+			if(bipodProgress > 0)
 			{
 				GlStateManager.pushMatrix();
 				GlStateManager.color(1f, 1f, 1f, Math.min(bipodProgress, 1));
@@ -165,7 +190,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 					mod.render();
 				for(ModelRendererTurbo mod : model.heightKnobModel)
 				{
-					mod.rotateAngleX= bipodHeightProgress*12.56f;
+					mod.rotateAngleX = bipodHeightProgress*12.56f;
 					mod.render();
 				}
 
@@ -176,7 +201,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 					mod.render();
 				for(ModelRendererTurbo mod : model.horizontalKnobModel)
 				{
-					mod.rotateAngleZ= sightsKnobProgress*6.28f;
+					mod.rotateAngleZ = sightsKnobProgress*6.28f;
 					mod.render();
 				}
 
@@ -196,7 +221,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 				GlStateManager.popMatrix();
 			}
 
-			if(tubeMountProgress>0)
+			if(tubeMountProgress > 0)
 			{
 				GlStateManager.pushMatrix();
 				v = 1f-tubeMountProgress;
@@ -222,6 +247,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 		model = new ModelMortar();
 		for(ModelRendererTurbo mod : model.baseHandleModel)
 			mod.hasOffset = true;
+		modelShell = new ModelBulletMortar6bCal();
 	}
 
 	@Override

@@ -981,7 +981,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				gui = guiBuilder.container.apply(player, te);
 				if(gui!=null)
 				{
-					((IGuiTile)te).onGuiOpened(player, true);
+					((IGuiTile)te).onGuiOpened(player, false);
 					return gui;
 				}
 			}

@@ -1,19 +1,26 @@
 package pl.pabilo8.immersiveintelligence.client.manual.pages;
 
+import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiManual;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.client.IDataMachineGui;
+import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +61,7 @@ public class IIManualPageDataVariablesCallback extends ManualPages
 		for(CallbackEntry entry : entries)
 		{
 			entry.init(manual, gui, x, y+spacing, pageButtons);
+			pageButtons.add(new GuiButtonDataCallback(pageButtons.size(), x-4, y+spacing-3, entry));
 			spacing += entry.getSpacing();
 		}
 
@@ -62,9 +70,23 @@ public class IIManualPageDataVariablesCallback extends ManualPages
 	}
 
 	@Override
+	public void buttonPressed(GuiManual gui, GuiButton button)
+	{
+		super.buttonPressed(gui, button);
+		if(button instanceof GuiButtonDataCallback)
+		{
+			CallbackEntry entry = ((GuiButtonDataCallback)button).entry;
+			if(Minecraft.getMinecraft().currentScreen instanceof IDataMachineGui)
+			{
+				((IDataMachineGui)Minecraft.getMinecraft().currentScreen).editVariable('c', new DataPacketTypeString(entry.n[0]));
+			}
+		}
+	}
+
+	@Override
 	public void renderPage(GuiManual gui, int x, int y, int mx, int my)
 	{
-		ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE.toString()+title, x+titleShift, y, 120, manual.getTextColour());
+		ManualUtils.drawSplitString(manual.fontRenderer, String.valueOf(TextFormatting.BOLD)+TextFormatting.UNDERLINE+title, x+titleShift, y, 120, manual.getTextColour());
 
 		CallbackEntry tooltip = null;
 		int down = 15;
@@ -140,4 +162,18 @@ public class IIManualPageDataVariablesCallback extends ManualPages
 		}
 	}
 
+	public static class GuiButtonDataCallback extends GuiButtonIE
+	{
+		@Nonnull
+		public final CallbackEntry entry;
+
+		public GuiButtonDataCallback(int buttonId, int x, int y, CallbackEntry entry)
+		{
+			super(100+buttonId, x, y, 16, 16, "",
+					String.format("immersiveintelligence:textures/gui/data_types/%s.png", entry.dataType.getName())
+					, 0, 0);
+			this.entry = entry;
+			this.enabled = ManualHelper.getManual().getGui() instanceof GuiWidgetManualWrapper;
+		}
+	}
 }

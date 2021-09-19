@@ -37,7 +37,7 @@ public class GuiFuelStation extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		//this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.fuel_station.name"), 8, 6, 0x0a0a0a);
+
 	}
 
 	/**

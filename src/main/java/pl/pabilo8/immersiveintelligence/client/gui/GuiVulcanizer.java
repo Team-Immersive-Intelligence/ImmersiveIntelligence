@@ -45,7 +45,7 @@ public class GuiVulcanizer extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		//this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.vulcanizer.name"), 8, 6, 0x0a0a0a);
+
 	}
 
 	/**

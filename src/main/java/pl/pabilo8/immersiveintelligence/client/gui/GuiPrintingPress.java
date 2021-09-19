@@ -38,7 +38,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.printing_press.name"), 8, 6, 0x0a0a0a);
+		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.printing_press.name"), 8, 6, Utils.COLOR_H1);
 	}
 
 	/**

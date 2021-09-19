@@ -72,6 +72,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+// TODO: 19.09.2021 improve multiplayer sync
 @net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
 public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISoundTile, IGuiTile, ILightProvider
 {
@@ -136,7 +137,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(currentlyInstalled!=null)
 		{
 			isDoorOpened = true;
-			IIPacketHandler.INSTANCE.sendToAllTracking(new MessageBooleanAnimatedPartsSync(true, 0, this.getPos()), Utils.targetPointFromTile(this, 48));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(true, 0, this.getPos()), Utils.targetPointFromTile(this, 48));
 		}
 		else if(currentWeapon!=null&&((forcedRepair&&currentWeapon.getHealth()!=currentWeapon.getMaxHealth())||currentWeapon.requiresPlatformRefill()))
 		{
@@ -152,7 +153,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			if(isDoorOpened^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0])))
 			{
 				isDoorOpened = world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]));
-				IIPacketHandler.INSTANCE.sendToAllTracking(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()), Utils.targetPointFromTile(this, 48));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()), Utils.targetPointFromTile(this, 48));
 			}
 		}
 
@@ -712,7 +713,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		NBTTagCompound taskTag = new NBTTagCompound();
 		if(task!=null)
 			taskTag.setTag("task", task.saveToNBT());
-		ImmersiveEngineering.packetHandler.sendToAllTracking(new MessageTileSync(this, taskTag), Utils.targetPointFromTile(this, 32));
+		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, taskTag), Utils.targetPointFromTile(this, 32));
 	}
 
 	@Override
@@ -727,7 +728,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		if(part==0)
 			isDoorOpened = state;
-		IIPacketHandler.INSTANCE.sendToAllTracking(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), Utils.targetPointFromTile(this, 32));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), Utils.targetPointFromTile(this, 32));
 	}
 
 	@Override
@@ -760,13 +761,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			{
 				case "opendoor":
 				{
-					IIPacketHandler.INSTANCE.sendToAllTracking(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = true, 0, master.getPos()),
+					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = true, 0, master.getPos()),
 							Utils.targetPointFromTile(master, 48));
 				}
 				break;
 				case "closedoor":
 				{
-					IIPacketHandler.INSTANCE.sendToAllTracking(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = false, 0, master.getPos()),
+					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = false, 0, master.getPos()),
 							Utils.targetPointFromTile(master, 48));
 				}
 				break;
@@ -774,7 +775,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				{
 					if(b instanceof DataPacketTypeBoolean)
 					{
-						IIPacketHandler.INSTANCE.sendToAllTracking(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = ((DataPacketTypeBoolean)b).value, 0, master.getPos()),
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = ((DataPacketTypeBoolean)b).value, 0, master.getPos()),
 								Utils.targetPointFromTile(master, 48));
 					}
 				}
@@ -919,6 +920,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			{
 				currentWeapon = getWeaponFromName(upgrade.getName());
 				currentWeapon.init(this, true);
+				markDirty();
+				markContainingBlockForUpdate(null);
 				return true;
 			}
 		}
@@ -1044,6 +1047,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		currentlyInstalled = upgrade;
 		upgradeProgress = 0;
 		clientUpgradeProgress = 0;
+
+		markDirty();
+		markContainingBlockForUpdate(null);
 	}
 
 	@Override
@@ -1054,6 +1060,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		currentWeapon = null;
 		upgradeProgress = 0;
 		clientUpgradeProgress = 0;
+
+		markDirty();
+		markContainingBlockForUpdate(null);
 	}
 
 	private MachineUpgradeEmplacementWeapon weaponToUpgrade()
@@ -1143,17 +1152,17 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				case "immersiveintelligence:emplacement_platform":
 				{
 					float v = master.progress/(float)Emplacement.lidTime;
-					return !master.finishedDoorAction()&&((v>0.25f&&v<0.65f)||(v>0.85f));
+					return !master.finishedDoorAction()&&((v > 0.25f&&v < 0.65f)||(v > 0.85f));
 				}
 				case "immersiveintelligence:emplacement_door_open":
 				{
 					float v = master.progress/(float)Emplacement.lidTime;
-					return !master.finishedDoorAction()&&(master.isDoorOpened?(v<0.25f):(v>0.65f&&v<0.85f));
+					return !master.finishedDoorAction()&&(master.isDoorOpened?(v < 0.25f): (v > 0.65f&&v < 0.85f));
 				}
 				case "immersiveintelligence:emplacement_door_close":
 				{
 					float v = master.progress/(float)Emplacement.lidTime;
-					return !master.finishedDoorAction()&&(!master.isDoorOpened?(v<0.25f):(v>0.65f&&v<0.85f));
+					return !master.finishedDoorAction()&&(!master.isDoorOpened?(v < 0.25f): (v > 0.65f&&v < 0.85f));
 				}
 				default:
 					return false;
@@ -1387,7 +1396,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setString("weaponName", getName());
 				nbt.setTag("currentWeapon", saveToNBT(true));
-				ImmersiveEngineering.packetHandler.sendToAllTracking(new MessageTileSync(te, nbt), Utils.targetPointFromTile(te, 32));
+				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(te, nbt), Utils.targetPointFromTile(te, 32));
 			}
 		}
 
@@ -1482,7 +1491,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("health", health);
-			ImmersiveEngineering.packetHandler.sendToAllTracking(new MessageTileSync(te, tag), Utils.targetPointFromTile(te, 32));
+			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(te, tag), Utils.targetPointFromTile(te, 32));
 		}
 
 		public abstract NonNullList<ItemStack> getBaseInventory();

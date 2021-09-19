@@ -131,9 +131,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	{
 		super.receiveMessageFromClient(message);
 		if(message.hasKey("variables"))
-		{
 			storedData.fromNBT(message.getCompoundTag("variables"));
-		}
+		if(message.hasKey("send_packet"))
+			this.onSend();
 	}
 
 	@Override
@@ -141,13 +141,9 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	{
 		super.receiveMessageFromServer(message);
 		if(message.hasKey("variables"))
-		{
 			storedData.fromNBT(message.getCompoundTag("variables"));
-		}
 		if(message.hasKey("production_progress"))
-		{
 			productionProgress = message.getFloat("production_progress");
-		}
 	}
 
 	@Override
@@ -169,9 +165,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 
 
 			if(this.productionProgress > 0&&energyStorage.getEnergyStored() > DataInputMachine.energyUsagePunchtape&&productionProgress < DataInputMachine.timePunchtapeProduction)
-			{
 				this.productionProgress += 1;
-			}
 		}
 
 		if(!world.isRemote&&!isDummy())
@@ -180,25 +174,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			{
 				toggle = !toggle;
 
+				//Finally!
 				if(toggle)
-				{
 					this.onSend();
-					//Finally!
-					if(energyStorage.getEnergyStored() >= DataInputMachine.energyUsage)
-					{
-						energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
-						IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);
-						if(conn!=null)
-						{
-							conn.sendPacket(storedData.clone());
-						}
-					}
-				}
 			}
 
 			if(dataOperations.keySet().stream().anyMatch(itemStackPredicate -> itemStackPredicate.test(inventoryHandler.getStackInSlot(0)))
 					&&energyStorage.getEnergyStored() >= DataInputMachine.energyUsagePunchtape)
-			{
 				if(productionProgress >= DataInputMachine.timePunchtapeProduction)
 				{
 					productionProgress = 0f;
@@ -224,7 +206,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 					energyStorage.extractEnergy(DataInputMachine.energyUsagePunchtape, false);
 					productionProgress += 1;
 				}
-			}
 			if(productionProgress%4==0)
 			{
 				NBTTagCompound tag = new NBTTagCompound();
@@ -376,7 +357,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	@Override
 	public void onSend()
 	{
-
+		if(energyStorage.getEnergyStored() >= DataInputMachine.energyUsage)
+		{
+			energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
+			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);
+			if(conn!=null)
+				conn.sendPacket(storedData.clone());
+		}
 	}
 
 	@Override
@@ -397,7 +384,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 		{
 			list.add(new AxisAlignedBB(0, 0.8125, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
-			switch(mirrored^pos==1?facing.getOpposite():facing)
+			switch(mirrored^pos==1?facing.getOpposite(): facing)
 			{
 				case NORTH:
 					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.0625+0.1875, 0.8125, 0.0625+0.1875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
@@ -421,15 +408,15 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 1-0.0625, 0.25, 1-0.0625)
 					//.shrink()
 					.offset(new Vec3d((mirrored?facing.rotateY(): facing.rotateYCCW()).getDirectionVec()).scale(0.0625f))
-					.expand(facing.getFrontOffsetX()*0.0625,0,facing.getFrontOffsetZ()*0.0625)
-					.contract(facing.rotateYCCW().getFrontOffsetX()*0.0625,0,facing.rotateYCCW().getFrontOffsetZ()*0.0625)
-					.contract(facing.rotateY().getFrontOffsetX()*0.0625,0,facing.rotateY().getFrontOffsetZ()*0.0625)
+					.expand(facing.getFrontOffsetX()*0.0625, 0, facing.getFrontOffsetZ()*0.0625)
+					.contract(facing.rotateYCCW().getFrontOffsetX()*0.0625, 0, facing.rotateYCCW().getFrontOffsetZ()*0.0625)
+					.contract(facing.rotateY().getFrontOffsetX()*0.0625, 0, facing.rotateY().getFrontOffsetZ()*0.0625)
 					//.offset(new Vec3d(facing.getDirectionVec()).scale(0.0625f))
 					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 		else if(pos==5)
 			list.add(new AxisAlignedBB(0.25, 0, 0.25, 1-0.25, 0.25, 1-0.25)
 					.offset(new Vec3d((mirrored?facing.rotateYCCW(): facing.rotateY()).getDirectionVec()).scale(0.125f))
-					.expand(facing.getFrontOffsetX()*-0.125,0,facing.getFrontOffsetZ()*-0.125)
+					.expand(facing.getFrontOffsetX()*-0.125, 0, facing.getFrontOffsetZ()*-0.125)
 					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 		else
 			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));

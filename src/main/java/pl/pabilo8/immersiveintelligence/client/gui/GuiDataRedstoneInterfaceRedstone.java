@@ -111,7 +111,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.data"), 4, 2, 0x0a0a0a);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.data"), 4, 2, Utils.COLOR_H1);
 	}
 
 	@Override

@@ -239,7 +239,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 
 			boolean uni = fontRenderer.getUnicodeFlag();
 			fontRenderer.setUnicodeFlag(true);
-			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed),guiLeft+xSize+2, guiTop+8,76,0x0a0a0a);
+			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed),guiLeft+xSize+2, guiTop+8,76,Utils.COLOR_H1);
 			fontRenderer.setUnicodeFlag(uni);
 		}
 

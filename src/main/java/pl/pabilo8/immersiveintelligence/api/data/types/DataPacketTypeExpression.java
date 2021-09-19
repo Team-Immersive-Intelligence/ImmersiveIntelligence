@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperat
  */
 public class DataPacketTypeExpression implements IDataType
 {
-	IDataType type1, type2;
+	public IDataType type1, type2;
 	DataOperator operation;
 	char requiredVariable = ' ';
 

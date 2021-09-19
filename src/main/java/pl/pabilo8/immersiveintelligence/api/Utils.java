@@ -82,6 +82,8 @@ public class Utils
 	public static final int COLOR_POWERBAR_1 = 0xffb51500, COLOR_POWERBAR_2 = 0xff600b00;
 	public static final int COLOR_ARMORBAR_1 = 0xcfcfcfcf, COLOR_ARMORBAR_2 = 0x0cfcfcfc;
 
+	public static final int COLOR_H1 = 0x0a0a0a, COLOR_H2 = 0x1a1a1a;
+
 	public static double getDistanceBetweenPos(BlockPos pos1, BlockPos pos2, boolean center)
 	{
 		double deltaX = (pos1.getX()+(center?0d: 0.5d))-(pos2.getX()+(center?0d: 0.5d));
@@ -327,6 +329,29 @@ public class Utils
 				current = DataPacket.varCharacters[current_char];
 		}
 		return current;
+	}
+
+	public static char cyclePacketCharsAvoiding(char current, boolean forward, boolean hasEmpty, DataPacket packet)
+	{
+		int current_char = ArrayUtils.indexOf(DataPacket.varCharacters, current);
+		int repeats = DataPacket.varCharacters.length+(hasEmpty?1: 0);
+
+		for(int i = 0; i < repeats; i++)
+		{
+			current_char += forward?1: -1;
+			if(current_char >= repeats)
+				current_char = 0;
+			if(current_char < 0)
+				current_char = repeats-1;
+
+			char c = (hasEmpty&&current_char==DataPacket.varCharacters.length)?' ': DataPacket.varCharacters[current_char];
+
+			if(!packet.hasVariable(c))
+			{
+				return c;
+			}
+		}
+		return current; //¯\_(ツ)_/¯
 	}
 
 	/**

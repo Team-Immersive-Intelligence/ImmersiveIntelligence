@@ -5,9 +5,11 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.recipebook.GuiRecipeBook;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineBase;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineBase;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,76 +20,29 @@ import java.util.List;
  * @author Pabilo8
  * @since 24.03.2021
  */
-public abstract class ArithmeticLogicMachineGuiHandler<T extends GuiContainer> implements IAdvancedGuiHandler<T>
+public class ArithmeticLogicMachineGuiHandler implements IAdvancedGuiHandler<GuiArithmeticLogicMachineBase>
 {
 	public ArithmeticLogicMachineGuiHandler()
 	{
 
+	}
+	@Override
+	public Class<GuiArithmeticLogicMachineBase> getGuiContainerClass()
+	{
+		return GuiArithmeticLogicMachineBase.class;
 	}
 
 	/**
 	 * Modeled after {@link GuiRecipeBook#render(int, int, float)}
 	 */
 	@Override
-	public List<Rectangle> getGuiExtraAreas(T guiContainer)
+	public List<Rectangle> getGuiExtraAreas(GuiArithmeticLogicMachineBase gui)
 	{
 		List<Rectangle> areas = new ArrayList<>();
-		IItemHandler handler = getHandler(guiContainer);
-		//Storage
-		areas.add(new Rectangle(guiContainer.getGuiLeft()-28, guiContainer.getGuiTop()+4, 28, 48));
-		//Circuits
-		for(int i = 0; i < 4; i++)
-		{
-			if(!handler.getStackInSlot(i).isEmpty())
-				areas.add(new Rectangle(guiContainer.getGuiLeft()-28, guiContainer.getGuiTop()+4+(24*(i+1)), 28, 24));
-		}
+		areas.add(new Rectangle(gui.getGuiLeft()-28, gui.getGuiTop()+4, 28, gui.TABS.size()*24));
+
+		areas.add(new Rectangle(gui.getGuiLeft()+176+(int)(146*(gui.sideManual.manualTime/100f)), gui.getGuiTop()+56, 32, 18)); //manual button
+		areas.add(new Rectangle(gui.getGuiLeft()+gui.getXSize()-20, gui.getGuiTop(), (int)(164*(gui.sideManual.manualTime/100f)), 198)); //manual
 		return areas;
-	}
-
-	abstract IItemHandler getHandler(T guiContainer);
-
-	public static class Variables extends ArithmeticLogicMachineGuiHandler<GuiArithmeticMachineVariables>
-	{
-		@Override
-		public Class<GuiArithmeticMachineVariables> getGuiContainerClass()
-		{
-			return GuiArithmeticMachineVariables.class;
-		}
-
-		@Override
-		IItemHandler getHandler(GuiArithmeticMachineVariables guiContainer)
-		{
-			return guiContainer.handler;
-		}
-	}
-
-	public static class Edit extends ArithmeticLogicMachineGuiHandler<GuiArithmeticLogicMachineEdit>
-	{
-		@Override
-		public Class<GuiArithmeticLogicMachineEdit> getGuiContainerClass()
-		{
-			return GuiArithmeticLogicMachineEdit.class;
-		}
-
-		@Override
-		IItemHandler getHandler(GuiArithmeticLogicMachineEdit guiContainer)
-		{
-			return guiContainer.handler;
-		}
-	}
-
-	public static class Storage extends ArithmeticLogicMachineGuiHandler<GuiArithmeticLogicMachineStorage>
-	{
-		@Override
-		public Class<GuiArithmeticLogicMachineStorage> getGuiContainerClass()
-		{
-			return GuiArithmeticLogicMachineStorage.class;
-		}
-
-		@Override
-		IItemHandler getHandler(GuiArithmeticLogicMachineStorage guiContainer)
-		{
-			return guiContainer.handler;
-		}
 	}
 }

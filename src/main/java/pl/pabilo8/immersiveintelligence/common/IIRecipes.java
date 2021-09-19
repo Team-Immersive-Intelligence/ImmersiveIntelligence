@@ -569,12 +569,15 @@ public class IIRecipes
 				.setRequiredProgress(20000)
 				.setRequiredSteps(10);
 
-		IIContent.UPGRADE_lATEX_DRAIN
-				.addStack(new IngredientStack("plateTungsten", 2))
-				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
-				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PLACER.getMeta())))
-				.setRequiredProgress(40000)
-				.setRequiredSteps(10);
+		IIContent.UPGRADE_UNPACKER_CONVERSION
+				.addStack(new IngredientStack("dyeOrange", 8))
+				.setRequiredProgress(50000)
+				.setRequiredSteps(25);
+
+		IIContent.UPGRADE_UNPACKER_CONVERSION
+				.addStack(new IngredientStack("dyeBlue", 8))
+				.setRequiredProgress(50000)
+				.setRequiredSteps(25);
 
 		IIContent.UPGRADE_RADIO_LOCATORS
 				.addStack(new IngredientStack("plateSteel", 4))

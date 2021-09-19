@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
+import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
 import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationMax;
 import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationMin;
 import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationPower;
@@ -25,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.DataO
 import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.DataOperationToInteger;
 import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.DataOperationToString;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ import java.util.Map;
  */
 public class DataOperations
 {
-	public static final Map<String, Class> operations = new HashMap<>();
+	public static final Map<String, Class<? extends DataOperator>> operations = new HashMap<>();
 
 	static
 	{
@@ -115,6 +117,24 @@ public class DataOperations
 		operations.put("to_boolean", DataOperationToBoolean.class);
 
 
+	}
+
+	@Nonnull
+	public static DataOperator getOperatorInstance(String name)
+	{
+		Class<? extends DataOperator> c = operations.get(name);
+		if(c!=null)
+		{
+			try
+			{
+				return c.newInstance();
+			}
+			catch(InstantiationException|IllegalAccessException ignored)
+			{
+
+			}
+		}
+		return new DataOperationAdd();
 	}
 
 }

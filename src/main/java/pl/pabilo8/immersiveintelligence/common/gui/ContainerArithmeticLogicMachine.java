@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.gui.arithmetic_logic_machine;
+package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
@@ -14,19 +14,36 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
  * @author Pabilo8
  * @since 30-06-2019
  */
-public class ContainerArithmeticLogicMachineStorage extends ContainerIEBase<TileEntityArithmeticLogicMachine>
+public class ContainerArithmeticLogicMachine extends ContainerIEBase<TileEntityArithmeticLogicMachine>
 {
-	public ContainerArithmeticLogicMachineStorage(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile)
+	public ContainerArithmeticLogicMachine(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, int id)
+	{
+		this(inventoryPlayer, tile, id, 0);
+	}
+
+	public ContainerArithmeticLogicMachine(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, int id, int page)
 	{
 		super(inventoryPlayer, tile);
-
-		this.addSlotToContainer(new CircuitSlot(this, this.inv, 0, 5, 25));
-		this.addSlotToContainer(new CircuitSlot(this, this.inv, 1, 5, 52));
-		this.addSlotToContainer(new CircuitSlot(this, this.inv, 2, 5, 78));
-		this.addSlotToContainer(new CircuitSlot(this, this.inv, 3, 5, 104));
-
-		this.slotCount = tile.getInventory().size();
 		this.tile = tile;
+		this.slotCount = tile.getInventory().size();
+
+		switch(id)
+		{
+			case 0: //Storage
+			{
+				this.addSlotToContainer(new CircuitSlot(this, this.inv, 0, 6, 26));
+				this.addSlotToContainer(new CircuitSlot(this, this.inv, 1, 6, 53));
+				this.addSlotToContainer(new CircuitSlot(this, this.inv, 2, 6, 79));
+				this.addSlotToContainer(new CircuitSlot(this, this.inv, 3, 6, 105));
+			}
+			break;
+			case 1: //Variables
+				this.addSlotToContainer(new CircuitSlot(this, this.inv, page, 6, 61));
+				break;
+			case 2: //Edit
+				break;
+		}
+
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)

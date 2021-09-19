@@ -25,17 +25,13 @@ public abstract class DataOperator
 	}
 
 	@Nonnull
-	public static <T extends IDataType> T getVarInType(Class<T> preferred, IDataType actual, DataPacket packet)
+	public static <T extends IDataType> T getVarInType(Class<T> preferred, @Nullable IDataType actual, DataPacket packet)
 	{
 		IDataType type;
 		if(actual instanceof DataPacketTypeAccessor)
-		{
 			type = ((DataPacketTypeAccessor)actual).getRealValue(packet);
-		}
 		else
-		{
 			type = actual;
-		}
 
 		if(preferred.isInstance(type))
 		{

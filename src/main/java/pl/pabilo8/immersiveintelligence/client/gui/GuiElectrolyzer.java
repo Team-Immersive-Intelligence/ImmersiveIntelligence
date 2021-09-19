@@ -36,7 +36,7 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name"), 8, 6, 0x0a0a0a);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name"), 8, 6, Utils.COLOR_H1);
 	}
 
 	/**

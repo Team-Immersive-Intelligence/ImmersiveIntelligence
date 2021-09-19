@@ -149,7 +149,6 @@ import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 /**
  * @author Pabilo8
@@ -569,14 +568,11 @@ public class ClientProxy extends CommonProxy
 		IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES.setClientGui((player, te) -> new GuiDataInputMachineVariables(player.inventory, (TileEntityDataInputMachine)te));
 		IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT.setClientGui((player, te) -> new GuiDataInputMachineEdit(player.inventory, (TileEntityDataInputMachine)te));
 		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui((player, te) -> new GuiArithmeticLogicMachineStorage(player.inventory, (TileEntityArithmeticLogicMachine)te));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 0));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 1));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 2));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_4.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 3));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_1.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 0));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_2.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 1));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_3.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 2));
-		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT_4.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te, 3));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 0));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 1));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 2));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player.inventory, (TileEntityArithmeticLogicMachine)te, 3));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT.setClientGui((player, te) -> new GuiArithmeticLogicMachineEdit(player.inventory, (TileEntityArithmeticLogicMachine)te));
 
 		IIGuiList.GUI_PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
 		IIGuiList.GUI_PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);

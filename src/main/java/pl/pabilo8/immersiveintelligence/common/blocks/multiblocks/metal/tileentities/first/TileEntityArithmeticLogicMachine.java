@@ -71,6 +71,14 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	}
 
 	@Override
+	public void receiveMessageFromServer(NBTTagCompound message)
+	{
+		super.receiveMessageFromServer(message);
+		if(message.hasKey("inventory"))
+			inventory = Utils.readInventory(message.getTagList("inventory", 10), 4);
+	}
+
+	@Override
 	public void receiveMessageFromClient(NBTTagCompound message)
 	{
 		super.receiveMessageFromClient(message);
@@ -375,7 +383,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
 			}
 			//
-			IDataConnector conn=null;
+			IDataConnector conn = null;
 			TileEntityArithmeticLogicMachine tile1 = getTileForPos(3);
 			TileEntityArithmeticLogicMachine tile2 = getTileForPos(2);
 			if(side==EnumFacing.DOWN&&tile1!=null)
@@ -459,6 +467,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 		if(!clientside)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
+			writeCustomNBT(tag, false);
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
 		}
 	}

@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,7 +14,7 @@ import java.util.Map.Entry;
  * @author Pabilo8
  * @since 2019-05-31
  */
-public class DataPacket
+public class DataPacket implements Iterable<IDataType>
 {
 	public Map<Character, IDataType> variables = new HashMap<>();
 	private EnumDyeColor packetColor = EnumDyeColor.WHITE;
@@ -53,7 +53,13 @@ public class DataPacket
 
 	public boolean hasVariables()
 	{
-		return variables.size()>0;
+		return variables.size() > 0;
+	}
+
+	// TODO: 18.09.2021 refactor others to use this
+	public boolean hasVariable(Character c)
+	{
+		return variables.containsKey(c);
 	}
 
 	public IDataType getPacketVariable(Character name)
@@ -92,7 +98,6 @@ public class DataPacket
 		return (packetAddress==-1||packetAddress==connAddress)&&(packetColor==EnumDyeColor.WHITE||connColor==packetColor);
 	}
 
-	//If you really need to
 	public void removeAllVariables()
 	{
 		for(char c : varCharacters)
@@ -144,7 +149,8 @@ public class DataPacket
 					try
 					{
 						data = (IDataType)varTypes.get(type).newInstance();
-					} catch(InstantiationException|IllegalAccessException e)
+					}
+					catch(InstantiationException|IllegalAccessException e)
 					{
 						e.printStackTrace();
 					}
@@ -197,5 +203,11 @@ public class DataPacket
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Iterator<IDataType> iterator()
+	{
+		return variables.values().iterator();
 	}
 }

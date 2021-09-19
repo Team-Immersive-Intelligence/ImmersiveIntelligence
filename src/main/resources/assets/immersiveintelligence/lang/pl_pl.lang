@@ -709,9 +709,9 @@ ie.manual.entry.data_variable_types.subtext=Efekt może się różnić
 ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types_null;§o§nNull§r;>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types_null;§o§nNull§r;>, <link;data_variable_types_int;§o§nInteger§r;>, <link;data_variable_types_string;§o§nString§r;>, <link;data_variable_types_bool;§o§nBoolean§r;>, there are also a couple of more advanced types like <link;data_variable_types_itemstack;§o§nItemStack§r;>, <link;data_variable_types_array;§o§nArray§r;>, <link;data_variable_types_pair;§o§nPair§r;> and <link;data_variable_types_range;§o§nRange§r;>.
 
 ie.manual.entry.data_variable_types_null=Null is a special variable type, which has no value. It is the default type of an undefined variable.
-ie.manual.entry.data_variable_types_int=Integer (often shortened to Int) is a number variable type, mainly used in calculations and number comparisons.
+ie.manual.entry.data_variable_types_integer=Integer (often shortened to Int) is a number variable type, mainly used in calculations and number comparisons.
 ie.manual.entry.data_variable_types_string=String is a text variable type, it can hold a variety of different characters.
-ie.manual.entry.data_variable_types_bool=Boolean (often shortened to Bool) is a logic variable type, it can hold one of two values - True or False and can be used in logic functions.
+ie.manual.entry.data_variable_types_boolean=Boolean (often shortened to Bool) is a logic variable type, it can hold one of two values - True or False and can be used in logic functions.
 ie.manual.entry.data_variable_types_itemstack=ItemStack is an advanced variable type which can hold informations about a specific item (not item type) like id, metadata (damage) and NBT.
 ie.manual.entry.data_variable_types_array=Array is a collection of variables, ordered by their index number (starting from 0), it can hold any variable type, except another array.
 ie.manual.entry.data_variable_types_pair=Pair is a variable type, which consists of two basic variable types, often used in comparisons.

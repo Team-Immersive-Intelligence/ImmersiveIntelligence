@@ -52,9 +52,9 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 
 		//Revolver Layout Slots
 
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 29, 125, 17));
+		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 29, 125, 18));
 		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 30, 144, 26));
-		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 31, 152, 44));
+		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 31, 152, 45));
 		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 32, 144, 64));
 		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 33, 125, 72));
 		this.addSlotToContainer(new GhostFilteredBullet(this, this.inv, 34, 106, 64));

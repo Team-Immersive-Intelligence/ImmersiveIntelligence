@@ -18,11 +18,13 @@ public class MessageParticleGunfire implements IMessage
 {
 	public Vec3d pos;
 	public Vec3d dir;
+	public float size;
 
-	public MessageParticleGunfire(Vec3d pos, Vec3d dir)
+	public MessageParticleGunfire(Vec3d pos, Vec3d dir, float size)
 	{
 		this.pos = pos;
 		this.dir = dir;
+		this.size = size;
 	}
 
 	public MessageParticleGunfire()
@@ -34,6 +36,7 @@ public class MessageParticleGunfire implements IMessage
 	{
 		this.pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
 		this.dir = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+		this.size = buf.readFloat();
 	}
 
 	@Override
@@ -46,6 +49,8 @@ public class MessageParticleGunfire implements IMessage
 		buf.writeDouble(dir.x);
 		buf.writeDouble(dir.y);
 		buf.writeDouble(dir.z);
+
+		buf.writeFloat(size);
 	}
 
 	public static class HandlerClient implements IMessageHandler<MessageParticleGunfire, IMessage>
@@ -58,7 +63,7 @@ public class MessageParticleGunfire implements IMessage
 				World world = ImmersiveEngineering.proxy.getClientWorld();
 				if(world!=null) // This can happen if the task is scheduled right before leaving the world
 				{
-					ParticleUtils.spawnGunfireFX(message.pos.x, message.pos.y, message.pos.z, message.dir.x, message.dir.y, message.dir.z, 2f);
+					ParticleUtils.spawnGunfireFX(message.pos.x, message.pos.y, message.pos.z, message.dir.x, message.dir.y, message.dir.z, message.size);
 				}
 
 			});
