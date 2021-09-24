@@ -117,13 +117,15 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 	}
 
 
-	public static ItemStack takeBullet(ItemStack stack)
+	public static ItemStack takeBullet(ItemStack stack, boolean doTake)
 	{
 		if(ItemNBTHelper.hasKey(stack, "bullets"))
 		{
 			int bc = getBulletCapactity(stack);
 			NonNullList<ItemStack> cartridge = Utils.readInventory(ItemNBTHelper.getTag(stack).getTagList("bullets", 10), bc);
 			ItemStack ammo = cartridge.get(0).copy();
+			if(!doTake)
+				return ammo;
 			cartridge.set(0, ItemStack.EMPTY);
 			for(int i = 1; i < bc; i += 1)
 			{

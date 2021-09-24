@@ -46,10 +46,16 @@ public class AIHansMachinegun extends EntityAIBase
 			mg = ((EntityMachinegun)hans.getRidingEntity());
 		}
 		else
+		{
+			hans.tasks.removeTask(this);
 			return false;
+		}
 
 		if(mg==null||mg.isDead)
+		{
+			hans.tasks.removeTask(this);
 			return false;
+		}
 
 		return true;
 	}

@@ -4,7 +4,6 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -12,10 +11,10 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.EyeEmotions;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthEmotions;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthShapes;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.EyeEmotions;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.MouthEmotions;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.MouthShapes;
 
 /**
  * @author Pabilo8
@@ -30,7 +29,6 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 	//eyes
 	private final float[] EYEBROW_COLOUR = Utils.rgbIntToRGB(0x2e2623);
 	private final float[] EYE_BACK_COLOUR = Utils.rgbIntToRGB(0xf1f1f1);
-	private final float[] EYE_COLOUR = Utils.rgbIntToRGB(0x597179);
 	private final float[] EYELID_COLOUR = Utils.rgbIntToRGB(0xdea893);
 	//mouth
 	private final float[] LIP_COLOUR = Utils.rgbIntToRGB(0xc59986);
@@ -50,7 +48,7 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 
 		if(hans.isSneaking())
 		{
-			GlStateManager.translate(0,0.25,0);
+			GlStateManager.translate(0, 0.25, 0);
 		}
 
 		//GlStateManager.enableBlend();
@@ -96,7 +94,7 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		if(hans.mouthShapeQueue.size() > 0)
 		{
 			double mouthProgress = (hans.speechProgress+partialTicks)/hans.mouthShapeQueue.get(0).getFirst();
-			double[] mouthShapeVals = HansEmotions.getMouthShapeInBetween(hans.mouthShape, hans.mouthShapeQueue.get(0).getSecond(), emotionM, mouthProgress);
+			double[] mouthShapeVals = HansAnimations.getMouthShapeInBetween(hans.mouthShape, hans.mouthShapeQueue.get(0).getSecond(), emotionM, mouthProgress);
 
 			lipBottomOffset = mouthShapeVals[0];
 			lipBottomWidth = mouthShapeVals[1];
@@ -119,7 +117,7 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		this.hansRenderer.bindTexture(TEXTURE);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-		drawHansEyes(buffer, lookOffset, eyebrowThickness, eyebrowHeightDiffRight, eyebrowHeightDiffLeft, eyeBlinkHalf);
+		drawHansEyes(buffer, lookOffset, eyebrowThickness, eyebrowHeightDiffRight, eyebrowHeightDiffLeft, eyeBlinkHalf, Utils.rgbIntToRGB(hans.eyeColour));
 		drawHansMouth(buffer, lipBottomOffset, lipBottomWidth, lipTopOffset, lipTopWidth, tongueHeight, upperTeethVisible);
 
 		tessellator.draw();
@@ -145,16 +143,16 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		buff.pos(x+width, y+hdiff, z).tex(ue, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
 	}
 
-	private void drawHansEyes(BufferBuilder buffer, double lookOffset, double eyebrowThickness, double eyebrowHeightDiffRight, double eyebrowHeightDiffLeft, double eyeBlinkProgress)
+	private void drawHansEyes(BufferBuilder buffer, double lookOffset, double eyebrowThickness, double eyebrowHeightDiffRight, double eyebrowHeightDiffLeft, double eyeBlinkProgress, float[] eyeColour)
 	{
 		//
 		drawTexturedModalRect(buffer, 1, -5-eyebrowThickness+(0.125f*eyeBlinkProgress), -4.014f, 2, eyebrowThickness, 0, eyebrowHeightDiffRight, EYEBROW_COLOUR);
 		drawTexturedModalRect(buffer, 1, -5, -4.011f, 2, 1, 0, 0, EYE_BACK_COLOUR);
-		drawTexturedModalRect(buffer, 1+Math.max(lookOffset, 0), -5, -4.012f, 1, 1, 0, 0, EYE_COLOUR);
+		drawTexturedModalRect(buffer, 1+Math.max(lookOffset, 0), -5, -4.012f, 1, 1, 0, 0, eyeColour);
 
 		drawTexturedModalRect(buffer, -3, -5-eyebrowThickness+(0.125f*eyeBlinkProgress)+eyebrowHeightDiffLeft, -4.014f, 2, eyebrowThickness, 0, -eyebrowHeightDiffLeft, EYEBROW_COLOUR);
 		drawTexturedModalRect(buffer, -3, -5, -4.011f, 2, 1, 0, 0, EYE_BACK_COLOUR);
-		drawTexturedModalRect(buffer, -2+Math.min(lookOffset, 0), -5, -4.012f, 1, 1, 0, 0, EYE_COLOUR);
+		drawTexturedModalRect(buffer, -2+Math.min(lookOffset, 0), -5, -4.012f, 1, 1, 0, 0, eyeColour);
 
 		drawTexturedModalRect(buffer, 1, -5, -4.013f, 2, eyeBlinkProgress, 0, 0, EYELID_COLOUR);
 		drawTexturedModalRect(buffer, -3, -5, -4.013f, 2, eyeBlinkProgress, 0, 0, EYELID_COLOUR);

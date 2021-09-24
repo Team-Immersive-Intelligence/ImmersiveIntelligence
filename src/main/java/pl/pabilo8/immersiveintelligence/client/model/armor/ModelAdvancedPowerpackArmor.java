@@ -314,25 +314,9 @@ public class ModelAdvancedPowerpackArmor extends TMTArmorModel implements IReloa
 			if(!bipedBody.isHidden&&bipedBody.showModel)
 			{
 				GlStateManager.pushMatrix();
-				GlStateManager.translate(bipedBody.rotationPointX*scale, bipedBody.rotationPointY*scale, bipedBody.rotationPointZ*scale);
 
-				if(bipedBody.rotateAngleY!=0.0F)
-				{
-					GlStateManager.rotate(bipedBody.rotateAngleY*(180F/(float)Math.PI), 0.0F, 1.0F, 0.0F);
-				}
-
-				if(bipedBody.rotateAngleX!=0.0F)
-				{
-					GlStateManager.rotate(bipedBody.rotateAngleX*(180F/(float)Math.PI), 1.0F, 0.0F, 0.0F);
-				}
-
-				if(bipedBody.rotateAngleZ!=0.0F)
-				{
-					GlStateManager.rotate(bipedBody.rotateAngleZ*(180F/(float)Math.PI), 0.0F, 0.0F, 1.0F);
-				}
-
-				GlStateManager.rotate(180, 0, 0, 1);
-				GlStateManager.rotate(180, 0, 1, 0);
+				bipedBody.postRender(scale);
+				GlStateManager.rotate(-180, 1, 0, 0);
 
 				GlStateManager.scale(1.06, 1.06, 1.06);
 

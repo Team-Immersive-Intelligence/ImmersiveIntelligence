@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 14.05.2021
  */
-public class HansEmotions
+public class HansAnimations
 {
 	public static void putMouthShape(EntityHans entityHans, char c, double start, double end)
 	{
@@ -122,5 +122,30 @@ public class HansEmotions
 				MathHelper.clampedLerp(e1.lipTopWidth, e2.lipTopWidth, percent*2)+e3.lipTopWidth,
 				MathHelper.clampedLerp(e1.tongueHeight, e2.tongueHeight, percent*2)
 		};
+	}
+
+	public enum HansLegAnimation
+	{
+		STANDING(1),
+		SNEAKING(1),
+		KNEELING(0),
+		SQUATTING(0),
+		LYING(0.5f,0.625f,0.8f),
+		KAZACHOK(0.5f);
+
+		public final float walkSpeedModifier;
+		public final float aabbWidth, aabbHeight;
+
+		HansLegAnimation(float walkSpeedModifier)
+		{
+			this(walkSpeedModifier, 0.625f, 1.8f);
+		}
+
+		HansLegAnimation(float walkSpeedModifier, float aabbWidth, float aabbHeight)
+		{
+			this.walkSpeedModifier = walkSpeedModifier;
+			this.aabbWidth = aabbWidth;
+			this.aabbHeight = aabbHeight;
+		}
 	}
 }

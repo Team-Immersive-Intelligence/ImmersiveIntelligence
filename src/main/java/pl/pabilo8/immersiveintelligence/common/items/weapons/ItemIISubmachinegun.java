@@ -244,7 +244,8 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				Vec3d vv = player.getPositionVector().addVector(0, (double)player.getEyeHeight()-0.10000000149011612D, 0);
 
 
-				ItemStack s2 = ItemIIBulletMagazine.takeBullet(magazine);
+				ItemStack s2 = ItemIIBulletMagazine.takeBullet(magazine, true);
+				boolean sturdyBarrel = getUpgrades(stack).hasKey("sturdy_barrel");
 
 				EntityBullet a = BulletHelper.createBullet(worldIn, s2, vv, vec);
 				a.setShooters(player);

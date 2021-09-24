@@ -1,39 +1,54 @@
 package pl.pabilo8.immersiveintelligence.common.entity;
 
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.EyeEmotions;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthEmotions;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansEmotions.MouthShapes;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.EyeEmotions;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.MouthEmotions;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.MouthShapes;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.*;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansChemthrower;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansRailgun;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansRevolver;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansSubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansKazachok;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansLookIdle;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author Pabilo8
@@ -41,17 +56,41 @@ import java.util.ArrayList;
  */
 public class EntityHans extends EntityCreature implements INpc
 {
-	public boolean crewman = false;
-	public boolean hasAmmo = true;
-	public boolean isKneeling = false;
+	private static final int[] EYE_COLOURS = new int[]{
+			0x597179,//cyan
+			0x536579,//toned blue
+			0x486479,//blue 2
+			0x3F795B,//green
+			0x3B7959,//green/blue
+			0x54795B,//toned green
+			0x414832,//khaki
+			0x3D4827,//olive
+			0x9D7956,//amber
+			0x434139,//brown
+			0x484739,//light brown
+			0x2F2E28,//dark brown
+	};
+	private static final DataParameter<String> DATA_MARKER_LEG_ANIMATION = EntityDataManager.createKey(EntityHans.class, DataSerializers.STRING);
+	private static final DataParameter<Integer> DATA_MARKER_EYE_COLOUR = EntityDataManager.createKey(EntityHans.class, DataSerializers.VARINT);
 
-	public EyeEmotions eyeEmotion = HansEmotions.EyeEmotions.NEUTRAL;
-	public MouthEmotions mouthEmotion = HansEmotions.MouthEmotions.NEUTRAL;
-	public MouthShapes mouthShape = HansEmotions.MouthShapes.CLOSED;
+	public HansLegAnimation prevLegAnimation = HansLegAnimation.STANDING;
+	public HansLegAnimation legAnimation = HansLegAnimation.STANDING;
+	public int legAnimationTimer = 0;
+	public EyeEmotions eyeEmotion = HansAnimations.EyeEmotions.NEUTRAL;
+	public MouthEmotions mouthEmotion = HansAnimations.MouthEmotions.NEUTRAL;
+	public MouthShapes mouthShape = HansAnimations.MouthShapes.CLOSED;
 	public ArrayList<Tuple<Integer, MouthShapes>> mouthShapeQueue = new ArrayList<>();
 	public int speechProgress = 0;
+	public int eyeColour;
 
-	public final NonNullList<ItemStack> mainInventory = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
+	public static final float MELEE_DISTANCE = 1.25f;
+
+	private EntityAIBase vehicleTask = null;
+
+	public boolean enemyContact = false;
+	public boolean hasAmmo = true;
+
+	public final NonNullList<ItemStack> mainInventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
 	private final net.minecraftforge.items.IItemHandlerModifiable handHandler = new net.minecraftforge.items.wrapper.EntityHandsInvWrapper(this);
 	private final net.minecraftforge.items.IItemHandlerModifiable armorHandler = new net.minecraftforge.items.wrapper.EntityArmorInvWrapper(this);
@@ -63,11 +102,14 @@ public class EntityHans extends EntityCreature implements INpc
 		super(worldIn);
 		this.enablePersistence();
 		setSneaking(false);
+		this.dataManager.register(DATA_MARKER_LEG_ANIMATION, legAnimation.name().toLowerCase());
+		this.dataManager.register(DATA_MARKER_EYE_COLOUR, eyeColour = EYE_COLOURS[rand.nextInt(EYE_COLOURS.length)]);
 	}
 
-	public void equipItems(int id)
+	@Override
+	protected void entityInit()
 	{
-
+		super.entityInit();
 	}
 
 	@Override
@@ -76,6 +118,11 @@ public class EntityHans extends EntityCreature implements INpc
 		super.onUpdate();
 		if(world.isRemote)
 		{
+			if(dataManager.isDirty())
+			{
+				eyeColour = dataManager.get(DATA_MARKER_EYE_COLOUR);
+				legAnimation = getLegAnimationFromString(dataManager.get(DATA_MARKER_LEG_ANIMATION));
+			}
 			if(mouthShapeQueue.size() > 0)
 			{
 				if(speechProgress++ >= mouthShapeQueue.get(0).getFirst())
@@ -100,8 +147,11 @@ public class EntityHans extends EntityCreature implements INpc
 			{
 				mouthEmotion = MouthEmotions.ANGRY;
 
+				if(legAnimation==HansLegAnimation.KAZACHOK)
+					mouthEmotion = MouthEmotions.HAPPY;
+
 				float hp = getHealth()/getMaxHealth();
-				if(hp > 0.75)
+				if(hp > 0.75||legAnimation==HansLegAnimation.KAZACHOK)
 					eyeEmotion = EyeEmotions.HAPPY;
 				else if(hp > 0.5)
 					eyeEmotion = EyeEmotions.NEUTRAL;
@@ -109,6 +159,55 @@ public class EntityHans extends EntityCreature implements INpc
 					eyeEmotion = EyeEmotions.FROWNING;
 			}
 		}
+		else
+		{
+			dataManager.set(DATA_MARKER_EYE_COLOUR, eyeColour);
+			//check if enemies are around
+			if(ticksExisted%25==0)
+				enemyContact = world.getEntitiesWithinAABB(Entity.class,
+								new AxisAlignedBB(this.getPositionVector(), this.getPositionVector()).grow(8), this::isValidTarget)
+						.stream().findAny().isPresent();
+
+			//idle + combat animations
+			HansLegAnimation current = legAnimation;
+			legAnimation = HansLegAnimation.STANDING;
+			tasks.taskEntries.removeIf(entry -> entry.action instanceof AIHansBase&&((AIHansBase)entry.action).shouldBeRemoved());
+			for(EntityAITaskEntry entry : tasks.taskEntries)
+			{
+				if(entry.action instanceof AIHansBase)
+					((AIHansBase)entry.action).setRequiredAnimation();
+			}
+			if(current!=legAnimation)
+			{
+				this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(getWalkSpeed());
+				dataManager.set(DATA_MARKER_LEG_ANIMATION, legAnimation.name().toLowerCase());
+			}
+
+		}
+
+		if(prevLegAnimation!=legAnimation)
+		{
+			if(legAnimationTimer > 0)
+				legAnimationTimer--;
+			else
+			{
+				legAnimationTimer = 8;
+				prevLegAnimation = legAnimation;
+				setSize(legAnimation.aabbWidth, legAnimation.aabbHeight);
+			}
+		}
+	}
+
+	private double getWalkSpeed()
+	{
+		return 0.25D*legAnimation.walkSpeedModifier;
+	}
+
+	private HansLegAnimation getLegAnimationFromString(String s)
+	{
+		return Arrays.stream(HansLegAnimation.values())
+				.filter(anim -> s.equalsIgnoreCase(anim.name()))
+				.findFirst().orElse(HansLegAnimation.STANDING);
 	}
 
 	@Override
@@ -116,32 +215,24 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		super.initEntityAI();
 
-		//howi AI
-		tasks.addTask(0, new AIHansHowitzer(this));
-		tasks.addTask(0, new AIHansMortar(this));
-		tasks.addTask(0, new AIHansMachinegun(this));
-
 		//Attack mobs
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, true, false,
 				input -> input instanceof IMob&&input.isEntityAlive()
 		));
 		//Attack entities with different team, stay neutral on default
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, true, false,
 				input -> input!=null&&isValidTarget(input)
 		));
 		//Call other hanses for help when attacked
 		this.targetTasks.addTask(2, new AIHansAlertOthers(this, true));
 
 		this.tasks.addTask(2, new AIHansHolsterWeapon(this));
-		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 20));
-		this.tasks.addTask(3, new AIHansRailgun(this, 0.95f, 50, 30));
-		this.tasks.addTask(3, new AIHansChemthrower(this, 0.95f, 50, 8));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.125f, true));
+		updateWeaponTasks();
 
 		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6D, 0.6D));
 		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityLiving.class, 6.0F));
 		this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1D, 0f));
-		this.tasks.addTask(8, new EntityAILookIdle(this));
+		this.tasks.addTask(8, new AIHansLookIdle(this));
 
 		//this.tasks.addTask(4, new AIHansEnterVehicle(this));
 
@@ -151,8 +242,51 @@ public class EntityHans extends EntityCreature implements INpc
 		//this.tasks.addTask(4, new EntityAIAvoidEntity<>(this, EntityLivingBase.class, avEntity-> this.hasAmmunition()&&avEntity!=null&&avEntity.getRevengeTarget()==this, 8.0F, 0.6D, 0.6D));
 	}
 
+	private void updateWeaponTasks()
+	{
+		this.tasks.addTask(3, new AIHansRevolver(this, 1f, 6));
+		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 20));
+		this.tasks.addTask(3, new AIHansRailgun(this, 0.95f, 50, 30));
+		this.tasks.addTask(3, new AIHansChemthrower(this, 0.95f, 50, 8));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.125f, true));
+	}
+
+
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	public boolean startRiding(@Nonnull Entity entity)
+	{
+		if(super.startRiding(entity))
+		{
+			if(entity instanceof EntityMachinegun)
+				tasks.addTask(0, vehicleTask = new AIHansMachinegun(this));
+			else if(entity instanceof EntityMortar)
+				tasks.addTask(0, vehicleTask = new AIHansMortar(this));
+			else if(entity.getLowestRidingEntity() instanceof EntityFieldHowitzer)
+				tasks.addTask(0, vehicleTask = new AIHansHowitzer(this));
+			return true;
+		}
+		return false;
+	}
+
+	public boolean markCrewman(@Nonnull Entity entity)
+	{
+		if(vehicleTask!=null)
+			return false;
+
+		tasks.addTask(0, new AIHansCrewman(this, entity));
+		return true;
+	}
+
+	@Override
+	public void dismountEntity(@Nonnull Entity entity)
+	{
+		super.dismountEntity(entity);
+		if(vehicleTask!=null)
+			tasks.removeTask(vehicleTask);
+	}
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return true;
@@ -161,7 +295,7 @@ public class EntityHans extends EntityCreature implements INpc
 
 	@Nullable
 	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
@@ -173,21 +307,22 @@ public class EntityHans extends EntityCreature implements INpc
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound compound)
+	public void readEntityFromNBT(@Nonnull NBTTagCompound compound)
 	{
 		super.readEntityFromNBT(compound);
 		readInventory(compound.getTagList("npc_inventory", 10));
-		crewman = compound.getBoolean("crewman");
-		isKneeling = compound.getBoolean("isKneeling");
+
+		this.legAnimation = getLegAnimationFromString(compound.getString("leg_animation"));
+		this.eyeColour = compound.getInteger("eye_colour");
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound compound)
+	public void writeEntityToNBT(@Nonnull NBTTagCompound compound)
 	{
 		super.writeEntityToNBT(compound);
 		compound.setTag("npc_inventory", Utils.writeInventory(mainInventory));
-		compound.setBoolean("crewman", crewman);
-		compound.setBoolean("isKneeling", isKneeling);
+		compound.setString("leg_animation", legAnimation.name().toLowerCase());
+		compound.setInteger("eye_colour", eyeColour);
 	}
 
 	private void readInventory(NBTTagList npc_inventory)
@@ -197,7 +332,7 @@ public class EntityHans extends EntityCreature implements INpc
 		{
 			NBTTagCompound itemTag = npc_inventory.getCompoundTagAt(i);
 			int slot = itemTag.getByte("Slot")&255;
-			if(slot >= 0&&slot < this.mainInventory.size())
+			if(slot < this.mainInventory.size())
 				this.mainInventory.set(slot, new ItemStack(itemTag));
 		}
 	}
@@ -206,7 +341,7 @@ public class EntityHans extends EntityCreature implements INpc
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25f);
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20f);
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(52f);
 	}
@@ -214,26 +349,24 @@ public class EntityHans extends EntityCreature implements INpc
 	public boolean attackEntityAsMob(Entity entityIn)
 	{
 		this.world.setEntityState(this, (byte)4);
-		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)(7+this.rand.nextInt(15)));
+		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)(1+this.rand.nextInt(2)));
 
 		if(flag)
-		{
-			entityIn.motionY += 0.4000000059604645D;
 			this.applyEnchantments(this, entityIn);
-		}
 
 		this.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, 1.0F, 1.0F);
 		return flag;
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand)
+	protected boolean processInteract(EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		return !player.isSpectator()&&hand==EnumHand.MAIN_HAND&&player.getPositionVector().distanceTo(this.getPositionVector()) <= 1d;
 	}
 
+	@Nonnull
 	@Override
-	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand)
+	public EnumActionResult applyPlayerInteraction(EntityPlayer player, @Nonnull Vec3d vec, @Nonnull EnumHand hand)
 	{
 		if(player.isSpectator()||hand==EnumHand.OFF_HAND)
 			return EnumActionResult.FAIL;
@@ -246,9 +379,20 @@ public class EntityHans extends EntityCreature implements INpc
 			{
 				sendPlayerMessage(player,
 						String.format("Guten %1$s, %2$s!",
-								getGermanTimeName(world.getWorldTime()),
+								HansUtils.getGermanTimeName(world.getWorldTime()),
 								player.getName()
 						));
+			}
+			else if(tasks.taskEntries.stream().noneMatch(entry -> entry.action instanceof AIHansKazachok)&&Utils.isFluidRelatedItemStack(heldItem))
+			{
+				IFluidHandlerItem capability = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+
+				if(capability!=null)
+				{
+					FluidStack drain = capability.drain(new FluidStack(IEContent.fluidEthanol, 1000), true);
+					if(drain!=null)
+						tasks.addTask(2, new AIHansKazachok(this, drain.amount/1000f));
+				}
 			}
 			else if(IIContent.itemSubmachinegun.isAmmo(heldItem, getActiveItemStack()))
 			{
@@ -341,14 +485,10 @@ public class EntityHans extends EntityCreature implements INpc
 		return EnumActionResult.PASS;
 	}
 
-	private String getGermanTimeName(long time)
+	@Override
+	public HoverEvent getHoverEvent()
 	{
-		if(time < 11500)
-			return "Morgen";
-		else if(time < 18000)
-			return "Tag";
-		else
-			return "Abend";
+		return super.getHoverEvent();
 	}
 
 	public boolean isValidTarget(Entity entity)
@@ -365,7 +505,7 @@ public class EntityHans extends EntityCreature implements INpc
 			ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation("chat.type.text", this.getDisplayName(), net.minecraftforge.common.ForgeHooks.newChatWithLinks(text)));
 	}
 
-	protected SoundEvent getHurtSound(DamageSource damageSourceIn)
+	protected SoundEvent getHurtSound(@Nonnull DamageSource damageSourceIn)
 	{
 		if(damageSourceIn==DamageSource.ON_FIRE)
 		{
@@ -382,30 +522,26 @@ public class EntityHans extends EntityCreature implements INpc
 		return SoundEvents.ENTITY_PLAYER_DEATH;
 	}
 
+	@Nonnull
 	protected SoundEvent getSwimSound()
 	{
 		return SoundEvents.ENTITY_PLAYER_SWIM;
 	}
 
+	@Nonnull
 	protected SoundEvent getSplashSound()
 	{
 		return SoundEvents.ENTITY_PLAYER_SPLASH;
 	}
 
+	@Nonnull
 	protected SoundEvent getFallSound(int heightIn)
 	{
 		return heightIn > 4?SoundEvents.ENTITY_PLAYER_BIG_FALL: SoundEvents.ENTITY_PLAYER_SMALL_FALL;
 	}
 
-	@Override
-	public HoverEvent getHoverEvent()
+	public HansLegAnimation getLegAnimation()
 	{
-		return super.getHoverEvent();
-	}
-
-	@Override
-	public boolean isSneaking()
-	{
-		return super.isSneaking();
+		return isSneaking()?HansLegAnimation.SNEAKING: legAnimation;
 	}
 }

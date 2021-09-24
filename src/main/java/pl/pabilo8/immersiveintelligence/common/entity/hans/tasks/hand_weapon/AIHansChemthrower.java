@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
 
 import java.util.List;
 
@@ -27,12 +28,8 @@ import java.util.List;
  * @author Pabilo8
  * @since 23.04.2021
  */
-public class AIHansChemthrower extends EntityAIBase
+public class AIHansChemthrower extends AIHansBase
 {
-	/**
-	 * The entity (as a RangedAttackMob) the AI instance has been applied to.
-	 */
-	private final EntityHans hans;
 	private EntityLivingBase attackTarget;
 	/**
 	 * A decrementing tick that spawns a ranged attack once this value reaches 0. It is then set back to the
@@ -49,11 +46,10 @@ public class AIHansChemthrower extends EntityAIBase
 
 	private final static ItemChemthrower CHEM = (ItemChemthrower)IEContent.itemChemthrower;
 
-	public AIHansChemthrower(EntityHans attacker, double movespeed, int burstTime, float maxAttackDistanceIn)
+	public AIHansChemthrower(EntityHans hans, double movespeed, int burstTime, float maxAttackDistanceIn)
 	{
+		super(hans);
 		this.rangedAttackTime = -1;
-
-		this.hans = attacker;
 		this.entityMoveSpeed = movespeed;
 		this.maxAttackDistance = maxAttackDistanceIn*maxAttackDistanceIn;
 		this.burstTime = burstTime;
@@ -97,7 +93,7 @@ public class AIHansChemthrower extends EntityAIBase
 	 */
 	public boolean shouldContinueExecuting()
 	{
-		return this.shouldExecute()||!this.hans.getNavigator().noPath()||!(this.attackTarget==null||hans.getPositionVector().distanceTo(attackTarget.getPositionVector()) < 1.25f);
+		return this.shouldExecute()||!this.hans.getNavigator().noPath()||!(this.attackTarget==null||hans.getPositionVector().distanceTo(attackTarget.getPositionVector()) < EntityHans.MELEE_DISTANCE);
 	}
 
 	/**
@@ -190,24 +186,13 @@ public class AIHansChemthrower extends EntityAIBase
 		}
 	}
 
-	private boolean canShootEntity(EntityLivingBase entity)
+	@Override
+	public void setRequiredAnimation()
 	{
-		Vec3d start = hans.getPositionEyes(0);
-		Vec3d end = entity.getPositionVector();
 
-		//Don't shoot non-targeted entities between the turret and the target
-		AxisAlignedBB potentialCollateralArea = entity.getEntityBoundingBox().union(hans.getEntityBoundingBox());
-		List<EntityLivingBase> potentialCollateral = hans.world.getEntitiesWithinAABB(EntityLivingBase.class, potentialCollateralArea);
-		for(EntityLivingBase coll : potentialCollateral)
-		{
-			AxisAlignedBB entityBB = coll.getEntityBoundingBox().grow(.125f/2+.4);//Add the range of a revolver bullet in all directions
-			if(coll!=hans&&!hans.isValidTarget(coll)&&entityBB.calculateIntercept(start, end)!=null)
-				return false;
-		}
-		return true;
 	}
 
-	//for the wanker who decided it's save to cast EntityLivingBase to EntityPlayer without checking, imagine there are other entities in the game
+	//for the wanker who decided it's safe to cast EntityLivingBase to EntityPlayer without checking, imagine there are other entities in the game
 	public void onUsingTick(ItemStack stack, EntityLivingBase living, int count)
 	{
 		FluidStack fs = CHEM.getFluid(stack);
@@ -234,7 +219,7 @@ public class AIHansChemthrower extends EntityAIBase
 				for(int i = 0; i < split; i++)
 				{
 					Vec3d vecDir = v.addVector(living.getRNG().nextGaussian()*scatter, living.getRNG().nextGaussian()*scatter, living.getRNG().nextGaussian()*scatter);
-					EntityChemthrowerShot chem = new EntityChemthrowerShot(living.world, look.x,look.y,look.z, vecDir.x*0.25, vecDir.y*0.25, vecDir.z*0.25, fs);
+					EntityChemthrowerShot chem = new EntityChemthrowerShot(living.world, look.x, look.y, look.z, vecDir.x*0.25, vecDir.y*0.25, vecDir.z*0.25, fs);
 
 					// Apply momentum from the player.
 					chem.motionX = living.motionX+vecDir.x*range;

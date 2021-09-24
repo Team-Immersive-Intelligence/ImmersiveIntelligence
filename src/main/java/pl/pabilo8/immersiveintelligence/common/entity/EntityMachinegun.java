@@ -828,7 +828,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setFloat("recoilPitch", recoilPitch);
 		tag.setFloat("overheating", overheating);
 
-		ItemStack stack = magazine==1?ItemIIBulletMagazine.takeBullet(magazine1): ItemIIBulletMagazine.takeBullet(magazine2);
+		ItemStack stack = magazine==1?ItemIIBulletMagazine.takeBullet(magazine1, false): ItemIIBulletMagazine.takeBullet(magazine2, true);
 
 		if(magazine==1)
 		{

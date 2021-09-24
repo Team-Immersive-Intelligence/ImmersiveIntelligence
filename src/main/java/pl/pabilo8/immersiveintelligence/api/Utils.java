@@ -872,7 +872,7 @@ public class Utils
 				dist -= force;
 				force *= 0.99;
 				baseMotionYC *= 0.99f;
-				gravityMotionY -= gravity;
+				gravityMotionY -= gravity/1.5f;
 				motionY += (baseMotionYC+gravityMotionY);
 			}
 

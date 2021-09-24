@@ -33,6 +33,9 @@ import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComp
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -60,6 +63,7 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -623,10 +627,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//ShrapnelHandler.addShrapnel("wood","",1,0.25f,0f,true);
 
 		//Tiny dusts (1 -> 9) from GregTech are a bit too much :P
-		DustUtils.registerDust(new IngredientStack("gunpowder",100), "gunpowder", 0x242424);
-		DustUtils.registerDust(new IngredientStack("smallGunpowder",25), "gunpowder");
-		DustUtils.registerDust(new IngredientStack("dustSulfur",100), "sulfur", 0xbba31d);
-		DustUtils.registerDust(new IngredientStack("dustSmallSulfur",25), "sulfur");
+		DustUtils.registerDust(new IngredientStack("gunpowder", 100), "gunpowder", 0x242424);
+		DustUtils.registerDust(new IngredientStack("smallGunpowder", 25), "gunpowder");
+		DustUtils.registerDust(new IngredientStack("dustSulfur", 100), "sulfur", 0xbba31d);
+		DustUtils.registerDust(new IngredientStack("dustSmallSulfur", 25), "sulfur");
 
 		ShrapnelHandler.addShrapnel("aluminum", 0xd9ecea, "immersiveengineering:textures/blocks/sheetmetal_aluminum", 1, 0.05f, 0f);
 		ShrapnelHandler.addShrapnel("zinc", 0xdee3dc, "immersiveintelligence:textures/blocks/metal/sheetmetal_zinc", 1, 0.15f, 0f);
@@ -1113,5 +1117,15 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 		if(!(event.getEntityLiving() instanceof EntityPlayer&&((EntityPlayer)event.getEntityLiving()).isCreative())&&event.getEntityLiving().world.getTotalWorldTime()%20==0&&event.getEntityLiving().world.getBiome(event.getEntityLiving().getPosition())==IIContent.biomeWasteland)
 			event.getEntityLiving().addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
+	}
+
+	@SubscribeEvent
+	public void spawnEvent(EntityJoinWorldEvent event)
+	{
+		if(event.getEntity() instanceof EntityMob)
+		{
+			EntityMob e = (EntityMob)event.getEntity();
+			e.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(e, EntityHans.class, true));
+		}
 	}
 }

@@ -47,10 +47,16 @@ public class AIHansMortar extends EntityAIBase
 			mortar = ((EntityMortar)hans.getRidingEntity());
 		}
 		else
+		{
+			hans.tasks.removeTask(this);
 			return false;
+		}
 
 		if(mortar==null||mortar.isDead)
+		{
+			hans.tasks.removeTask(this);
 			return false;
+		}
 
 		target = Optional.ofNullable(hans.getAttackTarget());
 		return true;

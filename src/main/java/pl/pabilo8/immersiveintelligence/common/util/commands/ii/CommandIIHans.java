@@ -459,6 +459,9 @@ public class CommandIIHans extends CommandBase
 		@Override
 		public EntityHans spawnHanses(World world, Vec3d pos, int amount, @Nullable Team team, boolean parachute, float yaw, float pitch)
 		{
+			if(isAirDroppable()&&parachute)
+				pos = pos.addVector(0, 60, 0);
+
 			T teamWeapon = spawnTeamWeapon(world, pos, team, parachute, yaw, pitch);
 			if(teamWeapon!=null)
 				return addCrewmen(world, pos, team, parachute, teamWeapon);
@@ -479,7 +482,15 @@ public class CommandIIHans extends CommandBase
 			HansUtils.setHelmet(hans);
 			if(team!=null)
 				world.getScoreboard().addPlayerToTeam(hans.getUniqueID().toString(), team.getName());
+			if(isAirDroppable()&&parachute)
+				HansUtils.setParachute(hans);
+
 			return hans;
+		}
+
+		protected boolean isAirDroppable()
+		{
+			return false;
 		}
 	}
 
@@ -543,17 +554,27 @@ public class CommandIIHans extends CommandBase
 			EntityFieldHowitzer howi = new EntityFieldHowitzer(world);
 			howi.setPositionAndRotation(pos.x, pos.y, pos.z, MathHelper.wrapDegrees(yaw+180), 0);
 			world.spawnEntity(howi);
+			if(parachute)
+				HansUtils.setParachute(howi);
 			return howi;
 		}
 
 		@Override
 		protected EntityHans addCrewmen(World world, Vec3d pos, Team team, boolean parachute, EntityFieldHowitzer teamWeapon)
 		{
-			EntityHans hans1 = createCrewman(world, pos, team, parachute);
-			EntityHans hans2 = createCrewman(world, pos, team, parachute);
+			EntityHans hans1 = createCrewman(world, pos.addVector(parachute?8:0,0,0), team, parachute);
+			EntityHans hans2 = createCrewman(world, pos.addVector(parachute?-8:0,0,0), team, parachute);
 
-			hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 0));
-			hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 1));
+			if(parachute)
+			{
+				hans1.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 0));
+				hans2.markCrewman(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 1));
+			}
+			else
+			{
+				hans1.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 0));
+				hans2.startRiding(EntityVehicleSeat.getOrCreateSeat(teamWeapon, 1));
+			}
 
 			return hans1;
 		}

@@ -2,28 +2,23 @@ package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
+import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
-
-import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 23.04.2021
  */
-public class AIHansSubmachinegun extends EntityAIBase
+public class AIHansSubmachinegun extends AIHansBase
 {
-	/**
-	 * The entity (as a RangedAttackMob) the AI instance has been applied to.
-	 */
-	private final EntityHans hans;
 	private EntityLivingBase attackTarget;
 	/**
 	 * A decrementing tick that spawns a ranged attack once this value reaches 0. It is then set back to the
@@ -38,14 +33,13 @@ public class AIHansSubmachinegun extends EntityAIBase
 	 */
 	private final float maxAttackDistance;
 
-	public AIHansSubmachinegun(EntityHans attacker, double movespeed, int burstTime, float maxAttackDistanceIn)
+	public AIHansSubmachinegun(EntityHans hans, double movespeed, int burstTime, float maxAttackDistanceIn)
 	{
+		super(hans);
 		this.rangedAttackTime = -1;
-
-		this.hans = attacker;
 		this.entityMoveSpeed = movespeed;
 		this.maxAttackDistance = maxAttackDistanceIn*maxAttackDistanceIn;
-		this.burstTime=burstTime;
+		this.burstTime = burstTime;
 		this.setMutexBits(3);
 	}
 
@@ -71,7 +65,7 @@ public class AIHansSubmachinegun extends EntityAIBase
 	{
 		final ItemStack smg = hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
 		final ItemStack magazine = ItemNBTHelper.getItemStack(smg, "magazine");
-		return hans.hasAmmo||IIContent.itemSubmachinegun.isAmmo(magazine, smg)||!IIContent.itemSubmachinegun.findMagazine(hans,smg).isEmpty();
+		return hans.hasAmmo||IIContent.itemSubmachinegun.isAmmo(magazine, smg)||!IIContent.itemSubmachinegun.findMagazine(hans, smg).isEmpty();
 	}
 
 	/**
@@ -79,7 +73,10 @@ public class AIHansSubmachinegun extends EntityAIBase
 	 */
 	public boolean shouldContinueExecuting()
 	{
-		return this.shouldExecute()||!this.hans.getNavigator().noPath()||!(this.attackTarget==null||hans.getPositionVector().distanceTo(attackTarget.getPositionVector()) < 1.25f);
+		if(this.shouldExecute()||!this.hans.getNavigator().noPath()||!(this.attackTarget==null||hans.getPositionVector().distanceTo(attackTarget.getPositionVector()) < EntityHans.MELEE_DISTANCE))
+			return true;
+		hans.setSneaking(false);
+		return false;
 	}
 
 	/**
@@ -97,9 +94,7 @@ public class AIHansSubmachinegun extends EntityAIBase
 	 */
 	public void updateTask()
 	{
-		if(attackTarget==null)
-			return;
-		if(attackTarget.isDead)
+		if(attackTarget==null||attackTarget.isDead)
 		{
 			hans.setSneaking(false);
 			resetTask();
@@ -128,7 +123,7 @@ public class AIHansSubmachinegun extends EntityAIBase
 
 		//this.hans.getPositionVector().add(this.hans.getLookVec()).subtract();
 		final Vec3d add = this.attackTarget.getPositionVector().add(this.attackTarget.getLookVec());
-		this.hans.getLookHelper().setLookPosition(add.x, add.y, add.z,30,30);
+		this.hans.getLookHelper().setLookPosition(add.x, add.y, add.z, 30, 30);
 
 		if(!flag)
 		{
@@ -163,7 +158,8 @@ public class AIHansSubmachinegun extends EntityAIBase
 				{
 					hans.hasAmmo = true;
 					hans.setSneaking(true);
-					hans.faceEntity(attackTarget,30,0);
+					hans.faceEntity(attackTarget, 30, 0);
+					hans.rotationPitch = calculateBallisticAngle(ItemIIBulletMagazine.takeBullet(magazine, false), attackTarget);
 					IIContent.itemSubmachinegun.onUsingTick(smg, this.hans, this.rangedAttackTime++);
 				}
 				IIContent.itemSubmachinegun.onUpdate(smg, this.hans.world, this.hans, 0, true);
@@ -174,20 +170,14 @@ public class AIHansSubmachinegun extends EntityAIBase
 		}
 	}
 
-	private boolean canShootEntity(EntityLivingBase entity)
+	@Override
+	public void setRequiredAnimation()
 	{
-		Vec3d start = hans.getPositionEyes(0);
-		Vec3d end = entity.getPositionVector();
 
-		//Don't shoot non-targeted entities between the turret and the target
-		AxisAlignedBB potentialCollateralArea = entity.getEntityBoundingBox().union(hans.getEntityBoundingBox());
-		List<EntityLivingBase> potentialCollateral = hans.world.getEntitiesWithinAABB(EntityLivingBase.class, potentialCollateralArea);
-		for(EntityLivingBase coll : potentialCollateral)
-		{
-			AxisAlignedBB entityBB = coll.getEntityBoundingBox().grow(.125f/2+.4);//Add the range of a revolver bullet in all directions
-			if(coll!=hans&&!hans.isValidTarget(coll)&&entityBB.calculateIntercept(start, end)!=null)
-				return false;
-		}
-		return true;
+	}
+
+	private float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
+	{
+		return Utils.getDirectFireAngle(IIContent.itemAmmoSubmachinegun.getDefaultVelocity(), IIContent.itemAmmoSubmachinegun.getMass(ammo), hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(attackTarget.getPositionVector()));
 	}
 }

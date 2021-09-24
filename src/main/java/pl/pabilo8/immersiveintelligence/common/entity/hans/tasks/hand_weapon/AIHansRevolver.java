@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon;
 
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
+import blusunrize.immersiveengineering.common.items.ItemRevolver;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -10,15 +11,13 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 
 /**
  * @author Pabilo8
  * @since 23.04.2021
  */
-public class AIHansRailgun extends AIHansBase
+public class AIHansRevolver extends AIHansBase
 {
 	private EntityLivingBase attackTarget;
 	/**
@@ -28,23 +27,18 @@ public class AIHansRailgun extends AIHansBase
 	private int rangedAttackTime;
 	private final double entityMoveSpeed;
 	private int seeTime;
-	private final int burstTime;
-	/**
-	 * Snipers lie down instead of kneeling
-	 */
-	boolean sniper = false;
 	/**
 	 * The maximum time the AI has to wait before peforming another ranged attack.
 	 */
 	private final float maxAttackDistance;
+	private static final ItemRevolver ITEM_REVOLVER = (ItemRevolver)IEContent.itemRevolver;
 
-	public AIHansRailgun(EntityHans hans, double movespeed, int burstTime, float maxAttackDistanceIn)
+	public AIHansRevolver(EntityHans hans, double movespeed, float maxAttackDistanceIn)
 	{
 		super(hans);
 		this.rangedAttackTime = -1;
 		this.entityMoveSpeed = movespeed;
 		this.maxAttackDistance = maxAttackDistanceIn*maxAttackDistanceIn;
-		this.burstTime = burstTime;
 		this.setMutexBits(3);
 	}
 
@@ -56,19 +50,17 @@ public class AIHansRailgun extends AIHansBase
 		EntityLivingBase entitylivingbase = this.hans.getAttackTarget();
 
 		if(entitylivingbase==null)
-		{
 			return false;
-		}
-		else
-		{
-			this.attackTarget = entitylivingbase;
-			return hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() instanceof ItemIIRailgunOverride&&hasAnyAmmo();
-		}
+
+		this.attackTarget = entitylivingbase;
+		return hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() instanceof ItemRevolver&&hasAnyAmmo();
 	}
 
 	private boolean hasAnyAmmo()
 	{
-		return hans.hasAmmo = (!ItemIIRailgunOverride.findAmmo(hans).isEmpty());
+		final ItemStack smg = hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+		final ItemStack magazine = ItemNBTHelper.getItemStack(smg, "magazine");
+		return hans.hasAmmo||IIContent.itemSubmachinegun.isAmmo(magazine, smg)||!IIContent.itemSubmachinegun.findMagazine(hans, smg).isEmpty();
 	}
 
 	/**
@@ -84,11 +76,6 @@ public class AIHansRailgun extends AIHansBase
 	 */
 	public void resetTask()
 	{
-		if(attackTarget!=null)
-		{
-			hans.setSneaking(false);
-		}
-
 		this.attackTarget = null;
 		this.seeTime = 0;
 		this.rangedAttackTime = -1;
@@ -99,9 +86,8 @@ public class AIHansRailgun extends AIHansBase
 	 */
 	public void updateTask()
 	{
-		if(attackTarget==null||attackTarget.isDead||!hasAnyAmmo())
+		if(attackTarget==null||attackTarget.isDead)
 		{
-			hans.setSneaking(false);
 			resetTask();
 			return;
 		}
@@ -109,88 +95,73 @@ public class AIHansRailgun extends AIHansBase
 		boolean flag = this.hans.getEntitySenses().canSee(this.attackTarget)&&canShootEntity(this.attackTarget);
 
 		if(flag)
-		{
 			++this.seeTime;
-		}
 		else
-		{
 			this.seeTime = 0;
-		}
 
-		if(d0 <= (double)this.maxAttackDistance&&this.seeTime >= 5)
-		{
+		if(d0 <= (double)this.maxAttackDistance&&this.seeTime >= 20)
 			this.hans.getNavigator().clearPath();
-		}
 		else
-		{
 			this.hans.getNavigator().tryMoveToEntityLiving(this.attackTarget, this.entityMoveSpeed);
-		}
 
 		//this.hans.getPositionVector().add(this.hans.getLookVec()).subtract();
 		final Vec3d add = this.attackTarget.getPositionVector().add(this.attackTarget.getLookVec());
 		this.hans.getLookHelper().setLookPosition(add.x, add.y, add.z, 30, 30);
 
 		if(!flag)
-		{
 			return;
-		}
-		final ItemStack backpack = hans.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		final ItemStack railgun = hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-		if(EnergyHelper.isFluxItem(backpack)&&EnergyHelper.isFluxItem(railgun))
-		{
-			//int extracted = EnergyHelper.extractFlux(backpack,4000,false);
-			//extracted =
-			EnergyHelper.insertFlux(railgun, 99999, false);
-			//EnergyHelper.insertFlux(backpack,extracted,false);
-		}
 
 		if(this.rangedAttackTime < 0)
 		{
 			hans.resetActiveHand();
 			rangedAttackTime += 1;
 		}
-		if(this.rangedAttackTime < burstTime)
+
+		final ItemStack smg = hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+		if(smg.getItem() instanceof ItemRevolver)
 		{
-			hans.setActiveHand(EnumHand.MAIN_HAND);
-			if(railgun.getItem() instanceof ItemIIRailgunOverride)
+			if(ITEM_REVOLVER.getShootCooldown(smg)==0)
 			{
-				ItemStack ammo = ItemIIRailgunOverride.findAmmo(hans);
-				if(ItemIIRailgunOverride.isAmmo(ammo))
+				hans.setActiveHand(EnumHand.MAIN_HAND);
+
+				/*
+				ItemStack magazine = ItemNBTHelper.getItemStack(smg, "magazine");
+				if(!IIContent.itemSubmachinegun.isAmmo(magazine, smg))
 				{
+					if(!ItemNBTHelper.getBoolean(smg, "shouldReload"))
+					{
+						final ItemStack ammo = IIContent.itemSubmachinegun.findMagazine(hans, smg);
+						hans.hasAmmo = !ammo.isEmpty();
+						if(hans.hasAmmo)
+							ItemNBTHelper.setBoolean(smg, "shouldReload", true);
+
+					}
+				}
+				else
+
+				{
+					ItemStack s1 =
 					hans.hasAmmo = true;
 					hans.faceEntity(attackTarget, 30, 0);
-					IEContent.itemRailgun.onUsingTick(railgun, this.hans, this.rangedAttackTime++);
+					hans.rotationPitch = calculateBallisticAngle(s1, attackTarget);
+					ITEM_REVOLVER.onUsingTick(smg, this.hans, this.rangedAttackTime++);
 				}
-				hans.rotationPitch = calculateBallisticAngle(ammo, attackTarget);
-				IEContent.itemRailgun.onUpdate(railgun, this.hans.world, this.hans, 0, true);
-				sniper = ((ItemIIRailgunOverride)railgun.getItem()).getUpgrades(railgun).getBoolean("scope");
+				ITEM_REVOLVER.onUpdate(smg, this.hans.world, this.hans, 0, true);
+				 */
 
-				if(rangedAttackTime >= burstTime)
-				{
-
-					IEContent.itemRailgun.onPlayerStoppedUsing(railgun, this.hans.world, this.hans, IEContent.itemRailgun.getMaxItemUseDuration(railgun)-rangedAttackTime);
-					rangedAttackTime = -10;
-				}
 			}
 		}
-	}
 
-	private float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
-	{
-		if(ammo.getItem()==IIContent.itemRailgunGrenade)
-		{
-			return Utils.getDirectFireAngle(IIContent.itemRailgunGrenade.getDefaultVelocity(), IIContent.itemRailgunGrenade.getMass(ammo), hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(attackTarget.getPositionVector()));
-		}
-		else
-		{
-			return Utils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(attackTarget.getPositionVector()));
-		}
 	}
 
 	@Override
 	public void setRequiredAnimation()
 	{
-		if(attackTarget!=null&&!attackTarget.isDead&&(hans.getNavigator().noPath())&&seeTime > 10)
-			hans.legAnimation = (sniper&&!hans.enemyContact)?HansLegAnimation.LYING: HansLegAnimation.KNEELING;
+
+	}
+
+	private float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
+	{
+		return Utils.getDirectFireAngle(IIContent.itemAmmoRevolver.getDefaultVelocity(), IIContent.itemAmmoRevolver.getMass(ammo), hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(attackTarget.getPositionVector()));
 	}
 }

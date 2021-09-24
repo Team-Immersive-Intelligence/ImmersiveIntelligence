@@ -30,7 +30,12 @@ public class AIHansHolsterWeapon extends EntityAIBase
 	public boolean shouldExecute()
 	{
 		timer = Math.max(--timer, 0);
-		return timer==0&&((hans.getAttackTarget()==null)^(isWeapon(hans.getHeldItem(EnumHand.OFF_HAND))&&!isWeapon(hans.getHeldItem(EnumHand.MAIN_HAND))));
+		boolean w1 = isWeapon(hans.getHeldItem(EnumHand.OFF_HAND));
+		boolean w2 = isWeapon(hans.getHeldItem(EnumHand.MAIN_HAND));
+		if(!w1&&!w2)
+			return false;
+
+		return timer==0&&((hans.getAttackTarget()==null)^(w1&&!w2));
 	}
 
 	@Override

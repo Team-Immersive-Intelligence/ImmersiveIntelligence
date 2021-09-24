@@ -5,7 +5,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.math.MathHelper;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 
 /**
  * @author Pabilo8
@@ -13,8 +16,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
  */
 public class ModelHansBiped extends ModelPlayer
 {
-	public ModelRenderer leftHand, rightHand, leftFoot, rightFoot;
-	public ModelRenderer leftHandWear, rightHandWear, leftFootWear, rightFootWear;
+	public ModelRenderer bipedLeftHand, bipedRightHand, bipedLeftFoot, bipedRightFoot;
+	public ModelRenderer bipedLeftHandWear, bipedRightHandWear, bipedLeftFootWear, bipedRightFootWear;
+	private final ModelHansBiped bipedHelper;
 
 	public ModelHansBiped(float expand)
 	{
@@ -29,30 +33,31 @@ public class ModelHansBiped extends ModelPlayer
 						0, 16, 0, 16,
 						0, 48, 0, 32,
 						16, 16
-				)
+				), false
 		);
 	}
 
-	public ModelHansBiped(float expand, boolean slimArms, BipedTextureUVs uvs)
+	private ModelHansBiped(float expand, boolean slimArms, BipedTextureUVs uvs, boolean slave)
 	{
 		super(expand, slimArms);
 
-		this.leftHand = addLimb(this.bipedLeftArm, true, uvs.armLeftU, uvs.armLeftV, -1.0F, -2.0F, -2.0F, expand);
-		this.rightHand = addLimb(this.bipedRightArm, false, uvs.armRightU, uvs.armRightV, -3.0F, -2.0F, -2.0F, expand);
-		this.leftHandWear = addLimb(this.bipedLeftArmwear, true, uvs.armWearLeftU, uvs.armWearLeftV, -1.0F, -2.0F, -2.0F, expand+0.25F);
-		this.rightHandWear = addLimb(this.bipedRightArmwear, false, uvs.armWearRightU, uvs.armWearRightV, -3.0F, -2.0F, -2.0F, expand+0.25F);
+		this.bipedLeftHand = addLimb(this.bipedLeftArm, true, uvs.armLeftU, uvs.armLeftV, -1.0F, -2.0F, -2.0F, expand);
+		this.bipedRightHand = addLimb(this.bipedRightArm, false, uvs.armRightU, uvs.armRightV, -3.0F, -2.0F, -2.0F, expand);
+		this.bipedLeftHandWear = addLimb(this.bipedLeftArmwear, true, uvs.armWearLeftU, uvs.armWearLeftV, -1.0F, -2.0F, -2.0F, expand+0.25F);
+		this.bipedRightHandWear = addLimb(this.bipedRightArmwear, false, uvs.armWearRightU, uvs.armWearRightV, -3.0F, -2.0F, -2.0F, expand+0.25F);
 
-		this.leftFoot = addLimb(this.bipedLeftLeg, true, uvs.legLeftU, uvs.legLeftV, -2.0F, 0.0F, -2.0F, expand);
-		this.leftFoot.rotationPointY += 2;
-		this.rightFoot = addLimb(this.bipedRightLeg, false, uvs.legRightU, uvs.legRightV, -2.0F, 0.0F, -2.0F, expand);
-		this.rightFoot.rotationPointY += 2;
+		this.bipedLeftFoot = addLimb(this.bipedLeftLeg, true, uvs.legLeftU, uvs.legLeftV, -2.0F, 0.0F, -2.0F, expand);
+		this.bipedLeftFoot.rotationPointY += 2;
+		this.bipedRightFoot = addLimb(this.bipedRightLeg, false, uvs.legRightU, uvs.legRightV, -2.0F, 0.0F, -2.0F, expand);
+		this.bipedRightFoot.rotationPointY += 2;
 
 
-		this.leftFootWear = addLimb(this.bipedLeftLegwear, true, uvs.legWearLeftU, uvs.legWearLeftV, -2.0F, 0.0F, -2.0F, expand+0.25F);
-		this.leftFootWear.rotationPointY += 2;
-		this.rightFootWear = addLimb(this.bipedRightLegwear, false, uvs.legWearRightU, uvs.legWearRightV, -2.0F, 0.0F, -2.0F, expand+0.25F);
-		this.rightFootWear.rotationPointY += 2;
+		this.bipedLeftFootWear = addLimb(this.bipedLeftLegwear, true, uvs.legWearLeftU, uvs.legWearLeftV, -2.0F, 0.0F, -2.0F, expand+0.25F);
+		this.bipedLeftFootWear.rotationPointY += 2;
+		this.bipedRightFootWear = addLimb(this.bipedRightLegwear, false, uvs.legWearRightU, uvs.legWearRightV, -2.0F, 0.0F, -2.0F, expand+0.25F);
+		this.bipedRightFootWear.rotationPointY += 2;
 
+		this.bipedHelper = slave?null: new ModelHansBiped(expand, slimArms, uvs, true);
 	}
 
 	private ModelRenderer addLimb(ModelRenderer bipedLeftArm, boolean l, int u, int v, float x, float y, float z, float expand)
@@ -116,31 +121,204 @@ public class ModelHansBiped extends ModelPlayer
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
 	{
-		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+		bipedRightFoot.rotationPointX = 0f;
+		bipedLeftFoot.rotationPointX = 0f;
+		bipedRightFoot.rotationPointY = 6f;
+		bipedLeftFoot.rotationPointY = 6f;
+		bipedRightFoot.rotationPointZ = 0f;
+		bipedLeftFoot.rotationPointZ = 0f;
 
-		leftFoot.rotateAngleX = 0;
-		rightFoot.rotateAngleX = 0;
-		leftHand.rotateAngleX = 0;
-		rightHand.rotateAngleX = 0;
+		bipedRightFoot.rotateAngleX = 0;
+		bipedLeftFoot.rotateAngleX = 0;
+		bipedRightFoot.rotateAngleY = 0;
+		bipedLeftFoot.rotateAngleY = 0;
+		bipedRightFoot.rotateAngleZ = 0;
+		bipedLeftFoot.rotateAngleZ = 0;
+
+		bipedRightHand.rotateAngleX = 0;
+		bipedLeftHand.rotateAngleX = 0;
+		bipedRightHand.rotateAngleY = 0;
+		bipedLeftHand.rotateAngleY = 0;
+		bipedRightHand.rotateAngleZ = 0;
+		bipedLeftHand.rotateAngleZ = 0;
+
+		bipedRightArm.rotationPointY = 2f;
+		bipedLeftArm.rotationPointY = 2f;
+
+		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
 
 		if(entityIn instanceof EntityHans)
 		{
 			EntityHans hans = (EntityHans)entityIn;
-			if(hans.isKneeling)
+
+			if(hans.getLegAnimation()==hans.prevLegAnimation)
+				handleLegAnimation(hans, hans.getLegAnimation(), ageInTicks); //less overhead ^^
+			else
+			{
+				// TODO: 25.09.2021 optimize
+				//**lots** of overhead
+				copyModelAngles(this.bipedLeftLeg, bipedHelper.bipedLeftLeg);
+				copyModelAngles(this.bipedRightLeg, bipedHelper.bipedRightLeg);
+				copyModelAngles(this.bipedLeftArm, bipedHelper.bipedLeftArm);
+				copyModelAngles(this.bipedRightArm, bipedHelper.bipedRightArm);
+				copyModelAngles(this.bipedBody, bipedHelper.bipedBody);
+
+				handleLegAnimation(hans, hans.prevLegAnimation, ageInTicks);
+				bipedHelper.handleLegAnimation(hans, hans.getLegAnimation(), ageInTicks);
+				final float progress = 1f-MathHelper.clamp((hans.legAnimationTimer-(ageInTicks%1))/8f, 0, 1);
+
+				lerpModelAngles(bipedLeftLeg, bipedHelper.bipedLeftLeg, progress);
+				lerpModelAngles(bipedRightLeg, bipedHelper.bipedRightLeg, progress);
+				lerpModelAngles(bipedLeftArm, bipedHelper.bipedLeftArm, progress);
+				lerpModelAngles(bipedRightArm, bipedHelper.bipedRightArm, progress);
+				lerpModelAngles(bipedBody, bipedHelper.bipedBody, progress);
+
+				lerpModelAngles(bipedLeftFoot, bipedHelper.bipedLeftFoot, progress);
+				lerpModelAngles(bipedRightFoot, bipedHelper.bipedRightFoot, progress);
+				lerpModelAngles(bipedLeftHand, bipedHelper.bipedLeftHand, progress);
+				lerpModelAngles(bipedRightHand, bipedHelper.bipedRightHand, progress);
+			}
+
+		}
+
+		copyModelAngles(this.bipedLeftLeg, this.bipedLeftLegwear);
+		copyModelAngles(this.bipedRightLeg, this.bipedRightLegwear);
+		copyModelAngles(this.bipedLeftArm, this.bipedLeftArmwear);
+		copyModelAngles(this.bipedRightArm, this.bipedRightArmwear);
+		copyModelAngles(this.bipedBody, this.bipedBodyWear);
+
+		copyModelAngles(bipedLeftFoot, bipedLeftFootWear);
+		copyModelAngles(bipedRightFoot, bipedRightFootWear);
+		copyModelAngles(bipedLeftHand, bipedLeftHandWear);
+		copyModelAngles(bipedRightHand, bipedRightHandWear);
+	}
+
+	private void lerpModelAngles(ModelRenderer main, ModelRenderer second, float progress)
+	{
+		main.rotateAngleX = (float)MathHelper.clampedLerp(main.rotateAngleX, second.rotateAngleX, progress);
+		main.rotateAngleY = (float)MathHelper.clampedLerp(main.rotateAngleY, second.rotateAngleY, progress);
+		main.rotateAngleZ = (float)MathHelper.clampedLerp(main.rotateAngleZ, second.rotateAngleZ, progress);
+		main.rotationPointX = (float)MathHelper.clampedLerp(main.rotationPointX, second.rotationPointX, progress);
+		main.rotationPointY = (float)MathHelper.clampedLerp(main.rotationPointY, second.rotationPointY, progress);
+		main.rotationPointZ = (float)MathHelper.clampedLerp(main.rotationPointZ, second.rotationPointZ, progress);
+	}
+
+	private void handleLegAnimation(EntityHans hans, HansLegAnimation animation, float ageInTicks)
+	{
+		switch(animation)
+		{
+			default:
+			case STANDING:
+				break;
+			case LYING:
+			{
+				bipedBody.rotateAngleX += 1.5f;
+
+				float a1 = 1f-((bipedLeftLeg.rotateAngleX+0.3f)/0.6f);
+				float a2 = 1f-((bipedRightLeg.rotateAngleX+0.3f)/0.6f);
+
+				bipedRightLeg.rotateAngleY = -Math.abs(a1);
+				bipedLeftLeg.rotateAngleY = Math.abs(a2);
+
+				if(hans.getAttackTarget()==null)
+				{
+					bipedRightArm.rotateAngleY += Math.abs(a1*0.75f);
+					bipedLeftArm.rotateAngleY += Math.abs(a2*0.75f);
+				}
+
+				bipedLeftFoot.rotateAngleZ = bipedLeftLeg.rotateAngleY;
+				bipedRightFoot.rotateAngleZ = bipedRightLeg.rotateAngleY;
+
+				bipedRightLeg.rotateAngleX = 1.5f;
+				bipedLeftLeg.rotateAngleX = 1.5f;
+
+				bipedRightLeg.rotateAngleZ = 0f;
+				bipedLeftLeg.rotateAngleZ = 0f;
+
+				bipedRightArm.rotateAngleX = -1.57f;
+				bipedLeftArm.rotateAngleX = -1.57f;
+
+				bipedRightLeg.rotationPointY = 1f;
+				bipedLeftLeg.rotationPointY = 1f;
+
+				bipedRightArm.rotationPointY = 1f;
+				bipedLeftArm.rotationPointY = 1f;
+
+				bipedRightLeg.rotationPointZ = 12f;
+				bipedLeftLeg.rotationPointZ = 12f;
+			}
+			break;
+			case KNEELING:
 			{
 				bipedLeftLeg.rotateAngleX = -1.57f;
 				bipedLeftLegwear.rotateAngleX = -1.57f;
-				leftFoot.rotateAngleX = 1.65f;
+				bipedLeftFoot.rotateAngleX = 1.65f;
 
 				bipedRightLeg.rotateAngleX = 0.25f;
-				rightFoot.rotateAngleX = 1.65f-0.25f;
+				bipedRightFoot.rotateAngleX = 1.65f-0.25f;
 			}
-		}
+			break;
+			case SQUATTING:
+			{
+				bipedLeftLeg.rotateAngleX = -1.57f-0.25f;
+				bipedRightLeg.rotateAngleX = -1.57f-0.25f;
 
-		copyModelAngles(leftFoot, leftFootWear);
-		copyModelAngles(rightFoot, rightFootWear);
-		copyModelAngles(leftHand, leftHandWear);
-		copyModelAngles(rightHand, rightHandWear);
+				bipedRightLeg.rotateAngleY = 0.625f;
+				bipedLeftLeg.rotateAngleY = -0.625f;
+
+				bipedRightLeg.rotationPointZ = 2f;
+				bipedLeftLeg.rotationPointZ = 2f;
+
+				bipedLeftFoot.rotateAngleX = 1.57f+0.425f;
+				bipedRightFoot.rotateAngleX = 1.57f+0.425f;
+
+				bipedBody.rotateAngleX = 0.3f;
+				//bipedBody.rotationPointZ = 10f;
+
+				bipedRightArm.rotateAngleX = -0.45f;
+				bipedRightArm.rotateAngleY = 0.45f;
+
+				bipedLeftArm.rotateAngleX = -0.45f;
+				bipedLeftArm.rotateAngleY = -0.45f;
+
+				bipedRightHand.rotateAngleX = -0.75f;
+				bipedLeftHand.rotateAngleX = -0.75f;
+			}
+			break;
+			case KAZACHOK:
+			{
+				float v = (ageInTicks%22)/22f;
+				float v1 = v < 0.5f?v*2f: 1f;
+				float v2 = v > 0.5f?(v-0.5f)/0.5f: 0;
+
+				bipedRightLeg.rotateAngleY = 0.25f;
+				bipedLeftLeg.rotateAngleY = -0.25f;
+
+				final float kickLeg = -1.57f+0.25f;
+				final float landLeg = -1.57f-0.25f;
+				final float kickFoot = 1.57f+0.35f;
+
+				bipedLeftLeg.rotateAngleX = Utils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
+				bipedRightLeg.rotateAngleX = Utils.clampedLerp3Par(kickLeg, landLeg-v1*0.125f, kickLeg, v2);
+
+				bipedLeftFoot.rotateAngleX = Utils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v1);
+				bipedRightFoot.rotateAngleX = Utils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v2);
+
+				bipedBody.rotateAngleX = -0.1f;
+
+				bipedRightArm.rotateAngleX = -1.57f;
+				bipedRightArm.rotateAngleY = -0.95f;
+				bipedRightHand.rotateAngleX = -0.125f;
+				bipedRightHand.rotateAngleZ = -0.35f;
+
+				bipedLeftArm.rotateAngleX = -1.57f;
+				bipedLeftArm.rotateAngleY = 0.95f;
+
+				bipedLeftHand.rotateAngleX = -0.125f;
+				bipedLeftHand.rotateAngleZ = 0.35f;
+			}
+			break;
+		}
 	}
 
 	@Override
@@ -167,7 +345,18 @@ public class ModelHansBiped extends ModelPlayer
 	@Override
 	public void postRenderArm(float scale, EnumHandSide side)
 	{
-		super.postRenderArm(scale, side);
+		ModelRenderer hand = side==EnumHandSide.LEFT?bipedLeftHand: bipedRightHand;
+		ModelRenderer arm = this.getArmForSide(side);
+
+		float f = 0.5F*(float)(side==EnumHandSide.RIGHT?1: -1);
+		arm.rotationPointX += f;
+		hand.rotationPointY -= 3;
+		hand.rotationPointZ += 1;
+		arm.postRender(scale);
+		hand.postRender(scale);
+		hand.rotationPointY += 3;
+		hand.rotationPointZ -= 1;
+		arm.rotationPointX -= f;
 	}
 
 	//stolen from the Betweenlands,

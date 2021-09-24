@@ -13,11 +13,14 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelHansBiped;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 
 /**
  * @author Pabilo8
@@ -46,6 +49,7 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 		GlStateManager.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 
+	@Override
 	public void doRender(EntityHans entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		/*
@@ -54,15 +58,14 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 		 */
 
 		double d0 = y;
-
-		if(entity.isKneeling)
-		{
-			d0 = y-0.25D;
-		}
-		else if(entity.isSneaking())
-		{
-			d0 = y-0.125D;
-		}
+		if(entity.prevLegAnimation==entity.legAnimation)
+			d0 += getOffsetForPose(entity, entity.getLegAnimation());
+		else
+			d0 += MathHelper.clampedLerp(
+					getOffsetForPose(entity, entity.prevLegAnimation),
+					getOffsetForPose(entity, entity.getLegAnimation()),
+					1f-MathHelper.clamp((entity.legAnimationTimer-partialTicks)/8f,0,1)
+			);
 
 		this.setModelVisibilities(entity);
 
@@ -156,12 +159,37 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 	@Override
 	public void reloadModels()
 	{
-		this.mainModel= new ModelHansBiped(0.0f, false);
+		this.mainModel = new ModelHansBiped(0.0f, false);
 		this.layerRenderers.clear();
 		this.addLayer(new LayerHansEmotions(this));
 		this.addLayer(new LayerHansTeamOverlay(this));
 		this.addLayer(new LayerArrow(this));
 		this.addLayer(new LayerBipedArmor(this));
 		this.addLayer(new LayerHansHeldItem(this));
+	}
+
+	public double getOffsetForPose(EntityHans entity, HansLegAnimation animation)
+	{
+		switch(animation)
+		{
+			case LYING:
+				return -1.25D;
+			case SQUATTING:
+				return -0.385D;
+			case SNEAKING:
+				return -0.125D;
+			case KNEELING:
+				return -0.25D;
+			case KAZACHOK:
+			{
+				float v = (entity.ticksExisted%22)/22f;
+				float v1 = v < 0.5f?v*2f: 1f;
+				float v2 = v > 0.5f?(v-0.5f)/0.5f: 0;
+
+				return -0.325f+Utils.clampedLerp3Par(0, 0.0725f, 0, v1)+Utils.clampedLerp3Par(0, 0.0725f, 0, v2);
+			}
+			default:
+				return 0;
+		}
 	}
 }

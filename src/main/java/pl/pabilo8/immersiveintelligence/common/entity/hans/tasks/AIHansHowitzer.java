@@ -48,10 +48,16 @@ public class AIHansHowitzer extends EntityAIBase
 			howitzer= ((EntityFieldHowitzer)hans.getRidingEntity().getRidingEntity());
 		}
 		else
+		{
+			hans.tasks.removeTask(this);
 			return false;
+		}
 
 		if(howitzer==null||howitzer.isDead)
+		{
+			hans.tasks.removeTask(this);
 			return false;
+		}
 
 		if(seat==0)
 			target= Optional.ofNullable(hans.getAttackTarget());

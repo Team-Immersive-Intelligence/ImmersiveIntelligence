@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -57,11 +58,21 @@ public class HansUtils
 		hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
 	}
 
-	public static void setParachute(EntityHans hans)
+	public static void setParachute(Entity entity)
 	{
-		EntityParachute para = new EntityParachute(hans.getEntityWorld());
-		para.setPosition(hans.posX,hans.posY,hans.posZ);
-		hans.world.spawnEntity(para);
-		hans.startRiding(para);
+		EntityParachute para = new EntityParachute(entity.getEntityWorld());
+		para.setPosition(entity.posX,entity.posY,entity.posZ);
+		entity.world.spawnEntity(para);
+		entity.startRiding(para);
+	}
+
+	public static String getGermanTimeName(long time)
+	{
+		if(time < 11500)
+			return "Morgen";
+		else if(time < 18000)
+			return "Tag";
+		else
+			return "Abend";
 	}
 }
