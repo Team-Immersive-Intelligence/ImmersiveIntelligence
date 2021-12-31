@@ -123,7 +123,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	public void init(TileEntityEmplacement te, boolean firstTime)
 	{
 		super.init(te, firstTime);
-		EnumFacing facing = EnumFacing.fromAngle(yaw).getOpposite();
+		EnumFacing facing = EnumFacing.fromAngle(MathHelper.wrapDegrees(yaw));
 		Vec3i vv = facing.getDirectionVec();
 		Vec3i vv2 = facing.rotateY().getDirectionVec();
 		vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5)
@@ -134,7 +134,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	}
 
 	@Override
-	public void tick(TileEntityEmplacement te)
+	public void tick(TileEntityEmplacement te, boolean active)
 	{
 
 	}
@@ -379,6 +379,13 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			requiresPlatformRefill = false;
 			syncWithClient(te);
 		}
+
+		EnumFacing facing = EnumFacing.fromAngle(MathHelper.wrapDegrees(yaw)).getOpposite();
+		Vec3i vv = facing.getDirectionVec();
+		Vec3i vv2 = facing.rotateY().getDirectionVec();
+		vision = new AxisAlignedBB(te.getPos()).offset(-0.5, 0, -0.5)
+				.expand(vv.getX()*InfraredObserver.detectionRadius, 0, vv.getZ()*InfraredObserver.detectionRadius)
+				.grow(vv2.getX()*InfraredObserver.detectionRadius, InfraredObserver.detectionRadius, vv2.getZ()*InfraredObserver.detectionRadius);
 	}
 
 	@Override

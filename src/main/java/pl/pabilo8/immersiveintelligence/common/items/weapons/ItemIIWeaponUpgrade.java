@@ -363,5 +363,22 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.bottomLoaderBox);
 				}
 		);
+
+		SubmachinegunItemStackRenderer.upgrades.put(
+				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("folding_stock")),
+				(stack, tmtNamedBoxGroups) ->
+				{
+					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.stockBox);
+
+					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.foldingStockHolderBox);
+					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.foldingStockBox);
+				}
+		);
+
+		SubmachinegunItemStackRenderer.upgrades.put(
+				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getInteger("melee") > 0),
+				(stack, tmtNamedBoxGroups) ->
+						tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.bayonetBox)
+		);
 	}
 }

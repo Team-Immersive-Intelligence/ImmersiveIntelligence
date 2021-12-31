@@ -19,6 +19,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
@@ -77,6 +79,7 @@ public class ItemIINavalMine extends ItemIIBulletBase implements IItemScrollable
 		return 16f;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public @Nonnull
 	Class<? extends IBulletModel> getModel()
@@ -115,6 +118,7 @@ public class ItemIINavalMine extends ItemIIBulletBase implements IItemScrollable
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		return new ArrayList<>();

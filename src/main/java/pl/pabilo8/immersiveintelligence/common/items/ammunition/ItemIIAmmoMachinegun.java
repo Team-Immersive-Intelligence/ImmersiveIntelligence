@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
@@ -59,6 +61,7 @@ public class ItemIIAmmoMachinegun extends ItemIIBulletBase
 		return 2f;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public @Nonnull Class<? extends IBulletModel> getModel()
 	{

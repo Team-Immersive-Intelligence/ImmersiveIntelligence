@@ -237,7 +237,8 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 
 		if(world.getTotalWorldTime()%6==0)
 		{
-			world.playSound(null,posX,posY,posZ,IISounds.bullet_wind,getSoundCategory(),1,1);
+			// TODO: 25.09.2021 proper flyby sound
+			//world.playSound(null,posX,posY,posZ,IISounds.bullet_wind,getSoundCategory(),0.25f,1);
 			//playFlySound(0);
 		}
 

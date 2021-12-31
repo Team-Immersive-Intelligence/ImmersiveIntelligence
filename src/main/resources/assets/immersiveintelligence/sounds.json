@@ -275,6 +275,27 @@
     ],
     "subtitle": "subtitle.immersiveintelligence.vulcanizer_motor"
   },
+  "chemical_painter_lights": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:lamp"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.chemical_painter_lights"
+  },
+  "chemical_painter_lift_up": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:inserter/inserter_forward"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.chemical_painter_lift_up"
+  },
+  "chemical_painter_lift_down": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:inserter/inserter_backward"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.chemical_painter_lift_down"
+  },
   "autocannon_firing": {
     "category": "block",
     "sounds": [
@@ -414,8 +435,6 @@
       "immersiveintelligence:emplacement/door_push"
     ]
   },
-
-
   "mine_detector": {
     "category": "block",
     "sounds": [
@@ -528,9 +547,9 @@
   "impact_foliage": {
     "category": "block",
     "sounds": [
-      "immersiveintelligence:block_hit/metal/impact0",
-      "immersiveintelligence:block_hit/metal/impact1",
-      "immersiveintelligence:block_hit/metal/impact2"
+      "immersiveintelligence:block_hit/foliage/impact0",
+      "immersiveintelligence:block_hit/foliage/impact1",
+      "immersiveintelligence:block_hit/foliage/impact2"
     ],
     "subtitle": "subtitle.immersiveintelligence.bullet_impact"
   },
@@ -568,5 +587,60 @@
       "immersiveintelligence:construction/hammer/hammer6"
     ],
     "subtitle": "subtitle.immersiveintelligence.hammer_construction"
+  },
+  "grenade_throw": {
+    "sounds": [
+      "immersiveintelligence:grenade_throw"
+    ]
+  },
+  "bullet_wind": {
+    "sounds": [
+      "immersiveintelligence:bullet_wind"
+    ]
+  },
+  "drawer_open": {
+    "sounds": [
+      "immersiveintelligence:machine_hatch/drawer/open0",
+      "immersiveintelligence:machine_hatch/drawer/open1",
+      "immersiveintelligence:machine_hatch/drawer/open2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.drawer_open"
+  },
+  "drawer_close": {
+    "sounds": [
+      "immersiveintelligence:machine_hatch/drawer/close0",
+      "immersiveintelligence:machine_hatch/drawer/close1",
+      "immersiveintelligence:machine_hatch/drawer/close2",
+      "immersiveintelligence:machine_hatch/drawer/close3"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.drawer_close"
+  },
+  "metal_breadbox_open": {
+    "sounds": [
+      "immersiveintelligence:vulcanizer/pull_start"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.metal_locker_open"
+  },
+  "metal_breadbox_close": {
+    "sounds": [
+      "immersiveintelligence:vulcanizer/pull_end"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.metal_locker_close"
+  },
+  "metal_locker_open": {
+    "sounds": [
+      "immersiveintelligence:machine_hatch/locker/open0",
+      "immersiveintelligence:machine_hatch/locker/open1",
+      "immersiveintelligence:machine_hatch/locker/open2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.metal_locker_open"
+  },
+  "metal_locker_close": {
+    "sounds": [
+      "immersiveintelligence:machine_hatch/locker/close0",
+      "immersiveintelligence:machine_hatch/locker/close1",
+      "immersiveintelligence:machine_hatch/locker/close2"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.metal_locker_close"
   }
 }

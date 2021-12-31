@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,8 +28,8 @@ public class EntityParachute extends Entity
 	public EntityParachute(World worldIn)
 	{
 		super(worldIn);
-		width=4.5f;
-		height=2f;
+		width = 4.5f;
+		height = 2f;
 	}
 
 	@Override
@@ -38,18 +39,19 @@ public class EntityParachute extends Entity
 
 		Entity controllingPassenger = getControllingPassenger();
 
-		if(!world.isRemote&&(controllingPassenger==null||controllingPassenger.getRidingEntity()!=this))
+		if((controllingPassenger==null||controllingPassenger.getRidingEntity()!=this))
 		{
-			setDead();
+			if(!world.isRemote)
+				setDead();
+			return;
 		}
 
-		if(controllingPassenger!=null)
-			controllingPassenger.fallDistance = 0F;
+		controllingPassenger.fallDistance = 0F;
 
-		time=Math.max(time-1,0);
+		time = Math.max(time-1, 0);
 
 		//motionY = 0;
-		motionY = time>0?-0.625:-0.2;
+		motionY = time > 0?-0.625: -0.2;
 
 		if(controllingPassenger instanceof EntityLivingBase)
 		{
@@ -67,11 +69,14 @@ public class EntityParachute extends Entity
 
 		move(MoverType.SELF, motionX, motionY, motionZ);
 
+
 		IBlockState state = world.getBlockState(getPosition().down(7));
 		if(!state.getBlock().isAir(state, world, getPosition().down(7)))
 		{
-			setDead();
+			Vec3d vv = new Vec3d(this.posX, this.posY+1+this.getMountedYOffset()+controllingPassenger.getYOffset(), this.posZ);
 			removePassengers();
+			setDead();
+			controllingPassenger.setPositionAndUpdate(vv.x, vv.y, vv.z);
 		}
 		else
 			isAirBorne = true;
@@ -126,13 +131,13 @@ public class EntityParachute extends Entity
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
 		if(compound.hasKey("health"))
-			health=compound.getInteger("health");
+			health = compound.getInteger("health");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
-		compound.setInteger("health",health);
+		compound.setInteger("health", health);
 	}
 
 	@Override
@@ -146,8 +151,8 @@ public class EntityParachute extends Entity
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float f)
 	{
-		health-=f;
-		if(health<=0||source.isExplosion())
+		health -= f;
+		if(health <= 0||source.isExplosion())
 		{
 			setDead();
 			removePassengers();
@@ -159,7 +164,7 @@ public class EntityParachute extends Entity
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return this.getEntityBoundingBox().expand(0,-6,0);
+		return this.getEntityBoundingBox().expand(0, -6, 0);
 	}
 
 	@Override

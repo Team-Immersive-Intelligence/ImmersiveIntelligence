@@ -74,7 +74,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Nonnull
 	NonNullList<ItemStack> inventory;
 	@Nonnull
-	IItemHandler insertionHandler;
+	public IItemHandler insertionHandler;
 
 	@Override
 	public EnumFacing getFacing()
@@ -326,9 +326,10 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
 			return true;
 		}
-		else if(open)
+		else if(open&&isSupplied())
 		{
 			affectEntityBasic(player);
+			useSupplies();
 			return true;
 		}
 

@@ -1169,13 +1169,13 @@ public class Config
 				public static int setupTime = 50;
 
 				@Comment({"Max scatter of heat, higher values will force the player to wait until the gun cools down."})
-				public static int maxOverheat = 100;
+				public static int maxOverheat = 250;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
-				public static float recoilHorizontal = 4f;
+				public static float recoilHorizontal = 2.5f;
 
 				@Comment({"Amount of vertical recoil after taking a shot."})
-				public static float recoilVertical = 4f;
+				public static float recoilVertical = 2.5f;
 
 				@Comment({"Fire rate multiplier when heavy barrel is mouted on mg."})
 				public static float heavyBarrelFireRateMultiplier = 0.25f;
@@ -1194,13 +1194,13 @@ public class Config
 				public static int waterCoolingTankCapacity = 4000;
 
 				@Comment({"Setup time multiplier when the mg is mounted on a tripod."})
-				public static float tripodSetupTimeMultiplier = 4f;
+				public static float tripodSetupTimeMultiplier = 2.5f;
 
 				@Comment({"Recoil multiplier when the mg is mounted on a tripod."})
 				public static float tripodRecoilMultiplier = 0.125f;
 
 				@Comment({"Setup time multiplier when the precise bipod is mouted on mg."})
-				public static float preciseBipodSetupTimeMultiplier = 2f;
+				public static float preciseBipodSetupTimeMultiplier = 1.5f;
 
 				@Comment({"Recoil multiplier when the precise bipod is mouted on mg."})
 				public static float preciseBipodRecoilMultiplier = 0.25f;

@@ -271,6 +271,7 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();

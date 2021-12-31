@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponCPDS.getInterceptTime;
+
 public class EmplacementWeaponAutocannon extends EmplacementWeapon
 {
 	private AxisAlignedBB vision;
@@ -127,7 +129,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		s2 = magazine.size() > 0?magazine.peekFirst(): ItemStack.EMPTY;
 		float mass = s2.isEmpty()?0: IIContent.itemAmmoAutocannon.getMass(s2);
 
-		vv = posTurret.subtract(posTarget.add(motion));
+		vv = posTurret.subtract(posTarget.add(motion.scale(getInterceptTime(force, posTurret.subtract(posTarget), motion))));
 
 		double dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
 		double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC;
@@ -157,9 +159,9 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 	}
 
 	@Override
-	public void tick(TileEntityEmplacement te)
+	public void tick(TileEntityEmplacement te, boolean active)
 	{
-		if(magazine.isEmpty())
+		if(active&&magazine.isEmpty())
 		{
 			if(reloadDelay==0)
 			{
@@ -195,15 +197,21 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			}
 			else if(te.getWorld().isRemote)
 			{
-				if(reloadDelay==reloadTimers[0]||reloadDelay==reloadTimers[1]||reloadDelay==reloadTimers[2]||reloadDelay==reloadTimers[3])
-					te.getWorld().playSound(ClientUtils.mc().player, te.getBlockPosForPos(49), IISounds.autocannon_unload, SoundCategory.NEUTRAL, 1, 0.75f);
-				if(reloadDelay==reloadTimers[4]||reloadDelay==reloadTimers[5]||reloadDelay==reloadTimers[6]||reloadDelay==reloadTimers[7])
-					te.getWorld().playSound(ClientUtils.mc().player, te.getBlockPosForPos(49), IISounds.autocannon_reload, SoundCategory.NEUTRAL, 1, 0.75f);
+				playSoundsClient(te);
 			}
 		}
 
 		if(shootDelay > 0)
 			shootDelay--;
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void playSoundsClient(TileEntityEmplacement te)
+	{
+		if(reloadDelay==reloadTimers[0]||reloadDelay==reloadTimers[1]||reloadDelay==reloadTimers[2]||reloadDelay==reloadTimers[3])
+			te.getWorld().playSound(ClientUtils.mc().player, te.getBlockPosForPos(49), IISounds.autocannon_unload, SoundCategory.NEUTRAL, 1, 0.75f);
+		if(reloadDelay==reloadTimers[4]||reloadDelay==reloadTimers[5]||reloadDelay==reloadTimers[6]||reloadDelay==reloadTimers[7])
+			te.getWorld().playSound(ClientUtils.mc().player, te.getBlockPosForPos(49), IISounds.autocannon_reload, SoundCategory.NEUTRAL, 1, 0.75f);
 	}
 
 	@Override

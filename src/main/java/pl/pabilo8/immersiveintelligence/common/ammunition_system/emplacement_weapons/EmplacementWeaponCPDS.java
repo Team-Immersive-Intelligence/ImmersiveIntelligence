@@ -163,10 +163,10 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		s2 = magazine.size() > 0?magazine.peekFirst(): ItemStack.EMPTY;
 		float mass = s2.isEmpty()?0: IIContent.itemAmmoMachinegun.getMass(s2);
 
-		vv = posTurret.subtract(posTarget.add(motion));
+		vv = posTurret.subtract(posTarget.add(motion.scale(1+getInterceptTime(force, posTurret.subtract(posTarget), motion))));
 
 		double dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
-		double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC = baseMotionY;
+		double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC;
 		while(dist > 0)
 		{
 			force -= EntityBullet.DRAG*force*EntityBullet.DEV_SLOMO;
@@ -185,6 +185,56 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		return new float[]{yy, pp};
 	}
 
+	// TODO: 26.12.2021 drag factor
+	/**
+	 * https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/
+	 * Originally written in C#
+	 *
+	 * @param bulletVelocity       velocity of the bullet
+	 * @param targetPosRelative
+	 * @param targetMotionRelative
+	 * @return
+	 * @author JamesLeeNZ
+	 */
+	public static double getInterceptTime(float bulletVelocity, Vec3d targetPosRelative, Vec3d targetMotionRelative)
+	{
+		double velocitySquared = targetMotionRelative.lengthSquared();
+		if(velocitySquared < 0.001f)
+			return 0f;
+
+		double a = velocitySquared-bulletVelocity*bulletVelocity;
+
+		//handle similar velocities
+		if(Math.abs(a) < 0.001f)
+		{
+			double t = -targetPosRelative.lengthSquared()/(2f*targetMotionRelative.dotProduct(targetPosRelative));
+			return Math.max(t, 0f); //don't shoot back in time
+		}
+
+		double b = 2f*targetMotionRelative.dotProduct(targetPosRelative);
+		double c = targetPosRelative.lengthSquared();
+		double determinant = b*b-4f*a*c;
+
+		if(determinant > 0f)
+		{ //determinant > 0; two intercept paths (most common)
+			double t1 = (-b+Math.sqrt(determinant))/(2f*a),
+					t2 = (-b-Math.sqrt(determinant))/(2f*a);
+			if(t1 > 0f)
+			{
+				if(t2 > 0f)
+					return Math.min(t1, t2); //both are positive
+				else
+					return t1; //only t1 is positive
+			}
+			else
+				return Math.max(t2, 0f); //don't shoot back in time
+		}
+		else if(determinant < 0f) //determinant < 0; no intercept path
+			return 0f;
+		else //determinant = 0; one intercept path, pretty much never happens
+			return Math.max(-b/(2f*a), 0f); //don't shoot back in time
+	}
+
 	@Override
 	public void init(TileEntityEmplacement te, boolean firstTime)
 	{
@@ -193,9 +243,9 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	}
 
 	@Override
-	public void tick(TileEntityEmplacement te)
+	public void tick(TileEntityEmplacement te, boolean active)
 	{
-		if(magazine.isEmpty())
+		if(active&&magazine.isEmpty())
 		{
 			if(reloadDelay==0)
 			{
@@ -293,8 +343,13 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.hatchModel)
 			mod.render();
 
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 31.5f/16f, -2.5f/16f);
+		float idle = MathHelper.cos((te.getWorld().getTotalWorldTime()+partialTicks)%2000*0.09F)*0.05F+0.05F;
+		GlStateManager.rotate(isAimedAt(nextYaw, nextPitch)?(idle*225-35): this.nextPitch, 1, 0, 0);
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelCPDS.observeModel)
 			mod.render();
+		GlStateManager.popMatrix();
 
 		GlStateManager.translate(0, 19.5/16f, 7.5F/16f);
 		GlStateManager.rotate(pp, 1, 0, 0);

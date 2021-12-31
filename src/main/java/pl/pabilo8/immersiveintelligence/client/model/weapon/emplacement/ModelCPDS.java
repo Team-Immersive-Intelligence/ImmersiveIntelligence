@@ -629,6 +629,7 @@ public class ModelCPDS extends ModelIIBase
 		{
 			translate(gunModel,0f, 19.50F, 7.5F);
 			translate(barrelsModel,0f, 19F, 6F);
+			translate(observeModel,0,31.5f,-2.5f);
 		}
 
 		flipAll();

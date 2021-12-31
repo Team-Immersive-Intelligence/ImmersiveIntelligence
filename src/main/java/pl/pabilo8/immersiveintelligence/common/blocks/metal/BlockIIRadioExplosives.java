@@ -8,6 +8,11 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -78,6 +83,7 @@ public class BlockIIRadioExplosives extends BlockIIMine
 			return 10f;
 		}
 
+		@SideOnly(Side.CLIENT)
 		@Override
 		public @Nonnull
 		Class<? extends IBulletModel> getModel()

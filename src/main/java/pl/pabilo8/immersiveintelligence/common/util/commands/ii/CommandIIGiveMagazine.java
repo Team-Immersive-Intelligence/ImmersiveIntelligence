@@ -76,8 +76,7 @@ public class CommandIIGiveMagazine extends CommandBase
 			{
 				ItemStack bulletWithParams = casing.getBulletWithParams(core, coreType, components.toArray(new IBulletComponent[0]));
 				NonNullList<ItemStack> l = NonNullList.withSize(ItemIIBulletMagazine.getBulletCapactity(magazine), bulletWithParams);
-				NBTTagList list = blusunrize.immersiveengineering.common.util.Utils.writeInventory(l);
-				ItemNBTHelper.getTag(magazine).setTag("bullets", list);
+				ItemNBTHelper.getTag(magazine).setTag("bullets", ItemIIBulletMagazine.writeInventory(l));
 				ItemIIBulletMagazine.makeDefault(magazine);
 				player.addItemStackToInventory(magazine);
 				sender.sendMessage(new TextComponentString("Magazine given!"));

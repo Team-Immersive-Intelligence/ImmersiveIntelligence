@@ -283,16 +283,20 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
+		TileEntityArithmeticLogicMachine master = master();
+		if(master==null)
+			return;
+
 		if(pos==2)
 		{
-			master().onReceive(packet, EnumFacing.DOWN);
+			master.onReceive(packet, EnumFacing.DOWN);
 		}
 		else if(pos==3)
 		{
-			master().onReceive(packet, EnumFacing.UP);
+			master.onReceive(packet, EnumFacing.UP);
 		}
 
-		if(this.pos==8&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
+		if(!isDummy()&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
 		{
 			DataPacket new_packet = packet.clone();
 			energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);

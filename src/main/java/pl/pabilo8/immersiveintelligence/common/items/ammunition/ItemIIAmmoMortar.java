@@ -71,9 +71,10 @@ public class ItemIIAmmoMortar extends ItemIIBulletBase
 		return 6f;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public @Nonnull
-	Class<? extends IBulletModel> getModel()
+	@Nonnull
+	public Class<? extends IBulletModel> getModel()
 	{
 		return ModelBulletMortar6bCal.class;
 	}
@@ -153,6 +154,7 @@ public class ItemIIAmmoMortar extends ItemIIBulletBase
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();
@@ -172,6 +174,7 @@ public class ItemIIAmmoMortar extends ItemIIBulletBase
 		return a;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void doPuff(EntityBullet bullet)
 	{
 		for(int i = 0; i < 20; i += 1)

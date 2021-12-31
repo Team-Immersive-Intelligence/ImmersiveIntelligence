@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponCPDS.getInterceptTime;
+
 public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 {
 	/**
@@ -153,13 +155,15 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
 		s2 = magazine.size() > 0?magazine.peekFirst(): ItemStack.EMPTY;
-		vv = posTurret.subtract(posTarget.add(motion));
 
-		double dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
+		double dist;
 		if(s2.getItem()==IIContent.itemRailgunGrenade)
 		{
 			float force = IIContent.itemRailgunGrenade.getDefaultVelocity()*3;
 			float mass = s2.isEmpty()?0: IIContent.itemRailgunGrenade.getMass(s2);
+
+			vv = posTurret.subtract(posTarget.add(motion.scale(getInterceptTime(force, posTurret.subtract(posTarget), motion))));
+			dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
 
 			double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC = baseMotionY;
 			while(dist > 0)
@@ -174,6 +178,8 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 		}
 		else
 		{
+			vv = posTurret.subtract(posTarget.add(motion));
+			dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
 			RailgunProjectileProperties p = RailgunHandler.getProjectileProperties(s2);
 			if(p!=null)
 			{
@@ -227,9 +233,9 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 	}
 
 	@Override
-	public void tick(TileEntityEmplacement te)
+	public void tick(TileEntityEmplacement te, boolean active)
 	{
-		if(magazine.isEmpty())
+		if(active&&magazine.isEmpty())
 		{
 			if(reloadDelay==0)
 			{

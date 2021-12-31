@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
 
@@ -63,6 +65,7 @@ public class BlockIITellermine extends BlockIIMine
 			return 10f;
 		}
 
+		@SideOnly(Side.CLIENT)
 		@Override
 		public @Nonnull
 		Class<? extends IBulletModel> getModel()

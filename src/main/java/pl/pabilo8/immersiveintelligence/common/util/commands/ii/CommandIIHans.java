@@ -101,7 +101,7 @@ public class CommandIIHans extends CommandBase
 						HansUtils.setHelmet(hans, ArmorUpgrades.GASMASK);
 
 						ItemStack magazine = ItemIIBulletMagazine.getMagazine("submachinegun_drum", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing"));
-						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING, WeaponUpgrades.STURDY_BARREL, WeaponUpgrades.SUPPRESSOR);
+						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING, WeaponUpgrades.FOLDING_STOCK, WeaponUpgrades.SUPPRESSOR);
 						hans.mainInventory.set(0, magazine.copy());
 						hans.mainInventory.set(1, magazine.copy());
 					}
@@ -307,11 +307,13 @@ public class CommandIIHans extends CommandBase
 			if(server.getEntityWorld().isRemote||args.length < 1)
 				throw new Exception();
 
+			World world = sender.getEntityWorld();
+
 			Entity commandSenderEntity = sender.getCommandSenderEntity();
 			Vec3d spawnPosition = getSpawnPosition(sender);
 			HansSquad squad = squadList.get(new ResourceLocation(args[0]));
 			int amount = args.length > 1?Integer.parseInt(args[1]): 1;
-			Team team = args.length > 2?server.getEntityWorld().getScoreboard().getTeam(args[2]): null;
+			Team team = args.length > 2?world.getScoreboard().getTeam(args[2]): null;
 			boolean parachute = args.length > 3&&Boolean.parseBoolean(args[3]);
 			float yaw = 0, pitch = 0;
 			if(commandSenderEntity!=null)
@@ -326,7 +328,7 @@ public class CommandIIHans extends CommandBase
 
 			if(squad!=null)
 			{
-				EntityHans hans = squad.spawnHanses(server.getEntityWorld(), spawnPosition, amount, team, parachute, yaw, pitch);
+				EntityHans hans = squad.spawnHanses(world, spawnPosition, amount, team, parachute, yaw, pitch);
 
 				if(commandSenderEntity!=null)
 				{
@@ -562,8 +564,8 @@ public class CommandIIHans extends CommandBase
 		@Override
 		protected EntityHans addCrewmen(World world, Vec3d pos, Team team, boolean parachute, EntityFieldHowitzer teamWeapon)
 		{
-			EntityHans hans1 = createCrewman(world, pos.addVector(parachute?8:0,0,0), team, parachute);
-			EntityHans hans2 = createCrewman(world, pos.addVector(parachute?-8:0,0,0), team, parachute);
+			EntityHans hans1 = createCrewman(world, pos.addVector(parachute?8: 0, 0, 0), team, parachute);
+			EntityHans hans2 = createCrewman(world, pos.addVector(parachute?-8: 0, 0, 0), team, parachute);
 
 			if(parachute)
 			{
@@ -577,6 +579,12 @@ public class CommandIIHans extends CommandBase
 			}
 
 			return hans1;
+		}
+
+		@Override
+		protected boolean isAirDroppable()
+		{
+			return true;
 		}
 	}
 

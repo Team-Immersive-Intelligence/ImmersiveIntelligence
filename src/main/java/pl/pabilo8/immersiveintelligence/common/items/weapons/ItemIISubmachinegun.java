@@ -5,10 +5,13 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -16,7 +19,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -38,7 +40,6 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
@@ -47,6 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemReloadMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.MessageParticleGunfire;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -88,7 +90,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		String skin = getSkinnableCurrentSkin(stack);
@@ -99,14 +101,13 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		}
 	}
 
+	@Nonnull
 	@Override
-	public IRarity getForgeRarity(ItemStack stack)
+	public IRarity getForgeRarity(@Nonnull ItemStack stack)
 	{
 		String skin = getSkinnableCurrentSkin(stack);
 		if(!skin.isEmpty()&&CustomSkinHandler.specialSkins.containsKey(skin))
-		{
 			return CustomSkinHandler.specialSkins.get(skin).rarity;
-		}
 		return super.getForgeRarity(stack);
 	}
 
@@ -126,10 +127,8 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 			ItemNBTHelper.setFloat(stack, "recoilV", MathHelper.clamp(recoilV-(Math.signum(recoilV)*(Math.min(Math.abs(recoilV), 1f))), -Submachinegun.recoilVertical, Submachinegun.recoilVertical));
 
 			if(worldIn.isRemote)
-			{
 				if(!ItemNBTHelper.getBoolean(stack, "shouldReload")&&ClientProxy.keybind_manualReload.isKeyDown())
 					IIPacketHandler.INSTANCE.sendToServer(new MessageItemReloadMagazine());
-			}
 
 			int currentAim = ItemNBTHelper.getInt(stack, "aiming");
 			int fireDelay = ItemNBTHelper.getInt(stack, "fireDelay");
@@ -145,7 +144,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				if(!magazine.isEmpty())
 				{
 					reloading += 1;
-					if(reloading >= Submachinegun.clipReloadTime)
+					if(reloading >= (ItemNBTHelper.getBoolean(stack, "isDrum")?Submachinegun.drumReloadTime: Submachinegun.clipReloadTime))
 					{
 						shouldReload = false;
 						reloading = 0;
@@ -167,7 +166,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				{
 					reloading += 1;
 					ItemNBTHelper.setBoolean(stack, "isDrum", findMagazine(entityIn, stack).getMetadata()==3);
-					if(reloading >= Submachinegun.clipReloadTime)
+					if(reloading >= (ItemNBTHelper.getBoolean(stack, "isDrum")?Submachinegun.drumReloadTime: Submachinegun.clipReloadTime))
 					{
 						shouldReload = false;
 						reloading = 0;
@@ -189,31 +188,16 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				}
 			}
 			else
-			{
-				shouldReload = false;
 				reloading = 0;
-			}
 
 			ItemNBTHelper.setInt(stack, "reloading", reloading);
 			ItemNBTHelper.setBoolean(stack, "shouldReload", shouldReload);
 
+			boolean foldingStock = getUpgrades(stack).hasKey("folding_stock");
 			if(reloading==0&&entityIn.isSneaking())
-			{
-				// TODO: 29.01.2021 reevaluate
-				/*
-				if(!worldIn.isRemote&&currentAim%10==0)
-					IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(entityIn, true), worldIn.provider.getDimension());
-				 */
-				ItemNBTHelper.setInt(stack, "aiming", MathHelper.clamp(currentAim+1, 0, Submachinegun.aimTime));
-			}
+				ItemNBTHelper.setInt(stack, "aiming", MathHelper.clamp(currentAim+1, 0, foldingStock?Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime));
 			else if(currentAim > 0)
-			{
-				/*
-				if(!worldIn.isRemote&&currentAim%5==0)
-					IIPacketHandler.INSTANCE.sendToDimension(new MessagePlayerAimAnimationSync(entityIn, false), worldIn.provider.getDimension());
-				 */
-				ItemNBTHelper.setInt(stack, "aiming", MathHelper.clamp(currentAim-3, 0, Submachinegun.aimTime));
-			}
+				ItemNBTHelper.setInt(stack, "aiming", MathHelper.clamp(currentAim-3, 0, foldingStock?Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime));
 
 			if(fireDelay > 0)
 				ItemNBTHelper.setInt(stack, "fireDelay", fireDelay-1);
@@ -222,7 +206,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	}
 
 	@Override
-	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
+	public void onUsingTick(@Nonnull ItemStack stack, EntityLivingBase player, int count)
 	{
 		World worldIn = player.getEntityWorld();
 
@@ -236,18 +220,19 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 			if(!worldIn.isRemote)
 			{
-				boolean isAimed = ItemNBTHelper.getInt(stack, "aiming") > Submachinegun.aimTime*0.9;
+				boolean foldingStock = getUpgrades(stack).hasKey("folding_stock");
+				boolean isAimed = ItemNBTHelper.getInt(stack, "aiming") > (foldingStock?Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime*0.9);
 				float recoilH = ItemNBTHelper.getFloat(stack, "recoilH");
 				float recoilV = ItemNBTHelper.getFloat(stack, "recoilV");
 
-				Vec3d vec = Utils.getVectorForRotation(player.rotationPitch-recoilH, player.rotationYaw+recoilV);
+				Vec3d vec = Utils.getVectorForRotation(player.rotationPitch-recoilH, player.getRotationYawHead()+recoilV);
 				Vec3d vv = player.getPositionVector().addVector(0, (double)player.getEyeHeight()-0.10000000149011612D, 0);
 
 
 				ItemStack s2 = ItemIIBulletMagazine.takeBullet(magazine, true);
 				boolean sturdyBarrel = getUpgrades(stack).hasKey("sturdy_barrel");
 
-				EntityBullet a = BulletHelper.createBullet(worldIn, s2, vv, vec);
+				EntityBullet a = BulletHelper.createBullet(worldIn, s2, vv, vec, sturdyBarrel?Submachinegun.sturdyBarrelVelocityMod: 1f);
 				a.setShooters(player);
 				worldIn.spawnEntity(a);
 
@@ -255,13 +240,11 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				float noise = supressor?0.25f: 1f;
 				blusunrize.immersiveengineering.common.util.Utils.attractEnemies(player, 36*noise);
 
-				worldIn.playSound(null, player.posX+vec.x, player.posY+vec.y, player.posZ+vec.z, IISounds.submachinegun_shot, SoundCategory.PLAYERS, 1.5f*noise, supressor?0.75f:0f);
+				worldIn.playSound(null, player.posX+vec.x, player.posY+vec.y, player.posZ+vec.z, IISounds.submachinegun_shot, SoundCategory.PLAYERS, 1.5f*noise, supressor?0.75f: 0f);
 
-				//.add(vec.addVector(0,0.10000000149011612D,0).normalize().scale(1.5f))
 				IIPacketHandler.INSTANCE.sendToAllAround(
-						new MessageParticleGunfire(vv.addVector(0,player.isSneaking()?-0.2f:0f,0).add(vec.scale(1.4f)), vec.scale(-1),supressor?0.5f:1.5f),
-						Utils.targetPointFromEntity(player,32));
-
+						new MessageParticleGunfire(player, supressor?0.5f: 1.5f),
+						Utils.targetPointFromEntity(player, 32));
 
 
 				if(count%3==0)
@@ -293,20 +276,22 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		}
 	}
 
+	@Nonnull
 	@Override
-	public EnumAction getItemUseAction(ItemStack stack)
+	public EnumAction getItemUseAction(@Nonnull ItemStack stack)
 	{
 		return EnumAction.NONE;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack)
+	public int getMaxItemUseDuration(@Nonnull ItemStack stack)
 	{
 		return Submachinegun.bulletFireTime+1;
 	}
 
+	@Nonnull
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		ItemStack itemstack = player.getHeldItem(hand);
 		if(hand==EnumHand.MAIN_HAND)
@@ -320,7 +305,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entityLiving, int timeLeft)
+	public void onPlayerStoppedUsing(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull EntityLivingBase entityLiving, int timeLeft)
 	{
 
 	}
@@ -342,8 +327,25 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		NBTTagCompound upgrades = getUpgrades(stack);
+		//NBTTagCompound upgrades = getUpgrades(stack);
 		// TODO: 09.08.2020 advancements
+	}
+
+	@Nonnull
+	@Override
+	public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, @Nonnull ItemStack stack)
+	{
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+		if(slot==EntityEquipmentSlot.MAINHAND)
+		{
+			double melee = getUpgrades(stack).getFloat("melee");
+			if(melee!=0)
+			{
+				multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", melee, 0));
+				multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4000000953674316D, 0));
+			}
+		}
+		return multimap;
 	}
 
 	@Override
@@ -389,10 +391,8 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 		if(stack.isEmpty())
 			return false;
 		if(stack.getItem() instanceof ItemIIBulletMagazine)
-		{
 			return ItemIIBulletMagazine.getMatchingType(stack)==IIContent.itemAmmoSubmachinegun&&!ItemIIBulletMagazine.hasNoBullets(stack)&&
 					(stack.getMetadata()!=3||getUpgrades(weapon).hasKey("bottom_loading"));
-		}
 		return false;
 	}
 }

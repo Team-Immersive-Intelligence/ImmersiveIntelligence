@@ -89,7 +89,7 @@ public class PenetrationRegistry
 		registeredMaterials.put(material -> material==Material.IRON, new PenetrationHandlerIron());
 
 		registeredMaterials.put(material -> material==Material.ROCK, new PenetrationHandlerStone());
-		registeredMaterials.put(material -> material==Material.GRASS, new PenetrationHandlerDirt());
+		registeredMaterials.put(material -> material==Material.GRASS, new PenetrationHandlerGrass());
 		registeredMaterials.put(material -> material==Material.GROUND, new PenetrationHandlerDirt());
 		registeredMaterials.put(material -> material==Material.GOURD, new PenetrationHandlerClay());
 		registeredMaterials.put(material -> material==Material.SAND, new PenetrationHandlerSand());

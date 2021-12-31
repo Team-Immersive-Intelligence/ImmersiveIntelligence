@@ -66,6 +66,7 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 		return 5f;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public @Nonnull
 	Class<? extends IBulletModel> getModel()
@@ -119,6 +120,7 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();

@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.IUpgrade;
 import blusunrize.immersiveengineering.api.tool.IUpgradeableTool;
 import blusunrize.immersiveengineering.client.ClientProxy;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.gui.IESlot.Upgrades;
 import blusunrize.immersiveengineering.common.util.IELogger;
@@ -32,6 +31,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -48,11 +48,11 @@ import java.util.UUID;
 
 /**
  * @author Pabilo8
+ * @author Kuruma
  * @since 13.09.2020
- *
+ * <p>
  * Based on work on Immersive Energy's armor
  * in cooperation with:
- * @author Kuruma
  */
 public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgradeableTool
 {
@@ -65,13 +65,19 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		super(materialIn, -1, equipmentSlotIn);
 		this.upgradeType = upgradeType;
 
-		String name = (materialIn.getName()+"_"+getNameForPart(equipmentSlotIn)).replace(ImmersiveIntelligence.MODID+":", "");
+		String name = (getMaterialName(getArmorMaterial())+"_"+getNameForPart(equipmentSlotIn)).replace(ImmersiveIntelligence.MODID+":", "");
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 		this.setMaxStackSize(1);
 		IIContent.ITEMS.add(this);
 		//MinecraftForge.EVENT_BUS.register(this);
 	}
+
+	private String getMaterialName(ArmorMaterial material)
+	{
+		return ObfuscationReflectionHelper.getPrivateValue(ArmorMaterial.class, material, "name");
+	}
+
 
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -281,6 +287,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 
 	@Nullable
 	@Override
+	@SideOnly(Side.CLIENT)
 	public FontRenderer getFontRenderer(ItemStack stack)
 	{
 		return ClientProxy.itemFont;

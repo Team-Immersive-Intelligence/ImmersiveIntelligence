@@ -181,8 +181,7 @@ public class IICreativeTab extends CreativeTabs
 		{
 			l.set(i, bullets.get(i%(bullets.size())));
 		}
-		NBTTagList list = blusunrize.immersiveengineering.common.util.Utils.writeInventory(l);
-		ItemNBTHelper.getTag(stack).setTag("bullets", list);
+		ItemNBTHelper.getTag(stack).setTag("bullets", ItemIIBulletMagazine.writeInventory(l));
 		ItemIIBulletMagazine.makeDefault(stack);
 		return stack;
 	}

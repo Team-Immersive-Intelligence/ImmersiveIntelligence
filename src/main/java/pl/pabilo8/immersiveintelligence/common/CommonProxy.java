@@ -870,8 +870,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "machinegun"),
 				EntityMachinegun.class, "machinegun", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
 
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "camera"),
-				EntityCamera.class, "camera", i++, ImmersiveIntelligence.INSTANCE, 1, 0, false);
+		/*EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "camera"),
+				EntityCamera.class, "camera", i++, ImmersiveIntelligence.INSTANCE, 1, 0, false);*/
 
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "skycrate_internal"),
 				EntitySkycrateInternal.class, "skycrate_internal", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);

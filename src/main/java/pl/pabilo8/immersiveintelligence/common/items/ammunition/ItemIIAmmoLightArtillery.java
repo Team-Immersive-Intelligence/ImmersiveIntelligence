@@ -65,6 +65,7 @@ public class ItemIIAmmoLightArtillery extends ItemIIBulletBase
 		return 6f;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public @Nonnull Class<? extends IBulletModel> getModel()
 	{
@@ -107,6 +108,7 @@ public class ItemIIAmmoLightArtillery extends ItemIIBulletBase
 		return true;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void doPuff(EntityBullet bullet)
 	{
 		for(int i = 0; i < 20; i += 1)

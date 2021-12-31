@@ -14,6 +14,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
 
@@ -106,6 +108,7 @@ public class BlockIITripmine extends BlockIIMine
 			return 10f;
 		}
 
+		@SideOnly(Side.CLIENT)
 		@Override
 		public @Nonnull Class<? extends IBulletModel> getModel()
 		{

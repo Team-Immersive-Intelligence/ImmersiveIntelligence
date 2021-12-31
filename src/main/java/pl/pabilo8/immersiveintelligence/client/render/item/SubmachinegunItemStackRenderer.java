@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
@@ -29,7 +30,7 @@ import java.util.function.Predicate;
 public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<SubmachinegunItemStackRenderer>
 {
 	public static SubmachinegunItemStackRenderer instance = new SubmachinegunItemStackRenderer().subscribeToList("submachinegun");
-	public static final String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/submachinegun.png";
+	public static final String texture = "immersiveintelligence:textures/items/weapons/submachinegun.png";
 	public static ModelSubmachinegun model = new ModelSubmachinegun();
 
 	public static HashMap<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> upgrades = new HashMap<>();
@@ -100,12 +101,13 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 					int reloading = ItemNBTHelper.getInt(stack, "reloading");
 					ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
 
+					int maxReload = (ItemNBTHelper.getBoolean(stack,"isDrum")?Submachinegun.drumReloadTime:Submachinegun.clipReloadTime);
 					float reload = MathHelper.clamp(
 							reloading+(reloading > 0?partialTicks: 0),
 							0,
-							Submachinegun.clipReloadTime
+							maxReload
 					);
-					reload /= Submachinegun.clipReloadTime;
+					reload /= maxReload;
 					float clipReload;
 
 					if(reloading==0)
@@ -164,6 +166,26 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 						GlStateManager.color(1f, 1f, 1f, 1f);
 
 					}
+					GlStateManager.popMatrix();
+				}
+				break;
+				case "foldingStock":
+				{
+					int aiming = ItemNBTHelper.getInt(stack, "aiming");
+					double preciseAim = MathHelper.clamp(
+							aiming+(aiming > 0?(Minecraft.getMinecraft().player.isSneaking()?partialTicks: -3*partialTicks): 0),
+							0,
+							Submachinegun.aimTimeFoldedStock
+					);
+
+					GlStateManager.pushMatrix();
+
+					GlStateManager.translate(2.5/16f, 0, 0.0625f);
+					GlStateManager.rotate(175*(float)(1d-(preciseAim/Submachinegun.aimTimeFoldedStock)), 0, 1,0);
+					GlStateManager.translate(-2.5/16f, 0, -0.0625f);
+
+					ClientUtils.bindTexture(nmod.getTexturePath());
+					nmod.render(0.0625f);
 					GlStateManager.popMatrix();
 				}
 				break;

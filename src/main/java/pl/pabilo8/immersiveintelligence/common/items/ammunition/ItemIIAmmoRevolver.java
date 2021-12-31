@@ -324,6 +324,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();

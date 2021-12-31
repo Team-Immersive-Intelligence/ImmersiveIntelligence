@@ -4,6 +4,8 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
+import blusunrize.immersiveengineering.common.util.IEItemFluidHandler;
+import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -25,12 +27,17 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IRarity;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ISkinnable;
+import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
@@ -228,15 +235,41 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	}
 
 	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
+	{
+		if(!stack.isEmpty())
+			return new IEItemStackHandler(stack)
+			{
+				IEItemFluidHandler fluids = new IEItemFluidHandler(stack, 0);
+
+				@Override
+				public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+				{
+					return capability==CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY||
+							super.hasCapability(capability, facing);
+				}
+
+				@Override
+				public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+				{
+					if(capability==CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+						return (T)fluids;
+					return super.getCapability(capability, facing);
+				}
+			};
+		return null;
+	}
+
+	@Override
 	public int getCapacity(ItemStack stack, int baseCapacity)
 	{
-		return 0;
+		return getUpgrades(stack).hasKey("water_cooling")?Machinegun.waterCoolingTankCapacity: 0;
 	}
 
 	@Override
 	public boolean allowFluid(ItemStack container, FluidStack fluid)
 	{
-		return false;
+		return getUpgrades(container).hasKey("water_cooling")&&MachinegunCoolantHandler.isValidCoolant(fluid);
 	}
 
 	@Override

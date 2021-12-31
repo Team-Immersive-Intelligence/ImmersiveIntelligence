@@ -62,6 +62,7 @@ public interface IBullet
 	 * {@link pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo} is preferred, but you can use any renderer you like
 	 */
 	@Nonnull
+	@SideOnly(Side.CLIENT)
 	Class<? extends IBulletModel> getModel();
 
 	/**

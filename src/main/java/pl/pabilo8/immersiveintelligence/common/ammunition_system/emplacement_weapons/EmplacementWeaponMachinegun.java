@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.util.IESounds;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,7 +33,6 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -218,9 +216,9 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 	}
 
 	@Override
-	public void tick(TileEntityEmplacement te)
+	public void tick(TileEntityEmplacement te, boolean active)
 	{
-		if(magazine.isEmpty())
+		if(active&&magazine.isEmpty())
 		{
 			if(reloadDelay==0)
 			{

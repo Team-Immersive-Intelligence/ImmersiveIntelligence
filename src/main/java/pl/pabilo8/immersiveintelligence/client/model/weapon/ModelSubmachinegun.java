@@ -18,9 +18,9 @@ public class ModelSubmachinegun extends ModelIIBase
 	int textureY = 128;
 
 	ModelRendererTurbo[] loaderModel, barrelModel, sightsModel, triggerModel, ammoModel, slideModel, gripModel, stockModel, casingEjectionModel;
-	ModelRendererTurbo[] bottomLoaderModel, magDrumModel, magBottomModel, sturdyBarrelModel, silencerModel;
+	ModelRendererTurbo[] bottomLoaderModel, magDrumModel, magBottomModel, sturdyBarrelModel, silencerModel, foldingStockHolderModel, foldingStockModel, bayonetModel;
 	public TmtNamedBoxGroup baseBox, loaderBox, barrelBox, sightsBox, triggerBox, ammoBox, slideBox, gripBox, stockBox, casingEjectionBox;
-	public TmtNamedBoxGroup bottomLoaderBox, magDrumBox, magBottomBox, sturdyBarrelBox, silencerBox;
+	public TmtNamedBoxGroup bottomLoaderBox, magDrumBox, magBottomBox, sturdyBarrelBox, silencerBox, foldingStockHolderBox, foldingStockBox, bayonetBox;
 
 	//ModelRendererTurbo[] heavyBarrelModel;
 	//public TmtNamedBoxGroup heavyBarrelBox;
@@ -270,7 +270,179 @@ public class ModelSubmachinegun extends ModelIIBase
 
 		silencerModel[0].addBox(0F, 0F, 0F, 3, 3, 8, 0F); // Box 5
 		silencerModel[0].setRotationPoint(-1.5F, -6F, 29F);
+		
+		
+		/*
+		foldingStockHolderModel = new ModelRendererTurbo[2];
+		foldingStockHolderModel[0] = new ModelRendererTurbo(this, 48, 33, textureX, textureY); // Box 39
+		foldingStockHolderModel[1] = new ModelRendererTurbo(this, 0, 31, textureX, textureY); // Box 39
 
+		foldingStockHolderModel[0].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F); // Box 39
+		foldingStockHolderModel[0].setRotationPoint(-3F, -3.5F, -1.01F);
+
+		foldingStockHolderModel[1].addShapeBox(0F, 0F, 0F, 4, 4, 1, 0F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F); // Box 39
+		foldingStockHolderModel[1].setRotationPoint(-2F, -4F, -1F);
+
+		foldingStockModel = new ModelRendererTurbo[7];
+		foldingStockModel[0] = new ModelRendererTurbo(this, 0, 1, textureX, textureY); // Box 39
+		foldingStockModel[1] = new ModelRendererTurbo(this, 50, 44, textureX, textureY); // Box 39
+		foldingStockModel[2] = new ModelRendererTurbo(this, 52, 33, textureX, textureY); // Box 39
+		foldingStockModel[3] = new ModelRendererTurbo(this, 52, 33, textureX, textureY); // Box 39
+		foldingStockModel[4] = new ModelRendererTurbo(this, 16, 58, textureX, textureY); // Box 39
+		foldingStockModel[5] = new ModelRendererTurbo(this, 58, 33, textureX, textureY); // Box 39
+		foldingStockModel[6] = new ModelRendererTurbo(this, 58, 33, textureX, textureY); // Box 39
+
+		foldingStockModel[0].addBox(0F, 0F, 0F, 3, 8, 1, 0F); // Box 39
+		foldingStockModel[0].setRotationPoint(-1.5F, -4F, -14F);
+
+		foldingStockModel[1].addBox(0F, 0F, 0F, 2, 9, 2, 0F); // Box 39
+		foldingStockModel[1].setRotationPoint(-1F, -4.5F, -13F);
+
+		foldingStockModel[2].addBox(0F, 0F, 0F, 1, 5, 2, 0F); // Box 39
+		foldingStockModel[2].setRotationPoint(-0.5F, -2F, -11F);
+		foldingStockModel[2].rotateAngleX = 1.57079633F;
+
+		foldingStockModel[3].addBox(0F, 0F, -1F, 1, 7, 2, 0F); // Box 39
+		foldingStockModel[3].setRotationPoint(-0.5F, 3F, -12F);
+		foldingStockModel[3].rotateAngleX = 1.88495559F;
+
+		foldingStockModel[4].addBox(0F, 0F, 0F, 4, 6, 2, 0F); // Box 39
+		foldingStockModel[4].setRotationPoint(-2F, -4F, -6F);
+
+		foldingStockModel[5].addBox(0F, 0F, 0F, 1, 5, 1, 0F); // Box 39
+		foldingStockModel[5].setRotationPoint(-2.75F, -2F, -5.5F);
+		foldingStockModel[5].rotateAngleX = 1.57079633F;
+		foldingStockModel[5].rotateAngleY = 0.08726646F;
+
+		foldingStockModel[6].addBox(0F, 0F, 0F, 1, 5, 1, 0F); // Box 39
+		foldingStockModel[6].setRotationPoint(-2.75F, 0F, -5.5F);
+		foldingStockModel[6].rotateAngleX = 1.57079633F;
+		foldingStockModel[6].rotateAngleY = 0.08726646F;
+		 */
+
+		foldingStockHolderModel = new ModelRendererTurbo[2];
+		foldingStockHolderModel[0] = new ModelRendererTurbo(this, 48, 33, textureX, textureY); // Box 39
+		foldingStockHolderModel[1] = new ModelRendererTurbo(this, 0, 31, textureX, textureY); // Box 39
+
+		foldingStockHolderModel[0].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F, 0.25F, 0F, 0.25F); // Box 39
+		foldingStockHolderModel[0].setRotationPoint(2.25F, -3.5F, -1.01F);
+
+		foldingStockHolderModel[1].addShapeBox(0F, 0F, 0F, 4, 4, 1, 0F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F, 0.25F); // Box 39
+		foldingStockHolderModel[1].setRotationPoint(-2F, -4F, -1F);
+
+		foldingStockModel = new ModelRendererTurbo[7];
+		foldingStockModel[0] = new ModelRendererTurbo(this, 0, 1, textureX, textureY); // Box 39
+		foldingStockModel[1] = new ModelRendererTurbo(this, 50, 44, textureX, textureY); // Box 39
+		foldingStockModel[2] = new ModelRendererTurbo(this, 52, 33, textureX, textureY); // Box 39
+		foldingStockModel[3] = new ModelRendererTurbo(this, 52, 33, textureX, textureY); // Box 39
+		foldingStockModel[4] = new ModelRendererTurbo(this, 16, 58, textureX, textureY); // Box 39
+		foldingStockModel[5] = new ModelRendererTurbo(this, 58, 33, textureX, textureY); // Box 39
+		foldingStockModel[6] = new ModelRendererTurbo(this, 58, 33, textureX, textureY); // Box 39
+
+		foldingStockModel[0].addBox(0F, 0F, 0F, 3, 8, 1, 0F); // Box 39
+		foldingStockModel[0].setRotationPoint(-1.5F, -4F, -14F);
+
+		foldingStockModel[1].addBox(0F, 0F, 0F, 2, 9, 2, 0F); // Box 39
+		foldingStockModel[1].setRotationPoint(-1F, -4.5F, -13F);
+
+		foldingStockModel[2].addBox(0F, 0F, 0F, 1, 5, 2, 0F); // Box 39
+		foldingStockModel[2].setRotationPoint(-0.5F, -2F, -11F);
+		foldingStockModel[2].rotateAngleX = 1.57079633F;
+
+		foldingStockModel[3].addBox(0F, 0F, -1F, 1, 7, 2, 0F); // Box 39
+		foldingStockModel[3].setRotationPoint(-0.5F, 3F, -12F);
+		foldingStockModel[3].rotateAngleX = 1.88495559F;
+
+		foldingStockModel[4].addBox(0F, 0F, 0F, 4, 6, 2, 0F); // Box 39
+		foldingStockModel[4].setRotationPoint(-2F, -4F, -6F);
+
+		foldingStockModel[5].addBox(-1F, 0F, 0F, 1, 5, 1, 0F); // Box 39
+		foldingStockModel[5].setRotationPoint(2.75F, -2F, -5.5F);
+		foldingStockModel[5].rotateAngleX = 1.57079633F;
+		foldingStockModel[5].rotateAngleY = -0.08726646F;
+
+		foldingStockModel[6].addBox(-1F, 0F, 0F, 1, 5, 1, 0F); // Box 39
+		foldingStockModel[6].setRotationPoint(2.75F, 0F, -5.5F);
+		foldingStockModel[6].rotateAngleX = 1.57079633F;
+		foldingStockModel[6].rotateAngleY = -0.08726646F;
+
+		bayonetModel = new ModelRendererTurbo[18];
+		bayonetModel[0] = new ModelRendererTurbo(this, 0, 36, textureX, textureY); // Box 50
+		bayonetModel[1] = new ModelRendererTurbo(this, 4, 46, textureX, textureY); // Box 50
+		bayonetModel[2] = new ModelRendererTurbo(this, 0, 36, textureX, textureY); // Box 50
+		bayonetModel[3] = new ModelRendererTurbo(this, 12, 44, textureX, textureY); // Box 50
+		bayonetModel[4] = new ModelRendererTurbo(this, 12, 26, textureX, textureY); // Box 50
+		bayonetModel[5] = new ModelRendererTurbo(this, 16, 27, textureX, textureY); // Box 50
+		bayonetModel[6] = new ModelRendererTurbo(this, 48, 28, textureX, textureY); // Box 50
+		bayonetModel[7] = new ModelRendererTurbo(this, 26, 24, textureX, textureY); // Box 50
+		bayonetModel[8] = new ModelRendererTurbo(this, 19, 26, textureX, textureY); // Box 50
+		bayonetModel[9] = new ModelRendererTurbo(this, 56, 57, textureX, textureY); // Box 50
+		bayonetModel[10] = new ModelRendererTurbo(this, 39, 16, textureX, textureY); // Box 50
+		bayonetModel[11] = new ModelRendererTurbo(this, 25, 2, textureX, textureY); // Box 50
+		bayonetModel[12] = new ModelRendererTurbo(this, 25, 0, textureX, textureY); // Box 50
+		bayonetModel[13] = new ModelRendererTurbo(this, 56, 57, textureX, textureY); // Box 50
+		bayonetModel[14] = new ModelRendererTurbo(this, 39, 16, textureX, textureY); // Box 50
+		bayonetModel[15] = new ModelRendererTurbo(this, 25, 2, textureX, textureY); // Box 50
+		bayonetModel[16] = new ModelRendererTurbo(this, 25, 0, textureX, textureY); // Box 50
+		bayonetModel[17] = new ModelRendererTurbo(this, 8, 38, textureX, textureY); // Box 50
+
+		bayonetModel[0].addBox(0F, 0F, 0F, 2, 4, 1, 0F); // Box 50
+		bayonetModel[0].setRotationPoint(-1F, -3F, 27F);
+
+		bayonetModel[1].addBox(0F, 0F, 0F, 1, 8, 3, 0F); // Box 50
+		bayonetModel[1].setRotationPoint(-0.5F, 0.5F, 28F);
+		bayonetModel[1].rotateAngleX = 1.57079633F;
+
+		bayonetModel[2].addBox(0F, 0F, 0F, 2, 4, 1, 0F); // Box 50
+		bayonetModel[2].setRotationPoint(-1F, -3F, 36F);
+
+		bayonetModel[3].addShapeBox(0F, 0F, 0F, 1, 10, 3, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F); // Box 50
+		bayonetModel[3].setRotationPoint(-0.5F, 0.5F, 37F);
+		bayonetModel[3].rotateAngleX = 1.57079633F;
+
+		bayonetModel[4].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F); // Box 50
+		bayonetModel[4].setRotationPoint(-0.5F, -2.5F, 47F);
+
+		bayonetModel[5].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F); // Box 50
+		bayonetModel[5].setRotationPoint(-0.5F, -2.5F, 48F);
+
+		bayonetModel[6].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, -0.5F, -0.25F, 0F, -0.5F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, -0.5F, -0.25F, -0.5F, -0.5F); // Box 50
+		bayonetModel[6].setRotationPoint(-0.5F, -2.5F, 49F);
+
+		bayonetModel[7].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, -0.5F, -0.25F, 0F, -0.5F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, -0.5F, -0.25F, -0.5F, -0.5F); // Box 50
+		bayonetModel[7].setRotationPoint(-0.5F, -1.5F, 48F);
+
+		bayonetModel[8].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, -0.5F, -0.25F, 0F, -0.5F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, -0.5F, -0.25F, -0.5F, -0.5F); // Box 50
+		bayonetModel[8].setRotationPoint(-0.5F, -0.5F, 47F);
+
+		bayonetModel[9].addShapeBox(0F, 0F, 0F, 1, 9, 2, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F); // Box 50
+		bayonetModel[9].setRotationPoint(0F, 0F, 37F);
+		bayonetModel[9].rotateAngleX = 1.57079633F;
+
+		bayonetModel[10].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F); // Box 50
+		bayonetModel[10].setRotationPoint(0F, -2F, 46F);
+
+		bayonetModel[11].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, -0.5F, -0.25F, 0F, -0.5F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, -0.5F, -0.25F, -0.5F, -0.5F); // Box 50
+		bayonetModel[11].setRotationPoint(0F, -2F, 47F);
+
+		bayonetModel[12].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, -0.5F, -0.25F, 0F, -0.5F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, -0.5F, -0.25F, -0.5F, -0.5F); // Box 50
+		bayonetModel[12].setRotationPoint(0F, -1F, 46F);
+
+		bayonetModel[13].addShapeBox(0F, 0F, 0F, 1, 9, 2, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F); // Box 50
+		bayonetModel[13].setRotationPoint(-1F, 0F, 37F);
+		bayonetModel[13].rotateAngleX = 1.57079633F;
+
+		bayonetModel[14].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F); // Box 50
+		bayonetModel[14].setRotationPoint(-1F, -2F, 46F);
+
+		bayonetModel[15].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, -0.5F, -0.25F, 0F, -0.5F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, -0.5F, -0.25F, -0.5F, -0.5F); // Box 50
+		bayonetModel[15].setRotationPoint(-1F, -2F, 47F);
+
+		bayonetModel[16].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, -0.25F, 0F, 0F, -0.25F, 0F, 0F, -0.25F, 0F, -0.5F, -0.25F, 0F, -0.5F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, 0F, -0.25F, -0.5F, -0.5F, -0.25F, -0.5F, -0.5F); // Box 50
+		bayonetModel[16].setRotationPoint(-1F, -1F, 46F);
+
+		bayonetModel[17].addShapeBox(0F, 0F, 0F, 3, 5, 1, 0F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F, 0.05F); // Box 50
+		bayonetModel[17].setRotationPoint(-1.5F, -3.5F, 27.5F);
 
 		parts.put("base", baseModel);
 		parts.put("loader", loaderModel);
@@ -288,6 +460,9 @@ public class ModelSubmachinegun extends ModelIIBase
 		parts.put("magDrum", magDrumModel);
 		parts.put("sturdyBarrel", sturdyBarrelModel);
 		parts.put("silencer", silencerModel);
+		parts.put("foldingStockHolder", foldingStockHolderModel);
+		parts.put("foldingStock", foldingStockModel);
+		parts.put("bayonet", bayonetModel);
 
 		flipAll();
 
@@ -296,6 +471,9 @@ public class ModelSubmachinegun extends ModelIIBase
 		parts.remove("magDrum");
 		parts.remove("sturdyBarrel");
 		parts.remove("silencer");
+		parts.remove("foldingStockHolder");
+		parts.remove("foldingStock");
+		parts.remove("bayonet");
 
 		baseBox = new TmtNamedBoxGroup("base", baseModel, SubmachinegunItemStackRenderer.texture);
 		loaderBox = new TmtNamedBoxGroup("loader", loaderModel, SubmachinegunItemStackRenderer.texture);
@@ -313,5 +491,8 @@ public class ModelSubmachinegun extends ModelIIBase
 		magDrumBox = new TmtNamedBoxGroup("magDrum", magDrumModel, SubmachinegunItemStackRenderer.texture);
 		sturdyBarrelBox = new TmtNamedBoxGroup("sturdyBarrel", sturdyBarrelModel, SubmachinegunItemStackRenderer.texture);
 		silencerBox = new TmtNamedBoxGroup("silencer", silencerModel, SubmachinegunItemStackRenderer.texture);
+		foldingStockHolderBox = new TmtNamedBoxGroup("foldingStockHolder", foldingStockHolderModel, SubmachinegunItemStackRenderer.texture);
+		foldingStockBox = new TmtNamedBoxGroup("foldingStock", foldingStockModel, SubmachinegunItemStackRenderer.texture);
+		bayonetBox = new TmtNamedBoxGroup("bayonet", bayonetModel, SubmachinegunItemStackRenderer.texture);
 	}
 }

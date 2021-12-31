@@ -96,8 +96,11 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	}
 
 	@Override
-	public void tick(TileEntityEmplacement te)
+	public void tick(TileEntityEmplacement te, boolean active)
 	{
+		if(!active)
+			return;
+
 		for(Integer targetedEntity : targetedEntities)
 		{
 			addEntityToAnimation(targetedEntity, te.getWorld(), te.getBlockPosForPos(49).up());

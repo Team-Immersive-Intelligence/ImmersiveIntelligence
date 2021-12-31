@@ -31,6 +31,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -189,7 +190,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			{
 				this.setYaw = getRidingEntity().getRotationYawHead();
 				setEntityBoundingBox(aabb);
-				setPositionAndUpdate(posX,posY,posZ);
+				setPositionAndUpdate(posX, posY, posZ);
 			}
 		}
 
@@ -330,7 +331,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		}
 		else
 		{
-			if(!world.isRemote&&setupTime>0)
+			if(!world.isRemote&&setupTime > 0)
 			{
 				dropItem();
 				return;
@@ -793,7 +794,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					ItemStack stack = crate.getInventory().get(i);
 					if(shootFromStack(stack))
 					{
-						stack.shrink(1);
+						crate.insertionHandler.extractItem(i, 1, false);
 						if(!world.isRemote)
 							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
 						return true;
@@ -828,7 +829,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setFloat("recoilPitch", recoilPitch);
 		tag.setFloat("overheating", overheating);
 
-		ItemStack stack = magazine==1?ItemIIBulletMagazine.takeBullet(magazine1, false): ItemIIBulletMagazine.takeBullet(magazine2, true);
+		ItemStack stack = ItemIIBulletMagazine.takeBullet(magazine==1?magazine1: magazine2, true);
 
 		if(magazine==1)
 		{
@@ -887,7 +888,9 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("heavy_barrel"))
 			bullet_delay_multiplier = Machinegun.heavyBarrelFireRateMultiplier;
 		else if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("water_cooling"))
+		{
 			tankCapacity = Machinegun.waterCoolingTankCapacity;
+		}
 
 		bulletDelayMax = Math.round(bullet_delay_multiplier*Machinegun.bulletFireTime);
 		bulletDelay = 0;
@@ -940,13 +943,16 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		hasInfrared = IIContent.itemMachinegun.getUpgrades(gun).hasKey("infrared_scope");
 		loadedFromCrate = IIContent.itemMachinegun.getUpgrades(gun).hasKey("belt_fed_loader");
 
+		tank.setCapacity(tankCapacity);
+		IFluidHandlerItem cap = gun.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+		if(cap!=null)
+			tank.setFluid(cap.drain(Integer.MAX_VALUE, true));
+
 		updateTank(false);
 
 		NBTTagCompound tag = new NBTTagCompound();
 		writeEntityToNBT(tag);
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
-
-		tank.setCapacity(tankCapacity);
 	}
 
 	void dropItem()
@@ -955,6 +961,16 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		{
 			ItemNBTHelper.setTagCompound(gun, "magazine1", magazine1.serializeNBT());
 			ItemNBTHelper.setTagCompound(gun, "magazine2", magazine2.serializeNBT());
+			if(IIContent.itemMachinegun.getCapacity(gun, 0) > 0)
+			{
+				IFluidHandlerItem cap = gun.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+				if(cap!=null)
+				{
+					cap.drain(Integer.MAX_VALUE, true);
+					if(tank.getFluid()!=null)
+						cap.fill(tank.getFluid().copy(), true);
+				}
+			}
 			blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), gun);
 			setDead();
 		}
