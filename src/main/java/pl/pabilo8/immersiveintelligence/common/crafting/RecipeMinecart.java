@@ -1,27 +1,49 @@
 package pl.pabilo8.immersiveintelligence.common.crafting;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
+import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.potion.PotionType;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional.Interface;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 23-04-2020
  */
-public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
+@Optional.Interface(iface = "mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper", modid = "jei")
+public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IShapedCraftingRecipeWrapper
 {
-	ItemStack outputMinecart = ItemStack.EMPTY;
-	ItemStack inputBlock = null;
+	private final ItemStack outputMinecart;
+	private final ItemStack inputBlock;
+	private final ArrayList<ItemStack> inputs;
+
+	public static ArrayList<RecipeMinecart> listAllRecipes = new ArrayList<>();
 
 	public RecipeMinecart(ItemStack outputMinecart, ItemStack inputBlock)
 	{
 		this.outputMinecart = outputMinecart;
 		this.inputBlock = inputBlock;
+
+		//JEI
+		this.inputs = new ArrayList<>();
+		this.inputs.add(inputBlock.copy());
+		this.inputs.add(new ItemStack(Items.MINECART));
+
+		listAllRecipes.add(this);
 	}
 
 	/**
@@ -106,6 +128,25 @@ public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistry
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	{
 		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
+	}
+
+	@Override
+	public int getWidth()
+	{
+		return 1;
+	}
+
+	@Override
+	public int getHeight()
+	{
+		return 2;
+	}
+
+	@Override
+	public void getIngredients(IIngredients ingredients)
+	{
+		ingredients.setInputs(VanillaTypes.ITEM, this.inputs);
+		ingredients.setOutput(VanillaTypes.ITEM, outputMinecart);
 	}
 
 }

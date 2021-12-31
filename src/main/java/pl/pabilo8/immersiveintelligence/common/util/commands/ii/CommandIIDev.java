@@ -25,14 +25,16 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.ClickEvent.Action;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer;
-import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer.MultipleTracerBuilder;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -44,7 +46,10 @@ import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Pabilo8
@@ -65,6 +70,7 @@ public class CommandIIDev extends CommandBase
 		options.add("killitems");
 		options.add("killhanses");
 		options.add("world_setup");
+		options.add("tpd");
 		options.add("decaybullets");
 		options.add("test_enemies");
 		options.add("explosion");
@@ -117,12 +123,13 @@ public class CommandIIDev extends CommandBase
 					sender.sendMessage(getMessageForCommand("killitems", "removes all items in 20 block radius"));
 					sender.sendMessage(getMessageForCommand("killhanses", "removes all ze Hanses in 20 block radius"));
 					sender.sendMessage(getMessageForCommand("world_setup", "disables day and night and weather cycles, disables mob spawning"));
-					sender.sendMessage(getMessageForCommand("decaybullets", "removes bullets decaying (despawning after x amount of ticks existing)"));
+					sender.sendMessage(getMessageForCommand("tpd", "teleports the player to a dimension", "<dim>"));
+					sender.sendMessage(getMessageForCommand("decaybullets", "toggles bullets decay (despawning after x amount of ticks existing)"));
 					sender.sendMessage(getMessageForCommand("test_enemies", "spawns enemies", "<amount>"));
 					sender.sendMessage(getMessageForCommand("explosion", "spawns an II explosion", "<size>"));
 					sender.sendMessage(getMessageForCommand("nuke", "plants a seed on ground zero"));
-					sender.sendMessage(getMessageForCommand("power", "charges held item with IF, absolutely free"));
-					sender.sendMessage(getMessageForCommand("tree", "created a happy little [R E B B U R] tree"));
+					sender.sendMessage(getMessageForCommand("power", "charges held item or looked entity with IF, absolutely free"));
+					sender.sendMessage(getMessageForCommand("tree", "creates a happy little [R E B B U R] tree"));
 					sender.sendMessage(getMessageForCommand("parachute", "spawns and mounts the command user on a parachute"));
 					sender.sendMessage(getMessageForCommand("deth", "removes the entity player is looking at"));
 
@@ -227,10 +234,37 @@ public class CommandIIDev extends CommandBase
 					server.getEntityWorld().getGameRules().setOrCreateGameRule("doMobSpawning", "false");
 					sender.sendMessage(new TextComponentString("World setup done!"));
 					break;
+				case "tpd":
+					if(args.length > 1&&senderEntity!=null)
+					{
+						senderEntity.changeDimension(Integer.parseInt(args[1]), new IITeleporter());
+						sender.sendMessage(new TextComponentString("Preparing to jump!"));
+					}
+					break;
 				case "power":
 				{
 					if(senderEntity==null)
 						return;
+
+					float blockReachDistance = 6;
+					Vec3d vec3d = senderEntity.getPositionEyes(0);
+					Vec3d vec3d1 = senderEntity.getLook(0);
+					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
+					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), true, false, true, Collections.singletonList(senderEntity), Collections.emptyList());
+					if(rayTracer.hits.size() > 0)
+					{
+						Entity entityHit = rayTracer.hits.get(0).entityHit;
+						if(entityHit!=null&&entityHit.hasCapability(CapabilityEnergy.ENERGY, null))
+						{
+							IEnergyStorage capability = entityHit.getCapability(CapabilityEnergy.ENERGY, null);
+							if(capability!=null)
+							{
+								while(capability.getEnergyStored()!=capability.getMaxEnergyStored())
+									capability.receiveEnergy(Integer.MAX_VALUE, false);
+								return;
+							}
+						}
+					}
 
 					senderEntity.getHeldEquipment().forEach(stack -> {
 						if(stack.getItem() instanceof IAdvancedFluidItem)
@@ -288,7 +322,8 @@ public class CommandIIDev extends CommandBase
 					try
 					{
 						num = Math.abs(Integer.parseInt(args[1]));
-					} catch(Exception ignored)
+					}
+					catch(Exception ignored)
 					{
 
 					}
@@ -316,7 +351,8 @@ public class CommandIIDev extends CommandBase
 					try
 					{
 						num = Math.abs(Integer.parseInt(args[1]));
-					} catch(Exception ignored)
+					}
+					catch(Exception ignored)
 					{
 
 					}
@@ -392,5 +428,16 @@ public class CommandIIDev extends CommandBase
 		return new TextComponentString("/ii dev ").appendText(subcommand).appendText(arguments.isEmpty()?arguments: (" "+arguments))
 				.setStyle(new Style().setColor(TextFormatting.GOLD).setClickEvent(new ClickEvent(Action.SUGGEST_COMMAND, "/ii dev "+subcommand)))
 				.appendSibling(new TextComponentString(" - ").appendText(description).setStyle(new Style().setColor(TextFormatting.RESET)));
+	}
+
+	private static class IITeleporter implements ITeleporter
+	{
+		@Override
+		public void placeEntity(World world, Entity entity, float yaw)
+		{
+
+
+			entity.moveToBlockPosAndAngles(world.getSpawnPoint(), yaw, entity.rotationPitch);
+		}
 	}
 }

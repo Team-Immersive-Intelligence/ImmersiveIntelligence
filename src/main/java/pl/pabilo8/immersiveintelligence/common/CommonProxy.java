@@ -990,16 +990,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 		IICompatModule.doModulesPostInit();
 
-		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.CRATE.getMeta()),
-				EntityMinecartCrateWooden::new);
-		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta()),
-				EntityMinecartCrateReinforced::new);
-		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IIContent.blockMetalDevice&&stack.getMetadata()==IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()),
-				EntityMinecartCrateSteel::new);
-		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockWoodenDevice0&&stack.getMetadata()==BlockTypes_WoodenDevice0.BARREL.getMeta()),
-				EntityMinecartBarrelWooden::new);
-		MinecartBlockHelper.blocks.put((stack -> blusunrize.immersiveengineering.common.util.Utils.getBlockFromItem(stack.getItem())==IEContent.blockMetalDevice0&&stack.getMetadata()==BlockTypes_MetalDevice0.BARREL.getMeta()),
-				EntityMinecartBarrelSteel::new);
+		for(Minecarts value : Minecarts.values())
+			MinecartBlockHelper.blocks.put(stack -> OreDictionary.itemMatches(stack, value.stack.get(), false), world -> value.minecart.apply(world, Vec3d.ZERO));
+
+		// TODO: 07.11.2021 register
 
 		RotaryUtils.ie_rotational_blocks_torque.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
 				aFloat -> aFloat*MechanicalDevices.dynamo_windmill_torque

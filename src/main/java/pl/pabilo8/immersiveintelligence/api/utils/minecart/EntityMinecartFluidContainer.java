@@ -1,11 +1,10 @@
-package pl.pabilo8.immersiveintelligence.api.utils;
+package pl.pabilo8.immersiveintelligence.api.utils.minecart;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +25,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 27-12-2019
  */
-public abstract class EntityMinecartFluidContainer extends EntityMinecart implements IEntityOverlayText
+public abstract class EntityMinecartFluidContainer extends EntityMinecartII implements IEntityOverlayText
 {
 	public FluidTank tank = new FluidTank(getTankCapacity());
 	SidedFluidHandler fluidHandler = new SidedFluidHandler(this, null);
@@ -44,9 +44,9 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 		super(worldIn);
 	}
 
-	public EntityMinecartFluidContainer(World worldIn, double x, double y, double z)
+	public EntityMinecartFluidContainer(World worldIn, Vec3d vv)
 	{
-		super(worldIn, x, y, z);
+		super(worldIn, vv);
 	}
 
 	@Override
@@ -81,6 +81,8 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 	{
 		super.readEntityFromNBT(compound);
 		readTank(compound);
+		if(!world.isRemote)
+			updateTank(false);
 	}
 
 	@Override
@@ -88,6 +90,8 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 	{
 		super.writeEntityToNBT(compound);
 		writeTank(compound, false);
+		if(!world.isRemote)
+			updateTank(false);
 	}
 
 	@Override
@@ -227,22 +231,14 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecart implem
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target)
+	void writeNBTToStack(NBTTagCompound nbt)
 	{
-		if(this instanceof IMinecartBlockPickable)
-		{
-			IBlockState tile = getDefaultDisplayTile();
-			ItemStack drop2 = new ItemStack(tile.getBlock(), 1, tile.getBlock().getMetaFromState(tile));
-			NBTTagCompound nbt = new NBTTagCompound();
+		writeTank(nbt, true);
+	}
 
-			if(this.hasCustomName())
-			{
-				nbt.setString("name", getCustomNameTag());
-			}
-			writeTank(nbt, true);
-			drop2.setTagCompound(nbt);
-			return drop2;
-		}
-		return ItemStack.EMPTY;
+	@Override
+	void readFromStack(ItemStack stack)
+	{
+		readTank(ItemNBTHelper.getTag(stack));
 	}
 }
