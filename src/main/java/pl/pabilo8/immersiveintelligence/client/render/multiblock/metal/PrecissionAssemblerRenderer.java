@@ -62,7 +62,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			currentModel.render();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(-(Math.min(5f, Math.max(te.drawer1Angle+(te.isDrawer1Opened?0.4f*partialTicks: -0.5f*partialTicks), 0f)))/16f, 0, 0);
+			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[0]+(te.isDrawerOpened[0]?0.4f:-0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
 			for(ModelRendererTurbo mod : currentModel.drawer1Model)
 			{
 				mod.render(0.0625f);
@@ -70,7 +70,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(-(Math.min(5f, Math.max(te.drawer2Angle+(te.isDrawer2Opened?0.4f*partialTicks: -0.5f*partialTicks), 0f)))/16f, 0, 0);
+			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[1]+(te.isDrawerOpened[1]?0.4f:-0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
 			for(ModelRendererTurbo mod : currentModel.drawer2Model)
 			{
 				mod.render(0.0625f);

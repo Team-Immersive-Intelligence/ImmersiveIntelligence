@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -40,16 +41,18 @@ public class ArithmeticLogicMachineRenderer extends TileEntitySpecialRenderer<Ti
 			modelCurrent.getBlockRotation(te.facing, te.mirrored);
 			int flipMod = te.mirrored?-1: 1;
 
+			float door = MathHelper.clamp(te.doorAngle+(partialTicks*(te.isDoorOpened?5f:-6.5f)), 0, 135f)*flipMod;
+
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(1.9375f, 3f, -0.96875f*flipMod);
-			GlStateManager.rotate(Math.min(135f, Math.max(te.doorAngle+(te.isDoorOpened?6.5f*partialTicks: -3f*partialTicks), 0f))*flipMod, 0, 1, 0);
+			GlStateManager.rotate(door, 0, 1, 0);
 			for(ModelRendererTurbo model : modelCurrent.doorLeftModel)
 				model.render(0.0625f);
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0.0625f, 3.0f, -0.96875f*flipMod);
-			GlStateManager.rotate(-Math.min(135f, Math.max(te.doorAngle+(te.isDoorOpened?6.5f*partialTicks: -3f*partialTicks), 0f))*flipMod, 0, 1, 0);
+			GlStateManager.rotate(-door, 0, 1, 0);
 			for(ModelRendererTurbo model : modelCurrent.doorRightModel)
 				model.render(0.0625f);
 			GlStateManager.popMatrix();

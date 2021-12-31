@@ -67,6 +67,7 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 						refreshStoredData();
 						syncDataToServer();
 
+						preparedForChange=true;
 						IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos(), playerInv.player));
 
 						break;
@@ -89,6 +90,7 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 				refreshStoredData();
 				syncDataToServer();
 
+				preparedForChange=true;
 				IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos(), playerInv.player));
 			}
 			else if(variableList.delete)

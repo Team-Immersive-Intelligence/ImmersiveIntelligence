@@ -86,6 +86,7 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 							refreshStoredData();
 							syncDataToServer();
 
+							preparedForChange=true;
 							IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos(), playerInv.player));
 
 							break;
@@ -109,6 +110,7 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 					refreshStoredData();
 					syncDataToServer();
 
+					preparedForChange=true;
 					IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos(), playerInv.player));
 				}
 				else if(variableList.delete)

@@ -15,7 +15,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -33,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
@@ -116,13 +119,10 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	{
 		super.update();
 
-		if(world.isRemote&&pos==8)
-		{
-			if(isDoorOpened&&doorAngle < 135f)
-				doorAngle = Math.min(doorAngle+6.5f, 135f);
-			else if(!isDoorOpened&&doorAngle > 0f)
-				doorAngle = Math.max(doorAngle-3f, 0f);
-		}
+		if(isDummy())
+			return;
+
+		doorAngle = MathHelper.clamp(doorAngle+(isDoorOpened?5f: -6.5f), 0, 135f);
 	}
 
 	@Override
@@ -487,7 +487,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	public void onAnimationChangeServer(boolean state, int part)
 	{
 		if(part==0)
+		{
+			if(state!=isDoorOpened)
+				world.playSound(null, getPos(), state?IISounds.metal_locker_open: IISounds.metal_locker_close, SoundCategory.BLOCKS, 0.25F, 1f);
 			isDoorOpened = state;
+		}
 
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
 	}

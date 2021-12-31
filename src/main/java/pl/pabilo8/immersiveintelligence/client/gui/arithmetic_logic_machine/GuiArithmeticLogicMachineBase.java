@@ -62,6 +62,8 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	private GuiManual trueManual;
 	public GuiWidgetManualWrapper sideManual = null;
 	protected GuiButtonState manualButton;
+	//this is due to the machine sending a close door message to the server and producing an annoying sound
+	protected boolean preparedForChange = false;
 
 	public GuiArithmeticLogicMachineBase(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, IIGuiList gui)
 	{
@@ -118,6 +120,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		{
 			syncDataToServer();
 			saveBasicData();
+			preparedForChange = true;
 			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos(), mc.player));
 		}
 	}
@@ -176,7 +179,8 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	public void onGuiClosed()
 	{
 		syncDataToServer();
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+		if(!preparedForChange)
+			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
 		super.onGuiClosed();
 	}
 

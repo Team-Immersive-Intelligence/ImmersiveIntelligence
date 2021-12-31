@@ -16,10 +16,10 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
@@ -48,7 +49,6 @@ import java.util.ArrayList;
  */
 public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<TileEntityPrecissionAssembler, PrecissionAssemblerRecipe> implements IGuiTile, ISoundTile, IBooleanAnimatedPartsBlock
 {
-	private static final ITextComponent HANS_NAME = new TextComponentString("Hans");
 	//3 x tool slots, 1x scheme slot, 1x main component slot, 3 x secondary component slots, 1 x output slot, 1 x trash output slot
 	//0 1 2, 3, 4, 5 6 7, 8, 9
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(10, ItemStack.EMPTY);
@@ -62,8 +62,8 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	private boolean update = false;
 	public boolean active = false;
 
-	public boolean isDrawer1Opened = false, isDrawer2Opened = false;
-	public float drawer1Angle = 0, drawer2Angle = 0;
+	public boolean[] isDrawerOpened = {false, false};
+	public float[] drawerAngle = {0, 0};
 
 	IItemHandler insertionHandler = new IEInventoryHandler(5, this, 4, true, false);
 
@@ -166,15 +166,8 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 
 		if(world.isRemote)
 		{
-			if(isDrawer1Opened&&drawer1Angle < 5f)
-				drawer1Angle = Math.min(drawer1Angle+0.4f, 5f);
-			else if(!isDrawer1Opened&&drawer1Angle > 0f)
-				drawer1Angle = Math.max(drawer1Angle-0.5f, 0f);
-
-			if(isDrawer2Opened&&drawer2Angle < 5f)
-				drawer2Angle = Math.min(drawer2Angle+0.4f, 5f);
-			else if(!isDrawer2Opened&&drawer2Angle > 0f)
-				drawer2Angle = Math.max(drawer2Angle-0.5f, 0f);
+			for(int i = 0; i < 2; i++)
+				drawerAngle[i] = MathHelper.clamp(drawerAngle[i]+(isDrawerOpened[i]?0.4f: -0.5f), 0f, 5f);
 
 			if(active&&processTime < processTimeMax)
 				processTime += 1;
@@ -221,7 +214,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 
 		if(world.getTotalWorldTime()%20==0)
 		{
-			EnumFacing ff = mirrored?facing.rotateY():facing.rotateYCCW();
+			EnumFacing ff = mirrored?facing.rotateY(): facing.rotateYCCW();
 			BlockPos pos = getBlockPosForPos(5).offset(ff, 1);
 			ItemStack output = inventory.get(8);
 			TileEntity inventoryTile = this.world.getTileEntity(pos);
@@ -529,23 +522,21 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	@Override
 	public void onAnimationChangeClient(boolean state, int part)
 	{
-		if(part==0)
-			isDrawer1Opened = state;
-		else if(part==1)
-			isDrawer2Opened = state;
+		isDrawerOpened[part] = state;
 	}
 
 	@Override
 	public void onAnimationChangeServer(boolean state, int part)
 	{
-		if(part==0)
-			isDrawer1Opened = state;
-		else if(part==1)
-			isDrawer2Opened = state;
+		if(part >= 2)
+			return;
+		if(state!=isDrawerOpened[part])
+			world.playSound(null, getPos(), state?IISounds.drawer_open: IISounds.drawer_close, SoundCategory.BLOCKS, 0.25F, 1f);
 
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawer1Opened, 0, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawer2Opened, 1, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
+		isDrawerOpened[part] = state;
 
+		for(int i = 0; i < 2; i++)
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawerOpened[i], i, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 
 	@Override
@@ -566,12 +557,5 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 		}
 
 		return super.getCapability(capability, facing);
-	}
-
-	@Nullable
-	@Override
-	public ITextComponent getDisplayName()
-	{
-		return HANS_NAME;
 	}
 }

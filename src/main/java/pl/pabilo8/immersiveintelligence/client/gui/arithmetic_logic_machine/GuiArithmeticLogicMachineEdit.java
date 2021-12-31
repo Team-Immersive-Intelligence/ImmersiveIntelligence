@@ -113,6 +113,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 				this.dataType = this.editor.outputType();
 			saveBasicData();
 			syncDataToServer();
+			preparedForChange=true;
 			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(getPage(page), tile.getPos(), playerInv.player));
 		}
 

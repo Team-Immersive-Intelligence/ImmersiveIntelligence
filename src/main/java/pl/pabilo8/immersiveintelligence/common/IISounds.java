@@ -111,8 +111,18 @@ public class IISounds
 	public static SoundEvent emplacement_door_pull = registerSound("emplacement_door_pull");
 	public static SoundEvent emplacement_door_push = registerSound("emplacement_door_push");
 
-	//public static SoundEvent hans_test_de = registerSound("hans_test_de");
+	public static SoundEvent chemical_painter_lights = registerSound("chemical_painter_lights");
+	public static SoundEvent chemical_painter_lift_up = registerSound("chemical_painter_lift_up");
+	public static SoundEvent chemical_painter_lift_down = registerSound("chemical_painter_lift_down");
 	//public static SoundEvent hans_test_pl = registerSound("hans_test_pl");
+	//public static SoundEvent hans_test_de = registerSound("hans_test_de");
+
+	public static SoundEvent drawer_open = registerSound("drawer_open");
+	public static SoundEvent drawer_close = registerSound("drawer_close");
+	public static SoundEvent metal_locker_open = registerSound("metal_locker_open");
+	public static SoundEvent metal_locker_close = registerSound("metal_locker_close");
+	public static SoundEvent metal_breadbox_open = registerSound("metal_breadbox_open");
+	public static SoundEvent metal_breadbox_close = registerSound("metal_breadbox_close");
 
 	private static SoundEvent registerSound(String name)
 	{

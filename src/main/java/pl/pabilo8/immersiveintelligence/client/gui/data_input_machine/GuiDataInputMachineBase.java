@@ -75,6 +75,8 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	private GuiButtonIE sendPacketButton;
 
 	DataPacket list;
+	//this is due to the machine sending a close door message to the server and producing an annoying sound
+	protected boolean preparedForChange = false;
 
 	public GuiDataInputMachineBase(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile, IIGuiList gui)
 	{
@@ -140,6 +142,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		{
 			syncDataToServer();
 			saveBasicData();
+			preparedForChange=true;
 			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos(), mc.player));
 		}
 	}
@@ -206,8 +209,11 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	{
 		syncDataToServer();
 		//Close the hatches
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+		if(!preparedForChange)
+		{
+			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+		}
 		super.onGuiClosed();
 	}
 
@@ -303,6 +309,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		refreshStoredData();
 		syncDataToServer();
 
+		preparedForChange=true;
 		IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos(), playerInv.player));
 	}
 }

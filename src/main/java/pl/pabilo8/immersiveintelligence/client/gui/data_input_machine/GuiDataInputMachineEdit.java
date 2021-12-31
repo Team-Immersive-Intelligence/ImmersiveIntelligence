@@ -140,6 +140,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 				this.dataType = this.editor.outputType();
 			saveBasicData();
 			syncDataToServer();
+			preparedForChange=true;
 			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile.getPos(), playerInv.player));
 		}
 		else if(button==buttonVariableHelp)

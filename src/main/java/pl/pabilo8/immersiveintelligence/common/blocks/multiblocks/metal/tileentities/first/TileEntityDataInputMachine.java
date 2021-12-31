@@ -16,7 +16,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
@@ -33,8 +35,8 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIIRadioExplosives.ItemBlockRadioExplosives;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.BlockIITripmine.ItemBlockTripmine;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
@@ -45,7 +47,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -153,16 +154,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 
 		if(world.isRemote&&!isDummy())
 		{
-			if(isDrawerOpened&&drawerAngle < 5f)
-				drawerAngle = Math.min(drawerAngle+0.4f, 5f);
-			else if(!isDrawerOpened&&drawerAngle > 0f)
-				drawerAngle = Math.max(drawerAngle-0.5f, 0f);
-
-			if(isDoorOpened&&doorAngle < 135f)
-				doorAngle = Math.min(doorAngle+3f, 135f);
-			else if(!isDoorOpened&&doorAngle > 0f)
-				doorAngle = Math.max(doorAngle-5f, 0f);
-
+			drawerAngle= MathHelper.clamp(drawerAngle+(isDrawerOpened?0.4f:-0.5f),0f,5f);
+			doorAngle= MathHelper.clamp(doorAngle+(isDoorOpened?3f:-5f),0f,135f);
 
 			if(this.productionProgress > 0&&energyStorage.getEnergyStored() > DataInputMachine.energyUsagePunchtape&&productionProgress < DataInputMachine.timePunchtapeProduction)
 				this.productionProgress += 1;
@@ -502,9 +495,17 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	public void onAnimationChangeServer(boolean state, int part)
 	{
 		if(part==0)
+		{
+			if(state!=isDrawerOpened)
+				world.playSound(null, getPos(), state?IISounds.drawer_open: IISounds.drawer_close, SoundCategory.BLOCKS, 0.25F, 1f);
 			isDrawerOpened = state;
+		}
 		else if(part==1)
+		{
+			if(state!=isDoorOpened)
+				world.playSound(null, getPos(), state?IISounds.metal_locker_open: IISounds.metal_locker_close, SoundCategory.BLOCKS, 0.25F, 1);
 			isDoorOpened = state;
+		}
 
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawerOpened, 0, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
 		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));

@@ -16,12 +16,4 @@ public class GuiArithmeticLogicMachineStorage extends GuiArithmeticLogicMachineB
 	{
 		super(inventoryPlayer, tile, IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE);
 	}
-
-	@Override
-	public void onGuiClosed()
-	{
-		syncDataToServer();
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		super.onGuiClosed();
-	}
 }
