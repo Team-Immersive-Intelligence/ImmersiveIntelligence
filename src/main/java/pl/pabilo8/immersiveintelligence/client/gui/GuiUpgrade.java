@@ -188,7 +188,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			{
 				int xx = (i%3)*20, yy = (int)Math.floor(i/3f)*20;
 				ClientUtils.bindTexture(TEXTURE);
-				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy, 101, 168, 20, 20);
+				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy, upgradableMachine.hasUpgrade(upgrade)?121:101, 168, 20, 20);
 				if(Utils.isPointInRectangle(guiLeft+100+xx, guiTop+9+yy, guiLeft+100+xx+16, guiTop+9+yy+16, mx, my))
 					tooltip.add(getUpgradeNameTranslation(upgrade));
 				i++;

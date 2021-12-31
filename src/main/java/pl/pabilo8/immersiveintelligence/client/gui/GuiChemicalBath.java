@@ -5,7 +5,9 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityChemicalBath;
@@ -35,7 +37,7 @@ public class GuiChemicalBath extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"), 8, 6, Utils.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"), 8, 8, Utils.COLOR_H1);
 	}
 
 	/**
@@ -51,11 +53,12 @@ public class GuiChemicalBath extends GuiIEContainerBase
 
 		this.drawTexturedModalRect(guiLeft+32, guiTop+39, 0, 168, 102, 32);
 
-		if(tile.tanks[0].getFluidAmount() > 0)
+		FluidStack fluid = tile.tanks[0].getFluid();
+		if(fluid!=null&&fluid.amount > 0)
 		{
 			//Draw fluid inside the tank
-			float tfluid = 1f-(((float)tile.tanks[0].getFluidAmount())/tile.tanks[0].getCapacity());
-			ClientUtils.drawRepeatedFluidSprite(tile.tanks[0].getFluid(), guiLeft+32, guiTop+39+(32*tfluid), 102, 32f);
+			float tfluid = 1f-(fluid.amount/(float)tile.tanks[0].getCapacity());
+			ClientUtils.drawRepeatedFluidSprite(fluid, guiLeft+32, guiTop+39+(32*tfluid), 102, 32f*(1f-tfluid));
 		}
 
 		ClientUtils.bindTexture(texture_chemical_bath);
@@ -64,7 +67,7 @@ public class GuiChemicalBath extends GuiIEContainerBase
 
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		Utils.drawPowerBar(guiLeft+161, guiTop+24,7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		Utils.drawPowerBar(guiLeft+161, guiTop+24, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		if(tile.active)
 		{
@@ -85,8 +88,22 @@ public class GuiChemicalBath extends GuiIEContainerBase
 		//Thanks Flaxbeard!
 		ArrayList<String> tooltip = new ArrayList<>();
 
-		if(mx > guiLeft+161&&mx < guiLeft+168&&my > guiTop+24&&my < guiTop+71)
+
+		if(isPointInRegion(161, 24, 7, 47, mx, my))
 			tooltip.add(Utils.getPowerLevelString(tile));
+
+		FluidStack fluid = tile.tanks[0].getFluid();
+		if(fluid!=null&&fluid.amount > 0)
+		{
+			float tfluid = 1f-(fluid.amount/(float)tile.tanks[0].getCapacity());
+			if(isPointInRegion(32,39+(int)(32*tfluid),102, (int)(32*(1f-tfluid)),mx,my))
+			{
+				if(!(
+						Utils.isPointInTriangle(30,57,30,70,43,70,mx-guiLeft,my-guiTop)||
+								Utils.isPointInTriangle(122,70,135,70,135,57,mx-guiLeft,my-guiTop)))
+					ClientUtils.addFluidTooltip(fluid,tooltip, ChemicalBath.fluidCapacity);
+			}
+		}
 
 		if(!tooltip.isEmpty())
 		{
