@@ -29,6 +29,16 @@
         }
       }
     ],
+    "inventory,type=coil_rubber_motor_belt": [
+      {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/cloth_decoration/coil_rubber_motor_belt_side",
+          "top": "immersiveintelligence:blocks/cloth_decoration/coil_rubber_motor_belt_top",
+          "bottom": "immersiveintelligence:blocks/cloth_decoration/coil_rubber_motor_belt_top"
+        }
+      }
+    ],
     "type": {
       "coil_rope": {
         "model": "immersiveengineering:ie_pillar",
@@ -44,6 +54,14 @@
           "side": "immersiveintelligence:blocks/cloth_decoration/coil_cloth_motor_belt_side",
           "top": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top",
           "bottom": "immersiveintelligence:blocks/cloth_decoration/coil_rope_top"
+        }
+      },
+      "coil_rubber_motor_belt": {
+        "model": "immersiveengineering:ie_pillar",
+        "textures": {
+          "side": "immersiveintelligence:blocks/cloth_decoration/coil_rubber_motor_belt_side",
+          "top": "immersiveintelligence:blocks/cloth_decoration/coil_rubber_motor_belt_top",
+          "bottom": "immersiveintelligence:blocks/cloth_decoration/coil_rubber_motor_belt_top"
         }
       }
     }

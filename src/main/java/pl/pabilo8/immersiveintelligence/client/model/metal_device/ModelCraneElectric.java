@@ -1,11 +1,16 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
+
+import static pl.pabilo8.immersiveintelligence.api.Utils.drawRope;
 
 /**
  * @author Pabilo8
@@ -151,16 +156,64 @@ public class ModelCraneElectric extends ModelIIBase
 		craneArmShaftModel[0].setRotationPoint(0F, -29F, 0F);
 		craneArmShaftModel[0].rotateAngleX = 1.57079633F;
 
-		parts.put("base",baseModel);
-		parts.put("craneMain",craneMainModel);
-		parts.put("shaft",shaftModel);
-		parts.put("grabber",grabberModel);
-		parts.put("armTop",armTopModel);
-		parts.put("armBottom",armBottomModel);
-		parts.put("craneArm",craneArmModel);
-		parts.put("craneArmShaft",craneArmShaftModel);
+		parts.put("base", baseModel);
+		parts.put("craneMain", craneMainModel);
+		parts.put("shaft", shaftModel);
+		parts.put("grabber", grabberModel);
+		parts.put("armTop", armTopModel);
+		parts.put("armBottom", armBottomModel);
+		parts.put("craneArm", craneArmModel);
+		parts.put("craneArmShaft", craneArmShaftModel);
 
 		flipAll();
 	}
 
+	public void renderCrane(ResourceLocation res, float yaw, float distance, float drop, float grabProgress, Runnable function)
+	{
+		GlStateManager.pushMatrix();
+		ClientUtils.mc().getTextureManager().bindTexture(res);
+
+		GlStateManager.translate(0, 0.0625, 0);
+		for(ModelRendererTurbo mod : baseModel)
+			mod.render(0.0625f);
+
+
+		GlStateManager.rotate(180+yaw, 0, 1, 0);
+
+		for(ModelRendererTurbo mod : craneMainModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : shaftModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0, 0, 1f-distance);
+
+		for(ModelRendererTurbo mod : craneArmModel)
+			mod.render(0.0625f);
+		for(ModelRendererTurbo mod : craneArmShaftModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0, -drop, 0);
+
+		// TODO: 01.11.2021 grabProgress
+		for(ModelRendererTurbo mod : grabberModel)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0, 1.25+0.0625, 0);
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, -0.75, -distance-0.625);
+		function.run();
+		GlStateManager.popMatrix();
+
+		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
+		GlStateManager.disableCull();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0.0625, 0);
+		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0, 0.0625);
+		Tessellator.getInstance().draw();
+		GlStateManager.enableCull();
+
+		GlStateManager.popMatrix();
+	}
 }

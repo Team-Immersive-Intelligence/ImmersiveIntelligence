@@ -1,32 +1,24 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElectric;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelEmplacement;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.render.ParachuteRenderer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
-
-import static pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.VehicleWorkshopRenderer.drawRope;
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
@@ -129,11 +121,11 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 			{
 				mod.render();
 			}
-			if(turretHeight>0.5)
+			if(turretHeight > 0.5)
 			{
-				GlStateManager.translate(0,-2.75*turretHeight,0);
+				GlStateManager.translate(0, -2.75*turretHeight, 0);
 				model.platformModel[1].render();
-				GlStateManager.translate(0,2.75*turretHeight,0);
+				GlStateManager.translate(0, 2.75*turretHeight, 0);
 			}
 
 			GlStateManager.translate(0.5, 3.0625f, -1.5);
@@ -207,39 +199,7 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 
 	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
 	{
-		GlStateManager.pushMatrix();
-		GlStateManager.rotate(180+yaw, 0, 1, 0);
-		ClientUtils.mc().getTextureManager().bindTexture(textureCraneGray);
-
-		for(ModelRendererTurbo mod : modelCrane.craneMainModel)
-			mod.render(0.0625f);
-		for(ModelRendererTurbo mod : modelCrane.shaftModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0, 0, 1f-distance);
-
-		for(ModelRendererTurbo mod : modelCrane.craneArmModel)
-			mod.render(0.0625f);
-		for(ModelRendererTurbo mod : modelCrane.craneArmShaftModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0,-drop,0);
-
-		for(ModelRendererTurbo mod : modelCrane.grabberModel)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0,1.25+0.0625,0);
-
-		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
-		GlStateManager.disableCull();
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		drawRope(buffer,0,0,-1.59375,0,drop+0.25,-1.59375,0.0625,0);
-		drawRope(buffer,0,0,-1.59375,0,drop+0.25, -1.59375,0,0.0625);
-		Tessellator.getInstance().draw();
-		GlStateManager.enableCull();
-
-		GlStateManager.popMatrix();
+		modelCrane.renderCrane(textureCraneGray, yaw, distance, drop, grabProgress, function);
 	}
 
 	public static void renderInserter(boolean green, float yaw, float pitch1, float pitch2, float progress, Runnable function)

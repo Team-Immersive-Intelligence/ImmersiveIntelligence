@@ -6,26 +6,20 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleRedstone;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -33,12 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Vulcanizer;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleShockwave;
@@ -75,6 +64,7 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 
 		if(isDummy()||isRSDisabled())
 			return;
+		processQueue.removeIf(p -> p.processTick >= p.maxTicks-1||p.clearProcess);
 
 		if(world.isRemote)
 		{
@@ -83,9 +73,9 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 			TileEntityVulcanizer t3 = getTileForPos(49);
 			TileEntityVulcanizer t4 = getTileForPos(25);
 
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.vulcanizer_heating, this, shoudlPlaySound("immersiveintelligence:vulcanizer_heating"), 1.5f, 1f);
 			if(t1!=null)
 				ImmersiveEngineering.proxy.handleTileSound(IISounds.printing_press, t1, shoudlPlaySound("immersiveintelligence:printing_press"), 1.5f, 0.5f);
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.vulcanizer_heating, this, shoudlPlaySound("immersiveintelligence:vulcanizer_heating"), 1.5f, 1f);
 			if(t2!=null)
 				ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzer_rotation_h, t2, shoudlPlaySound("immersiveintelligence:howitzer_rotation_h"), 1.5f, 0.5f);
 			if(t3!=null)
@@ -123,7 +113,6 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 					this.energyStorage.extractEnergy(energyExtracted, false);
 					process.processTick += ticksAdded;
 
-					//if(world.getTotalWorldTime()%10==0)
 					if(process.processTick > Math.ceil(0.86*process.maxTicks)&&process.processTick < Math.ceil(0.885*process.maxTicks)&&world.getTotalWorldTime()%4==0)
 						spawnParticles();
 
@@ -132,14 +121,6 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 			}
 
 			return;
-		}
-
-		for(MultiblockProcess<VulcanizerRecipe> process : processQueue)
-		{
-			if(process.processTick==process.maxTicks-1)
-			{
-				process.clearProcess=true;
-			}
 		}
 
 		for(MultiblockProcess<VulcanizerRecipe> process : processQueue)
@@ -350,13 +331,12 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 	@Override
 	public void onProcessFinish(MultiblockProcess<VulcanizerRecipe> process)
 	{
-		process.clearProcess = true;
+
 	}
 
 	@Override
 	public int getMaxProcessPerTick()
 	{
-		// TODO: 20.06.2021 fix weird recipe issue
 		return 2;
 	}
 
@@ -414,11 +394,11 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 		switch(i)
 		{
 			case 0:
-				return VulcanizerRecipe.recipeList.values().stream().anyMatch(vulcanizerRecipe -> vulcanizerRecipe.input.matchesItemStack(itemStack));
+				return VulcanizerRecipe.recipeList.values().stream().anyMatch(vulcanizerRecipe -> vulcanizerRecipe.input.matchesItemStackIgnoringSize(itemStack));
 			case 1:
-				return VulcanizerRecipe.recipeList.values().stream().anyMatch(vulcanizerRecipe -> vulcanizerRecipe.compoundInput.matchesItemStack(itemStack));
+				return VulcanizerRecipe.recipeList.values().stream().anyMatch(vulcanizerRecipe -> vulcanizerRecipe.compoundInput.matchesItemStackIgnoringSize(itemStack));
 			case 2:
-				return VulcanizerRecipe.recipeList.values().stream().anyMatch(vulcanizerRecipe -> vulcanizerRecipe.sulfurInput.matchesItemStack(itemStack));
+				return VulcanizerRecipe.recipeList.values().stream().anyMatch(vulcanizerRecipe -> vulcanizerRecipe.sulfurInput.matchesItemStackIgnoringSize(itemStack));
 		}
 		return false;
 	}

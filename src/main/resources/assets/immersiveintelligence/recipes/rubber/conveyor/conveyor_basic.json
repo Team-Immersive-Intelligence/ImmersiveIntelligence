@@ -7,7 +7,7 @@
   "key": {
     "B": {
       "type": "forge:ore_dict",
-      "ore": "beltRubber"
+      "ore": "itemRubber"
     },
     "I": {
       "type": "forge:ore_dict",

@@ -110,9 +110,8 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 			IFluidHandlerItem capability = bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			if(capability==null)
 				return;
-			IBlockState log = world.getBlockState(pos.offset(facing).up());
 
-			if(capability.fill(new FluidStack(IIContent.fluidLatex, 1000), false)==1000&&timer < LatexCollector.collectTime&&log.getBlock() instanceof BlockIIRubberLog&&log.getValue(IIContent.blockRubberLog.property)==IIBlockTypesRubberLog.STRIPPED)
+			if(capability.fill(new FluidStack(IIContent.fluidLatex, 1000), false)==1000&&timer < LatexCollector.collectTime&&isNextToTree())
 			{
 				timer = Math.min(timer+getIncomeModifier(), LatexCollector.collectTime);
 			}
@@ -132,6 +131,12 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 		}
 
 
+	}
+
+	public boolean isNextToTree()
+	{
+		IBlockState log = world.getBlockState(pos.offset(facing).up());
+		return log.getBlock() instanceof BlockIIRubberLog&&log.getValue(IIContent.blockRubberLog.property)==IIBlockTypesRubberLog.STRIPPED;
 	}
 
 	public float getIncomeModifier()

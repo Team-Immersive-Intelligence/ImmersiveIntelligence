@@ -112,7 +112,7 @@ public class GuiVulcanizer extends GuiIEContainerBase
 
 		GlStateManager.popMatrix();
 
-		Utils.drawPowerBar(guiLeft+157, guiTop+24, 7,47,prog2);
+		Utils.drawPowerBar(guiLeft+157, guiTop+24, 7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 	}
 

@@ -18,8 +18,8 @@ public enum IIBlockTypes_MetalMultiblock0 implements IStringSerializable, BlockI
 	ARTILLERY_HOWITZER(false),
 	PERISCOPE(false),
 	CONVEYOR_SCANNER(false),
-	AMMUNITION_FACTORY(false),
-	PACKER_OLD(true),
+	AMMUNITION_FACTORY(false), //deprecated
+	PACKER_OLD(true), //deprecated
 	PACKER(true),
 	RAILWAY_PACKER(false);
 

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rwr",
+    "www",
+    "rwr"
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "itemRubber"
+    },
+    "w": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 1
+    }
+  },
+  "result": {
+    "item": "immersiveengineering:wirecoil",
+    "count": 5,
+    "data": 7
+  }
+}

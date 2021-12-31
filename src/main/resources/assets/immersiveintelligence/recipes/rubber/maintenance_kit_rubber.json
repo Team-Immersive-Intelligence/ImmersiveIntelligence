@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "sw ",
+    "r  "
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "itemRubber"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickIron"
+    },
+    "w": {
+      "item": "immersiveengineering:tool",
+      "data": 1
+    }
+  },
+  "result": {
+    "item": "immersiveengineering:maintenance_kit"
+  }
+}

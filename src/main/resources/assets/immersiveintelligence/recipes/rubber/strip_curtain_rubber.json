@@ -1,0 +1,21 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "sss",
+    "rrr"
+  ],
+  "key": {
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "itemRubber"
+    },
+    "s": {
+      "item":"#listMetalSticks"
+    }
+  },
+  "result": {
+    "item": "immersiveengineering:cloth_device",
+    "data": 2,
+    "count": 3
+  }
+}

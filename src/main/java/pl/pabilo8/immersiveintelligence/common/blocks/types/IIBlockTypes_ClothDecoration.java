@@ -8,7 +8,8 @@ import java.util.Locale;
 public enum IIBlockTypes_ClothDecoration implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	COIL_ROPE,
-	COIL_CLOTH_MOTOR_BELT;
+	COIL_CLOTH_MOTOR_BELT,
+	COIL_RUBBER_MOTOR_BELT;
 
 	/**
 	 * @author Pabilo8

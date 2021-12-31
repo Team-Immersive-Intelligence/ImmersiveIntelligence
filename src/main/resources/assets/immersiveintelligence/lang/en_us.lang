@@ -663,6 +663,7 @@ desc.immersiveengineering.info.multiblock.II:RedstoneDataInterface=Redstone-Data
 desc.immersiveengineering.info.multiblock.II:VehicleWorkshop=Vehicle Workshop
 desc.immersiveengineering.info.multiblock.II:FuelStation=Fuel Station
 desc.immersiveengineering.info.multiblock.II:Vulcanizer=Vulcanizer
+desc.immersiveengineering.info.multiblock.II:Coagulator=Coagulator
 
 desc.immersiveengineering.info.multiblock.II:Emplacement=Emplacement
 desc.immersiveengineering.info.multiblock.II:Radar=Radar

@@ -7,19 +7,17 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFuelStation;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelVehicleWorkshop;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_workshop.ModelCrane;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_workshop.ModelHeavyInserter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFuelStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityVehicleWorkshop;
+
+import static pl.pabilo8.immersiveintelligence.api.Utils.drawRope;
 
 /**
  * @author Pabilo8
@@ -86,18 +84,18 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			GlStateManager.pushMatrix();
 
-			final float fh = (float)((Math.min((ff>0.5?(ff-0.5):0)/0.5,1))*TmtUtil.AngleToTMT(-135))*(te.mirrored?-1:1);
+			final float fh = (float)((Math.min((ff > 0.5?(ff-0.5): 0)/0.5, 1))*TmtUtil.AngleToTMT(-135))*(te.mirrored?-1: 1);
 			for(ModelRendererTurbo mod : model.doorLeftModel)
 			{
-				mod.rotateAngleY=fh;
+				mod.rotateAngleY = fh;
 				mod.render();
 			}
 
-			GlStateManager.translate(0,0,Math.min(ff/0.25f,1f)*0.0625f);
-			GlStateManager.translate(-Math.min((ff>0.25f?(ff-0.25f):0)/0.25f,1f)*(te.mirrored?-1:1),0,0);
+			GlStateManager.translate(0, 0, Math.min(ff/0.25f, 1f)*0.0625f);
+			GlStateManager.translate(-Math.min((ff > 0.25f?(ff-0.25f): 0)/0.25f, 1f)*(te.mirrored?-1: 1), 0, 0);
 			for(ModelRendererTurbo mod : model.doorRightModel)
 			{
-				mod.rotateAngleY=fh;
+				mod.rotateAngleY = fh;
 				mod.render();
 			}
 
@@ -108,14 +106,14 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 			for(ModelRendererTurbo mod : model.scissor1Model)
 			{
 				//mod.rotateAngleX=0.10471976F;
-				mod.rotateAngleX=0.10471976F+fg;
+				mod.rotateAngleX = 0.10471976F+fg;
 				//mod.rotateAngleX=-0.5f;
 				mod.render();
 			}
 
 			for(ModelRendererTurbo mod : model.scissor2Model)
 			{
-				mod.rotateAngleX=0.10471976F+fg;
+				mod.rotateAngleX = 0.10471976F+fg;
 				mod.render();
 			}
 
@@ -129,17 +127,21 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			if(te.mirrored)
 			{
-				GlStateManager.translate(-2.5,1f,-3.375);
-				renderCrane(0,1,0,0,() -> {});
-				GlStateManager.translate(-1f,0,0);
-				renderInserter(0,0,0,0,() -> {});
+				GlStateManager.translate(-2.5, 1f, -3.375);
+				renderCrane(0, 1, 0, 0, () -> {
+				});
+				GlStateManager.translate(-1f, 0, 0);
+				renderInserter(0, 0, 0, 0, () -> {
+				});
 			}
 			else
 			{
-				GlStateManager.translate(2.5,1f,-3.375);
-				renderCrane(0,1.25f,0,0,() -> {});
-				GlStateManager.translate(1f,0,0);
-				renderInserter(0,0,0,0,() -> {});
+				GlStateManager.translate(2.5, 1f, -3.375);
+				renderCrane(0, 1.25f, 0, 0, () -> {
+				});
+				GlStateManager.translate(1f, 0, 0);
+				renderInserter(0, 0, 0, 0, () -> {
+				});
 			}
 
 			//float f = te.calculateInserterAnimation(partialTicks);
@@ -164,7 +166,7 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(180+yaw,0,1,0);
+		GlStateManager.rotate(180+yaw, 0, 1, 0);
 		ClientUtils.bindTexture(TEXTURE_CRANE);
 
 		for(ModelRendererTurbo mod : modelCrane.craneMainModel)
@@ -174,26 +176,26 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 		for(ModelRendererTurbo mod : modelCrane.shaftModel)
 			mod.render(0.0625f);
 
-		GlStateManager.translate(0,0,1f-distance);
+		GlStateManager.translate(0, 0, 1f-distance);
 
 		for(ModelRendererTurbo mod : modelCrane.craneArmModel)
 			mod.render(0.0625f);
 		for(ModelRendererTurbo mod : modelCrane.craneArmShaftModel)
 			mod.render(0.0625f);
 
-		GlStateManager.translate(0,-drop,0);
+		GlStateManager.translate(0, -drop, 0);
 
 		for(ModelRendererTurbo mod : modelCrane.grabberModel)
 			mod.render(0.0625f);
 
-		GlStateManager.translate(0,1.25+0.0625,0);
+		GlStateManager.translate(0, 1.25+0.0625, 0);
 
 		ClientUtils.mc().getTextureManager().bindTexture(new ResourceLocation("immersiveengineering:textures/blocks/wire.png"));
 		GlStateManager.disableCull();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		drawRope(buffer,0,0,-1.59375,0,drop+0.25,-1.59375,0.0625,0);
-		drawRope(buffer,0,0,-1.59375,0,drop+0.25, -1.59375,0,0.0625);
+		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0.0625, 0);
+		drawRope(buffer, 0, 0, -1.59375, 0, drop+0.25, -1.59375, 0, 0.0625);
 		Tessellator.getInstance().draw();
 		GlStateManager.enableCull();
 
@@ -238,13 +240,5 @@ public class VehicleWorkshopRenderer extends TileEntitySpecialRenderer<TileEntit
 		function.run();
 
 		GlStateManager.popMatrix();
-	}
-
-	public static void drawRope(BufferBuilder buff, double x, double y, double z, double xx, double yy, double zz, double xdiff, double zdiff)
-	{
-		buff.pos(x+xdiff, y, z-zdiff).tex(0f, 0f).endVertex();
-		buff.pos(xx+xdiff, yy, zz-zdiff).tex(0f, 1f).endVertex();
-		buff.pos(xx-xdiff, yy, zz+zdiff).tex(0.125f, 1f).endVertex();
-		buff.pos(x-xdiff, y, z+zdiff).tex(0.125f, 0f).endVertex();
 	}
 }

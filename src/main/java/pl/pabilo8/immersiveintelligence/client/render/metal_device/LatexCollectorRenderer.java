@@ -5,13 +5,9 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.SimpleBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -20,12 +16,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.LatexCollector;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.TmtTessellator;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataDebugger;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityLatexCollector;
 
 import static blusunrize.immersiveengineering.api.IEProperties.FACING_HORIZONTAL;
@@ -36,8 +28,6 @@ import static blusunrize.immersiveengineering.api.IEProperties.FACING_HORIZONTAL
  */
 public class LatexCollectorRenderer extends TileEntitySpecialRenderer<TileEntityLatexCollector> implements IReloadableModelContainer<LatexCollectorRenderer>
 {
-	IBakedModel bucketModel = null;
-
 	@Override
 	public void render(TileEntityLatexCollector te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
@@ -74,7 +64,7 @@ public class LatexCollectorRenderer extends TileEntitySpecialRenderer<TileEntity
 				ClientUtils.bindAtlas();
 
 				worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-				Vec3d vv = new Vec3d(blockPos).scale(-1).add(new Vec3d(0,0.5,0).add(new Vec3d(te.facing.getOpposite().getDirectionVec())).scale(0.5).scale((1-Math.min(progress, 1))));
+				Vec3d vv = new Vec3d(blockPos).scale(-1).add(new Vec3d(0, 0.5, 0).add(new Vec3d(te.facing.getOpposite().getDirectionVec())).scale(0.5).scale((1-Math.min(progress, 1))));
 				worldRenderer.setTranslation(vv.x, vv.y, vv.z);
 
 				blockRenderer.getBlockModelRenderer().renderModel(te.getWorld(), model, state, blockPos, worldRenderer, true);
@@ -91,11 +81,11 @@ public class LatexCollectorRenderer extends TileEntitySpecialRenderer<TileEntity
 						atime += drain!=null&&drain.amount==1000?LatexCollector.collectTime: 0;
 					}
 				}
-				float amount = Math.min((atime+(!te.bucket.isEmpty()?(partialTicks*te.getIncomeModifier()): 0))/(float)LatexCollector.collectTime,1f);
-				if(progress>=1&&amount > 0)
+				float amount = Math.min((atime+(!te.bucket.isEmpty()&&te.isNextToTree()?(partialTicks*te.getIncomeModifier()): 0))/(float)LatexCollector.collectTime, 1f);
+				if(progress >= 1&&amount > 0)
 				{
-					GlStateManager.translate(0.5,0,0.5);
-					GlStateManager.rotate(-te.facing.getHorizontalAngle(),0,1,0);
+					GlStateManager.translate(0.5, 0, 0.5);
+					GlStateManager.rotate(-te.facing.getHorizontalAngle(), 0, 1, 0);
 					GlStateManager.translate(-0.25, 0.3125+(0.655*amount), -0.125);
 					GlStateManager.rotate(90, 1, 0, 0);
 					GlStateManager.scale(0.0625f, 0.0625f, 0.0625f);

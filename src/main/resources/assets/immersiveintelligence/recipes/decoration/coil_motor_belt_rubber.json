@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ccc",
+    "csc",
+    "ccc"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveintelligence:motor_belt",
+      "data": 2
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:cloth_decoration",
+    "data": 2,
+    "count": 1
+  }
+}

@@ -17,12 +17,11 @@ public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrec
 {
 	public ContainerPrecissionAssembler(InventoryPlayer inventoryPlayer, TileEntityPrecissionAssembler tile)
 	{
-		//Normal bullet slots
-
 		super(inventoryPlayer, tile);
 
+		//tool slots
 		for(int i = 0; i < 3; i++)
-			this.addSlotToContainer(new Slot(this.inv, i, 60+(i*18), 57)
+			this.addSlotToContainer(new Slot(this.inv, i, 62+(i*18), 59)
 			{
 				@Override
 				public boolean isItemValid(ItemStack stack)
@@ -31,6 +30,7 @@ public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrec
 				}
 			});
 
+		//scheme slot
 		this.addSlotToContainer(new Slot(this.inv, 3, 80, 24)
 		{
 			@Override
@@ -40,12 +40,14 @@ public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrec
 			}
 		});
 
+		//ingredient slots
 		this.addSlotToContainer(new Slot(this.inv, 4, 30, 39));
 
 		this.addSlotToContainer(new Slot(this.inv, 5, 9, 19));
 		this.addSlotToContainer(new Slot(this.inv, 6, 9, 39));
 		this.addSlotToContainer(new Slot(this.inv, 7, 9, 59));
 
+		//output slots
 		this.addSlotToContainer(new Output(this, this.inv, 8, 137, 39));
 		this.addSlotToContainer(new Output(this, this.inv, 9, 137, 59));
 
