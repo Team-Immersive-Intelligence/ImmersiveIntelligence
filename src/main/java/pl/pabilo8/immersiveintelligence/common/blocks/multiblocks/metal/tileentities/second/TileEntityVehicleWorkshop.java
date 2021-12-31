@@ -2,24 +2,17 @@ package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileent
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.VehicleWorkshop;
 
 /**
  * @author Pabilo8
@@ -27,15 +20,15 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
  */
 public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEntityVehicleWorkshop, MultiblockRecipe>
 {
+	public NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
+	public FluidTank[] tanks = new FluidTank[]{
+			new FluidTank(VehicleWorkshop.dieselCapacity)
+	};
+	public int progress=0, maxProgress=0;
+
 	public TileEntityVehicleWorkshop()
 	{
-		super(MultiblockVehicleWorkshop.instance, new int[]{4, 4, 5}, Emplacement.energyCapacity, true);
-	}
-
-	@Override
-	public void validate()
-	{
-		super.validate();
+		super(MultiblockVehicleWorkshop.instance, new int[]{4, 4, 5}, VehicleWorkshop.energyCapacity, true);
 	}
 
 	@Override
@@ -43,24 +36,37 @@ public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEnt
 	{
 		super.update();
 
+		// TODO: 19.10.2021 main loop
 	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
+		nbt.setTag("inventory", Utils.writeInventory(inventory));
+		tanks[0] = tanks[0].readFromNBT(nbt.getCompoundTag("tank"));
 	}
 
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
+		inventory = Utils.readInventory(nbt.getTagList("inventory", 10), inventory.size());
+		nbt.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
+	}
+
+	@Override
+	public void receiveMessageFromClient(NBTTagCompound message)
+	{
+		super.receiveMessageFromClient(message);
+		// TODO: 19.10.2021 Prints le Bleu
 	}
 
 	@Override
 	public void receiveMessageFromServer(NBTTagCompound message)
 	{
 		super.receiveMessageFromServer(message);
+		// TODO: 19.10.2021 update
 	}
 
 	@Override
@@ -72,19 +78,19 @@ public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEnt
 	@Override
 	public int[] getEnergyPos()
 	{
-		return new int[0];
+		return new int[]{};
 	}
 
 	@Override
 	public int[] getRedstonePos()
 	{
-		return new int[0];
+		return new int[]{};
 	}
 
 	@Override
 	public IFluidTank[] getInternalTanks()
 	{
-		return new IFluidTank[0];
+		return tanks;
 	}
 
 	@Override
@@ -159,6 +165,7 @@ public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEnt
 		return new IFluidTank[0];
 	}
 
+	// TODO: 19.10.2021 tank
 	@Override
 	protected boolean canFillTankFrom(int i, EnumFacing enumFacing, FluidStack fluidStack)
 	{
@@ -182,19 +189,19 @@ public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEnt
 	@Override
 	public NonNullList<ItemStack> getInventory()
 	{
-		return null;
+		return inventory;
 	}
 
 	@Override
 	public boolean isStackValid(int i, ItemStack itemStack)
 	{
-		return false;
+		return true;
 	}
 
 	@Override
 	public int getSlotLimit(int i)
 	{
-		return 0;
+		return 64;
 	}
 
 	@Override
