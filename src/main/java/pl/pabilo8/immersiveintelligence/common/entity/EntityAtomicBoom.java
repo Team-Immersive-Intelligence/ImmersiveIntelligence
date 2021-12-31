@@ -3,11 +3,12 @@ package pl.pabilo8.immersiveintelligence.common.entity;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
@@ -17,12 +18,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, ILightProvider
 {
 	public float size;
-	public int progress=0;
+	public int progress = 0;
 
 	public EntityAtomicBoom(World worldIn)
 	{
@@ -156,34 +156,37 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 		BlockPos pp = new BlockPos(x, y, z);
 		if(!world.isOutsideBuildHeight(pp))
 		{
-			Material material = world.getBlockState(pp).getMaterial();
-			if(progress < 48)
+			IBlockState state = world.getBlockState(pp);
+			Material material = state.getMaterial();
+			boolean b = material==Material.WOOD||
+					material==Material.CLOTH||
+					material==Material.CARPET||
+					material==Material.CACTUS||
+					material==Material.CORAL||
+					material==Material.GLASS||
+					material==Material.PLANTS||
+					material==Material.SNOW||
+					material==Material.CRAFTED_SNOW||
+					material==Material.LEAVES||
+					material==Material.WEB||
+					material==Material.CAKE||
+					material==Material.VINE||
+					material==Material.CIRCUITS||
+					material==Material.PACKED_ICE||
+					material==Material.ICE;
+
+
+			if(progress < 38)
 			{
-				if(material==Material.WOOD||
-						material==Material.CLOTH||
-						material==Material.CARPET||
-						material==Material.CACTUS||
-						material==Material.CORAL||
-						material==Material.GLASS||
-						material==Material.PLANTS||
-						material==Material.SNOW||
-						material==Material.CRAFTED_SNOW||
-						material==Material.LEAVES||
-						material==Material.WEB||
-						material==Material.CAKE||
-						material==Material.VINE||
-						material==Material.CIRCUITS||
-						material==Material.PACKED_ICE||
-						material==Material.ICE
-				)
+				if(b)
 					world.setBlockToAir(pp);
 			}
 			else
 			{
-				/*
-				if(progress > 56&&world.getBlockState(pp).getBlock().isFlammable(world, pp, facing))
-					world.setBlockState(pp.offset(facing.getOpposite()), Blocks.FIRE.getDefaultState(), 11);
-				 */
+				if(progress<52 && material==Material.WOOD&&state.getPropertyKeys().contains(BlockLog.LOG_AXIS))
+					world.setBlockState(pp, IIContent.blockCharredLog.getDefaultState().withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS)));
+				else if(b)
+					world.setBlockToAir(pp);
 
 				if(material==Material.PLANTS||material==Material.SNOW||material==Material.CRAFTED_SNOW||material==Material.LEAVES||material==Material.WEB||material==Material.CAKE||material==Material.VINE||material==Material.CIRCUITS||material==Material.PACKED_ICE||material==Material.ICE)
 					world.setBlockToAir(pp);
