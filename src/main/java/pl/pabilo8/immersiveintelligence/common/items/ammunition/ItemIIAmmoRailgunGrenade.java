@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelRailgunGrenade;
 
@@ -74,5 +75,11 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIBulletBase
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
 		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.PIERCING_SABOT, EnumCoreTypes.SHAPED, EnumCoreTypes.SOFTPOINT, EnumCoreTypes.CANISTER};
+	}
+
+	@Override
+	public EnumFuseTypes[] getAllowedFuseTypes()
+	{
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED,EnumFuseTypes.PROXIMITY};
 	}
 }

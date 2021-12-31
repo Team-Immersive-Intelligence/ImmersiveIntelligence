@@ -117,10 +117,24 @@
           }
         }
       ],
+      "carbon_monoxide": [
+        {
+          "custom": {
+            "fluid": "carbon_monoxide"
+          }
+        }
+      ],
       "formic_acid": [
         {
           "custom": {
             "fluid": "formic_acid"
+          }
+        }
+      ],
+      "mustard_gas": [
+        {
+          "custom": {
+            "fluid": "mustard_gas"
           }
         }
       ]

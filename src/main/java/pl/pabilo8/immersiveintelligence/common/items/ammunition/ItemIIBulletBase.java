@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
@@ -55,6 +56,8 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 			ItemNBTHelper.setString(stack, "core", "core_brass");
 		if(!ItemNBTHelper.hasKey(stack, "core_type"))
 			ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
+		if(stack.getMetadata()==BULLET&&!ItemNBTHelper.hasKey(stack, "fuse"))
+			ItemNBTHelper.setString(stack, "fuse", getAllowedFuseTypes()[0].getName());
 	}
 
 	@Override
@@ -120,6 +123,19 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 	}
 
 	@Override
+	public void addComponents(ItemStack stack, IBulletComponent component, NBTTagCompound componentNBT)
+	{
+		NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList("components", 8);
+		NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList("component_nbt", 10);
+
+		comps.appendTag(new NBTTagString(component.getName()));
+		nbts.appendTag(componentNBT.copy());
+
+		ItemNBTHelper.getTag(stack).setTag("components", comps);
+		ItemNBTHelper.getTag(stack).setTag("component_nbt", nbts);
+	}
+
+	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
@@ -138,10 +154,13 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 					I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_core_type."+getCoreType(stack).getName()),
 					I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+getCore(stack).getName()+".name")
 			));
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.fuse",
+					I18n.format(CommonProxy.DESCRIPTION_KEY+"bullet_fuse."+getFuseType(stack).getName())
+			));
 			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
 			//tooltip.add(getPenetrationTable(stack));
 		}
-		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(),"#.#")));
+		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(), "#.#")));
 	}
 
 	private String getFormattedBulletTypeName(ItemStack stack)
@@ -234,6 +253,21 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 	}
 
 	@Override
+	public ItemStack getBulletCore(String core, String coreType)
+	{
+		ItemStack stack = new ItemStack(this, 1, CORE);
+		ItemNBTHelper.setString(stack, "core", core);
+		ItemNBTHelper.setString(stack, "core_type", coreType);
+		return stack;
+	}
+
+	@Override
+	public boolean isBulletCore(ItemStack stack)
+	{
+		return stack.getMetadata()==CORE;
+	}
+
+	@Override
 	public ItemStack setPaintColour(ItemStack stack, int color)
 	{
 		ItemNBTHelper.setInt(stack, "paint_color", color);
@@ -257,6 +291,20 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 		return NAME;
 	}
 
+	@Override
+	public void setFuseType(ItemStack stack, EnumFuseTypes type)
+	{
+		ItemNBTHelper.setString(stack, "fuse", type.getName());
+	}
+
+	@Override
+	public EnumFuseTypes getFuseType(ItemStack stack)
+	{
+		if(!ItemNBTHelper.hasKey(stack, "fuse"))
+			makeDefault(stack);
+		return EnumFuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public FontRenderer getFontRenderer(ItemStack stack)
@@ -267,7 +315,7 @@ public abstract class ItemIIBulletBase extends ItemIIBase implements IBullet, IT
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return NAME+"_"+(getPaintColor(stack)==-1?"no_": "paint_")+getCoreType(stack).getName();
+		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME, getPaintColor(stack)==-1?"no_": "paint_", getCoreType(stack).getName());
 	}
 
 	@Override

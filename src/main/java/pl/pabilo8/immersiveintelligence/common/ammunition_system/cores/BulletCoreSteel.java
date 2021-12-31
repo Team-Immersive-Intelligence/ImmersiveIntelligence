@@ -19,7 +19,7 @@ public class BulletCoreSteel implements IBulletCore
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("plateSteel");
+		return new IngredientStack("nuggetSteel");
 	}
 
 	@Override

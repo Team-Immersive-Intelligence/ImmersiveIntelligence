@@ -7,7 +7,8 @@ import java.util.Locale;
 
 public enum IIBlockTypes_Mine implements IStringSerializable, BlockIEBase.IBlockEnum
 {
-	MAIN;
+	MAIN,
+	CORE;
 
 	/**
 	 * @author Pabilo8

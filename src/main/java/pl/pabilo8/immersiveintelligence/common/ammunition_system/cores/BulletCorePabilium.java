@@ -23,7 +23,7 @@ public class BulletCorePabilium implements IBulletCore
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("platePabilium");
+		return new IngredientStack("nuggetPabilium");
 	}
 
 	@Override

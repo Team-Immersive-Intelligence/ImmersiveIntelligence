@@ -19,7 +19,7 @@ public class BulletCoreBrass implements IBulletCore
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("plateBrass");
+		return new IngredientStack("nuggetBrass");
 	}
 
 	@Override

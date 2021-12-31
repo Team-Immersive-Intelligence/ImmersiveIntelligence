@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityNavalMine;
@@ -92,16 +93,18 @@ public class NavalMineRenderer extends Render<EntityNavalMine> implements IReloa
 	public static class NavalMineItemstackRenderer extends TileEntityItemStackRenderer
 	{
 		@Override
-		public void renderByItem(ItemStack itemStackIn, float partialTicks)
+		public void renderByItem(ItemStack stack, float partialTicks)
 		{
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0.5f, 0f, 0.5f);
-			ClientUtils.bindTexture(TEXTURE);
-			for(ModelRendererTurbo mod : model.baseModel)
-				mod.render();
-			for(ModelRendererTurbo mod : model.topModel)
-				mod.render();
+			if(stack.getMetadata()==0)
+			model.renderBulletUnused(stack);
+			else
+			{
+				IBullet b = (IBullet)stack.getItem();
+				model.renderCore(b.getCore(stack).getColour(), b.getCoreType(stack));
+			}
 
 			GlStateManager.popMatrix();
 		}

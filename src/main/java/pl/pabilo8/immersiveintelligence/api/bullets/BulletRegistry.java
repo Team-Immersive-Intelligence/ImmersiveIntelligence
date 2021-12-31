@@ -4,7 +4,9 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -59,7 +61,8 @@ public class BulletRegistry
 					IBulletModel iBulletModel = casing.getModel().newInstance();
 					iBulletModel.subscribeToList(casing.getName());
 					registeredModels.put(casing.getName(), iBulletModel);
-				} catch(InstantiationException|IllegalAccessException e)
+				}
+				catch(InstantiationException|IllegalAccessException e)
 				{
 					e.printStackTrace();
 				}
@@ -196,9 +199,31 @@ public class BulletRegistry
 			return role;
 		}
 
+		@Nonnull
 		public static EnumCoreTypes v(String s)
 		{
-			return valueOf(s.toUpperCase());
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(SOFTPOINT);
+		}
+	}
+
+	public enum EnumFuseTypes implements IStringSerializable
+	{
+		CONTACT,
+		TIMED,
+		PROXIMITY;
+
+		@Override
+		public String getName()
+		{
+			return this.toString().toLowerCase(Locale.ENGLISH);
+		}
+
+		@Nonnull
+		public static EnumFuseTypes v(String s)
+		{
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(CONTACT);
 		}
 	}
 

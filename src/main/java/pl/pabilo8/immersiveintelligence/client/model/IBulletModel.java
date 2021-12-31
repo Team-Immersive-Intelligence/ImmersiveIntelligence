@@ -54,7 +54,7 @@ public interface IBulletModel extends IReloadableModelContainer
 	 * If your bullet has a gunpowder filling animation it's preferred you add a simpler casing model and override {@link #renderBulletUnused(int, EnumCoreTypes, int)}
 	 *
 	 * @param gunpowderPercentage how much is the casing filled with gunpowder
-	 * @param paintColour in rgbInt format
+	 * @param paintColour in rgbInt format, -1 if unpainted
 	 */
 	void renderCasing(float gunpowderPercentage, int paintColour);
 

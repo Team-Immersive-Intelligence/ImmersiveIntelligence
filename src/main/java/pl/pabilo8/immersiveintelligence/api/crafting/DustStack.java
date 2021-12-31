@@ -33,7 +33,7 @@ public class DustStack
 
 	public boolean isEmpty()
 	{
-		return "".equals(name)&&amount==0;
+		return "".equals(name)||amount==0;
 	}
 
 	public static DustStack getEmptyStack()

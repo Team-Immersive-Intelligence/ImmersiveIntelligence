@@ -2,26 +2,27 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
-import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.api.TargetingInfo;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
+import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
+import blusunrize.immersiveengineering.api.energy.wires.WireType;
+import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
+import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
@@ -30,24 +31,25 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIITrenchShovel;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 06.02.2021
  */
-public class TileEntityRadioExplosives extends TileEntityIEBase implements IBlockBounds, ITileDrop, IPlayerInteraction, IDirectionalTile, IRadioDevice
+public class TileEntityRadioExplosives extends TileEntityImmersiveConnectable implements ITickable, IBlockBounds, ITileDrop, IPlayerInteraction, IDirectionalTile, IRadioDevice, IRedstoneConnector
 {
 	public int frequency = 0;
 	public DataPacket programmedPacket = new DataPacket();
 	public int coreColor = 0xffffff;
 	public ItemStack mineStack = ItemStack.EMPTY;
 
+	private static final Vec3d CONN_OFFSET = new Vec3d(0.5, 0.25, 0.5);
 	public EnumFacing facing = EnumFacing.NORTH;
+
+	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
+	private boolean refreshWireNetwork = false;
 
 	private boolean armed = true;
 
@@ -228,5 +230,66 @@ public class TileEntityRadioExplosives extends TileEntityIEBase implements IBloc
 	public DimensionBlockPos getDevicePosition()
 	{
 		return new DimensionBlockPos(this);
+	}
+
+	@Override
+	public Vec3d getConnectionOffset(Connection con)
+	{
+		return CONN_OFFSET;
+	}
+
+	@Override
+	protected boolean isRelay()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
+	{
+		return WireType.REDSTONE_CATEGORY.equals(cableType.getCategory());
+	}
+
+	@Override
+	public void setNetwork(RedstoneWireNetwork net)
+	{
+		wireNetwork = net;
+	}
+
+	@Override
+	public RedstoneWireNetwork getNetwork()
+	{
+		return wireNetwork;
+	}
+
+	@Override
+	public void onChange()
+	{
+		if(wireNetwork.getPowerOutput(0) > 0)
+			explode();
+	}
+
+	@Override
+	public World getConnectorWorld()
+	{
+		return getWorld();
+	}
+
+	@Override
+	public void updateInput(byte[] signals)
+	{
+
+	}
+
+	@Override
+	public void update()
+	{
+		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
+		{
+			refreshWireNetwork = true;
+			wireNetwork.removeFromNetwork(null);
+		}
+		if(hasWorld()&&!world.isRemote)
+			wireNetwork.updateValues();
 	}
 }

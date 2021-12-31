@@ -31,6 +31,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -98,6 +99,8 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 				ItemNBTHelper.setString(stack, "core", "core_brass");
 			if(!ItemNBTHelper.hasKey(stack, "core_type"))
 				ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
+			if(stack.getMetadata()==BULLET&&!ItemNBTHelper.hasKey(stack, "fuse"))
+				ItemNBTHelper.setString(stack, "fuse", getAllowedFuseTypes()[0].getName());
 		}
 	}
 
@@ -154,6 +157,19 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	}
 
 	@Override
+	public void addComponents(ItemStack stack, IBulletComponent component, NBTTagCompound componentNBT)
+	{
+		NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList("components", 8);
+		NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList("component_nbt", 10);
+
+		comps.appendTag(new NBTTagString(component.getName()));
+		nbts.appendTag(componentNBT.copy());
+
+		ItemNBTHelper.getTag(stack).setTag("components", comps);
+		ItemNBTHelper.getTag(stack).setTag("component_nbt", nbts);
+	}
+
+	@Override
 	public NBTTagCompound[] getComponentsNBT(ItemStack stack)
 	{
 		if(ItemNBTHelper.hasKey(stack, "component_nbt"))
@@ -182,7 +198,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
 			//tooltip.add(getPenetrationTable(stack));
 		}
-		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(),"#.#")));
+		tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(), "#.#")));
 	}
 
 	private String getFormattedBulletTypeName(ItemStack stack)
@@ -252,12 +268,6 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		return 0xffffffff;
 	}
 
-	public ItemStack getBulletWithParams(IBulletCore core, EnumCoreTypes coreType, IBulletComponent... components)
-	{
-		String[] compNames = Arrays.stream(components).map(IBulletComponent::getName).toArray(String[]::new);
-		return getBulletWithParams(core.getName(), coreType.getName(), compNames);
-	}
-
 	public ItemStack getBulletWithParams(String core, String coreType, String... components)
 	{
 		ItemStack stack = new ItemStack(this, 1, BULLET);
@@ -278,6 +288,41 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		}
 
 		return stack;
+	}
+
+	@Override
+	public ItemStack getBulletCore(String core, String coreType)
+	{
+		ItemStack stack = new ItemStack(this, 1, CORE);
+		ItemNBTHelper.setString(stack, "core", core);
+		ItemNBTHelper.setString(stack, "core_type", coreType);
+		return stack;
+	}
+
+	@Override
+	public boolean isBulletCore(ItemStack stack)
+	{
+		return stack.getMetadata()==CORE;
+	}
+
+	@Override
+	public EnumFuseTypes[] getAllowedFuseTypes()
+	{
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT};
+	}
+
+	@Override
+	public void setFuseType(ItemStack stack, EnumFuseTypes type)
+	{
+		ItemNBTHelper.setString(stack, "fuse", type.getName());
+	}
+
+	@Override
+	public EnumFuseTypes getFuseType(ItemStack stack)
+	{
+		if(!ItemNBTHelper.hasKey(stack, "fuse"))
+			makeDefault(stack);
+		return EnumFuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
 	}
 
 	@Override
@@ -320,7 +365,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return NAME+"_"+(getPaintColor(stack)==-1?"no_": "paint_")+getCoreType(stack).getName();
+		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME, getPaintColor(stack)==-1?"no_": "paint_", getCoreType(stack).getName());
 	}
 
 	@Override
@@ -380,8 +425,10 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 		return 1f;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public @Nonnull Class<? extends IBulletModel> getModel()
+	public @Nonnull
+	Class<? extends IBulletModel> getModel()
 	{
 		return ModelBullet1bCal.class;
 	}

@@ -19,7 +19,7 @@ public class BulletCoreLead implements IBulletCore
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("plateLead");
+		return new IngredientStack("nuggetLead");
 	}
 
 	@Override

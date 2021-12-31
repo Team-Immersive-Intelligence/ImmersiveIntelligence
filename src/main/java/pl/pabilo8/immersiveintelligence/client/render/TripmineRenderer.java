@@ -85,7 +85,8 @@ public class TripmineRenderer extends TileEntitySpecialRenderer<TileEntityTripMi
 		public void renderByItem(ItemStack itemStackIn, float partialTicks)
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 0, 1);
+			GlStateManager.translate(0.25, 0.75, 2);
+			GlStateManager.scale(1.75,1.75,1.75);
 
 			assert itemStackIn.getItem() instanceof IBullet;
 			IBullet bullet = (IBullet)itemStackIn.getItem();

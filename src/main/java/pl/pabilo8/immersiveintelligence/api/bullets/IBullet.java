@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.api.bullets;
 
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
 import javax.annotation.Nonnull;
@@ -125,6 +129,16 @@ public interface IBullet
 	/**
 	 * Internal Item method
 	 *
+	 * @param stack        bullet stack
+	 * @param component    added component
+	 * @param componentNBT
+	 * @return bullet components in appropriate order from stack NBT
+	 */
+	void addComponents(ItemStack stack, IBulletComponent component, NBTTagCompound componentNBT);
+
+	/**
+	 * Internal Item method
+	 *
 	 * @param stack bullet stack
 	 * @return NBT Tags for each bullet component in appropriate order from stack NBT
 	 */
@@ -203,8 +217,67 @@ public interface IBullet
 	}
 
 	/**
+	 * Proper method to get a bullet core, <u><b>use this instead of creating ItemStacks and setting NBT</b></u>
+	 *
+	 * @return a bullet core ItemStack for given parameters
+	 */
+	default ItemStack getBulletCore(IBulletCore core, EnumCoreTypes coreType)
+	{
+		return getBulletCore(core.getName(), coreType.getName());
+	}
+
+	/**
 	 * Same as {@link #getBulletWithParams(IBulletCore, EnumCoreTypes, IBulletComponent...)}, but uses String names
 	 * Can be used instead of the above method, <u><b>but things may broke after bullet part names are changed</b></u>
 	 */
 	ItemStack getBulletWithParams(String core, String coreType, String... components);
+
+	/**
+	 * Same as {@link #getBulletWithParams(IBulletCore, EnumCoreTypes, IBulletComponent...)}, but uses String names
+	 * Can be used instead of the above method, <u><b>but things may broke after bullet part names are changed</b></u>
+	 */
+	ItemStack getBulletCore(String core, String coreType);
+
+	/**
+	 * @param stack stack to be checked
+	 * @return whether the stack is a bullet core
+	 */
+	boolean isBulletCore(ItemStack stack);
+
+	/**
+	 * @return Returns allowed fuse types, these affect the way a bullet entity will detect collision
+	 * @see EnumFuseTypes
+	 */
+	EnumFuseTypes[] getAllowedFuseTypes();
+
+	/**
+	 * @param stack
+	 * @param type  type of the fuse
+	 */
+	void setFuseType(ItemStack stack, EnumFuseTypes type);
+
+	/**
+	 * @param stack
+	 * @return fuse type used in the bullet
+	 */
+	EnumFuseTypes getFuseType(ItemStack stack);
+
+	/**
+	 * @param stack bullet core stack to be checked
+	 * @return whether a component can be added to the stack
+	 */
+	default boolean hasFreeComponentSlots(ItemStack stack)
+	{
+		return getComponents(stack).length < getCoreType(stack).getComponentSlots();
+	}
+
+	default int getFuseParameter(ItemStack stack)
+	{
+		return ItemNBTHelper.getInt(stack, "fuse_param");
+	}
+
+	default void setFuseParameter(ItemStack stack, int p)
+	{
+		ItemNBTHelper.setInt(stack, "fuse_param",p);
+	}
 }

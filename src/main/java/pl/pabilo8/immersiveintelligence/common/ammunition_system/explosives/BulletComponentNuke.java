@@ -12,7 +12,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -21,6 +24,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
@@ -76,7 +80,7 @@ public class BulletComponentNuke implements IBulletComponent
 		{
 			e.addPotionEffect(new PotionEffect(IEPotions.flashed, 40, 1));
 			e.addPotionEffect(new PotionEffect(IIPotions.nuclear_heat, 40, 0));
-			e.hurtResistantTime=0;
+			e.hurtResistantTime = 0;
 			e.getArmorInventoryList().forEach(stack -> {
 				stack.damageItem(stack.getMaxDamage(), e);
 			});
@@ -88,8 +92,8 @@ public class BulletComponentNuke implements IBulletComponent
 			e.addPotionEffect(new PotionEffect(IIPotions.radiation, 4000, 0));
 		}
 
-		world.playSound(pos.x, pos.y, pos.z,  IISounds.explosion_nuke_high, SoundCategory.NEUTRAL, 12.0F, 0f, true);
-		world.playSound(pos.x, pos.y, pos.z,  IISounds.explosion_nuke_low, SoundCategory.NEUTRAL, 64.0F, 0f, true);
+		world.playSound(pos.x, pos.y, pos.z, IISounds.explosion_nuke_high, SoundCategory.NEUTRAL, 12.0F, 0f, true);
+		world.playSound(pos.x, pos.y, pos.z, IISounds.explosion_nuke_low, SoundCategory.NEUTRAL, 64.0F, 0f, true);
 
 		EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(world, amount);
 		entityAtomicBoom.setPosition(pos.x, pos.y, pos.z);
@@ -202,5 +206,11 @@ public class BulletComponentNuke implements IBulletComponent
 		}
 		else
 			return MathHelper.hsvToRGB(121f/255f, 0.75f, 0.88f);
+	}
+
+	@Override
+	public boolean matchesBullet(IBullet bullet)
+	{
+		return bullet.getCaliber() >= 6;
 	}
 }

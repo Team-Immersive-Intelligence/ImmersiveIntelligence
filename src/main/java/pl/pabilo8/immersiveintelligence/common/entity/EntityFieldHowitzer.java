@@ -905,4 +905,18 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	{
 		return Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
 	}
+
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount)
+	{
+		if(source.damageType.equals("bullet")) //immersive vehicles(tm)
+		{
+			DamageSource temp_source = new DamageSource("bullet").setProjectile().setDamageBypassesArmor();
+			//attack every part
+			for(EntityVehicleMultiPart part : new EntityVehicleMultiPart[]{partWheelRight, partWheelLeft, partShieldLeft, partShieldRight, partGun})
+				attackEntityFromPart(part, temp_source, amount);
+			return true;
+		}
+		return super.attackEntityFrom(source, amount);
+	}
 }

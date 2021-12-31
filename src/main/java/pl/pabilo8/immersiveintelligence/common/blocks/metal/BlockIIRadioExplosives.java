@@ -1,12 +1,19 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.api.IEProperties;
+import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
+import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -19,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,7 +37,32 @@ public class BlockIIRadioExplosives extends BlockIIMine
 {
 	public BlockIIRadioExplosives()
 	{
-		super("radio_explosives", ItemBlockRadioExplosives.class, IEProperties.FACING_ALL);
+		super("radio_explosives", ItemBlockRadioExplosives.class, IEProperties.FACING_ALL, IOBJModelCallback.PROPERTY, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1]);
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		BlockStateContainer base = super.createBlockState();
+		IUnlistedProperty[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
+		unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
+		unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
+		return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		state = super.getExtendedState(state, world, pos);
+		if(state instanceof IExtendedBlockState)
+		{
+			IExtendedBlockState ext = (IExtendedBlockState)state;
+			TileEntity te = world.getTileEntity(pos);
+			if(!(te instanceof TileEntityImmersiveConnectable))
+				return state;
+			state = ext.withProperty(IEProperties.CONNECTIONS, ((TileEntityImmersiveConnectable)te).genConnBlockstate());
+		}
+		return state;
 	}
 
 	@Override

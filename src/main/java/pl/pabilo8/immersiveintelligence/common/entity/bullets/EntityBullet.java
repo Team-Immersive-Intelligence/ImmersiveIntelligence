@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import io.netty.buffer.ByteBuf;
@@ -33,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.api.MultipleRayTracer.MultipleTracerBuil
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
@@ -56,8 +56,8 @@ import java.util.Arrays;
 public class EntityBullet extends Entity implements ILightProvider, IEntityAdditionalSpawnData
 {
 	public static final int MAX_TICKS = 600;
-	public static final float DRAG = 0.01f;
-	public static final float GRAVITY = 0.1f;
+	public static final float DRAG = 0f;
+	public static final float GRAVITY = 0.15f;
 
 	//For testing purposes
 	public static float DEV_SLOMO = 1f;
@@ -66,6 +66,8 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 	public IBullet bullet;
 	public IBulletCore core;
 	public EnumCoreTypes coreType;
+	public EnumFuseTypes fuseType = EnumFuseTypes.CONTACT;
+	public int fuseParameter = 0;
 	public IBulletComponent[] components = new IBulletComponent[0];
 	public NBTTagCompound[] componentNBT = new NBTTagCompound[0];
 
@@ -162,12 +164,14 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 			bullet = (IBullet)stack.getItem();
 			core = bullet.getCore(stack);
 			coreType = bullet.getCoreType(stack);
+			fuseType = bullet.getFuseType(stack);
+			fuseParameter = bullet.getFuseParameter(stack);
 			components = bullet.getComponents(stack);
 			componentNBT = bullet.getComponentsNBT(stack);
 			paintColor = bullet.getPaintColor(stack);
 
-			if(ItemNBTHelper.hasKey(stack, "fuse"))
-				fuse = ItemNBTHelper.getInt(stack, "fuse");
+			if(fuseType==EnumFuseTypes.TIMED)
+				fuse = fuseParameter;
 
 			refreshBullet();
 		}
@@ -180,7 +184,7 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 			setDead();
 			return;
 		}
-		penetrationHardness = core.getPenetrationHardness();
+		penetrationHardness = fuseType==EnumFuseTypes.PROXIMITY?1: core.getPenetrationHardness();
 		double compMass = 1d+Arrays.stream(components).mapToDouble(IBulletComponent::getDensity).sum();
 		compMass += core.getDensity();
 		baseDamage = (float)(bullet.getDamage()*compMass*core.getDamageModifier());
@@ -259,7 +263,7 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 			setMotion();
 
 			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), this.getNextPositionVector())
-					.setAABB(this.getEntityBoundingBox().offset(this.getPositionVector().scale(-1)))
+					.setAABB(this.getEntityBoundingBox().grow(fuseType==EnumFuseTypes.PROXIMITY?fuseParameter: 0).offset(this.getPositionVector().scale(-1)))
 					.setFilters(this.hitEntities, this.hitPos)
 					.volumetricTrace();
 
@@ -521,12 +525,6 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 		return getPositionVector().addVector(motionX, motionY, motionZ);
 	}
 
-	@SideOnly(Side.CLIENT)
-	private void onUpdateClient()
-	{
-		//TODO: Play flyby sound
-	}
-
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox()
 	{
@@ -561,6 +559,10 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 			this.core = BulletRegistry.INSTANCE.getCore(compound.getString("core"));
 		if(compound.hasKey("core_type"))
 			this.coreType = EnumCoreTypes.v(compound.getString("core_type"));
+		if(compound.hasKey("fuse_type"))
+			this.fuseType = EnumFuseTypes.v(compound.getString("fuse_type"));
+		if(compound.hasKey("fuse_parameter"))
+			this.fuseParameter = compound.getInteger("fuse_parameter");
 
 		if(compound.hasKey("components"))
 		{
@@ -606,6 +608,8 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 		compound.setString("casing", bullet.getName());
 		compound.setString("core", core.getName());
 		compound.setString("core_type", coreType.getName());
+		compound.setString("fuse_type", fuseType.getName());
+		compound.setInteger("fuse_parameter", fuseParameter);
 
 		NBTTagList tagList = new NBTTagList();
 		Arrays.stream(components).map(IBulletComponent::getName).map(NBTTagString::new).forEachOrdered(tagList::appendTag);

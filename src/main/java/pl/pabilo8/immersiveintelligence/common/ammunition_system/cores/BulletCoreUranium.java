@@ -19,7 +19,7 @@ public class BulletCoreUranium implements IBulletCore
 	@Override
 	public IngredientStack getMaterial()
 	{
-		return new IngredientStack("plateUranium");
+		return new IngredientStack("nuggetUranium");
 	}
 
 	@Override

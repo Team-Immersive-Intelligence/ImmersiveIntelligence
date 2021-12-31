@@ -988,7 +988,12 @@ desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
 desc.immersiveintelligence.bullet_core_type.piercing_sabot=Armor-Piercing Discarding Sabot
 desc.immersiveintelligence.bullet_core_type.canister=Canister
 
+desc.immersiveintelligence.bullet_fuse.contact=Contact
+desc.immersiveintelligence.bullet_fuse.timed=Timed
+desc.immersiveintelligence.bullet_fuse.proximity=Proximity
+
 desc.immersiveintelligence.bullets.core=Fitted with %1$s %2$s
+desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 

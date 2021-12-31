@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
@@ -37,6 +38,8 @@ import java.util.Arrays;
  */
 public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 {
+	public ItemBlockMineBase bullet;
+
 	public BlockIIMine(String name, Class<? extends ItemBlockMineBase> itemBlock, Object... additionalProperties)
 	{
 		super(name, Material.CIRCUITS, PropertyEnum.create("dummy", IIBlockTypes_Mine.class), itemBlock, additionalProperties);
@@ -44,19 +47,34 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		setResistance(1.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
-		tesrMap.put(0, name);
+		addToTESRMap(IIBlockTypes_Mine.MAIN);
+		addToTESRMap(IIBlockTypes_Mine.CORE);
+		setMetaHidden(IIBlockTypes_Mine.CORE.getMeta());
+		this.bullet = ((ItemBlockMineBase)super.itemBlock);
+	}
+
+	@Override
+	public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
+	{
+		return super.canPlaceBlockOnSide(worldIn, pos, side);
 	}
 
 	@Override
 	public boolean useCustomStateMapper()
 	{
-		return true;
+		return false;
+	}
+
+	@Override
+	public String getCustomStateMapping(int meta, boolean itemBlock)
+	{
+		return name;
 	}
 
 	@Override
 	public TileEntity createBasicTE(World world, IIBlockTypes_Mine type)
 	{
-		return getMineTileEntity();
+		return type==IIBlockTypes_Mine.MAIN?getMineTileEntity(): null;
 	}
 
 	protected abstract TileEntity getMineTileEntity();
@@ -134,6 +152,8 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 				ItemNBTHelper.setString(stack, "core", "core_brass");
 			if(!ItemNBTHelper.hasKey(stack, "core_type"))
 				ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
+			if(stack.getMetadata()==IIBlockTypes_Mine.MAIN.getMeta()&&!ItemNBTHelper.hasKey(stack, "fuse"))
+				ItemNBTHelper.setString(stack, "fuse", getAllowedFuseTypes()[0].getName());
 		}
 
 		@Override
@@ -169,7 +189,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		@Override
 		public ItemStack getBulletWithParams(String core, String coreType, String... components)
 		{
-			ItemStack stack = new ItemStack(this);
+			ItemStack stack = new ItemStack(this, 1, IIBlockTypes_Mine.MAIN.getMeta());
 			ItemNBTHelper.setString(stack, "core", core);
 			ItemNBTHelper.setString(stack, "core_type", coreType);
 			NBTTagList tagList = new NBTTagList();
@@ -188,6 +208,40 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 			return stack;
 		}
 
+		@Override
+		public ItemStack getBulletCore(String core, String coreType)
+		{
+			ItemStack stack = new ItemStack(this, 1, IIBlockTypes_Mine.CORE.getMeta());
+			ItemNBTHelper.setString(stack, "core", core);
+			ItemNBTHelper.setString(stack, "core_type", coreType);
+			return stack;
+		}
+
+		@Override
+		public boolean isBulletCore(ItemStack stack)
+		{
+			return stack.getMetadata()==IIBlockTypes_Mine.CORE.getMeta();
+		}
+
+		@Override
+		public EnumFuseTypes[] getAllowedFuseTypes()
+		{
+			return new EnumFuseTypes[]{EnumFuseTypes.CONTACT};
+		}
+
+		@Override
+		public void setFuseType(ItemStack stack, EnumFuseTypes type)
+		{
+			ItemNBTHelper.setString(stack, "fuse", type.getName());
+		}
+
+		@Override
+		public EnumFuseTypes getFuseType(ItemStack stack)
+		{
+			if(!ItemNBTHelper.hasKey(stack, "fuse"))
+				makeDefault(stack);
+			return EnumFuseTypes.v(ItemNBTHelper.getString(stack, "fuse"));
+		}
 
 		@Override
 		public IBulletComponent[] getComponents(ItemStack stack)
@@ -215,6 +269,19 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 				return arrayList.toArray(new NBTTagCompound[0]);
 			}
 			return new NBTTagCompound[0];
+		}
+
+		@Override
+		public void addComponents(ItemStack stack, IBulletComponent component, NBTTagCompound componentNBT)
+		{
+			NBTTagList comps = ItemNBTHelper.getTag(stack).getTagList("components", 8);
+			NBTTagList nbts = ItemNBTHelper.getTag(stack).getTagList("component_nbt", 10);
+
+			comps.appendTag(new NBTTagString(component.getName()));
+			nbts.appendTag(componentNBT.copy());
+
+			ItemNBTHelper.getTag(stack).setTag("components", comps);
+			ItemNBTHelper.getTag(stack).setTag("component_nbt", nbts);
 		}
 
 		@Override

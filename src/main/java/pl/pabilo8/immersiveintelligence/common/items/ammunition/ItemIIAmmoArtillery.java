@@ -6,6 +6,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -82,6 +83,12 @@ public class ItemIIAmmoArtillery extends ItemIIBulletBase
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
 		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER};
+	}
+
+	@Override
+	public EnumFuseTypes[] getAllowedFuseTypes()
+	{
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED,EnumFuseTypes.PROXIMITY};
 	}
 
 	@Override

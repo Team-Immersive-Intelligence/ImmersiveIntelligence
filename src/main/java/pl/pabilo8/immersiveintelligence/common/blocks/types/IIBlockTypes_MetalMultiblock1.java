@@ -13,15 +13,15 @@ public enum IIBlockTypes_MetalMultiblock1 implements IStringSerializable, BlockI
 {
 	REDSTONE_DATA_INTERFACE(false),
 	FILLER(false),
-	AMMUNITION_CORE_FORGE(false),
-	AMMUNTION_CORE_FILLER(false),
-	AMMUNITION_ASSEMBLER(false),
+	COAGULATOR(false),
+	PROJECTILE_WORKSHOP(false),
+	AMMUNITION_WORKSHOP(false),
 	FUEL_STATION(false),
 	VEHICLE_WORKSHOP(false),
 	FLAGPOLE(false),
 	RADAR(false),
 	EMPLACEMENT(false),
-	AMMUNITION_WORKSHOP(false),
+	STRATEGIC_COMMAND_TABLE(false),
 	CHEMICAL_PAINTER(false),
 	VULCANIZER(false);
 

@@ -51,4 +51,9 @@ public interface IBulletComponent
 	{
 
 	}
+
+	default boolean matchesBullet(IBullet bullet)
+	{
+		return true;
+	}
 }

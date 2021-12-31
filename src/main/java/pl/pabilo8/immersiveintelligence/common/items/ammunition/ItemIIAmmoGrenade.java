@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelGrenade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -93,6 +94,12 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	}
 
 	@Override
+	public EnumFuseTypes[] getAllowedFuseTypes()
+	{
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED};
+	}
+
+	@Override
 	public void registerSprites(TextureMap map)
 	{
 		ApiUtils.getRegisterSprite(map, ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base");
@@ -116,7 +123,7 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return NAME+"_"+(getPaintColor(stack)==-1?"no_": "paint_")+getCoreType(stack).getName()+Grenade.classicGrenades;
+		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME, getPaintColor(stack)==-1?"no_": "paint_", Grenade.classicGrenades);
 	}
 
 	@Override

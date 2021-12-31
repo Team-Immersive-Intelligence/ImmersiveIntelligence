@@ -13,6 +13,9 @@
   "variants": {
     "dummy": {
       "main": {
+        "model": "immersiveintelligence:smartmodel/conn_empty"
+      },
+      "core": {
         "model": "immersiveengineering:ie_empty"
       }
     },
@@ -23,6 +26,14 @@
       "west": {},
       "up": {},
       "down": {}
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
     }
   }
 }
