@@ -2,66 +2,105 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
+    "model": "cube_all",
     "textures": {
-      "texture": "immersiveintelligence:blocks/sandbags",
-      "particle": "immersiveintelligence:blocks/sandbags"
+      "#particles": "immersiveintelligence:blocks/fortification/sandbags"
     },
     "custom": {
       "flip-v": true
     }
   },
   "variants": {
-    "type": {},
+    "inventory,type=sandbags": [
+      {
+        "model": "immersiveintelligence:sandbags/sandbags_inventory.obj"
+      }
+    ],
+    "type": {
+      "sandbags": {
+        "model": "immersiveintelligence:sandbags/sandbags.obj"
+      }
+    },
+    "left": {
+      "0": {
+
+      },
+      "1": {
+        "submodel": "immersiveintelligence:sandbags/sandbags_none_left.obj"
+      },
+      "2": {
+        "submodel": "immersiveintelligence:sandbags/sandbags_left.obj"
+      }
+    },
+    "right": {
+      "0": {
+
+      },
+      "1": {
+        "submodel": "immersiveintelligence:sandbags/sandbags_none_right.obj"
+      },
+      "2": {
+
+      }
+    },
+    "corner": {
+      "0": {
+
+      },
+      "1": {
+        "model": "immersiveintelligence:sandbags/sandbags_corner.obj"
+      },
+      "2": {
+        "model": "immersiveintelligence:sandbags/sandbags_corner_flipped.obj"
+      }
+    },
     "facing": {
       "down": {},
-      "up": {
-        "transform": {
-          "rotation": {
-            "z": 180
-          }
-        }
-      },
+      "up": {},
       "north": {
         "transform": {
-          "rotation": {
-            "x": 90
-          }
+          "translation": [
+            0.5,
+            0,
+            0.5
+          ]
         }
       },
       "south": {
         "transform": {
+          "translation": [
+            -0.5,
+            0,
+            -0.5
+          ],
           "rotation": {
-            "x": -90
-          }
-        }
-      },
-      "west": {
-        "transform": {
-          "rotation": {
-            "z": -90
+            "y": 180
           }
         }
       },
       "east": {
         "transform": {
+          "translation": [
+            -0.5,
+            0,
+            0.5
+          ],
           "rotation": {
-            "z": 90
+            "y": -90
           }
         }
-      }
-    },
-    "boolean0": {
-      "false": {},
-      "true": {}
-    },
-    "boolean1": {
-      "false": {},
-      "true": {}
-    },
-    "_0multiblockslave": {
-      "false": {},
-      "true": {
-        "model": "immersiveengineering:ie_empty"
+      },
+      "west": {
+        "transform": {
+          "translation": [
+            0.5,
+            0,
+            -0.5
+          ],
+          "rotation": {
+            "y": 90
+          }
+        }
       }
     }
   }

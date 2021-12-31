@@ -133,7 +133,6 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalPump;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalWheel;
-import pl.pabilo8.immersiveintelligence.common.blocks.stone.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
@@ -736,10 +735,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataCallbackConnector.class, new DataCallbackConnectorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalDispenser.class, new ChemicalDispenserRenderer());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySandbags.class, new SandbagsRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockSandbags), IIBlockTypes_StoneDecoration.SANDBAGS.getMeta(), TileEntitySandbags.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMineSign.class, new MineSignRenderer());
-
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTankTrap.class, new TankTrapRenderer().subscribeToList("tank_trap"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalFortification1), IIBlockTypes_MetalFortification1.TANK_TRAP.getMeta(), TileEntityTankTrap.class);
 

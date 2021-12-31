@@ -24,7 +24,6 @@ import java.util.List;
 public class TileEntitySandbags extends TileEntityIEBase implements IDirectionalTile, IAdvancedCollisionBounds, IAdvancedSelectionBounds
 {
 	public EnumFacing facing = EnumFacing.NORTH;
-	public int cornerFacing = 0;
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
@@ -99,106 +98,32 @@ public class TileEntitySandbags extends TileEntityIEBase implements IDirectional
 		return te instanceof TileEntitySandbags;
 	}
 
-	@Nullable
-	public int getCornerFacing()
-	{
-		TileEntity other = world.getTileEntity(getPos().offset(facing.getOpposite()));
-		TileEntity cw = world.getTileEntity(getPos().offset(facing.rotateY()));
-		TileEntity ccw = world.getTileEntity(getPos().offset(facing.rotateYCCW()));
-
-		if(other instanceof TileEntitySandbags)
-		{
-			if(((TileEntitySandbags)other).facing==this.facing.rotateYCCW()&&cw instanceof TileEntitySandbags)
-				return 1;
-			if(((TileEntitySandbags)other).facing==this.facing.rotateY()&&ccw instanceof TileEntitySandbags)
-				return 2;
-		}
-
-		return 0;
-	}
-
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
 		List<AxisAlignedBB> aabb = new ArrayList<>();
-		int cf = getCornerFacing();
+		// TODO: 28.12.2021 new aabb
+
 		switch(facing)
 		{
 			case NORTH:
 			{
-				if(cf==2)
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f).offset(0.5f, 0f, 0.5f));
-				}
-				else if(cf==1)
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f).offset(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f).offset(0f, 0f, 0.5f));
-				}
-				else
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0f, 0f, 0.5f));
-				}
+				aabb.add(new AxisAlignedBB(pos).contract(0f, 0f, 0.5f));
 			}
 			break;
 			case SOUTH:
 			{
-				if(cf==2)
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f).offset(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f));
-				}
-				else if(cf==1)
-				{
-
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f).offset(0.5f, 0f, 0f));
-				}
-				else
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0f, 0f, 0.5f).offset(0f, 0f, 0.5f));
-				}
+				aabb.add(new AxisAlignedBB(pos).contract(0f, 0f, 0.5f).offset(0f, 0f, 0.5f));
 			}
 			break;
 			case EAST:
 			{
-				if(cf==2)
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f).offset(0.5f, 0f, 0f));
-				}
-				else if(cf==1)
-				{
-
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f).offset(0.5f, 0f, 0.5f));
-				}
-				else
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f).offset(0.5f, 0f, 0f));
-				}
-
-
+				aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f).offset(0.5f, 0f, 0f));
 			}
 			break;
 			case WEST:
 			{
-				if(cf==2)
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f).offset(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f).offset(0f, 0f, 0.5f));
-				}
-				else if(cf==1)
-				{
-
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f).offset(0.5f, 0f, 0f));
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0.5f).offset(0f, 0f, 0f));
-				}
-				else
-				{
-					aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f));
-				}
+				aabb.add(new AxisAlignedBB(pos).contract(0.5f, 0f, 0f));
 			}
 			break;
 		}
