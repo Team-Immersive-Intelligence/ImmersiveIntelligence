@@ -53,7 +53,7 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 	{
 		super.update();
 
-		active = world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]))&&energyStorage.extractEnergy(Radar.energyUsage, false)==Radar.energyUsage;
+		active = (redstoneControlInverted^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0])))&&energyStorage.extractEnergy(Radar.energyUsage, false)==Radar.energyUsage;
 		if(active)
 			dishRotation++;
 
