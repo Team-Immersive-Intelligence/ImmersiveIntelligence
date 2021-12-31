@@ -196,7 +196,7 @@ public class EntityHans extends EntityCreature implements INpc
 			//check if enemies are around
 			if(ticksExisted%25==0)
 				enemyContact = world.getEntitiesWithinAABB(Entity.class,
-								new AxisAlignedBB(this.getPositionVector(), this.getPositionVector()).grow(8), this::isValidTarget)
+								new AxisAlignedBB(this.getPositionVector(), this.getPositionVector()).grow(14), this::isValidTarget)
 						.stream().findAny().isPresent();
 
 			//idle + combat animations

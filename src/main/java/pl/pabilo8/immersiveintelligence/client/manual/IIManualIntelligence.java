@@ -1,11 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.manual;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
+import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRadar;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 
 /**
@@ -36,6 +38,16 @@ public class IIManualIntelligence extends IIManual
 
 		ManualHelper.addEntry("alarm_siren", getCategory(),
 				new ManualPages.Crafting(ManualHelper.getManual(), "alarm_siren0", new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.ALARM_SIREN.getMeta()))
+		);
+
+		ManualHelper.addEntry("tripod_periscope", getCategory(),
+				new ManualPages.Crafting(ManualHelper.getManual(), "tripod_periscope0", new ItemStack(IIContent.itemTripodPeriscope)),
+				new ManualPages.Text(ManualHelper.getManual(), "tripod_periscope1")
+		);
+
+		ManualHelper.addEntry("radar", getCategory(),
+				new ManualPageMultiblock(ManualHelper.getManual(), "radar0", MultiblockRadar.instance),
+				new ManualPages.Text(ManualHelper.getManual(), "radar1")
 		);
 	}
 }

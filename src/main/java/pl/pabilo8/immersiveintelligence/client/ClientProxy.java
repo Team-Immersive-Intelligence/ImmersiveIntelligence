@@ -13,6 +13,7 @@ import blusunrize.immersiveengineering.client.models.ModelItemDynamicOverride;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
 import blusunrize.immersiveengineering.client.render.EntityRenderNone;
 import blusunrize.immersiveengineering.client.render.ItemRendererIEOBJ;
+import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IColouredBlock;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
@@ -79,6 +80,8 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
@@ -97,6 +100,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPag
 import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageTasks;
 import pl.pabilo8.immersiveintelligence.client.manual.*;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.render.*;
 import pl.pabilo8.immersiveintelligence.client.render.RadioExplosivesRenderer.RadioExplosivesItemStackRenderer;
@@ -483,6 +488,7 @@ public class ClientProxy extends CommonProxy
 		}, ImmersiveIntelligence.MODID);
 
 		IIContent.itemMotorBelt.setRenderModels();
+		Config.manual_bool.put("petroleumHere", false);
 	}
 
 	@SubscribeEvent
@@ -648,6 +654,7 @@ public class ClientProxy extends CommonProxy
 		IIManualLogistics.INSTANCE.addPages();
 		IIManualWarfare.INSTANCE.addPages();
 		IIManualIntelligence.INSTANCE.addPages();
+		IIManualMotorworks.INSTANCE.addPages();
 
 		ManualHelper.addEntry("chemical_bath", ManualHelper.CAT_HEAVYMACHINES,
 				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_bath0", MultiblockChemicalBath.instance)
@@ -657,23 +664,64 @@ public class ClientProxy extends CommonProxy
 				new ManualPages.Text(ManualHelper.getManual(), "precission_assembler1")
 		);
 		ManualHelper.addEntry("electrolyzer", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "electrolyzer0", MultiblockElectrolyzer.instance)
+				new ManualPageMultiblock(ManualHelper.getManual(), "electrolyzer0", MultiblockElectrolyzer.instance),
+				new ManualPages.Text(ManualHelper.getManual(), "electrolyzer1")
+		);
+		ManualHelper.addEntry("chemical_painter", ManualHelper.CAT_HEAVYMACHINES,
+				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_painter0", MultiblockChemicalPainter.instance),
+				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter1"),
+				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter2"),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "filler", true)
+						.addEntry(new DataPacketTypeString(), 'p')
+						.addEntry(new DataPacketTypeInteger(), 'p'),
+				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "filler")
+						.addEntry(new DataPacketTypeInteger(), "get_color")
+						.addEntry(new DataPacketTypeInteger(), "get_color_hex")
+						.addEntry(new DataPacketTypeInteger(), "get_ink", "get_ink_black")
+						.addEntry(new DataPacketTypeInteger(), "get_ink_cyan")
+						.addEntry(new DataPacketTypeInteger(), "get_ink_magenta")
+						.addEntry(new DataPacketTypeInteger(), "get_ink_yellow")
+						.addEntry(new DataPacketTypeInteger(), "get_energy")
+		);
+		ManualHelper.addEntry("filler", ManualHelper.CAT_HEAVYMACHINES,
+				new ManualPageMultiblock(ManualHelper.getManual(), "filler0", MultiblockFiller.instance),
+				new ManualPages.Text(ManualHelper.getManual(), "filler1")
 		);
 
 		ManualHelper.addEntry("rotary_power", ManualHelper.CAT_MACHINES,
 				new ManualPages.Image(ManualHelper.getManual(), "rotary_power0", ImmersiveIntelligence.MODID+":textures/misc/rotary.png;0;0;110;64"),
 				new ManualPages.Text(ManualHelper.getManual(), "rotary_power1"),
 				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power2", new ItemStack(IIContent.blockMechanicalConnector)),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power3", new ItemStack(IIContent.itemMotorBelt, 1, 0), new ItemStack(IIContent.itemMotorBelt, 1, 1)),
+				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power3", new ItemStack(IIContent.itemMotorBelt, 1, 0), new ItemStack(IIContent.itemMotorBelt, 1, 1), new ItemStack(IIContent.itemMotorBelt, 1, 2)),
 				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power4", new ItemStack(IIContent.blockGearbox)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power5", new ItemStack(IIContent.blockMechanicalDevice, 1, IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX.getMeta())),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power6", new ItemStack(IIContent.itemWrench), new ItemStack(IIContent.itemElectricWrench))
+				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power5", new ItemStack(IIContent.blockMechanicalDevice, 1, IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX.getMeta()))
 		);
 
 		ManualHelper.addEntry("sawmill", ManualHelper.CAT_MACHINES,
 				new ManualPageMultiblock(ManualHelper.getManual(), "sawmill0", MultiblockSawmill.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "sawmill1"),
 				new ManualPages.Text(ManualHelper.getManual(), "sawmill2")
+		);
+
+		ManualHelper.addEntry("medicrate", ManualHelper.CAT_MACHINES,
+				new ManualPages.Crafting(ManualHelper.getManual(), "medicrate0", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta())),
+				new ManualPages.Text(ManualHelper.getManual(), "medicrate1")
+		);
+
+		ManualHelper.addEntry("repair_crate", ManualHelper.CAT_MACHINES,
+				new ManualPages.Crafting(ManualHelper.getManual(), "repair_crate0", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta())),
+				new ManualPages.Text(ManualHelper.getManual(), "repair_crate1")
+		);
+
+		ManualHelper.addEntry("advanced_powerpack", ManualHelper.CAT_TOOLS,
+				new ManualPages.Crafting(ManualHelper.getManual(), "advanced_powerpack0", new ItemStack(IIContent.itemAdvancedPowerPack)),
+				new ManualPages.Text(ManualHelper.getManual(), "advanced_powerpack1")
+		);
+
+		ManualHelper.addEntry("electric_tools", ManualHelper.CAT_TOOLS,
+				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools0", new ItemStack(IIContent.itemHammer)),
+				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools1", new ItemStack(IIContent.itemElectricWrench)),
+		new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools2", new ItemStack(IIContent.itemWirecutter))
 		);
 
 		ClientCommandHandler.instance.registerCommand(new IICommandHandler("tmt"));

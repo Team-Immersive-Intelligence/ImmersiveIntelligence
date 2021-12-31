@@ -206,6 +206,11 @@ public class ItemIIArmorUpgrade extends ItemIIBase implements IUpgrade
 				return values()[meta];
 			return GASMASK;
 		}
+
+		public boolean isValidFor(String weapon)
+		{
+			return toolset.contains(weapon);
+		}
 	}
 
 	public static TextFormatting getFormattingForWeapon(String weapon)

@@ -5,14 +5,15 @@ import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -33,6 +34,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockConveyorScanner.conveyorStack;
 
 /**
  * @author Pabilo8
@@ -75,7 +78,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		size = template.getSize();
 
 		//sets manual display scale
-		this.manualScale = Math.max(Math.max(size.getX(), size.getZ()), size.getX())*(2.4f);
+		this.manualScale = 10f/(Math.max(Math.max(size.getX(), size.getZ()), size.getY())/7f);
 
 		structure = new ItemStack[size.getY()][size.getZ()][size.getX()];
 		for(int x = 0; x < size.getX(); x++)
@@ -209,13 +212,23 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	@Override
 	public boolean overwriteBlockRender(ItemStack stack, int iterator)
 	{
+		if(stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock()==IEContent.blockConveyor)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0.5, 0.5, 0.5);
+			GlStateManager.rotate(90, 0, 1, 0);
+			ClientUtils.mc().getRenderItem().renderItem(conveyorStack, TransformType.NONE);
+			GlStateManager.popMatrix();
+			return true;
+		}
+
 		return false;
 	}
 
 	@Override
 	public float getManualScale()
 	{
-		return manualScale;
+		return manualScale*0.85f;
 	}
 
 	@Override
@@ -235,7 +248,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			te.facing = EnumFacing.NORTH;
 		}
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(-1, 2, 0);
+		GlStateManager.translate(
+				size.getX()/2f-offset.getX(),
+				size.getY()/2f-offset.getY(),
+				size.getZ()/2f-offset.getZ());
 		ImmersiveIntelligence.proxy.renderTile(te);
 		GlStateManager.popMatrix();
 	}
@@ -273,7 +289,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		{
 			// TODO: 08.08.2021 direction
 			ItemStack conveyorStack = ConveyorHandler.getConveyorStack(info.tileentityData.getString("conveyorBeltSubtype"));
-			ItemNBTHelper.setInt(conveyorStack, "conveyorFacing",info.tileentityData.getInteger("facing"));
+			ItemNBTHelper.setInt(conveyorStack, "conveyorFacing", info.tileentityData.getInteger("facing"));
 			return new IngredientStack(conveyorStack).setUseNBT(true);
 		}
 
@@ -285,7 +301,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			int[] oids = OreDictionary.getOreIDs(stack);
 			if(oids.length > 0)
 				return new IngredientStack(OreDictionary.getOreName(oids[0]));
-		} catch(Exception ignored)
+		}
+		catch(Exception ignored)
 		{
 
 		}
@@ -329,12 +346,12 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * @param w width (x)
 	 * @return resource location in string format if tile is a conveyor or empty string
 	 */
-	public Tuple<ResourceLocation,EnumFacing> getConveyorKey(int h, int l, int w, EnumFacing facing)
+	public Tuple<ResourceLocation, EnumFacing> getConveyorKey(int h, int l, int w, EnumFacing facing)
 	{
 		IngredientStack is = checkStructure[h][l][w];
 		ResourceLocation rl = new ResourceLocation(ItemNBTHelper.getString(is.stack, "conveyorType"));
 		EnumFacing sf = EnumFacing.getFront(ItemNBTHelper.getInt(is.stack, "conveyorFacing"));
 		EnumFacing ff = EnumFacing.getHorizontal(sf.getHorizontalIndex()+facing.getHorizontalIndex());//
-		return new Tuple<>(rl,ff);
+		return new Tuple<>(rl, ff);
 	}
 }

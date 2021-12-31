@@ -12,7 +12,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockPackerOld;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockPacker;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCratePost;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
@@ -68,15 +69,24 @@ public class IIManualLogistics extends IIManual
 						.addEntry(new DataPacketTypeString(), 'm')
 						.addEntry(new DataPacketTypeInteger(), 'c')
 		);
+		ManualHelper.addEntry("task_system", getCategory(),
+				new ManualPages.Text(ManualHelper.getManual(), "task_system0"),
+				new ManualPages.Text(ManualHelper.getManual(), "task_system1")
+		);
 
 		ManualHelper.addEntry("packer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPackerOld.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPacker.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "packer1"),
+				new ManualPages.Text(ManualHelper.getManual(), "packer2"),
+				new ManualPages.Text(ManualHelper.getManual(), "packer3"),
+				new ManualPages.Text(ManualHelper.getManual(), "packer4"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "packer", true)
-						.addEntry(new DataPacketTypeString(), 'm')
-						.addEntry(new DataPacketTypeInteger(), 'c')
-						.addEntry(new DataPacketTypeInteger(), 'q')
-						.addEntry(new DataPacketTypeBoolean(), 'i')
+						.addEntry(new DataPacketTypeString(), 'c')
+						.addEntry(new DataPacketTypeInteger(), 'a')
+						.addEntry(new DataPacketTypeInteger(), 's')
+						.addEntry(new DataPacketTypeBoolean(), 'm'),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "packer", true)
+						.addEntry(new DataPacketTypeBoolean(), 'e')
 		);
 
 		ManualHelper.addEntry("skycrates", getCategory(),
@@ -98,6 +108,15 @@ public class IIManualLogistics extends IIManual
 						Utils.getStackWithMetaName(IIContent.itemSkycrateMount, "electric"))
 		);
 
+		ManualHelper.addEntry("chain_fences", getCategory(),
+				new ManualPages.Crafting(ManualHelper.getManual(), "chain_fences0", new ItemStack(IIContent.itemAdvancedPowerPack)),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences1", MultiblockWoodenFenceGate.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences2", MultiblockWoodenChainFenceGate.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences3", MultiblockSteelFenceGate.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences4", MultiblockSteelChainFenceGate.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences5", MultiblockAluminiumFenceGate.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences6", MultiblockAluminiumChainFenceGate.instance)
+		);
 
 	}
 }

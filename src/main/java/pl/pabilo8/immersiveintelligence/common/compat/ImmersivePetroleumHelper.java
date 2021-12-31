@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorBelt;
+import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
 import flaxbeard.immersivepetroleum.api.energy.FuelHandler;
 import flaxbeard.immersivepetroleum.api.event.SchematicPlaceBlockPostEvent;
@@ -57,6 +58,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 	{
 		//for compat that requires events
 		MinecraftForge.EVENT_BUS.register(this);
+		Config.manual_bool.put("petroleumHere", true);
 	}
 
 	@Override
@@ -71,7 +73,8 @@ public class ImmersivePetroleumHelper extends IICompatModule
 			Fluid[] a = map.keySet().stream().map(FluidRegistry::getFluid).toArray(Fluid[]::new);
 			motorboatAmountTick1.setAccessible(false);
 			VehicleFuelHandler.addVehicle(EntitySpeedboat.class, a);
-		} catch(NoSuchFieldException|IllegalAccessException ignored)
+		}
+		catch(NoSuchFieldException|IllegalAccessException ignored)
 		{
 			ImmersiveIntelligence.logger.info("Failed to add IP Motorboat fuel station compat!");
 		}

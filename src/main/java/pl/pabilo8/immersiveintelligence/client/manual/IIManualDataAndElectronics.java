@@ -125,6 +125,7 @@ public class IIManualDataAndElectronics extends IIManual
 		);
 		ManualHelper.addEntry("conveyor_scanner", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.instance),
+				new ManualPages.Text(ManualHelper.getManual(), "conveyor_scanner1"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "conveyor_scanner", false)
 						.addEntry(new DataPacketTypeItemStack(), 's')
 		);

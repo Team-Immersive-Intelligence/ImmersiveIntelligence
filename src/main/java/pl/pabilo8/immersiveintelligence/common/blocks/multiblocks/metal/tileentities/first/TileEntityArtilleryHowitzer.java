@@ -58,11 +58,12 @@ import java.util.List;
  * @author Pabilo8
  * @since 28-06-2019
  */
+// TODO: 30.12.2021 refactor and improve performance
 public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileEntityArtilleryHowitzer, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IBooleanAnimatedPartsBlock, IConveyorAttachable
 {
 	public boolean active = false;
 
-	//0 - nothing, 1 - loading, 2 - unloading, 3 - shooting
+	//0 - nothing, 1 - loading, 2 - unloading, 3 - shooting, 4 - aiming
 	public int animation = 0, fuse = -1;
 	public int animationTime = 0, animationTimeMax = 0, shellLoadTime = 0, shellExpellTime = 0;
 	public boolean isDoorOpened;
@@ -226,7 +227,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 		}
 
-		if(turretYaw!=plannedYaw&&!(animation==3&&platformHeight!=5.25f))
+		if(turretYaw!=plannedYaw&&!((animation==3||animation==4)&&platformHeight!=5.25f))
 		{
 			if(energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePlatform)
 			{
@@ -243,7 +244,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 			}
 
 		}
-		else if(turretPitch!=plannedPitch&&!(animation==3&&platformHeight!=5.25f))
+		else if(turretPitch!=plannedPitch&&!((animation==3||animation==4)&&platformHeight!=5.25f))
 		{
 			if(energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePlatform)
 			{
@@ -339,7 +340,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 					energyStorage.extractEnergy(ArtilleryHowitzer.energyUsageLoader, false);
 				}
 			}
-			else if(animation==3)
+			else if(animation==3||animation==4)
 			{
 				if(platformHeight < 5.25f)
 				{
@@ -353,6 +354,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 
 				if(plannedPitch==turretPitch&&plannedYaw==turretYaw)
 				{
+					if(animation==4)
+					{
+						animation = 0;
+						animationTimeMax = 0;
+						animationTime = 0;
+						update = true;
+					}
+
 					if(animationTimeMax!=ArtilleryHowitzer.fireTime&&bullet.getItem() instanceof ItemIIAmmoArtillery&&bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
 						animationTimeMax = ArtilleryHowitzer.fireTime;
 
@@ -762,6 +771,13 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 					case "fire":
 					{
 						master.animation = 3;
+						master.animationTimeMax = ArtilleryHowitzer.fireTime;
+						master.animationTime = 0;
+					}
+					break;
+					case "aim":
+					{
+						master.animation = 4;
 						master.animationTimeMax = ArtilleryHowitzer.fireTime;
 						master.animationTime = 0;
 					}

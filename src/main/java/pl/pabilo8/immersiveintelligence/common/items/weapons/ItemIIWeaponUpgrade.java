@@ -198,6 +198,11 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 				return values()[meta];
 			return HEAVY_BARREL;
 		}
+
+		public boolean isValidFor(String weapon)
+		{
+			return toolset.contains(weapon);
+		}
 	}
 
 	/**
