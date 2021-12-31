@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttacha
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
@@ -20,7 +19,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
@@ -42,10 +40,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +53,7 @@ import java.util.function.Predicate;
  * @since 28-06-2019
  */
 @Deprecated
-public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPackerOld, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IConveyorAttachable, IGuiTile
+public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPackerOld, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IConveyorAttachable
 {
 	//First - the crate to which items are inserted, second - stack to insert, returns the stack if failed
 	public static HashMap<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> predicates = new HashMap<>();
@@ -462,7 +458,8 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 					{
 						PackingModes mode = PackingModes.valueOf(((DataPacketTypeString)packet.getPacketVariable('m')).value.toUpperCase());
 						master.packingMode = mode.ordinal();
-					} catch(IllegalArgumentException e)
+					}
+					catch(IllegalArgumentException e)
 					{
 
 					}
@@ -551,25 +548,6 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 			}
 
 		}*/
-	}
-
-	@Override
-	public boolean canOpenGui()
-	{
-		return true;
-	}
-
-	@Override
-	public int getGuiID()
-	{
-		return IIGuiList.GUI_PACKER.ordinal();
-	}
-
-	@Nullable
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
 	}
 
 	enum PackingModes

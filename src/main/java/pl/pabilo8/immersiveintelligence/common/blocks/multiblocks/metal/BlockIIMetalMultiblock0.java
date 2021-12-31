@@ -24,12 +24,14 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMult
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
  * @author Pabilo8
  * @since 20-06-2019
  */
+@SuppressWarnings("deprecation")
 public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_MetalMultiblock0>
 {
 	public BlockIIMetalMultiblock0()
@@ -41,13 +43,14 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
 
-		tesrMap.put(IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta(), IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getName());
-		tesrMap.put(IIBlockTypes_MetalMultiblock0.RADIO_STATION.getMeta(), IIBlockTypes_MetalMultiblock0.RADIO_STATION.getName());
-		tesrMap.put(IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta(), IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getName());
-		tesrMap.put(IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getName());
-		tesrMap.put(IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta(), IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getName());
-		tesrMap.put(IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getName());
-		tesrMap.put(IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getName());
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.PRINTING_PRESS);
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.RADIO_STATION);
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY);
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.ELECTROLYZER);
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH);
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER);
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER);
+		addToTESRMap(IIBlockTypes_MetalMultiblock0.PACKER);
 
 	}
 
@@ -65,8 +68,9 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		return null;
 	}
 
+	@Nonnull
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state)
+	public EnumBlockRenderType getRenderType(@Nonnull IBlockState state)
 	{
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
@@ -124,10 +128,15 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 			{
 				return new TileEntityPackerOld();
 			}
+			case PACKER:
+			{
+				return new TileEntityPacker();
+			}
 		}
 		return null;
 	}
 
+	@Nonnull
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
@@ -154,13 +163,13 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 	}
 
 	@Override
-	public boolean allowHammerHarvest(IBlockState state)
+	public boolean allowHammerHarvest(@Nonnull IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canIEBlockBePlaced(World world, BlockPos pos, IBlockState newState, EnumFacing side, float hitX, float hitY, float hitZ, EntityPlayer player, ItemStack stack)
+	public boolean canIEBlockBePlaced(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState newState, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EntityPlayer player, @Nonnull ItemStack stack)
 	{
 		return true;
 	}
