@@ -3,9 +3,11 @@ package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -27,24 +29,42 @@ public class AIHansRailgun extends AIHansBase
 	 */
 	private int rangedAttackTime;
 	private final double entityMoveSpeed;
+	/**
+	 * Determines for how many ticks an AI has to see its target to attack it
+	 */
 	private int seeTime;
-	private final int burstTime;
+	/**
+	 * The maximum time the AI has to wait before peforming another ranged attack.
+	 */
+	private final int holdFireTime;
 	/**
 	 * Snipers lie down instead of kneeling
 	 */
 	boolean sniper = false;
 	/**
-	 * The maximum time the AI has to wait before peforming another ranged attack.
+	 * The maximum distance the AI will attack enemies from
+	 * Will walk towards if necessary.
 	 */
 	private final float maxAttackDistance;
+	/**
+	 * The minimum distance the AI will attack enemies from
+	 * Will change position if closer.
+	 */
+	private final float minAttackDistance;
+	/**
+	 * The distance AI will run if it's too close to an enemy
+	 */
+	private final float safeAttackDistance;
 
-	public AIHansRailgun(EntityHans hans, double movespeed, int burstTime, float maxAttackDistanceIn)
+	public AIHansRailgun(EntityHans hans, double movespeed, int holdFireTime, float minAttackDistanceIn, float maxAttackDistanceIn)
 	{
 		super(hans);
 		this.rangedAttackTime = -1;
 		this.entityMoveSpeed = movespeed;
+		this.minAttackDistance = minAttackDistanceIn*minAttackDistanceIn;
 		this.maxAttackDistance = maxAttackDistanceIn*maxAttackDistanceIn;
-		this.burstTime = burstTime;
+		this.safeAttackDistance = (float)MathHelper.clampedLerp(minAttackDistance, maxAttackDistance, 0.35);
+		this.holdFireTime = holdFireTime;
 		this.setMutexBits(3);
 	}
 
@@ -117,12 +137,28 @@ public class AIHansRailgun extends AIHansBase
 			this.seeTime = 0;
 		}
 
-		if(d0 <= (double)this.maxAttackDistance&&this.seeTime >= 5)
+		if((d0 <= 60||(!hans.getNavigator().noPath()&&d0<=200))&&this.seeTime >= 20)
 		{
+			if(hans.getNavigator().noPath())
+			{
+				Vec3d away = RandomPositionGenerator.findRandomTargetBlockAwayFrom(hans, 40, 10, this.attackTarget.getPositionVector());
+				if(away!=null)
+				{
+					this.hans.getNavigator().tryMoveToXYZ(away.x, away.y, away.z, this.entityMoveSpeed*1.125f);
+					this.hans.setSprinting(true);
+
+				}
+			}
+			return;
+		}
+		else if(d0 <= (double)this.maxAttackDistance&&this.seeTime >= 5)
+		{
+			this.hans.setSprinting(false);
 			this.hans.getNavigator().clearPath();
 		}
 		else
 		{
+			this.hans.setSprinting(false);
 			this.hans.getNavigator().tryMoveToEntityLiving(this.attackTarget, this.entityMoveSpeed);
 		}
 
@@ -149,7 +185,7 @@ public class AIHansRailgun extends AIHansBase
 			hans.resetActiveHand();
 			rangedAttackTime += 1;
 		}
-		if(this.rangedAttackTime < burstTime)
+		if(this.rangedAttackTime < holdFireTime)
 		{
 			hans.setActiveHand(EnumHand.MAIN_HAND);
 			if(railgun.getItem() instanceof ItemIIRailgunOverride)
@@ -165,7 +201,7 @@ public class AIHansRailgun extends AIHansBase
 				IEContent.itemRailgun.onUpdate(railgun, this.hans.world, this.hans, 0, true);
 				sniper = ((ItemIIRailgunOverride)railgun.getItem()).getUpgrades(railgun).getBoolean("scope");
 
-				if(rangedAttackTime >= burstTime)
+				if(rangedAttackTime >= holdFireTime)
 				{
 
 					IEContent.itemRailgun.onPlayerStoppedUsing(railgun, this.hans.world, this.hans, IEContent.itemRailgun.getMaxItemUseDuration(railgun)-rangedAttackTime);
@@ -179,18 +215,24 @@ public class AIHansRailgun extends AIHansBase
 	{
 		if(ammo.getItem()==IIContent.itemRailgunGrenade)
 		{
-			return Utils.getDirectFireAngle(IIContent.itemRailgunGrenade.getDefaultVelocity(), IIContent.itemRailgunGrenade.getMass(ammo), hans.getPositionVector().addVector(0, (double)hans.getEyeHeight()-0.10000000149011612D, 0).subtract(attackTarget.getPositionVector()));
+			return Utils.getDirectFireAngle(IIContent.itemRailgunGrenade.getDefaultVelocity(), IIContent.itemRailgunGrenade.getMass(ammo),
+					hans.getPositionVector().addVector(0, hans.getEyeHeight()-0.10000000149011612D, 0).subtract(Utils.getEntityCenter(attackTarget)));
 		}
 		else
 		{
-			return Utils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(attackTarget.getPositionVector()));
+			return Utils.getIEDirectRailgunAngle(ammo, hans.getPositionVector().addVector(0, hans.getEyeHeight(), 0).subtract(Utils.getEntityCenter(attackTarget)));
 		}
 	}
 
 	@Override
 	public void setRequiredAnimation()
 	{
-		if(attackTarget!=null&&!attackTarget.isDead&&(hans.getNavigator().noPath())&&seeTime > 10)
-			hans.legAnimation = (sniper&&!hans.enemyContact)?HansLegAnimation.LYING: HansLegAnimation.KNEELING;
+		if(hans.getNavigator().noPath())
+		{
+			if(attackTarget!=null&&!attackTarget.isDead&&seeTime > 10)
+				hans.legAnimation = (sniper&&!hans.enemyContact)?HansLegAnimation.LYING: HansLegAnimation.KNEELING;
+		}
+		else
+			hans.legAnimation = HansLegAnimation.STANDING;
 	}
 }

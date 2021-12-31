@@ -5,6 +5,7 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * @author Pabilo8
@@ -91,6 +92,12 @@ public class HansAnimations
 			this.tongueHeight = tongueHeight;
 			this.upperTeethVisible = upperTeethVisible;
 		}
+
+		public static MouthShapes v(String s)
+		{
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(CLOSED);
+		}
 	}
 
 	@Nullable
@@ -130,7 +137,7 @@ public class HansAnimations
 		SNEAKING(1),
 		KNEELING(0),
 		SQUATTING(0),
-		LYING(0.5f,0.625f,0.8f),
+		LYING(0.5f, 0.625f, 0.8f),
 		KAZACHOK(0.5f);
 
 		public final float walkSpeedModifier;

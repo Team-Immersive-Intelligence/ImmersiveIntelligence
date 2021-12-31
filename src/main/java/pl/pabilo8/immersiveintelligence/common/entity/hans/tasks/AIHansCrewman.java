@@ -35,7 +35,7 @@ public class AIHansCrewman extends AIHansBase
 
 		if(this.mount==null||this.mount.isDead)
 			return false;
-		if(hans.getPositionVector().distanceTo(mount.getPositionVector()) < 1.5f)
+		if(hans.getPositionVector().distanceTo(mount.getLowestRidingEntity().getPositionVector()) < 1.5f)
 		{
 			hans.startRiding(mount);
 			return false;
@@ -47,9 +47,9 @@ public class AIHansCrewman extends AIHansBase
 	public void updateTask()
 	{
 		super.updateTask();
-		this.hans.getNavigator().tryMoveToEntityLiving(this.mount, 1.25f);
+		this.hans.getNavigator().tryMoveToEntityLiving(this.mount.getLowestRidingEntity(), 1.25f);
 
-		if(hans.getPositionVector().distanceTo(mount.getPositionVector()) < 1.5f)
+		if(hans.getPositionVector().distanceTo(mount.getLowestRidingEntity().getPositionVector()) < 1.5f)
 			hans.startRiding(mount);
 	}
 

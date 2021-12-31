@@ -13,10 +13,13 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -24,6 +27,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -35,14 +39,16 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.EyeEmo
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.MouthEmotions;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.MouthShapes;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansPathNavigate;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.*;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansChemthrower;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansRailgun;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansRevolver;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.AIHansSubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansIdle;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansKazachok;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansLookIdle;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansTimedLookAtEntity;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
 
 import javax.annotation.Nonnull;
@@ -72,6 +78,7 @@ public class EntityHans extends EntityCreature implements INpc
 	};
 	private static final DataParameter<String> DATA_MARKER_LEG_ANIMATION = EntityDataManager.createKey(EntityHans.class, DataSerializers.STRING);
 	private static final DataParameter<Integer> DATA_MARKER_EYE_COLOUR = EntityDataManager.createKey(EntityHans.class, DataSerializers.VARINT);
+	private static final DataParameter<NBTTagCompound> DATA_MARKER_SPEECH = EntityDataManager.createKey(EntityHans.class, DataSerializers.COMPOUND_TAG);
 
 	public HansLegAnimation prevLegAnimation = HansLegAnimation.STANDING;
 	public HansLegAnimation legAnimation = HansLegAnimation.STANDING;
@@ -104,6 +111,14 @@ public class EntityHans extends EntityCreature implements INpc
 		setSneaking(false);
 		this.dataManager.register(DATA_MARKER_LEG_ANIMATION, legAnimation.name().toLowerCase());
 		this.dataManager.register(DATA_MARKER_EYE_COLOUR, eyeColour = EYE_COLOURS[rand.nextInt(EYE_COLOURS.length)]);
+		this.dataManager.register(DATA_MARKER_SPEECH, new NBTTagCompound());
+		setHealth(20);
+	}
+
+	@Override
+	protected PathNavigate createNavigator(World worldIn)
+	{
+		return new HansPathNavigate(this, world);
 	}
 
 	@Override
@@ -122,6 +137,22 @@ public class EntityHans extends EntityCreature implements INpc
 			{
 				eyeColour = dataManager.get(DATA_MARKER_EYE_COLOUR);
 				legAnimation = getLegAnimationFromString(dataManager.get(DATA_MARKER_LEG_ANIMATION));
+
+				NBTTagCompound speech = dataManager.get(DATA_MARKER_SPEECH);
+				if(mouthShapeQueue.size()==0)
+				{
+					NBTTagList durations = speech.getTagList("durations", NBT.TAG_INT);
+					NBTTagList shapes = speech.getTagList("shapes", NBT.TAG_STRING);
+
+					for(int i = 0; i < durations.tagCount(); i++)
+					{
+						NBTTagString s = (NBTTagString)shapes.get(i);
+						NBTTagInt d = (NBTTagInt)durations.get(i);
+						mouthShapeQueue.add(new Tuple<>(d.getInt(), MouthShapes.v(s.getString())));
+					}
+					dataManager.set(DATA_MARKER_SPEECH, new NBTTagCompound());
+				}
+
 			}
 			if(mouthShapeQueue.size() > 0)
 			{
@@ -216,11 +247,11 @@ public class EntityHans extends EntityCreature implements INpc
 		super.initEntityAI();
 
 		//Attack mobs
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, true, false,
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
 				input -> input instanceof IMob&&input.isEntityAlive()
 		));
 		//Attack entities with different team, stay neutral on default
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, true, false,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
 				input -> input!=null&&isValidTarget(input)
 		));
 		//Call other hanses for help when attacked
@@ -229,24 +260,29 @@ public class EntityHans extends EntityCreature implements INpc
 		this.tasks.addTask(2, new AIHansHolsterWeapon(this));
 		updateWeaponTasks();
 
-		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6D, 0.6D));
-		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityLiving.class, 6.0F));
-		this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1D, 0f));
-		this.tasks.addTask(8, new AIHansLookIdle(this));
+		this.tasks.addTask(5, new EntityAIAvoidEntity<>(this, EntityGasCloud.class, 8.0F, 0.6f, 0.7f));
+		this.tasks.addTask(6, new AIHansIdle(this));
+		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityLiving.class, 6.0F));
 
 		//this.tasks.addTask(4, new AIHansEnterVehicle(this));
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(0, new EntityAIRestrictOpenDoor(this));
+		this.tasks.addTask(0, new AIHansClimbLadder(this));
+		this.tasks.addTask(0, new EntityAIOpenDoor(this, true));
 
 		//this.tasks.addTask(4, new EntityAIAvoidEntity<>(this, EntityLivingBase.class, avEntity-> this.hasAmmunition()&&avEntity!=null&&avEntity.getRevengeTarget()==this, 8.0F, 0.6D, 0.6D));
+	}
+
+	public double getSprintSpeed()
+	{
+		return getWalkSpeed()*1.25f;
 	}
 
 	private void updateWeaponTasks()
 	{
 		this.tasks.addTask(3, new AIHansRevolver(this, 1f, 6));
 		this.tasks.addTask(3, new AIHansSubmachinegun(this, 1f, 6, 20));
-		this.tasks.addTask(3, new AIHansRailgun(this, 0.95f, 50, 30));
+		this.tasks.addTask(3, new AIHansRailgun(this, 0.95f, 50, 6, 35));
 		this.tasks.addTask(3, new AIHansChemthrower(this, 0.95f, 50, 8));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.125f, true));
 	}
@@ -370,18 +406,19 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		if(player.isSpectator()||hand==EnumHand.OFF_HAND)
 			return EnumActionResult.FAIL;
+
 		if(!world.isRemote)
 		{
-			faceEntity(player, 360f, 360f);
+			//faceEntity(player, 360f, 360f);
+			tasks.addTask(2, new AIHansTimedLookAtEntity(this, player, 60, 1f));
+
+			this.prevRotationYaw = this.rotationYawHead;
+			this.rotationYaw = this.rotationYawHead;
 
 			ItemStack heldItem = player.getHeldItem(hand);
 			if(heldItem.isEmpty())
 			{
-				sendPlayerMessage(player,
-						String.format("Guten %1$s, %2$s!",
-								HansUtils.getGermanTimeName(world.getWorldTime()),
-								player.getName()
-						));
+				greetPlayer(player);
 			}
 			else if(tasks.taskEntries.stream().noneMatch(entry -> entry.action instanceof AIHansKazachok)&&Utils.isFluidRelatedItemStack(heldItem))
 			{
@@ -389,7 +426,7 @@ public class EntityHans extends EntityCreature implements INpc
 
 				if(capability!=null)
 				{
-					FluidStack drain = capability.drain(new FluidStack(IEContent.fluidEthanol, 1000), true);
+					FluidStack drain = capability.drain(new FluidStack(IEContent.fluidEthanol, 1000), false); // TODO: 08.12.2021 make an actual fix
 					if(drain!=null)
 						tasks.addTask(2, new AIHansKazachok(this, drain.amount/1000f));
 				}
@@ -415,74 +452,63 @@ public class EntityHans extends EntityCreature implements INpc
 		{
 			if(mouthShapeQueue.size() > 0)
 				return EnumActionResult.PASS;
-
-
-			//Uses Rhubarb, the voice to lip shapes thingy, if you want to see how it works, check out their github
-			//Disabled for now, might see service Soon™
-
-			/*
-			//German Test
-			//Text: Guten Tag, mein Name ist Hans.
-			this.speechProgress=0;
-			HansEmotions.putMouthShape(this, 'X', 0.00, 0.35);
-			HansEmotions.putMouthShape(this, 'F', 0.35, 0.63);
-			HansEmotions.putMouthShape(this, 'B', 0.63, 0.70);
-			HansEmotions.putMouthShape(this, 'C', 0.70, 0.84);
-			HansEmotions.putMouthShape(this, 'B', 0.84, 0.98);
-			HansEmotions.putMouthShape(this, 'X', 0.98, 1.27);
-			HansEmotions.putMouthShape(this, 'B', 1.27, 1.34);
-			HansEmotions.putMouthShape(this, 'A', 1.34, 1.40);
-			HansEmotions.putMouthShape(this, 'C', 1.40, 1.45);
-			HansEmotions.putMouthShape(this, 'B', 1.45, 0.63);
-			HansEmotions.putMouthShape(this, 'E', 1.56, 0.63);
-			HansEmotions.putMouthShape(this, 'A', 1.63, 1.72);
-			HansEmotions.putMouthShape(this, 'E', 1.72, 1.84);
-			HansEmotions.putMouthShape(this, 'D', 1.84, 2.12);
-			HansEmotions.putMouthShape(this, 'C', 2.12, 2.19);
-			HansEmotions.putMouthShape(this, 'B', 2.19, 2.40);
-			HansEmotions.putMouthShape(this, 'X', 2.40, 2.97);
-			HansEmotions.putMouthShape(this, 'A', 2.97, 3.10);
-			world.playSound(ClientUtils.mc().player, posX, posY, posZ, IISounds.hans_test_de, SoundCategory.NEUTRAL, 0.5f, 1f);
-			 */
-
-			/*
-			//Polish Test
-			//Text: Dzien dobry! Nazywam sie Grzegorz Brzeczyszczykiewicz i mieszkam w Chrzeszczyrzewoszycach w powiecie Lekolodzkim
-			HansEmotions.putMouthShape(this, 'X',0.00, 0.44);
-			HansEmotions.putMouthShape(this, 'B',0.44, 0.61);
-			HansEmotions.putMouthShape(this, 'A',0.61, 0.69);
-			HansEmotions.putMouthShape(this, 'E',0.69, 0.97);
-			HansEmotions.putMouthShape(this, 'X',0.97, 1.42);
-			HansEmotions.putMouthShape(this, 'B',1.42, 1.48);
-			HansEmotions.putMouthShape(this, 'C',1.48, 1.54);
-			HansEmotions.putMouthShape(this, 'F',1.54, 1.68);
-			HansEmotions.putMouthShape(this, 'E',1.68, 1.89);
-			HansEmotions.putMouthShape(this, 'F',1.89, 2.24);
-			HansEmotions.putMouthShape(this, 'G',2.24, 2.31);
-			HansEmotions.putMouthShape(this, 'B',2.31, 2.87);
-			HansEmotions.putMouthShape(this, 'A',2.87, 2.95);
-			HansEmotions.putMouthShape(this, 'B',2.95, 3.43);
-			HansEmotions.putMouthShape(this, 'C',3.43, 3.76);
-			HansEmotions.putMouthShape(this, 'G',3.76, 3.97);
-			HansEmotions.putMouthShape(this, 'C',3.97, 4.04);
-			HansEmotions.putMouthShape(this, 'F',4.04, 4.25);
-			HansEmotions.putMouthShape(this, 'B',4.25, 4.32);
-			HansEmotions.putMouthShape(this, 'G',4.32, 4.39);
-			HansEmotions.putMouthShape(this, 'F',4.39, 4.46);
-			HansEmotions.putMouthShape(this, 'B',4.46, 4.67);
-			HansEmotions.putMouthShape(this, 'C',4.67, 4.74);
-			HansEmotions.putMouthShape(this, 'B',4.74, 4.81);
-			HansEmotions.putMouthShape(this, 'A',4.81, 4.95);
-			HansEmotions.putMouthShape(this, 'B',4.95, 5.23);
-			HansEmotions.putMouthShape(this, 'F',5.23, 5.30);
-			HansEmotions.putMouthShape(this, 'B',5.30, 5.51);
-			HansEmotions.putMouthShape(this, 'F',5.51, 5.72);
-			HansEmotions.putMouthShape(this, 'B',5.72, 5.86);
-			HansEmotions.putMouthShape(this, 'X',5.86, 6.93);
-			world.playSound(ClientUtils.mc().player, posX, posY, posZ, IISounds.hans_test_pl, SoundCategory.NEUTRAL, 1f, 1f);
-			 */
 		}
 		return EnumActionResult.PASS;
+	}
+
+	private void greetPlayer(EntityPlayer player)
+	{
+		sendPlayerMessage(player,
+				String.format("Guten %1$s, %2$s!",
+						HansUtils.getGermanTimeName(world.getWorldTime()),
+						player.getName()
+				));
+
+		//Uses Rhubarb, the voice to lip shapes thingy, if you want to see how it works, check out their github
+		//Disabled for now, might see service Soon™
+
+		// TODO: 28.12.2021 decide on how speech will be performed (server or client)
+		this.mouthShapeQueue.clear();
+		this.speechProgress = 0;
+		HansAnimations.putMouthShape(this, 'X', 0.00, 0.35);
+		HansAnimations.putMouthShape(this, 'F', 0.35, 0.63);
+		HansAnimations.putMouthShape(this, 'B', 0.63, 0.70);
+		HansAnimations.putMouthShape(this, 'C', 0.70, 0.84);
+		HansAnimations.putMouthShape(this, 'B', 0.84, 0.98);
+		HansAnimations.putMouthShape(this, 'X', 0.98, 1.27);
+		HansAnimations.putMouthShape(this, 'B', 1.27, 1.34);
+		HansAnimations.putMouthShape(this, 'A', 1.34, 1.40);
+		HansAnimations.putMouthShape(this, 'C', 1.40, 1.45);
+		HansAnimations.putMouthShape(this, 'B', 1.45, 0.63);
+		HansAnimations.putMouthShape(this, 'E', 1.56, 0.63);
+		HansAnimations.putMouthShape(this, 'A', 1.63, 1.72);
+		HansAnimations.putMouthShape(this, 'E', 1.72, 1.84);
+		HansAnimations.putMouthShape(this, 'D', 1.84, 2.12);
+		HansAnimations.putMouthShape(this, 'C', 2.12, 2.19);
+		HansAnimations.putMouthShape(this, 'B', 2.19, 2.40);
+		HansAnimations.putMouthShape(this, 'X', 2.40, 2.97);
+		HansAnimations.putMouthShape(this, 'A', 2.97, 3.10);
+		dataManager.set(DATA_MARKER_SPEECH, createServerSpeechTagCompound());
+	}
+
+	@Nonnull
+	private NBTTagCompound createServerSpeechTagCompound()
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		NBTTagList durations = new NBTTagList();
+		NBTTagList shapes = new NBTTagList();
+
+		for(Tuple<Integer, MouthShapes> element : mouthShapeQueue)
+		{
+			durations.appendTag(new NBTTagInt(element.getFirst()));
+			shapes.appendTag(new NBTTagString(element.getSecond().name()));
+		}
+
+		tag.setTag("durations", durations);
+		tag.setTag("shapes", shapes);
+
+		this.mouthShapeQueue.clear();
+		return tag;
 	}
 
 	@Override
@@ -544,4 +570,6 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		return isSneaking()?HansLegAnimation.SNEAKING: legAnimation;
 	}
+
+
 }
