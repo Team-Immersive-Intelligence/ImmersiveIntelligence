@@ -63,10 +63,10 @@ public class ModelBullet6bCal extends ModelIIBase implements IBulletModel
 
 
 		paintModel = new ModelRendererTurbo[4];
-		paintModel[0] = new ModelRendererTurbo(this, 0, 22, textureX, textureY); // Box 3
-		paintModel[1] = new ModelRendererTurbo(this, 0, 22, textureX, textureY); // Box 3
-		paintModel[2] = new ModelRendererTurbo(this, 0, 16, textureX, textureY); // Box 3
-		paintModel[3] = new ModelRendererTurbo(this, 0, 16, textureX, textureY); // Box 3
+		paintModel[0] = new ModelRendererTurbo(this, 15, 0, textureX, textureY); // Box 3
+		paintModel[1] = new ModelRendererTurbo(this, 15, 0, textureX, textureY); // Box 3
+		paintModel[2] = new ModelRendererTurbo(this, 15, 0, textureX, textureY); // Box 3
+		paintModel[3] = new ModelRendererTurbo(this, 15, 0, textureX, textureY); // Box 3
 
 		paintModel[0].addShapeBox(-3F, -7F, -3F, 6, 3, 0, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 3
 		paintModel[0].setRotationPoint(0F, 0F, 0F);

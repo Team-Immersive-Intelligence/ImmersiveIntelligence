@@ -17,8 +17,6 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEnt
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
 
 import javax.annotation.Nonnull;
 import java.util.function.BiFunction;
@@ -80,7 +78,7 @@ public enum IIGuiList
 			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 3)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te,2)
+			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 2)
 	),
 
 	GUI_PRINTED_PAGE_BLANK(),
@@ -122,8 +120,8 @@ public enum IIGuiList
 			(player, te) -> new ContainerGearbox(player.inventory, (TileEntityGearbox)te)
 	),
 
-	GUI_PACKER(TileEntityPackerOld.class,
-			(player, te) -> new ContainerPacker(player.inventory, (TileEntityPackerOld)te)
+	GUI_PACKER(TileEntityPacker.class,
+			(player, te) -> new ContainerPacker(player.inventory, (TileEntityPacker)te)
 	),
 	//GUI_UNPACKER,
 
@@ -151,8 +149,22 @@ public enum IIGuiList
 
 	GUI_FILLER(TileEntityFiller.class,
 			(player, te) -> new ContainerFiller(player.inventory, (TileEntityFiller)te)
-	);
+	),
 
+	GUI_CHEMICAL_PAINTER(TileEntityChemicalPainter.class,
+			(player, te) -> new ContainerChemicalPainter(player.inventory, (TileEntityChemicalPainter)te)
+	),
+
+	GUI_COAGULATOR(TileEntityCoagulator.class,
+			(player, te) -> new ContainerCoagulator(player.inventory, (TileEntityCoagulator)te)
+	),
+
+	GUI_PROJECTILE_WORKSHOP(TileEntityProjectileWorkshop.class,
+			(player, te) -> new ContainerProjectileWorkshop(player.inventory, (TileEntityProjectileWorkshop)te)
+	),
+	GUI_AMMUNITION_WORKSHOP(TileEntityAmmunitionWorkshop.class,
+			(player, te) -> new ContainerAmmunitionWorkshop(player.inventory, (TileEntityAmmunitionWorkshop)te)
+	);
 
 	//GUI_PERISCOPE,
 

@@ -87,8 +87,13 @@ public class ModelGrenade extends ModelIIBase implements IBulletModel
 		for(ModelRendererTurbo model : baseModel)
 			model.render(0.0625f);
 		if(paintColour!=-1)
+		{
+			float[] c = Utils.rgbIntToRGB(paintColour);
+			GlStateManager.color(c[0], c[1], c[2]);
 			for(ModelRendererTurbo model : paintModel)
 				model.render(0.0625f);
+			GlStateManager.color(1f, 1f, 1f, 1f);
+		}
 	}
 
 	@Override

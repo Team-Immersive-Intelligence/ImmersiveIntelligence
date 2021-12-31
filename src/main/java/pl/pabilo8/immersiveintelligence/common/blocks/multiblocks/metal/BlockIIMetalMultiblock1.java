@@ -21,6 +21,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock1;
 
@@ -48,6 +49,10 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.RADAR);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.FILLER);
 		addToTESRMap(IIBlockTypes_MetalMultiblock1.VULCANIZER);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.CHEMICAL_PAINTER);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.COAGULATOR);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.PROJECTILE_WORKSHOP);
+		addToTESRMap(IIBlockTypes_MetalMultiblock1.AMMUNITION_WORKSHOP);
 
 	}
 
@@ -114,6 +119,23 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			{
 				return new TileEntityRadar();
 			}
+			case CHEMICAL_PAINTER:
+			{
+				return new TileEntityChemicalPainter();
+			}
+			case COAGULATOR:
+			{
+				return new TileEntityCoagulator();
+			}
+			case PROJECTILE_WORKSHOP:
+			{
+				return new TileEntityProjectileWorkshop();
+			}
+			case AMMUNITION_WORKSHOP:
+			{
+				return new TileEntityAmmunitionWorkshop();
+			}
+			// TODO: 18.11.2021 projectile workshop
 		}
 		return null;
 	}
