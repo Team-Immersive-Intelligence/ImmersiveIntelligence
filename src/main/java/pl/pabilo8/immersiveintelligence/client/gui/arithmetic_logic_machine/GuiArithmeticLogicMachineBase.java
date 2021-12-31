@@ -28,7 +28,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine.CircuitSlot;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
@@ -150,7 +150,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	protected void handleMouseClick(@Nullable Slot slotIn, int slotId, int mouseButton, @Nullable ClickType type)
 	{
 		super.handleMouseClick(slotIn, slotId, mouseButton, type);
-		if(type!=null&&slotIn!=null)
+		if(slotIn instanceof CircuitSlot)
 			initGui();
 	}
 
@@ -227,7 +227,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	protected void addItemTab(IIGuiList gui, int slot)
 	{
 		final int vOffset = TABS.size()*24;
-		if(!handler.getStackInSlot(slot)	.isEmpty())
+		if(!handler.getStackInSlot(slot).isEmpty())
 		{
 			GuiButtonItemAdvanced button = new GuiButtonItemAdvanced(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, TEXTURE_STORAGE,
 					thisGui==gui?204: 176, 24, handler.getStackInSlot(slot), 6, 2);

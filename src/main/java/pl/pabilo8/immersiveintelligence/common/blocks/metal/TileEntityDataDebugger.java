@@ -25,6 +25,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -91,7 +92,8 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		{
 			this.lastPacket = new DataPacket();
 			this.lastPacket.fromNBT(nbt.getCompoundTag("packet"));
-			this.packetString = compilePacketString();
+			if(!world.isRemote)
+				this.packetString = compilePacketString();
 		}
 	}
 
@@ -105,15 +107,31 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 
 		if(this.lastPacket!=null)
 		{
-			this.packetString = compilePacketString();
+			if(!world.isRemote)
+				this.packetString = compilePacketString();
 			nbt.setTag("packet", this.lastPacket.toNBT());
 		}
 	}
 
+	// TODO: 21.12.2021 make it use hexcol
 	private String[] compilePacketString()
 	{
 		//gets variables in format l:{Value:0}
-		return lastPacket.variables.entrySet().stream().map(entry -> entry.getKey()+":"+entry.getValue().valueToNBT().toString()).toArray(String[]::new);
+		return lastPacket.variables.entrySet().stream()
+				/*map(entry -> String.format("<hexcol=%s:%s> %s = %s",
+						String.format("%06X", entry.getValue().getTypeColour()),*/
+				.map(entry -> {
+					TextFormatting ff = TextFormatting.getValueByName(Utils.getRGBTextFormatting(entry.getValue().getTypeColour()).getName());
+					if(ff==TextFormatting.BLACK)
+						ff = TextFormatting.DARK_GRAY;
+					return String.format("%s%s§r %s = %s",
+							ff,
+							entry.getValue().getName(),
+							entry.getKey(),
+							entry.getValue().valueToString()
+					);
+				})
+				.toArray(String[]::new);
 	}
 
 	@Override

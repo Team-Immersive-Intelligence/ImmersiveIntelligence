@@ -24,6 +24,7 @@ public abstract class GuiDataEditor<T extends IDataType> extends GuiButton
 		editors.put(DataPacketTypeString.class, (id, data) -> new GuiDataEditorString(id, (DataPacketTypeString)data));
 		editors.put(DataPacketTypeInteger.class, (id, data) -> new GuiDataEditorInteger(id, (DataPacketTypeInteger)data));
 		editors.put(DataPacketTypeNull.class, (id, data) -> new GuiDataEditorNull(id, (DataPacketTypeNull)data));
+		editors.put(DataPacketTypeItemStack.class, (id, data) -> new GuiDataEditorItemStack(id, (DataPacketTypeItemStack)data));
 		//editors.put(DataPacketTypeAccessor.class, (id, data) -> new GuiDataEditorAccessor(id, (DataPacketTypeAccessor)data));
 	}
 

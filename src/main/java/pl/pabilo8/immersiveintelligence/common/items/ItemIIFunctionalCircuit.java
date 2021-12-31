@@ -92,7 +92,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 		return "";
 	}
 
-	enum Circuit implements IStringSerializable
+	public enum Circuit implements IStringSerializable
 	{
 		ARITHMETIC(1,
 				"add",
@@ -150,6 +150,8 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 				"set_durability",
 				"get_nbt",
 				"set_nbt",
+				"get_itemstack",
+				"get_item_id",
 				"can_stack_with",
 				"matches_oredict"
 		),
@@ -178,11 +180,12 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 				"is_null",
 				"to_integer",
 				"to_string",
-				"to_boolean"
+				"to_boolean",
+				"to_null"
 		);
 
 		private final String[] functions;
-		private final int tier;
+		public final int tier;
 
 		Circuit(int tier, String... functions)
 		{

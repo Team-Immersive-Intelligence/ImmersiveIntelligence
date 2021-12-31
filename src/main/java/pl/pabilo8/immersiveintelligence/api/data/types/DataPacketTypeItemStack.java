@@ -31,7 +31,11 @@ public class DataPacketTypeItemStack implements IDataType
 	@Override
 	public String valueToString()
 	{
-		return value.toString();
+		return String.format("%d*%s@%d%s",
+				value.getCount(),
+				value.getItem().getRegistryName(),
+				value.getMetadata(),
+				value.hasTagCompound()?value.getTagCompound().toString(): "");
 	}
 
 	@Override

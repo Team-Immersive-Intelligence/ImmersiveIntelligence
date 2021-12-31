@@ -80,7 +80,7 @@ item.immersiveintelligence.material_plate.tungsten.name=Tungsten Plate
 item.immersiveintelligence.material_plate.brass.name=Brass Plate
 item.immersiveintelligence.material_plate.advanced_electronic_alloy.name=Advanced Electronic Alloy Plate
 item.immersiveintelligence.material_plate.silicon.name=Silicon Wafer
-item.immersiveintelligence.material_plate.rubber.name=Natural Rubber Sheet
+item.immersiveintelligence.material_plate.rubber_raw.name=Natural Rubber Sheet
 item.immersiveintelligence.material_plate.duraluminium.name=Duraluminium Plate
 
 item.immersiveintelligence.material_nugget.platinum.name=Platinum Nugget
@@ -123,7 +123,7 @@ item.immersiveintelligence.material.rubber_compound.name=Vulcanization Compound
 
 item.immersiveintelligence.material.artificial_leather.name=Artificial Leather
 item.immersiveintelligence.material.natural_rubber.name=Natural Rubber
-item.immersiveintelligence.material.rubber_belt.name=Rubber Belt
+item.immersiveintelligence.material.rubber_belt.name=Rubber Strap
 item.immersiveintelligence.material.rubber_tire.name=Rubber Tire
 
 item.immersiveintelligence.circuit_functional.arithmetic.name=Arithmetic Circuit
@@ -143,6 +143,15 @@ item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforc
 item.immersiveintelligence.minecart.steel_crate.name=Minecart with Steel Crate
 item.immersiveintelligence.minecart.wooden_barrel.name=Minecart with Wooden Barrel
 item.immersiveintelligence.minecart.metal_barrel.name=Minecart with Metal Barrel
+item.immersiveintelligence.minecart.capacitor_lv.name=Minecart with LV Capacitor
+item.immersiveintelligence.minecart.capacitor_mv.name=Minecart with MV Capacitor
+item.immersiveintelligence.minecart.capacitor_hv.name=Minecart with HV Capacitor
+item.immersiveintelligence.minecart.capacitor_creative.name=Minecart with Creative Capacitor
+#Immersive Technology Compat
+item.immersiveintelligence.minecart.crate_creative.name=Minecart with Creative Storage Crate
+item.immersiveintelligence.minecart.barrel_creative.name=Minecart with Creative Barrel
+item.immersiveintelligence.minecart.steel_barrel.name=Minecart with Steel Barrel
+item.immersiveintelligence.minecart.open_barrel.name=Minecart with Open Metal Barrel
 
 item.immersiveintelligence.light_engineer_armor_helmet.name=Engineer's Light Helmet
 item.immersiveintelligence.light_engineer_armor_chestplate.name=Engineer's Light Chestplate
@@ -153,7 +162,7 @@ item.immersiveintelligence.advanced_powerpack.name=Improved Capacitor Backpack
 item.immersiveintelligence.lighter.name=Engineer's Lighter
 item.immersiveintelligence.measuring_cup.name=Engineer's Measuring Cup
 item.immersiveintelligence.electric_hammer.name=Engineer's Electric Hammer
-item.immersiveintelligence.electric_wirecutter.name=Engineer's Electric Wirecutter
+item.immersiveintelligence.electric_wirecutter.name=Engineer's Electric Wire Cutter
 item.immersiveintelligence.electric_multitool.name=Engineer's Electric Multitool
 item.immersiveintelligence.radio_configurator.basic.name=Basic Radio Tuner
 item.immersiveintelligence.radio_configurator.advanced.name=Advanced Radio Tuner
@@ -210,6 +219,7 @@ item.immersiveintelligence.armor_upgrade.helipack.name=Helipack
 item.immersiveintelligence.armor_upgrade.exoskeleton.name=Exoskeleton
 item.immersiveintelligence.armor_upgrade.boot_reinforcement.name=Boots Reinforcement
 item.immersiveintelligence.armor_upgrade.snow_rackets.name=Snow Rackets
+item.immersiveintelligence.armor_upgrade.flippers.name=Flippers
 item.immersiveintelligence.armor_upgrade.internal_springs.name=Internal Springs
 
 item.immersiveintelligence.tracer_powder.tracer_powder.name=Tracer Powder
@@ -273,6 +283,7 @@ desc.immersiveintelligence.toolupgrade.helipack=Allows slow, albeit stable fligh
 desc.immersiveintelligence.toolupgrade.exoskeleton=Allows faster running. Requires energy to operate.
 desc.immersiveintelligence.toolupgrade.boot_reinforcement=Makes wearer immune to fire damage. When combined with Heat-Resistant Coating, allows the wearer to swim in hot liquids.
 desc.immersiveintelligence.toolupgrade.snow_rackets=Increases walk speed on snow and stability on ice.
+desc.immersiveintelligence.toolupgrade.flippers=Allows faster movement in water.
 desc.immersiveintelligence.toolupgrade.internal_springs=Protects wearer from falling damage. Silences wearer's steps.
 
 item.immersiveintelligence.data_wire.name=Data Cable Coil
@@ -348,6 +359,10 @@ item.immersiveintelligence.bullet.component.firework.name=Fireworks
 item.immersiveintelligence.bullet.component.tesla.name=Electrostatic Charge Emitters
 item.immersiveintelligence.bullet.component.tracer_powder.name=Tracer Powder
 item.immersiveintelligence.bullet.component.flare_powder.name=Flare Powder
+item.immersiveintelligence.bullet.component.propaganda.name=Propaganda
+#shh! it's a secret!
+item.immersiveintelligence.bullet.component.fish.name=Fish
+item.immersiveintelligence.bullet.component.nuke.name=Nuclear Warhead
 
 #Cores
 
@@ -373,6 +388,7 @@ item.immersiveintelligence.motor_gear.tungsten.name=Tungsten Gear
 
 item.immersiveintelligence.motor_belt.cloth.name=Cloth Motor Belt
 item.immersiveintelligence.motor_belt.steel.name=Steel Motor Belt
+item.immersiveintelligence.motor_belt.rubber.name=Rubber Motor Belt
 
 item.immersiveintelligence.wrench.name=Engineer's Wrench
 item.immersiveintelligence.electric_wrench.name=Engineer's Electric Wrench
@@ -426,6 +442,7 @@ tile.immersiveintelligence.rubber_log.rebbur.name=Latex Extraction Hole
 tile.immersiveintelligence.rubber_log.stripped.name=Stripped Latex Extraction Point
 tile.immersiveintelligence.rubber_leaves.rubber.name=Rubber Tree Leaves
 tile.immersiveintelligence.rubber_sapling.rubber.name=Rubber Tree Sapling
+tile.immersiveintelligence.charred_log.main.name=Charred Log
 
 tile.immersiveintelligence.concrete_decoration.concrete_bricks.name=Concrete Bricks
 tile.immersiveintelligence.concrete_decoration_slab.concrete_bricks.name=Concrete Bricks Slab
@@ -450,6 +467,7 @@ tile.immersiveintelligence.metal_decoration.coil_steel_motor_belt.name=Steel Mot
 
 tile.immersiveintelligence.cloth_decoration.coil_rope.name=Rope Coil
 tile.immersiveintelligence.cloth_decoration.coil_cloth_motor_belt.name=Cloth Motor Belt Coil
+tile.immersiveintelligence.cloth_decoration.coil_rubber_motor_belt.name=Rubber Motor Belt Coil
 
 tile.immersiveintelligence.mine_sign.mine_sign.name=Mine Caution Sign
 tile.immersiveintelligence.mine_sign.mine_sign.desc=Mines;Ahead!
@@ -470,14 +488,19 @@ tile.immersiveengineering.conveyor.immersiveintelligence:rubber_extractcovered.n
 #redundant? yes, works? yes
 tile.immersiveintelligence.tripmine.main.name=Tripmine
 tile.immersiveintelligence.tripmine.core.name=Tripmine Core
+#Same as above (for the landmine and explosives), this is due to how the projectile workshop gets the translation
+item.immersiveintelligence.tripmine.core.name=Tripmine Core
 item.immersiveintelligence.ammo_casing.tripmine.name=Tripmine Casing
+tile.immersiveintelligence.tripwire_connector.main.name=Tripwire Link
 
 tile.immersiveintelligence.tellermine.main.name=Landmine
 tile.immersiveintelligence.tellermine.core.name=Landmine Core
+item.immersiveintelligence.tellermine.core.name=Landmine Core
 item.immersiveintelligence.ammo_casing.tellermine.name=Landmine Casing
 
 tile.immersiveintelligence.radio_explosives.main.name=Radio Explosives
 tile.immersiveintelligence.radio_explosives.core.name=Radio Explosives Core
+item.immersiveintelligence.radio_explosives.core.name=Radio Explosives Core
 item.immersiveintelligence.ammo_casing.radio_explosives.name=Radio-Equipped Satchel
 
 item.immersiveintelligence.naval_mine.bullet.name=Naval Mine
@@ -508,9 +531,7 @@ tile.immersiveintelligence.mechanical_device.wooden_transmission_box.name=Wooden
 tile.immersiveintelligence.mechanical_device.creative_transmission_box.name=Creative Transmission Box
 tile.immersiveintelligence.mechanical_device1.mechanical_pump.name=Mechanical Pump
 
-tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Wooden Wheel
-tile.immersiveintelligence.mechanical_connector.brass_wheel.name=Brass Wheel
-tile.immersiveintelligence.mechanical_connector.steel_wheel.name=Steel Wheel
+tile.immersiveintelligence.mechanical_connector.wooden_wheel.name=Wheel
 
 tile.immersiveintelligence.small_crate.wooden_crate_box.name=Small Wooden Crate (Box)
 tile.immersiveintelligence.small_crate.wooden_crate_cube.name=Small Wooden Crate (Cube)
@@ -579,11 +600,10 @@ tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
 tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Chemical Bath
 tile.immersiveintelligence.metal_multiblock.electrolyzer.name=Electrolyzer
 tile.immersiveintelligence.metal_multiblock.precission_assembler.name=Precision Assembler
-tile.immersiveintelligence.metal_multiblock.persicope.name=Periscope
+tile.immersiveintelligence.metal_multiblock.periscope.name=Periscope
 tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Artillery Howitzer
 tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Ballistic Computer
 tile.immersiveintelligence.metal_multiblock.missile_silo.name=Missile Silo
-tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Ammunition Factory
 tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Scanning Conveyor
 tile.immersiveintelligence.metal_multiblock.packer.name=Packer
 tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Railway Packer
@@ -619,6 +639,17 @@ desc.immersiveintelligence.metal_multiblock1.emplacement.remove=Remove
 desc.immersiveintelligence.metal_multiblock1.emplacement.duplicate=Duplicate
 desc.immersiveintelligence.metal_multiblock1.emplacement.clear=Clear
 
+desc.immersiveintelligence.metal_multiblock1.packer.task.pack=Pack
+desc.immersiveintelligence.metal_multiblock1.packer.task.unpack=Unpack
+desc.immersiveintelligence.metal_multiblock1.packer.task.charge=Charge
+desc.immersiveintelligence.metal_multiblock1.packer.task.discharge=Discharge
+desc.immersiveintelligence.metal_multiblock1.packer.task.fill=Fill
+desc.immersiveintelligence.metal_multiblock1.packer.task.drain=Drain
+
+desc.immersiveintelligence.metal_multiblock1.packer.mode.amount=Amount
+desc.immersiveintelligence.metal_multiblock1.packer.mode.slot=Slot
+desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=Possible space
+
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Animals
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.players=Players
@@ -630,12 +661,34 @@ desc.immersiveintelligence.metal_multiblock1.emplacement.target.name=Name
 
 tile.immersiveintelligence.metal_multiblock1.flagpole.name=Flagpole
 
+tile.immersiveintelligence.gate_multiblock.wooden_fence_gate.name=Wooden Fence Gate
+tile.immersiveintelligence.gate_multiblock.wooden_chain_fence_gate.name=Wooden Chain Fence Gate
+tile.immersiveintelligence.gate_multiblock.steel_fence_gate.name=Steel Fence Gate
+tile.immersiveintelligence.gate_multiblock.steel_chain_fence_gate.name=Steel Chain Fence Gate
+tile.immersiveintelligence.gate_multiblock.aluminium_fence_gate.name=Aluminium Fence Gate
+tile.immersiveintelligence.gate_multiblock.aluminium_chain_fence_gate.name=Aluminium Chain Fence Gate
+
 tile.immersiveintelligence.metal_multiblock1.filler.name=Filler
-tile.immersiveintelligence.metal_multiblock1.ammunition_core_forge.name=Ammunition Core Forge
-tile.immersiveintelligence.metal_multiblock1.ammunition_core_filler.name=Ammunition Core Filler
-tile.immersiveintelligence.metal_multiblock1.ammunition_assembler.name=Ammunition Assembler
 tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name=Ammunition Workshop
+tile.immersiveintelligence.metal_multiblock1.projectile_workshop.name=Projectile Workshop
+
 tile.immersiveintelligence.metal_multiblock1.chemical_painter.name=Chemical Painter
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb=Display in RGB
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb.r=Red
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb.g=Green
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.rgb.b=Blue
+
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk=Display in CMYK
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.c=Cyan
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.m=Magenta
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.y=Yellow
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.cmyk.k=Red
+
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv=Display in HSV
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.h=Hue
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.s=Saturation
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color.hsv.v=Value
+desc.immersiveintelligence.metal_multiblock1.chemical_painter.color_copied=Color Copied!
 
 desc.immersiveengineering.info.multiblock.II:SkyCrateStation=SkyCrate Station
 desc.immersiveengineering.info.multiblock.II:SkyCartStation=SkyCart Station
@@ -670,11 +723,16 @@ desc.immersiveengineering.info.multiblock.II:Radar=Radar
 desc.immersiveengineering.info.multiblock.II:Flagpole=Flagpole
 
 desc.immersiveengineering.info.multiblock.II:Filler=Filler
-desc.immersiveengineering.info.multiblock.II:AmmunitionCoreForge=Ammunition Core Forge
-desc.immersiveengineering.info.multiblock.II:AmmunitionCoreFiller=Ammunition Core Filler
-desc.immersiveengineering.info.multiblock.II:AmmunitionAssembler=Ammunition Assembler
 desc.immersiveengineering.info.multiblock.II:AmmunitionWorkshop=Ammunition Workshop
+desc.immersiveengineering.info.multiblock.II:ProjectileWorkshop=Projectile Workshop
 desc.immersiveengineering.info.multiblock.II:ChemicalPainter=Chemical Painter
+
+desc.immersiveengineering.info.multiblock.II:WoodenFenceGate=Wooden Fence Gate
+desc.immersiveengineering.info.multiblock.II:WoodenChainFenceGate=Wooden Chain Fence Gate
+desc.immersiveengineering.info.multiblock.II:SteelFenceGate=Steel Fence Gate
+desc.immersiveengineering.info.multiblock.II:SteelChainFenceGate=Steel Chain Fence Gate
+desc.immersiveengineering.info.multiblock.II:AluminiumFenceGate=Aluminium Fence Gate
+desc.immersiveengineering.info.multiblock.II:AluminiumChainFenceGate=Aluminium Chain Fence Gate
 
 #Fluids
 fluid.ink=Ink
@@ -692,6 +750,7 @@ fluid.oxygen=Oxygen
 fluid.hydrogen=Hydrogen
 fluid.chlorine=Chlorine
 fluid.carbon_dioxide=Carbon Dioxide
+fluid.carbon_monoxide=Carbon Monoxide
 fluid.mustard_gas=Mustard Gas
 
 fluid.brine=Brine
@@ -750,6 +809,15 @@ subtitle.immersiveintelligence.sawmill=Saw in action
 subtitle.immersiveintelligence.vulcanizer_heating=Vulcanizer Heater Noise
 subtitle.immersiveintelligence.vulcanizer_motor=Vulcanizer Rotates
 
+subtitle.immersiveintelligence.drawer_open=Drawer Slides Out
+subtitle.immersiveintelligence.drawer_close=Drawer Slides In
+subtitle.immersiveintelligence.metal_locker_open=Locker Door Opens
+subtitle.immersiveintelligence.metal_locker_close=Locker Door Shuts
+
+subtitle.immersiveintelligence.chemical_painter_lights=UV Lights Buzz
+subtitle.immersiveintelligence.chemical_painter_lift_up=Conveyor Ascends
+subtitle.immersiveintelligence.chemical_painter_lift_down=Conveyor Descends
+
 subtitle.immersiveintelligence.autocannon_shot=Autocannon Firing
 subtitle.immersiveintelligence.autocannon_reload=Autocannon Reloading
 
@@ -776,6 +844,16 @@ entity.minecart_reinforced_crate.name=Minecart with Reinforced Crate
 entity.minecart_steel_crate.name=Minecart with Steel Crate
 entity.minecart_wooden_barrel.name=Minecart with Wooden Barrel
 entity.minecart_metal_barrel.name=Minecart with Metal Barrel
+entity.minecart_capacitor_lv.name=Minecart with LV Capacitor
+entity.minecart_capacitor_mv.name=Minecart with MV Capacitor
+entity.minecart_capacitor_hv.name=Minecart with HV Capacitor
+entity.minecart_capacitor_creative.name=Minecart with Creative Capacitor
+#Immersive Technology Compat
+entity.minecart_crate_creative.name=Minecart with Creative Storage Crate
+entity.minecart_barrel_creative.name=Minecart with Creative Barrel
+entity.minecart_steel_barrel.name=Minecart with Steel Barrel
+entity.minecart_open_barrel.name=Minecart with Open Metal Barrel
+
 entity.skycrate.name=Skycrate
 
 entity.bullet.name=Bullet
@@ -903,6 +981,18 @@ machineupgrade.immersiveintelligence.light_howitzer.desc=Light Howitzer provides
 machineupgrade.immersiveintelligence.tesla=Tesla Tower
 machineupgrade.immersiveintelligence.tesla.desc=The Tesla Tower uses high voltage to decimate enemies in its radius, it's especially effective against electronics
 
+machineupgrade.immersiveintelligence.core_filler=Projectile Filler
+machineupgrade.immersiveintelligence.core_filler.desc=Equipping the Projectile Workshop with an inserter allows precise filling of the projectiles with desired components.
+
+machineupgrade.immersiveintelligence.unpacker_conversion=Unpacker Conversion
+machineupgrade.immersiveintelligence.unpacker_conversion.desc=Reverses the function of the machine so it can unload items from containers and drain liquids and power from containers (requires additional upgrades)
+
+machineupgrade.immersiveintelligence.packer_fluid=Pump Module
+machineupgrade.immersiveintelligence.packer_fluid.desc=Installing a fluid tank allows to fill items with liquids, decreases item storage space by half, due to safety reasons a Charging Module cannot be installed along with this upgrade
+
+machineupgrade.immersiveintelligence.packer_energy=Charging Module
+machineupgrade.immersiveintelligence.packer_energy.desc=Installing a fluid tank allows to charge items with IF, decreases item storage space by half, due to safety reasons a Pump Module cannot be installed along with this upgrade
+
 #Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Allows to set frequency for basic radio devices.
 desc.immersiveintelligence.radio_configurator_advanced=An upgraded model for setting higher frequencies.
@@ -986,7 +1076,7 @@ desc.immersiveintelligence.bullet_type.special=Special Purpose
 desc.immersiveintelligence.bullet_core_type.softpoint=Soft Point
 desc.immersiveintelligence.bullet_core_type.shaped=Shaped
 desc.immersiveintelligence.bullet_core_type.piercing=Armor-Piercing
-desc.immersiveintelligence.bullet_core_type.piercing_sabot=Armor-Piercing Discarding Sabot
+desc.immersiveintelligence.bullet_core_type.piercing_sabot=Sabot
 desc.immersiveintelligence.bullet_core_type.canister=Canister
 
 desc.immersiveintelligence.bullet_fuse.contact=Contact
@@ -1024,6 +1114,7 @@ potion.immersiveintelligence.medical_treatment=Medical Treatment
 potion.immersiveintelligence.undergoing_repairs=Undergoing Repairs
 potion.immersiveintelligence.radiation=Radiation
 potion.immersiveintelligence.nuclear_heat=Nuclear Heat
+potion.immersiveintelligence.movement_assist=Motion Assist
 
 #Chat info / debug
 info.immersiveintelligence.frequency_set=Radio frequency has been set to %s
@@ -1144,6 +1235,8 @@ datasystem.immersiveintelligence.function.get_durability=Get Durability
 datasystem.immersiveintelligence.function.set_durability=Set Durability
 datasystem.immersiveintelligence.function.get_nbt=Get NBT
 datasystem.immersiveintelligence.function.set_nbt=Set NBT
+datasystem.immersiveintelligence.function.get_itemstack=Create From ID
+datasystem.immersiveintelligence.function.get_item_id=Get ID
 datasystem.immersiveintelligence.function.can_stack_with=Can Stack With
 datasystem.immersiveintelligence.function.matches_oredict=Matches OreDictionary
 
@@ -1169,6 +1262,7 @@ datasystem.immersiveintelligence.function.is_null=Is Null
 datasystem.immersiveintelligence.function.to_integer=To Integer
 datasystem.immersiveintelligence.function.to_string=To String
 datasystem.immersiveintelligence.function.to_boolean=To Boolean
+datasystem.immersiveintelligence.function.to_null=To Null
 
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
@@ -1191,8 +1285,11 @@ desc.immersiveengineering.info.blueprint.processors=Processors
 
 desc.immersiveengineering.info.blueprint.basic_functional_circuits=Basic Functional Circuits
 desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced Functional Circuits
+desc.immersiveengineering.info.blueprint.processor_functional_circuits=Programmed Processors
 
 desc.immersiveengineering.info.blueprint.metal_springs=Springs
+desc.immersiveengineering.info.blueprint.ammo_molds=Ammunition Molds
+desc.immersiveengineering.info.blueprint.vulcanizer_molds=Vulcanizer Molds
 
 #Keybindings
 key.immersiveintelligence.manualReload=Manual Reload
@@ -1348,13 +1445,13 @@ ie.manual.category.ii_intel.name=Intelligence
 #Reference to... flow control... yeah, really, that boring
 ie.manual.entry.data_main.name=Data
 ie.manual.entry.data_main.subtext=Controlling the Flow
-ie.manual.entry.data_main0=When you want to control an automated factory, power plant or a different complicated structure you need some kind of a control system. <br>Redstone is good for a start, but with lots of machines the messy nature of it starts to show - and that's an appropriate moment to introduce The Data System.
-ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain 36 <link;data_variable_types;§n§oVariables§r;> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
+ie.manual.entry.data_main0=When you want to control an automated factory, power plant or a different complicated facility you need some kind of a control system. <br>Redstone is good for a start, but with lots of machines the messy nature of it starts to show - and that's an appropriate moment to introduce The Data System.
+ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain up to 36 <link;data_variable_types;§n§oVariables§r;> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
 
 #Reference to possibly a box of foodstuffs
 ie.manual.entry.data_variable_types.name=Variable Types
 ie.manual.entry.data_variable_types.subtext=Results May Vary
-ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types_null;§o§nNull§r;>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types_null;§o§nNull§r;>, <link;data_variable_types_int;§o§nInteger§r;>, <link;data_variable_types_string;§o§nString§r;>, <link;data_variable_types_bool;§o§nBoolean§r;>, there are also a couple of more advanced types like <link;data_variable_types_itemstack;§o§nItemStack§r;>, <link;data_variable_types_array;§o§nArray§r;>, <link;data_variable_types_pair;§o§nPair§r;> and <link;data_variable_types_range;§o§nRange§r;>.
+ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types;§o§nNull§r;1>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types;§o§nNull§r;1>, <link;data_variable_types;§o§nInteger§r;2>, <link;data_variable_types;§o§nString§r;3>, <link;data_variable_types;§o§nBoolean§r;4>, there are also a couple of more advanced types like <link;data_variable_types;§o§nItemStack§r;5>, <link;data_variable_types;§o§nArray§r;6>, <link;data_variable_types;§o§nPair§r;7> and <link;data_variable_types;§o§nRange§r;8>.
 
 ie.manual.entry.data_variable_types_null=Null is a special variable type, which has no value. It is the default type of an undefined variable.
 ie.manual.entry.data_variable_types_integer=Integer (often shortened to Int) is a number variable type, mainly used in calculations and number comparisons.
@@ -1362,17 +1459,17 @@ ie.manual.entry.data_variable_types_string=String is a text variable type, it ca
 ie.manual.entry.data_variable_types_boolean=Boolean (often shortened to Bool) is a logic variable type, it can hold one of two values - True or False and can be used in logic functions.
 ie.manual.entry.data_variable_types_itemstack=ItemStack is an advanced variable type which can hold informations about a specific item (not item type) like id, metadata (damage) and NBT.
 ie.manual.entry.data_variable_types_array=Array is a collection of variables, ordered by their index number (starting from 0), it can hold any variable type, except another array.
-ie.manual.entry.data_variable_types_pair=Pair is a variable type, which consists of two basic variable types, often used in comparisons.
-ie.manual.entry.data_variable_types_range=Range is a variable type, which consists of two <link;data_variable_types_int;§o§nIntegers§r;>, it is most commonly used in comparing numbers or setting them in a range.
+ie.manual.entry.data_variable_types_pair=Pair is a variable type, which consists of two variables - a key and a value, often used in comparisons.
+ie.manual.entry.data_variable_types_range=Range is a variable type, which consists of two <link;data_variable_types;§o§nIntegers§r;2>, it is most commonly used in comparing numbers or setting them in a range.
 
 ie.manual.entry.def_value=Default Value
-ie.manual.entry.min_value=Minimal Value
-ie.manual.entry.max_value=Maximal Value
+ie.manual.entry.min_value=Minimum Value
+ie.manual.entry.max_value=Maximum Value
 ie.manual.entry.min_index=Lowest Index
 ie.manual.entry.max_index=Highest Index
 ie.manual.entry.empty=Empty
 ie.manual.entry.accepted_values=Accepted Values
-ie.manual.entry.max_length=Maximal Length
+ie.manual.entry.max_length=Maximum Length
 ie.manual.entry.tf=True/False
 ie.manual.entry.false=False
 ie.manual.entry.true=True
@@ -1466,30 +1563,35 @@ ie.manual.entry.inserters.name=Inserters
 ie.manual.entry.inserters.subtext=No yellow this time!
 ie.manual.entry.inserters0=The Precision Insertion Device, also known as the Inserter is a device used to transfer items from one inventory to another. Item inserters consists of an arm and motors for rotation and handling the item pickup. Fluid inserters use pipes and automatic valves. Inserters are able to take and output from and to any horizontal side desired.
 ie.manual.entry.inserters1=The Inserter's sides can be configured with a hammer (sneak to set output). Inserters require electricity to run and data to tell them what to do.
-ie.manual.entry.inserters_basic=The basic inserter is used for simple, but controlled item transfer. Made of basic circuits and mechanical components, it is a cheap and easy way to determine how many items should be transfered from one block to other.
+ie.manual.entry.inserters_basic=The basic inserter is used for simple, but controlled item transfer. Made of basic circuits and mechanical components, it is a cheap and easy way to transfer a precise amount of items from one container to other.
 
-ie.manual.entry.inserters_basic.vars_in.m.main=Item take mode
-ie.manual.entry.inserters_basic.vars_in.m.sub=Possible values: "set", "add"
-ie.manual.entry.inserters_basic.vars_in.c.main=Amount of items
-ie.manual.entry.inserters_basic.vars_in.c.sub=
+ie.manual.entry.inserters_basic.vars_in.c.main=Command
+ie.manual.entry.inserters_basic.vars_in.c.sub=Possible values: "add", "remove", "clear"
+ie.manual.entry.inserters_basic.vars_in.a.main=Action (Used by "add", optional for "remove")
+ie.manual.entry.inserters_basic.vars_in.a.sub=Possible values: "item", "place_block", "from_minecart", "into_minecart"
+ie.manual.entry.inserters_basic.vars_in.s.main=Stack
+ie.manual.entry.inserters_basic.vars_in.s.sub=Optional. ItemStack or OreDict String the items have to match.
+ie.manual.entry.inserters_basic.vars_in.e.main=Expire after (Used by "add")
+ie.manual.entry.inserters_basic.vars_in.e.sub=Optional. After what amount of items should the task (request) end.
+ie.manual.entry.inserters_basic.vars_in.t.main=Item Take Amount (Used by "add")
+ie.manual.entry.inserters_basic.vars_in.t.sub=Optional. Max amount of items the inserter will take per turn.
+
+ie.manual.entry.inserters_basic.vars_in.i.main=Input direction
+ie.manual.entry.inserters_basic.vars_in.i.sub=Optional. String ("north", "east", "south", "west") or Integer 2-4.
+ie.manual.entry.inserters_basic.vars_in.o.main=Output direction
+ie.manual.entry.inserters_basic.vars_in.o.sub=Optional. String ("north", "east", "south", "west") or Integer 2-4.
+ie.manual.entry.inserters_basic.vars_in.1.main=Input Distance
+ie.manual.entry.inserters_basic.vars_in.1.sub=Optional. Integer 1-2.
+ie.manual.entry.inserters_basic.vars_in.0.main=Output Distance
+ie.manual.entry.inserters_basic.vars_in.0.sub=Optional. Integer 1-2
+
+
+ie.manual.entry.inserter_obsolete.vars_in.m.main=Item take mode (Deprecated)
+ie.manual.entry.inserter_obsolete.vars_in.m.sub=Possible values: "set", "add"
+ie.manual.entry.inserter_obsolete.vars_in.c.main=Amount of items (Deprecated)
+ie.manual.entry.inserter_obsolete.vars_in.c.sub=
 
 ie.manual.entry.inserters_advanced=The advanced inserter is an upgraded version, which allows to filter picking certain items and allows picking up crates and barrels from minecarts. The Advanced Inserters are much faster, but they also drain more power.
-
-ie.manual.entry.inserters_advanced.vars_in.m.main=Item take mode
-ie.manual.entry.inserters_advanced.vars_in.m.sub=Possible values: "set", "add"
-ie.manual.entry.inserters_advanced.vars_in.c.main=Amount of items
-ie.manual.entry.inserters_advanced.vars_in.c.sub=
-ie.manual.entry.inserters_advanced.vars_in.b.main=Can pick blocks from minecarts
-ie.manual.entry.inserters_advanced.vars_in.b.sub=
-ie.manual.entry.inserters_advanced.vars_in.f.main=Filter mode
-ie.manual.entry.inserters_advanced.vars_in.f.sub=Possible values: "whitelist", "blacklist", "none"
-ie.manual.entry.inserters_advanced.vars_in.g.main=Advanced filter mode
-ie.manual.entry.inserters_advanced.vars_in.g.sub=Possible values: "exact", "item", "oredict"
-ie.manual.entry.inserters_advanced2.vars_in.w.main=Minecart take mode
-ie.manual.entry.inserters_advanced2.vars_in.w.sub=Possible values: "items", "block"
-ie.manual.entry.inserters_advanced2.vars_in.1.main=Item filters
-ie.manual.entry.inserters_advanced2.vars_in.1.sub=
-
 ie.manual.entry.inserters_fluid=The fluid inserter is a precise limiter of fluid transfer. In some situations you want to insert only a required amount, this device does exactly that.
 
 ie.manual.entry.inserters_fluid.vars_in.m.main=Fluid take mode
@@ -1685,15 +1787,6 @@ ie.manual.entry.chemdispenser.vars_in.y.sub=Possible values: from -45 to 45
 ie.manual.entry.chemdispenser.vars_in.p.main=Nozzle pitch
 ie.manual.entry.chemdispenser.vars_in.p.sub=Possible values: from -45 to 45
 
-#Reference to a Polish Copypasta about guys estabilishing a regime in a kindergarten and forcing the children to work on assembling pens, while making a secret police from the other kids to watch over them
-ie.manual.entry.ammunition_factory.name=Ammunition Factory
-ie.manual.entry.ammunition_factory.subtext=Still better that making pens!
-ie.manual.entry.ammunition_factory0=The Ammunition Factory is a heavy, multi-section machine which produces ammunition of all types. You can produce grenades, bullets and shells here and their effect depends on materials used.
-ie.manual.entry.ammunition_factory1=The machine requires a power supply and can be given an optional data signal to change the bullets' fuse time, colouration and name. The basic ingredients of ammunition are:<br>The core - made of metal, such as steel or brass<br>The components - explosive materials, tracer dust, incendiary materials, fireworks, etc.<br>Gunpowder - the amount used depends of ammunition's calliber.<br>The higher the calliber the bigger the capacity for the components, thus bigger the mass.
-ie.manual.entry.ammunition_factory2=When making bullets, remember: there is no such thing as "the best bullet composition", add ingredients adjacent to your needs. Need a stun grenade? Use fireworks. Need a bullet that can penetrate trough steel? Use uranium cores. Keep in mind, that combining these two will result in lower suppression modifier of the fireworks, the cores modify the strengths of the effects. Some materials like brass raise it, while some like tungsten, steel or uranium decrease it.
-ie.manual.entry.ammunition_factory3=Use the data system to name and color your bullets. This will allow you to differentiate them easier, so you won't mistake an armour-piercing round for a high-explosive one. For coloring the machine requires a supply of inks to its tank, similar to the <link;printing_press;§o§nPrinting §o§nPress§r;>.
-ie.manual.entry.ammunition_factory4=Variables:<br>Integer 'p'-percentage proportion of the bullet components (0-100)<br>Integer or String 'c'-bullet casing's colour (Int - RGB, String - Hex)<br>String 'n' - bullet name.
-
 #Bullet cores & components
 ie.manual.entry.bullet_cores.name=Bullet Cores
 ie.manual.entry.bullet_cores.subtext=That one bounced!
@@ -1829,6 +1922,11 @@ ie.manual.entry.bullet_component.shrapnel_brass.desc=Brass is a bad choice for m
 ie.manual.entry.bullet_component.shrapnel_tungsten=Tungsten Shrapnel
 ie.manual.entry.bullet_component.shrapnel_tungsten.lore=And now we make *ekhem* TUNGSTEN-STEEL...
 ie.manual.entry.bullet_component.shrapnel_tungsten.desc=Tungsten is a very good material for shrapnel, its high damage allows to shred enemies to pieces.
+
+#Reference to Kuruma saying IEn's thorium railgun rods are the strongest railgun ammo
+ie.manual.entry.bullet_component.shrapnel_thorium=Thorium Shrapnel
+ie.manual.entry.bullet_component.shrapnel_thorium.lore=Make grenades, not rods!
+ie.manual.entry.bullet_component.shrapnel_thorium.desc=Thorium is a good, but costly shrapnel material with high damage and penetration values.
 
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite=HOP Graphite Shrapnel
 ie.manual.entry.bullet_component.shrapnel_HOPGraphite.lore=

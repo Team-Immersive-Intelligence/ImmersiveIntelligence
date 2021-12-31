@@ -21,10 +21,7 @@ import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationAN
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationNOT;
 import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationOR;
 import pl.pabilo8.immersiveintelligence.api.data.operators.text.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.DataOperationIsNull;
-import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.DataOperationToBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.DataOperationToInteger;
-import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.DataOperationToString;
+import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.*;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -89,6 +86,8 @@ public class DataOperations
 		operations.put("set_durability", DataOperationSetDurability.class);
 		operations.put("get_nbt", DataOperationGetNBT.class);
 		operations.put("set_nbt", DataOperationSetNBT.class);
+		operations.put("get_item_id", DataOperationGetItemID.class);
+		operations.put("get_itemstack", DataOperationGetItemStack.class);
 		operations.put("is_stack_empty", DataOperationIsStackEmpty.class);
 		operations.put("can_stack_with", DataOperationCanStackWith.class);
 		operations.put("matches_oredict", DataOperationMatchesOreDictionary.class);
@@ -115,6 +114,7 @@ public class DataOperations
 		operations.put("to_integer", DataOperationToInteger.class);
 		operations.put("to_string", DataOperationToString.class);
 		operations.put("to_boolean", DataOperationToBoolean.class);
+		operations.put("to_null", DataOperationToNull.class);
 
 
 	}

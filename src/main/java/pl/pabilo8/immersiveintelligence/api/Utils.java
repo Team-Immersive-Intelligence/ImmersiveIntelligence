@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.api;
 
 import blusunrize.immersiveengineering.api.DimensionBlockPos;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import net.minecraft.advancements.Advancement;
@@ -56,12 +58,14 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
@@ -170,23 +174,170 @@ public class Utils
 		return Math.abs(rounded-d) < 0.00000000000001?rounded: d;
 	}
 
-	//CMY is actually reverse RGB (i tested that out in GIMP ^^)... adding black makes colour darker (less means lighter)
-	//Black is actually the limit of darkness (less value - darker) in RGB
-	//But because everything is reverse, we get the color with greater value.
+	/**
+	 * CMY is actually reverse RGB (i tested that out in GIMP ^^)... adding black makes colour darker (less means lighter)<br>
+	 * Black is actually the limit of darkness (less value - darker) in RGB<br>
+	 * But because everything is reverse, we get the color with greater value.<br>
+	 */
 	public static int[] rgbToCmyk(int red, int green, int blue)
 	{
 		return new int[]{255-red, 255-green, 255-blue, 255-Math.min(red, Math.max(green, blue))};
 	}
 
+	/**
+	 * @param r red amount (0-1)
+	 * @param g green amount (0-1)
+	 * @param b blue amount (0-1)
+	 * @return float cmyk color array with values 0-1
+	 */
+	public static float[] rgbToCmyk(float r, float g, float b)
+	{
+		int[] cmyk = rgbToCmyk((int)(r*255), (int)(g*255), (int)(b*255));
+		return new float[]{cmyk[0]/255f, cmyk[1]/255f, cmyk[2]/255f, cmyk[3]/255f};
+	}
+
+	public static float[] rgbToCmyk(float[] rgb)
+	{
+		return rgbToCmyk(rgb[0], rgb[1], rgb[2]);
+	}
+
+	/**
+	 * @param cyan    cyan amount (0-255)
+	 * @param magenta magenta amount (0-255)
+	 * @param yellow  yellow amount (0-255)
+	 * @param black   black amount (0-255)
+	 * @return float cmyk color array with values 0-1
+	 */
 	public static int[] cmykToRgb(int cyan, int magenta, int yellow, int black)
 	{
 		return new int[]{Math.min(255-black, 255-cyan), Math.min(255-black, 255-magenta), Math.min(255-black, 255-yellow)};
+	}
+
+	public static float[] cmykToRgb(float c, float m, float y, float b)
+	{
+		int[] dec = cmykToRgb((int)(c*255), (int)(m*255), (int)(y*255), (int)(b*255));
+		return new float[]{dec[0]/255f, dec[1]/255f, dec[2]/255f};
+	}
+
+	/**
+	 * stolen from MathHelper class
+	 *
+	 * @param hue        hue amount (NOT DEGREES) in 0-1
+	 * @param saturation saturation amount in 0-1
+	 * @param value      value in 0-1
+	 * @return float rgb color array with values 0-1
+	 */
+	public static float[] hsvToRgb(float hue, float saturation, float value)
+	{
+		int i = (int)(hue*6.0F)%6;
+		float f = hue*6.0F-(float)i;
+		float f1 = value*(1.0F-saturation);
+		float f2 = value*(1.0F-f*saturation);
+		float f3 = value*(1.0F-(1.0F-f)*saturation);
+		float r, g, b;
+
+		switch(i)
+		{
+			case 0:
+				r = value;
+				g = f3;
+				b = f1;
+				break;
+			case 1:
+				r = f2;
+				g = value;
+				b = f1;
+				break;
+			case 2:
+				r = f1;
+				g = value;
+				b = f3;
+				break;
+			case 3:
+				r = f1;
+				g = f2;
+				b = value;
+				break;
+			case 4:
+				r = f3;
+				g = f1;
+				b = value;
+				break;
+			case 5:
+				r = value;
+				g = f1;
+				b = f2;
+				break;
+			default:
+				r = 0;
+				g = 0;
+				b = 0;
+				break;
+		}
+
+		return new float[]{r, g, b};
+	}
+
+	/**
+	 * based on formula from <a href="https://www.rapidtables.com/convert/color/rgb-to-hsv.html">https://www.rapidtables.com/convert/color/rgb-to-hsv.html</a>
+	 *
+	 * @param r red amount (0-1)
+	 * @param g green amount (0-1)
+	 * @param b blue amount (0-1)
+	 * @return float hsv array with values 0-1
+	 */
+	public static float[] rgbToHsv(float r, float g, float b)
+	{
+		float cMax = Math.max(Math.max(r, g), b);
+		float cMin = Math.min(Math.min(r, g), b);
+		float d = cMax-cMin;
+
+		float s = cMax!=0?d/cMax: 0;
+		float h;
+		if(d==0)
+			h = 0;
+		else if(cMax==r)
+			h = (((g-b)/d)%6f)/6f;
+		else if(cMax==g)
+			h = (((b-r)/d)+2)/6f;
+		else if(cMax==b)
+			h = (((r-g)/d)+4)/6f;
+		else
+			h = 0;
+
+		if(h < 0)
+			h = 1f+h;
+
+		return new float[]{h, s, cMax};
 	}
 
 	//Copied from GUIContainer
 	public static boolean isPointInRectangle(double x, double y, double xx, double yy, double px, double py)
 	{
 		return px >= x&&px < xx&&py >= y&&py < yy;
+	}
+
+	/**
+	 * From StackOverflow (yet again!)
+	 * <a href="https://stackoverflow.com/a/9755252/9876980">https://stackoverflow.com/a/9755252/9876980</a>
+	 *
+	 * @param x   point 1's x
+	 * @param y   point 1's y
+	 * @param xx  point 2's x
+	 * @param yy  point 2's y
+	 * @param xxx point 3's x
+	 * @param yyy point 3's y
+	 * @return whether px and py is inside the triangle
+	 */
+	public static boolean isPointInTriangle(int x, int y, int xx, int yy, int xxx, int yyy, int px, int py)
+	{
+		int as_x = px-x;
+		int as_y = py-y;
+
+		boolean s_ab = (xx-x)*as_y-(yy-y)*as_x > 0;
+
+		if((xxx-x)*as_y-(yyy-y)*as_x > 0==s_ab) return false;
+		return (xxx-xx)*(py-yy)-(yyy-yy)*(px-xx) > 0==s_ab;
 	}
 
 	public static <T extends IFluidTank & IFluidHandler> boolean handleBucketTankInteraction(T[] tanks, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, int tank, boolean fillBucket)
@@ -355,6 +506,14 @@ public class Utils
 	}
 
 	/**
+	 * Works™
+	 */
+	public static float clampedLerp3Par(float e1, float e2, float e3, float percent)
+	{
+		return (float)MathHelper.clampedLerp(MathHelper.clampedLerp(e1, e2, percent*2), e3, Math.max(percent-0.5f, 0)*2);
+	}
+
+	/**
 	 * Pitch calculation for artillery stolen from Pneumaticcraft. Huge thanks to desht and MineMaarten for this amazing code!
 	 * <a href="https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java">https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java</a>
 	 *
@@ -489,6 +648,13 @@ public class Utils
 		return stack.getItem().getToolClasses(stack).contains(CommonProxy.TOOL_CROWBAR);
 	}
 
+	public static boolean isVoltmeter(ItemStack stack)
+	{
+		if(stack.isEmpty())
+			return false;
+		return OreDictionary.itemMatches(new ItemStack(IEContent.itemTool, 1, 2), stack, true);
+	}
+
 	@SideOnly(Side.CLIENT)
 	public static void drawStringCentered(FontRenderer fontRenderer, String string, int x, int y, int w, int h, int colour)
 	{
@@ -522,6 +688,11 @@ public class Utils
 			return cycleInt(forward, i, min, max);
 		else
 			return i;
+	}
+
+	public static <E extends Enum<E>> E cycleEnum(boolean forward, Class<E> enumType, E current)
+	{
+		return enumType.getEnumConstants()[cycleInt(forward, current.ordinal(), 0, enumType.getEnumConstants().length-1)];
 	}
 
 	public static boolean compareBlockstateOredict(IBlockState state, String oreName)
@@ -695,6 +866,10 @@ public class Utils
 		return Math.abs((deltaR*deltaR+deltaG*deltaG+deltaB*deltaB)/3.0);
 	}
 
+	/**
+	 * @param color color in rgbInt
+	 * @return closest dye color
+	 */
 	public static EnumDyeColor getRGBTextFormatting(int color)
 	{
 		float[] cc = rgbIntToRGB(color);
@@ -880,5 +1055,75 @@ public class Utils
 		}
 
 		return (float)Math.toDegrees((Math.atan2(toTarget.y, toTarget.distanceTo(new Vec3d(0, toTarget.y, 0)))));
+	}
+
+	public static Vec3d getEntityCenter(Entity entity)
+	{
+		return entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void drawRope(BufferBuilder buff, double x, double y, double z, double xx, double yy, double zz, double xdiff, double zdiff)
+	{
+		buff.pos(x+xdiff, y, z-zdiff).tex(0f, 0f).endVertex();
+		buff.pos(xx+xdiff, yy, zz-zdiff).tex(0f, 1f).endVertex();
+		buff.pos(xx-xdiff, yy, zz+zdiff).tex(0.125f, 1f).endVertex();
+		buff.pos(x-xdiff, y, z+zdiff).tex(0.125f, 0f).endVertex();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void drawFace(BufferBuilder buff, double x, double y, double z, double xx, double yy, double zz, double u, double uu, double v, double vv)
+	{
+		buff.pos(x, y, z).tex(u, v).endVertex();
+		buff.pos(x, yy, z).tex(u, vv).endVertex();
+		buff.pos(xx, yy, zz).tex(uu, vv).endVertex();
+		buff.pos(xx, y, zz).tex(uu, v).endVertex();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void drawFluidBlock(@Nonnull FluidStack fs, boolean flowing, double x, double y, double z, double xx, double yy, double zz, boolean drawEnd)
+	{
+		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		String tex = (flowing?fs.getFluid().getFlowing(fs): fs.getFluid().getStill(fs)).toString();
+		TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(tex);
+
+		if(sprite!=null)
+		{
+			int col = fs.getFluid().getColor(fs);
+			double u = sprite.getMinU(), uu = sprite.getMaxU(), v = sprite.getMinV(), vv = v+((sprite.getMaxV()-v)*Math.min(1, (yy-y)/sprite.getIconHeight()));
+			double ux = u+((uu-u)*Math.min(1, (xx-x)/sprite.getIconWidth())), uz = u+(uu*Math.min(1, (zz-z)/sprite.getIconWidth()));
+
+			GlStateManager.color((col >> 16&255)/255.0f, (col >> 8&255)/255.0f, (col&255)/255.0f, 1);
+
+			BufferBuilder buff = Tessellator.getInstance().getBuffer();
+
+			buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+			drawFace(buff, x, yy, z, xx, y, z, u, ux, v, vv);
+			drawFace(buff, x, yy, zz, xx, y, zz, u, ux, v, vv);
+			drawFace(buff, x, yy, z, x, y, zz, u, ux, v, vv);
+			drawFace(buff, xx, yy, z, xx, y, zz, u, ux, v, vv);
+
+			Tessellator.getInstance().draw();
+
+			GlStateManager.color(1f, 1f, 1f);
+		}
+	}
+
+	@Nonnull
+	public static EnumFacing getFacingBetweenPos(@Nonnull BlockPos fromPos, @Nonnull BlockPos toPos)
+	{
+		Vec3d vv = new Vec3d(fromPos.subtract(toPos)).normalize();
+		return EnumFacing.getFacingFromVector((float)vv.x, (float)vv.y, (float)vv.x);
+	}
+
+	public static IngredientStack ingredientFromData(IDataType dataType)
+	{
+		if(dataType instanceof DataPacketTypeItemStack)
+			return new IngredientStack((((DataPacketTypeItemStack)dataType).value.copy()));
+		else if(dataType instanceof DataPacketTypeString)
+			return new IngredientStack(dataType.valueToString());
+		else
+			return new IngredientStack("*");
 	}
 }

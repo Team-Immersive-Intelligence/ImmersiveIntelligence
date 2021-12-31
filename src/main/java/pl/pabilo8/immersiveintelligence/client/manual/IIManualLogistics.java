@@ -48,18 +48,21 @@ public class IIManualLogistics extends IIManual
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "inserters0", inserter0, inserter1, inserter2),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_basic", inserter0),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
+						.addEntry(new DataPacketTypeString(), 'c')
+						.addEntry(new DataPacketTypeString(), 'a')
+						.addEntry(new DataPacketTypeItemStack(), 's'),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
+						.addEntry(new DataPacketTypeInteger(), 'e')
+						.addEntry(new DataPacketTypeInteger(), 't'),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
+						.addEntry(new DataPacketTypeString(), 'i')
+						.addEntry(new DataPacketTypeString(), 'o')
+						.addEntry(new DataPacketTypeInteger(), '1')
+						.addEntry(new DataPacketTypeInteger(), '0'),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "inserter_obsolete", true)
 						.addEntry(new DataPacketTypeString(), 'm')
 						.addEntry(new DataPacketTypeInteger(), 'c'),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_advanced", inserter1),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_advanced", true)
-						.addEntry(new DataPacketTypeString(), 'm')
-						.addEntry(new DataPacketTypeInteger(), 'c')
-						.addEntry(new DataPacketTypeBoolean(), 'b')
-						.addEntry(new DataPacketTypeString(), 'f')
-						.addEntry(new DataPacketTypeString(), 'g'),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_advanced2", true)
-						.addEntry(new DataPacketTypeString(), 'w')
-						.addEntry(new DataPacketTypeItemStack(), '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_fluid", inserter2),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_fluid", true)
 						.addEntry(new DataPacketTypeString(), 'm')

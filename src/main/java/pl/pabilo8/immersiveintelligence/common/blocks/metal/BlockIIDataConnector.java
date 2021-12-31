@@ -29,6 +29,8 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityAdvancedInserter;
+import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityInserter;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 
 import java.util.ArrayList;
@@ -60,6 +62,8 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 		addToTESRMap(IIBlockTypes_Connector.DATA_DEBUGGER);
 		addToTESRMap(IIBlockTypes_Connector.DATA_CALLBACK_CONNECTOR);
 		//addToTESRMap(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER);
+
+		setMetaHidden(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getMeta());
 
 	}
 
@@ -111,9 +115,9 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 	{
 		super.neighborChanged(state, world, pos, blockIn, fromPos);
 		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof TileEntityDataConnector|| te instanceof TileEntityDataRelay)
+		if(te instanceof TileEntityDataConnector||te instanceof TileEntityDataRelay)
 		{
-			TileEntityImmersiveConnectable connector = (TileEntityImmersiveConnectable& IDirectionalTile)te;
+			TileEntityImmersiveConnectable connector = (TileEntityImmersiveConnectable & IDirectionalTile)te;
 			if(world.isAirBlock(pos.offset(((IDirectionalTile)connector).getFacing())))
 			{
 				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);

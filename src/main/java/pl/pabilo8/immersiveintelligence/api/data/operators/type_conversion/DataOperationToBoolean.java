@@ -12,7 +12,6 @@ public class DataOperationToBoolean extends DataOperator
 {
 	public DataOperationToBoolean()
 	{
-		//A boolean version of the 'equals' operation
 		name = "to_boolean";
 		sign = "";
 		allowedType1 = DataPacketTypeNull.class;

@@ -21,7 +21,7 @@ import java.util.Map;
 public class Config
 {
 	public static final String GEARS = "Gears: Copper, Brass, Iron, Steel, Tungsten";
-	public static final String BELTS = "Belts: Cloth, Steel";
+	public static final String BELTS = "Belts: Cloth, Steel, Rubber";
 
 	@net.minecraftforge.common.config.Config(modid = ImmersiveIntelligence.MODID)
 	public static class IIConfig
@@ -49,9 +49,6 @@ public class Config
 
 		@Comment({"The maximum frequency for advanced radios."})
 		public static int radioAdvancedMaxFrequency = 256;
-
-		@Comment({"Should RPM be counted in real time or ingame time"})
-		public static boolean rpmRealTime = true;
 
 		@Comment({"Whether basic circuits should be produced in II or IE way"})
 		@RequiresMcRestart
@@ -150,7 +147,7 @@ public class Config
 			@Mapped(mapClass = IIWorldGen.class, mapName = "retrogenMap")
 			public static boolean gen_rubber_trees = true;
 
-			@RangeInt(min = 0,max = 100)
+			@RangeInt(min = 0, max = 100)
 			@RequiresWorldRestart
 			public static int gen_rubber_trees_chance = 15;
 		}
@@ -367,6 +364,10 @@ public class Config
 			@SubConfig
 			public static PrecissionAssembler precissionAssembler;
 			@SubConfig
+			public static Coagulator coagulator;
+			@SubConfig
+			public static Vulcanizer vulcanizer;
+			@SubConfig
 			public static ArtilleryHowitzer artilleryHowitzer;
 			@SubConfig
 			public static BallisticComputer ballisticComputer;
@@ -406,6 +407,8 @@ public class Config
 			public static Emplacement emplacement;
 			@SubConfig
 			public static Filler filler;
+			@SubConfig
+			public static VehicleWorkshop vehicleWorkshop;
 
 			public static class RedstoneInterface
 			{
@@ -432,6 +435,16 @@ public class Config
 				@RequiresWorldRestart
 				@Comment({"Dust capacity of the the Filler (in mB, 1 dustStack is 100mB)."})
 				public static int dustCapacity = 32000;
+			}
+
+			public static class VehicleWorkshop
+			{
+				@Comment({"Energy capacity of the the Vehicle Workshop (in IF)."})
+				public static int energyCapacity = 100000;
+
+				@RequiresWorldRestart
+				@Comment({"Fluid (diesel) capacity of the the Vehicle Workshop (in mB)."})
+				public static int dieselCapacity = 24000;
 			}
 
 			public static class EffectCrates
@@ -463,14 +476,17 @@ public class Config
 				@Comment({"Energy capacity of the glorious boxing device also known as The Packer."})
 				public static int energyCapacity = 16000;
 
-				@Comment({"Energy usage of the packer (after dropping a stack inside)."})
-				public static int energyUsage = 512;
+				@Comment({"Additional energy capacity of the packer when the charging module upgrade is present."})
+				public static int energyCapacityUpgrade = 4000000;
 
-				@Comment({"Duration of the container being pushed by conveyor into and out of the center (in ticks)."})
-				public static int conveyorTime = 60;
+				@Comment({"Additional fluid capacity of the packer when the pump module upgrade is present."})
+				public static int fluidCapacityUpgrade = 96000;
 
-				@Comment({"Duration of a single stack insertion process (in ticks)."})
-				public static int timeInsertion = 5;
+				@Comment({"Energy usage of the packer (if any stack/fluid/energy input/output is performed)."})
+				public static int energyUsage = 4096;
+
+				@Comment({"Duration of the packing process (in ticks)."})
+				public static int actionTime = 260;
 			}
 
 			public static class SkyCrateStation
@@ -616,6 +632,16 @@ public class Config
 				public static int fluidCapacity = 24000;
 			}
 
+			public static class ChemicalPainter
+			{
+				@Comment({"Energy capacity of the chemical painter."})
+				public static int energyCapacity = 16000;
+
+				@RequiresWorldRestart
+				@Comment({"Fluid capacity of each tank of the chemical painter."})
+				public static int fluidCapacity = 8000;
+			}
+
 			public static class Electrolyzer
 			{
 				@Comment({"Energy capacity of the electrolyzer."})
@@ -725,31 +751,26 @@ public class Config
 
 			public static class Inserter
 			{
-				@Comment({"Energy capacity of the inserter."})
-				public static int energyCapacity = 2048;
-				@Comment({"Energy usage of the inserter per item taken."})
+				@Comment({"Energy capacity of the inserter (in IF)"})
+				public static int energyCapacity = 4096;
+				@Comment({"Energy usage of the inserter per tick (in IF)"})
 				public static int energyUsage = 128;
-
-				@Comment({"How long does it take for the inserter to pick up an item (in ticks)"})
-				public static int grabTime = 20;
-
-				@Comment({"How long does it take for the inserter to rotate 90 degrees (in ticks)"})
-				public static int rotateTime = 10;
-
+				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
+				public static int taskTime = 20;
+				@Comment({"How many items can be taken per single operation"})
+				public static int maxTake = 32;
 			}
 
 			public static class AdvancedInserter
 			{
-				@Comment({"Energy capacity of the inserter."})
+				@Comment({"Energy capacity of the inserter (in IF)"})
 				public static int energyCapacity = 4096;
-				@Comment({"Energy usage of the inserter per item taken."})
+				@Comment({"Energy usage of the inserter per tick (in IF)"})
 				public static int energyUsage = 256;
-
-				@Comment({"How long does it take for the inserter to pick up an item (in ticks)"})
-				public static int grabTime = 10;
-
-				@Comment({"How long does it take for the inserter to rotate 90 degrees (in ticks)"})
-				public static int rotateTime = 5;
+				@Comment({"How long does it take for the inserter to perform a task (in ticks)"})
+				public static int taskTime = 10;
+				@Comment({"How many items can be taken per single operation"})
+				public static int maxTake = 64;
 
 			}
 
@@ -838,8 +859,53 @@ public class Config
 
 			public static class Vulcanizer
 			{
-				@Comment({"Energy capacity of the vulcanizer."})
+				@Comment({"Energy capacity of the vulcanizer (in IF)."})
 				public static int energyCapacity = 16000;
+			}
+
+			public static class Coagulator
+			{
+				@Comment({"Energy capacity of the coagulator (in IF)."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Fluid capacity of a coagulator tank (in mB)."})
+				public static int fluidCapacity = 16000;
+
+				@Comment({"Default bucket wait time for a coagulator process, when not specified in recipe (in ticks)."})
+				public static int bucketTime = 400;
+
+				@Comment({"How long does it take to move a crane 1 block (in ticks)."})
+				public static int craneMoveTime = 20;
+
+				@Comment({"Duration of crane bucket actions (in ticks)."})
+				public static int craneGrabTime = 20;
+			}
+
+			public static class AmmunitionWorkshop
+			{
+				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
+				public static int energyCapacity = 16000;
+			}
+
+			public static class ProjectileWorkshop
+			{
+				@Comment({"Energy capacity of the ammunition workshop (in IF)."})
+				public static int energyCapacity = 16000;
+
+				@Comment({"Fluid capacity of a projectile workshop coolant (water) tank (in mB)."})
+				public static int coolantTankCapacity = 6000;
+
+				@Comment({"Fluid capacity of a projectile workshop fluid bullet component buffer tank (in mB)."})
+				public static int componentTankCapacity = 1000;
+
+				@Comment({"Maximum amount of bullet component stored in a projectile workshop (16 is default amount per one item / 1000mB of a fluid)."})
+				public static int componentCapacity = 512;
+
+				@Comment({"How long does it take to produce a projectile from a plate (in ticks, multiplied by caliber)."})
+				public static int productionTime = 35;
+
+				@Comment({"How long does it take to fill a projectile with components (in ticks, multiplied by caliber)."})
+				public static int fillingTime = 35;
 			}
 		}
 
@@ -1135,20 +1201,29 @@ public class Config
 				@Comment({"Whether the recoil is visible in first-person view."})
 				public static boolean cameraRecoil = true;
 
-				@Comment({"Time required to reload a magazine in SMG."})
+				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})
 				public static int clipReloadTime = 45;
 
-				@Comment({"Time required to reload a magazine in SMG."})
+				@Comment({"Time required to reload a drum magazine in SMG. (in ticks)"})
+				public static int drumReloadTime = 80;
+
+				@Comment({"Time required to aim the SMG. (in ticks)"})
 				public static int aimTime = 10;
+
+				@Comment({"Time required to aim the SMG with folded stock upgrade."})
+				public static int aimTimeFoldedStock = 4;
 
 				@Comment({"Time required to fire a single bullet."})
 				public static int bulletFireTime = 2;
 
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float sturdyBarrelVelocityMod = 1.25f;
+
 				@Comment({"Amount of horizontal recoil after taking a shot."})
-				public static float recoilHorizontal = 3f;
+				public static float recoilHorizontal = 3.5f;
 
 				@Comment({"Amount of vertical recoil after taking a shot."})
-				public static float recoilVertical = 4f;
+				public static float recoilVertical = 5f;
 
 				@Comment({"Maximum amount of horizontal recoil."})
 				public static float maxRecoilHorizontal = 30f;
