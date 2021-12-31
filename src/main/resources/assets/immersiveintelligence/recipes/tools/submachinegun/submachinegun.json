@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "rbr",
-    "hbs",
-    " w "
+    "pc ",
+    "hbb",
+    "ww "
   ],
   "key": {
     "w": {
@@ -14,21 +14,21 @@
       "item": "immersiveengineering:material",
       "data": 14
     },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
     "h": {
       "item": "immersiveengineering:metal_decoration0",
       "data": 5
     },
-    "s": {
+    "p": {
       "type": "forge:ore_dict",
-      "ore": "blockTungsten"
-    },
-    "r": {
-      "type": "forge:ore_dict",
-      "ore": "stickSteel"
+      "ore": "plateTungsten"
     }
   },
   "result": {
-    "item": "immersiveintelligence:machinegun",
+    "item": "immersiveintelligence:submachinegun",
     "count": 1
   }
 }

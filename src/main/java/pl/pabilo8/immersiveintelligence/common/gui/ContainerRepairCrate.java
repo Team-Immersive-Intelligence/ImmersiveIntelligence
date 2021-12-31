@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,7 @@ public class ContainerRepairCrate extends ContainerIEBase<TileEntityRepairCrate>
 				@Override
 				public boolean isItemValid(ItemStack stack)
 				{
-					return true;
+					return Utils.compareToOreName(stack, "plateSteel");
 				}
 			});
 

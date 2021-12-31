@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rcr",
+    "rcr"
+  ],
+  "key": {
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "wireSteel"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "plankTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:wooden_fortification",
+    "data" : 0,
+    "count": 3
+  }
+}

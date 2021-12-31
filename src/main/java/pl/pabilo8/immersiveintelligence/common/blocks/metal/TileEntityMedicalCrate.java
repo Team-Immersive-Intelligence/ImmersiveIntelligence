@@ -9,6 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -45,6 +46,7 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 {
 	public static final Predicate<FluidStack> HEALTH_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:regeneration");
 	public static final Predicate<FluidStack> BOOST_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:absorption");
+	public static final Predicate<ItemStack> BOOST_POTION_ITEM = resource -> resource.getItem()==Items.GOLDEN_APPLE;
 
 	public TileEntityMedicalCrate()
 	{
@@ -107,8 +109,15 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 	public void update()
 	{
 		super.update();
-		boolean u = Utils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false,HEALTH_POTION);
-		u = Utils.handleBucketTankInteraction(tanks, inventory, 2, 3, 1, false,BOOST_POTION)||u;
+		boolean u = Utils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false, HEALTH_POTION);
+		if(tanks[1].getFluidAmount() < tanks[1].getCapacity()-200&&BOOST_POTION_ITEM.test(inventory.get(2)))
+		{
+			NBTTagCompound potionNBT = new NBTTagCompound();
+			potionNBT.setString("Potion", "minecraft:absorption");
+			if(tanks[1].fill(new FluidStack(IEContent.fluidPotion, 250, potionNBT), true) > 0)
+				inventory.get(2).shrink(1);
+			u = true;
+		}
 		if(u)
 		{
 			this.markContainingBlockForUpdate(null);

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "csb",
+    " d "
+  ],
+  "key": {
+    "b": {
+      "item": "immersiveengineering:material",
+      "data": 14
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "blockSheetmetalAluminum"
+    },
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlack"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 11,
+    "count": 1
+  }
+}

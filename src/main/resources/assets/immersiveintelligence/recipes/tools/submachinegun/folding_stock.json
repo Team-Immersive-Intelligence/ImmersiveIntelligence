@@ -1,23 +1,27 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "rcr",
-    "r r",
-    " r "
+    "crr",
+    " rl",
+    "  r"
   ],
   "key": {
     "c": {
       "item": "immersiveengineering:material",
-      "data": 8
+      "data": 9
     },
     "r": {
       "type": "forge:ore_dict",
-      "ore": "stickAluminum"
+      "ore": "stickSteel"
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
     }
   },
   "result": {
-    "item": "immersiveintelligence:skycrate_mount",
-    "data": 0,
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 13,
     "count": 1
   }
 }

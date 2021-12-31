@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "psp",
+    "rcr"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateTungsten"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 12,
+    "count": 1
+  }
+}

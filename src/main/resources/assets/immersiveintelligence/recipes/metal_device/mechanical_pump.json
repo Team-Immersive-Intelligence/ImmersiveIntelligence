@@ -1,26 +1,21 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "immersiveintelligence:mechanical_device",
-    "data": 0
+    "item": "immersiveintelligence:mechanical_device1"
   },
   "pattern": [
+    " p ",
     "pcp",
-    "rwr",
-    "p p"
+    "fff"
   ],
   "key": {
-    "r": {
-      "type": "forge:ore_dict",
-      "ore": "stickIron"
+    "f": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 6
     },
     "p": {
       "type": "forge:ore_dict",
       "ore": "plateBrass"
-    },
-    "w": {
-      "type": "forge:ore_dict",
-      "ore": "scaffoldingTreatedWood"
     },
     "c": {
       "item": "immersiveengineering:material",

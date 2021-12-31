@@ -1,0 +1,29 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device1"
+  },
+  "pattern": [
+    " s ",
+    "plt",
+    " lt"
+  ],
+  "key": {
+    "p": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 6
+    },
+    "l": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 4
+    },
+    "t": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 3
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingSteel"
+    }
+  }
+}

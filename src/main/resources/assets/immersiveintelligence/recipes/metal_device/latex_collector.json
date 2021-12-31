@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:metal_device",
+    "data": 10
+  },
+  "pattern": [
+    " p ",
+    "hhh",
+    "s s"
+  ],
+  "key": {
+    "p": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 6
+    },
+    "h": {
+      "type": "forge:ore_dict",
+      "ore": "slabTreatedWood"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    }
+  }
+}

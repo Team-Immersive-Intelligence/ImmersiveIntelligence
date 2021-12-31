@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.items;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -10,6 +12,10 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecissionAssemblerRenderer;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author Pabilo8
@@ -57,7 +63,7 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 	@Override
 	public int getPrecissionToolDamage(ItemStack stack)
 	{
-		return ItemNBTHelper.getInt(stack, "damage");
+		return ItemNBTHelper.hasKey(stack, "damage")?ItemNBTHelper.getInt(stack, "damage"):getPrecissionToolMaxDamage(stack);
 	}
 
 	@Override
@@ -88,6 +94,13 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 			}
 		}
 		return -1;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	{
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		tooltip.add(I18n.format(CommonProxy.INFO_KEY+"gear_durability", getPrecissionToolDamage(stack),getPrecissionToolMaxDamage(stack)));
 	}
 
 	@Override

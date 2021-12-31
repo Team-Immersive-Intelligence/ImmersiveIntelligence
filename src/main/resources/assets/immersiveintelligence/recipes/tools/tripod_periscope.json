@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " b ",
+    " e ",
+    "sss"
+  ],
+  "key": {
+    "b": {
+      "item": "immersiveintelligence:binoculars",
+      "data": 0
+    },
+    "e": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 4
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:tripod_periscope",
+    "count": 1
+  }
+}

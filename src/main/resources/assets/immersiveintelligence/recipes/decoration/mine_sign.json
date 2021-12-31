@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "wow",
+    "wow",
+    " s "
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "plankTreatedWood"
+    },
+    "o": {
+      "type": "forge:ore_dict",
+      "ore": "dyeOrange"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:mine_sign",
+    "count": 1
+  }
+}

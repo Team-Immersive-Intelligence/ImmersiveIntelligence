@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " cs",
+    "es ",
+    "ipp"
+  ],
+  "key": {
+    "c": {
+      "item": "minecraft:clock"
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotMagnet"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateAluminum"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickAluminum"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:mine_detector",
+    "count": 1
+  }
+}

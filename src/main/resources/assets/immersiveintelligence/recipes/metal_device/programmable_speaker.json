@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 8
+  },
+  "pattern": [
+    " w ",
+    "psp",
+    " w "
+  ],
+  "key": {
+    "w": {
+      "item": "immersiveintelligence:data_wire"
+    },
+    "s": {
+      "item": "immersiveintelligence:data_connector",
+      "data": 2
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateAluminum"
+    }
+  }
+}

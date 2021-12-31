@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:data_connector",
+    "data": 10,
+    "count": 1
+  },
+  "pattern": [
+    "c",
+    "e",
+    "c"
+  ],
+  "key": {
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "c": {
+      "item": "immersiveintelligence:data_connector",
+      "data": 0
+    }
+  }
+}

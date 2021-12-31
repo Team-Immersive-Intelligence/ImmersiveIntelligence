@@ -1,23 +1,26 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "rcr",
-    "r r",
-    " r "
+    "s",
+    "c",
+    "r"
   ],
   "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
     "c": {
       "item": "immersiveengineering:material",
-      "data": 8
+      "data": 9
     },
     "r": {
       "type": "forge:ore_dict",
-      "ore": "stickAluminum"
+      "ore": "stickTreatedWood"
     }
   },
   "result": {
-    "item": "immersiveintelligence:skycrate_mount",
-    "data": 0,
+    "item": "immersiveintelligence:trench_shovel",
     "count": 1
   }
 }

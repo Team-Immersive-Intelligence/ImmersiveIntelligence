@@ -11,7 +11,8 @@ public class ItemIIMaterialWire extends ItemIIBase
 	public ItemIIMaterialWire()
 	{
 		super("material_wire", 64,
-				"tungsten"
+				"tungsten",
+				"brass"
 		);
 	}
 }

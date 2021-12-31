@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "t",
+    "m",
+    "b"
+  ],
+  "key": {
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "springIron"
+    },
+    "m": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:tripwire_connector",
+    "count": 4
+  }
+}

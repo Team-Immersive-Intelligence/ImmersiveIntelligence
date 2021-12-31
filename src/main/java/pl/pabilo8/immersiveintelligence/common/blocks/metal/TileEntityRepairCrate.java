@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import blusunrize.immersiveengineering.common.util.IESounds;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,21 +44,26 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	@Override
 	boolean isSupplied()
 	{
-		return (shouldRepairArmor)||(shouldRepairVehicles);
+		return ((shouldRepairArmor)||(shouldRepairVehicles))&&inventory.stream().anyMatch(stack -> !stack.isEmpty());
 	}
 
 	@Override
 	void useSupplies()
 	{
-
+		for(ItemStack itemStack : inventory)
+			if(!itemStack.isEmpty())
+			{
+				itemStack.shrink(1);
+				break;
+			}
 	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		shouldRepairArmor =nbt.getBoolean("shouldHeal");
-		shouldRepairVehicles =nbt.getBoolean("shouldBoost");
+		shouldRepairArmor = nbt.getBoolean("shouldHeal");
+		shouldRepairVehicles = nbt.getBoolean("shouldBoost");
 	}
 
 	@Override
@@ -125,7 +130,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		return true;
+		return Utils.compareToOreName(stack, "plateSteel");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -168,7 +173,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	{
 		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
 		{
-			world.playSound(null,getPos(),focusedEntity!=null?IISounds.welding_start:IISounds.welding_end, SoundCategory.BLOCKS,1f,1f);
+			world.playSound(null, getPos(), focusedEntity!=null?IISounds.welding_start: IISounds.welding_end, SoundCategory.BLOCKS, 1f, 1f);
 		}
 		return super.makeSyncEntity();
 	}

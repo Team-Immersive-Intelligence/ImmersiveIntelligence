@@ -1,0 +1,34 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:ammo_casing",
+    "data": 10
+  },
+  "pattern": [
+    "  r",
+    "llc",
+    "nlw"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickIron"
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "n": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    }
+  }
+}

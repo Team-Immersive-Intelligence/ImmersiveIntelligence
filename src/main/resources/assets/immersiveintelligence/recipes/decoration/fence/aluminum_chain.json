@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rcr",
+    "rcr"
+  ],
+  "key": {
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "wireAluminum"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "ingotAluminum"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:metal_fortification",
+    "data" : 2,
+    "count": 3
+  }
+}

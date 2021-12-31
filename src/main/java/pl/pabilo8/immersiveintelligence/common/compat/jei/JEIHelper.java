@@ -11,8 +11,10 @@ import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
@@ -26,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.jei.precission_assembler.P
 import pl.pabilo8.immersiveintelligence.common.compat.jei.sawmill.SawmillRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.vulcanizer.VulcanizerGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.vulcanizer.VulcanizerRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
 
 import javax.annotation.Nonnull;
@@ -98,9 +101,9 @@ public class JEIHelper implements IModPlugin
 			jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
 		}
 
-		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_wooden_multiblock, 1, OreDictionary.WILDCARD_VALUE));
-		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_metal_multiblock0, 1, OreDictionary.WILDCARD_VALUE));
-		//jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(CommonProxy.block_metal_multiblock1, 1, OreDictionary.WILDCARD_VALUE));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.blockWoodenMultiblock, 1, OreDictionary.WILDCARD_VALUE));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.blockMetalMultiblock0, 1, OreDictionary.WILDCARD_VALUE));
+		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.blockMetalMultiblock1, 1, OreDictionary.WILDCARD_VALUE));
 
 		ImmersiveIntelligence.logger.info("JEI has just requested our recipes, it seems that we even have a class for registering them!");
 
@@ -144,6 +147,8 @@ public class JEIHelper implements IModPlugin
 				new RedstoneInterfaceGuiHandler.Redstone(),
 				new EmplacementGuiHandler()
 		);
+
+		modRegistry.addRecipes(RecipeMinecart.listAllRecipes, VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 	@Override

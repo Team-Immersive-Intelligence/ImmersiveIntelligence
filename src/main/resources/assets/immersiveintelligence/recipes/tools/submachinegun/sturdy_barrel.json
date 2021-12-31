@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "csb",
+    " p "
+  ],
+  "key": {
+    "b": {
+      "item": "immersiveengineering:material",
+      "data": 14
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "blockSheetmetalSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateTungsten"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 10,
+    "count": 1
+  }
+}

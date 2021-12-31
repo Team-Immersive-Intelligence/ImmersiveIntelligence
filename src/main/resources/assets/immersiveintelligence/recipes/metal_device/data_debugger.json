@@ -1,13 +1,12 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "immersiveintelligence:metal_device",
-    "data": 6
+    "item": "immersiveintelligence:data_connector",
+    "data": 9
   },
   "pattern": [
-    " d ",
     "dcd",
-    " d "
+    "sss"
   ],
   "key": {
     "d": {
@@ -17,6 +16,10 @@
     "c": {
       "item": "immersiveintelligence:metal_decoration",
       "data": 1
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingTreatedWood"
     }
   }
 }

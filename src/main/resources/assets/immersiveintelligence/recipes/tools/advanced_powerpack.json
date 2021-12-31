@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "pbp",
+    "d d"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:metal_device0",
+      "data": 1
+    },
+    "b": {
+      "item": "immersiveengineering:powerpack"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateTungsten"
+    },
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "stickTungsten"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:advanced_powerpack",
+    "count": 1
+  }
+}

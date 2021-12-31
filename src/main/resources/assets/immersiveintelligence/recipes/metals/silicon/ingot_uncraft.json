@@ -1,0 +1,14 @@
+{
+  "type": "forge:ore_shapeless",
+  "result": {
+    "item": "immersiveintelligence:material_nugget",
+    "data": 5,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "item": "immersiveintelligence:material_ingot",
+      "data": 6
+    }
+  ]
+}

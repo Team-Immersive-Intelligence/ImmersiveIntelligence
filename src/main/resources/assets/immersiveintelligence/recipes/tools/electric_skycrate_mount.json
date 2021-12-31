@@ -16,7 +16,7 @@
     },
     "r": {
       "type": "forge:ore_dict",
-      "ore": "stickIron"
+      "ore": "stickDuraluminium"
     }
   },
   "result": {
