@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "lrr",
+    " rr",
+    "lrr"
+  ],
+  "key": {
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "itemRubber"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 6,
+    "count": 1
+  }
+}

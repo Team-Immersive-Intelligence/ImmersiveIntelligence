@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "lqs",
+    " rt",
+    "lqs"
+  ],
+  "key": {
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "t": {
+      "type": "forge:ore_dict",
+      "ore": "plateTungsten"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "itemRubber"
+    },
+    "q": {
+      "type": "forge:ore_dict",
+      "ore": "ingotSilicon"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 5,
+    "count": 1
+  }
+}

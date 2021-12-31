@@ -7,9 +7,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -17,11 +18,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
-import java.util.stream.StreamSupport;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -100,17 +101,38 @@ public class BlockIIFluid extends BlockFluidClassic
 			}
 		}
 
-
 	}
 
 	public BlockIIFluid addToChemthrower()
 	{
 		if(potionEffects!=null)
 			ChemthrowerHandler.registerEffect(this.definedFluid,
-					new ChemthrowerEffect_Potion(isAcid?IEDamageSources.acid: null, isAcid?2: 0, potionEffects));
+					isAcid?new ChemthrowerEffect_Acid(potionEffects): new ChemthrowerEffect_Potion(null, 0, potionEffects));
 		if(flammability > 0)
 			ChemthrowerHandler.registerFlammable(this.definedFluid);
 		return this;
+	}
+
+	public static class ChemthrowerEffect_Acid extends ChemthrowerEffect_Potion
+	{
+		public ChemthrowerEffect_Acid(PotionEffect... effects)
+		{
+			super(IEDamageSources.acid, 2, effects);
+		}
+
+		@Override
+		public void applyToEntity(EntityLivingBase target, @Nullable EntityPlayer shooter, ItemStack thrower, Fluid fluid)
+		{
+			for(ItemStack stack1 : target.getArmorInventoryList())
+			{
+				if(!(stack1.getItem() instanceof IAcidProtectionEquipment)||
+						!((IAcidProtectionEquipment)stack1.getItem()).protectsFromAcid(stack1))
+				{
+					super.applyToEntity(target, shooter, thrower, fluid);
+					return;
+				}
+			}
+		}
 	}
 
 }

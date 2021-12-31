@@ -10,6 +10,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -48,7 +49,10 @@ public class ItemIILightEngineerChestplate extends ItemIIUpgradeableArmor implem
 		{
 			Material material = world.getBlockState(player.getPosition()).getMaterial();
 			if(player.isSneaking()&&(material==Material.GRASS||material==Material.LEAVES||material==Material.VINE))
+			{
 				player.addPotionEffect(new PotionEffect(IIPotions.concealed, 15, 0, false, false));
+				player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY,15,0,true,false));
+			}
 		}
 	}
 

@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pwp",
+    "acb"
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "w": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 6
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "circuitAdvanced"
+    },
+    "a": {
+      "item": "immersiveintelligence:armor_upgrade",
+      "data": 2
+    },
+    "b": {
+      "item": "immersiveintelligence:armor_upgrade",
+      "data": 1
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 3,
+    "count": 1
+  }
+}

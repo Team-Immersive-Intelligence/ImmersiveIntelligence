@@ -2,10 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.items.armor;
 
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -63,6 +66,14 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 
 		if(equipmentSlot==this.armorType)
 		{
+			if(ItemNBTHelper.hasKey(stack, "flippin"))
+			{
+				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
+			}
+			if(ItemNBTHelper.hasKey(stack, "rackets"))
+			{
+				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Rackets", 0.5, 1));
+			}
 			//if(getUpgrades(stack).hasKey(""))
 			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
 			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
@@ -71,10 +82,22 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 	}
 
 	@Override
-	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
+	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
-		super.onArmorTick(world, player, itemStack);
+		super.onArmorTick(world, player, stack);
+		if(getUpgrades(stack).hasKey("flippers")&&(player.isInWater())&&player.isSprinting())
+			ItemNBTHelper.setBoolean(stack, "flippin", true);
+		else if(ItemNBTHelper.hasKey(stack, "flippin"))
+			ItemNBTHelper.remove(stack, "flippin");
 
+		//(mat==Material.ICE||mat==Material.PACKED_ICE) soon
+		Material mat = world.getBlockState(player.getPosition()).getMaterial();
+		if(getUpgrades(stack).hasKey("snow_rackets")&&(mat==Material.SNOW||mat==Material.CRAFTED_SNOW))
+		{
+			ItemNBTHelper.setBoolean(stack, "rackets", true);
+		}
+		else if(ItemNBTHelper.hasKey(stack, "rackets"))
+			ItemNBTHelper.remove(stack, "rackets");
 	}
 
 	@Override
@@ -84,7 +107,6 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 		if(!(dSource instanceof ElectricDamageSource))
 		{
 		}
-		// TODO: 13.09.2020 tesla coil interaction
 	}
 
 	@Override

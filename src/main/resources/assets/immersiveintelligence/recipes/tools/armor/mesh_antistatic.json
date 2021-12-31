@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ggg",
+    "rfr",
+    "wcw"
+  ],
+  "key": {
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "ingotHOPGraphite"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "itemRubber"
+    },
+    "f": {
+      "type": "forge:ore_dict",
+      "ore": "dustFormaldehyde"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "wireAluminum"
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 8,
+    "count": 1
+  }
+}

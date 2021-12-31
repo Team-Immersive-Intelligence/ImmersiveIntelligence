@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sws",
+    "wlw",
+    "sws"
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "wireSteel"
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 15,
+    "count": 1
+  }
+}

@@ -79,8 +79,8 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 		if(!descPacket)
 			tanks[0].readFromNBT(nbt.getCompoundTag("tank"));
 		tanks[1].readFromNBT(nbt.getCompoundTag("potion_tank"));
-		shouldHeal=nbt.getBoolean("shouldHeal");
-		shouldBoost=nbt.getBoolean("shouldBoost");
+		shouldHeal = nbt.getBoolean("shouldHeal");
+		shouldBoost = nbt.getBoolean("shouldBoost");
 	}
 
 	@Override
@@ -89,8 +89,8 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 		super.writeCustomNBT(nbt, descPacket);
 		nbt.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
 		nbt.setTag("potion_tank", tanks[1].writeToNBT(new NBTTagCompound()));
-		nbt.setBoolean("shouldHeal",shouldHeal);
-		nbt.setBoolean("shouldBoost",shouldBoost);
+		nbt.setBoolean("shouldHeal", shouldHeal);
+		nbt.setBoolean("shouldBoost", shouldBoost);
 	}
 
 	@Override

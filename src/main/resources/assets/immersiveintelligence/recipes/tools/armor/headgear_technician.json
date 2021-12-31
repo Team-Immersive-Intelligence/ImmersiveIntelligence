@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c v",
+    "plp",
+    "s s"
+  ],
+  "key": {
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "c": {
+      "item": "minecraft:clock"
+    },
+    "v": {
+      "item": "immersiveengineering:tool",
+      "data": 2
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "s": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 8
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 2,
+    "count": 1
+  }
+}

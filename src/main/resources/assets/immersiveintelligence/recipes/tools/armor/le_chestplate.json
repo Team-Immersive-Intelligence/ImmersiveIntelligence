@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "chc",
+    " s ",
+    "clc"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "h": {
+      "item": "immersiveengineering:tool",
+      "data": 0
+    },
+    "s": {
+      "item": "immersiveengineering:steel_armor_chest",
+      "data": 9
+    },
+    "l": {
+      "item": "minecraft:leather_chestplate",
+      "data": 9
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:light_engineer_armor_chestplate",
+    "count": 1
+  }
+}

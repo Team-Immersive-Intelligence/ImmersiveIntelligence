@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "lpl",
+    "bp "
+  ],
+  "key": {
+    "b": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 3
+    },
+    "p": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 6
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 11,
+    "count": 1
+  }
+}

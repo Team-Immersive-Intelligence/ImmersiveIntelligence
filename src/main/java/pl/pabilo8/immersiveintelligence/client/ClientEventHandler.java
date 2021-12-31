@@ -30,6 +30,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -86,6 +87,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoGrenade;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIMineDetector;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
@@ -529,16 +531,19 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(ClientUtils.mc().player!=null&&event.getType()==RenderGameOverlayEvent.ElementType.TEXT)
 		{
+			boolean gotTheDrip = ItemIIUpgradeableArmor.isArmorWithUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "technician_gear")||
+					ItemIIUpgradeableArmor.isArmorWithUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "engineer_gear");
+
 			if(mop!=null)
-				if(mop.typeOfHit==Type.BLOCK&&!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
+				if(mop.typeOfHit==Type.BLOCK&&(gotTheDrip||!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()))
 				{
 					int col = IEConfig.nixietubeFont?Lib.colour_nixieTubeText: 0xffffff;
 					String[] text = null;
 					TileEntity tileEntity = player.world.getTileEntity(mop.getBlockPos());
 
-					if(pl.pabilo8.immersiveintelligence.api.Utils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND)))
+					if(tileEntity!=null&&tileEntity.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite()))
 					{
-						if(tileEntity!=null&&tileEntity.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite()))
+						if(gotTheDrip||pl.pabilo8.immersiveintelligence.api.Utils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND)))
 						{
 							IRotaryEnergy energy = tileEntity.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite());
 
@@ -563,12 +568,19 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							}
 						}
 					}
-					else if(pl.pabilo8.immersiveintelligence.api.Utils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND)))
+					if(gotTheDrip&&tileEntity instanceof IFluxReceiver)
 					{
-						if(tileEntity instanceof IUpgradableMachine)
+						int maxStorage = ((IFluxReceiver)tileEntity).getMaxEnergyStored(mop.sideHit);
+						int storage = ((IFluxReceiver)tileEntity).getEnergyStored(mop.sideHit);
+						if(maxStorage > 0)
+							text = I18n.format(Lib.DESC_INFO+"energyStored", "<br>"+Utils.toScientificNotation(storage, "0##", 100000)+" / "+Utils.toScientificNotation(maxStorage, "0##", 100000)).split("<br>");
+					}
+					if(tileEntity instanceof IUpgradableMachine)
+					{
+						if(gotTheDrip||pl.pabilo8.immersiveintelligence.api.Utils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND)))
 						{
 							IUpgradableMachine m = (IUpgradableMachine)tileEntity;
-							m=m.getUpgradeMaster();
+							m = m.getUpgradeMaster();
 							if(m!=null&&m.getCurrentlyInstalled()!=null)
 							{
 								text = new String[]{

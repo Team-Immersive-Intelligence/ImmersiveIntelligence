@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "scs",
+    "p p",
+    "s s"
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "scaffoldingSteel"
+    },
+    "c": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 9
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "circuitAdvanced"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 13,
+    "count": 1
+  }
+}

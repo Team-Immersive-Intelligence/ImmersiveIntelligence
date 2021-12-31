@@ -1198,4 +1198,64 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			e.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(e, EntityHans.class, true));
 		}
 	}
+
+	@SubscribeEvent
+	public void onLivingAttack(LivingAttackEvent event)
+	{
+		EntityLivingBase entity = event.getEntityLiving();
+		ItemStack head, chest, legs, boots;
+		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+		//plates
+		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+				event.setCanceled(true);
+		}
+		//heat resist
+		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
+				event.setCanceled(true);
+		}
+		//springs
+		else if(event.getSource()==DamageSource.FALL)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
+				event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void hurtEvent(LivingHurtEvent event)
+	{
+		EntityLivingBase entity = event.getEntityLiving();
+		ItemStack head, chest, legs, boots;
+		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+		//plates
+		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+				event.setCanceled(true);
+		}
+		//heat resist
+		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
+				event.setCanceled(true);
+		}
+		//springs
+		else if(event.getSource()==DamageSource.FALL)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
+				event.setCanceled(true);
+		}
+	}
 }

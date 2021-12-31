@@ -1,22 +1,27 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ps",
-    "p "
+    "l l",
+    "c c",
+    "p p"
   ],
   "key": {
-    "s": {
+    "l": {
       "type": "forge:ore_dict",
-      "ore": "springSteel"
+      "ore": "leather"
     },
     "p": {
       "type": "forge:ore_dict",
       "ore": "plateSteel"
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
     }
   },
   "result": {
-    "item": "immersiveintelligence:bullet_magazine",
-    "data": 0,
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 14,
     "count": 1
   }
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "s s",
+    "c c",
+    "s s"
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springSteel"
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 17,
+    "count": 1
+  }
+}

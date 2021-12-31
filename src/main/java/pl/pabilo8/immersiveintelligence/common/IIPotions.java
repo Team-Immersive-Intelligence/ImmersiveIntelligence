@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -26,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
  */
 public class IIPotions
 {
-	public static Potion suppression, broken_armor, corrosion, infrared_vision, iron_will, well_supplied, concealed, exposed, medical_treatment, undergoing_repairs, radiation, nuclear_heat;
+	public static Potion suppression, broken_armor, corrosion, infrared_vision, iron_will, well_supplied, concealed, exposed, medical_treatment, undergoing_repairs, radiation, nuclear_heat, movement_assist;
 
 	public static void init()
 	{
@@ -66,6 +65,7 @@ public class IIPotions
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
 			{
+
 				if(!living.isPotionActive(IIPotions.concealed))
 					living.setInvisible(true);
 			}
@@ -176,6 +176,10 @@ public class IIPotions
 		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -1, 2);
 		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -1, 2);
 		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
+
+		movement_assist = new IIPotion("movement_assist", false, 0x9d5919, 0, false, 13, true, true);
+		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 1, 1);
+		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 1, 1);
 
 	}
 

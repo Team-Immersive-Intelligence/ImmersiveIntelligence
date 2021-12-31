@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.model.armor;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -24,7 +27,14 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	static int textureY = 64;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/armor/engineer_light.png";
 	private static final String TEXTURE_GASMASK = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_gasmask.png";
-	ModelRendererTurbo[] capeModel, gasmaskModel;
+	private static final String TEXTURE_GOGGLES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_goggles.png";
+	private static final String TEXTURE_PLATES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_plates.png";
+	private static final String TEXTURE_EXOSUIT = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_exosuit.png";
+	private static final String TEXTURE_SCUBA = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_scuba.png";
+
+	ModelRendererTurbo[] capeModel, gasmaskModel, infiltratorGogglesModel, technicianGogglesModel, engineerGogglesModel;
+	ModelRendererTurbo[] scubaTankModel, exoSuitRightLegModel, exoSuitLeftLegModel, racketsModel, flippersModel;
+	ModelRendererTurbo[] platesHelmetModel, platesRightArmModel, platesLeftArmModel, platesChestModel, platesRightLegModel, platesLeftLegModel, platesSkirtRightModel, platesSkirtLeftModel;
 
 	static
 	{
@@ -387,10 +397,711 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		gasmaskModel[10].setRotationPoint(-1.5F, -12F, -9F);
 		gasmaskModel[10].rotateAngleX = 0.54105207F;
 
+		infiltratorGogglesModel = new ModelRendererTurbo[6];
+		infiltratorGogglesModel[0] = new ModelRendererTurbo(this, 22, 12, 32, 32); // Box 0
+		infiltratorGogglesModel[1] = new ModelRendererTurbo(this, 22, 12, 32, 32); // Box 1
+		infiltratorGogglesModel[2] = new ModelRendererTurbo(this, 14, 20, 32, 32); // Box 2
+		infiltratorGogglesModel[3] = new ModelRendererTurbo(this, 14, 22, 32, 32); // Box 3
+		infiltratorGogglesModel[4] = new ModelRendererTurbo(this, 0, 8, 32, 32); // Box 6
+		infiltratorGogglesModel[5] = new ModelRendererTurbo(this, 0, 8, 32, 32); // Box 7
+
+		infiltratorGogglesModel[0].addShapeBox(0F, 0F, 0F, 3, 3, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		infiltratorGogglesModel[0].setRotationPoint(0.5F, -17.5F, -6F);
+
+		infiltratorGogglesModel[1].addShapeBox(0F, 0F, 0F, 3, 3, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 1
+		infiltratorGogglesModel[1].setRotationPoint(-3.5F, -17.5F, -6F);
+
+		infiltratorGogglesModel[2].addShapeBox(0F, 0F, 0F, 8, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		infiltratorGogglesModel[2].setRotationPoint(-4F, -16.5F, -5F);
+
+		infiltratorGogglesModel[3].addShapeBox(0F, 0F, 0F, 8, 9, 1, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F); // Box 3
+		infiltratorGogglesModel[3].setRotationPoint(-4F, -15.5F, -4.5F);
+		infiltratorGogglesModel[3].rotateAngleX = 1.43116999F;
+
+		infiltratorGogglesModel[4].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 6
+		infiltratorGogglesModel[4].setRotationPoint(1F, -17F, -6.5F);
+
+		infiltratorGogglesModel[5].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 7
+		infiltratorGogglesModel[5].setRotationPoint(-3F, -17F, -6.5F);
+
+
+		technicianGogglesModel = new ModelRendererTurbo[6];
+		technicianGogglesModel[0] = new ModelRendererTurbo(this, 4, 27, 32, 32); // Box 0
+		technicianGogglesModel[1] = new ModelRendererTurbo(this, 4, 27, 32, 32); // Box 1
+		technicianGogglesModel[2] = new ModelRendererTurbo(this, 14, 20, 32, 32); // Box 2
+		technicianGogglesModel[3] = new ModelRendererTurbo(this, 14, 2, 32, 32); // Box 3
+		technicianGogglesModel[4] = new ModelRendererTurbo(this, 8, 5, 32, 32); // Box 6
+		technicianGogglesModel[5] = new ModelRendererTurbo(this, 8, 5, 32, 32); // Box 7
+
+		technicianGogglesModel[0].addShapeBox(0F, 0F, 0F, 3, 3, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		technicianGogglesModel[0].setRotationPoint(0.5F, -17.5F, -6F);
+
+		technicianGogglesModel[1].addShapeBox(0F, 0F, 0F, 3, 3, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 1
+		technicianGogglesModel[1].setRotationPoint(-3.5F, -17.5F, -6F);
+
+		technicianGogglesModel[2].addShapeBox(0F, 0F, 0F, 8, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		technicianGogglesModel[2].setRotationPoint(-4F, -16.5F, -5F);
+
+		technicianGogglesModel[3].addShapeBox(0F, 0F, 0F, 8, 9, 1, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F); // Box 3
+		technicianGogglesModel[3].setRotationPoint(-4F, -15.5F, -4.5F);
+		technicianGogglesModel[3].rotateAngleX = 1.43116999F;
+
+		technicianGogglesModel[4].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 6
+		technicianGogglesModel[4].setRotationPoint(1F, -17F, -6.5F);
+
+		technicianGogglesModel[5].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 7
+		technicianGogglesModel[5].setRotationPoint(-3F, -17F, -6.5F);
+
+
+		engineerGogglesModel = new ModelRendererTurbo[16];
+		engineerGogglesModel[0] = new ModelRendererTurbo(this, 6, 17, 32, 32); // Box 9
+		engineerGogglesModel[1] = new ModelRendererTurbo(this, 6, 17, 32, 32); // Box 10
+		engineerGogglesModel[2] = new ModelRendererTurbo(this, 2, 8, 32, 32); // Box 11
+		engineerGogglesModel[3] = new ModelRendererTurbo(this, 14, 17, 32, 32); // Box 13
+		engineerGogglesModel[4] = new ModelRendererTurbo(this, 0, 0, 32, 32); // Box 14
+		engineerGogglesModel[5] = new ModelRendererTurbo(this, 6, 2, 32, 32); // Box 15
+		engineerGogglesModel[6] = new ModelRendererTurbo(this, 0, 4, 32, 32); // Box 15
+		engineerGogglesModel[7] = new ModelRendererTurbo(this, 6, 2, 32, 32); // Box 15
+		engineerGogglesModel[8] = new ModelRendererTurbo(this, 2, 21, 32, 32); // Box 0
+		engineerGogglesModel[9] = new ModelRendererTurbo(this, 2, 21, 32, 32); // Box 1
+		engineerGogglesModel[10] = new ModelRendererTurbo(this, 0, 17, 32, 32); // Box 6
+		engineerGogglesModel[11] = new ModelRendererTurbo(this, 0, 17, 32, 32); // Box 7
+		engineerGogglesModel[12] = new ModelRendererTurbo(this, 14, 20, 32, 32); // Box 2
+		engineerGogglesModel[13] = new ModelRendererTurbo(this, 14, 22, 32, 32); // Box 3
+		engineerGogglesModel[14] = new ModelRendererTurbo(this, 14, 20, 32, 32); // Box 2
+		engineerGogglesModel[15] = new ModelRendererTurbo(this, 14, 22, 32, 32); // Box 3
+
+		engineerGogglesModel[0].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 9
+		engineerGogglesModel[0].setRotationPoint(1.5F, -22F, -5F);
+		engineerGogglesModel[0].rotateAngleX = -0.54105207F;
+
+		engineerGogglesModel[1].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 10
+		engineerGogglesModel[1].setRotationPoint(-3.5F, -22F, -5F);
+		engineerGogglesModel[1].rotateAngleX = -0.54105207F;
+
+		engineerGogglesModel[2].addShapeBox(0F, 0F, 0F, 4, 5, 4, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 11
+		engineerGogglesModel[2].setRotationPoint(-2F, -21F, -6F);
+		engineerGogglesModel[2].rotateAngleX = 1.57079633F;
+
+		engineerGogglesModel[3].addShapeBox(0F, 0F, 0F, 7, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 13
+		engineerGogglesModel[3].setRotationPoint(-3.5F, -22.5F, -5F);
+
+		engineerGogglesModel[4].addShapeBox(0F, 0F, 0F, 3, 3, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 14
+		engineerGogglesModel[4].setRotationPoint(-1.5F, -24.5F, -7F);
+
+		engineerGogglesModel[5].addBox(0F, 0F, 0F, 2, 1, 2, 0F); // Box 15
+		engineerGogglesModel[5].setRotationPoint(-1F, -22F, -1F);
+		engineerGogglesModel[5].rotateAngleX = 1.57079633F;
+
+		engineerGogglesModel[6].addShapeBox(0F, 0F, 0F, 2, 2, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F); // Box 15
+		engineerGogglesModel[6].setRotationPoint(-1F, -22F, 0F);
+		engineerGogglesModel[6].rotateAngleX = 1.57079633F;
+
+		engineerGogglesModel[7].addBox(0F, 0F, 0F, 2, 1, 2, 0F); // Box 15
+		engineerGogglesModel[7].setRotationPoint(-1F, -22F, 0F);
+
+		engineerGogglesModel[8].addShapeBox(0F, 0F, 0F, 3, 3, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
+		engineerGogglesModel[8].setRotationPoint(0.5F, -17.5F, -7.5F);
+
+		engineerGogglesModel[9].addShapeBox(0F, 0F, 0F, 3, 3, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 1
+		engineerGogglesModel[9].setRotationPoint(-3.5F, -17.5F, -7.5F);
+
+		engineerGogglesModel[10].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 6
+		engineerGogglesModel[10].setRotationPoint(1F, -17F, -8F);
+
+		engineerGogglesModel[11].addShapeBox(0F, 0F, 0F, 2, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 7
+		engineerGogglesModel[11].setRotationPoint(-3F, -17F, -8F);
+
+		engineerGogglesModel[12].addShapeBox(0F, 0F, 0F, 8, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		engineerGogglesModel[12].setRotationPoint(-4F, -17.55F, -5F);
+
+		engineerGogglesModel[13].addShapeBox(0F, 0F, 0F, 8, 9, 1, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F, 0.05F, 0F, 0F); // Box 3
+		engineerGogglesModel[13].setRotationPoint(-4F, -16F, -4.5F);
+		engineerGogglesModel[13].rotateAngleX = 1.43116999F;
+
+		engineerGogglesModel[14].addShapeBox(0F, 0F, 0F, 8, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 2
+		engineerGogglesModel[14].setRotationPoint(-4F, -15.45F, -5F);
+
+		engineerGogglesModel[15].addShapeBox(0F, 0F, -1F, 8, 9, 1, 0F, 0.05F, -9F, -1F, 0.05F, -9F, -1F, 0.05F, -9F, -1F, 0.05F, -9F, -1F, 0.05F, -9F, -1F, 0.05F, -9F, -1F, 0.05F, -9F, -1F, 0.05F, -9F, -1F); // Box 3
+		engineerGogglesModel[15].setRotationPoint(-4F, -16F, -4.5F);
+		engineerGogglesModel[15].rotateAngleX = 1.43116999F;
+
+		platesHelmetModel = new ModelRendererTurbo[9];
+		platesHelmetModel[0] = new ModelRendererTurbo(this, 16, 27, 32, 32); // Leather03
+		platesHelmetModel[1] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Metal03
+		platesHelmetModel[2] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Metal04
+		platesHelmetModel[3] = new ModelRendererTurbo(this, 16, 27, 32, 32); // Leather03
+		platesHelmetModel[4] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Metal03
+		platesHelmetModel[5] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Metal04
+		platesHelmetModel[6] = new ModelRendererTurbo(this, 16, 27, 32, 32); // Leather03
+		platesHelmetModel[7] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Metal03
+		platesHelmetModel[8] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Metal04
+
+		platesHelmetModel[0].addShapeBox(0F, 0.5F, 0F, 6, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Leather03
+		platesHelmetModel[0].setRotationPoint(-3F, -20F, 4.3F);
+		platesHelmetModel[0].rotateAngleX = 0.08726646F;
+
+		platesHelmetModel[1].addShapeBox(4F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Metal03
+		platesHelmetModel[1].setRotationPoint(-3.5F, -20F, 4.7F);
+		platesHelmetModel[1].rotateAngleX = 0.08726646F;
+
+		platesHelmetModel[2].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Metal04
+		platesHelmetModel[2].setRotationPoint(-3.5F, -20F, 4.7F);
+		platesHelmetModel[2].rotateAngleX = 0.08726646F;
+
+		platesHelmetModel[3].addShapeBox(0F, 0.5F, 0F, 6, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Leather03
+		platesHelmetModel[3].setRotationPoint(-5.5F, -20F, 3.1F);
+		platesHelmetModel[3].rotateAngleX = -0.08726646F;
+		platesHelmetModel[3].rotateAngleY = -1.57079633F;
+
+		platesHelmetModel[4].addShapeBox(4F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Metal03
+		platesHelmetModel[4].setRotationPoint(-6F, -20F, 3.5F);
+		platesHelmetModel[4].rotateAngleX = -0.08726646F;
+		platesHelmetModel[4].rotateAngleY = -1.57079633F;
+
+		platesHelmetModel[5].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Metal04
+		platesHelmetModel[5].setRotationPoint(-6F, -20F, 3.5F);
+		platesHelmetModel[5].rotateAngleX = -0.08726646F;
+		platesHelmetModel[5].rotateAngleY = -1.57079633F;
+
+		platesHelmetModel[6].addShapeBox(0F, 0.5F, 0F, 6, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Leather03
+		platesHelmetModel[6].setRotationPoint(4.5F, -20F, 3.1F);
+		platesHelmetModel[6].rotateAngleX = 0.08726646F;
+		platesHelmetModel[6].rotateAngleY = -1.57079633F;
+
+		platesHelmetModel[7].addShapeBox(4F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Metal03
+		platesHelmetModel[7].setRotationPoint(5F, -20F, 3.5F);
+		platesHelmetModel[7].rotateAngleX = 0.08726646F;
+		platesHelmetModel[7].rotateAngleY = -1.57079633F;
+
+		platesHelmetModel[8].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Metal04
+		platesHelmetModel[8].setRotationPoint(5F, -20F, 3.5F);
+		platesHelmetModel[8].rotateAngleX = 0.08726646F;
+		platesHelmetModel[8].rotateAngleY = -1.57079633F;
+
+		platesRightArmModel = new ModelRendererTurbo[5];
+		platesRightArmModel[0] = new ModelRendererTurbo(this, 0, 24, 32, 32); // RightArm01
+		platesRightArmModel[1] = new ModelRendererTurbo(this, 0, 12, 32, 32); // RightArm02
+		platesRightArmModel[2] = new ModelRendererTurbo(this, 22, 0, 32, 32); // RightArm03
+		platesRightArmModel[3] = new ModelRendererTurbo(this, 22, 0, 32, 32); // RightArm04
+		platesRightArmModel[4] = new ModelRendererTurbo(this, 22, 0, 32, 32); // RightArm05
+
+		platesRightArmModel[0].addShapeBox(0F, 0F, 0F, 4, 4, 4, 0F, -4.2F, 0.2F, 0.2F, -4.2F, 0.2F, 0.2F, -4.2F, 0.2F, 0.2F, -4.2F, 0.2F, 0.2F, -4.2F, 0.2F, 0.2F, -4.2F, 0.2F, 0.2F, -4.2F, 0.2F, 0.2F, -4.2F, 0.2F, 0.2F); // RightArm01
+		platesRightArmModel[0].setRotationPoint(-8F, -4F, -2F);
+
+		platesRightArmModel[1].addShapeBox(0F, 0F, 0F, 5, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // RightArm02
+		platesRightArmModel[1].setRotationPoint(-9.5F, -8F, 2.5F);
+		platesRightArmModel[1].rotateAngleX = -0.06981317F;
+		platesRightArmModel[1].rotateAngleY = -1.57079633F;
+
+		platesRightArmModel[2].addShapeBox(0F, 0F, 0F, 4, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // RightArm03
+		platesRightArmModel[2].setRotationPoint(-8F, -7F, 2F);
+
+		platesRightArmModel[3].addShapeBox(0F, 0F, 0F, 4, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // RightArm04
+		platesRightArmModel[3].setRotationPoint(-8F, -12F, 2F);
+		platesRightArmModel[3].rotateAngleX = 0.08726646F;
+
+		platesRightArmModel[4].addShapeBox(0F, 0F, 0F, 4, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // RightArm05
+		platesRightArmModel[4].setRotationPoint(-8F, -12F, -3F);
+		platesRightArmModel[4].rotateAngleX = -0.08726646F;
+
+
+		platesLeftArmModel = new ModelRendererTurbo[5];
+		platesLeftArmModel[0] = new ModelRendererTurbo(this, 0, 24, 32, 32); // LeftArm01
+		platesLeftArmModel[1] = new ModelRendererTurbo(this, 0, 12, 32, 32); // LeftArm02
+		platesLeftArmModel[2] = new ModelRendererTurbo(this, 22, 0, 32, 32); // LeftArm03
+		platesLeftArmModel[3] = new ModelRendererTurbo(this, 22, 0, 32, 32); // LeftArm04
+		platesLeftArmModel[4] = new ModelRendererTurbo(this, 22, 0, 32, 32); // LeftArm05
+
+		platesLeftArmModel[0].addShapeBox(0F, 0F, 0F, 4, 4, 4, 0F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F); // LeftArm01
+		platesLeftArmModel[0].setRotationPoint(4F, -4F, -2F);
+
+		platesLeftArmModel[1].addShapeBox(0F, 0F, 0F, 5, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LeftArm02
+		platesLeftArmModel[1].setRotationPoint(8.5F, -8F, 2.5F);
+		platesLeftArmModel[1].rotateAngleX = 0.06981317F;
+		platesLeftArmModel[1].rotateAngleY = -1.57079633F;
+
+		platesLeftArmModel[2].addShapeBox(0F, 0F, 0F, 4, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LeftArm03
+		platesLeftArmModel[2].setRotationPoint(4F, -7F, 2F);
+
+		platesLeftArmModel[3].addShapeBox(0F, 0F, 0F, 4, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LeftArm04
+		platesLeftArmModel[3].setRotationPoint(4F, -12F, 2F);
+		platesLeftArmModel[3].rotateAngleX = 0.08726646F;
+
+		platesLeftArmModel[4].addShapeBox(0F, 0F, 0F, 4, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LeftArm05
+		platesLeftArmModel[4].setRotationPoint(4F, -12F, -3F);
+		platesLeftArmModel[4].rotateAngleX = -0.08726646F;
+
+
+		platesChestModel = new ModelRendererTurbo[13];
+		platesChestModel[0] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Chest01
+		platesChestModel[1] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Chest02
+		platesChestModel[2] = new ModelRendererTurbo(this, 14, 0, 32, 32); // Chest03
+		platesChestModel[3] = new ModelRendererTurbo(this, 0, 7, 32, 32); // Chest04
+		platesChestModel[4] = new ModelRendererTurbo(this, 26, 11, 32, 32); // Chest06
+		platesChestModel[5] = new ModelRendererTurbo(this, 12, 23, 32, 32); // Chest08
+		platesChestModel[6] = new ModelRendererTurbo(this, 16, 7, 32, 32); // Chest09
+		platesChestModel[7] = new ModelRendererTurbo(this, 16, 7, 32, 32); // Chest10
+		platesChestModel[8] = new ModelRendererTurbo(this, 16, 11, 32, 32); // Chest11
+		platesChestModel[9] = new ModelRendererTurbo(this, 16, 27, 32, 32); // Chest12
+		platesChestModel[10] = new ModelRendererTurbo(this, 4, 21, 32, 32); // Chest13
+		platesChestModel[11] = new ModelRendererTurbo(this, 26, 11, 32, 32); // Chest06
+		platesChestModel[12] = new ModelRendererTurbo(this, 26, 11, 32, 32); // Chest06
+
+		platesChestModel[0].addShapeBox(0F, 0F, 0F, 3, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest01
+		platesChestModel[0].setRotationPoint(-1.5F, -6F, -4F);
+
+		platesChestModel[1].addShapeBox(0F, 0F, 0F, 3, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest02
+		platesChestModel[1].setRotationPoint(-4.5F, -6F, -3F);
+		platesChestModel[1].rotateAngleX = -0.01745329F;
+		platesChestModel[1].rotateAngleY = -0.45378561F;
+
+		platesChestModel[2].addShapeBox(0F, 0F, 0F, 3, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest03
+		platesChestModel[2].setRotationPoint(1.9F, -6F, -4.5F);
+		platesChestModel[2].rotateAngleY = 0.45378561F;
+
+		platesChestModel[3].addShapeBox(0F, 0F, 0F, 7, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest04
+		platesChestModel[3].setRotationPoint(-3.5F, -10.9F, -4.5F);
+
+		platesChestModel[4].addShapeBox(0F, 0F, 0F, 2, 7, 1, 0F, 0F, 0F, 0F, 0F, 0F, -2F, 0F, 0F, 2F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -2F, 0F, 0F, 2F, 0F, 0F, 0F); // Chest06
+		platesChestModel[4].setRotationPoint(-2.5F, -11F, -3.5F);
+		platesChestModel[4].rotateAngleY = 1.57079633F;
+		platesChestModel[4].rotateAngleZ = 1.57079633F;
+
+		platesChestModel[5].addShapeBox(0F, 0F, 0F, 9, 3, 1, 0F, 1F, -1F, 0F, 1F, -1F, 0F, 1F, -1F, 0F, 1F, -1F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F); // Chest08
+		platesChestModel[5].setRotationPoint(-4.5F, -14F, 3.5F);
+
+		platesChestModel[6].addShapeBox(0F, 0F, 0F, 7, 3, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest09
+		platesChestModel[6].setRotationPoint(-3.5F, -11F, 3F);
+
+		platesChestModel[7].addShapeBox(0F, 0F, 0F, 7, 3, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest10
+		platesChestModel[7].setRotationPoint(-3.5F, -7.5F, 3F);
+
+		platesChestModel[8].addShapeBox(0F, 0F, 0F, 4, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest11
+		platesChestModel[8].setRotationPoint(-2F, -4F, 3F);
+
+		platesChestModel[9].addShapeBox(0F, 0F, 0F, 6, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest12
+		platesChestModel[9].setRotationPoint(-3F, -9F, 2.5F);
+
+		platesChestModel[10].addShapeBox(0F, 0F, 0F, 3, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Chest13
+		platesChestModel[10].setRotationPoint(-1.5F, -5F, 2.5F);
+
+		platesChestModel[11].addShapeBox(0F, 0F, 0F, 2, 7, 1, 0F, 0F, 0F, -2F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 2F, 0F, 0F, -2F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 2F); // Chest06
+		platesChestModel[11].setRotationPoint(5.5F, -11F, -3.5F);
+		platesChestModel[11].rotateAngleY = 1.57079633F;
+		platesChestModel[11].rotateAngleZ = 1.57079633F;
+
+		platesChestModel[12].addShapeBox(0F, 0F, 0F, 2, 7, 1, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 1F, 0F, 0F, 0F); // Chest06
+		platesChestModel[12].setRotationPoint(3.5F, -11F, -3.5F);
+		platesChestModel[12].rotateAngleY = 3.14159265F;
+		platesChestModel[12].rotateAngleZ = 1.57079633F;
+
+
+		platesRightLegModel = new ModelRendererTurbo[7];
+		platesRightLegModel[0] = new ModelRendererTurbo(this, 12, 21, 32, 32); // LegRight01
+		platesRightLegModel[1] = new ModelRendererTurbo(this, 0, 19, 32, 32); // LegRight02
+		platesRightLegModel[2] = new ModelRendererTurbo(this, 0, 19, 32, 32); // LegRight03
+		platesRightLegModel[3] = new ModelRendererTurbo(this, 12, 21, 32, 32); // LegRight04
+		platesRightLegModel[4] = new ModelRendererTurbo(this, 12, 15, 32, 32); // LegRight05
+		platesRightLegModel[5] = new ModelRendererTurbo(this, 20, 19, 32, 32); // LegRight06
+		platesRightLegModel[6] = new ModelRendererTurbo(this, 22, 0, 32, 32); // LegRight07
+
+		platesRightLegModel[0].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegRight01
+		platesRightLegModel[0].setRotationPoint(-3.5F, 1F, -3.5F);
+
+		platesRightLegModel[1].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegRight02
+		platesRightLegModel[1].setRotationPoint(-3.5F, 2.5F, -3.5F);
+
+		platesRightLegModel[2].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegRight03
+		platesRightLegModel[2].setRotationPoint(-3.5F, 6.5F, -3.5F);
+
+		platesRightLegModel[3].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegRight04
+		platesRightLegModel[3].setRotationPoint(-3.5F, 5F, -3.5F);
+
+		platesRightLegModel[4].addShapeBox(0F, 0F, 0F, 3, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegRight05
+		platesRightLegModel[4].setRotationPoint(-4.5F, 0F, 1.5F);
+		platesRightLegModel[4].rotateAngleY = -1.57079633F;
+
+		platesRightLegModel[5].addShapeBox(0F, 0F, 0F, 4, 2, 2, 0F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F); // LegRight06
+		platesRightLegModel[5].setRotationPoint(-4F, 8F, -4F);
+
+		platesRightLegModel[6].addShapeBox(0F, 0F, 0F, 4, 6, 1, 0F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F); // LegRight07
+		platesRightLegModel[6].setRotationPoint(-4F, 7F, 2F);
+
+
+		platesLeftLegModel = new ModelRendererTurbo[7];
+		platesLeftLegModel[0] = new ModelRendererTurbo(this, 12, 21, 32, 32); // LegLeft01
+		platesLeftLegModel[1] = new ModelRendererTurbo(this, 0, 19, 32, 32); // LegLeft02
+		platesLeftLegModel[2] = new ModelRendererTurbo(this, 0, 19, 32, 32); // LegLeft03
+		platesLeftLegModel[3] = new ModelRendererTurbo(this, 12, 21, 32, 32); // LegLeft04
+		platesLeftLegModel[4] = new ModelRendererTurbo(this, 12, 15, 32, 32); // LegLeft05
+		platesLeftLegModel[5] = new ModelRendererTurbo(this, 20, 19, 32, 32); // LegLeft06
+		platesLeftLegModel[6] = new ModelRendererTurbo(this, 22, 0, 32, 32); // LegLeft07
+
+		platesLeftLegModel[0].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegLeft01
+		platesLeftLegModel[0].setRotationPoint(0.5F, 1F, -3.5F);
+
+		platesLeftLegModel[1].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegLeft02
+		platesLeftLegModel[1].setRotationPoint(0.5F, 2.5F, -3.5F);
+
+		platesLeftLegModel[2].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegLeft03
+		platesLeftLegModel[2].setRotationPoint(0.5F, 6.5F, -3.5F);
+
+		platesLeftLegModel[3].addShapeBox(0F, 0F, 0F, 3, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegLeft04
+		platesLeftLegModel[3].setRotationPoint(0.5F, 5F, -3.5F);
+
+		platesLeftLegModel[4].addShapeBox(0F, 0F, 0F, 3, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // LegLeft05
+		platesLeftLegModel[4].setRotationPoint(3.5F, 0F, 1.5F);
+		platesLeftLegModel[4].rotateAngleY = -1.57079633F;
+
+		platesLeftLegModel[5].addShapeBox(0F, 0F, 0F, 4, 2, 2, 0F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F, 0.2F); // LegLeft06
+		platesLeftLegModel[5].setRotationPoint(0F, 8F, -4F);
+
+		platesLeftLegModel[6].addShapeBox(0F, 0F, 0F, 4, 6, 1, 0F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F, 0.2F, 0F, 0.2F); // LegLeft07
+		platesLeftLegModel[6].setRotationPoint(0F, 7F, 2F);
+
+
+		platesSkirtRightModel = new ModelRendererTurbo[5];
+		platesSkirtRightModel[0] = new ModelRendererTurbo(this, 14, 0, 32, 32); // SkirtRight01
+		platesSkirtRightModel[1] = new ModelRendererTurbo(this, 0, 21, 32, 32); // SkirtRight02
+		platesSkirtRightModel[2] = new ModelRendererTurbo(this, 0, 0, 32, 32); // SkirtRight03
+		platesSkirtRightModel[3] = new ModelRendererTurbo(this, 14, 0, 32, 32); // SkirtRight04
+		platesSkirtRightModel[4] = new ModelRendererTurbo(this, 0, 21, 32, 32); // SkirtRight05
+
+		platesSkirtRightModel[0].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // SkirtRight01
+		platesSkirtRightModel[0].setRotationPoint(-3F, -1F, -3.5F);
+		platesSkirtRightModel[0].rotateAngleX = -0.12217305F;
+
+		platesSkirtRightModel[1].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F); // SkirtRight02
+		platesSkirtRightModel[1].setRotationPoint(-4F, -1F, -3.5F);
+		platesSkirtRightModel[1].rotateAngleX = -0.12217305F;
+
+		platesSkirtRightModel[2].addShapeBox(0F, 0F, 0F, 6, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // SkirtRight03
+		platesSkirtRightModel[2].setRotationPoint(-4.5F, -1F, 3F);
+		platesSkirtRightModel[2].rotateAngleX = -0.19198622F;
+		platesSkirtRightModel[2].rotateAngleY = -1.57079633F;
+
+		platesSkirtRightModel[3].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // SkirtRight04
+		platesSkirtRightModel[3].setRotationPoint(-3F, -1F, 1.5F);
+		platesSkirtRightModel[3].rotateAngleX = 0.27925268F;
+
+		platesSkirtRightModel[4].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F); // SkirtRight05
+		platesSkirtRightModel[4].setRotationPoint(-4F, -1F, 1.5F);
+		platesSkirtRightModel[4].rotateAngleX = 0.27925268F;
+
+
+		platesSkirtLeftModel = new ModelRendererTurbo[5];
+		platesSkirtLeftModel[0] = new ModelRendererTurbo(this, 14, 0, 32, 32); // SkirtLeft01
+		platesSkirtLeftModel[1] = new ModelRendererTurbo(this, 0, 21, 32, 32); // SkirtLeft02
+		platesSkirtLeftModel[2] = new ModelRendererTurbo(this, 0, 0, 32, 32); // SkirtLeft03
+		platesSkirtLeftModel[3] = new ModelRendererTurbo(this, 14, 0, 32, 32); // SkirtLeft04
+		platesSkirtLeftModel[4] = new ModelRendererTurbo(this, 0, 21, 32, 32); // SkirtLeft05
+
+		platesSkirtLeftModel[0].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // SkirtLeft01
+		platesSkirtLeftModel[0].setRotationPoint(0F, -1F, -3.5F);
+		platesSkirtLeftModel[0].rotateAngleX = -0.12217305F;
+
+		platesSkirtLeftModel[1].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F); // SkirtLeft02
+		platesSkirtLeftModel[1].setRotationPoint(3F, -1F, -3.5F);
+		platesSkirtLeftModel[1].rotateAngleX = -0.12217305F;
+
+		platesSkirtLeftModel[2].addShapeBox(0F, 0F, 0F, 6, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // SkirtLeft03
+		platesSkirtLeftModel[2].setRotationPoint(3.5F, -1F, 3F);
+		platesSkirtLeftModel[2].rotateAngleX = 0.19198622F;
+		platesSkirtLeftModel[2].rotateAngleY = -1.57079633F;
+
+		platesSkirtLeftModel[3].addShapeBox(0F, 0F, 0F, 3, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // SkirtLeft04
+		platesSkirtLeftModel[3].setRotationPoint(0F, -1F, 1.5F);
+		platesSkirtLeftModel[3].rotateAngleX = 0.27925268F;
+
+		platesSkirtLeftModel[4].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -1F, 0F, 0F, -1F, 0F, 0F, 0F, 0F); // SkirtLeft05
+		platesSkirtLeftModel[4].setRotationPoint(3F, -1F, 1.5F);
+		platesSkirtLeftModel[4].rotateAngleX = 0.27925268F;
+
+		exoSuitRightLegModel = new ModelRendererTurbo[21];
+		exoSuitRightLegModel[0] = new ModelRendererTurbo(this, 0, 0, 16, 16); // FrameRight01
+		exoSuitRightLegModel[1] = new ModelRendererTurbo(this, 0, 5, 16, 16); // FrameRight02
+		exoSuitRightLegModel[2] = new ModelRendererTurbo(this, 0, 5, 16, 16); // FrameRight03
+		exoSuitRightLegModel[3] = new ModelRendererTurbo(this, 0, 0, 16, 16); // FrameRight04
+		exoSuitRightLegModel[4] = new ModelRendererTurbo(this, 8, 2, 16, 16); // FrameRight05
+		exoSuitRightLegModel[5] = new ModelRendererTurbo(this, 3, -2, 16, 16); // FrameRight06
+		exoSuitRightLegModel[6] = new ModelRendererTurbo(this, 3, -2, 16, 16); // FrameRight07
+		exoSuitRightLegModel[7] = new ModelRendererTurbo(this, 8, 2, 16, 16); // FrameRight08
+		exoSuitRightLegModel[8] = new ModelRendererTurbo(this, 6, 10, 16, 16); // FrameRight09
+		exoSuitRightLegModel[9] = new ModelRendererTurbo(this, 6, 10, 16, 16); // FrameRight10
+		exoSuitRightLegModel[10] = new ModelRendererTurbo(this, 4, 1, 16, 16); // FrameRight11
+		exoSuitRightLegModel[11] = new ModelRendererTurbo(this, 4, 1, 16, 16); // FrameRight12
+		exoSuitRightLegModel[12] = new ModelRendererTurbo(this, 0, 11, 16, 16); // WiresRight01
+		exoSuitRightLegModel[13] = new ModelRendererTurbo(this, 0, 13, 16, 16); // WiresRight02
+		exoSuitRightLegModel[14] = new ModelRendererTurbo(this, 4, 4, 16, 16); // WiresRight03
+		exoSuitRightLegModel[15] = new ModelRendererTurbo(this, 4, 7, 16, 16); // WiresRight04
+		exoSuitRightLegModel[16] = new ModelRendererTurbo(this, 12, 0, 16, 16); // WiresRight05
+		exoSuitRightLegModel[17] = new ModelRendererTurbo(this, 4, 13, 16, 16); // FrameRight14
+		exoSuitRightLegModel[18] = new ModelRendererTurbo(this, 8, 5, 16, 16); // FrameRight15
+		exoSuitRightLegModel[19] = new ModelRendererTurbo(this, 4, 13, 16, 16); // Box 50
+		exoSuitRightLegModel[20] = new ModelRendererTurbo(this, 4, 4, 16, 16); // WiresRight01
+
+		exoSuitRightLegModel[0].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight01
+		exoSuitRightLegModel[0].setRotationPoint(-5F, 0F, -2F);
+
+		exoSuitRightLegModel[1].addShapeBox(0F, 0F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight02
+		exoSuitRightLegModel[1].setRotationPoint(-5F, 4F, -2F);
+
+		exoSuitRightLegModel[2].addShapeBox(0F, 0F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight03
+		exoSuitRightLegModel[2].setRotationPoint(-5F, 4F, 1F);
+
+		exoSuitRightLegModel[3].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight04
+		exoSuitRightLegModel[3].setRotationPoint(-5F, 0F, 1F);
+
+		exoSuitRightLegModel[4].addShapeBox(0F, 0F, 0F, 1, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight05
+		exoSuitRightLegModel[4].setRotationPoint(-5F, 8F, -1F);
+
+		exoSuitRightLegModel[5].addShapeBox(0F, 0F, 0F, 0, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight06
+		exoSuitRightLegModel[5].setRotationPoint(-5F, 4F, -1F);
+
+		exoSuitRightLegModel[6].addShapeBox(0F, 0F, 0F, 0, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight07
+		exoSuitRightLegModel[6].setRotationPoint(-5F, 2.5F, -1F);
+
+		exoSuitRightLegModel[7].addShapeBox(0F, 0F, 0F, 1, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight08
+		exoSuitRightLegModel[7].setRotationPoint(-5F, 0F, -1F);
+
+		exoSuitRightLegModel[8].addShapeBox(0F, 0F, 0F, 4, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight09
+		exoSuitRightLegModel[8].setRotationPoint(-4.5F, 6.5F, 1.5F);
+
+		exoSuitRightLegModel[9].addShapeBox(0F, 0F, 0F, 4, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight10
+		exoSuitRightLegModel[9].setRotationPoint(-4.5F, 1F, 1.5F);
+
+		exoSuitRightLegModel[10].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight11
+		exoSuitRightLegModel[10].setRotationPoint(-4.5F, 0.5F, -2.5F);
+
+		exoSuitRightLegModel[11].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight12
+		exoSuitRightLegModel[11].setRotationPoint(-4.5F, 6.5F, -2.5F);
+
+		exoSuitRightLegModel[12].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresRight01
+		exoSuitRightLegModel[12].setRotationPoint(-4.5F, 6F, -1F);
+
+		exoSuitRightLegModel[13].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresRight02
+		exoSuitRightLegModel[13].setRotationPoint(-4.5F, 3F, 0F);
+
+		exoSuitRightLegModel[14].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresRight03
+		exoSuitRightLegModel[14].setRotationPoint(-4.5F, 0F, -1F);
+
+		exoSuitRightLegModel[15].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F); // WiresRight04
+		exoSuitRightLegModel[15].setRotationPoint(-4.5F, 5F, 0F);
+
+		exoSuitRightLegModel[16].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresRight05
+		exoSuitRightLegModel[16].setRotationPoint(-4.5F, 2F, -1F);
+
+		exoSuitRightLegModel[17].addShapeBox(0F, 0F, 0F, 5, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight14
+		exoSuitRightLegModel[17].setRotationPoint(-5.05F, -1.5F, -2.5F);
+
+		exoSuitRightLegModel[18].addShapeBox(0F, 0F, 0F, 1, 2, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameRight15
+		exoSuitRightLegModel[18].setRotationPoint(-4.5F, -1.5F, -1.5F);
+
+		exoSuitRightLegModel[19].addShapeBox(0F, 0F, 0F, 5, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 50
+		exoSuitRightLegModel[19].setRotationPoint(-5.05F, -1.5F, 1.5F);
+
+		exoSuitRightLegModel[20].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresRight01
+		exoSuitRightLegModel[20].setRotationPoint(-4.5F, 7F, -1F);
+
+
+		exoSuitLeftLegModel = new ModelRendererTurbo[21];
+		exoSuitLeftLegModel[0] = new ModelRendererTurbo(this, 0, 0, 16, 16); // FrameLeft01
+		exoSuitLeftLegModel[1] = new ModelRendererTurbo(this, 0, 5, 16, 16); // FrameLeft02
+		exoSuitLeftLegModel[2] = new ModelRendererTurbo(this, 0, 5, 16, 16); // FrameLeft03
+		exoSuitLeftLegModel[3] = new ModelRendererTurbo(this, 0, 0, 16, 16); // FrameLeft04
+		exoSuitLeftLegModel[4] = new ModelRendererTurbo(this, 8, 2, 16, 16); // FrameLeft05
+		exoSuitLeftLegModel[5] = new ModelRendererTurbo(this, 3, -2, 16, 16); // FrameLeft06
+		exoSuitLeftLegModel[6] = new ModelRendererTurbo(this, 3, -2, 16, 16); // FrameLeft07
+		exoSuitLeftLegModel[7] = new ModelRendererTurbo(this, 8, 2, 16, 16); // FrameLeft08
+		exoSuitLeftLegModel[8] = new ModelRendererTurbo(this, 6, 10, 16, 16); // FrameLeft09
+		exoSuitLeftLegModel[9] = new ModelRendererTurbo(this, 6, 10, 16, 16); // FrameLeft10
+		exoSuitLeftLegModel[10] = new ModelRendererTurbo(this, 4, 1, 16, 16); // FrameLeft11
+		exoSuitLeftLegModel[11] = new ModelRendererTurbo(this, 4, 1, 16, 16); // FrameLeft12
+		exoSuitLeftLegModel[12] = new ModelRendererTurbo(this, 4, 13, 16, 16); // FrameLeft14
+		exoSuitLeftLegModel[13] = new ModelRendererTurbo(this, 8, 5, 16, 16); // FrameLeft15
+		exoSuitLeftLegModel[14] = new ModelRendererTurbo(this, 0, 11, 16, 16); // WiresLeft01
+		exoSuitLeftLegModel[15] = new ModelRendererTurbo(this, 0, 13, 16, 16); // WiresLeft02
+		exoSuitLeftLegModel[16] = new ModelRendererTurbo(this, 4, 4, 16, 16); // WiresLeft03
+		exoSuitLeftLegModel[17] = new ModelRendererTurbo(this, 4, 7, 16, 16); // WiresLeft04
+		exoSuitLeftLegModel[18] = new ModelRendererTurbo(this, 12, 0, 16, 16); // WiresLeft05
+		exoSuitLeftLegModel[19] = new ModelRendererTurbo(this, 4, 13, 16, 16); // Box 49
+		exoSuitLeftLegModel[20] = new ModelRendererTurbo(this, 4, 4, 16, 16); // WiresLeft01
+
+		exoSuitLeftLegModel[0].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft01
+		exoSuitLeftLegModel[0].setRotationPoint(4F, 0F, -2F);
+
+		exoSuitLeftLegModel[1].addShapeBox(0F, 0F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft02
+		exoSuitLeftLegModel[1].setRotationPoint(4F, 4F, -2F);
+
+		exoSuitLeftLegModel[2].addShapeBox(0F, 0F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft03
+		exoSuitLeftLegModel[2].setRotationPoint(4F, 4F, 1F);
+
+		exoSuitLeftLegModel[3].addShapeBox(0F, 0F, 0F, 1, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft04
+		exoSuitLeftLegModel[3].setRotationPoint(4F, 0F, 1F);
+
+		exoSuitLeftLegModel[4].addShapeBox(0F, 0F, 0F, 1, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft05
+		exoSuitLeftLegModel[4].setRotationPoint(4F, 8F, -1F);
+
+		exoSuitLeftLegModel[5].addShapeBox(0F, 0F, 0F, 0, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft06
+		exoSuitLeftLegModel[5].setRotationPoint(5F, 4F, -1F);
+
+		exoSuitLeftLegModel[6].addShapeBox(0F, 0F, 0F, 0, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft07
+		exoSuitLeftLegModel[6].setRotationPoint(5F, 2.5F, -1F);
+
+		exoSuitLeftLegModel[7].addShapeBox(0F, 0F, 0F, 1, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft08
+		exoSuitLeftLegModel[7].setRotationPoint(4F, 0F, -1F);
+
+		exoSuitLeftLegModel[8].addShapeBox(0F, 0F, 0F, 4, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft09
+		exoSuitLeftLegModel[8].setRotationPoint(0.5F, 6.5F, 1.5F);
+
+		exoSuitLeftLegModel[9].addShapeBox(0F, 0F, 0F, 4, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft10
+		exoSuitLeftLegModel[9].setRotationPoint(0.5F, 1F, 1.5F);
+
+		exoSuitLeftLegModel[10].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft11
+		exoSuitLeftLegModel[10].setRotationPoint(3.5F, 0.5F, -2.5F);
+
+		exoSuitLeftLegModel[11].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft12
+		exoSuitLeftLegModel[11].setRotationPoint(3.5F, 6.5F, -2.5F);
+
+		exoSuitLeftLegModel[12].addShapeBox(0F, 0F, 0F, 5, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft14
+		exoSuitLeftLegModel[12].setRotationPoint(-0.05F, -1.5F, -2.5F);
+
+		exoSuitLeftLegModel[13].addShapeBox(0F, 0F, 0F, 1, 2, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // FrameLeft15
+		exoSuitLeftLegModel[13].setRotationPoint(3.5F, -1.5F, -1.5F);
+
+		exoSuitLeftLegModel[14].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresLeft01
+		exoSuitLeftLegModel[14].setRotationPoint(3.5F, 6F, -1F);
+
+		exoSuitLeftLegModel[15].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresLeft02
+		exoSuitLeftLegModel[15].setRotationPoint(3.5F, 3F, 0F);
+
+		exoSuitLeftLegModel[16].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresLeft03
+		exoSuitLeftLegModel[16].setRotationPoint(3.5F, 0F, -1F);
+
+		exoSuitLeftLegModel[17].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F); // WiresLeft04
+		exoSuitLeftLegModel[17].setRotationPoint(3.5F, 5F, 0F);
+
+		exoSuitLeftLegModel[18].addShapeBox(0F, 0F, 0F, 1, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresLeft05
+		exoSuitLeftLegModel[18].setRotationPoint(3.5F, 2F, -1F);
+
+		exoSuitLeftLegModel[19].addShapeBox(0F, 0F, 0F, 5, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 49
+		exoSuitLeftLegModel[19].setRotationPoint(-0.05F, -1.5F, 1.5F);
+
+		exoSuitLeftLegModel[20].addShapeBox(0F, 0F, 0F, 1, 1, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // WiresLeft01
+		exoSuitLeftLegModel[20].setRotationPoint(3.5F, 7F, -1F);
+
+		scubaTankModel = new ModelRendererTurbo[7];
+		scubaTankModel[0] = new ModelRendererTurbo(this, 0, 10, 16, 16); // Box 4
+		scubaTankModel[1] = new ModelRendererTurbo(this, 0, 0, 16, 16); // Box 7
+		scubaTankModel[2] = new ModelRendererTurbo(this, 8, 0, 16, 16); // Box 8
+		scubaTankModel[3] = new ModelRendererTurbo(this, 12, 0, 16, 16); // Box 9
+		scubaTankModel[4] = new ModelRendererTurbo(this, 0, 10, 16, 16); // Box 4
+		scubaTankModel[5] = new ModelRendererTurbo(this, 0, 5, 16, 16); // Box 8
+		scubaTankModel[6] = new ModelRendererTurbo(this, 0, 0, 16, 16); // Box 7
+
+		scubaTankModel[0].addShapeBox(0F, 0F, 0F, 4, 3, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 4
+		scubaTankModel[0].setRotationPoint(-1.5F, -3F, 4.5F);
+		scubaTankModel[0].rotateAngleX = -0.34906585F;
+
+		scubaTankModel[1].addShapeBox(0F, 0F, 0F, 3, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 7
+		scubaTankModel[1].setRotationPoint(1.5F, -4F, 3F);
+
+		scubaTankModel[2].addShapeBox(0F, 0F, 0F, 1, 5, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 8
+		scubaTankModel[2].setRotationPoint(2.5F, -6.5F, 4F);
+
+		scubaTankModel[3].addShapeBox(0F, 0F, 0F, 1, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, -0.5F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 9
+		scubaTankModel[3].setRotationPoint(2.5F, -11.5F, 3F);
+
+		scubaTankModel[4].setFlipped(true);
+		scubaTankModel[4].addShapeBox(0F, 0F, 0F, 4, 3, 3, 0F, -4F, 0F, 0F, -4F, 0F, 0F, -4F, 0F, 0F, -4F, 0F, 0F, -4F, 0F, 0F, -4F, 0F, 0F, -4F, 0F, 0F, -4F, 0F, 0F); // Box 4
+		scubaTankModel[4].setRotationPoint(-5.5F, -3F, 4.5F);
+		scubaTankModel[4].rotateAngleX = -0.34906585F;
+
+		scubaTankModel[5].addShapeBox(0F, 0F, 0F, 1, 1, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 8
+		scubaTankModel[5].setRotationPoint(2.5F, -1.5F, 4F);
+
+		scubaTankModel[6].addShapeBox(0F, 0F, 0F, 3, 4, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 7
+		scubaTankModel[6].setRotationPoint(-4.5F, -4F, 3F);
+
 		for(ModelRendererTurbo mod : gasmaskModel)
 			mod.rotationPointY += 12f;
+		for(ModelRendererTurbo mod : infiltratorGogglesModel)
+			mod.rotationPointY += 12f;
+		for(ModelRendererTurbo mod : technicianGogglesModel)
+			mod.rotationPointY += 12f;
+		for(ModelRendererTurbo mod : engineerGogglesModel)
+			mod.rotationPointY += 12f;
+		for(ModelRendererTurbo mod : platesHelmetModel)
+			mod.rotationPointY += 12f;
+
+		//platesRightArmModel, platesLeftArmModel, platesChestModel, platesRightLegModel, platesLeftLegModel, platesSkirtRightModel, platesSkirtLeftModel
+		for(ModelRendererTurbo mod : platesChestModel)
+			mod.rotationPointY += 12f;
+
+		for(ModelRendererTurbo mod : scubaTankModel)
+		{
+			mod.rotationPointY += 12f;
+			mod.rotationPointX += 1f;
+		}
+
+		for(ModelRendererTurbo mod : platesLeftArmModel)
+		{
+			mod.rotationPointY += 9.5f;
+			mod.rotationPointX -= 5f;
+		}
+		for(ModelRendererTurbo mod : platesRightArmModel)
+		{
+			mod.rotationPointY += 9.5f;
+			mod.rotationPointX += 5f;
+		}
+
+		for(ModelRendererTurbo mod : platesSkirtLeftModel)
+		{
+			mod.rotationPointX -= 1.5f;
+		}
+		for(ModelRendererTurbo mod : platesSkirtRightModel)
+		{
+			mod.rotationPointX += 1.5f;
+		}
+
+		for(ModelRendererTurbo mod : exoSuitLeftLegModel)
+		{
+			mod.rotationPointX -= 1.5f;
+		}
+		for(ModelRendererTurbo mod : exoSuitRightLegModel)
+		{
+			mod.rotationPointX += 1.5f;
+		}
+
+		for(ModelRendererTurbo mod : platesLeftLegModel)
+		{
+			mod.rotationPointX -= 1.5f;
+			mod.rotationPointY -= 1.5f;
+		}
+		for(ModelRendererTurbo mod : platesRightLegModel)
+		{
+			mod.rotationPointX += 1.5f;
+			mod.rotationPointY -= 1.5f;
+		}
 
 		parts.put("gasmask", gasmaskModel);
+		parts.put("goggles_infiltrator", infiltratorGogglesModel);
+		parts.put("goggles_technician", technicianGogglesModel);
+		parts.put("goggles_engineer", engineerGogglesModel);
+		parts.put("plates_helmet_model", platesHelmetModel);
+
+		parts.put("plates_right_arm", platesRightArmModel);
+		parts.put("plates_left_arm", platesLeftArmModel);
+		parts.put("plates_chest", platesChestModel);
+		parts.put("plates_right_leg", platesRightLegModel);
+		parts.put("plates_left_leg", platesLeftLegModel);
+		parts.put("plates_skirt_right", platesSkirtRightModel);
+		parts.put("plates_skirt_left", platesSkirtLeftModel);
+		parts.put("exo_suit_right_leg", exoSuitRightLegModel);
+		parts.put("exo_suit_left_leg", exoSuitLeftLegModel);
+
+		parts.put("scuba_tank", scubaTankModel);
 
 		flipAll();
 		init();
@@ -404,29 +1115,120 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	}
 
 
-	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, float scale, float ageInTicks, boolean entity)
+	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, ModelRendererTurbo[] part, float ageInTicks, boolean entity, float scale)
 	{
-		if(renderSlot==EntityEquipmentSlot.HEAD)
+		NBTTagCompound upgrades = IIContent.itemLightEngineerHelmet.getUpgrades(renderStack);
+
+		switch(renderSlot)
 		{
-			if(IIContent.itemLightEngineerHelmet.getUpgrades(renderStack).hasKey("gasmask"))
+			case HEAD:
 			{
-				ClientUtils.bindTexture(TEXTURE_GASMASK);
-				if(entity)
-					renderChild(bipedHead, gasmaskModel, scale, TEXTURE_GASMASK);
-				else
-					for(ModelRendererTurbo mod : gasmaskModel)
-						mod.render();
+				if(upgrades.hasKey("gasmask"))
+					renderWithEntity(entity, bipedHead, gasmaskModel, scale, TEXTURE_GASMASK);
+				if(upgrades.hasKey("headgear"))
+				{
+					GlStateManager.pushMatrix();
+					GlStateManager.disableCull();
+					if(upgrades.hasKey("infiltrator_gear"))
+						renderWithEntity(entity, bipedHead, infiltratorGogglesModel, scale, TEXTURE_GOGGLES);
+					else if(upgrades.hasKey("technician_gear"))
+						renderWithEntity(entity, bipedHead, technicianGogglesModel, scale, TEXTURE_GOGGLES);
+					else if(upgrades.hasKey("engineer_gear"))
+						renderWithEntity(entity, bipedHead, engineerGogglesModel, scale, TEXTURE_GOGGLES);
+					GlStateManager.enableCull();
+					GlStateManager.popMatrix();
+				}
+				if(hasPlates(upgrades))
+				{
+					setColorForPlates(upgrades);
+					renderWithEntity(entity, bipedHead, platesHelmetModel, scale, TEXTURE_PLATES);
+					GlStateManager.color(1f,1f,1f);
+				}
 			}
-		}
-		/*
-		if(renderSlot==EntityEquipmentSlot.CHEST)
-		{
+			break;
+			case CHEST:
+			{
+				if(hasPlates(upgrades))
+				{
+					int armorIncrease = upgrades.getInteger("armor_increase");
+					setColorForPlates(upgrades);
+					if(entity||part==bodyModel)
+					renderWithEntity(entity, bipedBody, platesChestModel, scale, TEXTURE_PLATES);
+					if(armorIncrease>1&&(entity||part==rightArmModel))
+						renderWithEntity(entity, bipedRightArm, platesRightArmModel, scale, TEXTURE_PLATES);
+					if(armorIncrease>2&&(entity||part==leftArmModel))
+						renderWithEntity(entity, bipedLeftArm, platesLeftArmModel, scale, TEXTURE_PLATES);
+					GlStateManager.color(1f,1f,1f);
+				}
+				if((entity||part==bodyModel)&&upgrades.hasKey("scuba"))
+					renderWithEntity(entity, bipedBody, scubaTankModel, scale, TEXTURE_SCUBA);
+
+			/*
 			float pt = Math.abs((((ageInTicks+Minecraft.getMinecraft().getRenderPartialTicks())%160)/160f)-0.5f)/.5f;
 			for(ModelRendererTurbo mod : capeModel)
 				mod.rotateAngleX = 0.0625f+(pt*0.125f);
-			renderChild(this.bipedBody, capeModel, scale);
+			renderWithEntity(entity,this.bipedBody, capeModel, scale,TEXTURE);
+			 */
+			}
+			break;
+			case LEGS:
+			{
+				if(hasPlates(upgrades))
+				{
+					setColorForPlates(upgrades);
+					if(entity||part==leftLegModel)
+						renderWithEntity(entity, bipedLeftLeg, platesSkirtLeftModel, scale, TEXTURE_PLATES);
+					if(entity||part==rightLegModel)
+						renderWithEntity(entity, bipedRightLeg, platesSkirtRightModel, scale, TEXTURE_PLATES);
+					GlStateManager.color(1f,1f,1f);
+					//renderWithEntity(entity, bipedLeftLeg, platesLeftLegModel, scale, TEXTURE_PLATES);
+					//renderWithEntity(entity, bipedRightLeg, platesRightLegModel, scale, TEXTURE_PLATES);
+				}
+				if(upgrades.hasKey("exoskeleton"))
+				{
+					if(entity||part==leftLegModel)
+						renderWithEntity(entity, bipedLeftLeg, exoSuitLeftLegModel, scale, TEXTURE_EXOSUIT);
+					if(entity||part==rightLegModel)
+						renderWithEntity(entity, bipedRightLeg, exoSuitRightLegModel, scale, TEXTURE_EXOSUIT);
+				}
+			}
+			break;
+			case FEET:
+			{
+				if(upgrades.hasKey("reinforced"))
+				{
+
+				}
+			}
+			break;
 		}
-		 */
+
+	}
+
+	private boolean hasPlates(NBTTagCompound upgrades)
+	{
+		return upgrades.hasKey("steel_plates")||upgrades.hasKey("composite_plates");
+	}
+
+	private void setColorForPlates(NBTTagCompound upgrades)
+	{
+		if(upgrades.hasKey("composite_plates"))
+			GlStateManager.color(0.9f,0.9f,1f);
+		else
+			GlStateManager.color(1f,1f,1f);
+
+	}
+
+	public void renderWithEntity(boolean entity, ModelRenderer biped, ModelRendererTurbo[] model, float scale, String texture)
+	{
+		if(entity)
+			renderChild(biped, model, scale, texture);
+		else
+		{
+			ClientUtils.bindTexture(texture);
+			for(ModelRendererTurbo mod : model)
+				mod.render();
+		}
 	}
 
 	//yes, a bit weird mix of static and non-static methods here indeed

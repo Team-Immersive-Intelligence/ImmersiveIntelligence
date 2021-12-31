@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "glg",
+    "bp "
+  ],
+  "key": {
+    "c": {
+      "item": "minecraft:leather_helmet",
+      "data": 0
+    },
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "paneGlass"
+    },
+    "b": {
+      "item": "immersiveengineering:toolupgrade",
+      "data": 3
+    },
+    "p": {
+      "item": "immersiveengineering:metal_device1",
+      "data": 6
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 0,
+    "count": 1
+  }
+}

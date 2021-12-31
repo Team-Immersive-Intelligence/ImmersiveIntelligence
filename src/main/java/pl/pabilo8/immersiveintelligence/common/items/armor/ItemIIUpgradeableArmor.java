@@ -79,6 +79,11 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	}
 
 
+	public static boolean isArmorWithUpgrade(ItemStack stack, String upgrade)
+	{
+		return stack.getItem() instanceof ItemIIUpgradeableArmor&&((ItemIIUpgradeableArmor)stack.getItem()).getUpgrades(stack).hasKey(upgrade);
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)

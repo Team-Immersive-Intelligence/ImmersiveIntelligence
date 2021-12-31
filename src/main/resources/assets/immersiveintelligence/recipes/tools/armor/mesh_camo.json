@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "lrl",
+    "rcr",
+    "lrl"
+  ],
+  "key": {
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "treeLeaves"
+    },
+    "r": {
+      "item": "immersiveengineering:wirecoil",
+      "data": 3
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 9,
+    "count": 1
+  }
+}

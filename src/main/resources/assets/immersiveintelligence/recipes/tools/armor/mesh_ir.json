@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "dfd",
+    "fwf",
+    "wcw"
+  ],
+  "key": {
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlack"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "wireAluminum"
+    },
+    "f": {
+      "type": "forge:ore_dict",
+      "ore": "fabricHemp"
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 10,
+    "count": 1
+  }
+}

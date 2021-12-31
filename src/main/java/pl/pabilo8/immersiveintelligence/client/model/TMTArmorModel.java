@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 
 /**
@@ -53,43 +54,63 @@ public class TMTArmorModel extends ModelBiped
 		{
 			for(ModelRendererTurbo mod : headModel)
 				mod.render(0.0625f);
-			renderAddons(renderStack, renderSlot, 0.0625f, 0, false);
+			renderAddons(renderStack, renderSlot, null, 0, false, 0.0625f);
 		}
 		else if(renderSlot==EntityEquipmentSlot.CHEST)
 		{
 			GlStateManager.translate(0, 0.5f, 0);
 			GlStateManager.scale(0.85f, 0.85f, 0.85f);
-			renderAddons(renderStack, renderSlot, 0.0625f, 0, false);
+			GlStateManager.pushMatrix();
 			for(ModelRendererTurbo mod : bodyModel)
 				mod.render(0.0625f);
+			renderAddons(renderStack, renderSlot, bodyModel, 0, false, 0.0625f);
+
 			GlStateManager.translate(0.25f, -0.125f, 0);
+			ClientUtils.bindTexture(this.texture);
 			for(ModelRendererTurbo mod : leftArmModel)
 				mod.render(0.0625f);
+			renderAddons(renderStack, renderSlot, leftArmModel, 0, false, 0.0625f);
+
 			GlStateManager.translate(-0.5f, 0f, 0);
+			ClientUtils.bindTexture(this.texture);
 			for(ModelRendererTurbo mod : rightArmModel)
 				mod.render(0.0625f);
+			renderAddons(renderStack, renderSlot, rightArmModel, 0, false, 0.0625f);
+
+			GlStateManager.popMatrix();
+
 		}
 		else if(renderSlot==EntityEquipmentSlot.LEGS)
 		{
 			GlStateManager.translate(0.25f-0.0625, 0.75, 0);
-			renderAddons(renderStack, renderSlot, 0.0625f, 0, false);
+			GlStateManager.pushMatrix();
 			for(ModelRendererTurbo mod : leftLegModel)
 				mod.render(0.0625f);
+			renderAddons(renderStack, renderSlot, leftLegModel, 0, false, 0.0625f);
 			GlStateManager.translate(-0.25f, 0, 0);
+			ClientUtils.bindTexture(this.texture);
 			for(ModelRendererTurbo mod : rightLegModel)
 				mod.render(0.0625f);
+			renderAddons(renderStack, renderSlot, rightLegModel, 0, false, 0.0625f);
+			GlStateManager.popMatrix();
+
+
+
 		}
 		else if(renderSlot==EntityEquipmentSlot.FEET)
 		{
 			GlStateManager.translate(0.25f-0.0625, 0.75, 0);
-			renderAddons(renderStack, renderSlot, 0.0625f, 0, false);
+			GlStateManager.pushMatrix();
 			for(ModelRendererTurbo mod : leftFootModel)
 				mod.render(0.0625f);
+			renderAddons(renderStack, renderSlot, leftFootModel, 0, false, 0.0625f);
 			GlStateManager.translate(-0.25f, 0, 0);
 			GlStateManager.rotate(-35, 0, 1, 0);
+			ClientUtils.bindTexture(this.texture);
 			for(ModelRendererTurbo mod : rightFootModel)
 				mod.render(0.0625f);
-
+			renderAddons(renderStack, renderSlot, rightFootModel, 0, false, 0.0625f);
+			GlStateManager.popMatrix();
 		}
 	}
 
@@ -122,12 +143,12 @@ public class TMTArmorModel extends ModelBiped
 			renderChild(this.bipedLeftLeg, leftFootModel, scale, texture);
 			renderChild(this.bipedRightLeg, rightFootModel, scale, texture);
 		}
-		renderAddons(renderStack, renderSlot, scale, ageInTicks, true);
+		renderAddons(renderStack, renderSlot, null, ageInTicks, true, scale);
 
 		GlStateManager.popMatrix();
 	}
 
-	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, float scale, float ageInTicks, boolean entity)
+	public void renderAddons(ItemStack renderStack, EntityEquipmentSlot renderSlot, @Nullable ModelRendererTurbo[] part, float ageInTicks, boolean entity, float scale)
 	{
 
 	}

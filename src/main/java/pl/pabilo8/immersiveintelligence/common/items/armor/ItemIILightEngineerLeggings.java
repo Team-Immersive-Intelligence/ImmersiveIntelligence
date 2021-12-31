@@ -1,15 +1,21 @@
 package pl.pabilo8.immersiveintelligence.common.items.armor;
 
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
+import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,6 +24,8 @@ import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.ICorrosionProtectio
 import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,6 +40,43 @@ public class ItemIILightEngineerLeggings extends ItemIIUpgradeableArmor implemen
 	public ItemIILightEngineerLeggings()
 	{
 		super(IIContent.ARMOR_MATERIAL_LIGHT_ENGINEER, EntityEquipmentSlot.LEGS, "LIGHT_ENGINEER_LEGGINGS");
+	}
+
+	@Override
+	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
+	{
+		super.onArmorTick(world, player, itemStack);
+		if(getUpgrades(itemStack).hasKey("exoskeleton"))
+		{
+			int rammingCooldown = ItemNBTHelper.getInt(itemStack, "rammingCooldown")-1;
+			if(rammingCooldown>0)
+				ItemNBTHelper.setInt(itemStack,"rammingCooldown",rammingCooldown);
+			else
+				ItemNBTHelper.remove(itemStack,"rammingCooldown");
+
+			if(player.isSprinting())
+			{
+				if(player.distanceWalkedOnStepModified>8&&player.isPotionActive(IIPotions.movement_assist))
+				{
+					List<EntityMob> mobs = world.getEntitiesWithinAABB(EntityMob.class, player.getEntityBoundingBox(), null);
+					if(mobs.size()>0)
+					{
+						mobs.forEach(entityMob -> {
+							entityMob.knockBack(player,3, MathHelper.sin(player.rotationYaw * 0.017453292F), -MathHelper.cos(player.rotationYaw * 0.017453292F));
+							entityMob.attackEntityFrom(IEDamageSources.crusher,	player.getTotalArmorValue());
+						});
+						player.getArmorInventoryList().forEach(stack -> stack.damageItem(2,player));
+						player.removePotionEffect(IIPotions.movement_assist);
+						ItemNBTHelper.setInt(itemStack,"rammingCooldown",40);
+					}
+
+				}
+
+				if(ItemNBTHelper.getInt(itemStack,"rammingCooldown")<=0&&world.getTotalWorldTime()%4==0)
+					player.addPotionEffect(new PotionEffect(IIPotions.movement_assist, 4, 0, false, false));
+			}
+		}
+
 	}
 
 	@Nullable
@@ -58,7 +103,7 @@ public class ItemIILightEngineerLeggings extends ItemIIUpgradeableArmor implemen
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot, ItemStack stack)
 	{
-		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot,stack);
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
 		if(equipmentSlot==this.armorType)
 		{
