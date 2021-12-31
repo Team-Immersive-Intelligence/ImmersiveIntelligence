@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.wire.IIMotorBeltType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,7 +37,7 @@ public class ItemIIMotorBelt extends ItemIIBase implements IWireCoil
 {
 	public ItemIIMotorBelt()
 	{
-		super("motor_belt", 8, MotorBelt.getNames());
+		super("motor_belt", 64, MotorBelt.getNames());
 	}
 
 	@Override
@@ -69,52 +69,68 @@ public class ItemIIMotorBelt extends ItemIIBase implements IWireCoil
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		return RotaryUtils.doCoilUse(this, player, world, pos, hand, side, hitX, hitY, hitZ);
+		return RotaryUtils.useCoil(this, player, world, pos, hand, side, hitX, hitY, hitZ);
 	}
 
-	//Hey you, yes you, copying that class,
-	//Please remember to call your version of this method somewhere in your ClientProxy
-	//Have a nice day ^^
+	/**
+	 * Hey you, yes you, copying that class, <br>
+	 * Please remember to call your version of this method somewhere in your ClientProxy <br>
+	 * Have a nice day ^^ <br>
+	 */
 	public void setRenderModels()
 	{
 		MotorBelt.CLOTH.model = new ModelClothMotorBelt();
 		MotorBelt.STEEL.model = new ModelSteelMotorBelt();
+		MotorBelt.RUBBER.model = new ModelClothMotorBelt();
 	}
 
 	public enum MotorBelt implements IStringSerializable
 	{
-		CLOTH("light_belts", MechanicalDevices.belt_length[0], 1, 6, MechanicalDevices.belt_max_torque[0], MechanicalDevices.belt_max_rpm[0], MechanicalDevices.belt_torque_loss[0]),
-		STEEL("heavy_belts", MechanicalDevices.belt_length[1], 1, 8, MechanicalDevices.belt_max_torque[1], MechanicalDevices.belt_max_rpm[1], MechanicalDevices.belt_torque_loss[1]);
+		CLOTH("light_belts", MechanicalDevices.belt_length[0], 1, 6, MechanicalDevices.belt_max_torque[0], MechanicalDevices.belt_torque_loss[0]),
+		STEEL("heavy_belts", MechanicalDevices.belt_length[1], 1, 8, MechanicalDevices.belt_max_torque[1], MechanicalDevices.belt_torque_loss[1]),
+		RUBBER("light_belts", MechanicalDevices.belt_length[2], 1, 6, MechanicalDevices.belt_max_torque[2], MechanicalDevices.belt_torque_loss[2]);
 
-		public ResourceLocation res;
-		public String category;
-		public int thickness;
-		public float torqueLoss;
-		public int maxTorque, maxRPM, length, width;
-		public IIMotorBeltType type;
+		/**
+		 * Motor belt equivalent of {@link WireType#getCategory()}
+		 */
+		public final String category;
+
+		/**
+		 * See {@link pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices#belt_max_torque}
+		 */
+		public final int maxTorque;
+		/**
+		 * See {@link pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices#belt_torque_loss}
+		 */
+		public final float torqueLoss;
+		/**
+		 * Length - X - maximum allowed belt length<br>
+		 * Thickness - Y - how thick is the belt, tracks are thicker than cloth belts<br>
+		 * Width - Z - width of the belt, used to get spacing between pieces in rendering
+		 */
+		public final int length, thickness, width;
+
+		public final IIMotorBeltType type;
+		public final ResourceLocation res;
 		@SideOnly(Side.CLIENT)
 		public IModelMotorBelt model;
 
-		MotorBelt(String category, int length, int thickness, int width, int maxTorque, int maxRPM, float torqueLoss)
+		MotorBelt(String category, int length, int thickness, int width, int maxTorque, float torqueLoss)
 		{
-			res = getResourceLocation(getName());
 			this.category = category;
 			this.length = length;
 			this.thickness = thickness;
 			this.maxTorque = maxTorque;
-			this.maxRPM = maxRPM;
 			this.torqueLoss = torqueLoss;
 			this.width = width;
+
+			res = getResourceLocation(getName());
 			type = new IIMotorBeltType(this);
 		}
 
 		public static String[] getNames()
 		{
-			ArrayList<String> list = new ArrayList<>();
-			String[] a = new String[list.size()];
-			for(MotorBelt belt : values())
-				list.add(belt.getName());
-			return list.toArray(a);
+			return Arrays.stream(values()).map(MotorBelt::getName).toArray(String[]::new);
 		}
 
 		private static ResourceLocation getResourceLocation(String name)

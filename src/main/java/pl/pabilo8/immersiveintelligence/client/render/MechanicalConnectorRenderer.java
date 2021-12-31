@@ -22,9 +22,9 @@ import java.util.Set;
  * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
-public class MechanicalConnectorRenderer extends TileEntitySpecialRenderer<TileEntityMechanicalConnectable>
+public class MechanicalConnectorRenderer extends TileEntitySpecialRenderer<TileEntityMechanicalConnectable> implements IReloadableModelContainer<MechanicalConnectorRenderer>
 {
-	public static HashMap<Connection, MotorBeltData> cache = new HashMap<Connection, MotorBeltData>();
+	public static HashMap<Connection, MotorBeltData> cache = new HashMap<>();
 
 	@Nullable
 	public static MotorBeltData getBeltData(Connection connection, TileEntityMechanicalConnectable start, TileEntityMechanicalConnectable end)
@@ -37,7 +37,7 @@ public class MechanicalConnectorRenderer extends TileEntitySpecialRenderer<TileE
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.color(255, 255, 255, 255);
-		GlStateManager.translate((float)x-0.5f, (float)y-0.5f, (float)z-0.5f);
+		GlStateManager.translate((float)x+0.5f, (float)y+0.5f, (float)z+0.5f);
 
 		if(te!=null)
 		{
@@ -61,5 +61,11 @@ public class MechanicalConnectorRenderer extends TileEntitySpecialRenderer<TileE
 
 		}
 		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		cache.clear();
 	}
 }

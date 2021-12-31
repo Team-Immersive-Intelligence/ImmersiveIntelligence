@@ -15,37 +15,52 @@ import static pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils.BELT_CATEG
  */
 public abstract class MotorBeltType extends WireType
 {
-	//Resource location of the motor belt texture
+	/**
+	 * @return Resource location of the motor belt texture
+	 */
 	public abstract ResourceLocation getTexture();
 
-	//Category name, similar to how wires handle it
+	/**
+	 * @return Category name, similar to how wires handle it
+	 */
 	public String getCategory()
 	{
 		return BELT_CATEGORY;
 	}
 
-	//Category name, similar to how wires handle it
+	/**
+	  @return Category name, similar to how wires handle it
+	 */
 	public abstract String getName();
 
-	//Maximum length in blocks
+	/**
+	  @return Maximum length in blocks
+	 */
 	public abstract int getLength();
 
-	//Width of the belt
+	/**
+	  @return Width of the belt
+	 */
 	public abstract int getWidth();
 
-	//Thickness of the belt
+	/**
+	  @return Thickness of the belt
+	 */
 	public abstract int getThickness();
 
-	//Maximal Torque
+	/**
+	  @return Maximal Torque
+	 */
 	public abstract int getMaxTorque();
 
-	//Maximal Rotations per Minute
-	public abstract int getMaxRPM();
-
-	//Torque loss
+	/**
+	  @return Torque loss
+	 */
 	public abstract float getTorqueLoss();
 
-
+	/**
+	 * @return Motor belt's model
+	 */
 	@SideOnly(Side.CLIENT)
 	public abstract IModelMotorBelt getModel();
 

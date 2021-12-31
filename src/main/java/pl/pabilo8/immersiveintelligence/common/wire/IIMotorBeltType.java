@@ -25,12 +25,6 @@ public class IIMotorBeltType extends MotorBeltType
 	}
 
 	@Override
-	public String getCategory()
-	{
-		return super.getCategory();
-	}
-
-	@Override
 	public ResourceLocation getTexture()
 	{
 		return type.res;
@@ -64,12 +58,6 @@ public class IIMotorBeltType extends MotorBeltType
 	public int getMaxTorque()
 	{
 		return type.maxTorque;
-	}
-
-	@Override
-	public int getMaxRPM()
-	{
-		return type.maxRPM;
 	}
 
 	@Override

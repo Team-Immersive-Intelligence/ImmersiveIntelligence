@@ -21,6 +21,7 @@ public class ModelClothMotorBelt extends ModelIIBase implements IModelMotorBelt
 
 		baseModel[0].addBox(-3F, -1F, -5F, 6, 1, 10, 0F); // Box 0
 		baseModel[0].setRotationPoint(0F, 0F, 0F);
+		baseModel[0].rotateAngleY=1.57f;
 
 		translateAll(0F, 0F, 0F);
 

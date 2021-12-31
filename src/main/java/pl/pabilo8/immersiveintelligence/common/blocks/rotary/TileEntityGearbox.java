@@ -105,7 +105,6 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 
 				if(world.getTileEntity(p)==null)
 					continue;
-
 				if(!world.getTileEntity(p).hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, f.getOpposite()))
 					continue;
 
@@ -114,9 +113,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 				if(s==SideConfig.INPUT)
 				{
 					if(rotation.getRotationSpeed()==0)
-					{
 						rotation.setRotationSpeed(energy.getOutputRotationSpeed());
-					}
 					in.add(energy);
 				}
 				else
@@ -134,9 +131,9 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 			if(out.size() > 1)
 				rotation.setTorque(rotation.getTorque()/(float)out.size());
 			float eff = RotaryUtils.getGearEffectiveness(inventory, getEfficiencyMultiplier());
-			rotation.setRotationSpeed(rotation.getRotationSpeed()*eff);
-			rotation.setTorque(rotation.getTorque()*eff);
-			RotaryUtils.damageGears(inventory, rotation);
+			float tmod = RotaryUtils.getGearTorqueRatio(inventory);
+			rotation.setRotationSpeed((rotation.getRotationSpeed()*eff)/tmod);
+			rotation.setTorque(rotation.getTorque()*eff*tmod);
 
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
 		}
@@ -146,13 +143,11 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 	public void updateRotationStorage(float rpm, float torque, int part)
 	{
 		if(world.isRemote)
-		{
 			if(part==0)
 			{
 				rotation.setRotationSpeed(rpm);
 				rotation.setTorque(torque);
 			}
-		}
 	}
 
 	@Override

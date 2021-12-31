@@ -38,6 +38,7 @@ public class GuiGearbox extends GuiIEContainerBase
 	{
 		Utils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".gearbox.wooden_gearbox.name"), 0, 0, getXSize(), 6, 0xd99747);
 		fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier())*100)+"%", 76, 47, 0xd99747);
+		fontRenderer.drawString(String.format("%.2f", RotaryUtils.getGearTorqueRatio(tile.getInventory())), 76, 59, 0xd99747);
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class GuiGearbox extends GuiIEContainerBase
 		ClientUtils.bindTexture(texture_skycrate_station);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		RotaryUtils.renderEnergyBars(guiLeft+148, guiTop+20, tile.rotation, tile.getInventory());
+		RotaryUtils.renderEnergyBars(guiLeft+148, guiTop+20, tile.rotation,0,100);
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 
 /**
  * @author Pabilo8
@@ -13,9 +15,9 @@ public abstract class DirectionTransformer
 {
 	public abstract void transformTileDirection(EnumFacing facing);
 
-	public void startTileModel(double x, double y, double z, String texture)
+	public void startTileModel(double x, double y, double z, ResourceLocation texture)
 	{
-		ClientUtils.bindTexture(texture);
+		Utils.bindTexture(texture);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -25,7 +27,13 @@ public abstract class DirectionTransformer
 
 	}
 
-	public void startItemModel(double x, double y, double z, String texture)
+	@Deprecated
+	public void startTileModel(double x, double y, double z, String texture)
+	{
+		startTileModel(x, y, z, new ResourceLocation(texture));
+	}
+
+	public void startItemModel(double x, double y, double z, ResourceLocation texture)
 	{
 
 		GlStateManager.pushMatrix();
@@ -33,9 +41,15 @@ public abstract class DirectionTransformer
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 
-		ClientUtils.bindTexture(texture);
+		Utils.bindTexture(texture);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
+	}
+
+	@Deprecated
+	public void startItemModel(double x, double y, double z, String texture)
+	{
+		startItemModel(x, y, z, new ResourceLocation(texture));
 	}
 
 	public void endModel()

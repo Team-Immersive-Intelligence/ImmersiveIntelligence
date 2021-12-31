@@ -45,5 +45,5 @@ public interface IMotorBeltConnector
 	EnumFacing.Axis getConnectionAxis();
 
 	//Radius of the conveyor in 1/16 of a block
-	int getRadius();
+	float getRadius();
 }

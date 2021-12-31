@@ -188,8 +188,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 				b = true;
 			if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
 			{
-				if(world.getTotalWorldTime()%20==0)
-					RotaryUtils.damageGears(inventory, rotation);
+				// TODO: 26.12.2021 investigate
 				if(b)
 				{
 					rotation.grow(0, 0, 0.98f);
@@ -329,7 +328,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			if(animation > 1)
 			{
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier());
+					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(),3);
 				else
 				{
 					switch(animation)

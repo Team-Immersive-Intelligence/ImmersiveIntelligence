@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.*;
@@ -35,7 +34,6 @@ import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IIDamageSources;
@@ -94,8 +92,8 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		if(!descPacket)
 		{
 			nbt.setTag("inventory", Utils.writeInventory(inventory));
-			nbt.setInteger("processTime",processTime);
-			nbt.setInteger("processTimeMax",processTimeMax);
+			nbt.setInteger("processTime", processTime);
+			nbt.setInteger("processTimeMax", processTimeMax);
 		}
 
 	}
@@ -174,8 +172,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 				b = true;
 			if((rotation.getTorque() > 0||rotation.getRotationSpeed() > 0))
 			{
-				if(world.getTotalWorldTime()%20==0)
-					RotaryUtils.damageGears(inventory, rotation);
+				// TODO: 26.12.2021 investigate
 				if(b)
 				{
 					rotation.grow(0, 0, 0.98f);
@@ -201,15 +198,15 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 				}
 			}
 
-			if(rotation.getRotationSpeed()>0&&inventory.get(1).getItem() instanceof ISawblade&&(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360,0,1))==0))
+			if(rotation.getRotationSpeed() > 0&&inventory.get(1).getItem() instanceof ISawblade&&(world.getTotalWorldTime()%Math.ceil(4/MathHelper.clamp(rotation.getRotationSpeed()/360, 0, 1))==0))
 			{
 				ISawblade sawblade = (ISawblade)inventory.get(1).getItem();
 				int hardness = sawblade.getHardness(inventory.get(1));
 				Vec3i v = facing.getDirectionVec();
-				List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class,new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5,v.getY()*0.5,v.getZ()*0.5));
-				for(EntityLivingBase l: entities)
+				List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(getBlockPosForPos(2).offset(EnumFacing.UP)).offset(v.getX()*0.5, v.getY()*0.5, v.getZ()*0.5));
+				for(EntityLivingBase l : entities)
 				{
-					l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE,hardness);
+					l.attackEntityFrom(IIDamageSources.SAWMILL_DAMAGE, hardness);
 				}
 			}
 
@@ -465,7 +462,9 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@Override
 	public void doGraphicalUpdates(int slot)
 	{
-
+		//unstuck the process
+		if(processQueue.isEmpty())
+			processTime = 0;
 	}
 
 	public void sendUpdate(int id)
@@ -511,7 +510,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@Override
 	public SawmillRecipe findRecipeForInsertion(ItemStack inserting)
 	{
-		return SawmillRecipe.findRecipe(inserting);
+		return null;
 	}
 
 	@Override
@@ -565,7 +564,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		{
 			TileEntitySawmill master = master();
 			if(pos==15)
-			return (T)master.insertionHandler;
+				return (T)master.insertionHandler;
 			else if(pos==2||pos==6)
 				return (T)master.dustExtractionHandler;
 		}
@@ -622,27 +621,27 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		else if(pos==11)
 		{
 			aabb.add(new AxisAlignedBB(0, 0, 0, 1, 0.0625, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-			EnumFacing ff = mirrored?facing.rotateY():facing.rotateYCCW();
+			EnumFacing ff = mirrored?facing.rotateY(): facing.rotateYCCW();
 			switch(facing)
 			{
 				case NORTH:
 					aabb.add(new AxisAlignedBB(0, 0.0625, 0.5-0.0625, 1, 0.1875, 0.75)
-							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.expand(ff.getFrontOffsetX(), 0, ff.getFrontOffsetZ())
 							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 					break;
 				case SOUTH:
 					aabb.add(new AxisAlignedBB(0, 0.0625, 0.25, 1, 0.1875, 0.5+0.0625)
-							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.expand(ff.getFrontOffsetX(), 0, ff.getFrontOffsetZ())
 							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 					break;
 				case EAST:
 					aabb.add(new AxisAlignedBB(0.25, 0.0625, 0, 0.5+0.0625, 0.1875, 1)
-							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.expand(ff.getFrontOffsetX(), 0, ff.getFrontOffsetZ())
 							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 					break;
 				case WEST:
 					aabb.add(new AxisAlignedBB(0.5-0.0625, 0.0625, 0, 0.75, 0.1875, 1)
-							.expand(ff.getFrontOffsetX(),0,ff.getFrontOffsetZ())
+							.expand(ff.getFrontOffsetX(), 0, ff.getFrontOffsetZ())
 							.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 					break;
 			}
@@ -690,9 +689,9 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 						break;
 				}
 			}
-			int pp=pos;
+			int pp = pos;
 			if(mirrored)
-				pp=pos==3?1:(pos==1?3:pos==7?5:7);
+				pp = pos==3?1: (pos==1?3: pos==7?5: 7);
 
 			if(pp==3)
 			{

@@ -1399,42 +1399,23 @@ public class Config
 
 		public static class MechanicalDevices
 		{
-			@Comment({"Minimal RPM required by a gear to work.", GEARS})
-			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] gear_min_rpm = new int[]{10, 40, 120, 360, 720};
-
-			@Comment({"Gears will break if RPM is higher than this value.", GEARS})
-			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] gear_max_rpm = new int[]{60, 200, 240, 800, 2400};
-
-			@Comment({"Gears will break if Torque is higher than this value.", GEARS})
-			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] gear_max_torque = new int[]{6, 24, 32, 256, 512};
-
-			@Comment({"If enabled, gears will be damaged inside machines and durability will be set according to the setting below. Disabled by default."})
-			public static boolean gear_durability_enabled = false;
-
-			//20 mins, 40 mins 1h, 2h, 4h
-			@Comment({"Durability of the gear (decreases by 1 every 20 ticks (1 second)).", GEARS})
-			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] gear_max_durability = new int[]{2400, 4800, 7200, 14400, 28800};
-
-
-			@Comment({"Belts will break if RPM is higher than this value.", BELTS})
-			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] belt_max_rpm = new int[]{960, 3600};
+			@Comment({"The modifier of internal torque of a machine using this gear.", GEARS})
+			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
+			public static float[] gear_torque_modifier = new float[]{0.25f, 0.5f, 1f, 1.5f, 2f};
 
 			@Comment({"Belts will break if Torque is higher than this value.", BELTS})
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] belt_max_torque = new int[]{48, 640};
+			public static int[] belt_max_torque = new int[]{50, 200, 100};
 
 			@Comment({"Torque loss, later multiplied by belt length.", BELTS})
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
-			public static float[] belt_torque_loss = new float[]{0.05f, 0.1f};
+			public static float[] belt_torque_loss = new float[]{0.05f, 0.1f, 0.01f};
 
 			@Comment({"Max length of the belt, works exactly like wires (measured in blocks).", BELTS})
 			@Mapped(mapClass = Config.class, mapName = "manual_intA")
-			public static int[] belt_length = new int[]{8, 16};
+			public static int[] belt_length = new int[]{8, 16, 16};
+
+			// TODO: 26.12.2021 inspect
 
 			@Comment({"Immersive Flux to Rotary Flux conversion ratio (default 4 RoF = 1 IF)."})
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")

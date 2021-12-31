@@ -18,7 +18,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 {
 	public EnumFacing facing = EnumFacing.NORTH;
-	private int gridPower = 0;
 
 	@Override
 	public EnumFacing getFacing()
@@ -74,7 +73,6 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		EnumFacing side = facing.getOpposite();
 		return new Vec3d(0.5, 0.5, 0.5);
 	}
 
@@ -145,9 +143,9 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 	}
 
 	@Override
-	public int getRadius()
+	public float getRadius()
 	{
-		return 4;
+		return 6;
 		//Try it if you want ^^
 		//return (int)(world.getTotalWorldTime()%40>20?(20-(world.getTotalWorldTime()%20)):(world.getTotalWorldTime()%20));
 	}

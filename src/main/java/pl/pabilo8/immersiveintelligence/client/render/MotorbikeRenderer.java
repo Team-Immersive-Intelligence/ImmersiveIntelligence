@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.render;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
@@ -11,6 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltData;
+import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelMotorbike;
 import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelPanzer;
@@ -187,6 +187,11 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		GlStateManager.popMatrix();
 		GlStateManager.disableBlend();
 		GlStateManager.disableRescaleNormal();
+
+		/*GlStateManager.translate(0,4,0);
+		double world_rpm = (totalWorldTime%(double)RotaryUtils.getRPMMax())/(double)RotaryUtils.getRPMMax();
+		RotaryUtils.tessellateMotorBelt(tracks,8*acceleration,world_rpm);*/
+
 		GlStateManager.popMatrix();
 
 /*
@@ -311,8 +316,20 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 	public void reloadModels()
 	{
 		model = new ModelMotorbike();
-		modelPanzer = new ModelPanzer();
-		tracks = new MotorBeltData(
+		tracks = MotorBeltData.createBeltData(
+				new Vec3d[]{
+						new Vec3d(0,0,0),
+						new Vec3d(0,0,3),
+						new Vec3d(0,-2,1.5)
+				},
+				new float[]{
+						8,8,8
+				},
+				MotorBelt.STEEL.type
+		);
+
+		/*modelPanzer = new ModelPanzer();
+		(
 				MotorBelt.STEEL.model,
 				5,
 				6,
@@ -345,7 +362,8 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 				6,
 				8,
 				8.0f
-		);
+		)
+		 */
 
 	}
 

@@ -26,6 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
@@ -365,8 +366,7 @@ public class IIRecipes
 
 						if(!stacks.isEmpty())
 						{
-							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), 16, 200, 1);
-
+							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), Sawmill.torqueMin+2, 200, 1);
 						}
 
 						//ImmersiveIntelligence.logger.info("Added recipe for "+stack.getDisplayName()+" x"+stack.getCount()+" -> "+out.getDisplayName()+" x"+out.getCount());
@@ -378,8 +378,8 @@ public class IIRecipes
 		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood", 1), new IngredientStack("plankWood", 2), 3192);
 
 		//Planks to sticks
-		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), 8, 100, 1);
-		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), new IngredientStack("plankTreatedWood"), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), 8, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"),  Sawmill.torqueMin, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), new IngredientStack("plankTreatedWood"), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), Sawmill.torqueMin, 100, 1);
 
 		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood"), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
 		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood_treated", 1), new IngredientStack("pulpWood"), new FluidStack(IEContent.fluidCreosote, 1000));
