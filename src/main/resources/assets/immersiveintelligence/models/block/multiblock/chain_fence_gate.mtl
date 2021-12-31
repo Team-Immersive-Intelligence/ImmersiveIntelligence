@@ -1,0 +1,6 @@
+# Made in Blockbench 4.0.5
+newmtl m_0
+map_Kd immersiveintelligence:blocks/multiblock/wooden_gate
+newmtl m_1
+map_Kd immersiveintelligence:blocks/fortification/wooden_chain_fence
+newmtl none

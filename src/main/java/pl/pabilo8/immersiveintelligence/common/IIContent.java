@@ -23,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.fortification.BlockIIMetal
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.BlockIIMetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.BlockIIWoodenFortification;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.BlockIIFenceGateMultiblock;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.BlockIIMetalMultiblock1;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
@@ -33,10 +34,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDe
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIISandbags;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIMineSign;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLeaves;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberSapling;
+import pl.pabilo8.immersiveintelligence.common.blocks.wooden.*;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.*;
 import pl.pabilo8.immersiveintelligence.common.items.armor.*;
@@ -71,9 +69,12 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader"); //allows to use belt fed upgrade for mg
 
 	public static final MachineUpgrade UPGRADE_UNPACKER_CONVERSION = CommonProxy.createMachineUpgrade("unpacker_conversion"); //converts a packer to an unpacker
-	public static final MachineUpgrade UPGRADE_PACKER_CONVERSION = CommonProxy.createMachineUpgrade("packer_conversion"); //converts an unpacker to a packer
+	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
+	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy"); //allows charging items with IF
 
 	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators"); //allows the radar to detect radio signal emitters and send their positions
+
+	public static final MachineUpgrade UPGRADE_CORE_FILLER = CommonProxy.createMachineUpgrade("core_filler"); //changes the projectile workshop to *fill* projectiles
 
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
@@ -172,6 +173,7 @@ public class IIContent
 	public static BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();
 	public static BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
 	public static BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
+	public static BlockIICharredLog blockCharredLog = new BlockIICharredLog();
 
 	public static BlockIIOre blockOre = new BlockIIOre();
 	public static BlockIIBase<IIBlockTypes_Metal> blockSheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
@@ -201,6 +203,7 @@ public class IIContent
 	public static BlockIITellermine blockTellermine = new BlockIITellermine();
 	public static BlockIIRadioExplosives blockRadioExplosives = new BlockIIRadioExplosives();
 	public static ItemIINavalMine itemNavalMine = new ItemIINavalMine();
+	public static BlockIITripwireConnector blockTripwireConnector = new BlockIITripwireConnector();
 
 	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
 	public static BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();
@@ -210,6 +213,7 @@ public class IIContent
 
 	public static BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
 	public static BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
+	public static BlockIIFenceGateMultiblock blockFenceGateMultiblock = new BlockIIFenceGateMultiblock();
 
 	public static BlockIIFluid blockFluidInkBlack;
 	public static BlockIIFluid blockFluidInkCyan;
@@ -227,6 +231,7 @@ public class IIContent
 	public static BlockIIFluid blockGasOxygen;
 	public static BlockIIFluid blockGasChlorine;
 	public static BlockIIFluid blockGasCO2;
+	public static BlockIIFluid blockGasCO;
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 
@@ -244,6 +249,7 @@ public class IIContent
 	public static Fluid gasOxygen;
 	public static Fluid gasChlorine;
 	public static Fluid gasCO2;
+	public static Fluid gasCO;
 	public static Fluid gasMustardGas;
 	public static Fluid fluidAmmonia;
 	public static Fluid fluidMethanol;
@@ -265,6 +271,7 @@ public class IIContent
 		IIContent.gasHydrogen = makeFluid("hydrogen", -1000+100, 88).setGaseous(true);
 		IIContent.gasOxygen = makeFluid("oxygen", -1000+200, 204).setGaseous(true);
 		IIContent.gasCO2 = makeFluid("carbon_dioxide", -1000+100, 147).setGaseous(true);
+		IIContent.gasCO = makeFluid("carbon_monoxide", -1000+145, 166).setGaseous(true);
 		IIContent.gasChlorine = makeFluid("chlorine", -1000+100, 132).setGaseous(true);
 		IIContent.fluidAmmonia = makeFluid("ammonia", 771, 1007, "rdx_fluids/");
 		IIContent.fluidMethanol = makeFluid("methanol", 792, 553, "rdx_fluids/");
@@ -292,6 +299,8 @@ public class IIContent
 		IIContent.blockGasChlorine = new BlockIIFluid("chlorine", IIContent.gasChlorine, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
 		IIContent.blockGasCO2 = new BlockIIFluid("carbon_dioxide", IIContent.gasCO2, Material.WATER)
+				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+		IIContent.blockGasCO = new BlockIIFluid("carbon_oxide", IIContent.gasCO, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasHydrogen = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));

@@ -1,0 +1,211 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=wooden": [
+      {
+        "model": "immersiveintelligence:multiblock/fence_gate.obj",
+        "transform": {
+          "scale": 0.1875,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0,
+            -0.25,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=wooden_chain": [
+      {
+        "model": "immersiveintelligence:multiblock/chain_fence_gate.obj",
+        "transform": {
+          "scale": 0.1875,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0,
+            -0.25,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=steel": [
+      {
+        "model": "immersiveintelligence:multiblock/fence_gate.obj",
+        "transform": {
+          "scale": 0.1875,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0,
+            -0.25,
+            0
+          ]
+        },
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/steel_gate"
+        }
+      }
+    ],
+    "inventory,type=steel_chain": [
+      {
+        "model": "immersiveintelligence:multiblock/chain_fence_gate.obj",
+        "transform": {
+          "scale": 0.1875,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0,
+            -0.25,
+            0
+          ]
+        },
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/steel_gate",
+          "#m_1": "immersiveintelligence:blocks/fortification/steel_chain_fence"
+        }
+      }
+    ],
+    "inventory,type=aluminium": [
+      {
+        "model": "immersiveintelligence:multiblock/fence_gate.obj",
+        "transform": {
+          "scale": 0.1875,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0,
+            -0.25,
+            0
+          ]
+        },
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/aluminium_gate"
+        }
+      }
+    ],
+    "inventory,type=aluminium_chain": [
+      {
+        "model": "immersiveintelligence:multiblock/chain_fence_gate.obj",
+        "transform": {
+          "scale": 0.1875,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0,
+            -0.25,
+            0
+          ]
+        },
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/aluminium_gate",
+          "#m_1": "immersiveintelligence:blocks/fortification/aluminium_chain_fence"
+        }
+      }
+    ],
+    "type": {
+      "wooden": {
+        "model": "immersiveintelligence:multiblock/fence_gate.obj"
+      },
+      "wooden_chain": {
+        "model": "immersiveintelligence:multiblock/chain_fence_gate.obj"
+      },
+      "steel": {
+        "model": "immersiveintelligence:multiblock/fence_gate.obj",
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/steel_gate"
+        }
+      },
+      "steel_chain": {
+        "model": "immersiveintelligence:multiblock/chain_fence_gate.obj",
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/steel_gate",
+          "#m_1": "immersiveintelligence:blocks/fortification/steel_chain_fence"
+        }
+      },
+      "aluminium": {
+        "model": "immersiveintelligence:multiblock/fence_gate.obj",
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/aluminium_gate"
+        }
+      },
+      "aluminium_chain": {
+        "model": "immersiveintelligence:multiblock/chain_fence_gate.obj",
+        "textures": {
+          "#m_0": "immersiveintelligence:blocks/multiblock/aluminium_gate",
+          "#m_1": "immersiveintelligence:blocks/fortification/aluminium_chain_fence"
+        }
+      }
+    },
+    "facing": {
+      "north": {},
+      "south": {},
+      "west": {},
+      "east": {}
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "true": {
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    }
+  }
+}
