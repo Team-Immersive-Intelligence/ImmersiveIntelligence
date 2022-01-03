@@ -378,7 +378,7 @@ public class IIRecipes
 		CrusherRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood", 1), new IngredientStack("plankWood", 2), 3192);
 
 		//Planks to sticks
-		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"),  Sawmill.torqueMin, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), Sawmill.torqueMin, 100, 1);
 		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), new IngredientStack("plankTreatedWood"), Utils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), Sawmill.torqueMin, 100, 1);
 
 		BottlingMachineRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood"), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
@@ -883,16 +883,14 @@ public class IIRecipes
 						stack.deserializeNBT(core.serializeNBT());
 						return stack;
 					},
-					new IngredientStack(bullet.getBulletCore("coreBrass", IIContent.itemAmmoArtillery.getAllowedCoreTypes()[0].getName())),
+					new IngredientStack(bullet.getBulletCore("coreBrass", bullet.getAllowedCoreTypes()[0].getName())),
 					new IngredientStack(casingStack).setUseNBT(true),
 					(int)(128*bullet.getCaliber()),
 					(int)(240+(20*bullet.getCaliber()))
 			);
 		}
 
-		for(Item item : new Item[]{IIContent.blockTripmine.bullet, IIContent.blockTellermine.bullet, IIContent.itemNavalMine,
-				IIContent.itemGrenade, IIContent.itemRailgunGrenade
-		})
+		for(Item item : new Item[]{IIContent.blockTripmine.bullet, IIContent.blockTellermine.bullet, IIContent.blockRadioExplosives.bullet, IIContent.itemNavalMine})
 		{
 			assert item!=null;
 			IBullet bullet = (IBullet)item;
@@ -903,12 +901,32 @@ public class IIRecipes
 						stack.deserializeNBT(core.serializeNBT());
 						return stack;
 					},
-					new IngredientStack(bullet.getBulletCore("coreBrass", IIContent.itemAmmoArtillery.getAllowedCoreTypes()[0].getName())),
+					new IngredientStack(bullet.getBulletCore("coreBrass", bullet.getAllowedCoreTypes()[0].getName())),
 					new IngredientStack(bullet.getCasingStack(1)).setUseNBT(true),
-					(int)(128*bullet.getCaliber()),
+					(int)(256*bullet.getCaliber()),
 					480
 			);
 		}
+
+		AmmunitionWorkshopRecipe.addRecipe(
+				(core, casing) -> {
+					ItemStack stack = new ItemStack(IIContent.itemGrenade, 1, IIBlockTypes_Mine.MAIN.getMeta());
+					stack.deserializeNBT(core.serializeNBT());
+					return stack;
+				},
+				new IngredientStack(IIContent.itemGrenade.getBulletCore("coreBrass", IIContent.itemGrenade.getAllowedCoreTypes()[0].getName())),
+				new IngredientStack("stickTreatedWood"), 600, 480
+		);
+
+		AmmunitionWorkshopRecipe.addRecipe(
+				(core, casing) -> {
+					ItemStack stack = new ItemStack(IIContent.itemGrenade, 1, IIBlockTypes_Mine.MAIN.getMeta());
+					stack.deserializeNBT(core.serializeNBT());
+					return stack;
+				},
+				new IngredientStack(IIContent.itemGrenade.getBulletCore("coreBrass", IIContent.itemGrenade.getAllowedCoreTypes()[0].getName())),
+				new IngredientStack("stickSteel"), 1200, 540
+		);
 	}
 
 	public static void addRubberRecipes()

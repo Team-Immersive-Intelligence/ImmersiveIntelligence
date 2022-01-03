@@ -5,8 +5,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
 
@@ -82,7 +84,7 @@ public class BlockIITellermine extends BlockIIMine
 		@Override
 		public ItemStack getCasingStack(int amount)
 		{
-			return ItemStack.EMPTY;
+			return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"tellermine",amount);
 		}
 	}
 }

@@ -16,8 +16,10 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -124,7 +126,7 @@ public class BlockIITripmine extends BlockIIMine
 		@Override
 		public ItemStack getCasingStack(int amount)
 		{
-			return ItemStack.EMPTY;
+			return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"tripmine",amount);
 		}
 	}
 }

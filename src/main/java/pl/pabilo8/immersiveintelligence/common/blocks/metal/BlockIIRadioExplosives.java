@@ -20,9 +20,11 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -133,7 +135,7 @@ public class BlockIIRadioExplosives extends BlockIIMine
 		@Override
 		public ItemStack getCasingStack(int amount)
 		{
-			return ItemStack.EMPTY;
+			return Utils.getStackWithMetaName(IIContent.itemAmmoCasing,"radio_explosives",amount);
 		}
 	}
 }
