@@ -1,8 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
@@ -43,12 +45,24 @@ public abstract class IICompatModule
 				try
 				{
 					Boolean enabled = IIConfig.compat.get(e.getKey());
+
+					ImmersiveIntelligence.logger.info(e.getKey()+Utils.getModVersion(e.getKey()));
+
+					if(moduleMinModVersions.containsKey(e.getKey())&&
+							new DefaultArtifactVersion(moduleMinModVersions.get(e.getKey()))
+									.compareTo(new DefaultArtifactVersion(Utils.getModVersion(e.getKey()))) >= 0
+					)
+					{
+						ImmersiveIntelligence.logger.info("Consider updating %s, II adds additional compat for the new version", e.getKey());
+						continue;
+					}
 					if(enabled==null||!enabled)
 						continue;
 					IICompatModule m = e.getValue().newInstance();
 					modules.add(m);
 					m.preInit();
-				} catch(Exception exception)
+				}
+				catch(Exception exception)
 				{
 					ImmersiveIntelligence.logger.error("Compat module for "+e.getKey()+" could not be preInitialized. Report this and include the error message below!", exception);
 				}
@@ -60,7 +74,8 @@ public abstract class IICompatModule
 			try
 			{
 				compat.registerRecipes();
-			} catch(Exception exception)
+			}
+			catch(Exception exception)
 			{
 				ImmersiveIntelligence.logger.error("Compat module for "+compat+" could not register recipes. Report this and include the error message below!", exception);
 			}
@@ -72,7 +87,8 @@ public abstract class IICompatModule
 			try
 			{
 				compat.init();
-			} catch(Exception exception)
+			}
+			catch(Exception exception)
 			{
 				ImmersiveIntelligence.logger.error("Compat module for "+compat+" could not be initialized. Report this and include the error message below!", exception);
 			}
@@ -84,7 +100,8 @@ public abstract class IICompatModule
 			try
 			{
 				compat.postInit();
-			} catch(Exception exception)
+			}
+			catch(Exception exception)
 			{
 				ImmersiveIntelligence.logger.error("Compat module for "+compat+" could not be postInitialized. Report this and include the error message below!", exception);
 			}
@@ -103,7 +120,8 @@ public abstract class IICompatModule
 				{
 					compat.loadComplete();
 
-				} catch(Exception exception)
+				}
+				catch(Exception exception)
 				{
 					ImmersiveIntelligence.logger.error("Compat module for "+compat+" could not be initialized. Report this and include the error message below!", exception);
 				}
