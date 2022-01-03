@@ -9,6 +9,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleRedstone;
@@ -39,7 +40,6 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Filler;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustStack;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
-import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
 import javax.annotation.Nullable;
@@ -56,6 +56,10 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 	public DustStack dustStorage = DustStack.getEmptyStack();
 	public final int dustCapacity = Filler.dustCapacity;
 	NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
+
+	IItemHandler insertionHandlerDust = new IEInventoryHandler(1, this, 0, true, false);
+	IItemHandler insertionHandlerContainer = new MultiblockInventoryHandler_DirectProcessing(this);
+
 
 	public TileEntityFiller()
 	{
@@ -119,6 +123,10 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
+
+		if(isDummy())
+			return;
+
 		if(!descPacket)
 		{
 			dustStorage = new DustStack(nbt.getCompoundTag("dustStorage"));
@@ -130,6 +138,10 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
+
+		if(isDummy())
+			return;
+
 		if(!descPacket)
 		{
 			nbt.setTag("dustStorage", dustStorage.serializeNBT());
@@ -141,6 +153,10 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 	public void receiveMessageFromServer(NBTTagCompound message)
 	{
 		super.receiveMessageFromServer(message);
+
+		if(isDummy())
+			return;
+
 		if(message.hasKey("dustStorage"))
 			dustStorage = new DustStack(message.getCompoundTag("dustStorage"));
 		if(message.hasKey("inventory"))
@@ -318,7 +334,11 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 
 			if(pos==24)
 			{
+				stack = master.insertionHandlerDust.insertItem(0, stack, false);
 
+				((EntityItem)entity).setItem(stack);
+				if(stack.getCount() <= 0)
+					entity.setDead();
 			}
 			else if(pos==9)
 			{
@@ -370,12 +390,12 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 			TileEntityFiller master = master();
 			if(master==null)
 				return false;
+			if(pos==24&&facing==EnumFacing.UP)
+				return true;
 			return pos==9&&facing==getOutFacing().getOpposite();
 		}
 		return super.hasCapability(capability, facing);
 	}
-
-	IItemHandler insertionHandler = new MultiblockInventoryHandler_DirectProcessing(this);
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
@@ -385,8 +405,10 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 			TileEntityFiller master = master();
 			if(master==null)
 				return null;
+			if(pos==24&&facing==EnumFacing.UP)
+				return (T)master.insertionHandlerDust;
 			if(pos==9&&facing==getOutFacing().getOpposite())
-				return (T)master.insertionHandler;
+				return (T)master.insertionHandlerContainer;
 			return null;
 		}
 		return super.getCapability(capability, facing);
@@ -425,7 +447,7 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 
 	private float[] getCurrentProcessColor(FillerRecipe recipe)
 	{
-		return pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(DustUtils.getColor(processQueue.get(0).recipe.dust));
+		return pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(DustUtils.getColor(recipe.dust));
 	}
 
 	@Override
@@ -483,13 +505,64 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 				break;
 			case 24:
 			{
-				EnumFacing f = mirrored?facing.getOpposite(): facing;
-				switch(f)
-				{
-					case NORTH:
-						break;
-					case SOUTH:
-						list.add(new AxisAlignedBB(0, 0, 0.0625, 0.5, 0.0625, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				Vec3d d = new Vec3d((mirrored?facing.rotateYCCW(): facing.rotateY()).getDirectionVec());
+				Vec3d z = new Vec3d(facing.getDirectionVec());
+				Vec3d zz = z.scale(0.5f);
+				Vec3d zzF = z.scale(0.5f-0.0625f);
+				Vec3d dd = d.scale(0.5f-0.0625f);
+				Vec3d ddF = d.scale(0.3125f-0.0625f);
+				Vec3d ddFF = d.scale(0.125f);
+
+				Vec3d zzz = z.scale(0.0625f);
+				Vec3d ddd = d.scale(0.0625f);
+
+
+				list.add(new AxisAlignedBB(0.5, 0, 0.5, 0.5, 1, 0.5)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d.scale(0.5f-0.0625f))
+						.grow(zz.x,zz.y,zz.z)
+						.expand(ddd.x,ddd.y,ddd.z)
+				);
+
+				list.add(new AxisAlignedBB(0.5, 0.375, 0.5, 0.5, 1, 0.5)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d.scale(-0.5+0.0625f))
+						.grow(zzF.x,zzF.y,zzF.z)
+						.expand(ddd.x,ddd.y,ddd.z)
+				);
+
+				list.add(new AxisAlignedBB(0.5, 0.375, 0.5, 0.5, 1, 0.5)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(z.scale(0.5f-0.0625f))
+						.grow(dd.x,dd.y,dd.z)
+						.expand(zzz.x,zzz.y,zzz.z)
+				);
+
+				list.add(new AxisAlignedBB(0.5, 0.375, 0.5, 0.5, 1, 0.5)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(z.scale(-0.5f))
+						.grow(dd.x,dd.y,dd.z)
+						.expand(zzz.x,zzz.y,zzz.z)
+				);
+
+				list.add(new AxisAlignedBB(0.5, 0, 0.5, 0.5, 0.375, 0.5)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d.scale(0.125f))
+						.grow(zz.x,zz.y,zz.z)
+						.grow(ddF.x,ddF.y,ddF.z)
+						.expand(ddd.x,ddd.y,ddd.z)
+				);
+
+				list.add(new AxisAlignedBB(0.5, 0.125f, 0.5, 0.5, 0.375, 0.5)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d.scale(-0.25f))
+						.grow(zz.x,zz.y,zz.z)
+						.grow(ddFF.x,ddFF.y,ddFF.z)
+				);
+
+
+				/*
+				list.add(new AxisAlignedBB(0, 0, 0.0625, 0.5, 0.0625, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 						list.add(new AxisAlignedBB(0, 0, 0, 0.5, 1, 0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 						list.add(new AxisAlignedBB(0, 0, 1-0.0625, 0.5, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
@@ -501,19 +574,61 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 						list.add(new AxisAlignedBB(1-0.125, 0.375, 0.0625, 1-0.0625, 1, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 						list.add(new AxisAlignedBB(1-0.5, 0, 0.0625, 1-0.0625, 0.375, 1-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				 */
 
-						break;
-					case EAST:
-						break;
-					case WEST:
-						break;
-				}
 			}
 			break;
 			case 21:
-				break;
+			{
+				Vec3d d = new Vec3d((mirrored?facing.rotateYCCW(): facing.rotateY()).getDirectionVec()).scale(0.0625f);
+				list.add(new AxisAlignedBB(0.125, 0, 0.125, 0.75+0.125, 0.625, 0.75+0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d)
+						.expand(d.x, d.y, d.z)
+				);
+
+				list.add(new AxisAlignedBB(0.5, 0.625, 0.5, 0.5, 1, 0.5)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.grow(0.25, 0, 0.25)
+						//.offset(d)
+						//.expand(d.x, d.y, d.z)
+				);
+			}
+			break;
 			case 12:
-				break;
+			{
+				Vec3d d = new Vec3d((mirrored?facing.rotateYCCW(): facing.rotateY()).getDirectionVec());
+				Vec3d dd = d.scale(0.065f);
+				Vec3d ddd = d.scale(0.125f);
+				Vec3d z = new Vec3d(facing.getDirectionVec());
+				list.add(new AxisAlignedBB(0.5, 0, 0.5, 0.5, 1, 0.5)
+						.grow(0.125, 0, 0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d.scale(0.25f+0.125f))
+						.offset(z.scale(0.125f+0.0625f))
+				);
+				list.add(new AxisAlignedBB(0.5, 0, 0.5, 0.5, 1, 0.5)
+						.grow(0.125, 0, 0.125)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d.scale(0.25f+0.125f))
+						.offset(z.scale(-(0.125f+0.0625f)))
+				);
+
+				list.add(new AxisAlignedBB(0.5, 0.75, 0.5, 0.5, 1, 0.5)
+						.grow(0.125, 0, 0.125)
+						.expand(ddd.x, ddd.y, ddd.z)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(z.scale(0.125f+0.0625f))
+				);
+				list.add(new AxisAlignedBB(0.5, 0.75, 0.5, 0.5, 1, 0.5)
+						.grow(0.125, 0, 0.125)
+						.expand(dd.x, dd.y, dd.z)
+						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+						.offset(d.scale(0.0625f))
+						.offset(z.scale(-(0.125f+0.0625f)))
+				);
+			}
+			break;
 			default:
 				list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				break;

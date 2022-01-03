@@ -40,7 +40,7 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+1, (float)y-2, (float)z+2);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			float ff = ((te.getWorld().getTotalWorldTime()+partialTicks)%40)/40f;
+			float ff = ((te.getWorld().getTotalWorldTime())%40)/40f+(partialTicks/40f);
 			double[] shift = new double[te.processQueue.size()];
 			double[] fill = new double[te.processQueue.size()];
 			for(int i = 0; i < shift.length; i++)
