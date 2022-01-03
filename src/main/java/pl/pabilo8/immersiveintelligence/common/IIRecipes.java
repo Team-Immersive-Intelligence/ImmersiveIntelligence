@@ -243,11 +243,14 @@ public class IIRecipes
 		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "light_artillery_6bcal", 1),
 				new IngredientStack("plateSteel", 3), Utils.getStackWithMetaName(IIContent.itemPressMold, "light_howitzer"), 2200);
 
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "autocannon_3bcal", 1),
+				new IngredientStack("ingotBrass",2), Utils.getStackWithMetaName(IIContent.itemPressMold, "autocannon"), 1600);
+
 		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "mg_2bcal", 1),
 				new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "machinegun"), 1600);
 		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "stg_1bcal", 1),
 				new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "assault_rifle"), 1400);
-		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "submachinegun_1bcal", 1),
+		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "smg_1bcal", 1),
 				new IngredientStack("ingotBrass"), Utils.getStackWithMetaName(IIContent.itemPressMold, "submachinegun"), 1200);
 
 		MetalPressRecipe.addRecipe(Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "naval_mine", 1),
