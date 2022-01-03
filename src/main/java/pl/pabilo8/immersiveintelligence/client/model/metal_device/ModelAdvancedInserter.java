@@ -1,8 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
@@ -11,14 +8,13 @@ import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelAdvancedInserter extends ModelIIBase
+public class ModelAdvancedInserter extends ModelInserter
 {
-	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterItemPicker1, inserterItemPicker2, inserterOutput, inserterInput;
-	int textureX = 64;
-	int textureY = 64;
-
 	public ModelAdvancedInserter() //Same as Filename
 	{
+		textureX = 64;
+		textureY = 64;
+
 		baseModel = new ModelRendererTurbo[3];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // BaseBox
 		baseModel[1] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // BaseBoxTop
@@ -152,62 +148,17 @@ public class ModelAdvancedInserter extends ModelIIBase
 		inserterInput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseInputBox
 		inserterInput[0].setRotationPoint(8F, -4F, 8F);
 
+		parts.put("base",baseModel);
+		parts.put("inserter_mid_axle",inserterMidAxle);
+		parts.put("inserter_lower_arm",inserterLowerArm);
+		parts.put("inserter_upper_arm",inserterUpperArm);
+		parts.put("inserter_base_turntable",inserterBaseTurntable);
+		parts.put("inserter_item_picker_1",inserterItemPicker1);
+		parts.put("inserter_item_picker_2",inserterItemPicker2);
+		parts.put("inserter_output",inserterOutput);
+		parts.put("inserter_input",inserterInput);
+
 		flipAll();
 
-	}
-
-	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(inserterMidAxle);
-		flip(inserterLowerArm);
-		flip(inserterUpperArm);
-		flip(inserterBaseTurntable);
-		flip(inserterItemPicker1);
-		flip(inserterItemPicker2);
-		flip(inserterOutput);
-		flip(inserterInput);
-	}
-
-	@Override
-	public void translateAll(float x, float y, float z)
-	{
-		//super.translateAll(x, y, z);
-		translate(inserterMidAxle, x, y, z);
-		translate(inserterLowerArm, x, y, z);
-		translate(inserterUpperArm, x, y, z);
-		translate(inserterBaseTurntable, x, y, z);
-		translate(inserterItemPicker1, x, y, z);
-		translate(inserterItemPicker2, x, y, z);
-		translate(inserterOutput, x, y, z);
-		translate(inserterInput, x, y, z);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		//super.rotateAll(x, y, z);
-		rotate(inserterMidAxle, x, y, z);
-		rotate(inserterLowerArm, x, y, z);
-		rotate(inserterUpperArm, x, y, z);
-		rotate(inserterBaseTurntable, x, y, z);
-		rotate(inserterItemPicker1, x, y, z);
-		rotate(inserterItemPicker2, x, y, z);
-	}
-
-	@Override
-	public void render()
-	{
-		super.render();
-		//for(ModelRendererTurbo model : inserterBaseTurntable)
-		//	model.render(f5);
-
-	}
-
-	@Override
-	public void getBlockRotation(EnumFacing facing, boolean mirrored)
-	{
-		GlStateManager.rotate(180F, 0F, 1F, 0F);
 	}
 }

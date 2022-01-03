@@ -553,11 +553,11 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 		TileEntityAmmunitionWorkshop master = master();
 		if(master!=null&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
-			if(pos==20&&facing==(mirrored?this.facing.getOpposite(): this.facing))
+			if(pos==20&&facing==(this.facing.getOpposite()))
 			{
 				return true;
 			}
-			else if(pos==18&&facing==(mirrored?this.facing.getOpposite(): this.facing))
+			else if(pos==18&&facing==(this.facing.getOpposite()))
 			{
 				return true;
 			}
@@ -571,11 +571,11 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 		TileEntityAmmunitionWorkshop master = master();
 		if(master!=null&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
-			if(pos==20&&facing==(mirrored?this.facing.getOpposite(): this.facing))
+			if(pos==20&&facing==(this.facing.getOpposite()))
 			{
 				return ((T)master.coreInputHandler);
 			}
-			else if(pos==18&&facing==(mirrored?this.facing.getOpposite(): this.facing))
+			else if(pos==18&&facing==(this.facing.getOpposite()))
 			{
 				return ((T)master.casingInputHandler);
 			}
@@ -599,7 +599,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 			if(stack.isEmpty())
 				return;
 
-			if(pos==18)
+			if(pos==20)
 				stack = master.coreInputHandler.insertItem(0, stack, false);
 			else
 				stack = master.casingInputHandler.insertItem(0, stack, false);

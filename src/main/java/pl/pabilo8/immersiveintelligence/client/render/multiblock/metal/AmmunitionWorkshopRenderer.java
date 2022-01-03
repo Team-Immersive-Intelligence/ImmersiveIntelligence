@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAdvancedInserter;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -34,13 +35,13 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/ammunition_workshop.png");
 	public static final ResourceLocation TEXTURE_INSERTER = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/emplacement/inserter_gray.png");
-
-	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	public static final ResourceLocation TEXTURE_INSERTER2 = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/emplacement/inserter_gray_advanced.png");
 
 	private static IConveyorBelt con;
 	private static ModelAmmunitionWorkshop model;
 
 	private static ModelInserter modelInserter;
+	private static ModelAdvancedInserter modelInserterAdvanced;
 
 	@Override
 	public void render(TileEntityAmmunitionWorkshop te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -137,24 +138,28 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 			List<BakedQuad> conveyorAmmo, conveyorCore, conveyorCorner1, conveyorCorner2;
 			conveyorAmmo = ModelConveyor.getBaseConveyor(
-					te.mirrored?EnumFacing.EAST: EnumFacing.WEST, 1,
-					new Matrix4(te.mirrored?EnumFacing.EAST: EnumFacing.WEST), ConveyorDirection.HORIZONTAL,
-					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
+					EnumFacing.EAST, 1,
+					new Matrix4(EnumFacing.EAST), ConveyorDirection.HORIZONTAL,
+					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()),
+					new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
 
 			conveyorCore = ModelConveyor.getBaseConveyor(
-					te.mirrored?EnumFacing.EAST: EnumFacing.WEST, 1,
-					new Matrix4(te.mirrored?EnumFacing.EAST: EnumFacing.WEST), ConveyorDirection.HORIZONTAL,
-					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
+					EnumFacing.EAST, 1,
+					new Matrix4(EnumFacing.EAST), ConveyorDirection.HORIZONTAL,
+					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()),
+					new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
 
 			conveyorCorner1 = ModelConveyor.getBaseConveyor(
-					te.mirrored?EnumFacing.SOUTH: EnumFacing.NORTH, 1,
-					new Matrix4(te.mirrored?EnumFacing.SOUTH: EnumFacing.NORTH), ConveyorDirection.HORIZONTAL,
-					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{te.mirrored, !te.mirrored}, new boolean[]{true, true}, null, 0);
+					EnumFacing.SOUTH, 1,
+					new Matrix4(EnumFacing.SOUTH), ConveyorDirection.HORIZONTAL,
+					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()),
+					new boolean[]{te.mirrored, !te.mirrored}, new boolean[]{true, true}, null, 0);
 
 			conveyorCorner2 = ModelConveyor.getBaseConveyor(
-					te.mirrored?EnumFacing.EAST: EnumFacing.WEST, 1,
-					new Matrix4(te.mirrored?EnumFacing.EAST: EnumFacing.WEST), ConveyorDirection.HORIZONTAL,
-					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{!te.mirrored, te.mirrored}, new boolean[]{true, true}, null, 0);
+					EnumFacing.EAST, 1,
+					new Matrix4(EnumFacing.EAST), ConveyorDirection.HORIZONTAL,
+					ClientUtils.getSprite(conveyorAmmoRunning?con.getActiveTexture(): con.getInactiveTexture()),
+					new boolean[]{!te.mirrored, te.mirrored}, new boolean[]{true, true}, null, 0);
 
 			//render
 
@@ -208,7 +213,8 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			final IBullet finalBullet = bullet;
 			final IBulletModel finalBulletModel = bulletModel;
 
-			renderInserter(0, i1Pitch, i1Pitch2, 0,
+			ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER);
+			renderInserter(modelInserter,0, i1Pitch, i1Pitch2, 0,
 					model!=null?
 							() -> {
 								if(progress < 0.15||progress > 0.56)
@@ -228,7 +234,8 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			);
 			GlStateManager.translate(1, 0, 0);
 			//Core
-			renderInserter(0, i2Pitch, i2Pitch2, 0, () -> {
+			ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER2);
+			renderInserter(modelInserterAdvanced,0, i2Pitch, i2Pitch2, 0, () -> {
 			});
 			GlStateManager.popMatrix();
 
@@ -302,37 +309,37 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 		con = ConveyorHandler.getConveyor(new ResourceLocation("immersiveengineering:conveyor"), null);
 
 		modelInserter = new ModelInserter();
+		modelInserterAdvanced = new ModelAdvancedInserter();
 	}
 
-	public static void renderInserter(float yaw, float pitch1, float pitch2, float progress, Runnable function)
+	public static void renderInserter(ModelInserter inserter, float yaw, float pitch1, float pitch2, float progress, Runnable function)
 	{
 		GlStateManager.pushMatrix();
-		ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER);
 
 		GlStateManager.translate(-0.5, -0.5, 0.5);
-		modelInserter.baseModel[1].render();
+		inserter.baseModel[1].render();
 		GlStateManager.translate(0.5, 0.385, -0.5);
 
 		GlStateManager.rotate(yaw, 0, 1, 0);
-		for(ModelRendererTurbo mod : modelInserter.inserterBaseTurntable)
+		for(ModelRendererTurbo mod : inserter.inserterBaseTurntable)
 			mod.render(0.0625f);
 
 		GlStateManager.translate(0f, 0.125f, 0);
 
 		GlStateManager.rotate(pitch1, 1, 0, 0);
-		for(ModelRendererTurbo mod : modelInserter.inserterLowerArm)
+		for(ModelRendererTurbo mod : inserter.inserterLowerArm)
 			mod.render(0.0625f);
 
 		GlStateManager.translate(0f, 0.875f, 0);
 		GlStateManager.rotate(-pitch1, 1, 0, 0);
 		GlStateManager.translate(0f, 0.0625f, 0.03125f);
 
-		for(ModelRendererTurbo mod : modelInserter.inserterMidAxle)
+		for(ModelRendererTurbo mod : inserter.inserterMidAxle)
 			mod.render(0.0625f);
 
 		GlStateManager.rotate(pitch2, 1, 0, 0);
 
-		for(ModelRendererTurbo mod : modelInserter.inserterUpperArm)
+		for(ModelRendererTurbo mod : inserter.inserterUpperArm)
 			mod.render(0.0625f);
 
 		GlStateManager.translate(0f, 0.625f, 0.03125f);
@@ -343,7 +350,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 		GlStateManager.rotate(-45.0f*progress, 0f, 0f, 1f);
 
-		for(ModelRendererTurbo mod : modelInserter.inserterItemPicker1)
+		for(ModelRendererTurbo mod : inserter.inserterItemPicker1)
 			mod.render(0.0625f);
 
 		GlStateManager.popMatrix();
@@ -354,7 +361,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 		GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
 
-		for(ModelRendererTurbo mod : modelInserter.inserterItemPicker2)
+		for(ModelRendererTurbo mod : inserter.inserterItemPicker2)
 			mod.render(0.0625f);
 
 		GlStateManager.popMatrix();

@@ -119,56 +119,17 @@ public class ModelInserter extends ModelIIBase
 		inserterInput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseInputBox
 		inserterInput[0].setRotationPoint(8F, -4F, 8F);
 
+		parts.put("base",baseModel);
+		parts.put("inserter_mid_axle",inserterMidAxle);
+		parts.put("inserter_lower_arm",inserterLowerArm);
+		parts.put("inserter_upper_arm",inserterUpperArm);
+		parts.put("inserter_base_turntable",inserterBaseTurntable);
+		parts.put("inserter_item_picker_1",inserterItemPicker1);
+		parts.put("inserter_item_picker_2",inserterItemPicker2);
+		parts.put("inserter_output",inserterOutput);
+		parts.put("inserter_input",inserterInput);
+
 		flipAll();
-
-	}
-
-	@Override
-	public void flipAll()
-	{
-		super.flipAll();
-		flip(inserterMidAxle);
-		flip(inserterLowerArm);
-		flip(inserterUpperArm);
-		flip(inserterBaseTurntable);
-		flip(inserterItemPicker1);
-		flip(inserterItemPicker2);
-		flip(inserterOutput);
-		flip(inserterInput);
-	}
-
-	@Override
-	public void translateAll(float x, float y, float z)
-	{
-		//super.translateAll(x, y, z);
-		translate(inserterMidAxle, x, y, z);
-		translate(inserterLowerArm, x, y, z);
-		translate(inserterUpperArm, x, y, z);
-		translate(inserterBaseTurntable, x, y, z);
-		translate(inserterItemPicker1, x, y, z);
-		translate(inserterItemPicker2, x, y, z);
-		translate(inserterOutput, x, y, z);
-		translate(inserterInput, x, y, z);
-	}
-
-	@Override
-	public void rotateAll(float x, float y, float z)
-	{
-		//super.rotateAll(x, y, z);
-		rotate(inserterMidAxle, x, y, z);
-		rotate(inserterLowerArm, x, y, z);
-		rotate(inserterUpperArm, x, y, z);
-		rotate(inserterBaseTurntable, x, y, z);
-		rotate(inserterItemPicker1, x, y, z);
-		rotate(inserterItemPicker2, x, y, z);
-	}
-
-	@Override
-	public void render()
-	{
-		super.render();
-		//for(ModelRendererTurbo model : inserterBaseTurntable)
-		//	model.render(f5);
 
 	}
 
