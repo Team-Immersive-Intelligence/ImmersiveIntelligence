@@ -20,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPacker;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker;
 
 import java.util.List;
@@ -142,8 +143,10 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> 
 			for(ModelRendererTurbo mod : modelCurrent.markerInputModel)
 				mod.render();
 
+			boolean uDir = te.hasUpgrade(IIContent.UPGRADE_UNPACKER_CONVERSION);
+
 			IConveyorBelt con = ConveyorHandler.getConveyor(new ResourceLocation("immersiveengineering:conveyor"), null);
-			List<BakedQuad> quads = ModelConveyor.getBaseConveyor(EnumFacing.SOUTH, 1, new Matrix4(EnumFacing.SOUTH), ConveyorDirection.HORIZONTAL,
+			List<BakedQuad> quads = ModelConveyor.getBaseConveyor(uDir?EnumFacing.NORTH:EnumFacing.SOUTH, 1, new Matrix4(uDir?EnumFacing.NORTH:EnumFacing.SOUTH), ConveyorDirection.HORIZONTAL,
 					ClientUtils.getSprite(conveyorRunning?con.getActiveTexture(): con.getInactiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
 
 

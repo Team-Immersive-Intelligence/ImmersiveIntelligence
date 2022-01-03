@@ -442,6 +442,20 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 			if(clientUpgradeProgress < getMaxClientProgress())
 				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrench_upgrade_progress/2f), getMaxClientProgress());
 		}
+		else if(hasUpgrade(IIContent.UPGRADE_UNPACKER_CONVERSION))
+		{
+			BlockPos pos = getBlockPosForPos(23).offset(facing);
+			TileEntity inventoryTile = this.world.getTileEntity(pos);
+			if(inventoryTile!=null)
+				for(int i = 0; i < inventory.size(); i++)
+				{
+					ItemStack output = inventory.get(i);
+					if(output.isEmpty())
+						continue;
+					output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
+					inventory.set(i, output);
+				}
+		}
 
 		if(update)
 		{
