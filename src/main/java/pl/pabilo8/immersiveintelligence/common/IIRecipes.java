@@ -219,10 +219,6 @@ public class IIRecipes
 				ItemStack.EMPTY,
 				400, 512
 		);
-
-		CrusherRecipe.removeRecipesForInput(new ItemStack(Items.QUARTZ));
-
-
 	}
 
 	public static void addInkRecipes()
