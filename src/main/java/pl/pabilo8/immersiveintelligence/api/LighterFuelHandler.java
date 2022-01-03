@@ -42,4 +42,9 @@ public class LighterFuelHandler
 	{
 		allowedFluids.remove(fluid);
 	}
+
+	public static Fluid[] getAllowedFluids()
+	{
+		return allowedFluids.keySet().toArray(new Fluid[0]);
+	}
 }

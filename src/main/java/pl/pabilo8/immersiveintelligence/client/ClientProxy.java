@@ -28,6 +28,7 @@ import blusunrize.lib.manual.IManualPage;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import blusunrize.lib.manual.ManualPages;
+import blusunrize.lib.manual.ManualPages.Table;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -68,6 +69,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -76,6 +78,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
@@ -721,8 +724,33 @@ public class ClientProxy extends CommonProxy
 		ManualHelper.addEntry("electric_tools", ManualHelper.CAT_TOOLS,
 				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools0", new ItemStack(IIContent.itemHammer)),
 				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools1", new ItemStack(IIContent.itemElectricWrench)),
-		new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools2", new ItemStack(IIContent.itemWirecutter))
+				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools2", new ItemStack(IIContent.itemWirecutter))
 		);
+
+		Fluid[] lighterFluids = LighterFuelHandler.getAllowedFluids();
+		ManualPages[] lighterPages = new ManualPages[1+(int)Math.ceil(lighterFluids.length/12f)];
+		lighterPages[0] = new ManualPages.Crafting(ManualHelper.getManual(), "lighter0", new ItemStack(IIContent.itemLighter));
+
+		for(int i = 0; i < lighterPages.length-1; i++)
+		{
+			int off = (i*12);
+			int j = (lighterFluids.length-off)%12;
+			String[][] tt = new String[j+1][2];
+
+			tt[0][0] = ManualHelper.getManual().formatText("field_fuel");
+			tt[0][1] = ManualHelper.getManual().formatText("field_amount");
+
+			for(int ii = 0; ii < j; ii++)
+			{
+				int amount = LighterFuelHandler.getBurnQuantity(new FluidStack(lighterFluids[off+ii], 1));
+				tt[ii+1][0] = lighterFluids[off+ii].getLocalizedName(new FluidStack(lighterFluids[off+ii], amount));
+				tt[ii+1][1] = String.format("%d mB", amount);
+			}
+
+			lighterPages[i+1] = new Table(ManualHelper.getManual(), "lighter_fuels", tt, true);
+		}
+
+		ManualHelper.addEntry("lighter", ManualHelper.CAT_TOOLS, lighterPages);
 
 		ClientCommandHandler.instance.registerCommand(new IICommandHandler("tmt"));
 

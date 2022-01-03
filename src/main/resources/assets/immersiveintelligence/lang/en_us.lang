@@ -2218,6 +2218,14 @@ ie.manual.entry.electric_tools0=The Engineer's Electric Hammer is a direct upgra
 ie.manual.entry.electric_tools1=The Engineer's Electric Wrench is an enhanced version of the Engineer's Wrench. It constructs upgrades and emplacement weapons much faster than its manual counterpart.
 ie.manual.entry.electric_tools2=The Engineer's Electric Wire Cutters are an improved version of the Engineer's Wire Cutters. They cut through blocks, such as razor wire faster.
 
+#Reference to TF2 Pyro
+ie.manual.entry.lighter.name=Engineer's Lighter
+ie.manual.entry.lighter.subtext=No Rainbow-Vision
+ie.manual.entry.lighter0=The Engineer's Lighter is a device used to set blocks on fire. It has infinite durability, but requires fuel to operate.
+ie.manual.entry.lighter_fuels=Lighter Fuels
+ie.manual.entry.field_fuel=Fluid
+ie.manual.entry.field_amount=Amount
+
 #Reference to a certain picture i've seen on reddit few years ago
 ie.manual.entry.sawmill.name=Sawmill
 ie.manual.entry.sawmill.subtext=The better fidget spinner!
