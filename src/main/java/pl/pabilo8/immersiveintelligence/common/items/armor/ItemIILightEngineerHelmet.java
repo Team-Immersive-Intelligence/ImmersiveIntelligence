@@ -43,6 +43,12 @@ public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements
 		return ModelLightEngineerArmor.getModel(armorSlot, itemStack);
 	}
 
+	@Override
+	String getMaterialName(ArmorMaterial material)
+	{
+		return "light_engineer_armor";
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)

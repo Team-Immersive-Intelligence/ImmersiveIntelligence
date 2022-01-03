@@ -31,7 +31,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -73,10 +72,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		//MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	private String getMaterialName(ArmorMaterial material)
-	{
-		return ObfuscationReflectionHelper.getPrivateValue(ArmorMaterial.class, material, "name");
-	}
+	abstract String getMaterialName(ArmorMaterial material);
 
 
 	public static boolean isArmorWithUpgrade(ItemStack stack, String upgrade)

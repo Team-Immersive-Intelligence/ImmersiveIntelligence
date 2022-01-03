@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityChemicalPainter;
 
 import java.util.*;
@@ -51,7 +51,10 @@ public class PaintingRecipe extends MultiblockRecipe
 	{
 		NonNullList<ItemStack> list = NonNullList.create();
 		Set<ItemStack> collect = Arrays.stream(EnumDyeColor.values()).map(
-				enumDyeColor -> (Integer)ObfuscationReflectionHelper.getPrivateValue(EnumDyeColor.class, enumDyeColor, "colorValue"))
+						enumDyeColor -> {
+							float[] values = enumDyeColor.getColorComponentValues();
+							return Utils.rgb(values[0],values[1],values[2]);
+						})
 				.map(integer -> process.apply(integer, itemInput.getExampleStack().copy()))
 				.collect(Collectors.toSet());
 		list.addAll(collect);
