@@ -19,6 +19,7 @@ import java.util.Set;
 public abstract class IICompatModule
 {
 	public static HashMap<String, Class<? extends IICompatModule>> moduleClasses = new HashMap<>();
+	public static HashMap<String, String> moduleMinModVersions = new HashMap<>();
 	public static Set<IICompatModule> modules = new HashSet<>();
 
 	public static boolean serene = false;
@@ -29,6 +30,7 @@ public abstract class IICompatModule
 		moduleClasses.put("immersivepetroleum", ImmersivePetroleumHelper.class);
 		moduleClasses.put("immersiveposts", ImmersivePostsHelper.class);
 		moduleClasses.put("immersivetech", ImmersiveTechnologyHelper.class);
+		moduleMinModVersions.put("immersivetech", "1.7.50");
 		//it is the only IE addon which has a _ between words
 		moduleClasses.put("immersive_energy", ImmersiveEnergyHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
