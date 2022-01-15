@@ -16,7 +16,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
@@ -126,7 +129,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 			}
 			else
 			{
-				if(getPassengers().size()>0)
+				if(getPassengers().size() > 0)
 				{
 					Entity entity = getPassengers().get(0);
 					if(entity instanceof EntityLivingBase)
@@ -166,7 +169,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 					}
 				}
 				else
-					shootingProgress=0;
+					shootingProgress = 0;
 			}
 
 		}
@@ -177,7 +180,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		return amount>4;
+		return amount > 4;
 	}
 
 	private void handleClientKeyInput()
@@ -283,40 +286,35 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 	@Override
 	public void updatePassenger(Entity passenger)
 	{
-		if(this.isPassenger(passenger))
+		Vec3d pos = getPositionVector();
+		float headYaw = MathHelper.wrapDegrees(this.rotationYaw);
+		double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
+		double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
+		Vec3d pos2 = Utils.offsetPosDirection(0.125f, true_angle, 0);
+		Vec3d pos3 = Utils.offsetPosDirection(-0.75f, true_angle2, 0);
+		float ff = 1;
+		if(shootingProgress > 0)
 		{
-			BlockPos pos = getPosition();
-			float headYaw = MathHelper.wrapDegrees(this.rotationYaw);
-			double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
-			double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
-			Vec3d pos2 = Utils.offsetPosDirection(0.25f, true_angle, 0);
-			Vec3d pos3 = Utils.offsetPosDirection(-0.25f, true_angle2, 0);
-			float ff = 1;
-			if(shootingProgress > 0)
+			float v = shootingProgress/Mortar.shootTime;
+			if(v < 0.1)
 			{
-				float v = shootingProgress/Mortar.shootTime;
-				if(v < 0.1)
-				{
-					//rise up
-					ff = 1f-(v/0.1f);
-				}
-				else if(v < 0.3)
-				{
-					//unturn
-					ff = 0;
-				}
-				else if(v < 0.4)
-				{
-					//get down
-					ff = (v-0.3f)/0.1f;
-				}
-				else
-					ff = 1;
+				//rise up
+				ff = 1f-(v/0.1f);
 			}
-
-			passenger.setPosition(pos.getX()+0.5+pos2.x+pos3.x, pos.getY()-0.5*ff, pos.getZ()+0.5+pos2.z+pos3.z);
-			applyOrientationToEntity(passenger);
+			else if(v < 0.3)
+			{
+				//unturn
+				ff = 0;
+			}
+			else if(v < 0.4)
+			{
+				//get down
+				ff = (v-0.3f)/0.1f;
+			}
 		}
+
+		passenger.setPosition(pos.x+pos2.x+pos3.x, pos.y-0.5*ff, pos.z+pos2.z+pos3.z);
+		applyOrientationToEntity(passenger);
 	}
 
 	@Override
