@@ -74,7 +74,7 @@ public class ItemIILightEngineerBoots extends ItemIIUpgradeableArmor implements 
 		{
 			if(ItemNBTHelper.hasKey(stack, "flippin"))
 			{
-				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
+				multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
 			}
 			if(ItemNBTHelper.hasKey(stack, "rackets"))
 			{
