@@ -49,11 +49,10 @@ public class MessageManualClose implements IMessage
 		@Override
 		public IMessage onMessage(MessageManualClose message, MessageContext ctx)
 		{
-			Minecraft.getMinecraft().addScheduledTask(() ->
+			ctx.getServerHandler().player.mcServer.addScheduledTask(() ->
 			{
 				EntityPlayerMP player = ctx.getServerHandler().player;
-				World world = ImmersiveEngineering.proxy.getClientWorld();
-				if(world!=null&&player!=null)
+				if(player!=null)
 				{
 
 					ItemStack mainItem = player.getHeldItemMainhand();
