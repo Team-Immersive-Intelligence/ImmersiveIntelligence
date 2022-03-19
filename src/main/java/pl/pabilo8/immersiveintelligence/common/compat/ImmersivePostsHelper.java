@@ -36,7 +36,7 @@ public class ImmersivePostsHelper extends IICompatModule
 	 */
 	@Override
 	public void preInit()
-	{
+	{	
 		brassFence = createFence("brass");
 		tungstenFence = createFence("tungsten");
 		zincFence = createFence("zinc");
@@ -45,6 +45,8 @@ public class ImmersivePostsHelper extends IICompatModule
 
 		try
 		{
+			IIContent.itemMaterialRod.setMetaUnhidden(2, 3);
+			
 			Constructor<EnumPostMaterial> constructor = EnumPostMaterial.class.getDeclaredConstructor(String.class, int.class, String.class, Block.class, boolean.class, boolean.class);
 			constructor.setAccessible(true);
 
@@ -86,10 +88,6 @@ public class ImmersivePostsHelper extends IICompatModule
 	@Override
 	public void registerRecipes()
 	{
-		IIContent.itemMaterialRod.setMetaUnhidden(2, 3);
-		OreDictionary.registerOre("stickZinc", new ItemStack(IIContent.itemMaterialRod, 1, 2));
-		OreDictionary.registerOre("stickPlatinum", new ItemStack(IIContent.itemMaterialRod, 1, 3));
-
 		OreDictionary.registerOre("fenceBrass", new ItemStack(brassFence));
 		OreDictionary.registerOre("fenceTungsten", new ItemStack(tungstenFence));
 		OreDictionary.registerOre("fenceZinc", new ItemStack(zincFence));
