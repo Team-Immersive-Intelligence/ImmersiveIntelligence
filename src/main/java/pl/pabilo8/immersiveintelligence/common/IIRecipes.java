@@ -799,7 +799,7 @@ public class IIRecipes
 	{
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.ZINC.getMeta()),
+				new ItemStack(IIContent.blockOre, 1, IIBlockTypes_Ore.ZINC.getMeta()),
 				Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "zinc"),
 				0.5F);
 
@@ -814,7 +814,7 @@ public class IIRecipes
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.PLATINUM.getMeta()),
+				new ItemStack(IIContent.blockOre, 1, IIBlockTypes_Ore.PLATINUM.getMeta()),
 				Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "platinum"),
 				0.5F);
 
@@ -826,7 +826,7 @@ public class IIRecipes
 		if(IIConfig.smeltableTungsten)
 		{
 			FurnaceRecipes.instance().addSmeltingRecipe(
-					new ItemStack(IIContent.blockOre, IIBlockTypes_Ore.TUNGSTEN.getMeta()),
+					new ItemStack(IIContent.blockOre, 1, IIBlockTypes_Ore.TUNGSTEN.getMeta()),
 					Utils.getStackWithMetaName(IIContent.itemMaterialIngot, "tungsten"),
 					0.5F);
 
