@@ -480,7 +480,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 
 		if(world.isRemote)
-			setVelocity(partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
+			Utils.setEntityVelocity(this, partWheelFront.motionX, partWheelFront.motionY, partWheelFront.motionZ);
 
 
 		if(!world.isRemote&&speed > 1f)
@@ -1023,16 +1023,16 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		this.partSeat.setLocationAndAngles(posX+pos4_x.x, posY+1.175, posZ+pos4_x.z, 0.0F, 0);
 		this.partSeat.setEntityBoundingBox(aabb_seat.offset(this.partSeat.posX, this.partSeat.posY, this.partSeat.posZ));
 		if(world.isRemote)
-			this.partSeat.setVelocity(this.motionX, this.motionY, this.motionZ);
+			Utils.setEntityVelocity(this.partSeat, this.motionX, this.motionY, this.motionZ);
 		this.partSeat.onUpdate();
 
 		this.partUpgradeSeat.setLocationAndAngles(posX+pos5_x.x, posY+1.175, posZ+pos5_x.z, 0.0F, 0);
 		if(world.isRemote)
-			this.partUpgradeSeat.setVelocity(this.motionX, this.motionY, this.motionZ);
+			Utils.setEntityVelocity(this.partUpgradeSeat, this.motionX, this.motionY, this.motionZ);
 
 		this.partUpgradeCargo.setLocationAndAngles(posX+pos5_x.x, posY+1, posZ+pos5_x.z, 0.0F, 0);
 		if(world.isRemote)
-			this.partUpgradeCargo.setVelocity(this.motionX, this.motionY, this.motionZ);
+			Utils.setEntityVelocity(this.partUpgradeCargo, this.motionX, this.motionY, this.motionZ);
 
 		if(upgrade.equals("seat"))
 		{
@@ -1054,25 +1054,25 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		this.partWheelFront.setLocationAndAngles(posX+pos1_x.x, wheelHandle?partWheelFront.posY: posY, posZ+pos1_x.z, 0.0F, 0);
 		this.partWheelFront.setEntityBoundingBox(aabb_wheel.offset(this.partWheelFront.posX, this.partWheelFront.posY, this.partWheelFront.posZ));
 		if(world.isRemote)
-			this.partWheelFront.setVelocity(this.motionX, this.motionY, this.motionZ);
+			Utils.setEntityVelocity(this.partWheelFront, this.motionX, this.motionY, this.motionZ);
 		this.partWheelFront.onUpdate();
 
 		this.partWheelBack.setLocationAndAngles(posX+pos2_x.x, wheelHandle?partWheelBack.posY: posY, posZ+pos2_x.z, 0.0F, 0);
 		this.partWheelBack.setEntityBoundingBox(aabb_wheel.offset(this.partWheelBack.posX, this.partWheelBack.posY, this.partWheelBack.posZ));
 		if(world.isRemote)
-			this.partWheelBack.setVelocity(this.motionX, this.motionY, this.motionZ);
+			Utils.setEntityVelocity(this.partWheelBack, this.motionX, this.motionY, this.motionZ);
 		this.partWheelBack.onUpdate();
 
 		this.partEngine.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
 		this.partEngine.setEntityBoundingBox(aabb_engine.offset(this.partEngine.posX, this.partEngine.posY, this.partEngine.posZ));
 		if(world.isRemote)
-			this.partEngine.setVelocity(this.motionX, this.motionY, this.motionZ);
+			Utils.setEntityVelocity(this.partEngine, this.motionX, this.motionY, this.motionZ);
 		this.partEngine.onUpdate();
 
 		this.partFuelTank.setLocationAndAngles(posX+pos3_x.x, posY+1, posZ+pos3_x.z, 0.0F, 0);
 		this.partFuelTank.setEntityBoundingBox(aabb_tank.offset(this.partFuelTank.posX, this.partFuelTank.posY, this.partFuelTank.posZ));
 		if(world.isRemote)
-			this.partFuelTank.setVelocity(this.motionX, this.motionY, this.motionZ);
+			Utils.setEntityVelocity(this.partFuelTank, this.motionX, this.motionY, this.motionZ);
 		this.partFuelTank.onUpdate();
 
 
