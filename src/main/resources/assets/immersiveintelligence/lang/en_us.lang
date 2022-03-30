@@ -1160,6 +1160,10 @@ info.immersiveintelligence.tachometer.speed=Speed: %s
 info.immersiveintelligence.machineupgrade.name=Installing: %s
 info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
 
+info.immersiveintelligence.exoskeleton.0=Exoskeleton: §4Off§r
+info.immersiveintelligence.exoskeleton.1=Exoskeleton: §aMotion Assist§r
+info.immersiveintelligence.exoskeleton.2=Exoskeleton: §2Overdrive§r
+
 info.immersiveintelligence.machineupgrade.mg_loader.gui_tooltip=MG
 
 info.immersiveintelligence.towing.no=Can't find a towable vehicle

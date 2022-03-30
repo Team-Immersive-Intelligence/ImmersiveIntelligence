@@ -152,6 +152,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
@@ -472,6 +473,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(tracer_powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveIntelligence.MODID, "tracer_powder_colour"));
 		final ItemStack flare_powder = new ItemStack(IIContent.itemTracerPowder, 1, 1);
 		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(flare_powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveIntelligence.MODID, "flare_powder_colour"));
+
+		event.getRegistry().register(new RecipeRGBColouration((s) ->
+				(OreDictionary.itemMatches(new ItemStack(IIContent.itemAdvancedPowerPack, 1), s, false)),
+				(s) -> (ItemNBTHelper.hasKey(s, ItemIIAdvancedPowerPack.NBT_Colour)?ItemNBTHelper.getInt(s, ItemIIAdvancedPowerPack.NBT_Colour): 0xffffff),
+				(s, i) -> ItemNBTHelper.setInt(s, ItemIIAdvancedPowerPack.NBT_Colour, i)).setRegistryName(ImmersiveIntelligence.MODID, "advanced_powerpack_coloring"));
 
 		event.getRegistry().register(new RecipeRGBColouration((s) ->
 				(OreDictionary.itemMatches(new ItemStack(IIContent.itemLightEngineerHelmet, 1), s, false)),
