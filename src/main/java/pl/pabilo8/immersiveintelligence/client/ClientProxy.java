@@ -786,7 +786,6 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallDataBuffer.class, new SmallDataBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataMerger.class, new DataMergerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataDebugger.class, new DataDebuggerRenderer().subscribeToList("data_debugger"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPunchtapeReader.class, new PunchtapeReaderRenderer().subscribeToList("punchtape_reader"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLatexCollector.class, new LatexCollectorRenderer().subscribeToList("latex_collector"));
 
