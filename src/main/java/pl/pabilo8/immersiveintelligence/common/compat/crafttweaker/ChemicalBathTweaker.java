@@ -23,26 +23,21 @@ import java.util.List;
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".ChemicalBath")
 @ZenRegister
-public class BathingRecipeTweaker
+public class ChemicalBathTweaker
 {
-	public BathingRecipeTweaker()
-	{
-
-	}
-
 	@ZenMethod
 	public static void addWashingRecipe(IIngredient itemInput, IItemStack itemOutput, ILiquidStack fluidInput, int energy, int time)
 	{
 		Object oItemInput = CraftTweakerHelper.toObject(itemInput);
 		if(oItemInput==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Did not add chemical bath washing recipe for "+itemOutput.getDisplayName()+", input was null");
+			CraftTweakerAPI.getLogger().logError("Could not add chemical bath washing recipe for "+itemOutput.getDisplayName()+", input was null");
 			return;
 		}
 
 		FluidStack mcFluidInputStack = CraftTweakerMC.getLiquidStack(fluidInput);
 
-		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time,true);
+		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time, true);
 
 		CraftTweakerAPI.apply(new Add(r));
 	}
@@ -54,13 +49,13 @@ public class BathingRecipeTweaker
 		Object oItemInput = CraftTweakerHelper.toObject(itemInput);
 		if(oItemInput==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Did not add chemical bath recipe for "+itemOutput.getDisplayName()+", input was null");
+			CraftTweakerAPI.getLogger().logError("Could not add chemical bath recipe for "+itemOutput.getDisplayName()+", input was null");
 			return;
 		}
 
 		FluidStack mcFluidInputStack = CraftTweakerMC.getLiquidStack(fluidInput);
 
-		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time,false);
+		BathingRecipe r = new BathingRecipe(CraftTweakerHelper.toStack(itemOutput), oItemInput, mcFluidInputStack, energy, time, false);
 
 		CraftTweakerAPI.apply(new Add(r));
 	}

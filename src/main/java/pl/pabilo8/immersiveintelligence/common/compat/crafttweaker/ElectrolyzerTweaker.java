@@ -22,11 +22,6 @@ import java.util.List;
 @ZenRegister
 public class ElectrolyzerTweaker
 {
-	public ElectrolyzerTweaker()
-	{
-
-	}
-
 	@ZenMethod
 	public static void addRecipe(ILiquidStack fluidInput, ILiquidStack fluidOutput1, int energy, int time, @Optional ILiquidStack fluidOutput2)
 	{
@@ -42,9 +37,9 @@ public class ElectrolyzerTweaker
 	}
 
 	@ZenMethod
-	public static void removeRecipe(ILiquidStack fluidOutput1, @Optional ILiquidStack fluidOutput2)
+	public static void removeRecipe(ILiquidStack fluidInput)
 	{
-		CraftTweakerAPI.apply(new Remove(CraftTweakerMC.getLiquidStack(fluidOutput1), fluidOutput2!=null?CraftTweakerMC.getLiquidStack(fluidOutput2): null));
+		CraftTweakerAPI.apply(new Remove(CraftTweakerMC.getLiquidStack(fluidInput)));
 	}
 
 	private static class Add implements IAction
@@ -72,24 +67,23 @@ public class ElectrolyzerTweaker
 	private static class Remove implements IAction
 	{
 		List<ElectrolyzerRecipe> removedRecipes;
-		FluidStack f1, f2;
+		FluidStack f1;
 
-		public Remove(FluidStack f1, FluidStack f2)
+		public Remove(FluidStack f1)
 		{
 			this.f1 = f1;
-			this.f2 = f2;
 		}
 
 		@Override
 		public void apply()
 		{
-			removedRecipes = ElectrolyzerRecipe.removeRecipesForOutput(f1, f2);
+			removedRecipes = ElectrolyzerRecipe.removeRecipesForInput(f1);
 		}
 
 		@Override
 		public String describe()
 		{
-			return "Removing Electrolyzer Recipe for "+f2.getLocalizedName();
+			return "Removing Electrolyzer Recipe for "+f1.getLocalizedName();
 		}
 	}
 

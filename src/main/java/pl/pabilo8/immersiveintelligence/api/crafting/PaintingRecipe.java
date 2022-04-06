@@ -41,7 +41,7 @@ public class PaintingRecipe extends MultiblockRecipe
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
 		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
 		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
-		this.paintAmount = (int)Math.floor((float)time*paintModifier);
+		this.paintAmount = (int)Math.floor((float)paintAmount*paintModifier);
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = getExampleColoredItems();

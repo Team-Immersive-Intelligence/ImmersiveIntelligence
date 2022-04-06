@@ -15,16 +15,15 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 public class RotaryInputTweaker
 {
-
 	@ZenMethod
-	public static void addInput(String classPath, float torqueMod)
+	public static void addInput(String classPath, float torque)
 	{
 		try
 		{
 			Class c = Class.forName(classPath);
 			RotaryUtils.ie_rotational_blocks_torque.put(
 					(tileEntity -> tileEntity.getClass().equals(c)),
-					(aFloat -> aFloat*torqueMod)
+					(aFloat -> aFloat*torque)
 			);
 			CraftTweakerAPI.getLogger().logInfo("Transmission box will now recognise "+classPath+" as a rotary power source");
 		} catch(ClassNotFoundException e)

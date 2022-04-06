@@ -18,9 +18,9 @@ import java.util.List;
  * @author Pabilo8
  * @since 08-08-2019
  */
-@ZenClass("mods."+ImmersiveIntelligence.MODID+".PrecissionAssembler")
+@ZenClass("mods."+ImmersiveIntelligence.MODID+".PrecisionAssembler")
 @ZenRegister
-public class PrecissionAssemblerRecipeTweaker
+public class PrecisionAssemblerRecipeTweaker
 {
 	@ZenMethod
 	public static void addRecipe(IItemStack itemOutput, IItemStack trash, IIngredient[] itemInputs, String[] tools, String[] animations, int energy, int timeMultiplier)
@@ -35,28 +35,28 @@ public class PrecissionAssemblerRecipeTweaker
 
 		if(adds==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Did not add precission assembler recipe for "+itemOutput.getDisplayName()+", no valid inputs were provided");
+			CraftTweakerAPI.getLogger().logError("Could not add precision assembler recipe for "+itemOutput.getDisplayName()+", no valid inputs were provided");
 			return;
 		}
 		if(tools==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Did not add precission assembler recipe for "+itemOutput.getDisplayName()+", no tools were provided");
+			CraftTweakerAPI.getLogger().logError("Could not add precision assembler recipe for "+itemOutput.getDisplayName()+", no tools were provided");
 			return;
 		}
 		if(animations==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Did not add precission assembler recipe for "+itemOutput.getDisplayName()+", no valid animations were provided");
+			CraftTweakerAPI.getLogger().logError("Could not add precision assembler recipe for "+itemOutput.getDisplayName()+", no valid animations were provided");
 			return;
 		}
 
 		PrecissionAssemblerRecipe r = new PrecissionAssemblerRecipe(CraftTweakerHelper.toStack(itemOutput), CraftTweakerHelper.toStack(trash), adds, tools, animations, energy, timeMultiplier);
-		CraftTweakerAPI.apply(new PrecissionAssemblerRecipeTweaker.Add(r));
+		CraftTweakerAPI.apply(new Add(r));
 	}
 
 	@ZenMethod
 	public static void removeRecipe(IItemStack itemOutput)
 	{
-		CraftTweakerAPI.apply(new PrecissionAssemblerRecipeTweaker.Remove(CraftTweakerHelper.toStack(itemOutput)));
+		CraftTweakerAPI.apply(new Remove(CraftTweakerHelper.toStack(itemOutput)));
 	}
 
 	private static class Add implements IAction
@@ -77,7 +77,7 @@ public class PrecissionAssemblerRecipeTweaker
 		@Override
 		public String describe()
 		{
-			return "Adding Precission Assembler Recipe for "+recipe.output.getUnlocalizedName();
+			return "Adding precision Assembler Recipe for "+recipe.output.getUnlocalizedName();
 		}
 	}
 
@@ -100,7 +100,26 @@ public class PrecissionAssemblerRecipeTweaker
 		@Override
 		public String describe()
 		{
-			return "Removing Precission Assembler Recipe for "+f1.getUnlocalizedName();
+			return "Removing precision Assembler Recipe for "+f1.getUnlocalizedName();
+		}
+	}
+
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".PrecissionAssembler")
+	@ZenRegister
+	public static class OldAssemblerCompat
+	{
+		/**
+		 * Added as a compat for the old CT methods
+		 */
+		@ZenMethod
+		public static void addRecipe(IItemStack itemOutput, IItemStack trash, IIngredient[] itemInputs, String[] tools, String[] animations, int energy, int timeMultiplier)
+		{
+			PrecisionAssemblerRecipeTweaker.addRecipe(itemOutput, trash, itemInputs, tools, animations, energy, timeMultiplier);
+		}
+
+		public static void removeRecipe(IItemStack itemOutput)
+		{
+			PrecisionAssemblerRecipeTweaker.removeRecipe(itemOutput);
 		}
 	}
 

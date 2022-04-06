@@ -107,6 +107,13 @@ public class BulletRegistry
 		{
 			return this.toString().toLowerCase(Locale.ENGLISH);
 		}
+
+		@Nonnull
+		public static EnumComponentRole v(String s)
+		{
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(GENERAL_PURPOSE);
+		}
 	}
 
 	public enum EnumCoreTypes implements IStringSerializable
@@ -250,6 +257,12 @@ public class BulletRegistry
 		public boolean canRicochetOff()
 		{
 			return ricochet;
+		}
+
+		public static PenMaterialTypes v(String s)
+		{
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(METAL);
 		}
 	}
 }
