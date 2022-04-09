@@ -53,7 +53,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	protected DataWireNetwork dataNetwork = new DataWireNetwork().add(this);
 	EnumFacing facing = EnumFacing.NORTH;
 	@SideOnly(Side.CLIENT)
-	SoundEvent sound = IISounds.siren;
+	SoundEvent sound;
 	private boolean refreshWireNetwork = false;
 
 	@Override
