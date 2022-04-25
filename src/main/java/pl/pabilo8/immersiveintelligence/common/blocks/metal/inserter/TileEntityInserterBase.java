@@ -282,9 +282,9 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		if(nbt.hasKey("nextTaskAfterFinish"))
 			nextTaskAfterFinish = nbt.getBoolean("nextTaskAfterFinish");
 
-		if(nbt.hasKey("defaultOutputFacing"))
+		if(nbt.hasKey("outputFacing"))
 			defaultOutputFacing = EnumFacing.getFront(nbt.getInteger("outputFacing"));
-		if(nbt.hasKey("defaultInputFacing"))
+		if(nbt.hasKey("inputFacing"))
 			defaultInputFacing = EnumFacing.getFront(nbt.getInteger("inputFacing"));
 
 		if(nbt.hasKey("secondCable"))
