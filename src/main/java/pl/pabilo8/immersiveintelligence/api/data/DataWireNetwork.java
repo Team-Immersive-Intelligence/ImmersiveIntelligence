@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -82,6 +83,7 @@ public class DataWireNetwork
 			IImmersiveConnectable iic = ApiUtils.toIIC(next, world);
 			closed.add(next);
 			Set<Connection> connsAtBlock = INSTANCE.getConnections(dimension, next);
+
 			if(iic instanceof IDataConnector)
 			{
 				((IDataConnector)iic).setDataNetwork(network);
@@ -90,7 +92,8 @@ public class DataWireNetwork
 			if(connsAtBlock!=null&&iic!=null)
 				for(Connection c : connsAtBlock)
 				{
-					if(iic.allowEnergyToPass(c)&&
+					if(Objects.equals(c.cableType.getCategory(), IIDataWireType.DATA_CATEGORY)&&
+							iic.allowEnergyToPass(c)&&
 							!closed.contains(c.end))
 						open.add(c.end);
 				}
