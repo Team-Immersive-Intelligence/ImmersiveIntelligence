@@ -7,32 +7,27 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel.Group;
 import net.minecraftforge.client.model.obj.OBJModel.OBJState;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimationGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +43,7 @@ public class IIAnimationUtils
 	{
 		return MathHelper.clamp(invert?(1f-((current-partialTicks)/max)): ((current+partialTicks)/max), 0, 1);
 	}
+
 	/**
 	 * @param progress of the full animation
 	 * @param offset   of the current animation
@@ -82,55 +78,15 @@ public class IIAnimationUtils
 		return new Tuple<>(state, blockRenderer.getBlockModelShapes().getModelForState(state));
 	}
 
-	/**
-	 * Called before {@link #renderModel(Tessellator, World, Tuple, BlockPos, List, TRSRTransformation)}
-	 */
-	public static void startRender(Tessellator tessellator, BlockPos pos)
-	{
-		BufferBuilder buffer = tessellator.getBuffer();
-
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.blendFunc(770, 771);
-		GlStateManager.enableBlend();
-		GlStateManager.disableCull();
-		if(Minecraft.isAmbientOcclusionEnabled())
-			GlStateManager.shadeModel(7425);
-		else
-			GlStateManager.shadeModel(7424);
-
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		buffer.setTranslation(-pos.getX(), -pos.getY(), -pos.getZ());
-		buffer.color(255, 255, 255, 255);
-
-	}
-
-	/**
-	 * Renders an .obj model part<br>
-	 * Call {@link #startRender(Tessellator, BlockPos)} before and {@link #finishRender(Tessellator)} after.<br>
-	 * Method can be executed multiple times between start and finish.<br>
-	 */
-	public static void renderModel(Tessellator tessellator, World world, Tuple<IBlockState, IBakedModel> model, BlockPos pos, List<String> parts, TRSRTransformation transform)
-	{
-		BufferBuilder buffer = tessellator.getBuffer();
-		IBlockState state = model.getFirst();
-		if(state instanceof IExtendedBlockState)
-			state = ((IExtendedBlockState)state).withProperty(Properties.AnimationProperty, new OBJState(parts, false, null));
-
-		getBRD().getBlockModelRenderer().renderModel(world, model.getSecond(), state, pos, buffer, true);
-	}
-
-	/**
-	 * Called after {@link #renderModel(Tessellator, World, Tuple, BlockPos, List, TRSRTransformation)}
-	 */
-	public static void finishRender(Tessellator tessellator)
-	{
-		BufferBuilder buffer = tessellator.getBuffer();
-		buffer.setTranslation(0.0D, 0.0D, 0.0D);
-		tessellator.draw();
-	}
-
 	//--- AMT Based Animations ---//
 
+	/**
+	 * Applies animation to an AMT
+	 *
+	 * @param model the AMT
+	 * @param group an animation group providing the transforms
+	 * @param time  of the animation in range 0.0-1.0
+	 */
 	public static void setModelAnimations(AMT model, IIAnimationGroup group, float time)
 	{
 		if(group.visibility!=null)
@@ -145,7 +101,12 @@ public class IIAnimationUtils
 
 	}
 
-	public static AMT[] getAMT(Tuple<IBlockState, IBakedModel> model)
+	/**
+	 * @param model  the model to turn into AMTs
+	 * @param header the header file providing the group offsets and hierarchy
+	 * @return Animated Model Thingies
+	 */
+	public static AMT[] getAMT(Tuple<IBlockState, IBakedModel> model, @Nullable IIModelHeader header)
 	{
 		IESmartObjModel baked = (IESmartObjModel)(model.getSecond());
 
@@ -161,8 +122,12 @@ public class IIAnimationUtils
 			OBJState objState = new OBJState(ImmutableList.of(group), true, ModelRotation.X0_Y0);
 			IExtendedBlockState bstate = ((IExtendedBlockState)model.getFirst()).withProperty(Properties.AnimationProperty, objState);
 
+			Vec3d origin = Vec3d.ZERO;
+			if(header!=null)
+				origin = header.getOffset(group);
+
 			models.add(
-					new AMT(group, Vec3d.ZERO,
+					new AMT(group, origin,
 							baked.getModel()
 									.bake(objState, DefaultVertexFormats.BLOCK, ClientUtils::getSprite)
 									.getQuads(bstate, null, 0L).toArray(new BakedQuad[0])
@@ -170,10 +135,16 @@ public class IIAnimationUtils
 			);
 		}
 
+		if(header!=null)
+			header.applyHierarchy(models);
 
 		return models.toArray(new AMT[0]);
 	}
 
+	/**
+	 * If passed a non-null value, disposes of the AMTs' GLCallLists to free up memory. <br>
+	 * Call upon destruction
+	 */
 	public static AMT[] disposeOf(@Nullable AMT[] array)
 	{
 		if(array!=null)
@@ -182,6 +153,10 @@ public class IIAnimationUtils
 	}
 
 	//--- JSON Parsing ---//
+
+	/**
+	 * Turns a json [x,y,z] array into Vec3D
+	 */
 	public static Vec3d jsonToVec3d(JsonArray array)
 	{
 		return new Vec3d(

@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -47,7 +46,7 @@ public class AMT
 	boolean visible;
 	Vec3d off, scale;
 	Vector3f color;
-	Quaternion rot;
+	Vec3d rot;
 
 	public AMT(String name, Vec3d originPos, BakedQuad[] quads)
 	{
@@ -72,16 +71,23 @@ public class AMT
 
 		GlStateManager.pushMatrix();
 
-		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
+		if(off!=null)
+			GlStateManager.translate(-off.x, off.y, off.z);
+
+
+		GlStateManager.translate(-originPos.x, originPos.y, -originPos.z);
 
 		if(rot!=null)
-			GlStateManager.rotate(rot);
-		if(off!=null)
-			GlStateManager.translate(off.x, off.y, off.z);
+		{
+			GlStateManager.rotate((float)rot.z, 0, 0, 1);
+			GlStateManager.rotate((float)rot.y, 0, 1, 0);
+			GlStateManager.rotate((float)rot.x, 1, 0, 0);
+		}
+
+		GlStateManager.translate(originPos.x, -originPos.y, originPos.z);
+
 		if(scale!=null)
 			GlStateManager.scale(scale.x, scale.y, scale.z);
-
-		// TODO: 05.04.2022 Use VBOs?
 
 		if(listID!=-1)
 			GlStateManager.callList(listID);
@@ -92,7 +98,6 @@ public class AMT
 
 			for(BakedQuad bakedquad : quads)
 			{
-				buf.setTranslation(-originPos.x, -originPos.y, -originPos.z);
 				buf.begin(7, DefaultVertexFormats.ITEM);
 				buf.addVertexData(bakedquad.getVertexData());
 				if(color!=null&&bakedquad.hasTintIndex())
@@ -102,6 +107,7 @@ public class AMT
 				Vec3i vec3i = bakedquad.getFace().getDirectionVec();
 				buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
 				tes.draw();
+				buf.setTranslation(0, 0, 0);
 			}
 
 			GL11.glEndList();
@@ -119,9 +125,8 @@ public class AMT
 	public void defaultize()
 	{
 		visible = true;
-		off = scale = null;
+		off = scale = rot = null;
 		color = null;
-		rot = null;
 	}
 
 	/**
@@ -131,5 +136,10 @@ public class AMT
 	{
 		if(listID!=-1)
 			GlStateManager.glDeleteLists(listID, 1);
+	}
+
+	public void setChildren(AMT[] children)
+	{
+		this.children = children;
 	}
 }
