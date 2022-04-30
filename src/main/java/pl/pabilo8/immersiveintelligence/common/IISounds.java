@@ -48,7 +48,7 @@ public class IISounds
 
 	public static SoundEvent radio_noise = registerSound("radio_noise");
 	public static SoundEvent radio_beep = registerSound("radio_beep");
-	
+
 	public static SoundEvent motorbike_start = registerSound("motorbike_start");
 	public static SoundEvent motorbike_start_no_fuel = registerSound("motorbike_start_no_fuel");
 	public static SoundEvent motorbike_engine = registerSound("motorbike_engine");
@@ -123,6 +123,8 @@ public class IISounds
 	public static SoundEvent metal_locker_close = registerSound("metal_locker_close");
 	public static SoundEvent metal_breadbox_open = registerSound("metal_breadbox_open");
 	public static SoundEvent metal_breadbox_close = registerSound("metal_breadbox_close");
+
+	public static SoundEvent punchtape_reader = registerSound("punchtape_reader");
 
 	private static SoundEvent registerSound(String name)
 	{
