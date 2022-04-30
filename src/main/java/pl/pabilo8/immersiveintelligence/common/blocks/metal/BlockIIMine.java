@@ -49,6 +49,7 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		this.setAllNotNormalBlock();
 		addToTESRMap(IIBlockTypes_Mine.MAIN);
 		addToTESRMap(IIBlockTypes_Mine.CORE);
+		setMetaHidden(IIBlockTypes_Mine.MAIN.getMeta());
 		setMetaHidden(IIBlockTypes_Mine.CORE.getMeta());
 		this.bullet = ((ItemBlockMineBase)super.itemBlock);
 	}
