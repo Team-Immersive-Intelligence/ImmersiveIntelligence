@@ -5,12 +5,17 @@ import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorBelt;
 import blusunrize.immersiveengineering.common.Config;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
 import flaxbeard.immersivepetroleum.api.energy.FuelHandler;
 import flaxbeard.immersivepetroleum.api.event.SchematicPlaceBlockPostEvent;
+import flaxbeard.immersivepetroleum.api.event.SchematicRenderBlockEvent;
 import flaxbeard.immersivepetroleum.common.entity.EntitySpeedboat;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -28,6 +33,8 @@ import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.common.blocks.MultiblockStuctureBase;
@@ -91,13 +98,30 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onSchematicRenderBlock(SchematicRenderBlockEvent event)
+	{
+		IMultiblock mb = event.getMultiblock();
+		ItemStack stack = event.getItemStack();
+
+		if(mb instanceof MultiblockStuctureBase)
+		{
+			if(stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock()==IEContent.blockConveyor)
+			{
+				((MultiblockStuctureBase<?>)mb).renderConveyor(stack);
+				event.setCanceled(true);
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public void handleConveyorPlace(SchematicPlaceBlockPostEvent event)
 	{
 		IMultiblock mb = event.getMultiblock();
 		if(mb.getUniqueName().startsWith("II:"))
 		{
-			IBlockState state = event.getBlockState();
+			//IBlockState state = event.getBlockState();
 			TileEntity te = event.getWorld().getTileEntity(event.getPos());
 
 			if(te instanceof TileEntityConveyorBelt)

@@ -51,7 +51,7 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 			ModelRadar modelCurrent = te.mirrored?modelFlipped: model;
 			modelCurrent.getBlockRotation(te.facing, te.mirrored);
 
-			if(te.isConstructionFinished())
+			if(!te.hasWorld()||te.isConstructionFinished())
 			{
 				for(ModelRendererTurbo mod : modelCurrent.baseModel)
 					mod.render();

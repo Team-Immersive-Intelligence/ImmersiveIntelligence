@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "lcb",
+    " cb",
+    "lcb"
+  ],
+  "key": {
+    "l": {
+      "type": "forge:ore_dict",
+      "ore": "leather"
+    },
+    "c": {
+      "item": "minecraft:magma_cream"
+    },
+    "b": {
+      "item": "minecraft:blaze_powder"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:armor_upgrade",
+    "data": 7,
+    "count": 1
+  }
+}

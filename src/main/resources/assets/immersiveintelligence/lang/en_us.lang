@@ -890,18 +890,6 @@ skin.immersiveintelligence.old_glory.name=Old Glory
 skin.immersiveintelligence.old_glory.desc=Glory to Heroes
 skin.immersiveintelligence.old_glory.text=A Poland themed skin, granted as a reward for contribution.
 
-skin.immersiveintelligence.vaterland.name=Vaterland
-skin.immersiveintelligence.vaterland.desc=And all that sacrifice just for an Iron Cross...
-skin.immersiveintelligence.vaterland.text=A Germany themed skin, granted as a reward for contribution.
-
-skin.immersiveintelligence.pershing.name=Pershing
-skin.immersiveintelligence.pershing.desc=Whatever the weather, we'll win this war together
-skin.immersiveintelligence.pershing.text=A Western Allies themed skin, granted as a reward for contribution.
-
-skin.immersiveintelligence.zvezda.name=Zvezda
-skin.immersiveintelligence.zvezda.desc=Reward for the great sacrifice
-skin.immersiveintelligence.zvezda.text=A Soviet themed skin, granted as a reward for contribution.
-
 skin.immersiveintelligence.stormwind.name=Stormwind
 skin.immersiveintelligence.stormwind.desc=A tribute to defenders of the sea fortress
 skin.immersiveintelligence.stormwind.text=A skin inspired by the old awesome flash game "Storm Winds"
@@ -996,6 +984,9 @@ machineupgrade.immersiveintelligence.packer_fluid.desc=Installing a fluid tank a
 
 machineupgrade.immersiveintelligence.packer_energy=Charging Module
 machineupgrade.immersiveintelligence.packer_energy.desc=Installing a fluid tank allows to charge items with IF, decreases item storage space by half, due to safety reasons a Pump Module cannot be installed along with this upgrade
+
+machineupgrade.immersiveintelligence.radio_locators=Radio Locators
+machineupgrade.immersiveintelligence.radio_locators.desc=Allows the Radar to detect radio signals and compute points of their origin. Increases the amount of energy required to operate.
 
 #Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Allows to set frequency for basic radio devices.

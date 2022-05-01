@@ -18,6 +18,10 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.Multibl
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCratePost;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalFortification;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenFortification;
+
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -108,8 +112,15 @@ public class IIManualLogistics extends IIManual
 						Utils.getStackWithMetaName(IIContent.itemSkycrateMount, "electric"))
 		);
 
+		ArrayList<ItemStack> fences = new ArrayList<>();
+		for(IIBlockTypes_WoodenFortification v : IIBlockTypes_WoodenFortification.values())
+			fences.add(new ItemStack(IIContent.blockWoodenFortification, 1, v.getMeta()));
+		for(IIBlockTypes_MetalFortification v : IIBlockTypes_MetalFortification.values())
+			fences.add(new ItemStack(IIContent.blockMetalFortification, 1, v.getMeta()));
+
+
 		ManualHelper.addEntry("chain_fences", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "chain_fences0", new ItemStack(IIContent.itemAdvancedPowerPack)),
+				new ManualPages.CraftingMulti(ManualHelper.getManual(), "chain_fences0", fences.toArray()),
 				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences1", MultiblockWoodenFenceGate.instance),
 				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences2", MultiblockWoodenChainFenceGate.instance),
 				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences3", MultiblockSteelFenceGate.instance),
