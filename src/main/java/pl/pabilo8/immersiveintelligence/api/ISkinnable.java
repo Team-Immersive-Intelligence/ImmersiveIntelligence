@@ -19,5 +19,7 @@ public interface ISkinnable
 		ItemNBTHelper.setString(stack, "contributorSkin", skinName);
 	}
 
+	String getSkinnableName();
+
 	String getSkinnableDefaultTextureLocation();
 }

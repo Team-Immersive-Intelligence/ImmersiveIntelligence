@@ -10,10 +10,10 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelSubmachinegun;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<SubmachinegunItemStackRenderer>
 {
 	public static SubmachinegunItemStackRenderer instance = new SubmachinegunItemStackRenderer().subscribeToList("submachinegun");
-	public static final String texture = "immersiveintelligence:textures/items/weapons/submachinegun.png";
+	public static final String texture = "submachinegun.png";
 	public static ModelSubmachinegun model = new ModelSubmachinegun();
 
 	public static HashMap<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> upgrades = new HashMap<>();
@@ -81,8 +81,9 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 						renderParts.add(tmtNamedBoxGroup);
 				});
 			}
-
 		}
+		//specialText = I18n.format("skin.immersiveintelligence."+skin+".name");
+		skin = (skin.isEmpty()?IIContent.itemSubmachinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
 
 		for(Entry<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> s : upgrades.entrySet())
 		{
@@ -101,7 +102,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 					int reloading = ItemNBTHelper.getInt(stack, "reloading");
 					ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
 
-					int maxReload = (ItemNBTHelper.getBoolean(stack,"isDrum")?Submachinegun.drumReloadTime:Submachinegun.clipReloadTime);
+					int maxReload = (ItemNBTHelper.getBoolean(stack, "isDrum")?Submachinegun.drumReloadTime: Submachinegun.clipReloadTime);
 					float reload = MathHelper.clamp(
 							reloading+(reloading > 0?partialTicks: 0),
 							0,
@@ -114,14 +115,14 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 					{
 						if(IIContent.itemSubmachinegun.getUpgrades(stack).hasKey("bottom_loading"))
 						{
-							ClientUtils.bindTexture(nmod.getTexturePath());
+							ClientUtils.bindTexture(skin+nmod.getTexturePath());
 							nmod.render(0.0625f);
 							if(!magazine.isEmpty())
 								(magazine.getMetadata()==1?model.magBottomBox: model.magDrumBox).render(0.0625f);
 						}
 						else if(!magazine.isEmpty())
 						{
-							ClientUtils.bindTexture(nmod.getTexturePath());
+							ClientUtils.bindTexture(skin+nmod.getTexturePath());
 							nmod.render(0.0625f);
 						}
 					}
@@ -147,7 +148,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 								clipReload = 1f;
 
 						}
-						ClientUtils.bindTexture(nmod.getTexturePath());
+						ClientUtils.bindTexture(skin+nmod.getTexturePath());
 						if(IIContent.itemSubmachinegun.getUpgrades(stack).hasKey("bottom_loading"))
 						{
 							nmod.render(0.0625f);
@@ -181,10 +182,10 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 					GlStateManager.pushMatrix();
 
 					GlStateManager.translate(2.5/16f, 0, 0.0625f);
-					GlStateManager.rotate(175*(float)(1d-(preciseAim/Submachinegun.aimTimeFoldedStock)), 0, 1,0);
+					GlStateManager.rotate(175*(float)(1d-(preciseAim/Submachinegun.aimTimeFoldedStock)), 0, 1, 0);
 					GlStateManager.translate(-2.5/16f, 0, -0.0625f);
 
-					ClientUtils.bindTexture(nmod.getTexturePath());
+					ClientUtils.bindTexture(skin+nmod.getTexturePath());
 					nmod.render(0.0625f);
 					GlStateManager.popMatrix();
 				}
@@ -195,14 +196,14 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 					float movement = 1f-(Math.abs(delay/(float)Submachinegun.bulletFireTime-0.5f)/0.5f);
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(0, 0, 0.5f*movement);
-					ClientUtils.bindTexture(nmod.getTexturePath());
+					ClientUtils.bindTexture(skin+nmod.getTexturePath());
 					nmod.render(0.0625f);
 					GlStateManager.popMatrix();
 				}
 				break;
 				default:
 				{
-					ClientUtils.bindTexture(nmod.getTexturePath());
+					ClientUtils.bindTexture(skin+nmod.getTexturePath());
 					nmod.render(0.0625f);
 
 				}
