@@ -171,7 +171,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 
 	private void outputItem(ItemStack stack)
 	{
-		EnumFacing ff = mirrored?this.facing: this.facing.getOpposite();
+		EnumFacing ff = this.facing;
 		BlockPos pp = getBlockPosForPos(34).offset(ff);
 		TileEntity inventoryTile = this.world.getTileEntity(pp);
 		if(inventoryTile!=null)
