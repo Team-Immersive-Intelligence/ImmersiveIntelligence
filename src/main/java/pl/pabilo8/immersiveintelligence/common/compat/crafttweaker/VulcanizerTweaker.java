@@ -18,17 +18,12 @@ import java.util.List;
 
 /**
  * @author Pabilo8
- * @since 08-08-2019
+ * @since 19.06.2022
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".Vulcanizer")
 @ZenRegister
 public class VulcanizerTweaker
 {
-	public VulcanizerTweaker()
-	{
-
-	}
-
 	@ZenMethod
 	public static void addRecipe(IIngredient mainInput, IIngredient compoundInput, IIngredient sulfurInput, IItemStack itemMold, IItemStack itemOutput, int energy, String resIn, String resOut)
 	{
@@ -36,7 +31,7 @@ public class VulcanizerTweaker
 		{
 			if(o==null)
 			{
-				CraftTweakerAPI.getLogger().logError("Did not add vulcanizer recipe for "+itemOutput.getDisplayName()+", input was null");
+				CraftTweakerAPI.getLogger().logError("Could not add vulcanizer recipe for "+itemOutput.getDisplayName()+", input was null");
 				return;
 			}
 		}
@@ -48,8 +43,8 @@ public class VulcanizerTweaker
 				CraftTweakerHelper.toIEIngredientStack(compoundInput),
 				CraftTweakerHelper.toIEIngredientStack(sulfurInput),
 				energy,
-				new ResourceLocation(resIn),
-				new ResourceLocation(resOut)
+				new ResourceLocation(resIn+".png"),
+				new ResourceLocation(resOut+".png")
 		);
 
 		CraftTweakerAPI.apply(new Add(r));

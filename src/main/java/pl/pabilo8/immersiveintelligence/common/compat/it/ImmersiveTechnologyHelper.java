@@ -12,6 +12,9 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
+import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.PenetrationHandlerSteel;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIMinecart.Minecarts;
 
@@ -28,6 +31,11 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 	public void preInit()
 	{
 		addMinecarts();
+
+		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), ITContent.blockMetalMultiblock,
+				ITContent.blockMetalMultiblock1, ITContent.blockMetalBarrel, ITContent.blockMetalDevice,
+				ITContent.blockMetalTrash, ITContent.blockMetalDevice0Dummy, ITContent.blockMetalDevice1Dummy,
+				ITContent.blockValve);
 
 		/*
 		addMinecartToItem("trashcan_item", EntityMinecartTrashcanItem::new,

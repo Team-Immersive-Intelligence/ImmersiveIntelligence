@@ -5,7 +5,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -44,54 +48,31 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 		return r;
 	}
 
-	public static List<ElectrolyzerRecipe> removeRecipesForOutput(FluidStack fluidOutput1, @Nullable FluidStack fluidOutput2)
+	public static List<ElectrolyzerRecipe> removeRecipesForInput(FluidStack fluidInput)
 	{
-		List<ElectrolyzerRecipe> list = new ArrayList();
-		Iterator<ElectrolyzerRecipe> it = recipeList.iterator();
-		while(it.hasNext())
-		{
-			ElectrolyzerRecipe ir = it.next();
-			if(fluidOutput2==null)
-			{
-				if(ir.fluidOutputList.get(0)==fluidOutput1||ir.fluidOutputList.get(1)==fluidOutput1)
-				{
-					list.add(ir);
-					it.remove();
-				}
-			}
-			else
-			{
-				if(ir.fluidOutputList.get(0)==fluidOutput1||ir.fluidOutputList.get(1)==fluidOutput2)
-				{
-					list.add(ir);
-					it.remove();
-				}
-			}
-		}
-		return list;
+		List<ElectrolyzerRecipe> recipes = recipeList.stream()
+				.filter(r -> r.fluidInput.isFluidEqual(fluidInput))
+				.collect(Collectors.toList());
+
+		for(ElectrolyzerRecipe recipe : recipes)
+			recipeList.remove(recipe);
+
+		return recipeList;
 	}
 
 	public static ElectrolyzerRecipe findRecipe(FluidStack fluidInput)
 	{
 		for(ElectrolyzerRecipe recipe : recipeList)
-		{
 			if(recipe.fluidInput.getFluid()==fluidInput.getFluid()&&fluidInput.amount >= recipe.fluidInput.amount)
-			{
 				return recipe;
-			}
-		}
 		return null;
 	}
 
 	public static ElectrolyzerRecipe findIncompleteRecipe(FluidStack fluidInput)
 	{
 		for(ElectrolyzerRecipe recipe : recipeList)
-		{
 			if(recipe.fluidInput.getFluid()==fluidInput.getFluid())
-			{
 				return recipe;
-			}
-		}
 		return null;
 	}
 
@@ -111,7 +92,6 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 	public static ElectrolyzerRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
-
 		return findRecipe(fluid_input);
 	}
 

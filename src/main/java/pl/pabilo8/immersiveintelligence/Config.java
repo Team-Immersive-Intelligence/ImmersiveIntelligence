@@ -1194,6 +1194,15 @@ public class Config
 				@Comment({"How much the range decreases when there is bad weather (rain, snow) ( 1 - full range, 0.5 - half range, 0 - no range, etc.)"})
 				public static double weatherHarshness = 0.35;
 
+				@Comment({"A list of all entities which will not activate the Tripmine"})
+				public static String[] tripmineBlacklist = new String[]{
+						"minecraft:chicken",
+						"minecraft:rabbit",
+						"immersiveintelligence:bullet",
+						"immersiveintelligence:silverfish",
+						"immersiveintelligence:endermite"
+				};
+
 			}
 
 			public static class Submachinegun

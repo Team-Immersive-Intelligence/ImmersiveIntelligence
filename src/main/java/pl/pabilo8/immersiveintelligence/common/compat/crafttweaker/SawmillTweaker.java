@@ -20,13 +20,8 @@ import java.util.List;
  */
 @ZenClass("mods."+ImmersiveIntelligence.MODID+".Sawmill")
 @ZenRegister
-public class SawmillRecipeTweaker
+public class SawmillTweaker
 {
-	public SawmillRecipeTweaker()
-	{
-
-	}
-
 	@ZenMethod
 	public static void addRecipe(IIngredient itemInput, IItemStack itemOutput, IItemStack secondaryItemOutput, int torque, int time, int hardness, int dustColor)
 	{
@@ -34,7 +29,7 @@ public class SawmillRecipeTweaker
 		Object oItemInput = CraftTweakerHelper.toObject(itemInput);
 		if(oItemInput==null)
 		{
-			CraftTweakerAPI.getLogger().logError("Did not add sawmill recipe for "+itemOutput.getDisplayName()+", input was null");
+			CraftTweakerAPI.getLogger().logError("Could not add sawmill recipe for "+itemOutput.getDisplayName()+", input was null");
 			return;
 		}
 
@@ -68,7 +63,7 @@ public class SawmillRecipeTweaker
 		@Override
 		public String describe()
 		{
-			return "Adding SawmillRecipe Recipe for "+recipe.itemOutput.getDisplayName();
+			return "Adding Sawmill Recipe for "+recipe.itemOutput.getDisplayName();
 		}
 	}
 

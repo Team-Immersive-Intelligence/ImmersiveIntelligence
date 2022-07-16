@@ -19,7 +19,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 public class LighterTweaker
 {
-
 	@ZenMethod
 	public static void addFuel(ILiquidStack fuelEntry, int amountPerUse)
 	{

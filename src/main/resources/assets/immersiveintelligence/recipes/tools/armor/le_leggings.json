@@ -15,12 +15,10 @@
       "data": 0
     },
     "s": {
-      "item": "immersiveengineering:steel_armor_legs",
-      "data": 9
+      "item": "immersiveengineering:steel_armor_legs"
     },
     "l": {
-      "item": "minecraft:leather_leggings",
-      "data": 9
+      "item": "minecraft:leather_leggings"
     }
   },
   "result": {

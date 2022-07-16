@@ -273,6 +273,12 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	}
 
 	@Override
+	public String getSkinnableName()
+	{
+		return "machinegun";
+	}
+
+	@Override
 	public String getSkinnableDefaultTextureLocation()
 	{
 		return ImmersiveIntelligence.MODID+":textures/items/weapons/";

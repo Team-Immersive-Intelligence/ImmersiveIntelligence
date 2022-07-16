@@ -1,16 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.model.armor;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.render.IEBipedLayerRenderer;
-import blusunrize.immersiveengineering.common.items.ItemPowerpack;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
@@ -23,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
  * @author Pabilo8
  * @since 15.04.2021
  */
-public class ModelAdvancedPowerpackArmor extends TMTArmorModel implements IReloadableModelContainer<ModelAdvancedPowerpackArmor>
+public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadableModelContainer<ModelAdvancedPowerpack>
 {
 	static int textureX = 64;
 	static int textureY = 32;
@@ -35,10 +28,10 @@ public class ModelAdvancedPowerpackArmor extends TMTArmorModel implements IReloa
 
 	static
 	{
-		modelInstance = new ModelAdvancedPowerpackArmor().subscribeToList("advanced_powerpack");
+		modelInstance = new ModelAdvancedPowerpack().subscribeToList("advanced_powerpack");
 	}
 
-	public ModelAdvancedPowerpackArmor()
+	public ModelAdvancedPowerpack()
 	{
 		super(textureX, textureY, texture);
 
@@ -293,11 +286,11 @@ public class ModelAdvancedPowerpackArmor extends TMTArmorModel implements IReloa
 		init();
 	}
 
-	static ModelAdvancedPowerpackArmor modelInstance;
+	static ModelAdvancedPowerpack modelInstance;
 
-	public static ModelAdvancedPowerpackArmor getModel(EntityEquipmentSlot part, ItemStack stack)
+	public static ModelAdvancedPowerpack getModel(EntityEquipmentSlot part, ItemStack stack)
 	{
-		return (ModelAdvancedPowerpackArmor)modelInstance.prepareForRender(part, stack);
+		return (ModelAdvancedPowerpack)modelInstance.prepareForRender(part, stack);
 	}
 
 	protected void actualRender(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -314,25 +307,17 @@ public class ModelAdvancedPowerpackArmor extends TMTArmorModel implements IReloa
 			if(!bipedBody.isHidden&&bipedBody.showModel)
 			{
 				GlStateManager.pushMatrix();
-
-				bipedBody.postRender(scale);
-				GlStateManager.rotate(-180, 1, 0, 0);
-
-				GlStateManager.scale(1.06, 1.06, 1.06);
-
 				GlStateManager.enableBlend();
 				ClientUtils.bindTexture(texture);
-				for(ModelRendererTurbo model : bodyModel)
-					model.render(scale, false);
+
+				renderChild(bipedBody, bodyModel, scale, texture);
 
 				float[] color = Utils.rgbIntToRGB(renderColor);
 				GlStateManager.color(color[0], color[1], color[2]);
-				ClientUtils.bindTexture(textureLayer);
-				for(ModelRendererTurbo model : bodyColoredModel)
-					model.render(scale, false);
+				renderChild(bipedBody, bodyColoredModel, scale, textureLayer);
 				GlStateManager.color(1f, 1f, 1f);
 
-				GlStateManager.disableBlend();
+				//GlStateManager.disableBlend();
 				GlStateManager.popMatrix();
 			}
 		}
@@ -353,6 +338,6 @@ public class ModelAdvancedPowerpackArmor extends TMTArmorModel implements IReloa
 	public void reloadModels()
 	{
 		unsubscribeToList();
-		modelInstance = new ModelAdvancedPowerpackArmor().subscribeToList("advanced_powerpack");
+		modelInstance = new ModelAdvancedPowerpack().subscribeToList("advanced_powerpack");
 	}
 }

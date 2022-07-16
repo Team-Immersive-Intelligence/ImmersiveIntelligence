@@ -8,6 +8,7 @@
     ],
     "appliesTo": [
       "machinegun",
+      "submachinegun",
       "howitzer"
     ],
     "mods": [
@@ -22,6 +23,7 @@
     ],
     "appliesTo": [
       "machinegun",
+      "submachinegun",
       "howitzer"
     ],
     "mods": [
@@ -35,55 +37,11 @@
     ],
     "appliesTo": [
       "howitzer",
+      "submachinegun",
       "machinegun"
     ],
     "mods": [
       "skin_bauble"
-    ]
-  },
-  {
-    "name": "vaterland",
-    "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101"
-    ],
-    "appliesTo": [
-      "howitzer",
-      "machinegun"
-    ],
-    "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "text_color=ffffff"
-    ]
-  },
-  {
-    "name": "pershing",
-    "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101"
-    ],
-    "appliesTo": [
-      "howitzer",
-      "machinegun"
-    ],
-    "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "text_color=ffffff"
-    ]
-  },
-  {
-    "name": "zvezda",
-    "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101"
-    ],
-    "appliesTo": [
-      "howitzer",
-      "machinegun"
-    ],
-    "mods": [
-      "skin_bauble",
-      "skin_mg_text",
-      "text_color=ffffff"
     ]
   },
   {
@@ -93,6 +51,7 @@
     ],
     "appliesTo": [
       "howitzer",
+      "submachinegun",
       "machinegun"
     ],
     "mods": [
@@ -106,7 +65,9 @@
       "22153f9b-4950-4028-911a-7d39a2c80101"
     ],
     "appliesTo": [
-      "howitzer"
+      "howitzer",
+      "machinegun",
+      "submachinegun"
     ],
     "mods": [
       "skin_mg_text",
@@ -121,7 +82,8 @@
     ],
     "appliesTo": [
       "howitzer",
-      "machinegun"
+      "machinegun",
+      "submachinegun"
     ],
     "mods": [
       "skin_bauble",
@@ -132,22 +94,24 @@
     ]
   },
   {
-    "name": "ornamental",
-    "uuid": [
-      "22153f9b-4950-4028-911a-7d39a2c80101"
-    ],
-    "appliesTo": [
-      "machinegun"
-    ],
-    "mods": []
-  },
-  {
     "name": "vanguard",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101"
     ],
     "appliesTo": [
-      "machinegun"
+      "machinegun",
+      "submachinegun"
+    ],
+    "mods": []
+  },
+  {
+    "name": "magnate",
+    "uuid": [
+      "22153f9b-4950-4028-911a-7d39a2c80101"
+    ],
+    "appliesTo": [
+      "machinegun",
+      "submachinegun"
     ],
     "mods": [
       "rarity=Epic"
@@ -160,7 +124,8 @@
     ],
     "appliesTo": [
       "howitzer",
-      "machinegun"
+      "machinegun",
+      "submachinegun"
     ],
     "mods": [
       "skin_bauble",
@@ -173,7 +138,8 @@
       "80b55a74-33b4-4e03-bcb7-3d6599f7fab3"
     ],
     "appliesTo": [
-      "machinegun"
+      "machinegun",
+      "submachinegun"
     ],
     "mods": [
       "skin_bauble",

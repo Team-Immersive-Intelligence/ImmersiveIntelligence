@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.armor.ModelAdvancedPowerpackArmor;
+import pl.pabilo8.immersiveintelligence.client.model.armor.ModelAdvancedPowerpack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nonnull;
@@ -77,7 +77,7 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 	{
 		//And yes, I really like AoT in its current state
 		//return ModelManeuverGear.getModel();
-		return ModelAdvancedPowerpackArmor.getModel(armorSlot, itemStack);
+		return ModelAdvancedPowerpack.getModel(armorSlot, itemStack);
 	}
 
 	/**

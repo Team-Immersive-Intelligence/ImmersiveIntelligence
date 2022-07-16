@@ -44,7 +44,7 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-
+// TODO: 13.02.2022 fix/rework
 /**
  * @author Pabilo8
  * @since 13-04-2020
@@ -94,6 +94,8 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 			nbt.setTag("inventory", Utils.writeInventory(inventory));
 			nbt.setInteger("processTime", processTime);
 			nbt.setInteger("processTimeMax", processTimeMax);
+			nbt.setTag("processPrimary", processPrimary.serializeNBT());
+			nbt.setTag("processSecondary", processSecondary.serializeNBT());
 		}
 
 	}
@@ -193,7 +195,9 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 						processTime = 0;
 						processTimeMax = (int)((float)recipe.getTotalProcessTime());
 						//process.t
-						sendUpdate(1);
+						processPrimary = processQueue.get(0).recipe.itemOutput;
+						processSecondary = processQueue.get(0).recipe.itemSecondaryOutput;
+						sendUpdate(2);
 					}
 				}
 			}
@@ -214,13 +218,13 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 			{
 				BlockPos pos = getBlockPosForPos(4).offset(facing.getOpposite(), 1);
 				ItemStack output = inventory.get(2);
-				ItemStack output_secondary = inventory.get(3);
 				TileEntity inventoryTile = this.world.getTileEntity(pos);
 				if(inventoryTile!=null)
 				{
 					output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
 				}
 				inventory.set(2, output);
+
 				sendUpdate(2);
 
 			}
@@ -333,7 +337,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	{
 		boolean condition = inventory.get(1).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&inventory.get(2).getCount()+process.recipe.itemOutput.getCount() <= getSlotLimit(2);
 		if(!condition)
-			sendUpdate(1);
+			sendUpdate(2);
 		return condition;
 	}
 
@@ -382,8 +386,6 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		processSecondary = ItemStack.EMPTY;
 		int time = processTime;
 		processTime = -1;
-		sendUpdate(1);
-		processTime = time;
 	}
 
 	@Override
@@ -462,9 +464,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	@Override
 	public void doGraphicalUpdates(int slot)
 	{
-		//unstuck the process
-		if(processQueue.isEmpty())
-			processTime = 0;
+
 	}
 
 	public void sendUpdate(int id)
@@ -472,36 +472,14 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 		if(!world.isRemote)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
-			if(id==1)
-			{
-				tag.setTag("inventory", Utils.writeInventory(inventory));
-				if(processTime!=-1&&processQueue.size() > 0&&inventory.get(1).getItem() instanceof ISawblade&&getCurrentEfficiency() > 0.95&&inventory.get(2).getCount()+processQueue.get(0).recipe.itemOutput.getCount() <= getSlotLimit(2))
-				{
-					processPrimary = processQueue.get(0).recipe.itemOutput;
-					processSecondary = processQueue.get(0).recipe.itemSecondaryOutput;
-				}
-				else
-				{
-					processPrimary = ItemStack.EMPTY;
-					processSecondary = ItemStack.EMPTY;
-					processTime = 0;
-					processTimeMax = 0;
-				}
-			}
-			else if(id==2)
-			{
-				tag.setTag("inventory", Utils.writeInventory(inventory));
-			}
-			if(id!=2)
-			{
-				tag.setTag("processPrimary", processPrimary.serializeNBT());
-				tag.setTag("processSecondary", processSecondary.serializeNBT());
 
+			tag.setTag("inventory", Utils.writeInventory(inventory));
 
-				tag.setInteger("processTime", processTime);
-				tag.setInteger("processTimeMax", processTimeMax);
+			tag.setTag("processPrimary", processPrimary.serializeNBT());
+			tag.setTag("processSecondary", processSecondary.serializeNBT());
 
-			}
+			tag.setInteger("processTime", processTime);
+			tag.setInteger("processTimeMax", processTimeMax);
 
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
 		}
@@ -523,6 +501,13 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 	public boolean canOpenGui()
 	{
 		return formed;
+	}
+
+	@Override
+	public void onGuiOpened(EntityPlayer player, boolean clientside)
+	{
+		if(!clientside)
+			sendUpdate(2);
 	}
 
 	@Override

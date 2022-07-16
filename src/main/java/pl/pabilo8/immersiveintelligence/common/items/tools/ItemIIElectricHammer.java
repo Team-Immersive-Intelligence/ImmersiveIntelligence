@@ -285,9 +285,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		IBlockState state = world.getBlockState(pos);
-		if(tile==null)
-			return false;
-
 
 		if(!(tile instanceof IDirectionalTile)&&!(tile instanceof IHammerInteraction)&&!(tile instanceof IConfigurableSides)&&hasEnoughEnergy(player.getHeldItem(hand)))
 		{
@@ -297,7 +294,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				return true;
 			}
 		}
-		else if(tile instanceof IConfigurableSides&&!world.isRemote)
+
+		if(tile==null)
+			return false;
+
+		if(tile instanceof IConfigurableSides&&!world.isRemote)
 		{
 			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
 			return ((IConfigurableSides)tile).toggleSide(iSide, player);

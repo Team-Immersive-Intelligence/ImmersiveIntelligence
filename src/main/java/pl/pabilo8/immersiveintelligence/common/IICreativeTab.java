@@ -44,8 +44,8 @@ public class IICreativeTab extends CreativeTabs
 		return new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.ordinal());
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
+	@Override
 	public void displayAllRelevantItems(NonNullList<ItemStack> list)
 	{
 		super.displayAllRelevantItems(list);
@@ -69,7 +69,7 @@ public class IICreativeTab extends CreativeTabs
 		}
 	}
 
-	public void addAssemblySchemes(NonNullList list)
+	public void addAssemblySchemes(NonNullList<ItemStack> list)
 	{
 		for(PrecissionAssemblerRecipe recipe : PrecissionAssemblerRecipe.recipeList)
 		{
@@ -77,25 +77,25 @@ public class IICreativeTab extends CreativeTabs
 		}
 	}
 
-	public void addExampleBullets(NonNullList list)
+	public void addExampleBullets(NonNullList<ItemStack> list)
 	{
-		for(IBullet bullet : new IBullet[]{IIContent.itemAmmoArtillery,IIContent.itemAmmoLightArtillery,IIContent.itemAmmoMortar})
+		for(IBullet bullet : new IBullet[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
 		{
-			list.add(bullet.getBulletWithParams("core_brass", "canister", "tnt","tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_brass", "canister", "rdx","tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_brass", "canister", "hmx","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_brass", "canister", "tnt", "tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_brass", "canister", "rdx", "tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_brass", "canister", "hmx", "tracer_powder"));
 
-			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "tnt","tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "rdx","tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "hmx","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "tnt", "tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "rdx", "tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "hmx", "tracer_powder"));
 
-			list.add(bullet.getBulletWithParams("core_steel", "shaped", "tnt","tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_steel", "shaped", "rdx","tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_steel", "shaped", "hmx","tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_steel", "shaped", "tnt", "tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_steel", "shaped", "rdx", "tracer_powder"));
+			list.add(bullet.getBulletWithParams("core_steel", "shaped", "hmx", "tracer_powder"));
 		}
 
 		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("Phosphorgranate mk. 1"));
-		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmpatrone mk. 1"));
+		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmgranate mk. 1"));
 		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1"));
 
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Stielhandgranate mk.1"));
@@ -107,7 +107,8 @@ public class IICreativeTab extends CreativeTabs
 		try
 		{
 			((NBTTagList)ItemNBTHelper.getTag(grenade_firework).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{Explosion:{Type:0b,Colors:[I;3887386]}}"));
-		} catch(NBTException e)
+		}
+		catch(NBTException e)
 		{
 			e.printStackTrace();
 		}
@@ -123,7 +124,8 @@ public class IICreativeTab extends CreativeTabs
 		try
 		{
 			((NBTTagList)ItemNBTHelper.getTag(bullet_tracer).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{colour:3887386}"));
-		} catch(NBTException e)
+		}
+		catch(NBTException e)
 		{
 			e.printStackTrace();
 		}
@@ -158,6 +160,12 @@ public class IICreativeTab extends CreativeTabs
 		list.add(addColorBulletMagazine(IIContent.itemAmmoSubmachinegun, "submachinegun", 65327, 16711680, 25343, 16772608));
 		list.add(addColorBulletMagazine(IIContent.itemAmmoSubmachinegun, "submachinegun_drum", 65327, 16711680, 25343, 16772608));
 
+		list.add(IIContent.blockRadioExplosives.bullet.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Radio-Sprengstoff TNT mk.1"));
+		list.add(IIContent.blockRadioExplosives.bullet.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Radio-Sprengstoff Phosphor mk.1"));
+
+		list.add(IIContent.blockTellermine.bullet.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Tellermine mk.1"));
+		list.add(IIContent.blockTripmine.bullet.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("SD-Mine mk.1"));
+		list.add(IIContent.itemNavalMine.getBulletWithParams("core_brass", "softpoint", "rdx").setStackDisplayName("Seemine mk.1"));
 	}
 
 	ItemStack addColorBulletMagazine(IBullet type, String magName, int... colors)

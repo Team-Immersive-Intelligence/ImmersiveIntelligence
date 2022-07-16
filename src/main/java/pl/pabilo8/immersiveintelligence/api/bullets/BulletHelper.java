@@ -48,15 +48,12 @@ public class BulletHelper
 				PenetrationRegistry.blockDamage.add(new DamageBlockPos(dimensionBlockPos, newHp));
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getDensity()))), Utils.targetPointFromPos(dimensionBlockPos, world, 32));
 		}
-		else
+		else if(newHp <= 0)
 		{
-			if(newHp <= 0)
-			{
-				PenetrationRegistry.blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos));
-				world.getBlockState(pos).getBlock().breakBlock(world,pos,world.getBlockState(pos));
-				world.destroyBlock(dimensionBlockPos, false);
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, 0f)), Utils.targetPointFromPos(dimensionBlockPos, world, 32));
-			}
+			PenetrationRegistry.blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos));
+			world.getBlockState(pos).getBlock().breakBlock(world, pos, world.getBlockState(pos));
+			world.destroyBlock(dimensionBlockPos, false);
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, 0f)), Utils.targetPointFromPos(dimensionBlockPos, world, 32));
 		}
 
 
@@ -82,9 +79,7 @@ public class BulletHelper
 	public static void batchRegisterHandler(IPenetrationHandler handler, Block... blocks)
 	{
 		for(Block b : blocks)
-		{
 			PenetrationRegistry.registeredBlocks.put(iBlockState -> iBlockState.getBlock()==b, handler);
-		}
 	}
 
 	public static void suppress(World world, double posX, double posY, double posZ, float supressionRadius, int suppressionPower)
@@ -118,9 +113,7 @@ public class BulletHelper
 				effect.combine(new PotionEffect(IIPotions.broken_armor, 60, Math.min(255, effect.getAmplifier()+damageToArmour)));
 			}
 			for(ItemStack stack : ent.getArmorInventoryList())
-			{
 				stack.damageItem(damageToArmour, ent);
-			}
 
 			ent.addPotionEffect(effect);
 		}

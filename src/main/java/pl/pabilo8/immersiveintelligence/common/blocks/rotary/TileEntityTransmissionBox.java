@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
@@ -37,7 +38,7 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 		@Override
 		public RotationSide getSide(@Nullable EnumFacing facing)
 		{
-			return facing==getFacing().getOpposite()?RotationSide.OUTPUT: RotationSide.NONE;
+			return facing==getFacing().getOpposite()?RotationSide.OUTPUT: RotationSide.INPUT;
 		}
 	};
 
@@ -96,11 +97,26 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 	{
 		if(hasWorld()&&!world.isRemote)
 		{
-			tick -= 1;
-			if(tick < 1)
+			//energy.grow(60,10,0.98f);
+			TileEntity tile = world.getTileEntity(pos.offset(facing));
+			if(tile!=null&&tile.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
 			{
-				energy.grow(0, 0, 0.98f);
+				IRotaryEnergy cap = tile.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite());
+				if(cap!=null)
+					energy.handleRotation(cap, facing.getOpposite());
 			}
+			else
+			{
+				tick -= 1;
+				if(tick < 1)
+				{
+					energy.grow(0, 0, 0.98f);
+				}
+			}
+
+			tile = world.getTileEntity(pos.offset(facing.getOpposite()));
+			if(energy.getTorque() > 0&&tile instanceof IRotationAcceptor)
+				((IRotationAcceptor)tile).inputRotation(energy.getEnergy()/rof_conversion_ratio/IEConfig.Machines.dynamo_output, facing.getOpposite());
 		}
 	}
 

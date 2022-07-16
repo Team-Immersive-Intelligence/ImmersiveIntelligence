@@ -278,7 +278,7 @@ desc.immersiveintelligence.toolupgrade.heat_resistant_coating=When combined with
 desc.immersiveintelligence.toolupgrade.anti_static_mesh=Makes wearer immune to electric damage and makes proximity fuses unable to target it. Sensitive to EMP.
 desc.immersiveintelligence.toolupgrade.camouflage_mesh=Makes wearer invisible when sneaking through foliage. Sensitive to fire.
 desc.immersiveintelligence.toolupgrade.infrared_absorbing_mesh=Makes wearer invisible to infrared-based devices. Sensitive to EMP.
-desc.immersiveintelligence.toolupgrade.scuba_tank=Can be filled with oxygen for breathing underwater and additional fuel for operating powered tools.
+desc.immersiveintelligence.toolupgrade.scuba_tank=Can be filled with oxygen for breathing underwater and additional fuel for operating powered tools. Requires a Gas Mask to work.
 desc.immersiveintelligence.toolupgrade.helipack=Allows slow, albeit stable flight. Requires gasoline.
 desc.immersiveintelligence.toolupgrade.exoskeleton=Allows faster running. Requires energy to operate.
 desc.immersiveintelligence.toolupgrade.boot_reinforcement=Makes wearer immune to fire damage. When combined with Heat-Resistant Coating, allows the wearer to swim in hot liquids.
@@ -890,18 +890,6 @@ skin.immersiveintelligence.old_glory.name=Old Glory
 skin.immersiveintelligence.old_glory.desc=Glory to Heroes
 skin.immersiveintelligence.old_glory.text=A Poland themed skin, granted as a reward for contribution.
 
-skin.immersiveintelligence.vaterland.name=Vaterland
-skin.immersiveintelligence.vaterland.desc=And all that sacrifice just for an Iron Cross...
-skin.immersiveintelligence.vaterland.text=A Germany themed skin, granted as a reward for contribution.
-
-skin.immersiveintelligence.pershing.name=Pershing
-skin.immersiveintelligence.pershing.desc=Whatever the weather, we'll win this war together
-skin.immersiveintelligence.pershing.text=A Western Allies themed skin, granted as a reward for contribution.
-
-skin.immersiveintelligence.zvezda.name=Zvezda
-skin.immersiveintelligence.zvezda.desc=Reward for the great sacrifice
-skin.immersiveintelligence.zvezda.text=A Soviet themed skin, granted as a reward for contribution.
-
 skin.immersiveintelligence.stormwind.name=Stormwind
 skin.immersiveintelligence.stormwind.desc=A tribute to defenders of the sea fortress
 skin.immersiveintelligence.stormwind.text=A skin inspired by the old awesome flash game "Storm Winds"
@@ -996,6 +984,9 @@ machineupgrade.immersiveintelligence.packer_fluid.desc=Installing a fluid tank a
 
 machineupgrade.immersiveintelligence.packer_energy=Charging Module
 machineupgrade.immersiveintelligence.packer_energy.desc=Installing a fluid tank allows to charge items with IF, decreases item storage space by half, due to safety reasons a Pump Module cannot be installed along with this upgrade
+
+machineupgrade.immersiveintelligence.radio_locators=Radio Locators
+machineupgrade.immersiveintelligence.radio_locators.desc=Allows the Radar to detect radio signals and compute points of their origin. Increases the amount of energy required to operate.
 
 #Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Allows to set frequency for basic radio devices.
@@ -1159,6 +1150,10 @@ info.immersiveintelligence.tachometer.speed=Speed: %s
 
 info.immersiveintelligence.machineupgrade.name=Installing: %s
 info.immersiveintelligence.machineupgrade.progress=Progress: %1$s / %2$s IF
+
+info.immersiveintelligence.exoskeleton.0=Exoskeleton: §4Off§r
+info.immersiveintelligence.exoskeleton.1=Exoskeleton: §aMotion Assist§r
+info.immersiveintelligence.exoskeleton.2=Exoskeleton: §2Overdrive§r
 
 info.immersiveintelligence.machineupgrade.mg_loader.gui_tooltip=MG
 
@@ -1785,11 +1780,11 @@ ie.manual.entry.light_engineer_armor_upgrade_heat_resistant_coating=The Heat Res
 ie.manual.entry.light_engineer_armor_upgrade_anti_static_mesh=The Anti-Static Mesh gives the user immunity against electrical damage. It also interferes with the proximity fuses targeting, disrupting them. However, due to the properties of such coating it is extra vulnerable to any electromagnetic weapons, causing greater harm than it would have otherwise.
 ie.manual.entry.light_engineer_armor_upgrade_camouflage_mesh=The Camouflage Mesh is a simple net with leaves attached to it, making the wearer blend in with foliage when sneaking.  Due to it being made from leaves, being lit on fire is not recommended. Especially useful in forests, gardens and plains.
 ie.manual.entry.light_engineer_armor_upgrade_infrared_absorbing_mesh=The Infrared-Absorbing Mesh absorbs infrared light cast into it, serving as a perfect way to hide from infrared sensors. However due to it’s construction, getting hit by electromagnetic weapons will cause more harm than usual.
-ie.manual.entry.light_engineer_armor_upgrade_scuba_tank=The Scuba Tank gives the ability to remain longer underwater with no need to resurface for new air reserves. Thanks to it’s feed structure, can be filled with some fuel for operating powered tools.<br>Comes especially handy during underwater construction works. Requires a Gas Mask to be worn.
+ie.manual.entry.light_engineer_armor_upgrade_scuba_tank=The Scuba Tank gives the ability to remain longer underwater with no need to resurface for new air reserves. It can be filled with oxygen using the <link;bottlingMachine;§o§nBottling §o§nMachine§r>.<br>Comes especially handy during underwater construction works. Requires a Gas Mask to be worn.
 ie.manual.entry.light_engineer_armor_upgrade_helipack=
 ie.manual.entry.light_engineer_armor_upgrade_exoskeleton=The Exoskeleton upgrade grants it’s user ability to run faster thanks to it’s complex set of motors and hydraulics. As a safety precaution, it is only activated when running. The exoskeleton requires energy to operate.
 ie.manual.entry.light_engineer_armor_upgrade_boot_reinforcement=The Boots Reinforcement upgrade consists of several steel plates, held together by leather straps. It adds additional armor and protects the wearer from fire.
-ie.manual.entry.light_engineer_armor_upgrade_flippers=Flippers allow swift movement in fluids. They work very well with the Scuba Tank and Gasmask.
+ie.manual.entry.light_engineer_armor_upgrade_flippers=Flippers allow swift movement in fluids. They work very well with the Scuba Tank and Gas Mask.
 ie.manual.entry.light_engineer_armor_upgrade_snow_rackets=Snow Rackets improve stability on snow and ice, enabling the wearer to cross through difficult terrain.
 ie.manual.entry.light_engineer_armor_upgrade_internal_springs=Internal Springs suppress the impact force, protecting the wearer from fall damage. This is combined with rubber sole pads, which make the steps almost silent.
 

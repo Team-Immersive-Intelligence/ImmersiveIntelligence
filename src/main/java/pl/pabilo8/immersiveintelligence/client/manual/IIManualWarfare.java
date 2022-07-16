@@ -118,7 +118,7 @@ public class IIManualWarfare extends IIManual
 
 		ManualHelper.addEntry("fortifications", getCategory(),
 				new ManualPages.Crafting(ManualHelper.getManual(), "fortifications0", new ItemStack(IIContent.blockSandbags)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "fortifications1", new ItemStack(IIContent.blockMetalFortification))
+				new ManualPages.Crafting(ManualHelper.getManual(), "fortifications1", new ItemStack(IIContent.blockMetalFortification1, 1, IIBlockTypes_MetalFortification1.TANK_TRAP.getMeta()))
 		);
 
 		ManualHelper.addEntry("explosives_mines", getCategory(),

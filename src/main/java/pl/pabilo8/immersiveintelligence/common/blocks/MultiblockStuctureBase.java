@@ -1,17 +1,23 @@
 package pl.pabilo8.immersiveintelligence.common.blocks;
 
+import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
+import blusunrize.immersiveengineering.api.tool.ConveyorHandler.ConveyorDirection;
+import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorBelt;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.client.models.ModelConveyor;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,15 +31,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.Template;
 import net.minecraft.world.gen.structure.template.Template.BlockInfo;
 import net.minecraft.world.gen.structure.template.TemplateManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockConveyorScanner.conveyorStack;
 
@@ -78,7 +83,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		size = template.getSize();
 
 		//sets manual display scale
-		this.manualScale = 10f/(Math.max(Math.max(size.getX(), size.getZ()), size.getY())/7f);
+		this.manualScale = 7f/(Math.max(Math.max(size.getX(), size.getZ()), size.getY())/12f);
 
 		structure = new ItemStack[size.getY()][size.getZ()][size.getX()];
 		for(int x = 0; x < size.getX(); x++)
@@ -214,21 +219,39 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	{
 		if(stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock()==IEContent.blockConveyor)
 		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(0.5, 0.5, 0.5);
-			GlStateManager.rotate(90, 0, 1, 0);
-			ClientUtils.mc().getRenderItem().renderItem(conveyorStack, TransformType.NONE);
-			GlStateManager.popMatrix();
+			renderConveyor(stack);
 			return true;
 		}
 
 		return false;
 	}
 
+	/**
+	 * *Actually* renders a conveyor
+	 * @param stack conveyor ItemStack
+	 */
+	@SideOnly(Side.CLIENT)
+	public void renderConveyor(ItemStack stack)
+	{
+		GlStateManager.pushMatrix();
+
+		Tuple<ResourceLocation, EnumFacing> entry = getConveyorKey(stack, EnumFacing.NORTH);
+		EnumFacing facing = entry.getSecond();
+		IConveyorBelt conv = ConveyorHandler.functionRegistry.get(entry.getFirst()).apply(null);
+
+		List<BakedQuad> quads = ModelConveyor.getBaseConveyor(facing, 1, new Matrix4(facing), ConveyorDirection.HORIZONTAL,
+				ClientUtils.getSprite(conv.getActiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
+
+		quads = conv.modifyQuads(quads,null, facing);
+		ClientUtils.renderQuads(quads, 1, 1, 1, 1);
+
+		GlStateManager.popMatrix();
+	}
+
 	@Override
 	public float getManualScale()
 	{
-		return manualScale*0.85f;
+		return 6*(1f/(Math.max(Math.max(size.getX(), size.getZ()), size.getY())/10f));
 	}
 
 	@Override
@@ -287,7 +310,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 		if(state.getBlock()==IEContent.blockConveyor)
 		{
-			// TODO: 08.08.2021 direction
 			ItemStack conveyorStack = ConveyorHandler.getConveyorStack(info.tileentityData.getString("conveyorBeltSubtype"));
 			ItemNBTHelper.setInt(conveyorStack, "conveyorFacing", info.tileentityData.getInteger("facing"));
 			return new IngredientStack(conveyorStack).setUseNBT(true);
@@ -349,8 +371,13 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	public Tuple<ResourceLocation, EnumFacing> getConveyorKey(int h, int l, int w, EnumFacing facing)
 	{
 		IngredientStack is = checkStructure[h][l][w];
-		ResourceLocation rl = new ResourceLocation(ItemNBTHelper.getString(is.stack, "conveyorType"));
-		EnumFacing sf = EnumFacing.getFront(ItemNBTHelper.getInt(is.stack, "conveyorFacing"));
+		return getConveyorKey(is.stack,facing);
+	}
+
+	public Tuple<ResourceLocation, EnumFacing> getConveyorKey(ItemStack stack, EnumFacing facing)
+	{
+		ResourceLocation rl = new ResourceLocation(ItemNBTHelper.getString(stack, "conveyorType"));
+		EnumFacing sf = EnumFacing.getFront(ItemNBTHelper.getInt(stack, "conveyorFacing"));
 		EnumFacing ff = EnumFacing.getHorizontal(sf.getHorizontalIndex()+facing.getHorizontalIndex());//
 		return new Tuple<>(rl, ff);
 	}

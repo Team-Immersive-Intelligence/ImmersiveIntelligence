@@ -45,7 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageItemReloadMagazine;
+import pl.pabilo8.immersiveintelligence.common.network.MessageItemKeybind;
 import pl.pabilo8.immersiveintelligence.common.network.MessageParticleGunfire;
 
 import javax.annotation.Nonnull;
@@ -128,7 +128,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 			if(worldIn.isRemote)
 				if(!ItemNBTHelper.getBoolean(stack, "shouldReload")&&ClientProxy.keybind_manualReload.isKeyDown())
-					IIPacketHandler.INSTANCE.sendToServer(new MessageItemReloadMagazine());
+					IIPacketHandler.INSTANCE.sendToServer(new MessageItemKeybind(0));
 
 			int currentAim = ItemNBTHelper.getInt(stack, "aiming");
 			int fireDelay = ItemNBTHelper.getInt(stack, "fireDelay");
@@ -358,6 +358,12 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	public boolean allowFluid(ItemStack container, FluidStack fluid)
 	{
 		return false;
+	}
+
+	@Override
+	public String getSkinnableName()
+	{
+		return "submachinegun";
 	}
 
 	@Override

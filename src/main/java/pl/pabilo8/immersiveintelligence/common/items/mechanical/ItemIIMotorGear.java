@@ -1,11 +1,16 @@
 package pl.pabilo8.immersiveintelligence.common.items.mechanical;
 
+import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -25,10 +30,19 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add("Ratio:"+String.format("%.2f", getGearTorqueModifier(stack)));
+		float mod = getGearTorqueModifier(stack);
+		//speed : torque
+		float speed = mod < 1&&mod!=0?1f/mod: 1;
+		float torque = mod >= 1?mod: 1;
+
+		tooltip.add(I18n.format(CommonProxy.INFO_KEY+"gear_ratio",
+				speed==(int)speed?String.valueOf((int)speed): String.valueOf(speed),
+				torque==(int)torque?String.valueOf((int)torque): String.valueOf(torque)
+		));
 	}
 
 	@Override

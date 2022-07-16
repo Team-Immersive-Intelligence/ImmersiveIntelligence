@@ -37,11 +37,21 @@ public class ImmersivePostsHelper extends IICompatModule
 	@Override
 	public void preInit()
 	{
+		//IIContent.itemMaterialRod.setMetaUnhidden(2, 3);
+		//OreDictionary.registerOre("stickZinc", new ItemStack(IIContent.itemMaterialRod, 1, 2));
+		//OreDictionary.registerOre("stickPlatinum", new ItemStack(IIContent.itemMaterialRod, 1, 3));
+
 		brassFence = createFence("brass");
 		tungstenFence = createFence("tungsten");
 		zincFence = createFence("zinc");
 		platinumFence = createFence("platinum");
 		duraluminiumFence = createFence("duraluminium");
+
+		OreDictionary.registerOre("fenceBrass", new ItemStack(brassFence));
+		OreDictionary.registerOre("fenceTungsten", new ItemStack(tungstenFence));
+		OreDictionary.registerOre("fenceZinc", new ItemStack(zincFence));
+		OreDictionary.registerOre("fencePlatinum", new ItemStack(platinumFence));
+		OreDictionary.registerOre("fenceDuraluminium", new ItemStack(duraluminiumFence));
 
 		try
 		{
@@ -86,15 +96,7 @@ public class ImmersivePostsHelper extends IICompatModule
 	@Override
 	public void registerRecipes()
 	{
-		IIContent.itemMaterialRod.setMetaUnhidden(2, 3);
-		OreDictionary.registerOre("stickZinc", new ItemStack(IIContent.itemMaterialRod, 1, 2));
-		OreDictionary.registerOre("stickPlatinum", new ItemStack(IIContent.itemMaterialRod, 1, 3));
 
-		OreDictionary.registerOre("fenceBrass", new ItemStack(brassFence));
-		OreDictionary.registerOre("fenceTungsten", new ItemStack(tungstenFence));
-		OreDictionary.registerOre("fenceZinc", new ItemStack(zincFence));
-		OreDictionary.registerOre("fencePlatinum", new ItemStack(platinumFence));
-		OreDictionary.registerOre("fenceDuraluminium", new ItemStack(duraluminiumFence));
 	}
 
 	@Override

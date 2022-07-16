@@ -2,24 +2,29 @@ package pl.pabilo8.immersiveintelligence.common.items.armor;
 
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
-import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.ICorrosionProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.LightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.api.utils.IGasmask;
-import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.MessageItemKeybind;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +33,11 @@ import java.util.Map;
  * @author Pabilo8
  * @since 13.09.2020
  */
-public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements IElectricEquipment, IGasmask, ICorrosionProtectionEquipment, IRadiationProtectionEquipment, IAcidProtectionEquipment
+public class ItemIILightEngineerHelmet extends ItemIILightEngineerArmorBase implements IElectricEquipment, IGasmask
 {
 	public ItemIILightEngineerHelmet()
 	{
-		super(IIContent.ARMOR_MATERIAL_LIGHT_ENGINEER, EntityEquipmentSlot.HEAD, "LIGHT_ENGINEER_HELMET");
+		super(EntityEquipmentSlot.HEAD, "LIGHT_ENGINEER_HELMET");
 	}
 
 	@Nullable
@@ -43,15 +48,9 @@ public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements
 		return ModelLightEngineerArmor.getModel(armorSlot, itemStack);
 	}
 
-	@Override
-	String getMaterialName(ArmorMaterial material)
-	{
-		return "light_engineer_armor";
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, @Nonnull ITooltipFlag flag)
 	{
 		super.addInformation(stack, world, list, flag);
 	}
@@ -62,8 +61,9 @@ public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements
 		return 0.1f;
 	}
 
+	@Nonnull
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot, ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot equipmentSlot, @Nonnull ItemStack stack)
 	{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
@@ -75,13 +75,49 @@ public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements
 	}
 
 	@Override
+	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
+	{
+		super.onArmorTick(world, player, stack);
+		boolean hasEngineer = hasUpgrade(stack, "engineer_gear");
+		boolean hasIR = hasEngineer||hasUpgrade(stack, "infiltrator_gear");
+		boolean hasTech = hasEngineer||hasUpgrade(stack, "technician_gear");
+
+		if(world.isRemote)
+		{
+			if(hasIR&&ClientProxy.keybind_armorHelmet.isPressed())
+			{
+				IIPacketHandler.INSTANCE.sendToServer(new MessageItemKeybind(1));
+			}
+		}
+		else if((hasIR||hasTech)&&world.getTotalWorldTime()%20==0&&ItemNBTHelper.getBoolean(stack, "headgearActive"))
+		{
+			int drain = hasEngineer?LightEngineerArmor.ir_headgear_energy_usage:
+					(hasTech?LightEngineerArmor.technician_headgear_energy_usage: LightEngineerArmor.ir_headgear_energy_usage);
+
+			if(extractEnergy(stack, drain, false) < drain)
+				return;
+
+			if(hasIR)
+			{
+				boolean isInDarkness = world.getLightBrightness(player.getPosition()) <= 0.5f;
+				player.addPotionEffect(new PotionEffect(isInDarkness?MobEffects.NIGHT_VISION: MobEffects.BLINDNESS, 240, 1, true, false));
+			}
+			/*if(hasTech)
+			{
+
+			}*/
+		}
+
+	}
+
+	@Override
 	public void onStrike(ItemStack s, EntityEquipmentSlot eqSlot, EntityLivingBase p, Map<String, Object> cache,
 						 @Nullable DamageSource dSource, ElectricSource eSource)
 	{
 		if(!(dSource instanceof ElectricDamageSource))
 		{
+
 		}
-		// TODO: 13.09.2020 tesla coil interaction
 	}
 
 	@Override
@@ -94,23 +130,5 @@ public class ItemIILightEngineerHelmet extends ItemIIUpgradeableArmor implements
 	public boolean protectsFromGasses(ItemStack stack)
 	{
 		return getUpgrades(stack).hasKey("gasmask");
-	}
-
-	@Override
-	public boolean canCorrode(ItemStack stack)
-	{
-		return !getUpgrades(stack).hasKey("hazmat");
-	}
-
-	@Override
-	public boolean protectsFromRadiation(ItemStack stack)
-	{
-		return getUpgrades(stack).hasKey("hazmat");
-	}
-
-	@Override
-	public boolean protectsFromAcid(ItemStack stack)
-	{
-		return getUpgrades(stack).hasKey("hazmat");
 	}
 }
