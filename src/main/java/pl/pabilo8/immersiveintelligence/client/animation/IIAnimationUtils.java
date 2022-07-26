@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.animation;
 
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.models.IESmartObjModel;
+import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
+import blusunrize.immersiveengineering.client.models.obj.IEOBJModel;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import net.minecraft.block.state.IBlockState;
@@ -13,6 +16,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -23,12 +27,14 @@ import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
@@ -99,6 +105,50 @@ public class IIAnimationUtils
 		if(group.scale!=null)
 			model.scale = group.scale.getForTime(time);
 
+		if(group.alpha!=null)
+			model.alpha = group.alpha.getForTime(time);
+
+	}
+
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void setModelRotation(AMT model, double pitch, double yaw, double roll)
+	{
+		model.rot = new Vec3d(pitch, yaw, roll);
+	}
+
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void addModelRotation(AMT model, double pitch, double yaw, double roll)
+	{
+		if(model.rot==null)
+			setModelRotation(model, pitch, yaw, roll);
+		else model.rot = new Vec3d(model.rot.x+pitch, model.rot.y+yaw, model.rot.z+roll);
+	}
+
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void setModelTranslation(AMT model, Vec3d vec)
+	{
+		model.off = vec;
+	}
+
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void addModelTranslation(AMT model, Vec3d vec)
+	{
+		if(model.off==null)
+			setModelTranslation(model, vec);
+		else model.off = model.off.add(vec);
+	}
+
+	public static AMT[] getAMT(Tuple<IBlockState, IBakedModel> model, @Nullable IIModelHeader header)
+	{
+		return getAMT(model, header, h -> new AMT[0]);
 	}
 
 	/**
@@ -106,8 +156,9 @@ public class IIAnimationUtils
 	 * @param header the header file providing the group offsets and hierarchy
 	 * @return Animated Model Thingies
 	 */
-	public static AMT[] getAMT(Tuple<IBlockState, IBakedModel> model, @Nullable IIModelHeader header)
+	public static AMT[] getAMT(Tuple<IBlockState, IBakedModel> model, @Nullable IIModelHeader header, @Nonnull Function<IIModelHeader, AMT[]> custom)
 	{
+		// TODO: 17.07.2022 improve
 		IESmartObjModel baked = (IESmartObjModel)(model.getSecond());
 
 		//get group list from the unbaked model
@@ -122,23 +173,96 @@ public class IIAnimationUtils
 			OBJState objState = new OBJState(ImmutableList.of(group), true, ModelRotation.X0_Y0);
 			IExtendedBlockState bstate = ((IExtendedBlockState)model.getFirst()).withProperty(Properties.AnimationProperty, objState);
 
-			Vec3d origin = Vec3d.ZERO;
-			if(header!=null)
-				origin = header.getOffset(group);
+			Vec3d origin = getHeaderOffset(header, group);
 
-			models.add(
-					new AMT(group, origin,
-							baked.getModel()
-									.bake(objState, DefaultVertexFormats.BLOCK, ClientUtils::getSprite)
-									.getQuads(bstate, null, 0L).toArray(new BakedQuad[0])
-					)
-			);
+			baked.getTextures().forEach((s, textureAtlasSprite) -> ApiUtils.getRegisterSprite(ClientUtils.mc().getTextureMapBlocks(), textureAtlasSprite.getIconName()));
+
+			//get baked quads
+			BakedQuad[] quads = baked.getModel()
+					.bake(objState, DefaultVertexFormats.BLOCK, ClientUtils::getSprite)
+					.getQuads(bstate, null, 0L).toArray(new BakedQuad[0]);
+
+			//do not load empty models, fixes obj models having an additional empty element
+			if(quads.length==0)
+				continue;
+
+			models.add(new AMTQuads(group, origin, quads));
 		}
+
+		//add custom AMTs | item/fluid placeholders
+		models.addAll(Arrays.asList(custom.apply(header)));
 
 		if(header!=null)
 			header.applyHierarchy(models);
 
-		return models.toArray(new AMT[0]);
+		return organise(models.toArray(new AMT[0])); //remove children from array
+	}
+
+	private static Vec3d getHeaderOffset(IIModelHeader header, String name)
+	{
+		if(header!=null)
+			return header.getOffset(name);
+		return Vec3d.ZERO;
+	}
+
+	public static AMT[] getAMTFromRes(ResourceLocation res, @Nullable ResourceLocation headerRes)
+	{
+		return getAMTFromRes(res, headerRes, h -> new AMT[0]);
+	}
+
+	public static AMT[] getAMTFromRes(ResourceLocation res, @Nullable ResourceLocation headerRes, @Nonnull Function<IIModelHeader, AMT[]> custom)
+	{
+		try
+		{
+			/*IIAnimationLoader.preloadTexturesFromMTL(new ResourceLocation(
+					res.getResourceDomain(), res.getResourcePath().replace(".obj.ie", ".mtl")));*/
+			IEOBJModel model = ((IEOBJModel)IEOBJLoader.instance.loadModel(res));
+			IIModelHeader header = headerRes==null?null: IIAnimationLoader.loadHeader(headerRes);
+
+			return getAMTInternal(null, model, header, custom);
+
+		} catch(Exception ignored)
+		{
+		}
+		return new AMT[0];
+	}
+
+	private static AMT[] getAMTInternal(@Nullable IBlockState bState, @Nonnull IEOBJModel model, @Nullable IIModelHeader header, @Nonnull Function<IIModelHeader, AMT[]> custom)
+	{
+		//get group list from the unbaked model
+		Map<String, Group> groups = model.getMatLib().getGroups();
+
+		ArrayList<AMT> models = new ArrayList<>();
+
+		//turn .obj groups into AMT
+		for(String group : groups.keySet())
+		{
+			//get default, non rotated model state
+			OBJState objState = new OBJState(ImmutableList.of(group), true, ModelRotation.X0_Y0);
+
+			//get rotation offset
+			Vec3d origin = getHeaderOffset(header, group);
+
+			//get quads
+			BakedQuad[] quads = model
+					.bake(objState, DefaultVertexFormats.BLOCK, ClientUtils::getSprite)
+					.getQuads(bState, null, 0L).toArray(new BakedQuad[0]);
+
+			//do not add empty AMTs
+			if(quads.length==0)
+				continue;
+
+			models.add(new AMTQuads(group, origin, quads));
+		}
+
+		//add custom AMTs | item/fluid placeholders
+		models.addAll(Arrays.asList(custom.apply(header)));
+
+		//apply hierarchy from header file
+		if(header!=null)
+			header.applyHierarchy(models);
+
+		return organise(models.toArray(new AMT[0])); //remove children from array
 	}
 
 	/**
@@ -150,6 +274,21 @@ public class IIAnimationUtils
 		if(array!=null)
 			Arrays.stream(array).forEach(AMT::disposeOf);
 		return array;
+	}
+
+	public static AMT[] organise(AMT[] array)
+	{
+		return Arrays.stream(array).filter(amt -> !amt.isChild()).toArray(AMT[]::new);
+	}
+
+	public static AMT getPart(AMT[] array, String name)
+	{
+		return Arrays.stream(array)
+				.map(AMT::getChildrenRecursive)
+				.collect(new ArraylistJoinCollector<>())
+				.stream()
+				.filter(amt -> amt.name.equals(name))
+				.findFirst().orElse(array[0]);
 	}
 
 	//--- JSON Parsing ---//

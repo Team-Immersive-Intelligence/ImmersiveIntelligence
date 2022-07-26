@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IBulletContainer;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
@@ -16,7 +15,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -24,8 +22,6 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.AmmunitionCrateRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
@@ -57,17 +53,11 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		if(slot < 20)
-		{
 			return stack.getItem() instanceof ItemBullet&&!(stack.isItemEqual(BulletHandler.emptyCasing)||stack.isItemEqual(BulletHandler.emptyShell));
-		}
 		if(slot < 29)
-		{
 			return stack.getItem() instanceof ItemBullet&&(stack.isItemEqual(BulletHandler.emptyCasing))||stack.isItemEqual(BulletHandler.emptyShell)&&!stack.hasTagCompound();
-		}
 		if(slot < 37)
-		{
 			return stack.getItem() instanceof ItemBullet&&!(stack.equals(BulletHandler.emptyCasing)||stack.equals(BulletHandler.emptyShell));
-		}
 		if(slot==37)
 			return stack.getItem() instanceof ItemRevolver||stack.getItem() instanceof ItemSpeedloader;
 
@@ -79,8 +69,7 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	{
 		if(player.isSneaking())
 		{
-			open = !open;
-			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open, 0, this.pos), this.world.provider.getDimension());
+			IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open = !open, 0, this.pos), this.world.provider.getDimension());
 			return true;
 		}
 		else if(open)
@@ -105,22 +94,23 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	}
 
 	@Override
-	void affectEntity(Entity entity, boolean upgraded)
+	boolean affectEntity(Entity entity, boolean upgraded)
 	{
 		if(!upgraded||(ammoCrateEnergyPerAction <= energyStorage))
 		{
 			boolean healed = false;
 			if(entity instanceof EntityLivingBase)
-			{
 				if(!((EntityLivingBase)entity).isPotionActive(IIPotions.well_supplied))
 				{
 					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(IIPotions.well_supplied, 80, 0, true, true));
 					healed = true;
 				}
-			}
 			if(!upgraded&&healed)
 				energyStorage -= ammoCrateEnergyPerAction;
+
+			return healed;
 		}
+		return false;
 	}
 
 	@Override
@@ -147,23 +137,19 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 			{
 				ItemStack s = bullethandler.extractItem(i, 1, false);
 				if(s.isItemEqual(BulletHandler.emptyCasing)||s.isItemEqual(BulletHandler.emptyShell))
-				{
 					for(int j = 20; j < 29; j++)
 					{
 						s = insertionHandler.insertItem(j, s, false);
 						if(s.isEmpty())
 							break;
 					}
-				}
 				else
-				{
 					for(int j = 0; j < 20; j++)
 					{
 						s = insertionHandler.insertItem(j, s, false);
 						if(s.isEmpty())
 							break;
 					}
-				}
 			}
 
 			for(int j = 0; j < 8; j++)
@@ -173,13 +159,11 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 				{
 					ItemStack s = ItemStack.EMPTY;
 					for(int k = 0; k < 20; k++)
-					{
 						if(!insertionHandler.getStackInSlot(k).isEmpty()&&insertionHandler.getStackInSlot(k).getTagCompound().equals(required.getTagCompound()))
 						{
 							s = insertionHandler.extractItem(k, 1, false);
 							break;
 						}
-					}
 
 					bullethandler.insertItem(j, s, false);
 				}
@@ -209,12 +193,6 @@ public class TileEntityAmmunitionCrate extends TileEntityEffectCrate
 	{
 		// TODO: 06.09.2020
 		super.update();
-	}
-
-	@Override
-	public Vec3d getConnectionOffset(Connection con)
-	{
-		return new Vec3d(0.5, 0.5, 0.5);
 	}
 
 	@SideOnly(Side.CLIENT)

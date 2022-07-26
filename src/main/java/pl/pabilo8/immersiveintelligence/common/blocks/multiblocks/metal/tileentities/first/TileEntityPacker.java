@@ -938,6 +938,12 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	}
 
 	@Override
+	public int getClientInstallProgress()
+	{
+		return clientUpgradeProgress;
+	}
+
+	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
 		upgradeProgress += toAdd;

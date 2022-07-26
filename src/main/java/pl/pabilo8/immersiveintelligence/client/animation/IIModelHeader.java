@@ -71,6 +71,7 @@ public class IIModelHeader
 			AMT[] children = amts.stream()
 					.filter(child -> hierarchy.getOrDefault(child.name, "")
 							.equals(amt.name))
+					.map(AMT::setChild)
 					.toArray(AMT[]::new);
 
 			if(children.length > 0)

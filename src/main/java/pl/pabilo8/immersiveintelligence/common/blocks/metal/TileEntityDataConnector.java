@@ -257,6 +257,21 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 		return true;
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderColour(IBlockState object, String group)
+	{
+		if("Color".equals(group))
+			return 0xff000000|EnumDyeColor.byMetadata(this.color).getColorValue();
+		return 0xffffffff;
+	}
+
+	@Override
+	public String getCacheKey(IBlockState object)
+	{
+		return String.valueOf(this.color);
+	}
+
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
 	{

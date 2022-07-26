@@ -1,110 +1,60 @@
 package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelDebugger;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.animation.*;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataDebugger;
 
 /**
  * @author Pabilo8
  * @since 30.08.2020
  */
-public class DataDebuggerRenderer extends TileEntitySpecialRenderer<TileEntityDataDebugger> implements IReloadableModelContainer<DataDebuggerRenderer>
+public class DataDebuggerRenderer extends IITileRenderer<TileEntityDataDebugger>
 {
-	private static ModelDebugger model;
+	private static IIAnimation construction;
+	private static IIAnimationCompiledMap constructionMap;
+	private static AMT[] models = null;
 
 	@Override
-	public void render(TileEntityDataDebugger te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void draw(TileEntityDataDebugger te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/debugger.png";
-		if(te!=null)
+		if(te.setupTime > 0)
 		{
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x+1, y, z);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+			float progress = IIAnimationUtils.getAnimationProgress(te.setupTime, 25, true, partialTicks);
 
-			model.getBlockRotation(te.getFacing().getOpposite(), false);
-			if(te.setupTime > 0)
-			{
-				float progress = MathHelper.clamp(1f-((te.setupTime-partialTicks)/25f), 0, 1);
-				float machineBox = MathHelper.clamp(progress/0.35f, 0, 1);
-				float projector = MathHelper.clamp((progress-0.35f)/0.35f, 0, 1);
-				float deskStuff = MathHelper.clamp((progress-0.7f)/0.3f, 0, 1);
-				for(ModelRendererTurbo mod : model.baseModel)
-					mod.render(0.0625f);
+			//apply animation
+			constructionMap.apply(progress);
 
+			//apply rotation for block facing
+			applyStandardRotation(te.getFacing());
 
-				GlStateManager.enableBlend();
-				GlStateManager.pushMatrix();
-				GlStateManager.color(1f, 1f, 1f, Math.min(machineBox, 1));
-				GlStateManager.translate(0, 1f-machineBox, 0);
-				for(ModelRendererTurbo mod : model.machineBoxModel)
-					mod.render(0.0625f);
-				GlStateManager.popMatrix();
-				GlStateManager.pushMatrix();
-				GlStateManager.color(1f, 1f, 1f, Math.min(projector, 1));
-				GlStateManager.translate(0, 0, 1f-projector);
-				for(ModelRendererTurbo mod : model.projectorModel)
-					mod.render(0.0625f);
-				GlStateManager.popMatrix();
-				GlStateManager.pushMatrix();
-				GlStateManager.color(1f, 1f, 1f, Math.min(deskStuff, 1));
-				GlStateManager.translate(-1+deskStuff, 0, 0);
-				for(ModelRendererTurbo mod : model.deskStuffModel)
-					mod.render(0.0625f);
-				GlStateManager.popMatrix();
-				GlStateManager.disableBlend();
-			}
-			else
-			{
-				for(ModelRendererTurbo mod : model.baseModel)
-					mod.render(0.0625f);
-				for(ModelRendererTurbo mod : model.machineBoxModel)
-					mod.render(0.0625f);
-				for(ModelRendererTurbo mod : model.projectorModel)
-					mod.render(0.0625f);
-				for(ModelRendererTurbo mod : model.deskStuffModel)
-					mod.render(0.0625f);
-			}
-
-			GlStateManager.popMatrix();
-
-		}
-		else
-		{
-
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x+1, y, z);
-			GlStateManager.enableBlend();
-			GlStateManager.enableAlpha();
-
-			ClientUtils.bindTexture(texture);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			model.getBlockRotation(EnumFacing.SOUTH, false);
-			for(ModelRendererTurbo mod : model.baseModel)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.machineBoxModel)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.projectorModel)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.deskStuffModel)
-				mod.render(0.0625f);
-
-			GlStateManager.popMatrix();
+			//render
+			for(AMT mod : models)
+				mod.render(tes, buf);
 		}
 	}
 
 	@Override
-	public void reloadModels()
+	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
 	{
-		model = new ModelDebugger();
+		construction = IIAnimationLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "data_debugger_construction"));
+		models = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()));
+		constructionMap = IIAnimationCompiledMap.create(models, construction);
+	}
+
+	@Override
+	protected void nullifyModels()
+	{
+		models = IIAnimationUtils.disposeOf(models);
+		constructionMap = null;
+		construction = null;
 	}
 }

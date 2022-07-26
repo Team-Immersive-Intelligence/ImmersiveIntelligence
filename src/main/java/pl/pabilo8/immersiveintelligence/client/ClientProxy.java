@@ -83,8 +83,8 @@ import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
@@ -111,6 +111,8 @@ import pl.pabilo8.immersiveintelligence.client.render.RadioExplosivesRenderer.Ra
 import pl.pabilo8.immersiveintelligence.client.render.TellermineRenderer.TellermineItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.TripmineRenderer.TripmineItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.hans.HansRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.inserter.AdvancedInserterRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.inserter.InserterRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.*;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.MechanicalPumpRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRenderer;
@@ -123,7 +125,6 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
-import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityAdvancedInserter;
@@ -191,6 +192,8 @@ public class ClientProxy extends CommonProxy
 	};
 
 	public static KeyBinding keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
+	public static KeyBinding keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
+	public static KeyBinding keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
 	public static KeyBinding keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
 	public static KeyBinding keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
 	public static KeyBinding keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
@@ -226,17 +229,10 @@ public class ClientProxy extends CommonProxy
 				IIEMetaBlock ieMetaBlock = (IIEMetaBlock)block;
 				if(ieMetaBlock.useCustomStateMapper())
 					ModelLoader.setCustomStateMapper(block, IECustomStateMapper.getStateMapper(ieMetaBlock));
-				ModelLoader.setCustomMeshDefinition(blockItem, new ItemMeshDefinition()
-				{
-					@Override
-					public ModelResourceLocation getModelLocation(ItemStack stack)
-					{
-						return new ModelResourceLocation(loc, "inventory");
-					}
-				});
+				ModelLoader.setCustomMeshDefinition(blockItem, stack -> new ModelResourceLocation(loc, "inventory"));
 				for(int meta = 0; meta < ieMetaBlock.getMetaEnums().length; meta++)
 				{
-					BlockIIBase b = (BlockIIBase)block;
+					BlockIIBase<?> b = (BlockIIBase<?>)block;
 					if(!b.tesrMap.isEmpty()&&b.tesrMap.containsKey(meta))
 					{
 						ModelLoader.setCustomModelResourceLocation(blockItem, meta, new ModelResourceLocation(new ResourceLocation(ImmersiveIntelligence.MODID, "itemblock/"+b.tesrMap.get(meta)), "inventory"));
@@ -375,9 +371,9 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(EvenMoreImmersiveModelRegistry.instance);
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
 		IEOBJLoader.instance.addDomain(ImmersiveIntelligence.MODID);
-		//None of your trickery is present here...
-		//And yes, I would like to have .obj models, really...
-		//But using TMT seems easier (and more weird).
+
+		//long live .obj models! ^^
+
 		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMine.class, NavalMineRenderer::new);
@@ -550,6 +546,22 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberDropper.texture_on);
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberDropper.texture_off);
 		ApiUtils.getRegisterSprite(event.getMap(), ConveyorRubberExtract.texture_casing);
+
+		// TODO: 22.07.2022 Make texture loading dynamic
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/inserter_gray");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/inserter_dim");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/inserter");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/advanced_inserter");
+
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/crate_inserter_upgrade");
+
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_green");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_red");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_dim");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/metal_device/inserter/tool_gray");
+
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/common/common_copper_cable");
+
 	}
 
 	@Override
@@ -628,6 +640,9 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.registerKeyBinding(keybind_motorbikeEngine);
 		ClientRegistry.registerKeyBinding(keybind_motorbikeTowing);
 
+		ClientRegistry.registerKeyBinding(keybind_armorHelmet);
+		ClientRegistry.registerKeyBinding(keybind_armorExosuit);
+
 		ShaderUtil.init();
 
 		TileEntityFluidInserter.conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
@@ -675,16 +690,16 @@ public class ClientProxy extends CommonProxy
 				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter1"),
 				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter2"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "filler", true)
-						.addEntry(new DataPacketTypeString(), 'p')
-						.addEntry(new DataPacketTypeInteger(), 'p'),
+						.addEntry(new DataTypeString(), 'p')
+						.addEntry(new DataTypeInteger(), 'p'),
 				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "filler")
-						.addEntry(new DataPacketTypeInteger(), "get_color")
-						.addEntry(new DataPacketTypeInteger(), "get_color_hex")
-						.addEntry(new DataPacketTypeInteger(), "get_ink", "get_ink_black")
-						.addEntry(new DataPacketTypeInteger(), "get_ink_cyan")
-						.addEntry(new DataPacketTypeInteger(), "get_ink_magenta")
-						.addEntry(new DataPacketTypeInteger(), "get_ink_yellow")
-						.addEntry(new DataPacketTypeInteger(), "get_energy")
+						.addEntry(new DataTypeInteger(), "get_color")
+						.addEntry(new DataTypeInteger(), "get_color_hex")
+						.addEntry(new DataTypeInteger(), "get_ink", "get_ink_black")
+						.addEntry(new DataTypeInteger(), "get_ink_cyan")
+						.addEntry(new DataTypeInteger(), "get_ink_magenta")
+						.addEntry(new DataTypeInteger(), "get_ink_yellow")
+						.addEntry(new DataTypeInteger(), "get_energy")
 		);
 		ManualHelper.addEntry("filler", ManualHelper.CAT_HEAVYMACHINES,
 				new ManualPageMultiblock(ManualHelper.getManual(), "filler0", MultiblockFiller.instance),
@@ -707,7 +722,7 @@ public class ClientProxy extends CommonProxy
 		);
 
 		ManualHelper.addEntry("medicrate", ManualHelper.CAT_MACHINES,
-				new ManualPages.Crafting(ManualHelper.getManual(), "medicrate0", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta())),
+				new ManualPages.Crafting(ManualHelper.getManual(), "medicrate0", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.MEDIC_CRATE.getMeta())),
 				new ManualPages.Text(ManualHelper.getManual(), "medicrate1")
 		);
 
@@ -779,7 +794,7 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInserter.class, new InserterRenderer().subscribeToList("inserter"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedInserter.class, new AdvancedInserterRenderer().subscribeToList("advanced_inserter"));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidInserter.class, new FluidInserterRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidInserter.class, new FluidInserterRenderer().subscribeToList("fluid_inserter"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTimedBuffer.class, new TimedBufferRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneBuffer.class, new RedstoneBufferRenderer());
@@ -787,57 +802,30 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataMerger.class, new DataMergerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataDebugger.class, new DataDebuggerRenderer().subscribeToList("data_debugger"));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLatexCollector.class, new LatexCollectorRenderer().subscribeToList("latex_collector"));
-
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), TileEntityAmmunitionCrate.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta(), TileEntityMedicalCrate.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta(), TileEntityRepairCrate.class);
-
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLatexCollector.class, new LatexCollectorRenderer());
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getMeta(), TileEntityPunchtapeReader.class);
 
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalPump.class, new MechanicalPumpRenderer().subscribeToList("mechanical_pump"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMechanicalDevice1), IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta(), TileEntityMechanicalPump.class);
 
 		//Data Connectors
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataConnector.class, new DataConnectorRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataRelay.class, new DataRelayRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataCallbackConnector.class, new DataCallbackConnectorRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalDispenser.class, new ChemicalDispenserRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalDispenser.class, new ChemicalDispenserRenderer().subscribeToList("chemical_dispenser"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMineSign.class, new MineSignRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTankTrap.class, new TankTrapRenderer().subscribeToList("tank_trap"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalFortification1), IIBlockTypes_MetalFortification1.TANK_TRAP.getMeta(), TileEntityTankTrap.class);
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_CALLBACK_CONNECTOR.getMeta(), TileEntityDataCallbackConnector.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_DUPLEX_CONNECTOR.getMeta(), TileEntityDataCallbackConnector.class);
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), TileEntityAdvancedInserter.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), TileEntityChemicalDispenser.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_DEBUGGER.getMeta(), TileEntityDataDebugger.class);
 		//ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
-
-		//Alarm Siren
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAlarmSiren.class, new AlarmSirenRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.ALARM_SIREN.getMeta(), TileEntityAlarmSiren.class);
-
-		//Programmable Speaker
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProgrammableSpeaker.class, new ProgrammableSpeakerRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta(), TileEntityProgrammableSpeaker.class);
-
-		//Small Crate
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmallCrate.class, new SmallCrateRenderer());
-		Item.getItemFromBlock(IIContent.blockSmallCrate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
-
-		Item.getItemFromBlock(IIContent.blockSmallCrate).setTileEntityItemStackRenderer(SmallCrateItemStackRenderer.instance);
 
 		//Tools
 		IIContent.itemTachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);

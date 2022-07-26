@@ -79,6 +79,11 @@ public abstract class TileEntityGateBase<T extends TileEntityMultiblockMetal<T, 
 		gateAngle = MathHelper.clamp(gateAngle+(open?3.5f: -6f), 0f, 115f);
 	}
 
+	public boolean isDoorPart()
+	{
+		return (pos > 9&&pos < 15)||(pos > 33&&pos < 38)||(pos > 57&&pos < 62)||(pos > 81&&pos < 86);
+	}
+
 	@Nonnull
 	@Override
 	public float[] getBlockBounds()

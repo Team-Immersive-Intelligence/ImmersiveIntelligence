@@ -31,6 +31,14 @@
         "model": "immersiveintelligence:metal_device/latex_collector"
       }
     ],
+    "inventory,type=punchtape_reader": [
+      {
+        "model": "immersiveintelligence:metal_device/punchtape_reader.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
     "type": {
       "metal_crate": {
         "textures": {
@@ -44,6 +52,12 @@
       },
       "latex_collector": {
         "model": "immersiveintelligence:metal_device/latex_collector"
+      },
+      "punchtape_reader": {
+        "model": "immersiveintelligence:metal_device/punchtape_reader.obj",
+        "custom": {
+          "flip-v": true
+        }
       }
     },
     "facing": {
@@ -88,11 +102,9 @@
       "false": {},
       "true": {}
     },
-    "_0multiblockslave": {
+    "_1dynamicrender": {
       "false": {},
-      "true": {
-        "model": "immersiveengineering:ie_empty"
-      }
+      "true": {}
     }
   }
 }

@@ -56,18 +56,21 @@ public class IIAnimation
 		final IIVectorLine rotation;
 		@Nullable
 		final IIBooleanLine visibility;
+		@Nullable
+		final IIFloatLine alpha;
 
 		/**
 		 * For internal testing
 		 */
 		@Deprecated
-		public IIAnimationGroup(String groupName, @Nullable IIVectorLine position, @Nullable IIVectorLine scale, @Nullable IIVectorLine color, @Nullable IIVectorLine rotation, @Nullable IIBooleanLine visibility)
+		public IIAnimationGroup(String groupName, @Nullable IIVectorLine position, @Nullable IIVectorLine scale, @Nullable IIVectorLine color, @Nullable IIVectorLine rotation, @Nullable IIBooleanLine visibility, @Nullable IIFloatLine alpha)
 		{
 			this.groupName = groupName;
 			this.position = position;
 			this.scale = scale;
 			this.rotation = rotation;
 			this.visibility = visibility;
+			this.alpha = alpha;
 		}
 
 		public IIAnimationGroup(String groupName, JsonObject json)
@@ -78,9 +81,9 @@ public class IIAnimation
 			position = json.has("position")?loadPositionLine(loadLine(json, "position")): null;
 			scale = json.has("scale")?loadVectorLine(loadLine(json, "scale")): null;
 			rotation = json.has("rotation")?loadVectorLine(loadLine(json, "rotation")): null;
+			alpha = json.has("alpha")?loadFloatLine(json, "alpha"): null;
 
-			// TODO: 05.04.2022 implement visibility json loading
-			visibility = null;
+			visibility = json.has("visibility")?loadBooleanLine(json, "visibility"): null;
 		}
 
 		// TODO: 05.04.2022 attempt to streamline the code more
@@ -124,6 +127,53 @@ public class IIAnimation
 
 			//get line
 			return new IIVectorLine(arr, tuple.getSecond().toArray(new Vec3d[0]));
+		}
+
+		private IIFloatLine loadFloatLine(JsonObject json, String id)
+		{
+			JsonArray array = json.getAsJsonArray(id);
+			ArrayList<Float> timeframes = new ArrayList<>(), values = new ArrayList<>();
+
+			if(array!=null)
+				for(JsonElement jsonElement : array)
+				{
+					JsonObject obj = jsonElement.getAsJsonObject();
+					timeframes.add(obj.get("time").getAsFloat());
+					values.add(obj.get(id).getAsFloat());
+				}
+
+			//to array
+			float[] arr = new float[timeframes.size()];
+			for(int i = 0; i < timeframes.size(); i++)
+				arr[i] = timeframes.get(i);
+
+
+			//get line
+			return new IIFloatLine(arr, values.toArray(new Float[0]));
+		}
+
+		private IIBooleanLine loadBooleanLine(JsonObject json, String id)
+		{
+			JsonArray array = json.getAsJsonArray(id);
+			ArrayList<Float> timeframes = new ArrayList<>();
+			ArrayList<Boolean> values = new ArrayList<>();
+
+			if(array!=null)
+				for(JsonElement jsonElement : array)
+				{
+					JsonObject obj = jsonElement.getAsJsonObject();
+					timeframes.add(obj.get("time").getAsFloat());
+					values.add(obj.get(id).getAsBoolean());
+				}
+
+			//to array
+			float[] arr = new float[timeframes.size()];
+			for(int i = 0; i < timeframes.size(); i++)
+				arr[i] = timeframes.get(i);
+
+
+			//get line
+			return new IIBooleanLine(arr, values.toArray(new Boolean[0]));
 		}
 	}
 
@@ -211,10 +261,32 @@ public class IIAnimation
 		@Override
 		public Boolean getForTime(float time)
 		{
-			for(int i = 0; i < timeframes.length; i++)
-				if(time > timeframes[i])
-					return values[i];
+			for(int i = timeframes.length-1; i >= 0; i--)
+				if(time >= timeframes[i])
+				{
+					if(time==timeframes[i])
+						return values[i];
+					if(i+1 < timeframes.length)
+						return values[i];
+				}
 			return values[0];
+		}
+	}
+
+	/**
+	 * Used for boolean values, such as visibility
+	 */
+	public static class IIFloatLine extends IIAnimationLine<Float>
+	{
+		public IIFloatLine(float[] timeframes, Float[] values)
+		{
+			super(timeframes, values);
+		}
+
+		@Override
+		public Float interpolate(Float t1, Float t2, float value)
+		{
+			return (t1+t2)*0.5f;
 		}
 	}
 }

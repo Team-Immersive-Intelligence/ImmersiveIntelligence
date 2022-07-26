@@ -767,5 +767,15 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 		public abstract float getTimeModifier();
 	}
+
+	public final EnumFacing getCurrentInputFacing()
+	{
+		return current==null||current.facingIn==null?defaultInputFacing: current.facingIn;
+	}
+
+	public final EnumFacing getCurrentOutputFacing()
+	{
+		return current==null||current.facingOut==null?defaultOutputFacing: current.facingOut;
+	}
 }
 

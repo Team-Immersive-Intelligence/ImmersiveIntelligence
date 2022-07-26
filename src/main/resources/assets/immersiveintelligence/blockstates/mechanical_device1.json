@@ -11,22 +11,32 @@
   "variants": {
     "inventory,type=mechanical_pump": [
       {
-        "textures": {
-          "name": "immersiveintelligence:blocks/mechanical_device/pump/pump"
+        "model": "immersiveintelligence:metal_device/mechanical_pump/mechanical_pump_inv.obj",
+        "custom": {"flip-v": true},
+        "transform": {
+          "scale": [ 0.28125, 0.28125, 0.28125 ],
+          "firstperson_righthand": { "scale": [ 0.75, 0.75, 0.75 ], "rotation": [{ "y": 180 }] },
+          "firstperson_lefthand": { "scale": [ 0.75, 0.75, 0.75 ], "rotation": [{ "y": 180 }] },
+          "thirdperson_righthand": { "translation": [ 0, 0.09375, -0.171875 ], "rotation": [{ "x": 70 }, { "y": 70 }] },
+          "thirdperson_lefthand": { "translation": [ 0, 0.09375, -0.171875 ], "rotation": [{ "x": 70 }, { "y": 70 }] },
+          "fixed": {"scale": [ 2,2,2 ], "translation": [ 0, -0.25, 0 ], "rotation": [{ "y": 0 }]},
+          "gui": { "translation": [ 0, -0.15625, 0 ], "rotation": [{ "x": 30 },{ "y": 135 }], "scale": [ 1.5, 1.5, 1.5 ] }
         }
       }
     ],
     "type": {
-      "mechanical_pump": {
-        "textures": {
-          "name": "immersiveintelligence:blocks/mechanical_device/pump/pump"
-        }
-      }
+      "mechanical_pump": {}
     },
     "_0multiblockslave": {
       "false": {},
       "true": {
         "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/mechanical_pump/mechanical_pump.obj.ie"
       }
     }
   }

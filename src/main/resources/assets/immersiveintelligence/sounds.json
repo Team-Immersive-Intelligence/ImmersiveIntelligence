@@ -642,5 +642,11 @@
       "immersiveintelligence:machine_hatch/locker/close2"
     ],
     "subtitle": "subtitle.immersiveintelligence.metal_locker_close"
+  },
+  "punchtape_reader": {
+    "sounds": [
+      "immersiveintelligence:punchtape_reader"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.punchtape_reader"
   }
 }

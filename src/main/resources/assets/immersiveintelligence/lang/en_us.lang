@@ -519,7 +519,7 @@ tile.immersiveintelligence.metal_device.data_router.name=Data Router
 tile.immersiveintelligence.metal_device.data_merger.name=Data Combiner
 
 tile.immersiveintelligence.metal_device.ammunition_crate.name=Ammunition Crate
-tile.immersiveintelligence.metal_device.medical_crate.name=Medical Crate
+tile.immersiveintelligence.metal_device.medic_crate.name=Medical Crate
 tile.immersiveintelligence.metal_device.repair_crate.name=Repair Crate
 
 tile.immersiveintelligence.metal_device.latex_collector.name=Latex Collector

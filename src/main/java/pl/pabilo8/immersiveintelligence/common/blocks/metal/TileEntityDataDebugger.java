@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
+import blusunrize.immersiveengineering.api.IEProperties;
+import blusunrize.immersiveengineering.api.IEProperties.PropertyBoolInverted;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
@@ -8,18 +10,21 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -27,23 +32,25 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.model.TRSRTransformation;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * @author Pabilo8
  * @since 11-06-2019
  */
-public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IBlockOverlayText
+public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IBlockOverlayText, IActiveState
 {
 	private boolean toggle = false;
 	public int mode = 0;
@@ -65,19 +72,25 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		}
 
 		if(world.isRemote&&setupTime > 0)
+		{
 			setupTime -= 1;
+			if(setupTime==0)
+				onDataChange();
+		}
 		else if(!world.isRemote&&mode < 2)
-			if(world.getStrongPower(getPos()) > 0&&!toggle)
+		{
+			if(world.isBlockIndirectlyGettingPowered(getPos()) > 0&&!toggle)
 			{
 				toggle = true;
 				DataPacket pack = new DataPacket();
-				pack.setVariable('a', new DataPacketTypeString("Hello World!"));
+				pack.setVariable('a', new DataTypeString("Hello World!"));
 				this.getDataNetwork().sendPacket(pack, this);
 			}
-			else if(world.getStrongPower(getPos())==0&&toggle)
+			else if(world.isBlockIndirectlyGettingPowered(getPos())==0&&toggle)
 			{
 				toggle = false;
 			}
+		}
 	}
 
 
@@ -173,7 +186,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	@Override
 	public boolean mirrorFacingOnPlacement(EntityLivingBase placer)
 	{
-		return true;
+		return false;
 	}
 
 	@Override
@@ -267,9 +280,14 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
-		EnumFacing side = facing.getOpposite();
-		double conRadius = con.cableType.getRenderDiameter()/2;
-		return new Vec3d(.5+side.getFrontOffsetX()*0.8*(.5-conRadius), 0.95, .5+side.getFrontOffsetZ()*0.8*(.5-conRadius));
+		BlockPos p = con.start==pos?con.start.subtract(con.end): con.end.subtract(con.start);
+		Vec3d pp = (facing.rotateY().getAxis()==Axis.X)?new Vec3d(p.getX(), 0, 0): new Vec3d(0, 0, p.getZ());
+		if(pp.distanceTo(Vec3d.ZERO)==0)
+			pp = new Vec3d(facing.rotateY().getDirectionVec());
+
+		return new Vec3d(.5, 0.95, .5)
+				.add(new Vec3d(facing.getDirectionVec()).scale(0.25))
+				.add(pp.normalize().scale(0.325));
 	}
 
 	@Override
@@ -289,5 +307,32 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
 	{
 		return false;
+	}
+
+	@Override
+	public PropertyBoolInverted getBoolProperty(Class<? extends IUsesBooleanProperty> inf)
+	{
+		return IEProperties.BOOLEANS[0];
+	}
+
+	@Override
+	public boolean getIsActive()
+	{
+		return setupTime > 0;
+	}
+
+	@Override
+	public boolean shouldRenderGroup(IBlockState object, String group)
+	{
+		return true;
+	}
+
+	@Override
+	public Optional<TRSRTransformation> applyTransformations(IBlockState object, String group, Optional<TRSRTransformation> transform)
+	{
+		Matrix4 mat = transform.isPresent()?new Matrix4(transform.get().getMatrix()): new Matrix4();
+		mat = mat.translate(.5, 0, .5).rotate(Math.toRadians(25), 0, 1, 0).translate(-.5, 0, -.5);
+		transform = Optional.of(new TRSRTransformation(mat.toMatrix4f()));
+		return transform;
 	}
 }

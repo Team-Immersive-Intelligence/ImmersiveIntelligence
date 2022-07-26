@@ -8,9 +8,9 @@ import blusunrize.immersiveengineering.api.tool.ZoomHandler.IZoomTool;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemChemthrower;
 import blusunrize.immersiveengineering.common.items.ItemDrill;
+import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageRequestBlockUpdate;
@@ -44,6 +44,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Post;
@@ -57,7 +58,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GLContext;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
@@ -531,8 +531,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(ClientUtils.mc().player!=null&&event.getType()==RenderGameOverlayEvent.ElementType.TEXT)
 		{
-			boolean gotTheDrip = ItemIIUpgradeableArmor.isArmorWithUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "technician_gear")||
-					ItemIIUpgradeableArmor.isArmorWithUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "engineer_gear");
+			boolean gotTheDrip = ItemIIUpgradeableArmor.isArmorWithUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD),
+					"technician_gear", "engineer_gear");
+			// TODO: 08.01.2022 energy usage
 
 			if(mop!=null)
 				if(mop.typeOfHit==Type.BLOCK&&(gotTheDrip||!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()))
@@ -944,6 +945,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(ItemNBTHelper.hasKey(event.getItemStack(), "ii_FilledCasing"))
 			event.getToolTip().add(I18n.format(CommonProxy.DESCRIPTION_KEY+"filled_casing"));
+		if(ItemNBTHelper.hasKey(event.getItemStack(), IIContent.NBT_AdvancedPowerpack))
+		{
+			ItemStack powerpack = ItemNBTHelper.getItemStack(event.getItemStack(), IIContent.NBT_AdvancedPowerpack);
+			if(!powerpack.isEmpty())
+			{
+				event.getToolTip().add(TextFormatting.GRAY+powerpack.getDisplayName());
+				event.getToolTip().add(TextFormatting.GRAY.toString()+EnergyHelper.getEnergyStored(powerpack)+"/"+EnergyHelper.getMaxEnergyStored(powerpack)+" IF");
+			}
+		}
 		if(event.getItemStack().getItem() instanceof ItemIIBulletMagazine)
 		{
 			if(ItemNBTHelper.hasKey(event.getItemStack(), "bullets"))

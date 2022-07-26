@@ -332,6 +332,12 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 	}
 
 	@Override
+	public int getClientInstallProgress()
+	{
+		return clientUpgradeProgress;
+	}
+
+	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
 		upgradeProgress += toAdd;

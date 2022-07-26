@@ -1054,6 +1054,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	}
 
 	@Override
+	public int getClientInstallProgress()
+	{
+		return clientUpgradeProgress;
+	}
+
+	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
 		if(finishedDoorAction())

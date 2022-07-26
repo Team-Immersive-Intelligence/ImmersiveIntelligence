@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
@@ -41,7 +42,7 @@ public class ArithmeticLogicMachineRenderer extends TileEntitySpecialRenderer<Ti
 			modelCurrent.getBlockRotation(te.facing, te.mirrored);
 			int flipMod = te.mirrored?-1: 1;
 
-			float door = MathHelper.clamp(te.doorAngle+(partialTicks*(te.isDoorOpened?5f:-6.5f)), 0, 135f)*flipMod;
+			float door = MathHelper.clamp(te.doorAngle+(partialTicks*(te.isDoorOpened?5f: -6.5f)), 0, 135f)*flipMod;
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(1.9375f, 3f, -0.96875f*flipMod);
@@ -59,31 +60,15 @@ public class ArithmeticLogicMachineRenderer extends TileEntitySpecialRenderer<Ti
 
 			modelCurrent.render();
 
-			//I didn't know there even is something like String.isEmpty()
-			if(!te.renderCircuit1.isEmpty())
-			{
-				ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/alm_circuits/"+te.renderCircuit1+".png");
-				for(ModelRendererTurbo model : modelCurrent.chip1Model)
-					model.render(0.0625f);
-			}
-			if(!te.renderCircuit2.isEmpty())
-			{
-				ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/alm_circuits/"+te.renderCircuit2+".png");
-				for(ModelRendererTurbo model : modelCurrent.chip2Model)
-					model.render(0.0625f);
-			}
-			if(!te.renderCircuit3.isEmpty())
-			{
-				ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/alm_circuits/"+te.renderCircuit3+".png");
-				for(ModelRendererTurbo model : modelCurrent.chip3Model)
-					model.render(0.0625f);
-			}
-			if(!te.renderCircuit4.isEmpty())
-			{
-				ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/alm_circuits/"+te.renderCircuit4+".png");
-				for(ModelRendererTurbo model : modelCurrent.chip4Model)
-					model.render(0.0625f);
-			}
+			ModelRendererTurbo[][] circuits = new ModelRendererTurbo[][]{modelCurrent.chip1Model, modelCurrent.chip2Model, modelCurrent.chip3Model, modelCurrent.chip4Model};
+
+			for(int i = 0; i < te.renderCircuit.length; i++)
+				if(!te.renderCircuit[i].isEmpty())
+				{
+					ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/alm_circuits/"+te.renderCircuit[i]+".png");
+					for(ModelRendererTurbo model : circuits[i])
+						model.render();
+				}
 
 			GlStateManager.popMatrix();
 

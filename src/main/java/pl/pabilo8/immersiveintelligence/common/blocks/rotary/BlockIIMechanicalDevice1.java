@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.rotary;
 
 import blusunrize.immersiveengineering.api.IEProperties;
+import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -15,6 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MechanicalDevice1;
 
@@ -26,14 +28,15 @@ public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_M
 {
 	public BlockIIMechanicalDevice1()
 	{
-		super("mechanical_device1", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MechanicalDevice1.class), ItemBlockIEBase.class, IEProperties.MULTIBLOCKSLAVE, IEProperties.SIDECONFIG[0], IEProperties.SIDECONFIG[1], IEProperties.SIDECONFIG[2], IEProperties.SIDECONFIG[3], IEProperties.SIDECONFIG[4], IEProperties.SIDECONFIG[5]);
+		super("mechanical_device1", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MechanicalDevice1.class), ItemBlockIEBase.class, IEProperties.MULTIBLOCKSLAVE,
+				IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty,
+				IEProperties.SIDECONFIG[0], IEProperties.SIDECONFIG[1], IEProperties.SIDECONFIG[2], IEProperties.SIDECONFIG[3], IEProperties.SIDECONFIG[4], IEProperties.SIDECONFIG[5]);
 		lightOpacity = 0;
 		setHardness(3.0F);
 		setResistance(15.0F);
 		this.setMetaBlockLayer(IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta(), BlockRenderLayer.CUTOUT);
 		this.setAllNotNormalBlock();
 		this.setMetaMobilityFlag(IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP.getMeta(), EnumPushReaction.BLOCK);
-		addToTESRMap(IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP);
 	}
 
 	@Override
@@ -103,13 +106,5 @@ public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_M
 	public boolean allowHammerHarvest(IBlockState state)
 	{
 		return true;
-	}
-
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		if(state.getValue(IEProperties.MULTIBLOCKSLAVE))
-			return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-		return super.getRenderType(state);
 	}
 }

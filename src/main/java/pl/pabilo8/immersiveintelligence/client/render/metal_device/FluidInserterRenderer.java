@@ -1,29 +1,38 @@
 package pl.pabilo8.immersiveintelligence.client.render.metal_device;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FluidInserter;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelFluidInserter;
+import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityFluidInserter;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 
 /**
  * @author Pabilo8
  * @since 15-06-2019
  */
-
+// TODO: 26.07.2022 rework
 @SideOnly(Side.CLIENT)
-public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityFluidInserter>
+public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityFluidInserter> implements IReloadableModelContainer<FluidInserterRenderer>
 {
-	private static ModelFluidInserter model = new ModelFluidInserter();
+	private static ModelFluidInserter model;
+	public static ItemStack conn_data, conn_mv;
+	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 
 	@Override
 	public void render(TileEntityFluidInserter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -127,11 +136,11 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
 			if(TileEntityFluidInserter.conn_data!=null)
-				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_data, TransformType.GROUND);
+				renderItem.renderItem(TileEntityFluidInserter.conn_data, TransformType.GROUND);
 			GlStateManager.translate(0.375f, 0.1875f, 0.375f);
 			GlStateManager.scale(0.65f, 0.65f, 0.65f);
 			if(TileEntityFluidInserter.conn_mv!=null)
-				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_mv, TransformType.GROUND);
+				renderItem.renderItem(TileEntityFluidInserter.conn_mv, TransformType.GROUND);
 
 			GlStateManager.popMatrix();
 
@@ -167,14 +176,22 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 			GlStateManager.scale(2f, 2f, 2f);
 			GlStateManager.translate(0.0625f, 0.03125f, -0.4375);
 			if(TileEntityFluidInserter.conn_data!=null)
-				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_data, TransformType.GROUND);
+				renderItem.renderItem(TileEntityFluidInserter.conn_data, TransformType.GROUND);
 			GlStateManager.translate(0.375f, 0.1875f, 0.375f);
 			GlStateManager.scale(0.65f, 0.65f, 0.65f);
 			if(TileEntityFluidInserter.conn_mv!=null)
-				InserterRenderer.renderItem.renderItem(TileEntityFluidInserter.conn_mv, TransformType.GROUND);
+				renderItem.renderItem(TileEntityFluidInserter.conn_mv, TransformType.GROUND);
 
 
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void reloadModels()
+	{
+		model = new ModelFluidInserter();
+		conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 	}
 }

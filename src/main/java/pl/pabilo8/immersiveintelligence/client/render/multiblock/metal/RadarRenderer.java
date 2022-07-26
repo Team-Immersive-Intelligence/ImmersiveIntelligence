@@ -3,14 +3,12 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
-import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCrateInserterUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadar;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
@@ -45,7 +43,7 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
 
-			float ff = (te.dishRotation+(te.active?partialTicks:0));
+			float ff = (te.dishRotation+(te.active?partialTicks: 0));
 
 			float rotMod = te.mirrored?-1: 1;
 			ModelRadar modelCurrent = te.mirrored?modelFlipped: model;
@@ -185,7 +183,7 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 		ClientUtils.bindTexture(TEXTURE);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-0.5, -0.25f, 0);
-		GlStateManager.scale(0.25f,0.25f,0.25f);
+		GlStateManager.scale(0.25f, 0.25f, 0.25f);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
 		for(ModelRendererTurbo mod : modelFlipped.baseModel)
@@ -203,7 +201,6 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 		GlStateManager.translate(3, 0, 1);
 		for(ModelRendererTurbo mod : modelFlipped.radarModel)
 			mod.render();
-
 
 
 		GlStateManager.popMatrix();

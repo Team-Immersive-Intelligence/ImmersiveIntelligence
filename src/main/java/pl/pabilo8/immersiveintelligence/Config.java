@@ -37,6 +37,8 @@ public class Config
 		@SubConfig
 		public static Weapons weapons;
 		@SubConfig
+		public static Bullets bullets;
+		@SubConfig
 		public static Wires wires;
 		@SubConfig
 		public static Vehicles vehicles;
@@ -687,9 +689,6 @@ public class Config
 
 				@Comment({"How long does it take for the howitzer to move the shell by one item slot using conveyor (in ticks)"})
 				public static int conveyorTime = 40;
-
-				@Comment({"The speed of howitzer shells in blocks/tick"})
-				public static float howitzerVelocity = 20;
 			}
 
 			public static class BallisticComputer
@@ -925,6 +924,41 @@ public class Config
 			public static Grenade grenade;
 			@SubConfig
 			public static Mines mines;
+			@SubConfig
+			public static LightEngineerArmor lightEngineerArmor;
+
+			public static class LightEngineerArmor
+			{
+				@Comment({"The energy usage of the Infiltrator's Headgear when IR is active (in IF / 20 ticks)."})
+				@RangeInt(min = 0)
+				public static int ir_headgear_energy_usage = 150;
+
+				@Comment({"The energy usage of the Technician's Headgear when it is active (in IF / 20 ticks)."})
+				@RangeInt(min = 0)
+				public static int technician_headgear_energy_usage = 50;
+
+				@Comment({"The energy usage of the Engineer's Headgear when it is active (in IF / 20 ticks)."})
+				@RangeInt(min = 0)
+				public static int engineer_headgear_energy_usage = 225;
+
+				@Comment({"The multiplier of electric damage taken when an anti-static mesh is worn under water (in half-hearts)."})
+				@RangeInt(min = 0)
+				public static float anti_static_mesh_water_damage_mod = 1.5f;
+
+				@Comment({"The energy usage of the exoskeleton when running (in IF)."})
+				@RangeInt(min = 0)
+				public static int exoskeleton_energy_usage = 200;
+
+				@Comment({"The oxygen capacity of the scuba tank (in mB)."})
+				@RangeInt(min = 0)
+				@RequiresMcRestart
+				public static int scuba_tank_capacity = 10000;
+
+				@Comment({"The oxygen capacity of the scuba tank (in mB / 20 ticks)."})
+				@RangeInt(min = 0)
+				public static int scuba_tank_usage = 20;
+
+			}
 
 			public static class Mortar
 			{
@@ -1316,6 +1350,39 @@ public class Config
 				public static float shieldSetupTimeMultiplier = 0.5f;
 
 			}
+		}
+
+		public static class Bullets
+		{
+			@Comment({"Default velocity of a light howitzer shell."})
+			public static float mortarVelocity = 8f;
+
+			@Comment({"Default velocity of a light howitzer shell."})
+			public static float lightHowiVelocity = 10f;
+
+			@Comment({"Default velocity of an artillery howitzer shell."})
+			public static float artilleryHowiVelocity = 70f;
+
+			@Comment({"Default velocity of a railgun grenade."})
+			public static float railgunGrenadeVelocity = 5f;
+
+			@Comment({"Default velocity of a thrown grenade."})
+			public static float grenadeVelocity = 2.5f;
+
+			@Comment({"Default velocity of a machinegun bullet."})
+			public static float autocannonVelocity = 6f;
+
+			@Comment({"Default velocity of a machinegun bullet."})
+			public static float mgVelocity = 6.5f;
+
+			@Comment({"Default velocity of a submachinegun bullet."})
+			public static float smgVelocity = 5f;
+
+			@Comment({"Default velocity of an assault rifle bullet."})
+			public static float stgVelocity = 6.5f;
+
+			@Comment({"Default velocity of a revolver cartridge."})
+			public static float revolverVelocity = 6f;
 		}
 
 		public static class Wires

@@ -5,7 +5,7 @@
     "model": "stairs",
     "uvlock": true,
     "textures": {
-      "all": "immersiveintelligence:blocks/concrete_decoration/panzerbeton",
+      "all": "immersiveintelligence:blocks/concrete/panzerbeton",
       "bottom": "#all",
       "top": "#all",
       "side": "#all"

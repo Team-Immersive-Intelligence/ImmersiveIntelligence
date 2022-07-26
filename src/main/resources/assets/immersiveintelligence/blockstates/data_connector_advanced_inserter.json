@@ -1,0 +1,72 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_steel",
+      "particle": "immersiveengineering:blocks/storage_steel"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "inventory,type=advanced_inserter": [
+      {
+        "model": "immersiveintelligence:metal_device/inserter/inserter_advanced_inv.obj"
+      }
+    ],
+    "type": {
+      "advanced_inserter": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/metal_device/inserter/inserter_base.obj",
+          "layers": [
+            "SOLID"
+          ]
+        }
+      }
+    },
+    "facing": {
+      "down": {
+      },
+      "up": {
+      },
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/inserter/inserter_advanced.obj.ie"
+      }
+    }
+  }
+}

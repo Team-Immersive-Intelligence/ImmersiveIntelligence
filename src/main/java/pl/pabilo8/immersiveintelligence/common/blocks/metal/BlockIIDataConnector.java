@@ -19,7 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -46,25 +45,14 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 {
 	public BlockIIDataConnector()
 	{
-		super("data_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Connector.class), ItemBlockIEBase.class, IEProperties.FACING_ALL,
-				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IOBJModelCallback.PROPERTY);
+		super("data_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Connector.class), ItemBlockIEBase.class,
+				IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		lightOpacity = 0;
 		setAllNotNormalBlock();
 
-		addToTESRMap(IIBlockTypes_Connector.DATA_CONNECTOR);
-		addToTESRMap(IIBlockTypes_Connector.DATA_RELAY);
-		addToTESRMap(IIBlockTypes_Connector.ALARM_SIREN);
-		addToTESRMap(IIBlockTypes_Connector.INSERTER);
-		addToTESRMap(IIBlockTypes_Connector.ADVANCED_INSERTER);
 		addToTESRMap(IIBlockTypes_Connector.FLUID_INSERTER);
-		addToTESRMap(IIBlockTypes_Connector.CHEMICAL_DISPENSER);
-		addToTESRMap(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER);
-		addToTESRMap(IIBlockTypes_Connector.DATA_DEBUGGER);
-		addToTESRMap(IIBlockTypes_Connector.DATA_CALLBACK_CONNECTOR);
-		//addToTESRMap(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER);
-
 		setMetaHidden(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getMeta());
 
 	}
@@ -78,7 +66,27 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 	@Override
 	public String getCustomStateMapping(int meta, boolean itemBlock)
 	{
-		return null;
+		switch(IIBlockTypes_Connector.values()[meta])
+		{
+			default:
+				return null;
+
+			case DATA_CONNECTOR:
+			case DATA_RELAY:
+			case DATA_DUPLEX_CONNECTOR:
+				return "plug";
+
+			case INSERTER:
+				return "inserter";
+			case ADVANCED_INSERTER:
+				return "advanced_inserter";
+
+			case DATA_DEBUGGER:
+				return "data_debugger";
+
+			case CHEMICAL_DISPENSER:
+				return "chemical_dispenser";
+		}
 	}
 
 	@Override
@@ -151,7 +159,7 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 				return new TileEntityChemicalDispenser();
 			case DATA_DEBUGGER:
 				return new TileEntityDataDebugger();
-			case DATA_CALLBACK_CONNECTOR:
+			case DATA_DUPLEX_CONNECTOR:
 				return new TileEntityDataCallbackConnector();
 			//case ADVANCED_FLUID_INSERTER:
 			//	return new TileEntityAdvancedFluidInserter();

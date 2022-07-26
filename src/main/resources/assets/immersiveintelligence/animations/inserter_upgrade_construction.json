@@ -1,0 +1,441 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"screw1": {
+			"rotation": [
+				{
+					"time": 0.5625,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.60938,
+					"transform": [0, 360, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.5625,
+					"transform": [0, 6, 0]
+				},
+				{
+					"time": 0.59375,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"screw2": {
+			"rotation": [
+				{
+					"time": 0.625,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.67188,
+					"transform": [0, 360, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.625,
+					"transform": [0, 6, 0]
+				},
+				{
+					"time": 0.65625,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"screw3": {
+			"rotation": [
+				{
+					"time": 0.6875,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.73438,
+					"transform": [0, 360, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.6875,
+					"transform": [0, 6, 0]
+				},
+				{
+					"time": 0.71875,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"screw4": {
+			"rotation": [
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.79688,
+					"transform": [0, 360, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.75,
+					"transform": [0, 6, 0]
+				},
+				{
+					"time": 0.78125,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"corner1": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [-5, 0, 5]
+				},
+				{
+					"time": 0.0625,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [2, 24, 2]
+				},
+				{
+					"time": 0.0625,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"corner2": {
+			"rotation": [
+				{
+					"time": 0.0625,
+					"transform": [-5, 0, -5]
+				},
+				{
+					"time": 0.125,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.0625,
+					"transform": [-2, 24, 2]
+				},
+				{
+					"time": 0.125,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"corner3": {
+			"rotation": [
+				{
+					"time": 0.1875,
+					"transform": [5, 0, -5]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.1875,
+					"transform": [-2, 24, -2]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"corner4": {
+			"rotation": [
+				{
+					"time": 0.125,
+					"transform": [5, 0, 5]
+				},
+				{
+					"time": 0.1875,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.125,
+					"transform": [2, 24, -2]
+				},
+				{
+					"time": 0.1875,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"mesh1": {
+			"rotation": [
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.27187,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.29375,
+					"transform": [0, -5, 0]
+				},
+				{
+					"time": 0.3125,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.25,
+					"transform": [6, 0, 0]
+				},
+				{
+					"time": 0.3125,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.25,
+					"transform": [0, 1, 1]
+				},
+				{
+					"time": 0.3125,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"inserter": {
+			"rotation": [
+				{
+					"time": 0.875,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.89688,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.9375,
+					"transform": [0, 360, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.875,
+					"transform": [0, 14, -11]
+				},
+				{
+					"time": 0.89688,
+					"transform": [0, 8, 0]
+				},
+				{
+					"time": 0.9375,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"lower": {
+			"rotation": [
+				{
+					"time": 0.9375,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.95938,
+					"transform": [-45, 0, 0]
+				},
+				{
+					"time": 0.975,
+					"transform": [-45, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [-15, 0, 0]
+				}
+			]
+		},
+		"upper": {
+			"rotation": [
+				{
+					"time": 0.9375,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [-155, 0, 0]
+				}
+			]
+		},
+		"base": {
+			"position": [
+				{
+					"time": 0.5,
+					"transform": [0, 12, 0]
+				},
+				{
+					"time": 0.5625,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"mesh2": {
+			"rotation": [
+				{
+					"time": 0.3125,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.33438,
+					"transform": [0, -5, 0]
+				},
+				{
+					"time": 0.35938,
+					"transform": [0, 4.81, 0]
+				},
+				{
+					"time": 0.375,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.3125,
+					"transform": [0, 0, -6]
+				},
+				{
+					"time": 0.375,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.3125,
+					"transform": [1, 1, 0]
+				},
+				{
+					"time": 0.375,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"coil": {
+			"rotation": [
+				{
+					"time": 0.8125,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.84375,
+					"transform": [0, 270, 0]
+				},
+				{
+					"time": 0.875,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.8125,
+					"transform": [0, 6, 0]
+				},
+				{
+					"time": 0.875,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"mesh3": {
+			"rotation": [
+				{
+					"time": 0.375,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.39688,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.41875,
+					"transform": [0, -5, 0]
+				},
+				{
+					"time": 0.4375,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.375,
+					"transform": [6, 0, 0]
+				},
+				{
+					"time": 0.4375,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.375,
+					"transform": [0, 1, 1]
+				},
+				{
+					"time": 0.4375,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"mesh4": {
+			"rotation": [
+				{
+					"time": 0.4375,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45938,
+					"transform": [0, -5, 0]
+				},
+				{
+					"time": 0.48438,
+					"transform": [0, 4.81, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.4375,
+					"transform": [0, 0, -6]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.4375,
+					"transform": [1, 1, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [1, 1, 1]
+				}
+			]
+		}
+	}
+}

@@ -1,15 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.animation;
 
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
+import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -19,9 +19,9 @@ import org.lwjgl.util.vector.Vector3f;
  * Introducing the Animated Model Thingy(tm)<br>
  * Brace yourselves
  */
-public class AMT
+public abstract class AMT
 {
-	// --- FINAL PROPERTIES ---//
+	//--- Final Properties ---//
 
 	/**
 	 * The name of this ModelThingy
@@ -30,30 +30,30 @@ public class AMT
 	/**
 	 * The default position and rotation, not to be modified
 	 */
-	private final Vec3d originPos;
-	/**
-	 * Quads acquired from a {@link blusunrize.immersiveengineering.client.models.IESmartObjModel}
-	 */
-	private final BakedQuad[] quads;
-	private int listID = -1;
+	protected final Vec3d originPos;
 	/**
 	 * Children ModelThingies, rendered after this one
 	 */
 	private AMT[] children;
+	/**
+	 * Whether this AMT is a child<br>
+	 * If it is - it shouldn't be rendered on its own
+	 */
+	private boolean isChild = false;
 
-	// --- MUTABLE PROPERTIES ---//
+	//--- Mutable Properties ---//
 
 	boolean visible;
 	Vec3d off, scale;
 	Vector3f color;
 	Vec3d rot;
+	float alpha;
 
-	public AMT(String name, Vec3d originPos, BakedQuad[] quads)
+	public AMT(String name, Vec3d originPos)
 	{
 		//final variables
 		this.name = name;
 		this.originPos = originPos;
-		this.quads = quads;
 
 		defaultize();
 	}
@@ -64,9 +64,9 @@ public class AMT
 	 * @param tes Tesselator to be used
 	 * @param buf BufferBuilder of tes
 	 */
-	public void render(Tessellator tes, BufferBuilder buf)
+	public final void render(Tessellator tes, BufferBuilder buf)
 	{
-		if(!visible)
+		if(!visible||alpha==0)
 			return;
 
 		GlStateManager.pushMatrix();
@@ -75,49 +75,39 @@ public class AMT
 			GlStateManager.translate(-off.x, off.y, off.z);
 
 
-		GlStateManager.translate(-originPos.x, originPos.y, -originPos.z);
+		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
 
 		if(rot!=null)
 		{
-			GlStateManager.rotate((float)rot.z, 0, 0, 1);
 			GlStateManager.rotate((float)rot.y, 0, 1, 0);
-			GlStateManager.rotate((float)rot.x, 1, 0, 0);
+			GlStateManager.rotate((float)rot.z, 0, 0, 1);
+			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
 		}
 
-		GlStateManager.translate(originPos.x, -originPos.y, originPos.z);
+		GlStateManager.translate(-originPos.x, -originPos.y, -originPos.z);
 
 		if(scale!=null)
 			GlStateManager.scale(scale.x, scale.y, scale.z);
 
-		if(listID!=-1)
-			GlStateManager.callList(listID);
-		else
-		{
-			listID = GLAllocation.generateDisplayLists(1);
-			GL11.glNewList(listID, GL11.GL_COMPILE);
+		if(alpha!=1f)
+			ShaderUtil.alpha_static(alpha);
 
-			for(BakedQuad bakedquad : quads)
-			{
-				buf.begin(7, DefaultVertexFormats.ITEM);
-				buf.addVertexData(bakedquad.getVertexData());
-				if(color!=null&&bakedquad.hasTintIndex())
-					buf.putColorRGB_F4(color.x, color.y, color.z);
-				else
-					buf.putColorRGB_F4(1f, 1f, 1f);
-				Vec3i vec3i = bakedquad.getFace().getDirectionVec();
-				buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
-				tes.draw();
-				buf.setTranslation(0, 0, 0);
-			}
-
-			GL11.glEndList();
-		}
+		draw(tes, buf);
 
 		if(children!=null)
 			for(AMT child : children)
 				child.render(tes, buf);
+
+		if(alpha!=1f)
+			ShaderUtil.releaseShader();
+
 		GlStateManager.popMatrix();
 	}
+
+	/**
+	 * Draw this AMT
+	 */
+	protected abstract void draw(Tessellator tes, BufferBuilder buf);
 
 	/**
 	 * Set all variables to default values
@@ -127,19 +117,48 @@ public class AMT
 		visible = true;
 		off = scale = rot = null;
 		color = null;
+		alpha = 1f;
 	}
 
 	/**
 	 * Remove GL CallLists so they won't waste space, when not needed
 	 */
-	public void disposeOf()
-	{
-		if(listID!=-1)
-			GlStateManager.glDeleteLists(listID, 1);
-	}
+	public abstract void disposeOf();
 
-	public void setChildren(AMT[] children)
+	final void setChildren(AMT[] children)
 	{
 		this.children = children;
+	}
+
+	/**
+	 * @return the children of this AMT
+	 */
+	public final ArrayList<AMT> getChildrenRecursive()
+	{
+		return getChildrenRecursive(new ArrayList<>());
+	}
+
+	/**
+	 * Internal method for collection
+	 */
+	private ArrayList<AMT> getChildrenRecursive(@Nonnull ArrayList<AMT> list)
+	{
+		list.add(this);
+		if(children!=null)
+			for(AMT child : children)
+				child.getChildrenRecursive(list);
+
+		return list;
+	}
+
+	final AMT setChild()
+	{
+		this.isChild = true;
+		return this;
+	}
+
+	final boolean isChild()
+	{
+		return isChild;
 	}
 }

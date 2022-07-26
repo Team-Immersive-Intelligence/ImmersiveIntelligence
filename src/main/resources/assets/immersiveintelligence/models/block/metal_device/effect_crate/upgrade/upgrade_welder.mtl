@@ -1,0 +1,8 @@
+# Made by Pabilo8 in Blockbench 4.2.5
+newmtl m_0
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_gray
+newmtl m_1
+map_Kd immersiveintelligence:blocks/metal_device/crate_inserter_upgrade
+newmtl m_2
+map_Kd immersiveintelligence:blocks/metal_device/inserter/tool_gray
+newmtl none

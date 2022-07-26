@@ -40,6 +40,9 @@ public interface IUpgradableMachine
 
 	int getInstallProgress();
 
+	@SideOnly(Side.CLIENT)
+	int getClientInstallProgress();
+
 	boolean addUpgradeInstallProgress(int toAdd);
 
 	boolean resetInstallProgress();

@@ -1,0 +1,26 @@
+{
+	"origins": {
+		"base": [8, 0, 8],
+		"input": [8, 0, 8],
+		"output": [8, 0, 8],
+		"turntable": [8, 4, 8],
+		"lower": [8, 8, 8],
+		"upper": [8, 21.5, 8],
+		"pickerLeft": [10, 32, 8],
+		"pickerLeft2": [10, 35, 8],
+		"pickerRight": [6, 32, 8],
+		"pickerRight2": [6, 35, 8],
+		"camera": [8, 21.5, 7],
+		"held": [8, 36, 6]
+	},
+	"hierarchy": {
+		"lower": "turntable",
+		"upper": "lower",
+		"pickerLeft": "upper",
+		"pickerLeft2": "pickerLeft",
+		"pickerRight": "upper",
+		"pickerRight2": "pickerRight",
+		"camera": "upper",
+		"held": "upper"
+	}
+}

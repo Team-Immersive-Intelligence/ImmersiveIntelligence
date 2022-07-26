@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -22,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
@@ -35,20 +35,19 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 {
 	public BlockIIMetalDevice()
 	{
-		super("metal_device", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalDevice.class), ItemBlockIEBase.class, IEProperties.FACING_HORIZONTAL, IEProperties.MULTIBLOCKSLAVE, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IOBJModelCallback.PROPERTY);
+		super("metal_device", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalDevice.class), ItemBlockIEBase.class,
+				IEProperties.FACING_HORIZONTAL, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1],
+				IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty
+		);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		lightOpacity = 0;
 		this.setAllNotNormalBlock();
 
-		tesrMap.put(IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getMeta(), IIBlockTypes_MetalDevice.AMMUNITION_CRATE.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), IIBlockTypes_MetalDevice.TIMED_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getName());
 		tesrMap.put(IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), IIBlockTypes_MetalDevice.DATA_MERGER.getName());
-		tesrMap.put(IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getMeta(), IIBlockTypes_MetalDevice.PUNCHTAPE_READER.getName());
-		tesrMap.put(IIBlockTypes_MetalDevice.MEDICAL_CRATE.getMeta(), IIBlockTypes_MetalDevice.MEDICAL_CRATE.getName());
-		tesrMap.put(IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta(), IIBlockTypes_MetalDevice.REPAIR_CRATE.getName());
 	}
 
 	@Override
@@ -60,7 +59,16 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 	@Override
 	public String getCustomStateMapping(int meta, boolean itemBlock)
 	{
-		return null;
+		switch(IIBlockTypes_MetalDevice.values()[meta])
+		{
+			default:
+				return null;
+
+			case AMMUNITION_CRATE:
+			case MEDIC_CRATE:
+			case REPAIR_CRATE:
+				return IIBlockTypes_MetalDevice.values()[meta].getName();
+		}
 	}
 
 	@Override
@@ -101,7 +109,7 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 			{
 				return new TileEntityDataRouter();
 			}
-			case MEDICAL_CRATE:
+			case MEDIC_CRATE:
 			{
 				return new TileEntityMedicalCrate();
 			}
@@ -169,6 +177,10 @@ public class BlockIIMetalDevice extends BlockIITileProvider<IIBlockTypes_MetalDe
 			case METAL_CRATE:
 			case DATA_ROUTER:
 			case LATEX_COLLECTOR:
+			case PUNCHTAPE_READER:
+			case AMMUNITION_CRATE:
+			case MEDIC_CRATE:
+			case REPAIR_CRATE:
 				return EnumBlockRenderType.MODEL;
 			default:
 				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;

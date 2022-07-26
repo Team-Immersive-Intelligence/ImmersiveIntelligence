@@ -702,6 +702,12 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	}
 
 	@Override
+	public int getClientInstallProgress()
+	{
+		return upgradeProgress;
+	}
+
+	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
 		upgradeProgress += toAdd;

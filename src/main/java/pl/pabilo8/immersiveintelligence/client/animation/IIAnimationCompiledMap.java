@@ -1,7 +1,10 @@
 package pl.pabilo8.immersiveintelligence.client.animation;
 
+import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -18,12 +21,18 @@ public class IIAnimationCompiledMap extends HashMap<AMT, IIAnimationGroup>
 		super();
 	}
 
-	public static IIAnimationCompiledMap create(AMT[] AMTs, IIAnimation animation)
+	public static IIAnimationCompiledMap create(AMT[] amts, IIAnimation animation)
 	{
 		IIAnimationCompiledMap map = new IIAnimationCompiledMap();
+		//collect all child parts of the array
+		AMT[] parts = Arrays.stream(amts)
+				.map(AMT::getChildrenRecursive)
+				.collect(new ArraylistJoinCollector<>())
+				.toArray(new AMT[0]);
 
+		//iterate through all animation groups, if name matches, put the part into the animation map
 		for(IIAnimationGroup group : animation.groups)
-			for(AMT amt : AMTs)
+			for(AMT amt : parts)
 				if(group.groupName.equals(amt.name))
 				{
 					map.put(amt, group);
@@ -31,6 +40,11 @@ public class IIAnimationCompiledMap extends HashMap<AMT, IIAnimationGroup>
 				}
 
 		return map;
+	}
+
+	public static IIAnimationCompiledMap create(AMT[] AMTs, ResourceLocation res)
+	{
+		return create(AMTs, IIAnimationLoader.loadAnimation(res));
 	}
 
 	/**
