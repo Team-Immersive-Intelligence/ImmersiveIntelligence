@@ -65,13 +65,18 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			boolean conveyorAmmoRunning = progress < 0.15;
 			float i1Pitch = 35, i1Pitch2 = 135;
 			float i2Pitch = 35, i2Pitch2 = 135;
-			IBullet bullet = null;
+			IBullet bullet = null; //bad idea, causes softlock
 			IBulletModel bulletModel = null;
 
 			if(te.effect.getItem() instanceof IBullet)
 			{
 				bullet = (IBullet)te.effect.getItem();
 				bulletModel = BulletRegistry.INSTANCE.registeredModels.get(bullet.getName());
+			}
+			//bug fix to #204 (hopefully)
+			if(bullet.getModel() == null)
+			{
+				bulletModel = BulletRegistry.INSTANCE.registeredModels.get("bullet_revolver_1bcal");
 			}
 
 			if(progress > 0.15&&progress < 0.65)
