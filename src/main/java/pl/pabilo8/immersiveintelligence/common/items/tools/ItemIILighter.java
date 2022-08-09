@@ -47,7 +47,6 @@ public class ItemIILighter extends ItemIIBase implements ITool
 	public ItemIILighter()
 	{
 		super("lighter", 1);
-		//LighterFuelHandler.addFuel(IEcontent.fluidPlantoil, 100);
 	}
 
 	/**
