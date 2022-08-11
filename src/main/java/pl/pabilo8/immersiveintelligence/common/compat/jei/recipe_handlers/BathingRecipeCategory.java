@@ -1,5 +1,7 @@
-package pl.pabilo8.immersiveintelligence.common.compat.jei.bathing;
+package pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers;
 
+import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.compat.jei.JEIHelper;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -9,30 +11,32 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
 import java.util.List;
 
-public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, BathingRecipeWrapper>
+public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, BathingRecipeCategory.BathingRecipeWrapper>
 {
-	public static ResourceLocation background = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/jei_stuff.png");
 	private final IDrawable tankOverlay;
 	static ItemStack machineStack;
 
 	public BathingRecipeCategory(IGuiHelper helper, boolean washing)
 	{
-		super(washing?"washing":"bathing",
-				washing?CommonProxy.DESCRIPTION_KEY+"jei.washing_recipe":"tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"
-				, helper.createBlankDrawable(140, 50), BathingRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()));
-		tankOverlay = helper.createDrawable(background, 0, 52, 20, 51, -2, 2, -2, 2);
+		super(washing?"washing": "bathing",
+				washing?CommonProxy.DESCRIPTION_KEY+"jei.washing_recipe": "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"
+				, helper.createBlankDrawable(140, 64), BathingRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()));
+		tankOverlay = helper.createDrawable(texture, 0, 52, 20, 51, -2, 2, -2, 2);
 		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta());
 	}
 
@@ -59,5 +63,26 @@ public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, Bathi
 	public IRecipeWrapper getRecipeWrapper(BathingRecipe recipe)
 	{
 		return new BathingRecipeWrapper(recipe);
+	}
+
+	public static class BathingRecipeWrapper extends IIMultiblockRecipeWrapper
+	{
+		public BathingRecipeWrapper(MultiblockRecipe recipe)
+		{
+			super(recipe);
+		}
+
+		@Override
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
+		{
+			ClientUtils.drawSlot(101, 13, 16, 16);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(45F, 20F, 32.5F);
+			GlStateManager.scale(45, -45, 45);
+			minecraft.getRenderItem().renderItem(machineStack, TransformType.GUI);
+			GlStateManager.popMatrix();
+
+			drawEnergyTimeInfo(minecraft, 0, recipeHeight-10);
+		}
 	}
 }

@@ -1,5 +1,6 @@
-package pl.pabilo8.immersiveintelligence.common.compat.jei.electrolyzer;
+package pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers;
 
+import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.util.compat.jei.JEIHelper;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -8,27 +9,34 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
 import java.util.List;
 
-public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRecipe, ElectrolyzerRecipeWrapper>
+public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRecipe, ElectrolyzerRecipeCategory.ElectrolyzerRecipeWrapper>
 {
-	public static ResourceLocation background = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/jei_stuff.png");
 	private final IDrawable tankOverlay;
 	static ItemStack machineStack;
 
 	public ElectrolyzerRecipeCategory(IGuiHelper helper)
 	{
-		super("electrolyzer", "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name", helper.createBlankDrawable(140, 50), ElectrolyzerRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta()));
-		tankOverlay = helper.createDrawable(background, 0, 52, 20, 51, -2, 2, -2, 2);
+		super("electrolyzer",
+				"tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name",
+				helper.createBlankDrawable(140, 64),
+				ElectrolyzerRecipe.class,
+				new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta())
+		);
+		tankOverlay = helper.createDrawable(texture, 0, 52, 20, 51, -2, 2, -2, 2);
 		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta());
 	}
 
@@ -59,5 +67,26 @@ public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRec
 	public IRecipeWrapper getRecipeWrapper(ElectrolyzerRecipe recipe)
 	{
 		return new ElectrolyzerRecipeWrapper(recipe);
+	}
+
+	public static class ElectrolyzerRecipeWrapper extends IIMultiblockRecipeWrapper
+	{
+		public ElectrolyzerRecipeWrapper(MultiblockRecipe recipe)
+		{
+			super(recipe);
+		}
+
+		@Override
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(55F, 20F, 85);
+			GlStateManager.enableDepth();
+			GlStateManager.scale(45, -45, 45);
+			minecraft.getRenderItem().renderItem(machineStack, TransformType.GUI);
+			GlStateManager.popMatrix();
+
+			drawEnergyTimeInfo(minecraft, 0, recipeHeight-10);
+		}
 	}
 }
