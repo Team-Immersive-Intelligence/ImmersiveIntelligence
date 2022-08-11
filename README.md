@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/Pabilo8/ImmersiveIntelligence/blob/master/logos/logofullhq.png?raw=true"></p>
+<p align="center"><img src="art/logos/logofullhq.png" alt="II Logo"></p>   
 
 [![](http://cf.way2muchnoise.eu/versions/immersive-intelligence.svg)](https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence) 
 [![Join Here!](https://img.shields.io/discord/610912351142674434?color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
@@ -28,10 +28,12 @@ The mod author, the developer:
   - [Curseforge](https://www.curseforge.com/members/pabilo8/), 
   - [Twitter](https://twitter.com/PablosferaGames), 
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
-  
-Special thanks to:
-- [@Carver](https://github.com/Carvercarver1) - Current Modeller, general helper, also a fellow howitzer enthusiast and world destroyer
+
+The current modeller, author of most of the newer models:
+- [@Carver](https://github.com/Carvercarver1) - Main Modeller, Archivist, Assistant, a fellow howitzer enthusiast and world destroyer
   - [Curseforge](https://www.curseforge.com/members/john__carver/)
+
+Special thanks to:
 - [@Choroman](https://github.com/Choroman) - Retired Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
 - [@Krystiano0306](https://github.com/Krystiano0306) - Helped at various model-related jobs as a part of his practice, currently retired
 - [@Blacknight]() - Texture artist, created some textures for the mod's items
@@ -39,9 +41,12 @@ Special thanks to:
 - [@CrimsonTwilight](https://github.com/NightmareTwilight) - author of [Immersive Energy](https://www.curseforge.com/minecraft/mc-mods/immersive-energy), an allied modder from Team IG, also a *Swede*
   - [Curseforge](https://www.curseforge.com/members/crimsondragonrider)
 
-Proudly powered by Turbo Model Thingy (TMT):
+Proudly using [Blockbench](https://www.blockbench.net/) - the minecraft modelling software:
+- Author: [@JannisX11](https://github.com/JannisX11/)
+
+Partially powered by PMT, a fork of Turbo Model Thingy (TMT):
 - The original author: [@GaryCXJk](https://github.com/GaryCXJk)
-- Maintainers of the version II uses: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)
+- Licensed from: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)
 
 Please report any bugs you find in the 'issues' tab. Also, don't do that on Curseforge / DM ^^.  
 Feel free to join the mod's [Discord Server](https://discord.gg/teMfm3R) to have a chat with the devs and community.
