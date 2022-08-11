@@ -1,36 +1,38 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "https://maven.minecraftforge.net/"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.2.2"
-group= "pl.pabilo8"
-def archiveGroup = "pl.pabilo8"
-archivesBaseName = "immersiveintelligence"
+apply plugin: "net.minecraftforge.gradle.forge"
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+setVersion(modVersion)
+setGroup(modGroup)
+setArchivesBaseName(modName)
 
 minecraft {
-    version = "1.12.2-14.23.5.2847"
+    version = modForge
     runDir = "run"
 
-    replace "@VERSION@", project.version
+    replace "@VERSION@", modVersion
     
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20171003"
+    mappings = modMappings
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     useDepAts = true
 }
@@ -48,7 +50,7 @@ repositories {
 
     maven { // ModMaven, there is a bunch of stuff on there
         name 'ModMaven'
-        url "http://modmaven.k-4u.nl/"
+        url "https://modmaven.k-4u.nl/"
     }
 
     maven { // Albedo Lights
@@ -57,7 +59,7 @@ repositories {
 
     maven { // CTM
         name 'tterrag maven'
-        url "http://maven.tterrag.com/"
+        url "https://maven.tterrag.com/"
     }
 
     //https://www.cursemaven.com/
@@ -74,6 +76,13 @@ repositories {
         }
     }
 
+}
+
+// change default maven url of FG2 to the new one.
+repositories.each {
+    if (it instanceof MavenArtifactRepository && it.url.toString() == "https://files.minecraftforge.net/maven") {
+        it.url = "https://maven.minecraftforge.net/"
+    }
 }
 
 dependencies {
@@ -106,11 +115,11 @@ task coreJar(type: Jar) {
     from(sourceSets.main.output) {
         // Don't include the coremod in the main mod
         // If you have more coremod-related packages that aren't nested in the main one, add exclusions for them
-        include 'pl/pabilo8/immersiveintelligence/common/asm/**'
+        include modASMPath
     }
     manifest {
-        attributes "FMLCorePlugin": "pl.pabilo8.immersiveintelligence.common.asm.IILoadingPlugin"
-        attributes 'Maven-Artifact': archiveGroup + ':' + archivesBaseName + '-core:' + version
+        attributes "FMLCorePlugin": modASMClass
+        attributes 'Maven-Artifact': modGroup + ':' + modName + '-core:' + modVersion
     }
     // Add a classifier to the JAR ('-core' at the end of the file name)
     // Distinguishes the mod JAR from the shipped one
@@ -154,11 +163,11 @@ def libPrefix = 'META-INF/libraries'
 jar {
     manifest {
         attributes 'ContainedDeps': libPrefix + '/' + coreJar.archivePath.name
-        attributes "FMLAT": "immersiveintelligence_at.cfg"
-        attributes 'Maven-Artifact': archiveGroup + ':' + archivesBaseName + ':' + version
+        attributes "FMLAT": modATPath
+        attributes 'Maven-Artifact': modGroup + ':' + modName + ':' + modVersion
     }
 
-    exclude 'pl/pabilo8/immersiveintelligence/common/asm/**'
+    exclude modASMPath
     // Add the output of the mod JAR task to the main JAR for later extraction
     from(coreJar.archivePath.absolutePath) {
         include '*' // Due to the way Gradle's copy tasks work, we need this line for the JAR to get added
@@ -168,7 +177,7 @@ jar {
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
+    inputs.property "version", modVersion
     inputs.property "mcversion", project.minecraft.version
 
     //Exclude GIMP images
@@ -178,12 +187,12 @@ processResources {
     //Exclude template textures
     exclude '**/*Template.png'
 
-    // replace stuff in mcmod.info, nothing else
+    // replace stuff in mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':modVersion, 'mcversion':project.minecraft.version
     }
         
     // copy everything else except the mcmod.info and excluded files
@@ -198,8 +207,8 @@ task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
     manifest {
-        attributes 'FMLAT': 'immersiveintelligence_at.cfg'
-        attributes 'Maven-Artifact': group + ':' + archivesBaseName + ':' + version
+        attributes 'FMLAT': modATPath
+        attributes 'Maven-Artifact': modGroup + ':' + modName + ':' + modVersion
     }
 }
 
@@ -210,9 +219,9 @@ artifacts {
 //To use personalized options when working with the mod create a file named custom.gradle
 //The file is not sychronised with GitHub and can be used i.e. to store username and password
 //Thanks to BluSunrize for the idea (taken from IE)
-def customGradle = rootProject.file('custom.gradle');
+def customGradle = rootProject.file('custom.gradle')
 if (customGradle.exists()) {
-    apply from: customGradle;
+    apply from: customGradle
 }
 
 
