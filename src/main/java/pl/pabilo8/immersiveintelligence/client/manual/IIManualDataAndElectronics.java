@@ -6,13 +6,15 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataType;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
@@ -41,25 +43,12 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "data_main1")
 		);
 
-		String[][] intInfoTable = {{"ie.manual.entry.def_value", "0"}};
-		String[][] stringInfoTable = {{"ie.manual.entry.def_value", "''"}, {"ie.manual.entry.max_length", "512"}};
-		String[][] boolInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.false"}, {"ie.manual.entry.accepted_values", "ie.manual.entry.tf"}};
-		String[][] itemstackInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
-		String[][] arrayInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.empty"}, {"ie.manual.entry.min_index", "0"}, {"ie.manual.entry.max_index", "255"}};
-		String[][] pairInfoTable = {{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
-		String[][] rangeInfoTable = {{"ie.manual.entry.def_value", "0-0"}};
+		IIManualPageDataType[] dataPages = DataPacket.varTypes.values().stream()
+				.map(DataPacket::getVarInstance)
+				.map(data -> new IIManualPageDataType(ManualHelper.getManual(), data))
+				.toArray(IIManualPageDataType[]::new);
 
-		ManualHelper.addEntry("data_variable_types", getCategory(),
-				new ManualPages.Text(ManualHelper.getManual(), "data_variable_types"),
-				new ManualPages.Text(ManualHelper.getManual(), "data_variable_types_null"),
-				new ManualPages.Table(ManualHelper.getManual(), "data_variable_types_integer", intInfoTable, true),
-				new ManualPages.Table(ManualHelper.getManual(), "data_variable_types_string", stringInfoTable, true),
-				new ManualPages.Table(ManualHelper.getManual(), "data_variable_types_boolean", boolInfoTable, true),
-				new ManualPages.Table(ManualHelper.getManual(), "data_variable_types_itemstack", itemstackInfoTable, true),
-				new ManualPages.Table(ManualHelper.getManual(), "data_variable_types_array", arrayInfoTable, true),
-				new ManualPages.Table(ManualHelper.getManual(), "data_variable_types_pair", pairInfoTable, true),
-				new ManualPages.Table(ManualHelper.getManual(), "data_variable_types_range", rangeInfoTable, true)
-		);
+		ManualHelper.addEntry("data_variable_types", getCategory(), dataPages);
 
 		ManualHelper.addEntry("data_wires", getCategory(),
 				new ManualPages.Crafting(ManualHelper.getManual(), "data_wires0", new ItemStack(IIContent.itemDataWireCoil)),
@@ -127,7 +116,7 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "conveyor_scanner1"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "conveyor_scanner", false)
-						.addEntry(new DataPacketTypeItemStack(), 's')
+						.addEntry(new DataTypeItemStack(), 's')
 		);
 
 		ManualHelper.addEntry("printing_press", getCategory(),
@@ -135,16 +124,16 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press1"),
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press2"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "printing_press", true)
-						.addEntry(new DataPacketTypeInteger(), 'a')
-						.addEntry(new DataPacketTypeString(), 'm')
-						.addEntry(new DataPacketTypeString(), 't'),
+						.addEntry(new DataTypeInteger(), 'a')
+						.addEntry(new DataTypeString(), 'm')
+						.addEntry(new DataTypeString(), 't'),
 				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "printing_press")
-						.addEntry(new DataPacketTypeInteger(), "get_ink", "get_ink_black")
-						.addEntry(new DataPacketTypeInteger(), "get_ink_cyan")
-						.addEntry(new DataPacketTypeInteger(), "get_ink_magenta")
-						.addEntry(new DataPacketTypeInteger(), "get_ink_yellow")
-						.addEntry(new DataPacketTypeInteger(), "get_energy")
-						.addEntry(new DataPacketTypeInteger(), "get_paper")
+						.addEntry(new DataTypeInteger(), "get_ink", "get_ink_black")
+						.addEntry(new DataTypeInteger(), "get_ink_cyan")
+						.addEntry(new DataTypeInteger(), "get_ink_magenta")
+						.addEntry(new DataTypeInteger(), "get_ink_yellow")
+						.addEntry(new DataTypeInteger(), "get_energy")
+						.addEntry(new DataTypeInteger(), "get_paper")
 
 		);
 
@@ -169,10 +158,10 @@ public class IIManualDataAndElectronics extends IIManual
 		ManualHelper.addEntry("programmable_speaker", getCategory(),
 				new ManualPages.Crafting(ManualHelper.getManual(), "programmable_speaker0", new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER.getMeta())),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "programmable_speaker", true)
-						.addEntry(new DataPacketTypeBoolean(), 'o')
-						.addEntry(new DataPacketTypeString(), 's')
-						.addEntry(new DataPacketTypeInteger(), 'v')
-						.addEntry(new DataPacketTypeInteger(), 't')
+						.addEntry(new DataTypeBoolean(), 'o')
+						.addEntry(new DataTypeString(), 's')
+						.addEntry(new DataTypeInteger(), 'v')
+						.addEntry(new DataTypeInteger(), 't')
 		);
 	}
 }

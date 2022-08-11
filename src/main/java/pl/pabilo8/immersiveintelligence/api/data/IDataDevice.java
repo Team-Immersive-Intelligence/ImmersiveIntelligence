@@ -16,9 +16,4 @@ public interface IDataDevice
 	 * @param packet which has been received
 	 */
 	void onReceive(DataPacket packet, @Nullable EnumFacing side);
-
-	/**
-	 * Can be called after sending a packet to a connector. Unused.
-	 */
-	void onSend();
 }

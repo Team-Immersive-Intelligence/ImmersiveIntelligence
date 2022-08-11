@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeAccessor;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -11,12 +11,12 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
  * @author Pabilo8
  * @since 07.09.2021
  */
-public class GuiDataEditorAccessor extends GuiDataEditor<DataPacketTypeAccessor>
+public class GuiDataEditorAccessor extends GuiDataEditor<DataTypeAccessor>
 {
 	private GuiButtonDataLetterList buttonVariable;
 	private char c;
 
-	public GuiDataEditorAccessor(int buttonId, DataPacketTypeAccessor dataType)
+	public GuiDataEditorAccessor(int buttonId, DataTypeAccessor dataType)
 	{
 		super(buttonId, dataType);
 		c = dataType.variable;
@@ -31,9 +31,9 @@ public class GuiDataEditorAccessor extends GuiDataEditor<DataPacketTypeAccessor>
 	}
 
 	@Override
-	public DataPacketTypeAccessor createType()
+	public DataTypeAccessor createType()
 	{
-		return new DataPacketTypeAccessor();
+		return new DataTypeAccessor();
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class GuiDataEditorAccessor extends GuiDataEditor<DataPacketTypeAccessor>
 	}
 
 	@Override
-	public DataPacketTypeAccessor outputType()
+	public DataTypeAccessor outputType()
 	{
 		dataType.variable = c;
 		return dataType;

@@ -1,14 +1,14 @@
 package pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor;
 
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 
 /**
  * @author Pabilo8
  * @since 07.09.2021
  */
-public class GuiDataEditorNull extends GuiDataEditor<DataPacketTypeNull>
+public class GuiDataEditorNull extends GuiDataEditor<DataTypeNull>
 {
-	public GuiDataEditorNull(int buttonId, DataPacketTypeNull dataType)
+	public GuiDataEditorNull(int buttonId, DataTypeNull dataType)
 	{
 		super(buttonId, dataType);
 	}
@@ -20,13 +20,13 @@ public class GuiDataEditorNull extends GuiDataEditor<DataPacketTypeNull>
 	}
 
 	@Override
-	public DataPacketTypeNull createType()
+	public DataTypeNull createType()
 	{
-		return new DataPacketTypeNull();
+		return new DataTypeNull();
 	}
 
 	@Override
-	public DataPacketTypeNull outputType()
+	public DataTypeNull outputType()
 	{
 		return dataType;
 	}

@@ -21,8 +21,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachin
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeArray;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -188,14 +188,15 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 				this.drawTexturedModalRect(drawx, drawy, 0, 222, 128, 20);
 
 				ClientUtils.bindTexture(data.textureLocation());
+				ClientUtils.bindTexture(texture);
 
 				//Variable type based effects
-
-				this.drawTexturedModalRect(drawx, drawy, 0, data.getFrameOffset()*20, 8, 20);
-				this.drawTexturedModalRect(drawx+52, drawy, 8, data.getFrameOffset()*20, 24, 20);
-				this.drawTexturedModalRect(drawx+120, drawy, 32, data.getFrameOffset()*20, 8, 20);
-
-				ClientUtils.bindTexture(texture);
+				float[] rgb = Utils.rgbIntToRGB(data.getTypeColour());
+				GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
+				this.drawTexturedModalRect(drawx, drawy, 173, 222, 8, 20);
+				this.drawTexturedModalRect(drawx+52, drawy, 184, 222, 22, 20);
+				this.drawTexturedModalRect(drawx+120, drawy, 173+32+4, 222, 8, 20);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 				byte changeButton = 0;
 
@@ -232,24 +233,24 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 					changeButton = 5;
 				}
 
-				if(list.getPacketVariable(c) instanceof DataPacketTypeArray)
+				if(list.getPacketVariable(c) instanceof DataTypeArray)
 				{
-					DataPacketTypeArray array = (DataPacketTypeArray)list.getPacketVariable(c);
+					DataTypeArray array = (DataTypeArray)list.getPacketVariable(c);
 					GlStateManager.pushMatrix();
-					if(array.value.length < 2||!(array.value[0] instanceof DataPacketTypeInteger)||!(array.value[1] instanceof DataPacketTypeInteger))
-						array.value = new DataPacketTypeInteger[]{new DataPacketTypeInteger(0), new DataPacketTypeInteger(0)};
+					if(array.value.length < 2||!(array.value[0] instanceof DataTypeInteger)||!(array.value[1] instanceof DataTypeInteger))
+						array.value = new DataTypeInteger[]{new DataTypeInteger(0), new DataTypeInteger(0)};
 
-					float[] color = EnumDyeColor.byMetadata(((DataPacketTypeInteger)array.value[0]).value).getColorComponentValues();
+					float[] color = EnumDyeColor.byMetadata(((DataTypeInteger)array.value[0]).value).getColorComponentValues();
 					GlStateManager.color(color[0], color[1], color[2]);
 					//this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
 
 					this.drawTexturedModalRect(drawx+3, drawy+3, 155, 222, 16, 14);
-					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataPacketTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColour(), true);
+					this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.modes."+((DataTypeInteger)array.value[1]).value), drawx+64, drawy+6, data.getTypeColour(), true);
 
 					GlStateManager.popMatrix();
 
-					DataPacketTypeInteger i1 = (DataPacketTypeInteger)array.value[0];
-					DataPacketTypeInteger i2 = (DataPacketTypeInteger)array.value[1];
+					DataTypeInteger i1 = (DataTypeInteger)array.value[0];
+					DataTypeInteger i2 = (DataTypeInteger)array.value[1];
 
 					if(Mouse.isButtonDown(0)&&!wasDown)
 					{
@@ -359,7 +360,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 					//Save gui scroll, tile pos for validation
 					ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
 					saveGuiData(proxy);
-					list.setVariable(c, new DataPacketTypeArray(new DataPacketTypeInteger(0), new DataPacketTypeInteger(0)));
+					list.setVariable(c, new DataTypeArray(new DataTypeInteger(0), new DataTypeInteger(0)));
 					//Set variable and change gui
 					refreshstoredRedstone();
 					syncDataToServer();

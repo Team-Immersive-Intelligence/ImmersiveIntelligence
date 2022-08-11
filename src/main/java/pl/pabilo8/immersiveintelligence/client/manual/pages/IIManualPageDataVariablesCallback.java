@@ -8,13 +8,14 @@ import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
@@ -78,7 +79,7 @@ public class IIManualPageDataVariablesCallback extends ManualPages
 			CallbackEntry entry = ((GuiButtonDataCallback)button).entry;
 			if(Minecraft.getMinecraft().currentScreen instanceof IDataMachineGui)
 			{
-				((IDataMachineGui)Minecraft.getMinecraft().currentScreen).editVariable('c', new DataPacketTypeString(entry.n[0]));
+				((IDataMachineGui)Minecraft.getMinecraft().currentScreen).editVariable('c', new DataTypeString(entry.n[0]));
 			}
 		}
 	}
@@ -95,7 +96,7 @@ public class IIManualPageDataVariablesCallback extends ManualPages
 			GlStateManager.enableBlend();
 			GlStateManager.color(0.9f, 0.9f, 0.85f, 0.85f);
 			ClientUtils.bindTexture(entry.dataType.textureLocation());
-			gui.drawTexturedModalRect(x-4, y+down-3, 40, entry.dataType.getFrameOffset()*20, 16, 16);
+			Gui.drawModalRectWithCustomSizedTexture(x-4, y+down-3, 0, 0, 16, 16, 16, 16);
 
 			if(Utils.isPointInRectangle(x-4, y+down-3, x+12, y+down+13, mx, my))
 				tooltip = entry;

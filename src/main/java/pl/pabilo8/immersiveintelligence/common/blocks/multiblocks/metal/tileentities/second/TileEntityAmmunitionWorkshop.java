@@ -542,12 +542,6 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
 		TileEntityAmmunitionWorkshop master = master();

@@ -30,8 +30,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArithmeticLogic
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -53,7 +53,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 
 	public boolean isDoorOpened = false;
 	public float doorAngle = 0;
-	public String renderCircuit1 = "", renderCircuit2 = "", renderCircuit3 = "", renderCircuit4 = "";
+	public String[] renderCircuit = new String[]{"", "", "", ""};
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 	IItemHandler inventoryHandler = new IEInventoryHandler(4, this, 0, true, true);
 
@@ -67,10 +67,8 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	{
 		super.readCustomNBT(nbt, descPacket);
 		if(!descPacket&&!isDummy())
-		{
 			if(nbt.hasKey("inventory"))
 				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 4);
-		}
 	}
 
 	@Override
@@ -109,9 +107,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	{
 		super.writeCustomNBT(nbt, descPacket);
 		if(!descPacket&&!isDummy())
-		{
 			nbt.setTag("inventory", Utils.writeInventory(inventory));
-		}
 	}
 
 	@Override
@@ -248,17 +244,11 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	public void doGraphicalUpdates(int slot)
 	{
 		this.markDirty();
-		if(world.isRemote)
+		if(world.isRemote&&slot >= 0&&slot < renderCircuit.length)
 		{
-			if(slot==0)
-				renderCircuit1 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
-			if(slot==1)
-				renderCircuit2 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
-			if(slot==2)
-				renderCircuit3 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
-			if(slot==3)
-				renderCircuit4 = inventoryHandler.getStackInSlot(slot).isEmpty()?"": ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(slot).getItem()).getTESRRenderTexture(inventoryHandler.getStackInSlot(slot));
-
+			ItemStack stack = inventoryHandler.getStackInSlot(slot);
+			renderCircuit[slot] = stack.isEmpty()?"":
+					((ItemIIFunctionalCircuit)stack.getItem()).getTESRRenderTexture(stack);
 		}
 	}
 
@@ -275,12 +265,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		TileEntityArithmeticLogicMachine master = master();
@@ -288,105 +272,46 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			return;
 
 		if(pos==2)
-		{
 			master.onReceive(packet, EnumFacing.DOWN);
-		}
 		else if(pos==3)
-		{
 			master.onReceive(packet, EnumFacing.UP);
-		}
 
 		if(!isDummy()&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
 		{
 			DataPacket new_packet = packet.clone();
 			energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
 
-			boolean c1 = false, c2 = false, c3 = false, c4 = false;
-			DataPacket circuit1 = null, circuit2 = null, circuit3 = null, circuit4 = null;
-			if(!inventoryHandler.getStackInSlot(0).isEmpty())
+			boolean[] circuit = new boolean[4];
+			DataPacket[] cPacket = new DataPacket[4];
+
+			for(int i = 0; i < 4; i++)
 			{
-				c1 = true;
-				circuit1 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(0).getItem()).getStoredData(inventoryHandler.getStackInSlot(0));
-			}
-			if(!inventoryHandler.getStackInSlot(1).isEmpty())
-			{
-				c2 = true;
-				circuit2 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(1).getItem()).getStoredData(inventoryHandler.getStackInSlot(1));
-			}
-			if(!inventoryHandler.getStackInSlot(2).isEmpty())
-			{
-				c3 = true;
-				circuit3 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(2).getItem()).getStoredData(inventoryHandler.getStackInSlot(2));
-			}
-			if(!inventoryHandler.getStackInSlot(3).isEmpty())
-			{
-				c4 = true;
-				circuit4 = ((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(3).getItem()).getStoredData(inventoryHandler.getStackInSlot(3));
+				circuit[i] = !inventoryHandler.getStackInSlot(i).isEmpty();
+				cPacket[i] = circuit[i]?
+						((ItemIIFunctionalCircuit)inventoryHandler.getStackInSlot(i).getItem()).getStoredData(inventoryHandler.getStackInSlot(i)):
+						null;
 			}
 
-
-			if(c1)
-			{
-				for(char c : DataPacket.varCharacters)
+			for(int i = 0; i < 4; i++)
+				if(circuit[i])
 				{
-					IDataType type = new_packet.getPacketVariable(c);
-					if(circuit1.variables.containsKey(c)&&circuit1.variables.get(c) instanceof DataPacketTypeExpression)
+					if(energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false) < ArithmeticLogicMachine.energyUsage)
+						break;
+					for(char c : DataPacket.varCharacters)
 					{
-						DataPacketTypeExpression exp = (DataPacketTypeExpression)circuit1.variables.get(c);
-						if(exp.getRequiredVariable()==' '||(new_packet.getPacketVariable(exp.getRequiredVariable()) instanceof DataPacketTypeBoolean&&((DataPacketTypeBoolean)new_packet.getPacketVariable(exp.getRequiredVariable())).value))
-							new_packet.setVariable(c, ((DataPacketTypeExpression)circuit1.getPacketVariable(c)).getValue(new_packet));
+						IDataType var = cPacket[i].getPacketVariable(c);
+						if(var instanceof DataTypeExpression)
+						{
+							DataTypeExpression exp = ((DataTypeExpression)var);
+							char condition = exp.getRequiredVariable();
+
+							if(condition==' '||(new_packet.getPacketVariable(condition) instanceof DataTypeBoolean
+									&&((DataTypeBoolean)new_packet.getPacketVariable(condition)).value))
+								new_packet.setVariable(c, exp.getValue(new_packet));
+						}
 					}
 				}
-			}
 
-			if(c2&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
-			{
-				for(char c : DataPacket.varCharacters)
-				{
-					IDataType type = new_packet.getPacketVariable(c);
-
-					if(circuit2.variables.containsKey(c)&&circuit2.variables.get(c) instanceof DataPacketTypeExpression)
-					{
-						DataPacketTypeExpression exp = (DataPacketTypeExpression)circuit2.variables.get(c);
-						if(exp.getRequiredVariable()==' '||(new_packet.getPacketVariable(exp.getRequiredVariable()) instanceof DataPacketTypeBoolean&&((DataPacketTypeBoolean)new_packet.getPacketVariable(exp.getRequiredVariable())).value))
-							new_packet.setVariable(c, ((DataPacketTypeExpression)circuit2.getPacketVariable(c)).getValue(new_packet));
-					}
-				}
-				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
-			}
-
-			if(c3&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
-			{
-				for(char c : DataPacket.varCharacters)
-				{
-					IDataType type = new_packet.getPacketVariable(c);
-
-					if(circuit3.variables.containsKey(c)&&circuit3.variables.get(c) instanceof DataPacketTypeExpression)
-					{
-						DataPacketTypeExpression exp = (DataPacketTypeExpression)circuit3.variables.get(c);
-						if(exp.getRequiredVariable()==' '||(new_packet.getPacketVariable(exp.getRequiredVariable()) instanceof DataPacketTypeBoolean&&((DataPacketTypeBoolean)new_packet.getPacketVariable(exp.getRequiredVariable())).value))
-							new_packet.setVariable(c, ((DataPacketTypeExpression)circuit3.getPacketVariable(c)).getValue(new_packet));
-					}
-				}
-				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
-			}
-
-			if(c4&&energyStorage.getEnergyStored() >= ArithmeticLogicMachine.energyUsage)
-			{
-				for(char c : DataPacket.varCharacters)
-				{
-					IDataType type = new_packet.getPacketVariable(c);
-
-					if(circuit4.variables.containsKey(c)&&circuit4.variables.get(c) instanceof DataPacketTypeExpression)
-					{
-						DataPacketTypeExpression exp = (DataPacketTypeExpression)circuit4.variables.get(c);
-						if(exp.getRequiredVariable()==' '||(new_packet.getPacketVariable(exp.getRequiredVariable()) instanceof DataPacketTypeBoolean&&((DataPacketTypeBoolean)new_packet.getPacketVariable(exp.getRequiredVariable())).value))
-							new_packet.setVariable(c, ((DataPacketTypeExpression)circuit4.getPacketVariable(c)).getValue(new_packet));
-					}
-				}
-				energyStorage.extractEnergy(ArithmeticLogicMachine.energyUsage, false);
-			}
-			//
 			IDataConnector conn = null;
 			TileEntityArithmeticLogicMachine tile1 = getTileForPos(3);
 			TileEntityArithmeticLogicMachine tile2 = getTileForPos(2);
@@ -396,9 +321,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 				conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(tile2.getPos(), world, mirrored?facing.rotateY(): facing.rotateYCCW());
 
 			if(conn!=null)
-			{
 				conn.sendPacket(new_packet);
-			}
 
 		}
 	}

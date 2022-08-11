@@ -9,18 +9,20 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
  * @since 07.09.2021
  */
-public class GuiDataEditorItemStack extends GuiDataEditor<DataPacketTypeItemStack>
+public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 {
 	private GuiTextField metaEdit, countEdit;
 
@@ -30,7 +32,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataPacketTypeItemStac
 	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 	private RenderItem renderItem = ClientUtils.mc().getRenderItem();
 
-	public GuiDataEditorItemStack(int buttonId, DataPacketTypeItemStack dataType)
+	public GuiDataEditorItemStack(int buttonId, DataTypeItemStack dataType)
 	{
 		super(buttonId, dataType);
 		scanned = dataType.value;
@@ -58,9 +60,9 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataPacketTypeItemStac
 	}
 
 	@Override
-	public DataPacketTypeItemStack createType()
+	public DataTypeItemStack createType()
 	{
-		return new DataPacketTypeItemStack();
+		return new DataTypeItemStack();
 	}
 
 	@Override
@@ -80,11 +82,6 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataPacketTypeItemStac
 		drawTexturedModalRect(x+(width/2)-9, y+7, 0, 50, 18, 18);
 
 		renderer.drawString(valueLabel, x+2, y+2, Utils.COLOR_H1, false);
-
-		if(Utils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mouseX, mouseY))
-		{
-
-		}
 
 		renderer.drawString(scanned.getDisplayName(), x+2, y+2+10+16, Lib.COLOUR_I_ImmersiveOrange, false);
 		renderer.drawString("Meta:", x+2, y+2+20+18, Utils.COLOR_H1, false);
@@ -136,12 +133,12 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataPacketTypeItemStac
 	}
 
 	@Override
-	public DataPacketTypeItemStack outputType()
+	public DataTypeItemStack outputType()
 	{
 		dataType.setDefaultValue();
 
-		scanned.setCount(getFieldValue(this.countEdit,scanned.getCount()));
-		scanned.setItemDamage(getFieldValue(this.metaEdit,scanned.getMetadata()));
+		scanned.setCount(getFieldValue(this.countEdit, scanned.getCount()));
+		scanned.setItemDamage(getFieldValue(this.metaEdit, scanned.getMetadata()));
 
 		dataType.value = scanned.copy();
 
@@ -159,5 +156,13 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataPacketTypeItemStac
 		{
 			return defaultValue;
 		}
+	}
+
+	@Override
+	public void getTooltip(ArrayList<String> tooltip, int mx, int my)
+	{
+		if(!scanned.isEmpty()&&Utils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mx, my))
+			tooltip.addAll(scanned.getTooltip(ClientUtils.mc().player, ClientUtils.mc().gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
+
 	}
 }

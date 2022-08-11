@@ -10,12 +10,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
@@ -78,7 +79,10 @@ public class GuiDataVariableList extends GuiButton
 		edit = false;
 		delete = false;
 		add = false;
-		if(packet.variables.size() > 0&&Utils.isPointInRectangle(x, y, x+width, y+height, mx, my))
+
+		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+			delete = true;
+		else if(packet.variables.size() > 0&&Utils.isPointInRectangle(x, y, x+width, y+height, mx, my))
 		{
 			//scrolling
 			int mouseChange = Mouse.getDWheel();
@@ -182,8 +186,8 @@ public class GuiDataVariableList extends GuiButton
 		ClientUtils.drawTexturedRect(x+26, y+4, 12, 12, 0f, 1f, 0f, 1f);
 
 		FontRenderer f = mc.fontRenderer;
-		if(data instanceof DataPacketTypeExpression)
-			f.drawString(I18n.format(CommonProxy.DATA_KEY+"function."+((DataPacketTypeExpression)data).getOperation().name), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
+		if(data instanceof DataTypeExpression)
+			f.drawString(I18n.format(CommonProxy.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
 		else
 			f.drawString(I18n.format(CommonProxy.DATA_KEY+"datatype."+data.getName()), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
 		//Draw variable name (single character)

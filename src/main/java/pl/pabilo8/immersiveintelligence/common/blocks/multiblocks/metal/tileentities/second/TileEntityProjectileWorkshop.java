@@ -43,8 +43,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
@@ -790,14 +789,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 				master.coreType = master.producedBullet.getAllowedCoreTypes()[0];
 
 			if(packet.hasVariable('a'))
-				master.fillAmount = DataOperator.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('a'), packet).value;
+				master.fillAmount = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('a')).value;
 		}
-	}
-
-	@Override
-	public void onSend()
-	{
-
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 
 /**
  * @author Pabilo8
@@ -144,7 +144,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 		timer = 1;
 		if(packet.getPacketVariable('0').getName().equals("integer"))
 		{
-			maxtimer = ((DataPacketTypeInteger)packet.getPacketVariable('0')).value;
+			maxtimer = ((DataTypeInteger)packet.getPacketVariable('0')).value;
 
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setInteger("maxtimer", maxtimer);
@@ -153,9 +153,4 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 		}
 	}
 
-	@Override
-	public void onSend()
-	{
-
-	}
 }

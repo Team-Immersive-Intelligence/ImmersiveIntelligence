@@ -39,8 +39,8 @@ import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -681,58 +681,58 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 			IDataType c = packet.getPacketVariable('c');
 			IDataType p = packet.getPacketVariable('p');
 
-			if(c instanceof DataPacketTypeString&&side!=null)
+			if(c instanceof DataTypeString&&side!=null)
 			{
 				IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(10), world, side.getOpposite());
 				if(conn==null)
 					return;
 				DataPacket reply = new DataPacket();
-				switch(((DataPacketTypeString)c).value)
+				switch(((DataTypeString)c).value)
 				{
 					case "get_ink":
 					case "get_ink_black":
-						reply.setVariable('c', new DataPacketTypeString("ink_black"));
-						reply.setVariable('g', new DataPacketTypeInteger(master.tanks[0].getFluidAmount()));
+						reply.setVariable('c', new DataTypeString("ink_black"));
+						reply.setVariable('g', new DataTypeInteger(master.tanks[0].getFluidAmount()));
 						conn.sendPacket(reply);
 						break;
 					case "get_ink_cyan":
-						reply.setVariable('c', new DataPacketTypeString("ink_cyan"));
-						reply.setVariable('g', new DataPacketTypeInteger(master.tanks[1].getFluidAmount()));
+						reply.setVariable('c', new DataTypeString("ink_cyan"));
+						reply.setVariable('g', new DataTypeInteger(master.tanks[1].getFluidAmount()));
 						conn.sendPacket(reply);
 						break;
 					case "get_ink_yellow":
-						reply.setVariable('c', new DataPacketTypeString("ink_yellow"));
-						reply.setVariable('g', new DataPacketTypeInteger(master.tanks[2].getFluidAmount()));
+						reply.setVariable('c', new DataTypeString("ink_yellow"));
+						reply.setVariable('g', new DataTypeInteger(master.tanks[2].getFluidAmount()));
 						conn.sendPacket(reply);
 						break;
 					case "get_ink_magenta":
-						reply.setVariable('c', new DataPacketTypeString("ink_magenta"));
-						reply.setVariable('g', new DataPacketTypeInteger(master.tanks[3].getFluidAmount()));
+						reply.setVariable('c', new DataTypeString("ink_magenta"));
+						reply.setVariable('g', new DataTypeInteger(master.tanks[3].getFluidAmount()));
 						conn.sendPacket(reply);
 						break;
 					case "get_energy":
-						reply.setVariable('c', new DataPacketTypeString("energy"));
-						reply.setVariable('g', new DataPacketTypeInteger(master.energyStorage.getEnergyStored()));
+						reply.setVariable('c', new DataTypeString("energy"));
+						reply.setVariable('g', new DataTypeInteger(master.energyStorage.getEnergyStored()));
 						conn.sendPacket(reply);
 						break;
 					case "get_color":
-						reply.setVariable('c', new DataPacketTypeString("color"));
-						reply.setVariable('g', new DataPacketTypeInteger(master.color));
+						reply.setVariable('c', new DataTypeString("color"));
+						reply.setVariable('g', new DataTypeInteger(master.color));
 						conn.sendPacket(reply);
 						break;
 					case "get_color_hex":
-						reply.setVariable('c', new DataPacketTypeString("color"));
-						reply.setVariable('g', new DataPacketTypeString(String.format("#%06X", master.color)));
+						reply.setVariable('c', new DataTypeString("color"));
+						reply.setVariable('g', new DataTypeString(String.format("#%06X", master.color)));
 						conn.sendPacket(reply);
 						break;
 				}
 			}
 
-			if(p instanceof DataPacketTypeInteger)
+			if(p instanceof DataTypeInteger)
 			{
-				master.color = MathHelper.clamp(((DataPacketTypeInteger)p).value, 0, 0xffffff);
+				master.color = MathHelper.clamp(((DataTypeInteger)p).value, 0, 0xffffff);
 			}
-			else if(p instanceof DataPacketTypeString)
+			else if(p instanceof DataTypeString)
 			{
 				try
 				{
@@ -745,12 +745,6 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 				}
 			}
 		}
-	}
-
-	@Override
-	public void onSend()
-	{
-
 	}
 
 	public static class PaintingProcess extends MultiblockProcessInMachine<PaintingRecipe>

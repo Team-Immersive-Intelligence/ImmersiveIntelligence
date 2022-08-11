@@ -18,7 +18,7 @@ import net.minecraft.util.NonNullList;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 
 import javax.annotation.Nullable;
@@ -43,7 +43,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		packet = new DataPacket();
 		for(char c : DataPacket.varCharacters)
-			packet.setVariable(c, new DataPacketTypeInteger(0));
+			packet.setVariable(c, new DataTypeInteger(0));
 		packetLeft = new DataPacket();
 		packetRight = new DataPacket();
 		if(nbt.hasKey("packet"))
@@ -159,9 +159,9 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 
 		for(char c : DataPacket.varCharacters)
 		{
-			if(this.packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+			if(this.packet.getPacketVariable(c) instanceof DataTypeInteger)
 			{
-				switch(((DataPacketTypeInteger)this.packet.getPacketVariable(c)).value)
+				switch(((DataTypeInteger)this.packet.getPacketVariable(c)).value)
 				{
 					case 0:
 					{
@@ -211,12 +211,6 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 				IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(facing));
 				d.sendPacket(newpacket);
 			}
-
-	}
-
-	@Override
-	public void onSend()
-	{
 
 	}
 

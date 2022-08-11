@@ -3,6 +3,9 @@ package pl.pabilo8.immersiveintelligence.api.data.types;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * @author Pabilo8
  * @since 2019-06-01
@@ -14,6 +17,14 @@ public interface IDataType
 	 * @return data type name, should be snake_case
 	 */
 	String getName();
+
+	/**
+	 * @return data type's manual info table
+	 */
+	default String[][] getTypeInfoTable()
+	{
+		return new String[0][0];
+	}
 
 	/**
 	 * @return value to string, if compound make it JSON styled, look at {@link NBTTagCompound#toString()}
@@ -43,15 +54,14 @@ public interface IDataType
 	/**
 	 * @return texture location for GUI frames, *must* contain the file extension, II default is immersiveintelligence:textures/gui/data_types.png
 	 */
-	String textureLocation();
-
-	/**
-	 * @return frame offset number inside the texture file, see immersiveintelligence:textures/gui/data_types.png for reference
-	 */
-	int getFrameOffset();
+	default String textureLocation()
+	{
+		return String.format("immersiveintelligence:textures/gui/data_types/%s.png", getName());
+	}
 
 	/**
 	 * Sets header (type name) while saving the variable to NBT
+	 *
 	 * @return NBTTagCompound with header tag
 	 */
 	default NBTTagCompound getHeaderTag()
@@ -59,5 +69,15 @@ public interface IDataType
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("Type", getName());
 		return tag;
+	}
+
+	/**
+	 * Used by interfaces extending IDataType to provide a generic "bridge" between data types
+	 * @see IDataTypeNumeric
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface IGenericDataType
+	{
+		Class<? extends IDataType> defaultType();
 	}
 }

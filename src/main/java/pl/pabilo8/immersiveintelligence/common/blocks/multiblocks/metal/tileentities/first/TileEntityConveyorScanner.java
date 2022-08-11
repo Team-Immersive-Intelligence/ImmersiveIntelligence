@@ -34,7 +34,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ConveyorScanner
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +121,7 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 				if(conn!=null)
 				{
 					DataPacket packet = new DataPacket();
-					packet.setVariable('s', new DataPacketTypeItemStack(inventoryHandler.extractItem(0, 64, true)));
+					packet.setVariable('s', new DataTypeItemStack(inventoryHandler.extractItem(0, 64, true)));
 					conn.sendPacket(packet);
 				}
 				Utils.dropStackAtPos(world, this.getPos().offset(facing), inventoryHandler.extractItem(0, 64, false));
@@ -287,12 +287,6 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 	protected IMultiblockRecipe readRecipeFromNBT(NBTTagCompound tag)
 	{
 		return null;
-	}
-
-	@Override
-	public void onSend()
-	{
-
 	}
 
 	@Override

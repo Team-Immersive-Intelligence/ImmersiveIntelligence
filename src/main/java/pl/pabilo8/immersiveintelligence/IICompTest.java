@@ -1,11 +1,18 @@
 package pl.pabilo8.immersiveintelligence;
 
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.data.pol.POLComputerMemory;
+import pl.pabilo8.immersiveintelligence.api.data.pol.POLProcess;
+import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript;
+import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -16,170 +23,99 @@ import java.util.HashMap;
 @Deprecated
 public class IICompTest
 {
-	// TODO: 24.02.2021 Finish, then remove
-	static final ArrayList<String> KEYWORDS = new ArrayList<>();
-	static final DataPacket packet = new DataPacket();
-
-	static
-	{
-		KEYWORDS.add("using");
-		KEYWORDS.add("swap");
-		KEYWORDS.add("execute");
-		KEYWORDS.add("return");
-	}
-
-	static final ArrayList<String> list = new ArrayList<>();
-	static final ArrayList<String> list2 = new ArrayList<>();
-	static final HashMap<String,ArrayList<String>> scripts = new HashMap<>();
-
-	static
-	{
-		list.add("using ARITMETIC_CIRCUIT from CIRCUIT0;");
-		list.add("integer a = 25;");
-		list.add("integer b = 10;");
-		list.add("integer c = @a + @b;");
-		list.add("execute subtract;");
-		//list.add("integer c = @a+@b;");
-
-		list2.add("integer c -= 1;");
-
-		scripts.put("main",list);
-		scripts.put("subtract",list2);
-	}
+	// TODO: remove or move into a dedicated "emulator"
+	static boolean DEBUG = true;
+	static POLComputerMemory MEMORY = new POLComputerMemory(8);
+	static POLTerminal TERMINAL = new POLMockupTerminal("POL");
 
 	public static void main(String[] args)
 	{
-		execute("main");
+		execute(readFile("trigonometry"));
+	}
+
+	/**
+	 * load a POL file into scripts
+	 */
+	private static String readFile(String name)
+	{
+		try
+		{
+			FileReader f = new FileReader("src/pol/"+name+".pol");
+			BufferedReader reader = new BufferedReader(f);
+			ArrayList<String> c = reader.lines().collect(Collectors.toCollection(ArrayList::new));
+
+			MEMORY.putScript(name, POLScript.prepareScript(c));
+			reader.close();
+			return name;
+		}
+		catch(IOException ignored)
+		{
+
+		}
+		return "";
 	}
 
 	private static void execute(String id)
 	{
-		ArrayList<String> script = scripts.get(id);
-		boolean running = true;
-		int lineID = 0;
-		final String LOG = "["+id+"]";
-		while(running)
+		POLProcess process = new POLProcess(MEMORY.getScript(id));
+//		final String LOG = "["+id+"]";
+
+		do
 		{
-			if(!executeLine(reformatCode(script.get(lineID))))
-				running = false;
-			lineID++;
-			if(lineID >= script.size())
-				running = false;
-			System.out.print(running?"[R]": "[S]");
-			System.out.print(LOG);
-			System.out.println(packet.toString());
+			process.run(MEMORY, TERMINAL);
+			/*if(DEBUG)
+			{
+				System.out.print(process.isRunning()?"[R]": "[H]");
+				System.out.print(LOG);
+				System.out.println(MEMORY);
+			}*/
 		}
+		while(process.isRunning());
 	}
 
-	private static boolean executeLine(String[] reformatCode)
+	private static class POLMockupTerminal extends POLTerminal
 	{
-		if(reformatCode.length > 0)
-		{
-			if(KEYWORDS.contains(reformatCode[0]))
-			{
-				switch(reformatCode[0])
-				{
-					case "using":
-					{
-						return true;
-					}
-					case "swap":
-					{
-						return true;
-					}
-					case "execute":
-					{
-						execute(reformatCode[1]);
-						return true;
-					}
-					case "return":
-					{
-						return false;
-					}
+		private final String name;
 
-				}
-			}
-			else
+		public POLMockupTerminal(String name)
+		{
+			this.name = "["+name+"]";
+		}
+
+		@Override
+		public void error(String text)
+		{
+			System.out.println(text);
+		}
+
+		@Override
+		public void type(String text)
+		{
+			System.out.println(text);
+		}
+
+		@Override
+		public void lamp(int lamp, int color, boolean state)
+		{
+			// TODO: 17.04.2022 lamp display
+		}
+
+		@Override
+		public IDataDevice getDeviceAt(int section, int id)
+		{
+			return null;
+		}
+
+		@Override
+		public void sleep(int value)
+		{
+			try
 			{
-				if(reformatCode[0].equals("integer"))
-				{
-					int result = 0;
-					char c = reformatCode[1].charAt(0);
-					switch(reformatCode[2])
-					{
-						case "=":
-							result = parseExpression(Arrays.copyOfRange(reformatCode, 3, reformatCode.length));
-							break;
-						case "+=":
-							result = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value+parseExpression(Arrays.copyOfRange(reformatCode, 3, reformatCode.length));
-							break;
-						case "-=":
-							result = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value-parseExpression(Arrays.copyOfRange(reformatCode, 3, reformatCode.length));
-							break;
-						case "*=":
-							result = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value*parseExpression(Arrays.copyOfRange(reformatCode, 3, reformatCode.length));
-							break;
-						case "/=":
-							result = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value/parseExpression(Arrays.copyOfRange(reformatCode, 3, reformatCode.length));
-							break;
-						case "%=":
-							result = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value%parseExpression(Arrays.copyOfRange(reformatCode, 3, reformatCode.length));
-							break;
-					}
-					packet.setVariable(c, new DataPacketTypeInteger(result));
-				}
+				Thread.sleep(value*20L);
+			}
+			catch(InterruptedException ignored)
+			{
 			}
 		}
-		return true;
-	}
-
-	private static String[] reformatCode(String s)
-	{
-		return s.replaceAll(";", "").split(" ");
-	}
-
-	static int parseExpression(String[] exp)
-	{
-		/*
-		for(int i = 0; i < exp.length; i++)
-		if(exp[i].contains("("))
-		 */
-		String[] finExp = Arrays.stream(exp).map(s -> s.startsWith("@")?
-				String.valueOf(((DataPacketTypeInteger)packet.getPacketVariable(s.substring(1).charAt(0))).value)
-				: s).toArray(String[]::new);
-		int g = 0;
-		char op = 0;
-		for(int i = 0; i < finExp.length; i++)
-		{
-			//System.out.println(finExp[i]+" / "+op+" / "+g);
-			if(i==0)
-				g = Integer.parseInt(finExp[0]);
-			else if(op!=0)
-			{
-				int parsed = Integer.parseInt(finExp[i]);
-				switch(op)
-				{
-					case '+':
-						g += parsed;
-						break;
-					case '-':
-						g -= parsed;
-						break;
-					case '*':
-						g *= parsed;
-						break;
-					case '/':
-						g /= parsed;
-						break;
-					case '%':
-						g %= parsed;
-						break;
-				}
-				op = 0;
-			}
-			else
-				op = finExp[i].charAt(0);
-		}
-		return g;
 	}
 }

@@ -21,14 +21,13 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ProgrammableSpeaker;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageProgrammableSpeakerSync;
@@ -138,13 +137,13 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	public void onPacketReceive(DataPacket packet)
 	{
 		//once
-		boolean once = packet.getPacketVariable('o') instanceof DataPacketTypeBoolean&&((DataPacketTypeBoolean)packet.getPacketVariable('o')).value;
+		boolean once = packet.getPacketVariable('o') instanceof DataTypeBoolean&&((DataTypeBoolean)packet.getPacketVariable('o')).value;
 
-		if(packet.getPacketVariable('t') instanceof DataPacketTypeInteger)
-			tone = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('t')).value/100f, -2, 2);
+		if(packet.getPacketVariable('t') instanceof DataTypeInteger)
+			tone = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('t')).value/100f, -2, 2);
 
-		if(packet.getPacketVariable('v') instanceof DataPacketTypeInteger)
-			soundVolume = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('v')).value/100f, 0, 1);
+		if(packet.getPacketVariable('v') instanceof DataTypeInteger)
+			soundVolume = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('v')).value/100f, 0, 1);
 
 		if(packet.variables.containsKey('s'))
 		{

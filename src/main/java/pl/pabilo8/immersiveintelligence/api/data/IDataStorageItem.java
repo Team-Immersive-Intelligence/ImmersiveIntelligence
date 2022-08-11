@@ -11,6 +11,4 @@ public interface IDataStorageItem
 	DataPacket getStoredData(ItemStack stack);
 
 	void writeDataToItem(DataPacket packet, ItemStack stack);
-
-	String getDataStorageItemType(ItemStack stack);
 }

@@ -1,0 +1,24 @@
+use ARITHMETIC
+use COMPARATOR
+use LOGIC
+
+integer a = 198
+integer b = 231
+
+exec "gcd"
+type @c
+
+end
+
+;Euclid's Algorithm - calculates greatest common divisor
+;uses @a and @b as parameters
+;returns @c
+
+mark gcd
+integer a = % @a @b
+swap a b
+
+if ! (== @b 0)
+    goto "gcd"
+copy a c
+end

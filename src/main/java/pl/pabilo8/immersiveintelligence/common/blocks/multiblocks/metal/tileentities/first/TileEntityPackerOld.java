@@ -36,9 +36,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
@@ -429,12 +429,6 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		TileEntityPackerOld master = master();
@@ -444,19 +438,19 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 		{
 			master.energyStorage.extractEnergy(Packer.energyUsage, false);
 
-			if(packet.getPacketVariable('c') instanceof DataPacketTypeInteger)
-				master.itemsToPack = ((DataPacketTypeInteger)packet.getPacketVariable('c')).value;
+			if(packet.getPacketVariable('c') instanceof DataTypeInteger)
+				master.itemsToPack = ((DataTypeInteger)packet.getPacketVariable('c')).value;
 			if(packet.variables.containsKey('m'))
 			{
-				if(packet.getPacketVariable('m') instanceof DataPacketTypeInteger)
+				if(packet.getPacketVariable('m') instanceof DataTypeInteger)
 				{
-					master.packingMode = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('m')).value, 0, PackingModes.values().length-1);
+					master.packingMode = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('m')).value, 0, PackingModes.values().length-1);
 				}
-				else if(packet.getPacketVariable('m') instanceof DataPacketTypeString)
+				else if(packet.getPacketVariable('m') instanceof DataTypeString)
 				{
 					try
 					{
-						PackingModes mode = PackingModes.valueOf(((DataPacketTypeString)packet.getPacketVariable('m')).value.toUpperCase());
+						PackingModes mode = PackingModes.valueOf(((DataTypeString)packet.getPacketVariable('m')).value.toUpperCase());
 						master.packingMode = mode.ordinal();
 					}
 					catch(IllegalArgumentException e)
@@ -466,11 +460,11 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 				}
 			}
 
-			if(packet.getPacketVariable('q') instanceof DataPacketTypeInteger)
-				master.insertQuantity = ((DataPacketTypeInteger)packet.getPacketVariable('q')).value;
+			if(packet.getPacketVariable('q') instanceof DataTypeInteger)
+				master.insertQuantity = ((DataTypeInteger)packet.getPacketVariable('q')).value;
 
-			if(packet.getPacketVariable('i') instanceof DataPacketTypeBoolean)
-				master.ignoreEmptyStacks = ((DataPacketTypeBoolean)packet.getPacketVariable('i')).value;
+			if(packet.getPacketVariable('i') instanceof DataTypeBoolean)
+				master.ignoreEmptyStacks = ((DataTypeBoolean)packet.getPacketVariable('i')).value;
 
 		}
 	}

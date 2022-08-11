@@ -5,10 +5,10 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -53,25 +53,25 @@ public class IIManualLogistics extends IIManual
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "inserters0", inserter0, inserter1, inserter2),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_basic", inserter0),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
-						.addEntry(new DataPacketTypeString(), 'c')
-						.addEntry(new DataPacketTypeString(), 'a')
-						.addEntry(new DataPacketTypeItemStack(), 's'),
+						.addEntry(new DataTypeString(), 'c')
+						.addEntry(new DataTypeString(), 'a')
+						.addEntry(new DataTypeItemStack(), 's'),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
-						.addEntry(new DataPacketTypeInteger(), 'e')
-						.addEntry(new DataPacketTypeInteger(), 't'),
+						.addEntry(new DataTypeInteger(), 'e')
+						.addEntry(new DataTypeInteger(), 't'),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_basic", true)
-						.addEntry(new DataPacketTypeString(), 'i')
-						.addEntry(new DataPacketTypeString(), 'o')
-						.addEntry(new DataPacketTypeInteger(), '1')
-						.addEntry(new DataPacketTypeInteger(), '0'),
+						.addEntry(new DataTypeString(), 'i')
+						.addEntry(new DataTypeString(), 'o')
+						.addEntry(new DataTypeInteger(), '1')
+						.addEntry(new DataTypeInteger(), '0'),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "inserter_obsolete", true)
-						.addEntry(new DataPacketTypeString(), 'm')
-						.addEntry(new DataPacketTypeInteger(), 'c'),
+						.addEntry(new DataTypeString(), 'm')
+						.addEntry(new DataTypeInteger(), 'c'),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_advanced", inserter1),
 				new ManualPages.Crafting(ManualHelper.getManual(), "inserters_fluid", inserter2),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "inserters_fluid", true)
-						.addEntry(new DataPacketTypeString(), 'm')
-						.addEntry(new DataPacketTypeInteger(), 'c')
+						.addEntry(new DataTypeString(), 'm')
+						.addEntry(new DataTypeInteger(), 'c')
 		);
 		ManualHelper.addEntry("task_system", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "task_system0"),
@@ -85,12 +85,12 @@ public class IIManualLogistics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "packer3"),
 				new ManualPages.Text(ManualHelper.getManual(), "packer4"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "packer", true)
-						.addEntry(new DataPacketTypeString(), 'c')
-						.addEntry(new DataPacketTypeInteger(), 'a')
-						.addEntry(new DataPacketTypeInteger(), 's')
-						.addEntry(new DataPacketTypeBoolean(), 'm'),
+						.addEntry(new DataTypeString(), 'c')
+						.addEntry(new DataTypeInteger(), 'a')
+						.addEntry(new DataTypeInteger(), 's')
+						.addEntry(new DataTypeBoolean(), 'm'),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "packer", true)
-						.addEntry(new DataPacketTypeBoolean(), 'e')
+						.addEntry(new DataTypeBoolean(), 'e')
 		);
 
 		ManualHelper.addEntry("skycrates", getCategory(),

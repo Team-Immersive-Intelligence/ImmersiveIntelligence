@@ -18,7 +18,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.Utils;
@@ -294,12 +293,6 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void onSend()
-	{
-
 	}
 
 	@Override

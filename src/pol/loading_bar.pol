@@ -1,0 +1,48 @@
+;Creates an animated progress bar
+
+use ADVANCED_ARITHMETIC ;use a circuit
+use COMPARATOR
+use LOGIC
+use TYPE_CONVERSION
+use TEXT
+
+integer w = 5  ;wait time
+integer m = 64 ;max
+integer i = 0   ;begin
+integer l = 32  ;length (in chars)
+
+mark loop
+
+string b = "["
+float k = * @l (/ (<float> @i) (<float> @m)) ;current length
+float f = * (/ (<float> @i) (<float> @m)) 100
+copy k e; empty chars
+float e = - @l @e
+
+mark full
+if > @k 0
+    float k = - @k 1
+    string b = string_join @b "="
+    goto "full"
+
+mark empty
+if > @e 0
+    float e = - @e 1
+    string b = string_join @b " "
+    goto "empty"
+
+string b = string_join @b "]"
+string b = string_join @b " "
+string b = string_join @b (<string> @f)
+string b = string_join @b "%"
+
+wait @w ;wait w ticks
+type @b
+integer i = + @i 1
+
+if < @i @m
+    goto "loop"
+
+type "Loading Complete!"
+
+end

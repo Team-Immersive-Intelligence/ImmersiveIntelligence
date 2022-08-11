@@ -9,10 +9,10 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
@@ -27,7 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIArmorUpgrade;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalFortification;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 
 import java.util.ArrayList;
@@ -192,40 +193,40 @@ public class IIManualWarfare extends IIManual
 				new ManualPageMultiblock(ManualHelper.getManual(), "artillery_howitzer1", MultiblockArtilleryHowitzer.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "artillery_howitzer2"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer", true)
-						.addEntry(new DataPacketTypeString(), 'c')
-						.addEntry(new DataPacketTypeInteger(), 'f')
-						.addEntry(new DataPacketTypeInteger(), 'y'),
+						.addEntry(new DataTypeString(), 'c')
+						.addEntry(new DataTypeInteger(), 'f')
+						.addEntry(new DataTypeInteger(), 'y'),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer2", true)
-						.addEntry(new DataPacketTypeInteger(), 'p'),
+						.addEntry(new DataTypeInteger(), 'p'),
 				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer1")
-						.addEntry(new DataPacketTypeInteger(), "get_energy")
-						.addEntry(new DataPacketTypeString(), "get_state")
-						.addEntry(new DataPacketTypeInteger(), "get_state_num")
-						.addEntry(new DataPacketTypeInteger(), "get_state_progress"),
+						.addEntry(new DataTypeInteger(), "get_energy")
+						.addEntry(new DataTypeString(), "get_state")
+						.addEntry(new DataTypeInteger(), "get_state_num")
+						.addEntry(new DataTypeInteger(), "get_state_progress"),
 				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer2")
-						.addEntry(new DataPacketTypeInteger(), "get_yaw")
-						.addEntry(new DataPacketTypeInteger(), "get_pitch")
-						.addEntry(new DataPacketTypeInteger(), "get_planned_yaw")
-						.addEntry(new DataPacketTypeInteger(), "get_planned_pitch")
-						.addEntry(new DataPacketTypeInteger(), "get_platform_height"),
+						.addEntry(new DataTypeInteger(), "get_yaw")
+						.addEntry(new DataTypeInteger(), "get_pitch")
+						.addEntry(new DataTypeInteger(), "get_planned_yaw")
+						.addEntry(new DataTypeInteger(), "get_planned_pitch")
+						.addEntry(new DataTypeInteger(), "get_platform_height"),
 
 				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer3")
-						.addEntry(new DataPacketTypeBoolean(), "get_door_opened")
-						.addEntry(new DataPacketTypeBoolean(), "get_door_closed")
-						.addEntry(new DataPacketTypeBoolean(), "get_door_opening"),
+						.addEntry(new DataTypeBoolean(), "get_door_opened")
+						.addEntry(new DataTypeBoolean(), "get_door_closed")
+						.addEntry(new DataTypeBoolean(), "get_door_opening"),
 				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer4")
-						.addEntry(new DataPacketTypeItemStack(), "get_loaded_shell")
-						.addEntry(new DataPacketTypeItemStack(), "get_stored_shell")
+						.addEntry(new DataTypeItemStack(), "get_loaded_shell")
+						.addEntry(new DataTypeItemStack(), "get_stored_shell")
 		);
 
 		ManualHelper.addEntry("ballistic_computer", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "ballistic_computer0", MultiblockBallisticComputer.instance),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "ballistic_computer", true)
-						.addEntry(new DataPacketTypeInteger(), 'x', 'y', 'z')
-						.addEntry(new DataPacketTypeInteger(), 'm'),
+						.addEntry(new DataTypeInteger(), 'x', 'y', 'z')
+						.addEntry(new DataTypeInteger(), 'm'),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "ballistic_computer", false)
-						.addEntry(new DataPacketTypeInteger(), 'y')
-						.addEntry(new DataPacketTypeInteger(), 'p')
+						.addEntry(new DataTypeInteger(), 'y')
+						.addEntry(new DataTypeInteger(), 'p')
 		);
 
 		ManualHelper.addEntry("flagpole", getCategory(),
@@ -241,10 +242,10 @@ public class IIManualWarfare extends IIManual
 				new ManualPages.Crafting(ManualHelper.getManual(), "chemdispenser0", new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta())),
 				new ManualPages.Text(ManualHelper.getManual(), "chemdispenser1"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "chemdispenser", true)
-						.addEntry(new DataPacketTypeInteger(), 'a')
-						.addEntry(new DataPacketTypeBoolean(), 'i')
-						.addEntry(new DataPacketTypeInteger(), 'y')
-						.addEntry(new DataPacketTypeInteger(), 'p')
+						.addEntry(new DataTypeInteger(), 'a')
+						.addEntry(new DataTypeBoolean(), 'i')
+						.addEntry(new DataTypeInteger(), 'y')
+						.addEntry(new DataTypeInteger(), 'p')
 		);
 
 		ManualHelper.addEntry("trench_shovel", getCategory(),

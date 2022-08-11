@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiButton;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -20,11 +21,12 @@ public abstract class GuiDataEditor<T extends IDataType> extends GuiButton
 
 	static
 	{
-		editors.put(DataPacketTypeBoolean.class, (id, data) -> new GuiDataEditorBoolean(id, (DataPacketTypeBoolean)data));
-		editors.put(DataPacketTypeString.class, (id, data) -> new GuiDataEditorString(id, (DataPacketTypeString)data));
-		editors.put(DataPacketTypeInteger.class, (id, data) -> new GuiDataEditorInteger(id, (DataPacketTypeInteger)data));
-		editors.put(DataPacketTypeNull.class, (id, data) -> new GuiDataEditorNull(id, (DataPacketTypeNull)data));
-		editors.put(DataPacketTypeItemStack.class, (id, data) -> new GuiDataEditorItemStack(id, (DataPacketTypeItemStack)data));
+		editors.put(DataTypeBoolean.class, (id, data) -> new GuiDataEditorBoolean(id, (DataTypeBoolean)data));
+		editors.put(DataTypeString.class, (id, data) -> new GuiDataEditorString(id, (DataTypeString)data));
+		editors.put(DataTypeInteger.class, (id, data) -> new GuiDataEditorInteger(id, (DataTypeInteger)data));
+		editors.put(DataTypeFloat.class, (id, data) -> new GuiDataEditorFloat(id, (DataTypeFloat)data));
+		editors.put(DataTypeNull.class, (id, data) -> new GuiDataEditorNull(id, (DataTypeNull)data));
+		editors.put(DataTypeItemStack.class, (id, data) -> new GuiDataEditorItemStack(id, (DataTypeItemStack)data));
 		//editors.put(DataPacketTypeAccessor.class, (id, data) -> new GuiDataEditorAccessor(id, (DataPacketTypeAccessor)data));
 	}
 
@@ -98,5 +100,10 @@ public abstract class GuiDataEditor<T extends IDataType> extends GuiButton
 	public boolean isFocused()
 	{
 		return false;
+	}
+
+	public void getTooltip(ArrayList<String> tooltip, int mx, int my)
+	{
+
 	}
 }

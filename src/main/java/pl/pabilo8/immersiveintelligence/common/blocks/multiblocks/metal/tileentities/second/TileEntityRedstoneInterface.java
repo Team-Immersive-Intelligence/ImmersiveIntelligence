@@ -27,16 +27,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -487,11 +484,11 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			{
 				if(storedData.variables.containsKey(c))
 				{
-					if(storedData.variables.get(c) instanceof DataPacketTypeArray)
+					if(storedData.variables.get(c) instanceof DataTypeArray)
 					{
-						DataPacketTypeArray a = (DataPacketTypeArray)storedData.variables.get(c);
-						DataPacketTypeInteger int1 = (DataPacketTypeInteger)a.value[0];
-						DataPacketTypeInteger int2 = (DataPacketTypeInteger)a.value[1];
+						DataTypeArray a = (DataTypeArray)storedData.variables.get(c);
+						DataTypeInteger int1 = (DataTypeInteger)a.value[0];
+						DataTypeInteger int2 = (DataTypeInteger)a.value[1];
 						redstoneOutput[int1.value] = getRedstoneFromPacket(int2.value, packet, c);
 
 					}
@@ -516,16 +513,16 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 1:
 			{
-				if(packet.getPacketVariable(c) instanceof DataPacketTypeBoolean)
-					return (byte)(((DataPacketTypeBoolean)packet.getPacketVariable(c)).value?15: 0);
+				if(packet.getPacketVariable(c) instanceof DataTypeBoolean)
+					return (byte)(((DataTypeBoolean)packet.getPacketVariable(c)).value?15: 0);
 				else
 					return 0;
 			}
 			case 2:
 			{
-				if(packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+				if(packet.getPacketVariable(c) instanceof DataTypeInteger)
 				{
-					int i = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value;
+					int i = ((DataTypeInteger)packet.getPacketVariable(c)).value;
 					return (byte)MathHelper.clamp(i, 0, 15);
 				}
 				else
@@ -533,9 +530,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 3:
 			{
-				if(packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+				if(packet.getPacketVariable(c) instanceof DataTypeInteger)
 				{
-					int i = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value;
+					int i = ((DataTypeInteger)packet.getPacketVariable(c)).value;
 					return (byte)MathHelper.clamp(((float)i/255f)*15, 0, 15);
 				}
 				else
@@ -543,9 +540,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 4:
 			{
-				if(packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+				if(packet.getPacketVariable(c) instanceof DataTypeInteger)
 				{
-					int i = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value;
+					int i = ((DataTypeInteger)packet.getPacketVariable(c)).value;
 					return (byte)MathHelper.clamp(((float)i/100f)*15, 0, 15);
 				}
 				else
@@ -553,9 +550,9 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 			}
 			case 5:
 			{
-				if(packet.getPacketVariable(c) instanceof DataPacketTypeString)
+				if(packet.getPacketVariable(c) instanceof DataTypeString)
 				{
-					String s = ((DataPacketTypeString)packet.getPacketVariable(c)).value;
+					String s = ((DataTypeString)packet.getPacketVariable(c)).value;
 					switch(s)
 					{
 						case "on":
@@ -585,24 +582,24 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		{
 			case 0:
 			{
-				return new DataPacketTypeNull();
+				return new DataTypeNull();
 			}
 			case 1:
 			{
-				return new DataPacketTypeBoolean(value > 0);
+				return new DataTypeBoolean(value > 0);
 			}
 			case 2:
 			{
-				return new DataPacketTypeInteger(value);
+				return new DataTypeInteger(value);
 			}
 
 			case 3:
 			{
-				return new DataPacketTypeInteger((int)((float)value/15f*255));
+				return new DataTypeInteger((int)((float)value/15f*255));
 			}
 			case 4:
 			{
-				return new DataPacketTypeInteger((int)((float)value/15f*100));
+				return new DataTypeInteger((int)((float)value/15f*100));
 			}
 			case 5:
 			{
@@ -618,17 +615,11 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 				else
 					s = "off";
 
-				return new DataPacketTypeString(s);
+				return new DataTypeString(s);
 
 			}
 		}
-		return new DataPacketTypeNull();
-	}
-
-	@Override
-	public void onSend()
-	{
-
+		return new DataTypeNull();
 	}
 
 	@Override
@@ -684,11 +675,11 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		DataPacket out = new DataPacket();
 		for(char c : DataPacket.varCharacters)
 		{
-			if(m.storedRedstone.variables.containsKey(c)&&m.storedRedstone.variables.get(c) instanceof DataPacketTypeArray)
+			if(m.storedRedstone.variables.containsKey(c)&&m.storedRedstone.variables.get(c) instanceof DataTypeArray)
 			{
-				DataPacketTypeArray a = (DataPacketTypeArray)m.storedRedstone.variables.get(c);
-				int i1 = ((DataPacketTypeInteger)a.value[0]).value;
-				int i2 = ((DataPacketTypeInteger)a.value[1]).value;
+				DataTypeArray a = (DataTypeArray)m.storedRedstone.variables.get(c);
+				int i1 = ((DataTypeInteger)a.value[0]).value;
+				int i2 = ((DataTypeInteger)a.value[1]).value;
 
 				TileEntityRedstoneInterface m4 = getTileForPos(4);
 				if(m4!=null)

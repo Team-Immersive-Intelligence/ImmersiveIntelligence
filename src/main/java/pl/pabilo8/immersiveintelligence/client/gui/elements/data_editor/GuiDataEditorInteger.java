@@ -8,16 +8,17 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
  * @since 07.09.2021
  */
-public class GuiDataEditorInteger extends GuiDataEditor<DataPacketTypeInteger>
+public class GuiDataEditorInteger extends GuiDataEditor<DataTypeInteger>
 {
 	private GuiButtonIE buttonInt, buttonHex, buttonBin;
 	private GuiTextField valueEdit;
@@ -25,7 +26,7 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataPacketTypeInteger>
 	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 	private int mode = 10;
 
-	public GuiDataEditorInteger(int buttonId, DataPacketTypeInteger dataType)
+	public GuiDataEditorInteger(int buttonId, DataTypeInteger dataType)
 	{
 		super(buttonId, dataType);
 	}
@@ -54,9 +55,9 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataPacketTypeInteger>
 	}
 
 	@Override
-	public DataPacketTypeInteger createType()
+	public DataTypeInteger createType()
 	{
-		return new DataPacketTypeInteger();
+		return new DataTypeInteger();
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataPacketTypeInteger>
 	}
 
 	@Override
-	public DataPacketTypeInteger outputType()
+	public DataTypeInteger outputType()
 	{
 		dataType.setDefaultValue();
 		dataType.value = getFieldValue();
@@ -135,5 +136,17 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataPacketTypeInteger>
 		{
 			return 0;
 		}
+	}
+
+	@Override
+	public void getTooltip(ArrayList<String> tooltip, int mx, int my)
+	{
+		// TODO: 19.01.2022 translation 
+		if(buttonInt.isMouseOver())
+			tooltip.add("Decimal");
+		else if(buttonHex.isMouseOver())
+			tooltip.add("Hexadecimal");
+		else if(buttonBin.isMouseOver())
+			tooltip.add("Binary");
 	}
 }

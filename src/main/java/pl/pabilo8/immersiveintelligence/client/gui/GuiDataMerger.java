@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataMerger;
@@ -96,9 +96,9 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 		{
 			int xoff = (int)Math.floor(i/6f), yoff = i%6;
 			int col = 0xefefef;
-			if(packet.getPacketVariable(c) instanceof DataPacketTypeInteger)
+			if(packet.getPacketVariable(c) instanceof DataTypeInteger)
 			{
-				int o = ((DataPacketTypeInteger)packet.getPacketVariable(c)).value;
+				int o = ((DataTypeInteger)packet.getPacketVariable(c)).value;
 				switch(o)
 				{
 					case -2:
@@ -173,18 +173,18 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	void switchMode(char c, boolean forward)
 	{
 		IDataType p = packet.getPacketVariable(c);
-		if(p instanceof DataPacketTypeInteger)
+		if(p instanceof DataTypeInteger)
 		{
-			int i = ((DataPacketTypeInteger)p).value;
+			int i = ((DataTypeInteger)p).value;
 			i += forward?1: -1;
 			if(i > 2)
 				i = -2;
 			else if(i < -2)
 				i = 2;
-			packet.setVariable(c, new DataPacketTypeInteger(i));
+			packet.setVariable(c, new DataTypeInteger(i));
 		}
 		else
-			packet.setVariable(c, new DataPacketTypeInteger(forward?1: -1));
+			packet.setVariable(c, new DataTypeInteger(forward?1: -1));
 	}
 
 }

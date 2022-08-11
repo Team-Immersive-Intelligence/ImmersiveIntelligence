@@ -1,27 +1,22 @@
 package pl.pabilo8.immersiveintelligence.api.data;
 
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationMax;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationMin;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationPower;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_arithmetic.DataOperationRoot;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationNAND;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationNOR;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationXNOR;
-import pl.pabilo8.immersiveintelligence.api.data.operators.advanced_logic.DataOperationXOR;
-import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.array.DataOperationGet;
-import pl.pabilo8.immersiveintelligence.api.data.operators.array.DataOperationPop;
-import pl.pabilo8.immersiveintelligence.api.data.operators.array.DataOperationPush;
-import pl.pabilo8.immersiveintelligence.api.data.operators.comparators.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.document.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.entity.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.itemstack.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationAND;
-import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationNOT;
-import pl.pabilo8.immersiveintelligence.api.data.operators.logic.DataOperationOR;
-import pl.pabilo8.immersiveintelligence.api.data.operators.text.*;
-import pl.pabilo8.immersiveintelligence.api.data.operators.type_conversion.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
+import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_arithmetic.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_logic.DataOperationNAND;
+import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_logic.DataOperationNOR;
+import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_logic.DataOperationXNOR;
+import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_logic.DataOperationXOR;
+import pl.pabilo8.immersiveintelligence.api.data.operations.arithmetic.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.array.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.comparators.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.document.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.entity.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.itemstack.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.logic.DataOperationAND;
+import pl.pabilo8.immersiveintelligence.api.data.operations.logic.DataOperationNOT;
+import pl.pabilo8.immersiveintelligence.api.data.operations.logic.DataOperationOR;
+import pl.pabilo8.immersiveintelligence.api.data.operations.text.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.type_conversion.*;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -33,7 +28,7 @@ import java.util.Map;
  */
 public class DataOperations
 {
-	public static final Map<String, Class<? extends DataOperator>> operations = new HashMap<>();
+	public static final Map<String, Class<? extends DataOperation>> operations = new HashMap<>();
 
 	static
 	{
@@ -42,11 +37,21 @@ public class DataOperations
 		operations.put("multiply", DataOperationMultiply.class);
 		operations.put("divide", DataOperationDivide.class);
 		operations.put("modulo", DataOperationModulo.class);
+		operations.put("abs", DataOperationAbs.class);
 
 		operations.put("power", DataOperationPower.class);
 		operations.put("root", DataOperationRoot.class);
 		operations.put("max", DataOperationMax.class);
 		operations.put("min", DataOperationMin.class);
+
+		operations.put("sign", DataOperationSign.class);
+		operations.put("ceil", DataOperationCeil.class);
+		operations.put("round", DataOperationRound.class);
+		operations.put("floor", DataOperationFloor.class);
+
+		operations.put("sin", DataOperationSin.class);
+		operations.put("cos", DataOperationCos.class);
+		operations.put("tan", DataOperationTan.class);
 
 		operations.put("greater", DataOperationGreater.class);
 		operations.put("less", DataOperationLess.class);
@@ -64,16 +69,20 @@ public class DataOperations
 		operations.put("xnor", DataOperationXNOR.class);
 
 		operations.put("string_join", DataOperationStringJoin.class);
-		operations.put("string_equal", DataOperationStringEqual.class);
 		operations.put("string_split", DataOperationStringSplit.class);
 		operations.put("string_length", DataOperationStringLength.class);
 		operations.put("string_char_at", DataOperationStringCharAt.class);
 		operations.put("string_substring", DataOperationStringSubstring.class);
 		operations.put("string_trim", DataOperationStringTrim.class);
+
 		operations.put("string_hexcol", DataOperationStringHexcol.class);
 		operations.put("string_format", DataOperationStringFormat.class);
+
 		operations.put("string_contains", DataOperationStringContains.class);
 		operations.put("string_contains_count", DataOperationStringContainsCount.class);
+		operations.put("string_replace_first", DataOperationStringReplaceFirst.class);
+		operations.put("string_replace_all", DataOperationStringReplaceAll.class);
+
 		operations.put("string_lowercase", DataOperationStringLowerCase.class);
 		operations.put("string_uppercase", DataOperationStringUpperCase.class);
 		operations.put("string_snake_case", DataOperationStringSnakeCase.class);
@@ -101,8 +110,11 @@ public class DataOperations
 		operations.put("entity_get_z", DataOperationGetEntityPosZ.class);
 
 		operations.put("array_get", DataOperationGet.class);
+		operations.put("array_set", DataOperationSet.class);
 		operations.put("array_pop", DataOperationPop.class);
 		operations.put("array_push", DataOperationPush.class);
+		operations.put("array_swap", DataOperationSwap.class);
+		operations.put("array_length", DataOperationArrayLength.class);
 
 		operations.put("document_read_page", DataOperationDocumentReadPage.class);
 		operations.put("document_read_all_pages_array", DataOperationDocumentReadAllPagesArray.class);
@@ -111,7 +123,9 @@ public class DataOperations
 		operations.put("document_get_title", DataOperationDocumentGetTitle.class);
 
 		operations.put("is_null", DataOperationIsNull.class);
+		operations.put("is_same_type", DataOperationIsSameType.class);
 		operations.put("to_integer", DataOperationToInteger.class);
+		operations.put("to_float", DataOperationToFloat.class);
 		operations.put("to_string", DataOperationToString.class);
 		operations.put("to_boolean", DataOperationToBoolean.class);
 		operations.put("to_null", DataOperationToNull.class);
@@ -120,9 +134,9 @@ public class DataOperations
 	}
 
 	@Nonnull
-	public static DataOperator getOperatorInstance(String name)
+	public static DataOperation getOperationInstance(String name)
 	{
-		Class<? extends DataOperator> c = operations.get(name);
+		Class<? extends DataOperation> c = operations.get(name);
 		if(c!=null)
 		{
 			try
@@ -131,7 +145,6 @@ public class DataOperations
 			}
 			catch(InstantiationException|IllegalAccessException ignored)
 			{
-
 			}
 		}
 		return new DataOperationAdd();

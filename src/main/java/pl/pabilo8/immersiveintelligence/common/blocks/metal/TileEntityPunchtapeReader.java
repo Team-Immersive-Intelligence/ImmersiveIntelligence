@@ -114,12 +114,6 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
 		if(player.isSneaking())
@@ -189,7 +183,6 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 				final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
 				if(te instanceof IDataDevice)
 					((IDataDevice)te).onReceive(packet, facing);
-
 				if(mode==2)
 					rsTime = 20;
 			}

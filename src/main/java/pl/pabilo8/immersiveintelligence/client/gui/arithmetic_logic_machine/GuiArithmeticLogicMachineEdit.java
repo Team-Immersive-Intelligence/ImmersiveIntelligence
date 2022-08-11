@@ -10,8 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
@@ -27,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Pabilo8 on 30-06-2019.
@@ -72,7 +72,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 		buttonVariableHelp = addButton(new GuiButtonII(buttonList.size(), guiLeft+152, guiTop+15, 16, 16, "immersiveintelligence:textures/gui/data_types/expression.png", 0, 0, 1, 1));
 
 		this.editor = addButton(new GuiDataEditorExpression(buttonList.size(),
-				this.editor!=null?this.editor.outputType(): DataOperator.getVarInType(DataPacketTypeExpression.class, dataType, new DataPacket()), handler.getStackInSlot(page)));
+				this.editor!=null?this.editor.outputType(): new DataPacket().getVarInType(DataTypeExpression.class, dataType), handler.getStackInSlot(page)));
 		this.editor.setBounds(guiLeft+35, guiTop+46, 131, 80);
 
 		//Letter Change Buttons
@@ -151,7 +151,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 		if(list.variables.containsKey(variableToEdit))
 			this.dataType = list.getPacketVariable(variableToEdit);
 		else
-			this.dataType = new DataPacketTypeExpression();
+			this.dataType = new DataTypeExpression();
 	}
 
 	public DataPacket getPacketFromPage()
@@ -176,6 +176,15 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 
 		syncDataToServer();
 		initGui();
+	}
+
+	@Override
+	public ArrayList<String> getTooltip(int mx, int my)
+	{
+		ArrayList<String> tooltip = super.getTooltip(mx, my);
+		if(editor!=null)
+			editor.getTooltip(tooltip,mx,my);
+		return tooltip;
 	}
 
 	@Override
