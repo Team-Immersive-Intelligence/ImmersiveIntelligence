@@ -138,7 +138,8 @@ public class HansAnimations
 		KNEELING(0),
 		SQUATTING(0),
 		LYING(0.5f, 0.625f, 0.8f),
-		KAZACHOK(0.5f);
+		KAZACHOK(0.5f),
+		SWIMMING(1f);
 
 		public final float walkSpeedModifier;
 		public final float aabbWidth, aabbHeight;
@@ -154,5 +155,20 @@ public class HansAnimations
 			this.aabbWidth = aabbWidth;
 			this.aabbHeight = aabbHeight;
 		}
+	}
+
+	public enum HansArmAnimation
+	{
+		NORMAL,
+		SALUTE,
+		SURRENDER,
+
+		SQUAD_ORDER_HALT,
+		SQUAD_ORDER_COVER_ME,
+
+		SQUAD_ORDER_ONWARDS,
+		SQUAD_ORDER_FALLBACK,
+		SQUAD_ORDER_RIGHT,
+		SQUAD_ORDER_LEFT
 	}
 }

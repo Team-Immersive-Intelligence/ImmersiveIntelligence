@@ -8,13 +8,11 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerArrow;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.client.renderer.entity.layers.LayerSpiderEyes;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelHansBiped;
@@ -64,7 +62,7 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 			d0 += MathHelper.clampedLerp(
 					getOffsetForPose(entity, entity.prevLegAnimation),
 					getOffsetForPose(entity, entity.getLegAnimation()),
-					1f-MathHelper.clamp((entity.legAnimationTimer-partialTicks)/8f,0,1)
+					1f-MathHelper.clamp((entity.legAnimationTimer-partialTicks)/8f, 0, 1)
 			);
 
 		this.setModelVisibilities(entity);
@@ -73,65 +71,56 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 
 	}
 
-	private void setModelVisibilities(EntityHans clientPlayer)
+	private void setModelVisibilities(EntityHans hans)
 	{
 		ModelPlayer model = this.getMainModel();
 
-		ItemStack itemstack = clientPlayer.getHeldItemMainhand();
-		ItemStack itemstack1 = clientPlayer.getHeldItemOffhand();
+		ItemStack mainHand = hans.getHeldItemMainhand();
+		ItemStack offHand = hans.getHeldItemOffhand();
 		model.setVisible(true);
-		model.isSneak = clientPlayer.isSneaking();
-		ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
-		ModelBiped.ArmPose modelbiped$armpose1 = ModelBiped.ArmPose.EMPTY;
+		model.isSneak = hans.isSneaking();
+		ModelBiped.ArmPose poseMainHand = ModelBiped.ArmPose.EMPTY;
+		ModelBiped.ArmPose poseOffHand = ModelBiped.ArmPose.EMPTY;
 
-		if(!itemstack.isEmpty())
+		if(!mainHand.isEmpty())
 		{
-			modelbiped$armpose = ModelBiped.ArmPose.ITEM;
+			poseMainHand = ModelBiped.ArmPose.ITEM;
 
-			if(clientPlayer.getItemInUseCount() > 0)
+			if(hans.getItemInUseCount() > 0)
 			{
-				EnumAction enumaction = itemstack.getItemUseAction();
+				EnumAction enumaction = mainHand.getItemUseAction();
 
 				if(enumaction==EnumAction.BLOCK)
-				{
-					modelbiped$armpose = ModelBiped.ArmPose.BLOCK;
-				}
+					poseMainHand = ModelBiped.ArmPose.BLOCK;
 				else if(enumaction==EnumAction.BOW)
-				{
-					modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
-				}
+					poseMainHand = ModelBiped.ArmPose.BOW_AND_ARROW;
 			}
 		}
 
-		if(!itemstack1.isEmpty())
+		if(!offHand.isEmpty())
 		{
-			modelbiped$armpose1 = ModelBiped.ArmPose.ITEM;
+			poseOffHand = ModelBiped.ArmPose.ITEM;
 
-			if(clientPlayer.getItemInUseCount() > 0)
+			if(hans.getItemInUseCount() > 0)
 			{
-				EnumAction enumaction1 = itemstack1.getItemUseAction();
+				EnumAction enumaction1 = offHand.getItemUseAction();
 
 				if(enumaction1==EnumAction.BLOCK)
-				{
-					modelbiped$armpose1 = ModelBiped.ArmPose.BLOCK;
-				}
-				// FORGE: fix MC-88356 allow offhand to use bow and arrow animation
+					poseOffHand = ModelBiped.ArmPose.BLOCK;
 				else if(enumaction1==EnumAction.BOW)
-				{
-					modelbiped$armpose1 = ModelBiped.ArmPose.BOW_AND_ARROW;
-				}
+					poseOffHand = ModelBiped.ArmPose.BOW_AND_ARROW;
 			}
 		}
 
-		if(clientPlayer.getPrimaryHand()==EnumHandSide.RIGHT)
+		if(hans.getPrimaryHand()==EnumHandSide.RIGHT)
 		{
-			model.rightArmPose = modelbiped$armpose;
-			model.leftArmPose = modelbiped$armpose1;
+			model.rightArmPose = poseMainHand;
+			model.leftArmPose = poseOffHand;
 		}
 		else
 		{
-			model.rightArmPose = modelbiped$armpose1;
-			model.leftArmPose = modelbiped$armpose;
+			model.rightArmPose = poseOffHand;
+			model.leftArmPose = poseMainHand;
 		}
 	}
 
@@ -188,6 +177,8 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 
 				return -0.325f+Utils.clampedLerp3Par(0, 0.0725f, 0, v1)+Utils.clampedLerp3Par(0, 0.0725f, 0, v2);
 			}
+			case SWIMMING:
+				return 1;
 			default:
 				return 0;
 		}

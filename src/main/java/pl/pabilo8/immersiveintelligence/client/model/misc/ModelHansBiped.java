@@ -8,6 +8,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansArmAnimation;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 
 /**
@@ -65,12 +66,10 @@ public class ModelHansBiped extends ModelPlayer
 		bipedLeftArm.cubeList.clear();
 		bipedLeftArm.cubeList.add(new ModelBoxCustomizable(bipedLeftArm, u, v, x, y, z, 4, 5, 4, expand, 0, -4));
 
-		// TODO: 19.05.2021 corners
-		//bipedLeftArm.cubeList.add(new ModelBoxCustomizable(bipedLeftArm, uvs.armLeftU, uvs.armLeftV, -1.0F, 2.0F, -2.0F, 4, 4, 4, expand-0.01f,0,-4));
-
 		ModelRenderer mod = new ModelRenderer(this);
 		mod.rotationPointY = 4f;
 		mod.cubeList.add(new ModelBoxCustomizable(mod, u, v+5, x, -1, z, 4, 7, 4, expand, -5, 0));
+
 		bipedLeftArm.addChild(mod);
 		return mod;
 	}
@@ -152,7 +151,10 @@ public class ModelHansBiped extends ModelPlayer
 			EntityHans hans = (EntityHans)entityIn;
 
 			if(hans.getLegAnimation()==hans.prevLegAnimation)
+			{
 				handleLegAnimation(hans, hans.getLegAnimation(), ageInTicks); //less overhead ^^
+
+			}
 			else
 			{
 				// TODO: 25.09.2021 optimize
@@ -163,7 +165,14 @@ public class ModelHansBiped extends ModelPlayer
 				copyModelAngles(this.bipedRightArm, bipedHelper.bipedRightArm);
 				copyModelAngles(this.bipedBody, bipedHelper.bipedBody);
 
+				copyModelAngles(this.bipedLeftHand, bipedHelper.bipedLeftHand);
+				copyModelAngles(this.bipedRightHand, bipedHelper.bipedRightHand);
+				copyModelAngles(this.bipedLeftFoot, bipedHelper.bipedLeftFoot);
+				copyModelAngles(this.bipedRightFoot, bipedHelper.bipedRightFoot);
+
 				handleLegAnimation(hans, hans.prevLegAnimation, ageInTicks);
+				handleArmAnimation(hans, hans.prevArmAnimation, ageInTicks);
+
 				bipedHelper.handleLegAnimation(hans, hans.getLegAnimation(), ageInTicks);
 				final float progress = 1f-MathHelper.clamp((hans.legAnimationTimer-(ageInTicks%1))/8f, 0, 1);
 
@@ -175,6 +184,28 @@ public class ModelHansBiped extends ModelPlayer
 
 				lerpModelAngles(bipedLeftFoot, bipedHelper.bipedLeftFoot, progress);
 				lerpModelAngles(bipedRightFoot, bipedHelper.bipedRightFoot, progress);
+				lerpModelAngles(bipedLeftHand, bipedHelper.bipedLeftHand, progress);
+				lerpModelAngles(bipedRightHand, bipedHelper.bipedRightHand, progress);
+			}
+
+			if(hans.armAnimation==hans.prevArmAnimation)
+				handleArmAnimation(hans, hans.armAnimation, ageInTicks);
+			else
+			{
+				copyModelAngles(this.bipedLeftLeg, bipedHelper.bipedLeftLeg);
+				copyModelAngles(this.bipedRightLeg, bipedHelper.bipedRightLeg);
+				copyModelAngles(this.bipedLeftArm, bipedHelper.bipedLeftArm);
+				copyModelAngles(this.bipedRightArm, bipedHelper.bipedRightArm);
+				copyModelAngles(this.bipedLeftHand, bipedHelper.bipedLeftHand);
+				copyModelAngles(this.bipedRightHand, bipedHelper.bipedRightHand);
+
+
+				handleArmAnimation(hans, hans.prevArmAnimation, ageInTicks);
+				bipedHelper.handleArmAnimation(hans, hans.armAnimation, ageInTicks);
+				final float progress = 1f-MathHelper.clamp((hans.armAnimationTimer-(ageInTicks%1))/8f, 0, 1);
+
+				lerpModelAngles(bipedLeftArm, bipedHelper.bipedLeftArm, progress);
+				lerpModelAngles(bipedRightArm, bipedHelper.bipedRightArm, progress);
 				lerpModelAngles(bipedLeftHand, bipedHelper.bipedLeftHand, progress);
 				lerpModelAngles(bipedRightHand, bipedHelper.bipedRightHand, progress);
 			}
@@ -201,6 +232,44 @@ public class ModelHansBiped extends ModelPlayer
 		main.rotationPointX = (float)MathHelper.clampedLerp(main.rotationPointX, second.rotationPointX, progress);
 		main.rotationPointY = (float)MathHelper.clampedLerp(main.rotationPointY, second.rotationPointY, progress);
 		main.rotationPointZ = (float)MathHelper.clampedLerp(main.rotationPointZ, second.rotationPointZ, progress);
+	}
+
+	private void handleArmAnimation(EntityHans hans, HansArmAnimation animation, float ageInTicks)
+	{
+		switch(animation)
+		{
+			default:
+			case NORMAL:
+				break;
+			case SALUTE:
+			{
+				bipedRightArm.rotateAngleX -= 2.5f;
+				bipedRightArm.rotateAngleZ -= 0.5f;
+
+				bipedRightHand.rotateAngleZ -= 0.75f;
+			}
+			break;
+			case SURRENDER:
+			{
+				bipedRightArm.rotateAngleZ = 3.14f-0.25f;
+				bipedLeftArm.rotateAngleZ -= 3.14f-0.25f;
+			}
+			break;
+
+			case SQUAD_ORDER_ONWARDS:
+			{
+				float v = Math.min((ageInTicks%40)/22f, 1);
+				float v1 = v%0.5f/0.5f;
+				float v2 = v > 0.5f?(v-0.5f)/0.25f: 0;
+
+				final float kickLeg = 0.25f;
+				final float landLeg = -0.55f;
+
+				bipedLeftHand.rotateAngleX = Utils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
+
+			}
+			break;
+		}
 	}
 
 	private void handleLegAnimation(EntityHans hans, HansLegAnimation animation, float ageInTicks)
@@ -316,6 +385,11 @@ public class ModelHansBiped extends ModelPlayer
 
 				bipedLeftHand.rotateAngleX = -0.125f;
 				bipedLeftHand.rotateAngleZ = 0.35f;
+			}
+			break;
+			case SWIMMING:
+			{
+
 			}
 			break;
 		}

@@ -228,7 +228,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 	{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 		if(slot==EntityEquipmentSlot.MAINHAND)
-			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID,"Increased Sight Range (Mobs)", 20.0D, 0));
+			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID,"Increased Sight Range (Mobs)", 30.0D, 0));
 		return multimap;
 	}
 }

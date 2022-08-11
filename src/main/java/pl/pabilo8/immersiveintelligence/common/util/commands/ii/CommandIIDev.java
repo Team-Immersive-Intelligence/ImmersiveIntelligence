@@ -9,11 +9,15 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -345,7 +349,7 @@ public class CommandIIDev extends CommandBase
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
-					BlockPos position = traceResult.getBlockPos().up();
+					Vec3d pos = new Vec3d(traceResult.getBlockPos().up());
 
 					int num = 0;
 					try
@@ -358,16 +362,38 @@ public class CommandIIDev extends CommandBase
 					}
 					if(!server.getEntityWorld().isRemote)
 					{
-						for(int i = 0; i < num; i++)
+						World world = senderEntity.getEntityWorld();
+						final int row = (int)Math.floor(Math.sqrt(num));
+						final int roff = (int)Math.floor(row/2f);
+						int i = 0, missed = 0;
+
+						while(i < num)
 						{
-							EntityZombie z1 = new EntityZombie(senderEntity.getEntityWorld());
-							z1.setArmsRaised(false);
+							int c = i+missed;
+							//Vec3d offset = pos.add(new Vec3d(EnumFacing.getHorizontal(i).getDirectionVec()).scale(parachute?3f:1f).scale(1+(Math.floor(i/4f))));
+							Vec3d offset = pos
+									.addVector(-roff, 0, -roff)
+									.add(new Vec3d(Math.floor(c/(float)row), 0, (c%row))
+									);
+
+							if(world.getBlockState(new BlockPos(offset)).causesSuffocation())
+							{
+								missed += 1;
+								continue;
+							}
+
+							EntitySkeleton z1 = new EntitySkeleton(senderEntity.getEntityWorld());
+							z1.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.BOW));
+							//z1.setArmsRaised(false);
 							z1.setAIMoveSpeed(0.125f);
-							z1.setPosition(position.getX(), position.getY(), position.getZ());
+							z1.setPosition(offset.x+0.5f, offset.y, offset.z+0.5f);
 							z1.setCustomNameTag("Zombie #"+i);
 							z1.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IIContent.itemLightEngineerHelmet));
 							senderEntity.getEntityWorld().spawnEntity(z1);
+
+							i++;
 						}
+
 						sender.sendMessage(new TextComponentString("Test enemies summoned!"));
 					}
 

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
@@ -174,20 +175,21 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entityLiving, int timeLeft)
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
 	{
 		if(!world.isRemote)
 		{
-			world.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, IISounds.grenade_throw, SoundCategory.PLAYERS, 1f, 1f);
+			world.playSound(null, entity.posX, entity.posY, entity.posZ, IISounds.grenade_throw, SoundCategory.PLAYERS, 1f, 1f);
 
-			Vec3d vec = entityLiving.getLookVec().scale(1f);
-			Vec3d vv = entityLiving.getPositionVector().addVector(0, (double)entityLiving.getEyeHeight()-0.10000000149011612D, 0);
+			Vec3d vec = Utils.getVectorForRotation(entity.rotationPitch, entity.getRotationYawHead());
+			Vec3d vv = entity.getPositionVector().addVector(0, (double)entity.getEyeHeight()-0.10000000149011612D, 0);
+
 			EntityBullet a = BulletHelper.createBullet(world, stack, vv, vec, Math.min((((float)this.getMaxItemUseDuration(stack)-timeLeft)/(float)this.getMaxItemUseDuration(stack)), 35)*Grenade.throwSpeedModifier);
-			a.setShooters(entityLiving);
+			a.setShooters(entity);
 			a.fuse = (int)(60f/EntityBullet.DEV_SLOMO);
 			world.spawnEntity(a);
 
-			if(!(entityLiving instanceof EntityPlayer)||!((EntityPlayer)entityLiving).capabilities.isCreativeMode)
+			if(!(entity instanceof EntityPlayer)||!((EntityPlayer)entity).capabilities.isCreativeMode)
 			{
 				stack.shrink(1);
 			}
