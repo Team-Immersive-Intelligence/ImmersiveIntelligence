@@ -82,7 +82,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	}
 
 	@Override
-	void affectEntity(Entity entity, boolean upgraded)
+	boolean affectEntity(Entity entity, boolean upgraded)
 	{
 		if(!upgraded||(repairCrateEnergyPerAction <= energyStorage))
 		{
@@ -105,7 +105,9 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 			{
 				energyStorage -= repairCrateEnergyPerAction;
 			}
+			return repaired;
 		}
+		return false;
 	}
 
 	@Override

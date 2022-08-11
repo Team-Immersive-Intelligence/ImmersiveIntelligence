@@ -65,7 +65,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
 	int upgradeProgress = 0;
-	public int clientUpgradeProgress=0;
+	public int clientUpgradeProgress = 0;
 	public int energyStorage = 0;
 
 	//Client only
@@ -261,8 +261,9 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			entitiesWithinAABB.removeIf(entity -> !checkEntity(entity));
 			if(entitiesWithinAABB.size() > 0)
 			{
-				affectEntityUpgraded(entitiesWithinAABB.get(0));
-				useSupplies();
+
+				if(affectEntityUpgraded(entitiesWithinAABB.get(0)))
+					useSupplies();
 				if(!entitiesWithinAABB.contains(focusedEntity))
 				{
 					focusedEntity = entitiesWithinAABB.get(0);
@@ -419,18 +420,18 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
-		upgradeProgress+=toAdd;
+		upgradeProgress += toAdd;
 		return true;
 	}
 
 	@Override
 	public boolean resetInstallProgress()
 	{
-		currentlyInstalled=null;
-		if(upgradeProgress>0)
+		currentlyInstalled = null;
+		if(upgradeProgress > 0)
 		{
-			upgradeProgress=0;
-			clientUpgradeProgress=0;
+			upgradeProgress = 0;
+			clientUpgradeProgress = 0;
 			return true;
 		}
 		return false;
@@ -439,9 +440,9 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
 	{
-		currentlyInstalled=upgrade;
-		upgradeProgress=0;
-		clientUpgradeProgress=0;
+		currentlyInstalled = upgrade;
+		upgradeProgress = 0;
+		clientUpgradeProgress = 0;
 	}
 
 	@Override
@@ -452,6 +453,12 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 	@Override
 	protected boolean canTakeLV()
+	{
+		return true;
+	}
+
+	@Override
+	protected boolean canTakeMV()
 	{
 		return true;
 	}
@@ -512,17 +519,17 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		return 3;
 	}
 
-	void affectEntityUpgraded(Entity entity)
+	private boolean affectEntityUpgraded(Entity entity)
 	{
-		affectEntity(entity, true);
+		return affectEntity(entity, true);
 	}
 
-	void affectEntityBasic(Entity entity)
+	private boolean affectEntityBasic(Entity entity)
 	{
-		affectEntity(entity, false);
+		return affectEntity(entity, false);
 	}
 
-	abstract void affectEntity(Entity entity, boolean upgraded);
+	abstract boolean affectEntity(Entity entity, boolean upgraded);
 
 	abstract boolean checkEntity(Entity entity);
 

@@ -128,7 +128,7 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 	}
 
 	@Override
-	void affectEntity(Entity entity, boolean upgraded)
+	boolean affectEntity(Entity entity, boolean upgraded)
 	{
 		if(!upgraded||(repairCrateEnergyPerAction <= energyStorage))
 		{
@@ -154,13 +154,16 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 			}
 			if(!upgraded&&healed)
 				energyStorage -= mediCrateEnergyPerAction;
+			return healed;
 		}
+		return false;
 	}
 
 	@Override
 	boolean checkEntity(Entity entity)
 	{
-		return entity instanceof EntityLivingBase;
+		return entity instanceof EntityLivingBase&&
+				((EntityLivingBase)entity).getHealth()!=((EntityLivingBase)entity).getMaxHealth();
 	}
 
 	@Override
