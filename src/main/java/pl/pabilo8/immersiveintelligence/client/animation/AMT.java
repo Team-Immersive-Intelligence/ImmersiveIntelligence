@@ -43,11 +43,11 @@ public abstract class AMT
 
 	//--- Mutable Properties ---//
 
-	boolean visible;
-	Vec3d off, scale;
-	Vector3f color;
-	Vec3d rot;
-	float alpha;
+	protected boolean visible;
+	protected Vec3d off, scale;
+	protected Vector3f color;
+	protected Vec3d rot;
+	protected float alpha;
 
 	public AMT(String name, Vec3d originPos)
 	{
@@ -71,9 +71,30 @@ public abstract class AMT
 
 		GlStateManager.pushMatrix();
 
+		preDraw();
+
+		if(alpha!=1f)
+			ShaderUtil.alpha_static(alpha);
+
+		draw(tes, buf);
+
+		if(children!=null)
+			for(AMT child : children)
+				child.render(tes, buf);
+
+		if(alpha!=1f)
+			ShaderUtil.releaseShader();
+
+		GlStateManager.popMatrix();
+	}
+
+	/**
+	 * Rotate (YZX), Translate, Scale
+	 */
+	protected void preDraw()
+	{
 		if(off!=null)
 			GlStateManager.translate(-off.x, off.y, off.z);
-
 
 		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
 
@@ -89,19 +110,6 @@ public abstract class AMT
 		if(scale!=null)
 			GlStateManager.scale(scale.x, scale.y, scale.z);
 
-		if(alpha!=1f)
-			ShaderUtil.alpha_static(alpha);
-
-		draw(tes, buf);
-
-		if(children!=null)
-			for(AMT child : children)
-				child.render(tes, buf);
-
-		if(alpha!=1f)
-			ShaderUtil.releaseShader();
-
-		GlStateManager.popMatrix();
 	}
 
 	/**

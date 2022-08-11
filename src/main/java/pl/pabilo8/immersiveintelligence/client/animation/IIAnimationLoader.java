@@ -11,12 +11,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 
 /**
  * @author Pabilo8
@@ -24,17 +23,23 @@ import java.io.Reader;
  */
 public class IIAnimationLoader
 {
-	// TODO: 06.04.2022 more safety (?)
 	public static JsonObject readFileToJSON(@Nonnull ResourceLocation res)
 	{
 		try
 		{
 			IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(res);
-			JsonElement object = new JsonStreamParser(new InputStreamReader(resource.getInputStream())).next();
+			InputStream stream = resource.getInputStream();
+			JsonElement object = new JsonStreamParser(new InputStreamReader(stream)).next();
 			return object.getAsJsonObject();
-		} catch(IOException ignored)
+		} catch(Exception exception)
 		{
-
+			ImmersiveIntelligence.logger.error("[AMT] Couldn't load animation "+
+							TextFormatting.GOLD+
+					res.toString()
+							.replaceFirst("animations/","")
+							.replaceFirst(".json","")+
+					TextFormatting.RESET+
+					", "+exception.getClass().getCanonicalName());
 		}
 		return new JsonObject();
 	}
@@ -73,10 +78,14 @@ public class IIAnimationLoader
 					.map(s -> s.split(" ")[1])
 					.forEach(s -> ApiUtils.getRegisterSprite(ClientUtils.mc().getTextureMapBlocks(), s+".png"));
 
-
-		} catch(IOException ignored)
+		} catch(IOException exception)
 		{
-
+			ImmersiveIntelligence.logger.error("[AMT] Couldn't load MTL file "+
+					TextFormatting.GOLD+
+					res.toString()
+							.replaceFirst("models/","")+
+					TextFormatting.RESET+
+					", "+exception.getClass().getCanonicalName());
 		}
 
 	}

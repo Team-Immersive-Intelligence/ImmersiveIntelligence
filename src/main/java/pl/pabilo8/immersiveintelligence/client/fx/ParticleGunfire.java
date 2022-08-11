@@ -46,7 +46,7 @@ public class ParticleGunfire extends IIParticle
 		motionZ*=0.6f;
 		if(this.particleAge++ >= this.particleMaxAge)
 		{
-			this.setExpired();
+			//this.setExpired();
 		}
 	}
 

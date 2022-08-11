@@ -20,12 +20,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel.Group;
 import net.minecraftforge.client.model.obj.OBJModel.OBJState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
 
@@ -45,9 +47,19 @@ public class IIAnimationUtils
 {
 	//--- Time Calculation ---//
 
+	public static float getDebugProgress(World world, float max, float partialTicks)
+	{
+		return (world.getTotalWorldTime()%max+partialTicks)/max;
+	}
+
 	public static float getAnimationProgress(float current, float max, boolean invert, float partialTicks)
 	{
 		return MathHelper.clamp(invert?(1f-((current-partialTicks)/max)): ((current+partialTicks)/max), 0, 1);
+	}
+
+	public static float getAnimationProgress(float current, float max, boolean shouldAnimate, boolean reverse, float posStep, float negStep, float partialTicks)
+	{
+		return current==0?0: (current==max?1: (MathHelper.clamp((current+(shouldAnimate?((reverse?-negStep: posStep)*partialTicks): 0))/max, 0f, 1f)));
 	}
 
 	/**
@@ -108,6 +120,13 @@ public class IIAnimationUtils
 		if(group.alpha!=null)
 			model.alpha = group.alpha.getForTime(time);
 
+	}
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void setModelVisibility(AMT model, boolean visible)
+	{
+		model.visible = visible;
 	}
 
 	/**
@@ -281,12 +300,16 @@ public class IIAnimationUtils
 		return Arrays.stream(array).filter(amt -> !amt.isChild()).toArray(AMT[]::new);
 	}
 
-	public static AMT getPart(AMT[] array, String name)
+	public static AMT[] getChildrenRecursive(AMT[] array)
 	{
 		return Arrays.stream(array)
 				.map(AMT::getChildrenRecursive)
-				.collect(new ArraylistJoinCollector<>())
-				.stream()
+				.collect(new ArraylistJoinCollector<>()).toArray(new AMT[0]);
+	}
+
+	public static AMT getPart(AMT[] array, String name)
+	{
+		return Arrays.stream(getChildrenRecursive(array))
 				.filter(amt -> amt.name.equals(name))
 				.findFirst().orElse(array[0]);
 	}

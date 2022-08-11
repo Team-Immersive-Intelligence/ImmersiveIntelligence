@@ -11,6 +11,7 @@ import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.IESounds;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,13 +51,15 @@ public class BulletComponentTesla implements IBulletComponent
 	@Override
 	public float getDensity()
 	{
-		return 1f;
+		return 1.15f;
 	}
 
 	@Override
 	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
 		float radius = amount*10;
+		int extracted = (int)(4000000*amount);
+
 		world.playSound(null, new BlockPos(pos), IISounds.explosion_flare, SoundCategory.NEUTRAL, 1, 0.5f);
 		world.playSound(null, new BlockPos(pos), IESounds.tesla, SoundCategory.NEUTRAL, 1, 0.5f);
 
@@ -73,7 +76,7 @@ public class BulletComponentTesla implements IBulletComponent
 					{
 						if(te instanceof TileEntityMultiblockMetal)
 						{
-							((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy((int)(4000000*amount), false);
+							((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy((int)(extracted), false);
 						}
 						else
 						{
@@ -84,7 +87,7 @@ public class BulletComponentTesla implements IBulletComponent
 									IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, facing);
 									if(cap!=null)
 									{
-										cap.extractEnergy((int)(4000000*amount), false);
+										cap.extractEnergy((int)(extracted), false);
 										break;
 									}
 								}
@@ -93,7 +96,7 @@ public class BulletComponentTesla implements IBulletComponent
 					}
 				}
 
-		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos, pos).grow(radius)))
+		for(EntityLivingBase e : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z).grow(radius)))
 			if(!(e instanceof ITeslaEntity))
 			{
 				ElectricDamageSource dmgsrc = IEDamageSources.causeTeslaDamage(IEConfig.Machines.teslacoil_damage, false);
@@ -105,6 +108,29 @@ public class BulletComponentTesla implements IBulletComponent
 						int prevFire = e.fire;
 						e.setFire(prevFire+1);
 						e.addPotionEffect(new PotionEffect(IEPotions.stunned, 128));
+					}
+				}
+
+				for(ItemStack stack : e.getArmorInventoryList())
+				{
+					if((stack.hasCapability(CapabilityEnergy.ENERGY, null)))
+					{
+						IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
+						if(cap!=null)
+							if(cap.extractEnergy((int)(extracted), false)==0)
+							{
+								//Get off Rolf's property before Rolf gets his  b e a t i n g  s t i c k
+								//For items that don't want to be extracted from
+								if(ItemNBTHelper.hasKey(stack, "Energy"))
+									ItemNBTHelper.setInt(stack, "Energy", Math.max(0, ItemNBTHelper.getInt(stack, "Energy")-extracted));
+								else if(ItemNBTHelper.hasKey(stack, "energy"))
+									ItemNBTHelper.setInt(stack, "energy", Math.max(0, ItemNBTHelper.getInt(stack, "energy")-extracted));
+								else if(ItemNBTHelper.hasKey(stack, "Power"))
+									ItemNBTHelper.setInt(stack, "Power", Math.max(0, ItemNBTHelper.getInt(stack, "Power")-extracted));
+								else if(ItemNBTHelper.hasKey(stack, "power"))
+									ItemNBTHelper.setInt(stack, "power", Math.max(0, ItemNBTHelper.getInt(stack, "power")-extracted));
+
+							}
 					}
 				}
 			}

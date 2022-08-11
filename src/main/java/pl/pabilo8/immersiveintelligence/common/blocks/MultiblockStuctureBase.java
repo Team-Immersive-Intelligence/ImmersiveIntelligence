@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
@@ -18,7 +17,6 @@ import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -38,9 +36,10 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 
 import javax.annotation.Nullable;
-import java.util.*;
-
-import static pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockConveyorScanner.conveyorStack;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Pabilo8
@@ -170,12 +169,21 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 						;
 
 						//BlockPos oPos = BlockPos.ORIGIN.offset(side, l).offset(side.rotateY(), ww).add(0, h, 0);
-
-						tile.offset = new int[]{(side==EnumFacing.WEST?-l+1: side==EnumFacing.EAST?l-1: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l+1: side==EnumFacing.SOUTH?l-1: side==EnumFacing.EAST?ww: -ww)};
+						tile.offset = useNewOffset()?
+								new int[]{(side==EnumFacing.WEST?-l+1: side==EnumFacing.EAST?l-1: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l+1: side==EnumFacing.SOUTH?l-1: side==EnumFacing.EAST?ww: -ww)}:
+								new int[]{(side==EnumFacing.WEST?-l: side==EnumFacing.EAST?l: side==EnumFacing.NORTH?ww: -ww), h, (side==EnumFacing.NORTH?-l: side==EnumFacing.SOUTH?l: side==EnumFacing.EAST?ww: -ww)};
 						tile.markDirty();
 						addBlockEvent(world, pos2);
 					}
 				}
+		return true;
+	}
+
+	/**
+	 * Whether the master block should have 1 block offset
+	 */
+	protected boolean useNewOffset()
+	{
 		return true;
 	}
 
@@ -228,6 +236,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 	/**
 	 * *Actually* renders a conveyor
+	 *
 	 * @param stack conveyor ItemStack
 	 */
 	@SideOnly(Side.CLIENT)
@@ -242,7 +251,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		List<BakedQuad> quads = ModelConveyor.getBaseConveyor(facing, 1, new Matrix4(facing), ConveyorDirection.HORIZONTAL,
 				ClientUtils.getSprite(conv.getActiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
 
-		quads = conv.modifyQuads(quads,null, facing);
+		quads = conv.modifyQuads(quads, null, facing);
 		ClientUtils.renderQuads(quads, 1, 1, 1, 1);
 
 		GlStateManager.popMatrix();
@@ -323,8 +332,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			int[] oids = OreDictionary.getOreIDs(stack);
 			if(oids.length > 0)
 				return new IngredientStack(OreDictionary.getOreName(oids[0]));
-		}
-		catch(Exception ignored)
+		} catch(Exception ignored)
 		{
 
 		}
@@ -371,7 +379,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	public Tuple<ResourceLocation, EnumFacing> getConveyorKey(int h, int l, int w, EnumFacing facing)
 	{
 		IngredientStack is = checkStructure[h][l][w];
-		return getConveyorKey(is.stack,facing);
+		return getConveyorKey(is.stack, facing);
 	}
 
 	public Tuple<ResourceLocation, EnumFacing> getConveyorKey(ItemStack stack, EnumFacing facing)

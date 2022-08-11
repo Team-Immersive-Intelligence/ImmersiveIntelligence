@@ -20,8 +20,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IInfraredProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
@@ -170,9 +170,9 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		if(c.equals("facing"))
 		{
 			IDataType f = packet.getPacketVariable('f');
-			if(f instanceof DataPacketTypeInteger)
-				nextYaw = EnumFacing.getHorizontal(((DataPacketTypeInteger)f).value).getHorizontalAngle();
-			else if(f instanceof DataPacketTypeString)
+			if(f instanceof DataTypeInteger)
+				nextYaw = EnumFacing.getHorizontal(((DataTypeInteger)f).value).getHorizontalAngle();
+			else if(f instanceof DataTypeString)
 			{
 				EnumFacing facing = EnumFacing.byName(f.valueToString());
 				if(facing!=null)

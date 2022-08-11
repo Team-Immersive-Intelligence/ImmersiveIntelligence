@@ -275,7 +275,7 @@ desc.immersiveintelligence.toolupgrade.steel_armor_plates=Slightly increase armo
 desc.immersiveintelligence.toolupgrade.composite_armor_plates=Significantly increase armor thickness. Deflects projectiles and damages enemy melee weapons when they aren't capable of dealing enough damage to armor wearer. Up to 3 can be installed per one armor piece.
 desc.immersiveintelligence.toolupgrade.hazmat_coating=Makes the armor resistant to radiation and corrosion.
 desc.immersiveintelligence.toolupgrade.heat_resistant_coating=When combined with reinforced boots, allows for swimming in hot liquids.
-desc.immersiveintelligence.toolupgrade.anti_static_mesh=Makes wearer immune to electric damage and makes proximity fuses unable to target it. Sensitive to EMP.
+desc.immersiveintelligence.toolupgrade.anti_static_mesh=Makes wearer immune to electric damage and makes proximity fuses unable to target it. Very sensitive to electric damage under water.
 desc.immersiveintelligence.toolupgrade.camouflage_mesh=Makes wearer invisible when sneaking through foliage. Sensitive to fire.
 desc.immersiveintelligence.toolupgrade.infrared_absorbing_mesh=Makes wearer invisible to infrared-based devices. Sensitive to EMP.
 desc.immersiveintelligence.toolupgrade.scuba_tank=Can be filled with oxygen for breathing underwater and additional fuel for operating powered tools. Requires a Gas Mask to work.
@@ -570,7 +570,7 @@ tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithm
 
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
-tile.immersiveintelligence.data_connector.data_callback_connector.name=Data Callback Connector
+tile.immersiveintelligence.data_connector.data_duplex_connector.name=Data Duplex Connector
 tile.immersiveintelligence.data_connector.chemical_dispenser.name=Chemical Dispenser
 
 tile.immersiveintelligence.data_connector.alarm_siren.name=Alarm Siren
@@ -785,8 +785,9 @@ subtitle.immersiveintelligence.submachinegun_shot=Submachinegun Shots
 subtitle.immersiveintelligence.submachinegun_reload=Submachinegun Reloading
 
 subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
-subtitle.immersiveintelligence.howitzer_load=Howitzer Loading
-subtitle.immersiveintelligence.howitzer_unload=Howitzer Unloading
+subtitle.immersiveintelligence.howitzer_shell_pick=Artillery Shell Picked
+subtitle.immersiveintelligence.howitzer_shell_put=Artillery Shell Placed
+subtitle.immersiveintelligence.howitzer_platform=Gun Platform Moving
 subtitle.immersiveintelligence.howitzer_rotating=Howitzer Moving
 subtitle.immersiveintelligence.howitzer_door_open=Howitzer Doors Opening
 subtitle.immersiveintelligence.howitzer_door_close=Howitzer Doors Closing
@@ -996,6 +997,7 @@ desc.immersiveintelligence.radio_configurator_max_frequency=Max Frequency: %s
 desc.immersiveintelligence.naval_mine_chain_length=Max Chain Length: %s
 desc.immersiveintelligence.measuring_cup_size=Capacity: %s / %s mB
 desc.immersiveintelligence.measuring_cup_cant_resize=Cannot change size when contains fluid.
+desc.immersiveintelligence.functional_circuit_shift=§6Hold Shift§r - Performed Operations
 desc.immersiveintelligence.functional_circuit=Allows the machine to do operations such as:
 desc.immersiveintelligence.upgrade_toolbox=Can be used to upgrade machines
 desc.immersiveintelligence.cost=Material Cost:
@@ -1118,7 +1120,7 @@ info.immersiveintelligence.current_frequency=Current frequency: %s
 
 info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
 
-info.immersiveintelligence.gear_durability=Durability: %1$s / %2$s
+info.immersiveintelligence.gear_ratio=Gear Ratio: %1$s : %2$s
 
 info.immersiveintelligence.yaw=Yaw: %s
 info.immersiveintelligence.pitch=Pitch: %s
@@ -1192,10 +1194,19 @@ datasystem.immersiveintelligence.function.subtract=Subtraction
 datasystem.immersiveintelligence.function.multiply=Multiplication
 datasystem.immersiveintelligence.function.divide=Division
 datasystem.immersiveintelligence.function.modulo=Mod
+datasystem.immersiveintelligence.function.abs=Abs
+
 datasystem.immersiveintelligence.function.power=Power
 datasystem.immersiveintelligence.function.root=Root
 datasystem.immersiveintelligence.function.max=Max
 datasystem.immersiveintelligence.function.min=Min
+datasystem.immersiveintelligence.function.sign=Sign
+datasystem.immersiveintelligence.function.ceil=Ceiling
+datasystem.immersiveintelligence.function.round=Round
+datasystem.immersiveintelligence.function.floor=Floor
+datasystem.immersiveintelligence.function.sin=Sin
+datasystem.immersiveintelligence.function.cos=Cos
+datasystem.immersiveintelligence.function.tan=Tan
 
 datasystem.immersiveintelligence.function.and=AND
 datasystem.immersiveintelligence.function.or=OR
@@ -1212,16 +1223,20 @@ datasystem.immersiveintelligence.function.less_or_equal=Less or Equal
 datasystem.immersiveintelligence.function.equal=Equal
 
 datasystem.immersiveintelligence.function.string_join=Join
-datasystem.immersiveintelligence.function.string_equal=Equal
 datasystem.immersiveintelligence.function.string_split=Split
 datasystem.immersiveintelligence.function.string_length=Length
 datasystem.immersiveintelligence.function.string_char_at=Character At
 datasystem.immersiveintelligence.function.string_substring=Substring
 datasystem.immersiveintelligence.function.string_trim=Trim
+
 datasystem.immersiveintelligence.function.string_hexcol=Format using Hexcol
 datasystem.immersiveintelligence.function.string_format=Format using TextFormatting
+
 datasystem.immersiveintelligence.function.string_contains=Contains
 datasystem.immersiveintelligence.function.string_contains_count=Contained Amount
+datasystem.immersiveintelligence.function.string_replace_first=Replace First
+datasystem.immersiveintelligence.function.string_replace_all=Replace All
+
 datasystem.immersiveintelligence.function.string_lowercase=To Lowercase
 datasystem.immersiveintelligence.function.string_uppercase=To Uppercase
 datasystem.immersiveintelligence.function.string_snake_case=To snake_case
@@ -1240,8 +1255,11 @@ datasystem.immersiveintelligence.function.can_stack_with=Can Stack With
 datasystem.immersiveintelligence.function.matches_oredict=Matches OreDictionary
 
 datasystem.immersiveintelligence.function.array_get=Get
+datasystem.immersiveintelligence.function.array_set=Set
 datasystem.immersiveintelligence.function.array_push=Push
 datasystem.immersiveintelligence.function.array_pop=Pop
+datasystem.immersiveintelligence.function.array_swap=Swap
+datasystem.immersiveintelligence.function.array_length=Get Length
 
 datasystem.immersiveintelligence.function.entity_get_id=Get ID
 datasystem.immersiveintelligence.function.entity_get_type=Get Type
@@ -1258,7 +1276,9 @@ datasystem.immersiveintelligence.function.document_get_author=Get Author
 datasystem.immersiveintelligence.function.document_get_title=Get Title
 
 datasystem.immersiveintelligence.function.is_null=Is Null
+datasystem.immersiveintelligence.function.is_same_type=Is Same Type
 datasystem.immersiveintelligence.function.to_integer=To Integer
+datasystem.immersiveintelligence.function.to_float=To Float
 datasystem.immersiveintelligence.function.to_string=To String
 datasystem.immersiveintelligence.function.to_boolean=To Boolean
 datasystem.immersiveintelligence.function.to_null=To Null
@@ -1266,6 +1286,7 @@ datasystem.immersiveintelligence.function.to_null=To Null
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
 datasystem.immersiveintelligence.datatype.integer=Integer
+datasystem.immersiveintelligence.datatype.float=Float
 datasystem.immersiveintelligence.datatype.string=String
 datasystem.immersiveintelligence.datatype.expression=Expression
 datasystem.immersiveintelligence.datatype.accessor=Accessor
@@ -1292,7 +1313,11 @@ desc.immersiveengineering.info.blueprint.vulcanizer_molds=Vulcanizer Molds
 
 #Keybindings
 key.immersiveintelligence.manualReload=Manual Reload
-key.immersiveintelligence.mgScope=Machinegun Scope
+key.immersiveintelligence.armorHelmet=Toggle Light Engineer Armor Headgear
+key.immersiveintelligence.armorExosuit=Toggle Light Engineer Armor Exoskeleton
+
+key.immersiveintelligence.mgScope=Zoom / Machinegun Scope
+
 key.immersiveintelligence.engineWorking=Toggle Engine
 key.immersiveintelligence.motorbikeTowing=Tow/Untow
 
@@ -1444,18 +1469,26 @@ ie.manual.entry.data_main0=When you want to control an automated factory, power 
 ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain up to 36 <link;data_variable_types;§n§oVariables§r;> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
 
 #Reference to possibly a box of foodstuffs
-ie.manual.entry.data_variable_types.name=Variable Types
+ie.manual.entry.data_variable_types.name=Data types
 ie.manual.entry.data_variable_types.subtext=Results May Vary
 ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types;§o§nNull§r;1>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types;§o§nNull§r;1>, <link;data_variable_types;§o§nInteger§r;2>, <link;data_variable_types;§o§nString§r;3>, <link;data_variable_types;§o§nBoolean§r;4>, there are also a couple of more advanced types like <link;data_variable_types;§o§nItemStack§r;5>, <link;data_variable_types;§o§nArray§r;6>, <link;data_variable_types;§o§nPair§r;7> and <link;data_variable_types;§o§nRange§r;8>.
 
-ie.manual.entry.data_variable_types_null=Null is a special variable type, which has no value. It is the default type of an undefined variable.
-ie.manual.entry.data_variable_types_integer=Integer (often shortened to Int) is a number variable type, mainly used in calculations and number comparisons.
-ie.manual.entry.data_variable_types_string=String is a text variable type, it can hold a variety of different characters.
-ie.manual.entry.data_variable_types_boolean=Boolean (often shortened to Bool) is a logic variable type, it can hold one of two values - True or False and can be used in logic functions.
-ie.manual.entry.data_variable_types_itemstack=ItemStack is an advanced variable type which can hold informations about a specific item (not item type) like id, metadata (damage) and NBT.
-ie.manual.entry.data_variable_types_array=Array is a collection of variables, ordered by their index number (starting from 0), it can hold any variable type, except another array.
-ie.manual.entry.data_variable_types_pair=Pair is a variable type, which consists of two variables - a key and a value, often used in comparisons.
-ie.manual.entry.data_variable_types_range=Range is a variable type, which consists of two <link;data_variable_types;§o§nIntegers§r;2>, it is most commonly used in comparing numbers or setting them in a range.
+ie.manual.entry.data_variable_types_null=§lNull§r is a special data type, which has §6no value§r.<br>It is the default type of an §6undefined§r variable.
+
+ie.manual.entry.data_variable_types_integer=§lInteger§r is a number data type. It can store a §6number§r without its fractional component.<br>It is mainly used in calculations and number comparisons.
+ie.manual.entry.data_variable_types_float=§lFloat§r is a number data type. It can store a §6number§r along with its fractional component.<br>It is used in high-precision calculations, i.e. computing angles of a long-distance ballistic trajectory.
+
+ie.manual.entry.data_variable_types_string=§lString§r is a §6text§r data type, which can hold multiple characters.<br>It is used by many devices for commands, queries and input/output messages.
+
+ie.manual.entry.data_variable_types_boolean=§lBoolean§r is a §6logic§r data type, it can hold one of two values - §6True§r or §6False§r. Its primary use is in logic functions using Boolean Algebra.
+
+ie.manual.entry.data_variable_types_itemstack=§lItemStack§r is a data type which holds information about a specific §6stack§r of items: its §6id§r, §6amount§r, §6metadata§r (damage) and §6NBT component§r.
+ie.manual.entry.data_variable_types_entity=§lEntity§r is a data type which holds information about a specific in-world §6entity§r: its §6name§r, §6id§r, §6position§r, §6motion§r and §6NBT data§r.
+
+ie.manual.entry.data_variable_types_array=§lArray§r is a collection of data types, ordered by their §6index§r number starting from 0, it can hold any data type.
+ie.manual.entry.data_variable_types_map=§lMap§r is a collection of pairs of 2 data types called §6entries§r.<br>The first element of an entry is called a §6key§r and second is called a §6value§r.<br>The first can be used to get the second and in reverse.<br>An entry can hold any data type both in key and value field.
+
+ie.manual.entry.data_variable_types_expression=§lExpression§r is a special data type used by the circuits of Arithetic-Logic Machine. It performs a pre-programmed function on input parameters in form of values or their accessors and returns a value.
 
 ie.manual.entry.def_value=Default Value
 ie.manual.entry.min_value=Minimum Value
@@ -1777,7 +1810,7 @@ ie.manual.entry.light_engineer_armor_upgrade_steel_armor_plates=The Steel Armor 
 ie.manual.entry.light_engineer_armor_upgrade_composite_armor_plates=Composite Armor Plates are much more durable than Steel Ones and due to their light weight, a higher thickness can be achieved. In addition, hitting the armor with a melee weapon will damage it severely. Only 3 plates can be installed per one armor piece.
 ie.manual.entry.light_engineer_armor_upgrade_hazmat_coating=The Hazmat Coating is an additional internal armor layer protecting from radiation and acids. Time to go for a walk in the nuclear wastelands.
 ie.manual.entry.light_engineer_armor_upgrade_heat_resistant_coating=The Heat Resistance Coating layer allows to swim in hot liquids which would otherwise incinerate the wearer. Only works when worn with reinforced boots due to overlapping protective layers and heat distribution.
-ie.manual.entry.light_engineer_armor_upgrade_anti_static_mesh=The Anti-Static Mesh gives the user immunity against electrical damage. It also interferes with the proximity fuses targeting, disrupting them. However, due to the properties of such coating it is extra vulnerable to any electromagnetic weapons, causing greater harm than it would have otherwise.
+ie.manual.entry.light_engineer_armor_upgrade_anti_static_mesh=The Anti-Static Mesh gives the user immunity against electrical damage and interferes with the proximity fuses targeting, disrupting them. However, due to its construction it will not work underwater, causing greater harm to the wearer when attacked with electric or electromagnetic weapons.
 ie.manual.entry.light_engineer_armor_upgrade_camouflage_mesh=The Camouflage Mesh is a simple net with leaves attached to it, making the wearer blend in with foliage when sneaking.  Due to it being made from leaves, being lit on fire is not recommended. Especially useful in forests, gardens and plains.
 ie.manual.entry.light_engineer_armor_upgrade_infrared_absorbing_mesh=The Infrared-Absorbing Mesh absorbs infrared light cast into it, serving as a perfect way to hide from infrared sensors. However due to it’s construction, getting hit by electromagnetic weapons will cause more harm than usual.
 ie.manual.entry.light_engineer_armor_upgrade_scuba_tank=The Scuba Tank gives the ability to remain longer underwater with no need to resurface for new air reserves. It can be filled with oxygen using the <link;bottlingMachine;§o§nBottling §o§nMachine§r>.<br>Comes especially handy during underwater construction works. Requires a Gas Mask to be worn.

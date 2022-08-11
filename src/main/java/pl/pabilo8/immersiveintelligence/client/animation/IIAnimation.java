@@ -13,8 +13,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// TODO: 05.04.2022 separate animations and offsets using a new model format
-
 /**
  * @author Pabilo8
  * @since 03.04.2022
@@ -40,11 +38,21 @@ public class IIAnimation
 		this.res = res;
 
 		//get the groups
-		JsonObject groups = json.getAsJsonObject("groups");
-		this.groups = groups.entrySet().stream()
-				.map(e -> new IIAnimationGroup(e.getKey(), e.getValue().getAsJsonObject()))
-				.toArray(IIAnimationGroup[]::new);
+		if(json.has("groups"))
+		{
+			JsonObject groups = json.getAsJsonObject("groups");
+			this.groups = groups.entrySet().stream()
+					.map(e -> new IIAnimationGroup(e.getKey(), e.getValue().getAsJsonObject()))
+					.toArray(IIAnimationGroup[]::new);
+		}
+		else
+			this.groups = new IIAnimationGroup[0];
 		//there is also a 'comment' tag, but it's left out intentionally
+	}
+
+	public IIAnimationGroup getLeadingGroup()
+	{
+		return groups.length > 0?groups[0]: new IIAnimationGroup("missingno", new JsonObject());
 	}
 
 	public static class IIAnimationGroup
@@ -60,9 +68,8 @@ public class IIAnimation
 		final IIFloatLine alpha;
 
 		/**
-		 * For internal testing
+		 * For manual usage only
 		 */
-		@Deprecated
 		public IIAnimationGroup(String groupName, @Nullable IIVectorLine position, @Nullable IIVectorLine scale, @Nullable IIVectorLine color, @Nullable IIVectorLine rotation, @Nullable IIBooleanLine visibility, @Nullable IIFloatLine alpha)
 		{
 			this.groupName = groupName;

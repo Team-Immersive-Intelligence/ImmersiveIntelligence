@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.commands.ii;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.command.CommandBase;
@@ -61,28 +62,29 @@ import java.util.Set;
  */
 public class CommandIIDev extends CommandBase
 {
-	private static Set<String> options = new HashSet<>();
+	private static final Set<String> OPTIONS = new HashSet<>();
 
 	static
 	{
-		options.add("help");
-		options.add("slowmo");
-		options.add("zawarudo");
-		options.add("bulletspeed");
-		options.add("killbullets");
-		options.add("killvehicles");
-		options.add("killitems");
-		options.add("killhanses");
-		options.add("world_setup");
-		options.add("tpd");
-		options.add("decaybullets");
-		options.add("test_enemies");
-		options.add("explosion");
-		options.add("nuke");
-		options.add("power");
-		options.add("tree");
-		options.add("parachute");
-		options.add("deth");
+		OPTIONS.add("help");
+		OPTIONS.add("slowmo");
+		OPTIONS.add("zawarudo");
+		OPTIONS.add("bulletspeed");
+		OPTIONS.add("killbullets");
+		OPTIONS.add("killvehicles");
+		OPTIONS.add("killitems");
+		OPTIONS.add("killhanses");
+		OPTIONS.add("world_setup");
+		OPTIONS.add("tpd");
+		OPTIONS.add("decaybullets");
+		OPTIONS.add("test_enemies");
+		OPTIONS.add("explosion");
+		OPTIONS.add("nuke");
+		OPTIONS.add("power");
+		OPTIONS.add("tree");
+		OPTIONS.add("parachute");
+		OPTIONS.add("deth");
+		OPTIONS.add("get_mb");
 	}
 
 	/**
@@ -167,10 +169,7 @@ public class CommandIIDev extends CommandBase
 						return;
 
 					float blockReachDistance = 100f;
-					Vec3d vec3d = senderEntity.getPositionEyes(0);
-					Vec3d vec3d1 = senderEntity.getLook(0);
-					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-					RayTraceResult traceResult = sender.getEntityWorld().rayTraceBlocks(vec3d, vec3d2, false, false, true);
+					RayTraceResult traceResult = getRayTraceResult(senderEntity, blockReachDistance);
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
@@ -301,10 +300,7 @@ public class CommandIIDev extends CommandBase
 						return;
 
 					float blockReachDistance = 100f;
-					Vec3d vec3d = senderEntity.getPositionEyes(0);
-					Vec3d vec3d1 = senderEntity.getLook(0);
-					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-					RayTraceResult traceResult = senderEntity.getEntityWorld().rayTraceBlocks(vec3d, vec3d2, false, false, true);
+					RayTraceResult traceResult = getRayTraceResult(senderEntity, blockReachDistance);
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
@@ -326,8 +322,7 @@ public class CommandIIDev extends CommandBase
 					try
 					{
 						num = Math.abs(Integer.parseInt(args[1]));
-					}
-					catch(Exception ignored)
+					} catch(Exception ignored)
 					{
 
 					}
@@ -342,10 +337,7 @@ public class CommandIIDev extends CommandBase
 						return;
 
 					float blockReachDistance = 100f;
-					Vec3d vec3d = senderEntity.getPositionEyes(0);
-					Vec3d vec3d1 = senderEntity.getLook(0);
-					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-					RayTraceResult traceResult = senderEntity.getEntityWorld().rayTraceBlocks(vec3d, vec3d2, false, false, true);
+					RayTraceResult traceResult = getRayTraceResult(senderEntity, blockReachDistance);
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 
@@ -355,8 +347,7 @@ public class CommandIIDev extends CommandBase
 					try
 					{
 						num = Math.abs(Integer.parseInt(args[1]));
-					}
-					catch(Exception ignored)
+					} catch(Exception ignored)
 					{
 
 					}
@@ -410,11 +401,46 @@ public class CommandIIDev extends CommandBase
 					}
 				}
 				break;
+				case "get_mb":
+				{
+					float blockReachDistance = 40f;
+
+					RayTraceResult traceResult = getRayTraceResult(senderEntity, blockReachDistance);
+					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
+						return;
+					TileEntity te = senderEntity.getEntityWorld().getTileEntity(traceResult.getBlockPos());
+
+					if(te instanceof TileEntityMultiblockPart<?>)
+						senderEntity.sendMessage(
+								new TextComponentString(TextFormatting.GOLD+"ID: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).pos+" | ")
+							.appendSibling(new TextComponentString(TextFormatting.GOLD+"Mirrored: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).mirrored+" | "))
+							.appendSibling(new TextComponentString(TextFormatting.GOLD+"Facing: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).facing.name()))
+						);
+				}
+				break;
 			}
 
 		}
 		else
 			throw new WrongUsageException(getUsage(sender));
+	}
+
+	/**
+	 * @param entity        entity being the origin point
+	 * @param traceDistance length in which blocks will be traced
+	 * @return a nullable {@link RayTraceResult} of type {@link Type#BLOCK} or {@link Type#MISS}
+	 */
+	@Nullable
+	private static RayTraceResult getRayTraceResult(@Nullable Entity entity, float traceDistance)
+	{
+		if(entity==null)
+			return null;
+
+		Vec3d eyesPos = entity.getPositionEyes(0);
+		Vec3d lookVector = entity.getLook(0);
+		Vec3d traceVector = eyesPos.addVector(lookVector.x*traceDistance, lookVector.y*traceDistance, lookVector.z*traceDistance);
+
+		return entity.getEntityWorld().rayTraceBlocks(eyesPos, traceVector, false, false, true);
 	}
 
 	/**
@@ -432,7 +458,7 @@ public class CommandIIDev extends CommandBase
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
-		return getListOfStringsMatchingLastWord(args, options);
+		return getListOfStringsMatchingLastWord(args, OPTIONS);
 	}
 
 	/**
@@ -461,8 +487,6 @@ public class CommandIIDev extends CommandBase
 		@Override
 		public void placeEntity(World world, Entity entity, float yaw)
 		{
-
-
 			entity.moveToBlockPosAndAngles(world.getSpawnPoint(), yaw, entity.rotationPitch);
 		}
 	}

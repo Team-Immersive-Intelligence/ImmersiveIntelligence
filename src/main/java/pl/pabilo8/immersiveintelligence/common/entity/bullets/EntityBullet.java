@@ -7,6 +7,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -56,7 +57,7 @@ import java.util.Arrays;
 public class EntityBullet extends Entity implements ILightProvider, IEntityAdditionalSpawnData
 {
 	public static final int MAX_TICKS = 600;
-	public static final float DRAG = 0f;
+	public static final float DRAG = 0.01f;
 	public static final float GRAVITY = 0.15f;
 
 	//For testing purposes
@@ -255,12 +256,16 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 			baseMotionX = 0;
 			baseMotionY = 0;
 			baseMotionZ = 0;
+			move(MoverType.SELF, 0, -GRAVITY, 0);
 		}
 		else
 		{
-			force -= DRAG*force*DEV_SLOMO;
+			double realDrag = 1d-(DRAG*DEV_SLOMO);
+			force *= realDrag;
 			gravityMotionY -= GRAVITY*this.mass*DEV_SLOMO;
+			gravityMotionY *= realDrag;
 			setMotion();
+			//ImmersiveIntelligence.logger.info(getPositionVector());
 
 			MultipleRayTracer tracer = MultipleTracerBuilder.setPos(world, this.getPositionVector(), this.getNextPositionVector())
 					.setAABB(this.getEntityBoundingBox().grow(fuseType==EnumFuseTypes.PROXIMITY?fuseParameter: 0).offset(this.getPositionVector().scale(-1)))

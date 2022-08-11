@@ -50,9 +50,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -710,7 +709,34 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IBlockEnum> extend
 	{
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof TileEntityIEBase)
+		{
+			//ladders
 			((TileEntityIEBase)te).onEntityCollision(world, entity);
+			if(te instanceof ILadderMultiblock&&((ILadderMultiblock)te).isLadder()&&entity instanceof EntityLivingBase&&!((EntityLivingBase)entity).isOnLadder())
+			{
+				float f5 = 0.15F;
+				if(entity.motionX < -f5)
+					entity.motionX = -f5;
+				if(entity.motionX > f5)
+					entity.motionX = f5;
+				if(entity.motionZ < -f5)
+					entity.motionZ = -f5;
+				if(entity.motionZ > f5)
+					entity.motionZ = f5;
+
+				entity.fallDistance = 0.0F;
+				if(entity.motionY < -0.15D)
+					entity.motionY = -0.15D;
+
+				if(entity.motionY < 0&&entity instanceof EntityPlayer&&entity.isSneaking())
+				{
+					entity.motionY = 0;
+					return;
+				}
+				if(entity.collidedHorizontally)
+					entity.motionY = .2;
+			}
+		}
 	}
 
 

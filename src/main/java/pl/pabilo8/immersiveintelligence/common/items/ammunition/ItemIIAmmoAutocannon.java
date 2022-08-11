@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.items.ammunition;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
@@ -52,7 +53,7 @@ public class ItemIIAmmoAutocannon extends ItemIIBulletBase
 	@Override
 	public float getDefaultVelocity()
 	{
-		return 6f;
+		return Bullets.autocannonVelocity;
 	}
 
 	@Override

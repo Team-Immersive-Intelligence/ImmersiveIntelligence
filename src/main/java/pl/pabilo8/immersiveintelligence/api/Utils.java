@@ -67,6 +67,7 @@ import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
@@ -759,7 +760,7 @@ public class Utils
 		Block block = world.getBlockState(blockpos).getBlock();
 		TileEntity te = world.getTileEntity(blockpos);
 		boolean hasBreak = block instanceof BlockChest||block instanceof BlockEnderChest
-				||block instanceof BlockSign||block instanceof BlockSkull;
+				||block instanceof BlockSign||block instanceof BlockSkull||block instanceof BlockIIMultiblock<?>;
 		if(!hasBreak) hasBreak = te!=null&&te.canRenderBreaking();
 		if(!hasBreak)
 		{

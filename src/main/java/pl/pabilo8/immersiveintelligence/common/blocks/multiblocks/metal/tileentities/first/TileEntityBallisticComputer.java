@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -23,16 +22,16 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.BallisticComputer;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataTypeNumeric;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
@@ -193,12 +192,6 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
@@ -215,85 +208,87 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
+		if(this.pos!=2)
+			return;
+
 		TileEntityBallisticComputer master = master();
-		if(this.pos==2&&master!=null&&master.energyStorage.getEnergyStored() > BallisticComputer.energyUsage)
+		TileEntityBallisticComputer output = getTileForPos(3);
+
+		if(master==null||output==null)
+			return;
+
+		if(master.energyStorage.getEnergyStored() < BallisticComputer.energyUsage)
+			return;
+		master.energyStorage.extractEnergy(BallisticComputer.energyUsage, false);
+
+
+		DataPacket new_packet = packet.clone();
+		if(new_packet.hasAnyVariables('x','y','z'))
 		{
-			master.energyStorage.extractEnergy(BallisticComputer.energyUsage, false);
+			float x = packet.getVarInType(IDataTypeNumeric.class,new_packet.getPacketVariable('x')).floatValue();
+			float y = packet.getVarInType(IDataTypeNumeric.class,new_packet.getPacketVariable('y')).floatValue();
+			float z = packet.getVarInType(IDataTypeNumeric.class,new_packet.getPacketVariable('z')).floatValue();
+			new_packet.removeVariables('x','y','z');
 
-			DataPacket new_packet = packet.clone();
+			float mass = 0;
+			double force = IIContent.itemAmmoArtillery.getDefaultVelocity();
 
-			if(new_packet.getPacketVariable('x') instanceof DataPacketTypeInteger&&
-					new_packet.getPacketVariable('y') instanceof DataPacketTypeInteger&&
-					new_packet.getPacketVariable('z') instanceof DataPacketTypeInteger)
+			if(new_packet.hasVariable('s'))
 			{
-				float x = ((DataPacketTypeInteger)new_packet.getPacketVariable('x')).value;
-				float y = ((DataPacketTypeInteger)new_packet.getPacketVariable('y')).value;
-				float z = ((DataPacketTypeInteger)new_packet.getPacketVariable('z')).value;
-				new_packet.removeVariable('x');
-				new_packet.removeVariable('y');
-				new_packet.removeVariable('z');
-
-				float mass = 0;
-				double force = IIContent.itemAmmoArtillery.getDefaultVelocity();
-
-				if(new_packet.getPacketVariable('s') instanceof DataPacketTypeItemStack)
+				DataTypeItemStack t = packet.getVarInType(DataTypeItemStack.class, new_packet.getPacketVariable('s'));
+				ItemStack stack = t.value;
+				if(stack.getItem() instanceof IBullet)
 				{
-					DataPacketTypeItemStack t = DataOperator.getVarInType(DataPacketTypeItemStack.class, new_packet.getPacketVariable('s'), packet);
-					ItemStack stack = t.value;
-					if(stack.getItem() instanceof IBullet)
-					{
-						IBullet bullet = (IBullet)stack.getItem();
+					IBullet bullet = (IBullet)stack.getItem();
+					force = bullet.getDefaultVelocity();
+					mass = bullet.getMass(stack);
+				}
+				new_packet.removeVariable('s');
+			}
+			else
+			{
+				if(new_packet.hasVariable('m'))
+					mass = packet.getVarInType(DataTypeInteger.class, new_packet.getPacketVariable('m')).value;
+				if(new_packet.hasVariable('f'))
+					force = packet.getVarInType(DataTypeInteger.class, new_packet.getPacketVariable('f')).value;
+				if(new_packet.hasVariable('t'))
+				{
+					String bname = new_packet.getPacketVariable('t').valueToString();
+					IBullet bullet = BulletRegistry.INSTANCE.getBulletItem(bname);
+					if(bullet!=null)
 						force = bullet.getDefaultVelocity();
-						mass = bullet.getMass(stack);
-					}
-					new_packet.removeVariable('s');
-				}
-				else
-				{
-					if(new_packet.getPacketVariable('m')!=null)
-						mass = DataOperator.getVarInType(DataPacketTypeInteger.class, new_packet.getPacketVariable('m'), packet).value;
-					if(new_packet.getPacketVariable('f')!=null)
-						force = DataOperator.getVarInType(DataPacketTypeInteger.class, new_packet.getPacketVariable('f'), packet).value;
-					if(new_packet.getPacketVariable('t')!=null)
-					{
-						String bname = new_packet.getPacketVariable('t').valueToString();
-						IBullet bullet = BulletRegistry.INSTANCE.getBulletItem(bname);
-						if(bullet!=null)
-							force = bullet.getDefaultVelocity();
-					}
-
-
-					new_packet.removeVariable('m');
-					new_packet.removeVariable('f');
-					new_packet.removeVariable('t');
 				}
 
-				float distance = (float)new Vec3d(0, 0, 0).distanceTo(new Vec3d(x, 0, z));
 
-				double drag = 1f-EntityBullet.DRAG;
-				double gravity = EntityBullet.GRAVITY*mass;
+				new_packet.removeVariables('m','f','t');
+			}
+
+			float distance = (float)new Vec3d(0, 0, 0).distanceTo(new Vec3d(x, 0, z));
+
+			double drag = 1f-EntityBullet.DRAG;
+			double gravity = EntityBullet.GRAVITY*mass;
 
 
-				float yaw;
-				if(x < 0&&z >= 0)
-					yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D);
-				else if(x <= 0&&z <= 0)
-					yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+90;
-				else if(z < 0)
-					yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D)+180;
-				else
-					yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+270;
+			float yaw;
+			if(x < 0&&z >= 0)
+				yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D);
+			else if(x <= 0&&z <= 0)
+				yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+90;
+			else if(z < 0)
+				yaw = (float)(Math.atan(Math.abs((double)x/(double)z))/Math.PI*180D)+180;
+			else
+				yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+270;
 
-				float pitch = pl.pabilo8.immersiveintelligence.api.Utils.calculateBallisticAngle(distance, y, (float)force, gravity, drag);
+			float pitch = pl.pabilo8.immersiveintelligence.api.Utils.calculateBallisticAngle(distance, y, (float)force, gravity, drag, 0.002);
 
-				new_packet.setVariable('y', new DataPacketTypeInteger(Math.round(yaw)));
-				new_packet.setVariable('p', new DataPacketTypeInteger(Math.round(pitch)));
+			new_packet.setVariable('y', new DataTypeFloat(yaw));
+			new_packet.setVariable('p', new DataTypeFloat(pitch));
 
-				IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getTileForPos(3).getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
-				if(conn!=null)
-				{
-					conn.sendPacket(new_packet);
-				}
+
+			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(output.getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
+			if(conn!=null)
+			{
+				conn.sendPacket(new_packet);
 			}
 		}
 	}

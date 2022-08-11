@@ -1,553 +1,297 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.client.animation.*;
+import pl.pabilo8.immersiveintelligence.client.animation.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoArtillery;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer.ArtilleryHowitzerAnimation;
 
 /**
  * @author Pabilo8
- * @since 21-06-2019
+ * @since 29.07.2022
  */
-public class ArtilleryHowitzerRenderer extends TileEntitySpecialRenderer<TileEntityArtilleryHowitzer> implements IReloadableModelContainer<ArtilleryHowitzerRenderer>
+public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtilleryHowitzer>
 {
-	private static ModelArtilleryHowitzer model;
-	private static ModelArtilleryHowitzer modelFlipped;
-	private static ModelBullet8bCal modelBullet = new ModelBullet8bCal();
+	private AMT[] model = null, allParts = null;
+	//animations
+	private IIAnimationCompiledMap animationDefault, animationOpen, animationPlatform;
+	private IIAnimationCompiledMap[] animationFire, animationLoading, animationUnloading;
 
-	private static String textureBullet = ImmersiveIntelligence.MODID+":textures/entity/bullet.png";
+	//shell queue
+	private IIAnimationGroup animationQueueIn, animationQueueOut;
+	private AMTBullet[] shells, shellsStorage;
+
+	//shells used by other animations
+	private AMTBullet shellHeld, shellEjected, shellLoaded;
+
+	private AMT gunYaw, gunPitch;
 
 	@Override
-	public void render(TileEntityArtilleryHowitzer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	protected boolean shouldNotRender(TileEntityArtilleryHowitzer te)
 	{
-		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/artillery_howitzer.png";
-		if(te!=null&&!te.isDummy())
-		{
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+4, (float)y-5, (float)z-1);
-			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			if(te.hasWorld())
-			{
-				GlStateManager.translate(0f, 1f, 1f);
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-			}
-
-			ModelArtilleryHowitzer modelCurrent = te.mirrored?modelFlipped: model;
-			GlStateManager.pushMatrix();
-			modelCurrent.getBlockRotation(te.facing, te.mirrored);
-			modelCurrent.render();
-			GlStateManager.popMatrix();
-			modelCurrent.getBlockRotation(te.facing, false);
-
-			float loadingProgress = 0f;
-
-			switch(te.animation)
-			{
-				case 1:
-				{
-					loadingProgress = Math.max((te.animationTime*0.8f)/((float)te.animationTimeMax*0.8f), 0f);
-				}
-				case 2:
-				{
-					loadingProgress = 1f-Math.max((te.animationTime*0.8f)/((float)te.animationTimeMax*0.8f), 0f);
-				}
-			}
-
-			float progress2 = (loadingProgress < 0.5?loadingProgress/0.5f: 1f-((loadingProgress-0.5f)/0.5f));
-			GlStateManager.pushMatrix();
-			if(te.animation==1||te.animation==2)
-			{
-				//loadingProgress
-				GlStateManager.translate(0f, 0, 2.5f*progress2);
-				for(ModelRendererTurbo mod : model.ammo_door)
-					mod.render(0.0625f);
-				GlStateManager.translate(4.125f+0.5, 0.5, -6-0.5);
-
-				if(te.animation==1&&loadingProgress > 0.5&&!te.inventory.get(5).isEmpty())
-					modelBullet.renderBulletUnused(te.inventory.get(5));
-				else if(te.animation==2&&loadingProgress < 0.5)
-				{
-					if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-					{
-						if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-							modelBullet.renderBulletUnused(te.bullet);
-						else
-							modelBullet.renderCasing(0, -1);
-					}
-				}
-			}
-			GlStateManager.popMatrix();
-
-			GlStateManager.pushMatrix();
-
-			GlStateManager.translate(3f, 0f, -9f);
-
-			GlStateManager.pushMatrix();
-			GlStateManager.rotate(90, 1f, 0f, 0f);
-			GlStateManager.rotate(90, 0f, 0f, 1f);
-			GlStateManager.translate(0f, -1f, 0f);
-
-
-			//te.shellLoadTime/(float)Machines.artilleryHowitzer.conveyorTime
-
-			GlStateManager.pushMatrix();
-
-			boolean[] shell_can_move = new boolean[]{te.inventoryHandler.getStackInSlot(0).isEmpty(), te.inventoryHandler.getStackInSlot(1).isEmpty(), te.inventoryHandler.getStackInSlot(2).isEmpty(), te.inventoryHandler.getStackInSlot(3).isEmpty(), te.inventoryHandler.getStackInSlot(4).isEmpty(), te.inventoryHandler.getStackInSlot(5).isEmpty(), te.inventoryHandler.getStackInSlot(6).isEmpty(), te.inventoryHandler.getStackInSlot(7).isEmpty(), te.inventoryHandler.getStackInSlot(8).isEmpty(), te.inventoryHandler.getStackInSlot(9).isEmpty(), te.inventoryHandler.getStackInSlot(10).isEmpty(), te.inventoryHandler.getStackInSlot(11).isEmpty()};
-			boolean is_moved = false;
-
-			GlStateManager.translate(0f, 0f, 1f);
-
-			float prgrs;
-			if(te.animation==1)
-				prgrs = Math.min((float)te.animationTime/((float)te.animationTimeMax*0.2f), 1f);
-			else
-				prgrs = te.shellLoadTime/(float)ArtilleryHowitzer.conveyorTime;
-
-			if(!shell_can_move[6])
-			{
-				GlStateManager.pushMatrix();
-				if(te.animation==2)
-				{
-					GlStateManager.translate(0f, 1f-prgrs, 0f);
-					is_moved = true;
-				}
-				GlStateManager.translate(1f-0.5f, -2f, -0.875f+0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(6);
-				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-				{
-					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						modelBullet.renderBulletUnused(te.bullet);
-					else
-						modelBullet.renderCasing(0, -1);
-				}
-
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[7])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[8])
-					is_moved = true;
-
-				GlStateManager.translate(1f-(0.5f*((is_moved)?prgrs: 0f))+0.5f, -2f, -0.875f-0.5f);
-
-				ItemStack stack = te.inventoryHandler.getStackInSlot(7);
-				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-				{
-					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						modelBullet.renderBulletUnused(te.bullet);
-					else
-						modelBullet.renderCasing(0, -1);
-				}
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[8])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[9])
-					is_moved = true;
-
-				GlStateManager.translate((0.5f*((is_moved)?1f-prgrs: 0f))+0.5f, -2f, -0.875f-0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(8);
-				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-				{
-					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						modelBullet.renderBulletUnused(te.bullet);
-					else
-						modelBullet.renderCasing(0, -1);
-				}
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[9])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[10])
-					is_moved = true;
-
-				GlStateManager.translate(0.5f, -2f, -1.385+(0.5f*((is_moved)?1f-prgrs: 0f))-0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(9);
-				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-				{
-					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						modelBullet.renderBulletUnused(te.bullet);
-					else
-						modelBullet.renderCasing(0, -1);
-				}
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[10])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[11])
-					is_moved = true;
-
-				GlStateManager.translate(0.5f, -2f, -2.185+(0.5f*((is_moved)?1f-prgrs: 0f))-0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(10);
-				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-				{
-					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						modelBullet.renderBulletUnused(te.bullet);
-					else
-						modelBullet.renderCasing(0, -1);
-				}
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[11])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[1])
-					is_moved = true;
-
-				GlStateManager.translate(0.5f, -2f, -2.985-(1.5f*((is_moved)?prgrs: 0f)));
-				ItemStack stack = te.inventoryHandler.getStackInSlot(11);
-				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-				{
-					if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						modelBullet.renderBulletUnused(te.bullet);
-					else
-						modelBullet.renderCasing(0, -1);
-				}
-
-				GlStateManager.popMatrix();
-			}
-
-			//
-
-			if(!shell_can_move[5])
-			{
-				GlStateManager.pushMatrix();
-				if(te.animation==1)
-				{
-					GlStateManager.translate(0f, -prgrs, 0f);
-					is_moved = true;
-				}
-				GlStateManager.translate(1f+0.5f, 0f, -0.875f-0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(5);
-				modelBullet.renderBulletUnused(stack);
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[4])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[5])
-					is_moved = true;
-
-				GlStateManager.translate(0.5f+0.5f+(0.5f*((is_moved)?prgrs: 0f)), 0f, -0.875f-0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(4);
-				modelBullet.renderBulletUnused(stack);
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[3])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[4])
-					is_moved = true;
-
-				GlStateManager.translate((0.5f*((is_moved)?prgrs: 0f))+0.5f, 0f, -0.875f-0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(3);
-				modelBullet.renderBulletUnused(stack);
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[2])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[3])
-					is_moved = true;
-
-				GlStateManager.translate(0.5f, 0f, -1.385+(0.5f*((is_moved)?prgrs: 0f))-0.5f);
-				ItemStack stack = te.inventoryHandler.getStackInSlot(2);
-				modelBullet.renderBulletUnused(stack);
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[1])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[2])
-					is_moved = true;
-
-				GlStateManager.translate(0.5f, 0f, -2.185+(0.5f*((is_moved)?prgrs: 0f)));
-				ItemStack stack = te.inventoryHandler.getStackInSlot(1);
-				modelBullet.renderBulletUnused(stack);
-
-				GlStateManager.popMatrix();
-			}
-
-			if(!shell_can_move[0])
-			{
-				GlStateManager.pushMatrix();
-
-				if(shell_can_move[1])
-					is_moved = true;
-
-				GlStateManager.translate(0.5f, 0f, -2.985+(0.5f*((is_moved)?prgrs: 0f)));
-				ItemStack stack = te.inventoryHandler.getStackInSlot(0);
-				modelBullet.renderBulletUnused(stack);
-
-				GlStateManager.popMatrix();
-			}
-
-			GlStateManager.popMatrix();
-
-			//GlStateManager.translate(0f,0f,-0.6f);
-
-
-			GlStateManager.popMatrix();
-
-			ClientUtils.bindTexture("textures/atlas/blocks.png");
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
-			GlStateManager.translate(0f, 0f, 1f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
-			GlStateManager.rotate(180, 0, 1, 0);
-			GlStateManager.translate(-1f, 0f, -0.125f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.DOWN);
-			GlStateManager.translate(0f, 1f, 0f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.DOWN);
-			GlStateManager.translate(0f, 1f, 0f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.DOWN);
-			GlStateManager.translate(0f, 1f, 0f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.DOWN);
-
-			GlStateManager.popMatrix();
-
-			GlStateManager.pushMatrix();
-
-
-			ClientUtils.bindTexture("textures/atlas/blocks.png");
-			GlStateManager.translate(5f, 0f, -9f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
-			GlStateManager.translate(0f, 0f, 1f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.NORTH);
-
-			GlStateManager.translate(0f, 0f, -0.875f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.UP);
-			GlStateManager.translate(0f, 1f, 0f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.UP);
-			GlStateManager.translate(0f, 1f, 0f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.UP);
-			GlStateManager.translate(0f, 1f, 0f);
-			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:vertical", EnumFacing.UP);
-
-			GlStateManager.popMatrix();
-
-			ClientUtils.bindTexture(texture);
-
-			float platform_height = te.platformHeight;
-			float barrel_recoil = 0f;
-			if(te.animation==3)
-			{
-				platform_height = Math.min(5.25f, te.platformHeight+(partialTicks/20f));
-				float afloat = (float)te.animationTime/((float)te.animationTimeMax);
-				if(te.bullet.getItem() instanceof ItemIIAmmoArtillery&&te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-					barrel_recoil = afloat <= 0.25f?(afloat/0.25f): 1f-((afloat-0.25f)/0.75f);
-			}
-
-
-			GlStateManager.pushMatrix();
-
-			float doorAngle = MathHelper.clamp(te.doorAngle+(te.isDoorOpened?partialTicks:-partialTicks),0,155);
-
-			GlStateManager.translate(0f, 5f, 0f);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(1.625f, 0f, -1.625f);
-			GlStateManager.rotate(doorAngle, 1f, 0f, 0f);
-			model.hatch[0].render(0.0625f);
-
-			GlStateManager.popMatrix();
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(1.625f, 0.125f, -7.375f);
-
-			GlStateManager.rotate(-doorAngle, 1f, 0f, 0f);
-			model.hatch[1].render(0.0625f);
-
-			GlStateManager.popMatrix();
-
-			GlStateManager.popMatrix();
-
-			model.getModelCounterRotation(te.facing);
-
-			GlStateManager.translate(72F/16f, platform_height, -72F/16f);
-
-			GlStateManager.rotate(-(te.turretYaw+90), 0f, 1f, 0f);
-
-			for(ModelRendererTurbo mod : model.cannon_platform)
-				mod.render(0.0625f);
-
-
-			//Rods
-			GlStateManager.pushMatrix();
-
-			GlStateManager.translate(0f, 1f, 0f);
-
-			for(int i = 0; i <= platform_height; i += 1)
-			{
-				GlStateManager.translate(0f, -1f, 0f);
-				model.platform_rod[0].render(0.0625f);
-			}
-
-			GlStateManager.popMatrix();
-
-			GlStateManager.translate(0f, 1.625f, 0f);
-			GlStateManager.rotate(te.turretPitch, 1f, 0f, 0f);
-
-			for(ModelRendererTurbo mod : model.cannon)
-				mod.render(0.0625f);
-
-			GlStateManager.pushMatrix();
-
-			if(te.animation==1||te.animation==2)
-			{
-				GlStateManager.pushMatrix();
-
-				GlStateManager.translate(-0.4075f+0.5, -1.15f, 0.15f);
-				if(te.animation==1&&loadingProgress < 0.5&&!te.inventory.get(5).isEmpty())
-					modelBullet.renderBulletUnused(te.inventory.get(5));
-				else if(te.animation==2&&loadingProgress > 0.5)
-				{
-					if(te.bullet.getItem() instanceof ItemIIAmmoArtillery)
-					{
-						if(te.bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-							modelBullet.renderBulletUnused(te.bullet);
-						else
-							modelBullet.renderCasing(0, -1);
-					}
-				}
-
-				GlStateManager.popMatrix();
-
-				GlStateManager.translate(-0.375f, -1f, 0f);
-				GlStateManager.rotate(-90*progress2, 1, 0, 0);
-				GlStateManager.translate(0.375f, 1f, 0f);
-			}
-			ClientUtils.bindTexture(texture);
-			for(ModelRendererTurbo mod : model.cannon_ammo_door_left)
-				mod.render(0.0625f);
-
-			GlStateManager.popMatrix();
-			ClientUtils.bindTexture(texture);
-
-			GlStateManager.pushMatrix();
-
-			if(te.animation==1||te.animation==2)
-			{
-				GlStateManager.translate(-0.375f, -1f, 0f);
-				GlStateManager.rotate(-90*progress2, 1, 0, 0);
-				GlStateManager.translate(0.375f, 1f, 0f);
-			}
-
-			for(ModelRendererTurbo mod : model.cannon_ammo_door_right)
-				mod.render(0.0625f);
-
-			GlStateManager.popMatrix();
-
-			GlStateManager.pushMatrix();
-
-			GlStateManager.popMatrix();
-
-			GlStateManager.pushMatrix();
-
-			GlStateManager.translate(0f, -barrel_recoil, 0f);
-			for(ModelRendererTurbo mod : model.cannon_barrel)
-				mod.render(0.0625f);
-
-			GlStateManager.popMatrix();
-
-			GlStateManager.popMatrix();
-
-		}
-		else if(te==null)
-		{
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x+1.5, (float)y+0.55, (float)z+1.5);
-			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			GlStateManager.scale(0.5, 0.5, 0.5);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			for(ModelRendererTurbo mod : model.cannon_platform)
-				mod.render(0.0625f);
-
-			GlStateManager.translate(0f, 1.625f, 0f);
-			GlStateManager.rotate(-45, 1f, 0f, 0f);
-
-			for(ModelRendererTurbo mod : model.cannon)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.cannon_barrel)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.cannon_ammo_door_left)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.cannon_ammo_door_right)
-				mod.render(0.0625f);
-
-			GlStateManager.popMatrix();
-
-		}
+		return te==null||te.isDummy();
 	}
 
 	@Override
-	public void reloadModels()
+	public void draw(TileEntityArtilleryHowitzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		model = new ModelArtilleryHowitzer(false);
-		modelFlipped = new ModelArtilleryHowitzer(true);
-		for(ModelRendererTurbo[] mod : modelFlipped.parts.values())
+		applyStandardRotation(te.facing);
+		GlStateManager.translate(0, 0, -0.5);
+
+		//defaultize
+		for(AMT mod : allParts)
+			mod.defaultize();
+		//apply default animation (for inserter angle)
+		animationDefault.apply(0);
+
+		//has enough power for active and passive action
+		boolean canOperatePassive = te.energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive;
+		boolean canOperateActive = canOperatePassive&&te.energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
+
+		//platform and door animation
+		float doorAnim = IIAnimationUtils.getAnimationProgress(te.doorTime, ArtilleryHowitzer.doorTime,
+				canOperatePassive, !te.isDoorOpened, 1f, 2f, partialTicks);
+		float platformAnim = IIAnimationUtils.getAnimationProgress(te.platformTime, ArtilleryHowitzer.platformTime,
+				canOperatePassive, !te.platformPosition, 1f, 1f, partialTicks);
+		animationOpen.apply(doorAnim);
+		animationPlatform.apply(platformAnim);
+
+		//gun pitch and yaw
+		//calculated before animations, so animations can modify it
+		float pDiff = te.plannedPitch-te.turretPitch, yDiff = MathHelper.wrapDegrees(360+te.plannedYaw-te.turretYaw);
+		float turretYaw = te.turretYaw+Math.signum(yDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed);
+		float turretPitch = te.turretPitch+(Math.signum(pDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed));
+
+		//conveyor animation
+		float conveyorAnim = IIAnimationUtils.getAnimationProgress(te.shellConveyorTime, ArtilleryHowitzer.conveyorTime,
+				canOperatePassive, false, 1f, 0f, partialTicks);
+
+		//apply conveyor animation directly to shells
+		boolean next = false;
+		for(int i = 5; i >= 0; i--) //checked from bottom to top
+			next = animateShellConveyor(te, 0, i, conveyorAnim, BulletState.BULLET_UNUSED, animationQueueIn, next);
+		next = false;
+		for(int i = 11; i >= 6; i--) //checked from top to bottom
+			next = animateShellConveyor(te, 6, i, conveyorAnim, BulletState.CASING, animationQueueOut, next);
+
+		shellEjected.withStack(ItemStack.EMPTY, BulletState.CASING);
+
+		//shell rack display
+		for(int i = 0; i < 4; i++)
 		{
-
-			for(ModelRendererTurbo m : mod)
-			{
-				if(!m.field_1402_i)
-				{
-					m.doMirror(true, false, false);
-					m.setRotationPoint(-m.rotationPointX, m.rotationPointY, m.rotationPointZ);
-					m.rotateAngleY *= -1;
-					m.rotateAngleZ *= -1;
-				}
-				else
-				{
-					m.rotationPointX -= 144f;
-					m.field_1402_i = false;
-				}
-			}
-
+			IIAnimationUtils.setModelVisibility(shellsStorage[i], true);
+			shellsStorage[i].withStack(te.loadedShells.get(i),
+					te.loadedShells.get(i).getItem()==IIContent.itemAmmoArtillery?BulletState.BULLET_UNUSED: BulletState.CASING);
 		}
+		IIAnimationUtils.setModelVisibility(shellHeld, false);
+		IIAnimationUtils.setModelVisibility(shellEjected, false);
+		IIAnimationUtils.setModelVisibility(shellLoaded, false);
+
+		float animationProgress = IIAnimationUtils.getAnimationProgress(te.animationTime, te.animationTimeMax,
+				canOperateActive&&te.animation!=ArtilleryHowitzerAnimation.STOP, false, 1f, 0f, partialTicks);
+		switch(te.animation)
+		{
+			case STOP:
+			case HIDE:
+				break;
+			case LOAD1:
+			case LOAD2:
+			case LOAD3:
+			case LOAD4:
+			{
+				//loading animation
+				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.LOAD1.ordinal();
+				setupShellDisplay(te, BulletState.BULLET_UNUSED, slot);
+				animationLoading[slot].apply(animationProgress);
+			}
+			break;
+			case UNLOAD1:
+			case UNLOAD2:
+			case UNLOAD3:
+			case UNLOAD4:
+			{
+				//unloading animation
+				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.UNLOAD1.ordinal();
+				setupShellDisplay(te, shellsStorage[slot].getState(), slot);
+				animationUnloading[slot].apply(animationProgress);
+			}
+			break;
+			case FIRE1:
+			case FIRE2:
+			case FIRE3:
+			case FIRE4:
+			{
+				//loading from rack / firing animation
+				int slot = te.animation.ordinal()-ArtilleryHowitzerAnimation.FIRE1.ordinal();
+				BulletState firingState = animationProgress > ArtilleryHowitzer.gunFireMoment?BulletState.CASING: BulletState.BULLET_UNUSED;
+				setupShellDisplay(te, firingState, slot);
+				animationFire[slot].apply(animationProgress);
+
+				double firstMarker = ArtilleryHowitzer.gunFireMoment-0.03f;
+				double secondMarker = ArtilleryHowitzer.gunFireMoment-0.07f;
+				double dist = Math.abs(firstMarker-secondMarker);
+				double firstMarker2 = ArtilleryHowitzer.gunFireMoment+0.01f;
+				double secondMarker2 = ArtilleryHowitzer.gunFireMoment+0.04f;
+				double dist2 = Math.abs(firstMarker2-secondMarker2);
+
+				// TODO: 11.08.2022 add parameter handling to animation system and remove this mess
+				if(animationProgress < 0.1f)
+					turretPitch = (-90+turretPitch)*Math.min(animationProgress/0.1f, 1f);
+				else if(animationProgress > 0.9f)
+					turretPitch = (-90+turretPitch)*(1f-Math.min((animationProgress-0.9f)/0.1f, 1f));
+				else if(animationProgress > secondMarker&&animationProgress < firstMarker)
+					turretPitch = (-90+turretPitch)*(1f-(float)Math.min((animationProgress-(secondMarker))/dist, 1f));
+				else if(animationProgress > firstMarker2&&animationProgress < secondMarker2)
+					turretPitch = (-90+turretPitch)*(float)Math.min((animationProgress-(firstMarker2))/dist2, 1f);
+				else if(animationProgress < secondMarker||animationProgress > secondMarker2)
+					turretPitch = -90;
+			}
+			break;
+			case AIM:
+			default:
+				break;
+		}
+
+		//set gun pitch and yaw
+		IIAnimationUtils.setModelRotation(gunYaw, 0, (te.mirrored?-1: 1)*(te.facing.getHorizontalAngle()-turretYaw), 0);
+		IIAnimationUtils.setModelRotation(gunPitch, turretPitch, 0, 0);
+
+		//flipping
+		if(te.mirrored)
+			mirrorRender();
+
+		//render
+		for(AMT mod : model)
+			mod.render(tes, buf);
+
+		if(te.mirrored)
+			unMirrorRender();
+	}
+
+	private void setupShellDisplay(TileEntityArtilleryHowitzer te, BulletState state, int slot)
+	{
+		shellLoaded.withStack(te.inventory.get(5), state);
+		shellHeld.withStack(te.inventory.get(5), state);
+		shellEjected.withStack(te.inventory.get(5), state);
+		shellsStorage[slot].withStack(te.inventory.get(5), state);
+	}
+
+	/**
+	 * Check if shell is present, causes next shells to animate.
+	 */
+	private boolean animateShellConveyor(TileEntityArtilleryHowitzer te, int startFrom, int i, float conveyorAnim, BulletState bulletUnused, IIAnimationGroup animationQueueIn, boolean next)
+	{
+		boolean here = !te.inventory.get(i).isEmpty();
+		float shellTime = 0.16666667f*((i-startFrom)+(next?conveyorAnim: 0f));
+
+		IIAnimationUtils.setModelVisibility(shells[i], here);
+		if(here)
+		{
+			shells[i].withStack(te.inventory.get(i), bulletUnused);
+			IIAnimationUtils.setModelAnimations(shells[i], animationQueueIn, shellTime);
+		}
+		else
+			next = true;
+		return next;
+	}
+
+	@Override
+	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	{
+		shells = new AMTBullet[12];
+		shellsStorage = new AMTBullet[4];
+
+		model = IIAnimationUtils.getAMT(sModel, IIAnimationLoader.loadHeader(sModel.getSecond()),
+				header -> new AMT[]{
+						//add shell models to placeholders
+						createShellQueueAMT(true, 0, header),
+						createShellQueueAMT(true, 1, header),
+						createShellQueueAMT(true, 2, header),
+						createShellQueueAMT(true, 3, header),
+						createShellQueueAMT(true, 4, header),
+						createShellQueueAMT(true, 5, header),
+						createShellQueueAMT(false, 0, header),
+						createShellQueueAMT(false, 1, header),
+						createShellQueueAMT(false, 2, header),
+						createShellQueueAMT(false, 3, header),
+						createShellQueueAMT(false, 4, header),
+						createShellQueueAMT(false, 5, header),
+
+						shellsStorage[0] = createDefaultShellAMT(header, "shell_storage1"),
+						shellsStorage[1] = createDefaultShellAMT(header, "shell_storage2"),
+						shellsStorage[2] = createDefaultShellAMT(header, "shell_storage3"),
+						shellsStorage[3] = createDefaultShellAMT(header, "shell_storage4"),
+
+						shellLoaded = createDefaultShellAMT(header, "shell_loaded"),
+						shellEjected = createDefaultShellAMT(header, "shell_hatch"),
+						shellHeld = createDefaultShellAMT(header, "shell_held")
+				}
+		);
+		allParts = IIAnimationUtils.getChildrenRecursive(model);
+		animationDefault = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_default"));
+		animationOpen = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_door"));
+		animationPlatform = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_platform"));
+
+		//firing and loading animations, for each ammo rack shell
+		animationLoading = new IIAnimationCompiledMap[4];
+		animationUnloading = new IIAnimationCompiledMap[4];
+		animationFire = new IIAnimationCompiledMap[4];
+		for(int i = 0; i < 4; i++)
+		{
+			animationLoading[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_loading"+(i+1)));
+			animationUnloading[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_unloading"+(i+1)));
+			animationFire[i] = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_fire"+(i+1)));
+		}
+
+		animationQueueIn = IIAnimationLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_in")).getLeadingGroup();
+		animationQueueOut = IIAnimationLoader.loadAnimation(new ResourceLocation(ImmersiveIntelligence.MODID, "artillery_howitzer/artillery_howitzer_queue_out")).getLeadingGroup();
+
+		gunYaw = IIAnimationUtils.getPart(model, "turret");
+		gunPitch = IIAnimationUtils.getPart(model, "gun");
+	}
+
+	@Override
+	protected void nullifyModels()
+	{
+		model = IIAnimationUtils.disposeOf(model);
+		animationOpen = animationPlatform = null;
+		animationFire = animationLoading = null;
+		gunYaw = gunPitch = null;
+	}
+
+	//--- Internal Methods ---//
+
+	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name)
+	{
+		return createDefaultShellAMT(header, name, name);
+	}
+
+	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name, String originName)
+	{
+		return new AMTBullet(name, header.getOffset(originName), BulletRegistry.INSTANCE.getModel(IIContent.itemAmmoArtillery));
+	}
+
+	private AMTBullet createShellQueueAMT(boolean in, int id, IIModelHeader header)
+	{
+		String name = in?"shell_in": "shell_out";
+		AMTBullet mod = createDefaultShellAMT(header, name+id, name)
+				.withState(BulletState.BULLET_UNUSED);
+		shells[(in?0: 6)+id] = mod;
+		return mod;
 	}
 }

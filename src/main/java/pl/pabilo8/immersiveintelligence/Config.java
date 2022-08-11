@@ -667,25 +667,32 @@ public class Config
 			public static class ArtilleryHowitzer
 			{
 				@Comment({"Energy capacity of the artillery howitzer."})
-				public static int energyCapacity = 1000000;
+				public static int energyCapacity = 4000000;
 
-				@Comment({"Energy usage when moving / rotating the platform."})
-				public static int energyUsagePlatform = 1620;
+				@Comment({"Additional energy usage when moving the platform, loading or shooting."})
+				public static int energyUsageActive = 1024;
 
-				@Comment({"Energy usage when loading / unloading a shell."})
-				public static int energyUsageLoader = 3192;
+				@Comment({"Passive energy usage of the howitzer (in IF)."})
+				public static int energyUsagePassive = 2048;
 
-				@Comment({"Time needed for the platform to ascend/descend (in ticks."})
-				public static int platformTime = 180;
+				@Comment({"Time needed for the platform to ascend/descend (in ticks)."})
+				public static int platformTime = 200;
 
-				@Comment({"Time needed for the howitzer to fire (in ticks."})
-				public static int fireTime = 35;
+				@Comment({"Time needed for the howitzer to fire (in ticks)."})
+				public static int gunFireTime = 240;
 
-				@Comment({"How long does it take for the howitzer to rotate 90 degrees (in ticks)"})
-				public static int rotateTime = 140;
+				@RangeDouble(min = 0.0, max = 1.0)
+				@Comment({"In what moment of animation should the gun fire the bullet (0.0-1.0 fraction of gunFireTime)"})
+				public static double gunFireMoment = 0.5989;
 
-				@Comment({"How long does it take for the howitzer to load a shell (in ticks)"})
-				public static int loadTime = 100;
+				@Comment({"Time needed to open the howitzer door (in ticks)."})
+				public static int doorTime = 248;
+
+				@Comment({"How many degrees per tick can the howitzer rotate (in degrees)"})
+				public static int rotateSpeed = 2;
+
+				@Comment({"How long does it take for the howitzer to load or unload a shell to the platform shell rack (in ticks)"})
+				public static int loadRackTime = 360;
 
 				@Comment({"How long does it take for the howitzer to move the shell by one item slot using conveyor (in ticks)"})
 				public static int conveyorTime = 40;

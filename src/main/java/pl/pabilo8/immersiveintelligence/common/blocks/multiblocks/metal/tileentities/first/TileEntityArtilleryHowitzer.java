@@ -1,683 +1,669 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.IExplosionResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.base.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoArtillery;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author Pabilo8
  * @since 28-06-2019
  */
-// TODO: 30.12.2021 refactor and improve performance
-public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileEntityArtilleryHowitzer, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IBooleanAnimatedPartsBlock, IConveyorAttachable
+public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<TileEntityArtilleryHowitzer>
+		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IExplosionResistantMultiblock
 {
-	public boolean active = false;
+	//--- AABB ---//
+	private static final AxisAlignedBB AABB_FULL = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
+	private static final AxisAlignedBB AABB_EMPTY = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+	private static final AxisAlignedBB AABB_DOOR = new AxisAlignedBB(0, 0, 0, 1, 0.125, 1);
+	private static final AxisAlignedBB AABB_TALLER_FLOOR = new AxisAlignedBB(0, 0, 0, 1, 0.4375, 1);
+	private static final AxisAlignedBB AABB_LOWER_FLOOR = new AxisAlignedBB(0, 0, 0, 1, 0.1875, 1);
+	private static final AxisAlignedBB AABB_TABLE_TOP = new AxisAlignedBB(0, 0, 0, 1, 0.25, 1);
 
-	//0 - nothing, 1 - loading, 2 - unloading, 3 - shooting, 4 - aiming
-	public int animation = 0, fuse = -1;
-	public int animationTime = 0, animationTimeMax = 0, shellLoadTime = 0, shellExpellTime = 0;
-	public boolean isDoorOpened;
-	public float turretYaw = 0, turretPitch = 0, plannedYaw = 0, plannedPitch = 0, platformHeight = 0, doorAngle = 0;
-	public ItemStack bullet = ItemStack.EMPTY;
-	public NonNullList<ItemStack> inventory = NonNullList.withSize(12, ItemStack.EMPTY);
-	//0, 1, 2, 3, 4, 5 - 6, 7, 8, 9, 10, 11
-	//0 - input, 11 - output 0-> 5 6->11
-	public IItemHandler inventoryHandler = new IEInventoryHandler(12, this, 0, true, true);
-	boolean update = false;
+	private static final AxisAlignedBB[] AABB_LADDER = new AxisAlignedBB[]{
+			new AxisAlignedBB(0, 0, 0, 1, 1, 0.9375),
+			new AxisAlignedBB(0, 0, 0.0625, 1, 1, 1),
+			new AxisAlignedBB(0, 0, 0, 0.9375, 1, 1),
+			new AxisAlignedBB(0.0625, 0, 0, 1, 1, 1)
+	};
+	private static final AxisAlignedBB[] AABB_DOOR_HOLDERS_RIGHT = new AxisAlignedBB[]{
+			new AxisAlignedBB(0, 0, 0, 0.5, 0.625, 1),
+			new AxisAlignedBB(0.5, 0, 0, 1, 0.625, 1),
+			new AxisAlignedBB(0, 0, 0.5, 1, 0.625, 1),
+			new AxisAlignedBB(0, 0, 0, 1, 0.625, 0.5)
+	};
+	private static final AxisAlignedBB[] AABB_DOOR_HOLDERS_LEFT = new AxisAlignedBB[]{
+			new AxisAlignedBB(0.5, 0, 0, 1, 0.625, 1),
+			new AxisAlignedBB(0, 0, 0, 0.5, 0.625, 1),
+			new AxisAlignedBB(0, 0, 0, 1, 0.625, 0.5),
+			new AxisAlignedBB(0, 0, 0.5, 1, 0.625, 1)
+	};
+
+	private static IISoundAnimation loadingSoundAnimation, unloadingSoundAnimation, firingSoundAnimation;
+
+	static
+	{
+		loadingSoundAnimation = new IISoundAnimation(18);
+		unloadingSoundAnimation = new IISoundAnimation(18);
+		firingSoundAnimation = new IISoundAnimation(15.96);
+
+		loadingSoundAnimation
+				.withSound(0.64, IISounds.metal_breadbox_open)
+				.withSound(0.84, IISounds.howitzer_door_open)
+				.withSound(1.88, IISounds.howitzer_door_open)
+				.withSound(2.76, IISounds.howitzer_door_open)
+				.withSound(3.68, IISounds.howitzer_door_close)
+				.withSound(4.36, IISounds.metal_locker_open)
+				.withSound(5.0, IISounds.howitzer_chain)
+				.withSound(6.12, IISounds.metal_breadbox_open)
+				.withSound(8.24, IISounds.metal_breadbox_close)
+				.withSound(8.4, IISounds.howitzer_shell_put)
+				.withSound(8.92, IISounds.howitzer_platform_start)
+				.withSound(9.04, IISounds.howitzer_chain)
+				.withSound(11.28, IISounds.metal_breadbox_open)
+				.withSound(11.52, IISounds.metal_locker_close)
+				.withSound(11.96, IISounds.inserter_forward)
+				.withSound(12.44, IISounds.inserter_forward)
+				.withSound(12.8, IISounds.inserter_forward)
+				.withSound(13.2, IISounds.inserter_forward)
+				.withSound(13.24, IISounds.howitzer_door_open)
+				.withSound(13.96, IISounds.howitzer_shell_pick)
+				.withSound(14.24, IISounds.inserter_forward)
+				.withSound(14.72, IISounds.inserter_forward)
+				.withSound(15.12, IISounds.inserter_forward)
+				.withSound(15.56, IISounds.inserter_forward)
+				.withSound(15.96, IISounds.inserter_forward)
+				.withSound(16.36, IISounds.howitzer_shell_put)
+				.withSound(16.44, IISounds.inserter_forward)
+				.withSound(16.68, IISounds.inserter_forward)
+				.compile(ArtilleryHowitzer.loadRackTime);
+
+		firingSoundAnimation
+				.withSound(0.0, IISounds.metal_breadbox_open)
+				.withSound(0.52, IISounds.inserter_forward)
+				.withSound(1.0, IISounds.inserter_forward)
+				.withSound(1.32, IISounds.inserter_forward)
+				.withSound(1.76, IISounds.inserter_forward)
+				.withSound(2.24, IISounds.inserter_forward)
+				.withSound(2.28, IISounds.inserter_forward)
+				.withSound(2.8, IISounds.inserter_forward)
+				.withSound(3.24, IISounds.inserter_forward)
+				.withSound(3.72, IISounds.inserter_forward)
+				.withSound(4.16, IISounds.inserter_forward)
+				.withSound(4.4, IISounds.metal_breadbox_close)
+				.withSound(4.56, IISounds.inserter_forward)
+				.withSound(4.96, IISounds.howitzer_shell_pick)
+				.withSound(5.04, IISounds.inserter_forward)
+				.withSound(5.48, IISounds.inserter_forward)
+				.withSound(5.92, IISounds.inserter_forward)
+				.withSound(6.36, IISounds.inserter_forward)
+				.withSound(6.8, IISounds.inserter_forward)
+				.withSound(7.08, IISounds.metal_breadbox_close)
+				.withSound(7.72, IISounds.howitzer_shell_put)
+				.withSound(7.8, IISounds.inserter_forward)
+				.withSound(8.24, IISounds.inserter_forward)
+				.withSound(8.44, IISounds.inserter_forward)
+				.withSound(8.48, IISounds.inserter_forward)
+				.withSound(9.0, IISounds.inserter_forward)
+				//fire!
+				.withSound(9.52, IISounds.inserter_forward)
+				.withSound(10.0, IISounds.inserter_forward)
+				.withSound(10.36, IISounds.inserter_forward)
+				.withSound(10.64, IISounds.inserter_forward)
+				.withSound(10.68, IISounds.inserter_forward)
+				.withSound(11.2, IISounds.inserter_forward)
+				.withSound(11.68, IISounds.inserter_forward)
+				.withSound(12.16, IISounds.inserter_forward)
+				.withSound(12.24, IISounds.howitzer_shell_pick)
+				.withSound(12.64, IISounds.inserter_backward)
+				.withSound(13.08, IISounds.inserter_backward)
+				.withSound(13.52, IISounds.inserter_backward)
+				.withSound(13.96, IISounds.inserter_forward)
+				.withSound(14.12, IISounds.metal_breadbox_close)
+				.withSound(14.48, IISounds.howitzer_shell_put)
+				.withSound(14.76, IISounds.inserter_backward)
+				.withSound(15.24, IISounds.inserter_backward)
+				.withSound(15.6, IISounds.inserter_backward)
+				.withSound(15.72, IISounds.metal_breadbox_open)
+				.compile(ArtilleryHowitzer.gunFireTime);
+
+		unloadingSoundAnimation
+				.withSound(0.0, IISounds.inserter_forward)
+				.withSound(0.04, IISounds.metal_breadbox_open)
+				.withSound(0.36, IISounds.howitzer_door_open)
+				.withSound(0.48, IISounds.inserter_forward)
+				.withSound(0.96, IISounds.inserter_forward)
+				.withSound(1.24, IISounds.metal_breadbox_close)
+				.withSound(1.36, IISounds.howitzer_shell_pick)
+				.withSound(1.44, IISounds.inserter_forward)
+				.withSound(1.92, IISounds.inserter_forward)
+				.withSound(2.36, IISounds.inserter_forward)
+				.withSound(2.84, IISounds.inserter_forward)
+				.withSound(3.32, IISounds.inserter_forward)
+				.withSound(3.8, IISounds.inserter_forward)
+				.withSound(4.0, IISounds.howitzer_shell_put)
+				.withSound(4.28, IISounds.inserter_forward)
+				.withSound(4.72, IISounds.inserter_forward)
+				.withSound(5.16, IISounds.inserter_forward)
+				.withSound(5.6, IISounds.inserter_forward)
+				.withSound(5.76, IISounds.metal_breadbox_close)
+				.withSound(5.92, IISounds.metal_locker_open)
+				.withSound(6.6, IISounds.howitzer_chain)
+				.withSound(8.08, IISounds.howitzer_door_close)
+				.withSound(9.28, IISounds.metal_breadbox_close)
+				.withSound(10.32, IISounds.howitzer_door_close)
+				.withSound(12.44, IISounds.metal_locker_close)
+				.compile(ArtilleryHowitzer.loadRackTime);
+	}
+
+	//--- Variables ---//
+
+	//currently performed action
+	public ArtilleryHowitzerAnimation animation = ArtilleryHowitzerAnimation.STOP;
+	//animation related variables
+	public int animationTime = 0, animationTimeMax = 0, shellConveyorTime = 0;
+	public boolean isDoorOpened = false, platformPosition = false;
+
+	public int platformTime = 0, doorTime = 0;
+	public float turretYaw = 0, turretPitch = 0, plannedYaw = 0, plannedPitch = 0;
+
+	//shells loaded into the rack
+	public NonNullList<ItemStack> loadedShells;
+	public IItemHandler inventoryHandler, insertionHandler;
+
 
 	public TileEntityArtilleryHowitzer()
 	{
-		super(MultiblockArtilleryHowitzer.instance, new int[]{7, 9, 9}, ArtilleryHowitzer.energyCapacity, true);
+		super(MultiblockArtilleryHowitzer.instance);
+
+		this.energyStorage = new FluxStorageAdvanced(ArtilleryHowitzer.energyCapacity);
+
+		//shell queue: 0-5 in, 5-11 out
+		inventory = NonNullList.withSize(12, ItemStack.EMPTY);
+		loadedShells = NonNullList.withSize(4, ItemStack.EMPTY);
+		inventoryHandler = new IEInventoryHandler(inventory.size(), this, 0, true, true);
+		insertionHandler = new IEInventoryHandler(1, this, 0, true, false);
 	}
 
+
 	@Override
-	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
+	public void onUpdate()
+	{
+		//handles looped sounds
+		if(world.isRemote)
+			handleSounds();
+
+		boolean rs = world.isBlockPowered(getBlockPosForPos(getRedstonePos(true)[0]))^redstoneControlInverted;
+		if(isDoorOpened^rs)
+		{
+			isDoorOpened = rs;
+			if(!world.isRemote)
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()),
+						pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 48));
+		}
+
+		//operate only if energy is sufficient
+		if(energyStorage.getEnergyStored() < ArtilleryHowitzer.energyUsagePassive)
+			return;
+		energyStorage.extractEnergy(ArtilleryHowitzer.energyUsagePassive, false);
+
+		//howitzer door movement
+		doorTime = MathHelper.clamp(doorTime+(isDoorOpened?1: -2), 0, ArtilleryHowitzer.doorTime);
+		//howitzer platform movement
+		platformTime = MathHelper.clamp(platformTime+(platformPosition?1: -1), 0, ArtilleryHowitzer.platformTime);
+
+		//hide howitzer if door is closed
+		if(!isDoorOpened)
+			animation = ArtilleryHowitzerAnimation.HIDE;
+
+		//shell conveyor action
+		if(shellConveyorTime < ArtilleryHowitzer.conveyorTime)
+			shellConveyorTime += 1;
+		else
+		{
+			//push up
+			//input 0->5
+			for(int i = 5; i > 0; i--)
+				if(inventoryHandler.getStackInSlot(i).isEmpty())
+					inventory.set(i, inventoryHandler.extractItem(i-1, 1, false));
+			//output 6->11
+			for(int i = 11; i > 6; i--)
+				if(inventoryHandler.getStackInSlot(i).isEmpty())
+					inventory.set(i, inventoryHandler.extractItem(i-1, 1, false));
+
+			//output shell into TileEntity or drop as item
+			if(!inventoryHandler.getStackInSlot(11).isEmpty())
+			{
+				BlockPos outPos = getBlockPosForPos(327)
+						.offset(facing.getOpposite())
+						.offset(EnumFacing.UP);
+				ItemStack casing = inventoryHandler.extractItem(11, 1, false);
+
+				if(world.getTileEntity(outPos)!=null)
+					casing = Utils.insertStackIntoInventory(world.getTileEntity(outPos), casing, facing);
+
+				if(!casing.isEmpty())
+					Utils.dropStackAtPos(world, outPos, casing);
+			}
+
+			shellConveyorTime = 0;
+
+			if(!world.isRemote)
+				forceTileUpdate();
+		}
+
+		/*if(!animation.matchesRequirements(this))
+		{
+			animation = ArtilleryHowitzerAnimation.STOP;
+			animationTime = animationTimeMax = 0;
+		}*/
+
+		//S T O P
+		if(animation==ArtilleryHowitzerAnimation.STOP)
+			return;
+
+		boolean canContinue = true;
+		switch(animation.gunPosition)
+		{
+			case NEUTRAL: //doesn't need anything
+				break;
+			case LOADING: //platform lowered, gun yaw,pitch=0
+			{
+				platformPosition = false;
+				plannedYaw = facing.getHorizontalAngle();
+				plannedPitch = 0;
+
+				canContinue = platformTime==0;
+			}
+			break;
+			case ON_TARGET: //platform up, gun aimed
+			{
+				platformPosition = true;
+				canContinue = platformTime==ArtilleryHowitzer.platformTime&&isAimed();
+			}
+			break;
+		}
+
+		//gun aiming
+		turnToTarget();
+
+		//passed above check
+		if(canContinue)
+		{
+			if(animationTime < animationTimeMax)
+				animationTime++;
+			else
+			{
+				animation = ArtilleryHowitzerAnimation.STOP;
+				animationTimeMax = 0;
+				animationTime = 0;
+				forceTileUpdate();
+			}
+
+			if(world.isRemote)
+				handleAnimationSounds();
+
+			if(animationTime==(int)(animationTimeMax*animation.executeTime))
+			{
+				switch(animation)
+				{
+					case AIM:
+						break;
+					case FIRE1:
+					case FIRE2:
+					case FIRE3:
+					case FIRE4:
+						fireGun(animation.ordinal()-ArtilleryHowitzerAnimation.FIRE1.ordinal());
+						break;
+					case LOAD1:
+					case LOAD2:
+					case LOAD3:
+					case LOAD4:
+					{
+						int slot = animation.ordinal()-ArtilleryHowitzerAnimation.LOAD1.ordinal();
+						loadedShells.set(slot, inventoryHandler.extractItem(5, 1, false));
+					}
+					break;
+					case UNLOAD1:
+					case UNLOAD2:
+					case UNLOAD3:
+					case UNLOAD4:
+					{
+						int slot = animation.ordinal()-ArtilleryHowitzerAnimation.UNLOAD1.ordinal();
+						inventory.set(6, loadedShells.get(slot).copy());
+						loadedShells.set(slot, ItemStack.EMPTY);
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	private void fireGun(int i)
+	{
+		double true_angle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
+		double true_angle2 = Math.toRadians(-(-90-turretPitch));
+
+		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(3, true_angle, true_angle2);
+		Vec3d gun_dir = gun_end.normalize();
+		if(world.isRemote)
+		{
+			Vec3d gun_end_particle = gun_dir.scale(4.5);
+			ParticleUtils.spawnGunfireFX(getGunPosition().x+gun_end_particle.x, getGunPosition().y+gun_end_particle.y, getGunPosition().z+gun_end_particle.z, gun_dir.x, gun_dir.y, gun_dir.z, 8f);
+		}
+		world.playSound(null, getPos(), IISounds.howitzer_shot, SoundCategory.BLOCKS, 1, 1);
+
+		if(!world.isRemote)
+		{
+			ItemStack bullet = loadedShells.get(i);
+			EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_dir);
+			a.setShootPos(getMultiblockBlocks());
+			a.world.spawnEntity(a);
+		}
+
+		loadedShells.set(i, IIContent.itemAmmoArtillery.getCasingStack(1));
+	}
+
+	private boolean isAimed()
+	{
+		return plannedYaw==turretYaw&&plannedPitch==turretPitch;
+	}
+
+	//--- NBT Handling ---//
+
+	@Override
+	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		if(!isDummy())
-		{
-			if(!descPacket)
-			{
-				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 12);
-			}
-			active = nbt.getBoolean("active");
-			doorAngle = nbt.getFloat("doorAngle");
-			platformHeight = nbt.getFloat("platformHeight");
-			turretYaw = nbt.getFloat("turretYaw");
-			plannedYaw = nbt.getFloat("plannedYaw");
-			turretPitch = nbt.getFloat("turretPitch");
-			plannedPitch = nbt.getFloat("plannedPitch");
-			isDoorOpened = nbt.getBoolean("isDoorOpened");
-
-			animation = nbt.getInteger("animation");
-			animationTime = nbt.getInteger("animationTime");
-			animationTimeMax = nbt.getInteger("animationTimeMax");
-
-			shellLoadTime = nbt.getInteger("shellLoadTime");
-			shellExpellTime = nbt.getInteger("shellExpellTime");
-
-			bullet = new ItemStack(nbt.getCompoundTag("bullet"));
-
-		}
-	}
-
-	@Override
-	public void receiveMessageFromClient(NBTTagCompound message)
-	{
-		super.receiveMessageFromClient(message);
-	}
-
-	@Override
-	public void receiveMessageFromServer(NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("active"))
-			this.active = message.getBoolean("active");
-		if(message.hasKey("isDoorOpened"))
-			this.isDoorOpened = message.getBoolean("isDoorOpened");
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), 12);
-		if(message.hasKey("doorAngle"))
-			doorAngle = message.getFloat("doorAngle");
-		if(message.hasKey("platformHeight"))
-			platformHeight = message.getFloat("platformHeight");
-		if(message.hasKey("turretYaw"))
-			turretYaw = message.getFloat("turretYaw");
-		if(message.hasKey("turretPitch"))
-			turretPitch = message.getFloat("turretPitch");
-		if(message.hasKey("plannedYaw"))
-			plannedYaw = message.getFloat("plannedYaw");
-		if(message.hasKey("plannedPitch"))
-			plannedPitch = message.getFloat("plannedPitch");
-		if(message.hasKey("animation"))
-			animation = message.getInteger("animation");
-		if(message.hasKey("animationTime"))
-			animationTime = message.getInteger("animationTime");
-		if(message.hasKey("animationTimeMax"))
-			animationTimeMax = message.getInteger("animationTimeMax");
-		if(message.hasKey("bullet"))
-			bullet = new ItemStack(message.getCompoundTag("bullet"));
-		if(message.hasKey("shellLoadTime"))
-			shellLoadTime = message.getInteger("shellLoadTime");
-		if(message.hasKey("shellExpellTime"))
-			shellExpellTime = message.getInteger("shellExpellTime");
-	}
-
-	@Override
-	public void onChunkUnload()
-	{
-		super.onChunkUnload();
-	}
-
-	@Override
-	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(!isDummy())
-		{
-			if(!descPacket)
-			{
-				nbt.setTag("inventory", Utils.writeInventory(inventory));
-			}
-			nbt.setBoolean("active", active);
-			nbt.setBoolean("isDoorOpened", isDoorOpened);
-			nbt.setFloat("doorAngle", doorAngle);
-			nbt.setFloat("platformHeight", platformHeight);
-			nbt.setFloat("turretYaw", turretYaw);
-			nbt.setFloat("turretPitch", turretPitch);
-			nbt.setFloat("plannedYaw", plannedYaw);
-			nbt.setFloat("plannedPitch", plannedPitch);
-
-			nbt.setInteger("animation", animation);
-			nbt.setInteger("animationTime", animationTime);
-			nbt.setInteger("animationTimeMax", animationTimeMax);
-
-			nbt.setInteger("shellLoadTime", shellLoadTime);
-			nbt.setInteger("shellExpellTime", shellExpellTime);
-
-			nbt.setTag("bullet", bullet.serializeNBT());
-		}
-	}
-
-	@Override
-	public void update()
-	{
-		super.update();
 
 		if(isDummy())
 			return;
 
-		if(world.isRemote)
+		if(!descPacket)
 		{
-			handleSounds();
+			loadedShells = Utils.readInventory(nbt.getTagList("loaded_shells", 10), loadedShells.size());
+
+			//for compatibility with old howitzer
+			if(nbt.hasKey("bullet"))
+				loadedShells = NonNullList.from(ItemStack.EMPTY, new ItemStack(nbt.getCompoundTag("bullet")),
+						ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
 		}
 
-		if(!world.isRemote&&(isDoorOpened^world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]))))
-		{
-			isDoorOpened = world.isBlockPowered(getBlockPosForPos(getRedstonePos()[0]));
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 48));
-		}
+		turretYaw = nbt.getFloat("turretYaw");
+		plannedYaw = nbt.getFloat("plannedYaw");
+		turretPitch = nbt.getFloat("turretPitch");
+		plannedPitch = nbt.getFloat("plannedPitch");
 
+		isDoorOpened = nbt.getBoolean("isDoorOpened");
 
-		if(isDoorOpened&&doorAngle < 155f)
-			doorAngle = Math.min(doorAngle+0.25f, 155f);
+		animation = ArtilleryHowitzerAnimation.values()[nbt.getInteger("animation")];
+		animationTime = nbt.getInteger("animation_time");
+		animationTimeMax = nbt.getInteger("animation_time_max");
 
-		if(!isDoorOpened)
-		{
-			platformHeight = Math.max(0, platformHeight-(5/(float)ArtilleryHowitzer.platformTime));
-			animationTime = 0;
-			animationTimeMax = 0;
-			animation = 0;
-			plannedYaw = 0;
-			plannedPitch = 0;
-			if(world.getTotalWorldTime()%8==0)
-				update = true;
-			if(doorAngle > 0f)
-				doorAngle = Math.max(doorAngle-0.5f, 0f);
+		doorTime = nbt.getInteger("door_time");
+		platformTime = nbt.getInteger("platform_time");
+		platformPosition = nbt.getBoolean("platform_position");
 
-		}
+		shellConveyorTime = nbt.getInteger("shell_conveyor_time");
+	}
 
-		if(turretYaw!=plannedYaw&&!((animation==3||animation==4)&&platformHeight!=5.25f))
-		{
-			if(energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePlatform)
-			{
-				if(turretYaw < plannedYaw)
-					turretYaw += Math.round(90f/ArtilleryHowitzer.rotateTime);
-				else if(turretYaw > plannedYaw)
-					turretYaw -= Math.round(90f/ArtilleryHowitzer.rotateTime);
+	@Override
+	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
 
-				if(Math.round(turretYaw/10f)*10f==Math.round(plannedYaw/10f)*10f)
-					turretYaw = plannedYaw;
-
-				turretYaw = turretYaw%360;
-				update = true;
-			}
-
-		}
-		else if(turretPitch!=plannedPitch&&!((animation==3||animation==4)&&platformHeight!=5.25f))
-		{
-			if(energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePlatform)
-			{
-				if(turretPitch < plannedPitch)
-					turretPitch += Math.round(90f/ArtilleryHowitzer.rotateTime);
-				else if(turretPitch > plannedPitch)
-					turretPitch -= Math.round(90f/ArtilleryHowitzer.rotateTime);
-
-				if(Math.round(turretPitch/10f)*10f==Math.round(plannedPitch/10f)*10f)
-					turretPitch = plannedPitch;
-
-				turretPitch = turretPitch%360;
-				update = true;
-			}
-		}
-
-		work:
-		if(isDoorOpened&&(animation!=0))
-		{
-			if(animation==1||animation==2)
-			{
-				plannedPitch = 0;
-				plannedYaw = facing.getOpposite().getHorizontalAngle() > 180?360f-facing.getOpposite().getHorizontalAngle(): facing.getOpposite().getHorizontalAngle();
-
-				if(turretYaw==plannedYaw&&turretPitch==plannedPitch&&energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsageLoader)
-				{
-					if(platformHeight > 0)
-					{
-						if(energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePlatform)
-						{
-							platformHeight = Math.max(0, platformHeight-(5/(float)ArtilleryHowitzer.platformTime));
-							energyStorage.extractEnergy(ArtilleryHowitzer.energyUsagePlatform, false);
-							update = true;
-						}
-
-						break work;
-					}
-
-
-					if(animationTimeMax!=ArtilleryHowitzer.loadTime)
-					{
-						animationTimeMax = ArtilleryHowitzer.loadTime;
-						update = true;
-
-					}
-
-					if(animationTime==animationTimeMax/2)
-					{
-						world.playSound(null, getPos(), animation==1?IISounds.howitzer_load: IISounds.howitzer_unload, SoundCategory.BLOCKS, 0.5F, 1);
-					}
-
-					if(animationTime >= animationTimeMax)
-					{
-						if(!world.isRemote)
-						{
-							if(animation==1)
-							{
-								bullet = inventoryHandler.extractItem(5, 1, false);
-								animation = 0;
-								animationTimeMax = 0;
-								animationTime = 0;
-							}
-							else
-							{
-								//Idk why, but I can't use insertItem, because it does nothing
-								if(inventoryHandler.getStackInSlot(6).isEmpty())
-								{
-									inventory.set(6, bullet.copy());
-									bullet = ItemStack.EMPTY;
-								}
-
-								if(bullet.isEmpty())
-								{
-									animation = 0;
-									animationTimeMax = 0;
-									animationTime = 0;
-								}
-							}
-						}
-
-
-						update = true;
-
-					}
-					else
-					{
-						if(animation==0||animation%20==0)
-							update = true;
-						animationTime += 1;
-					}
-
-					//update = true;
-					energyStorage.extractEnergy(ArtilleryHowitzer.energyUsageLoader, false);
-				}
-			}
-			else if(animation==3||animation==4)
-			{
-				if(platformHeight < 5.25f)
-				{
-					if(energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePlatform)
-					{
-						platformHeight = Math.min(5.25f, platformHeight+(5/(float)ArtilleryHowitzer.platformTime));
-						energyStorage.extractEnergy(ArtilleryHowitzer.energyUsagePlatform, false);
-					}
-					break work;
-				}
-
-				if(plannedPitch==turretPitch&&plannedYaw==turretYaw)
-				{
-					if(animation==4)
-					{
-						animation = 0;
-						animationTimeMax = 0;
-						animationTime = 0;
-						update = true;
-					}
-
-					if(animationTimeMax!=ArtilleryHowitzer.fireTime&&bullet.getItem() instanceof ItemIIAmmoArtillery&&bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						animationTimeMax = ArtilleryHowitzer.fireTime;
-
-					if(animationTime==Math.round(animationTimeMax*0.25f))
-					{
-
-						if(bullet.getItem() instanceof ItemIIAmmoArtillery&&bullet.getMetadata()==ItemIIAmmoArtillery.BULLET)
-						{
-							double true_angle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
-							double true_angle2 = Math.toRadians(-(-90-turretPitch));
-
-							Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(3f, true_angle, true_angle2);
-							if(world.isRemote)
-								ParticleUtils.spawnGunfireFX(getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, 0, 0, 0, 8f);
-							//world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, getGunPosition().x+gun_end.x, getGunPosition().y+gun_end.y, getGunPosition().z+gun_end.z, 0, 0, 0);
-							world.playSound(null, getPos(), IISounds.howitzer_shot, SoundCategory.BLOCKS, 1F, 1);
-
-							if(!world.isRemote)
-							{
-								EntityBullet a = BulletHelper.createBullet(world, bullet, getGunPosition().add(gun_end), gun_end.scale(0.33f));
-								if(this.fuse > 0)
-								{
-									a.fuse = this.fuse;
-									this.fuse = -1;
-								}
-								ArrayList<BlockPos> pp = new ArrayList<>();
-								for(int i = 0; i < structureDimensions[0]*structureDimensions[1]*structureDimensions[2]; i++)
-									pp.add(getBlockPosForPos(i));
-								a.setShootPos(pp.toArray(new BlockPos[0]));
-								a.world.spawnEntity(a);
-
-								bullet = ((IBullet)bullet.getItem()).getCasingStack(1);
-							}
-
-						}
-
-						update = true;
-						animationTime += 1;
-
-					}
-					else if(animationTime >= animationTimeMax)
-					{
-						animation = 0;
-						animationTimeMax = 0;
-						animationTime = 0;
-						update = true;
-
-					}
-					else
-					{
-						if(animation==0)
-							update = true;
-
-						animationTime += 1;
-					}
-
-					if(world.getTotalWorldTime()%40==0)
-						update = true;
-				}
-
-
-			}
-
-		}
-
-		if(world.getTotalWorldTime()%40==0&&inventoryHandler.getStackInSlot(0).isEmpty())
-		{
-
-			if(getTileForPos(mirrored?327: 329)!=null)
-			{
-				List<EntityItem> itemsIn = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(getTileForPos(mirrored?327: 329).getPos().offset(EnumFacing.UP)));
-				for(EntityItem ent : itemsIn)
-				{
-					if(!(ent.getItem().getItem() instanceof ItemIIAmmoArtillery))
-						continue;
-					//ImmersiveIntelligence.logger.info(ent);
-
-					ItemStack stack = inventoryHandler.insertItem(0, ent.getItem().copy(), false);
-
-					update = true;
-					if(stack.isEmpty())
-					{
-						ent.setItem(ItemStack.EMPTY);
-						break;
-					}
-				}
-			}
-
-		}
-
-		if(shellLoadTime < ArtilleryHowitzer.conveyorTime)
-		{
-			shellLoadTime += 1;
-		}
-		else
-		{
-			if(inventoryHandler.getStackInSlot(5).isEmpty())
-			{
-				ItemStack stack = inventoryHandler.extractItem(4, 1, false);
-				inventoryHandler.insertItem(5, stack, false);
-			}
-
-			if(inventoryHandler.getStackInSlot(4).isEmpty())
-			{
-				ItemStack stack = inventoryHandler.extractItem(3, 1, false);
-				inventoryHandler.insertItem(4, stack, false);
-			}
-
-			if(inventoryHandler.getStackInSlot(3).isEmpty())
-			{
-				ItemStack stack = inventoryHandler.extractItem(2, 1, false);
-				inventoryHandler.insertItem(3, stack, false);
-			}
-
-			if(inventoryHandler.getStackInSlot(2).isEmpty())
-			{
-				ItemStack stack = inventoryHandler.extractItem(1, 1, false);
-				inventoryHandler.insertItem(2, stack, false);
-			}
-
-			if(inventoryHandler.getStackInSlot(1).isEmpty())
-			{
-				ItemStack stack = inventoryHandler.extractItem(0, 1, false);
-				inventoryHandler.insertItem(1, stack, false);
-			}
-
-			update = true;
-			shellLoadTime = 0;
-		}
-
-		if(shellExpellTime < ArtilleryHowitzer.conveyorTime)
-		{
-			shellExpellTime += 1;
-		}
-		else
-		{
-			if(!world.isRemote&&!inventoryHandler.getStackInSlot(11).isEmpty())
-				Utils.dropStackAtPos(world, getBlockPosForPos(mirrored?329: 327).offset(EnumFacing.UP), inventoryHandler.extractItem(11, 1, false));
-
-			if(inventoryHandler.getStackInSlot(11).isEmpty())
-			{
-				ItemStack stack = inventory.get(10).copy();
-				inventory.set(11, stack);
-				inventory.set(10, ItemStack.EMPTY);
-			}
-
-			if(inventoryHandler.getStackInSlot(10).isEmpty())
-			{
-				ItemStack stack = inventory.get(9).copy();
-				inventory.set(10, stack);
-				inventory.set(9, ItemStack.EMPTY);
-			}
-
-			if(inventoryHandler.getStackInSlot(9).isEmpty())
-			{
-				ItemStack stack = inventory.get(8).copy();
-				inventory.set(9, stack);
-				inventory.set(8, ItemStack.EMPTY);
-			}
-
-			if(inventoryHandler.getStackInSlot(8).isEmpty())
-			{
-				ItemStack stack = inventory.get(7).copy();
-				inventory.set(8, stack);
-				inventory.set(7, ItemStack.EMPTY);
-			}
-
-			if(inventoryHandler.getStackInSlot(7).isEmpty())
-			{
-				ItemStack stack = inventory.get(6).copy();
-				inventory.set(7, stack);
-				inventory.set(6, ItemStack.EMPTY);
-			}
-
-			update = true;
-			shellExpellTime = 0;
-		}
-
-		if(world.isRemote)
+		if(isDummy())
 			return;
 
-		if(update)
+		if(!descPacket)
 		{
-			this.markDirty();
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setBoolean("active", active);
-			tag.setBoolean("isDoorOpened", isDoorOpened);
-			tag.setFloat("doorAngle", doorAngle);
-			tag.setFloat("platformHeight", platformHeight);
-			tag.setFloat("turretYaw", turretYaw);
-			tag.setFloat("turretPitch", turretPitch);
-			tag.setFloat("plannedYaw", plannedYaw);
-			tag.setFloat("plannedPitch", plannedPitch);
-			tag.setFloat("platformHeight", platformHeight);
-			tag.setInteger("animation", animation);
-			tag.setFloat("animationTime", animationTime);
-			tag.setFloat("animationTimeMax", animationTimeMax);
-			tag.setInteger("shellLoadTime", shellLoadTime);
-			tag.setInteger("shellExpellTime", shellExpellTime);
+			nbt.setTag("loaded_shells", Utils.writeInventory(loadedShells));
+		}
 
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			tag.setTag("bullet", bullet.serializeNBT());
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 48));
+		nbt.setFloat("turretYaw", turretYaw);
+		nbt.setFloat("plannedYaw", plannedYaw);
+		nbt.setFloat("turretPitch", turretPitch);
+		nbt.setFloat("plannedPitch", plannedPitch);
+
+		nbt.setBoolean("isDoorOpened", isDoorOpened);
+
+		nbt.setInteger("animation", animation.ordinal());
+		nbt.setInteger("animation_time", animationTime);
+		nbt.setInteger("animation_time_max", animationTimeMax);
+
+		nbt.setInteger("door_time", doorTime);
+		nbt.setInteger("platform_time", platformTime);
+		nbt.setBoolean("platform_position", platformPosition);
+
+		nbt.setInteger("shell_conveyor_time", shellConveyorTime);
+
+	}
+
+	@Override
+	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
+	{
+
+	}
+
+	@Override
+	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
+	{
+		super.receiveMessageFromServer(message);
+
+		if(isFullSyncMessage(message)||isDummy())
+			return;
+
+		if(message.hasKey("loaded_shells"))
+			loadedShells = Utils.readInventory(message.getTagList("loaded_shells", 10), loadedShells.size());
+
+		if(message.hasKey("turretYaw"))
+			turretYaw = message.getFloat("turretYaw");
+		if(message.hasKey("plannedYaw"))
+			plannedYaw = message.getFloat("plannedYaw");
+		if(message.hasKey("turretPitch"))
+			turretPitch = message.getFloat("turretPitch");
+		if(message.hasKey("plannedPitch"))
+			plannedPitch = message.getFloat("plannedPitch");
+
+		if(message.hasKey("isDoorOpened"))
+			isDoorOpened = message.getBoolean("isDoorOpened");
+
+		if(message.hasKey("animation"))
+			animation = ArtilleryHowitzerAnimation.values()[message.getInteger("animation")];
+		if(message.hasKey("animation_time"))
+			animationTime = message.getInteger("animation_time");
+		if(message.hasKey("animation_time_max"))
+			animationTimeMax = message.getInteger("animation_time_max");
+
+		if(message.hasKey("door_time"))
+			doorTime = message.getInteger("door_time");
+		if(message.hasKey("platform_time"))
+			platformTime = message.getInteger("platform_time");
+		if(message.hasKey("platform_position"))
+			platformPosition = message.getBoolean("platform_position");
+
+		if(message.hasKey("shell_conveyor_time"))
+			shellConveyorTime = message.getInteger("shell_conveyor_time");
+
+
+	}
+
+	//--- Utility Methods ---//
+
+	private void turnToTarget()
+	{
+		//fixes a bug
+		if(Double.isNaN(turretPitch))
+			turretPitch = 0;
+		if(Double.isNaN(turretYaw))
+			turretYaw = 0;
+
+		if(isAimed())
+			return;
+
+		//normalize to 0-360 degrees
+		this.plannedYaw = MathHelper.wrapDegrees(plannedYaw);
+		float p = plannedPitch-this.turretPitch;
+		this.turretPitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, ArtilleryHowitzer.rotateSpeed);
+		float y = MathHelper.wrapDegrees(360+plannedYaw-this.turretYaw);
+
+		//if angle to target is smaller than rotation speed, set angle directly to target
+		if(Math.abs(p) < ArtilleryHowitzer.rotateSpeed*0.5f)
+			this.turretPitch = this.plannedPitch;
+		if(Math.abs(y) < ArtilleryHowitzer.rotateSpeed*0.5f)
+			this.turretYaw = this.plannedYaw;
+		else
+			this.turretYaw = MathHelper.wrapDegrees(this.turretYaw+(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, ArtilleryHowitzer.rotateSpeed)));
+	}
+
+	//for handling single sounds
+	@SideOnly(Side.CLIENT)
+	private void handleAnimationSounds()
+	{
+		IISoundAnimation current = null;
+
+		switch(animation)
+		{
+			case FIRE1:
+			case FIRE2:
+			case FIRE3:
+			case FIRE4:
+				current = firingSoundAnimation;
+				break;
+			case LOAD1:
+			case LOAD2:
+			case LOAD3:
+			case LOAD4:
+				current = loadingSoundAnimation;
+				break;
+			case UNLOAD1:
+			case UNLOAD2:
+			case UNLOAD3:
+			case UNLOAD4:
+				current = unloadingSoundAnimation;
+				break;
+			default:
+				break;
+		}
+
+		if(current!=null)
+		{
+			SoundEvent[] sounds = current.getSounds(animationTime);
+			if(sounds!=null)
+				for(int i = 0; i < sounds.length; i++)
+				{
+					Vec3d vv = new Vec3d(getBlockPosForPos(202)).addVector(
+							Utils.RAND.nextFloat(),
+							Utils.RAND.nextFloat(),
+							Utils.RAND.nextFloat()
+					);
+					world.playSound(ClientUtils.mc().player, vv.x, vv.y, vv.z, sounds[i], SoundCategory.BLOCKS, .75f, 1);
+				}
+
 		}
 	}
 
+	//for handling repeated sounds
 	@SideOnly(Side.CLIENT)
 	private void handleSounds()
 	{
-		boolean platform_ok = animation==0||platformHeight==((animation==1||animation==2)?0f: 5.25f);
-		boolean yaw_ok = turretYaw==plannedYaw;
-		boolean pitch_ok = turretPitch==plannedPitch;
-		if(platform_ok)
+		boolean hasEnergy = energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive;
+		boolean hasActiveEnergy = energyStorage.getEnergyStored() >= ArtilleryHowitzer.energyUsagePassive+ArtilleryHowitzer.energyUsageActive;
+
+		boolean platformOK = animation==ArtilleryHowitzerAnimation.STOP||platformTime==(platformPosition?ArtilleryHowitzer.platformTime: 0);
+		boolean yawOK = turretYaw==MathHelper.wrapDegrees(plannedYaw);
+		boolean pitchOK = turretPitch==plannedPitch;
+		if(platformOK)
 		{
-			if(!yaw_ok)
+			if(!yawOK)
 			{
 				if(world.getTotalWorldTime()%20==0)
 					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_v, SoundCategory.BLOCKS, .5f, 1);
 			}
-			else if(!pitch_ok)
-			{
+			else if(!pitchOK)
 				if(world.getTotalWorldTime()%20==0)
 					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
-			}
 		}
-		else
+		else if(hasEnergy)
 		{
+			boolean isStart = platformTime==1, isFinish = platformTime==ArtilleryHowitzer.platformTime-1;
+			if(platformPosition?isStart: isFinish)
+				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).down(), IISounds.howitzer_platform_start, SoundCategory.BLOCKS, .5f, 1);
+			if(platformPosition?isFinish: isStart)
+				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).down(), IISounds.howitzer_platform_end, SoundCategory.BLOCKS, .5f, 1);
+
 			if(world.getTotalWorldTime()%20==0)
-				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzer_rotation_h, SoundCategory.BLOCKS, .5f, 1);
+				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), platformPosition?IISounds.howitzer_platform_raise: IISounds.howitzer_platform_lower, SoundCategory.BLOCKS, .5f, 1);
 		}
 
-		if(isDoorOpened&&doorAngle < 155f)
+		if(isDoorOpened&&doorTime < ArtilleryHowitzer.doorTime)
 		{
-			if(world.getTotalWorldTime()%20==0)
+			if(hasActiveEnergy&&world.getTotalWorldTime()%20==0)
 				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_open, SoundCategory.BLOCKS, .5f, 1);
 		}
-		else if(!isDoorOpened&&doorAngle > 0f)
-		{
-			if(world.getTotalWorldTime()%20==0)
+		else if(!isDoorOpened&&doorTime > 0)
+			if(hasActiveEnergy&&world.getTotalWorldTime()%20==0)
 				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzer_door_close, SoundCategory.BLOCKS, .5f, 1);
-		}
 	}
 
-	@Override
-	public float[] getBlockBounds()
-	{
-		if(isDoorOpened&&((pos >= 524&&pos <= 528)||(pos >= 533&&pos <= 537)||(pos >= 542&&pos <= 546)||(pos >= 515&&pos <= 519)||(pos >= 506&&pos <= 510)))
-		{
-			return new float[]{0, 0, 0, 1, 1, 1};
-		}
-		return new float[0];
-	}
-
+	@Nonnull
 	@Override
 	public int[] getEnergyPos()
 	{
-		return new int[]{mirrored?449: 441};
+		return new int[]{449};
 	}
 
+	@Nonnull
 	@Override
-	public int[] getRedstonePos()
+	public int[] getRedstonePos(boolean in)
 	{
-		return new int[]{481};
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return false;
-	}
-
-	@Override
-	public void doProcessOutput(ItemStack output)
-	{
-
-	}
-
-	@Override
-	public void doProcessFluidOutput(FluidStack output)
-	{
-	}
-
-	@Override
-	public void onProcessFinish(MultiblockProcess<IMultiblockRecipe> process)
-	{
-
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return 0;
-	}
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return inventory;
+		return in?new int[]{481}: new int[0];
 	}
 
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
-		//Matches caliber
 		return stack.getItem() instanceof ItemIIAmmoArtillery;
 	}
 
@@ -687,350 +673,357 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 		return 1;
 	}
 
+	@Nonnull
 	@Override
-	public int[] getOutputSlots()
+	public int[] getDataPos(boolean input)
 	{
-		return new int[]{};
+		//input and output
+		return new int[]{441};
 	}
 
 	@Override
-	public int[] getOutputTanks()
+	public void receiveData(DataPacket packet, int pos)
 	{
-		return new int[0];
-	}
+		IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(441), world, mirrored?facing.rotateY(): facing.rotateYCCW());
 
-	@Override
-	public boolean additionalCanProcessCheck(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return false;
-	}
-
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return new FluidTank[0];
-	}
-
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
-	{
-		return new FluidTank[0];
-	}
-
-	@Override
-	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
-	{
-		return (side.getAxis()==Axis.Y&&iTank==0);
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-		this.markDirty();
-	}
-
-	@Override
-	public IMultiblockRecipe findRecipeForInsertion(ItemStack inserting)
-	{
-		return null;
-	}
-
-	@Override
-	protected IMultiblockRecipe readRecipeFromNBT(NBTTagCompound tag)
-	{
-		return null;
-	}
-
-	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
-	public void onReceive(DataPacket packet, EnumFacing side)
-	{
-		TileEntityArtilleryHowitzer master = master();
-		if(pos==(mirrored?441: 449)&master!=null)
+		//Command
+		if(animationTime==0&&packet.getPacketVariable('c') instanceof DataTypeString) //cannot interrupt a performed task
 		{
-			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(6), world, mirrored?facing.rotateY(): facing.rotateYCCW());
-			DataPacket p = new DataPacket();
+			String command = packet.getPacketVariable('c').valueToString();
 
-			//Command
-			if(!active&&packet.getPacketVariable('c') instanceof DataPacketTypeString)
+			ArtilleryHowitzerAnimation anim = ArtilleryHowitzerAnimation.v(command, this);
+			if(anim!=null)
 			{
-				String command = packet.getPacketVariable('c').valueToString();
+				if(anim.matchesRequirements(this))
+				{
+					if(animation==ArtilleryHowitzerAnimation.STOP) //is not doing any task
+					{
+						if(packet.getPacketVariable('y') instanceof IDataTypeNumeric)
+						{
+							plannedYaw = ((IDataTypeNumeric)packet.getPacketVariable('y')).floatValue()%360;
+							if(plannedYaw < 0)
+								plannedYaw = 360f-plannedYaw;
+						}
+						if(packet.getPacketVariable('p') instanceof IDataTypeNumeric)
+							plannedPitch = Math.min(Math.max(-Math.abs((((IDataTypeNumeric)packet.getPacketVariable('p')).floatValue())%360), -105), 0);
+					}
+
+					animation = anim;
+					animationTime = 0;
+					animationTimeMax = anim.animationTime;
+					forceTileUpdate();
+				}
+			}
+			else
+			{
+				if(conn==null)
+					return;
+
+				DataPacket pp = null;
 				switch(command)
 				{
-					case "fire":
-					{
-						master.animation = 3;
-						master.animationTimeMax = ArtilleryHowitzer.fireTime;
-						master.animationTime = 0;
-					}
-					break;
-					case "aim":
-					{
-						master.animation = 4;
-						master.animationTimeMax = ArtilleryHowitzer.fireTime;
-						master.animationTime = 0;
-					}
-					break;
-					case "load":
-					{
-						if(master.bullet.isEmpty())
-						{
-							master.animation = 1;
-							master.animationTimeMax = ArtilleryHowitzer.loadTime;
-							master.animationTime = 0;
-						}
-					}
-					break;
-					case "unload":
-					{
-						if(!master.bullet.isEmpty())
-						{
-							master.animation = 2;
-							master.animationTimeMax = ArtilleryHowitzer.loadTime;
-							master.animationTime = 0;
-						}
-					}
-					break;
-					case "stop":
-					{
-						master.animation = 0;
-						master.animationTimeMax = 0;
-						master.animationTime = 0;
-					}
-					break;
-					//callback
 					case "get_energy":
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("energy"));
-						p.setVariable('g', new DataPacketTypeInteger(energyStorage.getEnergyStored()));
-						conn.sendPacket(p);
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage(packet, "energy", new DataTypeInteger(energyStorage.getEnergyStored()));
 						break;
-					case "get_state":
-					case "get_state_num":
-					{
-						//0 - nothing, 1 - loading, 2 - unloading, 3 - shooting
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("state"));
-						if(command.equals("get_state_num"))
-							p.setVariable('g', new DataPacketTypeInteger(animation));
-						else
-							p.setVariable('g', new DataPacketTypeString(new String[]{"idle","loading","unloading","shooting"}[animation]));
-						conn.sendPacket(p);
-					}
 					case "get_state_progress":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("state_progress"));
-						p.setVariable('g', new DataPacketTypeInteger((int)(animationTime/(float)animationTimeMax*100)));
-						conn.sendPacket(p);
-					}
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "state_progress", new DataTypeInteger((int)(animationTime/(float)animationTimeMax*100)));
+						break;
 					case "get_yaw":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("yaw"));
-						p.setVariable('g', new DataPacketTypeInteger((int)turretYaw));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "yaw", new DataTypeInteger((int)turretYaw));
+						break;
 					case "get_pitch":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("pitch"));
-						p.setVariable('g', new DataPacketTypeInteger((int)turretPitch));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "pitch", new DataTypeInteger((int)turretPitch));
+						break;
 					case "get_planned_yaw":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("planned_yaw"));
-						p.setVariable('g', new DataPacketTypeInteger((int)plannedYaw));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "planned_yaw", new DataTypeInteger((int)plannedYaw));
+						break;
 					case "get_planned_pitch":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("planned_pitch"));
-						p.setVariable('g', new DataPacketTypeInteger((int)plannedPitch));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "planned_pitch", new DataTypeInteger((int)plannedPitch));
+						break;
 					case "get_platform_height":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("platform_height"));
-						p.setVariable('g', new DataPacketTypeInteger((int)platformHeight));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "platform_height", new DataTypeInteger((int)platformTime));
+						break;
 					case "get_door_opened":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("door_opened"));
-						p.setVariable('g', new DataPacketTypeBoolean(isDoorOpened&&doorAngle==155f));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "door_opened", new DataTypeBoolean(isDoorOpened&&doorTime==ArtilleryHowitzer.doorTime));
+						break;
 					case "get_door_closed":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("door_closed"));
-						p.setVariable('g', new DataPacketTypeBoolean(!isDoorOpened&&doorAngle==0f));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "door_closed", new DataTypeBoolean(!isDoorOpened&&doorTime==0));
+						break;
 					case "get_door_opening":
-					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("door_opening"));
-						p.setVariable('g', new DataPacketTypeBoolean(doorAngle!=155f&&doorAngle!=0f));
-						conn.sendPacket(p);
-					}
-					break;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "door_opening", new DataTypeBoolean(doorTime!=0&&doorTime!=ArtilleryHowitzer.doorTime));
+						break;
 					case "get_loaded_shell":
 					{
-						if(conn==null)
-							return;
-						p.setVariable('c', new DataPacketTypeString("loaded_shell"));
-						p.setVariable('g', new DataPacketTypeItemStack(bullet));
-						conn.sendPacket(p);
+						int i = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('i')).value;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "loaded_shell", new DataTypeItemStack(loadedShells.get(i)));
 					}
 					break;
 					case "get_stored_shell":
 					{
-						if(conn==null)
-							return;
-						IDataType i = packet.getPacketVariable('i');
-						if(i instanceof DataPacketTypeInteger)
-						{
-							int value = ((DataPacketTypeInteger)i).value;
-							if(value >= 0&&value <= 5)
-							{
-								p.setVariable('c', new DataPacketTypeString("stored_shell"));
-								p.setVariable('g', new DataPacketTypeItemStack(bullet));
-								conn.sendPacket(p);
-							}
+						int i = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('i')).value;
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "stored_shell", new DataTypeItemStack(inventory.get(MathHelper.clamp(i, 0, 5))));
 
-						}
 					}
 					break;
-
+					case "get_state":
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "state", new DataTypeString(animation.getName()));
+						break;
+					case "get_state_num":
+						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
+								(packet, "state", new DataTypeInteger(animation.ordinal()));
+						break;
 				}
+				if(pp!=null)
+					conn.sendPacket(pp);
 			}
-
-			if(master.animation!=0)
-			{
-				if(packet.getPacketVariable('y') instanceof DataPacketTypeInteger)
-				{
-					master.plannedYaw = ((DataPacketTypeInteger)packet.getPacketVariable('y')).value%360;
-					if(master.plannedYaw < 0)
-						master.plannedYaw = 360f-master.plannedYaw;
-				}
-
-				if(packet.getPacketVariable('p') instanceof DataPacketTypeInteger)
-				{
-					master.plannedPitch = Math.min(Math.max(-Math.abs((((DataPacketTypeInteger)packet.getPacketVariable('p')).value)%360), -105), 0);
-				}
-
-				if(packet.getPacketVariable('f') instanceof DataPacketTypeInteger)
-				{
-					master.fuse = Math.max(-1, ((DataPacketTypeInteger)packet.getPacketVariable('f')).value);
-				}
-			}
-
-			master.update = true;
 		}
+
+		forceTileUpdate();
 	}
 
 	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		TileEntityArtilleryHowitzer master = master();
 		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		if((pos >= 524&&pos <= 528)||(pos >= 533&&pos <= 537)||(pos >= 542&&pos <= 546)||(pos >= 515&&pos <= 519)||(pos >= 506&&pos <= 510))
+		switch(pos) //sorry, I wish I could use expressions there, but it's java8 :<
 		{
-			if(master!=null&&master.doorAngle > 5)
-			{
-				if(pos==544||pos==508)
+			case 445:
+			case 364:
+			case 283:
+				//ladder side empty blocks
+			case 345:
+			case 346:
+			case 347:
+				//ladder side empty blocks
+			case 264:
+			case 265:
+			case 266:
+				//ladder side empty blocks
+			case 183:
+			case 184:
+			case 185:
+				//ladder side empty blocks
+			case 102:
+			case 103:
+			case 104:
+				//loader chamber metal box
+			case 419:
+			case 418:
+			case 417:
+				//cannon
+			case 293:
+			case 284:
+			case 275:
+			case 291:
+			case 282:
+			case 273:
+			case 111:
+			case 112:
+			case 113:
+			case 120:
+			case 122:
+			case 129:
+			case 130:
+			case 131:
+				list.add(AABB_EMPTY.offset(getPos()));
+				break;
+			//base | cable part
+			case 30:
+			case 31:
+			case 32:
+			case 41:
+			case 39:
+			case 48:
+			case 49:
+			case 50:
+				list.add(AABB_LOWER_FLOOR.offset(getPos()));
+				break;
+			//base | yellow-black stripes/concrete part
+			case 21:
+			case 22:
+			case 23:
+			case 29:
+			case 33:
+			case 38:
+			case 42:
+			case 47:
+			case 51:
+			case 57:
+			case 58:
+			case 59:
+				list.add(AABB_TALLER_FLOOR.offset(getPos()));
+				break;
+			//door
+			case 524:
+			case 525:
+			case 526:
+			case 527:
+			case 528:
+			case 533:
+			case 534:
+			case 535:
+			case 536:
+			case 537:
+			case 542:
+			case 543:
+			case 544:
+			case 545:
+			case 546:
+			case 515:
+			case 516:
+			case 517:
+			case 518:
+			case 519:
+			case 506:
+			case 507:
+			case 508:
+			case 509:
+			case 510:
+				list.add((master!=null&&master.doorTime > 1?AABB_EMPTY: AABB_DOOR)
+						.offset(getPos()));
+				break;
+			//door holders | right
+			case 520:
+			case 529:
+			case 538:
+				list.add(AABB_DOOR_HOLDERS_RIGHT[(mirrored?facing: facing.getOpposite()).getIndex()-2].offset(getPos()));
+				break;
+			//door holders | left
+			case 514:
+			case 523:
+			case 532:
+				list.add(AABB_DOOR_HOLDERS_LEFT[(mirrored?facing: facing.getOpposite()).getIndex()-2].offset(getPos()));
+				break;
+			//table_top1
+			case 560:
+			case 551:
+			case 541:
+			case 540:
+				//table_top2
+			case 488:
+			case 497:
+			case 505:
+			case 504:
+				//table_top3
+			case 492:
+			case 501:
+			case 511:
+			case 512:
+				//table_top4
+			case 548:
+			case 547:
+			case 555:
+			case 564:
+				list.add(AABB_TABLE_TOP.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				break;
+			//s
+			case 465:
+			case 425:
+			case 384:
+			case 303:
+			case 222:
+			case 141:
+			case 344:
+			case 263:
+			case 182:
+			case 101:
+				list.add(new AxisAlignedBB(0.25+0.0625, 0, 0.25+0.0625, 0.75-0.0625, 1, 0.75-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				switch(mirrored?facing: facing.getOpposite())
 				{
-					double true_angle2 = Math.toRadians(pos==508?-master.doorAngle: master.doorAngle);
-					AxisAlignedBB aabb = new AxisAlignedBB(-0.125, -0.125, -0.125, 0.125, 0.125, 0.125)
-							.offset(facing.getFrontOffsetX(),0,facing.getFrontOffsetZ())
-							.grow(facing.rotateY().getFrontOffsetX()*3,0,facing.rotateY().getFrontOffsetZ()*3)
-							.offset(0.5,0,0.5);
-					Vec3d vv = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(1f, Math.toRadians(180-facing.getHorizontalAngle()), true_angle2);
-					for(float x = 0; x < 3f; x += 0.25)
-						list.add(aabb.offset(getPos().getX(), getPos().getY(), getPos().getZ()).offset(vv.scale(x)));
-
-					for(AxisAlignedBB axisAlignedBB : list)
-					{
-						world.getEntitiesWithinAABB(EntityLivingBase.class,axisAlignedBB,EntityLivingBase::canBePushed).forEach(entityLivingBase -> entityLivingBase.move(MoverType.PISTON,0,0.002,0));
-					}
+					case NORTH:
+					case WEST:
+						list.add(new AxisAlignedBB(0.6875, 0, 0, 1, 1, 0.3125).offset(getPos()));
+						list.add(new AxisAlignedBB(0, 0, 0.6875, 0.3125, 1, 1).offset(getPos()));
+						break;
+					case SOUTH:
+					case EAST:
+						list.add(new AxisAlignedBB(0, 0, 0, 0.3125, 1, 0.3125).offset(getPos()));
+						list.add(new AxisAlignedBB(1-0.3125, 0, 1-0.3125, 1, 1, 1).offset(getPos()));
+						break;
+					default:
+						list.add(AABB_EMPTY.offset(getPos()));
+						break;
 				}
-				else
-					list.add(new AxisAlignedBB(0, 0, 0, 0, 0, 0).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-			}
-			else
-				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				break;
+			//s
+			case 461:
+			case 380:
+			case 299:
+			case 218:
+			case 137:
+			case 429:
+			case 348:
+			case 267:
+			case 186:
+			case 105:
+				list.add(new AxisAlignedBB(0.25+0.0625, 0, 0.25+0.0625, 0.75-0.0625, 1, 0.75-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				switch(mirrored?facing: facing.getOpposite())
+				{
+					case NORTH:
+					case WEST:
+						list.add(new AxisAlignedBB(0, 0, 0, 0.3125, 1, 0.3125).offset(getPos()));
+						list.add(new AxisAlignedBB(1-0.3125, 0, 1-0.3125, 1, 1, 1).offset(getPos()));
+						break;
+					case SOUTH:
+					case EAST:
+						list.add(new AxisAlignedBB(0.6875, 0, 0, 1, 1, 0.3125).offset(getPos()));
+						list.add(new AxisAlignedBB(0, 0, 0.6875, 0.3125, 1, 1).offset(getPos()));
+						break;
+					default:
+						list.add(AABB_EMPTY.offset(getPos()));
+						break;
+				}
+				break;
+			//ladder
+			case 66:
+			case 147:
+			case 228:
+			case 309:
+			case 390:
+			case 471:
+				list.add(AABB_LADDER[facing.getIndex()-2].offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				break;
+			case 410:
+				list.add(AABB_LADDER[facing.getIndex()-2].offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				break;
+			default:
+				list.add(AABB_FULL.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
+				break;
 		}
-		else
-			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return master()!=null;
+			return pos==410&&master()!=null;
 		return super.hasCapability(capability, facing);
 	}
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==410)
 		{
 			TileEntityArtilleryHowitzer master = master();
 			if(master==null)
 				return null;
-			return (T)this.inventoryHandler;
+			return (T)master.insertionHandler;
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -1059,14 +1052,192 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockMetal<TileE
 	}
 
 	@Override
-	public void onEntityCollision(World world, Entity entity)
+	public void onEntityCollision(@Nonnull World world, @Nonnull Entity entity)
 	{
+		if(!world.isRemote&&pos==410&&entity instanceof EntityItem)
+		{
+			//perform on master TE, check if insertion slot is empty
+			TileEntityArtilleryHowitzer master = master();
+			if(master==null||!master.inventory.get(0).isEmpty())
+				return;
 
+			//check if artillery shell
+			EntityItem entityItem = (EntityItem)entity;
+			if(entityItem.getItem().getItem()!=IIContent.itemAmmoArtillery)
+				return;
+
+			//insert copied stack to inventory
+			ItemStack stack = master.inventoryHandler.insertItem(0, entityItem.getItem().copy(), false);
+			if(stack.isEmpty())
+				entityItem.setItem(ItemStack.EMPTY);
+		}
 	}
 
 	private Vec3d getGunPosition()
 	{
-		BlockPos shoot_pos = getBlockPosForPos(526).offset(EnumFacing.UP, 1);
+		BlockPos shoot_pos = getBlockPosForPos(445).offset(EnumFacing.UP, 1);
 		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+1.5, shoot_pos.getZ()+.5);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	@Nonnull
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		if(!isDummy())
+		{
+			BlockPos nullPos = this.getBlockPosForPos(0);
+			return new AxisAlignedBB(nullPos, nullPos.offset(facing, structureDimensions[1])
+					.offset(mirrored?facing.rotateYCCW(): facing.rotateY(), structureDimensions[2]).up(structureDimensions[0]))
+					.grow(5);
+		}
+		return new AxisAlignedBB(0, 0, 0, 1, 1, 1)
+				.offset(getPos());
+	}
+
+	@Override
+	public boolean isLadder()
+	{
+		switch(pos)
+		{
+			case 66:
+			case 147:
+			case 228:
+			case 309:
+			case 390:
+			case 471:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	@Override
+	public float getExplosionResistance()
+	{
+		switch(pos)
+		{
+			case 524:
+			case 525:
+			case 526:
+			case 527:
+			case 528:
+			case 533:
+			case 534:
+			case 535:
+			case 536:
+			case 537:
+			case 542:
+			case 543:
+			case 544:
+			case 545:
+			case 546:
+			case 515:
+			case 516:
+			case 517:
+			case 518:
+			case 519:
+			case 506:
+			case 507:
+			case 508:
+			case 509:
+			case 510:
+			{
+				TileEntityArtilleryHowitzer master = master();
+				return master!=null&&master.doorTime > 1?2000.0F: IIContent.blockMetalMultiblock0.getBlockResistance();
+			}
+			default:
+				return IIContent.blockMetalMultiblock0.getBlockResistance();
+		}
+	}
+
+	public enum ArtilleryHowitzerAnimation implements IStringSerializable
+	{
+		STOP(false, false, GunPosition.NEUTRAL, t -> true, 0, null, 1f), //stops current action
+		HIDE(false, false, GunPosition.LOADING, t -> true, 0, null, 1f), //makes howitzer go down
+		LOAD1(true, false, GunPosition.LOADING, t -> t.loadedShells.get(0).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
+		LOAD2(true, false, GunPosition.LOADING, t -> t.loadedShells.get(1).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
+		LOAD3(true, false, GunPosition.LOADING, t -> t.loadedShells.get(2).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
+		LOAD4(true, false, GunPosition.LOADING, t -> t.loadedShells.get(3).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
+		UNLOAD1(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(0).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
+		UNLOAD2(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(1).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
+		UNLOAD3(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(2).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
+		UNLOAD4(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(3).isEmpty(),
+				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
+
+		FIRE1(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(0).getItem()==IIContent.itemAmmoArtillery,
+				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
+		FIRE2(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(1).getItem()==IIContent.itemAmmoArtillery,
+				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
+		FIRE3(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(2).getItem()==IIContent.itemAmmoArtillery,
+				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
+		FIRE4(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(3).getItem()==IIContent.itemAmmoArtillery,
+				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
+		AIM(true, true, GunPosition.ON_TARGET, t -> true, 0, null, 1f);
+
+		//whether the platform is required to be in a position
+		//the platform position: true - up, false - down
+		//whether requires yaw & pitch to be 0
+		final boolean requiresPlatform, platformUp;
+		final GunPosition gunPosition;
+		@Nullable
+		final String alias;
+		final Predicate<TileEntityArtilleryHowitzer> requirements;
+		final int animationTime;
+		final float executeTime;
+
+		ArtilleryHowitzerAnimation(boolean requiresPlatform, boolean platformUp, GunPosition gunPosition,
+								   Predicate<TileEntityArtilleryHowitzer> requirements,
+								   int animationTime, @Nullable String alias, float executeTime)
+		{
+			this.requiresPlatform = requiresPlatform;
+			this.platformUp = platformUp;
+			this.gunPosition = gunPosition;
+			this.requirements = requirements;
+			this.animationTime = animationTime;
+			this.alias = alias;
+			this.executeTime = executeTime;
+		}
+
+		@Override
+		@Nonnull
+		public String getName()
+		{
+			return name().toLowerCase();
+		}
+
+		public boolean matchesRequirements(TileEntityArtilleryHowitzer te)
+		{
+			return requirements.test(te);
+		}
+
+		@Nullable
+		public static ArtilleryHowitzerAnimation v(String s, TileEntityArtilleryHowitzer te)
+		{
+			String ss = s.toUpperCase();
+			Optional<ArtilleryHowitzerAnimation> found = Arrays.stream(values())
+					.filter(e -> e.alias!=null&&e.alias.toLowerCase().matches(s))
+					.filter(a -> a.matchesRequirements(te))
+					.findFirst();
+			return found.orElseGet(() -> Arrays.stream(values())
+					.filter(e -> e.name().equals(ss))
+					.findFirst()
+					.orElse(null));
+
+		}
+	}
+
+	public enum GunPosition
+	{
+		ON_TARGET,
+		NEUTRAL,
+		LOADING
 	}
 }

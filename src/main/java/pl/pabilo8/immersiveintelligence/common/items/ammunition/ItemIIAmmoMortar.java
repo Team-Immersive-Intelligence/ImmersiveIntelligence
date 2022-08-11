@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
@@ -61,7 +62,7 @@ public class ItemIIAmmoMortar extends ItemIIBulletBase
 	@Override
 	public float getDefaultVelocity()
 	{
-		return 8f;
+		return Bullets.mortarVelocity;
 	}
 
 	@Override

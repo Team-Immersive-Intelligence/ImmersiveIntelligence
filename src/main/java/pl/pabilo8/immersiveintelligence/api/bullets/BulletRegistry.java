@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
 import javax.annotation.Nonnull;
@@ -88,6 +90,13 @@ public class BulletRegistry
 	public IBulletCore getCore(String name)
 	{
 		return registeredBulletCores.get(name);
+	}
+
+	@Nullable
+	@SideOnly(Side.CLIENT)
+	public IBulletModel getModel(IBullet bullet)
+	{
+		return registeredModels.get(bullet.getName());
 	}
 
 	public enum EnumComponentRole implements IStringSerializable
