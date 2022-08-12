@@ -919,7 +919,7 @@ public class IIRecipes
 
 		AmmunitionWorkshopRecipe.addRecipe(
 				(core, casing) -> {
-					ItemStack stack = new ItemStack(IIContent.itemGrenade, 1, IIBlockTypes_Mine.MAIN.getMeta());
+					ItemStack stack = new ItemStack(IIContent.itemRailgunGrenade, 1, IIBlockTypes_Mine.MAIN.getMeta());
 					stack.deserializeNBT(core.serializeNBT());
 					return stack;
 				},
