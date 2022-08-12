@@ -1,0 +1,33 @@
+name: Build II
+
+on:
+  push: #Trigger On Push
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch: #Manual Trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout Repository
+       uses: actions/checkout@v3
+       
+     - name: Setup Java
+       uses: actions/setup-java@v3
+       with:
+        distribution: corretto
+        java-version: 8
+        
+     - name: Setup Gradle
+       uses: gradle/gradle-build-action@v2
+    
+     - name: Execute Gradle build
+       run: chmod +x gradlew ; ./gradlew build --scan
+     
+     - name: Upload build reports
+       uses: actions/upload-artifact@v3
+       with:
+        name: current-build
+        path: build/libs/
