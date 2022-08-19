@@ -17,13 +17,10 @@ import java.util.stream.Collectors;
  */
 public class ElectrolyzerRecipe extends MultiblockRecipe
 {
-	public static float energyModifier = 1.0F;
-	public static float timeModifier = 1.0F;
-
 	public final FluidStack fluidInput;
 	public final FluidStack[] fluidOutputs;
 
-	public static ArrayList<ElectrolyzerRecipe> recipeList = new ArrayList();
+	public static ArrayList<ElectrolyzerRecipe> recipeList = new ArrayList<>();
 	int totalProcessTime;
 	int totalProcessEnergy;
 
@@ -34,8 +31,8 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 		this.fluidOutputs[1] = fluidOutput2;
 		this.fluidInput = fluidInput;
 
-		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
-		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
+		this.totalProcessEnergy = (int)Math.floor((float)energy);
+		this.totalProcessTime = (int)Math.floor((float)time);
 
 		this.fluidInputList = Collections.singletonList(this.fluidInput);
 		this.fluidOutputList = Arrays.asList(fluidOutputs);

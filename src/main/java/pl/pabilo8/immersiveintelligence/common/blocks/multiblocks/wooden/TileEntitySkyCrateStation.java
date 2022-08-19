@@ -139,7 +139,6 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	{
 		super.update();
 
-		main:
 		if(!isDummy()&&!world.isRemote)
 		{
 			handleRotation();
@@ -504,7 +503,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		List<AxisAlignedBB> list = new ArrayList<>();
 
 		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 

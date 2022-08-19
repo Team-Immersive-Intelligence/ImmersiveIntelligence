@@ -18,8 +18,8 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
  */
 public class GuiEmplacementTaskList extends GuiButton
 {
-	private TaskFilter[] entries;
-	private int[] padding = {0, 0, 0, 0};
+	private final TaskFilter[] entries;
+	private final int[] padding = {0, 0, 0, 0};
 	private boolean needsSlider = false;
 	private int perPage;
 	private float textScale = 1;

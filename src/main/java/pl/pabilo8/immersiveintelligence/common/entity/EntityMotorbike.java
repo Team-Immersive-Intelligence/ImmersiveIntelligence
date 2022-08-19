@@ -80,7 +80,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	private static final DataParameter<String> dataMarkerUpgrade = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.STRING);
 
-	private EntityVehicleMultiPart[] partArray;
+	private final EntityVehicleMultiPart[] partArray;
 
 	public EntityVehicleWheel partWheelFront = new EntityVehicleWheel(this, "wheel_front", 1F, 1.0F);
 	public EntityVehicleWheel partWheelBack = new EntityVehicleWheel(this, "wheel_back", 1F, 1.0F);

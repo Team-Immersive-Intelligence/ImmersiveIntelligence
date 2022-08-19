@@ -5,6 +5,10 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
+/**
+ * @author Pabilo8
+ * @since 20-06-2019
+ */
 public enum IIBlockTypes_MetalMultiblock0 implements IStringSerializable, BlockIEBase.IBlockEnum
 {
 	RADIO_STATION(false),
@@ -23,11 +27,7 @@ public enum IIBlockTypes_MetalMultiblock0 implements IStringSerializable, BlockI
 	PACKER(true),
 	RAILWAY_PACKER(false);
 
-	/**
-	 * @author Pabilo8
-	 * @since 20-06-2019
-	 */
-	private boolean needsCustomState;
+	private final boolean needsCustomState;
 
 	IIBlockTypes_MetalMultiblock0(boolean needsCustomState)
 	{

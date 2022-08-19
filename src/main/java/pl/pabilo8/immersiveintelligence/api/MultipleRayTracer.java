@@ -67,7 +67,6 @@ public class MultipleRayTracer
 				if(stopOnLiquid&&state.getBlock() instanceof IFluidBlock)
 					break;
 
-				lastPos = pos;
 				if(state.getCollisionBoundingBox(world, pos)==Block.NULL_AABB)
 				{
 					if(!ignoreBlockWithoutBoundingBox)

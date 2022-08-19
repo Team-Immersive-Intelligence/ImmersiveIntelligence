@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
 
 import javax.annotation.Nonnull;
 
@@ -20,7 +19,7 @@ import javax.annotation.Nonnull;
  */
 public class ParticleAtomFog extends IIParticle
 {
-	private float actualParticleScale;
+	private final float actualParticleScale;
 
 	public ParticleAtomFog(World world, double x, double y, double z, double mx, double my, double mz, float size)
 	{

@@ -36,7 +36,9 @@ public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRec
 				ElectrolyzerRecipe.class,
 				new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta())
 		);
-		tankOverlay = helper.createDrawable(texture, 0, 52, 20, 51, -2, 2, -2, 2);
+		tankOverlay =helper.drawableBuilder(texture, 0, 52, 20, 51)
+				.addPadding(-2, 2, -2, 2)
+				.build();
 		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta());
 	}
 

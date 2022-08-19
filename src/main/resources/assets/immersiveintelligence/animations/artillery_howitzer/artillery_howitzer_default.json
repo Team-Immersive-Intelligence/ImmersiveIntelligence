@@ -4,7 +4,7 @@
 		"lower": {
 			"rotation": [
 				{
-					"time": NaN,
+					"time": 0.0,
 					"transform": [-15, 0, 0]
 				}
 			]
@@ -12,7 +12,7 @@
 		"upper": {
 			"rotation": [
 				{
-					"time": NaN,
+					"time": 0.0,
 					"transform": [-146, 0, 0]
 				}
 			]

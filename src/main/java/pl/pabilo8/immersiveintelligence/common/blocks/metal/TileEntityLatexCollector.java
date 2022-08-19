@@ -76,9 +76,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 			this.timer=0;
 			return true;
 		}
-		else if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,null))
-			return true;
-		return false;
+		else return heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 	}
 
 	private void updateBucket()

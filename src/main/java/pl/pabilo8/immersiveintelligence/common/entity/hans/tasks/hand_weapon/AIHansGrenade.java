@@ -1,21 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon;
 
-import blusunrize.immersiveengineering.common.IEContent;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoGrenade;
-
-import java.util.List;
 
 /**
  * @author Pabilo8
@@ -124,12 +118,6 @@ public class AIHansGrenade extends AIHansHandWeapon
 	{
 
 	}
-
-	/*@Override
-	protected boolean canShootEntity(EntityLivingBase entity)
-	{
-		return true;
-	}*/
 
 	@Override
 	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)

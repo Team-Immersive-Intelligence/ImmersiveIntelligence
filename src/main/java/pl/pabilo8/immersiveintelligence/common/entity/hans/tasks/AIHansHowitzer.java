@@ -115,10 +115,7 @@ public class AIHansHowitzer extends EntityAIBase
 					}
 					else
 					{
-						if(howitzer.shootingProgress==0&&!howitzer.fireKeyPress)
-							howitzer.fireKeyPress = true;
-						else
-							howitzer.fireKeyPress = false;
+						howitzer.fireKeyPress = howitzer.shootingProgress==0&&!howitzer.fireKeyPress;
 					}
 					if(howitzer.fireKeyPress)
 						howitzer.getWorld().getEntitiesWithinAABB(EntityItem.class, howitzer.getEntityBoundingBox()).forEach(Entity::setDead);

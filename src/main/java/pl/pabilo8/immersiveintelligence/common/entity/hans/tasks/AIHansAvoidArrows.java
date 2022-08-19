@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;

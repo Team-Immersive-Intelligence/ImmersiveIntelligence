@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  */
 public class ParticleFlareTrace extends IIParticle
 {
-	private float actualParticleScale;
+	private final float actualParticleScale;
 
 	public ParticleFlareTrace(World world, double x, double y, double z, float size, int colour, int lifeTime)
 	{

@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -61,8 +60,6 @@ public class IIModelHeader
 	/**
 	 * Applies parent/child hierarchy to AMTs<br>
 	 * Children will be rendered as having offset from parents
-	 *
-	 * @param amts
 	 */
 	public void applyHierarchy(Collection<AMT> amts)
 	{

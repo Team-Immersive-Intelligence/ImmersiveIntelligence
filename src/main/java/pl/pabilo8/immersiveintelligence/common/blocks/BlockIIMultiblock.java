@@ -49,7 +49,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & BlockIIBase.IBlockEn
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if(tileEntity instanceof TileEntityMultiblockPart&&world.getGameRules().getBoolean("doTileDrops"))
 		{
-			TileEntityMultiblockPart tile = (TileEntityMultiblockPart)tileEntity;
+			TileEntityMultiblockPart<?> tile = (TileEntityMultiblockPart<?>)tileEntity;
 			if(!tile.formed&&tile.pos==-1&&!tile.getOriginalBlock().isEmpty())
 				world.spawnEntity(new EntityItem(world, pos.getX()+.5, pos.getY()+.5, pos.getZ()+.5, tile.getOriginalBlock().copy()));
 
@@ -63,7 +63,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & BlockIIBase.IBlockEn
 			}
 		}
 		if(tileEntity instanceof TileEntityMultiblockPart)
-			((TileEntityMultiblockPart)tileEntity).disassemble();
+			((TileEntityMultiblockPart<?>)tileEntity).disassemble();
 		super.breakBlock(world, pos, state);
 	}
 
@@ -93,7 +93,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & BlockIIBase.IBlockEn
 	{
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof TileEntityMultiblockPart)
-			return ((TileEntityMultiblockPart)te).getOriginalBlock();
+			return ((TileEntityMultiblockPart<?>)te).getOriginalBlock();
 		return ItemStack.EMPTY;
 	}
 }

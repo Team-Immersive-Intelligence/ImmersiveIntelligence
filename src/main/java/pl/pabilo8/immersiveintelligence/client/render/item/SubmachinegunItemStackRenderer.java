@@ -75,7 +75,8 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 			if(s!=null)
 			{
 				if(s.mods.contains("skin_mg_text"))
-					drawText = true;
+				{
+				}
 				skinParts.forEach(tmtNamedBoxGroup -> {
 					if(s.mods.contains(tmtNamedBoxGroup.getName()))
 						renderParts.add(tmtNamedBoxGroup);

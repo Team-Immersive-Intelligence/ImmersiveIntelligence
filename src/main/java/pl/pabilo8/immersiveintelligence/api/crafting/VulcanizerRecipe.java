@@ -108,8 +108,8 @@ public class VulcanizerRecipe extends MultiblockRecipe
 
 	public static List<VulcanizerRecipe> removeRecipes(ItemStack output)
 	{
-		List<VulcanizerRecipe> list = new ArrayList();
-		Set<ComparableItemStack> keySet = new HashSet<ComparableItemStack>(recipeList.keySet());
+		List<VulcanizerRecipe> list = new ArrayList<>();
+		Set<ComparableItemStack> keySet = new HashSet<>(recipeList.keySet());
 		for(ComparableItemStack mold : keySet)
 		{
 			Iterator<VulcanizerRecipe> it = recipeList.get(mold).iterator();

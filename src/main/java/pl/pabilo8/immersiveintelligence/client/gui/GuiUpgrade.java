@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -101,17 +100,17 @@ public class GuiUpgrade extends GuiIEContainerBase
 	protected void actionPerformed(GuiButton button) throws IOException
 	{
 		if(button.id==0)
-			info^=true;
+			info ^= true;
 		else if(button.id==1)
 		{
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(),mc.player, !previewInstalled));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(), mc.player, !previewInstalled));
 			mc.player.closeScreen();
 		}
 		else if(button.id==2)
 		{
-			previewed=null;
-			info=false;
-			buttonList.forEach(guiButton -> guiButton.visible=false);
+			previewed = null;
+			info = false;
+			buttonList.forEach(guiButton -> guiButton.visible = false);
 		}
 	}
 
@@ -145,7 +144,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			int xx = mouseX-(guiLeft+100);
 			int yy = mouseY-(guiTop+9);
 			int id = (int)(Math.floor(xx/20f)+(3*Math.floor(yy/20f)));
-			if(id>-1&&id < upgrades.size())
+			if(id > -1&&id < upgrades.size())
 			{
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				previewed = upgrades.get(id);
@@ -156,8 +155,8 @@ public class GuiUpgrade extends GuiIEContainerBase
 		else
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		buttonList.forEach(guiButton -> guiButton.visible=(previewed!=null));
-		buttonUpgrade.enabled=hasItemsForUpgrade(previewed);
+		buttonList.forEach(guiButton -> guiButton.visible = (previewed!=null));
+		buttonUpgrade.enabled = hasItemsForUpgrade(previewed);
 	}
 
 	@Override
@@ -188,7 +187,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			{
 				int xx = (i%3)*20, yy = (int)Math.floor(i/3f)*20;
 				ClientUtils.bindTexture(TEXTURE);
-				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy, upgradableMachine.hasUpgrade(upgrade)?121:101, 168, 20, 20);
+				drawTexturedModalRect(guiLeft+100+xx, guiTop+9+yy, upgradableMachine.hasUpgrade(upgrade)?121: 101, 168, 20, 20);
 				if(Utils.isPointInRectangle(guiLeft+100+xx, guiTop+9+yy, guiLeft+100+xx+16, guiTop+9+yy+16, mx, my))
 					tooltip.add(getUpgradeNameTranslation(upgrade));
 				i++;
@@ -223,7 +222,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 		if(info)
 		{
 			RenderHelper.enableGUIStandardItemLighting();
-			int yy= (int)(Math.floor(previewed.getRequiredStacks().size()/4f)*18);
+			int yy = (int)(Math.floor(previewed.getRequiredStacks().size()/4f)*18);
 			for(int i = 0; i < previewed.getRequiredStacks().size(); i++)
 			{
 				int x = (i%4)*18;
@@ -239,7 +238,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 
 			boolean uni = fontRenderer.getUnicodeFlag();
 			fontRenderer.setUnicodeFlag(true);
-			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed),guiLeft+xSize+2, guiTop+8,76,Utils.COLOR_H1);
+			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed), guiLeft+xSize+2, guiTop+8, 76, Utils.COLOR_H1);
 			fontRenderer.setUnicodeFlag(uni);
 		}
 
@@ -295,7 +294,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 	{
 		if(previewed!=null&&info)
 		{
-			int yy= (int)(Math.floor(previewed.getRequiredStacks().size()/4f)*18);
+			int yy = (int)(Math.floor(previewed.getRequiredStacks().size()/4f)*18);
 			for(int i = 0; i < previewed.getRequiredStacks().size(); i++)
 			{
 				int x = (i%4)*18;

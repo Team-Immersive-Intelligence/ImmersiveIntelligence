@@ -20,7 +20,7 @@ public class RotaryInputTweaker
 	{
 		try
 		{
-			Class c = Class.forName(classPath);
+			Class<?> c = Class.forName(classPath);
 			RotaryUtils.ie_rotational_blocks_torque.put(
 					(tileEntity -> tileEntity.getClass().equals(c)),
 					(aFloat -> aFloat*torque)

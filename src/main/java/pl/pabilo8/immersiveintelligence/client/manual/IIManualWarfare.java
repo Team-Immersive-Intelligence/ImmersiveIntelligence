@@ -27,7 +27,6 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalFortification;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 

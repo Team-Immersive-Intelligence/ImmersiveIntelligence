@@ -40,7 +40,7 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 		return new SkinResult(inv).remaining;
 	}
 
-	private class SkinResult
+	private static class SkinResult
 	{
 		private final boolean canCraft;
 		private final NonNullList<ItemStack> remaining;

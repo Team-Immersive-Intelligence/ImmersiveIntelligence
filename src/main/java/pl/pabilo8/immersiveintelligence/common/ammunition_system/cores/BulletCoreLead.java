@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.ammunition_system.cores;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 
 /**

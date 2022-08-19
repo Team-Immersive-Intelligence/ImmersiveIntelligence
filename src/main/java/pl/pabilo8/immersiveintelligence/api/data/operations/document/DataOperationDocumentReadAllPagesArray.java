@@ -39,7 +39,7 @@ public class DataOperationDocumentReadAllPagesArray extends DataOperation
 				{
 					ITextComponent json = Serializer.jsonToComponent(((NBTTagString)page).getString());
 					if(json!=null)
-					list.add(json.getUnformattedText());
+						list.add(json.getUnformattedText());
 				}
 			}
 			return new DataTypeArray(list.stream().map(DataTypeString::new).toArray(IDataType[]::new));

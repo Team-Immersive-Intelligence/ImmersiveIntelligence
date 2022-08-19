@@ -10,7 +10,6 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltData;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelMotorbike;
 import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelPanzer;

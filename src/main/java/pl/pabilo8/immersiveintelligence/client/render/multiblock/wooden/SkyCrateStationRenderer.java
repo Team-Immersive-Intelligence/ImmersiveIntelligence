@@ -43,9 +43,9 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 {
 	private static ModelSkyCrateStation model;
 	private static ModelSkyCrateStation modelFlipped;
-	private static TileEntityBanner banner = new TileEntityBanner();
-	private static ModelBanner modelBanner = new ModelBanner();
-	private static String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_station.png";
+	private static final TileEntityBanner banner = new TileEntityBanner();
+	private static final ModelBanner modelBanner = new ModelBanner();
+	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_station.png";
 
 	static
 	{
@@ -66,7 +66,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			float rpm_pitch = 0, rpm_grab = 0, rpm_crate = 0, rpm_gears = 0;
+			float rpm_pitch = 0, rpm_grab = 0, rpm_crate = 0, rpm_gears;
 			double motorTick = 0f;
 			float progress = 0f;
 			IConveyorBelt con = ConveyorHandler.getConveyor(new ResourceLocation("immersiveengineering:conveyor"), null);
@@ -123,9 +123,7 @@ public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntit
 					animProgress = progress/SkyCrateStation.crateOutTime;
 					float finalAnimProgress = (float)animProgress;
 					drawCrate(te, animProgress, (double1) ->
-							{
-								GlStateManager.translate(-1.5*finalAnimProgress, 0, 0);
-							}
+							GlStateManager.translate(-1.5*finalAnimProgress, 0, 0)
 					);
 					convOutWork = true;
 					break;

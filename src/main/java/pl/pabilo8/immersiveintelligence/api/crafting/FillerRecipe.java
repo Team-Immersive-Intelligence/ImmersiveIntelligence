@@ -26,7 +26,7 @@ public class FillerRecipe extends MultiblockRecipe
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
 
-	public static ArrayList<FillerRecipe> recipeList = new ArrayList();
+	public static ArrayList<FillerRecipe> recipeList = new ArrayList<>();
 	public DustStack dust;
 	int totalProcessTime;
 	int totalProcessEnergy;
@@ -66,7 +66,7 @@ public class FillerRecipe extends MultiblockRecipe
 
 	public static List<FillerRecipe> removeRecipesForOutput(ItemStack stack)
 	{
-		List<FillerRecipe> list = new ArrayList();
+		List<FillerRecipe> list = new ArrayList<>();
 		Iterator<FillerRecipe> it = recipeList.iterator();
 		while(it.hasNext())
 		{

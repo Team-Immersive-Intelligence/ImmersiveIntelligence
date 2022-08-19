@@ -40,7 +40,7 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 
 		float pitch = -entity.gunPitch;//Math.abs(((tt%120)/120f)-0.5f)*-155f;
 		float firing = (entity.shootingProgress+(entity.shootingProgress > 0?f1: 0))/FieldHowitzer.fireTime;
-		float recoil = 0;
+		float recoil;
 		float gun_recoil = 0;
 		float plate_recoil = 0;
 
@@ -62,7 +62,7 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 
 		float yaw = -entity.rotationYaw;//(tt%60)/60f*360f;
 
-		float towing = 0;
+		float towing;
 		if(entity.isRiding())
 		{
 			GlStateManager.rotate(yaw, 0, 1, 0);

@@ -80,7 +80,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			new AxisAlignedBB(0, 0, 0.5, 1, 0.625, 1)
 	};
 
-	private static IISoundAnimation loadingSoundAnimation, unloadingSoundAnimation, firingSoundAnimation;
+	private static final IISoundAnimation loadingSoundAnimation;
+	private static final IISoundAnimation unloadingSoundAnimation;
+	private static final IISoundAnimation firingSoundAnimation;
 
 	static
 	{
@@ -591,14 +593,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		{
 			SoundEvent[] sounds = current.getSounds(animationTime);
 			if(sounds!=null)
-				for(int i = 0; i < sounds.length; i++)
+				for(SoundEvent sound : sounds)
 				{
 					Vec3d vv = new Vec3d(getBlockPosForPos(202)).addVector(
 							Utils.RAND.nextFloat(),
 							Utils.RAND.nextFloat(),
 							Utils.RAND.nextFloat()
 					);
-					world.playSound(ClientUtils.mc().player, vv.x, vv.y, vv.z, sounds[i], SoundCategory.BLOCKS, .75f, 1);
+					world.playSound(ClientUtils.mc().player, vv.x, vv.y, vv.z, sound, SoundCategory.BLOCKS, .75f, 1);
 				}
 
 		}
@@ -747,7 +749,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 						break;
 					case "get_platform_height":
 						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
-								(packet, "platform_height", new DataTypeInteger((int)platformTime));
+								(packet, "platform_height", new DataTypeInteger(platformTime));
 						break;
 					case "get_door_opened":
 						pp = pl.pabilo8.immersiveintelligence.api.Utils.getSimpleCallbackMessage
@@ -994,8 +996,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			case 309:
 			case 390:
 			case 471:
-				list.add(AABB_LADDER[facing.getIndex()-2].offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				break;
+				//shell input
 			case 410:
 				list.add(AABB_LADDER[facing.getIndex()-2].offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				break;

@@ -46,7 +46,6 @@ public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill
 				//RenderHelper.enableGUIStandardItemLighting();
 
 				world_rpm = (te.getWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
-				;
 			}
 			ModelSawmill modelCurrent = te.mirrored?modelFlipped: model;
 			float mirrorMod = te.mirrored?-1: 1;
@@ -91,7 +90,7 @@ public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill
 				float timeFull = ptime/(float)te.processTimeMax;
 				boolean renderStack = false, time_half = false;
 
-				float single = 0, time_inserter = 0, inserter_backpush_time = 0, inserter_push = 0;
+				float single, time_inserter = 0, inserter_backpush_time = 0, inserter_push = 0;
 				int iteration = 0;
 
 				if(timeFull < 0.125f)
@@ -192,7 +191,7 @@ public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill
 					mod.render(0.0625f);
 
 				GlStateManager.translate(3.5, 1.25, -0.325f*mirrorMod);
-				GlStateManager.scale(0.95f, 0.95f, 0.95f*1f-Math.max((iteration+(time_half?1: 0))/(float)te.processPrimary.getCount(), 0));
+				GlStateManager.scale(0.95f, 0.95f, 0.95f-Math.max((iteration+(time_half?1: 0))/(float)te.processPrimary.getCount(), 0));
 
 				if(renderStack)
 					renderItem.renderItem(te.inventory.get(0), TransformType.FIXED);

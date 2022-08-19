@@ -1,25 +1,23 @@
 package pl.pabilo8.immersiveintelligence.client.gui.elements;
 
-import java.util.ArrayList;
-
-import net.minecraft.client.gui.*;
-import org.lwjgl.input.Mouse;
-
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.input.Mouse;
+
+import java.util.ArrayList;
 
 /**
  * This is a direct copy of a gist made by Draco18s
  * @see <a href=https://gist.github.com/Draco18s/2b02762b597e67a9b887aed241f25077#file-guimultilinetextfield">https://gist.github.com/Draco18s/2b02762b597e67a9b887aed241f25077#file-guimultilinetextfield</a>
- *
+ * <p>
  * Huge thanks, that made me not copy-paste vanilla code and spend hours tweaking it ^^
  * If you want to copy it from here, feel free to
  * Only changes to the original are the text offset fix to be in top left corner (see line 698) and this JavaDoc
@@ -38,7 +36,7 @@ public class GuiMultiLineTextField extends GuiTextField
 	public int width;
 	public int height;
 	/** Has the current text being edited on the textbox. */
-	private ArrayList<String> text = new ArrayList<String>();
+	private final ArrayList<String> text = new ArrayList<>();
 	private int currentLine = 0;
 	private int verticalScrollOffset = 0;
 	private int maxStringLength = 32;
@@ -61,7 +59,7 @@ public class GuiMultiLineTextField extends GuiTextField
 	private boolean visible = true;
 	private GuiPageButtonList.GuiResponder guiResponder;
 	/** Called to check if the text is valid */
-	private Predicate<String> validator = Predicates.<String>alwaysTrue();
+	private Predicate<String> validator = Predicates.alwaysTrue();
 
 	public GuiMultiLineTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height)
 	{
@@ -102,22 +100,12 @@ public class GuiMultiLineTextField extends GuiTextField
 		if (this.validator.apply(textIn))
 		{
 			String[] lines = textIn.split("\n");
-			for(int l=0;l<lines.length;l++) {
-				if (lines[l].length() > this.maxStringLength)
-				{
-					//this.text = textIn.substring(0, this.maxStringLength);
+			//this.text = textIn.substring(0, this.maxStringLength);
+			for(int l=0;l<lines.length;l++)
+				if(lines[l].length() > this.maxStringLength)
 					text.set(l, lines[l].substring(0, this.maxStringLength));
-				}
-				else
-				{
-					if(text.size() <= l) {
-						text.add(lines[l]);
-					}
-					else {
-						text.set(l, lines[l]);
-					}
-				}
-			}
+				else if(text.size() <= l) text.add(lines[l]);
+				else text.set(l, lines[l]);
 			this.setCursorPositionEnd();
 		}
 	}
@@ -128,11 +116,10 @@ public class GuiMultiLineTextField extends GuiTextField
 	@Override
 	public String getText()
 	{
-		String str = "";
-		for(String s : text) {
-			str += s + (text.indexOf(s) < text.size()-1 ? "\n" : "");
-		}
-		return str;
+		StringBuilder str = new StringBuilder();
+		for(String s : text)
+			str.append(s).append(text.indexOf(s) < text.size()-1?"\n": "");
+		return str.toString();
 	}
 
 	/**
@@ -165,9 +152,7 @@ public class GuiMultiLineTextField extends GuiTextField
 		int k = this.maxStringLength - this.text.get(currentLine).length() - (i - j);
 
 		if (!this.text.isEmpty())
-		{
-			s = s + this.text.get(currentLine).substring(0, i);
-		}
+			s = s+this.text.get(currentLine).substring(0, i);
 
 		int l;
 
@@ -183,9 +168,7 @@ public class GuiMultiLineTextField extends GuiTextField
 		}
 
 		if (!this.text.isEmpty() && j < this.text.get(currentLine).length())
-		{
-			s = s + this.text.get(currentLine).substring(j);
-		}
+			s = s+this.text.get(currentLine).substring(j);
 
 		if (this.validator.apply(s))
 		{
@@ -202,9 +185,7 @@ public class GuiMultiLineTextField extends GuiTextField
 	public void setResponderEntryValue(int idIn, String textIn)
 	{
 		if (this.guiResponder != null)
-		{
 			this.guiResponder.setEntryValue(idIn, textIn);
-		}
 	}
 
 	/**
@@ -215,16 +196,10 @@ public class GuiMultiLineTextField extends GuiTextField
 	public void deleteWords(int num)
 	{
 		if (!this.text.isEmpty())
-		{
-			if (this.selectionEnd != this.cursorPosition)
-			{
+			if(this.selectionEnd!=this.cursorPosition)
 				this.writeText("");
-			}
 			else
-			{
-				this.deleteFromCursor(this.getNthWordFromCursor(num) - this.cursorPosition);
-			}
-		}
+				this.deleteFromCursor(this.getNthWordFromCursor(num)-this.cursorPosition);
 	}
 
 	/**
@@ -235,63 +210,52 @@ public class GuiMultiLineTextField extends GuiTextField
 	public void deleteFromCursor(int num)
 	{
 		if (!this.text.isEmpty())
-		{
-			if (this.selectionEnd != this.cursorPosition)
-			{
+			if(this.selectionEnd!=this.cursorPosition)
 				this.writeText("");
-			}
 			else
 			{
 				boolean flag = num < 0;
-				int i = flag ? this.cursorPosition + num : this.cursorPosition;
-				int j = flag ? this.cursorPosition : this.cursorPosition + num;
+				int i = flag?this.cursorPosition+num: this.cursorPosition;
+				int j = flag?this.cursorPosition: this.cursorPosition+num;
 				String s = "";
 
-				if (i >= 0)
-				{
-					if(num > 0 && this.cursorPosition == this.text.get(currentLine).length() && this.text.size() > currentLine+1) {
+				if(i >= 0)
+					if(num > 0&&this.cursorPosition==this.text.get(currentLine).length()&&this.text.size() > currentLine+1)
+					{
 						s = this.text.get(currentLine)+this.text.get(currentLine+1);
 						this.text.remove(currentLine+1);
 					}
-					else {
-						s = this.text.get(currentLine).substring(0, i);
-					}
-				}
+					else s = this.text.get(currentLine).substring(0, i);
 
-				if (j < this.text.get(currentLine).length())
-				{
-					if(num < 0 && this.cursorPosition == 0 && currentLine > 0) {
+				if(j < this.text.get(currentLine).length())
+					if(num < 0&&this.cursorPosition==0&&currentLine > 0)
+					{
 						String curline = this.text.get(currentLine);
 						this.text.remove(currentLine);
 						currentLine--;
 						this.setCursorPosition(this.text.get(currentLine).length()+1);
 						flag = true;
 						num = 0;
-						s = this.text.get(currentLine) + curline;
+						s = this.text.get(currentLine)+curline;
 					}
-					else {
-						s = s + this.text.get(currentLine).substring(j);
-					}
-				}
-				else if(j == 0 && this.text.size() > 1 && currentLine > 0) {
+					else s = s+this.text.get(currentLine).substring(j);
+				else if(j==0&&this.text.size() > 1&&currentLine > 0)
+				{
 					text.remove(currentLine);
 					currentLine--;
 					this.setCursorPositionEnd();
 					return;
 				}
 
-				if (this.validator.apply(s))
+				if(this.validator.apply(s))
 				{
 					this.text.set(currentLine, s);
 
-					if (flag)
-					{
+					if(flag)
 						this.moveCursorBy(num);
-					}
 					this.setResponderEntryValue(this.id, this.text.get(currentLine));
 				}
 			}
-		}
 	}
 
 	@Override
@@ -329,37 +293,25 @@ public class GuiMultiLineTextField extends GuiTextField
 		int j = Math.abs(n);
 
 		for (int k = 0; k < j; ++k)
-		{
-			if (!flag)
+			if(!flag)
 			{
 				int l = this.text.get(currentLine).length();
 				i = this.text.get(currentLine).indexOf(32, i);
 
-				if (i == -1)
-				{
+				if(i==-1)
 					i = l;
-				}
 				else
-				{
-					while (skipWs && i < l && this.text.get(currentLine).charAt(i) == ' ')
-					{
+					while(skipWs&&i < l&&this.text.get(currentLine).charAt(i)==' ')
 						++i;
-					}
-				}
 			}
 			else
 			{
-				while (skipWs && i > 0 && this.text.get(currentLine).charAt(i - 1) == ' ')
-				{
+				while(skipWs&&i > 0&&this.text.get(currentLine).charAt(i-1)==' ')
 					--i;
-				}
 
-				while (i > 0 && this.text.get(currentLine).charAt(i - 1) != ' ')
-				{
+				while(i > 0&&this.text.get(currentLine).charAt(i-1)!=' ')
 					--i;
-				}
 			}
-		}
 
 		return i;
 	}
@@ -385,16 +337,12 @@ public class GuiMultiLineTextField extends GuiTextField
 			currentLine++;
 			this.cursorPosition =  0;
 			i = this.text.get(currentLine).length();
-			if (this.lineScrollOffset > i) {
-				this.lineScrollOffset = i;
-			}
+			if (this.lineScrollOffset > i) this.lineScrollOffset = i;
 		}
 		if(this.cursorPosition < 0 && currentLine > 0) {
 			currentLine--;
 			this.cursorPosition = i = this.text.get(currentLine).length();
-			if (this.lineScrollOffset > i) {
-				this.lineScrollOffset = i;
-			}
+			if (this.lineScrollOffset > i) this.lineScrollOffset = i;
 		}
 		this.cursorPosition = MathHelper.clamp(this.cursorPosition, 0, i);
 		this.setSelectionPos(this.cursorPosition);
@@ -425,9 +373,7 @@ public class GuiMultiLineTextField extends GuiTextField
 	public boolean textboxKeyTyped(char typedChar, int keyCode)
 	{
 		if (!this.isFocused)
-		{
 			return false;
-		}
 		else if (GuiScreen.isKeyComboCtrlA(keyCode))
 		{
 			this.setCursorPositionEnd();
@@ -458,166 +404,118 @@ public class GuiMultiLineTextField extends GuiTextField
 			GuiScreen.setClipboardString(this.getSelectedText());
 
 			if (this.isEnabled)
-			{
 				this.writeText("");
-			}
 
 			return true;
 		}
 		else
-		{
-			switch (keyCode)
+			switch(keyCode)
 			{
 				case 28:
 					int lin = text.get(currentLine).length();
-					if(this.cursorPosition == lin) {
+					if(this.cursorPosition==lin)
+					{
 						currentLine++;
 						text.add(currentLine, "");
 						setCursorPosition(0);
 					}
-					else {
+					else
+					{
 						String rem = text.get(currentLine).substring(cursorPosition);
-						text.set(currentLine, text.get(currentLine).substring(0,cursorPosition));
+						text.set(currentLine, text.get(currentLine).substring(0, cursorPosition));
 						currentLine++;
-						this.text.add(currentLine,rem);
+						this.text.add(currentLine, rem);
 						this.setCursorPositionZero();
 					}
 					return true;
 				case 200:
 					currentLine = Math.max(currentLine-1, 0);
-					if(this.cursorPosition > text.get(currentLine).length()) {
+					if(this.cursorPosition > text.get(currentLine).length())
 						this.selectionEnd = this.cursorPosition = text.get(currentLine).length();
-					}
-					else {
-						this.moveCursorBy(0);
-					}
+					else this.moveCursorBy(0);
 					return true;
 				case 208:
 					currentLine = Math.min(currentLine+1, text.size()-1);
-					if(this.cursorPosition > text.get(currentLine).length()) {
+					if(this.cursorPosition > text.get(currentLine).length())
 						this.selectionEnd = this.cursorPosition = text.get(currentLine).length();
-					}
-					else {
-						this.moveCursorBy(0);
-					}
+					else this.moveCursorBy(0);
 					return true;
 				case 14:
 
-					if (GuiScreen.isCtrlKeyDown())
+					if(GuiScreen.isCtrlKeyDown())
 					{
-						if (this.isEnabled)
-						{
+						if(this.isEnabled)
 							this.deleteWords(-1);
-						}
 					}
-					else if (this.isEnabled)
-					{
+					else if(this.isEnabled)
 						this.deleteFromCursor(-1);
-					}
 
 					return true;
 				case 199:
 
-					if (GuiScreen.isShiftKeyDown())
-					{
+					if(GuiScreen.isShiftKeyDown())
 						this.setSelectionPos(0);
-					}
 					else
-					{
 						this.setCursorPositionZero();
-					}
 
 					return true;
 				case 203:
 
-					if (GuiScreen.isShiftKeyDown())
-					{
-						if (GuiScreen.isCtrlKeyDown())
-						{
+					if(GuiScreen.isShiftKeyDown())
+						if(GuiScreen.isCtrlKeyDown())
 							this.setSelectionPos(this.getNthWordFromPos(-1, this.getSelectionEnd()));
-						}
 						else
-						{
-							this.setSelectionPos(this.getSelectionEnd() - 1);
-						}
-					}
-					else if (GuiScreen.isCtrlKeyDown())
-					{
+							this.setSelectionPos(this.getSelectionEnd()-1);
+					else if(GuiScreen.isCtrlKeyDown())
 						this.setCursorPosition(this.getNthWordFromCursor(-1));
-					}
 					else
-					{
 						this.moveCursorBy(-1);
-					}
 
 					return true;
 				case 205:
 
-					if (GuiScreen.isShiftKeyDown())
-					{
-						if (GuiScreen.isCtrlKeyDown())
-						{
+					if(GuiScreen.isShiftKeyDown())
+						if(GuiScreen.isCtrlKeyDown())
 							this.setSelectionPos(this.getNthWordFromPos(1, this.getSelectionEnd()));
-						}
 						else
-						{
-							this.setSelectionPos(this.getSelectionEnd() + 1);
-						}
-					}
-					else if (GuiScreen.isCtrlKeyDown())
-					{
+							this.setSelectionPos(this.getSelectionEnd()+1);
+					else if(GuiScreen.isCtrlKeyDown())
 						this.setCursorPosition(this.getNthWordFromCursor(1));
-					}
 					else
-					{
 						this.moveCursorBy(1);
-					}
 
 					return true;
 				case 207:
 
-					if (GuiScreen.isShiftKeyDown())
-					{
+					if(GuiScreen.isShiftKeyDown())
 						this.setSelectionPos(this.text.get(currentLine).length());
-					}
 					else
-					{
 						this.setCursorPositionEnd();
-					}
 
 					return true;
 				case 211:
 
-					if (GuiScreen.isCtrlKeyDown())
+					if(GuiScreen.isCtrlKeyDown())
 					{
-						if (this.isEnabled)
-						{
+						if(this.isEnabled)
 							this.deleteWords(1);
-						}
 					}
-					else if (this.isEnabled)
-					{
+					else if(this.isEnabled)
 						this.deleteFromCursor(1);
-					}
 
 					return true;
 				default:
 
-					if (ChatAllowedCharacters.isAllowedCharacter(typedChar))
+					if(ChatAllowedCharacters.isAllowedCharacter(typedChar))
 					{
-						if (this.isEnabled)
-						{
+						if(this.isEnabled)
 							this.writeText(Character.toString(typedChar));
-						}
 
 						return true;
 					}
 					else
-					{
 						return false;
-					}
 			}
-		}
 	}
 
 	/**
@@ -629,18 +527,14 @@ public class GuiMultiLineTextField extends GuiTextField
 		boolean flag = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
 
 		if (this.canLoseFocus)
-		{
 			this.setFocused(flag);
-		}
 
 		if (this.isFocused && flag && mouseButton == 0)
 		{
 			int i = mouseX - this.x;
 
 			if (this.enableBackgroundDrawing)
-			{
 				i -= 4;
-			}
 
 			int j = mouseY - this.y;
 			j /= fontRenderer.FONT_HEIGHT;
@@ -654,9 +548,7 @@ public class GuiMultiLineTextField extends GuiTextField
 			return true;
 		}
 		else
-		{
 			return false;
-		}
 	}
 
 	/**
@@ -708,9 +600,7 @@ public class GuiMultiLineTextField extends GuiTextField
 				int k1 = j1;
 
 				if (!flag)
-				{
-					k1 = j > 0 ? l + this.width : l;
-				}
+					k1 = j > 0?l+this.width: l;
 				else if (flag2)
 				{
 					k1 = j1 - 1;
@@ -720,26 +610,16 @@ public class GuiMultiLineTextField extends GuiTextField
 				if(cl == currentLine) {
 
 					if (k > s.length())
-					{
 						k = s.length();
-					}
 
 					if (!s.isEmpty() && flag && j < s.length())
-					{
-						j1 = this.fontRenderer.drawStringWithShadow(s.substring(j), (float)j1, (float)i1, i);
-					}
+						this.fontRenderer.drawStringWithShadow(s.substring(j), (float)j1, (float)i1, i);
 
 					if (flag1)
-					{
-						if (flag2)
-						{
-							Gui.drawRect(k1, i1 - 1, k1 + 1, i1 + 1 + this.fontRenderer.FONT_HEIGHT, -3092272);
-						}
+						if(flag2)
+							Gui.drawRect(k1, i1-1, k1+1, i1+1+this.fontRenderer.FONT_HEIGHT, -3092272);
 						else
-						{
 							this.fontRenderer.drawStringWithShadow("_", (float)k1, (float)i1, i);
-						}
-					}
 
 					if (k != j)
 					{
@@ -777,14 +657,10 @@ public class GuiMultiLineTextField extends GuiTextField
 		}
 
 		if (endX > this.x + this.width)
-		{
-			endX = this.x + this.width;
-		}
+			endX = this.x+this.width;
 
 		if (startX > this.x + this.width)
-		{
-			startX = this.x + this.width;
-		}
+			startX = this.x+this.width;
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -793,10 +669,10 @@ public class GuiMultiLineTextField extends GuiTextField
 		GlStateManager.enableColorLogic();
 		GlStateManager.colorLogicOp(GlStateManager.LogicOp.OR_REVERSE);
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
-		bufferbuilder.pos((double)startX, (double)endY, 0.0D).endVertex();
-		bufferbuilder.pos((double)endX, (double)endY, 0.0D).endVertex();
-		bufferbuilder.pos((double)endX, (double)startY, 0.0D).endVertex();
-		bufferbuilder.pos((double)startX, (double)startY, 0.0D).endVertex();
+		bufferbuilder.pos(startX, endY, 0.0D).endVertex();
+		bufferbuilder.pos(endX, endY, 0.0D).endVertex();
+		bufferbuilder.pos(endX, startY, 0.0D).endVertex();
+		bufferbuilder.pos(startX, startY, 0.0D).endVertex();
 		tessellator.draw();
 		GlStateManager.disableColorLogic();
 		GlStateManager.enableTexture2D();
@@ -812,9 +688,7 @@ public class GuiMultiLineTextField extends GuiTextField
 		this.maxStringLength = length;
 
 		if (this.text.get(currentLine).length() > length)
-		{
 			this.text.set(currentLine, this.text.get(currentLine).substring(0, length));
-		}
 	}
 
 	/**
@@ -884,16 +758,12 @@ public class GuiMultiLineTextField extends GuiTextField
 	public void setFocused(boolean isFocusedIn)
 	{
 		if (isFocusedIn && !this.isFocused)
-		{
 			this.cursorCounter = 0;
-		}
 
 		this.isFocused = isFocusedIn;
 
 		if (Minecraft.getMinecraft().currentScreen != null)
-		{
 			Minecraft.getMinecraft().currentScreen.setFocused(isFocusedIn);
-		}
 	}
 
 	/**
@@ -942,41 +812,29 @@ public class GuiMultiLineTextField extends GuiTextField
 		int i = this.text.get(currentLine).length();
 
 		if (position > i)
-		{
 			position = i;
-		}
 
 		if (position < 0)
-		{
 			position = 0;
-		}
 
 		this.selectionEnd = position;
 
 		if (this.fontRenderer != null)
 		{
 			if (this.lineScrollOffset > i)
-			{
 				this.lineScrollOffset = i;
-			}
 
 			int j = this.getWidth();
 			String s = this.fontRenderer.trimStringToWidth(this.text.get(currentLine).substring(this.lineScrollOffset), j);
 			int k = s.length() + this.lineScrollOffset;
 
 			if (position == this.lineScrollOffset)
-			{
 				this.lineScrollOffset -= this.fontRenderer.trimStringToWidth(this.text.get(currentLine), j, true).length();
-			}
 
 			if (position > k)
-			{
-				this.lineScrollOffset += position - k;
-			}
+				this.lineScrollOffset += position-k;
 			else if (position <= this.lineScrollOffset)
-			{
-				this.lineScrollOffset -= this.lineScrollOffset - position;
-			}
+				this.lineScrollOffset -= this.lineScrollOffset-position;
 
 			this.lineScrollOffset = MathHelper.clamp(this.lineScrollOffset, 0, i);
 		}

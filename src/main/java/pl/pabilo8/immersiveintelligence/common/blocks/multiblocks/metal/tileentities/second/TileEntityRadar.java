@@ -1,9 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -226,16 +224,6 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 
 	}
 
-	public void sendUpdate(int id)
-	{
-		NBTTagCompound tag = new NBTTagCompound();
-		if(id==0)
-		{
-			//tag.setTag("flag", flag.serializeNBT());
-		}
-		if(!tag.hasNoTags())
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 32));
-	}
 
 	@Override
 	public int getConstructionCost()

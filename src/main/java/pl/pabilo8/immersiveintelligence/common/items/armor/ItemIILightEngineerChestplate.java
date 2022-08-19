@@ -60,7 +60,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 		if(!stack.isEmpty())
 			return new IIArmorItemStackHandler(stack)
 			{
-				IEItemFluidHandler fluids = new IEItemFluidHandler(stack, 0);
+				final IEItemFluidHandler fluids = new IEItemFluidHandler(stack, 0);
 
 				@Override
 				public boolean hasCapability(Capability<?> capability, EnumFacing facing)

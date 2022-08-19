@@ -424,8 +424,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	private static void registerItemOredict(ItemIIBase item, String subname, String... dicts)
 	{
-		for(int i = 0; i < dicts.length; i += 1)
-			OreDictionary.registerOre(Utils.toCamelCase(dicts[i], true), new ItemStack(item, 1, item.getMetaBySubname(subname)));
+		for(String dict : dicts)
+			OreDictionary.registerOre(Utils.toCamelCase(dict, true), new ItemStack(item, 1, item.getMetaBySubname(subname)));
 	}
 
 	private static void registerMetalOredict(ItemIIBase item, String dict)
@@ -1019,7 +1019,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(IMultiblock mb : MultiblockHandler.getMultiblocks())
 		{
 			if(mb instanceof MultiblockStuctureBase)
-				((MultiblockStuctureBase)mb).updateStructure();
+				((MultiblockStuctureBase<?>)mb).updateStructure();
 		}
 	}
 

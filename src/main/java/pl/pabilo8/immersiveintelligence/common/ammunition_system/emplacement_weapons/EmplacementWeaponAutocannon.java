@@ -85,9 +85,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			(int)(0.55*Autocannon.reloadTime), (int)(0.65*Autocannon.reloadTime), (int)(0.75*Autocannon.reloadTime), (int)(0.85*Autocannon.reloadTime)
 	};
 
-	private static final Runnable INSERTER_ANIM_NONE = () -> {
-		Utils.bindTexture(EmplacementRenderer.textureAutocannon);
-	};
+	private static final Runnable INSERTER_ANIM_NONE = () -> Utils.bindTexture(EmplacementRenderer.textureAutocannon);
 	private static final Runnable INSERTER_ANIM_LEFT = () -> {
 		Utils.bindTexture(EmplacementRenderer.textureAutocannon);
 		GlStateManager.rotate(-55, 1, 0, 0);
@@ -318,7 +316,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 
 		GlStateManager.pushMatrix();
 		float p, pp, y, yy;
-		double cannonAnim = 0;
+		double cannonAnim;
 		double b1 = 0, b2 = 0, b3 = 0, b4 = 0;
 
 		p = this.nextPitch-this.pitch;
@@ -531,9 +529,6 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			else if(reloadAnim < 0.7)
 			{
 				double p_anim = (reloadAnim-0.5)/0.2;
-				ins_y = 65f;
-				ins_p2 = 105;
-				ins_p1 = 40;
 				if(p_anim < 0.2)
 				{
 					ins_y = (float)(65f-(12.5f*(p_anim/0.2f)));
@@ -568,9 +563,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			else if(reloadAnim < 0.9)
 			{
 				double p_anim = (reloadAnim-0.7)/0.2;
-				ins_y = 65f;
 				ins_p2 = 105;
-				ins_p1 = 40;
 				if(p_anim < 0.2)
 				{
 					ins_y = (float)(65f-(12.5f*(p_anim/0.2f)));
@@ -630,7 +623,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			if(1+i > Math.round(l*progress))
 			{
 				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f)/1f);
+				double scale = 1f-(((progress*l)%1f));
 				GlStateManager.enableBlend();
 				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
 				GlStateManager.translate(0, scale*1.5f, 0);

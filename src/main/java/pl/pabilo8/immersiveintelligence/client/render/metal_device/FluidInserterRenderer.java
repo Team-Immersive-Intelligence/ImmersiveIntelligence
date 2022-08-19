@@ -22,6 +22,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8
  * @since 15-06-2019
@@ -35,7 +37,7 @@ public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityF
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 
 	@Override
-	public void render(TileEntityFluidInserter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(@Nullable TileEntityFluidInserter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/fluid_inserter.png";
 		if(te!=null)

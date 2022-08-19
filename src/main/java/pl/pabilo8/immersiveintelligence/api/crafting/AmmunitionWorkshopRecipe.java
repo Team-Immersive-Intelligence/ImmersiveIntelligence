@@ -22,15 +22,13 @@ import java.util.function.BiFunction;
  */
 public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 {
-	public static float energyModifier = 1.0F;
-	public static float timeModifier = 1.0F;
 	public final BiFunction<ItemStack, ItemStack, ItemStack> process;
 	public final IngredientStack coreInput, casingInput;
 
-	public static LinkedList<AmmunitionWorkshopRecipe> recipeList = new LinkedList();
+	public static final LinkedList<AmmunitionWorkshopRecipe> recipeList = new LinkedList<>();
 
-	int totalProcessTime;
-	int totalProcessEnergy;
+	final int totalProcessTime;
+	final int totalProcessEnergy;
 
 	public AmmunitionWorkshopRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, Object coreInput, Object casingInput, int energy, int time)
 	{
@@ -38,8 +36,8 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 		this.coreInput = ApiUtils.createIngredientStack(coreInput);
 		this.casingInput = ApiUtils.createIngredientStack(casingInput);
 
-		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
-		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
+		this.totalProcessEnergy = (int)Math.floor((float)energy);
+		this.totalProcessTime = (int)Math.floor((float)time);
 
 		this.inputList = Lists.newArrayList(this.coreInput, this.casingInput);
 		this.outputList = getExampleItems();

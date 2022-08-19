@@ -13,7 +13,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

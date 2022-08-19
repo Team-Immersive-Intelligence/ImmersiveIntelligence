@@ -1524,8 +1524,6 @@ public class Config
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
 		{
 			ConfigManager.sync(ImmersiveIntelligence.MODID, net.minecraftforge.common.config.Config.Type.INSTANCE);
-			// TODO: 29.11.2020 add when required
-			//onConfigUpdate();
 		}
 	}
 }

@@ -7,7 +7,6 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author Pabilo8

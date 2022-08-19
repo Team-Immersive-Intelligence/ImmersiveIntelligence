@@ -190,7 +190,7 @@ public class TileEntitySawmill extends TileEntityMultiblockMetal<TileEntitySawmi
 					SawmillRecipe recipe = SawmillRecipe.findRecipe(inventory.get(0));
 					if(recipe!=null&&sawblade.getHardness(inventory.get(1)) >= recipe.getHardness()&&rotation.getTorque() >= recipe.getTorque())
 					{
-						MultiblockProcessInMachine<SawmillRecipe> process = new MultiblockProcessInMachine(recipe, 0);
+						MultiblockProcessInMachine<SawmillRecipe> process = new MultiblockProcessInMachine<>(recipe, 0);
 						this.addProcessToQueue(process, false);
 						processTime = 0;
 						processTimeMax = (int)((float)recipe.getTotalProcessTime());

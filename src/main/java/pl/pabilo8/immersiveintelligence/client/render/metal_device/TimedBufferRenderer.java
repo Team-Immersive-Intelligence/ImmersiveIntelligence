@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityTimedBuffe
 @SideOnly(Side.CLIENT)
 public class TimedBufferRenderer extends TileEntitySpecialRenderer<TileEntityTimedBuffer>
 {
-	private static ModelTimedBuffer model = new ModelTimedBuffer();
+	private static final ModelTimedBuffer model = new ModelTimedBuffer();
 
 	@Override
 	public void render(TileEntityTimedBuffer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

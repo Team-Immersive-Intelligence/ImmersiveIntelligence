@@ -11,7 +11,6 @@ import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit.Cir
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class POLScript
 {
-	private static Pattern SPECIAL_REGEX_CHARS = Pattern.compile("[{}()\\[\\].+*?^$\\\\|]");
+	private static final Pattern SPECIAL_REGEX_CHARS = Pattern.compile("[{}()\\[\\].+*?^$\\\\|]");
 
 	private final HashMap<String, Tuple<Integer, Integer>> markers;
 	private final POLInstruction[] instructions;
@@ -43,7 +42,7 @@ public class POLScript
 	}
 
 	/**
-	 * @return
+	 * @return text processed into POL keywords and arguments
 	 */
 	protected static ArrayList<Tuple<POLKeywords, String>> processText(ArrayList<String> text)
 	{

@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.IAdvancedBounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEntityConveyorScanner, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IConveyorAttachable
+public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEntityConveyorScanner, IMultiblockRecipe> implements IDataDevice, IAdvancedBounds, IConveyorAttachable
 {
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
 	public int processTime, processTimeMax;
@@ -149,12 +150,6 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
 		}
 
-	}
-
-	@Override
-	public float[] getBlockBounds()
-	{
-		return new float[]{0, 0, 0, 1, 1, 1};
 	}
 
 	@Override
@@ -299,7 +294,7 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 	}
 
 	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 		if(pos==2)
@@ -360,18 +355,6 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1)
 					.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
 	}
 
 	@Override

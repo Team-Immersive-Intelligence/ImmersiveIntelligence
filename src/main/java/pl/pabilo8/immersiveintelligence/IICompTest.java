@@ -7,11 +7,9 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLScript;
 import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -85,13 +83,13 @@ public class IICompTest
 		@Override
 		public void error(String text)
 		{
-			System.out.println(text);
+			System.out.println(name+" "+text);
 		}
 
 		@Override
 		public void type(String text)
 		{
-			System.out.println(text);
+			System.out.println(name+" "+text);
 		}
 
 		@Override

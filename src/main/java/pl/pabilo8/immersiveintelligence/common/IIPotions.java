@@ -167,9 +167,7 @@ public class IIPotions
 			public void performEffect(EntityLivingBase living, int amplifier)
 			{
 				living.hurtResistantTime = 0;
-				living.getArmorInventoryList().forEach(stack -> {
-					stack.damageItem(stack.getMaxDamage(), living);
-				});
+				living.getArmorInventoryList().forEach(stack -> stack.damageItem(stack.getMaxDamage(), living));
 				living.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
 			}
 		};

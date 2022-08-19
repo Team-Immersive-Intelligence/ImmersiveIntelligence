@@ -171,7 +171,7 @@ public class ItemIIAmmoGrenade extends ItemIIBulletBase
 	{
 		ItemStack itemstack = player.getHeldItem(hand);
 		player.setActiveHand(hand);
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+		return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
 
 	}
 

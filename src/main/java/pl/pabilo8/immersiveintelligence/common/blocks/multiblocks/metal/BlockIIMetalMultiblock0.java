@@ -175,7 +175,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 			TileEntity te = world.getTileEntity(pos);
 			if(!(te instanceof TileEntityMultiblockConnectable))
 				return state;
-			state = ext.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable)te).genConnBlockstate());
+			state = ext.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable<?,?>)te).genConnBlockstate());
 		}
 		return state;
 	}

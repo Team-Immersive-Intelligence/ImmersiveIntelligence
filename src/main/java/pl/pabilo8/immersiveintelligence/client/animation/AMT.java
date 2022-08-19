@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.client.animation;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Vector3f;
 import pl.pabilo8.immersiveintelligence.client.ShaderUtil;

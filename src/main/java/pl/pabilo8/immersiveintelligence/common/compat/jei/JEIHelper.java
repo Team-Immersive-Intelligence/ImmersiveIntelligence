@@ -21,13 +21,8 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.BathingRecipeCategory;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.ElectrolyzerRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.PrecissionAssemblerRecipeCategory;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.SawmillRecipeCategory;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.VulcanizerGuiHandler;
-import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.VulcanizerRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
 

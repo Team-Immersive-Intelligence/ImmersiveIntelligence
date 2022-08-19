@@ -33,11 +33,11 @@ import java.util.Random;
  */
 public class IIWorldGen implements IWorldGenerator
 {
-	public static ArrayList<OreGen> orespawnList = new ArrayList();
-	public static ArrayList<Integer> oreDimBlacklistOverworld = new ArrayList();
-	public static ArrayList<Integer> oreDimBlacklistNether = new ArrayList();
-	public static ArrayList<Integer> oreDimBlacklistEnd = new ArrayList();
-	public static HashMap<String, Boolean> retrogenMap = new HashMap();
+	public static ArrayList<OreGen> orespawnList = new ArrayList<>();
+	public static ArrayList<Integer> oreDimBlacklistOverworld = new ArrayList<>();
+	public static ArrayList<Integer> oreDimBlacklistNether = new ArrayList<>();
+	public static ArrayList<Integer> oreDimBlacklistEnd = new ArrayList<>();
+	public static HashMap<String, Boolean> retrogenMap = new HashMap<>();
 	public static ArrayListMultimap<Integer, ChunkPos> retrogenChunks = ArrayListMultimap.create();
 
 	public static IIWorldGenRubberTree worldGenRubberTree = new IIWorldGenRubberTree();
@@ -120,7 +120,7 @@ public class IIWorldGen implements IWorldGenerator
 			for(int i = 0; i < 2; i++)
 			{
 				chunks = retrogenChunks.get(dimension);
-				if(chunks==null||chunks.size() <= 0)
+				if(chunks==null||chunks.size()==0)
 					break;
 				counter++;
 				ChunkPos loc = chunks.get(0);

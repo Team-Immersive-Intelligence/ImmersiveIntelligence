@@ -1,7 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
-import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
-import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorBelt;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,7 +37,6 @@ public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoag
 	private static ModelCoagulator model;
 	private static ModelCoagulator modelFlipped;
 	private static ModelCraneElectric modelCrane;
-	private static IConveyorBelt con;
 
 	@Override
 	public void render(@Nullable TileEntityCoagulator te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -444,7 +441,6 @@ public class CoagulatorRenderer extends TileEntitySpecialRenderer<TileEntityCoag
 		modelFlipped = new ModelCoagulator();
 
 		modelCrane = new ModelCraneElectric();
-		con = ConveyorHandler.getConveyor(new ResourceLocation("immersiveengineering:conveyor"), null);
 	}
 
 

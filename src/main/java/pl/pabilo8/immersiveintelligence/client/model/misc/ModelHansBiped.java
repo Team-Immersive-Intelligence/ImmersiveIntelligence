@@ -11,6 +11,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansArmAnimation;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
 
+import java.util.Arrays;
+
 /**
  * @author Pabilo8
  * @since 18.05.2021
@@ -450,9 +452,9 @@ public class ModelHansBiped extends ModelPlayer
 
 		public static final int SIDE_ALL = SIDE_LEFT|SIDE_RIGHT|SIDE_TOP|SIDE_BOTTOM|SIDE_FRONT|SIDE_BACK;
 
-		private PositionTextureVertex[] vertexPositions;
+		private final PositionTextureVertex[] vertexPositions;
 
-		private TexturedQuad[] quadList;
+		private final TexturedQuad[] quadList;
 
 		private final float posX1;
 
@@ -517,12 +519,7 @@ public class ModelHansBiped extends ModelPlayer
 			quadList[4] = new TexturedQuad(new PositionTextureVertex[]{v100, v000, v010, v110}, u+depth, v+depth, u+depth+width, v+depth+height, model.textureWidth, model.textureHeight);
 			quadList[5] = new TexturedQuad(new PositionTextureVertex[]{v001, v101, v111, v011}, u+depth+width+depth, v+depth, u+depth+width+depth+width, v+depth+height, model.textureWidth, model.textureHeight);
 			if(model.mirror)
-			{
-				for(int i = 0; i < quadList.length; i++)
-				{
-					quadList[i].flipFace();
-				}
-			}
+				Arrays.stream(quadList).forEach(TexturedQuad::flipFace);
 			setVisibleSides(SIDE_ALL);
 		}
 

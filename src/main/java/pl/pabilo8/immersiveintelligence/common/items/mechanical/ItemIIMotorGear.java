@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.items.mechanical;
 
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -59,7 +58,7 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 		STEEL(MechanicalDevices.gear_torque_modifier[3]),
 		TUNGSTEN(MechanicalDevices.gear_torque_modifier[4]);
 
-		float torqueMod;
+		final float torqueMod;
 
 		MotorGear(float torqueMod)
 		{
@@ -68,11 +67,10 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 
 		public static String[] getNames()
 		{
-			ArrayList<String> list = new ArrayList<String>();
-			String[] a = new String[list.size()];
+			ArrayList<String> list = new ArrayList<>();
 			for(MotorGear belt : values())
 				list.add(belt.getName());
-			return list.toArray(a);
+			return list.toArray(new String[0]);
 		}
 
 		@Override

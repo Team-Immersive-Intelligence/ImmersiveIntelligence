@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 public class GuiDataVariableList extends GuiButton
 {
 	private static final ResourceLocation TEXTURE_VARIABLES = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/data_input_machine.png");
-	private DataPacket packet;
+	private final DataPacket packet;
 	private int scroll;
 	private int maxScroll;
 	public boolean edit = false, delete = false, add = false;

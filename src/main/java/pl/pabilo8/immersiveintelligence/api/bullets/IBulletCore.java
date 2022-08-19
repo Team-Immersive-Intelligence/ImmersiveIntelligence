@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
 
 /**
  * @author Pabilo8

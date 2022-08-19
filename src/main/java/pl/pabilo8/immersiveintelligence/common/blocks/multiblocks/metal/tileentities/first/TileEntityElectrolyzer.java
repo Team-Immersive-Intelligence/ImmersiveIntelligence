@@ -107,7 +107,7 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 				ElectrolyzerRecipe recipe = ElectrolyzerRecipe.findRecipe(tanks[0].getFluid());
 				if(recipe!=null)
 				{
-					MultiblockProcessInMachine<ElectrolyzerRecipe> process = new MultiblockProcessInMachine(recipe);
+					MultiblockProcessInMachine<ElectrolyzerRecipe> process = new MultiblockProcessInMachine<>(recipe);
 					process.setInputTanks(0);
 					processTime = 0;
 					processTimeMax = recipe.getTotalProcessTime();

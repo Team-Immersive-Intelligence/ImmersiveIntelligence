@@ -1,19 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers;
 
 import mezz.jei.api.gui.IAdvancedGuiHandler;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.recipebook.GuiRecipeBook;
-import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineBase;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineBase;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

@@ -28,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageProgrammableSpeakerSync;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
@@ -62,7 +61,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 		if(world.isRemote)
 		{
 			if(active)
-			this.updateSound();
+				this.updateSound();
 			if (!soundID.equals(""))
 			{
 
@@ -151,7 +150,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 			{
 				SoundEvent s = SoundEvent.REGISTRY.getObject(new ResourceLocation(packet.getPacketVariable('s').valueToString()));
 				if(s!=null)
-					world.playSound(null, getPos(), s, SoundCategory.BLOCKS, 1f*((ProgrammableSpeaker.soundRange+4)/20f), tone);
+					world.playSound(null, getPos(), s, SoundCategory.BLOCKS, ((ProgrammableSpeaker.soundRange+4)/20f), tone);
 			}
 			else
 			{

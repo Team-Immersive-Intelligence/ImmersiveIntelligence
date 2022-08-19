@@ -1,10 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.gui.elements.buttons;
 
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
 
 /**
  * @author Pabilo8

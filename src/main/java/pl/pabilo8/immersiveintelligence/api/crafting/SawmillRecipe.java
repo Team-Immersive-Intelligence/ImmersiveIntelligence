@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.common.util.ListUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
@@ -31,7 +30,7 @@ public class SawmillRecipe extends MultiblockRecipe
 	public final ItemStack itemOutput, itemSecondaryOutput;
 
 	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
-	public static ArrayList<SawmillRecipe> recipeList = new ArrayList();
+	public static ArrayList<SawmillRecipe> recipeList = new ArrayList<>();
 	int totalProcessTime;
 
 	public int getTorque()
@@ -78,7 +77,7 @@ public class SawmillRecipe extends MultiblockRecipe
 
 	public static List<SawmillRecipe> removeRecipesForOutput(ItemStack stack)
 	{
-		List<SawmillRecipe> list = new ArrayList();
+		List<SawmillRecipe> list = new ArrayList<>();
 		Iterator<SawmillRecipe> it = recipeList.iterator();
 		while(it.hasNext())
 		{

@@ -3,9 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.items.armor;
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.tool.IUpgrade;
 import blusunrize.immersiveengineering.api.tool.IUpgradeableTool;
-import blusunrize.immersiveengineering.common.gui.IESlot.Upgrades;
-import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -169,10 +166,10 @@ public class ItemIIArmorUpgrade extends ItemIIBase implements IUpgrade
 				(target, upgrade) -> true,
 				(upgrade, modifications) -> modifications.setBoolean("springs", true));
 
-		private ImmutableSet<String> toolset;
-		private int stackSize = 1;
-		private BiPredicate<ItemStack, ItemStack> applyCheck;
-		private BiConsumer<ItemStack, NBTTagCompound> function;
+		private final ImmutableSet<String> toolset;
+		private final int stackSize;
+		private final BiPredicate<ItemStack, ItemStack> applyCheck;
+		private final BiConsumer<ItemStack, NBTTagCompound> function;
 
 		ArmorUpgrades(ImmutableSet<String> toolset, BiConsumer<ItemStack, NBTTagCompound> function)
 		{

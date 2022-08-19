@@ -39,6 +39,6 @@ public class CapabilityRotaryEnergy
 						((RotaryStorage)instance).torque = ((NBTTagCompound)nbt).getFloat("torque");
 					}
 				},
-				() -> new RotaryStorage());
+				RotaryStorage::new);
 	}
 }

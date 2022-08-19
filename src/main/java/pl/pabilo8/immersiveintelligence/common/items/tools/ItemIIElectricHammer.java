@@ -362,7 +362,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		{
 			if(state.getBlock() instanceof BlockIEBase)
 			{
-				return ((BlockIEBase)state.getBlock()).allowHammerHarvest(state);
+				return ((BlockIEBase<?>)state.getBlock()).allowHammerHarvest(state);
 			}
 			else if(state.getBlock().isToolEffective(TOOL_HAMMER, state))
 				return true;

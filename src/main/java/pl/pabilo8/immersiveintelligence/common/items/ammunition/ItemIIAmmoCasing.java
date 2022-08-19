@@ -57,7 +57,6 @@ public class ItemIIAmmoCasing extends ItemIIBase
 			case 7:
 				return IIContent.itemNavalMine.getItemStackLimit(stack);
 			case 8:
-				return 64;
 			case 9:
 				return 64;
 			case 10:

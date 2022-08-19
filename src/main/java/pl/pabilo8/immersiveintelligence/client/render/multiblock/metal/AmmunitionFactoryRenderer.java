@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelAmmunitionFactory;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityAmmunitionFactory;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -26,11 +27,11 @@ import java.util.List;
  */
 public class AmmunitionFactoryRenderer extends TileEntitySpecialRenderer<TileEntityAmmunitionFactory>
 {
-	private static ModelAmmunitionFactory model = new ModelAmmunitionFactory();
-	private static ModelInserter modelInserter = new ModelInserter();
+	private static final ModelAmmunitionFactory model = new ModelAmmunitionFactory();
+	private static final ModelInserter modelInserter = new ModelInserter();
 
 	@Override
-	public void render(TileEntityAmmunitionFactory te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(@Nullable TileEntityAmmunitionFactory te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{

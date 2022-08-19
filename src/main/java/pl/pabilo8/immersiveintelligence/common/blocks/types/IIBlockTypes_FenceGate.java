@@ -18,7 +18,7 @@ public enum IIBlockTypes_FenceGate implements IStringSerializable, BlockIEBase.I
 	ALUMINIUM(false),
 	ALUMINIUM_CHAIN(false);
 
-	private boolean needsCustomState;
+	private final boolean needsCustomState;
 
 	IIBlockTypes_FenceGate(boolean needsCustomState)
 	{

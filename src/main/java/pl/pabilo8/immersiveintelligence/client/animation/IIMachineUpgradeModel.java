@@ -14,7 +14,6 @@ import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimation
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIFloatLine;
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIVectorLine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -165,13 +165,12 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 			case 1:
 				return 24;
 			case 2:
+			case 5:
 				return 16;
 			case 3:
 				return 64;
 			case 4:
 				return 32;
-			case 5:
-				return 16;
 			case 6:
 				return 128;
 		}
@@ -379,9 +378,8 @@ public class ItemIIBulletMagazine extends ItemIIBase implements ITextureOverride
 		ArrayList<ItemStack> dictionary = new ArrayList<>();
 		NBTTagList invList = new NBTTagList();
 
-		for(int i = 0; i < inv.size(); i++)
+		for(ItemStack stack : inv)
 		{
-			ItemStack stack = inv.get(i);
 			if(stack.isEmpty())
 				continue;
 			int id;

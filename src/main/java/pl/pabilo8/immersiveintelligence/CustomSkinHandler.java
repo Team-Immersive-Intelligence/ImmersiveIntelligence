@@ -7,7 +7,6 @@ import com.google.gson.*;
 import net.minecraft.item.EnumRarity;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 import java.io.InputStreamReader;
 import java.net.URL;

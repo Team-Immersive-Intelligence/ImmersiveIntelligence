@@ -30,7 +30,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 	private ItemStack scanned;
 	private String valueLabel;
 	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
-	private RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	private final RenderItem renderItem = ClientUtils.mc().getRenderItem();
 
 	public GuiDataEditorItemStack(int buttonId, DataTypeItemStack dataType)
 	{

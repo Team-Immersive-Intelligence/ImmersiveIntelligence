@@ -497,9 +497,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	@Override
 	protected boolean canFillTankFrom(int i, @Nonnull EnumFacing side, @Nonnull FluidStack fluidStack)
 	{
-		if(pos==22&&side==facing)
-			return true;
-		return false;
+		return pos==22&&side==facing;
 	}
 
 	@Override

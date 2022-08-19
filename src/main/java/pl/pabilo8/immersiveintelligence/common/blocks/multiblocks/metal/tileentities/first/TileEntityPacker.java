@@ -55,6 +55,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PackerRenderer;
@@ -75,7 +76,7 @@ import java.util.function.Predicate;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IConveyorAttachable, IGuiTile, IUpgradableMachine
+public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker, IMultiblockRecipe> implements IDataDevice, IAdvancedBounds, IConveyorAttachable, IGuiTile, IUpgradableMachine
 {
 	/**
 	 * Used for handling item I/O
@@ -688,7 +689,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 
 	@Nonnull
 	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 		switch(pos)
@@ -762,19 +763,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 		}
 
 		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(@Nonnull AxisAlignedBB box, @Nonnull EntityPlayer player, @Nonnull RayTraceResult mop, @Nonnull ArrayList<AxisAlignedBB> list)
-	{
-		return false;
-	}
-
-	@Nonnull
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
 	}
 
 	@Override

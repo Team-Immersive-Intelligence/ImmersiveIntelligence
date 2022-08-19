@@ -169,8 +169,8 @@ public enum IIGuiList
 	//GUI_PERISCOPE,
 
 	public boolean item;
-	public Class<? extends TileEntity> teClass;
-	public BiFunction<EntityPlayer, TileEntity, Container> container;
+	public final Class<? extends TileEntity> teClass;
+	public final BiFunction<EntityPlayer, TileEntity, Container> container;
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)

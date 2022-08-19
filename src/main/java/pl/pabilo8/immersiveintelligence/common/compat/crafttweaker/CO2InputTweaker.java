@@ -80,18 +80,13 @@ public class CO2InputTweaker
 			if(pos.contains(c.cast(tile).pos))
 				return 0;
 
-			TileEntityMultiblockMetal machine = c.cast(c.cast(tile).master());
+			TileEntityMultiblockMetal<?,?> machine = c.cast(c.cast(tile).master());
 			if(machine==null)
 				return 0;
 			int i = 0;
-			for(Object p : machine.processQueue)
-			{
-				assert p instanceof MultiblockProcess;
-				MultiblockProcess process = ((MultiblockProcess)p);
-				if(process.canProcess(machine)&&process.processTick%time==0)
+			for(MultiblockProcess<?> p : machine.processQueue)
+				if(p.canProcess(machine)&&p.processTick%time==0)
 					i += amount;
-
-			}
 			return i;
 		}
 	}

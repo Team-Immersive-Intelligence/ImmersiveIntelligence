@@ -11,7 +11,6 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.client.animation.*;
 import pl.pabilo8.immersiveintelligence.client.animation.AMTBullet.BulletState;
@@ -106,9 +105,6 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 				canOperateActive&&te.animation!=ArtilleryHowitzerAnimation.STOP, false, 1f, 0f, partialTicks);
 		switch(te.animation)
 		{
-			case STOP:
-			case HIDE:
-				break;
 			case LOAD1:
 			case LOAD2:
 			case LOAD3:
@@ -162,6 +158,8 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 					turretPitch = -90;
 			}
 			break;
+			case STOP:
+			case HIDE:
 			case AIM:
 			default:
 				break;

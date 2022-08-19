@@ -4,7 +4,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.animation.*;
+import pl.pabilo8.immersiveintelligence.client.animation.AMT;
+import pl.pabilo8.immersiveintelligence.client.animation.AMTItem;
+import pl.pabilo8.immersiveintelligence.client.animation.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.animation.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityInserter;
 
 import java.util.function.Function;

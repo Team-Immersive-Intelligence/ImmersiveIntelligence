@@ -82,6 +82,11 @@ public class AMTBullet extends AMT
 
 	}
 
+	public void setModel(@Nullable IBulletModel model)
+	{
+		this.model = model;
+	}
+
 	public AMTBullet withStack(ItemStack stack, BulletState state)
 	{
 		this.state = state;

@@ -508,10 +508,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 							curStep = i;
 							dist = Math.abs(steps[i]-ZoomHandler.fovZoom);
 						}
-					if(curStep!=-1)
-						ZoomHandler.fovZoom = steps[curStep];
-					else
-						ZoomHandler.fovZoom = event.getFOV();
+					ZoomHandler.fovZoom = steps[curStep];
 					event.setFOV(ZoomHandler.fovZoom*event.getFOV());
 				}
 				ZoomHandler.isZooming = true;
@@ -828,13 +825,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						}
 						GlStateManager.translate(0, -totalOffset/256*resMin, 0);
 
-						if(curStep >= 0&&curStep < steps.length)
-						{
-							GlStateManager.translate(6/256f*resMin, curStep*stepLength/256*resMin, 0);
-							ClientUtils.drawTexturedRect(0, 0, 8/256f*resMin, 7/256f*resMin, 88/256f, 98/256f, 103/256f, 110/256f);
-							ClientUtils.font().drawString((1/steps[curStep])+"x", (int)(16/256f*resMin), 0, 0xffffff);
-							GlStateManager.translate(-6/256f*resMin, -curStep*stepLength/256*resMin, 0);
-						}
+						GlStateManager.translate(6/256f*resMin, curStep*stepLength/256*resMin, 0);
+						ClientUtils.drawTexturedRect(0, 0, 8/256f*resMin, 7/256f*resMin, 88/256f, 98/256f, 103/256f, 110/256f);
+						ClientUtils.font().drawString((1/steps[curStep])+"x", (int)(16/256f*resMin), 0, 0xffffff);
+						GlStateManager.translate(-6/256f*resMin, -curStep*stepLength/256*resMin, 0);
 						GlStateManager.translate(0, -((5+stepOffset)/256*resMin), 0);
 						GlStateManager.translate(-223/256f*resMin, -64/256f*resMin, 0);
 					}

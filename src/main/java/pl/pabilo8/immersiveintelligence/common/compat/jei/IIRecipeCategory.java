@@ -23,8 +23,8 @@ public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements I
 {
 	public static ResourceLocation texture = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/jei_stuff.png");
 
-	private String uniqueName;
-	private String localizedName;
+	private final String uniqueName;
+	private final String localizedName;
 	private final IDrawable background;
 	private final Class<T> recipeClass;
 	private final ItemStack[] displayStacks;

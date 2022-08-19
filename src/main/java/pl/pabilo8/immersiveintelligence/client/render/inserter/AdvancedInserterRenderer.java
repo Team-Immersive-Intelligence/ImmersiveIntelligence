@@ -8,7 +8,6 @@ import pl.pabilo8.immersiveintelligence.client.animation.AMT;
 import pl.pabilo8.immersiveintelligence.client.animation.AMTItem;
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.client.animation.IIModelHeader;
-import pl.pabilo8.immersiveintelligence.client.render.inserter.InserterBaseRenderer;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityAdvancedInserter;
 
 import java.util.function.Function;

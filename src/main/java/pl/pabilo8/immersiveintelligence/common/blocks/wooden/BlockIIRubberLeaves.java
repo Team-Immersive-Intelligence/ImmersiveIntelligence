@@ -13,7 +13,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.IBlockAccess;
@@ -53,19 +56,19 @@ public class BlockIIRubberLeaves extends BlockIIBase<IIBlockTypesRubberStuff> im
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(property, IIBlockTypesRubberStuff.RUBBER).withProperty(BlockLeaves.CHECK_DECAY,meta==1).withProperty(BlockLeaves.DECAYABLE,meta==1);
+		return this.getDefaultState().withProperty(property, IIBlockTypesRubberStuff.RUBBER).withProperty(BlockLeaves.CHECK_DECAY, meta==1).withProperty(BlockLeaves.DECAYABLE, meta==1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(BlockLeaves.DECAYABLE)?1:0;
+		return state.getValue(BlockLeaves.DECAYABLE)?1: 0;
 	}
 
 	@Override
 	protected IBlockState getInitDefaultState()
 	{
-		return super.getInitDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false).withProperty(BlockLeaves.DECAYABLE,false);
+		return super.getInitDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false).withProperty(BlockLeaves.DECAYABLE, false);
 	}
 
 	@Override
@@ -278,7 +281,9 @@ public class BlockIIRubberLeaves extends BlockIIBase<IIBlockTypesRubberStuff> im
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
-		return (this.leavesFancy=Minecraft.getMinecraft().gameSettings.fancyGraphics)?BlockRenderLayer.CUTOUT_MIPPED: BlockRenderLayer.SOLID;
+		this.leavesFancy = Minecraft.getMinecraft().gameSettings.fancyGraphics;
+
+		return this.leavesFancy?BlockRenderLayer.CUTOUT_MIPPED: BlockRenderLayer.SOLID;
 	}
 
 	@Override
@@ -358,7 +363,7 @@ public class BlockIIRubberLeaves extends BlockIIBase<IIBlockTypesRubberStuff> im
 	@Override
 	public int getRenderColour(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex)
 	{
-		return worldIn != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(worldIn, pos) : ColorizerFoliage.getFoliageColorBasic();
+		return worldIn!=null&&pos!=null?BiomeColorHelper.getFoliageColorAtPos(worldIn, pos): ColorizerFoliage.getFoliageColorBasic();
 	}
 
 	public static class ItemBlockIILeaves extends ItemBlockIEBase implements IColouredItem

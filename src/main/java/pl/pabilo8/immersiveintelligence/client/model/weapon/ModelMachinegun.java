@@ -26,7 +26,7 @@ public class ModelMachinegun extends ModelIIBase
 	ModelRendererTurbo[] tripodBaseModel, tripodLeg1Model, tripodLeg2Model, tripodLeg3Model;
 	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox, baubleBox, tripodBox;
 
-	private static String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
+	private static final String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
 
 	public ModelMachinegun() //Same as Filename
 	{

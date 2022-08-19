@@ -370,7 +370,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		List<AxisAlignedBB> list = new ArrayList<>();
 
 		if(pos==4)
 		{

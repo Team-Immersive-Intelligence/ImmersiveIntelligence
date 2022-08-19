@@ -191,7 +191,6 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		GlStateManager.pushMatrix();
 		float p, pp, y, yy;
 		p = this.nextPitch-this.pitch;
-		y = this.nextYaw-this.yaw;
 		boolean power = te.energyStorage.getEnergyStored() >= getEnergyUpkeepCost();
 		pp = pitch+(power?(Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, 1)*partialTicks*getPitchTurnSpeed()): 0);
 		yy = yaw;//+(power?(Math.signum(y)*MathHelper.clamp(Math.abs(y), 0, 1)*partialTicks*getYawTurnSpeed()):0);
@@ -287,7 +286,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			if(1+i > Math.round(l*progress))
 			{
 				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f)/1f);
+				double scale = 1f-(((progress*l)%1f));
 				GlStateManager.enableBlend();
 				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
 				GlStateManager.translate(0, scale*1.5f, 0);

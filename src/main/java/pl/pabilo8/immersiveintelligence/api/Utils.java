@@ -102,11 +102,15 @@ public class Utils
 	public static IDataConnector findConnectorFacing(BlockPos pos, World world, EnumFacing facing)
 	{
 		BlockPos newpos = pos.offset(facing);
-		if(world.isBlockLoaded(newpos)&&world.getTileEntity(newpos) instanceof IDataConnector&&world.getTileEntity(newpos) instanceof IDirectionalTile)
+		if(!world.isBlockLoaded(newpos))
+			return null;
+		TileEntity te = world.getTileEntity(newpos);
+
+		if(te instanceof IDataConnector&&te instanceof IDirectionalTile)
 		{
-			IDirectionalTile t = (IDirectionalTile)world.getTileEntity(newpos);
+			IDirectionalTile t = (IDirectionalTile)te;
 			if(t.getFacing()==facing.getOpposite())
-				return (IDataConnector)world.getTileEntity(newpos);
+				return (IDataConnector)te;
 		}
 		return null;
 	}
@@ -114,33 +118,11 @@ public class Utils
 	@Nullable
 	public static IDataConnector findConnectorAround(BlockPos pos, World world)
 	{
-		BlockPos newpos = pos.add(1, 0, 0);
-		if(world.isBlockLoaded(newpos)&&world.getTileEntity(newpos) instanceof IDataConnector&&world.getTileEntity(newpos) instanceof IDirectionalTile)
+		for(EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
-			IDirectionalTile t = (IDirectionalTile)world.getTileEntity(newpos);
-			if(t.getFacing()==EnumFacing.WEST)
-				return (IDataConnector)world.getTileEntity(newpos);
-		}
-		newpos = pos.add(-1, 0, 0);
-		if(world.isBlockLoaded(newpos)&&world.getTileEntity(newpos) instanceof IDataConnector&&world.getTileEntity(newpos) instanceof IDirectionalTile)
-		{
-			IDirectionalTile t = (IDirectionalTile)world.getTileEntity(newpos);
-			if(t.getFacing()==EnumFacing.EAST)
-				return (IDataConnector)world.getTileEntity(newpos);
-		}
-		newpos = pos.add(0, 0, 1);
-		if(world.isBlockLoaded(newpos)&&world.getTileEntity(newpos) instanceof IDataConnector&&world.getTileEntity(newpos) instanceof IDirectionalTile)
-		{
-			IDirectionalTile t = (IDirectionalTile)world.getTileEntity(newpos);
-			if(t.getFacing()==EnumFacing.NORTH)
-				return (IDataConnector)world.getTileEntity(newpos);
-		}
-		newpos = pos.add(0, 0, -1);
-		if(world.isBlockLoaded(newpos)&&world.getTileEntity(newpos) instanceof IDataConnector&&world.getTileEntity(newpos) instanceof IDirectionalTile)
-		{
-			IDirectionalTile t = (IDirectionalTile)world.getTileEntity(newpos);
-			if(t.getFacing()==EnumFacing.SOUTH)
-				return (IDataConnector)world.getTileEntity(newpos);
+			IDataConnector conn = findConnectorFacing(pos, world, facing);
+			if(conn!=null)
+				return conn;
 		}
 		return null;
 	}
@@ -518,13 +500,13 @@ public class Utils
 	 * Pitch calculation for artillery stolen from Pneumaticcraft. Huge thanks to desht and MineMaarten for this amazing code!
 	 * <a href="https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java">https://github.com/TeamPneumatic/pnc-repressurized/blob/master/src/main/java/me/desht/pneumaticcraft/common/tileentity/TileEntityAirCannon.java</a>
 	 *
-	 * @param distance
-	 * @param height
-	 * @param force
-	 * @param gravity
-	 * @param drag
-	 * @param anglePrecision
-	 * @return
+	 * @param distance distance to target
+	 * @param height height difference between the gun and target
+	 * @param force speed (blocks/s) of the bullet
+	 * @param gravity gravity of the bullet
+	 * @param drag drag factor of the bullet
+	 * @param anglePrecision precision with which the angle will be searched, the lower the number, the higher the precision
+	 * @return optimal ballistic shooting angle
 	 * @author desht
 	 * @author MineMaarten
 	 */
@@ -536,9 +518,10 @@ public class Utils
 		{
 			return 90F-(float)(Math.atan(height/distance)*180F/Math.PI);
 		}
-		// simulate the trajectory for angles from 45 to 90 degrees,
-		// returning the angle which lands the projectile closest to the target distance
-//        for (double i = Math.PI * 0.25D; i < Math.PI * 0.50D; i += 0.001D) {
+		/*
+			simulate the trajectory for angles from 45 to 90 degrees,
+			returning the angle which lands the projectile closest to the target distance
+		*/
 		for(double i = Math.PI*anglePrecision; i < Math.PI*0.5D; i += anglePrecision)
 		{
 			double motionX = MathHelper.cos((float)i)*force;// calculate the x component of the vector
@@ -546,7 +529,8 @@ public class Utils
 			double posX = 0;
 			double posY = 0;
 			while(posY > height||motionY > 0)
-			{ // simulate movement, until we reach the y-level required
+			{
+				// simulate movement, until we reach the y-level required
 				motionX *= drag;
 				motionY *= drag;
 				motionY -= gravity;
@@ -560,24 +544,6 @@ public class Utils
 				bestAngle = i;
 			}
 		}
-		/*ImmersiveIntelligence.logger.info(String.format("Best Distance: %s/%s", (distance-bestDistance), distance));
-		ImmersiveIntelligence.logger.info("Calculated Trajectory:");
-		{
-			double motionX = MathHelper.cos((float)bestAngle)*force;// calculate the x component of the vector
-			double motionY = MathHelper.sin((float)bestAngle)*force;// calculate the y component of the vector
-			double posX = 0;
-			double posY = 0;
-			while(posY > height||motionY > 0)
-			{ // simulate movement, until we reach the y-level required
-				motionX *= drag;
-				motionY *= drag;
-				motionY -= gravity;
-				posX += motionX;
-				posY += motionY;
-				ImmersiveIntelligence.logger.info(posX+", "+posY);
-			}
-		}
-		ImmersiveIntelligence.logger.info("---");*/
 
 		return 90F-(float)(bestAngle*180D/Math.PI);
 	}
@@ -788,12 +754,12 @@ public class Utils
 
 	}
 
-	public static ItemStack getStackWithMetaName(BlockIIBase block, String name)
+	public static ItemStack getStackWithMetaName(BlockIIBase<?> block, String name)
 	{
 		return new ItemStack(block, 1, block.getMetaBySubname(name));
 	}
 
-	public static ItemStack getStackWithMetaName(BlockIIBase block, String name, int count)
+	public static ItemStack getStackWithMetaName(BlockIIBase<?> block, String name, int count)
 	{
 		ItemStack stack = getStackWithMetaName(block, name);
 		stack.setCount(count);
@@ -814,7 +780,7 @@ public class Utils
 
 	public static int RGBAToRGB(int color)
 	{
-		return color-(color >> 24&0xFF);
+		return color-(color>>24&0xFF);
 	}
 
 	//Thanks Blu, these stencil buffers look really capable
@@ -1114,7 +1080,7 @@ public class Utils
 			double u = sprite.getMinU(), uu = sprite.getMaxU(), v = sprite.getMinV(), vv = v+((sprite.getMaxV()-v)*Math.min(1, (yy-y)/sprite.getIconHeight()));
 			double ux = u+((uu-u)*Math.min(1, (xx-x)/sprite.getIconWidth())), uz = u+(uu*Math.min(1, (zz-z)/sprite.getIconWidth()));
 
-			GlStateManager.color((col >> 16&255)/255.0f, (col >> 8&255)/255.0f, (col&255)/255.0f, 1);
+			GlStateManager.color((col>>16&255)/255.0f, (col>>8&255)/255.0f, (col&255)/255.0f, 1);
 
 			BufferBuilder buff = Tessellator.getInstance().getBuffer();
 

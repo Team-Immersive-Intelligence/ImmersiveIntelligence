@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog.IIBlockTypesRubberLog;
 
 import java.util.Random;
@@ -35,9 +34,7 @@ public class IIWorldGenRubberTree extends WorldGenAbstractTree
 	protected void setDirtAt(World worldIn, BlockPos pos)
 	{
 		if(worldIn.getBlockState(pos).getBlock()!=Blocks.DIRT)
-		{
 			this.setBlockAndNotifyAdequately(worldIn, pos, Blocks.DIRT.getDefaultState());
-		}
 	}
 
 	public boolean isReplaceable(World world, BlockPos pos)
@@ -59,42 +56,28 @@ public class IIWorldGenRubberTree extends WorldGenAbstractTree
 
 			for(int i1 = position.getY(); i1 <= position.getY()+1+i&&flag; ++i1)
 			{
-				int j1 = 1;
+				int j1;
 
 				if(i1-position.getY() < j)
-				{
 					j1 = 0;
-				}
 				else
-				{
 					j1 = l;
-				}
 
 				BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
 				for(int k1 = position.getX()-j1; k1 <= position.getX()+j1&&flag; ++k1)
-				{
 					for(int l1 = position.getZ()-j1; l1 <= position.getZ()+j1&&flag; ++l1)
-					{
 						if(i1 >= 0&&i1 < 256)
 						{
 							if(!this.isReplaceable(worldIn, blockpos$mutableblockpos.setPos(k1, i1, l1)))
-							{
 								flag = false;
-							}
 						}
 						else
-						{
 							flag = false;
-						}
-					}
-				}
 			}
 
 			if(!flag)
-			{
 				return false;
-			}
 			else
 			{
 				BlockPos down = position.down();
@@ -122,21 +105,15 @@ public class IIWorldGenRubberTree extends WorldGenAbstractTree
 									state = worldIn.getBlockState(blockpos);
 
 									if(state.getBlock().canBeReplacedByLeaves(state, worldIn, blockpos))
-									{
 										this.setBlockAndNotifyAdequately(worldIn, blockpos, LEAF);
-									}
 								}
 							}
 						}
 
 						if(k2 >= 1&&l2==position.getY()+j+1)
-						{
 							--k2;
-						}
 						else if(k2 < l)
-						{
 							++k2;
-						}
 					}
 
 					for(int i3 = 0; i3 < i-1; ++i3)
@@ -145,22 +122,16 @@ public class IIWorldGenRubberTree extends WorldGenAbstractTree
 						state = worldIn.getBlockState(upN);
 
 						if(state.getBlock().isAir(state, worldIn, upN)||state.getBlock().isLeaves(state, worldIn, upN))
-						{
-							this.setBlockAndNotifyAdequately(worldIn, position.up(i3), i3==1?TRUNK_REBBUR:TRUNK);
-						}
+							this.setBlockAndNotifyAdequately(worldIn, position.up(i3), i3==1?TRUNK_REBBUR: TRUNK);
 					}
 
 					return true;
 				}
 				else
-				{
 					return false;
-				}
 			}
 		}
 		else
-		{
 			return false;
-		}
 	}
 }

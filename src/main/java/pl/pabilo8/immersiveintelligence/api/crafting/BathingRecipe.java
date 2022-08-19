@@ -18,25 +18,23 @@ import java.util.*;
  */
 public class BathingRecipe extends MultiblockRecipe
 {
-	public static float energyModifier = 1.0F;
-	public static float timeModifier = 1.0F;
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
 	public final boolean isWashing;
 
 	public final FluidStack fluidInput;
 
-	public static LinkedList<BathingRecipe> recipeList = new LinkedList();
-	int totalProcessTime;
-	int totalProcessEnergy;
+	public static final LinkedList<BathingRecipe> recipeList = new LinkedList<>();
+	final int totalProcessTime;
+	final int totalProcessEnergy;
 
 	public BathingRecipe(ItemStack itemOutput, Object itemInput, FluidStack fluidInput, int energy, int time, boolean isWashing)
 	{
 		this.itemOutput = itemOutput;
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
 		this.fluidInput = fluidInput;
-		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
-		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
+		this.totalProcessEnergy = (int)Math.floor((float)energy);
+		this.totalProcessTime = (int)Math.floor((float)time);
 		this.isWashing = isWashing;
 
 		this.fluidInputList = Collections.singletonList(this.fluidInput);
@@ -61,7 +59,7 @@ public class BathingRecipe extends MultiblockRecipe
 
 	public static List<BathingRecipe> removeRecipesForOutput(ItemStack stack)
 	{
-		List<BathingRecipe> list = new ArrayList();
+		List<BathingRecipe> list = new ArrayList<>();
 		Iterator<BathingRecipe> it = recipeList.iterator();
 		while(it.hasNext())
 		{

@@ -3,9 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
 import net.minecraft.client.gui.recipebook.GuiRecipeBook;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiUpgrade;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;

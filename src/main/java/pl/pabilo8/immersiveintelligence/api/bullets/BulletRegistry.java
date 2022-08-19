@@ -256,7 +256,7 @@ public class BulletRegistry
 		//glass, wool, leaves, cloth
 		LIGHT(false);
 
-		boolean ricochet;
+		private final boolean ricochet;
 
 		PenMaterialTypes(boolean ricochet)
 		{

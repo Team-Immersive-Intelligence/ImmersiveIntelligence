@@ -95,10 +95,9 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 	@Override
 	public TileEntity createBasicTE(World worldIn, IIBlockTypes_MetalDevice1 type)
 	{
-		switch(type)
+		if(type==IIBlockTypes_MetalDevice1.CO2_FILTER)
 		{
-			case CO2_FILTER:
-				return new TileEntityCO2Filter();
+			return new TileEntityCO2Filter();
 		}
 		return null;
 	}

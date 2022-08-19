@@ -27,7 +27,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
 
@@ -66,7 +65,7 @@ public class IIAnimationUtils
 	 * @param progress of the full animation
 	 * @param offset   of the current animation
 	 * @param duration of the current animation
-	 * @return
+	 * @return animation time 0-1
 	 */
 	public static float getOffset(float progress, float offset, float duration)
 	{

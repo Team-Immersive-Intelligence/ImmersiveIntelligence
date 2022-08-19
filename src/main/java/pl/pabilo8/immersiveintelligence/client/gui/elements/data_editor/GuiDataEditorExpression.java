@@ -43,7 +43,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	@Nullable
 	private GuiDataEditor<? extends IDataType> pageEditor;
 	@Nonnull
-	private List<String> operations;
+	private final List<String> operations;
 
 	private GuiButtonDropdownList dropdownOperationPicker;
 	private GuiButtonDataLetterList dropdownLetterPicker;

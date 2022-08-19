@@ -22,7 +22,6 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -34,7 +33,7 @@ import java.util.function.Consumer;
 public class GuiPackerTaskList extends GuiButton
 {
 	boolean unpacker;
-	private ArrayList<PackerTask> entries;
+	private final ArrayList<PackerTask> entries;
 	private final Consumer<Integer> taskChange;
 	private static final ResourceLocation TEXTURE_PACKER = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/packer.png");
 	private long prevWheelNano = 0;
@@ -171,10 +170,8 @@ public class GuiPackerTaskList extends GuiButton
 				List<ItemStack> ores = OreDictionary.getOres(action.stack.oreName);
 				if(ores!=null)
 				{
-					Iterator<ItemStack> i = ores.iterator();
-					while(i.hasNext())
+					for(ItemStack next : ores)
 					{
-						ItemStack next = i.next();
 						if(next.getHasSubtypes()&&next.getMetadata()==32767)
 						{
 							ores.remove(next);

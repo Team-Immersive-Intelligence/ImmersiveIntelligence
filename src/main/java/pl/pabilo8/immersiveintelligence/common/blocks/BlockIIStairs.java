@@ -1,10 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.blocks;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.BlockIEStairs;
-import blusunrize.immersiveengineering.common.blocks.ItemBlockIEStairs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;

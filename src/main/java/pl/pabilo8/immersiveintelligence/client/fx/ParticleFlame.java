@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  */
 public class ParticleFlame extends IIParticle
 {
-	private float actualParticleScale;
+	private final float actualParticleScale;
 
 	public ParticleFlame(World world, double x, double y, double z, double mx, double my, double mz, float size, int lifeTime)
 	{

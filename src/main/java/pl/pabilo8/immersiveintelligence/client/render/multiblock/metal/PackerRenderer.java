@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPacker;
@@ -34,7 +33,7 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> 
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPacker model;
 	private static ModelPacker modelFlipped;
-	private static ResourceLocation TEXTURE = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/packer.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/packer.png");
 
 	@Override
 	public void render(TileEntityPacker te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -84,7 +83,7 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> 
 			//clamps down 0
 			else if(pp < 0.75)
 			{
-				clampProgress = (float)(1d-((pp+-0.65)/0.1));
+				clampProgress = (float)(1d-((pp-0.65)/0.1));
 				clampGrab = 1;
 			}
 			//clamps drop, doors shut

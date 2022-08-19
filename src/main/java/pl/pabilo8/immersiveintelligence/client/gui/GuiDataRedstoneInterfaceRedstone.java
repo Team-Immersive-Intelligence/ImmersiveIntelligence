@@ -119,7 +119,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	{
 		super.drawScreen(mx, my, partial);
 
-		ArrayList<String> tooltip = new ArrayList<String>();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
 			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"data_to_redstone_module"));
@@ -152,7 +152,6 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 
 		int i = 0;
-		loop:
 		for(char c : DataPacket.varCharacters)
 		{
 			if(list.variables.containsKey(c))

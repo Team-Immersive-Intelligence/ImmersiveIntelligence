@@ -29,7 +29,7 @@ public class PaintingRecipe extends MultiblockRecipe
 	public final BiFunction<Integer, ItemStack, ItemStack> process;
 	public final IngredientStack itemInput;
 
-	public static LinkedList<PaintingRecipe> recipeList = new LinkedList();
+	public static LinkedList<PaintingRecipe> recipeList = new LinkedList<>();
 
 	int paintAmount;
 	int totalProcessTime;

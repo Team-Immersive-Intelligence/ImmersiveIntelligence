@@ -76,7 +76,7 @@ public class BulletComponentTesla implements IBulletComponent
 					{
 						if(te instanceof TileEntityMultiblockMetal)
 						{
-							((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy((int)(extracted), false);
+							((TileEntityMultiblockMetal<?, ?>)te).energyStorage.extractEnergy(extracted, false);
 						}
 						else
 						{
@@ -87,7 +87,7 @@ public class BulletComponentTesla implements IBulletComponent
 									IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, facing);
 									if(cap!=null)
 									{
-										cap.extractEnergy((int)(extracted), false);
+										cap.extractEnergy(extracted, false);
 										break;
 									}
 								}
@@ -117,7 +117,7 @@ public class BulletComponentTesla implements IBulletComponent
 					{
 						IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
 						if(cap!=null)
-							if(cap.extractEnergy((int)(extracted), false)==0)
+							if(cap.extractEnergy(extracted, false)==0)
 							{
 								//Get off Rolf's property before Rolf gets his  b e a t i n g  s t i c k
 								//For items that don't want to be extracted from

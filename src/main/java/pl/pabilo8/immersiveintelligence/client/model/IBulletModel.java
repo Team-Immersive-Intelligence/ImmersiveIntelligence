@@ -10,14 +10,14 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
  * @author Pabilo8
  * @since 04-10-2019
  */
-public interface IBulletModel extends IReloadableModelContainer
+public interface IBulletModel extends IReloadableModelContainer<IBulletModel>
 {
 	/**
 	 * Renders casing and core.
 	 * When your bullet has a gunpowder filling animation it is preferred to override this method and render a simpler casing model (less geometry -> more performance)
 	 *
-	 * @param coreColour of the bullet, see {@link IBulletCore#getColour()}
-	 * @param coreType of the bullet, see {@link IBullet#getAllowedCoreTypes()}
+	 * @param coreColour  of the bullet, see {@link IBulletCore#getColour()}
+	 * @param coreType    of the bullet, see {@link IBullet#getAllowedCoreTypes()}
 	 * @param paintColour in rgbInt format
 	 */
 	default void renderBulletUnused(int coreColour, EnumCoreTypes coreType, int paintColour)
@@ -28,6 +28,7 @@ public interface IBulletModel extends IReloadableModelContainer
 
 	/**
 	 * Same as {@link #renderBulletUnused(int, EnumCoreTypes, int)}, use according to your needs
+	 *
 	 * @param stack to be rendered
 	 */
 	default void renderBulletUnused(ItemStack stack)
@@ -40,8 +41,8 @@ public interface IBulletModel extends IReloadableModelContainer
 	 * By default, shot bullets render only the core (as casing is expelled)
 	 * Override it when rendering grenades (so the stick/casing would be rendered too)
 	 *
-	 * @param coreColour of the bullet, see {@link IBulletCore#getColour()}
-	 * @param coreType of the bullet, see {@link IBullet#getAllowedCoreTypes()}
+	 * @param coreColour  of the bullet, see {@link IBulletCore#getColour()}
+	 * @param coreType    of the bullet, see {@link IBullet#getAllowedCoreTypes()}
 	 * @param paintColour in rgbInt format
 	 */
 	default void renderBulletUsed(int coreColour, EnumCoreTypes coreType, int paintColour)
@@ -54,7 +55,7 @@ public interface IBulletModel extends IReloadableModelContainer
 	 * If your bullet has a gunpowder filling animation it's preferred you add a simpler casing model and override {@link #renderBulletUnused(int, EnumCoreTypes, int)}
 	 *
 	 * @param gunpowderPercentage how much is the casing filled with gunpowder
-	 * @param paintColour in rgbInt format, -1 if unpainted
+	 * @param paintColour         in rgbInt format, -1 if unpainted
 	 */
 	void renderCasing(float gunpowderPercentage, int paintColour);
 

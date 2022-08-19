@@ -42,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
@@ -57,7 +58,7 @@ import java.util.function.Predicate;
  * @since 28-06-2019
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEntityChemicalPainter, PaintingRecipe> implements IGuiTile, ISoundTile, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ILightProvider, IDataDevice
+public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEntityChemicalPainter, PaintingRecipe> implements IGuiTile, ISoundTile, IAdvancedBounds, ILightProvider, IDataDevice
 {
 	private static final Predicate<FluidStack> CYAN = fluidStack -> fluidStack!=null&&fluidStack.getFluid().getName().equals("ink_cyan");
 	private static final Predicate<FluidStack> MAGENTA = fluidStack -> fluidStack!=null&&fluidStack.getFluid().getName().equals("ink_magenta");
@@ -601,7 +602,7 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 
 	@Nonnull
 	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 		switch(pos)
@@ -642,19 +643,6 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 
 		}
 		return list;
-	}
-
-	@Nonnull
-	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
-	{
-		return getAdvancedColisionBounds();
-	}
-
-	@Override
-	public boolean isOverrideBox(@Nonnull AxisAlignedBB box, @Nonnull EntityPlayer player, @Nonnull RayTraceResult mop, @Nonnull ArrayList<AxisAlignedBB> list)
-	{
-		return false;
 	}
 
 	@Override

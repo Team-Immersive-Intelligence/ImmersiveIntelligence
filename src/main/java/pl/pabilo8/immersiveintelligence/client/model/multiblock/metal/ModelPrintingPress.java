@@ -408,7 +408,7 @@ public class ModelPrintingPress extends ModelIIBase
 
 		if(flipped)
 			for(ModelRendererTurbo mod : rollerModel)
-			mod.rotateAngleY*=-1;
+				mod.rotateAngleY*=-1;
 
 		parts.put("base", baseModel);
 		parts.put("rollerModel", rollerModel);

@@ -18,7 +18,6 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -74,7 +73,7 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 		boolean upgraded = tile.hasUpgrade(IIContent.UPGRADE_INSERTER);
 		int ww = upgraded?9: 36;
 
-		ArrayList<String> tooltip = new ArrayList<String>();
+		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(upgraded)
 		{

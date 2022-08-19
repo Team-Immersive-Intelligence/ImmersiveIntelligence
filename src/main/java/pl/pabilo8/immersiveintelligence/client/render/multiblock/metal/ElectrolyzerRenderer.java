@@ -8,6 +8,8 @@ import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelElect
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityElectrolyzer;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8
  * @since 28-06-2019
@@ -17,7 +19,7 @@ public class ElectrolyzerRenderer extends TileEntitySpecialRenderer<TileEntityEl
 	private static ModelElectrolyzer model;
 
 	@Override
-	public void render(TileEntityElectrolyzer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(@Nullable TileEntityElectrolyzer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/electrolyzer.png";
 		if(te!=null)
