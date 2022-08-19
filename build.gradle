@@ -16,6 +16,7 @@ buildscript {
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: 'idea'
 
 setVersion(modVersion)
 setGroup(modGroup)
@@ -62,6 +63,16 @@ repositories {
         url "https://maven.tterrag.com/"
     }
 
+    maven {
+        name 'ComputerCraft Maven'
+        url 'https://squiddev.cc/maven/'
+    }
+
+    maven { // OpenComputers
+        name "OpenComputers"
+        url "http://maven.cil.li/"
+    }
+
     //https://www.cursemaven.com/
     //for Immersive Petroleum, Posts and Technology
     maven {
@@ -100,9 +111,13 @@ dependencies {
     //deobfCompile "albedo:albedo:1.12.2:1.1.0"
     deobfCompile 'baubles:Baubles:1.12:1.5.2'
 
+    compileOnly "org.squiddev:cc-tweaked-1.12.2:1.89.2"
+    compileOnly "opencomputers:OpenComputers:MC1.12.2:1.7.2.67"
+
     compileOnly "curse.maven:immersive-petroleum-268250:2544919"
     compileOnly "curse.maven:immersive-posts-314645:2951672"
     compileOnly "curse.maven:immersive-technology-359407:3251902"
+
 }
 
 reobf {

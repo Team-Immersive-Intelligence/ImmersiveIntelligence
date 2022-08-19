@@ -282,4 +282,9 @@ public class DataPacket implements Iterable<IDataType>
 	{
 		return variables.values().iterator();
 	}
+
+	public int size()
+	{
+		return variables.size();
+	}
 }

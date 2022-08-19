@@ -103,7 +103,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		{
 			this.lastPacket = new DataPacket();
 			this.lastPacket.fromNBT(nbt.getCompoundTag("packet"));
-			if(world.isRemote)
+			if(world!=null&&world.isRemote)
 				this.packetString = compilePacketString();
 		}
 	}
