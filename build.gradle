@@ -116,7 +116,7 @@ dependencies {
 
     compileOnly "curse.maven:immersive-petroleum-268250:2544919"
     compileOnly "curse.maven:immersive-posts-314645:2951672"
-    compileOnly "curse.maven:immersive-technology-359407:3251902"
+    compileOnly "curse.maven:immersive-technology-359407:3658279"
 
 }
 
