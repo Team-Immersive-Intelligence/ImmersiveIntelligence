@@ -499,7 +499,7 @@ info.immersiveintelligence.current_frequency=Текущая частота: %s
 
 info.immersiveintelligence.requires_advanced_hammer=Для продвинутой инженерии требуются продвинутые инструменты ... чтобы построить эту машину, вам понадобится электрический молоток!
 
-info.immersiveintelligence.gear_durability=Прочность: %1$s / %2$s
+info.immersiveintelligence.tool_durability=Прочность: %1$s / %2$s
 
 info.immersiveintelligence.yaw=Рыск: %s
 

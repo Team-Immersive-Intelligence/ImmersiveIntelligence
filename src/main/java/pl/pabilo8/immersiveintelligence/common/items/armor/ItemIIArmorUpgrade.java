@@ -233,8 +233,10 @@ public class ItemIIArmorUpgrade extends ItemIIBase implements IUpgrade
 		{
 			for(String upgradeType : this.getUpgradeTypes(stack))
 				list.add(getFormattingForWeapon(upgradeType)+I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade.item."+upgradeType.toLowerCase()));
-			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]), 200);
-			list.addAll(Arrays.asList(flavour));
+			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
+					I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]),
+					200);
+			Arrays.stream(flavour).map(s -> TextFormatting.ITALIC+s+TextFormatting.RESET).forEach(list::add);
 		}
 	}
 

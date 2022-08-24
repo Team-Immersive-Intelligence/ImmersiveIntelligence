@@ -228,6 +228,10 @@ item.immersiveintelligence.tracer_powder.flare_powder.name=Flare Powder
 item.immersiveintelligence.skycrate_mount.mechanical.name=Skycrate Mount
 item.immersiveintelligence.skycrate_mount.electric.name=Electric Skycrate Mount
 
+desc.immersiveintelligence.electric_hammer=Rotates blocks, toggles machine ports, forms multiblocks.
+desc.immersiveintelligence.electric_wirecutter=Cuts wires and motor belts, works as shears.
+desc.immersiveintelligence.wrench=Installs upgrades on compatible machines.
+
 desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
 desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
 desc.immersiveintelligence.toolupgrade.item.machinegun=Machinegun
@@ -1120,7 +1124,9 @@ info.immersiveintelligence.current_frequency=Current frequency: %s
 
 info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
 
+info.immersiveintelligence.tool_durability=Durability: %1$s / %2$s
 info.immersiveintelligence.gear_ratio=Gear Ratio: %1$s : %2$s
+info.immersiveintelligence.charge_with_if=Charge with IF
 
 info.immersiveintelligence.yaw=Yaw: %s
 info.immersiveintelligence.pitch=Pitch: %s
