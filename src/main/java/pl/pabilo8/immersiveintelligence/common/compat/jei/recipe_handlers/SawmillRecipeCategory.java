@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
@@ -21,9 +22,16 @@ import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenM
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, SawmillRecipeCategory.SawmillRecipeWrapper>
 {
 	static ItemStack machineStack;
+
 	public SawmillRecipeCategory(IGuiHelper helper)
 	{
 		super("sawmill",
@@ -44,11 +52,18 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 		guiItemStacks.init(1, true, 114, 20-8);
 		guiItemStacks.init(2, true, 134, 20-8);
 
+		guiItemStacks.init(3, true, 64, 20-12);
+
+		//in, out
 		guiItemStacks.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 		guiItemStacks.set(1, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
 
+		//sawdust
 		if(ingredients.getOutputs(VanillaTypes.ITEM).size() > 1)
 			guiItemStacks.set(2, ingredients.getOutputs(VanillaTypes.ITEM).get(1));
+
+		//saw
+		guiItemStacks.set(3, ingredients.getInputs(VanillaTypes.ITEM).get(1));
 
 	}
 
@@ -70,6 +85,25 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 		}
 
 		@Override
+		public void getIngredients(IIngredients ingredients)
+		{
+			//add recipe input
+			ArrayList<List<ItemStack>> items = new ArrayList<>(Arrays.asList(recipeInputs.clone()));
+			//add saws
+			items.add(
+					SawmillRecipe.toolMap.entrySet().stream()
+							.map(e -> new Tuple<>(e.getValue(), e.getValue().getToolPresentationStack(e.getKey())))
+							.filter(e -> e.getFirst().getHardness(e.getSecond()) >= hardness)
+							.map(Tuple::getSecond)
+							.collect(Collectors.toList())
+			);
+
+			super.getIngredients(ingredients);
+			if(!inputs.isEmpty())
+				ingredients.setInputLists(VanillaTypes.ITEM, items);
+		}
+
+		@Override
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
 		{
 			ClientUtils.drawSlot(0, 21-8, 16, 16);
@@ -85,7 +119,7 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 			minecraft.getRenderItem().renderItem(machineStack, TransformType.GUI);
 			GlStateManager.popMatrix();
 
-			drawEnergyTimeInfo(minecraft,0,recipeHeight-26);
+			drawEnergyTimeInfo(minecraft, 0, recipeHeight-26);
 		}
 
 		@Override

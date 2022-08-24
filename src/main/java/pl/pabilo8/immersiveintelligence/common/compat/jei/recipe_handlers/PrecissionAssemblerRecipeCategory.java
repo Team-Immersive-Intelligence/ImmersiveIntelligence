@@ -19,7 +19,10 @@ import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrap
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<PrecissionAssemblerRecipe, PrecissionAssemblerRecipeCategory.PrecissionAssemblerRecipeWrapper>
 {
@@ -54,39 +57,26 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 
 		guiItemStacks.set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
 
-		if(recipeWrapper.recipeInputs.length > 1)
-		{
+		if(recipeWrapper.inputCount > 1)
 			guiItemStacks.set(1, ingredients.getInputs(VanillaTypes.ITEM).get(1));
-		}
 
-		if(recipeWrapper.recipeInputs.length > 2)
-		{
+		if(recipeWrapper.inputCount > 2)
 			guiItemStacks.set(2, ingredients.getInputs(VanillaTypes.ITEM).get(2));
-		}
 
-		if(recipeWrapper.recipeInputs.length > 3)
-		{
+		if(recipeWrapper.inputCount > 3)
 			guiItemStacks.set(3, ingredients.getInputs(VanillaTypes.ITEM).get(3));
-		}
 
 		guiItemStacks.set(4, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+
 		if(recipeWrapper.recipeOutputs.length > 1)
-		{
 			guiItemStacks.set(5, ingredients.getOutputs(VanillaTypes.ITEM).get(1));
-		}
 
 		if(recipeWrapper.tools.size() > 0)
-		{
 			guiItemStacks.set(6, recipeWrapper.tools.get(0));
-		}
 		if(recipeWrapper.tools.size() > 1)
-		{
 			guiItemStacks.set(7, recipeWrapper.tools.get(1));
-		}
 		if(recipeWrapper.tools.size() > 2)
-		{
 			guiItemStacks.set(8, recipeWrapper.tools.get(2));
-		}
 
 		guiItemStacks.set(9, recipeWrapper.scheme);
 
@@ -100,21 +90,39 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 
 	public static class PrecissionAssemblerRecipeWrapper extends IIMultiblockRecipeWrapper
 	{
+		final int inputCount, toolCount;
+		protected final List<ItemStack> tools = new ArrayList<>();
+		protected final ItemStack scheme;
+
 		public PrecissionAssemblerRecipeWrapper(PrecissionAssemblerRecipe recipe)
 		{
 			super(recipe);
 			for(String tool : recipe.tools)
-			{
 				if(PrecissionAssemblerRecipe.toolMap.containsKey(tool))
-				{
 					tools.add(PrecissionAssemblerRecipe.toolMap.get(tool).getToolPresentationStack(tool));
-				}
-			}
 			scheme = IIContent.itemAssemblyScheme.getStackForRecipe(recipe);
+			inputCount=recipe.inputs.length;
+			toolCount=tools.size();
 		}
 
-		protected List<ItemStack> tools = new ArrayList<>();
-		protected ItemStack scheme;
+		@Override
+		public void getIngredients(IIngredients ingredients)
+		{
+			ArrayList<List<ItemStack>> items = new ArrayList<>();
+			//add recipe inputs
+			items.addAll(Arrays.asList(recipeInputs.clone()));
+			//add tools
+			items.addAll(tools.stream()
+					.map(Collections::singletonList)
+					.collect(Collectors.toList())
+			);
+			//add blueprint
+			items.add(Collections.singletonList(scheme));
+
+			super.getIngredients(ingredients);
+			if(!inputs.isEmpty())
+				ingredients.setInputLists(VanillaTypes.ITEM, items);
+		}
 
 		@Override
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)

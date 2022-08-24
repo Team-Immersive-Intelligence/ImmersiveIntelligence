@@ -23,7 +23,7 @@ import java.util.List;
 public class PrecisionAssemblerRecipeTweaker
 {
 	@ZenMethod
-	public static void addRecipe(IItemStack itemOutput, IItemStack trash, IIngredient[] itemInputs, String[] tools, String[] animations, int energy, int timeMultiplier)
+	public static void addRecipe(IItemStack itemOutput, IItemStack trash, IIngredient[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
 	{
 		Object[] adds = null;
 		if(itemInputs!=null)
@@ -112,7 +112,7 @@ public class PrecisionAssemblerRecipeTweaker
 		 * Added as a compat for the old CT methods
 		 */
 		@ZenMethod
-		public static void addRecipe(IItemStack itemOutput, IItemStack trash, IIngredient[] itemInputs, String[] tools, String[] animations, int energy, int timeMultiplier)
+		public static void addRecipe(IItemStack itemOutput, IItemStack trash, IIngredient[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
 		{
 			PrecisionAssemblerRecipeTweaker.addRecipe(itemOutput, trash, itemInputs, tools, animations, energy, timeMultiplier);
 		}
