@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -37,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoArtill
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.NBTTagCollector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -113,12 +116,15 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.withSound(13.96, IISounds.howitzer_shell_pick)
 				.withSound(14.24, IISounds.inserter_forward)
 				.withSound(14.72, IISounds.inserter_forward)
+				.withSound(14.96, IISounds.howitzer_platform_start)
 				.withSound(15.12, IISounds.inserter_forward)
 				.withSound(15.56, IISounds.inserter_forward)
 				.withSound(15.96, IISounds.inserter_forward)
 				.withSound(16.36, IISounds.howitzer_shell_put)
 				.withSound(16.44, IISounds.inserter_forward)
 				.withSound(16.68, IISounds.inserter_forward)
+				.withSound(17.0, IISounds.howitzer_door_close)
+				.withSound(17.3, IISounds.metal_locker_open)
 				.compile(ArtilleryHowitzer.loadRackTime);
 
 		firingSoundAnimation
@@ -201,6 +207,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	//--- Variables ---//
 
+	public ArrayList<HowitzerOrder> orderList = new ArrayList<>();
 	//currently performed action
 	public ArtilleryHowitzerAnimation animation = ArtilleryHowitzerAnimation.STOP;
 	//animation related variables
@@ -275,7 +282,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					inventory.set(i, inventoryHandler.extractItem(i-1, 1, false));
 
 			//output shell into TileEntity or drop as item
-			if(!inventoryHandler.getStackInSlot(11).isEmpty())
+			if(!world.isRemote&&!inventoryHandler.getStackInSlot(11).isEmpty())
 			{
 				BlockPos outPos = getBlockPosForPos(327)
 						.offset(facing.getOpposite())
@@ -303,7 +310,29 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		//S T O P
 		if(animation==ArtilleryHowitzerAnimation.STOP)
+		{
+			if(world.isRemote||orderList.isEmpty())
+				return;
+			HowitzerOrder newOrder = orderList.get(0);
+			//only apply when valid
+
+			if(newOrder.animation.isFulfilled(this)) //already fulfilled
+				orderList.remove(0);
+			else if(newOrder.animation.matchesRequirements(this)) //can be done
+			{
+				animation = newOrder.animation;
+				animationTime = 0;
+				animationTimeMax = animation.animationTime;
+				plannedPitch = newOrder.pitch;
+				plannedYaw = newOrder.yaw;
+
+				forceTileUpdate();
+				orderList.remove(0);
+			}
+
 			return;
+		}
+
 
 		boolean canContinue = true;
 		switch(animation.gunPosition)
@@ -448,6 +477,18 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		platformPosition = nbt.getBoolean("platform_position");
 
 		shellConveyorTime = nbt.getInteger("shell_conveyor_time");
+
+		orderList.clear();
+		for(NBTBase order : nbt.getTagList("order_queue", NBT.TAG_COMPOUND))
+			if(order instanceof NBTTagCompound)
+			{
+				NBTTagCompound compound = (NBTTagCompound)order;
+				orderList.add(
+						new HowitzerOrder(ArtilleryHowitzerAnimation.values()[compound.getInteger("order")],
+								compound.getFloat("pitch"),
+								compound.getFloat("yaw")
+						));
+			}
 	}
 
 	@Override
@@ -479,6 +520,19 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		nbt.setBoolean("platform_position", platformPosition);
 
 		nbt.setInteger("shell_conveyor_time", shellConveyorTime);
+
+
+		nbt.setTag("order_queue",
+				orderList.stream()
+						.map(order -> {
+							NBTTagCompound tag = new NBTTagCompound();
+							tag.setInteger("order", order.animation.ordinal());
+							tag.setFloat("pitch", order.pitch);
+							tag.setFloat("yaw", order.yaw);
+							return tag;
+						})
+						.collect(new NBTTagCollector())
+		);
 
 	}
 
@@ -686,7 +740,17 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(441), world, mirrored?facing.rotateY(): facing.rotateYCCW());
+		IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(441), world, EnumFacing.UP);
+
+		if(packet.getPacketVariable('y') instanceof IDataTypeNumeric)
+		{
+			plannedYaw = ((IDataTypeNumeric)packet.getPacketVariable('y')).floatValue()%360;
+			if(plannedYaw < 0)
+				plannedYaw = 360f-plannedYaw;
+		}
+
+		if(packet.getPacketVariable('p') instanceof IDataTypeNumeric)
+			plannedPitch = Math.abs(Math.min(Math.max(-Math.abs((((IDataTypeNumeric)packet.getPacketVariable('p')).floatValue())%360), -105), 0));
 
 		//Command
 		if(animationTime==0&&packet.getPacketVariable('c') instanceof DataTypeString) //cannot interrupt a performed task
@@ -696,20 +760,11 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			ArtilleryHowitzerAnimation anim = ArtilleryHowitzerAnimation.v(command, this);
 			if(anim!=null)
 			{
+				if(anim==ArtilleryHowitzerAnimation.STOP)
+					orderList.clear();
+
 				if(anim.matchesRequirements(this))
 				{
-					if(animation==ArtilleryHowitzerAnimation.STOP) //is not doing any task
-					{
-						if(packet.getPacketVariable('y') instanceof IDataTypeNumeric)
-						{
-							plannedYaw = ((IDataTypeNumeric)packet.getPacketVariable('y')).floatValue()%360;
-							if(plannedYaw < 0)
-								plannedYaw = 360f-plannedYaw;
-						}
-						if(packet.getPacketVariable('p') instanceof IDataTypeNumeric)
-							plannedPitch = Math.min(Math.max(-Math.abs((((IDataTypeNumeric)packet.getPacketVariable('p')).floatValue())%360), -105), 0);
-					}
-
 					animation = anim;
 					animationTime = 0;
 					animationTimeMax = anim.animationTime;
@@ -718,6 +773,41 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			}
 			else
 			{
+				if(animation==ArtilleryHowitzerAnimation.STOP&&orderList.isEmpty()) //is not doing any task
+					switch(command)
+					{
+						case "fire_all":
+						{
+							float vOffset = 0, hOffset = 0;
+							if(packet.hasVariable('v')) //v - vertical
+								vOffset = packet.getVarInType(IDataTypeNumeric.class,packet.getPacketVariable('v')).floatValue();
+							if(packet.hasVariable('h')) //h - horizontal
+								hOffset = packet.getVarInType(IDataTypeNumeric.class,packet.getPacketVariable('v')).floatValue();
+
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE1, plannedPitch-vOffset, plannedYaw-hOffset));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE2, plannedPitch+vOffset, plannedYaw+hOffset));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE3, plannedPitch-vOffset, plannedYaw-hOffset));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE4, plannedPitch+vOffset, plannedYaw+hOffset));
+						}
+						break;
+						case "load_all":
+						{
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD1));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD2));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD3));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD4));
+						}
+						break;
+						case "unload_all":
+						{
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD1));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD2));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD3));
+							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD4));
+						}
+						break;
+					}
+
 				if(conn==null)
 					return;
 
@@ -1154,34 +1244,49 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	public enum ArtilleryHowitzerAnimation implements IStringSerializable
 	{
-		STOP(false, false, GunPosition.NEUTRAL, t -> true, 0, null, 1f), //stops current action
-		HIDE(false, false, GunPosition.LOADING, t -> true, 0, null, 1f), //makes howitzer go down
+		STOP(false, false, GunPosition.NEUTRAL, t -> true, t -> false, 0, null, 1f), //stops current action
+		HIDE(false, false, GunPosition.LOADING, t -> true, t -> t.platformTime==0, 0, null, 1f), //makes howitzer go down
+
 		LOAD1(true, false, GunPosition.LOADING, t -> t.loadedShells.get(0).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				t -> !t.loadedShells.get(0).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
 		LOAD2(true, false, GunPosition.LOADING, t -> t.loadedShells.get(1).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				t -> !t.loadedShells.get(1).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
 		LOAD3(true, false, GunPosition.LOADING, t -> t.loadedShells.get(2).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				t -> !t.loadedShells.get(2).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
 		LOAD4(true, false, GunPosition.LOADING, t -> t.loadedShells.get(3).isEmpty()&&!t.inventory.get(5).isEmpty(),
+				t -> !t.loadedShells.get(3).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "LOAD", 1f),
+
 		UNLOAD1(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(0).isEmpty(),
+				t -> t.loadedShells.get(0).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
 		UNLOAD2(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(1).isEmpty(),
+				t -> t.loadedShells.get(1).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
 		UNLOAD3(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(2).isEmpty(),
+				t -> t.loadedShells.get(2).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
 		UNLOAD4(true, false, GunPosition.LOADING, t -> !t.loadedShells.get(3).isEmpty(),
+				t -> t.loadedShells.get(3).isEmpty(),
 				ArtilleryHowitzer.loadRackTime, "UNLOAD", 1f),
 
 		FIRE1(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(0).getItem()==IIContent.itemAmmoArtillery,
+				t -> t.loadedShells.get(0).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
 		FIRE2(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(1).getItem()==IIContent.itemAmmoArtillery,
+				t -> t.loadedShells.get(1).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
 		FIRE3(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(2).getItem()==IIContent.itemAmmoArtillery,
+				t -> t.loadedShells.get(2).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
 		FIRE4(true, true, GunPosition.ON_TARGET, t -> t.loadedShells.get(3).getItem()==IIContent.itemAmmoArtillery,
+				t -> t.loadedShells.get(3).isEmpty(),
 				ArtilleryHowitzer.gunFireTime, "FIRE", (float)ArtilleryHowitzer.gunFireMoment),
-		AIM(true, true, GunPosition.ON_TARGET, t -> true, 0, null, 1f);
+
+		AIM(true, true, GunPosition.ON_TARGET, t -> true, t -> false, 0, null, 1f);
 
 		//whether the platform is required to be in a position
 		//the platform position: true - up, false - down
@@ -1190,18 +1295,20 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		final GunPosition gunPosition;
 		@Nullable
 		final String alias;
-		final Predicate<TileEntityArtilleryHowitzer> requirements;
+		final Predicate<TileEntityArtilleryHowitzer> requirements, fulfilled;
 		final int animationTime;
 		final float executeTime;
 
 		ArtilleryHowitzerAnimation(boolean requiresPlatform, boolean platformUp, GunPosition gunPosition,
 								   Predicate<TileEntityArtilleryHowitzer> requirements,
+								   Predicate<TileEntityArtilleryHowitzer> fulfilled,
 								   int animationTime, @Nullable String alias, float executeTime)
 		{
 			this.requiresPlatform = requiresPlatform;
 			this.platformUp = platformUp;
 			this.gunPosition = gunPosition;
 			this.requirements = requirements;
+			this.fulfilled = fulfilled;
 			this.animationTime = animationTime;
 			this.alias = alias;
 			this.executeTime = executeTime;
@@ -1219,12 +1326,17 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			return requirements.test(te);
 		}
 
+		public boolean isFulfilled(TileEntityArtilleryHowitzer te)
+		{
+			return fulfilled.test(te);
+		}
+
 		@Nullable
 		public static ArtilleryHowitzerAnimation v(String s, TileEntityArtilleryHowitzer te)
 		{
 			String ss = s.toUpperCase();
 			Optional<ArtilleryHowitzerAnimation> found = Arrays.stream(values())
-					.filter(e -> e.alias!=null&&e.alias.toLowerCase().matches(s))
+					.filter(e -> e.alias!=null&&e.alias.toLowerCase().equals(s))
 					.filter(a -> a.matchesRequirements(te))
 					.findFirst();
 			return found.orElseGet(() -> Arrays.stream(values())
@@ -1240,5 +1352,23 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		ON_TARGET,
 		NEUTRAL,
 		LOADING
+	}
+
+	public static class HowitzerOrder
+	{
+		final ArtilleryHowitzerAnimation animation;
+		final float pitch, yaw;
+
+		public HowitzerOrder(ArtilleryHowitzerAnimation animation, float pitch, float yaw)
+		{
+			this.animation = animation;
+			this.pitch = pitch;
+			this.yaw = yaw;
+		}
+
+		public HowitzerOrder(ArtilleryHowitzerAnimation animation)
+		{
+			this(animation, 0, 0);
+		}
 	}
 }

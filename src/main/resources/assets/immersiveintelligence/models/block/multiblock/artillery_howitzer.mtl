@@ -27,4 +27,6 @@ newmtl m_13
 map_Kd immersiveintelligence:blocks/common/common_concrete
 newmtl m_14
 map_Kd immersiveintelligence:blocks/common/common_table
+newmtl m_16
+map_Kd immersiveengineering:blocks/conveyor
 newmtl none

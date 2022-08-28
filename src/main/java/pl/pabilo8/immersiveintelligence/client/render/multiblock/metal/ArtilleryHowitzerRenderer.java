@@ -74,7 +74,7 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 		//calculated before animations, so animations can modify it
 		float pDiff = te.plannedPitch-te.turretPitch, yDiff = MathHelper.wrapDegrees(360+te.plannedYaw-te.turretYaw);
 		float turretYaw = te.turretYaw+Math.signum(yDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed);
-		float turretPitch = te.turretPitch+(Math.signum(pDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed));
+		float turretPitch = te.turretPitch+Math.signum(pDiff)*MathHelper.clamp(Math.abs(yDiff)*partialTicks, 0, ArtilleryHowitzer.rotateSpeed);
 
 		//conveyor animation
 		float conveyorAnim = IIAnimationUtils.getAnimationProgress(te.shellConveyorTime, ArtilleryHowitzer.conveyorTime,
@@ -147,15 +147,15 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 
 				// TODO: 11.08.2022 add parameter handling to animation system and remove this mess
 				if(animationProgress < 0.1f)
-					turretPitch = (-90+turretPitch)*Math.min(animationProgress/0.1f, 1f);
+					turretPitch = lerp(turretPitch, 90,Math.min(animationProgress/0.1f, 1f));
 				else if(animationProgress > 0.9f)
-					turretPitch = (-90+turretPitch)*(1f-Math.min((animationProgress-0.9f)/0.1f, 1f));
+					turretPitch = lerp(90, turretPitch, (animationProgress-0.9f)/0.1f);
 				else if(animationProgress > secondMarker&&animationProgress < firstMarker)
-					turretPitch = (-90+turretPitch)*(1f-(float)Math.min((animationProgress-(secondMarker))/dist, 1f));
+					turretPitch = lerp(90, turretPitch, (float)((animationProgress-secondMarker)/dist));
 				else if(animationProgress > firstMarker2&&animationProgress < secondMarker2)
-					turretPitch = (-90+turretPitch)*(float)Math.min((animationProgress-(firstMarker2))/dist2, 1f);
+					turretPitch = lerp(turretPitch, 90,(float)((animationProgress-firstMarker2)/dist2));
 				else if(animationProgress < secondMarker||animationProgress > secondMarker2)
-					turretPitch = -90;
+					turretPitch = 90;
 			}
 			break;
 			case STOP:
@@ -167,7 +167,7 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 
 		//set gun pitch and yaw
 		IIAnimationUtils.setModelRotation(gunYaw, 0, (te.mirrored?-1: 1)*(te.facing.getHorizontalAngle()-turretYaw), 0);
-		IIAnimationUtils.setModelRotation(gunPitch, turretPitch, 0, 0);
+		IIAnimationUtils.setModelRotation(gunPitch, -turretPitch, 0, 0);
 
 		//flipping
 		if(te.mirrored)
@@ -291,5 +291,10 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 				.withState(BulletState.BULLET_UNUSED);
 		shells[(in?0: 6)+id] = mod;
 		return mod;
+	}
+
+	float lerp(float a, float b, float f)
+	{
+		return a * (1.0f - f)+b * f;
 	}
 }

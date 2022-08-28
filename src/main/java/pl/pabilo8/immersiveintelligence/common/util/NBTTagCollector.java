@@ -16,7 +16,7 @@ import java.util.stream.Collector;
  * @author Pabilo8
  * @since 06.06.2022
  */
-public class NBTTagCollector implements Collector<NBTTagCompound, NBTTagList, NBTTagList>
+public class NBTTagCollector implements Collector<NBTBase, NBTTagList, NBTTagList>
 {
 	@Override
 	public Supplier<NBTTagList> supplier()
@@ -25,7 +25,7 @@ public class NBTTagCollector implements Collector<NBTTagCompound, NBTTagList, NB
 	}
 
 	@Override
-	public BiConsumer<NBTTagList, NBTTagCompound> accumulator()
+	public BiConsumer<NBTTagList, NBTBase> accumulator()
 	{
 		return NBTTagList::appendTag;
 	}

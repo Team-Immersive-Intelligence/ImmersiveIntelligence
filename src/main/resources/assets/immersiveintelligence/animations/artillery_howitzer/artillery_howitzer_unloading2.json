@@ -1213,10 +1213,10 @@
 			"visibility": [
 				{
 					"time": 0.0,
-					"visibility": true
+					"visibility": false
 				},
 				{
-					"time": 0.055,
+					"time": 0.088,
 					"visibility": true
 				},
 				{
