@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityRedstoneBu
 @SideOnly(Side.CLIENT)
 public class RedstoneBufferRenderer extends TileEntitySpecialRenderer<TileEntityRedstoneBuffer>
 {
-	private static ModelRedstoneBuffer model = new ModelRedstoneBuffer();
+	private static final ModelRedstoneBuffer model = new ModelRedstoneBuffer();
 
 	@Override
 	public void render(TileEntityRedstoneBuffer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

@@ -34,3 +34,4 @@ libs/
 .settings/
 custom.gradle
 *Thumbs.db
+*.ini

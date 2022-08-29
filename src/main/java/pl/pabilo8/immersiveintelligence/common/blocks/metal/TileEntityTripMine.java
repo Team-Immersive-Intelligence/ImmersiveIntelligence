@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
@@ -13,7 +12,9 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -22,19 +23,16 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIITripWireCoil;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIITripWireCoil.IITripWireType;
 import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIITrenchShovel;
 
 import javax.annotation.Nullable;
@@ -111,14 +109,6 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 			bullet.fuse=20;
 			world.spawnEntity(bullet);
 		}
-		/*
-		IIExplosion exp = new IIExplosion(world, null, pos.getX(), pos.getY(), pos.getZ(), 10, 1, false, false);
-		if(!net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, exp))
-		{
-			exp.doExplosionA();
-			exp.doExplosionB(true);
-		}
-		 */
 		world.setBlockToAir(this.getPos());
 	}
 
@@ -137,6 +127,12 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	@Override
 	public void processDamage(Entity e, float amount, Connection c)
 	{
+		if(e.doesEntityNotTriggerPressurePlate())
+			return;
+		ResourceLocation key = EntityList.getKey(e instanceof MultiPartEntityPart?(Entity)((MultiPartEntityPart)e).parent: e);
+		if(key!=null&&Arrays.asList(Mines.tripmineBlacklist).contains(key.toString()))
+			return;
+
 		TileEntity tileStart = world.getTileEntity(c.start);
 		TileEntity tileEnd = world.getTileEntity(c.end);
 		if(tileStart instanceof TileEntityTripMine)

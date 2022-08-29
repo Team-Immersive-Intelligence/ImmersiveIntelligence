@@ -6,7 +6,6 @@ import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 
 /**

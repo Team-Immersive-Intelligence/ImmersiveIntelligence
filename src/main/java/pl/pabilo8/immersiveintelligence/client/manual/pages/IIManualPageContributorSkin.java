@@ -53,7 +53,7 @@ public class IIManualPageContributorSkin extends IIManualPages
 	{
 		if(localizedName!=null&&!localizedName.isEmpty())
 		{
-			Utils.drawStringCentered(manual.fontRenderer,TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE.toString()+localizedName, x+10, y+40, 100, 0,manual.getTextColour());
+			Utils.drawStringCentered(manual.fontRenderer,TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE+localizedName, x+10, y+40, 100, 0,manual.getTextColour());
 		}
 
 		if(localizedLore!=null&&!localizedLore.isEmpty())

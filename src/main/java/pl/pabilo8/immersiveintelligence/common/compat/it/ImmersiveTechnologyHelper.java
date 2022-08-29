@@ -3,7 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.compat.it;
 import mctmods.immersivetechnology.common.ITContent;
 import mctmods.immersivetechnology.common.blocks.metal.types.BlockType_MetalBarrel;
 import mctmods.immersivetechnology.common.blocks.wooden.types.BlockType_WoodenCrate;
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -12,9 +15,13 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
+import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.PenetrationHandlerConcreteBricks;
+import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.PenetrationHandlerSteel;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIMinecart.Minecarts;
 
+import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -39,6 +46,13 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 		 */
 	}
 
+	private void addBlock(ArrayList<Block> blocks, ResourceLocation res)
+	{
+		Block block = Block.REGISTRY.getObject(res);
+		if(block!=Blocks.AIR)
+			blocks.add(block);
+	}
+
 	@Override
 	public void registerRecipes()
 	{
@@ -54,7 +68,19 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 	@Override
 	public void postInit()
 	{
+		ArrayList<Block> blocks = new ArrayList<>();
+		addBlock(blocks, new ResourceLocation("immersivetech", "metal_multiblock"));
+		addBlock(blocks, new ResourceLocation("immersivetech", "metal_multiblock1"));
+		addBlock(blocks, new ResourceLocation("immersivetech", "metal_barrel"));
+		addBlock(blocks, new ResourceLocation("immersivetech", "metal_device"));
+		addBlock(blocks, new ResourceLocation("immersivetech", "metal_trash"));
+		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), blocks.toArray(new Block[0]));
 
+		blocks.clear();
+		addBlock(blocks, new ResourceLocation("immersivetech", "stone_multiblock"));
+		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration"));
+		addBlock(blocks, new ResourceLocation("immersivetech", "stone_decoration_slab"));
+		BulletHelper.batchRegisterHandler(new PenetrationHandlerConcreteBricks(), blocks.toArray(new Block[0]));
 	}
 
 	@Optional.Method(modid = "immersivetech")

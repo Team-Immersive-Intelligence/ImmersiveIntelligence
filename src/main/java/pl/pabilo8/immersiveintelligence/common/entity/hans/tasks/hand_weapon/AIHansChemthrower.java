@@ -9,74 +9,40 @@ import blusunrize.immersiveengineering.common.items.ItemChemthrower;
 import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
-
-import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 23.04.2021
  */
-public class AIHansChemthrower extends AIHansBase
+public class AIHansChemthrower extends AIHansHandWeapon
 {
-	private EntityLivingBase attackTarget;
-	/**
-	 * A decrementing tick that spawns a ranged attack once this value reaches 0. It is then set back to the
-	 * maxRangedAttackTime.
-	 */
-	private int rangedAttackTime;
-	private final double entityMoveSpeed;
-	private int seeTime;
 	private final int burstTime;
-	/**
-	 * The maximum time the AI has to wait before peforming another ranged attack.
-	 */
-	private final float maxAttackDistance;
 
 	private final static ItemChemthrower CHEM = (ItemChemthrower)IEContent.itemChemthrower;
 
-	public AIHansChemthrower(EntityHans hans, double movespeed, int burstTime, float maxAttackDistanceIn)
+	public AIHansChemthrower(EntityHans hans)
 	{
-		super(hans);
-		this.rangedAttackTime = -1;
-		this.entityMoveSpeed = movespeed;
-		this.maxAttackDistance = maxAttackDistanceIn*maxAttackDistanceIn;
-		this.burstTime = burstTime;
-		this.setMutexBits(3);
+		super(hans, 10, 4, 0.9f);
+		this.burstTime = 20;
 	}
 
-	/**
-	 * Returns whether the EntityAIBase should begin execution.
-	 */
-	public boolean shouldExecute()
+	@Override
+	protected boolean isValidWeapon()
 	{
-		EntityLivingBase entitylivingbase = this.hans.getAttackTarget();
-
-		if(entitylivingbase==null)
-		{
-			return false;
-		}
-		else
-		{
-			this.attackTarget = entitylivingbase;
-			ItemStack chemthrower = hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-			return chemthrower.getItem() instanceof ItemChemthrower&&hasAmmo(chemthrower);
-		}
+		return getWeapon().getItem() instanceof ItemChemthrower;
 	}
 
-	private boolean hasAmmo(ItemStack chemthrower)
+	@Override
+	protected boolean hasAnyAmmo()
 	{
+		ItemStack chemthrower = getWeapon();
 		if(chemthrower.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
 		{
 			IFluidHandlerItem capability = chemthrower.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
@@ -88,73 +54,13 @@ public class AIHansChemthrower extends AIHansBase
 		return false;
 	}
 
-	/**
-	 * Returns whether an in-progress EntityAIBase should continue executing
-	 */
-	public boolean shouldContinueExecuting()
+	@Override
+	protected void executeTask()
 	{
-		return this.shouldExecute()||!this.hans.getNavigator().noPath()||!(this.attackTarget==null||hans.getPositionVector().distanceTo(attackTarget.getPositionVector()) < EntityHans.MELEE_DISTANCE);
-	}
+		assert attackTarget!=null;
 
-	/**
-	 * Reset the task's internal state. Called when this task is interrupted by another one
-	 */
-	public void resetTask()
-	{
-		if(attackTarget!=null)
-			hans.setSneaking(false);
-
-		this.attackTarget = null;
-		this.seeTime = 0;
-		this.rangedAttackTime = -1;
-	}
-
-	/**
-	 * Keep ticking a continuous task that has already been started
-	 */
-	public void updateTask()
-	{
-		if(attackTarget==null)
-			return;
-		if(attackTarget.isDead)
-		{
-			hans.setSneaking(false);
-			resetTask();
-			return;
-		}
-		double d0 = this.hans.getDistanceSq(this.attackTarget.posX, this.attackTarget.getEntityBoundingBox().minY, this.attackTarget.posZ);
-		boolean flag = this.hans.getEntitySenses().canSee(this.attackTarget)&&canShootEntity(this.attackTarget);
-
-		if(flag)
-		{
-			++this.seeTime;
-		}
-		else
-		{
-			this.seeTime = 0;
-		}
-
-		if(d0 <= (double)this.maxAttackDistance&&this.seeTime >= 20)
-		{
-			this.hans.getNavigator().clearPath();
-		}
-		else
-		{
-			this.hans.getNavigator().tryMoveToEntityLiving(this.attackTarget, this.entityMoveSpeed);
-		}
-
-		//this.hans.getPositionVector().add(this.hans.getLookVec()).subtract();
-		final Vec3d add = this.attackTarget.getPositionVector().add(this.attackTarget.getLookVec());
-		this.hans.getLookHelper().setLookPosition(add.x, add.y, add.z, 30, 30);
-
-		if(!flag)
-		{
-			return;
-		}
-
-		// TODO: 19.05.2021 fluid backpacks
-
-		final ItemStack chemthrower = hans.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+		final ItemStack chemthrower = getWeapon();
+		lookOnTarget();
 
 		if(this.rangedAttackTime < 0)
 		{
@@ -163,27 +69,26 @@ public class AIHansChemthrower extends AIHansBase
 		}
 		if(this.rangedAttackTime < burstTime)
 		{
-			if(chemthrower.getItem() instanceof ItemChemthrower)
-			{
-				if(hasAmmo(chemthrower))
-				{
-					hans.hasAmmo = true;
-					hans.faceEntity(attackTarget, 30, 0);
-					hans.rotationPitch -= 25;
-					ItemNBTHelper.setBoolean(chemthrower, "ignite", true);
-					onUsingTick(chemthrower, this.hans, IEContent.itemChemthrower.getMaxItemUseDuration(chemthrower)-rangedAttackTime);
-					hans.rotationPitch += 25;
-				}
-				CHEM.onUpdate(chemthrower, this.hans.world, this.hans, 0, true);
+			hans.hasAmmo = true;
+			lookOnTarget();
+			hans.rotationPitch -= 25;
+			ItemNBTHelper.setBoolean(chemthrower, "ignite", true);
+			onUsingTick(chemthrower, this.hans, IEContent.itemChemthrower.getMaxItemUseDuration(chemthrower)-rangedAttackTime);
+			hans.rotationPitch += 25;
 
-				if(rangedAttackTime >= burstTime)
-				{
-					// TODO: 19.05.2021 add balistic calculation
-					CHEM.onPlayerStoppedUsing(chemthrower, this.hans.world, this.hans, CHEM.getMaxItemUseDuration(chemthrower)-rangedAttackTime);
-					rangedAttackTime = -10;
-				}
+			if(rangedAttackTime >= burstTime)
+			{
+				// TODO: 19.05.2021 add balistic calculation
+				CHEM.onPlayerStoppedUsing(chemthrower, this.hans.world, this.hans, CHEM.getMaxItemUseDuration(chemthrower)-rangedAttackTime);
+				rangedAttackTime = -10;
 			}
 		}
+	}
+
+	@Override
+	protected float calculateBallisticAngle(ItemStack ammo, EntityLivingBase attackTarget)
+	{
+		return 0;
 	}
 
 	@Override

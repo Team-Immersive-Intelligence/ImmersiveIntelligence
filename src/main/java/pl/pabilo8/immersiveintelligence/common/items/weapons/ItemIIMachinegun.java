@@ -110,11 +110,11 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		float f = 1.0F;
-		float f1 = playerIn.prevRotationPitch+(playerIn.rotationPitch-playerIn.prevRotationPitch)*1.0F;
-		float f2 = playerIn.prevRotationYaw+(playerIn.rotationYaw-playerIn.prevRotationYaw)*1.0F;
-		double d0 = playerIn.prevPosX+(playerIn.posX-playerIn.prevPosX)*1.0D;
-		double d1 = playerIn.prevPosY+(playerIn.posY-playerIn.prevPosY)*1.0D+(double)playerIn.getEyeHeight();
-		double d2 = playerIn.prevPosZ+(playerIn.posZ-playerIn.prevPosZ)*1.0D;
+		float f1 = playerIn.prevRotationPitch+(playerIn.rotationPitch-playerIn.prevRotationPitch);
+		float f2 = playerIn.prevRotationYaw+(playerIn.rotationYaw-playerIn.prevRotationYaw);
+		double d0 = playerIn.prevPosX+(playerIn.posX-playerIn.prevPosX);
+		double d1 = playerIn.prevPosY+(playerIn.posY-playerIn.prevPosY)+(double)playerIn.getEyeHeight();
+		double d2 = playerIn.prevPosZ+(playerIn.posZ-playerIn.prevPosZ);
 		Vec3d vec3d = new Vec3d(d0, d1, d2);
 		float f3 = MathHelper.cos(-f2*0.017453292F-(float)Math.PI);
 		float f4 = MathHelper.sin(-f2*0.017453292F-(float)Math.PI);
@@ -128,7 +128,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 
 		if(raytraceresult==null)
 		{
-			return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+			return new ActionResult<>(EnumActionResult.PASS, itemstack);
 		}
 		else
 		{
@@ -136,10 +136,8 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 			boolean flag = false;
 			List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(vec3d2.x*5.0D, vec3d2.y*5.0D, vec3d2.z*5.0D).grow(1.0D));
 
-			for(int i = 0; i < list.size(); ++i)
+			for(Entity entity : list)
 			{
-				Entity entity = list.get(i);
-
 				if(entity.canBeCollidedWith())
 				{
 					AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
@@ -153,11 +151,11 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 
 			if(flag)
 			{
-				return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+				return new ActionResult<>(EnumActionResult.PASS, itemstack);
 			}
 			else if(raytraceresult.typeOfHit!=RayTraceResult.Type.BLOCK)
 			{
-				return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+				return new ActionResult<>(EnumActionResult.PASS, itemstack);
 			}
 			else
 			{
@@ -185,13 +183,13 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 				}
 
 				if(aabb==null)
-					return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+					return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 
 				boolean intersects = Utils.isAABBContained(fence, aabb);
 
 				if(!intersects)
 				{
-					return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+					return new ActionResult<>(EnumActionResult.PASS, itemstack);
 				}
 
 				EntityMachinegun maschinengewehr = new EntityMachinegun(worldIn, raytraceresult.getBlockPos(), playerIn.getRotationYawHead(), pitch, itemstack.copy());
@@ -240,7 +238,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 		if(!stack.isEmpty())
 			return new IEItemStackHandler(stack)
 			{
-				IEItemFluidHandler fluids = new IEItemFluidHandler(stack, 0);
+				final IEItemFluidHandler fluids = new IEItemFluidHandler(stack, 0);
 
 				@Override
 				public boolean hasCapability(Capability<?> capability, EnumFacing facing)
@@ -270,6 +268,12 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	public boolean allowFluid(ItemStack container, FluidStack fluid)
 	{
 		return getUpgrades(container).hasKey("water_cooling")&&MachinegunCoolantHandler.isValidCoolant(fluid);
+	}
+
+	@Override
+	public String getSkinnableName()
+	{
+		return "machinegun";
 	}
 
 	@Override

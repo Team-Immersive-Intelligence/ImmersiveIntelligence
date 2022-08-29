@@ -18,7 +18,7 @@ public class TachometerItemStackRenderer extends TileEntityItemStackRenderer
 {
 	public static TachometerItemStackRenderer instance = new TachometerItemStackRenderer();
 	@SideOnly(Side.CLIENT)
-	private static ModelTachometer model = new ModelTachometer();
+	private static final ModelTachometer model = new ModelTachometer();
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/items/tools/tachometer.png";
 
 	@Override

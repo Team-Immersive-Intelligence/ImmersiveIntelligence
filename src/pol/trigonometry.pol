@@ -1,0 +1,30 @@
+use ADVANCED_ARITHMETIC ;here also a comment!
+use TEXT
+use TYPE_CONVERSION
+use COMPARATOR
+use ARRAY
+
+integer i = 0
+
+type "This program will display sin values for x 0 to 45"
+
+mark f
+
+float e = sin @i
+;round to 4 places
+e =
+
+type string_join (string_join (string_join "sin " (<string> @i)) " = ") (<string> @e) ;cos i = ...
+integer i = + @i 1
+
+array a = array_push @a @e ;push to array
+
+wait 3
+
+if < @i 46
+goto "f"
+
+type string_join "Array: " (<string> @a) ;print array
+type "Koniec Roboty"
+
+end

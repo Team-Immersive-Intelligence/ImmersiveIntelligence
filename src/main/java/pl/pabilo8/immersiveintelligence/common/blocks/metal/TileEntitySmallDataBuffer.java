@@ -144,9 +144,4 @@ public class TileEntitySmallDataBuffer extends TileEntityIEBase implements IPlay
 		//for (DataPacket pck : packets)
 	}
 
-	@Override
-	public void onSend()
-	{
-
-	}
 }

@@ -3,26 +3,15 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BannerTextures;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelEmplacement;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFlagpole;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelAutocannon;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelCPDS;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelHeavyChemthrower;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.ModelInfraredObserver;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFlagpole;
 
 public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpole> implements IReloadableModelContainer<FlagpoleRenderer>
@@ -30,7 +19,7 @@ public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpo
 	private static ModelFlagpole model;
 	private static ModelFlagpole modelFlipped;
 	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/flagpole.png";
-	private static TileEntityBanner banner = new TileEntityBanner();
+	private static final TileEntityBanner banner = new TileEntityBanner();
 
 	@Override
 	public void render(TileEntityFlagpole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

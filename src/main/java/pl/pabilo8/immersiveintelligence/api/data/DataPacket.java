@@ -4,9 +4,13 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataType.IGenericDataType;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,52 +25,125 @@ public class DataPacket implements Iterable<IDataType>
 	private int packetAddress = -1;
 
 	public static final char[] varCharacters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
-	public static final Map<String, Class> varTypes = new HashMap<>();
+	public static final Map<String, Class<? extends IDataType>> varTypes = new LinkedHashMap<>();
 
 	static
 	{
-		varTypes.put("null", DataPacketTypeNull.class);
+		//null
+		varTypes.put("null", DataTypeNull.class);
 
-		varTypes.put("integer", DataPacketTypeInteger.class);
-		//varTypes.put("float", DataPacketTypeFloat.class);
-		//varTypes.put("vector", DataPacketTypeVector.class);
-		//varTypes.put("range", DataPacketTypeRange.class);
+		//logic types
+		varTypes.put("boolean", DataTypeBoolean.class);
 
-		varTypes.put("string", DataPacketTypeString.class);
-		//varTypes.put("character", DataPacketTypeCharacter.class);
+		//number types
+		varTypes.put("integer", DataTypeInteger.class);
+		varTypes.put("float", DataTypeFloat.class);
+		varTypes.put("vector", DataTypeVector.class);
 
-		varTypes.put("boolean", DataPacketTypeBoolean.class);
+		//text types
+		varTypes.put("string", DataTypeString.class);
 
-		varTypes.put("accessor", DataPacketTypeAccessor.class);
-		varTypes.put("expression", DataPacketTypeExpression.class);
+		//statement types
+		varTypes.put("accessor", DataTypeAccessor.class);
+		varTypes.put("expression", DataTypeExpression.class);
 
-		varTypes.put("itemstack", DataPacketTypeItemStack.class);
-		//varTypes.put("fluidstack", DataPacketTypeFluidStack.class);
-		//varTypes.put("crafting_recipe", DataPacketTypeCraftingRecipe.class);
+		//collection types
+		varTypes.put("array", DataTypeArray.class);
+		varTypes.put("map", DataTypeMap.class);
 
-		varTypes.put("array", DataPacketTypeArray.class);
-
-		varTypes.put("entity", DataPacketTypeEntity.class);
-
-		//varTypes.put("pair", DataPacketTypePair.class);
+		//in-world types
+		varTypes.put("itemstack", DataTypeItemStack.class);
+		varTypes.put("fluidstack", DataTypeFluidStack.class);
+		varTypes.put("entity", DataTypeEntity.class);
 	}
 
-	public boolean hasVariables()
+	@Nonnull
+	public static IDataType getVarFromNBT(NBTTagCompound nbt)
+	{
+		IDataType data = getVarInstance(DataPacket.varTypes.get(nbt.getString("Type")));
+		data.valueFromNBT(nbt);
+		return data;
+	}
+
+	@Nonnull
+	public static IDataType getVarInstance(Class<? extends IDataType> type)
+	{
+		try
+		{
+			IDataType data = type.isAnnotationPresent(IGenericDataType.class)?(type.getAnnotation(IGenericDataType.class).defaultType().newInstance()): type.newInstance();
+			data.setDefaultValue();
+			return data;
+		}
+		catch(InstantiationException|IllegalAccessException ignored)
+		{
+		}
+		return new DataTypeNull();
+	}
+
+	/**
+	 * @param preferred type, can be {@link IDataType} for *any* type and an interface annotated with {@link IGenericDataType} a generic/bridging type
+	 * @param actual    actual tag in packet, if null a default value of preferred type will be returned
+	 * @param <T>       the returned datatype
+	 * @return datatype provided in preferred class or a new instance of it
+	 */
+	@Nonnull
+	public <T extends IDataType> T getVarInType(Class<T> preferred, @Nullable IDataType actual)
+	{
+		if(actual!=null)
+		{
+			if(preferred==IDataType.class)
+				return (T)actual;
+
+			IDataType type;
+			if(actual instanceof DataTypeAccessor)
+				type = ((DataTypeAccessor)actual).getRealValue(this);
+			else if(actual instanceof DataTypeExpression&&preferred!=DataTypeExpression.class)
+				type = ((DataTypeExpression)actual).getValue(this);
+			else
+				type = actual;
+
+			if(preferred.isInstance(type))
+				return (T)type;
+			else if(!preferred.isAnnotationPresent(IGenericDataType.class))
+			{
+				try
+				{
+					IDataType p = preferred.newInstance();
+					p.setDefaultValue();
+					return preferred.cast(p);
+				}
+				catch(InstantiationException|IllegalAccessException ignored)
+				{
+				}
+			}
+		}
+
+		return (T)getVarInstance(preferred);
+	}
+
+	public boolean hasAnyVariables()
 	{
 		return variables.size() > 0;
 	}
 
-	// TODO: 18.09.2021 refactor others to use this
 	public boolean hasVariable(Character c)
 	{
 		return variables.containsKey(c);
+	}
+
+	public boolean hasAnyVariables(Character... names)
+	{
+		for(Character c : names)
+			if(!variables.containsKey(c))
+				return false;
+		return true;
 	}
 
 	public IDataType getPacketVariable(Character name)
 	{
 		if(variables.containsKey(name))
 			return variables.get(name);
-		return new DataPacketTypeNull();
+		return new DataTypeNull();
 	}
 
 	public boolean setVariable(Character c, IDataType type)
@@ -95,15 +172,20 @@ public class DataPacket implements Iterable<IDataType>
 
 	public boolean matchesConnector(EnumDyeColor connColor, int connAddress)
 	{
-		return (packetAddress==-1||packetAddress==connAddress)&&(packetColor==EnumDyeColor.WHITE||connColor==packetColor);
+		return (packetAddress==-1||packetAddress==connAddress)&&(packetColor==EnumDyeColor.WHITE||packetColor==connColor);
 	}
 
 	public void removeAllVariables()
 	{
 		for(char c : varCharacters)
-		{
 			removeVariable(c);
-		}
+	}
+
+	public void removeVariables(Character... names)
+	{
+		for(Character c : names)
+			if(ArrayUtils.contains(varCharacters, c))
+				variables.remove(c);
 	}
 
 	public boolean removeVariable(Character c)
@@ -121,9 +203,7 @@ public class DataPacket implements Iterable<IDataType>
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		for(Map.Entry<Character, IDataType> entry : variables.entrySet())
-		{
 			nbt.setTag(String.valueOf(entry.getKey()), entry.getValue().valueToNBT());
-		}
 
 		if(packetColor!=EnumDyeColor.WHITE)
 			nbt.setInteger("color", packetColor.getMetadata());
@@ -138,7 +218,6 @@ public class DataPacket implements Iterable<IDataType>
 	{
 		variables.clear();
 		for(Character c : varCharacters)
-		{
 			if(nbt.hasKey(String.valueOf(c)))
 			{
 				NBTTagCompound n = nbt.getCompoundTag(String.valueOf(c));
@@ -148,7 +227,7 @@ public class DataPacket implements Iterable<IDataType>
 					IDataType data = null;
 					try
 					{
-						data = (IDataType)varTypes.get(type).newInstance();
+						data = varTypes.get(type).newInstance();
 					}
 					catch(InstantiationException|IllegalAccessException e)
 					{
@@ -161,7 +240,6 @@ public class DataPacket implements Iterable<IDataType>
 					}
 				}
 			}
-		}
 		if(nbt.hasKey("color"))
 			this.packetColor = EnumDyeColor.byMetadata(nbt.getInteger("color"));
 		if(nbt.hasKey("address"))
@@ -209,5 +287,10 @@ public class DataPacket implements Iterable<IDataType>
 	public Iterator<IDataType> iterator()
 	{
 		return variables.values().iterator();
+	}
+
+	public int size()
+	{
+		return variables.size();
 	}
 }

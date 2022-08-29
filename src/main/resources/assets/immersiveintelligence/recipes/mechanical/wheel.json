@@ -2,25 +2,25 @@
   "type": "forge:ore_shaped",
   "result": {
     "item": "immersiveintelligence:mechanical_connector",
-    "count": 4
+    "count": 2
   },
   "pattern": [
-    "pp ",
-    "rrs",
-    "pp "
+    "  s",
+    "crs",
+    "  s"
   ],
   "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
     "r": {
       "type": "forge:ore_dict",
       "ore": "stickIron"
     },
-    "p": {
-      "type": "forge:ore_dict",
-      "ore": "plateBrass"
-    },
     "s": {
       "type": "forge:ore_dict",
-      "ore": "scaffoldingTreatedWood"
+      "ore": "blockSheetmetalIron"
     }
   }
 }

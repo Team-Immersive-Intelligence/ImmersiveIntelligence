@@ -9,9 +9,20 @@
     }
   },
   "variants": {
+    "inventory,type=tank_trap": [
+      {
+        "model": "immersiveintelligence:tank_trap.obj",
+        "custom": {
+          "flip-v": true
+        }
+      }
+    ],
     "type": {
       "tank_trap": {
-        "model": "immersiveengineering:ie_empty"
+        "model": "immersiveintelligence:tank_trap.obj",
+        "custom": {
+          "flip-v": true
+        }
       }
     }
   }

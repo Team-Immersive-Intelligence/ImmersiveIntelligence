@@ -58,9 +58,9 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 
 	boolean checkingArea = false;
 	Fluid searchFluid = null;
-	ArrayList<BlockPos> openList = new ArrayList<BlockPos>();
-	ArrayList<BlockPos> closedList = new ArrayList<BlockPos>();
-	ArrayList<BlockPos> checked = new ArrayList<BlockPos>();
+	ArrayList<BlockPos> openList = new ArrayList<>();
+	ArrayList<BlockPos> closedList = new ArrayList<>();
+	ArrayList<BlockPos> checked = new ArrayList<>();
 
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
@@ -193,7 +193,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 
 	public void checkAreaTick()
 	{
-		BlockPos next = null;
+		BlockPos next;
 		final int closedListMax = 2048;
 		int timeout = 0;
 		while(timeout < 64&&closedList.size() < closedListMax&&!openList.isEmpty())
@@ -237,7 +237,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 
 		final int fluidForSort = canAccept;
 		int sum = 0;
-		HashMap<DirectionalFluidOutput, Integer> sorting = new HashMap<DirectionalFluidOutput, Integer>();
+		HashMap<DirectionalFluidOutput, Integer> sorting = new HashMap<>();
 		for(EnumFacing f : EnumFacing.values())
 			if(sideConfig[f.ordinal()]==1)
 			{
@@ -557,7 +557,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 
 	private void selfDestruct()
 	{
-		//world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 3, true);
-		//world.setBlockToAir(this.pos);
+		world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 1, true);
+		world.setBlockToAir(this.pos);
 	}
 }

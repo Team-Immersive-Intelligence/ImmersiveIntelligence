@@ -1,11 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.carversound.sounds;
 
 import net.minecraft.client.audio.MovingSound;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
 
@@ -44,13 +40,13 @@ public class MovingSoundMotorbikeEngine extends MovingSound
 
 			if (motorbike.engineProgress>10)
 			{
-				this.distance = Math.min(1f,distance+=0.05f);
+				this.distance = Math.min(1f,distance+0.05f);
 				this.pitch = motorbike.acceleration*1.25f;
 			}
 			else
 			{
 				this.pitch=0;
-				this.distance = Math.max(0f,distance-=0.07f);
+				this.distance = Math.max(0f,distance-0.07f);
 			}
 			this.volume=distance*0.95f;
 		}

@@ -36,6 +36,9 @@ public abstract class IICompatModule
 		//it is the only IE addon which has a _ between words
 		moduleClasses.put("immersive_energy", ImmersiveEnergyHelper.class);
 		moduleClasses.put("tfc", TerrafirmaHelper.class);
+		moduleClasses.put("baubles", BaublesHelper.class);
+		moduleClasses.put("opencomputers", OpenComputersHelper.class);
+		moduleClasses.put("computercraft", ComputerCraftHelper.class);
 	}
 
 	public static void doModulesPreInit()
@@ -53,7 +56,7 @@ public abstract class IICompatModule
 									.compareTo(new DefaultArtifactVersion(Utils.getModVersion(e.getKey()))) >= 0
 					)
 					{
-						ImmersiveIntelligence.logger.info("Consider updating %s, II adds additional compat for the new version", e.getKey());
+						ImmersiveIntelligence.logger.info("Consider updating "+e.getKey()+", II adds additional compat for the new version");
 						continue;
 					}
 					if(enabled==null||!enabled)

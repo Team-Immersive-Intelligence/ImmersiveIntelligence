@@ -8,6 +8,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Pabilo8
  * @since 19-08-2019
@@ -23,7 +25,7 @@ public class ItemIISawblade extends ItemIIBase implements ISawblade
 	}
 
 	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
+	public void onCreated(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
 		ItemNBTHelper.setInt(stack, "damage", getSawbladeMaxDamage(stack));
@@ -50,6 +52,8 @@ public class ItemIISawblade extends ItemIIBase implements ISawblade
 	@Override
 	public int getSawbladeDamage(ItemStack stack)
 	{
+		if(!ItemNBTHelper.hasKey(stack,"damage"))
+			return getSawbladeMaxDamage(stack);
 		return ItemNBTHelper.getInt(stack, "damage");
 	}
 
@@ -108,17 +112,18 @@ public class ItemIISawblade extends ItemIIBase implements ISawblade
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack)
+	public boolean showDurabilityBar(@Nonnull ItemStack stack)
 	{
-		return ItemNBTHelper.hasKey(stack, "damage")&&((double)getSawbladeDamage(stack)/(double)getSawbladeDamage(stack))!=1f;
+		return getSawbladeDamage(stack)!=getSawbladeMaxDamage(stack);
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack)
+	public double getDurabilityForDisplay(@Nonnull ItemStack stack)
 	{
 		return 1d-((double)getSawbladeDamage(stack)/(double)getSawbladeDamage(stack));
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack getToolPresentationStack(String tool_name)
 	{

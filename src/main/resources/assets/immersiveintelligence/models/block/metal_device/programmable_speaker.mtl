@@ -1,0 +1,6 @@
+# Made by Pabilo8 in Blockbench 4.2.0
+newmtl m_0
+map_Kd immersiveintelligence:blocks/metal_device/alarm_siren
+newmtl m_1
+map_Kd immersiveintelligence:blocks/metal_device/alarm_siren_pole
+newmtl none

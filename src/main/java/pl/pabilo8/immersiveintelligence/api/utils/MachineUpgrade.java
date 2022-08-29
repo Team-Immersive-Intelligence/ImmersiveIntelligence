@@ -24,7 +24,7 @@ public class MachineUpgrade
 	protected ResourceLocation icon;
 	private int progress=0;
 	private int steps=1;
-	private List<IngredientStack> requiredStacks = new ArrayList<>();
+	private final List<IngredientStack> requiredStacks = new ArrayList<>();
 
 	public MachineUpgrade(String name, ResourceLocation icon)
 	{

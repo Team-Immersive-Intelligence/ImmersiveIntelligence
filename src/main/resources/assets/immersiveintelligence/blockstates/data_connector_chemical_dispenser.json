@@ -1,0 +1,63 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_aluminum",
+      "particle": "immersiveengineering:blocks/storage_aluminum"
+    },
+    "custom": { "flip-v": true }
+  },
+  "variants": {
+    "inventory,type=chemical_dispenser": [
+      {
+        "model": "immersiveintelligence:metal_device/chemical_dispenser/chemical_dispenser_inv.obj"
+      }
+    ],
+    "type": {
+      "chemical_dispenser": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/metal_device/chemical_dispenser/chemical_dispenser_base.obj",
+          "layers": [
+            "SOLID"
+          ]
+        }
+      }
+    },
+    "facing": {
+      "down": {
+        "transform": {
+          "rotation": [{"y": 90 }]
+        }
+      },
+      "up": { "transform": {
+        "rotation": [{"y": 90 },{"z": 180 }]
+      }},
+      "north": { "transform": {
+        "rotation": {"x": 90 }
+      }},
+      "south": { "transform": {
+        "rotation": {"x": -90 }
+      }},
+      "west": { "transform": {
+        "rotation": [{"y": 90 },{"x": 90 }]
+      }},
+      "east": { "transform": {
+        "rotation": [{"y": -90 },{"x": 90 }]
+      }}
+    },
+    "boolean0": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/chemical_dispenser/chemical_dispenser.obj.ie"
+      }
+    }
+  }
+}

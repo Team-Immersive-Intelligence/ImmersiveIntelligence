@@ -2,8 +2,6 @@ package pl.pabilo8.immersiveintelligence.client.fx;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.Utils;

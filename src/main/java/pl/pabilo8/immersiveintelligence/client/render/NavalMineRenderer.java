@@ -49,17 +49,17 @@ public class NavalMineRenderer extends Render<EntityNavalMine> implements IReloa
 
 			GlStateManager.pushMatrix();
 
-			GlStateManager.scale(0.0625f,0.0625f,0.0625f);
-			GlStateManager.translate(0,-18,0);
+			GlStateManager.scale(0.0625f, 0.0625f, 0.0625f);
+			GlStateManager.translate(0, -18, 0);
 
 			for(int j = 0; j < 4; j++)
 			{
-				for(int i=0;i<mountedYOffset;i+=15)
+				for(int i = 0; i < mountedYOffset; i += 15)
 				{
-					float l = (float)MathHelper.clamp(mountedYOffset-i,0,15);
-					ClientUtils.drawTexturedRect(-1.5f,-i,3, l,0, 0.046875,0,l*0.015625);
+					float l = (float)MathHelper.clamp(mountedYOffset-i, 0, 15);
+					ClientUtils.drawTexturedRect(-1.5f, -i, 3, l, 0, 0.046875, 0, l*0.015625);
 				}
-				GlStateManager.rotate(90,0,1,0);
+				GlStateManager.rotate(90, 0, 1, 0);
 			}
 
 
@@ -98,13 +98,11 @@ public class NavalMineRenderer extends Render<EntityNavalMine> implements IReloa
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0.5f, 0f, 0.5f);
+			IBullet b = (IBullet)stack.getItem();
 			if(stack.getMetadata()==0)
-			model.renderBulletUnused(stack);
+				model.renderBulletUsed(b.getCore(stack).getColour(), b.getCoreType(stack), b.getPaintColor(stack));
 			else
-			{
-				IBullet b = (IBullet)stack.getItem();
 				model.renderCore(b.getCore(stack).getColour(), b.getCoreType(stack));
-			}
 
 			GlStateManager.popMatrix();
 		}

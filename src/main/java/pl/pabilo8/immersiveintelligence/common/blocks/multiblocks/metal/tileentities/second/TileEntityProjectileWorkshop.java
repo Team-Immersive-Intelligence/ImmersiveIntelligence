@@ -43,8 +43,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
@@ -498,9 +497,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	@Override
 	protected boolean canFillTankFrom(int i, @Nonnull EnumFacing side, @Nonnull FluidStack fluidStack)
 	{
-		if(pos==22&&side==facing)
-			return true;
-		return false;
+		return pos==22&&side==facing;
 	}
 
 	@Override
@@ -702,6 +699,12 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	}
 
 	@Override
+	public int getClientInstallProgress()
+	{
+		return upgradeProgress;
+	}
+
+	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
 		upgradeProgress += toAdd;
@@ -784,14 +787,8 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 				master.coreType = master.producedBullet.getAllowedCoreTypes()[0];
 
 			if(packet.hasVariable('a'))
-				master.fillAmount = DataOperator.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('a'), packet).value;
+				master.fillAmount = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('a')).value;
 		}
-	}
-
-	@Override
-	public void onSend()
-	{
-
 	}
 
 	@Override

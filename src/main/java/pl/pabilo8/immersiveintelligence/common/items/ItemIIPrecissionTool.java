@@ -100,7 +100,7 @@ public class ItemIIPrecissionTool extends ItemIIBase implements IPrecissionTool
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(CommonProxy.INFO_KEY+"gear_durability", getPrecissionToolDamage(stack),getPrecissionToolMaxDamage(stack)));
+		tooltip.add(I18n.format(CommonProxy.INFO_KEY+"tool_durability", getPrecissionToolDamage(stack),getPrecissionToolMaxDamage(stack)));
 	}
 
 	@Override

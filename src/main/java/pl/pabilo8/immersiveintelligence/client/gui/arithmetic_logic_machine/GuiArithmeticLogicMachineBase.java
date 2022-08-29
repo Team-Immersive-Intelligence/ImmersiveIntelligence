@@ -162,17 +162,22 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	{
 		super.drawScreen(mx, my, partial);
 
-		ArrayList<String> tooltip = new ArrayList<>();
-		TABS.keySet().stream().filter(GuiButton::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
-
-		if(this.manualButton.isMouseOver())
-			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
-
+		ArrayList<String> tooltip = getTooltip(mx, my);
 		if(!tooltip.isEmpty())
 		{
 			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, -1, -1);
 			RenderHelper.enableGUIStandardItemLighting();
 		}
+	}
+
+	public ArrayList<String> getTooltip(int mx, int my)
+	{
+		ArrayList<String> tooltip = new ArrayList<>();
+		TABS.keySet().stream().filter(GuiButton::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
+
+		if(this.manualButton.isMouseOver())
+			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
+		return tooltip;
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class ImmersivePostsHelper extends IICompatModule
 	 */
 	@Override
 	public void preInit()
-	{	
+	{
 		brassFence = createFence("brass");
 		tungstenFence = createFence("tungsten");
 		zincFence = createFence("zinc");

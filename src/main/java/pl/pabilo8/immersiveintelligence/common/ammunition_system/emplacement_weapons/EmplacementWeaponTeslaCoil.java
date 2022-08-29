@@ -53,8 +53,8 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 {
 	private AxisAlignedBB vision;
 	private AxisAlignedBB attack;
-	private ArrayList<Integer> targetedEntities = new ArrayList<>();
-	private ArrayList<LightningAnimation> effects = new ArrayList<>();
+	private final ArrayList<Integer> targetedEntities = new ArrayList<>();
+	private final ArrayList<LightningAnimation> effects = new ArrayList<>();
 
 	@Override
 	public String getName()
@@ -314,7 +314,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 			if(1+i > Math.round(l*progress))
 			{
 				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f)/1f);
+				double scale = 1f-(((progress*l)%1f));
 				GlStateManager.enableBlend();
 				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
 				GlStateManager.translate(0, scale*1.5f, 0);

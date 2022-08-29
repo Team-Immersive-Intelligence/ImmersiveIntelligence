@@ -37,11 +37,9 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.operators.arithmetic.DataOperationAdd;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -55,7 +53,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntityPrintingPress, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IBooleanAnimatedPartsBlock, IConveyorAttachable, ISoundTile
+public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntityPrintingPress, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IConveyorAttachable, ISoundTile
 {
 	public boolean active = false, hasPaper = false;
 	public DataPacket dataToPrint = new DataPacket();
@@ -237,12 +235,10 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			tag.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
 		}
 
+		//this.markDirty();
+		//this.markContainingBlockForUpdate(null);
 		if(update)
-		{
-			//this.markDirty();
-			//this.markContainingBlockForUpdate(null);
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
-		}
 
 
 	}
@@ -257,7 +253,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 		if(pagesLeft < 1)
 			active = false;
 
-		DataPacketTypeString item_type = (DataPacketTypeString)DataOperationAdd.getVarInType(DataPacketTypeString.class, dataToPrint.getPacketVariable('m'), dataToPrint);
+		DataTypeString item_type = dataToPrint.getVarInType(DataTypeString.class, dataToPrint.getPacketVariable('m'));
 
 		switch(item_type.value)
 		{
@@ -269,24 +265,14 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 				int black_amount = 0, cyan_amount = 0, magenta_amount = 0, yellow_amount = 0;
 
 				for(FluidStack stack : tanks[0].fluids)
-				{
 					if(stack.getFluid().getName().equals("ink"))
-					{
 						black_amount += stack.amount;
-					}
 					else if(stack.getFluid().getName().equals("ink_cyan"))
-					{
 						cyan_amount += stack.amount;
-					}
 					else if(stack.getFluid().getName().equals("ink_magenta"))
-					{
 						magenta_amount += stack.amount;
-					}
 					else if(stack.getFluid().getName().equals("ink_yellow"))
-					{
 						yellow_amount += stack.amount;
-					}
-				}
 
 				int black_amount_start = black_amount, cyan_amount_start = cyan_amount, magenta_amount_start = magenta_amount, yellow_amount_start = yellow_amount;
 
@@ -313,35 +299,24 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 						//printedChars+="<";
 						String fragment = toPrint.substring(charnum-1);
 
-						if(fragment.length() > 3&&fragment.startsWith("<br>"))
+						if(fragment.startsWith("<br>"))
 						{
 							shouldstartfrom = charnum+4;
 							printedChars.append("<br>");
 						}
-						else if(fragment.length() > 7&&fragment.startsWith("<hexcol="))
+						else if(fragment.startsWith("<hexcol="))
 						{
-							black_cost.get(black_cost.size()-1);
-
 							if(black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage > black_amount)
-							{
 								black_cost.set(black_cost.size()-1, (float)black_amount/(float)PrintingPress.printInkUsage);
-							}
 
 							if(cyan_cost.get(cyan_cost.size()-1)*PrintingPress.printInkUsage > cyan_amount)
-							{
 								cyan_cost.set(cyan_cost.size()-1, (float)cyan_amount/(float)PrintingPress.printInkUsage);
-							}
 
 							if(magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage > magenta_amount)
-							{
 								magenta_cost.set(magenta_cost.size()-1, (float)magenta_amount/(float)PrintingPress.printInkUsage);
-							}
 
 							if(yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage > yellow_amount)
-							{
 								yellow_cost.set(yellow_cost.size()-1, (float)yellow_amount/(float)PrintingPress.printInkUsage);
-							}
-
 
 							try
 							{
@@ -360,7 +335,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 							}
 
 							shouldstartfrom = charnum+15;
-							printedChars.append("<hexcol=").append(fragment.substring(8, 14)).append(":");
+							printedChars.append("<hexcol=").append(fragment, 8, 14).append(":");
 
 						}
 					}
@@ -396,29 +371,19 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 						else
 						{
 							if(black_cost.get(black_cost.size()-1)*PrintingPress.printInkUsage > black_amount)
-							{
 								black_cost.set(black_cost.size()-1, (float)black_amount/(float)PrintingPress.printInkUsage);
-							}
 
 							if(cyan_cost.get(cyan_cost.size()-1)*PrintingPress.printInkUsage > cyan_amount)
-							{
 								cyan_cost.set(cyan_cost.size()-1, (float)cyan_amount/(float)PrintingPress.printInkUsage);
-							}
 
 							if(magenta_cost.get(magenta_cost.size()-1)*PrintingPress.printInkUsage > magenta_amount)
-							{
 								magenta_cost.set(magenta_cost.size()-1, (float)magenta_amount/(float)PrintingPress.printInkUsage);
-							}
 
 							if(yellow_cost.get(yellow_cost.size()-1)*PrintingPress.printInkUsage > yellow_amount)
-							{
 								yellow_cost.set(yellow_cost.size()-1, (float)yellow_amount/(float)PrintingPress.printInkUsage);
-							}
 
 							if(black_cost.get(black_cost.size()-1)==0&&cyan_cost.get(cyan_cost.size()-1)==0&&magenta_cost.get(magenta_cost.size()-1)==0&&yellow_cost.get(yellow_cost.size()-1)==0)
-							{
 								printedChars.append(" ");
-							}
 							else
 							{
 								printedChars.append("> <hexcol=");
@@ -578,10 +543,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	{
 		TileEntityPrintingPress master = this.master();
 		if(master!=null)
-		{
 			if(pos==29&&side.getAxis()==Axis.Y)
 				return master.tanks;
-		}
 		return new FluidTank[0];
 	}
 
@@ -622,25 +585,16 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		if(pos==6)
-		{
 			master().onReceive(packet, side);
-		}
 
 		if(!this.isDummy())
-		{
 			if(packet.variables.containsKey('c'))
 			{
 				IDataType c = packet.getPacketVariable('c');
-				if(c instanceof DataPacketTypeString)
+				if(c instanceof DataTypeString)
 				{
 					IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorFacing(getBlockPosForPos(6), world, mirrored?facing.rotateY(): facing.rotateYCCW());
 					if(conn==null)
@@ -648,42 +602,42 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 					DataPacket p = new DataPacket();
 					int amount;
 
-					switch(((DataPacketTypeString)c).value)
+					switch(((DataTypeString)c).value)
 					{
 						case "get_ink":
 						case "get_ink_black":
 							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink")).mapToInt(fs -> fs.amount).sum();
-							p.setVariable('c', new DataPacketTypeString("ink_black"));
-							p.setVariable('g', new DataPacketTypeInteger(amount));
+							p.setVariable('c', new DataTypeString("ink_black"));
+							p.setVariable('g', new DataTypeInteger(amount));
 							conn.sendPacket(p);
 							break;
 						case "get_ink_cyan":
 							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink_cyan")).mapToInt(fs -> fs.amount).sum();
-							p.setVariable('c', new DataPacketTypeString("ink_cyan"));
-							p.setVariable('g', new DataPacketTypeInteger(amount));
+							p.setVariable('c', new DataTypeString("ink_cyan"));
+							p.setVariable('g', new DataTypeInteger(amount));
 							conn.sendPacket(p);
 							break;
 						case "get_ink_yellow":
 							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink_yellow")).mapToInt(fs -> fs.amount).sum();
-							p.setVariable('c', new DataPacketTypeString("ink_yellow"));
-							p.setVariable('g', new DataPacketTypeInteger(amount));
+							p.setVariable('c', new DataTypeString("ink_yellow"));
+							p.setVariable('g', new DataTypeInteger(amount));
 							conn.sendPacket(p);
 							break;
 						case "get_ink_magenta":
 							amount = tanks[0].fluids.stream().filter(fluidStack -> fluidStack.getFluid().getName().equals("ink_magenta")).mapToInt(fs -> fs.amount).sum();
-							p.setVariable('c', new DataPacketTypeString("ink_magenta"));
-							p.setVariable('g', new DataPacketTypeInteger(amount));
+							p.setVariable('c', new DataTypeString("ink_magenta"));
+							p.setVariable('g', new DataTypeInteger(amount));
 							conn.sendPacket(p);
 							break;
 
 						case "get_energy":
-							p.setVariable('c', new DataPacketTypeString("energy"));
-							p.setVariable('g', new DataPacketTypeInteger(energyStorage.getEnergyStored()));
+							p.setVariable('c', new DataTypeString("energy"));
+							p.setVariable('g', new DataTypeInteger(energyStorage.getEnergyStored()));
 							conn.sendPacket(p);
 							break;
 						case "get_paper":
-							p.setVariable('c', new DataPacketTypeString("paper"));
-							p.setVariable('g', new DataPacketTypeInteger(inventory.get(0).getCount()));
+							p.setVariable('c', new DataTypeString("paper"));
+							p.setVariable('g', new DataTypeInteger(inventory.get(0).getCount()));
 							conn.sendPacket(p);
 							break;
 					}
@@ -692,11 +646,9 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			else
 			{
 				energyStorage.extractEnergy(PrintingPress.energyUsage, false);
-				this.pagesLeft = ((DataPacketTypeInteger)DataOperationAdd.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('a'), packet)).value;
+				this.pagesLeft = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('a')).value;
 				this.newDataToPrint = packet.clone();
 			}
-
-		}
 	}
 
 	@Override
@@ -768,11 +720,8 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			list.add(new AxisAlignedBB(0.125, 0.5, 0.125, 0.875, 1, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 		}
 		else if(pos==27)
-		{
 			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).contract(facing.getFrontOffsetX()*0.0625, 0, facing.getFrontOffsetZ()*0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-		}
 		else if(pos==28)
-		{
 			if(facing.getAxis()==Axis.X)
 				list.add(new AxisAlignedBB(0.125, 0, 0, 0.875, 0.875, 1)
 						.contract(0, 0, facing==EnumFacing.EAST^mirrored?-0.25: 0.25)
@@ -781,7 +730,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 				list.add(new AxisAlignedBB(0, 0, 0.125, 1, 0.875, 0.875)
 						.contract(facing==EnumFacing.NORTH^mirrored?-0.25: 0.25, 0, 0)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-		}
 		else if(pos==29)
 		{
 			if(facing.getAxis()==Axis.X)
@@ -860,21 +808,6 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			NBTTagCompound tag = new NBTTagCompound();
 			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
 		}
-	}
-
-	@Override
-	public void onAnimationChangeClient(boolean state, int part)
-	{
-		/*if (part==0)
-			isDoorOpened=state;*/
-	}
-
-	@Override
-	public void onAnimationChangeServer(boolean state, int part)
-	{
-		/*if (part==0)
-			isDoorOpened=state;*/
-		//IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened,1, getPos()),pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(),this.world,32));
 	}
 
 	@Override

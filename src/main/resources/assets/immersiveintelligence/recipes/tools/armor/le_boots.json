@@ -15,12 +15,10 @@
       "data": 0
     },
     "s": {
-      "item": "immersiveengineering:steel_armor_feet",
-      "data": 9
+      "item": "immersiveengineering:steel_armor_feet"
     },
     "l": {
-      "item": "minecraft:leather_boots",
-      "data": 9
+      "item": "minecraft:leather_boots"
     }
   },
   "result": {

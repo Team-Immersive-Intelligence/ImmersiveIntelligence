@@ -161,10 +161,10 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 
 		 */
 
-		private ImmutableSet<String> toolset;
-		private int stackSize = 1;
-		private BiPredicate<ItemStack, ItemStack> applyCheck;
-		private BiConsumer<ItemStack, NBTTagCompound> function;
+		private final ImmutableSet<String> toolset;
+		private final int stackSize;
+		private final BiPredicate<ItemStack, ItemStack> applyCheck;
+		private final BiConsumer<ItemStack, NBTTagCompound> function;
 
 		WeaponUpgrades(ImmutableSet<String> toolset, BiConsumer<ItemStack, NBTTagCompound> function)
 		{
@@ -215,8 +215,10 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		{
 			for(String upgradeType : this.getUpgradeTypes(stack))
 				list.add(getFormattingForWeapon(upgradeType)+I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade.item."+upgradeType.toLowerCase()));
-			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]), 200);
-			list.addAll(Arrays.asList(flavour));
+			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
+					I18n.format(CommonProxy.DESCRIPTION_KEY+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]),
+					200);
+			Arrays.stream(flavour).map(s -> TextFormatting.ITALIC+s+TextFormatting.RESET).forEach(list::add);
 		}
 	}
 
@@ -290,17 +292,13 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		MachinegunRenderer.upgrades.put(
 				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("scope")),
 				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.scopeBox);
-				}
+						tmtNamedBoxGroups.add(MachinegunRenderer.model.scopeBox)
 		);
 
 		MachinegunRenderer.upgrades.put(
 				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("infrared_scope")),
 				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.infraredScopeBox);
-				}
+						tmtNamedBoxGroups.add(MachinegunRenderer.model.infraredScopeBox)
 		);
 
 		MachinegunRenderer.upgrades.put(
@@ -333,9 +331,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		MachinegunRenderer.upgrades.put(
 				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("shield")),
 				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox);
-				}
+						tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox)
 		);
 
 		//smg
@@ -352,9 +348,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 		SubmachinegunItemStackRenderer.upgrades.put(
 				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("suppressor")),
 				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.silencerBox);
-				}
+						tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.silencerBox)
 		);
 
 		SubmachinegunItemStackRenderer.upgrades.put(

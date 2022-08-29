@@ -27,6 +27,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
@@ -416,7 +417,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IBullet, BulletHan
 	@Override
 	public float getDefaultVelocity()
 	{
-		return 6f;
+		return Bullets.revolverVelocity;
 	}
 
 	@Override

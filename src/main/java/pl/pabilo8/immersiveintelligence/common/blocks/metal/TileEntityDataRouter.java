@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 
 /**
  * @author Pabilo8
@@ -107,21 +107,15 @@ public class TileEntityDataRouter extends TileEntityIEBase implements IPlayerInt
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		if(packet.getPacketVariable(variable) instanceof DataPacketTypeInteger)
+		if(packet.getPacketVariable(variable) instanceof DataTypeInteger)
 		{
-			int c = ((DataPacketTypeInteger)packet.getPacketVariable(variable)).value;
+			int c = ((DataTypeInteger)packet.getPacketVariable(variable)).value;
 			if(world.isBlockLoaded(this.pos.offset(EnumFacing.getFront(c)))&&world.getTileEntity(this.pos.offset(EnumFacing.getFront(c))) instanceof IDataConnector)
 			{
 				IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(EnumFacing.getFront(c)));
 				d.sendPacket(packet);
 			}
 		}
-
-	}
-
-	@Override
-	public void onSend()
-	{
 
 	}
 

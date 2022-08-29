@@ -384,7 +384,6 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					if(!world.isRemote)
 						blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, entity.getPosition(), mag2);
 					setMagazineToSlot(setTo, ItemStack.EMPTY);
-					return true;
 				}
 				else
 				{
@@ -398,8 +397,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					}
 					if(!world.isRemote&&clipReload==1)
 						world.playSound(null, getPosition(), IISounds.machinegun_unload, SoundCategory.BLOCKS, 1F, 1f);
-					return true;
 				}
+				return true;
 			}
 			else
 			{

@@ -32,7 +32,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.util.vector.Vector3f;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -292,8 +291,7 @@ public class ConveyorRubberExtract extends ConveyorBasic
 	@Override
 	public List<AxisAlignedBB> getColisionBoxes(TileEntity tile, EnumFacing facing)
 	{
-		List<AxisAlignedBB> list = Lists.newArrayList(conveyorBounds);
-		return list;
+		return Lists.newArrayList(conveyorBounds);
 	}
 
 	@Override

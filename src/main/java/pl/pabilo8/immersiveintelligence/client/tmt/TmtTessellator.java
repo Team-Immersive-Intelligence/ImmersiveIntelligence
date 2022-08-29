@@ -8,16 +8,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.ARBBufferObject;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.Arrays;
 
 @SideOnly(Side.CLIENT)
 public class TmtTessellator extends Tessellator
 {
-	private static int nativeBufferSize = 0x200000;
-	private static int trivertsInBuffer = (nativeBufferSize/48)*6;
+	private static final int nativeBufferSize = 0x200000;
+	private static final int trivertsInBuffer = (nativeBufferSize/48)*6;
 	public static boolean renderingWorldRenderer = false;
 	public boolean defaultTexture = false;
 	private int rawBufferSize = 0;
@@ -25,27 +27,27 @@ public class TmtTessellator extends Tessellator
 	/**
 	 * Boolean used to check whether quads should be drawn as two triangles. Initialized to false and never changed.
 	 */
-	private static boolean convertQuadsToTriangles = false;
+	private static final boolean convertQuadsToTriangles = false;
 
 	/**
 	 * The byte buffer used for GL allocation.
 	 */
-	private static ByteBuffer byteBuffer = GLAllocation.createDirectByteBuffer(nativeBufferSize*4);
+	private static final ByteBuffer byteBuffer = GLAllocation.createDirectByteBuffer(nativeBufferSize*4);
 
 	/**
 	 * The same memory as byteBuffer, but referenced as an integer buffer.
 	 */
-	private static IntBuffer intBuffer = byteBuffer.asIntBuffer();
+	private static final IntBuffer intBuffer = byteBuffer.asIntBuffer();
 
 	/**
 	 * The same memory as byteBuffer, but referenced as an float buffer.
 	 */
-	private static FloatBuffer floatBuffer = byteBuffer.asFloatBuffer();
+	private static final FloatBuffer floatBuffer = byteBuffer.asFloatBuffer();
 
 	/**
 	 * Short buffer
 	 */
-	private static ShortBuffer shortBuffer = byteBuffer.asShortBuffer();
+	private static final ShortBuffer shortBuffer = byteBuffer.asShortBuffer();
 
 	/**
 	 * Raw integer array.
@@ -138,7 +140,7 @@ public class TmtTessellator extends Tessellator
 	/**
 	 * The static instance of the Tessellator.
 	 */
-	public static TmtTessellator instance = new TmtTessellator(2097152);
+	public static TmtTessellator instance = new TmtTessellator();
 
 	/**
 	 * Whether this tessellator is currently in draw mode.
@@ -164,17 +166,7 @@ public class TmtTessellator extends Tessellator
 	/**
 	 * Number of vertex buffer objects allocated for use.
 	 */
-	private static int vboCount = 10;
-
-	/**
-	 * The size of the buffers used (in integers).
-	 */
-	private int bufferSize;
-
-	private TmtTessellator(int par1)
-	{
-		super(2097152);
-	}
+	private static final int vboCount = 10;
 
 	public TmtTessellator()
 	{
@@ -184,17 +176,7 @@ public class TmtTessellator extends Tessellator
 	static
 	{
 		instance.defaultTexture = true;
-		/**
-		 * Boolean used to check if we should use vertex buffers. Initialized to false and never changed.
-		 */
-		boolean tryVBO = false;
-		useVBO = tryVBO&&GLContext.getCapabilities().GL_ARB_vertex_buffer_object;
-
-		if(useVBO)
-		{
-			vertexBuffers = GLAllocation.createDirectIntBuffer(vboCount);
-			ARBBufferObject.glGenBuffersARB(vertexBuffers);
-		}
+		useVBO = false;
 	}
 
 	/**
@@ -351,7 +333,6 @@ public class TmtTessellator extends Tessellator
 				rawBuffer = null;
 			}
 
-			int var1 = this.rawBufferIndex*4;
 			this.reset();
 		}
 	}
@@ -365,14 +346,6 @@ public class TmtTessellator extends Tessellator
 		TmtTessellator.byteBuffer.clear();
 		this.rawBufferIndex = 0;
 		this.addedVertices = 0;
-	}
-
-	/**
-	 * Sets draw mode in the tessellator to draw quads.
-	 */
-	public void startDrawingQuads()
-	{
-		this.startDrawing(7);
 	}
 
 	/**
@@ -400,123 +373,12 @@ public class TmtTessellator extends Tessellator
 	/**
 	 * Sets the texture coordinates.
 	 */
-	public void setTextureUV(double par1, double par3)
-	{
-		this.hasTexture = true;
-		this.textureU = par1;
-		this.textureV = par3;
-		this.textureW = 1.0D;
-	}
-
-	/**
-	 * Sets the texture coordinates.
-	 */
 	public void setTextureUVW(double par1, double par3, double par4)
 	{
 		this.hasTexture = true;
 		this.textureU = par1;
 		this.textureV = par3;
 		this.textureW = par4;
-	}
-
-	public void setBrightness(int par1)
-	{
-		this.hasBrightness = true;
-		this.brightness = par1;
-	}
-
-	/**
-	 * Sets the RGB values as specified, converting from floats between 0 and 1 to integers from 0-255.
-	 */
-
-	public void setColorOpaque_F(float par1, float par2, float par3)
-	{
-		this.setColorOpaque((int)(par1*255.0F), (int)(par2*255.0F), (int)(par3*255.0F));
-	}
-
-	/**
-	 * Sets the RGBA values for the color, converting from floats between 0 and 1 to integers from 0-255.
-	 */
-	public void setColorRGBA_F(float par1, float par2, float par3, float par4)
-	{
-		this.setColorRGBA((int)(par1*255.0F), (int)(par2*255.0F), (int)(par3*255.0F), (int)(par4*255.0F));
-	}
-
-	/**
-	 * Sets the RGB values as specified, and sets alpha to opaque.
-	 */
-	public void setColorOpaque(int par1, int par2, int par3)
-	{
-		this.setColorRGBA(par1, par2, par3, 255);
-	}
-
-	/**
-	 * Sets the RGBA values for the color. Also clamps them to 0-255.
-	 */
-	public void setColorRGBA(int par1, int par2, int par3, int par4)
-	{
-		if(!this.isColorDisabled)
-		{
-			if(par1 > 255)
-			{
-				par1 = 255;
-			}
-
-			if(par2 > 255)
-			{
-				par2 = 255;
-			}
-
-			if(par3 > 255)
-			{
-				par3 = 255;
-			}
-
-			if(par4 > 255)
-			{
-				par4 = 255;
-			}
-
-			if(par1 < 0)
-			{
-				par1 = 0;
-			}
-
-			if(par2 < 0)
-			{
-				par2 = 0;
-			}
-
-			if(par3 < 0)
-			{
-				par3 = 0;
-			}
-
-			if(par4 < 0)
-			{
-				par4 = 0;
-			}
-
-			this.hasColor = true;
-
-			if(ByteOrder.nativeOrder()==ByteOrder.LITTLE_ENDIAN)
-			{
-				this.color = par4<<24|par3<<16|par2<<8|par1;
-			}
-			else
-			{
-				this.color = par1<<24|par2<<16|par3<<8|par4;
-			}
-		}
-	}
-
-	/**
-	 * Adds a vertex specifying both x,y,z and the texture u,v for it.
-	 */
-	public void addVertexWithUV(double par1, double par3, double par5, double par7, double par9)
-	{
-		this.setTextureUV(par7, par9);
-		this.addVertex(par1, par3, par5);
 	}
 
 	public void addVertexWithUVW(double par1, double par3, double par5, double par7, double par9, double par10)
@@ -609,36 +471,6 @@ public class TmtTessellator extends Tessellator
 	}
 
 	/**
-	 * Sets the color to the given opaque value (stored as byte values packed in an integer).
-	 */
-	public void setColorOpaque_I(int par1)
-	{
-		int j = par1>>16&255;
-		int k = par1>>8&255;
-		int l = par1&255;
-		this.setColorOpaque(j, k, l);
-	}
-
-	/**
-	 * Sets the color to the given color (packed as bytes in integer) and alpha values.
-	 */
-	public void setColorRGBA_I(int par1, int par2)
-	{
-		int k = par1>>16&255;
-		int l = par1>>8&255;
-		int i1 = par1&255;
-		this.setColorRGBA(k, l, i1, par2);
-	}
-
-	/**
-	 * Disables colors for the current draw call.
-	 */
-	public void disableColor()
-	{
-		this.isColorDisabled = true;
-	}
-
-	/**
 	 * Sets the normal for the current draw call.
 	 */
 	public void setNormal(float par1, float par2, float par3)
@@ -648,25 +480,5 @@ public class TmtTessellator extends Tessellator
 		byte b1 = (byte)((int)(par2*127.0F));
 		byte b2 = (byte)((int)(par3*127.0F));
 		this.normal = b0&255|(b1&255)<<8|(b2&255)<<16;
-	}
-
-	/**
-	 * Sets the translation for all vertices in the current draw call.
-	 */
-	public void setTranslation(double par1, double par3, double par5)
-	{
-		this.xOffset = par1;
-		this.yOffset = par3;
-		this.zOffset = par5;
-	}
-
-	/**
-	 * Offsets the translation for all vertices in the current draw call.
-	 */
-	public void addTranslation(float par1, float par2, float par3)
-	{
-		this.xOffset += par1;
-		this.yOffset += par2;
-		this.zOffset += par3;
 	}
 }

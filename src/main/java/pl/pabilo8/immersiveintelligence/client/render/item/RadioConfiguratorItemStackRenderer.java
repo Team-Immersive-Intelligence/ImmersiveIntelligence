@@ -22,9 +22,9 @@ public class RadioConfiguratorItemStackRenderer extends TileEntityItemStackRende
 {
 	public static RadioConfiguratorItemStackRenderer instance = new RadioConfiguratorItemStackRenderer();
 	@SideOnly(Side.CLIENT)
-	private static ModelRadioConfigurator model_basic = new ModelRadioConfigurator();
+	private static final ModelRadioConfigurator model_basic = new ModelRadioConfigurator();
 	@SideOnly(Side.CLIENT)
-	private static ModelAdvancedRadioConfigurator model_advanced = new ModelAdvancedRadioConfigurator();
+	private static final ModelAdvancedRadioConfigurator model_advanced = new ModelAdvancedRadioConfigurator();
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn, float partialTicks)

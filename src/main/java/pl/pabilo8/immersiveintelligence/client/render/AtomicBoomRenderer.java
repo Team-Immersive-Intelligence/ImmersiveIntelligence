@@ -8,13 +8,8 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
 
-import java.util.Map;
-import java.util.Queue;
 import java.util.Random;
 
 /**
@@ -62,11 +57,11 @@ public class AtomicBoomRenderer extends Render<EntityAtomicBoom>
 			float f2 = random.nextFloat()*35f*f1;
 			float f3 = random.nextFloat()*15.0F*f1;
 			bufferbuilder.begin(6, DefaultVertexFormats.POSITION_COLOR);
-			bufferbuilder.pos((double)0.0D, (double)0.0D, (double)0.0D).color(255, 255, 255, 255).endVertex();
-			bufferbuilder.pos((double)-0.866D*f3,(double) f2, -0.5F*(double)f3).color(255, 127, 55, 0).endVertex();
-			bufferbuilder.pos(0.866D*f3, (double)f2, -0.5F*(double)f3).color(255, 127, 55, 0).endVertex();
-			bufferbuilder.pos((double)0.0D, (double)f2, 1.0F*(double)f3).color(255, 127, 55, 0).endVertex();
-			bufferbuilder.pos(-0.866D*(double)f3, (double)f2, (double)-0.5F*f3).color(255, 127, 55, 0).endVertex();
+			bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(255, 255, 255, 255).endVertex();
+			bufferbuilder.pos(-0.866D*f3, f2, -0.5F*(double)f3).color(255, 127, 55, 0).endVertex();
+			bufferbuilder.pos(0.866D*f3, f2, -0.5F*(double)f3).color(255, 127, 55, 0).endVertex();
+			bufferbuilder.pos(0.0D, f2, 1.0F*(double)f3).color(255, 127, 55, 0).endVertex();
+			bufferbuilder.pos(-0.866D*(double)f3, f2, (double)-0.5F*f3).color(255, 127, 55, 0).endVertex();
 			tessellator.draw();
 		}
 

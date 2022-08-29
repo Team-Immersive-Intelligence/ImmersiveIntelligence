@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +23,7 @@ import java.util.function.BiFunction;
  * @author Pabilo8
  * @since 10-07-2019
  */
-public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal> extends GuiIEContainerBase
+public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>> extends GuiIEContainerBase
 {
 	protected static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/ammunition_workshop.png");
 	protected static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/manual.png");

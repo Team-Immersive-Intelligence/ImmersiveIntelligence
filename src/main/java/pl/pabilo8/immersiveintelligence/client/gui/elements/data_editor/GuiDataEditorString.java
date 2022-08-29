@@ -1,14 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiMultiLineTextField;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
@@ -18,13 +16,13 @@ import java.io.IOException;
  * @author Pabilo8
  * @since 07.09.2021
  */
-public class GuiDataEditorString extends GuiDataEditor<DataPacketTypeString>
+public class GuiDataEditorString extends GuiDataEditor<DataTypeString>
 {
 	private GuiTextField valueEdit;
 	private String valueLabel;
 	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 
-	public GuiDataEditorString(int buttonId, DataPacketTypeString dataType)
+	public GuiDataEditorString(int buttonId, DataTypeString dataType)
 	{
 		super(buttonId, dataType);
 	}
@@ -44,9 +42,9 @@ public class GuiDataEditorString extends GuiDataEditor<DataPacketTypeString>
 	}
 
 	@Override
-	public DataPacketTypeString createType()
+	public DataTypeString createType()
 	{
-		return new DataPacketTypeString();
+		return new DataTypeString();
 	}
 
 	@Override
@@ -81,7 +79,7 @@ public class GuiDataEditorString extends GuiDataEditor<DataPacketTypeString>
 	}
 
 	@Override
-	public DataPacketTypeString outputType()
+	public DataTypeString outputType()
 	{
 		dataType.setDefaultValue();
 		dataType.value = this.valueEdit.getText();

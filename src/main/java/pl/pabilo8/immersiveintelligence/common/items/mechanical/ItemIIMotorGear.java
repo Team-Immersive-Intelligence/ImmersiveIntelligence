@@ -1,11 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.items.mechanical;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -25,10 +29,19 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add("Ratio:"+String.format("%.2f", getGearTorqueModifier(stack)));
+		float mod = getGearTorqueModifier(stack);
+		//speed : torque
+		float speed = mod < 1&&mod!=0?1f/mod: 1;
+		float torque = mod >= 1?mod: 1;
+
+		tooltip.add(I18n.format(CommonProxy.INFO_KEY+"gear_ratio",
+				speed==(int)speed?String.valueOf((int)speed): String.valueOf(speed),
+				torque==(int)torque?String.valueOf((int)torque): String.valueOf(torque)
+		));
 	}
 
 	@Override
@@ -45,7 +58,7 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 		STEEL(MechanicalDevices.gear_torque_modifier[3]),
 		TUNGSTEN(MechanicalDevices.gear_torque_modifier[4]);
 
-		float torqueMod;
+		final float torqueMod;
 
 		MotorGear(float torqueMod)
 		{
@@ -54,11 +67,10 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 
 		public static String[] getNames()
 		{
-			ArrayList<String> list = new ArrayList<String>();
-			String[] a = new String[list.size()];
+			ArrayList<String> list = new ArrayList<>();
 			for(MotorGear belt : values())
 				list.add(belt.getName());
-			return list.toArray(a);
+			return list.toArray(new String[0]);
 		}
 
 		@Override

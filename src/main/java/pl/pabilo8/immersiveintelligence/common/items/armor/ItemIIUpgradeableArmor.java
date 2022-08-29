@@ -40,6 +40,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIArmorItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,12 +60,12 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	String upgradeType;
 	public static final String NBT_Colour = "colour";
 
-	public ItemIIUpgradeableArmor(ArmorMaterial materialIn, EntityEquipmentSlot equipmentSlotIn, String upgradeType)
+	public ItemIIUpgradeableArmor(ArmorMaterial armorMaterial, EntityEquipmentSlot slot, String upgradeType)
 	{
-		super(materialIn, -1, equipmentSlotIn);
+		super(armorMaterial, -1, slot);
 		this.upgradeType = upgradeType;
 
-		String name = (getMaterialName(getArmorMaterial())+"_"+getNameForPart(equipmentSlotIn)).replace(ImmersiveIntelligence.MODID+":", "");
+		String name = (getMaterialName(getArmorMaterial())+"_"+getNameForPart(slot)).replace(ImmersiveIntelligence.MODID+":", "");
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
 		this.setCreativeTab(ImmersiveIntelligence.creativeTab);
 		this.setMaxStackSize(1);
@@ -75,14 +76,28 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	abstract String getMaterialName(ArmorMaterial material);
 
 
-	public static boolean isArmorWithUpgrade(ItemStack stack, String upgrade)
+	public static boolean isArmorWithUpgrade(ItemStack stack, String... upgrades)
 	{
-		return stack.getItem() instanceof ItemIIUpgradeableArmor&&((ItemIIUpgradeableArmor)stack.getItem()).getUpgrades(stack).hasKey(upgrade);
+		if(!(stack.getItem() instanceof ItemIIUpgradeableArmor))
+			return false;
+
+		ItemIIUpgradeableArmor item = (ItemIIUpgradeableArmor)stack.getItem();
+		for(String u : upgrades)
+		{
+			if(item.hasUpgrade(stack, u))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean hasUpgrade(ItemStack stack, String upgrade)
+	{
+		return getUpgrades(stack).hasKey(upgrade);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, List<String> tooltip, @Nonnull ITooltipFlag flag)
 	{
 		float durability = 100-(float)getDurabilityForDisplay(stack)*100f;
 		tooltip.add(I18n.format(Lib.DESC_INFO+"durability", durability+"%"));
@@ -95,7 +110,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	}
 
 	@Override
-	public int getColor(ItemStack stack)
+	public int getColor(@Nonnull ItemStack stack)
 	{
 		if(ItemNBTHelper.hasKey(stack, NBT_Colour))
 			return ItemNBTHelper.getInt(stack, NBT_Colour);
@@ -142,7 +157,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 			return;
 		clearUpgrades(stack);
 		IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		NBTTagCompound upgradeTag = getUpgradeBase(stack).copy();
+		NBTTagCompound upgradeTag = new NBTTagCompound();
 		if(inv!=null)
 		{
 			for(int i = 0; i < inv.getSlots(); i++)
@@ -158,11 +173,6 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 			ItemNBTHelper.setTagCompound(stack, "upgrades", upgradeTag);
 			finishUpgradeRecalculation(stack);
 		}
-	}
-
-	public NBTTagCompound getUpgradeBase(ItemStack stack)
-	{
-		return new NBTTagCompound();
 	}
 
 	@Override
@@ -244,7 +254,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	 * it's contents.
 	 */
 	@Override
-	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
+	public void onUpdate(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull Entity entityIn, int itemSlot, boolean isSelected)
 	{
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		if(ItemNBTHelper.hasKey(stack, "Inv"))
@@ -258,8 +268,9 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		}
 	}
 
+	@Nonnull
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot, ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot equipmentSlot, @Nonnull ItemStack stack)
 	{
 		Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 		if(equipmentSlot==this.armorType)
@@ -281,7 +292,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	}
 
 	@Override
-	public boolean hasOverlay(ItemStack stack)
+	public boolean hasOverlay(@Nonnull ItemStack stack)
 	{
 		return false;
 	}
@@ -289,7 +300,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 	@Nullable
 	@Override
 	@SideOnly(Side.CLIENT)
-	public FontRenderer getFontRenderer(ItemStack stack)
+	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
 	{
 		return ClientProxy.itemFont;
 	}

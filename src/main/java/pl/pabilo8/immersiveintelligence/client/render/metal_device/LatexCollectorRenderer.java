@@ -16,7 +16,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.LatexCollector;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityLatexCollector;
 
@@ -26,8 +25,10 @@ import static blusunrize.immersiveengineering.api.IEProperties.FACING_HORIZONTAL
  * @author Pabilo8
  * @since 30.08.2020
  */
-public class LatexCollectorRenderer extends TileEntitySpecialRenderer<TileEntityLatexCollector> implements IReloadableModelContainer<LatexCollectorRenderer>
+public class LatexCollectorRenderer extends TileEntitySpecialRenderer<TileEntityLatexCollector>
 {
+	// TODO: 11.07.2022 adapt to AMT
+
 	@Override
 	public void render(TileEntityLatexCollector te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
@@ -101,11 +102,5 @@ public class LatexCollectorRenderer extends TileEntitySpecialRenderer<TileEntity
 			GlStateManager.popMatrix();
 
 		}
-	}
-
-	@Override
-	public void reloadModels()
-	{
-
 	}
 }

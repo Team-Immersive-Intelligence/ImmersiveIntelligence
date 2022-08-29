@@ -3,9 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.entity.bullets;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 /**
  * @author Pabilo8

@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEApi;
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent;
@@ -113,7 +112,6 @@ import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.blocks.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityChainFence;
-import pl.pabilo8.immersiveintelligence.common.blocks.fortification.TileEntityTankTrap;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.*;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityAdvancedInserter;
@@ -139,6 +137,7 @@ import pl.pabilo8.immersiveintelligence.common.crafting.RecipePowerpackAdvanced;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeSkinCraftingHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.*;
+import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.barrel.EntityMinecartBarrelSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.barrel.EntityMinecartBarrelWooden;
 import pl.pabilo8.immersiveintelligence.common.entity.minecarts.capacitor.EntityMinecartCapacitorCreative;
@@ -152,6 +151,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
@@ -210,7 +210,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(Block block : IIContent.BLOCKS)
 			event.getRegistry().register(block.setRegistryName(createRegistryName(block.getUnlocalizedName())));
 
-		registerFeedthroughForWiretype(IIDataWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/data_connector.obj"),
+		registerFeedthroughForWiretype(IIDataWireType.DATA, new ResourceLocation(ImmersiveIntelligence.MODID, "block/connector/data_connector.obj.ie"),
 				new ResourceLocation(ImmersiveIntelligence.MODID, "blocks/data_connector_feedtrough"), new float[]{4, 4, 12, 12},
 				0.75, IIContent.blockDataConnector.getStateFromMeta(IIBlockTypes_Connector.DATA_CONNECTOR.getMeta()),
 				0, 0, (f) -> f);
@@ -314,20 +314,22 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		OreDictionary.registerOre("oc:circuitChip1", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_electronic_element")));
 
 		//Advanced Circuit Board
+		OreDictionary.registerOre("circuitAdvanced", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board")));
 		OreDictionary.registerOre("circuitAdvancedRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_raw")));
+		OreDictionary.registerOre("oc:materialCircuitBoardRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_raw")));
 		OreDictionary.registerOre("circuitAdvancedEtched", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_etched")));
-		OreDictionary.registerOre("oc:materialCircuitBoardPrinted", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_raw")));
+		OreDictionary.registerOre("oc:materialCircuitBoardPrinted", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_etched")));
 		OreDictionary.registerOre("chipAdvanced", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_electronic_element")));
 		OreDictionary.registerOre("oc:circuitChip2", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_electronic_element")));
-		OreDictionary.registerOre("circuitAdvanced", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board")));
 
 		//Processor Circuit Board
+		OreDictionary.registerOre("circuitProcessor", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board")));
+		OreDictionary.registerOre("circuitProcessorRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_raw")));
+		OreDictionary.registerOre("oc:materialCircuitBoardRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_raw")));
 		OreDictionary.registerOre("circuitProcessorEtched", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_etched")));
 		OreDictionary.registerOre("oc:materialCircuitBoardPrinted", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_etched")));
-		OreDictionary.registerOre("circuitProcessorRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_raw")));
 		OreDictionary.registerOre("chipProcessor", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_electronic_element")));
 		OreDictionary.registerOre("oc:circuitChip3", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_electronic_element")));
-		OreDictionary.registerOre("circuitProcessor", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board")));
 
 		OreDictionary.registerOre("circuitEliteEtched", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_etched")));
 		OreDictionary.registerOre("circuitEliteRaw", new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_raw")));
@@ -424,8 +426,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	private static void registerItemOredict(ItemIIBase item, String subname, String... dicts)
 	{
-		for(int i = 0; i < dicts.length; i += 1)
-			OreDictionary.registerOre(Utils.toCamelCase(dicts[i], true), new ItemStack(item, 1, item.getMetaBySubname(subname)));
+		for(String dict : dicts)
+			OreDictionary.registerOre(Utils.toCamelCase(dict, true), new ItemStack(item, 1, item.getMetaBySubname(subname)));
 	}
 
 	private static void registerMetalOredict(ItemIIBase item, String dict)
@@ -472,6 +474,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(tracer_powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveIntelligence.MODID, "tracer_powder_colour"));
 		final ItemStack flare_powder = new ItemStack(IIContent.itemTracerPowder, 1, 1);
 		event.getRegistry().register(new RecipeRGBColouration((s) -> (OreDictionary.itemMatches(flare_powder, s, true)), (s) -> (ItemNBTHelper.hasKey(s, "colour")?ItemNBTHelper.getInt(s, "colour"): 0xffffff), (s, i) -> ItemNBTHelper.setInt(s, "colour", i)).setRegistryName(ImmersiveIntelligence.MODID, "flare_powder_colour"));
+
+		event.getRegistry().register(new RecipeRGBColouration((s) ->
+				(OreDictionary.itemMatches(new ItemStack(IIContent.itemAdvancedPowerPack, 1), s, false)),
+				(s) -> (ItemNBTHelper.hasKey(s, ItemIIAdvancedPowerPack.NBT_Colour)?ItemNBTHelper.getInt(s, ItemIIAdvancedPowerPack.NBT_Colour): 0xffffff),
+				(s, i) -> ItemNBTHelper.setInt(s, ItemIIAdvancedPowerPack.NBT_Colour, i)).setRegistryName(ImmersiveIntelligence.MODID, "advanced_powerpack_coloring"));
 
 		event.getRegistry().register(new RecipeRGBColouration((s) ->
 				(OreDictionary.itemMatches(new ItemStack(IIContent.itemLightEngineerHelmet, 1), s, false)),
@@ -791,7 +798,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerTile(TileEntityTransmissionBox.class);
 		registerTile(TileEntityMechanicalPump.class);
 
-		registerTile(TileEntityTankTrap.class);
 		registerTile(TileEntityChainFence.class);
 		registerTile(TileEntityTripMine.class);
 		registerTile(TileEntityTellermine.class);
@@ -989,6 +995,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public void postInit()
 	{
 		IICompatModule.doModulesPostInit();
+		//Init Hans Weapons
+		HansUtils.init();
 
 		for(Minecarts value : Minecarts.values())
 			MinecartBlockHelper.blocks.put(stack -> OreDictionary.itemMatches(stack, value.stack.get(), false), world -> value.minecart.apply(world, Vec3d.ZERO));
@@ -1013,7 +1021,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		for(IMultiblock mb : MultiblockHandler.getMultiblocks())
 		{
 			if(mb instanceof MultiblockStuctureBase)
-				((MultiblockStuctureBase)mb).updateStructure();
+				((MultiblockStuctureBase<?>)mb).updateStructure();
 		}
 	}
 

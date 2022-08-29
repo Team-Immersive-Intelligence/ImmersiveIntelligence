@@ -72,7 +72,7 @@ public class IIManualPageBulletComponent extends IIManualPages
 	public void renderPage(GuiManual gui, int x, int y, int mx, int my)
 	{
 		if(localizedName!=null&&!localizedName.isEmpty())
-			ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE.toString()+localizedName, x+40, y, 90, manual.getTextColour());
+			ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE+localizedName, x+40, y, 90, manual.getTextColour());
 
 		if(localizedLore!=null&&!localizedLore.isEmpty())
 			ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.ITALIC+localizedLore, x+40, y+10, 90, manual.getTextColour());

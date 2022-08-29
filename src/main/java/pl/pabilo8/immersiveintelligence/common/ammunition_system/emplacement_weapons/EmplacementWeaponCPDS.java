@@ -185,14 +185,13 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		return new float[]{yy, pp};
 	}
 
-	// TODO: 26.12.2021 drag factor
 	/**
-	 * https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/
+	 * <a href="https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/">https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/</a><br>
 	 * Originally written in C#
 	 *
 	 * @param bulletVelocity       velocity of the bullet
-	 * @param targetPosRelative
-	 * @param targetMotionRelative
+	 * @param targetPosRelative 	position of the target relative to shooter
+	 * @param targetMotionRelative motion of the target
 	 * @return
 	 * @author JamesLeeNZ
 	 */
@@ -382,7 +381,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 			if(1+i > Math.round(l*progress))
 			{
 				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f)/1f);
+				double scale = 1f-(((progress*l)%1f));
 				GlStateManager.enableBlend();
 				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
 				GlStateManager.translate(0, scale*1.5f, 0);

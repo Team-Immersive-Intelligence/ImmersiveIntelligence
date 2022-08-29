@@ -26,7 +26,7 @@ public class AIHansTimedLookAtEntity extends AIHansBase
 	@Override
 	public void setRequiredAnimation()
 	{
-		hans.getLookHelper().setLookPositionWithEntity(lookedAt,30f*rotatoSped,30f*rotatoSped);
+		hans.getLookHelper().setLookPositionWithEntity(lookedAt,hans.getHorizontalFaceSpeed()*rotatoSped,hans.getVerticalFaceSpeed()*rotatoSped);
 	}
 
 	@Override

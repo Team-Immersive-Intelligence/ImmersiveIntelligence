@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  */
 public class IIClassTransformer implements IClassTransformer
 {
-	private static Map<String, MethodTransformer[]> transformerMap = Maps.newHashMap();
+	private static final Map<String, MethodTransformer[]> transformerMap = Maps.newHashMap();
 
 	static
 	{

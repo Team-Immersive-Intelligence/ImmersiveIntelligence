@@ -121,10 +121,10 @@ public class ModelMeasuringCup extends ModelAbstractItem
 	}
 
 	/*
- * (non-Javadoc)
- *
- * @see net.minecraftforge.client.model.IModel#getDependencies()
- */
+	 * (non-Javadoc)
+	 *
+	 * @see net.minecraftforge.client.model.IModel#getDependencies()
+	 */
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
@@ -245,14 +245,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 			{
 				IModel parent = model.parent.process(ImmutableMap.of("fluid", name));
 				Function<ResourceLocation, TextureAtlasSprite> textureGetter;
-				textureGetter = new Function<ResourceLocation, TextureAtlasSprite>()
-				{
-					@Override
-					public TextureAtlasSprite apply(ResourceLocation location)
-					{
-						return ClientUtils.mc().getTextureMapBlocks().getAtlasSprite(location.toString());
-					}
-				};
+				textureGetter = location -> ClientUtils.mc().getTextureMapBlocks().getAtlasSprite(location.toString());
 				IBakedModel bakedModel = parent.bake(new SimpleModelState(model.transforms), model.format,
 						textureGetter);
 				model.cache.put(name, bakedModel);

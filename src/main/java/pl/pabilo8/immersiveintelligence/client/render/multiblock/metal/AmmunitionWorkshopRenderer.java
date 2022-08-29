@@ -8,7 +8,6 @@ import blusunrize.immersiveengineering.client.models.ModelConveyor;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
@@ -25,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityAmmunitionWorkshop;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -44,10 +44,13 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 	private static ModelAdvancedInserter modelInserterAdvanced;
 
 	@Override
-	public void render(TileEntityAmmunitionWorkshop te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(@Nullable TileEntityAmmunitionWorkshop te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
-		if(te!=null&&!te.isDummy())
+		if(te!=null)
 		{
+			if(te.isDummy())
+				return;
+
 			Utils.bindTexture(TEXTURE);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y+1, (float)z);
@@ -225,7 +228,8 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 								if(progress > 0.15+(5/7f*0.5f))
 									finalBulletModel.renderBulletUnused(finalBullet.getCore(te.effect).getColour(), finalBullet.getCoreType(te.effect), -1);
 								else if(progress > 0.15+(3/7f*0.5f))
-									return;
+								{
+								}
 								else if(progress > 0.15+(1/7f*0.5f))
 									finalBulletModel.renderCore(finalBullet.getCore(te.effect).getColour(), finalBullet.getCoreType(te.effect));
 							}:
@@ -285,7 +289,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 			GlStateManager.popMatrix();
 		}
-		else if(te==null)
+		else
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x-0.25, y-0.25, z);

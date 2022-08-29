@@ -5,8 +5,6 @@ import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
@@ -15,17 +13,12 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -36,15 +29,13 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -53,7 +44,7 @@ import java.util.function.Predicate;
  * @since 28-06-2019
  */
 @Deprecated
-public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPackerOld, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IConveyorAttachable
+public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPackerOld, IMultiblockRecipe> implements IDataDevice, IConveyorAttachable
 {
 	//First - the crate to which items are inserted, second - stack to insert, returns the stack if failed
 	public static HashMap<Predicate<ItemStack>, Function<Tuple<ItemStack, ItemStack>, ItemStack>> predicates = new HashMap<>();
@@ -429,12 +420,6 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		TileEntityPackerOld master = master();
@@ -444,19 +429,19 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 		{
 			master.energyStorage.extractEnergy(Packer.energyUsage, false);
 
-			if(packet.getPacketVariable('c') instanceof DataPacketTypeInteger)
-				master.itemsToPack = ((DataPacketTypeInteger)packet.getPacketVariable('c')).value;
+			if(packet.getPacketVariable('c') instanceof DataTypeInteger)
+				master.itemsToPack = ((DataTypeInteger)packet.getPacketVariable('c')).value;
 			if(packet.variables.containsKey('m'))
 			{
-				if(packet.getPacketVariable('m') instanceof DataPacketTypeInteger)
+				if(packet.getPacketVariable('m') instanceof DataTypeInteger)
 				{
-					master.packingMode = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('m')).value, 0, PackingModes.values().length-1);
+					master.packingMode = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('m')).value, 0, PackingModes.values().length-1);
 				}
-				else if(packet.getPacketVariable('m') instanceof DataPacketTypeString)
+				else if(packet.getPacketVariable('m') instanceof DataTypeString)
 				{
 					try
 					{
-						PackingModes mode = PackingModes.valueOf(((DataPacketTypeString)packet.getPacketVariable('m')).value.toUpperCase());
+						PackingModes mode = PackingModes.valueOf(((DataTypeString)packet.getPacketVariable('m')).value.toUpperCase());
 						master.packingMode = mode.ordinal();
 					}
 					catch(IllegalArgumentException e)
@@ -466,35 +451,13 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 				}
 			}
 
-			if(packet.getPacketVariable('q') instanceof DataPacketTypeInteger)
-				master.insertQuantity = ((DataPacketTypeInteger)packet.getPacketVariable('q')).value;
+			if(packet.getPacketVariable('q') instanceof DataTypeInteger)
+				master.insertQuantity = ((DataTypeInteger)packet.getPacketVariable('q')).value;
 
-			if(packet.getPacketVariable('i') instanceof DataPacketTypeBoolean)
-				master.ignoreEmptyStacks = ((DataPacketTypeBoolean)packet.getPacketVariable('i')).value;
+			if(packet.getPacketVariable('i') instanceof DataTypeBoolean)
+				master.ignoreEmptyStacks = ((DataTypeBoolean)packet.getPacketVariable('i')).value;
 
 		}
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
-	{
-		List list = new ArrayList<AxisAlignedBB>();
-
-		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-
-		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
 	}
 
 	@Override
@@ -529,25 +492,6 @@ public class TileEntityPackerOld extends TileEntityMultiblockMetal<TileEntityPac
 		else if(pos==28)
 			return new EnumFacing[]{facing.rotateY()};
 		return new EnumFacing[0];
-	}
-
-	@Override
-	public void onEntityCollision(World world, Entity entity)
-	{
-		/*if(pos==1&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty() &&pl.pabilo8.immersiveintelligence.api.Utils.getDistanceBetweenPos(entity.getPosition(),this.getPos().offset(facing.getOpposite()),false)==0f)
-		{
-			ItemStack stack = ((EntityItem)entity).getItem();
-			if(stack.isEmpty())
-				return;
-			if(inventory.get(0).isEmpty() && inventoryHandler.insertItem(0, stack, false).isEmpty())
-			{
-				((EntityItem)entity).setItem(ItemStack.EMPTY);
-				entity.setDead();
-				processTime=0;
-				animation=60;
-			}
-
-		}*/
 	}
 
 	enum PackingModes

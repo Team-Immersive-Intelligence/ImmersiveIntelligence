@@ -15,12 +15,10 @@
       "data": 0
     },
     "s": {
-      "item": "immersiveengineering:steel_armor_chest",
-      "data": 9
+      "item": "immersiveengineering:steel_armor_chest"
     },
     "l": {
-      "item": "minecraft:leather_chestplate",
-      "data": 9
+      "item": "minecraft:leather_chestplate"
     }
   },
   "result": {

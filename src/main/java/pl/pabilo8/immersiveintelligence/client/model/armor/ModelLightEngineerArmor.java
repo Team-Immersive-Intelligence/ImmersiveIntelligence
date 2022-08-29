@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.armor;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -9,12 +10,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
 
 /**
  * @author Pabilo8
@@ -1140,9 +1143,9 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 				}
 				if(hasPlates(upgrades))
 				{
-					setColorForPlates(upgrades);
+					setColorForPlates(renderStack, upgrades);
 					renderWithEntity(entity, bipedHead, platesHelmetModel, scale, TEXTURE_PLATES);
-					GlStateManager.color(1f,1f,1f);
+					GlStateManager.color(1f, 1f, 1f);
 				}
 			}
 			break;
@@ -1151,14 +1154,14 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 				if(hasPlates(upgrades))
 				{
 					int armorIncrease = upgrades.getInteger("armor_increase");
-					setColorForPlates(upgrades);
+					setColorForPlates(renderStack, upgrades);
 					if(entity||part==bodyModel)
-					renderWithEntity(entity, bipedBody, platesChestModel, scale, TEXTURE_PLATES);
-					if(armorIncrease>1&&(entity||part==rightArmModel))
+						renderWithEntity(entity, bipedBody, platesChestModel, scale, TEXTURE_PLATES);
+					if(armorIncrease > 1&&(entity||part==rightArmModel))
 						renderWithEntity(entity, bipedRightArm, platesRightArmModel, scale, TEXTURE_PLATES);
-					if(armorIncrease>2&&(entity||part==leftArmModel))
+					if(armorIncrease > 2&&(entity||part==leftArmModel))
 						renderWithEntity(entity, bipedLeftArm, platesLeftArmModel, scale, TEXTURE_PLATES);
-					GlStateManager.color(1f,1f,1f);
+					GlStateManager.color(1f, 1f, 1f);
 				}
 				if((entity||part==bodyModel)&&upgrades.hasKey("scuba"))
 					renderWithEntity(entity, bipedBody, scubaTankModel, scale, TEXTURE_SCUBA);
@@ -1175,12 +1178,12 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 			{
 				if(hasPlates(upgrades))
 				{
-					setColorForPlates(upgrades);
+					setColorForPlates(renderStack, upgrades);
 					if(entity||part==leftLegModel)
 						renderWithEntity(entity, bipedLeftLeg, platesSkirtLeftModel, scale, TEXTURE_PLATES);
 					if(entity||part==rightLegModel)
 						renderWithEntity(entity, bipedRightLeg, platesSkirtRightModel, scale, TEXTURE_PLATES);
-					GlStateManager.color(1f,1f,1f);
+					GlStateManager.color(1f, 1f, 1f);
 					//renderWithEntity(entity, bipedLeftLeg, platesLeftLegModel, scale, TEXTURE_PLATES);
 					//renderWithEntity(entity, bipedRightLeg, platesRightLegModel, scale, TEXTURE_PLATES);
 				}
@@ -1210,12 +1213,17 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		return upgrades.hasKey("steel_plates")||upgrades.hasKey("composite_plates");
 	}
 
-	private void setColorForPlates(NBTTagCompound upgrades)
+	private void setColorForPlates(ItemStack stack, NBTTagCompound upgrades)
 	{
-		if(upgrades.hasKey("composite_plates"))
-			GlStateManager.color(0.9f,0.9f,1f);
+		if(ItemNBTHelper.hasKey(stack, ItemIIUpgradeableArmor.NBT_Colour))
+		{
+			float[] rgb = Utils.rgbIntToRGB(ItemNBTHelper.getInt(stack, ItemIIUpgradeableArmor.NBT_Colour));
+			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
+		}
+		else if(upgrades.hasKey("composite_plates"))
+			GlStateManager.color(0.9f, 0.9f, 1f);
 		else
-			GlStateManager.color(1f,1f,1f);
+			GlStateManager.color(1f, 1f, 1f);
 
 	}
 

@@ -80,7 +80,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 
 	public GuiDataInputMachineBase(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile, IIGuiList gui)
 	{
-		super(new ContainerDataInputMachine(inventoryPlayer, tile,gui==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE));
+		super(new ContainerDataInputMachine(inventoryPlayer, tile, gui==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE));
 		this.thisTexture = gui==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE?TEXTURE_STORAGE: gui==IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES?TEXTURE_VARIABLES: TEXTURE_EDIT;
 		this.ySize = 222;
 		this.playerInv = inventoryPlayer;
@@ -142,7 +142,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		{
 			syncDataToServer();
 			saveBasicData();
-			preparedForChange=true;
+			preparedForChange = true;
 			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos(), mc.player));
 		}
 	}
@@ -178,18 +178,23 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 
 		drawPunchtapeProgress();
 
+		ArrayList<String> tooltip = getTooltip(mx, my);
+		if(!tooltip.isEmpty())
+		{
+			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, -1, -1);
+			RenderHelper.enableGUIStandardItemLighting();
+		}
+	}
+
+	public ArrayList<String> getTooltip(int mx, int my)
+	{
 		ArrayList<String> tooltip = new ArrayList<>();
 		TABS.keySet().stream().filter(GuiButtonTab::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
 		if(this.sendPacketButton.isMouseOver())
 			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_send_packet"));
 		else if(this.manualButton.isMouseOver())
 			tooltip.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
-
-		if(!tooltip.isEmpty())
-		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, fontRenderer, -1, -1);
-			RenderHelper.enableGUIStandardItemLighting();
-		}
+		return tooltip;
 	}
 
 	/**
@@ -309,7 +314,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		refreshStoredData();
 		syncDataToServer();
 
-		preparedForChange=true;
+		preparedForChange = true;
 		IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos(), playerInv.player));
 	}
 }

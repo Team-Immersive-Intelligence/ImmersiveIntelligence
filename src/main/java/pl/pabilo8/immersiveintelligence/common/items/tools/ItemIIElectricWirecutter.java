@@ -27,6 +27,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,6 +37,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 import javax.annotation.Nonnull;
@@ -61,7 +63,9 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(I18n.format(Lib.DESC+"info.energyStored", stored));
+		list.add(TextFormatting.ITALIC+I18n.format(CommonProxy.DESCRIPTION_KEY+"electric_wirecutter")+TextFormatting.RESET);
+		list.add(TextFormatting.ITALIC+I18n.format(CommonProxy.INFO_KEY+"charge_with_if")+TextFormatting.RESET);
+		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 	}
 
 	@Override
@@ -223,7 +227,7 @@ public class ItemIIElectricWirecutter extends ItemIIBase implements ITool, IIEEn
 		{
 			if(state.getBlock() instanceof BlockIEBase)
 			{
-				return ((BlockIEBase)state.getBlock()).allowWirecutterHarvest(state);
+				return ((BlockIEBase<?>)state.getBlock()).allowWirecutterHarvest(state);
 			}
 			else return state.getBlock().isToolEffective(TOOL_WIRECUTTER, state);
 		}

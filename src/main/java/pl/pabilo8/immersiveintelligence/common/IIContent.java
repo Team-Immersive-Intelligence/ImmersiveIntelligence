@@ -33,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalCo
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDevice;
 import pl.pabilo8.immersiveintelligence.common.blocks.rotary.BlockIIMechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.blocks.stone.BlockIISandbags;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
+import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Metal;
 import pl.pabilo8.immersiveintelligence.common.blocks.wooden.*;
 import pl.pabilo8.immersiveintelligence.common.items.*;
 import pl.pabilo8.immersiveintelligence.common.items.ammunition.*;
@@ -42,7 +42,10 @@ import pl.pabilo8.immersiveintelligence.common.items.material.*;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.items.tools.*;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.*;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMortar;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.world.BiomeWasteland;
 
 import java.util.ArrayList;

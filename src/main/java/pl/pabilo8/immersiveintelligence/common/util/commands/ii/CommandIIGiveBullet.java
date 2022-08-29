@@ -16,7 +16,10 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

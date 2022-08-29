@@ -6,7 +6,6 @@ import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class ModelAutocannon extends ModelIIBase
 {

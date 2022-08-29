@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**

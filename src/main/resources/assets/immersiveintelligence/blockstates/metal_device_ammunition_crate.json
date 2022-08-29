@@ -1,0 +1,67 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "model": "cube_all",
+    "textures": {
+      "particle": "immersiveintelligence:blocks/metal_device/ammunition_crate"
+    }
+  },
+  "variants": {
+    "inventory,type=ammunition_crate": [
+      {
+        "model": "immersiveintelligence:metal_device/effect_crate/ammunition_crate_inv.obj",
+        "custom": { "flip-v": true }
+      }
+    ],
+    "type": {
+      "ammunition_crate": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/metal_device/effect_crate/ammunition_crate_base.obj.ie",
+          "layers": ["SOLID"]
+        }
+      }
+    },
+    "facing": {
+      "down": {},
+      "up": {},
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {},
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "boolean1": {
+      "false": {},
+      "true": {}
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/effect_crate/ammunition_crate.obj.ie"
+      }
+    }
+  }
+}

@@ -30,7 +30,6 @@ public class ItemIIBase extends ItemIEBase
 	//This function allows us to use IEBase classes, by fixing things up so they come from our mod.
 	//It should be called right after the super call in any constructor of a class that derives from ItemIEBase
 	//This is kind of hacky, but allows us to avoid copying a lot of code.
-	@SuppressWarnings("rawtypes")
 	public void fixupItem()
 	{
 		//First, get the item out of IE's registries.

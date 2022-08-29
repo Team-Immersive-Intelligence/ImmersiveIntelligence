@@ -83,28 +83,35 @@
     ],
     "subtitle": "subtitle.immersiveintelligence.submachinegun_shot"
   },
+  "howitzer_chain": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/howitzer_chain"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_chain"
+  },
   "howitzer_shot": {
     "category": "block",
     "sounds": [
-      "immersiveintelligence:howitzer/howitzer0",
-      "immersiveintelligence:howitzer/howitzer1",
-      "immersiveintelligence:howitzer/howitzer2"
+      "immersiveintelligence:howitzer/howitzer_fire0",
+      "immersiveintelligence:howitzer/howitzer_fire1",
+      "immersiveintelligence:howitzer/howitzer_fire2"
     ],
     "subtitle": "subtitle.immersiveintelligence.howitzer_shot"
   },
-  "howitzer_load": {
+  "howitzer_shell_pick": {
     "category": "block",
     "sounds": [
-      "immersiveintelligence:howitzer/howitzer_load"
+      "immersiveintelligence:howitzer/shell_pick"
     ],
-    "subtitle": "subtitle.immersiveintelligence.howitzer_load"
+    "subtitle": "subtitle.immersiveintelligence.howitzer_shell_pick"
   },
-  "howitzer_unload": {
+  "howitzer_shell_put": {
     "category": "block",
     "sounds": [
-      "immersiveintelligence:howitzer/howitzer_unload"
+      "immersiveintelligence:howitzer/shell_put"
     ],
-    "subtitle": "subtitle.immersiveintelligence.howitzer_unload"
+    "subtitle": "subtitle.immersiveintelligence.howitzer_shell_put"
   },
   "howitzer_rotation_h": {
     "category": "block",
@@ -133,6 +140,32 @@
       "immersiveintelligence:howitzer/howitzer_door_close"
     ],
     "subtitle": "subtitle.immersiveintelligence.howitzer_door_close"
+  },
+  "howitzer_platform_start": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/platform_start"
+    ]
+  },
+  "howitzer_platform_end": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/platform_end"
+    ]
+  },
+  "howitzer_platform_raise": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/platform_raise"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_platform"
+  },
+  "howitzer_platform_lower": {
+    "category": "block",
+    "sounds": [
+      "immersiveintelligence:howitzer/platform_lower"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.howitzer_platform"
   },
   "inserter_forward": {
     "category": "block",
@@ -642,5 +675,11 @@
       "immersiveintelligence:machine_hatch/locker/close2"
     ],
     "subtitle": "subtitle.immersiveintelligence.metal_locker_close"
+  },
+  "punchtape_reader": {
+    "sounds": [
+      "immersiveintelligence:punchtape_reader"
+    ],
+    "subtitle": "subtitle.immersiveintelligence.punchtape_reader"
   }
 }

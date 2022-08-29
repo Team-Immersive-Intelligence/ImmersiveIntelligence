@@ -10,6 +10,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelDataMerger;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataMerger;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Pabilo8
  * @since 2019-05-26
@@ -17,10 +19,10 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataMerger
 @SideOnly(Side.CLIENT)
 public class DataMergerRenderer extends TileEntitySpecialRenderer<TileEntityDataMerger>
 {
-	private static ModelDataMerger model = new ModelDataMerger();
+	private static final ModelDataMerger model = new ModelDataMerger();
 
 	@Override
-	public void render(TileEntityDataMerger te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(@Nullable TileEntityDataMerger te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		String texture = ImmersiveIntelligence.MODID+":textures/blocks/metal_device/small_data_buffer.png";
 		if(te!=null)

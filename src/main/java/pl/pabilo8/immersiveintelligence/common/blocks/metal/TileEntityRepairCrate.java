@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
@@ -12,7 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
@@ -82,7 +80,7 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	}
 
 	@Override
-	void affectEntity(Entity entity, boolean upgraded)
+	boolean affectEntity(Entity entity, boolean upgraded)
 	{
 		if(!upgraded||(repairCrateEnergyPerAction <= energyStorage))
 		{
@@ -105,20 +103,15 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 			{
 				energyStorage -= repairCrateEnergyPerAction;
 			}
+			return repaired;
 		}
+		return false;
 	}
 
 	@Override
 	boolean checkEntity(Entity entity)
 	{
 		return entity instanceof IEntitySpecialRepairable||(entity instanceof EntityLivingBase);
-	}
-
-
-	@Override
-	public Vec3d getConnectionOffset(Connection con)
-	{
-		return new Vec3d(0.5, 0.5, 0.5);
 	}
 
 	@Override

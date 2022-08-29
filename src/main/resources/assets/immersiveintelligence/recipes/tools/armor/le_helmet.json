@@ -15,12 +15,10 @@
       "data": 0
     },
     "s": {
-      "item": "immersiveengineering:steel_armor_head",
-      "data": 9
+      "item": "immersiveengineering:steel_armor_head"
     },
     "l": {
-      "item": "minecraft:leather_helmet",
-      "data": 9
+      "item": "minecraft:leather_helmet"
     }
   },
   "result": {

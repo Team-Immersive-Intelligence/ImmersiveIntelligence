@@ -29,7 +29,7 @@ public class PaintingRecipe extends MultiblockRecipe
 	public final BiFunction<Integer, ItemStack, ItemStack> process;
 	public final IngredientStack itemInput;
 
-	public static LinkedList<PaintingRecipe> recipeList = new LinkedList();
+	public static LinkedList<PaintingRecipe> recipeList = new LinkedList<>();
 
 	int paintAmount;
 	int totalProcessTime;
@@ -41,7 +41,7 @@ public class PaintingRecipe extends MultiblockRecipe
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
 		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
 		this.totalProcessTime = (int)Math.floor((float)time*timeModifier);
-		this.paintAmount = (int)Math.floor((float)time*paintModifier);
+		this.paintAmount = (int)Math.floor((float)paintAmount*paintModifier);
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = getExampleColoredItems();

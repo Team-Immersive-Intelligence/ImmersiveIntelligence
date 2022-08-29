@@ -8,11 +8,9 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
@@ -75,8 +73,6 @@ public class TripmineRenderer extends TileEntitySpecialRenderer<TileEntityTripMi
 	{
 		model = new ModelTripMine();
 		model.translateAll(7.5f,0,-8.5f );
-		//BulletRegistry.INSTANCE.registeredModels.remove("tripmine");
-		//BulletRegistry.INSTANCE.registeredModels.put("tripmine", model);
 	}
 
 	public static class TripmineItemStackRenderer extends TileEntityItemStackRenderer

@@ -33,7 +33,7 @@ public class BulletComponentTracerPowder implements IBulletComponent
 	@Override
 	public float getDensity()
 	{
-		return 1f;
+		return 0.25f;
 	}
 
 	@Override

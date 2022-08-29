@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
 

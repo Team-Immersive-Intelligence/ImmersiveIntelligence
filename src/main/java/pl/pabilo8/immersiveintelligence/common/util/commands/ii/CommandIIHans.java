@@ -68,9 +68,23 @@ public class CommandIIHans extends CommandBase
 
 						ItemStack magazine = ItemIIBulletMagazine.getMagazine("submachinegun", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
 						HansUtils.setSubmachinegun(hans, magazine);
-						hans.mainInventory.set(0, magazine.copy());
-						hans.mainInventory.set(1, magazine.copy());
-						hans.mainInventory.set(2, magazine.copy());
+						for(int i = 0; i < 6; i++)
+							hans.mainInventory.set(i, magazine.copy());
+					}
+				}
+		);
+
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "grenadier"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans);
+						ItemStack stack = IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "hmx")
+								.setStackDisplayName("Sprenghandgranate mk.2");
+						stack.setCount(16);
+						hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
 					}
 				}
 		);
@@ -85,9 +99,8 @@ public class CommandIIHans extends CommandBase
 
 						ItemStack magazine = ItemIIBulletMagazine.getMagazine("submachinegun_drum", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
 						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING);
-						hans.mainInventory.set(0, magazine.copy());
-						hans.mainInventory.set(1, magazine.copy());
-						hans.mainInventory.set(2, magazine.copy());
+						for(int i = 0; i < 4; i++)
+							hans.mainInventory.set(i, magazine.copy());
 					}
 				}
 		);
@@ -98,12 +111,12 @@ public class CommandIIHans extends CommandBase
 					@Override
 					public void setItems(EntityHans hans, int id)
 					{
-						HansUtils.setHelmet(hans, ArmorUpgrades.GASMASK);
+						HansUtils.setHelmet(hans, ArmorUpgrades.INFILTRATOR_GEAR, ArmorUpgrades.COMPOSITE_ARMOR_PLATES);
 
 						ItemStack magazine = ItemIIBulletMagazine.getMagazine("submachinegun_drum", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing"));
 						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING, WeaponUpgrades.FOLDING_STOCK, WeaponUpgrades.SUPPRESSOR);
-						hans.mainInventory.set(0, magazine.copy());
-						hans.mainInventory.set(1, magazine.copy());
+						for(int i = 0; i < 6; i++)
+							hans.mainInventory.set(i, magazine.copy());
 					}
 				}
 		);
@@ -190,7 +203,7 @@ public class CommandIIHans extends CommandBase
 					@Override
 					public void setItems(EntityHans hans, int id)
 					{
-						HansUtils.setHelmet(hans, ArmorUpgrades.GASMASK);
+						HansUtils.setHelmet(hans);
 						ItemStack stack = new ItemStack(IIContent.itemBinoculars);
 						hans.setHeldItem(EnumHand.MAIN_HAND, stack);
 					}
@@ -329,6 +342,8 @@ public class CommandIIHans extends CommandBase
 			if(squad!=null)
 			{
 				EntityHans hans = squad.spawnHanses(world, spawnPosition, amount, team, parachute, yaw, pitch);
+				if(amount > 1||squad instanceof HansSquadTeamWeapon)
+					hans.commander = true;
 
 				if(commandSenderEntity!=null)
 				{
@@ -429,25 +444,36 @@ public class CommandIIHans extends CommandBase
 			final int rsof = parachute?8: 1;
 			final int row = (int)Math.floor(Math.sqrt(amount));
 			final int roff = (int)Math.floor(row/2f)*rsof;
+			int i = 0, missed = 0;
 
-			for(int i = 0; i < amount; i++)
+			while(i < amount)
 			{
+				int c = i+missed;
 				//Vec3d offset = pos.add(new Vec3d(EnumFacing.getHorizontal(i).getDirectionVec()).scale(parachute?3f:1f).scale(1+(Math.floor(i/4f))));
 				Vec3d offset = pos.addVector(-roff, 0, -roff).add(
-						new Vec3d(Math.floor(i/(float)row)*rsof, 0, (i%row)*rsof)
+						new Vec3d(Math.floor(c/(float)row)*rsof, 0, (c%row)*rsof)
 				);
+
+				if(world.getBlockState(new BlockPos(offset)).causesSuffocation())
+				{
+					missed += 1;
+					continue;
+				}
+
 				EntityHans hans = new EntityHans(world);
-				hans.setPosition(offset.x, offset.y, offset.z);
+				hans.setPosition(offset.x+0.5, offset.y, offset.z+0.5);
 				if(team!=null)
 					world.getScoreboard().addPlayerToTeam(hans.getUniqueID().toString(), team.getName());
 				if(parachute)
 					HansUtils.setParachute(hans);
 				setItems(hans, i);
+				hans.updateWeaponTasks();
 				world.spawnEntity(hans);
 
 				if(i==0)
 					firstHans = hans;
 				else firstHans.applyEntityCollision(hans);
+				i++;
 			}
 
 			return firstHans;
@@ -481,11 +507,12 @@ public class CommandIIHans extends CommandBase
 			EntityHans hans = new EntityHans(world);
 			hans.setPosition(pos.x, pos.y, pos.z);
 			world.spawnEntity(hans);
-			HansUtils.setHelmet(hans);
+			HansUtils.setHelmet(hans, ArmorUpgrades.TECHNICIAN_GEAR);
 			if(team!=null)
 				world.getScoreboard().addPlayerToTeam(hans.getUniqueID().toString(), team.getName());
 			if(isAirDroppable()&&parachute)
 				HansUtils.setParachute(hans);
+			hans.updateWeaponTasks();
 
 			return hans;
 		}

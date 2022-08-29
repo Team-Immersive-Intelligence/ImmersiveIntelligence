@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.items.tools;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
@@ -28,8 +27,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -76,7 +75,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 		if(isAdvanced(stack))
 		{
 			String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-			list.add(I18n.format(Lib.DESC+"info.energyStored", stored));
+			list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 			list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(ItemNBTHelper.getBoolean(stack, "enabled")?"infrared_enabled": "infrared_disabled"), stored));
 		}
 	}
@@ -228,7 +227,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 	{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 		if(slot==EntityEquipmentSlot.MAINHAND)
-			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID,"Increased Sight Range (Mobs)", 20.0D, 0));
+			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID,"Increased Sight Range (Mobs)", 30.0D, 0));
 		return multimap;
 	}
 }

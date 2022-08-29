@@ -182,7 +182,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 		vv = posTurret.subtract(posTarget.add(motion));
 
 		double dist = vv.distanceTo(new Vec3d(0, vv.y, 0));
-		double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC = baseMotionY;
+		double gravityMotionY = 0, motionY = 0, baseMotionY = vv.normalize().y, baseMotionYC;
 		while(dist > 0)
 		{
 			force -= EntityBullet.DRAG*force*EntityBullet.DEV_SLOMO;
@@ -403,7 +403,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 			if(1+i > Math.round(l*progress))
 			{
 				GlStateManager.pushMatrix();
-				double scale = 1f-(((progress*l)%1f)/1f);
+				double scale = 1f-(((progress*l)%1f));
 				GlStateManager.enableBlend();
 				GlStateManager.color(1f, 1f, 1f, (float)Math.min(scale, 1));
 				GlStateManager.translate(0, scale*1.5f, 0);

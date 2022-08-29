@@ -55,7 +55,7 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 	protected BlockStateContainer createBlockState()
 	{
 		BlockStateContainer base = super.createBlockState();
-		IUnlistedProperty[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
+		IUnlistedProperty<?>[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
 		unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
 		unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
 		return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);
@@ -147,7 +147,7 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 			TileEntity te = world.getTileEntity(pos);
 			if(te instanceof IImmersiveConnectable)
 			{
-				TargetingInfo subTarget = null;
+				TargetingInfo subTarget;
 				if(target.hitVec!=null)
 					subTarget = new TargetingInfo(target.sideHit, (float)target.hitVec.x-pos.getX(), (float)target.hitVec.y-pos.getY(), (float)target.hitVec.z-pos.getZ());
 				else
@@ -161,11 +161,10 @@ public class BlockIIMechanicalConnector extends BlockIITileProvider<IIBlockTypes
 					WireType wire = connectable.getCableLimiter(subTarget);
 					if(wire!=null)
 						return wire.getWireCoil();
-					ArrayList<ItemStack> applicableWires = new ArrayList<ItemStack>();
+					ArrayList<ItemStack> applicableWires = new ArrayList<>();
 					NonNullList<ItemStack> pInventory = player.inventory.mainInventory;
-					for(int i = 0; i < pInventory.size(); i++)
+					for(ItemStack s : pInventory)
 					{
-						ItemStack s = pInventory.get(i);
 						if(s.getItem() instanceof IWireCoil)
 						{
 							IWireCoil coilItem = (IWireCoil)s.getItem();

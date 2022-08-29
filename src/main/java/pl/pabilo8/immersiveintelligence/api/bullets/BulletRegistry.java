@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.api.bullets;
 
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
 import javax.annotation.Nonnull;
@@ -90,6 +92,13 @@ public class BulletRegistry
 		return registeredBulletCores.get(name);
 	}
 
+	@Nullable
+	@SideOnly(Side.CLIENT)
+	public IBulletModel getModel(IBullet bullet)
+	{
+		return registeredModels.get(bullet.getName());
+	}
+
 	public enum EnumComponentRole implements IStringSerializable
 	{
 		GENERAL_PURPOSE,
@@ -106,6 +115,13 @@ public class BulletRegistry
 		public String getName()
 		{
 			return this.toString().toLowerCase(Locale.ENGLISH);
+		}
+
+		@Nonnull
+		public static EnumComponentRole v(String s)
+		{
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(GENERAL_PURPOSE);
 		}
 	}
 
@@ -240,7 +256,7 @@ public class BulletRegistry
 		//glass, wool, leaves, cloth
 		LIGHT(false);
 
-		boolean ricochet;
+		private final boolean ricochet;
 
 		PenMaterialTypes(boolean ricochet)
 		{
@@ -250,6 +266,12 @@ public class BulletRegistry
 		public boolean canRicochetOff()
 		{
 			return ricochet;
+		}
+
+		public static PenMaterialTypes v(String s)
+		{
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(METAL);
 		}
 	}
 }

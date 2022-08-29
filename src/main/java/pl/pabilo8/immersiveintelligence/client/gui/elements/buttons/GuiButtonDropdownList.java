@@ -20,12 +20,12 @@ public class GuiButtonDropdownList extends GuiButton
 {
 	private boolean needsSlider;
 	public boolean dropped = false;
-	private int perPage;
+	private final int perPage;
 	private int offset;
 	private int maxOffset;
 
 	private Function<String, String> translationFunction;
-	private String[] entries;
+	private final String[] entries;
 
 	public int selectedEntry = -1;
 	private int hoveredEntry = -1;

@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.common.util.FakePlayerUtil;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.IEDamageSource_Indirect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;

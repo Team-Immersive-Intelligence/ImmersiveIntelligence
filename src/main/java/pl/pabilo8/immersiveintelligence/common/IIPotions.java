@@ -167,9 +167,7 @@ public class IIPotions
 			public void performEffect(EntityLivingBase living, int amplifier)
 			{
 				living.hurtResistantTime = 0;
-				living.getArmorInventoryList().forEach(stack -> {
-					stack.damageItem(stack.getMaxDamage(), living);
-				});
+				living.getArmorInventoryList().forEach(stack -> stack.damageItem(stack.getMaxDamage(), living));
 				living.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
 			}
 		};
@@ -178,8 +176,8 @@ public class IIPotions
 		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
 
 		movement_assist = new IIPotion("movement_assist", false, 0x9d5919, 0, false, 13, true, true);
-		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 1, 1);
-		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 1, 1);
+		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
+		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
 
 	}
 

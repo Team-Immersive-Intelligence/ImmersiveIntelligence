@@ -40,6 +40,13 @@ public class TMTArmorModel extends ModelBiped
 	@Override
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
 	{
+		if(entity instanceof EntityLivingBase)
+		{
+			isChild = ((EntityLivingBase)entity).isChild();
+			isSneak = entity.isSneaking();
+			isRiding = entity.isRiding();
+			this.setLivingAnimations((EntityLivingBase)entity, limbSwing, limbSwingAmount, ClientUtils.timer().renderPartialTicks);
+		}
 		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
 		GlStateManager.pushMatrix();
 		actualRender(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);

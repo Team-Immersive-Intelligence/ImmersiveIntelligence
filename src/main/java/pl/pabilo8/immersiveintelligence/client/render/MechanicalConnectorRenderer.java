@@ -14,7 +14,6 @@ import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanica
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -46,10 +45,8 @@ public class MechanicalConnectorRenderer extends TileEntitySpecialRenderer<TileE
 			Set<Connection> outputs = ImmersiveNetHandler.INSTANCE.getConnections(te.getWorld(), Utils.toCC(te));
 			if(outputs!=null)
 			{
-				Iterator<Connection> itCon = outputs.iterator();
-				while(itCon.hasNext())
+				for(Connection con : outputs)
 				{
-					Connection con = itCon.next();
 					TileEntity end = getWorld().getTileEntity(con.end);
 					if(end instanceof TileEntityMechanicalConnectable)
 					{

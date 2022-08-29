@@ -15,7 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -64,7 +63,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	{
 		if(!world.isRemote)
 		{
-			if(packet.hasVariables())
+			if(packet.hasAnyVariables())
 			{
 				if(passtroughMode&&world.isBlockPowered(this.getPos()))
 				{
@@ -135,12 +134,6 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		this.packet = packet;
-	}
-
-	@Override
-	public void onSend()
-	{
-
 	}
 
 	@Override

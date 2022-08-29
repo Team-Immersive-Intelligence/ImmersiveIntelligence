@@ -26,7 +26,7 @@ public enum IIBlockTypes_MetalMultiblock1 implements IStringSerializable, BlockI
 	VULCANIZER(false);
 
 
-	private boolean needsCustomState;
+	private final boolean needsCustomState;
 
 	IIBlockTypes_MetalMultiblock1(boolean needsCustomState)
 	{

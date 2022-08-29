@@ -12,6 +12,8 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBou
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,6 +25,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.Utils;
@@ -30,21 +33,29 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.compat.ComputerCraftHelper;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
  * @since 2019-05-31
  */
-public class TileEntityDataConnector extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IBlockOverlayText
+@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralTile", modid = "computercraft")
+public class TileEntityDataConnector extends TileEntityImmersiveConnectable implements
+		ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IBlockOverlayText,
+		IPeripheralTile
 {
 	public EnumFacing facing = EnumFacing.DOWN;
-
 	public int color = 0;
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
+
+	//--- OpenComputers / ComputerCraft compat ---//
+	public DataPacket lastReceived = null;
+	public boolean compatReceived = true; //whether a computer received the signal
 
 	/**
 	 * Like the old updateEntity(), except more generic.
@@ -92,6 +103,10 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
+		//computercraft/opencomputers
+		this.lastReceived = packet.clone();
+		compatReceived = false;
+
 		if(packet.matchesConnector(EnumDyeColor.byMetadata(this.color), -1))
 		{
 			BlockPos devicePos = this.pos.offset(facing);
@@ -257,6 +272,21 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 		return true;
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderColour(IBlockState object, String group)
+	{
+		if("Color".equals(group))
+			return 0xff000000|EnumDyeColor.byMetadata(this.color).getColorValue();
+		return 0xffffffff;
+	}
+
+	@Override
+	public String getCacheKey(IBlockState object)
+	{
+		return String.valueOf(this.color);
+	}
+
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
 	{
@@ -272,5 +302,12 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
 	{
 		return false;
+	}
+
+	@Nullable
+	@Override
+	public IPeripheral getPeripheral(@Nonnull EnumFacing facing)
+	{
+		return facing==this.facing?ComputerCraftHelper.createConnectorPeripheral(this): null;
 	}
 }

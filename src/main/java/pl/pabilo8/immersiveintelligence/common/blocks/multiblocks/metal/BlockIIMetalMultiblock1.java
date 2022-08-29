@@ -73,13 +73,11 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 	@Deprecated
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		switch(IIBlockTypes_MetalMultiblock1.values()[getMetaFromState(state)])
+		if(IIBlockTypes_MetalMultiblock1.values()[getMetaFromState(state)]==IIBlockTypes_MetalMultiblock1.REDSTONE_DATA_INTERFACE)
 		{
-			case REDSTONE_DATA_INTERFACE:
-				return EnumBlockRenderType.MODEL;
-			default:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+			return EnumBlockRenderType.MODEL;
 		}
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
@@ -144,7 +142,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 	protected BlockStateContainer createBlockState()
 	{
 		BlockStateContainer base = super.createBlockState();
-		IUnlistedProperty[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
+		IUnlistedProperty<?>[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
 		unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
 		unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
 		return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);
@@ -160,7 +158,7 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<IIBlockTypes_Meta
 			TileEntity te = world.getTileEntity(pos);
 			if(!(te instanceof TileEntityMultiblockConnectable))
 				return state;
-			state = ext.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable)te).genConnBlockstate());
+			state = ext.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable<?, ?>)te).genConnBlockstate());
 		}
 		return state;
 	}

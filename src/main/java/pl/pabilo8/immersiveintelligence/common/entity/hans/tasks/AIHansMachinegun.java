@@ -88,7 +88,7 @@ public class AIHansMachinegun extends EntityAIBase
 			}
 			else if(target!=null)
 			{
-				hans.getLookHelper().setLookPositionWithEntity(target, 30, 30);
+				hans.getLookHelper().setLookPositionWithEntity(target, hans.getHorizontalFaceSpeed(), hans.getVerticalFaceSpeed());
 				if(isAimedAt())
 				{
 					mg.shoot = true;
@@ -115,7 +115,7 @@ public class AIHansMachinegun extends EntityAIBase
 				, (posTarget.y+motion.y)-posTurret.y,
 				IIContent.itemAmmoMachinegun.getDefaultVelocity(),
 				EntityBullet.GRAVITY*0.2f,
-				1f-EntityBullet.DRAG));
+				1f-EntityBullet.DRAG, 0.01));
 
 		return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
 	}

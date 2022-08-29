@@ -1225,7 +1225,7 @@ public class ModelRadar extends ModelIIBase
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				GlStateManager.translate(-1f, 0f, 0f);
 				if(mirrored)
-				GlStateManager.translate(0, 0f, 1f);
+					GlStateManager.translate(0, 0f, 1f);
 			}
 			break;
 		}

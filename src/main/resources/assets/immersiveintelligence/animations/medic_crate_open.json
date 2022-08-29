@@ -1,0 +1,17 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"lid": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.99996,
+					"transform": [0, 0, 205]
+				}
+			]
+		}
+	}
+}

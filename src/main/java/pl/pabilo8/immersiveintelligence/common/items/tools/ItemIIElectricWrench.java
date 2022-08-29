@@ -18,6 +18,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -53,7 +54,9 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(I18n.format(Lib.DESC+"info.energyStored", stored));
+		list.add(TextFormatting.ITALIC+I18n.format(CommonProxy.DESCRIPTION_KEY+"wrench")+TextFormatting.RESET);
+		list.add(TextFormatting.ITALIC+I18n.format(CommonProxy.INFO_KEY+"charge_with_if")+TextFormatting.RESET);
+		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 	}
 
 	@Override

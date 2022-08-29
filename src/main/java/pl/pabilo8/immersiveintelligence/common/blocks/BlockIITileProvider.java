@@ -50,9 +50,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -290,20 +289,20 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IBlockEnum> extend
 		}
 		if(tile instanceof IActiveState)
 		{
-			IProperty boolProp = ((IActiveState)tile).getBoolProperty(IActiveState.class);
+			IProperty<?> boolProp = ((IActiveState)tile).getBoolProperty(IActiveState.class);
 			if(state.getPropertyKeys().contains(boolProp))
 				state = applyProperty(state, boolProp, ((IActiveState)tile).getIsActive());
 		}
 
 		if(tile instanceof IDualState)
 		{
-			IProperty boolProp = ((IDualState)tile).getBoolProperty(IDualState.class);
+			IProperty<?> boolProp = ((IDualState)tile).getBoolProperty(IDualState.class);
 			if(state.getPropertyKeys().contains(boolProp))
 				state = applyProperty(state, boolProp, ((IDualState)tile).getIsSecondState());
 		}
 
 		if(tile instanceof TileEntityMultiblockPart)
-			state = applyProperty(state, IEProperties.MULTIBLOCKSLAVE, ((TileEntityMultiblockPart)tile).isDummy());
+			state = applyProperty(state, IEProperties.MULTIBLOCKSLAVE, ((TileEntityMultiblockPart<?>)tile).isDummy());
 		else if(tile instanceof IHasDummyBlocks)
 			state = applyProperty(state, IEProperties.MULTIBLOCKSLAVE, ((IHasDummyBlocks)tile).isDummy());
 
@@ -368,7 +367,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IBlockEnum> extend
 				if(te instanceof IDynamicTexture)
 					extended = extended.withProperty(IEProperties.OBJ_TEXTURE_REMAP, ((IDynamicTexture)te).getTextureReplacements());
 				if(te instanceof IOBJModelCallback)
-					extended = extended.withProperty(IOBJModelCallback.PROPERTY, (IOBJModelCallback)te);
+					extended = extended.withProperty(IOBJModelCallback.PROPERTY, (IOBJModelCallback<?>)te);
 				if(te.hasCapability(CapabilityShader.SHADER_CAPABILITY, null))
 					extended = extended.withProperty(CapabilityShader.BLOCKSTATE_PROPERTY, te.getCapability(CapabilityShader.SHADER_CAPABILITY, null));
 				if(te instanceof IPropertyPassthrough&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.TILEENTITY_PASSTHROUGH))
@@ -376,7 +375,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IBlockEnum> extend
 				if(te instanceof TileEntityImmersiveConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
 					extended = extended.withProperty(IEProperties.CONNECTIONS, ((TileEntityImmersiveConnectable)te).genConnBlockstate());
 				if(te instanceof TileEntityMultiblockConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
-					extended = extended.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable)te).genConnBlockstate());
+					extended = extended.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable<?, ?>)te).genConnBlockstate());
 			}
 			state = extended;
 		}
@@ -505,7 +504,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IBlockEnum> extend
 		return 0;
 	}
 
-	public BlockIITileProvider setHasColours()
+	public BlockIITileProvider<?> setHasColours()
 	{
 		this.hasColours = true;
 		return this;
@@ -710,7 +709,34 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IBlockEnum> extend
 	{
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof TileEntityIEBase)
+		{
+			//ladders
 			((TileEntityIEBase)te).onEntityCollision(world, entity);
+			if(te instanceof ILadderMultiblock&&((ILadderMultiblock)te).isLadder()&&entity instanceof EntityLivingBase&&!((EntityLivingBase)entity).isOnLadder())
+			{
+				float f5 = 0.15F;
+				if(entity.motionX < -f5)
+					entity.motionX = -f5;
+				if(entity.motionX > f5)
+					entity.motionX = f5;
+				if(entity.motionZ < -f5)
+					entity.motionZ = -f5;
+				if(entity.motionZ > f5)
+					entity.motionZ = f5;
+
+				entity.fallDistance = 0.0F;
+				if(entity.motionY < -0.15D)
+					entity.motionY = -0.15D;
+
+				if(entity.motionY < 0&&entity instanceof EntityPlayer&&entity.isSneaking())
+				{
+					entity.motionY = 0;
+					return;
+				}
+				if(entity.collidedHorizontally)
+					entity.motionY = .2;
+			}
+		}
 	}
 
 

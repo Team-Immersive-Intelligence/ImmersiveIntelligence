@@ -81,9 +81,7 @@ public class BulletComponentNuke implements IBulletComponent
 			e.addPotionEffect(new PotionEffect(IEPotions.flashed, 40, 1));
 			e.addPotionEffect(new PotionEffect(IIPotions.nuclear_heat, 40, 0));
 			e.hurtResistantTime = 0;
-			e.getArmorInventoryList().forEach(stack -> {
-				stack.damageItem(stack.getMaxDamage(), e);
-			});
+			e.getArmorInventoryList().forEach(stack -> stack.damageItem(stack.getMaxDamage(), e));
 			e.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
 		}
 		entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(50*amount)).toArray(new EntityLivingBase[0]);

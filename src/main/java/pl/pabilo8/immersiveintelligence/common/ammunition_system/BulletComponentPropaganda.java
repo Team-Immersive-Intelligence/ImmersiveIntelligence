@@ -33,7 +33,7 @@ public class BulletComponentPropaganda implements IBulletComponent
 	@Override
 	public float getDensity()
 	{
-		return 0.25f;
+		return 0.65f;
 	}
 
 	@Override

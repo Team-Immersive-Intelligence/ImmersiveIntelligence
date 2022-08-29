@@ -35,8 +35,8 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 {
 	private static ModelSkyCartStation model;
 	private static ModelSkyCartStation modelFlipped;
-	private static TileEntityBanner banner = new TileEntityBanner();
-	private static ModelBanner modelBanner = new ModelBanner();
+	private static final TileEntityBanner banner = new TileEntityBanner();
+	private static final ModelBanner modelBanner = new ModelBanner();
 
 	static
 	{
@@ -58,7 +58,7 @@ public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntity
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			float rpm_pitch = 0, rpm_grab = 0, rpm_crate = 0, rpm_gears = 0;
+			float rpm_pitch = 0, rpm_grab = 0, rpm_crate = 0, rpm_gears;
 			double motorTick = 0f;
 			float progress = 0f;
 

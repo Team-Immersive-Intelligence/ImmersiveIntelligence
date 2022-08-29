@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class RecipeCrateConversion extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
 {
-	List<ItemStack> inputCrates = null;
+	List<ItemStack> inputCrates;
 
 	public RecipeCrateConversion(ItemStack... inputCrates)
 	{

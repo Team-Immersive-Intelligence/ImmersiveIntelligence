@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class IISounds
 {
-	static Set<SoundEvent> registeredEvents = new HashSet();
+	static Set<SoundEvent> registeredEvents = new HashSet<>();
 	public static SoundEvent siren = registerSound("siren");
 	public static SoundEvent printing_press = registerSound("printing_press");
 	public static SoundEvent paper_eject = registerSound("paper_eject");
@@ -35,11 +35,16 @@ public class IISounds
 	public static SoundEvent submachinegun_reload = registerSound("submachinegun_reload");
 	public static SoundEvent submachinegun_unload = registerSound("submachinegun_unload");
 
+	public static SoundEvent howitzer_chain = registerSound("howitzer_chain");
 	public static SoundEvent howitzer_shot = registerSound("howitzer_shot");
-	public static SoundEvent howitzer_load = registerSound("howitzer_load");
-	public static SoundEvent howitzer_unload = registerSound("howitzer_unload");
+	public static SoundEvent howitzer_shell_pick = registerSound("howitzer_shell_pick");
+	public static SoundEvent howitzer_shell_put = registerSound("howitzer_shell_put");
 	public static SoundEvent howitzer_rotation_h = registerSound("howitzer_rotation_h");
 	public static SoundEvent howitzer_rotation_v = registerSound("howitzer_rotation_v");
+	public static SoundEvent howitzer_platform_start = registerSound("howitzer_platform_start");
+	public static SoundEvent howitzer_platform_end = registerSound("howitzer_platform_end");
+	public static SoundEvent howitzer_platform_raise = registerSound("howitzer_platform_raise");
+	public static SoundEvent howitzer_platform_lower = registerSound("howitzer_platform_lower");
 	public static SoundEvent howitzer_door_open = registerSound("howitzer_door_open");
 	public static SoundEvent howitzer_door_close = registerSound("howitzer_door_close");
 
@@ -48,7 +53,7 @@ public class IISounds
 
 	public static SoundEvent radio_noise = registerSound("radio_noise");
 	public static SoundEvent radio_beep = registerSound("radio_beep");
-	
+
 	public static SoundEvent motorbike_start = registerSound("motorbike_start");
 	public static SoundEvent motorbike_start_no_fuel = registerSound("motorbike_start_no_fuel");
 	public static SoundEvent motorbike_engine = registerSound("motorbike_engine");
@@ -123,6 +128,8 @@ public class IISounds
 	public static SoundEvent metal_locker_close = registerSound("metal_locker_close");
 	public static SoundEvent metal_breadbox_open = registerSound("metal_breadbox_open");
 	public static SoundEvent metal_breadbox_close = registerSound("metal_breadbox_close");
+
+	public static SoundEvent punchtape_reader = registerSound("punchtape_reader");
 
 	private static SoundEvent registerSound(String name)
 	{

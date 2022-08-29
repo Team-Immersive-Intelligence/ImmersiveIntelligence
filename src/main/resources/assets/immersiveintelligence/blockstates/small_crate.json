@@ -2,10 +2,124 @@
   "forge_marker": 1,
   "defaults": {
     "transform": "forge:default-block",
-    "model": "cube_all",
-    "textures": {
-      "texture": "immersiveengineering:blocks/storage_steel",
-      "particle": "immersiveengineering:blocks/storage_steel"
+    "model": "cube_all"
+  },
+  "variants": {
+    "inventory,type=wooden_crate_box": [
+      {
+        "model": "immersiveintelligence:small_crate/box",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/wooden"
+        }
+      }
+    ],
+    "inventory,type=wooden_crate_cube": [
+      {
+        "model": "immersiveintelligence:small_crate/cube",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/wooden"
+        }
+      }
+    ],
+    "inventory,type=wooden_crate_wide": [
+      {
+        "model": "immersiveintelligence:small_crate/wide",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/wooden"
+        }
+      }
+    ],
+    "inventory,type=metal_crate_box": [
+      {
+        "model": "immersiveintelligence:small_crate/box",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/metal"
+        }
+      }
+    ],
+    "inventory,type=metal_crate_cube": [
+      {
+        "model": "immersiveintelligence:small_crate/cube",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/metal"
+        }
+      }
+    ],
+    "inventory,type=metal_crate_wide": [
+      {
+        "model": "immersiveintelligence:small_crate/wide",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/metal"
+        }
+      }
+    ],
+    "type": {
+      "wooden_crate_box": {
+        "model": "immersiveintelligence:small_crate/box",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/wooden",
+          "particle": "immersiveengineering:blocks/wooden_device_crate"
+        }
+      },
+      "wooden_crate_cube": {
+        "model": "immersiveintelligence:small_crate/cube",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/wooden",
+          "particle": "immersiveengineering:blocks/wooden_device_crate"
+        }
+      },
+      "wooden_crate_wide": {
+        "model": "immersiveintelligence:small_crate/wide",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/wooden",
+          "particle": "immersiveengineering:blocks/wooden_device_crate"
+        }
+      },
+      "metal_crate_box": {
+        "model": "immersiveintelligence:small_crate/box",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/metal",
+          "particle": "immersiveengineering:blocks/storage_steel"
+        }
+      },
+      "metal_crate_cube": {
+        "model": "immersiveintelligence:small_crate/cube",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/metal",
+          "particle": "immersiveengineering:blocks/storage_steel"
+        }
+      },
+      "metal_crate_wide": {
+        "model": "immersiveintelligence:small_crate/wide",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/metal",
+          "particle": "immersiveengineering:blocks/storage_steel"
+        }
+      }
+    },
+    "facing": {
+      "north": {},
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
     }
   }
 }

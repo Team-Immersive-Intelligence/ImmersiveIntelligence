@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors;
 
-import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorDrop;
 import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorDropCovered;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;

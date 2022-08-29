@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.blocks.metal;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.TargetingInfo;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
@@ -18,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
@@ -63,11 +65,12 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
 	int upgradeProgress = 0;
-	public int clientUpgradeProgress=0;
+	public int clientUpgradeProgress = 0;
 	public int energyStorage = 0;
 
 	//Client only
 	float inserterAnimation = 0f;
+	float inserterHeight = 0f;
 	float inserterAngle = 0f;
 	Entity focusedEntity = null;
 
@@ -176,7 +179,8 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			this.name = nbt.getString("name");
 		if(nbt.hasKey("open"))
 			open = nbt.getBoolean("open");
-		setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
+		if(nbt.hasKey("facing"))
+			setFacing(EnumFacing.getFront(nbt.getInteger("facing")));
 		getUpgradesFromNBT(nbt);
 		energyStorage = nbt.getInteger("energyStorage");
 		if(!descPacket)
@@ -243,6 +247,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			if(energyStorage > 0&&hasUpgrade(IIContent.UPGRADE_INSERTER))
 			{
 				inserterAnimation = calculateInserterAnimation(0);
+				inserterHeight = calculateInserterHeight(0);
 				inserterAngle = calculateInserterAngle(0);
 			}
 			else if(clientUpgradeProgress < getMaxClientProgress())
@@ -256,12 +261,14 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			entitiesWithinAABB.removeIf(entity -> !checkEntity(entity));
 			if(entitiesWithinAABB.size() > 0)
 			{
-				affectEntityUpgraded(entitiesWithinAABB.get(0));
-				useSupplies();
+
+				if(affectEntityUpgraded(entitiesWithinAABB.get(0)))
+					useSupplies();
 				if(!entitiesWithinAABB.contains(focusedEntity))
 				{
 					focusedEntity = entitiesWithinAABB.get(0);
 					inserterAnimation = 0f;
+					inserterHeight = 0f;
 					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
 				}
 			}
@@ -269,6 +276,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			{
 				focusedEntity = null;
 				inserterAnimation = 0f;
+				inserterHeight = 0f;
 				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromTile(this, 16));
 			}
 		}
@@ -276,12 +284,18 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 	public float calculateInserterAnimation(float partialTicks)
 	{
-		float anim;
 		if(focusedEntity!=null)
-			anim = Math.min(inserterAnimation+(0.05f*(1+partialTicks)), 1f);
+			return Math.min(inserterAnimation+(0.05f*(1+partialTicks)), 1f);
 		else
-			anim = Math.max(inserterAnimation-(0.025f*(1+partialTicks)), 0f);
-		return anim;
+			return Math.max(inserterAnimation-(0.025f*(1+partialTicks)), 0f);
+	}
+
+	public float calculateInserterHeight(float partialTicks)
+	{
+		if(focusedEntity!=null)
+			return MathHelper.clamp((float)(pos.getY()+1.35f-focusedEntity.posY-(partialTicks*focusedEntity.motionY)), -1f, 1f);
+		else
+			return Math.signum(inserterHeight)*Math.abs(inserterHeight-(0.1f*(1+partialTicks)));
 	}
 
 	public float calculateInserterAngle(float partialTicks)
@@ -289,7 +303,9 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(focusedEntity!=null)
 		{
 			//Subtracts two vector and calculates angle (in degrees) using atan
-			Vec3d vec3d = focusedEntity.getPositionVector().subtract(new Vec3d(this.pos));
+			Vec3d vec3d = pl.pabilo8.immersiveintelligence.api.Utils.getEntityCenter(focusedEntity)
+					.add(new Vec3d(focusedEntity.motionX,0,focusedEntity.motionZ).scale(partialTicks))
+					.subtract(new Vec3d(this.pos));
 			float yaw;
 			if(vec3d.x < 0&&vec3d.z >= 0)
 				yaw = (float)(Math.atan(Math.abs(vec3d.x/vec3d.z))/Math.PI*180D);
@@ -396,20 +412,26 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	}
 
 	@Override
+	public int getClientInstallProgress()
+	{
+		return clientUpgradeProgress;
+	}
+
+	@Override
 	public boolean addUpgradeInstallProgress(int toAdd)
 	{
-		upgradeProgress+=toAdd;
+		upgradeProgress += toAdd;
 		return true;
 	}
 
 	@Override
 	public boolean resetInstallProgress()
 	{
-		currentlyInstalled=null;
-		if(upgradeProgress>0)
+		currentlyInstalled = null;
+		if(upgradeProgress > 0)
 		{
-			upgradeProgress=0;
-			clientUpgradeProgress=0;
+			upgradeProgress = 0;
+			clientUpgradeProgress = 0;
 			return true;
 		}
 		return false;
@@ -418,9 +440,9 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public void startUpgrade(@Nonnull MachineUpgrade upgrade)
 	{
-		currentlyInstalled=upgrade;
-		upgradeProgress=0;
-		clientUpgradeProgress=0;
+		currentlyInstalled = upgrade;
+		upgradeProgress = 0;
+		clientUpgradeProgress = 0;
 	}
 
 	@Override
@@ -431,6 +453,12 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 
 	@Override
 	protected boolean canTakeLV()
+	{
+		return true;
+	}
+
+	@Override
+	protected boolean canTakeMV()
 	{
 		return true;
 	}
@@ -463,6 +491,12 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		return 0;
 	}
 
+	@Override
+	public Vec3d getConnectionOffset(Connection con)
+	{
+		return new Vec3d(0.5, 0.9375, 0.5);
+	}
+
 	private void updateLid()
 	{
 		if(open&&lidAngle < 1.5f)
@@ -485,17 +519,17 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		return 3;
 	}
 
-	void affectEntityUpgraded(Entity entity)
+	private boolean affectEntityUpgraded(Entity entity)
 	{
-		affectEntity(entity, true);
+		return affectEntity(entity, true);
 	}
 
-	void affectEntityBasic(Entity entity)
+	private boolean affectEntityBasic(Entity entity)
 	{
-		affectEntity(entity, false);
+		return affectEntity(entity, false);
 	}
 
-	abstract void affectEntity(Entity entity, boolean upgraded);
+	abstract boolean affectEntity(Entity entity, boolean upgraded);
 
 	abstract boolean checkEntity(Entity entity);
 
@@ -503,10 +537,12 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public float[] getBlockBounds()
 	{
+		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
+			return new float[]{0f, 0f, 0f, 1f, 0.8125f, 1f};
 		if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
-			return new float[]{0f, 0, .25f, 1f, .58f, .75f};
-		else
-			return new float[]{.25f, 0, 0f, .75f, .58f, 1f};
+			return new float[]{0f, 0f, .25f, 1f, .58f, .75f};
+
+		return new float[]{.25f, 0f, 0f, .75f, .58f, 1f};
 	}
 
 	@Override

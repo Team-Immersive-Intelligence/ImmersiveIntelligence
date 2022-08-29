@@ -35,7 +35,7 @@ public class GuiWidgetManualWrapper extends GuiManual
 	//See, isn't that hard to do
 	public int x;
 	public int y;
-	public int manualTime = 0;
+	public int manualTime;
 	private boolean opened = false;
 	//not to be confused with GuiManual's manual variable
 	private ManualInstance manualInstance;

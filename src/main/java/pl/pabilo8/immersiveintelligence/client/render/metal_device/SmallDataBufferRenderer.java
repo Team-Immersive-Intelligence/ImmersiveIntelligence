@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntitySmallDataB
 @SideOnly(Side.CLIENT)
 public class SmallDataBufferRenderer extends TileEntitySpecialRenderer<TileEntitySmallDataBuffer>
 {
-	private static ModelSmallDataBuffer model = new ModelSmallDataBuffer();
+	private static final ModelSmallDataBuffer model = new ModelSmallDataBuffer();
 
 	@Override
 	public void render(TileEntitySmallDataBuffer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

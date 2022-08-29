@@ -38,7 +38,7 @@ public class ModelRendererTurbo extends ModelRenderer
 		vertices = new PositionTextureVertex[0];
 		faces = new TexturedPolygon[0];
 		forcedRecompile = false;
-		textureGroup = new HashMap<String, TextureGroup>();
+		textureGroup = new HashMap<>();
 		textureGroup.put("0", new TextureGroup());
 		currentTextureGroup = textureGroup.get("0");
 		boxName = s;
@@ -107,9 +107,7 @@ public class ModelRendererTurbo extends ModelRenderer
 		try
 		{
 			for(int i = 0; i < verts.length; i++)
-			{
 				verts[i] = verts[i].setTexturePosition(uv[i][0]/textureWidth, uv[i][1]/textureHeight);
-			}
 		} finally
 		{
 			addPolygon(verts);
@@ -310,13 +308,8 @@ public class ModelRendererTurbo extends ModelRenderer
 				}, textureOffsetX+d+w+d, textureOffsetY+d, textureOffsetX+d+w+d+w, textureOffsetY+d+h,
 				qParam[2]*qParam[5], qParam[2], 1F, qParam[5]);
 		if(mirror^flip)
-		{
 			for(TexturedPolygon aPoly : poly)
-			{
 				aPoly.flipFace();
-			}
-
-		}
 
 		copyTo(verts, poly);
 	}
@@ -1100,12 +1093,8 @@ public class ModelRendererTurbo extends ModelRenderer
 		Shape3D shape3D = shape.extrude(x, y, z, rotX, rotY, rotZ, depth, textureOffsetX, textureOffsetY, textureWidth, textureHeight, shapeTextureWidth, shapeTextureHeight, sideTextureWidth, sideTextureHeight, faceLengths);
 
 		if(flip)
-		{
 			for(int idx = 0; idx < shape3D.faces.length; idx++)
-			{
 				shape3D.faces[idx].flipFace();
-			}
-		}
 
 		copyTo(shape3D.vertices, shape3D.faces);
 	}
@@ -1325,17 +1314,15 @@ public class ModelRendererTurbo extends ModelRenderer
 		float y1 = y-expansion;
 		float z1 = z-expansion;
 
-		int wDir = 0;
-		int hDir = 0;
-		int dDir = 0;
+		int wDir;
+		int hDir;
+		int dDir;
 
 		float wScale = 1F+(expansion/(w*pixelScale));
 		float hScale = 1F+(expansion/(h*pixelScale));
 
 		if(!rotX)
-		{
 			if(!rotY)
-			{
 				if(!rotZ)
 				{
 					wDir = 0;
@@ -1348,55 +1335,42 @@ public class ModelRendererTurbo extends ModelRenderer
 					hDir = 0;
 					dDir = 2;
 				}
+			else if(!rotZ)
+			{
+				wDir = 2;
+				hDir = 1;
+				dDir = 0;
 			}
 			else
 			{
-				if(!rotZ)
-				{
-					wDir = 2;
-					hDir = 1;
-					dDir = 0;
-				}
-				else
-				{
-					wDir = 2;
-					hDir = 0;
-					dDir = 1;
-				}
+				wDir = 2;
+				hDir = 0;
+				dDir = 1;
 			}
+		else if(!rotY)
+			if(!rotZ)
+			{
+				wDir = 0;
+				hDir = 2;
+				dDir = 1;
+			}
+			else
+			{
+				wDir = 1;
+				hDir = 2;
+				dDir = 0;
+			}
+		else if(!rotZ)
+		{
+			wDir = 2;
+			hDir = 0;
+			dDir = 1;
 		}
 		else
 		{
-			if(!rotY)
-			{
-				if(!rotZ)
-				{
-					wDir = 0;
-					hDir = 2;
-					dDir = 1;
-				}
-				else
-				{
-					wDir = 1;
-					hDir = 2;
-					dDir = 0;
-				}
-			}
-			else
-			{
-				if(!rotZ)
-				{
-					wDir = 2;
-					hDir = 0;
-					dDir = 1;
-				}
-				else
-				{
-					wDir = 2;
-					hDir = 1;
-					dDir = 0;
-				}
-			}
+			wDir = 2;
+			hDir = 1;
+			dDir = 0;
 		}
 
 		int texStartX = textureOffsetX+(mirrorX?w-1: 0);
@@ -1409,18 +1383,12 @@ public class ModelRendererTurbo extends ModelRenderer
 		float dVoxSize = getPixelSize(wScale, hScale, d*pixelScale+expansion*2, 0, 1, dDir, 1, 1);
 
 		for(int i = 0; i < w; i++)
-		{
 			for(int j = 0; j < h; j++)
-			{
 				if(mask[j].charAt(i)=='1')
-				{
 					addPixel(x1+getPixelSize(wScale, hScale, 0, wDir, hDir, 0, i, j),
 							y1+getPixelSize(wScale, hScale, 0, wDir, hDir, 1, i, j),
 							z1+getPixelSize(wScale, hScale, 0, wDir, hDir, 2, i, j),
 							new float[]{wVoxSize, hVoxSize, dVoxSize}, texStartX+texDirX*i, texStartY+texDirY*j);
-				}
-			}
-		}
 	}
 
 	private float getPixelSize(float wScale, float hScale, float dScale, int wDir, int hDir, int checkDir, int texPosX, int texPosY)
@@ -1843,16 +1811,13 @@ public class ModelRendererTurbo extends ModelRenderer
 	 */
 	public void doMirror(boolean x, boolean y, boolean z)
 	{
-		for(int i = 0; i < faces.length; i++)
+		for(TexturedPolygon face : faces)
 		{
-			PositionTextureVertex[] verts = faces[i].vertexPositions;
-			for(int j = 0; j < verts.length; j++)
-			{
-				verts[j].vector3D = new Vec3d(verts[j].vector3D.x*(x?-1: 1), verts[j].vector3D.y*(y?-1: 1), verts[j].vector3D.z*(z?-1: 1));
-
-			}
+			PositionTextureVertex[] verts = face.vertexPositions;
+			for(PositionTextureVertex vert : verts)
+				vert.vector3D = new Vec3d(vert.vector3D.x*(x?-1: 1), vert.vector3D.y*(y?-1: 1), vert.vector3D.z*(z?-1: 1));
 			if(x^y^z)
-				faces[i].flipFace();
+				face.flipFace();
 		}
 	}
 
@@ -1936,9 +1901,7 @@ public class ModelRendererTurbo extends ModelRenderer
 	{
 		TexturedPolygon[] poly = new TexturedPolygon[quad.length];
 		for(int idx = 0; idx < quad.length; idx++)
-		{
 			poly[idx] = new TexturedPolygon((PositionTextureVertex[])quad[idx].vertexPositions);
-		}
 
 		copyTo(verts, poly);
 	}
@@ -1978,9 +1941,7 @@ public class ModelRendererTurbo extends ModelRenderer
 	public void setTextureGroup(String groupName)
 	{
 		if(!textureGroup.containsKey(groupName))
-		{
 			textureGroup.put(groupName, new TextureGroup());
-		}
 		currentTextureGroup = textureGroup.get(groupName);
 	}
 
@@ -2056,49 +2017,30 @@ public class ModelRendererTurbo extends ModelRenderer
 	public void render(float worldScale, boolean oldRotateOrder)
 	{
 		if(field_1402_i)
-		{
 			return;
-		}
 		if(!showModel)
-		{
 			return;
-		}
 		if(!compiled||forcedRecompile)
-		{
 			compileDisplayList(worldScale);
-		}
 		if(rotateAngleX!=0.0F||rotateAngleY!=0.0F||rotateAngleZ!=0.0F)
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslatef(rotationPointX*worldScale, rotationPointY*worldScale, rotationPointZ*worldScale);
 			if(!oldRotateOrder&&rotateAngleY!=0.0F)
-			{
 				GL11.glRotatef(rotateAngleY*57.29578F, 0.0F, 1.0F, 0.0F);
-			}
 			if(rotateAngleZ!=0.0F)
-			{
 				GL11.glRotatef((oldRotateOrder?-1: 1)*rotateAngleZ*57.29578F, 0.0F, 0.0F, 1.0F);
-			}
 			if(oldRotateOrder&&rotateAngleY!=0.0F)
-			{
 				GL11.glRotatef(-rotateAngleY*57.29578F, 0.0F, 1.0F, 0.0F);
-			}
 			if(rotateAngleX!=0.0F)
-			{
 				GL11.glRotatef(rotateAngleX*57.29578F, 1.0F, 0.0F, 0.0F);
-			}
 			if(hasOffset)
 				GL11.glTranslatef(offsetX*worldScale, offsetY*worldScale, offsetZ*worldScale);
 
 			callDisplayList();
 			if(childModels!=null)
-			{
-				for(Object childModel : childModels)
-				{
-					((ModelRenderer)childModel).render(worldScale);
-				}
-
-			}
+				for(ModelRenderer childModel : childModels)
+					childModel.render(worldScale);
 			GL11.glPopMatrix();
 		}
 		else if(rotationPointX!=0.0F||rotationPointY!=0.0F||rotationPointZ!=0.0F)
@@ -2106,26 +2048,16 @@ public class ModelRendererTurbo extends ModelRenderer
 			GL11.glTranslatef(rotationPointX*worldScale, rotationPointY*worldScale, rotationPointZ*worldScale);
 			callDisplayList();
 			if(childModels!=null)
-			{
-				for(Object childModel : childModels)
-				{
-					((ModelRenderer)childModel).render(worldScale);
-				}
-
-			}
+				for(ModelRenderer childModel : childModels)
+					childModel.render(worldScale);
 			GL11.glTranslatef(-rotationPointX*worldScale, -rotationPointY*worldScale, -rotationPointZ*worldScale);
 		}
 		else
 		{
 			callDisplayList();
 			if(childModels!=null)
-			{
-				for(Object childModel : childModels)
-				{
-					((ModelRenderer)childModel).render(worldScale);
-				}
-
-			}
+				for(ModelRenderer childModel : childModels)
+					childModel.render(worldScale);
 		}
 	}
 
@@ -2133,31 +2065,19 @@ public class ModelRendererTurbo extends ModelRenderer
 	public void renderWithRotation(float f)
 	{
 		if(field_1402_i)
-		{
 			return;
-		}
 		if(!showModel)
-		{
 			return;
-		}
 		if(!compiled)
-		{
 			compileDisplayList(f);
-		}
 		GL11.glPushMatrix();
 		GL11.glTranslatef(rotationPointX*f, rotationPointY*f, rotationPointZ*f);
 		if(rotateAngleY!=0.0F)
-		{
 			GL11.glRotatef(rotateAngleY*57.29578F, 0.0F, 1.0F, 0.0F);
-		}
 		if(rotateAngleX!=0.0F)
-		{
 			GL11.glRotatef(rotateAngleX*57.29578F, 1.0F, 0.0F, 0.0F);
-		}
 		if(rotateAngleZ!=0.0F)
-		{
 			GL11.glRotatef(rotateAngleZ*57.29578F, 0.0F, 0.0F, 1.0F);
-		}
 		callDisplayList();
 		GL11.glPopMatrix();
 	}
@@ -2174,37 +2094,23 @@ public class ModelRendererTurbo extends ModelRenderer
 	public void postRender(float f)
 	{
 		if(field_1402_i)
-		{
 			return;
-		}
 		if(!showModel)
-		{
 			return;
-		}
 		if(!compiled||forcedRecompile)
-		{
 			compileDisplayList(f);
-		}
 		if(rotateAngleX!=0.0F||rotateAngleY!=0.0F||rotateAngleZ!=0.0F)
 		{
 			GL11.glTranslatef(rotationPointX*f, rotationPointY*f, rotationPointZ*f);
 			if(rotateAngleZ!=0.0F)
-			{
 				GL11.glRotatef(rotateAngleZ*57.29578F, 0.0F, 0.0F, 1.0F);
-			}
 			if(rotateAngleY!=0.0F)
-			{
 				GL11.glRotatef(rotateAngleY*57.29578F, 0.0F, 1.0F, 0.0F);
-			}
 			if(rotateAngleX!=0.0F)
-			{
 				GL11.glRotatef(rotateAngleX*57.29578F, 1.0F, 0.0F, 0.0F);
-			}
 		}
 		else if(rotationPointX!=0.0F||rotationPointY!=0.0F||rotationPointZ!=0.0F)
-		{
 			GL11.glTranslatef(rotationPointX*f, rotationPointY*f, rotationPointZ*f);
-		}
 	}
 
 	private void callDisplayList()
@@ -2247,9 +2153,7 @@ public class ModelRendererTurbo extends ModelRenderer
 
 				TextureGroup usedGroup = itr.next();
 				for(int j = 0; j < usedGroup.poly.size(); j++)
-				{
 					usedGroup.poly.get(j).draw(tessellator, worldScale);
-				}
 
 				GL11.glEndList();
 			}
@@ -2264,9 +2168,7 @@ public class ModelRendererTurbo extends ModelRenderer
 		GL11.glNewList(displayList, GL11.GL_COMPILE);
 		TmtTessellator tessellator = TmtTessellator.instance;
 		for(TexturedPolygon face : faces)
-		{
 			face.draw(tessellator, worldScale);
-		}
 
 		GL11.glEndList();
 	}
@@ -2278,15 +2180,15 @@ public class ModelRendererTurbo extends ModelRenderer
 		this.rotateAngleZ = z;
 	}
 
-	private PositionTextureVertex vertices[];
-	private TexturedPolygon faces[];
+	private PositionTextureVertex[] vertices;
+	private TexturedPolygon[] faces;
 	private int textureOffsetX;
 	private int textureOffsetY;
 	private boolean compiled;
 	private int displayList;
-	private int displayListArray[];
+	private int[] displayListArray;
 	private Map<String, TransformGroup> transformGroup;
-	private Map<String, TextureGroup> textureGroup;
+	private final Map<String, TextureGroup> textureGroup;
 	private TransformGroup currentGroup;
 	private TextureGroup currentTextureGroup;
 	public boolean mirror;
@@ -2296,7 +2198,6 @@ public class ModelRendererTurbo extends ModelRenderer
 	public boolean field_1402_i;
 	public boolean forcedRecompile;
 	public boolean useLegacyCompiler;
-	public List cubeList;
 	public ArrayList<ModelRenderer> childModels;
 	public final String boxName;
 

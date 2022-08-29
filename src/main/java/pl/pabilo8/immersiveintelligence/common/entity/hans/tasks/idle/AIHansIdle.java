@@ -56,7 +56,7 @@ public class AIHansIdle extends AIHansBase
 		super(hans);
 		this.setMutexBits(3); //motion + head movement
 		pastIdleTime = getIdleTime();
-		wanderDistance = 3+hans.getRNG().nextInt(4);
+		wanderDistance = 3+hans.getRNG().nextInt(2);
 		reGenerateWanders();
 	}
 
@@ -119,16 +119,13 @@ public class AIHansIdle extends AIHansBase
 						break;
 					}
 				}
-
-			currentAnimation = inside?HansLegAnimation.STANDING: ANIMATIONS[hans.getRNG().nextInt(ANIMATIONS.length)];
+			if(inside)
+				currentAnimation = ANIMATIONS[hans.getRNG().nextInt(ANIMATIONS.length)];
 		}
 		else
 		{
-			currentAnimation = HansLegAnimation.STANDING;
 			wanderCount++;
-
 			Vec3d vv = this.getWanderPosition();
-
 			if(vv!=null)
 			{
 				this.x = vv.x;
@@ -174,6 +171,8 @@ public class AIHansIdle extends AIHansBase
 	{
 		if(this.hans.isInWater())
 		{
+
+
 			Vec3d vec3d = RandomPositionGenerator.getLandPos(this.hans, wanderDistance, 7);
 			return vec3d==null?
 					RandomPositionGenerator.getLandPos(this.hans, wanderDistance, 15):

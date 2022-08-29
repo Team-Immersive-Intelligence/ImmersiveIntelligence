@@ -19,7 +19,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 public class MachinegunTweaker
 {
-
 	@ZenMethod
 	public static void addCoolant(ILiquidStack fuelEntry, int amountPerUse)
 	{

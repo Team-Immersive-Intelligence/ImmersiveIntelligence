@@ -35,12 +35,11 @@ public abstract class AIHansBase extends EntityAIBase
 		Vec3d start = hans.getPositionEyes(0);
 		Vec3d end = entity.getPositionVector();
 
-		//Don't shoot non-targeted entities between the turret and the target
 		AxisAlignedBB potentialCollateralArea = entity.getEntityBoundingBox().union(hans.getEntityBoundingBox());
 		List<EntityLivingBase> potentialCollateral = hans.world.getEntitiesWithinAABB(EntityLivingBase.class, potentialCollateralArea);
 		for(EntityLivingBase coll : potentialCollateral)
 		{
-			AxisAlignedBB entityBB = coll.getEntityBoundingBox().grow(.125f/2+.4);//Add the range of a revolver bullet in all directions
+			AxisAlignedBB entityBB = coll.getEntityBoundingBox().grow(.125f/2+.4);
 			if(coll!=hans&&!hans.isValidTarget(coll)&&entityBB.calculateIntercept(start, end)!=null)
 				return false;
 		}

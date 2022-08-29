@@ -1,0 +1,117 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"Table": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 7, 0]
+				},
+				{
+					"time": 0.16,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0,
+					"alpha": 0
+				},
+				{
+					"time": 0.16,
+					"alpha": 1
+				},
+				{
+					"time": 1,
+					"alpha": 1
+				}
+			]
+		},
+		"Machine": {
+			"position": [
+				{
+					"time": 0.24,
+					"transform": [0, 0, 12]
+				},
+				{
+					"time": 0.48,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.24,
+					"alpha": 0
+				},
+				{
+					"time": 0.48,
+					"alpha": 1
+				},
+				{
+					"time": 1,
+					"alpha": 1
+				}
+			]
+		},
+		"Rod": {
+			"position": [
+				{
+					"time": 0.72,
+					"transform": [0, 0, -8]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.72,
+					"alpha": 0
+				},
+				{
+					"time": 1,
+					"alpha": 1
+				}
+			]
+		},
+		"Pens": {
+			"position": [
+				{
+					"time": 0.48,
+					"transform": [-16, 0, 0]
+				},
+				{
+					"time": 0.72,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.48,
+					"alpha": 0
+				},
+				{
+					"time": 0.72,
+					"alpha": 1
+				},
+				{
+					"time": 1,
+					"alpha": 1
+				}
+			]
+		}
+	}
+}

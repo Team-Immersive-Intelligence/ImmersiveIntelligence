@@ -36,8 +36,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FluidInserter;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
@@ -48,6 +48,7 @@ import java.util.Set;
  * @author Pabilo8
  * @since 15-07-2019
  */
+// TODO: 26.07.2022 rework
 public class TileEntityFluidInserter extends TileEntityImmersiveConnectable implements ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
 {
 	public static ItemStack conn_data, conn_mv;
@@ -409,12 +410,12 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 	{
 		if(packet.getPacketVariable('m').getName().equals("string"))
 		{
-			fluidTakeMode = ((DataPacketTypeString)packet.getPacketVariable('m')).value;
+			fluidTakeMode = ((DataTypeString)packet.getPacketVariable('m')).value;
 		}
 
 		if(packet.getPacketVariable('c').getName().equals("integer"))
 		{
-			int items = ((DataPacketTypeInteger)packet.getPacketVariable('c')).value;
+			int items = ((DataTypeInteger)packet.getPacketVariable('c')).value;
 			fluidToTake = (fluidTakeMode.equals("add"))?fluidToTake+items: items;
 		}
 	}

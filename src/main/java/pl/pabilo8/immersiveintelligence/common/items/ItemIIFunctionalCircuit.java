@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
-import pl.pabilo8.immersiveintelligence.api.data.DataHelper;
+import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
@@ -28,6 +28,8 @@ import java.util.Locale;
  */
 public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageItem
 {
+	public static final String[] TEXTURES = {"redstone_circuits", "electronic_circuits", "advanced_circuits"};
+
 	public ItemIIFunctionalCircuit()
 	{
 		super("circuit_functional", 1, Arrays.stream(Circuit.values()).map(Circuit::getName).toArray(String[]::new));
@@ -37,11 +39,13 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, @Nonnull ITooltipFlag flag)
 	{
-		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+"functional_circuit"));
-		for(String s : getOperationsList(stack))
-		{
-			list.add("-"+I18n.format(CommonProxy.DATA_KEY+"function."+s));
-		}
+		boolean b = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+		list.add(I18n.format(CommonProxy.DESCRIPTION_KEY+(b?"functional_circuit": "functional_circuit_shift")));
+		if(b)
+			for(String s : getOperationsList(stack))
+			{
+				list.add("-"+I18n.format(CommonProxy.DATA_KEY+"function."+s));
+			}
 	}
 
 	@Override
@@ -60,12 +64,6 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 		ItemNBTHelper.setTagCompound(stack, "operations", packet.toNBT());
 	}
 
-	@Override
-	public String getDataStorageItemType(ItemStack stack)
-	{
-		return DataHelper.DATA_STORAGE_TYPE_CIRCUIT_FUNCTIONAL;
-	}
-
 
 	public List<String> getOperationsList(ItemStack stack)
 	{
@@ -80,32 +78,23 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 	public String getTESRRenderTexture(ItemStack stack)
 	{
 		if(stack.getMetadata() < Circuit.values().length)
-			switch(Circuit.values()[stack.getMetadata()].tier)
-			{
-				case 0:
-					return "redstone_circuits";
-				case 1:
-					return "electronic_circuits";
-				case 2:
-					return "advanced_circuits";
-			}
+			return TEXTURES[Circuit.values()[stack.getMetadata()].tier];
 		return "";
 	}
 
 	public enum Circuit implements IStringSerializable
 	{
 		ARITHMETIC(1,
-				"add",
-				"subtract",
-				"multiply",
-				"divide",
-				"modulo"
+				"add", "subtract", "multiply", "divide",
+				"modulo",
+				"abs"
 		),
 		ADVANCED_ARITHMETIC(2, ARITHMETIC,
-				"power",
-				"root",
-				"min",
-				"max"
+				"power", "root",
+				"min", "max",
+				"sign",
+				"ceil", "round", "floor",
+				"sin", "cos", "tan"
 		),
 		LOGIC(0,
 				"and",
@@ -126,21 +115,14 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 				"xnor"
 		),
 		TEXT(1,
-				"string_join",
-				"string_equal",
+				"string_join", "equal",
 				"string_split",
 				"string_length",
-				"string_char_at",
-				"string_substring",
-				"string_trim",
-				"string_hexcol",
-				"string_format",
-				"string_contains",
-				"string_contains_count",
-				"string_lowercase",
-				"string_uppercase",
-				"string_snake_case",
-				"string_camel_case",
+				"string_char_at", "string_substring", "string_trim",
+				"string_hexcol", "string_format",
+				"string_contains", "string_contains_count",
+				"string_replace_first", "string_replace_all",
+				"string_lowercase", "string_uppercase", "string_snake_case", "string_camel_case",
 				"string_reverse"
 		),
 		ITEMSTACK(2,
@@ -156,9 +138,10 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 				"matches_oredict"
 		),
 		ARRAY(1,
-				"array_get",
-				"array_pop",
-				"array_push"
+				"array_get", "array_set",
+				"array_length",
+				"array_push", "array_pop",
+				"array_swap"
 		),
 		ENTITY(2,
 				"entity_get_id",
@@ -179,6 +162,7 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 		TYPE_CONVERSION(1,
 				"is_null",
 				"to_integer",
+				"to_float",
 				"to_string",
 				"to_boolean",
 				"to_null"
@@ -196,6 +180,11 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 		Circuit(int tier, Circuit parent, String... functions)
 		{
 			this(tier, ArrayUtils.addAll(parent.functions, functions));
+		}
+
+		public String[] getFunctions()
+		{
+			return functions;
 		}
 
 		@Nonnull

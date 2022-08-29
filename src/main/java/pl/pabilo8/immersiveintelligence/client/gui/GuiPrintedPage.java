@@ -18,7 +18,7 @@ public class GuiPrintedPage extends GuiScreen
 {
 	private static final String page_texture = ImmersiveIntelligence.MODID+":textures/gui/printed_page.png";
 
-	private String text = "";
+	private final String text;
 
 	public GuiPrintedPage(EntityPlayer player, ItemStack book)
 	{

@@ -12,10 +12,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
@@ -26,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityChemicalPainter;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntit
 	private static ModelChemicalPainter modelFlipped;
 
 	@Override
-	public void render(TileEntityChemicalPainter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(@Nullable TileEntityChemicalPainter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{

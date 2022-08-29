@@ -1,0 +1,27 @@
+{
+	"origins": {
+		"base": [8, 12.25, 8],
+		"screw1": [2, 12.75, 2],
+		"screw2": [14, 12.75, 2],
+		"screw3": [14, 12.75, 14],
+		"screw4": [2, 12.75, 14],
+		"corner1": [1, 6, 15],
+		"corner2": [15, 6, 15],
+		"corner3": [15, 6, 1],
+		"corner4": [1, 6, 1],
+		"inserter": [8, 15, 8],
+		"lower": [8, 19, 8],
+		"mesh1": [8, 6, 15.5],
+		"mesh2": [0.5, 6, 8],
+		"mesh3": [8, 6, 0.5],
+		"mesh4": [15.5, 6, 8],
+		"coil": [8, 15, 8],
+		"upper": [8, 32.5, 8],
+		"syringe": [8, 47, 7.5]
+	},
+	"hierarchy": {
+		"lower": "inserter",
+		"upper": "lower",
+		"syringe": "upper"
+	}
+}

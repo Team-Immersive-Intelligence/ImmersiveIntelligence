@@ -1,0 +1,12 @@
+# Made in Blockbench 4.2.5
+newmtl m_1
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter
+newmtl m_2
+map_Kd immersiveengineering:blocks/connector_connector_lv
+newmtl m_3
+map_Kd immersiveintelligence:blocks/data_connector
+newmtl m_4
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base1
+newmtl m_5
+map_Kd immersiveintelligence:blocks/metal_device/inserter/inserter_base2
+newmtl none

@@ -63,7 +63,10 @@
     },
     "_0multiblockslave": {
       "false": {
-        "model": "immersiveintelligence:metal_device/co2_filter/funnel"
+        "model": "immersiveintelligence:metal_device/co2_filter/funnel.obj",
+        "custom": {
+          "flip-v": true
+        }
       },
       "true": {
       }

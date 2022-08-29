@@ -282,9 +282,9 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		if(nbt.hasKey("nextTaskAfterFinish"))
 			nextTaskAfterFinish = nbt.getBoolean("nextTaskAfterFinish");
 
-		if(nbt.hasKey("defaultOutputFacing"))
+		if(nbt.hasKey("outputFacing"))
 			defaultOutputFacing = EnumFacing.getFront(nbt.getInteger("outputFacing"));
-		if(nbt.hasKey("defaultInputFacing"))
+		if(nbt.hasKey("inputFacing"))
 			defaultInputFacing = EnumFacing.getFront(nbt.getInteger("inputFacing"));
 
 		if(nbt.hasKey("secondCable"))
@@ -766,6 +766,16 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		abstract String getName();
 
 		public abstract float getTimeModifier();
+	}
+
+	public final EnumFacing getCurrentInputFacing()
+	{
+		return current==null||current.facingIn==null?defaultInputFacing: current.facingIn;
+	}
+
+	public final EnumFacing getCurrentOutputFacing()
+	{
+		return current==null||current.facingOut==null?defaultOutputFacing: current.facingOut;
 	}
 }
 

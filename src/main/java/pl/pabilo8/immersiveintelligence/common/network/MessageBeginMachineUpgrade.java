@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.network;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.lib.manual.ManualUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;

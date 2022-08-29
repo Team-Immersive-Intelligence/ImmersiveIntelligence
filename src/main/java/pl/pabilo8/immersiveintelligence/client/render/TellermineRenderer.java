@@ -12,7 +12,6 @@ import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
-import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityTellermine;
 
 /**

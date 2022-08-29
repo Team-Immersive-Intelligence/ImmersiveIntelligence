@@ -1,0 +1,72 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "texture": "immersiveengineering:blocks/storage_aluminum",
+      "particle": "immersiveengineering:blocks/storage_aluminum"
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "inventory,type=data_debugger": [
+      {
+        "model": "immersiveintelligence:metal_device/data_debugger/data_debugger.obj"
+      }
+    ],
+    "type": {
+      "data_debugger": {
+        "model": "immersiveengineering:smartmodel/connector",
+        "custom": {
+          "base": "immersiveintelligence:block/metal_device/data_debugger/data_debugger.obj",
+          "layers": [
+            "SOLID"
+          ]
+        }
+      }
+    },
+    "facing": {
+      "down": {
+      },
+      "up": {
+      },
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "south": {
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      }
+    },
+    "boolean0": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {
+        "model": "immersiveintelligence:metal_device/data_debugger/data_debugger_construction.obj.ie"
+      }
+    }
+  }
+}

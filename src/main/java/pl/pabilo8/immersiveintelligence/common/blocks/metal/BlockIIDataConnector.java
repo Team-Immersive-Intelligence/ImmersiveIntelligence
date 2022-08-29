@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.blocks.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityAdvancedInserter;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityInserter;
@@ -44,25 +45,14 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 {
 	public BlockIIDataConnector()
 	{
-		super("data_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Connector.class), ItemBlockIEBase.class, IEProperties.FACING_ALL,
-				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IOBJModelCallback.PROPERTY);
+		super("data_connector", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Connector.class), ItemBlockIEBase.class,
+				IEProperties.FACING_ALL, IEProperties.BOOLEANS[0], IEProperties.DYNAMICRENDER, IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		lightOpacity = 0;
 		setAllNotNormalBlock();
 
-		addToTESRMap(IIBlockTypes_Connector.DATA_CONNECTOR);
-		addToTESRMap(IIBlockTypes_Connector.DATA_RELAY);
-		addToTESRMap(IIBlockTypes_Connector.ALARM_SIREN);
-		addToTESRMap(IIBlockTypes_Connector.INSERTER);
-		addToTESRMap(IIBlockTypes_Connector.ADVANCED_INSERTER);
 		addToTESRMap(IIBlockTypes_Connector.FLUID_INSERTER);
-		addToTESRMap(IIBlockTypes_Connector.CHEMICAL_DISPENSER);
-		addToTESRMap(IIBlockTypes_Connector.PROGRAMMABLE_SPEAKER);
-		addToTESRMap(IIBlockTypes_Connector.DATA_DEBUGGER);
-		addToTESRMap(IIBlockTypes_Connector.DATA_CALLBACK_CONNECTOR);
-		//addToTESRMap(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER);
-
 		setMetaHidden(IIBlockTypes_Connector.ADVANCED_FLUID_INSERTER.getMeta());
 
 	}
@@ -76,14 +66,34 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 	@Override
 	public String getCustomStateMapping(int meta, boolean itemBlock)
 	{
-		return null;
+		switch(IIBlockTypes_Connector.values()[meta])
+		{
+			default:
+				return null;
+
+			case DATA_CONNECTOR:
+			case DATA_RELAY:
+			case DATA_DUPLEX_CONNECTOR:
+				return "plug";
+
+			case INSERTER:
+				return "inserter";
+			case ADVANCED_INSERTER:
+				return "advanced_inserter";
+
+			case DATA_DEBUGGER:
+				return "data_debugger";
+
+			case CHEMICAL_DISPENSER:
+				return "chemical_dispenser";
+		}
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		BlockStateContainer base = super.createBlockState();
-		IUnlistedProperty[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
+		IUnlistedProperty<?>[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
 		unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
 		unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
 		return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);
@@ -149,7 +159,7 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 				return new TileEntityChemicalDispenser();
 			case DATA_DEBUGGER:
 				return new TileEntityDataDebugger();
-			case DATA_CALLBACK_CONNECTOR:
+			case DATA_DUPLEX_CONNECTOR:
 				return new TileEntityDataCallbackConnector();
 			//case ADVANCED_FLUID_INSERTER:
 			//	return new TileEntityAdvancedFluidInserter();
@@ -166,7 +176,7 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 			TileEntity te = world.getTileEntity(pos);
 			if(te instanceof IImmersiveConnectable)
 			{
-				TargetingInfo subTarget = null;
+				TargetingInfo subTarget;
 				if(target.hitVec!=null)
 					subTarget = new TargetingInfo(target.sideHit, (float)target.hitVec.x-pos.getX(), (float)target.hitVec.y-pos.getY(), (float)target.hitVec.z-pos.getZ());
 				else
@@ -180,11 +190,10 @@ public class BlockIIDataConnector extends BlockIITileProvider<IIBlockTypes_Conne
 					WireType wire = connectable.getCableLimiter(subTarget);
 					if(wire!=null)
 						return wire.getWireCoil();
-					ArrayList<ItemStack> applicableWires = new ArrayList<ItemStack>();
+					ArrayList<ItemStack> applicableWires = new ArrayList<>();
 					NonNullList<ItemStack> pInventory = player.inventory.mainInventory;
-					for(int i = 0; i < pInventory.size(); i++)
+					for(ItemStack s : pInventory)
 					{
-						ItemStack s = pInventory.get(i);
 						if(s.getItem() instanceof IWireCoil)
 						{
 							IWireCoil coilItem = (IWireCoil)s.getItem();

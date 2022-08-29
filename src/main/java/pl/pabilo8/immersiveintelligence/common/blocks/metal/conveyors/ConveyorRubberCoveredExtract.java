@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration1;
 import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorCovered;
-import blusunrize.immersiveengineering.common.blocks.metal.conveyors.ConveyorExtractCovered;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.common.collect.Lists;
@@ -29,7 +28,6 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -201,8 +199,8 @@ public class ConveyorRubberCoveredExtract extends ConveyorRubberExtract
 				if(q!=null&&q.getSprite()!=null&&q.getFace()!=null)
 					sprites.put(q.getFace(), q.getSprite());
 
-			Function<EnumFacing, TextureAtlasSprite> getSprite = f -> sprites.containsKey(f)?sprites.get(f): sprite;
-			Function<EnumFacing, TextureAtlasSprite> getSpriteHorizontal = f -> f.getAxis()==Axis.Y?null: sprites.containsKey(f)?sprites.get(f): sprite;
+			Function<EnumFacing, TextureAtlasSprite> getSprite = f -> sprites.getOrDefault(f, sprite);
+			Function<EnumFacing, TextureAtlasSprite> getSpriteHorizontal = f -> f.getAxis()==Axis.Y?null: sprites.getOrDefault(f, sprite);
 
 			float[] colour = {1, 1, 1, 1};
 			Matrix4 matrix = new Matrix4(facing);

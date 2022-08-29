@@ -8,6 +8,7 @@ import mezz.jei.api.recipe.IRecipeWrapperFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 
 import javax.annotation.Nullable;
@@ -20,8 +21,10 @@ import java.util.List;
  */
 public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements IRecipeCategory<W>, IRecipeWrapperFactory<T>
 {
-	private String uniqueName;
-	private String localizedName;
+	public static ResourceLocation texture = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/jei_stuff.png");
+
+	private final String uniqueName;
+	private final String localizedName;
 	private final IDrawable background;
 	private final Class<T> recipeClass;
 	private final ItemStack[] displayStacks;

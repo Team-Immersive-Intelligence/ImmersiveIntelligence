@@ -12,11 +12,8 @@ import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -102,15 +99,18 @@ public class AIHansMortar extends EntityAIBase
 
 	public float[] getAnglePrediction(Vec3d posTurret, Vec3d posTarget, Vec3d motion)
 	{
-		Vec3d vv = posTurret.subtract(posTarget).add(motion).normalize();
-		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = Math.round(Utils.calculateBallisticAngle(
-				posTurret.distanceTo(posTarget.add(motion))+10
-				, (posTarget.y+motion.y)-posTurret.y,
-				IIContent.itemAmmoMortar.getDefaultVelocity(),
-				EntityBullet.GRAVITY*3.4f,
-				1f-EntityBullet.DRAG));
+		Vec3d dist = posTurret.subtract(posTarget.add(motion));
+		Vec3d norm = dist.normalize();
 
-		return new float[]{MathHelper.wrapDegrees(180-yy), pp};
+		float yy = (float)((Math.atan2(norm.x, norm.z)*180D)/3.1415927410125732D);
+
+		float pp = Math.round(Utils.calculateBallisticAngle(
+				new Vec3d(dist.x, 0, dist.z).distanceTo(Vec3d.ZERO)
+				, dist.y,
+				IIContent.itemAmmoMortar.getDefaultVelocity(),
+				EntityBullet.GRAVITY*3.1875f,
+				1f-EntityBullet.DRAG, 0.01));
+
+		return new float[]{MathHelper.wrapDegrees(180-yy), 90-pp};
 	}
 }

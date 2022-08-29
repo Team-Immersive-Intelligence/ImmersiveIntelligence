@@ -1,19 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.network;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 
 /**
  * @author Pabilo8
@@ -49,13 +45,13 @@ public class MessageManualClose implements IMessage
 		@Override
 		public IMessage onMessage(MessageManualClose message, MessageContext ctx)
 		{
-			Minecraft.getMinecraft().addScheduledTask(() ->
-			{
-				EntityPlayerMP player = ctx.getServerHandler().player;
-				World world = ImmersiveEngineering.proxy.getClientWorld();
-				if(world!=null&&player!=null)
-				{
+			EntityPlayerMP player = ctx.getServerHandler().player;
 
+			if(player!=null)
+			{
+				WorldServer world = ctx.getServerHandler().player.getServerWorld();
+				world.addScheduledTask(() ->
+				{
 					ItemStack mainItem = player.getHeldItemMainhand();
 					ItemStack offItem = player.getHeldItemOffhand();
 
@@ -64,20 +60,12 @@ public class MessageManualClose implements IMessage
 					ItemStack target = main?mainItem: offItem;
 
 					if(main||off)
-					{
-
 						if((message.skin==null||message.skin.isEmpty())&&ItemNBTHelper.hasKey(target, "lastSkin"))
-						{
 							ItemNBTHelper.remove(target, "lastSkin");
-						}
 						else if(message.skin!=null)
-						{
 							ItemNBTHelper.setString(target, "lastSkin", message.skin);
-						}
-					}
-				}
-
-			});
+				});
+			}
 			return null;
 		}
 	}

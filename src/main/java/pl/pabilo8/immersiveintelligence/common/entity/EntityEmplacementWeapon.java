@@ -162,7 +162,8 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 			Entity immediateSource = source.getImmediateSource();
 
 			//Get nearest hitbox
-			Optional<EmplacementHitboxEntity> hitbox = Arrays.stream(partArray).sorted((o1, o2) -> DoubleComparators.NATURAL_COMPARATOR.compare(o1.getDistance(immediateSource), o2.getDistance(immediateSource))).findFirst();
+			Optional<EmplacementHitboxEntity> hitbox = Arrays.stream(partArray)
+					.min((o1, o2) -> DoubleComparators.NATURAL_COMPARATOR.compare(o1.getDistance(immediateSource), o2.getDistance(immediateSource)));
 			if(hitbox.isPresent())
 			{
 				return attackEntityFromPart(hitbox.get(), source, amount);
@@ -200,7 +201,7 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 			return;
 
 		float f = MathHelper.clamp(t.progress/(float)Emplacement.lidTime, 0f, 1f);
-		float turretHeight = 0;
+		float turretHeight;
 		if(f <= 0.65)
 		{
 			turretHeight = (f-0.25f)/0.4f;

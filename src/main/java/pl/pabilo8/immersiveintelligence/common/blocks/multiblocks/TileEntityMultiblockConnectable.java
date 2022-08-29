@@ -157,7 +157,7 @@ public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultib
 		}
 	}
 
-	private List<Pair<Float, Consumer<Float>>> sources = new ArrayList<>();
+	private final List<Pair<Float, Consumer<Float>>> sources = new ArrayList<>();
 	private long lastSourceUpdate = 0;
 
 	@Override

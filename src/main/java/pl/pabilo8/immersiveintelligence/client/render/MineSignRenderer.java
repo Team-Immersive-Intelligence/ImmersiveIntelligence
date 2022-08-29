@@ -29,9 +29,7 @@ public class MineSignRenderer extends TileEntitySpecialRenderer<TileEntityMineSi
 
 		String[] str = I18n.format(KEY).split(";");
 		for(int i = 0; i < str.length; i++)
-		{
 			Utils.drawStringCentered(getFontRenderer(), str[i], 8, i*12, 48, 12, 0xd99747);
-		}
 
 		GlStateManager.popMatrix();
 	}

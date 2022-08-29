@@ -791,9 +791,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		if(master.currentWeapon!=null)
 			master.currentWeapon.handleDataPacket(packet.clone());
 
-		if(c instanceof DataPacketTypeString)
+		if(c instanceof DataTypeString)
 		{
-			switch(((DataPacketTypeString)c).value)
+			switch(((DataTypeString)c).value)
 			{
 				case "opendoor":
 				{
@@ -809,17 +809,17 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				break;
 				case "door":
 				{
-					if(b instanceof DataPacketTypeBoolean)
+					if(b instanceof DataTypeBoolean)
 					{
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = ((DataPacketTypeBoolean)b).value, 0, master.getPos()),
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = ((DataTypeBoolean)b).value, 0, master.getPos()),
 								Utils.targetPointFromTile(master, 48));
 					}
 				}
 				break;
 				case "rscontrol":
 				{
-					if(b instanceof DataPacketTypeBoolean)
-						master.redstoneControl = ((DataPacketTypeBoolean)b).value;
+					if(b instanceof DataTypeBoolean)
+						master.redstoneControl = ((DataTypeBoolean)b).value;
 				}
 				break;
 				case "reload":
@@ -845,10 +845,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				break;
 				case "target":
 				{
-					if(i instanceof DataPacketTypeInteger)
+					if(i instanceof DataTypeInteger)
 					{
 						//0,1,2,3,4
-						master.defaultTargetMode = MathHelper.clamp(((DataPacketTypeInteger)i).value, 0, 4)-1;
+						master.defaultTargetMode = MathHelper.clamp(((DataTypeInteger)i).value, 0, 4)-1;
 
 						if(master.defaultTargetMode==-1)
 							master.task = null;
@@ -874,7 +874,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				}
 				break;
 				case "fire":
-					if(e instanceof DataPacketTypeNull)
+					if(e instanceof DataTypeNull)
 					{
 						if(master.defaultTargetMode==-1)
 							master.task = null;
@@ -882,9 +882,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 							master.task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
 						master.syncTask();
 					}
-					else if(e instanceof DataPacketTypeInteger||(e instanceof DataPacketTypeEntity&&((DataPacketTypeEntity)e).dimensionID==world.provider.getDimension()))
+					else if(e instanceof DataTypeInteger||(e instanceof DataTypeEntity&&((DataTypeEntity)e).dimensionID==world.provider.getDimension()))
 					{
-						int id = e instanceof DataPacketTypeInteger?((DataPacketTypeInteger)e).value: ((DataPacketTypeEntity)e).entityID;
+						int id = e instanceof DataTypeInteger?((DataTypeInteger)e).value: ((DataTypeEntity)e).entityID;
 						Entity entityByID = world.getEntityByID(id);
 						if(entityByID!=null)
 						{
@@ -892,31 +892,31 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 							master.syncTask();
 						}
 					}
-					else if(x instanceof DataPacketTypeInteger&&y instanceof DataPacketTypeInteger&&z instanceof DataPacketTypeInteger)
+					else if(x instanceof DataTypeInteger&&y instanceof DataTypeInteger&&z instanceof DataTypeInteger)
 					{
-						int xx = ((DataPacketTypeInteger)x).value;
-						int yy = ((DataPacketTypeInteger)y).value;
-						int zz = ((DataPacketTypeInteger)z).value;
-						int amount = a instanceof DataPacketTypeInteger?((DataPacketTypeInteger)a).value: 1;
+						int xx = ((DataTypeInteger)x).value;
+						int yy = ((DataTypeInteger)y).value;
+						int zz = ((DataTypeInteger)z).value;
+						int amount = a instanceof DataTypeInteger?((DataTypeInteger)a).value: 1;
 
 						//Same as in howitzer
 						master.task = new EmplacementTaskPosition(new BlockPos(xx, yy, zz).add(this.getBlockPosForPos(49)), amount);
 						master.syncTask();
 					}
-					else if(y instanceof DataPacketTypeInteger&&p instanceof DataPacketTypeInteger)
+					else if(y instanceof DataTypeInteger&&p instanceof DataTypeInteger)
 					{
-						int yy = ((DataPacketTypeInteger)y).value;
-						int pp = ((DataPacketTypeInteger)p).value;
+						int yy = ((DataTypeInteger)y).value;
+						int pp = ((DataTypeInteger)p).value;
 
 						double true_angle = Math.toRadians(-yy);
 						double true_angle2 = Math.toRadians(pp);
 
-						int amount = a instanceof DataPacketTypeInteger?((DataPacketTypeInteger)a).value: 1;
+						int amount = a instanceof DataTypeInteger?((DataTypeInteger)a).value: 1;
 
 						IDataType d = packet.getPacketVariable('d');
 						int distance = 40;
-						if(d instanceof DataPacketTypeInteger)
-							distance = ((DataPacketTypeInteger)d).value;
+						if(d instanceof DataTypeInteger)
+							distance = ((DataTypeInteger)d).value;
 
 						master.task = new EmplacementTaskPosition(new BlockPos(Utils.offsetPosDirection(distance, true_angle, true_angle2)).add(this.getBlockPosForPos(49)), amount);
 						master.syncTask();
@@ -931,20 +931,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		DataPacket packet = new DataPacket();
 		final BlockPos center = this.getBlockPosForPos(49);
-		DataPacketTypeEntity[] entities = Arrays.stream(spottedEntity).map(entity -> new DataPacketTypeEntity(entity, center)).toArray(DataPacketTypeEntity[]::new);
-		DataPacketTypeArray arr = new DataPacketTypeArray(entities);
+		DataTypeEntity[] entities = Arrays.stream(spottedEntity).map(entity -> new DataTypeEntity(entity, center)).toArray(DataTypeEntity[]::new);
+		DataTypeArray arr = new DataTypeArray(entities);
 
 		packet.setVariable('e', arr);
 
 		IDataConnector conn = Utils.findConnectorFacing(getBlockPosForPos(0), world, facing.rotateYCCW());
 		if(conn!=null)
 			conn.sendPacket(packet);
-	}
-
-	@Override
-	public void onSend()
-	{
-
 	}
 
 	@Override
@@ -1051,6 +1045,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public int getInstallProgress()
 	{
 		return upgradeProgress;
+	}
+
+	@Override
+	public int getClientInstallProgress()
+	{
+		return clientUpgradeProgress;
 	}
 
 	@Override

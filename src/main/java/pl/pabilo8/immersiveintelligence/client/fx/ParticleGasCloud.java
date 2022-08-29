@@ -15,7 +15,6 @@ import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;

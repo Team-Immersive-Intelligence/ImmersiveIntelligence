@@ -22,8 +22,7 @@ import java.util.*;
  */
 public class PrecissionAssemblerRecipe extends MultiblockRecipe
 {
-	public float energyModifier = 1.0F;
-	public float timeModifier = 1.0F;
+	public float timeModifier;
 
 	public ItemStack output;
 	public ItemStack trashOutput;
@@ -32,7 +31,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 	public String[] animations;
 
 	public static HashMap<String, IPrecissionTool> toolMap = new HashMap<>();
-	public static ArrayList<PrecissionAssemblerRecipe> recipeList = new ArrayList();
+	public static ArrayList<PrecissionAssemblerRecipe> recipeList = new ArrayList<>();
 
 	int totalProcessTime;
 	int totalProcessEnergy;
@@ -63,7 +62,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 		this.tools = tools;
 		this.animations = animations;
 
-		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
+		this.totalProcessEnergy = (int)Math.floor((float)energy);
 		this.timeModifier = timeMultiplier;
 		this.totalProcessTime = (int)Math.floor((float)processDuration*this.timeModifier);
 
@@ -82,7 +81,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 	public static List<PrecissionAssemblerRecipe> removeRecipesForOutput(ItemStack stack)
 	{
-		List<PrecissionAssemblerRecipe> list = new ArrayList();
+		List<PrecissionAssemblerRecipe> list = new ArrayList<>();
 		Iterator<PrecissionAssemblerRecipe> it = recipeList.iterator();
 		while(it.hasNext())
 		{

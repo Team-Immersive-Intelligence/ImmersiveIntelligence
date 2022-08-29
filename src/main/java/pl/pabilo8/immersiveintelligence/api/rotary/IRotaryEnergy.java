@@ -157,9 +157,9 @@ public interface IRotaryEnergy
 		BOTH(true, true),
 		NONE(false, false);
 
-		private boolean canInput;
+		private final boolean canInput;
 
-		private boolean canOutput;
+		private final boolean canOutput;
 
 		RotationSide(boolean canInput, boolean canOutput)
 		{

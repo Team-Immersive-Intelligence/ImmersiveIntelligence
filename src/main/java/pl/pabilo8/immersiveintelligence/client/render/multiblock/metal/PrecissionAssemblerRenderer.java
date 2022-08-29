@@ -33,7 +33,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 	public static ModelPrecissionSolderer modelSolderer = new ModelPrecissionSolderer();
 	public static ModelPrecissionWelder modelWelder = new ModelPrecissionWelder();
 	public static ModelPrecissionHammer modelHammer = new ModelPrecissionHammer();
-	private static RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	private static final RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPrecissionAssembler model;
 	private static ModelPrecissionAssembler modelFlipped;
 

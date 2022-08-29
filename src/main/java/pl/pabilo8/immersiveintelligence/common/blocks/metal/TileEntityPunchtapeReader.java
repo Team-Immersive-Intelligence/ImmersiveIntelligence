@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -25,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 /**
  * @author Pabilo8
@@ -49,6 +50,7 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			{
 				if(received!=null&&!hadRedstone)
 				{
+					world.playSound(null, this.pos, IISounds.punchtape_reader, SoundCategory.BLOCKS, 1f, 1f);
 					IDataConnector conn = Utils.findConnectorFacing(pos, world, facing.getOpposite());
 					if(conn!=null)
 						conn.sendPacket(received.clone());
@@ -107,12 +109,6 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 
 	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
-	{
-
-	}
-
-	@Override
-	public void onSend()
 	{
 
 	}
@@ -187,10 +183,10 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 				final TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
 				if(te instanceof IDataDevice)
 					((IDataDevice)te).onReceive(packet, facing);
-
 				if(mode==2)
-					rsTime=20;
+					rsTime = 20;
 			}
+			world.playSound(null, this.pos, IISounds.punchtape_reader, SoundCategory.BLOCKS, 1f, 1f);
 		}
 		return false;
 	}

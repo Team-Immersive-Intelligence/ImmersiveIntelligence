@@ -17,7 +17,7 @@ public enum IIBlockTypes_Connector implements IStringSerializable, BlockIEBase.I
 	CHEMICAL_DISPENSER,
 	PROGRAMMABLE_SPEAKER,
 	DATA_DEBUGGER,
-	DATA_CALLBACK_CONNECTOR;
+	DATA_DUPLEX_CONNECTOR;
 
 	/**
 	 * @author Pabilo8

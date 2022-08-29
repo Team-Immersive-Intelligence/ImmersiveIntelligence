@@ -1,0 +1,29 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"door_right": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.9375,
+					"transform": [0, 0, 185]
+				}
+			]
+		},
+		"door_left": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.9375,
+					"transform": [0, 0, -185]
+				}
+			]
+		}
+	}
+}

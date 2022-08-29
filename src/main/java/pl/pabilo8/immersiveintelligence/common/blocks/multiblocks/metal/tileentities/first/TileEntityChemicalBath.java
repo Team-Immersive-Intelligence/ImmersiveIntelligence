@@ -1,23 +1,18 @@
 package pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler.ChemthrowerEffect;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
@@ -25,7 +20,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -38,8 +32,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFlagpole;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -49,7 +43,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntityChemicalBath, BathingRecipe> implements IGuiTile, ISoundTile, IPlayerInteraction, IAdvancedCollisionBounds, IAdvancedSelectionBounds
+public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntityChemicalBath, BathingRecipe> implements IGuiTile, ISoundTile, IPlayerInteraction, IAdvancedBounds
 {
 	public FluidTank[] tanks = {new FluidTank(ChemicalBath.fluidCapacity)};
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -140,7 +134,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 				BathingRecipe recipe = BathingRecipe.findRecipe(inventory.get(0), tanks[0].getFluid());
 				if(recipe!=null)
 				{
-					MultiblockProcessInMachine<BathingRecipe> process = new MultiblockProcessInMachine(recipe, 0);
+					MultiblockProcessInMachine<BathingRecipe> process = new MultiblockProcessInMachine<>(recipe, 0);
 					process.setInputTanks(0);
 					this.addProcessToQueue(process, false);
 					update = true;
@@ -463,7 +457,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	}
 
 	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		if(offset[1]==-1&&(facing.getAxis()==Axis.X?(offset[2]==0||offset[2]==-1||offset[2]==1):(offset[0]==0||offset[0]==-1||offset[0]==1)))
 		{
@@ -511,17 +505,5 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 			return aabb;
 		}
 		return new ArrayList<>();
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
-	{
-		return getAdvancedColisionBounds();
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
 	}
 }

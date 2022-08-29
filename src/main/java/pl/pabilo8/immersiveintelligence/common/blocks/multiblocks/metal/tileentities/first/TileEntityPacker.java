@@ -51,11 +51,11 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PackerRenderer;
@@ -76,7 +76,7 @@ import java.util.function.Predicate;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IConveyorAttachable, IGuiTile, IUpgradableMachine
+public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker, IMultiblockRecipe> implements IDataDevice, IAdvancedBounds, IConveyorAttachable, IGuiTile, IUpgradableMachine
 {
 	/**
 	 * Used for handling item I/O
@@ -612,12 +612,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	}
 
 	@Override
-	public void onSend()
-	{
-
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
 		TileEntityPacker master = master();
@@ -648,7 +642,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 					IngredientStack stack = pl.pabilo8.immersiveintelligence.api.Utils.ingredientFromData(s);
 					PackerTask packerTask = new PackerTask(mode, action, stack);
 					if(packet.hasVariable('e'))
-						packerTask.expirationAmount = DataOperator.getVarInType(DataPacketTypeInteger.class, e, packet).value;
+						packerTask.expirationAmount = packet.getVarInType(DataTypeInteger.class, e).value;
 					master.tasks.add(packerTask);
 
 				}
@@ -662,16 +656,16 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 					}
 					by id (int)
 					*/
-					if(a instanceof DataPacketTypeInteger)
+					if(a instanceof DataTypeInteger)
 					{
-						master.tasks.remove(((DataPacketTypeInteger)a).value);
+						master.tasks.remove(((DataTypeInteger)a).value);
 					}
 					else
 					{
 						Predicate<PackerTask> p;
-						if(s instanceof DataPacketTypeString)
+						if(s instanceof DataTypeString)
 							p = packerTask -> packerTask.stack.oreName.equals(s.valueToString());
-						else if(s instanceof DataPacketTypeItemStack)
+						else if(s instanceof DataTypeItemStack)
 							p = packerTask -> packerTask.stack.equals(pl.pabilo8.immersiveintelligence.api.Utils.ingredientFromData(s));
 						else
 							p = packerTask -> true;
@@ -695,7 +689,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 
 	@Nonnull
 	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 		switch(pos)
@@ -769,19 +763,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 		}
 
 		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(@Nonnull AxisAlignedBB box, @Nonnull EntityPlayer player, @Nonnull RayTraceResult mop, @Nonnull ArrayList<AxisAlignedBB> list)
-	{
-		return false;
-	}
-
-	@Nonnull
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
 	}
 
 	@Override
@@ -935,6 +916,12 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	public int getInstallProgress()
 	{
 		return upgradeProgress;
+	}
+
+	@Override
+	public int getClientInstallProgress()
+	{
+		return clientUpgradeProgress;
 	}
 
 	@Override

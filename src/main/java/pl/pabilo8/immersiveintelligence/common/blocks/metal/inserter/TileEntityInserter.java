@@ -27,10 +27,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
@@ -135,11 +134,11 @@ public class TileEntityInserter extends TileEntityInserterBase
 		//old inserter compat
 		if(m.valueToString().equals("set")||m.valueToString().equals("add"))
 		{
-			DataPacketTypeInteger count = DataOperator.getVarInType(DataPacketTypeInteger.class, c, packet);
+			DataTypeInteger count = packet.getVarInType(DataTypeInteger.class, c);
 			IngredientStack ss;
 			if(packet.hasVariable('s'))
 			{
-				ss = new IngredientStack(DataOperator.getVarInType(DataPacketTypeItemStack.class, s, packet).value);
+				ss = new IngredientStack(packet.getVarInType(DataTypeItemStack.class, s).value);
 				ss.inputSize = count.value;
 			}
 			else
@@ -181,9 +180,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 						if(packet.hasVariable('i'))
 						{
 							EnumFacing f = null;
-							if(i instanceof DataPacketTypeInteger)
-								f = EnumFacing.getHorizontal(EnumFacing.getFront(((DataPacketTypeInteger)i).value).getHorizontalIndex());
-							else if(i instanceof DataPacketTypeString)
+							if(i instanceof DataTypeInteger)
+								f = EnumFacing.getHorizontal(EnumFacing.getFront(((DataTypeInteger)i).value).getHorizontalIndex());
+							else if(i instanceof DataTypeString)
 							{
 								String ss = i.valueToString().toUpperCase();
 								f = Arrays.stream(EnumFacing.values()).filter(e -> e.name().equals(ss)).findFirst().orElse(null);
@@ -196,9 +195,9 @@ public class TileEntityInserter extends TileEntityInserterBase
 						if(packet.hasVariable('o'))
 						{
 							EnumFacing f = null;
-							if(o instanceof DataPacketTypeInteger)
-								f = EnumFacing.getHorizontal(EnumFacing.getFront(((DataPacketTypeInteger)o).value).getHorizontalIndex());
-							else if(o instanceof DataPacketTypeString)
+							if(o instanceof DataTypeInteger)
+								f = EnumFacing.getHorizontal(EnumFacing.getFront(((DataTypeInteger)o).value).getHorizontalIndex());
+							else if(o instanceof DataTypeString)
 							{
 								String ss = o.valueToString().toUpperCase();
 								f = Arrays.stream(EnumFacing.values()).filter(e -> e.name().equals(ss)).findFirst().orElse(null);
@@ -208,10 +207,10 @@ public class TileEntityInserter extends TileEntityInserterBase
 						}
 
 						//1 resembles I, and 0 resembles O
-						if(packet.getPacketVariable('1') instanceof DataPacketTypeInteger)
-							task.distanceIn = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('1')).value, -1, 2);
-						if(packet.getPacketVariable('0') instanceof DataPacketTypeInteger)
-							task.distanceOut = MathHelper.clamp(((DataPacketTypeInteger)packet.getPacketVariable('0')).value, -1, 2);
+						if(packet.getPacketVariable('1') instanceof DataTypeInteger)
+							task.distanceIn = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('1')).value, -1, 2);
+						if(packet.getPacketVariable('0') instanceof DataTypeInteger)
+							task.distanceOut = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('0')).value, -1, 2);
 
 						if(packet.hasVariable('s'))
 							task.stack = Utils.ingredientFromData(packet.getPacketVariable('s'));
@@ -221,8 +220,8 @@ public class TileEntityInserter extends TileEntityInserterBase
 						{
 
 							int requested =
-									packet.getPacketVariable('e') instanceof DataPacketTypeInteger?
-											DataOperator.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('e'), packet).value:
+									packet.getPacketVariable('e') instanceof DataTypeInteger?
+											packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('e')).value:
 											task.stack.inputSize;
 							task.overrideTakeAmount = task.stack.inputSize;
 							task.stack.inputSize = requested;
@@ -233,7 +232,7 @@ public class TileEntityInserter extends TileEntityInserterBase
 						if(packet.hasVariable('t'))
 						{
 							task.overrideTakeAmount = MathHelper.clamp(
-									DataOperator.getVarInType(DataPacketTypeInteger.class, packet.getPacketVariable('t'), packet).value, 1, 64);
+									packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('t')).value, 1, 64);
 							task.strictAmount = true;
 						}
 						tasks.add(task);
@@ -248,16 +247,16 @@ public class TileEntityInserter extends TileEntityInserterBase
 					{by stack, by ore}
 					if 'a', check if task name matches
 					*/
-					if(a instanceof DataPacketTypeInteger)
+					if(a instanceof DataTypeInteger)
 					{
-						tasks.remove(((DataPacketTypeInteger)a).value);
+						tasks.remove(((DataTypeInteger)a).value);
 					}
 					else
 					{
 						Predicate<InserterTask> p;
-						if(s instanceof DataPacketTypeString)
+						if(s instanceof DataTypeString)
 							p = packerTask -> packerTask.stack.oreName.equals(s.valueToString());
-						else if(s instanceof DataPacketTypeItemStack)
+						else if(s instanceof DataTypeItemStack)
 							p = packerTask -> packerTask.stack.equals(pl.pabilo8.immersiveintelligence.api.Utils.ingredientFromData(s));
 						else
 							p = packerTask -> true;

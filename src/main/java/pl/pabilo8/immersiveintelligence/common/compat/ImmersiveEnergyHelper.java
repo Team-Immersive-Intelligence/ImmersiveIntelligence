@@ -12,6 +12,7 @@ public class ImmersiveEnergyHelper extends IICompatModule
 	public void preInit()
 	{
 		ShrapnelHandler.addShrapnel("thorium", 0x867b75, "immersive_energy:textures/blocks/sheetmetal_thorium", 7, 0.45f, 8f);
+		// TODO: 07.01.2022 Wait for The Swede to finish the battery (I'm too busy with II) ^^
 	}
 
 	@Override

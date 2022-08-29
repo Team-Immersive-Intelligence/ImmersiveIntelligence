@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
@@ -43,7 +44,7 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIBulletBase
 	@Override
 	public float getDefaultVelocity()
 	{
-		return 5f;
+		return Bullets.railgunGrenadeVelocity;
 	}
 
 	@Override

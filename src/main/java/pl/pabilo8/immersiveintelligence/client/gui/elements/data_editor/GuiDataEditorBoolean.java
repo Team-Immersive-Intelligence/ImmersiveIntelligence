@@ -7,14 +7,14 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 
 /**
  * @author Pabilo8
  * @since 07.09.2021
  */
-public class GuiDataEditorBoolean extends GuiDataEditor<DataPacketTypeBoolean>
+public class GuiDataEditorBoolean extends GuiDataEditor<DataTypeBoolean>
 {
 	private static final String TEX = ImmersiveIntelligence.MODID+":textures/gui/data_input_machine_editing.png";
 	private boolean editedstate = false;
@@ -22,7 +22,7 @@ public class GuiDataEditorBoolean extends GuiDataEditor<DataPacketTypeBoolean>
 	private String valueLabel;
 	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 
-	public GuiDataEditorBoolean(int buttonId, DataPacketTypeBoolean dataType)
+	public GuiDataEditorBoolean(int buttonId, DataTypeBoolean dataType)
 	{
 		super(buttonId, dataType);
 	}
@@ -76,13 +76,13 @@ public class GuiDataEditorBoolean extends GuiDataEditor<DataPacketTypeBoolean>
 	}
 
 	@Override
-	public DataPacketTypeBoolean createType()
+	public DataTypeBoolean createType()
 	{
-		return new DataPacketTypeBoolean();
+		return new DataTypeBoolean();
 	}
 
 	@Override
-	public DataPacketTypeBoolean outputType()
+	public DataTypeBoolean outputType()
 	{
 		dataType.value = editedstate;
 		return dataType;

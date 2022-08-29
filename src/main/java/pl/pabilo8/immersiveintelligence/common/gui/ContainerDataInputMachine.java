@@ -3,14 +3,12 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.gui.IESlot.Output;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIPunchtape;
 
 /**
  * @author Pabilo8

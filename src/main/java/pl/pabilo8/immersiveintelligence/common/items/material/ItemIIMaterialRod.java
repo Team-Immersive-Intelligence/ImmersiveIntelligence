@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.items.material;
 
+import net.minecraftforge.fml.common.Loader;
 import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
 
 /**
@@ -18,6 +19,7 @@ public class ItemIIMaterialRod extends ItemIIBase
 				"duraluminium"
 		);
 
-		setMetaHidden(2,3);
+		if(!Loader.isModLoaded("immersiveposts"))
+			setMetaHidden(2, 3);
 	}
 }

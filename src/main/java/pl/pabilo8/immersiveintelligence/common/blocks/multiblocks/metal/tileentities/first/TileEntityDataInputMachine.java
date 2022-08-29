@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -53,7 +54,7 @@ import java.util.function.Predicate;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEntityDataInputMachine, IMultiblockRecipe> implements IDataDevice, IAdvancedCollisionBounds, IAdvancedSelectionBounds, IGuiTile, IBooleanAnimatedPartsBlock
+public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEntityDataInputMachine, IMultiblockRecipe> implements IDataDevice, IAdvancedBounds, IGuiTile, IBooleanAnimatedPartsBlock
 {
 	public static HashMap<Predicate<ItemStack>, BiFunction<TileEntityDataInputMachine, ItemStack, ItemStack>> dataOperations = new HashMap<>();
 
@@ -134,7 +135,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 		if(message.hasKey("variables"))
 			storedData.fromNBT(message.getCompoundTag("variables"));
 		if(message.hasKey("send_packet"))
-			this.onSend();
+			this.sendPacket();
 	}
 
 	@Override
@@ -154,8 +155,8 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 
 		if(world.isRemote&&!isDummy())
 		{
-			drawerAngle= MathHelper.clamp(drawerAngle+(isDrawerOpened?0.4f:-0.5f),0f,5f);
-			doorAngle= MathHelper.clamp(doorAngle+(isDoorOpened?3f:-5f),0f,135f);
+			drawerAngle = MathHelper.clamp(drawerAngle+(isDrawerOpened?0.4f: -0.5f), 0f, 5f);
+			doorAngle = MathHelper.clamp(doorAngle+(isDoorOpened?3f: -5f), 0f, 135f);
 
 			if(this.productionProgress > 0&&energyStorage.getEnergyStored() > DataInputMachine.energyUsagePunchtape&&productionProgress < DataInputMachine.timePunchtapeProduction)
 				this.productionProgress += 1;
@@ -169,7 +170,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 
 				//Finally!
 				if(toggle)
-					this.onSend();
+					this.sendPacket();
 			}
 
 			if(dataOperations.keySet().stream().anyMatch(itemStackPredicate -> itemStackPredicate.test(inventoryHandler.getStackInSlot(0)))
@@ -206,6 +207,17 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(this.getPos(), this.world, 32));
 			}
 
+		}
+	}
+
+	public void sendPacket()
+	{
+		if(energyStorage.getEnergyStored() >= DataInputMachine.energyUsage)
+		{
+			energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
+			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);
+			if(conn!=null)
+				conn.sendPacket(storedData.clone());
 		}
 	}
 
@@ -348,28 +360,13 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	}
 
 	@Override
-	public void onSend()
-	{
-		if(energyStorage.getEnergyStored() >= DataInputMachine.energyUsage)
-		{
-			energyStorage.extractEnergy(DataInputMachine.energyUsage, false);
-			IDataConnector conn = pl.pabilo8.immersiveintelligence.api.Utils.findConnectorAround(getBlockPosForPos(3), this.world);
-			if(conn!=null)
-				conn.sendPacket(storedData.clone());
-		}
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, EnumFacing side)
 	{
-		/*if (this.pos==3 && energyStorage.getEnergyStored()>=dataInputMachine.energyUsage)
-		{
-			energyStorage.extractEnergy(dataInputMachine.energyUsage,false);
-		}*/
+
 	}
 
 	@Override
-	public List<AxisAlignedBB> getAdvancedSelectionBounds()
+	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
 		ArrayList<AxisAlignedBB> list = new ArrayList<>();
 
@@ -415,18 +412,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
 		return list;
-	}
-
-	@Override
-	public boolean isOverrideBox(AxisAlignedBB box, EntityPlayer player, RayTraceResult mop, ArrayList<AxisAlignedBB> list)
-	{
-		return false;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getAdvancedColisionBounds()
-	{
-		return getAdvancedSelectionBounds();
 	}
 
 	@Override

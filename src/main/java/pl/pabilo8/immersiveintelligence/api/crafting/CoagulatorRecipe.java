@@ -20,8 +20,6 @@ import java.util.Map.Entry;
  */
 public class CoagulatorRecipe extends MultiblockRecipe
 {
-	public static float energyModifier = 1.0F;
-	public static float timeModifier = 1.0F;
 	public final FluidStack fluidInput, coagulantInput;
 	public final ItemStack itemOutput;
 
@@ -35,8 +33,8 @@ public class CoagulatorRecipe extends MultiblockRecipe
 		this.itemOutput = itemOutput;
 		this.fluidInput = fluidInput;
 		this.coagulantInput = coagulantInput;
-		this.totalProcessEnergy = (int)Math.floor((float)energy*energyModifier);
-		this.totalProcessTime = (int)Math.floor((float)mixingTime*timeModifier);
+		this.totalProcessEnergy = (int)Math.floor((float)energy);
+		this.totalProcessTime = (int)Math.floor((float)mixingTime);
 
 		this.fluidInputList = new ArrayList<>();
 		this.fluidInputList.add(this.fluidInput);
@@ -55,7 +53,7 @@ public class CoagulatorRecipe extends MultiblockRecipe
 
 	public static List<CoagulatorRecipe> removeRecipesForOutput(ItemStack stack)
 	{
-		List<CoagulatorRecipe> list = new ArrayList();
+		List<CoagulatorRecipe> list = new ArrayList<>();
 		Iterator<CoagulatorRecipe> it = recipeList.iterator();
 		while(it.hasNext())
 		{

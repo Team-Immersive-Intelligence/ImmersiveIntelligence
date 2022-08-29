@@ -4,7 +4,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class PositionTextureVertex extends net.minecraft.client.model.PositionTextureVertex
 {
-	public float texturePositionW = 1F;
+	public float texturePositionW;
 
 	public PositionTextureVertex(float par1, float par2, float par3, float par4, float par5)
 	{

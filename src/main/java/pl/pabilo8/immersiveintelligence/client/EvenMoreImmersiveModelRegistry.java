@@ -21,14 +21,13 @@ import java.util.Set;
  * The bestest of best!
  * Blu, please make variables public (and available to addon makers)
  */
-@SuppressWarnings("deprecation")
 @SideOnly(Side.CLIENT)
 public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 {
 	public static EvenMoreImmersiveModelRegistry instance = new EvenMoreImmersiveModelRegistry();
 	//Yes
-	public HashMap<ModelResourceLocation, ItemModelReplacement> itemModelReplacements = new HashMap<ModelResourceLocation, ItemModelReplacement>();
-	private Map<ResourceLocation, IReloadableModelContainer> reloadableModels = new HashMap<>();
+	public final HashMap<ModelResourceLocation, ItemModelReplacement> itemModelReplacements = new HashMap<>();
+	private final Map<ResourceLocation, IReloadableModelContainer<?>> reloadableModels = new HashMap<>();
 
 	@Override
 	@SubscribeEvent
@@ -64,12 +63,12 @@ public class EvenMoreImmersiveModelRegistry extends ImmersiveModelRegistry
 		}
 	}
 
-	public void addReloadableModel(IReloadableModelContainer model, ResourceLocation modelName)
+	public void addReloadableModel(IReloadableModelContainer<?> model, ResourceLocation modelName)
 	{
 		reloadableModels.put(modelName, model);
 	}
 
-	public void removeReloadableModel(IReloadableModelContainer model)
+	public void removeReloadableModel(IReloadableModelContainer<?> model)
 	{
 		reloadableModels.remove(model);
 	}

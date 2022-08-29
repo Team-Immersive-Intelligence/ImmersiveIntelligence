@@ -6,21 +6,17 @@ import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualUtils;
-import blusunrize.lib.manual.gui.GuiButtonManual;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.input.Mouse;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
@@ -89,7 +85,7 @@ public class IIManualPageDataVariables extends ManualPages
 			GlStateManager.enableBlend();
 			GlStateManager.color(0.9f, 0.9f, 0.85f, 0.85f);
 			ClientUtils.bindTexture(entry.dataType.textureLocation());
-			gui.drawTexturedModalRect(x-4, y+down-3, 40, entry.dataType.getFrameOffset()*20, 16, 16);
+			Gui.drawModalRectWithCustomSizedTexture(x-4, y+down-3, 0, 0, 16, 16, 16, 16);
 
 			if(Utils.isPointInRectangle(x-4, y+down-3, x+12, y+down+13, mx, my))
 				tooltip = entry;
@@ -129,7 +125,7 @@ public class IIManualPageDataVariables extends ManualPages
 			DisplayEntry entry = ((GuiButtonDatatype)button).entry;
 			if(Minecraft.getMinecraft().currentScreen instanceof IDataMachineGui)
 			{
-				((IDataMachineGui)Minecraft.getMinecraft().currentScreen).editVariable(entry.c[0], DataOperator.getVarInType(entry.dataType.getClass(), new DataPacketTypeNull(), new DataPacket()));
+				((IDataMachineGui)Minecraft.getMinecraft().currentScreen).editVariable(entry.c[0], new DataPacket().getVarInType(entry.dataType.getClass(), new DataTypeNull()));
 			}
 		}
 	}

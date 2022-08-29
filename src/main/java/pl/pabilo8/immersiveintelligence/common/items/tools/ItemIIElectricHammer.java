@@ -69,7 +69,9 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(I18n.format(Lib.DESC+"info.energyStored", stored));
+		list.add(TextFormatting.ITALIC+I18n.format(CommonProxy.DESCRIPTION_KEY+"electric_hammer")+TextFormatting.RESET);
+		list.add(TextFormatting.ITALIC+I18n.format(CommonProxy.INFO_KEY+"charge_with_if")+TextFormatting.RESET);
+		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 
 		if(ItemNBTHelper.hasKey(stack, "multiblockPermission"))
 		{
@@ -180,7 +182,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				}
 			}
 
-		if(performHammerFunctions(player,world,pos,side,hitX,hitY,hitZ,hand))
+		if(performHammerFunctions(player, world, pos, side, hitX, hitY, hitZ, hand))
 		{
 			return doAction(player, hand);
 		}
@@ -206,7 +208,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				if(energy > 0)
 				{
 					mb.setCurrentConstruction(mb.getCurrentConstruction()+energy);
-					world.playSound(null,pos, IISounds.construction_hammer, SoundCategory.PLAYERS,0.5f,1);
+					world.playSound(null, pos, IISounds.construction_hammer, SoundCategory.PLAYERS, 0.5f, 1);
 					return doAction(player, hand);
 				}
 				else
@@ -285,9 +287,6 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		IBlockState state = world.getBlockState(pos);
-		if(tile==null)
-			return false;
-
 
 		if(!(tile instanceof IDirectionalTile)&&!(tile instanceof IHammerInteraction)&&!(tile instanceof IConfigurableSides)&&hasEnoughEnergy(player.getHeldItem(hand)))
 		{
@@ -297,7 +296,11 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 				return true;
 			}
 		}
-		else if(tile instanceof IConfigurableSides&&!world.isRemote)
+
+		if(tile==null)
+			return false;
+
+		if(tile instanceof IConfigurableSides&&!world.isRemote)
 		{
 			int iSide = player.isSneaking()?side.getOpposite().ordinal(): side.ordinal();
 			return ((IConfigurableSides)tile).toggleSide(iSide, player);
@@ -361,7 +364,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 		{
 			if(state.getBlock() instanceof BlockIEBase)
 			{
-				return ((BlockIEBase)state.getBlock()).allowHammerHarvest(state);
+				return ((BlockIEBase<?>)state.getBlock()).allowHammerHarvest(state);
 			}
 			else if(state.getBlock().isToolEffective(TOOL_HAMMER, state))
 				return true;

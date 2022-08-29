@@ -5,10 +5,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
 
 import javax.annotation.Nonnull;
 
@@ -46,7 +44,7 @@ public class ParticleGunfire extends IIParticle
 		motionZ*=0.6f;
 		if(this.particleAge++ >= this.particleMaxAge)
 		{
-			this.setExpired();
+			//this.setExpired();
 		}
 	}
 

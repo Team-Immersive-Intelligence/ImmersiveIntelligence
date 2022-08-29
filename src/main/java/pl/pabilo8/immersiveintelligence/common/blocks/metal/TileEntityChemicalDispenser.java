@@ -39,8 +39,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalDispens
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
@@ -568,18 +568,18 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		if(packet.getPacketVariable('p') instanceof DataPacketTypeInteger)
+		if(packet.getPacketVariable('p') instanceof DataTypeInteger)
 		{
-			this.plannedPitch = ((DataPacketTypeInteger)packet.getPacketVariable('p')).value;
+			this.plannedPitch = ((DataTypeInteger)packet.getPacketVariable('p')).value;
 			this.plannedPitch = MathHelper.clamp(this.plannedPitch, -45, 45);
 
 			nbt.setFloat("plannedPitch", plannedPitch);
 			nbt.setFloat("pitch", pitch);
 		}
 
-		if(packet.getPacketVariable('y') instanceof DataPacketTypeInteger)
+		if(packet.getPacketVariable('y') instanceof DataTypeInteger)
 		{
-			this.plannedYaw = ((DataPacketTypeInteger)packet.getPacketVariable('y')).value;
+			this.plannedYaw = ((DataTypeInteger)packet.getPacketVariable('y')).value;
 			this.plannedYaw = MathHelper.clamp(this.plannedYaw, -45, 45);
 
 			nbt.setFloat("plannedYaw", plannedYaw);
@@ -587,20 +587,20 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 
 		}
 
-		if(packet.getPacketVariable('a') instanceof DataPacketTypeInteger)
+		if(packet.getPacketVariable('a') instanceof DataTypeInteger)
 		{
-			this.plannedAmount = ((DataPacketTypeInteger)packet.getPacketVariable('a')).value;
+			this.plannedAmount = ((DataTypeInteger)packet.getPacketVariable('a')).value;
 			nbt.setInteger("plannedAmount", plannedAmount);
 		}
-		if(packet.getPacketVariable('s') instanceof DataPacketTypeInteger)
+		if(packet.getPacketVariable('s') instanceof DataTypeInteger)
 		{
-			this.scatter = ((DataPacketTypeInteger)packet.getPacketVariable('s')).value;
+			this.scatter = ((DataTypeInteger)packet.getPacketVariable('s')).value;
 			this.scatter = MathHelper.clamp(this.scatter, 0, 100);
 			nbt.setInteger("scatter", scatter);
 		}
-		if(packet.getPacketVariable('i') instanceof DataPacketTypeBoolean)
+		if(packet.getPacketVariable('i') instanceof DataTypeBoolean)
 		{
-			this.shouldIgnite = ((DataPacketTypeBoolean)packet.getPacketVariable('i')).value;
+			this.shouldIgnite = ((DataTypeBoolean)packet.getPacketVariable('i')).value;
 			nbt.setBoolean("shouldIgnite", shouldIgnite);
 		}
 

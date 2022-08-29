@@ -1,0 +1,39 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"shell_out": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, -90]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.2,
+					"transform": [0, 0, -8]
+				},
+				{
+					"time": 0.4,
+					"transform": [0, 8, -8]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 16, -8]
+				},
+				{
+					"time": 0.8,
+					"transform": [0, 24, -8]
+				},
+				{
+					"time": 1,
+					"transform": [0, 32, -8]
+				}
+			]
+		}
+	}
+}

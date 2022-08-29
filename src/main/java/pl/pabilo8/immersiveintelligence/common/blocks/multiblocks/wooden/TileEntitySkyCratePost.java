@@ -215,7 +215,7 @@ public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<Tile
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		List<AxisAlignedBB> list = new ArrayList<>();
 
 		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
@@ -295,7 +295,7 @@ public class TileEntitySkyCratePost extends TileEntityMultiblockConnectable<Tile
 				Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
 				if(conns!=null)
 					for(Connection conn : conns)
-					ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(conn, world, getBlockPosForPos(1));
+						ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(conn, world, getBlockPosForPos(1));
 			}
 		}
 	}

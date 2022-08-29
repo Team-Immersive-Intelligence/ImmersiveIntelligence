@@ -1,0 +1,55 @@
+name: Build II
+
+on:
+  push: #Trigger On Push
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch: #Manual Trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout Repository
+       uses: actions/checkout@v3
+       
+     - name: Setup Java
+       uses: actions/setup-java@v3
+       with:
+        distribution: corretto
+        java-version: 8
+        
+     - name: Setup Gradle
+       uses: gradle/gradle-build-action@v2
+    
+     - name: Execute Gradle build
+       run: chmod +x gradlew ; ./gradlew build --scan
+
+     - name: Upload test build
+       uses: actions/upload-artifact@v3
+       with:
+         name: test-build
+         path: |
+           build/libs/
+           !build/libs/*-core.jar
+           !build/libs/*-deobf.jar
+           !build/libs/*-sources.jar
+
+     - name: Upload sources
+       uses: actions/upload-artifact@v3
+       with:
+         name: sources
+         path: |
+           build/libs/*-core.jar
+           build/libs/*-deobf.jar
+           build/libs/*-sources.jar
+     - name: Notify Discord
+       uses: rguillaume/discord-action-embed@v1.0.2
+       with:
+         webhook: ${{ secrets.DISCORD_WEBHOOK }}
+         message: ""
+         embed: '{"title": "Dev Build assembly completed!","color": 3617648,"description": "You are granted access to a new, automatically compiled Dev Build of Immersive Intelligence:tm:. \n\nThis build can be downloaded by clicking on the link above, then on `current-build` in `Artifacts` section.\n\nHappy testing and please report any bugs you encounter. ^^","url": "https://github.com/Pabilo8/ImmersiveIntelligence/actions/runs/${{ github.run_id }}","author": {"name": "Immersive Intelligence","url": "https://github.com/Pabilo8/ImmersiveIntelligence","icon_url": "https://github.com/Pabilo8/ImmersiveIntelligence/raw/master/art/logos/logofullhq.png"}}'
+
+
+

@@ -7,13 +7,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelBallisticComputer;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityBallisticComputer;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -21,51 +18,12 @@ import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileenti
  */
 public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEntityBallisticComputer> implements IReloadableModelContainer<BallisticComputerRenderer>
 {
-	private static ModelBallisticComputer model;
-	private static ModelBallisticComputer modelFlipped;
-
-	static
-	{
-		model = new ModelBallisticComputer();
-		modelFlipped = new ModelBallisticComputer();
-
-		modelFlipped.baseModel[2].flip = true;
-		modelFlipped.baseModel[2].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(4, 16, 4, 16), new Coord2D(0, 12, 0, 12)}), 1, 16, 16, 62, 1, ModelRendererTurbo.MR_FRONT, new float[]{12, 6, 12, 16, 16}); // ShapeMiddleWall
-		modelFlipped.baseModel[2].setRotationPoint(16F, -8F, 0F);
-		modelFlipped.baseModel[2].rotateAngleY = 1.57079633F;
-
-		modelFlipped.flipAllZ();
-
-		for(ModelRendererTurbo[] mod : model.parts.values())
-		{
-			for(ModelRendererTurbo m : mod)
-				m.rotateAngleY *= -1;
-		}
-	}
-
 	@Override
-	public void render(TileEntityBallisticComputer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(@Nullable TileEntityBallisticComputer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		if(te!=null&&!te.isDummy())
 		{
-			String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/ballistic_computer.png";
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x, (float)y-1f, (float)z);
-			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			if(te.hasWorld())
-			{
-				GlStateManager.translate(0f, 1f, 1f);
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-			}
-
-			ModelBallisticComputer modelCurrent = te.mirrored?modelFlipped: model;
-
-			modelCurrent.getBlockRotation(te.facing, te.mirrored);
-			modelCurrent.render();
-
+			//draw cocoa
 			if(te.progress > 0)
 			{
 				GlStateManager.pushMatrix();
@@ -104,30 +62,12 @@ public class BallisticComputerRenderer extends TileEntitySpecialRenderer<TileEnt
 				GlStateManager.popMatrix();
 			}
 
-			GlStateManager.popMatrix();
-
 		}
 	}
 
 	@Override
 	public void reloadModels()
 	{
-		model = new ModelBallisticComputer();
-		modelFlipped = new ModelBallisticComputer();
 
-		modelFlipped.baseModel[2].flip = true;
-		modelFlipped.baseModel[2].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(4, 16, 4, 16), new Coord2D(0, 12, 0, 12)}), 1, 16, 16, 62, 1, ModelRendererTurbo.MR_FRONT, new float[]{12, 6, 12, 16, 16}); // ShapeMiddleWall
-		modelFlipped.baseModel[2].setRotationPoint(16F, -8F, 0F);
-		modelFlipped.baseModel[2].rotateAngleY = 1.57079633F;
-
-		modelFlipped.baseModel[4].doMirror(true, false, true);
-
-		modelFlipped.flipAllZ();
-
-		for(ModelRendererTurbo[] mod : modelFlipped.parts.values())
-		{
-			for(ModelRendererTurbo m : mod)
-				m.rotateAngleY *= -1;
-		}
 	}
 }

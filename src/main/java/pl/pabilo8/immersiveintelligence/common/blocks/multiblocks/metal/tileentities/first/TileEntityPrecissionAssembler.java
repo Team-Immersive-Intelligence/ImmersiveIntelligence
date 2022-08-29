@@ -135,7 +135,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 				NBTTagString string = (NBTTagString)base;
 				ArrayUtils.add(animationOrder, string.getString());
 				int duration = (int)(PrecissionAssemblerRecipe.toolMap.get(string.getString().split(" ")[0]).getWorkTime(string.getString().split(" ")[0])*modifier);
-				Tuple<Integer, String> tuple = new Tuple<Integer, String>(duration, string.getString());
+				Tuple<Integer, String> tuple = new Tuple<>(duration, string.getString());
 				animationPrepared.add(tuple);
 
 
@@ -184,7 +184,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 			PrecissionAssemblerRecipe recipe = PrecissionAssemblerRecipe.findRecipe(new ItemStack[]{inventory.get(4), inventory.get(5), inventory.get(6), inventory.get(7)}, inventory.get(3), new ItemStack[]{inventory.get(0), inventory.get(1), inventory.get(2)});
 			if(recipe!=null)
 			{
-				MultiblockProcessInMachine<PrecissionAssemblerRecipe> process = new MultiblockProcessInMachine(recipe, 4, 5, 6, 7);
+				MultiblockProcessInMachine<PrecissionAssemblerRecipe> process = new MultiblockProcessInMachine<>(recipe, 4, 5, 6, 7);
 				this.addProcessToQueue(process, false);
 				update = true;
 				processTime = 0;

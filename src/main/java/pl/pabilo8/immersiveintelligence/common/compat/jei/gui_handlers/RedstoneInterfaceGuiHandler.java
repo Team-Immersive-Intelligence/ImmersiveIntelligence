@@ -5,9 +5,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.recipebook.GuiRecipeBook;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiDataRedstoneInterfaceData;
 import pl.pabilo8.immersiveintelligence.client.gui.GuiDataRedstoneInterfaceRedstone;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
 
 import java.awt.*;
 import java.util.ArrayList;

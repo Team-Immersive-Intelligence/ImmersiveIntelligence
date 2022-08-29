@@ -13,8 +13,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.operators.DataOperator;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataPacketTypeNull;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
@@ -179,6 +178,15 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 
 	}
 
+	@Override
+	public ArrayList<String> getTooltip(int mx, int my)
+	{
+		ArrayList<String> tooltip = super.getTooltip(mx, my);
+		if(editor!=null)
+			editor.getTooltip(tooltip,mx,my);
+		return tooltip;
+	}
+
 	//Used to refresh gui variables after one of the variables is changed
 	void refreshStoredData()
 	{
@@ -198,7 +206,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		{
 			ArrayList<Class<? extends IDataType>> types = new ArrayList<>(GuiDataEditor.editors.keySet());
 			int i = Utils.cycleInt(forward, types.indexOf(this.dataType.getClass()), 0, types.size()-1);
-			list.setVariable(variableToEdit, DataOperator.getVarInType(types.get(i), new DataPacketTypeNull(), new DataPacket()));
+			list.setVariable(variableToEdit, new DataPacket().getVarInType(types.get(i), new DataTypeNull()));
 			this.dataType = list.getPacketVariable(variableToEdit);
 			this.dataType.setDefaultValue();
 		}

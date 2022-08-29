@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
@@ -26,7 +25,7 @@ public class ItemIISkycrateMount extends ItemIIBase implements ISkycrateMount
 	{
 		if(stack.getMetadata()==0)
 		{
-			return Tools.skycrateMounts.mech_energy;
+			return SkycrateMounts.mech_energy;
 		}
 		return 0;
 	}

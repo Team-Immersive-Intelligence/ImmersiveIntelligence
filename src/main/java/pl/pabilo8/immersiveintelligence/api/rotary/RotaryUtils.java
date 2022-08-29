@@ -517,4 +517,9 @@ public class RotaryUtils
 				return e.getValue().apply((float)rotation);
 		return MechanicalDevices.dynamo_default_torque;
 	}
+
+	public static double getWorldRPM(World world, float partialTicks)
+	{
+		return (world.getTotalWorldTime()%getRPMMax()+partialTicks)/getRPMMax();
+	}
 }

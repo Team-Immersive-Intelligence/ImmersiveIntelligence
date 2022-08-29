@@ -38,7 +38,10 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCartStation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.api.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
-import pl.pabilo8.immersiveintelligence.api.utils.*;
+import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
+import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
+import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.TileEntityMultiblockConnectable;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
@@ -307,9 +310,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			if(cart==null&&world.getTotalWorldTime()%4==0)
 			{
 				List<EntityMinecart> e = world.getEntitiesWithinAABB(EntityMinecart.class, new AxisAlignedBB(getBlockPosForPos(2).offset((mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))), (EntityMinecart input) ->
-				{
-					return EnumFacing.getFacingFromVector((float)input.motionX, (float)input.motionY, (float)input.motionZ)==facing.rotateYCCW();
-				});
+						EnumFacing.getFacingFromVector((float)input.motionX, (float)input.motionY, (float)input.motionZ)==facing.rotateYCCW());
 				if(e.size() > 0)
 				{
 					getInternalEntity();
@@ -612,7 +613,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	@Override
 	public List<AxisAlignedBB> getAdvancedSelectionBounds()
 	{
-		List list = new ArrayList<AxisAlignedBB>();
+		List<AxisAlignedBB> list = new ArrayList<>();
 
 		list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
@@ -758,9 +759,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		if(internalEntity==null||!internalEntity.isEntityAlive())
 		{
 			List<EntitySkycrateInternal> e = world.getEntitiesWithinAABB(EntitySkycrateInternal.class, new AxisAlignedBB(master().getPos()), (EntitySkycrateInternal input) ->
-			{
-				return true;
-			});
+					true);
 			if(e.size() > 0)
 			{
 				internalEntity = e.get(0);
