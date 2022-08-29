@@ -1293,11 +1293,14 @@ datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
 datasystem.immersiveintelligence.datatype.integer=Integer
 datasystem.immersiveintelligence.datatype.float=Float
+datasystem.immersiveintelligence.datatype.vector=Vector
 datasystem.immersiveintelligence.datatype.string=String
 datasystem.immersiveintelligence.datatype.expression=Expression
 datasystem.immersiveintelligence.datatype.accessor=Accessor
 datasystem.immersiveintelligence.datatype.itemstack=ItemStack
+datasystem.immersiveintelligence.datatype.fluidstack=FluidStack
 datasystem.immersiveintelligence.datatype.array=Array
+datasystem.immersiveintelligence.datatype.map=Map
 datasystem.immersiveintelligence.datatype.entity=Entity
 
 datasystem.immersiveintelligence.datatype.boolean.true=True
@@ -1477,24 +1480,27 @@ ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a 
 #Reference to possibly a box of foodstuffs
 ie.manual.entry.data_variable_types.name=Data types
 ie.manual.entry.data_variable_types.subtext=Results May Vary
-ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each one has a default value (not to be confused with <link;data_variable_types;§o§nNull§r;1>) and other parameters specific to their type.<br> The basic types are: <link;data_variable_types;§o§nNull§r;1>, <link;data_variable_types;§o§nInteger§r;2>, <link;data_variable_types;§o§nString§r;3>, <link;data_variable_types;§o§nBoolean§r;4>, there are also a couple of more advanced types like <link;data_variable_types;§o§nItemStack§r;5>, <link;data_variable_types;§o§nArray§r;6>, <link;data_variable_types;§o§nPair§r;7> and <link;data_variable_types;§o§nRange§r;8>.
+ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each type has a default value (not to be confused with <link;data_variable_types;§o§nNull§r;1>) and other parameters specific to it.<br> The Basic Types are: <link;data_variable_types;§o§nNull§r;1>, <link;data_variable_types;§o§nInteger§r;2>, <link;data_variable_types;§o§nString§r;3>, <link;data_variable_types;§o§nBoolean§r;4>. There are also a few Compound Types, these include <link;data_variable_types;§o§nItemStack§r;5>, <link;data_variable_types;§o§nArray§r;6>, <link;data_variable_types;§o§nFluidStack§r;7>, <link;data_variable_types;§o§nVector§r;7>, <link;data_variable_types;§o§nEntity§r;7> and <link;data_variable_types;§o§nMap§r;8>.
 
 ie.manual.entry.data_variable_types_null=§lNull§r is a special data type, which has §6no value§r.<br>It is the default type of an §6undefined§r variable.
 
 ie.manual.entry.data_variable_types_integer=§lInteger§r is a number data type. It can store a §6number§r without its fractional component.<br>It is mainly used in calculations and number comparisons.
 ie.manual.entry.data_variable_types_float=§lFloat§r is a number data type. It can store a §6number§r along with its fractional component.<br>It is used in high-precision calculations, i.e. computing angles of a long-distance ballistic trajectory.
+ie.manual.entry.data_variable_types_vector=§lVector§r is a data type storing 3 number values. It can store §6integers§r, §6floats§r or a mix of them.<br>It is used to represent values in 3-dimensional space, such as position or motion of objects.
 
 ie.manual.entry.data_variable_types_string=§lString§r is a §6text§r data type, which can hold multiple characters.<br>It is used by many devices for commands, queries and input/output messages.
 
 ie.manual.entry.data_variable_types_boolean=§lBoolean§r is a §6logic§r data type, it can hold one of two values - §6True§r or §6False§r. Its primary use is in logic functions using Boolean Algebra.
 
 ie.manual.entry.data_variable_types_itemstack=§lItemStack§r is a data type which holds information about a specific §6stack§r of items: its §6id§r, §6amount§r, §6metadata§r (damage) and §6NBT component§r.
+ie.manual.entry.data_variable_types_fluidstack=§lFluidStack§r is a data type which holds information about a specific §6fluid§r of fluid: its §6name§r, §6amount§r and §6NBT component§r.
 ie.manual.entry.data_variable_types_entity=§lEntity§r is a data type which holds information about a specific in-world §6entity§r: its §6name§r, §6id§r, §6position§r, §6motion§r and §6NBT data§r.
 
 ie.manual.entry.data_variable_types_array=§lArray§r is a collection of data types, ordered by their §6index§r number starting from 0, it can hold any data type.
 ie.manual.entry.data_variable_types_map=§lMap§r is a collection of pairs of 2 data types called §6entries§r.<br>The first element of an entry is called a §6key§r and second is called a §6value§r.<br>The first can be used to get the second and in reverse.<br>An entry can hold any data type both in key and value field.
 
 ie.manual.entry.data_variable_types_expression=§lExpression§r is a special data type used by the circuits of Arithetic-Logic Machine. It performs a pre-programmed function on input parameters in form of values or their accessors and returns a value.
+ie.manual.entry.data_variable_types_accessor=§lAccessor§r is a data type used to get the value of another variable in a packet. Accessors are often used inside Expressions to get a value dynamically from a packet instead of having a fixed one.
 
 ie.manual.entry.def_value=Default Value
 ie.manual.entry.min_value=Minimum Value

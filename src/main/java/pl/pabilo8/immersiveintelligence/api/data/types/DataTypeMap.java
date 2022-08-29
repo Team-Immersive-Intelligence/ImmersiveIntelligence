@@ -13,9 +13,9 @@ import java.util.Map.Entry;
  * @author Pabilo8
  * @since 2019-06-01
  */
-public class DataTypeMap implements IDataType
+public class DataTypeMap implements IDataTypeIterable
 {
-	public HashMap<IDataType, IDataType> values;
+	private HashMap<IDataType, IDataType> values;
 
 	public DataTypeMap(IDataType key, IDataType value)
 	{
@@ -26,6 +26,32 @@ public class DataTypeMap implements IDataType
 	public DataTypeMap()
 	{
 
+	}
+
+	public DataTypeMap put(IDataType key, IDataType value)
+	{
+		if(values.size() < 255)
+			values.put(key, value);
+
+		return this;
+	}
+
+	@Nonnull
+	public IDataType getValue(IDataType key)
+	{
+		return values.getOrDefault(key, new DataTypeNull());
+	}
+
+	@Nonnull
+	public IDataType getKey(IDataType value)
+	{
+		//ah, yes, the lambdas
+		return values.entrySet()
+				.stream()
+				.filter(e -> e.getValue().equals(value))
+				.map(Entry::getKey)
+				.findFirst()
+				.orElse(new DataTypeNull());
 	}
 
 	@Nonnull
@@ -39,7 +65,7 @@ public class DataTypeMap implements IDataType
 	@Override
 	public String[][] getTypeInfoTable()
 	{
-		return new String[][]{{"ie.manual.entry.def_value", "ie.manual.entry.empty"}};
+		return new String[][]{{"ie.manual.entry.def_value", "ie.manual.entry.empty"}, {"ie.manual.entry.max_length", "255"}};
 	}
 
 	@Nonnull
@@ -82,8 +108,8 @@ public class DataTypeMap implements IDataType
 		for(Entry<IDataType, IDataType> entry : values.entrySet())
 		{
 			NBTTagCompound tag = new NBTTagCompound();
-			tag.setTag("Key",entry.getKey().valueToNBT());
-			tag.setTag("Value",entry.getValue().valueToNBT());
+			tag.setTag("Key", entry.getKey().valueToNBT());
+			tag.setTag("Value", entry.getValue().valueToNBT());
 			list.appendTag(tag);
 		}
 
@@ -94,6 +120,6 @@ public class DataTypeMap implements IDataType
 	@Override
 	public int getTypeColour()
 	{
-		return 0x829d00;
+		return 0x4d5914;
 	}
 }

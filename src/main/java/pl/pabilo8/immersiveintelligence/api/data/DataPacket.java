@@ -29,26 +29,32 @@ public class DataPacket implements Iterable<IDataType>
 
 	static
 	{
+		//null
 		varTypes.put("null", DataTypeNull.class);
 
+		//logic types
 		varTypes.put("boolean", DataTypeBoolean.class);
 
+		//number types
 		varTypes.put("integer", DataTypeInteger.class);
 		varTypes.put("float", DataTypeFloat.class);
-		//varTypes.put("vector", DataTypeVector.class);
-		//varTypes.put("range", DataTypeRange.class);
+		varTypes.put("vector", DataTypeVector.class);
 
+		//text types
 		varTypes.put("string", DataTypeString.class);
 
+		//statement types
 		varTypes.put("accessor", DataTypeAccessor.class);
 		varTypes.put("expression", DataTypeExpression.class);
 
-		varTypes.put("itemstack", DataTypeItemStack.class);
-		varTypes.put("entity", DataTypeEntity.class);
-
+		//collection types
 		varTypes.put("array", DataTypeArray.class);
 		varTypes.put("map", DataTypeMap.class);
 
+		//in-world types
+		varTypes.put("itemstack", DataTypeItemStack.class);
+		varTypes.put("fluidstack", DataTypeFluidStack.class);
+		varTypes.put("entity", DataTypeEntity.class);
 	}
 
 	@Nonnull

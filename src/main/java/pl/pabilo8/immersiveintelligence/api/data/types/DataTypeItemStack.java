@@ -74,7 +74,7 @@ public class DataTypeItemStack implements IDataType
 	@Override
 	public int getTypeColour()
 	{
-		return 0x082730;
+		return 0x121031;
 	}
 
 	@Override

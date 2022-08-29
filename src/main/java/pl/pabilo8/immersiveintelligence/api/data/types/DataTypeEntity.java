@@ -100,7 +100,7 @@ public class DataTypeEntity implements IDataType
 	@Override
 	public int getTypeColour()
 	{
-		return 0x082730;
+		return 0x435e46;
 	}
 
 	public NBTTagCompound actualValueToNBT(NBTTagCompound nbt)
