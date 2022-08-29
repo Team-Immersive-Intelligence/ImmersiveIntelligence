@@ -84,7 +84,7 @@ public abstract class AIHansHandWeapon extends AIHansBase
 
 		this.minAttackDistance = minAttackDistance;
 		this.maxAttackDistance = maxAttackDistance;
-		this.safeAttackDistance = (int)MathHelper.clampedLerp(this.minAttackDistance, this.maxAttackDistance, 0.35);
+		this.safeAttackDistance = (int)MathHelper.clampedLerp(this.minAttackDistance, this.maxAttackDistance, 0.65);
 
 		this.setMutexBits(3);
 	}
