@@ -1,9 +1,12 @@
 <p align="center"><img src="art/logos/logofullhq.png" alt="II Logo"></p>   
 
-[![](http://cf.way2muchnoise.eu/versions/immersive-intelligence.svg)](https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence) 
+[![](https://cf.way2muchnoise.eu/versions/344344_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence) 
 [![Join Here!](https://img.shields.io/discord/610912351142674434?color=%237289da&label=Discord)](https://discord.gg/teMfm3R)
 [![Jitpack](https://jitpack.io/v/Pabilo8/ImmersiveIntelligence.svg)](https://jitpack.io/#Pabilo8/ImmersiveIntelligence)
+[![Build II](https://github.com/Pabilo8/ImmersiveIntelligence/actions/workflows/build.yml/badge.svg)](https://github.com/Pabilo8/ImmersiveIntelligence/actions/workflows/build.yml)
 [![Become a Patron!](https://img.shields.io/badge/Become%20a%20Patron-Pabilo8-red?style=flat-square&logo=patreon)](https://www.patreon.com/bePatron?u=34304036)  
+
+### Description
 
 **Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so **most of the planned features are not added**. There are four main categories of the mod's content: 
 
@@ -16,12 +19,8 @@
  - **Intelligence** - espionage - stealth - sabotage - this category contains surveillance devices, such as the Infrared Observer and Tripod Periscope which allow you to spy on other players and monitor the world
  
  The mod also features the new rotary power system.
- 
-Some GIFs / Screenshots on [Imgur](https://imgur.com/a/kiyUFdk)
 
-Short videos on Youtube:
- - [Circuit Production](https://www.youtube.com/watch?v=jDmpZ4gAknE)
- - [Artillery Howitzer Test](https://youtu.be/o3mt9exEfL0)
+### Credits
 
 The mod author, the developer:
 - [@Pabilo8](https://github.com/Pabilo8/) - Main Developer, author - the programmer, graphic artist and modeller 
@@ -44,9 +43,9 @@ Special thanks to:
 Proudly using [Blockbench](https://www.blockbench.net/) - the minecraft modelling software:
 - Author: [@JannisX11](https://github.com/JannisX11/)
 
-Partially powered by PMT, a fork of Turbo Model Thingy (TMT):
+Partially a fork of Turbo Model Thingy (TMT):
 - The original author: [@GaryCXJk](https://github.com/GaryCXJk)
 - Licensed from: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)
 
-Please report any bugs you find in the 'issues' tab. Also, don't do that on Curseforge / DM ^^.  
-Feel free to join the mod's [Discord Server](https://discord.gg/teMfm3R) to have a chat with the devs and community.
+#### Please report any bugs you find in the 'issues' tab. Also, don't do that on Curseforge / DM ^^.  
+#### Feel free to join the mod's [Discord Server](https://discord.gg/teMfm3R) to have a chat with the devs and community.
