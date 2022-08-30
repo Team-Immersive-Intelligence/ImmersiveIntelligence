@@ -4,11 +4,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelRadioExplosives;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityRadioExplosives;
 
 /**
  * @author Pabilo8
@@ -75,8 +75,8 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 	public void reloadModels()
 	{
 		model = new ModelRadioExplosives();
-		BulletRegistry.INSTANCE.registeredModels.remove("radio_explosives");
-		BulletRegistry.INSTANCE.registeredModels.put("radio_explosives", model);
+		AmmoRegistry.INSTANCE.registeredModels.remove("radio_explosives");
+		AmmoRegistry.INSTANCE.registeredModels.put("radio_explosives", model);
 	}
 
 	public static class RadioExplosivesItemStackRenderer extends TileEntityItemStackRenderer
@@ -88,8 +88,8 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.translate(0.5, 0.25, 0.5);
 			GlStateManager.scale(1.5, 1.5, 1.5f);
 
-			assert itemStackIn.getItem() instanceof IBullet;
-			IBullet bullet = (IBullet)itemStackIn.getItem();
+			assert itemStackIn.getItem() instanceof IAmmo;
+			IAmmo bullet = (IAmmo)itemStackIn.getItem();
 
 			model.renderCasing(0, bullet.getPaintColor(itemStackIn));
 			//model.renderCore(bullet.getCore(itemStackIn).getColour(), EnumCoreTypes.CANISTER);

@@ -7,7 +7,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFuelStation;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_workshop.ModelHeavyInserter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFuelStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityFuelStation;
 
 /**
  * @author Pabilo8

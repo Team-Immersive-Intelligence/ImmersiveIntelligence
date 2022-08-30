@@ -15,14 +15,14 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelChemicalPainter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityChemicalPainter;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityChemicalPainter;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,7 +44,7 @@ public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntit
 	{
 		if(te!=null&&!te.isDummy())
 		{
-			Utils.bindTexture(TEXTURE);
+			IIClientUtils.bindTexture(TEXTURE);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
@@ -163,16 +163,16 @@ public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntit
 			{
 				GlStateManager.translate((0.25-3.5*conveyorProgress)*(te.mirrored?-1:1)+(te.mirrored?1:0), 0.385+lifterProgress*0.4375, 0.5);
 				GlStateManager.rotate(lifterRotate*360, 0, 1, 0);
-				if(te.effect.getItem() instanceof IBullet)
+				if(te.effect.getItem() instanceof IAmmo)
 				{
-					IBullet bullet = (IBullet)te.effect.getItem();
-					IBulletModel bModel = BulletRegistry.INSTANCE.registeredModels.get(bullet.getName());
+					IAmmo bullet = (IAmmo)te.effect.getItem();
+					IBulletModel bModel = AmmoRegistry.INSTANCE.registeredModels.get(bullet.getName());
 					GlStateManager.translate(0, -0.25f, 0);
 					bModel.renderBulletUnused(itemProgress > 0.5f?te.effect: te.inventory.get(0));
 					ClientUtils.bindAtlas();
 				}
 				else
-					Utils.drawItemProgress(te.inventory.get(0), te.effect, itemProgress, TransformType.NONE, Tessellator.getInstance(), 0.5f);
+					IIClientUtils.drawItemProgress(te.inventory.get(0), te.effect, itemProgress, TransformType.NONE, Tessellator.getInstance(), 0.5f);
 			}
 			GlStateManager.popMatrix();
 
@@ -208,7 +208,7 @@ public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			GlStateManager.popMatrix();
 
-			//ImmersiveIntelligence.logger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
+			//IILogger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
 		}
 	}
 

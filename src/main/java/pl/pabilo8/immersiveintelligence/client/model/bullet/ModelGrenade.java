@@ -4,11 +4,11 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
  * Created by Pabilo8 on 07-06-2019.
@@ -87,7 +87,7 @@ public class ModelGrenade extends ModelIIBase implements IBulletModel
 			model.render(0.0625f);
 		if(paintColour!=-1)
 		{
-			float[] c = Utils.rgbIntToRGB(paintColour);
+			float[] c = IIUtils.rgbIntToRGB(paintColour);
 			GlStateManager.color(c[0], c[1], c[2]);
 			for(ModelRendererTurbo model : paintModel)
 				model.render(0.0625f);
@@ -104,7 +104,7 @@ public class ModelGrenade extends ModelIIBase implements IBulletModel
 			default:
 			case 0:
 			{
-				float[] c = Utils.rgbIntToRGB(coreColour);
+				float[] c = IIUtils.rgbIntToRGB(coreColour);
 				GlStateManager.color(c[0], c[1], c[2]);
 				for(ModelRendererTurbo model : coreModel)
 					model.render(0.0625f);
@@ -112,7 +112,7 @@ public class ModelGrenade extends ModelIIBase implements IBulletModel
 			break;
 			case 1:
 			{
-				float[] c = Utils.rgbIntToRGB(coreColour);
+				float[] c = IIUtils.rgbIntToRGB(coreColour);
 				GlStateManager.color(c[0], c[1], c[2]);
 				for(ModelRendererTurbo model : coreClassicModel)
 					model.render(0.0625f);

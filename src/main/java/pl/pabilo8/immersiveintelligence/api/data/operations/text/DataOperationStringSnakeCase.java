@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data.operations.text;
 
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
@@ -26,6 +26,6 @@ public class DataOperationStringSnakeCase extends DataOperation
 	public IDataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		DataTypeString t1 = packet.getVarInType(DataTypeString.class, data.getArgument(0));
-		return new DataTypeString(Utils.toSnakeCase(t1.value));
+		return new DataTypeString(IIUtils.toSnakeCase(t1.value));
 	}
 }

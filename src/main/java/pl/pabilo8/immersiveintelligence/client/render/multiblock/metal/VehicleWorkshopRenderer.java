@@ -13,11 +13,11 @@ import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelVehic
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_workshop.ModelCrane;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_workshop.ModelHeavyInserter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityVehicleWorkshop;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityVehicleWorkshop;
 
-import static pl.pabilo8.immersiveintelligence.api.Utils.drawRope;
+import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.drawRope;
 
 /**
  * @author Pabilo8

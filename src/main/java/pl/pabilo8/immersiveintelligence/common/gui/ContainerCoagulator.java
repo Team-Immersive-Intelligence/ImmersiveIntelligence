@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityCoagulator;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityCoagulator;
 
 /**
  * @author Pabilo8

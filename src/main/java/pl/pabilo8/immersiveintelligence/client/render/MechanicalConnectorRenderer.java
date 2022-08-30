@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltData;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
+import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalConnectable;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

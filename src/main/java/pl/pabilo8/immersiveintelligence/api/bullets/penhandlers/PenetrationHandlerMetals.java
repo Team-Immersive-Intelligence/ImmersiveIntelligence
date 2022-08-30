@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.bullets.penhandlers;
 
 import net.minecraft.util.SoundEvent;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -127,7 +127,7 @@ public class PenetrationHandlerMetals
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochet_metal: IISounds.impact_metal;
+			return effect==RICOCHET?IISounds.ricochetMetal: IISounds.impactMetal;
 		}
 
 		@Override

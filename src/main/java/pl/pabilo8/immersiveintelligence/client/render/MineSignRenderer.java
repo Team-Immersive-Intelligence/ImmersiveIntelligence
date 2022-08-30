@@ -4,8 +4,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing.Axis;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.block.wooden.TileEntityMineSign;
 
 /**
  * @author Pabilo8
@@ -29,7 +29,7 @@ public class MineSignRenderer extends TileEntitySpecialRenderer<TileEntityMineSi
 
 		String[] str = I18n.format(KEY).split(";");
 		for(int i = 0; i < str.length; i++)
-			Utils.drawStringCentered(getFontRenderer(), str[i], 8, i*12, 48, 12, 0xd99747);
+			IIClientUtils.drawStringCentered(getFontRenderer(), str[i], 8, i*12, 48, 12, 0xd99747);
 
 		GlStateManager.popMatrix();
 	}

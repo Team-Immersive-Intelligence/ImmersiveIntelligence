@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden;
 
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
  * Created by Pabilo8 on 07-06-2019.

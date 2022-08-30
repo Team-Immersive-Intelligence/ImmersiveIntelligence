@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.model.metal_device;
 
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 /**
  * Created by Pabilo8 on 2019-05-26.'

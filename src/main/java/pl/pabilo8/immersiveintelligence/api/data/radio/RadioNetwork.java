@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class RadioNetwork
 		float range1 = device1.getRange()*device1.getWeatherRangeDecrease();
 		float range2 = device2.getRange()*device2.getWeatherRangeDecrease();
 
-		return Utils.getDistanceBetweenPos(device1.getDevicePosition(), device2.getDevicePosition(), true) <= (range1+range2)/2f;
+		return IIUtils.getDistanceBetweenPos(device1.getDevicePosition(), device2.getDevicePosition(), true) <= (range1+range2)/2f;
 	}
 
 }

@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 
 /**
  * @author Pabilo8
@@ -40,7 +40,7 @@ public class BulletRenderer extends Render<EntityBullet>
 		if(entity.bullet!=null)
 		{
 			int coreColor = entity.core.getColour();
-			IBulletModel model = BulletRegistry.INSTANCE.registeredModels.get(entity.bullet.getName());
+			IBulletModel model = AmmoRegistry.INSTANCE.registeredModels.get(entity.bullet.getName());
 
 			model.renderBulletUsed(coreColor, entity.coreType, entity.paintColor);
 		}

@@ -14,7 +14,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelHansBiped;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
@@ -175,7 +175,7 @@ public class HansRenderer extends RenderLivingBase<EntityHans> implements IReloa
 				float v1 = v < 0.5f?v*2f: 1f;
 				float v2 = v > 0.5f?(v-0.5f)/0.5f: 0;
 
-				return -0.325f+Utils.clampedLerp3Par(0, 0.0725f, 0, v1)+Utils.clampedLerp3Par(0, 0.0725f, 0, v2);
+				return -0.325f+IIUtils.clampedLerp3Par(0, 0.0725f, 0, v1)+IIUtils.clampedLerp3Par(0, 0.0725f, 0, v2);
 			}
 			case SWIMMING:
 				return 1;

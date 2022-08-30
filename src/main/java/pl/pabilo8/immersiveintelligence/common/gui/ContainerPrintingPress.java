@@ -6,7 +6,7 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrintingPress;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityPrintingPress;
 
 /**
  * @author Pabilo8

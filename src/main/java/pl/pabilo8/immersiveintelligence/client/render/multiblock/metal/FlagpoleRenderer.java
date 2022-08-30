@@ -11,8 +11,8 @@ import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFlagpole;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFlagpole;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityFlagpole;
 
 public class FlagpoleRenderer extends TileEntitySpecialRenderer<TileEntityFlagpole> implements IReloadableModelContainer<FlagpoleRenderer>
 {

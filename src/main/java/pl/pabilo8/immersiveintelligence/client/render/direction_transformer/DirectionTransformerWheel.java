@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.render.direction_transformer;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
-import pl.pabilo8.immersiveintelligence.client.tmt.DirectionTransformer;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.DirectionTransformer;
 
 /**
  * @author Pabilo8

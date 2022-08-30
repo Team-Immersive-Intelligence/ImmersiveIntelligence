@@ -4,9 +4,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 
 import javax.annotation.Nonnull;
 
@@ -33,7 +33,7 @@ public class ParticleTracer extends IIParticle
 		this.particleScale = size*16f;
 		this.actualParticleScale = size;
 		this.particleMaxAge = (int)(1/EntityBullet.DEV_SLOMO);
-		this.color = Utils.rgbIntToRGB(color);
+		this.color = IIUtils.rgbIntToRGB(color);
 	}
 
 	public void onUpdate()

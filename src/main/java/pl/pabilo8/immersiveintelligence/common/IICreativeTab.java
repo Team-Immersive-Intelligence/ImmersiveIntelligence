@@ -16,11 +16,10 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDecoration;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDecoration;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,29 +56,27 @@ public class IICreativeTab extends CreativeTabs
 			addFluidBucket(fluid, list);
 	}
 
-	public void addFluidBucket(Fluid fluid, NonNullList list)
+	public void addFluidBucket(Fluid fluid, NonNullList<ItemStack> list)
 	{
 		UniversalBucket bucket = ForgeModContainer.getInstance().universalBucket;
 		ItemStack stack = new ItemStack(bucket);
 		FluidStack fs = new FluidStack(fluid, bucket.getCapacity());
 		IFluidHandlerItem fluidHandler = new FluidBucketWrapper(stack);
 		if(fluidHandler.fill(fs, true)==fs.amount)
-		{
 			list.add(fluidHandler.getContainer());
-		}
 	}
 
 	public void addAssemblySchemes(NonNullList<ItemStack> list)
 	{
-		for(PrecissionAssemblerRecipe recipe : PrecissionAssemblerRecipe.recipeList)
-		{
-			list.add(IIContent.itemAssemblyScheme.getStackForRecipe(recipe));
-		}
+		PrecissionAssemblerRecipe.recipeList
+				.stream()
+				.map(IIContent.itemAssemblyScheme::getStackForRecipe)
+				.forEach(list::add);
 	}
 
 	public void addExampleBullets(NonNullList<ItemStack> list)
 	{
-		for(IBullet bullet : new IBullet[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
+		for(IAmmo bullet : new IAmmo[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
 		{
 			list.add(bullet.getBulletWithParams("core_brass", "canister", "tnt", "tracer_powder"));
 			list.add(bullet.getBulletWithParams("core_brass", "canister", "rdx", "tracer_powder"));
@@ -107,8 +104,7 @@ public class IICreativeTab extends CreativeTabs
 		try
 		{
 			((NBTTagList)ItemNBTHelper.getTag(grenade_firework).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{Explosion:{Type:0b,Colors:[I;3887386]}}"));
-		}
-		catch(NBTException e)
+		} catch(NBTException e)
 		{
 			e.printStackTrace();
 		}
@@ -124,8 +120,7 @@ public class IICreativeTab extends CreativeTabs
 		try
 		{
 			((NBTTagList)ItemNBTHelper.getTag(bullet_tracer).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{colour:3887386}"));
-		}
-		catch(NBTException e)
+		} catch(NBTException e)
 		{
 			e.printStackTrace();
 		}
@@ -168,7 +163,7 @@ public class IICreativeTab extends CreativeTabs
 		list.add(IIContent.itemNavalMine.getBulletWithParams("core_brass", "softpoint", "rdx").setStackDisplayName("Seemine mk.1"));
 	}
 
-	ItemStack addColorBulletMagazine(IBullet type, String magName, int... colors)
+	ItemStack addColorBulletMagazine(IAmmo type, String magName, int... colors)
 	{
 		ArrayList<ItemStack> bullets = new ArrayList<>();
 		for(int color : colors)
@@ -197,7 +192,7 @@ public class IICreativeTab extends CreativeTabs
 	//Deutsche Qualität
 	private String getGermanColorName(int color)
 	{
-		switch(Utils.getRGBTextFormatting(color))
+		switch(IIUtils.getRGBTextFormatting(color))
 		{
 			case WHITE:
 				return "Weiß";

@@ -4,11 +4,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
@@ -130,7 +131,7 @@ public class ModelTripMine extends ModelIIBase implements IBulletModel
 	@Override
 	public void renderCasing(float gunpowderPercentage, int paintColour)
 	{
-		Utils.bindTexture(TEXTURES[Mines.tripmineColor]);
+		IIClientUtils.bindTexture(TEXTURES[Mines.tripmineColor]);
 		for(ModelRendererTurbo mod : baseModel)
 			mod.render();
 	}
@@ -138,8 +139,8 @@ public class ModelTripMine extends ModelIIBase implements IBulletModel
 	@Override
 	public void renderCore(int coreColour, EnumCoreTypes coreType)
 	{
-		Utils.bindTexture(TEXTURES[Mines.tripmineColor]);
-		float[] c = Utils.rgbIntToRGB(coreColour);
+		IIClientUtils.bindTexture(TEXTURES[Mines.tripmineColor]);
+		float[] c = IIUtils.rgbIntToRGB(coreColour);
 		GlStateManager.color(c[0], c[1], c[2]);
 		for(ModelRendererTurbo mod : coreModel)
 			mod.render();

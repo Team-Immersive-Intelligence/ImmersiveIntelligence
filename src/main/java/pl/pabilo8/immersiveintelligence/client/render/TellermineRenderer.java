@@ -7,12 +7,12 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityTellermine;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityTellermine;
 
 /**
  * @author Pabilo8
@@ -39,7 +39,7 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 
 			GlStateManager.translate(-0.5f, 0, -0.5f);
 			int color = getWorld().getBiome(te.getPos()).getGrassColorAtPos(te.getPos())&0x7FFFFFFF;
-			float[] colors = Utils.rgbIntToRGB(color);
+			float[] colors = IIUtils.rgbIntToRGB(color);
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
@@ -57,8 +57,8 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 	public void reloadModels()
 	{
 		model = new ModelTellermine();
-		BulletRegistry.INSTANCE.registeredModels.remove("tellermine");
-		BulletRegistry.INSTANCE.registeredModels.put("tellermine", model);
+		AmmoRegistry.INSTANCE.registeredModels.remove("tellermine");
+		AmmoRegistry.INSTANCE.registeredModels.put("tellermine", model);
 	}
 
 	public static class TellermineItemStackRenderer extends TileEntityItemStackRenderer
@@ -70,8 +70,8 @@ public class TellermineRenderer extends TileEntitySpecialRenderer<TileEntityTell
 			GlStateManager.translate(0.5, 0.25, 0.5);
 			GlStateManager.scale(1.5,1.5,1.5f);
 
-			assert itemStackIn.getItem() instanceof IBullet;
-			IBullet bullet = (IBullet)itemStackIn.getItem();
+			assert itemStackIn.getItem() instanceof IAmmo;
+			IAmmo bullet = (IAmmo)itemStackIn.getItem();
 
 			model.renderCasing(0, bullet.getPaintColor(itemStackIn));
 			model.renderCore(bullet.getCore(itemStackIn).getColour(), EnumCoreTypes.CANISTER);

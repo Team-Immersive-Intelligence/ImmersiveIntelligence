@@ -6,11 +6,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadioStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityRadioStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityRadioStation;
 
 /**
  * @author Pabilo8
@@ -49,7 +49,7 @@ public class RadioStationRenderer extends TileEntitySpecialRenderer<TileEntityRa
 			}
 			else
 			{
-				double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electric_hammer_energy_per_use_construction/4.25f))), Utils.getMaxClientProgress(te.construction, te.getConstructionCost(), TileEntityRadioStation.PART_AMOUNT));
+				double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electricHammerEnergyPerUseConstruction/4.25f))), IIUtils.getMaxClientProgress(te.construction, te.getConstructionCost(), TileEntityRadioStation.PART_AMOUNT));
 				double progress = MathHelper.clamp(cc/(float)te.getConstructionCost(), 0f, 1f);
 
 				for(int i = 0; i < TileEntityRadioStation.PART_AMOUNT*progress; i++)

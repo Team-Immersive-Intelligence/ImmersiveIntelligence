@@ -10,12 +10,12 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class IIPacketHandler
 {
-	/*
-	Huge thanks to Choonster: https://www.minecraftforge.net/forum/topic/36769-18-the-received-string-length-is-longer-than-maximum-allowed-27-gt-20/
-	According mc forum, the lenght of the SimpleNetworkWrapper name mustn't be longer than 20 letters
-	Immersive Intelligence happens to have 21...
-	Really, what's even the reason for that?!
-	*/
+	/**
+	 Huge thanks to Choonster: <a href="https://www.minecraftforge.net/forum/topic/36769-18-the-received-string-length-is-longer-than-maximum-allowed-27-gt-20/">
+	 https://www.minecraftforge.net/forum/topic/36769-18-the-received-string-length-is-longer-than-maximum-allowed-27-gt-20/</a><br>
+	 According mc forum, the length of the SimpleNetworkWrapper name mustn't be longer than 20 letters<br>
+	 Immersive Intelligence happens to have 21...<br>
+	 */
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel("immersiveintelli");
 
 	public static void preInit()

@@ -10,14 +10,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
 
 /**
  * @author Pabilo8
@@ -1217,7 +1217,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	{
 		if(ItemNBTHelper.hasKey(stack, ItemIIUpgradeableArmor.NBT_Colour))
 		{
-			float[] rgb = Utils.rgbIntToRGB(ItemNBTHelper.getInt(stack, ItemIIUpgradeableArmor.NBT_Colour));
+			float[] rgb = IIUtils.rgbIntToRGB(ItemNBTHelper.getInt(stack, ItemIIUpgradeableArmor.NBT_Colour));
 			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 		}
 		else if(upgrades.hasKey("composite_plates"))

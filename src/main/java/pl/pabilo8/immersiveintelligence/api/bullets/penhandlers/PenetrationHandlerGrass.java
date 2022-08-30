@@ -18,6 +18,6 @@ public class PenetrationHandlerGrass extends PenetrationHandlerDirt
 	@Override
 	public SoundEvent getSpecialSound(HitEffect effect)
 	{
-		return effect==RICOCHET?IISounds.ricochet_grass: IISounds.impact_grass;
+		return effect==RICOCHET?IISounds.ricochetGrass: IISounds.impactGrass;
 	}
 }

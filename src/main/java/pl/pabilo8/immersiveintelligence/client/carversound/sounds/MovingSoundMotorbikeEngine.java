@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.carversound.sounds;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.util.SoundCategory;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 
 /**
  * @author Pabilo8
@@ -16,7 +16,7 @@ public class MovingSoundMotorbikeEngine extends MovingSound
 
 	public MovingSoundMotorbikeEngine(EntityMotorbike minecartIn)
 	{
-		super(IISounds.motorbike_engine, SoundCategory.NEUTRAL);
+		super(IISounds.motorbikeEngine, SoundCategory.NEUTRAL);
 		this.motorbike = minecartIn;
 		this.repeat = true;
 		this.repeatDelay = 0;
@@ -33,7 +33,7 @@ public class MovingSoundMotorbikeEngine extends MovingSound
 		}
 		else
 		{
-			//ImmersiveIntelligence.logger.info(new Vec3d(motorbike.motionX, motorbike.motionY, motorbike.motionZ).distanceTo(Vec3d.ZERO));
+			//IILogger.info(new Vec3d(motorbike.motionX, motorbike.motionY, motorbike.motionZ).distanceTo(Vec3d.ZERO));
 			this.xPosF = (float)this.motorbike.posX;
 			this.yPosF = (float)this.motorbike.posY;
 			this.zPosF = (float)this.motorbike.posZ;

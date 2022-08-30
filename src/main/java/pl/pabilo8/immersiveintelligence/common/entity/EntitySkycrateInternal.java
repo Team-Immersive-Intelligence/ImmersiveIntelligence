@@ -7,7 +7,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.TileEntitySkyCrateStation;
 
 /**
  * @author Pabilo8
@@ -123,7 +123,7 @@ public class EntitySkycrateInternal extends Entity
 	public void updatePassenger(Entity passenger)
 	{
 		//super.updatePassenger(passenger);
-		//ImmersiveIntelligence.logger.info(riding_pos);
+		//IILogger.info(riding_pos);
 		//passenger.setPosition(origin_pos.getX(),origin_pos.getY()+3,origin_pos.getZ());
 		if(this.isPassenger(passenger))
 		{

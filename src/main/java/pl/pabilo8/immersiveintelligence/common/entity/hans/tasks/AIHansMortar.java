@@ -9,10 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 
 import java.util.Optional;
 
@@ -104,7 +104,7 @@ public class AIHansMortar extends EntityAIBase
 
 		float yy = (float)((Math.atan2(norm.x, norm.z)*180D)/3.1415927410125732D);
 
-		float pp = Math.round(Utils.calculateBallisticAngle(
+		float pp = Math.round(IIUtils.calculateBallisticAngle(
 				new Vec3d(dist.x, 0, dist.z).distanceTo(Vec3d.ZERO)
 				, dist.y,
 				IIContent.itemAmmoMortar.getDefaultVelocity(),

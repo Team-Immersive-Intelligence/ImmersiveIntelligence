@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import twistedgate.immersiveposts.ImmersivePosts;
 import twistedgate.immersiveposts.common.blocks.BlockPost;
 import twistedgate.immersiveposts.enums.EnumPostMaterial;
@@ -62,7 +63,7 @@ public class ImmersivePostsHelper extends IICompatModule
 			BlockPost platinumPost = createMetalPost(postMatPlatinum);
 			BlockPost duraluminiumPost = createMetalPost(postMatDuraluminium);
 
-			ImmersiveIntelligence.logger.info("It's fine, everything's fine. (no really, don't report it to me or TwistedGate)");
+			IILogger.info("It's fine, everything's fine. (no really, don't report it to me or TwistedGate)");
 
 			// TODO: 28.07.2021 either poke Twisted about adding an api (on 1.12? are you serious?) or do the asm
 			/*
@@ -81,7 +82,7 @@ public class ImmersivePostsHelper extends IICompatModule
 		}
 		catch(NoSuchMethodException e) // |IOException
 		{
-			ImmersiveIntelligence.logger.info("Couldn't add Immersive Posts Compat :<");
+			IILogger.info("Couldn't add Immersive Posts Compat :<");
 		}
 	}
 

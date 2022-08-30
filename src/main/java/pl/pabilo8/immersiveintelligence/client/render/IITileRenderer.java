@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.client.animation.AMT;
-import pl.pabilo8.immersiveintelligence.client.animation.IIAnimationCompiledMap;
-import pl.pabilo8.immersiveintelligence.client.animation.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 
 import javax.annotation.Nullable;
 

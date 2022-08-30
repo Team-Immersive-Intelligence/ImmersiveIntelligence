@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement;
 
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 import java.util.Arrays;
 

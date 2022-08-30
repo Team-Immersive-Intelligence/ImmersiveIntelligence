@@ -16,9 +16,9 @@ import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityPrecissionAssembler;
 
 /**
  * @author Pabilo8

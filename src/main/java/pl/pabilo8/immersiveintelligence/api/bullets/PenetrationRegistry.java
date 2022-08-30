@@ -7,8 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.*;
@@ -51,37 +51,37 @@ public class PenetrationRegistry
 
 	static
 	{
-		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), IEContent.blockMetalDecoration0,
+		AmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), IEContent.blockMetalDecoration0,
 				IEContent.blockMetalDevice0, IEContent.blockMetalDevice1, IEContent.blockMetalMultiblock);
-		BulletHelper.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.blockMetalDecoration,
+		AmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.blockMetalDecoration,
 				IIContent.blockMetalMultiblock0, IIContent.blockMetalMultiblock1);
-		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "logWood"), new PenetrationHandlerLog());
+		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "logWood"), new PenetrationHandlerLog());
 
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerIron(), "iron");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerCopper(), "copper");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerSteel(), "steel");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerIron(), "iron");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerCopper(), "copper");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerSteel(), "steel");
 
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerGold(), "gold");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerGold(), "electrum");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerGold(), "silver");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerGold(), "platinum");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "gold");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "electrum");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "silver");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerGold(), "platinum");
 
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerBronze(), "bronze");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerBronze(), "lead");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerBronze(), "constantan");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerBronze(), "bronze");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerBronze(), "lead");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerBronze(), "constantan");
 
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerTungsten(), "tungsten");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerTungsten(), "tungsten");
 
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerAluminium(), "aluminum");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerAluminium(), "tin");
-		BulletHelper.registerMetalMaterial(new PenetrationHandlerAluminium(), "zinc");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerAluminium(), "aluminum");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerAluminium(), "tin");
+		AmmoUtils.registerMetalMaterial(new PenetrationHandlerAluminium(), "zinc");
 
-		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "uberConcrete"), new PenetrationHandlerUberConcrete());
-		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "sturdyBricksConcrete"), new PenetrationHandlerPanzerConcrete());
-		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "bricksConcrete"), new PenetrationHandlerConcreteBricks());
+		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "uberConcrete"), new PenetrationHandlerUberConcrete());
+		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "sturdyBricksConcrete"), new PenetrationHandlerPanzerConcrete());
+		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "bricksConcrete"), new PenetrationHandlerConcreteBricks());
 
-		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "leadedConcrete"), new PenetrationHandlerLeadedConcrete());
-		registeredBlocks.put(iBlockState -> Utils.compareBlockstateOredict(iBlockState, "concrete"), new PenetrationHandlerConcrete());
+		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "leadedConcrete"), new PenetrationHandlerLeadedConcrete());
+		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "concrete"), new PenetrationHandlerConcrete());
 
 		registeredMaterials.put(material -> material==Material.GLASS, new PenetrationHandlerGlass());
 

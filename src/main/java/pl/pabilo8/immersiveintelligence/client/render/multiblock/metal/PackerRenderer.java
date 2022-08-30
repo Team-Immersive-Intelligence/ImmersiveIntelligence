@@ -14,13 +14,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPacker;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityPacker;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> 
 	{
 		if(te!=null&&!te.isDummy())
 		{
-			Utils.bindTexture(TEXTURE);
+			IIClientUtils.bindTexture(TEXTURE);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x+1, (float)y-1, (float)z+2);
 			GlStateManager.rotate(180F, 0F, 1F, 0F);
@@ -188,14 +188,14 @@ public class PackerRenderer extends TileEntitySpecialRenderer<TileEntityPacker> 
 
 			GlStateManager.popMatrix();
 
-			//ImmersiveIntelligence.logger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
+			//IILogger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
 		}
 	}
 
 	// TODO: 30.12.2021 actually model the upgrades
 	public static void renderWithUpgrades(MachineUpgrade[] upgrades)
 	{
-		Utils.bindTexture(TEXTURE);
+		IIClientUtils.bindTexture(TEXTURE);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.5, 0.5, 0.5);
 		GlStateManager.translate(0.5, 1, 0.5);

@@ -2,12 +2,12 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.render.NavalMineRenderer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
  * @author Pabilo8
@@ -427,7 +427,7 @@ public class ModelNavalMine extends ModelIIBase implements IBulletModel
 	public void renderCore(int coreColour, EnumCoreTypes coreType)
 	{
 		ClientUtils.bindTexture(NavalMineRenderer.TEXTURE);
-		float[] c = Utils.rgbIntToRGB(coreColour);
+		float[] c = IIUtils.rgbIntToRGB(coreColour);
 		GlStateManager.color(c[0], c[1], c[2]);
 		for(ModelRendererTurbo mod : coreModel)
 			mod.render();
@@ -436,7 +436,7 @@ public class ModelNavalMine extends ModelIIBase implements IBulletModel
 	@Override
 	public void renderBulletUsed(int coreColour, EnumCoreTypes coreType, int paintColour)
 	{
-		float[] c = Utils.rgbIntToRGB(coreColour);
+		float[] c = IIUtils.rgbIntToRGB(coreColour);
 		ClientUtils.bindTexture(NavalMineRenderer.TEXTURE);
 		for(ModelRendererTurbo mod : baseModel)
 			mod.render();

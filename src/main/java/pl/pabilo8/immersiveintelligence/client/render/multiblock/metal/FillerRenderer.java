@@ -13,14 +13,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFiller;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityFiller;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityFiller;
 
 /**
  * @author Pabilo8
@@ -114,10 +114,10 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 					continue;
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(-0.5, 1.125f, -3*(1f-shift[i]));
-				IBullet bullet = process.recipe.getBullet();
+				IAmmo bullet = process.recipe.getBullet();
 				if(bullet!=null)
 				{
-					IBulletModel iBulletModel = BulletRegistry.INSTANCE.registeredModels.get(bullet.getName());
+					IBulletModel iBulletModel = AmmoRegistry.INSTANCE.registeredModels.get(bullet.getName());
 					if(iBulletModel!=null)
 						iBulletModel.renderCasing((float)MathHelper.clamp(fill[i],0,1),-1);
 				}

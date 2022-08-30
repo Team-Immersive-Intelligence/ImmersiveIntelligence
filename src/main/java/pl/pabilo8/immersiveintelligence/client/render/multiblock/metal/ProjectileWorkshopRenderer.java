@@ -15,12 +15,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityProjectileWorkshop;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +43,7 @@ public class ProjectileWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 	{
 		if(te!=null&&!te.isDummy())
 		{
-			Utils.bindTexture(TEXTURE);
+			IIClientUtils.bindTexture(TEXTURE);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -133,7 +133,7 @@ public class ProjectileWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 	public static void renderWithUpgrades(MachineUpgrade[] upgrades)
 	{
-		Utils.bindTexture(TEXTURE);
+		IIClientUtils.bindTexture(TEXTURE);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.5, 0.5, 0.5);
 		GlStateManager.translate(2, 1, 1.5);

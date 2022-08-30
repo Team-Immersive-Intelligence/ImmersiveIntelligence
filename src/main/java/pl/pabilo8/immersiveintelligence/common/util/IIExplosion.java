@@ -20,6 +20,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageExplosion;
 
@@ -160,14 +161,14 @@ public class IIExplosion extends Explosion
 		float pitch = (1.0F+(Utils.RAND.nextFloat()-Utils.RAND.nextFloat())*0.2F)*0.7F;
 		if(causesFire)
 		{
-			this.world.playSound(this.x, this.y, this.z, IISounds.explosion_incendiary_high, SoundCategory.NEUTRAL, 4.0F+size, pitch, true);
-			this.world.playSound(this.x, this.y, this.z, IISounds.explosion_incendiary_low, SoundCategory.NEUTRAL, 12.0F+size, pitch, true);
+			this.world.playSound(this.x, this.y, this.z, IISounds.explosionIncendiaryHigh, SoundCategory.NEUTRAL, 4.0F+size, pitch, true);
+			this.world.playSound(this.x, this.y, this.z, IISounds.explosionIncendiaryLow, SoundCategory.NEUTRAL, 12.0F+size, pitch, true);
 		}
 		else
 			this.world.playSound(this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 4.0F+size, pitch, true);
 
 		if(spawnParticles)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageExplosion(this.causesFire, this.damagesTerrain, this.size, this.power, this.x, this.y, this.z), pl.pabilo8.immersiveintelligence.api.Utils.targetPointFromPos(getPos(), world, (int)(64+size)));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageExplosion(this.causesFire, this.damagesTerrain, this.size, this.power, this.x, this.y, this.z), IIUtils.targetPointFromPos(getPos(), world, (int)(64+size)));
 
 
 		if(this.damagesTerrain)

@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
@@ -72,7 +72,7 @@ public class AIHansMachinegun extends EntityAIBase
 
 			NBTTagCompound update = new NBTTagCompound();
 			mg.writeEntityToNBT(update);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(mg, update), Utils.targetPointFromEntity(mg, 24));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(mg, update), IIUtils.targetPointFromEntity(mg, 24));
 
 			if(mg.magazine1.isEmpty())
 			{
@@ -110,7 +110,7 @@ public class AIHansMachinegun extends EntityAIBase
 		Vec3d motionVec = new Vec3d(motion.x, motion.y, motion.z).scale(2f).addVector(0, 0, 0f);
 		vv = vv.add(motionVec).normalize();
 		float yy = (float)((Math.atan2(vv.x, vv.z)*180D)/3.1415927410125732D);
-		float pp = Math.round(Utils.calculateBallisticAngle(
+		float pp = Math.round(IIUtils.calculateBallisticAngle(
 				posTurret.distanceTo(posTarget.add(motion))+10
 				, (posTarget.y+motion.y)-posTurret.y,
 				IIContent.itemAmmoMachinegun.getDefaultVelocity(),

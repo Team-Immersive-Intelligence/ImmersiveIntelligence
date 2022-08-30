@@ -14,12 +14,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.client.IDataMachineGui;
+import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class IIManualPageDataVariablesCallback extends ManualPages
 			ClientUtils.bindTexture(entry.dataType.textureLocation());
 			Gui.drawModalRectWithCustomSizedTexture(x-4, y+down-3, 0, 0, 16, 16, 16, 16);
 
-			if(Utils.isPointInRectangle(x-4, y+down-3, x+12, y+down+13, mx, my))
+			if(IIUtils.isPointInRectangle(x-4, y+down-3, x+12, y+down+13, mx, my))
 				tooltip = entry;
 
 			String toDraw = entry.n[(int)Math.ceil((gui.mc.world.getTotalWorldTime()%entry.prezTimeTotal)/20)];
@@ -118,7 +118,7 @@ public class IIManualPageDataVariablesCallback extends ManualPages
 		if(tooltip!=null)
 		{
 			ArrayList<String> toDraw = new ArrayList<>();
-			toDraw.add(I18n.format(CommonProxy.DATA_KEY+"datatype."+tooltip.dataType.getName()));
+			toDraw.add(I18n.format(IILib.DATA_KEY+"datatype."+tooltip.dataType.getName()));
 			ClientUtils.drawHoveringText(toDraw, mx, my, manual.fontRenderer, -1, -1);
 		}
 		manual.fontRenderer.setUnicodeFlag(true);

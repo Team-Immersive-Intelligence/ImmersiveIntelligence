@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelConveyorScanner;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityConveyorScanner;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityConveyorScanner;
 
 /**
  * @author Pabilo8
@@ -55,7 +55,7 @@ public class ConveyorScannerRenderer extends TileEntitySpecialRenderer<TileEntit
 
 			GlStateManager.popMatrix();
 
-			//ImmersiveIntelligence.logger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
+			//IILogger.info(ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", te.facing));
 		}
 	}
 

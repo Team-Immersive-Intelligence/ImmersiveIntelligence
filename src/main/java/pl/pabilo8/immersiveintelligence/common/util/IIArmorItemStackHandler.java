@@ -11,17 +11,17 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
- * @since 09.07.2020
- *
- * but actually
  * @author BluSunrize
+ * @since 09.07.2020
+ * <p>
+ * but actually
  */
 public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabilityProvider
 {
@@ -36,41 +36,25 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 		this.energyStorage = new EnergyHelper.ItemEnergyStorage(stack);
 	}
 
-	@Nonnull
-	private Runnable onChange = () -> {
-	};
+	@Nullable
+	private Runnable onChange = null;
 
 	public void setTile(TileEntity tile)
 	{
-		if(tile!=null)
-		{
-			onChange = tile::markDirty;
-		}
-		else
-		{
-			onChange = () -> {
-			};
-		}
+		onChange = tile==null?null: (tile::markDirty);
 	}
 
 	public void setInventoryForUpdate(IInventory inv)
 	{
-		if(inv!=null)
-		{
-			onChange = inv::markDirty;
-		}
-		else
-		{
-			onChange = () -> {
-			};
-		}
+		onChange = inv==null?null: (inv::markDirty);
 	}
 
 	@Override
 	protected void onContentsChanged(int slot)
 	{
 		super.onContentsChanged(slot);
-		onChange.run();
+		if(onChange!=null)
+			onChange.run();
 	}
 
 	@Override

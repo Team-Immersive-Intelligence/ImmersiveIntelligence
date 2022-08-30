@@ -18,11 +18,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalMultiblock0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, Bathi
 	public BathingRecipeCategory(IGuiHelper helper, boolean washing)
 	{
 		super(washing?"washing": "bathing",
-				washing?CommonProxy.DESCRIPTION_KEY+"jei.washing_recipe": "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"
+				washing?IILib.DESCRIPTION_KEY+"jei.washing_recipe": "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"
 				, helper.createBlankDrawable(140, 64), BathingRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta()));
 		tankOverlay = helper.drawableBuilder(texture, 0, 52, 20, 51)
 				.addPadding(-2, 2, -2, 2)

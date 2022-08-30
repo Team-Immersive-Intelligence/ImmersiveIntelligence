@@ -12,9 +12,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.MechanicalPump;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.client.animation.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalPump;
+import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalPump;
 
 /**
  * @author Pabilo8

@@ -18,15 +18,15 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.TmtNamedBoxGroup;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 
 		}
 		specialText = I18n.format("skin.immersiveintelligence."+skin+".name");
-		skin = (skin.isEmpty()?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): CommonProxy.SKIN_LOCATION+skin+"/");
+		skin = (skin.isEmpty()?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): IILib.SKIN_LOCATION+skin+"/");
 
 
 		ClientUtils.bindTexture(skin+texture);
@@ -189,7 +189,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 						}
 						case "belt_fed_loader":
 							nmod.render(0.0625f);
-							IBulletModel mm = BulletRegistry.INSTANCE.registeredModels.get("mg_2bCal");
+							IBulletModel mm = AmmoRegistry.INSTANCE.registeredModels.get("mg_2bCal");
 							GlStateManager.pushMatrix();
 							GlStateManager.translate(0.69f, 0.65f, -0.0625f+(-0.0625f*1.5f));
 							GlStateManager.rotate(180, 0, 1, 0);

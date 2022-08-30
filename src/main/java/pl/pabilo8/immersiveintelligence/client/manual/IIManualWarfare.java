@@ -5,30 +5,30 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualPages.Crafting;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockBallisticComputer;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockAmmunitionWorkshop;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockEmplacement;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockProjectileWorkshop;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalFortification1;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.MultiblockArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.MultiblockBallisticComputer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockFlagpole;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalFortification1;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -44,7 +44,7 @@ public class IIManualWarfare extends IIManual
 	@Override
 	public String getCategory()
 	{
-		return ClientProxy.CAT_WARFARE;
+		return IILib.CAT_WARFARE;
 	}
 
 	@Override
@@ -55,14 +55,14 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ArrayList<ManualPages> bullet_cores = new ArrayList<>();
-		for(Entry<String, IBulletCore> entry : BulletRegistry.INSTANCE.registeredBulletCores.entrySet())
+		for(Entry<String, IAmmoCore> entry : AmmoRegistry.INSTANCE.registeredBulletCores.entrySet())
 		{
 			if(!entry.getValue().getMaterial().getExampleStack().isEmpty())
 				bullet_cores.add(new IIManualPageBulletCore(ManualHelper.getManual(), entry.getValue()));
 		}
 
 		ArrayList<ManualPages> bullet_components = new ArrayList<>();
-		for(Entry<String, IBulletComponent> entry : BulletRegistry.INSTANCE.registeredComponents.entrySet())
+		for(Entry<String, IAmmoComponent> entry : AmmoRegistry.INSTANCE.registeredComponents.entrySet())
 		{
 			if(entry.getValue().showInManual()&&!entry.getValue().getMaterial().getExampleStack().isEmpty())
 				bullet_components.add(new IIManualPageBulletComponent(ManualHelper.getManual(), entry.getValue()));
@@ -132,7 +132,7 @@ public class IIManualWarfare extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "explosives_mines_satchel1"),
 				new ManualPages.Text(ManualHelper.getManual(), "explosives_mines_satchel2"),
 				new ManualPages.Crafting(ManualHelper.getManual(), "explosives_mines_satchel3",
-						Utils.getStackWithMetaName(IIContent.itemAmmoCasing, "radio_explosives")),
+						IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "radio_explosives")),
 
 				new ManualPages.Crafting(ManualHelper.getManual(), "explosives_mines_sign", new ItemStack(IIContent.blockMineSign))
 		);

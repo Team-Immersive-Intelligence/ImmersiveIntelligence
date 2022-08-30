@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.pol.instructions.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIFunctionalCircuit.Circuit;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuit;
 
 import java.util.ArrayList;
 import java.util.Arrays;

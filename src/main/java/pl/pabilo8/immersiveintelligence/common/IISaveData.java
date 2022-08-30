@@ -58,7 +58,7 @@ public class IISaveData extends WorldSavedData
 				PenetrationRegistry.blockDamage.add(dpos);
 			} catch(ClassCastException|NullPointerException e)
 			{
-				ImmersiveIntelligence.logger.info("Error in the block damage list!");
+				IILogger.info("Error in the block damage list!");
 			}
 
 		}

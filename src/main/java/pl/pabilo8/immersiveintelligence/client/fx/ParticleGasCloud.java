@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -114,7 +116,7 @@ public class ParticleGasCloud extends IIParticle
 		public ParticleFlareFlash(World world, double x, double y, double z, int colour, float size)
 		{
 			super(world, x, y, z, size, null);
-			float[] rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(colour);
+			float[] rgb = IIUtils.rgbIntToRGB(colour);
 			this.particleRed = rgb[0];
 			this.particleGreen = rgb[1];
 			this.particleBlue = rgb[2];
@@ -149,10 +151,10 @@ public class ParticleGasCloud extends IIParticle
 			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(f);
 			is = resource.getInputStream();
 			image = ImageIO.read(is);
-			texture = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB((image.getRGB(0,0)-0xff000000)<<2);
+			texture = IIUtils.rgbIntToRGB((image.getRGB(0,0)-0xff000000)<<2);
 		} catch(IOException e)
 		{
-			ImmersiveIntelligence.logger.error("Could not load fluid texture file for ParticleGasCloud");
+			IILogger.error("Could not load fluid texture file for ParticleGasCloud");
 			texture = new float[]{1f, 1f, 1f};
 		}
 		CACHED_COLORS.put(fluid, texture);

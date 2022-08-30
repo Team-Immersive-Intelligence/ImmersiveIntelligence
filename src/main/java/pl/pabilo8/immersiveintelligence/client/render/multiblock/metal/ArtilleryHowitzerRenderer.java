@@ -11,14 +11,14 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.client.animation.*;
-import pl.pabilo8.immersiveintelligence.client.animation.AMTBullet.BulletState;
-import pl.pabilo8.immersiveintelligence.client.animation.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer.ArtilleryHowitzerAnimation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityArtilleryHowitzer.ArtilleryHowitzerAnimation;
 
 /**
  * @author Pabilo8
@@ -281,7 +281,7 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 
 	private AMTBullet createDefaultShellAMT(IIModelHeader header, String name, String originName)
 	{
-		return new AMTBullet(name, header.getOffset(originName), BulletRegistry.INSTANCE.getModel(IIContent.itemAmmoArtillery));
+		return new AMTBullet(name, header.getOffset(originName), AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoArtillery));
 	}
 
 	private AMTBullet createShellQueueAMT(boolean in, int id, IIModelHeader header)

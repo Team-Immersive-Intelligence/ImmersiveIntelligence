@@ -5,7 +5,7 @@ import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeAccessor;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
  * @author Pabilo8
@@ -47,7 +47,7 @@ public class GuiDataEditorAccessor extends GuiDataEditor<DataTypeAccessor>
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawButton(mc, mouseX, mouseY, partialTicks);
-		mc.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"variable"), x+2, y+10, 0x0a0a0a, false);
+		mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"variable"), x+2, y+10, 0x0a0a0a, false);
 
 	}
 

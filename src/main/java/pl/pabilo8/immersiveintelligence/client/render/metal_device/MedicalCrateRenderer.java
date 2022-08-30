@@ -4,7 +4,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityMedicalCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityMedicalCrate;
 
 /**
  * @author Pabilo8

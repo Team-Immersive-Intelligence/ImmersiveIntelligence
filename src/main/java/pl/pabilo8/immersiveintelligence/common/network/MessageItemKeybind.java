@@ -13,11 +13,11 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerLeggings;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerLeggings;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
  * @author Pabilo8
@@ -78,7 +78,7 @@ public class MessageItemKeybind implements IMessage
 								ctx.getServerHandler().player.removePotionEffect(MobEffects.NIGHT_VISION);
 
 							ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(
-									CommonProxy.DESCRIPTION_KEY+(newState?
+									IILib.DESCRIPTION_KEY+(newState?
 											"infrared_enabled": "infrared_disabled"))), player);
 
 						}
@@ -91,8 +91,8 @@ public class MessageItemKeybind implements IMessage
 						if(equipped.getItem() instanceof ItemIILightEngineerLeggings)
 						{
 							int mode = ItemNBTHelper.getInt(equipped, "exoskeletonMode");
-							ItemNBTHelper.setInt(equipped, "exoskeletonMode", mode = Utils.cycleInt(!player.isSneaking(), mode, 0, 2));
-							ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(CommonProxy.INFO_KEY+"exoskeleton."+mode)), player);
+							ItemNBTHelper.setInt(equipped, "exoskeletonMode", mode = IIUtils.cycleInt(!player.isSneaking(), mode, 0, 2));
+							ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"exoskeleton."+mode)), player);
 						}
 					}
 					break;

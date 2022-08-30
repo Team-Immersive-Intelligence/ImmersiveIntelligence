@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.model.connector;
 
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
  * Created by Pabilo8 on 2019-06-01.

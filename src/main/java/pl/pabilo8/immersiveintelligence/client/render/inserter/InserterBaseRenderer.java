@@ -8,9 +8,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.animation.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityInserterBase;
+import pl.pabilo8.immersiveintelligence.common.block.metal.inserter.TileEntityInserterBase;
 
 import java.util.function.Function;
 

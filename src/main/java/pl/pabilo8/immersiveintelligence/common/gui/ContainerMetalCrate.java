@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import blusunrize.immersiveengineering.common.gui.ContainerCrate;
 import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityMetalCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityMetalCrate;
 
 /**
  * @author Pabilo8

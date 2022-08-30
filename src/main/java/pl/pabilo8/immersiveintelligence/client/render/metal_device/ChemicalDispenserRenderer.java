@@ -7,11 +7,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.client.animation.AMT;
-import pl.pabilo8.immersiveintelligence.client.animation.IIAnimationLoader;
-import pl.pabilo8.immersiveintelligence.client.animation.IIAnimationUtils;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityChemicalDispenser;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityChemicalDispenser;
 
 /**
  * @author Pabilo8

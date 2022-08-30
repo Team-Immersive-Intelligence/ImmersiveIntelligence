@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripodPeriscope;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 
 /**
@@ -41,7 +41,7 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderHelper.enableStandardItemLighting();
 
-		float progress = MathHelper.clamp(((entity.setupTime+partialTicks)/TripodPeriscope.setup_time), 0, 1);
+		float progress = MathHelper.clamp(((entity.setupTime+partialTicks)/TripodPeriscope.setupTime), 0, 1);
 		ClientUtils.bindTexture(texture);
 
 		if(progress==1)
@@ -69,7 +69,7 @@ public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> imple
 			mod.render();
 
 		float yy = MathHelper.wrapDegrees(360+entity.periscopeNextYaw-entity.periscopeYaw);
-		float yaw = MathHelper.wrapDegrees(entity.periscopeYaw+(Math.signum(yy)*MathHelper.clamp(Math.abs(yy), 0, TripodPeriscope.turn_speed*partialTicks)));
+		float yaw = MathHelper.wrapDegrees(entity.periscopeYaw+(Math.signum(yy)*MathHelper.clamp(Math.abs(yy), 0, TripodPeriscope.turnSpeed*partialTicks)));
 
 		GlStateManager.popMatrix();
 		GlStateManager.rotate(-yaw+90, 0, 1, 0);

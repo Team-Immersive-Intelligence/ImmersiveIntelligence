@@ -16,11 +16,11 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FluidInserter;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelFluidInserter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityFluidInserter;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityFluidInserter;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Connector;
 
 import javax.annotation.Nullable;
 

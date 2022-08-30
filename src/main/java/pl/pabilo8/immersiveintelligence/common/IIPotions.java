@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 
 /**
  * @author Pabilo8
@@ -25,7 +26,8 @@ import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
  */
 public class IIPotions
 {
-	public static Potion suppression, broken_armor, corrosion, infrared_vision, iron_will, well_supplied, concealed, exposed, medical_treatment, undergoing_repairs, radiation, nuclear_heat, movement_assist;
+	public static Potion suppression, brokenArmor, corrosion, infraredVision, ironWill, wellSupplied, concealed;
+	public static Potion exposed, medicalTreatment, undergoingRepairs, radiation, nuclearHeat, movementAssist;
 
 	public static void init()
 	{
@@ -36,8 +38,8 @@ public class IIPotions
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.125, 2);
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
-		broken_armor = new IIPotion("broken_armor", true, 0x755959, 0, false, 1, true, true);
-		broken_armor.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
+		brokenArmor = new IIPotion("broken_armor", true, 0x755959, 0, false, 1, true, true);
+		brokenArmor.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
 		corrosion = new IIPotion("corrosion", true, 0x567b46, 0, false, 2, true, true)
 		{
@@ -52,13 +54,13 @@ public class IIPotions
 		};
 		corrosion.registerPotionAttributeModifier(SharedMonsterAttributes.ARMOR_TOUGHNESS, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
-		infrared_vision = new IIPotion("infrared_vision", false, 0x7b0000, 0, false, 3, true, true);
+		infraredVision = new IIPotion("infrared_vision", false, 0x7b0000, 0, false, 3, true, true);
 
-		iron_will = new IIPotion("iron_will", false, 0xe2c809, 0, false, 4, true, true);
-		iron_will.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.003921569f, 1);
-		iron_will.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), 0.007843138f, 2);
+		ironWill = new IIPotion("iron_will", false, 0xe2c809, 0, false, 4, true, true);
+		ironWill.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.003921569f, 1);
+		ironWill.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK, Utils.generateNewUUID().toString(), 0.007843138f, 2);
 
-		well_supplied = new IIPotion("well_supplied", false, 0xa49e66, 0, false, 5, true, true);
+		wellSupplied = new IIPotion("well_supplied", false, 0xa49e66, 0, false, 5, true, true);
 
 		concealed = new IIPotion("concealed", false, 0x558858, 0, false, 6, true, true)
 		{
@@ -93,7 +95,7 @@ public class IIPotions
 		suppression.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.007843138f, 2);
 
 
-		medical_treatment = new IIPotion("medical_treatment", false, 0xe13eb8, 0, false, 7, true, true)
+		medicalTreatment = new IIPotion("medical_treatment", false, 0xe13eb8, 0, false, 7, true, true)
 		{
 			@Override
 			public boolean isReady(int duration, int amplifier)
@@ -108,7 +110,7 @@ public class IIPotions
 					living.heal((amplifier+1)/4f);
 			}
 		};
-		undergoing_repairs = new IIPotion("undergoing_repairs", false, 0xc0c0c0, 0, false, 8, true, true)
+		undergoingRepairs = new IIPotion("undergoing_repairs", false, 0xc0c0c0, 0, false, 8, true, true)
 		{
 			@Override
 			public boolean isReady(int duration, int amplifier)
@@ -161,7 +163,7 @@ public class IIPotions
 		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 		radiation.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -0.003921569f, 2);
 
-		nuclear_heat = new IIPotion("nuclear_heat", true, 0x9d5919, 0, false, 10, true, true)
+		nuclearHeat = new IIPotion("nuclear_heat", true, 0x9d5919, 0, false, 10, true, true)
 		{
 			@Override
 			public void performEffect(EntityLivingBase living, int amplifier)
@@ -171,13 +173,13 @@ public class IIPotions
 				living.attackEntityFrom(IIDamageSources.NUCLEAR_HEAT_DAMAGE, 2000);
 			}
 		};
-		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -1, 2);
-		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -1, 2);
-		nuclear_heat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
+		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), -1, 2);
+		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FOLLOW_RANGE, Utils.generateNewUUID().toString(), -1, 2);
+		nuclearHeat.registerPotionAttributeModifier(SharedMonsterAttributes.FLYING_SPEED, Utils.generateNewUUID().toString(), -1, 2);
 
-		movement_assist = new IIPotion("movement_assist", false, 0x9d5919, 0, false, 13, true, true);
-		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
-		movement_assist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
+		movementAssist = new IIPotion("movement_assist", false, 0x9d5919, 0, false, 13, true, true);
+		movementAssist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
+		movementAssist.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, Utils.generateNewUUID().toString(), 0.5, 1);
 
 	}
 

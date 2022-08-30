@@ -13,10 +13,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBulletMortar6bCal;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMortar;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 
 /**
@@ -264,7 +264,7 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 
 			GlStateManager.translate(0.5f, 0f, 0.5f);
 			GlStateManager.rotate(-90, 0, 1, 0);
-			Utils.bindTexture(TEXTURE);
+			IIClientUtils.bindTexture(TEXTURE);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render();
 

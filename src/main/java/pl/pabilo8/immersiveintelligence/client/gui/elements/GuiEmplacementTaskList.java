@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Mouse;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageTasks.TaskFilter;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks.TaskFilter;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
  * @author Pabilo8
@@ -124,7 +124,7 @@ public class GuiEmplacementTaskList extends GuiButton
 
 			if(j > entries.length-1)
 				j = entries.length-1;
-			String s = I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+entries[j].type.getName());
+			String s = I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+entries[j].type.getName());
 			int overLength = s.length()-fr.sizeStringToWidth(s, strWidth);
 			if(overLength > 0)//String is too long
 			{

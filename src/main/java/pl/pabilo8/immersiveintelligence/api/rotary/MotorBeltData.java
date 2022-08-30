@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.client.render.MechanicalConnectorRenderer;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
+import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalConnectable;
 
 import javax.annotation.Nullable;
 

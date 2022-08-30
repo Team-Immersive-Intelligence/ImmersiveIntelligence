@@ -8,17 +8,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElectric;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelEmplacement;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.emplacement.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
@@ -185,13 +185,13 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 		modelCPDS = new ModelCPDS(true);
 		modelTeslaCoil = new ModelEmplacementWeaponTeslaCoil(true);
 
-		modelMachinegunConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, new ModelEmplacementWeaponMachinegun(false));
-		modelAutocannonConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, new ModelAutocannon(false));
-		modelInfraredObserverConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, new ModelInfraredObserver(false));
-		modelHeavyChemthrowerConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, new ModelHeavyChemthrower(false));
-		modelHeavyRailgunConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, new ModelHeavyRailgun(false));
-		modelCPDSConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, new ModelCPDS(false));
-		modelTeslaCoilConstruction = Utils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA, new ModelEmplacementWeaponTeslaCoil(false));
+		modelMachinegunConstruction = IIClientUtils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN, new ModelEmplacementWeaponMachinegun(false));
+		modelAutocannonConstruction = IIClientUtils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON, new ModelAutocannon(false));
+		modelInfraredObserverConstruction = IIClientUtils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER, new ModelInfraredObserver(false));
+		modelHeavyChemthrowerConstruction = IIClientUtils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER, new ModelHeavyChemthrower(false));
+		modelHeavyRailgunConstruction = IIClientUtils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN, new ModelHeavyRailgun(false));
+		modelCPDSConstruction = IIClientUtils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_CPDS, new ModelCPDS(false));
+		modelTeslaCoilConstruction = IIClientUtils.createConstructionModel(IIContent.UPGRADE_EMPLACEMENT_WEAPON_TESLA, new ModelEmplacementWeaponTeslaCoil(false));
 
 		modelInserter = new ModelInserter();
 		modelCrane = new ModelCraneElectric();

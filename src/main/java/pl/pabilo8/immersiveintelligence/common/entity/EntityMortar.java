@@ -27,14 +27,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
-import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 
@@ -146,7 +146,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 							}
 							if(shootingProgress==Math.round(Mortar.shootTime*0.2f))
 							{
-								world.playSound(null, posX, posY, posZ, IISounds.mortar_load, SoundCategory.PLAYERS, 1.25f, 1f);
+								world.playSound(null, posX, posY, posZ, IISounds.mortarLoad, SoundCategory.PLAYERS, 1.25f, 1f);
 							}
 							if(shootingProgress==Math.round(Mortar.shootTime*0.55f))
 							{
@@ -154,10 +154,10 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 								{
 									double true_angle = Math.toRadians((MathHelper.wrapDegrees(-rotationYaw+180)));
 									double true_angle2 = Math.toRadians(rotationPitch);
-									Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2f, true_angle, true_angle2);
+									Vec3d gun_end = IIUtils.offsetPosDirection(2f, true_angle, true_angle2);
 
-									world.playSound(null, posX, posY, posZ, IISounds.mortar_shot, SoundCategory.PLAYERS, 1.25f, 1f);
-									EntityBullet a = BulletHelper.createBullet(world, heldItem.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize());
+									world.playSound(null, posX, posY, posZ, IISounds.mortarShot, SoundCategory.PLAYERS, 1.25f, 1f);
+									EntityBullet a = AmmoUtils.createBullet(world, heldItem.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize());
 									a.setShooters(this);
 									world.spawnEntity(a);
 									heldItem.shrink(1);
@@ -290,8 +290,8 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 		float headYaw = MathHelper.wrapDegrees(this.rotationYaw);
 		double true_angle = Math.toRadians((-headYaw) > 180?360f-(-headYaw): (-headYaw));
 		double true_angle2 = Math.toRadians((-headYaw-90) > 180?360f-(-headYaw-90): (-headYaw-90));
-		Vec3d pos2 = Utils.offsetPosDirection(0.125f, true_angle, 0);
-		Vec3d pos3 = Utils.offsetPosDirection(-0.75f, true_angle2, 0);
+		Vec3d pos2 = IIUtils.offsetPosDirection(0.125f, true_angle, 0);
+		Vec3d pos3 = IIUtils.offsetPosDirection(-0.75f, true_angle2, 0);
 		float ff = 1;
 		if(shootingProgress > 0)
 		{

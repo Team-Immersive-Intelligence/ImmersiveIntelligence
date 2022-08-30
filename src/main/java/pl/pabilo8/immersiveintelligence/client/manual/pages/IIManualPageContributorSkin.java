@@ -9,7 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class IIManualPageContributorSkin extends IIManualPages
 	{
 		if(localizedName!=null&&!localizedName.isEmpty())
 		{
-			Utils.drawStringCentered(manual.fontRenderer,TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE+localizedName, x+10, y+40, 100, 0,manual.getTextColour());
+			IIClientUtils.drawStringCentered(manual.fontRenderer,TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE+localizedName, x+10, y+40, 100, 0,manual.getTextColour());
 		}
 
 		if(localizedLore!=null&&!localizedLore.isEmpty())

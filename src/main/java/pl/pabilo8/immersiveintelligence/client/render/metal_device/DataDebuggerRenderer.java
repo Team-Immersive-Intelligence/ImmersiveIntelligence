@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.animation.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityDataDebugger;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityDataDebugger;
 
 /**
  * @author Pabilo8

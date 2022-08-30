@@ -31,10 +31,6 @@ public class ImmersiveIntelligence
 	@SidedProxy(clientSide = "pl.pabilo8.immersiveintelligence.client.ClientProxy", serverSide = "pl.pabilo8.immersiveintelligence.common.CommonProxy")
 	public static CommonProxy proxy;
 
-	public static Logger logger;
-
-	public static IICreativeTab creativeTab = new IICreativeTab(MODID);
-
 	@Instance(MODID)
 	public static ImmersiveIntelligence INSTANCE;
 
@@ -47,7 +43,7 @@ public class ImmersiveIntelligence
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		logger = event.getModLog();
+		IILogger.logger = event.getModLog();
 		proxy.preInit();
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, proxy);
 	}

@@ -10,12 +10,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityTripMine;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityTripMine;
 
 /**
  * @author Pabilo8
@@ -41,7 +42,7 @@ public class TripmineRenderer extends TileEntitySpecialRenderer<TileEntityTripMi
 
 			GlStateManager.translate(0f, 0, -1f);
 			int color = getWorld().getBiome(te.getPos()).getGrassColorAtPos(te.getPos())&0x7FFFFFFF;
-			float[] colors = Utils.rgbIntToRGB(color);
+			float[] colors = IIUtils.rgbIntToRGB(color);
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
@@ -52,13 +53,13 @@ public class TripmineRenderer extends TileEntitySpecialRenderer<TileEntityTripMi
 					colors[0], colors[1], colors[2]);
 			GlStateManager.enableLighting();
 			GlStateManager.translate(0f, 0, 1f);
-			Utils.bindTexture(ModelTripMine.TEXTURES[Mines.tripmineColor]);
+			IIClientUtils.bindTexture(ModelTripMine.TEXTURES[Mines.tripmineColor]);
 
 		}
 
 		GlStateManager.enableBlend();
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		float[] c = Utils.rgbIntToRGB(te.coreColor);
+		float[] c = IIUtils.rgbIntToRGB(te.coreColor);
 		GlStateManager.color(c[0], c[1], c[2],te.grass?0.125f:1f);
 		for(ModelRendererTurbo mod : model.coreModel)
 			mod.render();
@@ -84,8 +85,8 @@ public class TripmineRenderer extends TileEntitySpecialRenderer<TileEntityTripMi
 			GlStateManager.translate(0.25, 0.75, 2);
 			GlStateManager.scale(1.75,1.75,1.75);
 
-			assert itemStackIn.getItem() instanceof IBullet;
-			IBullet bullet = (IBullet)itemStackIn.getItem();
+			assert itemStackIn.getItem() instanceof IAmmo;
+			IAmmo bullet = (IAmmo)itemStackIn.getItem();
 
 			model.renderCasing(0, bullet.getPaintColor(itemStackIn));
 			model.renderCore(bullet.getCore(itemStackIn).getColour(), EnumCoreTypes.CANISTER);

@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 
 /**
@@ -29,7 +29,7 @@ public class LayerHansTeamOverlay implements LayerRenderer<EntityHans>
 		if(team!=null&&team.getColor().isColor())
 		{
 			int i = ClientUtils.font().colorCode[team.getColor().getColorIndex()];
-			float[] rgb = Utils.rgbIntToRGB(i);
+			float[] rgb = IIUtils.rgbIntToRGB(i);
 			this.hansRenderer.bindTexture(TEXTURE);
 			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 			hansRenderer.getMainModel().render(hans, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);

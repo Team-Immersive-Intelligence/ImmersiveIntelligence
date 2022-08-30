@@ -6,7 +6,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityMedicalCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityMedicalCrate;
 
 /**
  * @author Pabilo8

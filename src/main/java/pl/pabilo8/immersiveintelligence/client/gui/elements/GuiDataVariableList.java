@@ -14,11 +14,12 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
 
@@ -82,12 +83,12 @@ public class GuiDataVariableList extends GuiButton
 
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 			delete = true;
-		else if(packet.variables.size() > 0&&Utils.isPointInRectangle(x, y, x+width, y+height, mx, my))
+		else if(packet.variables.size() > 0&&IIUtils.isPointInRectangle(x, y, x+width, y+height, mx, my))
 		{
 			//scrolling
 			int mouseChange = Mouse.getDWheel();
 			scroll -= Integer.signum(mouseChange)*15;
-			if(Mouse.isButtonDown(0)&&Utils.isPointInRectangle(x+width-11, y, x+width, y+114, mx, my))
+			if(Mouse.isButtonDown(0)&&IIUtils.isPointInRectangle(x+width-11, y, x+width, y+114, mx, my))
 			{
 				float v = (my-y)/(float)height;
 				setScrollPercent((my-y+(v > 0.5f?v/20f: -v/20f))/114f);
@@ -116,7 +117,7 @@ public class GuiDataVariableList extends GuiButton
 
 		//draw scrollbar
 		GlStateManager.pushMatrix();
-		Utils.bindTexture(TEXTURE_VARIABLES);
+		IIClientUtils.bindTexture(TEXTURE_VARIABLES);
 		drawTexturedModalRect(this.x+width-10, this.y+(int)(getScrollPercent()*100), 128, 222, 9, 14);
 
 		scissor(x, y, width, height);
@@ -144,12 +145,12 @@ public class GuiDataVariableList extends GuiButton
 	{
 		//Draw '+' button
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Utils.bindTexture(TEXTURE_VARIABLES);
+		IIClientUtils.bindTexture(TEXTURE_VARIABLES);
 		GlStateManager.pushMatrix();
 		int length = (this.packet.variables.size()*20)-scroll;
 
 		this.drawTexturedModalRect(x+56, y+length, 137, 222, 18, 18);
-		add = Utils.isPointInRectangle(x+56, y+length, x+56+18, y+length+18, mx, my);
+		add = IIUtils.isPointInRectangle(x+56, y+length, x+56+18, y+length+18, mx, my);
 		fr.drawString("+", x+62, y+5+length, add?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
 		GL11.glPopMatrix();
 
@@ -164,7 +165,7 @@ public class GuiDataVariableList extends GuiButton
 
 		GlStateManager.enableAlpha();
 
-		Utils.bindTexture(TEXTURE_VARIABLES);
+		IIClientUtils.bindTexture(TEXTURE_VARIABLES);
 
 		//Background
 		this.drawTexturedModalRect(x, y, 0, 222, 128, 20);
@@ -174,7 +175,7 @@ public class GuiDataVariableList extends GuiButton
 		this.drawTexturedModalRect(x+93+14+5, y+4, hovered&&delete?36: 24, 242, 12, 12);
 
 		//Variable type based effects
-		float[] rgb = Utils.rgbIntToRGB(data.getTypeColour());
+		float[] rgb = IIUtils.rgbIntToRGB(data.getTypeColour());
 		GL11.glColor4f(rgb[0], rgb[1], rgb[2], 1f);
 		this.drawTexturedModalRect(x+1, y, 155, 222, 12, 20);
 		this.drawTexturedModalRect(x+52+2, y, 166, 222, 22, 20);
@@ -187,9 +188,9 @@ public class GuiDataVariableList extends GuiButton
 
 		FontRenderer f = mc.fontRenderer;
 		if(data instanceof DataTypeExpression)
-			f.drawString(I18n.format(CommonProxy.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
+			f.drawString(I18n.format(IILib.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
 		else
-			f.drawString(I18n.format(CommonProxy.DATA_KEY+"datatype."+data.getName()), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
+			f.drawString(I18n.format(IILib.DATA_KEY+"datatype."+data.getName()), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
 		//Draw variable name (single character)
 		f.drawString(String.valueOf(c), x+11, y+5, Lib.COLOUR_I_ImmersiveOrange, true);
 

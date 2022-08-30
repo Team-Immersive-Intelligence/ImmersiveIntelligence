@@ -5,8 +5,9 @@ import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import blusunrize.lib.manual.ManualPages;
 import com.google.gson.*;
 import net.minecraft.item.EnumRarity;
-import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -96,7 +97,7 @@ public class CustomSkinHandler
 			Gson gson = new Gson();
 			try
 			{
-				ImmersiveIntelligence.logger.info("Attempting to download II special skin list from GitHub");
+				IILogger.info("Attempting to download II special skin list from GitHub");
 				URL url = new URL("https://raw.githubusercontent.com/Pabilo8/ImmersiveIntelligence/master/contributor_skins.json");
 				specialSkins.clear();
 				specialSkinsByUUID.clear();
@@ -129,17 +130,17 @@ public class CustomSkinHandler
 
 					} catch(Exception excepParse)
 					{
-						ImmersiveIntelligence.logger.warn(excepParse);
+						IILogger.warn(excepParse);
 					}
 				}
 				specialSkins.values().forEach(SpecialSkin::parseAdditionals);
 				StringBuilder builder = new StringBuilder("Loaded skins: ");
 				specialSkins.values().forEach(specialSkin -> builder.append(specialSkin.name).append(", "));
-				ImmersiveIntelligence.logger.info(builder.delete(builder.lastIndexOf(", "), builder.length()).toString());
+				IILogger.info(builder.delete(builder.lastIndexOf(", "), builder.length()).toString());
 
 			} catch(Exception e)
 			{
-				ImmersiveIntelligence.logger.info("Could not load contributor special skin list.");
+				IILogger.info("Could not load contributor special skin list.");
 				e.printStackTrace();
 			}
 
@@ -157,8 +158,8 @@ public class CustomSkinHandler
 		ManualEntry contributor_skins = ManualHelper.getManual().getEntry("contributor_skins");
 		if(contributor_skins==null)
 		{
-			contributor_skins = new ManualEntry("contributor_skins", ClientProxy.CAT_WARFARE);
-			ManualHelper.getManual().manualContents.put(ClientProxy.CAT_WARFARE,contributor_skins);
+			contributor_skins = new ManualEntry("contributor_skins", IILib.CAT_WARFARE);
+			ManualHelper.getManual().manualContents.put(IILib.CAT_WARFARE,contributor_skins);
 		}
 
 		contributor_skins.setPages(skin_pages.toArray(new ManualPages[]{}));

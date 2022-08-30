@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.render;
 
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.EvenMoreImmersiveModelRegistry;
+import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 
 /**
  * @author Pabilo8
@@ -19,12 +19,12 @@ public interface IReloadableModelContainer<T>
 
 	default T subscribeToList(ResourceLocation modelName)
 	{
-		EvenMoreImmersiveModelRegistry.instance.addReloadableModel(this, modelName);
+		IIModelRegistry.instance.addReloadableModel(this, modelName);
 		return (T)this;
 	}
 
 	default void unsubscribeToList()
 	{
-		EvenMoreImmersiveModelRegistry.instance.removeReloadableModel(this);
+		IIModelRegistry.instance.removeReloadableModel(this);
 	}
 }

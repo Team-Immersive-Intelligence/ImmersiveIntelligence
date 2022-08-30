@@ -6,7 +6,7 @@ import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
  * @author Pabilo8
@@ -40,7 +40,7 @@ public class GuiButtonCheckboxII extends GuiButtonState
 			this.mouseDragged(mc, mouseX, mouseY);
 			if(displayString!=null&&!displayString.isEmpty())
 			{
-				this.drawString(fontrenderer, displayString, x+textOffset[0]+2, y+textOffset[1], Utils.COLOR_H1);
+				this.drawString(fontrenderer, displayString, x+textOffset[0]+2, y+textOffset[1], IILib.COLOR_H1);
 			}
 		}
 		if(this.visible&&state)

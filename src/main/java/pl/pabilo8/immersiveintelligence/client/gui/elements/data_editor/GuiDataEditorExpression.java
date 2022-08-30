@@ -9,7 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
@@ -21,8 +22,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDat
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDataLetterList.ArrowsAlignment;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,7 +89,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 			dropdownLetterPicker = addButton(new GuiButtonDataLetterList(buttonList.size(), x+2, y+2+24+14, true, dataType.getRequiredVariable(), ArrowsAlignment.RIGHT));
 
 			dropdownOperationPicker = addButton(new GuiButtonDropdownList(buttonList.size(), x+2, y+14, width-4, 20, 4, operations.toArray(new String[0])))
-					.setTranslationFunc(s -> I18n.format(CommonProxy.DATA_KEY+"function."+s));
+					.setTranslationFunc(s -> I18n.format(IILib.DATA_KEY+"function."+s));
 			dropdownOperationPicker.selectedEntry = operations.indexOf(dataType.getOperation().name);
 			dropdownOperationPicker.enabled = !operations.isEmpty();
 		}
@@ -101,7 +102,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 			Class<? extends IDataType> currentType = dataType.getOperation().allowedTypes[page-1];
 			IDataType edited = dataType.getArgument(page-1);
 			if(edited instanceof GuiDataEditorExpression) //In case someone really does that: don't
-				ImmersiveIntelligence.logger.info("Stop doing what you're doing right now! Have some mercy for the bandwidth!");
+				IILogger.info("Stop doing what you're doing right now! Have some mercy for the bandwidth!");
 			else
 			{
 				if(currentType==DataTypeAccessor.class)
@@ -179,8 +180,8 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	{
 		if(page==0)
 		{
-			mc.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"operation"), x+2, y+2, Utils.COLOR_H2, false);
-			mc.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"conditional_variable"), x+2, y+2+24, Utils.COLOR_H2, false);
+			mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"operation"), x+2, y+2, IILib.COLOR_H2, false);
+			mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"conditional_variable"), x+2, y+2+24, IILib.COLOR_H2, false);
 		}
 		else
 		{
@@ -190,7 +191,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 			for(int i = 0; i < Math.max(width-24, 0); i += 12)
 				drawTexturedModalRect(x+12+i, y, 192, 142, MathHelper.clamp(width-24-i, 0, 12), 12);
 
-			mc.fontRenderer.drawString("Parameter: ", x+2+12, y+2, Utils.COLOR_H2, false);
+			mc.fontRenderer.drawString("Parameter: ", x+2+12, y+2, IILib.COLOR_H2, false);
 			mc.fontRenderer.drawString(TextFormatting.ITALIC+paramName,
 					x+width-12-(hasTypeSwitch?7: 0)-mc.fontRenderer.getStringWidth(paramName), y+2, paramColor, false);
 
@@ -270,7 +271,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 
 					if(!collect.isEmpty())
 					{
-						int i = Utils.cycleInt(forward, collect.indexOf(dClass), 0, collect.size()-1);
+						int i = IIUtils.cycleInt(forward, collect.indexOf(dClass), 0, collect.size()-1);
 
 						dataType.data[page-1] = DataPacket.getVarInstance(collect.get(i));
 						dataType.data[page-1].setDefaultValue();
@@ -287,7 +288,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 				buttonPagePrev.mousePressed(mc, mouseX, mouseY))
 		{
 			outputType();
-			page = Utils.cycleInt(buttonPageNext.isMouseOver(), page, 0, dataType.getOperation().allowedTypes.length);
+			page = IIUtils.cycleInt(buttonPageNext.isMouseOver(), page, 0, dataType.getOperation().allowedTypes.length);
 			init();
 			return true;
 		}

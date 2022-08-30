@@ -6,16 +6,17 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelRadar;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.Coord2D;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.Shape2D;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.TileEntityRadar;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityRadar;
 
 /**
  * @author Pabilo8
@@ -123,8 +124,8 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 		model.parts.remove("triangulators");
 		modelFlipped.parts.remove("triangulators");
 
-		modelConstruction = Utils.createConstructionModel(null, model);
-		modelConstructionFlipped = Utils.createConstructionModel(null, modelFlipped);
+		modelConstruction = IIClientUtils.createConstructionModel(null, model);
+		modelConstructionFlipped = IIClientUtils.createConstructionModel(null, modelFlipped);
 		TileEntityRadar.PART_AMOUNT = modelConstruction.length;
 
 		//ah yes, even in my own code there is this cheeky maneuvering
@@ -138,7 +139,7 @@ public class RadarRenderer extends TileEntitySpecialRenderer<TileEntityRadar> im
 	public void renderConstruction(TileEntityRadar te, float partialTicks)
 	{
 		ModelRendererTurbo[] tt = te.mirrored?modelConstructionFlipped: modelConstruction;
-		double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electric_hammer_energy_per_use_construction/4.25f))), Utils.getMaxClientProgress(te.construction, te.getConstructionCost(), TileEntityRadar.PART_AMOUNT));
+		double cc = (int)Math.min(te.clientConstruction+((partialTicks*(Tools.electricHammerEnergyPerUseConstruction/4.25f))), IIUtils.getMaxClientProgress(te.construction, te.getConstructionCost(), TileEntityRadar.PART_AMOUNT));
 		double progress = MathHelper.clamp(cc/(float)te.getConstructionCost(), 0f, 1f);
 
 		for(int i = 0; i < TileEntityRadar.PART_AMOUNT*progress; i++)

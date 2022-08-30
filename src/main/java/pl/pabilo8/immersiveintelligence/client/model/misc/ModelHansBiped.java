@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansArmAnimation;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.HansLegAnimation;
@@ -267,7 +267,7 @@ public class ModelHansBiped extends ModelPlayer
 				final float kickLeg = 0.25f;
 				final float landLeg = -0.55f;
 
-				bipedLeftHand.rotateAngleX = Utils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
+				bipedLeftHand.rotateAngleX = IIUtils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
 
 			}
 			break;
@@ -369,11 +369,11 @@ public class ModelHansBiped extends ModelPlayer
 				final float landLeg = -1.57f-0.25f;
 				final float kickFoot = 1.57f+0.35f;
 
-				bipedLeftLeg.rotateAngleX = Utils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
-				bipedRightLeg.rotateAngleX = Utils.clampedLerp3Par(kickLeg, landLeg-v1*0.125f, kickLeg, v2);
+				bipedLeftLeg.rotateAngleX = IIUtils.clampedLerp3Par(kickLeg, landLeg-v2*0.125f, kickLeg, v1);
+				bipedRightLeg.rotateAngleX = IIUtils.clampedLerp3Par(kickLeg, landLeg-v1*0.125f, kickLeg, v2);
 
-				bipedLeftFoot.rotateAngleX = Utils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v1);
-				bipedRightFoot.rotateAngleX = Utils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v2);
+				bipedLeftFoot.rotateAngleX = IIUtils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v1);
+				bipedRightFoot.rotateAngleX = IIUtils.clampedLerp3Par(kickFoot, -0.25f, kickFoot, v2);
 
 				bipedBody.rotateAngleX = -0.1f;
 

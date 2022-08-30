@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 
 /**
  * @author Pabilo8

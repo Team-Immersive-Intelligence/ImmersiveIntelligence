@@ -12,8 +12,8 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSawmill;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.TileEntitySawmill;
 
 /**
  * @author Pabilo8
@@ -85,7 +85,7 @@ public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill
 			{
 				GlStateManager.pushMatrix();
 
-				//ImmersiveIntelligence.logger.info(te.processTime+" / "+te.processTimeMax);
+				//IILogger.info(te.processTime+" / "+te.processTimeMax);
 				float ptime = Math.min(te.processTime+partialTicks, te.processTimeMax);
 				float timeFull = ptime/(float)te.processTimeMax;
 				boolean renderStack = false, time_half = false;

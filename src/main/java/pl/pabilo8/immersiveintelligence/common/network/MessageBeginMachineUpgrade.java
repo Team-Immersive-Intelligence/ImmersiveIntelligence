@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 
@@ -102,7 +102,7 @@ public class MessageBeginMachineUpgrade implements IMessage
 									}
 
 									((IUpgradableMachine)tile).startUpgrade(upgrade);
-									IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
+									IIPacketHandler.INSTANCE.sendToAllTracking(message, IIUtils.targetPointFromTile(tile, 32));
 								}
 							}
 						}
@@ -111,7 +111,7 @@ public class MessageBeginMachineUpgrade implements IMessage
 							if(tile instanceof IUpgradableMachine)
 							{
 								((IUpgradableMachine)tile).removeUpgrade(upgrade);
-								IIPacketHandler.INSTANCE.sendToAllTracking(message, Utils.targetPointFromTile(tile, 32));
+								IIPacketHandler.INSTANCE.sendToAllTracking(message, IIUtils.targetPointFromTile(tile, 32));
 							}
 						}
 					}

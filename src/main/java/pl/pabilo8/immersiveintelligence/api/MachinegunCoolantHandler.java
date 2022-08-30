@@ -11,7 +11,6 @@ import java.util.HashMap;
  */
 public class MachinegunCoolantHandler
 {
-
 	static HashMap<Fluid, Integer> allowedFluids = new HashMap<>();
 
 	public static boolean isValidCoolant(FluidStack stack)

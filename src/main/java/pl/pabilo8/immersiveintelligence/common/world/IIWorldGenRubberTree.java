@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.BlockIIRubberLog.IIBlockTypesRubberLog;
+import pl.pabilo8.immersiveintelligence.common.block.wooden.BlockIIRubberLog.IIBlockTypesRubberLog;
 
 import java.util.Random;
 

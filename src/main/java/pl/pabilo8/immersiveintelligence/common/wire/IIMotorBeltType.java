@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.api.rotary.IModelMotorBelt;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltType;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt.MotorBelt;
+import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.MotorBelt;
 
 import java.util.ArrayList;
 

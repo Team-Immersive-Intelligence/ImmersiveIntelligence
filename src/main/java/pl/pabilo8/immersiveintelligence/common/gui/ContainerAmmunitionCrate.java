@@ -11,8 +11,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoMachinegun;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoMachinegun;
 
 /**
  * @author Pabilo8

@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.api.bullets.penhandlers;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 

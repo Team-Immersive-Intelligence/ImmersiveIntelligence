@@ -66,7 +66,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
+import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
@@ -75,27 +75,32 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoGrenade;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIIUpgradeableArmor;
-import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIBinoculars;
-import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIMineDetector;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMachinegun;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIMortar;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIRailgunOverride;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIISubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoGrenade;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMortar;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -142,11 +147,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					float[] rgb;
 					if(cc!=-1)
 					{
-						rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+						rgb = IIUtils.rgbIntToRGB(cc);
 						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 						ClientUtils.drawTexturedRect(10, 0, 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
 					}
-					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					rgb = IIUtils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
 					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 					ClientUtils.drawTexturedRect(24, 0, 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
 					GlStateManager.color(1f, 1f, 1f);
@@ -182,7 +187,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				GlStateManager.popMatrix();
 			}
 			ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
-			pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+			IIClientUtils.drawStringCentered(ClientUtils.font(),
 					String.valueOf(bullets),
 					width-38+12, height-27+12,
 					12, 0,
@@ -207,11 +212,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					float[] rgb;
 					if(cc!=-1)
 					{
-						rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+						rgb = IIUtils.rgbIntToRGB(cc);
 						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 						ClientUtils.drawTexturedRect(x+10, height-17-(i*6), 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
 					}
-					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					rgb = IIUtils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
 					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 					ClientUtils.drawTexturedRect(x+24, height-17-(i*6), 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
 					GlStateManager.color(1f, 1f, 1f);
@@ -219,7 +224,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				}
 			}
 			ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
-			pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+			IIClientUtils.drawStringCentered(ClientUtils.font(),
 					String.valueOf(bullets),
 					width-38+12, height-27+12,
 					12, 0,
@@ -255,11 +260,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					float[] rgb;
 					if(cc!=-1)
 					{
-						rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+						rgb = IIUtils.rgbIntToRGB(cc);
 						GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 						ClientUtils.drawTexturedRect(x+10, height-17-(i*6), 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
 					}
-					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+					rgb = IIUtils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
 					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 					ClientUtils.drawTexturedRect(x+24, height-17-(i*6), 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
 					GlStateManager.color(1f, 1f, 1f);
@@ -267,7 +272,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				}
 			}
 			ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
-			pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+			IIClientUtils.drawStringCentered(ClientUtils.font(),
 					String.valueOf(mg.bullets2),
 					width-38+12, height-27+12,
 					12, 0,
@@ -291,11 +296,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 				float[] rgb;
 				if(cc!=-1)
 				{
-					rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(cc);
+					rgb = IIUtils.rgbIntToRGB(cc);
 					GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 					ClientUtils.drawTexturedRect(x+10, height-17-(i*6), 4, 6, 61/256f, (65)/256f, 27/256f, (27+6)/256f);
 				}
-				rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
+				rgb = IIUtils.rgbIntToRGB(IIContent.itemAmmoMachinegun.getCore(cartridge.get(i)).getColour());
 				GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 				ClientUtils.drawTexturedRect(x+24, height-17-(i*6), 6, 6, 75/256f, (81)/256f, 27/256f, (27+6)/256f);
 				GlStateManager.color(1f, 1f, 1f);
@@ -303,7 +308,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			}
 		}
 		ClientUtils.drawTexturedRect(width-38+10, height-27+8, 16, 15, 51/256f, (51+16)/256f, 39/256f, (44+10)/256f);
-		pl.pabilo8.immersiveintelligence.api.Utils.drawStringCentered(ClientUtils.font(),
+		IIClientUtils.drawStringCentered(ClientUtils.font(),
 				String.valueOf(mg.bullets1),
 				width-38+12, height-27+12,
 				12, 0,
@@ -336,7 +341,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(hasShield)
 		{
 			ClientUtils.drawTexturedRect(width-24, height-20, 22, 18, 0/256f, 22/256f, 62/256f, 80/256f);
-			pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(width-23, height-3, 3, 16,
+			IIClientUtils.drawArmorBar(width-23, height-3, 3, 16,
 					mg.shieldStrength/mg.maxShieldStrength);
 			ClientUtils.drawTexturedRect(width-19, height-19, 16, 16, 32/256f, 48/256f, 0, 16/256f);
 			//height-=18;
@@ -384,7 +389,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate)
 	{
 		if(resourcePredicate.test(VanillaResourceType.MODELS))
-			EvenMoreImmersiveModelRegistry.instance.reloadRegisteredModels();
+			IIModelRegistry.instance.reloadRegisteredModels();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -399,7 +404,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					{
 						if(damageBlockPos!=null&&damageBlockPos.dimension==world.provider.getDimension()&&damageBlockPos.damage > 0&&world.isBlockLoaded(damageBlockPos))
 						{
-							pl.pabilo8.immersiveintelligence.api.Utils.tesselateBlockBreak(tessellator, world, damageBlockPos, event.getPartialTicks());
+							IIClientUtils.tesselateBlockBreak(tessellator, world, damageBlockPos, event.getPartialTicks());
 						}
 					}
 			);
@@ -410,9 +415,9 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	{
 		if(event.getEntity() instanceof EntityLivingBase)
 		{
-			if(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclear_heat)!=null)
+			if(((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclearHeat)!=null)
 			{
-				PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclear_heat);
+				PotionEffect effect = ((EntityLivingBase)event.getEntity()).getActivePotionEffect(IIPotions.nuclearHeat);
 				assert effect!=null;
 
 				GlStateManager.setFog(FogMode.EXP2);
@@ -448,10 +453,10 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onFogColourUpdate(EntityViewRenderEvent.FogColors event)
 	{
 		Entity entity = event.getEntity();
-		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.infrared_vision))
+		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.infraredVision))
 		{
 			float r = event.getRed(), g = event.getGreen(), b = event.getBlue();
-			float f15 = Math.min(Objects.requireNonNull(((EntityLivingBase)entity).getActivePotionEffect(IIPotions.infrared_vision)).getAmplifier(), 4)/4f;
+			float f15 = Math.min(Objects.requireNonNull(((EntityLivingBase)entity).getActivePotionEffect(IIPotions.infraredVision)).getAmplifier(), 4)/4f;
 			float f6 = 1.0F/event.getRed();
 
 			if(f6 > 1.0F/event.getGreen())
@@ -477,7 +482,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			event.setGreen(0);
 			event.setBlue(0);
 		}
-		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).getActivePotionEffect(IIPotions.nuclear_heat)!=null)
+		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).getActivePotionEffect(IIPotions.nuclearHeat)!=null)
 		{
 			float v = event.getEntity().getEntityWorld().provider.getSunBrightnessFactor(0);
 			//float min = Math.min(Math.min(event.getRed(), event.getGreen()), event.getBlue());
@@ -541,7 +546,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 					if(tileEntity!=null&&tileEntity.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite()))
 					{
-						if(gotTheDrip||pl.pabilo8.immersiveintelligence.api.Utils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND)))
+						if(gotTheDrip||IIUtils.isTachometer(player.getHeldItem(EnumHand.MAIN_HAND)))
 						{
 							IRotaryEnergy energy = tileEntity.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mop.sideHit.getOpposite());
 
@@ -553,15 +558,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								float ext_speed = energy.getOutputRotationSpeed();
 								if(int_torque!=ext_torque&&int_speed!=ext_speed)
 									text = new String[]{
-											I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_torque", int_torque),
-											I18n.format(CommonProxy.INFO_KEY+"tachometer.internal_speed", int_speed),
-											I18n.format(CommonProxy.INFO_KEY+"tachometer.external_torque", ext_torque),
-											I18n.format(CommonProxy.INFO_KEY+"tachometer.external_speed", ext_speed)
+											I18n.format(IILib.INFO_KEY+"tachometer.internal_torque", int_torque),
+											I18n.format(IILib.INFO_KEY+"tachometer.internal_speed", int_speed),
+											I18n.format(IILib.INFO_KEY+"tachometer.external_torque", ext_torque),
+											I18n.format(IILib.INFO_KEY+"tachometer.external_speed", ext_speed)
 									};
 								else
 									text = new String[]{
-											I18n.format(CommonProxy.INFO_KEY+"tachometer.torque", int_torque),
-											I18n.format(CommonProxy.INFO_KEY+"tachometer.speed", int_speed)
+											I18n.format(IILib.INFO_KEY+"tachometer.torque", int_torque),
+											I18n.format(IILib.INFO_KEY+"tachometer.speed", int_speed)
 									};
 							}
 						}
@@ -575,15 +580,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 					}
 					if(tileEntity instanceof IUpgradableMachine)
 					{
-						if(gotTheDrip||pl.pabilo8.immersiveintelligence.api.Utils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND)))
+						if(gotTheDrip||IIUtils.isWrench(player.getHeldItem(EnumHand.MAIN_HAND)))
 						{
 							IUpgradableMachine m = (IUpgradableMachine)tileEntity;
 							m = m.getUpgradeMaster();
 							if(m!=null&&m.getCurrentlyInstalled()!=null)
 							{
 								text = new String[]{
-										I18n.format(CommonProxy.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+m.getCurrentlyInstalled().getName())),
-										I18n.format(CommonProxy.INFO_KEY+"machineupgrade.progress", m.getInstallProgress(), m.getCurrentlyInstalled().getProgressRequired())
+										I18n.format(IILib.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+m.getCurrentlyInstalled().getName())),
+										I18n.format(IILib.INFO_KEY+"machineupgrade.progress", m.getInstallProgress(), m.getCurrentlyInstalled().getProgressRequired())
 								};
 							}
 						}
@@ -615,7 +620,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						useNixie = overlayBlock.useNixieFont(ClientUtils.mc().player, mop);
 					}
 					//learn how if statements work, blu! (so I don't have to fix bugs in my mod for you)
-					else if(mop.entityHit instanceof IFluxReceiver&&(gotTheDrip||pl.pabilo8.immersiveintelligence.api.Utils.isVoltmeter(player.getHeldItem(EnumHand.MAIN_HAND))))
+					else if(mop.entityHit instanceof IFluxReceiver&&(gotTheDrip||IIUtils.isVoltmeter(player.getHeldItem(EnumHand.MAIN_HAND))))
 					{
 						int maxStorage = ((IFluxReceiver)mop.entityHit).getMaxEnergyStored(null);
 						int storage = ((IFluxReceiver)mop.entityHit).getEnergyStored(null);
@@ -688,22 +693,22 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		ClientUtils.drawTexturedRect(-51.0F, -73.0F, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
 		ClientUtils.drawTexturedRect(-51.0F+5, -73.0F+1, 16, 16, 48/256f, 64/256f, 0/256f, 16/256f);
-		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-51+1, -73+1, 3, 16,
+		IIClientUtils.drawArmorBar(-51+1, -73+1, 3, 16,
 				motorbike.frontWheelDurability/(float)Motorbike.wheelDurability);
 
 		ClientUtils.drawTexturedRect(-59.0F, -73.0F+18, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
 		ClientUtils.drawTexturedRect(-59.0F+5, -73.0F+18+1, 16, 16, 80/256f, 96/256f, 0/256f, 16/256f);
-		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-59+1, -73+18+1, 3, 16,
+		IIClientUtils.drawArmorBar(-59+1, -73+18+1, 3, 16,
 				motorbike.engineDurability/(float)Motorbike.engineDurability);
 
 		ClientUtils.drawTexturedRect(-59.0F, -73.0F+18*2, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
 		ClientUtils.drawTexturedRect(-59.0F+5, -73.0F+18*2+1, 16, 16, 96/256f, 112/256f, 0/256f, 16/256f);
-		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-59+1, -73+18*2+1, 3, 16,
+		IIClientUtils.drawArmorBar(-59+1, -73+18*2+1, 3, 16,
 				motorbike.fuelTankDurability/(float)Motorbike.fuelTankDurability);
 
 		ClientUtils.drawTexturedRect(-51.0F, -73.0F+18*3, 22, 18, 22/256f, 44/256f, 62/256f, 80/256f);
 		ClientUtils.drawTexturedRect(-51.0F+5, -73.0F+18*3+1, 16, 16, 64/256f, 80/256f, 0/256f, 16/256f);
-		pl.pabilo8.immersiveintelligence.api.Utils.drawArmorBar(-51+1, -73+18*3+1, 3, 16,
+		IIClientUtils.drawArmorBar(-51+1, -73+18*3+1, 3, 16,
 				motorbike.backWheelDurability/(float)Motorbike.wheelDurability);
 
 
@@ -712,15 +717,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 	private void drawTripodGui(RenderGameOverlayEvent.Post event)
 	{
-		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"yaw", CameraHandler.INSTANCE.getYaw()),
+		ClientUtils.font().drawString(I18n.format(IILib.INFO_KEY+"yaw", CameraHandler.INSTANCE.getYaw()),
 				event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+8, 0xffffff, true);
-		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"pitch", CameraHandler.INSTANCE.getPitch()),
+		ClientUtils.font().drawString(I18n.format(IILib.INFO_KEY+"pitch", CameraHandler.INSTANCE.getPitch()),
 				event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+16, 0xffffff, true);
 
 		RayTraceResult traceResult = CameraHandler.INSTANCE.rayTrace(90, event.getPartialTicks());
 		BlockPos pos = ClientUtils.mc().player.getPosition();
 
-		ClientUtils.font().drawString(I18n.format(CommonProxy.INFO_KEY+"distance", (traceResult==null||traceResult.typeOfHit==Type.MISS)?I18n.format(CommonProxy.INFO_KEY+"distance_unknown"): traceResult.getBlockPos().getDistance(pos.getX(), pos.getY(), pos.getZ())),
+		ClientUtils.font().drawString(I18n.format(IILib.INFO_KEY+"distance", (traceResult==null||traceResult.typeOfHit==Type.MISS)?I18n.format(IILib.INFO_KEY+"distance_unknown"): traceResult.getBlockPos().getDistance(pos.getX(), pos.getY(), pos.getZ())),
 				event.getResolution().getScaledWidth()/2+8, event.getResolution().getScaledHeight()/2+24, 0xffffff, true);
 	}
 
@@ -896,8 +901,8 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 					boolean hasScope = mg.getZoom().canZoom(mg.gun, null);
 
-					Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
-					Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
+					Vec3d gun_end = IIUtils.offsetPosDirection(2.25f-(hasScope?1.25f: 0), true_angle, true_angle2);
+					Vec3d gun_height = IIUtils.offsetPosDirection(0.25f+(hasScope?0.125f: 0f), true_angle, true_angle2+90);
 
 					CameraHandler.INSTANCE.setCameraPos(px+(0.85*(gun_end.x+gun_height.x)), py-1.5f+0.4025+(0.85*(gun_end.y+gun_height.y)), pz+(0.85*(gun_end.z+gun_height.z)));
 					CameraHandler.INSTANCE.setCameraAngle(mg.setYaw+yaw, pitch, 0);
@@ -938,7 +943,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	public void onItemTooltip(ItemTooltipEvent event)
 	{
 		if(ItemNBTHelper.hasKey(event.getItemStack(), "ii_FilledCasing"))
-			event.getToolTip().add(I18n.format(CommonProxy.DESCRIPTION_KEY+"filled_casing"));
+			event.getToolTip().add(I18n.format(IILib.DESCRIPTION_KEY+"filled_casing"));
 		if(ItemNBTHelper.hasKey(event.getItemStack(), IIContent.NBT_AdvancedPowerpack))
 		{
 			ItemStack powerpack = ItemNBTHelper.getItemStack(event.getItemStack(), IIContent.NBT_AdvancedPowerpack);
@@ -1497,15 +1502,15 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								//1.5707964 down
 								float v = (model.bipedHead.rotateAngleX+1.5707964f)/3.1415927f;
 
-								model.bipedRightArm.rotateAngleY += pl.pabilo8.immersiveintelligence.api.Utils.clampedLerp3Par(0, -0.45f, 0f, v);
-								model.bipedRightArm.rotateAngleZ += pl.pabilo8.immersiveintelligence.api.Utils.clampedLerp3Par(0.25f, 0, -0.45f, v);
-								model.bipedLeftArm.rotateAngleZ += pl.pabilo8.immersiveintelligence.api.Utils.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
-								model.bipedLeftArm.rotateAngleY += pl.pabilo8.immersiveintelligence.api.Utils.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
+								model.bipedRightArm.rotateAngleY += IIUtils.clampedLerp3Par(0, -0.45f, 0f, v);
+								model.bipedRightArm.rotateAngleZ += IIUtils.clampedLerp3Par(0.25f, 0, -0.45f, v);
+								model.bipedLeftArm.rotateAngleZ += IIUtils.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
+								model.bipedLeftArm.rotateAngleY += IIUtils.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
 
-								model.bipedLeftArm.rotationPointX += pl.pabilo8.immersiveintelligence.api.Utils.clampedLerp3Par(-2f, -1f, -2f, v);
-								model.bipedLeftArm.rotationPointZ += pl.pabilo8.immersiveintelligence.api.Utils.clampedLerp3Par(0, -2f, 0, v);
+								model.bipedLeftArm.rotationPointX += IIUtils.clampedLerp3Par(-2f, -1f, -2f, v);
+								model.bipedLeftArm.rotationPointZ += IIUtils.clampedLerp3Par(0, -2f, 0, v);
 
-								model.bipedRightArm.rotationPointZ += pl.pabilo8.immersiveintelligence.api.Utils.clampedLerp3Par(0, 2f, 0, v);
+								model.bipedRightArm.rotationPointZ += IIUtils.clampedLerp3Par(0, 2f, 0, v);
 
 
 								//up
@@ -1621,14 +1626,14 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 						//float recoilV = ItemNBTHelper.getFloat(heldItem, "recoilV");
 
 						Vec3d vec =
-								pl.pabilo8.immersiveintelligence.api.Utils.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
+								IIUtils.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
 										.scale(-1);
 
 						double true_angle = Math.toRadians((-player.getRotationYawHead()) > 180?360f-(-player.getRotationYawHead()): (-player.getRotationYawHead()));
 						double true_angle2 = Math.toRadians((-player.getRotationYawHead()-90) > 180?360f-(-player.getRotationYawHead()-90): (-player.getRotationYawHead()-90));
 
-						Vec3d pos1_x = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f, true_angle, 0);
-						Vec3d pos1_z = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f, true_angle2, 0);
+						Vec3d pos1_x = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f, true_angle, 0);
+						Vec3d pos1_z = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f, true_angle2, 0);
 
 						Vec3d vv = player.getPositionVector()
 								.addVector(0, (24.0F-model.bipedRightArm.rotationPointY)/16f, 0)

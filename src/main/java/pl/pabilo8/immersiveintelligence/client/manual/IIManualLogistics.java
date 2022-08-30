@@ -4,22 +4,22 @@ import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.MultiblockPacker;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCratePost;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.MultiblockSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_MetalFortification;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_WoodenFortification;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.MultiblockPacker;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.MultiblockSkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.MultiblockSkyCratePost;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.MultiblockSkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalFortification;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_WoodenFortification;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class IIManualLogistics extends IIManual
 	@Override
 	public String getCategory()
 	{
-		return ClientProxy.CAT_LOGISTICS;
+		return IILib.CAT_LOGISTICS;
 	}
 
 	@Override
@@ -101,15 +101,15 @@ public class IIManualLogistics extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "skycrates4"),
 				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates5", MultiblockSkyCratePost.instance),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "skycrates6",
-						Utils.getStackWithMetaName(IIContent.itemMinecart, "wooden_crate"),
-						Utils.getStackWithMetaName(IIContent.itemMinecart, "reinforced_crate"),
-						Utils.getStackWithMetaName(IIContent.itemMinecart, "steel_crate"),
-						Utils.getStackWithMetaName(IIContent.itemMinecart, "wooden_barrel"),
-						Utils.getStackWithMetaName(IIContent.itemMinecart, "metal_barrel")
+						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "wooden_crate"),
+						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "reinforced_crate"),
+						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "steel_crate"),
+						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "wooden_barrel"),
+						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "metal_barrel")
 				),
 				new ManualPages.CraftingMulti(ManualHelper.getManual(), "skycrates7",
-						Utils.getStackWithMetaName(IIContent.itemSkycrateMount, "mechanical"),
-						Utils.getStackWithMetaName(IIContent.itemSkycrateMount, "electric"))
+						IIUtils.getStackWithMetaName(IIContent.itemSkycrateMount, "mechanical"),
+						IIUtils.getStackWithMetaName(IIContent.itemSkycrateMount, "electric"))
 		);
 
 		ArrayList<ItemStack> fences = new ArrayList<>();

@@ -5,13 +5,13 @@ import blusunrize.immersiveengineering.api.ManualPageBlueprint;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockCoagulator;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockFuelStation;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockVehicleWorkshop;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockVulcanizer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockCoagulator;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockFuelStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockVehicleWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockVulcanizer;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
  * @author Pabilo8
@@ -24,7 +24,7 @@ public class IIManualMotorworks extends IIManual
 	@Override
 	public String getCategory()
 	{
-		return ClientProxy.CAT_MOTORWORKS;
+		return IILib.CAT_MOTORWORKS;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class IIManualMotorworks extends IIManual
 						new ItemStack(IIContent.itemVulcanizerMold, 1, 0),
 						new ItemStack(IIContent.itemVulcanizerMold, 1, 1)
 				),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "vulcanizer4", Utils.getStackWithMetaName(IIContent.itemMaterial, "rubber_compound"))
+				new ManualPages.CraftingMulti(ManualHelper.getManual(), "vulcanizer4", IIUtils.getStackWithMetaName(IIContent.itemMaterial, "rubber_compound"))
 		);
 		ManualHelper.addEntry("fuel_station", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "fuel_station0", MultiblockFuelStation.instance),

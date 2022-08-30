@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAlarmSiren;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityAlarmSiren;
 
 /**
  * @author Pabilo8

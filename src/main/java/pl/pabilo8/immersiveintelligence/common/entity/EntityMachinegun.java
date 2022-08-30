@@ -38,10 +38,10 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
-import pl.pabilo8.immersiveintelligence.api.camera.CameraHandler;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
@@ -49,9 +49,9 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityAmmunitionCrate;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessagePlayerAimAnimationSync;
@@ -226,7 +226,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setBoolean("forClient", true);
 				writeEntityToNBT(tag);
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
 			}
 		}
 
@@ -349,8 +349,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			BlockPos pos = getPosition();
 			double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
 			double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
-			Vec3d pos2 = Utils.offsetPosDirection(-1.65f, true_angle, 0);
-			Vec3d pos3 = Utils.offsetPosDirection(-0.25f, true_angle2, 0);
+			Vec3d pos2 = IIUtils.offsetPosDirection(-1.65f, true_angle, 0);
+			Vec3d pos3 = IIUtils.offsetPosDirection(-0.25f, true_angle2, 0);
 
 			passenger.setPosition(pos.getX()+0.5+pos2.x+pos3.x, pos.getY()-1.15, pos.getZ()+0.5+pos2.z+pos3.z);
 		}
@@ -393,10 +393,10 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					{
 						NBTTagCompound tag = new NBTTagCompound();
 						writeEntityToNBT(tag);
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
 					}
 					if(!world.isRemote&&clipReload==1)
-						world.playSound(null, getPosition(), IISounds.machinegun_unload, SoundCategory.BLOCKS, 1F, 1f);
+						world.playSound(null, getPosition(), IISounds.machinegunUnload, SoundCategory.BLOCKS, 1F, 1f);
 				}
 				return true;
 			}
@@ -423,7 +423,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 						clipReload += 1;
 						currentlyLoaded = setTo;
 						if(!world.isRemote&&clipReload==Math.round(Machinegun.clipReloadTime*0.35f))
-							world.playSound(null, getPosition(), IISounds.machinegun_reload, SoundCategory.BLOCKS, 1F, 1f);
+							world.playSound(null, getPosition(), IISounds.machinegunReload, SoundCategory.BLOCKS, 1F, 1f);
 						return true;
 					}
 					else
@@ -448,7 +448,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 							bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
 							bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
 							writeEntityToNBT(tag);
-							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
+							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
 						}
 						return true;
 					}
@@ -731,23 +731,23 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			return false;
 
 		if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("heavy_barrel"))
-			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.75f);
+			world.playSound(null, getPosition(), IISounds.machinegunShotHeavybarrel, SoundCategory.PLAYERS, 1F, 0.75f);
 		else if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("water_cooling"))
-			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.25f);
+			world.playSound(null, getPosition(), IISounds.machinegunShotHeavybarrel, SoundCategory.PLAYERS, 1F, 0.25f);
 		else
-			world.playSound(null, getPosition(), IISounds.machinegun_shot_heavybarrel, SoundCategory.PLAYERS, 1F, 0.55f);
+			world.playSound(null, getPosition(), IISounds.machinegunShotHeavybarrel, SoundCategory.PLAYERS, 1F, 0.55f);
 
 		double true_angle = Math.toRadians(360f-rotationYaw);
 		double true_angle2 = Math.toRadians(-(rotationPitch));
-		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.95f, true_angle, true_angle2);
-		Vec3d gun_height = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
+		Vec3d gun_end = IIUtils.offsetPosDirection(0.95f, true_angle, true_angle2);
+		Vec3d gun_height = IIUtils.offsetPosDirection(0.1875f, true_angle, true_angle2+90);
 
 		Vec3d vpos = new Vec3d(posX+0.85*(gun_end.x+gun_height.x), posY+0.34375+0.85*(gun_end.y+gun_height.y), posZ+0.85*(gun_end.z+gun_height.z));
-		EntityBullet b = BulletHelper.createBullet(world, stack, vpos, gun_end);
+		EntityBullet b = AmmoUtils.createBullet(world, stack, vpos, gun_end);
 		b.setShooters(getPassengers().get(0), this);
 		world.spawnEntity(b);
 
-		ItemStack stack2 = ((IBullet)stack.getItem()).getCasingStack(1);
+		ItemStack stack2 = ((IAmmo)stack.getItem()).getCasingStack(1);
 		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
 
 		return true;
@@ -763,7 +763,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
 		recoilPitch += maxRecoilPitch*Math.random();
-		if(((EntityLivingBase)getPassengers().get(0)).getActivePotionEffects().stream().anyMatch(potionEffect -> potionEffect.getPotion()==IIPotions.iron_will))
+		if(((EntityLivingBase)getPassengers().get(0)).getActivePotionEffects().stream().anyMatch(potionEffect -> potionEffect.getPotion()==IIPotions.ironWill))
 		{
 			recoilYaw *= 0.1;
 			recoilPitch *= 0.1;
@@ -795,7 +795,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					{
 						crate.insertionHandler.extractItem(i, 1, false);
 						if(!world.isRemote)
-							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
+							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
 						return true;
 					}
 				}
@@ -814,7 +814,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		bulletDelay = bulletDelayMax;
 		recoilYaw += Math.random() > 0.5?maxRecoilYaw*2*Math.random(): -maxRecoilYaw*2*Math.random();
 		recoilPitch += maxRecoilPitch*Math.random();
-		if(((EntityLivingBase)getPassengers().get(0)).getActivePotionEffects().stream().anyMatch(potionEffect -> potionEffect.getPotion()==IIPotions.iron_will))
+		if(((EntityLivingBase)getPassengers().get(0)).getActivePotionEffects().stream().anyMatch(potionEffect -> potionEffect.getPotion()==IIPotions.ironWill))
 		{
 			recoilYaw *= 0.1;
 			recoilPitch *= 0.1;
@@ -853,7 +853,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setBoolean("mag2Empty", mag2Empty);
 
 		if(!world.isRemote)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
 
 		return shootFromStack(stack);
 	}
@@ -951,7 +951,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		NBTTagCompound tag = new NBTTagCompound();
 		writeEntityToNBT(tag);
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), Utils.targetPointFromEntity(this, 24));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
 	}
 
 	void dropItem()
@@ -1093,7 +1093,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		@Override
 		public float[] getZoomSteps(ItemStack stack, EntityPlayer player)
 		{
-			return Machinegun.machinegun_scope_max_zoom;
+			return Machinegun.machinegunScopeMaxZoom;
 		}
 	}
 

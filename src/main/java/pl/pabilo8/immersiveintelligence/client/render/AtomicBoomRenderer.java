@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityAtomicBoom;
 
 import java.util.Random;
 

@@ -16,12 +16,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumComponentRole;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -90,7 +90,7 @@ public class BulletTweaker
 		@ZenMethod
 		public static CoreMaterialBuilder create(String name)
 		{
-			return new CoreMaterialBuilder("core_"+Utils.toSnakeCase(name));
+			return new CoreMaterialBuilder("core_"+IIUtils.toSnakeCase(name));
 		}
 
 		@ZenMethod
@@ -148,8 +148,8 @@ public class BulletTweaker
 			public void apply()
 			{
 				final IngredientStack s = ApiUtils.createIngredientStack(core.stack);
-				BulletRegistry.INSTANCE.registerBulletCore(
-						new IBulletCore()
+				AmmoRegistry.INSTANCE.registerBulletCore(
+						new IAmmoCore()
 						{
 							@Override
 							public String getName()
@@ -223,7 +223,7 @@ public class BulletTweaker
 		@ZenMethod
 		public static ComponentMaterialBuilder create(String name)
 		{
-			return new ComponentMaterialBuilder(Utils.toSnakeCase(name));
+			return new ComponentMaterialBuilder(IIUtils.toSnakeCase(name));
 		}
 
 		@ZenMethod
@@ -277,8 +277,8 @@ public class BulletTweaker
 				final IngredientStack s = ApiUtils.createIngredientStack(component.stack);
 				final EnumComponentRole r = EnumComponentRole.v(component.role);
 
-				BulletRegistry.INSTANCE.registerComponent(
-						new IBulletComponent()
+				AmmoRegistry.INSTANCE.registerComponent(
+						new IAmmoComponent()
 						{
 							@Override
 							public String getName()
@@ -344,12 +344,12 @@ public class BulletTweaker
 	@ZenMethod
 	public static void removeCore(String name)
 	{
-		BulletRegistry.INSTANCE.registeredBulletCores.remove(name);
+		AmmoRegistry.INSTANCE.registeredBulletCores.remove(name);
 	}
 
 	@ZenMethod
 	public static void removeComponent(String name)
 	{
-		BulletRegistry.INSTANCE.registeredComponents.remove(name);
+		AmmoRegistry.INSTANCE.registeredComponents.remove(name);
 	}
 }

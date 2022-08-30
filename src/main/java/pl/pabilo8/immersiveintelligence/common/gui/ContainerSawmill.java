@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.TileEntitySawmill;
 
 /**
  * @author Pabilo8

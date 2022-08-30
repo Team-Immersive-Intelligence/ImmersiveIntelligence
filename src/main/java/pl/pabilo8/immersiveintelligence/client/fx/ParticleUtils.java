@@ -22,8 +22,8 @@ import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomFog;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomicBoomCore;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomicBoomRing;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleShockwave;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityAtomicBoom;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityAtomicBoom;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.HashSet;

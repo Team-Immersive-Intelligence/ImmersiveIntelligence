@@ -14,7 +14,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.TileEntityGateBase;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.TileEntityGateBase;
 
 /**
  * @author Pabilo8

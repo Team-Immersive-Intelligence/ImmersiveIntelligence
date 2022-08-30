@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class IIWorldGen implements IWorldGenerator
 
 	private void generateTrees(Random random, int chunkX, int chunkZ, World world, boolean newGeneration)
 	{
-		if(Ores.gen_rubber_trees&&random.nextInt(Ores.gen_rubber_trees_chance)==0)
+		if(Ores.genRubberTrees&&random.nextInt(Ores.genRubberTreesChance)==0)
 		{
 			final int x = chunkX * 16 + 8 + random.nextInt(16);
 			final int z = chunkZ * 16 + 8 + random.nextInt(16);
@@ -93,17 +94,17 @@ public class IIWorldGen implements IWorldGenerator
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		event.getData().setTag("ImmersiveIntelligence", nbt);
-		nbt.setBoolean(IIConfig.Ores.retrogen_key, true);
+		nbt.setBoolean(IIConfig.Ores.retrogenKey, true);
 	}
 
 	@SubscribeEvent
 	public void chunkLoad(ChunkDataEvent.Load event)
 	{
 		int dimension = event.getWorld().provider.getDimension();
-		if((!event.getData().getCompoundTag("ImmersiveIntelligence").hasKey(IIConfig.Ores.retrogen_key))&&(Ores.retrogen_platinum||Ores.retrogen_salt||Ores.retrogen_tungsten||Ores.retrogen_zinc||Ores.retrogen_fluorite||Ores.retrogen_phosphorus))
+		if((!event.getData().getCompoundTag("ImmersiveIntelligence").hasKey(IIConfig.Ores.retrogenKey))&&(Ores.retrogenPlatinum||Ores.retrogenSalt||Ores.retrogenTungsten||Ores.retrogenZinc||Ores.retrogenFluorite||Ores.retrogenPhosphorus))
 		{
-			if(IIConfig.Ores.retrogen_log_flagChunk)
-				ImmersiveIntelligence.logger.info("Chunk "+event.getChunk().getPos()+" has been flagged for Ore RetroGeneration by II.");
+			if(IIConfig.Ores.retrogenLogFlagChunk)
+				IILogger.info("Chunk "+event.getChunk().getPos()+" has been flagged for Ore RetroGeneration by II.");
 			retrogenChunks.put(dimension, event.getChunk().getPos());
 		}
 	}
@@ -132,8 +133,8 @@ public class IIWorldGen implements IWorldGenerator
 				this.generateOres(fmlRandom, loc.x, loc.z, event.world, false);
 				chunks.remove(0);
 			}
-		if(counter > 0&&IIConfig.Ores.retrogen_log_remaining)
-			ImmersiveIntelligence.logger.info("Retrogen was performed on "+counter+" Chunks, "+Math.max(0, chunks.size())+" chunks remaining");
+		if(counter > 0&&IIConfig.Ores.retrogenLogRemaining)
+			IILogger.info("Retrogen was performed on "+counter+" Chunks, "+Math.max(0, chunks.size())+" chunks remaining");
 	}
 
 	public enum EnumOreType

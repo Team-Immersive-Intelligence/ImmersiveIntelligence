@@ -8,8 +8,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletHelper;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry.PenMaterialTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
@@ -60,7 +60,7 @@ public class BlockPenetrationTweaker
 				return density;
 			}
 		};
-		BulletHelper.registerMetalMaterial(pen, name);
+		AmmoUtils.registerMetalMaterial(pen, name);
 	}
 
 	private static class CTPenetrationHandler implements IPenetrationHandler

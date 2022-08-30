@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import java.util.function.Function;
 
@@ -165,7 +165,7 @@ public class GuiButtonDropdownList extends GuiButton
 				hoverTimer = 0;
 			}
 
-			if(Utils.isPointInRectangle(x, yDropDown, x+width, yDropDown+hh, mx, my))
+			if(IIUtils.isPointInRectangle(x, yDropDown, x+width, yDropDown+hh, mx, my))
 				handleWheel();
 		}
 
@@ -207,7 +207,7 @@ public class GuiButtonDropdownList extends GuiButton
 			FontRenderer fr = ClientUtils.mc().fontRenderer;
 			int yDropDown = y+2+fr.FONT_HEIGHT;
 			int hh = Math.min(perPage, entries.length)*fr.FONT_HEIGHT;
-			boolean b = Utils.isPointInRectangle(x, yDropDown, x+width, yDropDown+hh, mx, my);
+			boolean b = IIUtils.isPointInRectangle(x, yDropDown, x+width, yDropDown+hh, mx, my);
 			if(b)
 			{
 				int mmY = my-yDropDown;
@@ -224,7 +224,7 @@ public class GuiButtonDropdownList extends GuiButton
 		}
 		else
 		{
-			return this.dropped = Utils.isPointInRectangle(x, y, x+width, y+height, mx, my);
+			return this.dropped = IIUtils.isPointInRectangle(x, y, x+width, y+height, mx, my);
 		}
 	}
 

@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.model.motor_belt;
 
 import pl.pabilo8.immersiveintelligence.api.rotary.IModelMotorBelt;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 /**
  * Created by Pabilo8 on 07-06-2019.

@@ -4,11 +4,11 @@ import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.MultiblockRadar;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockRadar;
+import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
  * @author Pabilo8
@@ -21,7 +21,7 @@ public class IIManualIntelligence extends IIManual
 	@Override
 	public String getCategory()
 	{
-		return ClientProxy.CAT_INTELLIGENCE;
+		return IILib.CAT_INTELLIGENCE;
 	}
 
 	@Override
@@ -32,8 +32,8 @@ public class IIManualIntelligence extends IIManual
 		);
 
 		ManualHelper.addEntry("binoculars", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars0", Utils.getStackWithMetaName(IIContent.itemBinoculars, "binoculars")),
-				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars1", Utils.getStackWithMetaName(IIContent.itemBinoculars, "infrared_binoculars"))
+				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars0", IIUtils.getStackWithMetaName(IIContent.itemBinoculars, "binoculars")),
+				new ManualPages.Crafting(ManualHelper.getManual(), "binoculars1", IIUtils.getStackWithMetaName(IIContent.itemBinoculars, "infrared_binoculars"))
 		);
 
 		ManualHelper.addEntry("alarm_siren", getCategory(),

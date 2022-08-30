@@ -10,10 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.EntityNavalMine;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMine;
 
 /**
  * @author Pabilo8
@@ -98,7 +98,7 @@ public class NavalMineRenderer extends Render<EntityNavalMine> implements IReloa
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0.5f, 0f, 0.5f);
-			IBullet b = (IBullet)stack.getItem();
+			IAmmo b = (IAmmo)stack.getItem();
 			if(stack.getMetadata()==0)
 				model.renderBulletUsed(b.getCore(stack).getColour(), b.getCoreType(stack), b.getPaintColor(stack));
 			else

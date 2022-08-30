@@ -44,7 +44,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansIdle
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansKazachok;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansSalute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.idle.AIHansTimedLookAtEntity;
-import pl.pabilo8.immersiveintelligence.common.items.armor.ItemIILightEngineerHelmet;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHelmet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

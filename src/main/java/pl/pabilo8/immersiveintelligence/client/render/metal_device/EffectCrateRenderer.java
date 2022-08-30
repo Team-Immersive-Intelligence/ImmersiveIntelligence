@@ -7,12 +7,12 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.animation.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityEffectCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityEffectCrate;
 
 /**
  * @author Pabilo8
@@ -55,8 +55,8 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 			IIAnimationUtils.setModelRotation(partLower, -ins*45-15, 0, 0);
 			IIAnimationUtils.setModelRotation(partUpper, -145+ins*75, 0, 0);
 
-			IIAnimationUtils.addModelRotation(partLower, Utils.clampedLerp3Par(35,0,-45,h)*ins, 0, 0);
-			IIAnimationUtils.addModelRotation(partUpper, Utils.clampedLerp3Par(75,-10,50,h)*ins, 0, 0);
+			IIAnimationUtils.addModelRotation(partLower, IIUtils.clampedLerp3Par(35,0,-45,h)*ins, 0, 0);
+			IIAnimationUtils.addModelRotation(partUpper, IIUtils.clampedLerp3Par(75,-10,50,h)*ins, 0, 0);
 
 
 			modelUpgrade.render(tes, buf);

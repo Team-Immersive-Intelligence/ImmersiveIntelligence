@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansAnimations.EyeEmotions;
@@ -27,14 +27,14 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 	private final ModelBiped modelHans;
 
 	//eyes
-	private final float[] EYEBROW_COLOUR = Utils.rgbIntToRGB(0x2e2623);
-	private final float[] EYE_BACK_COLOUR = Utils.rgbIntToRGB(0xf1f1f1);
-	private final float[] EYELID_COLOUR = Utils.rgbIntToRGB(0xdea893);
+	private final float[] EYEBROW_COLOUR = IIUtils.rgbIntToRGB(0x2e2623);
+	private final float[] EYE_BACK_COLOUR = IIUtils.rgbIntToRGB(0xf1f1f1);
+	private final float[] EYELID_COLOUR = IIUtils.rgbIntToRGB(0xdea893);
 	//mouth
-	private final float[] LIP_COLOUR = Utils.rgbIntToRGB(0xc59986);
-	private final float[] MOUTH_COLOUR = Utils.rgbIntToRGB(0x473e3a);
-	private final float[] TEETH_COLOUR = Utils.rgbIntToRGB(0xc1c1c1);
-	private final float[] TONGUE_COLOUR = Utils.rgbIntToRGB(0xc58686);
+	private final float[] LIP_COLOUR = IIUtils.rgbIntToRGB(0xc59986);
+	private final float[] MOUTH_COLOUR = IIUtils.rgbIntToRGB(0x473e3a);
+	private final float[] TEETH_COLOUR = IIUtils.rgbIntToRGB(0xc1c1c1);
+	private final float[] TONGUE_COLOUR = IIUtils.rgbIntToRGB(0xc58686);
 
 	public LayerHansEmotions(HansRenderer renderer)
 	{
@@ -117,7 +117,7 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		this.hansRenderer.bindTexture(TEXTURE);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-		drawHansEyes(buffer, lookOffset, eyebrowThickness, eyebrowHeightDiffRight, eyebrowHeightDiffLeft, eyeBlinkHalf, Utils.rgbIntToRGB(hans.eyeColour));
+		drawHansEyes(buffer, lookOffset, eyebrowThickness, eyebrowHeightDiffRight, eyebrowHeightDiffLeft, eyeBlinkHalf, IIUtils.rgbIntToRGB(hans.eyeColour));
 		drawHansMouth(buffer, lipBottomOffset, lipBottomWidth, lipTopOffset, lipTopWidth, tongueHeight, upperTeethVisible);
 
 		tessellator.draw();

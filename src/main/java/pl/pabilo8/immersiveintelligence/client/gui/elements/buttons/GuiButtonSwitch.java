@@ -6,7 +6,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -30,8 +30,8 @@ public class GuiButtonSwitch extends GuiButtonState
 		this.textColor = textColor;
 		this.texSliderU = u+backWidth;
 
-		this.color1 = Utils.rgbIntToRGB(color1);
-		this.color2 = Utils.rgbIntToRGB(color2);
+		this.color1 = IIUtils.rgbIntToRGB(color1);
+		this.color2 = IIUtils.rgbIntToRGB(color2);
 
 		//Should animate when false
 		timer = firstTime^state?MAX_SWITCH_TICKS: 0;
@@ -50,7 +50,7 @@ public class GuiButtonSwitch extends GuiButtonState
 			timer = MathHelper.clamp(timer+(state?-1: 1), 0, MAX_SWITCH_TICKS);
 
 			float progress = 1f-(MathHelper.clamp((timer+(this.state?partialTicks: -partialTicks)), 0, MAX_SWITCH_TICKS)/MAX_SWITCH_TICKS);
-			float[] c = Utils.medColour(color1, color2, progress);
+			float[] c = IIUtils.medColour(color1, color2, progress);
 			int offset = (int)(progress*(backWidth-sliderWidth+1));
 			GlStateManager.color(c[0], c[1], c[2], 1f);
 			this.drawTexturedModalRect(x+offset, y, texSliderU, texV, sliderWidth, height);//176, 98, 8, 9

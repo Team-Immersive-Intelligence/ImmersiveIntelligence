@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class SawmillRecipe extends MultiblockRecipe
 {
-	private static final int DEFAULT_COLOR = Utils.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
+	private static final int DEFAULT_COLOR = IIUtils.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
 	public static float torqueModifier = 1.0F;
 	public static float timeModifier = 1.0F;
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
@@ -58,7 +58,7 @@ public class SawmillRecipe extends MultiblockRecipe
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItems(this.itemOutput, this.itemSecondaryOutput);
-		this.dustColor = Utils.rgbIntToRGB(dustColor);
+		this.dustColor = IIUtils.rgbIntToRGB(dustColor);
 	}
 
 	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)

@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +26,7 @@ public class ParticleFlareTrace extends IIParticle
 		this.actualParticleScale = this.particleScale;
 		this.particleMaxAge = (int)(lifeTime*0.5+(lifeTime*0.5*Utils.RAND.nextGaussian()))+1;
 
-		float[] rgb = pl.pabilo8.immersiveintelligence.api.Utils.rgbIntToRGB(colour);
+		float[] rgb = IIUtils.rgbIntToRGB(colour);
 		this.particleRed = rgb[0];
 		this.particleGreen = rgb[1];
 		this.particleBlue = rgb[2];

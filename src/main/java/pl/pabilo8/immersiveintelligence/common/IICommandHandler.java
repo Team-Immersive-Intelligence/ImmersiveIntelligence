@@ -6,8 +6,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
-import pl.pabilo8.immersiveintelligence.common.util.commands.ii.*;
-import pl.pabilo8.immersiveintelligence.common.util.commands.tmt.CommandTMTReloadModels;
+import pl.pabilo8.immersiveintelligence.common.commands.ii.*;
+import pl.pabilo8.immersiveintelligence.common.commands.tmt.CommandTMTReloadModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

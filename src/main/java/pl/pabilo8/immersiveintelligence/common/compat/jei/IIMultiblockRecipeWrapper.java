@@ -8,6 +8,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.Arrays;
 
@@ -51,11 +52,11 @@ public class IIMultiblockRecipeWrapper extends MultiblockRecipeWrapper
 		String time = GuiScreen.isShiftKeyDown()?
 				this.time+" t":
 				Utils.formatDouble(this.time*0.05, "0.##")+" s";
-		minecraft.fontRenderer.drawString(time, x+16, y, pl.pabilo8.immersiveintelligence.api.Utils.COLOR_H2);
+		minecraft.fontRenderer.drawString(time, x+16, y, IILib.COLOR_H2);
 
 		String energy = GuiScreen.isShiftKeyDown()?
 				this.energy+" IF":
 				Utils.formatDouble(this.energy/(double)this.time, "0")+" IF/t";
-		minecraft.fontRenderer.drawString(energy, x+64+16, y, pl.pabilo8.immersiveintelligence.api.Utils.COLOR_H2);
+		minecraft.fontRenderer.drawString(energy, x+64+16, y, IILib.COLOR_H2);
 	}
 }

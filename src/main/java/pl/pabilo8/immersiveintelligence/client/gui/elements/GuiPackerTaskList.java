@@ -16,9 +16,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.TileEntityPacker.PackerTask;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityPacker.PackerTask;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class GuiPackerTaskList extends GuiButton
 	@Override
 	public void drawButton(@Nonnull Minecraft mc, int mx, int my, float partialTicks)
 	{
-		if(entries.size() > 0&&Utils.isPointInRectangle(x, y, x+width, y+height, mx, my))
+		if(entries.size() > 0&&IIUtils.isPointInRectangle(x, y, x+width, y+height, mx, my))
 		{
 
 			//Handle DWheel
@@ -92,7 +93,7 @@ public class GuiPackerTaskList extends GuiButton
 				prevWheelNano = Mouse.getEventNanoseconds();
 				scroll -= Integer.signum(mouseWheel)*10;
 			}
-			if(Mouse.isButtonDown(0)&&Utils.isPointInRectangle(x+width-11, y, x+width, y+(height-11), mx, my))
+			if(Mouse.isButtonDown(0)&&IIUtils.isPointInRectangle(x+width-11, y, x+width, y+(height-11), mx, my))
 			{
 				float v = (my-y)/(float)height;
 				setScrollPercent((my-y+(v > 0.5f?v/20f: -v/20f))/(height-11));
@@ -110,7 +111,7 @@ public class GuiPackerTaskList extends GuiButton
 
 		//draw scrollbar
 		GlStateManager.pushMatrix();
-		Utils.bindTexture(TEXTURE_PACKER);
+		IIClientUtils.bindTexture(TEXTURE_PACKER);
 		drawTexturedModalRect(this.x+width-10, this.y+(int)(getScrollPercent()*(height-12)), 161, 211, 9, 14);
 
 		scissor(x, y, width, height);
@@ -138,13 +139,13 @@ public class GuiPackerTaskList extends GuiButton
 
 		GlStateManager.enableAlpha();
 
-		Utils.bindTexture(TEXTURE_PACKER);
+		IIClientUtils.bindTexture(TEXTURE_PACKER);
 
 		//Background
 		this.drawTexturedModalRect(x, y, 96, 211, 65, 20);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.fontRenderer.drawString(I18n.format(CommonProxy.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+action.actionType.getActionName(unpacker)), x+2, y+7, Utils.COLOR_H1, false);
+		mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+action.actionType.getActionName(unpacker)), x+2, y+7, IILib.COLOR_H1, false);
 
 		if(Objects.equals(action.stack.oreName, "*"))
 		{
@@ -215,7 +216,7 @@ public class GuiPackerTaskList extends GuiButton
 	public boolean mousePressed(Minecraft mc, int mx, int my)
 	{
 		int s = selectedOption;
-		if(Utils.isPointInRectangle(x, y, x+width-11, y+height, mx, my))
+		if(IIUtils.isPointInRectangle(x, y, x+width-11, y+height, mx, my))
 		{
 			selectedOption = (selectedOption!=hoveredOption)?hoveredOption: -1;
 			taskChange.accept(s);

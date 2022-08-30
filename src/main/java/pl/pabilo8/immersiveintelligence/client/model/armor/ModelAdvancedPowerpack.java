@@ -6,10 +6,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**
@@ -312,7 +312,7 @@ public class ModelAdvancedPowerpack extends TMTArmorModel implements IReloadable
 
 				renderChild(bipedBody, bodyModel, scale, texture);
 
-				float[] color = Utils.rgbIntToRGB(renderColor);
+				float[] color = IIUtils.rgbIntToRGB(renderColor);
 				GlStateManager.color(color[0], color[1], color[2]);
 				renderChild(bipedBody, bodyColoredModel, scale, textureLayer);
 				GlStateManager.color(1f, 1f, 1f);

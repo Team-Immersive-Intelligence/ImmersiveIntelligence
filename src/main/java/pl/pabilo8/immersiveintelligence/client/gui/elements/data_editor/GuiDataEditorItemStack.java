@@ -11,9 +11,9 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.Utils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 	{
 		super.init();
 
-		this.valueLabel = I18n.format(CommonProxy.DESCRIPTION_KEY+"variable_value");
+		this.valueLabel = I18n.format(IILib.DESCRIPTION_KEY+"variable_value");
 
 		this.metaEdit = new GuiTextField(0, renderer,
 				x+40, y+2+20+16, width-42, 12);
@@ -81,11 +81,11 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 		ClientUtils.bindTexture("immersiveintelligence:textures/gui/emplacement_icons.png");
 		drawTexturedModalRect(x+(width/2)-9, y+7, 0, 50, 18, 18);
 
-		renderer.drawString(valueLabel, x+2, y+2, Utils.COLOR_H1, false);
+		renderer.drawString(valueLabel, x+2, y+2, IILib.COLOR_H1, false);
 
 		renderer.drawString(scanned.getDisplayName(), x+2, y+2+10+16, Lib.COLOUR_I_ImmersiveOrange, false);
-		renderer.drawString("Meta:", x+2, y+2+20+18, Utils.COLOR_H1, false);
-		renderer.drawString("Count:", x+2, y+32+16+8, Utils.COLOR_H1, false);
+		renderer.drawString("Meta:", x+2, y+2+20+18, IILib.COLOR_H1, false);
+		renderer.drawString("Count:", x+2, y+32+16+8, IILib.COLOR_H1, false);
 
 		this.countEdit.drawTextBox();
 		this.metaEdit.drawTextBox();
@@ -117,7 +117,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 	@Override
 	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
 	{
-		if(Utils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mouseX, mouseY))
+		if(IIUtils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mouseX, mouseY))
 		{
 			ItemStack underMouse = mc.player.inventory.getItemStack();
 			this.scanned = underMouse.copy();
@@ -161,7 +161,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 	@Override
 	public void getTooltip(ArrayList<String> tooltip, int mx, int my)
 	{
-		if(!scanned.isEmpty()&&Utils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mx, my))
+		if(!scanned.isEmpty()&&IIUtils.isPointInRectangle(x+(width/2)-8, y+10, x+(width/2)-8+16, y+10+16, mx, my))
 			tooltip.addAll(scanned.getTooltip(ClientUtils.mc().player, ClientUtils.mc().gameSettings.advancedItemTooltips?TooltipFlags.ADVANCED: TooltipFlags.NORMAL));
 
 	}

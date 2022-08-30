@@ -13,10 +13,10 @@ import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltData;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelMotorbike;
 import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelPanzer;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.client.tmt.TmtUtil;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.items.mechanical.ItemIIMotorBelt.MotorBelt;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.MotorBelt;
 
 public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloadableModelContainer<MotorbikeRenderer>
 {

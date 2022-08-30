@@ -81,8 +81,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.LighterFuelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
-import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IBullet;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
@@ -90,21 +90,23 @@ import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleGasCloud;
 import pl.pabilo8.immersiveintelligence.client.gui.*;
-import pl.pabilo8.immersiveintelligence.client.gui.ammunition_production.GuiAmmunitionWorkshop;
-import pl.pabilo8.immersiveintelligence.client.gui.ammunition_production.GuiProjectileWorkshop;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.arithmetic_logic_machine.GuiArithmeticMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineEdit;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.data_input_machine.GuiDataInputMachineVariables;
-import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageStatus;
-import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageStorage;
-import pl.pabilo8.immersiveintelligence.client.gui.emplacement.GuiEmplacementPageTasks;
+import pl.pabilo8.immersiveintelligence.client.gui.block.*;
+import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks;
 import pl.pabilo8.immersiveintelligence.client.manual.*;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
+import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.render.*;
 import pl.pabilo8.immersiveintelligence.client.render.RadioExplosivesRenderer.RadioExplosivesItemStackRenderer;
@@ -119,39 +121,40 @@ import pl.pabilo8.immersiveintelligence.client.render.mechanical_device.WheelRen
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
-import pl.pabilo8.immersiveintelligence.common.CommonProxy;
-import pl.pabilo8.immersiveintelligence.common.IICommandHandler;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIBase;
-import pl.pabilo8.immersiveintelligence.common.blocks.BlockIIFluid;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.conveyors.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityAdvancedInserter;
-import pl.pabilo8.immersiveintelligence.common.blocks.metal.inserter.TileEntityInserter;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.MultiblockAluminiumFenceGate.TileEntityAluminiumFenceGate;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.MultiblockSteelChainFenceGate.TileEntitySteelChainFenceGate;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.MultiblockSteelFenceGate.TileEntitySteelFenceGate;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.gate.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.first.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.metal.tileentities.second.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.multiblocks.wooden.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityGearbox;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalConnectable;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalPump;
-import pl.pabilo8.immersiveintelligence.common.blocks.rotary.TileEntityMechanicalWheel;
-import pl.pabilo8.immersiveintelligence.common.blocks.types.*;
-import pl.pabilo8.immersiveintelligence.common.blocks.wooden.TileEntityMineSign;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.block.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.block.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.block.metal.*;
+import pl.pabilo8.immersiveintelligence.common.block.metal.conveyors.*;
+import pl.pabilo8.immersiveintelligence.common.block.metal.inserter.TileEntityAdvancedInserter;
+import pl.pabilo8.immersiveintelligence.common.block.metal.inserter.TileEntityInserter;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockAluminiumFenceGate.TileEntityAluminiumFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockSteelChainFenceGate.TileEntitySteelChainFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockSteelFenceGate.TileEntitySteelFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.*;
+import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityGearbox;
+import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalConnectable;
+import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalPump;
+import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalWheel;
+import pl.pabilo8.immersiveintelligence.common.block.types.*;
+import pl.pabilo8.immersiveintelligence.common.block.wooden.TileEntityMineSign;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
-import pl.pabilo8.immersiveintelligence.common.entity.bullets.*;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIAmmoRevolver;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIIBulletBase;
-import pl.pabilo8.immersiveintelligence.common.items.ammunition.ItemIINavalMine;
-import pl.pabilo8.immersiveintelligence.common.items.tools.ItemIIDrillHead.DrillHeadPerm;
-import pl.pabilo8.immersiveintelligence.common.items.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.*;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeadPerm;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.MessageItemScrollableSwitch;
@@ -170,12 +173,6 @@ import java.util.Map.Entry;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)
 public class ClientProxy extends CommonProxy
 {
-	public static final String CAT_DATA = "ii_data";
-	public static final String CAT_WARFARE = "ii_warfare";
-	public static final String CAT_LOGISTICS = "ii_logi";
-	public static final String CAT_INTELLIGENCE = "ii_intel";
-	public static final String CAT_MOTORWORKS = "ii_motorworks";
-
 	IKeyConflictContext passenger_action = new IKeyConflictContext()
 	{
 		@Override
@@ -368,7 +365,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(EvenMoreImmersiveModelRegistry.instance);
+		MinecraftForge.EVENT_BUS.register(IIModelRegistry.instance);
 		OBJLoader.INSTANCE.addDomain(ImmersiveIntelligence.MODID);
 		IEOBJLoader.instance.addDomain(ImmersiveIntelligence.MODID);
 
@@ -410,15 +407,15 @@ public class ClientProxy extends CommonProxy
 				.setTransformations(TransformType.GROUND, new Matrix4().translate(.125, .125, .0625).scale(.125, .125, .125)));
 		IEContent.itemRailgun.setTileEntityItemStackRenderer(ItemRendererIEOBJ.INSTANCE);
 
-		for(IBullet bullet : BulletRegistry.INSTANCE.registeredBulletItems.values())
+		for(IAmmo bullet : AmmoRegistry.INSTANCE.registeredBulletItems.values())
 		{
 			if(bullet instanceof ItemIINavalMine)
 			{
 
 			}
-			else if(bullet instanceof ItemIIBulletBase)
+			else if(bullet instanceof ItemIIAmmoBase)
 			{
-				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIBulletBase)bullet, 1, ItemIIBulletBase.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
+				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoBase)bullet, 1, ItemIIAmmoBase.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
 				{
 					@Override
 					public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -426,7 +423,7 @@ public class ClientProxy extends CommonProxy
 						return new ModelItemDynamicOverride(existingModel, null);
 					}
 				}, ImmersiveIntelligence.MODID);
-				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIBulletBase)bullet, 1, ItemIIBulletBase.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
+				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoBase)bullet, 1, ItemIIAmmoBase.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
 				{
 					@Override
 					public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -437,7 +434,7 @@ public class ClientProxy extends CommonProxy
 			}
 			else if(bullet instanceof ItemIIAmmoRevolver)
 			{
-				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
+				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
 				{
 					@Override
 					public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -445,7 +442,7 @@ public class ClientProxy extends CommonProxy
 						return new ModelItemDynamicOverride(existingModel, null);
 					}
 				}, ImmersiveIntelligence.MODID);
-				EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
+				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
 				{
 					@Override
 					public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -458,7 +455,7 @@ public class ClientProxy extends CommonProxy
 
 		for(int i = 0; i < IIContent.itemBulletMagazine.getSubNames().length; i++)
 		{
-			EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBulletMagazine, 1, i), new ImmersiveModelRegistry.ItemModelReplacement()
+			IIModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBulletMagazine, 1, i), new ImmersiveModelRegistry.ItemModelReplacement()
 			{
 				@Override
 				public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -469,7 +466,7 @@ public class ClientProxy extends CommonProxy
 		}
 
 
-		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
+		IIModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
 		{
 			@Override
 			public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -477,7 +474,7 @@ public class ClientProxy extends CommonProxy
 				return new ModelItemDynamicOverride(existingModel, null);
 			}
 		}, ImmersiveIntelligence.MODID);
-		EvenMoreImmersiveModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 1), new ImmersiveModelRegistry.ItemModelReplacement()
+		IIModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 1), new ImmersiveModelRegistry.ItemModelReplacement()
 		{
 			@Override
 			public IBakedModel createBakedModel(IBakedModel existingModel)
@@ -493,16 +490,16 @@ public class ClientProxy extends CommonProxy
 	@SubscribeEvent
 	public void textureStichPre(TextureStitchEvent.Pre event)
 	{
-		for(Map.Entry<String, IBullet> s : BulletRegistry.INSTANCE.registeredBulletItems.entrySet())
+		for(Map.Entry<String, IAmmo> s : AmmoRegistry.INSTANCE.registeredBulletItems.entrySet())
 		{
-			ImmersiveIntelligence.logger.info("registering sprite for bullet casing: "+s.getKey());
+			IILogger.info("registering sprite for bullet casing: "+s.getKey());
 			s.getValue().registerSprites(event.getMap());
 		}
 
 
 		for(String s : IIContent.itemBulletMagazine.getSubNames())
 		{
-			ImmersiveIntelligence.logger.info("registering sprite for bullet magazine type: "+s);
+			IILogger.info("registering sprite for bullet magazine type: "+s);
 			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/main");
 
 			ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/bullets/magazines/"+s+"/bullet0");
@@ -667,7 +664,7 @@ public class ClientProxy extends CommonProxy
 	public void postInit()
 	{
 		super.postInit();
-		ImmersiveIntelligence.logger.info("Registering II Manual Pages.");
+		IILogger.info("Registering II Manual Pages.");
 		IIManualDataAndElectronics.INSTANCE.addPages();
 		IIManualLogistics.INSTANCE.addPages();
 		IIManualWarfare.INSTANCE.addPages();
@@ -1060,7 +1057,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void reloadModels()
 	{
-		EvenMoreImmersiveModelRegistry.instance.reloadRegisteredModels();
+		IIModelRegistry.instance.reloadRegisteredModels();
 	}
 
 	static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition

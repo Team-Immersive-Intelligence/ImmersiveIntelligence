@@ -12,7 +12,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.items.ItemIIAssemblyScheme;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIAssemblyScheme;
 
 import java.util.*;
 

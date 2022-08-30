@@ -5,7 +5,7 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
-import pl.pabilo8.immersiveintelligence.common.entity.EntityVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleMultiPart;
 
 /**
  * @author Pabilo8

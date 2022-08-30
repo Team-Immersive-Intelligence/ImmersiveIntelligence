@@ -35,7 +35,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
-import pl.pabilo8.immersiveintelligence.common.blocks.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.block.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,7 +82,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		}
 		catch(NoSuchFieldException|IllegalAccessException ignored)
 		{
-			ImmersiveIntelligence.logger.info("Failed to add IP Motorboat fuel station compat!");
+			IILogger.info("Failed to add IP Motorboat fuel station compat!");
 		}
 
 	}

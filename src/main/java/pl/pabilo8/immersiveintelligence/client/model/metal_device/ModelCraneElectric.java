@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
-import pl.pabilo8.immersiveintelligence.client.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
-import static pl.pabilo8.immersiveintelligence.api.Utils.drawRope;
+import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.drawRope;
 
 /**
  * @author Pabilo8
