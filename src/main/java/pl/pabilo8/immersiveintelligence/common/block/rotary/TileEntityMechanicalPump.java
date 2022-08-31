@@ -39,7 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

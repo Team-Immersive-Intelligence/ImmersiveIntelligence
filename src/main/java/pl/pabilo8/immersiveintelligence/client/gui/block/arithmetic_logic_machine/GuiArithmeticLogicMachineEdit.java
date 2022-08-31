@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -113,7 +113,7 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 			saveBasicData();
 			syncDataToServer();
 			preparedForChange=true;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(getPage(page), tile.getPos(), playerInv.player));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(getPage(page), tile.getPos()));
 		}
 
 	}

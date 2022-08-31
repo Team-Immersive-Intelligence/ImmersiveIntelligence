@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataE
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -139,7 +139,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 			saveBasicData();
 			syncDataToServer();
 			preparedForChange=true;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile.getPos(), playerInv.player));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile.getPos()));
 		}
 		else if(button==buttonVariableHelp)
 		{

@@ -237,7 +237,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			weaponCenter = weaponCenter.add(vv.rotatePitch(bulletsShot<2?90:-90).scale(0.25));
 
 			Vec3d vg = vv.scale(3f);
-			ParticleUtils.spawnGunfireFX(weaponCenter.x, weaponCenter.y, weaponCenter.z, vg.x, vg.y, vg.z, 4f);
+			ParticleUtils.spawnGunfireFX(weaponCenter, vg, 4f);
 
 			magazine.removeFirst();
 		}

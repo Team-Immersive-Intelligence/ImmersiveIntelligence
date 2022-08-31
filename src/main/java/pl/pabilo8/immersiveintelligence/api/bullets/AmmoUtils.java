@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetra
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 
 import java.util.List;
 import java.util.stream.Collectors;

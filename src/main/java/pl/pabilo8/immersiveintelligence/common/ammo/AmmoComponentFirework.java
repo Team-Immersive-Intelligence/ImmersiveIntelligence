@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRo
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageFireworks;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageFireworks;
 
 /**
  * @author Pabilo8
@@ -41,7 +41,7 @@ public class AmmoComponentFirework implements IAmmoComponent
 	@Override
 	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, (float)pos.x, (float)pos.y+1, (float)pos.z), IIUtils.targetPointFromPos(pos, world,96));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, pos), IIUtils.targetPointFromPos(pos, world, 96));
 		AmmoUtils.suppress(world, pos.x, pos.y, pos.z, 10f*amount, (int)(255*amount));
 	}
 

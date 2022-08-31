@@ -1,12 +1,13 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 
@@ -14,22 +15,19 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 17.07.2020
  */
-public class ParticleFlareTrace extends IIParticle
+public class ParticleFlame extends IIParticle
 {
 	private final float actualParticleScale;
 
-	public ParticleFlareTrace(World world, double x, double y, double z, float size, int colour, int lifeTime)
+	public ParticleFlame(World world, Vec3d pos, Vec3d motion, float size, int lifeTime)
 	{
-		super(world, x, y, z, 0.0, 0.03, 0.0);
+		super(world, pos, motion);
+		this.motionX *= 0.65;
 		this.motionY *= 0.25;
+		this.motionZ *= 0.65;
 		this.particleScale = (float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f;
 		this.actualParticleScale = this.particleScale;
 		this.particleMaxAge = (int)(lifeTime*0.5+(lifeTime*0.5*Utils.RAND.nextGaussian()))+1;
-
-		float[] rgb = IIUtils.rgbIntToRGB(colour);
-		this.particleRed = rgb[0];
-		this.particleGreen = rgb[1];
-		this.particleBlue = rgb[2];
 	}
 
 	public void onUpdate()
@@ -44,10 +42,18 @@ public class ParticleFlareTrace extends IIParticle
 		}
 
 		this.setParticleTextureIndex((int)(7-(particleAge/(float)particleMaxAge*6)));
-		this.motionY += 0.002D;
-		this.move(0, this.motionY, 0);
+		this.motionY += 0.004D;
+		this.move(this.motionX, this.motionY, this.motionZ);
 
+		if(this.posY==this.prevPosY)
+		{
+			this.motionX *= 1.1D;
+			this.motionZ *= 1.1D;
+		}
+
+		this.motionX *= 0.9599999785423279D;
 		this.motionY *= 0.9599999785423279D;
+		this.motionZ *= 0.9599999785423279D;
 
 		if(this.onGround)
 		{
@@ -76,6 +82,8 @@ public class ParticleFlareTrace extends IIParticle
 	{
 		float f = ((float)this.particleAge+partialTicks)/(float)this.particleMaxAge;
 		f = MathHelper.clamp(f, 0.0F, 1.0F);
+		setRBGColorF(1f, 0.3f+(0.55f*f), 0);
+
 
 		setAlphaF(0.25f-((1f-f)*0.1f));
 		this.particleScale = this.actualParticleScale*(1-f)*1.5f;

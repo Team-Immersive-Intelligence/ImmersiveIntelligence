@@ -30,8 +30,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 		else if(button.id==1)
 		{
 			syncDataToServer();
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE, tile.getPos(), playerInv.player));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE, tile.getPos()));
 		}
 	}
 

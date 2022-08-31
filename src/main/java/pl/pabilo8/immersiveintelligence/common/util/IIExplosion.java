@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageExplosion;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
 
 import java.util.List;
 import java.util.Set;
@@ -39,6 +39,11 @@ public class IIExplosion extends Explosion
 	{
 		super(worldIn, entityIn, x, y, z, size, flaming, damagesTerrain);
 		this.power = power;
+	}
+
+	public IIExplosion(World worldIn, Entity entityIn, Vec3d pos, float size, float power, boolean flaming, boolean damagesTerrain)
+	{
+		this(worldIn, entityIn, pos.x, pos.y, pos.z, size, power, flaming, damagesTerrain);
 	}
 
 	@Override
@@ -168,7 +173,7 @@ public class IIExplosion extends Explosion
 			this.world.playSound(this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 4.0F+size, pitch, true);
 
 		if(spawnParticles)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageExplosion(this.causesFire, this.damagesTerrain, this.size, this.power, this.x, this.y, this.z), IIUtils.targetPointFromPos(getPos(), world, (int)(64+size)));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageExplosion(this.causesFire, this.damagesTerrain, this.size, this.power, getPosition()), IIUtils.targetPointFromPos(getPos(), world, (int)(64+size)));
 
 
 		if(this.damagesTerrain)

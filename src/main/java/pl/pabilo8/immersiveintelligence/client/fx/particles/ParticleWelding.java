@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 /**
  * @author Pabilo8

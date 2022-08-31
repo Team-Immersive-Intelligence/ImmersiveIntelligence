@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
@@ -20,12 +21,14 @@ public class ParticleAtomicBoomCore extends IIParticle
 {
 	private final float actualParticleScale;
 
-	public ParticleAtomicBoomCore(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	public ParticleAtomicBoomCore(World world, Vec3d pos, Vec3d motion, float size)
 	{
-		super(world, x, y, z, 0, 0, 0);
-		this.motionX = mx*1.55;
-		this.motionY = my*0.65;
-		this.motionZ = mz*1.55;
+		super(world, pos, motion);
+
+		this.motionX*=1.55;
+		this.motionY*=0.65;
+		this.motionZ*=1.55;
+
 		this.particleScale = ((float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f)*0.45f;
 		this.actualParticleScale = this.particleScale;
 		this.particleMaxAge = (int)(5+(10*Utils.RAND.nextGaussian()))+1;

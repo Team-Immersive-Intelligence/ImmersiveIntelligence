@@ -506,7 +506,11 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 			{
 				Vec3d bpos = new Vec3d(getBlockPosForPos(p)).addVector(0.5, -0.5, 0.5).add(facing);
 				float mod = Utils.RAND.nextFloat();
-				ParticleShockwave particle = new ParticleShockwave(ClientUtils.mc().world, bpos.x, bpos.y+(0.125*i), bpos.z, facing.x*mod, -mod*0.1f, facing.z*mod, i+mod);
+
+				ParticleShockwave particle = new ParticleShockwave(ClientUtils.mc().world,
+						bpos.addVector(0, 0.125*i, 0),
+						facing.scale(mod).addVector(0, -mod*0.1, 0),
+						i+mod);
 				ParticleUtils.particleRenderer.addEffect(particle);
 			}
 	}

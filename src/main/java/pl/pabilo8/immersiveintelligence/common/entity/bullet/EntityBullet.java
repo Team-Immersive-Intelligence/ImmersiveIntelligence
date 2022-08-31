@@ -40,7 +40,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetra
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

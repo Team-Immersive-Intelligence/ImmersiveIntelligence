@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoMachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 
 import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.ammoCrateEnergyPerAction;
 

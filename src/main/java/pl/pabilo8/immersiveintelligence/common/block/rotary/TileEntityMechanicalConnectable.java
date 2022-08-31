@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

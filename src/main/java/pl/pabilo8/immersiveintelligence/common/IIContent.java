@@ -67,6 +67,7 @@ public class IIContent
 {
 	public static final List<Block> BLOCKS = new ArrayList<>();
 	public static final List<Item> ITEMS = new ArrayList<>();
+	public static IICreativeTab creativeTab = new IICreativeTab(MODID);
 
 	//Shares code with Immersive Energy, long live II-IEn Cooperation!
 	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
@@ -263,7 +264,6 @@ public class IIContent
 	public static Fluid fluidMethanol;
 	public static Fluid fluidLatex;
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
-	public static IICreativeTab creativeTab = new IICreativeTab(MODID);
 
 	static
 	{

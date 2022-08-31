@@ -12,6 +12,7 @@ import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNet
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
+import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
@@ -28,8 +29,6 @@ import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageProgrammableSpeakerSync;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import java.util.Objects;
@@ -57,12 +56,11 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void update()
 	{
-
 		if(world.isRemote)
 		{
 			if(active)
 				this.updateSound();
-			if (!soundID.equals(""))
+			if(!soundID.equals(""))
 			{
 
 				if(sound!=null)
@@ -77,7 +75,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 			boolean wasActive = active;
 			active = this.getNetwork().getPowerOutput(redstoneChannel) > 0;
 			if(active^wasActive)
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageProgrammableSpeakerSync(active, this.getPos(),tone, soundVolume,soundID), this.world.provider.getDimension());
+				sendSoundUpdate();
 		}
 
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
@@ -105,7 +103,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	@Override
 	public void onChange()
 	{
-		soundVolume=getNetwork().channelValues[this.redstoneChannel]/15f;
+		soundVolume = getNetwork().channelValues[this.redstoneChannel]/15f;
 	}
 
 	@Override
@@ -155,11 +153,20 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 			else
 			{
 				soundID = packet.getPacketVariable('s').valueToString();
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageProgrammableSpeakerSync(active, this.getPos(), tone, soundVolume, soundID), this.world.provider.getDimension());
+				sendSoundUpdate();
 			}
-
 		}
+	}
 
+	private void sendSoundUpdate()
+	{
+		NBTTagCompound message = new NBTTagCompound();
+		message.setBoolean("active", active);
+		message.setFloat("tone", tone);
+		message.setFloat("volume", soundVolume);
+		message.setString("sound", soundID);
+
+		ImmersiveEngineering.packetHandler.sendToDimension(new MessageTileSync(this, message), this.world.provider.getDimension());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -200,18 +207,18 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	public boolean canConnectCable(WireType cableType, TargetingInfo target, Vec3i offset)
 	{
 		String category = cableType.getCategory();
-		return (Objects.equals(category, WireType.REDSTONE.getCategory())&& this.limitType==null) || (Objects.equals(category, IIDataWireType.DATA.getCategory())&& this.wireData==null);
+		return (Objects.equals(category, WireType.REDSTONE.getCategory())&&this.limitType==null)||(Objects.equals(category, IIDataWireType.DATA.getCategory())&&this.wireData==null);
 	}
 
 	@Override
 	public void connectCable(WireType cableType, TargetingInfo target, IImmersiveConnectable other)
 	{
-		if(Objects.equals(cableType.getCategory(), WireType.REDSTONE.getCategory())&& this.limitType==null)
+		if(Objects.equals(cableType.getCategory(), WireType.REDSTONE.getCategory())&&this.limitType==null)
 		{
 			RedstoneWireNetwork.updateConnectors(pos, world, redstoneNetwork);
 			this.limitType = cableType;
 		}
-		else if(Objects.equals(cableType.getCategory(), IIDataWireType.DATA.getCategory())&& this.wireData==null)
+		else if(Objects.equals(cableType.getCategory(), IIDataWireType.DATA.getCategory())&&this.wireData==null)
 		{
 			DataWireNetwork.updateConnectors(pos, world, dataNetwork);
 			this.wireData = cableType;
@@ -286,7 +293,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 
 		redstoneChannel = nbt.getInteger("redstoneChannel");
 
-		tone=nbt.getFloat("tone");
+		tone = nbt.getFloat("tone");
 	}
 
 	@Override

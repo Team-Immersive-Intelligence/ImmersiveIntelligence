@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -8,9 +8,10 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -32,9 +33,9 @@ public class ParticleGasCloud extends IIParticle
 	public static TextureAtlasSprite TEXTURE;
 	public static final HashMap<Fluid, float[]> CACHED_COLORS = new HashMap<>();
 
-	public ParticleGasCloud(World world, double x, double y, double z, float size, Fluid fluid)
+	public ParticleGasCloud(World world, Vec3d pos, float size, Fluid fluid)
 	{
-		super(world, x, y, z);
+		super(world, pos);
 		this.fluid = fluid;
 		motionY = 0.05f;
 		this.particleScale = (float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()));
@@ -90,7 +91,7 @@ public class ParticleGasCloud extends IIParticle
 	protected void getFluidColor(float partialTicks)
 	{
 		particleAlpha = 1f;//Math.min((particleAge+partialTicks)/ (particleMaxAge / 2f)*0.25f, 1);
-		float brightness = MathHelper.clamp(getBrightnessForRender(partialTicks),0,1);
+		float brightness = MathHelper.clamp(getBrightnessForRender(partialTicks), 0, 1);
 		final float[] fluidColor = getFluidColor(fluid);
 		this.particleRed = fluidColor[0]*brightness;
 		this.particleGreen = fluidColor[1]*brightness;
@@ -106,16 +107,16 @@ public class ParticleGasCloud extends IIParticle
 
 	@Nonnull
 	@Override
-	public ParticleRenderer.DrawingStages getDrawStage()
+	public DrawingStages getDrawStage()
 	{
 		return DrawingStages.CUSTOM;
 	}
 
 	public static class ParticleFlareFlash extends ParticleGasCloud
 	{
-		public ParticleFlareFlash(World world, double x, double y, double z, int colour, float size)
+		public ParticleFlareFlash(World world, Vec3d pos, int colour, float size)
 		{
-			super(world, x, y, z, size, null);
+			super(world, pos, size, null);
 			float[] rgb = IIUtils.rgbIntToRGB(colour);
 			this.particleRed = rgb[0];
 			this.particleGreen = rgb[1];
@@ -141,17 +142,16 @@ public class ParticleGasCloud extends IIParticle
 		if(CACHED_COLORS.containsKey(fluid))
 			return CACHED_COLORS.get(fluid);
 
-
 		InputStream is;
 		BufferedImage image;
 		float[] texture;
 		try
 		{
-			final ResourceLocation f = new ResourceLocation(fluid.getStill().getResourceDomain(),"textures/"+fluid.getStill().getResourcePath()+".png");
+			final ResourceLocation f = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/"+fluid.getStill().getResourcePath()+".png");
 			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(f);
 			is = resource.getInputStream();
 			image = ImageIO.read(is);
-			texture = IIUtils.rgbIntToRGB((image.getRGB(0,0)-0xff000000)<<2);
+			texture = IIUtils.rgbIntToRGB((image.getRGB(0, 0)-0xff000000)<<2);
 		} catch(IOException e)
 		{
 			IILogger.error("Could not load fluid texture file for ParticleGasCloud");

@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -87,7 +87,7 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 							syncDataToServer();
 
 							preparedForChange=true;
-							IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos(), playerInv.player));
+							IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos()));
 
 							break;
 						}
@@ -111,7 +111,7 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 					syncDataToServer();
 
 					preparedForChange=true;
-					IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos(), playerInv.player));
+					IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos()));
 				}
 				else if(variableList.delete)
 				{

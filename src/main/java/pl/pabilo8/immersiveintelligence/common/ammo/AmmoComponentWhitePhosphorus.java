@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageParticleEffect;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 
 /**
  * @author Pabilo8
@@ -71,7 +71,7 @@ public class AmmoComponentWhitePhosphorus implements IAmmoComponent
 			world.spawnEntity(shrap);
 		}
 
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(pos.x+v.x, pos.y+v.y+1f, pos.z+v.z, "white_phosphorus"), IIUtils.targetPointFromPos(pos, world, (48)));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(pos.addVector(0,1,0), "white_phosphorus"), IIUtils.targetPointFromPos(pos, world, (48)));
 
 		//main
 		EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, pos.x+v.x, pos.y+v.y+1f, pos.z+v.z);

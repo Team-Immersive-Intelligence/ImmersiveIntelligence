@@ -1,11 +1,13 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 
 import javax.annotation.Nonnull;
@@ -16,22 +18,12 @@ import javax.annotation.Nonnull;
  */
 public class ParticleGunfire extends IIParticle
 {
-	final double dirX, dirY, dirZ;
+	final Vec3d dir;
 
-	public ParticleGunfire(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	public ParticleGunfire(World world, Vec3d pos, Vec3d motion, float size)
 	{
-		super(world, x, y, z, mx, my, mz);
-		this.posX = x;
-		this.posY = y;
-		this.posZ = z;
-
-		this.dirX = mx;
-		this.dirY = my;
-		this.dirZ = mz;
-
-		this.motionX = mx;
-		this.motionY = my;
-		this.motionZ = mz;
+		super(world, pos, motion);
+		this.dir = motion.normalize();
 
 		this.particleScale = (size+Utils.RAND.nextFloat());
 		this.particleMaxAge = (int)(2+(3*Utils.RAND.nextGaussian()));
@@ -39,13 +31,12 @@ public class ParticleGunfire extends IIParticle
 
 	public void onUpdate()
 	{
-		motionX*=0.6f;
-		motionY*=0.6f;
-		motionZ*=0.6f;
+		motionX *= 0.6f;
+		motionY *= 0.6f;
+		motionZ *= 0.6f;
+
 		if(this.particleAge++ >= this.particleMaxAge)
-		{
-			//this.setExpired();
-		}
+			this.setExpired();
 	}
 
 	@Override
@@ -103,7 +94,7 @@ public class ParticleGunfire extends IIParticle
 
 	@Nonnull
 	@Override
-	public ParticleRenderer.DrawingStages getDrawStage()
+	public DrawingStages getDrawStage()
 	{
 		return DrawingStages.TRACER;
 	}

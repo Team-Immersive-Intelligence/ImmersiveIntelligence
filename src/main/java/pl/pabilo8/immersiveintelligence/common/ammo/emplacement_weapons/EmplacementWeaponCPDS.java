@@ -135,7 +135,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		{
 			Vec3d weaponCenter = te.getWeaponCenter().add(vv.scale(-2.5));
 			Vec3d vg = vv.scale(4f);
-			ParticleUtils.spawnGunfireFX(weaponCenter.x, weaponCenter.y, weaponCenter.z, vg.x, vg.y, vg.z, 4f);
+			ParticleUtils.spawnGunfireFX(weaponCenter, vg, 4f);
 
 			magazine.removeFirst();
 		}
@@ -191,7 +191,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 	 * Originally written in C#
 	 *
 	 * @param bulletVelocity       velocity of the bullet
-	 * @param targetPosRelative 	position of the target relative to shooter
+	 * @param targetPosRelative    position of the target relative to shooter
 	 * @param targetMotionRelative motion of the target
 	 * @return
 	 * @author JamesLeeNZ

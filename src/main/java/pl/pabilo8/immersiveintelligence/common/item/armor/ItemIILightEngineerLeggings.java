@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageItemKeybind;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

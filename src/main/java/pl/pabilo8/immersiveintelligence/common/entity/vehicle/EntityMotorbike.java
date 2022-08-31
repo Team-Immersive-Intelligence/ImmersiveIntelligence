@@ -44,8 +44,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
-import pl.pabilo8.immersiveintelligence.common.network.MessageParticleEffect;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nullable;
@@ -584,7 +584,8 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			{
 				world.newExplosion(null, posX, posY, posZ, tank.getFluidAmount()/12000f*4, false, false);
 			}
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(this.getEntityId(), 0, 0, "motorbike_explosion"), IIUtils.targetPointFromEntity(this, 48));
+			// TODO: 30.08.2022 improve
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(new Vec3d(this.getEntityId(), 0, 0), "motorbike_explosion"), IIUtils.targetPointFromEntity(this, 48));
 			setDead();
 		}
 		else
@@ -646,20 +647,20 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		float worldRandom = Math.abs((world.getTotalWorldTime()%40/40f)-0.5f)/0.5f;
 
 		Vec3d smokeVec = new Vec3d(0, 0.5, 0).add(IIUtils.offsetPosDirection(-0.25f+(worldRandom*0.015625f*8), angle2, 0));
-		Vec3d modVec = IIUtils.offsetPosDirection(4, angle2, 0);
+		Vec3d modVec = IIUtils.offsetPosDirection(0.2f, angle2, 0);
 		world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX+smokeVec.x, posY+smokeVec.y, posZ+smokeVec.z, worldRandom*0.015625*modVec.x, 0.015625*modVec.y, worldRandom*0.015625*modVec.z);
 
 		if(engineDurability < Motorbike.engineDurability*0.65)
 		{
 
 			Vec3d fireVec = new Vec3d(0, 0.55, 0).add(IIUtils.offsetPosDirection(0.135f, angle2, 0));
-			ParticleUtils.spawnFlameFX(posX+fireVec.x, posY+fireVec.y, posZ+fireVec.z, worldRandom*modVec.x, 2, worldRandom*modVec.z, 2.5f, 16);
+			ParticleUtils.spawnFlameFX(getPositionVector().add(fireVec), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
 
 			if(engineDurability < Motorbike.engineDurability*0.35)
 			{
-				modVec = IIUtils.offsetPosDirection(-4, angle2, 0);
+				modVec = IIUtils.offsetPosDirection(-0.2f, angle2, 0);
 				Vec3d fireVec2 = new Vec3d(0, 0.55, 0).add(IIUtils.offsetPosDirection(-0.2f, angle2, 0));
-				ParticleUtils.spawnFlameFX(posX+fireVec2.x, posY+fireVec2.y, posZ+fireVec2.z, worldRandom*modVec.x, 2, worldRandom*modVec.z, 2.5f, 16);
+				ParticleUtils.spawnFlameFX(getPositionVector().add(fireVec2), new Vec3d(worldRandom*modVec.x, 0.1, worldRandom*modVec.z), 2.5f, 16);
 
 				if(engineDurability < Motorbike.engineDurability*0.2)
 				{
@@ -673,7 +674,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	private void spawnExplosionParticles()
 	{
-		ParticleUtils.spawnFlameExplosion(posX, posY, posZ, 1f+(tank.getFluidAmount()/12000f), rand);
+		ParticleUtils.spawnFlameExplosion(getPositionVector(), 1f+(tank.getFluidAmount()/12000f), rand);
 	}
 
 	@Override
@@ -1106,7 +1107,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 					.add(vz);
 			Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.25, rand.nextGaussian()*0.25, rand.nextGaussian()*0.025);
 
-			ParticleUtils.spawnTMTModelFX(vo.x, vo.y, vo.z, (vx.x+vz.x+vecDir.x)/1.5f, (0.25+vecDir.y)/1.5f, (vx.z+vz.z+vecDir.z)/1.5f, 0.0625f, mod, MotorbikeRenderer.TEXTURE);
+			ParticleUtils.spawnTMTModelFX(vo, vx.add(vz).add(vecDir).scale(0.66), 0.0625f, mod, MotorbikeRenderer.TEXTURE);
 		}
 	}
 

@@ -158,7 +158,7 @@ import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBlockDamageSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;

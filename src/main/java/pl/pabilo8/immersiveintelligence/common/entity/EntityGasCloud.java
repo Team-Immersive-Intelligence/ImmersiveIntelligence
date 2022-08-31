@@ -65,7 +65,7 @@ public class EntityGasCloud extends Entity
 	@Override
 	public void onUpdate()
 	{
-		move(MoverType.SELF,0.01f,0,0.01f);
+		move(MoverType.SELF, 0.01f, 0, 0.01f);
 		super.onUpdate();
 		if(this.fluid==null&&this.world.isRemote)
 		{
@@ -103,7 +103,7 @@ public class EntityGasCloud extends Entity
 				setDead();
 		}
 		else if(ticksExisted%20==0)
-			ParticleUtils.spawnGasCloud(posX, posY+1, posZ, radius, fluid.getFluid());
+			ParticleUtils.spawnGasCloud(getPositionVector().addVector(0, 1, 0), radius, fluid.getFluid());
 	}
 
 	@Override

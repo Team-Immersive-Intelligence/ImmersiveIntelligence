@@ -34,8 +34,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -144,7 +144,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 			syncDataToServer();
 			saveBasicData();
 			preparedForChange = true;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos(), mc.player));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos()));
 		}
 	}
 
@@ -316,6 +316,6 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		syncDataToServer();
 
 		preparedForChange = true;
-		IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos(), playerInv.player));
+		IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos()));
 	}
 }

@@ -126,10 +126,10 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 					//.add(vv.rotatePitch(-90).scale(0.125))
 					.add(vv.rotateYaw(90).scale(0.25));
 			Vec3d vg = vv.scale(3f);
-			ParticleUtils.spawnGunfireFX(weaponCenter.x, weaponCenter.y, weaponCenter.z, vg.x, vg.y, vg.z, 3f);
+			ParticleUtils.spawnGunfireFX(weaponCenter, vg, 3f);
 
 			weaponCenter = weaponCenter.add(vv.rotateYaw(90).scale(-0.5));
-			ParticleUtils.spawnGunfireFX(weaponCenter.x, weaponCenter.y, weaponCenter.z, vg.x, vg.y, vg.z, 3f);
+			ParticleUtils.spawnGunfireFX(weaponCenter, vg, 3f);
 
 			magazine.removeFirst();
 		}

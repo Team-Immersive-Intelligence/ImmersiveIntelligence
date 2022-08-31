@@ -99,7 +99,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMortar;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -1641,7 +1641,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 								.add(vec.scale(-1.25f));//
 						//.add(arm.rotatePitch(-90f).scale(0.5f));
 
-						ParticleUtils.spawnGunfireFX(vv.x, vv.y, vv.z, vec.x, vec.y, vec.z, v);
+						ParticleUtils.spawnGunfireFX(vv, vec, v);
 					}
 				}
 			}

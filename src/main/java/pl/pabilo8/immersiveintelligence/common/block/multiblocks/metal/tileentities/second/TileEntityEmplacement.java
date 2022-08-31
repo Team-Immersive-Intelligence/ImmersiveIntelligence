@@ -65,7 +65,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -1600,7 +1600,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			ResourceLocation texture = stuff.getFirst();
 
 			Vec3d weaponCenter = te.getWeaponCenter();
-			ParticleUtils.spawnExplosionBoomFX(entity.world, weaponCenter.x, weaponCenter.y, weaponCenter.z, 5, 4, true, true);
+			ParticleUtils.spawnExplosionBoomFX(entity.world, weaponCenter, 5, 4, true, true);
 
 			for(ModelRendererTurbo mod : models)
 			{
@@ -1612,7 +1612,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 						.add(vz);
 				Vec3d vecDir = new Vec3d(rand.nextGaussian()*0.075, rand.nextGaussian()*0.15, rand.nextGaussian()*0.075);
 
-				ParticleUtils.spawnTMTModelFX(vo.x, vo.y, vo.z, (vx.x+vz.x+vecDir.x)/1.5f, (0.25+vecDir.y)/1.5f, (vx.z+vz.z+vecDir.z)/1.5f, 0.0625f, mod, texture);
+				ParticleUtils.spawnTMTModelFX(vo, vx.add(vz).addVector(0, 0.25+vecDir.y, 0).scale(0.66), 0.0625f, mod, texture);
 			}
 		}
 
@@ -2011,7 +2011,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			if(entity instanceof IEntityMultiPart)
 			{
 				Entity[] parts = entity.getParts();
-				if(parts!=null&&parts.length>0)
+				if(parts!=null&&parts.length > 0)
 				{
 					//target the biggest hitbox
 					Entity t = Arrays.stream(parts).max((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))).orElse(parts[0]);

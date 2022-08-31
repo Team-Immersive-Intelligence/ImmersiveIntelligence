@@ -53,8 +53,8 @@ import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityAmmunitionC
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageEntityNBTSync;
-import pl.pabilo8.immersiveintelligence.common.network.MessagePlayerAimAnimationSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessagePlayerAimAnimationSync;
 
 import javax.annotation.Nullable;
 

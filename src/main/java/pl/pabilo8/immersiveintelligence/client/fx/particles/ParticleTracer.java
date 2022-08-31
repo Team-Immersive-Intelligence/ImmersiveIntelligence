@@ -1,9 +1,11 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
@@ -19,17 +21,10 @@ public class ParticleTracer extends IIParticle
 	private final float actualParticleScale;
 	private final float[] color;
 
-	public ParticleTracer(World world, double x, double y, double z, double mx, double my, double mz, float size, int color)
+	public ParticleTracer(World world, Vec3d pos, Vec3d motion, float size, int color)
 	{
-		super(world, x, y, z, mx, my, mz);
-		this.posX = x;
-		this.posY = y;
-		this.posZ = z;
-
-		this.motionX = mx/EntityBullet.DEV_SLOMO;
-		this.motionY = my/EntityBullet.DEV_SLOMO;
-		this.motionZ = mz/EntityBullet.DEV_SLOMO;
-
+		super(world, pos, motion);
+		setMotion(motion.scale(1/EntityBullet.DEV_SLOMO));
 		this.particleScale = size*16f;
 		this.actualParticleScale = size;
 		this.particleMaxAge = (int)(1/EntityBullet.DEV_SLOMO);
@@ -95,7 +90,7 @@ public class ParticleTracer extends IIParticle
 
 	@Nonnull
 	@Override
-	public ParticleRenderer.DrawingStages getDrawStage()
+	public DrawingStages getDrawStage()
 	{
 		return DrawingStages.TRACER;
 	}

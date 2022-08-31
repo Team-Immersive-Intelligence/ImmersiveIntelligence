@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDro
 import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.io.IOException;

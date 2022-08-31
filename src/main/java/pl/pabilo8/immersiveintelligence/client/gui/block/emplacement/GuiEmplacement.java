@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentit
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.io.IOException;
@@ -113,7 +113,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		if(button instanceof GuiButtonTab)
 		{
 			syncDataToServer();
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos(), mc.player));
+			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos()));
 		}
 	}
 

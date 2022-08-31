@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleExplosion;
+import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleExplosion;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet6bCal;
@@ -120,7 +120,7 @@ public class ItemIIAmmoLightArtillery extends ItemIIAmmoBase
 		for(int i = 0; i < 20; i += 1)
 		{
 			Vec3d v = bullet.getBaseMotion().rotatePitch(-90f).rotateYaw(i/20f*360f);
-			ParticleExplosion particle = new ParticleExplosion(ClientUtils.mc().world, bullet.posX, bullet.posY, bullet.posZ, v.x*0.125, v.y*0.0125, v.z*0.125, 3.25f);
+			ParticleExplosion particle = new ParticleExplosion(ClientUtils.mc().world, bullet.getPositionVector(), v.scale(0.125), 3.25f);
 			ParticleUtils.particleRenderer.addEffect(particle);
 		}
 	}

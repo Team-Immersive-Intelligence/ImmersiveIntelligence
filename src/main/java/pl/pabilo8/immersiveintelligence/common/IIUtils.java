@@ -390,9 +390,9 @@ public class IIUtils
 	 */
 	public static float[] rgbIntToRGB(int rgb)
 	{
-		float r = (rgb>>16&255)/255f;
-		float g = (rgb>>8&255)/255f;
-		float b = (rgb&256)/255f;
+		float r = ((rgb>>16)&0x0ff)*0.003921f;
+		float g = ((rgb>>8)&0x0ff)*0.003921f;
+		float b = (rgb&0x0ff)*0.003921f;
 		return new float[]{r, g, b};
 	}
 
@@ -873,6 +873,11 @@ public class IIUtils
 		entity.motionY = motionY;
 		entity.motionZ = motionZ;
 		entity.velocityChanged = true;
+	}
+
+	public static Vec3d getEntityMotion(Entity entity)
+	{
+		return new Vec3d(entity.motionX, entity.motionY, entity.motionZ);
 	}
 
 }

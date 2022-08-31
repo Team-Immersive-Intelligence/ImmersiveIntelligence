@@ -14,6 +14,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
@@ -43,6 +44,8 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	{
 		this(worldIn);
 		this.size = size;
+		this.ignoreFrustumCheck=true;
+		setRenderDistanceWeight(32.0);
 	}
 
 	@Override
@@ -52,43 +55,46 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 		progress++;
 		if(world.isRemote&&world.getTotalWorldTime()%4==0)
 		{
+			Vec3d pos = getPositionVector();
 			if(progress < 40)
 			{
-				ParticleUtils.spawnShockwave(posX, posY+(1.5*size), posZ, 20f, 2.5f);
+				ParticleUtils.spawnShockwave(pos.addVector(0, 1.5*size, 0), 20f, 2.5f);
 			}
 			if(progress > 10&&progress < 360)
 			{
 				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 12f, 0.85f, -0.125f);
+
 				if(progress < 30)
-					ParticleUtils.spawnAtomicBoomCore(this, posX, posY+(0.5*size), posZ, 10f, 0, 0.5f);
+					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 0.5*size, 0), 10f, 0, 0.5f);
 			}
 			if(progress > 20&&progress < 340)
 			{
+
 				if(progress < 320)
-					ParticleUtils.spawnAtomicBoomCore(this, posX, posY+4+(3.5*size), posZ, 20f, 0.05f, -0.25f);
-				ParticleUtils.spawnAtomicBoomCore(this, posX, posY+4+(1.5*size), posZ, 10f, 0, 0.5f);
+					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 20f, 0.05f, -0.25f);
+				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 10f, 0, 0.5f);
 			}
 			if(progress > 20&&progress < 320)
 			{
 				//ParticleUtils.spawnFog(posX, posY+(0.5*size), posZ, 25f, 1, -0.25f);
-				ParticleUtils.spawnAtomicBoomCore(this, posX, posY+4+(1.5*size), posZ, 20f, -0.01f, 0.25f);
+				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(1.5*size), 0), 20f, -0.01f, 0.25f);
 				if(progress < 35)
-					ParticleUtils.spawnAtomicBoomCore(this, posX, posY+4+(3.5*size), posZ, 10f, 0, 0.5f);
+					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(3.5*size), 0), 10f, 0, 0.5f);
 			}
 			if(progress > 25&&progress < 300)
 			{
 				//ParticleUtils.spawnFog(posX, posY+(6.5*size), posZ, 20f, 0.1f, -0.25f);
-				ParticleUtils.spawnAtomicBoomCore(this, posX, posY+4+(6.5*size), posZ, 20f, -0.01f, 0.25f);
+				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 20f, -0.01f, 0.25f);
 				if(progress < 40)
-					ParticleUtils.spawnAtomicBoomCore(this, posX, posY+4+(6.5*size), posZ, 10f, 0, 0.5f);
+					ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(6.5*size), 0), 10f, 0, 0.5f);
 			}
 			if(progress > 30&&progress < 280)
 			{
-				ParticleUtils.spawnAtomicBoomCore(this, posX, posY+4+(12.5*size), posZ, 15f, -0.01f, 0.125f);
+				ParticleUtils.spawnAtomicBoomCore(this, pos.addVector(0, 4+(12.5*size), 0), 15f, -0.01f, 0.125f);
 			}
 			if(progress > 40&&progress < 280)
 			{
-				ParticleUtils.spawnAtomicBoomRing(this, posX, posY+4+(18.5*size), posZ, 25f, 0.25f, -0.05f);
+				ParticleUtils.spawnAtomicBoomRing(this, pos.addVector(0, 4+(18.5*size), 0), 25f, 0.25f, -0.05f);
 			}
 			/*
 			if(progress > 20)
@@ -183,7 +189,7 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 			}
 			else
 			{
-				if(progress<52 && material==Material.WOOD&&state.getPropertyKeys().contains(BlockLog.LOG_AXIS))
+				if(progress < 52&&material==Material.WOOD&&state.getPropertyKeys().contains(BlockLog.LOG_AXIS))
 					world.setBlockState(pp, IIContent.blockCharredLog.getDefaultState().withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS)));
 				else if(b)
 					world.setBlockToAir(pp);

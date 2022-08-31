@@ -38,7 +38,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentit
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.NBTTagCollector;
 
@@ -414,22 +414,22 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void fireGun(int i)
 	{
-		double true_angle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
-		double true_angle2 = Math.toRadians(-(-90-turretPitch));
+		double yawFireAngle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
+		double yawPitchAngle = Math.toRadians(-(-90-turretPitch));
 
-		Vec3d gun_end = IIUtils.offsetPosDirection(3, true_angle, true_angle2);
-		Vec3d gun_dir = gun_end.normalize();
+		Vec3d gunEnd = IIUtils.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
+		Vec3d gunVec = gunEnd.normalize();
 		if(world.isRemote)
 		{
-			Vec3d gun_end_particle = gun_dir.scale(4.5);
-			ParticleUtils.spawnGunfireFX(getGunPosition().x+gun_end_particle.x, getGunPosition().y+gun_end_particle.y, getGunPosition().z+gun_end_particle.z, gun_dir.x, gun_dir.y, gun_dir.z, 8f);
+			Vec3d gun_end_particle = gunVec.scale(4.5);
+			ParticleUtils.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
 		}
 		world.playSound(null, getPos(), IISounds.howitzerShot, SoundCategory.BLOCKS, 1, 1);
 
 		if(!world.isRemote)
 		{
 			ItemStack bullet = loadedShells.get(i);
-			EntityBullet a = AmmoUtils.createBullet(world, bullet, getGunPosition().add(gun_end), gun_dir);
+			EntityBullet a = AmmoUtils.createBullet(world, bullet, getGunPosition().add(gunEnd), gunVec);
 			a.setShootPos(getMultiblockBlocks());
 			a.world.spawnEntity(a);
 		}

@@ -48,7 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblocks.TileEntityMulti
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageRotaryPowerSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

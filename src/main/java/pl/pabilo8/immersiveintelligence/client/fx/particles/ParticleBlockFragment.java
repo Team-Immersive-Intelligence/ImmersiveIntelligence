@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -7,7 +7,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 
 import javax.annotation.Nonnull;
@@ -22,21 +24,17 @@ public class ParticleBlockFragment extends IIParticle
 	private final IBlockState sourceState;
 	private BlockPos sourcePos;
 
-	public ParticleBlockFragment(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, float scale, IBlockState state)
+	public ParticleBlockFragment(World world, Vec3d pos, Vec3d motion, float scale, IBlockState state)
 	{
-		super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+		super(world, pos, motion);
 		this.sourceState = state;
 		this.particleScale = scale;
 		this.setParticleTexture(Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(state).getParticleTexture());
 		this.particleMaxAge = (int)(100+(60*rand.nextFloat()));
-		this.particleGravity = state.getBlock().blockParticleGravity*0.45f;
+		this.particleGravity = state.getBlock().blockParticleGravity*0.85f;
 		this.particleRed = 0.6F;
 		this.particleGreen = 0.6F;
 		this.particleBlue = 0.6F;
-
-		this.motionX = xSpeedIn;
-		this.motionY = ySpeedIn;
-		this.motionZ = zSpeedIn;
 
 	}
 
@@ -138,7 +136,7 @@ public class ParticleBlockFragment extends IIParticle
 
 	@Override
 	@Nonnull
-	public ParticleRenderer.DrawingStages getDrawStage()
+	public DrawingStages getDrawStage()
 	{
 		return DrawingStages.CUSTOM;
 	}

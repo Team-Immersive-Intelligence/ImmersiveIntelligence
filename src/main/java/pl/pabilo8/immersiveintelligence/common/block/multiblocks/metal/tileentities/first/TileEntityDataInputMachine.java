@@ -38,7 +38,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal.BlockIIRadioExplosives.ItemBlockRadioExplosives;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPunchtape;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

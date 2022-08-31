@@ -45,8 +45,8 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageItemKeybind;
-import pl.pabilo8.immersiveintelligence.common.network.MessageParticleGunfire;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleGunfire;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.particle.Particle;
@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
@@ -18,17 +19,12 @@ public class ParticleTMTModel extends Particle
 	private final ModelRendererTurbo model;
 	private final ResourceLocation texture;
 
-	public ParticleTMTModel(World world, double x, double y, double z, double mx, double my, double mz, float size, ModelRendererTurbo model, ResourceLocation texture)
+	public ParticleTMTModel(World world, Vec3d pos, Vec3d motion, float size, ModelRendererTurbo model, ResourceLocation texture)
 	{
-		super(world, x, y, z, mx, my, mz);
+		super(world, pos.x, pos.y, pos.z, motion.x, motion.y, motion.z);
 		this.particleMaxAge = 100+(int)(rand.nextGaussian()*32d);
 		this.particleAngle = (float)(90f*rand.nextGaussian());
-		this.posX = x;
-		this.posY = y;
-		this.posZ = z;
-		this.motionX = mx;
-		this.motionY = my;
-		this.motionZ = mz;
+
 		this.particleScale = size;
 		this.model = model;
 		this.texture = texture;

@@ -46,8 +46,8 @@ public class EntityFlare extends Entity implements IEntityAdditionalSpawnData
 	@SideOnly(Side.CLIENT)
 	private void spawnParticles()
 	{
-		ParticleUtils.spawnFlareTraceFX(posX, posY, posZ, colour, 2f);
-		ParticleUtils.spawnFlareFX(posX, posY-0.1f, posZ, colour, 1f);
+		ParticleUtils.spawnFlareTraceFX(getPositionVector(), colour, 2f);
+		ParticleUtils.spawnFlareFX(getPositionVector().subtract(0, 0.1f, 0), colour, 1f);
 	}
 
 	@Override

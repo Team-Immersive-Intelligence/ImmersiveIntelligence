@@ -14,6 +14,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOve
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
+import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,8 +28,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.MessageAlarmSirenSync;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +64,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 			boolean wasActive = active;
 			active = this.getNetwork().getPowerOutput(redstoneChannel) > 0;
 			if(active^wasActive)
-				IIPacketHandler.INSTANCE.sendToDimension(new MessageAlarmSirenSync(active, soundVolume,this.getPos()), this.world.provider.getDimension());
+				sendSoundUpdate();
 		}
 
 		if(hasWorld()&&!world.isRemote&&!refreshWireNetwork)
@@ -128,7 +127,7 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	@Override
 	public void onChange()
 	{
-		soundVolume=wireNetwork.channelValues[this.redstoneChannel]/15f;
+		soundVolume = wireNetwork.channelValues[this.redstoneChannel]/15f;
 
 	}
 
@@ -200,6 +199,23 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 		soundVolume = nbt.getFloat("volume");
 		facing = EnumFacing.getFront(nbt.getInteger("facing"));
 		redstoneChannel = nbt.getInteger("redstoneChannel");
+	}
+
+	@Override
+	public void receiveMessageFromServer(NBTTagCompound message)
+	{
+		if(message.hasKey("volume"))
+			soundVolume = message.getFloat("volume");
+		if(message.hasKey("active"))
+			active = message.getBoolean("active");
+	}
+
+	private void sendSoundUpdate()
+	{
+		NBTTagCompound message = new NBTTagCompound();
+		message.setBoolean("active", active);
+		message.setFloat("volume", soundVolume);
+		ImmersiveEngineering.packetHandler.sendToDimension(new MessageTileSync(this, message), this.world.provider.getDimension());
 	}
 
 	@Override

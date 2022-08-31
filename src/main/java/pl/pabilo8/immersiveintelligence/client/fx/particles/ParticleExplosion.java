@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.fx;
+package pl.pabilo8.immersiveintelligence.client.fx.particles;
 
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -7,7 +7,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 
 import javax.annotation.Nonnull;
@@ -20,12 +22,13 @@ public class ParticleExplosion extends IIParticle
 {
 	protected float actualParticleScale;
 
-	public ParticleExplosion(World world, double x, double y, double z, double mx, double my, double mz, float size)
+	public ParticleExplosion(World world, Vec3d pos, Vec3d motion, float size)
 	{
-		super(world, x, y, z, 0, 0, 0);
-		this.motionX = mx*1.55;
-		this.motionY = my*0.65;
-		this.motionZ = mz*1.55;
+		super(world, pos, motion);
+		this.motionX*=1.55;
+		this.motionY*=0.65;
+		this.motionZ*=1.55;
+
 		this.particleScale = (float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f;
 		this.actualParticleScale = this.particleScale;
 		this.particleMaxAge = (int)(40+(10*Utils.RAND.nextGaussian()))+1;
@@ -40,9 +43,7 @@ public class ParticleExplosion extends IIParticle
 		this.prevPosZ = this.posZ;
 
 		if(this.particleAge++ >= this.particleMaxAge)
-		{
 			this.setExpired();
-		}
 
 		this.move(this.motionX, this.motionY, this.motionZ);
 		this.motionX *= 0.9599999785423279D;
@@ -107,16 +108,16 @@ public class ParticleExplosion extends IIParticle
 
 	@Nonnull
 	@Override
-	public ParticleRenderer.DrawingStages getDrawStage()
+	public DrawingStages getDrawStage()
 	{
 		return DrawingStages.NORMAL;
 	}
 
 	public static class ParticleExplosionWP extends ParticleExplosion
 	{
-		public ParticleExplosionWP(World world, double x, double y, double z, double mx, double my, double mz, float size)
+		public ParticleExplosionWP(World world, Vec3d pos, Vec3d motion, float size)
 		{
-			super(world, x, y, z, mx, my, mz, size);
+			super(world, pos, motion, size);
 		}
 
 		@Override
