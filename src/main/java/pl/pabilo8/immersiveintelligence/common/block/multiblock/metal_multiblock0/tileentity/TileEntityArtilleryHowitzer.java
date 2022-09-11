@@ -40,7 +40,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
-import pl.pabilo8.immersiveintelligence.common.util.NBTTagCollector;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTTagCollector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
