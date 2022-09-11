@@ -4,21 +4,22 @@ import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.*;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.MultiblockPacker;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.MultiblockSkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.MultiblockSkyCratePost;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.MultiblockSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalFortification;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_WoodenFortification;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalChainFence.MetalFortifications;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWoodenChainFence.WoodenFortifications;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCratePost;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class IIManualLogistics extends IIManual
 		);
 
 		ManualHelper.addEntry("packer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPacker.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "packer0", MultiblockPacker.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "packer1"),
 				new ManualPages.Text(ManualHelper.getManual(), "packer2"),
 				new ManualPages.Text(ManualHelper.getManual(), "packer3"),
@@ -95,38 +96,38 @@ public class IIManualLogistics extends IIManual
 
 		ManualHelper.addEntry("skycrates", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "skycrates0"),
-				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates1", MultiblockSkyCrateStation.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates1", MultiblockSkyCrateStation.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "skycrates2"),
-				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates3", MultiblockSkyCartStation.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates3", MultiblockSkyCartStation.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "skycrates4"),
-				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates5", MultiblockSkyCratePost.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "skycrates5", MultiblockSkyCratePost.INSTANCE),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "skycrates6",
-						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "wooden_crate"),
-						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "reinforced_crate"),
-						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "steel_crate"),
-						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "wooden_barrel"),
-						IIUtils.getStackWithMetaName(IIContent.itemMinecart, "metal_barrel")
+						IIContent.itemMinecart.getStack(Minecarts.WOODEN_CRATE),
+						IIContent.itemMinecart.getStack(Minecarts.REINFORCED_CRATE),
+						IIContent.itemMinecart.getStack(Minecarts.STEEL_CRATE),
+						IIContent.itemMinecart.getStack(Minecarts.WOODEN_BARREL),
+						IIContent.itemMinecart.getStack(Minecarts.METAL_BARREL)
 				),
 				new ManualPages.CraftingMulti(ManualHelper.getManual(), "skycrates7",
-						IIUtils.getStackWithMetaName(IIContent.itemSkycrateMount, "mechanical"),
-						IIUtils.getStackWithMetaName(IIContent.itemSkycrateMount, "electric"))
+						IIContent.itemSkycrateMount.getStack(SkycrateMounts.MECHANICAL),
+						IIContent.itemSkycrateMount.getStack(SkycrateMounts.ELECTRIC))
 		);
 
 		ArrayList<ItemStack> fences = new ArrayList<>();
-		for(IIBlockTypes_WoodenFortification v : IIBlockTypes_WoodenFortification.values())
+		for(WoodenFortifications v : WoodenFortifications.values())
 			fences.add(new ItemStack(IIContent.blockWoodenFortification, 1, v.getMeta()));
-		for(IIBlockTypes_MetalFortification v : IIBlockTypes_MetalFortification.values())
+		for(MetalFortifications v : MetalFortifications.values())
 			fences.add(new ItemStack(IIContent.blockMetalFortification, 1, v.getMeta()));
 
 
 		ManualHelper.addEntry("chain_fences", getCategory(),
 				new ManualPages.CraftingMulti(ManualHelper.getManual(), "chain_fences0", fences.toArray()),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences1", MultiblockWoodenFenceGate.instance),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences2", MultiblockWoodenChainFenceGate.instance),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences3", MultiblockSteelFenceGate.instance),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences4", MultiblockSteelChainFenceGate.instance),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences5", MultiblockAluminiumFenceGate.instance),
-				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences6", MultiblockAluminiumChainFenceGate.instance)
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences1", MultiblockWoodenFenceGate.INSTANCE),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences2", MultiblockWoodenChainFenceGate.INSTANCE),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences3", MultiblockSteelFenceGate.INSTANCE),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences4", MultiblockSteelChainFenceGate.INSTANCE),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences5", MultiblockAluminiumFenceGate.INSTANCE),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chain_fences6", MultiblockAluminiumChainFenceGate.INSTANCE)
 		);
 
 	}

@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityGearbox;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerGearbox;
 
 import java.util.ArrayList;

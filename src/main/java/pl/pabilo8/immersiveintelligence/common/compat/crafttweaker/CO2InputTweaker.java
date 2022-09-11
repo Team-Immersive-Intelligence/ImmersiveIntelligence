@@ -6,8 +6,8 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import net.minecraft.tileentity.TileEntity;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityCO2Filter;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityCO2Filter.CO2Handler;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityCO2Filter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityCO2Filter.CO2Handler;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 

@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityElectrolyzer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerElectrolyzer;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 

@@ -16,6 +16,7 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageRequestBlockUpdate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelBiped;
@@ -25,11 +26,14 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -66,7 +70,6 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
-import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
@@ -80,11 +83,15 @@ import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.entity.*;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
@@ -130,11 +137,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//for drums
 		if(magazine.getMetadata()==3)
 		{
-			int bullets = ItemIIBulletMagazine.getRemainingBulletCount(magazine);
+			int bullets = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine);
 			ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
 			if(bullets > 0)
 			{
-				NonNullList<ItemStack> cartridge = ItemIIBulletMagazine.readInventory(ItemNBTHelper.getTagCompound(magazine, "bullets"), ItemIIBulletMagazine.getBulletCapactity(magazine));
+				NonNullList<ItemStack> cartridge = IIContent.itemBulletMagazine.readInventory(magazine);
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(width-38+3, height-17, 0);
 				for(int i = 0; i < bullets; i++)
@@ -197,11 +204,11 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		//for stick
 		else
 		{
-			int bullets = ItemIIBulletMagazine.getRemainingBulletCount(magazine);
+			int bullets = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine);
 			ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
 			if(bullets > 0)
 			{
-				NonNullList<ItemStack> cartridge = ItemIIBulletMagazine.readInventory(ItemNBTHelper.getTagCompound(magazine, "bullets"), ItemIIBulletMagazine.getBulletCapactity(magazine));
+				NonNullList<ItemStack> cartridge = IIContent.itemBulletMagazine.readInventory(magazine);
 				for(int i = 0; i < bullets; i++)
 				{
 					if(cartridge.get(i).isEmpty())
@@ -249,7 +256,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
 			if(mg.bullets2 > 0)
 			{
-				NonNullList<ItemStack> cartridge = ItemIIBulletMagazine.readInventory(ItemNBTHelper.getTagCompound(mg.magazine2, "bullets"), ItemIIBulletMagazine.getBulletCapactity(mg.magazine2));
+				NonNullList<ItemStack> cartridge = IIContent.itemBulletMagazine.readInventory(mg.magazine2);
 				for(int i = 0; i < mg.bullets2; i++)
 				{
 					if(cartridge.get(i).isEmpty())
@@ -285,7 +292,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		ClientUtils.drawTexturedRect(width-38, height-27, 36, 25, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
 		if(mg.bullets1 > 0)
 		{
-			NonNullList<ItemStack> cartridge = ItemIIBulletMagazine.readInventory(ItemNBTHelper.getTagCompound(mg.magazine1, "bullets"), ItemIIBulletMagazine.getBulletCapactity(mg.magazine1));
+			NonNullList<ItemStack> cartridge = IIContent.itemBulletMagazine.readInventory(mg.magazine1);
 			for(int i = 0; i < mg.bullets1; i++)
 			{
 				if(cartridge.get(i).isEmpty())

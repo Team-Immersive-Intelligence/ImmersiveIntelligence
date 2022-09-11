@@ -9,7 +9,7 @@ import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityDataDebugger;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataDebugger;
 
 /**
  * @author Pabilo8

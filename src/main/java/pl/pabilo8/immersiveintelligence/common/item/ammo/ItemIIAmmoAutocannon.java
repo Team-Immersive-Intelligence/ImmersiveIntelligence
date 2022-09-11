@@ -1,15 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet3bCal;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +19,7 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase
 {
 	public ItemIIAmmoAutocannon()
 	{
-		super("autocannon_3bCal", 24);
+		super("autocannon_3bCal", Casings.AUTOCANNON_3BCAL);
 	}
 
 	@Override
@@ -74,12 +72,6 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase
 	}
 
 	@Override
-	public ItemStack getCasingStack(int amount)
-	{
-		return IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing,"autocannon_3bcal",amount);
-	}
-
-	@Override
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
 		return new EnumCoreTypes[]{EnumCoreTypes.SOFTPOINT, EnumCoreTypes.PIERCING};
@@ -88,7 +80,7 @@ public class ItemIIAmmoAutocannon extends ItemIIAmmoBase
 	@Override
 	public EnumFuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED, EnumFuseTypes.PROXIMITY};
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.TIMED, EnumFuseTypes.PROXIMITY};
 	}
 
 	@Override

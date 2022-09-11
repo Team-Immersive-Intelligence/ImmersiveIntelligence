@@ -34,7 +34,7 @@ public class CapabilityRotaryEnergy
 					public void readNBT(Capability<IRotaryEnergy> capability, IRotaryEnergy instance, EnumFacing side, NBTBase nbt)
 					{
 						if(!(instance instanceof RotaryStorage))
-							throw new IllegalArgumentException("Can not deserialize to an instance that isn't the default implementation");
+							throw new IllegalArgumentException("Can not deserialize to an INSTANCE that isn't the default implementation");
 						((RotaryStorage)instance).speed = ((NBTTagCompound)nbt).getFloat("rpm");
 						((RotaryStorage)instance).torque = ((NBTTagCompound)nbt).getFloat("torque");
 					}

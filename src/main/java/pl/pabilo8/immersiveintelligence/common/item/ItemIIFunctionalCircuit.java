@@ -13,7 +13,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,63 +29,16 @@ import java.util.Locale;
  * @author Pabilo8
  * @since 25-06-2019
  */
-public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageItem
+public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implements IDataStorageItem
 {
 	public static final String[] TEXTURES = {"redstone_circuits", "electronic_circuits", "advanced_circuits"};
 
 	public ItemIIFunctionalCircuit()
 	{
-		super("circuit_functional", 1, Arrays.stream(Circuit.values()).map(Circuit::getName).toArray(String[]::new));
+		super("circuit_functional", 1, Circuits.values());
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, @Nonnull ITooltipFlag flag)
-	{
-		boolean b = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
-		list.add(I18n.format(IILib.DESCRIPTION_KEY+(b?"functional_circuit": "functional_circuit_shift")));
-		if(b)
-			for(String s : getOperationsList(stack))
-			{
-				list.add("-"+I18n.format(IILib.DATA_KEY+"function."+s));
-			}
-	}
-
-	@Override
-	public DataPacket getStoredData(ItemStack stack)
-	{
-		stack.serializeNBT();
-		NBTTagCompound realtag = ItemNBTHelper.getTagCompound(stack, "operations");
-		DataPacket data = new DataPacket();
-		data.fromNBT(realtag);
-		return data;
-	}
-
-	@Override
-	public void writeDataToItem(DataPacket packet, ItemStack stack)
-	{
-		ItemNBTHelper.setTagCompound(stack, "operations", packet.toNBT());
-	}
-
-
-	public List<String> getOperationsList(ItemStack stack)
-	{
-		if(stack.getMetadata() < Circuit.values().length)
-		{
-			Circuit circuit = Circuit.values()[stack.getMetadata()];
-			return Arrays.asList(circuit.functions);
-		}
-		return Collections.emptyList();
-	}
-
-	public String getTESRRenderTexture(ItemStack stack)
-	{
-		if(stack.getMetadata() < Circuit.values().length)
-			return TEXTURES[Circuit.values()[stack.getMetadata()].tier];
-		return "";
-	}
-
-	public enum Circuit implements IStringSerializable
+	public enum Circuits implements IIItemEnum
 	{
 		ARITHMETIC(1,
 				"add", "subtract", "multiply", "divide",
@@ -171,13 +127,13 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 		private final String[] functions;
 		public final int tier;
 
-		Circuit(int tier, String... functions)
+		Circuits(int tier, String... functions)
 		{
 			this.tier = tier;
 			this.functions = functions;
 		}
 
-		Circuit(int tier, Circuit parent, String... functions)
+		Circuits(int tier, Circuits parent, String... functions)
 		{
 			this(tier, ArrayUtils.addAll(parent.functions, functions));
 		}
@@ -193,5 +149,52 @@ public class ItemIIFunctionalCircuit extends ItemIIBase implements IDataStorageI
 		{
 			return this.toString().toLowerCase(Locale.ENGLISH);
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, @Nonnull ITooltipFlag flag)
+	{
+		boolean b = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+		list.add(I18n.format(IILib.DESCRIPTION_KEY+(b?"functional_circuit": "functional_circuit_shift")));
+		if(b)
+			for(String s : getOperationsList(stack))
+			{
+				list.add("-"+I18n.format(IILib.DATA_KEY+"function."+s));
+			}
+	}
+
+	@Override
+	public DataPacket getStoredData(ItemStack stack)
+	{
+		stack.serializeNBT();
+		NBTTagCompound realtag = ItemNBTHelper.getTagCompound(stack, "operations");
+		DataPacket data = new DataPacket();
+		data.fromNBT(realtag);
+		return data;
+	}
+
+	@Override
+	public void writeDataToItem(DataPacket packet, ItemStack stack)
+	{
+		ItemNBTHelper.setTagCompound(stack, "operations", packet.toNBT());
+	}
+
+
+	public List<String> getOperationsList(ItemStack stack)
+	{
+		if(stack.getMetadata() < Circuits.values().length)
+		{
+			Circuits circuit = Circuits.values()[stack.getMetadata()];
+			return Arrays.asList(circuit.functions);
+		}
+		return Collections.emptyList();
+	}
+
+	public String getTESRRenderTexture(ItemStack stack)
+	{
+		if(stack.getMetadata() < Circuits.values().length)
+			return TEXTURES[Circuits.values()[stack.getMetadata()].tier];
+		return "";
 	}
 }

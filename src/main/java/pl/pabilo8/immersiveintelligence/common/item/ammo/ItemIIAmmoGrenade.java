@@ -15,13 +15,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelGrenade;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase
 {
 	public ItemIIAmmoGrenade()
 	{
-		super("grenade_5bCal", 8);
+		super("grenade_5bCal", null);
 	}
 
 	@Override
@@ -86,6 +86,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase
 	@Override
 	public ItemStack getCasingStack(int amount)
 	{
+		//stick
 		return new ItemStack(IEContent.itemMaterial, amount, 0);
 	}
 
@@ -98,7 +99,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase
 	@Override
 	public EnumFuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED};
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.TIMED};
 	}
 
 	@Override
@@ -125,7 +126,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME, getPaintColor(stack)==-1?"no_": "paint_", Grenade.classicGrenades);
+		return String.format("%s%s_%s%s", stackToSub(stack).getMeta(), NAME, getPaintColor(stack)==-1?"no_": "paint_", Grenade.classicGrenades);
 	}
 
 	@Override
@@ -133,50 +134,55 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();
-		if(stack.getMetadata()==BULLET)
+		switch(stackToSub(stack))
 		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
-			if(Grenade.classicGrenades < 2)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp"));
-			else
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp_classic"));
-			if(getPaintColor(stack)!=-1)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
-
-		}
-		else if(stack.getMetadata()==CORE)
-		{
-			if(Grenade.classicGrenades < 2)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
-			else
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_classic"));
+			case CORE:
+			{
+				if(Grenade.classicGrenades < 2)
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
+				else
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_classic"));
+			}
+			break;
+			case BULLET:
+			{
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
+				if(Grenade.classicGrenades < 2)
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp"));
+				else
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core_disp_classic"));
+				if(getPaintColor(stack)!=-1)
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
+			}
+			break;
 		}
 		return a;
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack stack)
+	@Nonnull
+	public EnumAction getItemUseAction(@Nonnull ItemStack stack)
 	{
 		return EnumAction.BOW;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack)
+	public int getMaxItemUseDuration(@Nonnull ItemStack stack)
 	{
 		return 60;
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		ItemStack itemstack = player.getHeldItem(hand);
 		player.setActiveHand(hand);
 		return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
-
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
+	public void onPlayerStoppedUsing(@Nonnull ItemStack stack, World world, @Nonnull EntityLivingBase entity, int timeLeft)
 	{
 		if(!world.isRemote)
 		{

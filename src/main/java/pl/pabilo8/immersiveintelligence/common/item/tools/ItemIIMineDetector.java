@@ -12,8 +12,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.block.metal.BlockIIMine;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 /**
  * @author Pabilo8

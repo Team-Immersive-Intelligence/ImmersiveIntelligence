@@ -1,12 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common;
 
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
@@ -17,10 +12,13 @@ import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDecoration;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.ItemBlockMineBase;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIRadioExplosives.ItemBlockRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,18 +36,18 @@ public class IICreativeTab extends CreativeTabs
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getTabIconItem()
 	{
-		return new ItemStack(IIContent.blockMetalDecoration, 1, IIBlockTypes_MetalDecoration.COIL_DATA.ordinal());
+		return IIContent.blockMetalDecoration.getStack(IIBlockTypes_MetalDecoration.COIL_DATA, 1);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void displayAllRelevantItems(NonNullList<ItemStack> list)
+	public void displayAllRelevantItems(@Nonnull NonNullList<ItemStack> list)
 	{
 		super.displayAllRelevantItems(list);
 
-		//addAssemblySchemes(list);
 		addExampleBullets(list);
 
 		for(Fluid fluid : fluidBucketMap)
@@ -66,130 +64,110 @@ public class IICreativeTab extends CreativeTabs
 			list.add(fluidHandler.getContainer());
 	}
 
-	public void addAssemblySchemes(NonNullList<ItemStack> list)
-	{
-		PrecissionAssemblerRecipe.recipeList
-				.stream()
-				.map(IIContent.itemAssemblyScheme::getStackForRecipe)
-				.forEach(list::add);
-	}
-
 	public void addExampleBullets(NonNullList<ItemStack> list)
 	{
+		//add generic artillery ammo
 		for(IAmmo bullet : new IAmmo[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar})
-		{
-			list.add(bullet.getBulletWithParams("core_brass", "canister", "tnt", "tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_brass", "canister", "rdx", "tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_brass", "canister", "hmx", "tracer_powder"));
+			for(String[] core : new String[][]{{"core_brass", "canister"}, {"core_tungsten", "piercing"}, {"core_steel", "shaped"}})
+				for(String explosive : new String[]{"tnt", "rdx", "hmx"})
+					list.add(bullet.getBulletWithParams(core[0], core[1], explosive, "tracer_powder"));
 
-			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "tnt", "tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "rdx", "tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_tungsten", "piercing", "hmx", "tracer_powder"));
-
-			list.add(bullet.getBulletWithParams("core_steel", "shaped", "tnt", "tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_steel", "shaped", "rdx", "tracer_powder"));
-			list.add(bullet.getBulletWithParams("core_steel", "shaped", "hmx", "tracer_powder"));
-		}
-
+		//add custom artillery ammo examples
 		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "hmx", "white_phosphorus").setStackDisplayName("Phosphorgranate mk. 1"));
 		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "fluid_napalm").setStackDisplayName("Napalmgranate mk. 1"));
 		list.add(IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "nuke").setStackDisplayName("Geburtstagsgranate mk.1"));
 
+		//add grenades
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Stielhandgranate mk.1"));
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Phosphorhandgranate mk.1"));
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "rdx").setStackDisplayName("Sprenghandgranate mk.1"));
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "hmx").setStackDisplayName("Sprenghandgranate mk.2"));
 		list.add(IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "gas_chlorine").setStackDisplayName("Chemhandgranate mk.1"));
+		//firework grenade
 		ItemStack grenade_firework = IIContent.itemGrenade.getBulletWithParams("core_brass", "canister", "firework").setStackDisplayName("Feuerwerkhandgranate mk.1");
-		try
-		{
-			((NBTTagList)ItemNBTHelper.getTag(grenade_firework).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{Explosion:{Type:0b,Colors:[I;3887386]}}"));
-		} catch(NBTException e)
-		{
-			e.printStackTrace();
-		}
+		IIContent.itemGrenade.setComponentNBT(grenade_firework, EasyNBT.parseNBT("{Explosion:{Type:0b,Colors:[I;3887386]}}"));
 
-		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "gas_chlorine").setStackDisplayName("Schienenkanone Chemgranate mk.1"));
-		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "rdx").setStackDisplayName("Schienenkanone Sprenggranate mk.1"));
-
+		//railgun grenades
+		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "gas_chlorine")
+				.setStackDisplayName("Schienenkanone Chemgranate mk.1"));
+		list.add(IIContent.itemRailgunGrenade.getBulletWithParams("core_brass", "canister", "rdx")
+				.setStackDisplayName("Schienenkanone Sprenggranate mk.1"));
+		//firework railgun grenade
 		list.add(grenade_firework);
 
-		list.add(IIContent.itemAmmoRevolver.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Flammpatrone mk.1"));
-		list.add(IIContent.itemAmmoRevolver.getBulletWithParams("core_tungsten", "piercing").setStackDisplayName("Wolframpatrone mk.1"));
-		ItemStack bullet_tracer = IIContent.itemAmmoRevolver.getBulletWithParams("core_brass", "canister", "tracer_powder").setStackDisplayName("Markierungspatrone mk.1");
-		try
-		{
-			((NBTTagList)ItemNBTHelper.getTag(bullet_tracer).getTag("component_nbt")).set(0, JsonToNBT.getTagFromJson("{colour:3887386}"));
-		} catch(NBTException e)
-		{
-			e.printStackTrace();
-		}
+		//revolver bullets
+		list.add(IIContent.itemAmmoRevolver.getBulletWithParams("core_brass", "canister", "white_phosphorus")
+				.setStackDisplayName("Flammpatrone mk.1"));
+		list.add(IIContent.itemAmmoRevolver.getBulletWithParams("core_tungsten", "piercing")
+				.setStackDisplayName("Wolframpatrone mk.1"));
+		ItemStack bullet_tracer = IIContent.itemAmmoRevolver.getBulletWithParams("core_brass", "canister", "tracer_powder")
+				.setStackDisplayName("Markierungspatrone mk.1");
+		IIContent.itemAmmoRevolver.setComponentNBT(bullet_tracer, EasyNBT.parseNBT("{colour:3887386}"));
 		list.add(bullet_tracer);
 
-		ItemStack bullet1 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Sprengpatrone mk.1");
-		ItemStack bullet2 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_tungsten", "piercing", "shrapnel_tungsten").setStackDisplayName("Wolframpatrone mk.1");
-		ItemStack bullet3 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_steel", "piercing").setStackDisplayName("Stahlpatrone mk.1");
-		ItemStack bullet4 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_brass", "softpoint", "white_phosphorus").setStackDisplayName("Phosphorpatrone mk.1");
-		list.add(bullet1);
-		list.add(bullet2);
-		list.add(bullet3);
-		list.add(bullet4);
-		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet1, bullet2, bullet3, bullet4));
+		ItemStack bullet1, bullet2, bullet3, bullet4, bullet5;
 
-		list.add(ItemIIBulletMagazine.getMagazine("submachinegun",
+		list.add(bullet1 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Sprengpatrone mk.1"));
+		list.add(bullet2 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_tungsten", "piercing", "shrapnel_tungsten").setStackDisplayName("Wolframpatrone mk.1"));
+		list.add(bullet3 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_steel", "piercing").setStackDisplayName("Stahlpatrone mk.1"));
+		list.add(bullet4 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_brass", "softpoint", "white_phosphorus").setStackDisplayName("Phosphorpatrone mk.1"));
+		list.add(IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN, bullet1, bullet2, bullet3, bullet4));
+
+		list.add(IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN,
 				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Sprengpatrone mk.1"),
 				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing", "shrapnel_tungsten").setStackDisplayName("Wolframpatrone mk.1"),
 				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_steel", "piercing").setStackDisplayName("Stahlpatrone mk.1"),
 				IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "softpoint", "white_phosphorus").setStackDisplayName("Phosphorpatrone mk.1"))
 		);
 
-		ItemStack bullet5 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_uranium", "piercing", "shrapnel_uranium").setStackDisplayName("Uraniumpatrone mk.1");
-		list.add(bullet5);
-		list.add(ItemIIBulletMagazine.getMagazine("machinegun", bullet5, bullet5, bullet5, bullet5));
+		list.add(bullet5 = IIContent.itemAmmoMachinegun.getBulletWithParams("core_uranium", "piercing", "shrapnel_uranium").setStackDisplayName("Uraniumpatrone mk.1"));
+		list.add(IIContent.itemBulletMagazine.getMagazine(Magazines.MACHINEGUN, bullet5));
 
+		//add tracer magazines
+		for(Magazines magazine : Magazines.values())
+			if(!IIContent.itemBulletMagazine.isMetaHidden(magazine.getMeta()))
+				list.add(getColorMagazine(magazine, 65327, 16711680, 25343, 16772608));
 
-		list.add(addColorBulletMagazine(IIContent.itemAmmoMachinegun, "cpds_drum", 65327, 16711680, 25343, 16772608));
-		list.add(addColorBulletMagazine(IIContent.itemAmmoAutocannon, "autocannon", 65327, 16711680, 25343, 16772608));
-		list.add(addColorBulletMagazine(IIContent.itemAmmoMachinegun, "machinegun", 65327, 16711680, 25343, 16772608));
-		list.add(addColorBulletMagazine(IIContent.itemAmmoAssaultRifle, "assault_rifle", 65327, 16711680, 25343, 16772608));
-		list.add(addColorBulletMagazine(IIContent.itemAmmoSubmachinegun, "submachinegun", 65327, 16711680, 25343, 16772608));
-		list.add(addColorBulletMagazine(IIContent.itemAmmoSubmachinegun, "submachinegun_drum", 65327, 16711680, 25343, 16772608));
+		assert IIContent.blockRadioExplosives.itemBlock instanceof ItemBlockMineBase;
+		assert IIContent.blockTellermine.itemBlock instanceof ItemBlockMineBase;
+		assert IIContent.blockTripmine.itemBlock instanceof ItemBlockMineBase;
 
-		list.add(IIContent.blockRadioExplosives.bullet.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Radio-Sprengstoff TNT mk.1"));
-		list.add(IIContent.blockRadioExplosives.bullet.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Radio-Sprengstoff Phosphor mk.1"));
+		list.add(((ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock)
+				.getBulletWithParams("core_brass", "canister", "tnt").setStackDisplayName("Radio-Sprengstoff TNT mk.1"));
+		list.add(((ItemBlockMineBase)IIContent.blockRadioExplosives.itemBlock)
+				.getBulletWithParams("core_brass", "canister", "white_phosphorus").setStackDisplayName("Radio-Sprengstoff Phosphor mk.1"));
 
-		list.add(IIContent.blockTellermine.bullet.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Tellermine mk.1"));
-		list.add(IIContent.blockTripmine.bullet.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("SD-Mine mk.1"));
+		list.add(((ItemBlockMineBase)IIContent.blockTellermine.itemBlock)
+				.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("Tellermine mk.1"));
+		list.add(((ItemBlockMineBase)IIContent.blockTripmine.itemBlock)
+				.getBulletWithParams("core_brass", "softpoint", "tnt").setStackDisplayName("SD-Mine mk.1"));
 		list.add(IIContent.itemNavalMine.getBulletWithParams("core_brass", "softpoint", "rdx").setStackDisplayName("Seemine mk.1"));
 	}
 
-	ItemStack addColorBulletMagazine(IAmmo type, String magName, int... colors)
+	ItemStack getColorMagazine(Magazines magazine, int... colors)
 	{
-		ArrayList<ItemStack> bullets = new ArrayList<>();
-		for(int color : colors)
+		ItemStack[] bullets = new ItemStack[colors.length];
+		for(int i = 0; i < colors.length; i++)
 		{
+			//get bullet
+			ItemStack stack = magazine.ammo.getBulletWithParams("core_steel", "softpoint", "tracer_powder")
+					.setStackDisplayName(getGermanColorName(colors[i])+"markierungspatrone");
+			//tracer color
+			magazine.ammo.setComponentNBT(stack, EasyNBT.parseNBT("{colour: %s}", colors[i]));
 
-			ItemStack stack = type.getBulletWithParams("core_brass", "softpoint", "tracer_powder").setStackDisplayName(getGermanColorName(color)+"markierungspatrone");
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("colour", color);
-			type.setComponentNBT(stack, tag);
-			type.setPaintColour(stack, color);
-			ItemNBTHelper.setInt(stack, "fuse", 2);
-			bullets.add(stack);
+			//paint color
+			magazine.ammo.setPaintColour(stack, colors[i]);
+
+			//set in array
+			bullets[i] = stack;
 		}
 
-		ItemStack stack = new ItemStack(IIContent.itemBulletMagazine, 1, IIContent.itemBulletMagazine.getMetaBySubname(magName));
-		NonNullList<ItemStack> l = NonNullList.withSize(ItemIIBulletMagazine.getBulletCapactity(stack), ItemStack.EMPTY);
-		for(int i = 0; i < l.size(); i++)
-		{
-			l.set(i, bullets.get(i%(bullets.size())));
-		}
-		ItemNBTHelper.getTag(stack).setTag("bullets", ItemIIBulletMagazine.writeInventory(l));
-		ItemIIBulletMagazine.makeDefault(stack);
-		return stack;
+		return IIContent.itemBulletMagazine.getMagazine(magazine, bullets);
 	}
 
-	//Deutsche Qualität
+	/**
+	 * Deutsche Qualität
+	 */
 	private String getGermanColorName(int color)
 	{
 		switch(IIUtils.getRGBTextFormatting(color))

@@ -94,7 +94,7 @@ public class AIHansSubmachinegun extends AIHansHandWeapon
 			{
 				hans.hasAmmo = true;
 				hans.setSneaking(true);
-				hans.rotationPitch = calculateBallisticAngle(ItemIIBulletMagazine.takeBullet(magazine, false), attackTarget);
+				hans.rotationPitch = calculateBallisticAngle(IIContent.itemBulletMagazine.takeBullet(magazine, false), attackTarget);
 			}
 			else
 				hans.resetActiveHand();

@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataEditorExpression;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.TileEntityArithmeticLogicMachine;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;

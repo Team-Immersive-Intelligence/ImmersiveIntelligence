@@ -14,7 +14,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.commands.ii;
 
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -8,21 +7,18 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -63,25 +59,15 @@ public class CommandIIGiveMagazine extends CommandBase
 		if(args.length > 3)
 		{
 			EntityPlayerMP player = CommandBase.getPlayer(server, sender, args[0]);
-			ItemStack magazine = IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, args[1]);
-			IAmmo casing = ItemIIBulletMagazine.getMatchingType(magazine);
-			IAmmoCore core = AmmoRegistry.INSTANCE.getCore(args[2]);
-			EnumCoreTypes coreType = EnumCoreTypes.v(args[3]);
-			ArrayList<IAmmoComponent> components = new ArrayList<>();
-			for(int i = 4; i < args.length; i++)
-				components.add(AmmoRegistry.INSTANCE.getComponent(args[i]));
+			Magazines magazines = IIContent.itemBulletMagazine.nameToSub(args[1]);
 
-			if(casing!=null&&core!=null)
-			{
-				ItemStack bulletWithParams = casing.getBulletWithParams(core, coreType, components.toArray(new IAmmoComponent[0]));
-				NonNullList<ItemStack> l = NonNullList.withSize(ItemIIBulletMagazine.getBulletCapactity(magazine), bulletWithParams);
-				ItemNBTHelper.getTag(magazine).setTag("bullets", ItemIIBulletMagazine.writeInventory(l));
-				ItemIIBulletMagazine.makeDefault(magazine);
-				player.addItemStackToInventory(magazine);
-				sender.sendMessage(new TextComponentString("Magazine given!"));
-			}
-			else
-				throw new WrongUsageException(getUsage(sender));
+			ItemStack bullet = magazines.ammo.getBulletWithParams(
+					args[2], args[3],
+					Arrays.copyOfRange(args, 4, args.length)
+			);
+			ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(magazines, bullet);
+			player.addItemStackToInventory(magazine);
+			sender.sendMessage(new TextComponentString("Magazine given!"));
 		}
 		else
 			throw new WrongUsageException(getUsage(sender));
@@ -100,6 +86,8 @@ public class CommandIIGiveMagazine extends CommandBase
 	 * Get a list of options for when the user presses the TAB key
 	 */
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
 		if(args.length==1)
@@ -116,9 +104,14 @@ public class CommandIIGiveMagazine extends CommandBase
 		}
 		else if(args.length==4)
 		{
-			ItemStack magazine = IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, args[1]);
-			IAmmo matchingType = ItemIIBulletMagazine.getMatchingType(magazine);
-			return getListOfStringsMatchingLastWord(args,matchingType==null?Collections.emptyList():Arrays.stream(matchingType.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
+			if(!ArrayUtils.contains(IIContent.itemBulletMagazine.getSubNames(), args[1]))
+				return Collections.emptyList();
+
+			IAmmo matchingType = IIContent.itemBulletMagazine.nameToSub(args[1]).ammo;
+			return getListOfStringsMatchingLastWord(args,
+					Arrays.stream(matchingType.getAllowedCoreTypes())
+							.map(EnumCoreTypes::getName)
+							.collect(Collectors.toList()));
 		}
 		else if(args.length > 4)
 		{
@@ -132,7 +125,7 @@ public class CommandIIGiveMagazine extends CommandBase
 	 * Return whether the specified command parameter index is a username parameter.
 	 */
 	@Override
-	public boolean isUsernameIndex(String[] args, int index)
+	public boolean isUsernameIndex(@Nonnull String[] args, int index)
 	{
 		return index==0;
 	}

@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.wooden.BlockIIRubberLog.IIBlockTypesRubberLog;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLog.RubberLogs;
 
 import java.util.Random;
 
@@ -20,7 +20,7 @@ import java.util.Random;
 public class IIWorldGenRubberTree extends WorldGenAbstractTree
 {
 	private static final IBlockState TRUNK = IIContent.blockRubberLog.getDefaultState().withProperty(BlockLog.LOG_AXIS, EnumAxis.Y);
-	private static final IBlockState TRUNK_REBBUR = IIContent.blockRubberLog.getDefaultState().withProperty(IIContent.blockRubberLog.property, IIBlockTypesRubberLog.REBBUR).withProperty(BlockLog.LOG_AXIS, EnumAxis.Y);
+	private static final IBlockState TRUNK_REBBUR = IIContent.blockRubberLog.getDefaultState().withProperty(IIContent.blockRubberLog.property, RubberLogs.REBBUR).withProperty(BlockLog.LOG_AXIS, EnumAxis.Y);
 	private static final IBlockState LEAF = IIContent.blockRubberLeaves.getDefaultState().withProperty(BlockLeaves.DECAYABLE, true).withProperty(BlockLeaves.CHECK_DECAY, true);
 
 	public IIWorldGenRubberTree()

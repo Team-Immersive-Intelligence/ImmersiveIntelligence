@@ -1,9 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common;
 
-import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -15,32 +14,33 @@ import net.minecraftforge.fluids.Fluid;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons.*;
-import pl.pabilo8.immersiveintelligence.common.block.*;
-import pl.pabilo8.immersiveintelligence.common.block.cloth.BlockIIClothDecoration;
-import pl.pabilo8.immersiveintelligence.common.block.concrete.BlockIIConcreteDecoration;
-import pl.pabilo8.immersiveintelligence.common.block.concrete.BlockIIConcreteDecoration.BlockIIConcreteSlab;
-import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification;
-import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1;
-import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWoodenFortification;
-import pl.pabilo8.immersiveintelligence.common.block.metal.*;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.BlockIIFenceGateMultiblock;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.BlockIIMetalMultiblock0;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.BlockIIMetalMultiblock1;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.BlockIIWoodenMultiblock;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.BlockIIGearbox;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.BlockIIMechanicalConnector;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.BlockIIMechanicalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.BlockIIMechanicalDevice1;
-import pl.pabilo8.immersiveintelligence.common.block.stone.BlockIISandbags;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Metal;
-import pl.pabilo8.immersiveintelligence.common.block.wooden.*;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.*;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice1;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITellermine;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripmine;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIITripwireConnector;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIGearbox;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalConnector;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1;
+import pl.pabilo8.immersiveintelligence.common.block.simple.*;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.item.*;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.*;
 import pl.pabilo8.immersiveintelligence.common.item.armor.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMetalPressMold;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawblade;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.*;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt;
@@ -50,6 +50,10 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMortar;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIStairs;
 import pl.pabilo8.immersiveintelligence.common.world.BiomeWasteland;
 
 import java.util.ArrayList;
@@ -67,23 +71,37 @@ public class IIContent
 {
 	public static final List<Block> BLOCKS = new ArrayList<>();
 	public static final List<Item> ITEMS = new ArrayList<>();
-	public static IICreativeTab creativeTab = new IICreativeTab(MODID);
+	public static final List<Class<? extends TileEntity>> TILE_ENTITIES = new ArrayList<>();
+	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
+
+	public static final IICreativeTab II_CREATIVE_TAB = new IICreativeTab(MODID);
 
 	//Shares code with Immersive Energy, long live II-IEn Cooperation!
 	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
 
-	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter"); //for crates
-	public static final MachineUpgrade UPGRADE_IMPROVED_GEARBOX = CommonProxy.createMachineUpgrade("improved_gearbox"); //increases machine speed
-	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator"); //more sawdust for cost of planks
-	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader"); //allows to use belt fed upgrade for mg
+	//--- Upgrades ---//
 
-	public static final MachineUpgrade UPGRADE_UNPACKER_CONVERSION = CommonProxy.createMachineUpgrade("unpacker_conversion"); //converts a packer to an unpacker
-	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
-	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy"); //allows charging items with IF
+	//used by effect crates
+	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter");
+	//increases machine speed
+	public static final MachineUpgrade UPGRADE_IMPROVED_GEARBOX = CommonProxy.createMachineUpgrade("improved_gearbox");
+	//more sawdust for cost of planks
+	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator");
+	//allows to use belt fed upgrade for mg
+	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader");
 
-	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators"); //allows the radar to detect radio signal emitters and send their positions
+	//converts a packer to an unpacker
+	public static final MachineUpgrade UPGRADE_UNPACKER_CONVERSION = CommonProxy.createMachineUpgrade("unpacker_conversion");
+	//allows filling items with fluids
+	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid");
+	//allows charging items with IF
+	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy");
 
-	public static final MachineUpgrade UPGRADE_CORE_FILLER = CommonProxy.createMachineUpgrade("core_filler"); //changes the projectile workshop to *fill* projectiles
+	//allows the radar to detect radio signal emitters and send their positions
+	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators");
+
+	//changes the projectile workshop to *fill* projectiles
+	public static final MachineUpgrade UPGRADE_CORE_FILLER = CommonProxy.createMachineUpgrade("core_filler");
 
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
@@ -105,6 +123,9 @@ public class IIContent
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_WATERCOOLED = CommonProxy.createMachineUpgrade("mg_watercooled");
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = CommonProxy.createMachineUpgrade("mg_bunker");
 
+	//--- Items ---//
+
+	//materials
 	public static ItemIIMaterial itemMaterial = new ItemIIMaterial();
 	public static ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
 	public static ItemIIMaterialPlate itemMaterialPlate = new ItemIIMaterialPlate();
@@ -121,6 +142,7 @@ public class IIContent
 	public static ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
 	public static ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
 
+	//tools
 	public static ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
 	public static ItemIILighter itemLighter = new ItemIILighter();
 	public static ItemIIElectricHammer itemHammer = new ItemIIElectricHammer();
@@ -139,28 +161,30 @@ public class IIContent
 	public static ItemIISmallWireCoil itemSmallWireCoil = new ItemIISmallWireCoil();
 	public static ItemIITripWireCoil itemTripWireCoil = new ItemIITripWireCoil();
 	public static ItemIIMinecart itemMinecart = new ItemIIMinecart();
-	public static ItemIIRadioConfigurator itemRadioConfigurator = new ItemIIRadioConfigurator();
+	public static ItemIIRadioTuner itemRadioTuner = new ItemIIRadioTuner();
 	public static ItemIIMeasuringCup itemMeasuringCup = new ItemIIMeasuringCup();
-	public static ItemIIPrecissionTool itemPrecissionTool = new ItemIIPrecissionTool();
+	public static ItemIIPrecisionTool itemPrecissionTool = new ItemIIPrecisionTool();
 	public static ItemIIAssemblyScheme itemAssemblyScheme = new ItemIIAssemblyScheme();
-	public static ItemIISawblade itemSawblade = new ItemIISawblade();
+	public static ItemIISawBlade itemSawblade = new ItemIISawBlade();
 	public static ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();
 	public static ItemIIMachinegun itemMachinegun = new ItemIIMachinegun();
 	public static ItemIISubmachinegun itemSubmachinegun = new ItemIISubmachinegun();
 	public static ItemIIMortar itemMortar = new ItemIIMortar();
 	public static ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
 
-	//public static ItemIIArmorUpgrade item_armor_upgrade = new ItemIIArmorUpgrade();
-	public static ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor", ImmersiveIntelligence.MODID+":light_engineer_armor", 42, new int[]{4, 7, 8, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
+	//armor
+	public static ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor",
+			ImmersiveIntelligence.MODID+":light_engineer_armor", 42,
+			new int[]{4, 7, 8, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
 	public static ItemIILightEngineerHelmet itemLightEngineerHelmet = new ItemIILightEngineerHelmet();
 	public static ItemIILightEngineerChestplate itemLightEngineerChestplate = new ItemIILightEngineerChestplate();
 	public static ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
 	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
 	public static ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
-	//Thanks, Blu
 	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 
+	//ammo
 	public static ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
 	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
 	public static ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
@@ -175,38 +199,54 @@ public class IIContent
 
 	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
 
+	//data
 	public static ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
 	public static ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
 	public static ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();
 
+	//--- Blocks ---//
+
+	//rubber
 	public static BlockIIRubberLog blockRubberLog = new BlockIIRubberLog();
 	public static BlockIIRubberLeaves blockRubberLeaves = new BlockIIRubberLeaves();
 	public static BlockIIRubberSapling blockRubberSapling = new BlockIIRubberSapling();
 	public static BlockIICharredLog blockCharredLog = new BlockIICharredLog();
 
+	//metal
+	@IBatchOredictRegister(oreDict = "ore")
 	public static BlockIIOre blockOre = new BlockIIOre();
-	public static BlockIIBase<IIBlockTypes_Metal> blockSheetmetal = (BlockIIBase)new BlockIIBase("sheetmetal", Material.IRON,
-			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
-			.setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIBase<IIBlockTypes_Metal> blockMetalStorage = (BlockIIBase)new BlockIIBase("storage", Material.IRON,
-			PropertyEnum.create("type", IIBlockTypes_Metal.class), ItemBlockIEBase.class, false).setOpaque(true)
-			.setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIBase<IIBlockTypes_Metal> blockMetalSlabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("storage_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
-	public static BlockIIBase<IIBlockTypes_Metal> blockSheetmetalSlabs = (BlockIIBase<IIBlockTypes_Metal>)new BlockIISlab("sheetmetal_slab", Material.IRON, PropertyEnum.create("type", IIBlockTypes_Metal.class)).setHardness(3.0F).setResistance(10.0F);
+	@IBatchOredictRegister(oreDict = "sheetmetal")
+	public static BlockIIMetalBase blockSheetmetal = new BlockIIMetalBase("sheetmetal");
+	@IBatchOredictRegister(oreDict = "block")
+	public static BlockIIMetalBase blockMetalStorage = new BlockIIMetalBase("storage");
+	@IBatchOredictRegister(oreDict = "slab")
+	public static BlockIISlab<Metals> blockMetalSlabs = new BlockIISlab<>(blockSheetmetal);
+	@IBatchOredictRegister(oreDict = "slabSheetmetal")
+	public static BlockIISlab<Metals> blockSheetmetalSlabs = new BlockIISlab<>(blockMetalStorage);
+
+	//regular blocks
 	public static BlockIISandbags blockSandbags = new BlockIISandbags();
 	public static BlockIIClothDecoration blockClothDecoration = new BlockIIClothDecoration();
 	public static BlockIIMetalDecoration blockMetalDecoration = new BlockIIMetalDecoration();
+
+	//b e t o n
 	public static BlockIIConcreteDecoration blockConcreteDecoration = new BlockIIConcreteDecoration();
-	public static BlockIIConcreteSlab blockConcreteSlabs = new BlockIIConcreteSlab();
+	public static BlockIISlab<ConcreteDecorations> blockConcreteSlabs = new BlockIISlab<>(blockConcreteDecoration);
 	public static BlockIIStairs[] blockIIConcreteStairs = BlockIIConcreteDecoration.getStairs();
-	public static BlockIIMetalFortification blockMetalFortification = new BlockIIMetalFortification();
+
+	//mesh fences
+	public static BlockIIMetalChainFence blockMetalFortification = new BlockIIMetalChainFence();
+	public static BlockIIWoodenChainFence blockWoodenFortification = new BlockIIWoodenChainFence();
+	//tank trap
 	public static BlockIIMetalFortification1 blockMetalFortification1 = new BlockIIMetalFortification1();
-	public static BlockIIWoodenFortification blockWoodenFortification = new BlockIIWoodenFortification();
+
+	//devices
 	public static BlockIIMetalDevice blockMetalDevice = new BlockIIMetalDevice();
 	public static BlockIIMetalDevice1 blockMetalDevice1 = new BlockIIMetalDevice1();
-	public static BlockIIDataConnector blockDataConnector = new BlockIIDataConnector();
+	public static BlockIIDataDevice blockDataConnector = new BlockIIDataDevice();
 	public static BlockIISmallCrate blockSmallCrate = new BlockIISmallCrate();
 
+	//ammunition
 	public static BlockIIMineSign blockMineSign = new BlockIIMineSign();
 	public static BlockIITripmine blockTripmine = new BlockIITripmine();
 	public static BlockIITellermine blockTellermine = new BlockIITellermine();
@@ -214,55 +254,37 @@ public class IIContent
 	public static ItemIINavalMine itemNavalMine = new ItemIINavalMine();
 	public static BlockIITripwireConnector blockTripwireConnector = new BlockIITripwireConnector();
 
+	//rotary devices
 	public static BlockIIMechanicalDevice blockMechanicalDevice = new BlockIIMechanicalDevice();
 	public static BlockIIMechanicalDevice1 blockMechanicalDevice1 = new BlockIIMechanicalDevice1();
 	public static BlockIIGearbox blockGearbox = new BlockIIGearbox();
 	public static BlockIIMechanicalConnector blockMechanicalConnector = new BlockIIMechanicalConnector();
 	public static BlockIIWoodenMultiblock blockWoodenMultiblock = new BlockIIWoodenMultiblock();
 
+	//multiblocks
 	public static BlockIIMetalMultiblock0 blockMetalMultiblock0 = new BlockIIMetalMultiblock0();
 	public static BlockIIMetalMultiblock1 blockMetalMultiblock1 = new BlockIIMetalMultiblock1();
 	public static BlockIIFenceGateMultiblock blockFenceGateMultiblock = new BlockIIFenceGateMultiblock();
 
-	public static BlockIIFluid blockFluidInkBlack;
-	public static BlockIIFluid blockFluidInkCyan;
-	public static BlockIIFluid blockFluidInkMagenta;
-	public static BlockIIFluid blockFluidInkYellow;
-	public static BlockIIFluid blockFluidEtchingAcid;
-	public static BlockIIFluid blockFluidSulfuricAcid;
-	public static BlockIIFluid blockFluidNitricAcid;
-	public static BlockIIFluid blockFluidHydrofluoricAcid;
-	public static BlockIIFluid blockFluidFormicAcid;
-	public static BlockIIFluid blockFluidAmmonia;
-	public static BlockIIFluid blockFluidMethanol;
+	//fluid blocks
+	public static BlockIIFluid blockFluidInkBlack, blockFluidInkCyan, blockFluidInkMagenta, blockFluidInkYellow;
+	public static BlockIIFluid blockFluidEtchingAcid, blockFluidSulfuricAcid, blockFluidNitricAcid, blockFluidHydrofluoricAcid, blockFluidFormicAcid;
+	public static BlockIIFluid blockFluidAmmonia, blockFluidMethanol;
 	public static BlockIIFluid blockFluidBrine;
-	public static BlockIIFluid blockGasHydrogen;
-	public static BlockIIFluid blockGasOxygen;
-	public static BlockIIFluid blockGasChlorine;
-	public static BlockIIFluid blockGasCO2;
-	public static BlockIIFluid blockGasCO;
+	public static BlockIIFluid blockGasHydrogen, blockGasOxygen, blockGasChlorine, blockGasCO2, blockGasCO;
 	public static BlockIIFluid blockGasMustardGas;
 	public static BlockIIFluid blockFluidLatex;
 
-	public static Fluid fluidInkBlack;
-	public static Fluid fluidInkCyan;
-	public static Fluid fluidInkMagenta;
-	public static Fluid fluidInkYellow;
-	public static Fluid fluidEtchingAcid;
-	public static Fluid fluidSulfuricAcid;
-	public static Fluid fluidHydrofluoricAcid;
-	public static Fluid fluidNitricAcid;
-	public static Fluid fluidFormicAcid;
+	//fluids
+	public static Fluid fluidInkBlack, fluidInkCyan, fluidInkMagenta, fluidInkYellow;
+	public static Fluid fluidEtchingAcid, fluidSulfuricAcid, fluidHydrofluoricAcid, fluidNitricAcid, fluidFormicAcid;
+	public static Fluid fluidAmmonia, fluidMethanol;
 	public static Fluid fluidBrine;
-	public static Fluid gasHydrogen;
-	public static Fluid gasOxygen;
-	public static Fluid gasChlorine;
-	public static Fluid gasCO2;
-	public static Fluid gasCO;
+	public static Fluid gasHydrogen, gasOxygen, gasChlorine, gasCO2, gasCO;
 	public static Fluid gasMustardGas;
-	public static Fluid fluidAmmonia;
-	public static Fluid fluidMethanol;
 	public static Fluid fluidLatex;
+
+	//biomes
 	public static BiomeWasteland biomeWasteland = new BiomeWasteland();
 
 	static
@@ -313,6 +335,12 @@ public class IIContent
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasHydrogen = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
+
+	}
+
+	//dummy method, called so that static fields above get loaded
+	static void init()
+	{
 
 	}
 }

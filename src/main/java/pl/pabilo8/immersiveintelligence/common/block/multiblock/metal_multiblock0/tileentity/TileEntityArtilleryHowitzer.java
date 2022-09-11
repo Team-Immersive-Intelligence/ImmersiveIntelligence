@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first;
+package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
@@ -28,13 +28,14 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.util.IIMultiblockInterfaces.IExplosionResistantMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.IIMultiblockInterfaces.ILadderMultiblock;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.base.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -225,7 +226,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	public TileEntityArtilleryHowitzer()
 	{
-		super(MultiblockArtilleryHowitzer.instance);
+		super(MultiblockArtilleryHowitzer.INSTANCE);
 
 		this.energyStorage = new FluxStorageAdvanced(ArtilleryHowitzer.energyCapacity);
 
@@ -1236,10 +1237,10 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			case 510:
 			{
 				TileEntityArtilleryHowitzer master = master();
-				return master!=null&&master.doorTime > 1?2000.0F: IIContent.blockMetalMultiblock0.getBlockResistance();
+				return master!=null&&master.doorTime > 1?2000.0F: -1;
 			}
 			default:
-				return IIContent.blockMetalMultiblock0.getBlockResistance();
+				return -1;
 		}
 	}
 

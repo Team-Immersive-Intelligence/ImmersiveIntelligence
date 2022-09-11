@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.crafting;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.ComparableItemStack;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -33,13 +33,30 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Mine;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Ore;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_SmallCrate;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuit;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTypes_Mine;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMetalPressMold.PressMolds;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold.VulcanizerMolds;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialBoule.MaterialsBoule;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialIngot.MaterialsIngot;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialNugget.MaterialsNugget;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialPlate.MaterialsPlate;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialSpring.MaterialsSpring;
+import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIAdvancedPowerPack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -52,41 +69,157 @@ import java.util.List;
  */
 public class IIRecipes
 {
+	private static ItemStack BASIC_CIRCUIT, TOOL_HAMMER, TOOL_CUTTERS;
+
+	public static void doRecipes(IForgeRegistry<IRecipe> recipeRegistry)
+	{
+		//--- Setup Items ---//
+		BASIC_CIRCUIT = new ItemStack(IEContent.itemMaterial, 1, 27);
+		TOOL_HAMMER = new ItemStack(IEContent.itemTool, 1, 0);
+		TOOL_CUTTERS = new ItemStack(IEContent.itemTool, 1, 1);
+
+		//--- Add Recipes ---//
+		addMinecartRecipes(recipeRegistry);
+		addSmallCrateRecipes(recipeRegistry);
+
+		addMetalPressRecipes();
+		addBulletPressRecipes();
+
+		addSiliconProcessingRecipes();
+		addCircuitRecipes();
+
+		addFunctionalCircuits();
+		addSpringRecipes();
+		addMiscIERecipes();
+
+		addWoodTableSawRecipes();
+		addRotaryPowerRecipes();
+		addUpgradeRecipes();
+
+		addRDXProductionRecipes();
+		addHMXProductionRecipes();
+
+		addConcreteRecipes();
+		addChemicalBathCleaningRecipes();
+
+		addColouringRecipes(recipeRegistry);
+		addChemicalPainterRecipes();
+
+		//Immersive Engineering can into space???
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 750),
+				FluidRegistry.getFluidStack("oxygen", 250),
+				FluidRegistry.getFluidStack("hydrogen", 500),
+				160, 80);
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 750),
+				FluidRegistry.getFluidStack("chlorine", 375),
+				FluidRegistry.getFluidStack("hydrogen", 375),
+				160, 80);
+
+		//Why Realism when you have Immersiveness ^^
+		ElectrolyzerRecipe.addRecipe(new FluidStack(IIContent.gasCO2, 750), new FluidStack(IIContent.gasCO, 500),
+				new FluidStack(IIContent.gasOxygen, 250), 160, 160);
+		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidFormicAcid, 16), new FluidStack(IIContent.fluidMethanol, 8),
+				new FluidStack(IIContent.gasCO, 8), 65);
+
+		addInkRecipes();
+
+		addSmeltingRecipes();
+		addArcFurnaceRecyclingRecipes();
+
+		addAmmunitionCasingRecipes();
+		addRubberRecipes();
+		addDuraluminiumRecipes();
+
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidEtchingAcid, 1000),
+				new FluidStack(IIContent.gasChlorine, 500), new Object[]{"dustIron"}, 4800);
+
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidSulfuricAcid, 500),
+				new FluidStack(FluidRegistry.WATER, 1000), new Object[]{"dustSulfur"}, 4800);
+
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidHydrofluoricAcid, 500),
+				new FluidStack(IIContent.fluidSulfuricAcid, 1000), new Object[]{"dustFluorite"}, 5600);
+
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidNitricAcid, 250),
+				new FluidStack(IIContent.fluidSulfuricAcid, 1000), new Object[]{"dustSaltpeter"}, 5600);
+
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidBrine, 750),
+				new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
+
+
+	}
+
+	private static void addColouringRecipes(IForgeRegistry<IRecipe> registry)
+	{
+		addColoringRecipe(registry, IIContent.itemTracerPowder, 0, "colour", "tracer_powder_colour");
+		addColoringRecipe(registry, IIContent.itemTracerPowder, 1, "colour", "flare_powder_colour");
+
+		addColoringRecipe(registry, IIContent.itemAdvancedPowerPack, -1,
+				ItemIIAdvancedPowerPack.NBT_Colour, "advanced_powerpack_coloring");
+
+		addColoringRecipe(registry, IIContent.itemLightEngineerHelmet, -1,
+				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_helmet_coloring");
+		addColoringRecipe(registry, IIContent.itemLightEngineerChestplate, -1,
+				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_chestplate_coloring");
+		addColoringRecipe(registry, IIContent.itemLightEngineerLeggings, -1,
+				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_leggings_coloring");
+		addColoringRecipe(registry, IIContent.itemLightEngineerBoots, -1,
+				ItemIIUpgradeableArmor.NBT_Colour, "light_engineer_armor_boots_coloring");
+	}
+
+	private static void addColoringRecipe(IForgeRegistry<IRecipe> registry, Item item, int meta, String colorTag, String recipeName)
+	{
+		registry.register(new RecipeRGBColouration((s) ->
+				(OreDictionary.itemMatches(new ItemStack(item,1,meta==-1?0:meta), s, meta!=-1)),
+				(s) -> (ItemNBTHelper.hasKey(s, colorTag)?ItemNBTHelper.getInt(s, colorTag): 0xffffff),
+				(s, i) -> ItemNBTHelper.setInt(s, colorTag, i)).setRegistryName(ImmersiveIntelligence.MODID, recipeName));
+	}
+
 	public static void addCircuitRecipes()
 	{
 		//Allow me to introduce you to Immersive Gregineering™
 
 		if(IIConfig.changeCircuitProduction)
 		{
-			//Remove old circuit recipe
-			ItemStack circuitboard = new ItemStack(IEContent.itemMaterial, 1, 27);
-			BlueprintCraftingRecipe.recipeList.get("components").removeIf(blueprintCraftingRecipe -> blueprintCraftingRecipe.output.isItemEqual(circuitboard));
+			BlueprintCraftingRecipe.recipeList.get("components").removeIf(blueprintCraftingRecipe -> blueprintCraftingRecipe.output.isItemEqual(BASIC_CIRCUIT));
 
 			BlueprintCraftingRecipe.addRecipe("basic_circuits",
-					new ItemStack(IIContent.itemMaterial, 1,
-							IIContent.itemMaterial.getMetaBySubname("basic_circuit_board_raw")), new ItemStack(IEContent.blockStoneDecoration, 2, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()), "plateCopper");
-			BlueprintCraftingRecipe.addRecipe("basic_circuits", new ItemStack(IEContent.itemMaterial, 1, 27), "circuitBasicEtched", new IngredientStack("chipBasic", 2));
+					IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_RAW),
+					new ItemStack(IEContent.blockStoneDecoration, 2, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()),
+					"plateCopper"
+			);
+			BlueprintCraftingRecipe.addRecipe("basic_circuits", BASIC_CIRCUIT,
+					"circuitBasicEtched",
+					new IngredientStack("chipBasic", 2)
+			);
 
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
-					new ItemStack(IIContent.itemMaterial, 1,
-							IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_raw")), new IngredientStack("circuitBasicRaw", 2), "plateAdvancedElectronicAlloy");
+					IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_RAW),
+					new IngredientStack("circuitBasicRaw", 2),
+					"plateAdvancedElectronicAlloy"
+			);
 			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
-					new ItemStack(IIContent.itemMaterial, 1,
-							IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board")), "circuitAdvancedEtched", new IngredientStack("chipAdvanced", 2));
+					IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD),
+					"circuitAdvancedEtched",
+					new IngredientStack("chipAdvanced", 2)
+			);
 
 			BlueprintCraftingRecipe.addRecipe("processors",
-					new ItemStack(IIContent.itemMaterial, 1,
-							IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_raw")), new IngredientStack("circuitAdvancedRaw", 4), new IngredientStack("plateAdvancedElectronicAlloy", 2));
+					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
+					new IngredientStack("circuitAdvancedRaw", 4),
+					new IngredientStack("plateAdvancedElectronicAlloy", 2)
+			);
 			BlueprintCraftingRecipe.addRecipe("processors",
-					new ItemStack(IIContent.itemMaterial, 1,
-							IIContent.itemMaterial.getMetaBySubname("processor_circuit_board")), "circuitProcessorEtched", new IngredientStack("chipProcessor", 2));
+					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD),
+					"circuitProcessorEtched",
+					new IngredientStack("chipProcessor", 2)
+			);
 
 		}
 
 		//Circuits
-		BathingRecipe.addRecipe(new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_circuit_board_etched")), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 15000, 360);
-		BathingRecipe.addRecipe(new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_circuit_board_etched")), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 150000, 560);
-		BathingRecipe.addRecipe(new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_circuit_board_etched")), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 4000), 1500000, 720);
+		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 15000, 360);
+		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 150000, 560);
+		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 4000), 1500000, 720);
 
 //4x Vacuum tube + 1 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
 		PrecissionAssemblerRecipe.addRecipe(
@@ -104,7 +237,7 @@ public class IIRecipes
 
 		//1x Basic Electronic Component =  2x vacuum tube + nickel plate + 4 x redstone dust
 		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("basic_electronic_element")),
+				IIContent.itemMaterial.getStack(Materials.BASIC_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
 				new IngredientStack[]{new IngredientStack("electronTube"), new IngredientStack("plateNickel"), new IngredientStack("dustRedstone", 4)},
@@ -117,7 +250,7 @@ public class IIRecipes
 		);
 
 		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(IIContent.itemMaterial, 2, IIContent.itemMaterial.getMetaBySubname("advanced_electron_tube")),
+				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRON_TUBE),
 				ItemStack.EMPTY,
 
 				new IngredientStack[]{new IngredientStack("plateSteel"), new IngredientStack("wireTungsten", 2), new IngredientStack("electronTube", 2)},
@@ -130,7 +263,7 @@ public class IIRecipes
 		);
 
 		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("advanced_electronic_element")),
+				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
 				new IngredientStack[]{new IngredientStack("electronTubeAdvanced"), new IngredientStack("chipBasic")},
@@ -143,7 +276,7 @@ public class IIRecipes
 		);
 
 		PrecissionAssemblerRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterial, "transistor", 4),
+				IIContent.itemMaterial.getStack(Materials.TRANSISTOR, 4),
 				ItemStack.EMPTY,
 
 				new IngredientStack[]{new IngredientStack("plateSilicon", 2), new IngredientStack("plateAdvancedElectronicAlloy"), new IngredientStack("plateAluminum"), new IngredientStack("dyeBlack")},
@@ -156,8 +289,8 @@ public class IIRecipes
 		);
 
 		PrecissionAssemblerRecipe.addRecipe(
-				new ItemStack(IIContent.itemMaterial, 1, IIContent.itemMaterial.getMetaBySubname("processor_electronic_element")),
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialNugget, "silicon"),
+				IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
+				IIContent.itemMaterialNugget.getStack(MaterialsNugget.SILICON),
 
 				new IngredientStack[]{new IngredientStack("transistor", 32), new IngredientStack("electronTubeAdvanced", 2)},
 
@@ -172,10 +305,10 @@ public class IIRecipes
 	public static void addSiliconProcessingRecipes()
 	{
 		PrecissionAssemblerRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialPlate, "silicon"),
+				IIContent.itemMaterialPlate.getStack(MaterialsPlate.SILICON),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("bouleSilicon", 1)},
+				new IngredientStack[]{new IngredientStack("bouleSilicon")},
 
 				new String[]{"buzzsaw"},
 				new String[]{"buzzsaw work main"},
@@ -185,10 +318,10 @@ public class IIRecipes
 		);
 
 		PrecissionAssemblerRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "silicon"),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.SILICON),
 				ItemStack.EMPTY,
 
-				new IngredientStack[]{new IngredientStack("bouleSilicon", 1)},
+				new IngredientStack[]{new IngredientStack("bouleSilicon")},
 
 				new String[]{"hammer", "buzzsaw"},
 				new String[]{"hammer work main", "hammer work main", "buzzsaw work main", "hammer work main"},
@@ -200,20 +333,20 @@ public class IIRecipes
 
 		CrusherRecipe.removeRecipesForInput(new ItemStack(Items.QUARTZ));
 		CrusherRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialDust, "quartz_dirty"),
-				new IngredientStack("gemQuartz", 1),
+				IIContent.itemMaterialDust.getStack(MaterialsDust.QUARTZ_DIRTY),
+				new IngredientStack("gemQuartz"),
 				3200
 		);
 
 		BathingRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialDust, "quartz"),
+				IIContent.itemMaterialDust.getStack(MaterialsDust.QUARTZ),
 				new IngredientStack("dustQuartzDirty"),
 				new FluidStack(IIContent.fluidHydrofluoricAcid, 1000),
 				4200, 240
 		);
 
 		ArcFurnaceRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialBoule, "silicon"),
+				IIContent.itemMaterialBoule.getStack(MaterialsBoule.SILICON),
 				new IngredientStack("dustQuartz", 6),
 				ItemStack.EMPTY,
 				400, 512
@@ -222,76 +355,107 @@ public class IIRecipes
 
 	public static void addInkRecipes()
 	{
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkCyan, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeCyan"}, 3200);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkYellow, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeYellow"}, 3200);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkMagenta, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeMagenta"}, 3200);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkBlack, 1000), new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeBlack"}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkCyan, 1000),
+				new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeCyan"}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkYellow, 1000),
+				new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeYellow"}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkMagenta, 1000),
+				new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeMagenta"}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidInkBlack, 1000),
+				new FluidStack(FluidRegistry.WATER, 500), new Object[]{"dyeBlack"}, 3200);
 	}
 
 	public static void addBulletPressRecipes()
 	{
 
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "artillery_8bcal", 1),
-				new IngredientStack("plateBrass", 4), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "howitzer"), 2800);
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "mortar_6bCal", 1),
-				new IngredientStack("plateAluminum", 3), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "mortar"), 2500);
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "light_artillery_6bcal", 1),
-				new IngredientStack("plateBrass", 3), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "light_howitzer"), 2200);
+		addMetalPressBullet(Casings.ARTILLERY_8BCAL,
+				new IngredientStack("plateBrass", 4),
+				PressMolds.HOWITZER, 2800);
+		addMetalPressBullet(Casings.MORTAR_6BCAL,
+				new IngredientStack("plateAluminum", 3),
+				PressMolds.MORTAR, 2500);
+		addMetalPressBullet(Casings.LIGHT_ARTILLERY_6BCAL,
+				new IngredientStack("plateBrass", 3),
+				PressMolds.LIGHT_HOWITZER, 2200);
 
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "autocannon_3bcal", 1),
-				new IngredientStack("ingotBrass",2), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "autocannon"), 1600);
+		addMetalPressBullet(Casings.AUTOCANNON_3BCAL,
+				new IngredientStack("ingotBrass", 2),
+				PressMolds.AUTOCANNON, 1600);
 
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "mg_2bcal", 2),
-				new IngredientStack("ingotBrass"), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "machinegun"), 1600);
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "stg_1bcal", 2),
-				new IngredientStack("ingotBrass"), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "assault_rifle"), 1400);
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "smg_1bcal", 3),
-				new IngredientStack("ingotBrass"), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "submachinegun"), 1200);
+		addMetalPressBullet(Casings.MG_2BCAL,
+				new IngredientStack("ingotBrass"),
+				PressMolds.MACHINEGUN, 1600);
+		addMetalPressBullet(Casings.STG_1BCAL,
+				new IngredientStack("ingotBrass"),
+				PressMolds.ASSAULT_RIFLE, 1400);
+		addMetalPressBullet(Casings.SMG_1BCAL,
+				new IngredientStack("ingotBrass"),
+				PressMolds.SUBMACHINEGUN, 1200);
 
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "naval_mine", 1),
-				new IngredientStack("plateSteel", 4), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "naval_mine"), 4800);
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "tripmine", 1),
-				new IngredientStack("plateBrass", 2), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "tripmine"), 3600);
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "tellermine", 1),
-				new IngredientStack("plateBrass", 2), IIUtils.getStackWithMetaName(IIContent.itemPressMold, "tellermine"), 3600);
+		addMetalPressBullet(Casings.NAVAL_MINE,
+				new IngredientStack("plateSteel", 4),
+				PressMolds.NAVAL_MINE, 4800);
+		addMetalPressBullet(Casings.TRIPMINE,
+				new IngredientStack("plateBrass", 2),
+				PressMolds.TRIPMINE, 3600);
+		addMetalPressBullet(Casings.TELLERMINE,
+				new IngredientStack("plateBrass", 2),
+				PressMolds.TELLERMINE, 3600);
 
 		MetalPressRecipe.removeRecipes(new ItemStack(IEContent.itemBullet, 2, 0));
-		MetalPressRecipe.addRecipe(new ItemStack(IEContent.itemBullet, 3, 0), "ingotBrass", new ItemStack(IEContent.itemMold, 1, 3), 2800);
+		MetalPressRecipe.addRecipe(new ItemStack(IEContent.itemBullet, 3, 0),
+				"ingotBrass",
+				new ItemStack(IEContent.itemMold, 1, 3), 2800);
 
 		//Magazines
 
-		BlueprintCraftingRecipe.addRecipe("bullet_magazines", IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "machinegun"),
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.MACHINEGUN),
 				new IngredientStack("plateSteel", 2),
-				new IngredientStack("springSteel", 1));
-		BlueprintCraftingRecipe.addRecipe("bullet_magazines", IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "submachinegun"),
-				new IngredientStack("plateSteel", 2),
-				new IngredientStack("springSteel", 1));
-		BlueprintCraftingRecipe.addRecipe("bullet_magazines", IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "assault_rifle"),
-				new IngredientStack("plateSteel", 2),
-				new IngredientStack("springSteel", 1));
-		BlueprintCraftingRecipe.addRecipe("bullet_magazines", IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "submachinegun_drum"),
-				new IngredientStack("plateSteel", 5),
-				new IngredientStack("springSteel", 1));
+				new IngredientStack("springSteel"));
 
-		BlueprintCraftingRecipe.addRecipe("bullet_magazines", IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "autocannon"),
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.SUBMACHINEGUN),
+				new IngredientStack("plateSteel", 2),
+				new IngredientStack("springSteel"));
+
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.ASSAULT_RIFLE),
+				new IngredientStack("plateSteel", 2),
+				new IngredientStack("springSteel"));
+
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.SUBMACHINEGUN_DRUM),
+				new IngredientStack("plateSteel", 5),
+				new IngredientStack("springSteel"));
+
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.AUTOCANNON),
 				new IngredientStack("plateSteel", 3),
 				new IngredientStack("springSteel", 2));
-		BlueprintCraftingRecipe.addRecipe("bullet_magazines", IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "cpds_drum"),
+
+		BlueprintCraftingRecipe.addRecipe("bullet_magazines",
+				IIContent.itemBulletMagazine.getStack(Magazines.CPDS_DRUM),
 				new IngredientStack("plateSteel", 8),
 				new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
 				new IngredientStack("springSteel", 2),
 				new IngredientStack("dyeGreen", 2)
 		);
+	}
 
+	private static void addMetalPressBullet(Casings casing, IngredientStack stack, PressMolds mold, int energy)
+	{
+		MetalPressRecipe.addRecipe(IIContent.itemAmmoCasing.getStack(casing),
+				stack, IIContent.itemPressMold.getStack(mold), energy);
 	}
 
 	public static void addFunctionalCircuits()
 	{
-		for(Circuit value : Circuit.values())
+		for(Circuits value : Circuits.values())
 		{
 			BlueprintCraftingRecipe.addRecipe(getNameForCircuitTier(value.tier),
-					IIUtils.getStackWithMetaName(IIContent.itemCircuit, value.getName()),
-					new IngredientStack("circuitBasic", 2), new ItemStack(IEContent.itemTool, 1, 1)
+					IIContent.itemCircuit.getStack(value),
+					new IngredientStack("circuitBasic", 2), TOOL_CUTTERS
 			);
 		}
 	}
@@ -314,16 +478,16 @@ public class IIRecipes
 	public static void addSpringRecipes()
 	{
 		BlueprintCraftingRecipe.addRecipe("metal_springs",
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialSpring, "iron", 2),
-				new IngredientStack("plateIron", 1), new ItemStack(IEContent.itemTool, 1)
+				IIContent.itemMaterialSpring.getStack(MaterialsSpring.IRON, 2),
+				new IngredientStack("plateIron", 1), TOOL_HAMMER
 		);
 		BlueprintCraftingRecipe.addRecipe("metal_springs",
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialSpring, "steel", 2),
-				new IngredientStack("plateSteel", 1), new ItemStack(IEContent.itemTool, 1)
+				IIContent.itemMaterialSpring.getStack(MaterialsSpring.STEEL, 2),
+				new IngredientStack("plateSteel", 1), TOOL_HAMMER
 		);
 		BlueprintCraftingRecipe.addRecipe("metal_springs",
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialSpring, "brass", 2),
-				new IngredientStack("plateBrass", 1), new ItemStack(IEContent.itemTool, 1)
+				IIContent.itemMaterialSpring.getStack(MaterialsSpring.BRASS, 2),
+				new IngredientStack("plateBrass", 1), TOOL_HAMMER
 		);
 
 	}
@@ -340,7 +504,7 @@ public class IIRecipes
 		MetalPressRecipe.addRecipe(new ItemStack(IIContent.itemPrintedPage, 1, 0), new IngredientStack("paper"), new ItemStack(IEContent.itemMold, 1, 0), 600);
 
 		ArcFurnaceRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterial, "white_phosphorus", 4),
+				IIContent.itemMaterial.getStack(Materials.WHITE_PHOSPHORUS, 4),
 				new IngredientStack("dustPhosphorus", 4),
 				ItemStack.EMPTY,
 				400, 512,
@@ -360,34 +524,56 @@ public class IIRecipes
 						out.setCount(Math.round(out.getCount()*1.5f));
 						List<ItemStack> stacks = new ArrayList<>();
 						for(Ingredient ingredient : iRecipe.getIngredients())
-							Arrays.stream(ingredient.getMatchingStacks()).filter(stack -> blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, "logWood")).forEachOrdered(stacks::add);
+							Arrays.stream(ingredient.getMatchingStacks())
+									.filter(stack -> blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, "logWood"))
+									.forEachOrdered(stacks::add);
 
 						if(!stacks.isEmpty())
-						{
-							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false), IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), Sawmill.torqueMin+2, 200, 1);
-						}
+							SawmillRecipe.addRecipe(out, new IngredientStack(stacks).setUseNBT(false),
+									IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+									Sawmill.torqueMin+2, 200, 1);
 
 						//IILogger.info("Added recipe for "+stack.getDisplayName()+" x"+stack.getCount()+" -> "+out.getDisplayName()+" x"+out.getCount());
 					}
 				}
 		);
 		//Crusher, logs to sawdust
-		CrusherRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood", 2), new IngredientStack("logWood"), 4096);
-		CrusherRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood", 1), new IngredientStack("plankWood", 2), 3192);
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD, 2),
+				new IngredientStack("logWood"), 4096);
+		CrusherRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				new IngredientStack("plankWood", 2), 3192);
 
 		//Planks to sticks
-		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3), new IngredientStack("plankWood"), IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), Sawmill.torqueMin, 100, 1);
-		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0), new IngredientStack("plankTreatedWood"), IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood"), Sawmill.torqueMin, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(Items.STICK, 3),
+				new IngredientStack("plankWood"),
+				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				Sawmill.torqueMin, 100, 1);
+		SawmillRecipe.addRecipe(new ItemStack(IEContent.itemMaterial, 3, 0),
+				new IngredientStack("plankTreatedWood"),
+				IIContent.itemMaterial.getStack(Materials.DUST_WOOD),
+				Sawmill.torqueMin, 100, 1);
 
-		BottlingMachineRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood"), new IngredientStack("dustWood"), new FluidStack(FluidRegistry.WATER, 250));
-		BottlingMachineRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood_treated", 1), new IngredientStack("pulpWood"), new FluidStack(IEContent.fluidCreosote, 1000));
+		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PULP_WOOD),
+				new IngredientStack("dustWood"),
+				new FluidStack(FluidRegistry.WATER, 250)
+		);
+		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PULP_WOOD_TREATED),
+				new IngredientStack("pulpWood"),
+				new FluidStack(IEContent.fluidCreosote, 1000)
+		);
 
-		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 2, 0), new IngredientStack("pulpWood"), new ItemStack(IEContent.itemMold, 1, 0), 100);
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "artificial_leather"), new IngredientStack("pulpWoodTreated"), new ItemStack(IEContent.itemMold, 1, 0), 600);
+		MetalPressRecipe.addRecipe(new ItemStack(Items.PAPER, 2, 0),
+				new IngredientStack("pulpWood"),
+				new ItemStack(IEContent.itemMold, 1, 0),
+				100);
+		MetalPressRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ARTIFICIAL_LEATHER),
+				new IngredientStack("pulpWoodTreated"),
+				new ItemStack(IEContent.itemMold, 1, 0),
+				600);
 
 		//Charred log to coke dust and sawdust
 		CrusherRecipe.addRecipe(new ItemStack(IIContent.itemMaterial, 1, 17), new IngredientStack(new ItemStack(IIContent.blockCharredLog)), 2024)
-				.addToSecondaryOutput(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_wood", 1), 1f);
+				.addToSecondaryOutput(IIContent.itemMaterial.getStack(Materials.DUST_WOOD), 1f);
 
 	}
 
@@ -399,59 +585,75 @@ public class IIRecipes
 	public static void addMinecartRecipes(IForgeRegistry<IRecipe> registry)
 	{
 		for(Minecarts value : Minecarts.values())
-		{
-			registry.register(new RecipeMinecart(new ItemStack(IIContent.itemMinecart, 1, value.ordinal()),
-					value.stack.get()).setRegistryName(ImmersiveIntelligence.MODID, "minecart_"+value.getName()));
-		}
+			registry.register(new RecipeMinecart(IIContent.itemMinecart.getStack(value), value.stack.get())
+					.setRegistryName(ImmersiveIntelligence.MODID, "minecart_"+value.getName()));
 	}
 
 	public static void addSmallCrateRecipes(IForgeRegistry<IRecipe> registry)
 	{
-		registry.register(new RecipeCrateConversion(new ItemStack(IEContent.blockWoodenDevice0, 1, 0),
-				getSmallCrate(IIBlockTypes_SmallCrate.WOODEN_CRATE_BOX),
-				getSmallCrate(IIBlockTypes_SmallCrate.WOODEN_CRATE_CUBE),
-				getSmallCrate(IIBlockTypes_SmallCrate.WOODEN_CRATE_WIDE)
+		registry.register(new RecipeCrateConversion(
+				new ItemStack(IEContent.blockWoodenDevice0, 1, 0),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_BOX),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_CUBE),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.WOODEN_CRATE_WIDE)
 		).setRegistryName(ImmersiveIntelligence.MODID, "small_crate_wooden"));
 
-		registry.register(new RecipeCrateConversion(new ItemStack(IIContent.blockMetalDevice, 1, 0),
-				getSmallCrate(IIBlockTypes_SmallCrate.METAL_CRATE_BOX),
-				getSmallCrate(IIBlockTypes_SmallCrate.METAL_CRATE_CUBE),
-				getSmallCrate(IIBlockTypes_SmallCrate.METAL_CRATE_WIDE)
+		registry.register(new RecipeCrateConversion(
+				IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.METAL_CRATE),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_BOX),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_CUBE),
+				IIContent.blockSmallCrate.getStack(IIBlockTypes_SmallCrate.METAL_CRATE_WIDE)
 		).setRegistryName(ImmersiveIntelligence.MODID, "small_crate_metal"));
 
 	}
 
-	public static ItemStack getSmallCrate(IIBlockTypes_SmallCrate e)
-	{
-		return new ItemStack(IIContent.blockSmallCrate, 1, e.getMeta());
-	}
-
 	public static void addRDXProductionRecipes()
 	{
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidMethanol, 500), new FluidStack(IIContent.gasHydrogen, 1000), new IngredientStack[]{new IngredientStack("dustNickel")}, 3200);
-		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidMethanol, 2000), new FluidStack(IIContent.gasHydrogen, 3000), new IngredientStack[]{new IngredientStack("dustPlatinum")}, 4800);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidMethanol, 500),
+				new FluidStack(IIContent.gasHydrogen, 1000),
+				new IngredientStack[]{new IngredientStack("dustNickel")}, 3200);
+		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidMethanol, 2000),
+				new FluidStack(IIContent.gasHydrogen, 3000),
+				new IngredientStack[]{new IngredientStack("dustPlatinum")}, 4800);
 
-		FermenterRecipe.addRecipe(new FluidStack(IIContent.fluidAmmonia, 120), ItemStack.EMPTY, new IngredientStack("listAllMeatRaw"), 1600);
-		FermenterRecipe.addRecipe(new FluidStack(IIContent.fluidAmmonia, 160), ItemStack.EMPTY, new ItemStack(Items.ROTTEN_FLESH), 1000);
+		FermenterRecipe.addRecipe(new FluidStack(IIContent.fluidAmmonia, 120), ItemStack.EMPTY,
+				new IngredientStack("listAllMeatRaw"), 1600);
+		FermenterRecipe.addRecipe(new FluidStack(IIContent.fluidAmmonia, 160), ItemStack.EMPTY,
+				new ItemStack(Items.ROTTEN_FLESH), 1000);
 
-		BottlingMachineRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_formaldehyde", 2), new IngredientStack("nuggetSilver"), new FluidStack(IIContent.fluidMethanol, 1000));
+		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_FORMALDEHYDE, 2),
+				new IngredientStack("nuggetSilver"),
+				new FluidStack(IIContent.fluidMethanol, 1000)
+		);
 
-		BottlingMachineRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_hexamine", 1), new IngredientStack("dustFormaldehyde"), new FluidStack(IIContent.fluidAmmonia, 320));
+		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_HEXAMINE),
+				new IngredientStack("dustFormaldehyde"),
+				new FluidStack(IIContent.fluidAmmonia, 320)
+		);
 	}
 
 	public static void addHMXProductionRecipes()
 	{
-		BottlingMachineRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "dust_hmx", 1), new IngredientStack("materialHexogen"), new FluidStack(IIContent.fluidNitricAcid, 500));
+		BottlingMachineRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.DUST_HMX),
+				new IngredientStack("materialHexogen"),
+				new FluidStack(IIContent.fluidNitricAcid, 500));
 	}
 
 	public static void addConcreteRecipes()
 	{
 		//Concrete Bricks / Volksbeton
-		BathingRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.blockConcreteDecoration, "concrete_bricks"), new IngredientStack(new ItemStack(Blocks.BRICK_BLOCK)), new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120);
+		BathingRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS),
+				new IngredientStack(new ItemStack(Blocks.BRICK_BLOCK)),
+				new FluidStack(FluidRegistry.getFluid("concrete"), 500), 1600, 120);
 		//Panzerconcrete / Panzerbeton
-		ArcFurnaceRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.blockConcreteDecoration, "sturdy_concrete_bricks"), IIUtils.getStackWithMetaName(IIContent.blockConcreteDecoration, "concrete_bricks"), ItemStack.EMPTY, 200, 2400, new IngredientStack("stickSteel", 2));
+		ArcFurnaceRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS),
+				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.CONCRETE_BRICKS), ItemStack.EMPTY, 200, 2400,
+				new IngredientStack("stickSteel", 2));
 		//Uberconcrete / Uberbeton
-		ArcFurnaceRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.blockConcreteDecoration, "uberconcrete", 2), IIUtils.getStackWithMetaName(IIContent.blockConcreteDecoration, "sturdy_concrete_bricks"), ItemStack.EMPTY, 200, 3600, new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()));
+		ArcFurnaceRecipe.addRecipe(IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.UBERCONCRETE, 2),
+				IIContent.blockConcreteDecoration.getStack(ConcreteDecorations.STURDY_CONCRETE_BRICKS),
+				ItemStack.EMPTY, 200, 3600,
+				new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()));
 
 	}
 
@@ -661,19 +863,19 @@ public class IIRecipes
 	public static void addUpgradeRecipes()
 	{
 		IIContent.UPGRADE_INSERTER
-				.addStack(new IngredientStack(IIUtils.getStackWithMetaName(IIContent.itemPrecissionTool, "precission_inserter")))
+				.addStack(new IngredientStack(IIContent.itemPrecissionTool.getStack(PrecisionTools.INSERTER)))
 				.addStack(new IngredientStack("scaffoldingSteel"))
 				.setRequiredProgress(20000)
 				.setRequiredSteps(12);
 
 		IIContent.UPGRADE_SAW_UNREGULATOR
-				.addStack(new IngredientStack(IIUtils.getStackWithMetaName(IIContent.itemMotorGear, "steel")))
+				.addStack(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)))
 				.addStack(new IngredientStack("stickSteel", 2))
 				.setRequiredProgress(32000);
 
 		IIContent.UPGRADE_IMPROVED_GEARBOX
-				.addStack(new IngredientStack(IIUtils.getStackWithMetaName(IIContent.itemMotorGear, "tungsten", 2)))
+				.addStack(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.TUNGSTEN, 2)))
 				.addStack(new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9)))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
 				.setRequiredProgress(32000);
@@ -701,7 +903,7 @@ public class IIRecipes
 
 		IIContent.UPGRADE_RADIO_LOCATORS
 				.addStack(new IngredientStack("plateSteel", 4))
-				.addStack(new IngredientStack(new ItemStack(IIContent.itemRadioConfigurator, 2, 1)))
+				.addStack(new IngredientStack(new ItemStack(IIContent.itemRadioTuner, 2, 1)))
 				.addStack(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
 				.setRequiredProgress(250000)
 				.setRequiredSteps(1);
@@ -798,47 +1000,47 @@ public class IIRecipes
 	{
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				new ItemStack(IIContent.blockOre, 1, IIBlockTypes_Ore.ZINC.getMeta()),
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "zinc"),
+				IIContent.blockOre.getStack(Ores.ZINC),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.ZINC),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialDust, "zinc"),
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "zinc"),
+				IIContent.itemMaterialDust.getStack(MaterialsDust.ZINC),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.ZINC),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialDust, "brass"),
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "brass"),
+				IIContent.itemMaterialDust.getStack(MaterialsDust.BRASS),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.BRASS),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				new ItemStack(IIContent.blockOre, 1, IIBlockTypes_Ore.PLATINUM.getMeta()),
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "platinum"),
+				IIContent.blockOre.getStack(Ores.PLATINUM),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.PLATINUM),
 				0.5F);
 
 		FurnaceRecipes.instance().addSmeltingRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialDust, "platinum"),
-				IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "platinum"),
+				IIContent.itemMaterialDust.getStack(MaterialsDust.PLATINUM),
+				IIContent.itemMaterialIngot.getStack(MaterialsIngot.PLATINUM),
 				0.5F);
 
 		if(IIConfig.smeltableTungsten)
 		{
 			FurnaceRecipes.instance().addSmeltingRecipe(
-					new ItemStack(IIContent.blockOre, 1, IIBlockTypes_Ore.TUNGSTEN.getMeta()),
-					IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "tungsten"),
+					IIContent.blockOre.getStack(Ores.TUNGSTEN),
+					IIContent.itemMaterialIngot.getStack(MaterialsIngot.TUNGSTEN),
 					0.5F);
 
 			FurnaceRecipes.instance().addSmeltingRecipe(
-					IIUtils.getStackWithMetaName(IIContent.itemMaterialDust, "tungsten"),
-					IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "tungsten"),
+					IIContent.itemMaterialDust.getStack(MaterialsDust.TUNGSTEN),
+					IIContent.itemMaterialIngot.getStack(MaterialsIngot.TUNGSTEN),
 					0.5F);
 		}
 
 		if(IIConfig.smeltableAEA)
 			FurnaceRecipes.instance().addSmeltingRecipe(
-					IIUtils.getStackWithMetaName(IIContent.itemMaterialDust, "advanced_electronic_alloy"),
-					IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "advanced_electronic_alloy"),
+					IIContent.itemMaterialDust.getStack(MaterialsDust.ADVANCED_ELECTRONIC_ALLOY),
+					IIContent.itemMaterialIngot.getStack(MaterialsIngot.ADVANCED_ELECTRONIC_ALLOY),
 					0.5F);
 	}
 
@@ -866,29 +1068,29 @@ public class IIRecipes
 		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
 
 
-		for(Item item : new Item[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoAutocannon,
-				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun, IIContent.itemAmmoRevolver})
+		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoAutocannon,
+				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
+		// TODO: 05.09.2022 , IIContent.itemAmmoRevolver
 		{
 			assert item!=null;
 
-			IAmmo bullet = (IAmmo)item;
-			ItemStack casingStack = bullet.getCasingStack(1);
+			ItemStack casingStack = item.getCasingStack(1);
 			ItemNBTHelper.setBoolean(casingStack, "ii_FilledCasing", true);
 
 			AmmunitionWorkshopRecipe.addRecipe(
 					(core, casing) -> {
-						ItemStack stack = new ItemStack(item, 1, ItemIIAmmoBase.BULLET);
+						ItemStack stack = item.getStack(AmmoParts.BULLET);
 						stack.deserializeNBT(core.serializeNBT());
 						return stack;
 					},
-					new IngredientStack(bullet.getBulletCore("coreBrass", bullet.getAllowedCoreTypes()[0].getName())),
+					new IngredientStack(item.getBulletCore("coreBrass", item.getAllowedCoreTypes()[0].getName())),
 					new IngredientStack(casingStack).setUseNBT(true),
-					(int)(128*bullet.getCaliber()),
-					(int)(240+(20*bullet.getCaliber()))
+					(int)(128*item.getCaliber()),
+					(int)(240+(20*item.getCaliber()))
 			);
 		}
 
-		for(Item item : new Item[]{IIContent.blockTripmine.bullet, IIContent.blockTellermine.bullet, IIContent.blockRadioExplosives.bullet, IIContent.itemNavalMine})
+		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock, IIContent.itemNavalMine})
 		{
 			assert item!=null;
 			IAmmo bullet = (IAmmo)item;
@@ -908,7 +1110,8 @@ public class IIRecipes
 
 		AmmunitionWorkshopRecipe.addRecipe(
 				(core, casing) -> {
-					ItemStack stack = new ItemStack(IIContent.itemGrenade, 1, IIBlockTypes_Mine.MAIN.getMeta());
+
+					ItemStack stack = IIContent.itemGrenade.getStack(AmmoParts.BULLET);
 					stack.deserializeNBT(core.serializeNBT());
 					return stack;
 				},
@@ -918,7 +1121,7 @@ public class IIRecipes
 
 		AmmunitionWorkshopRecipe.addRecipe(
 				(core, casing) -> {
-					ItemStack stack = new ItemStack(IIContent.itemRailgunGrenade, 1, IIBlockTypes_Mine.MAIN.getMeta());
+					ItemStack stack = IIContent.itemRailgunGrenade.getStack(AmmoParts.BULLET);
 					stack.deserializeNBT(core.serializeNBT());
 					return stack;
 				},
@@ -929,25 +1132,28 @@ public class IIRecipes
 
 	public static void addRubberRecipes()
 	{
-		for(int i = 0; i < IIContent.itemVulcanizerMold.getSubNames().length; i++)
-			BlueprintCraftingRecipe.addRecipe("vulcanizer_molds", new ItemStack(IIContent.itemVulcanizerMold, 1, i), new IngredientStack("plateSteel", 8), new ItemStack(IEContent.itemTool, 1, 1));
+		for(VulcanizerMolds mold : VulcanizerMolds.values())
+			BlueprintCraftingRecipe.addRecipe("vulcanizer_molds",
+					IIContent.itemVulcanizerMold.getStack(mold),
+					new IngredientStack("plateSteel", 8),
+					TOOL_CUTTERS);
 
-		MetalPressRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterialPlate, "rubber_raw"),
+		MetalPressRecipe.addRecipe(IIContent.itemMaterialPlate.getStack(MaterialsPlate.RUBBER_RAW),
 				new IngredientStack("rubberRaw"),
 				ApiUtils.createComparableItemStack(new ItemStack(IEContent.itemMold, 1, 0), false),
 				2400
 		);
 
-		VulcanizerRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "rubber_belt", 4),
-				new ComparableItemStack(IIUtils.getStackWithMetaName(IIContent.itemVulcanizerMold, "belt")),
+		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_BELT, 4),
+				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.BELT),
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 3),
 				new IngredientStack("dustSulfur", 2),
 				24000
 		);
 
-		VulcanizerRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterial, "rubber_tire", 3),
-				new ComparableItemStack(IIUtils.getStackWithMetaName(IIContent.itemVulcanizerMold, "tire")),
+		VulcanizerRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.RUBBER_TIRE, 3),
+				IIContent.itemVulcanizerMold.getComparableStack(VulcanizerMolds.TIRE),
 				new IngredientStack("plateRubberRaw", 10),
 				new IngredientStack("dustVulcanizationCompound", 8),
 				new IngredientStack("dustSulfur", 3),
@@ -957,7 +1163,7 @@ public class IIRecipes
 		//Rubber is a slow pace industry ^^
 		//Unless you build lots of coagulators, that is
 		CoagulatorRecipe.addRecipe(
-				IIUtils.getStackWithMetaName(IIContent.itemMaterial, "natural_rubber", 8),
+				IIContent.itemMaterial.getStack(Materials.NATURAL_RUBBER, 8),
 				new FluidStack(IIContent.fluidLatex, 5500),
 				new FluidStack(IIContent.fluidFormicAcid, 500),
 				24000,
@@ -969,8 +1175,12 @@ public class IIRecipes
 
 	public static void addMetalPressRecipes()
 	{
-		for(int i = 0; i < IIContent.itemPressMold.getSubNames().length; i++)
-			BlueprintCraftingRecipe.addRecipe("ammo_molds", new ItemStack(IIContent.itemPressMold, 1, i), new IngredientStack("plateSteel", 5), new ItemStack(IEContent.itemTool, 1, 1));
+		for(PressMolds value : PressMolds.values())
+			BlueprintCraftingRecipe.addRecipe("ammo_molds",
+					IIContent.itemPressMold.getStack(value),
+					new IngredientStack("plateSteel", 5),
+					TOOL_CUTTERS
+			);
 	}
 
 	public static void addDuraluminiumRecipes()
@@ -978,14 +1188,14 @@ public class IIRecipes
 		// TODO: 07.11.2021 drones ^^
 
 		//Not realistic at all, but it's an advanced material, hence the time and energy required
-		ArcFurnaceRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "duraluminium", 6),
+		ArcFurnaceRecipe.addRecipe(IIContent.itemMaterialIngot.getStack(MaterialsIngot.DURALUMINIUM, 6),
 				new IngredientStack("ingotAluminum", 6),
 				new ItemStack(Items.IRON_NUGGET),
 				600, 640,
 				"ingotCopper", "ingotZinc", "ingotIron", "ingotSilicon"
 		);
 
-		ArcFurnaceRecipe.addRecipe(IIUtils.getStackWithMetaName(IIContent.itemMaterialIngot, "duraluminium", 6),
+		ArcFurnaceRecipe.addRecipe(IIContent.itemMaterialIngot.getStack(MaterialsIngot.DURALUMINIUM, 6),
 				new IngredientStack("dustAluminum", 6),
 				new ItemStack(Items.IRON_NUGGET),
 				600, 640,

@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
@@ -15,10 +14,11 @@ import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataType
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.*;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockRedstoneInterface;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
@@ -61,42 +61,42 @@ public class IIManualDataAndElectronics extends IIManual
 		ManualHelper.addEntry("circuit_production", getCategory(),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production0",
 						new ItemStack(IEContent.itemMaterial, 1, 27),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "advanced_circuit_board"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "processor_circuit_board")
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD),
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD)
 				),
 
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_basic",
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "basic_circuit_board_raw"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "basic_circuit_board_etched"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "advanced_electronic_element"),
+						IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_RAW),
+						IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED),
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
 						new ItemStack(IEContent.itemMaterial, 1, 27)
 				),
 				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_basic_usages"),
 
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_advanced",
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "advanced_circuit_board_raw"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "advanced_circuit_board_etched"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "advanced_electronic_element"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "advanced_circuit_board")
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_RAW),
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED),
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD)
 				),
 				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_advanced_usages"),
 
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_processor",
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "processor_circuit_board_raw"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "processor_circuit_board_etched"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "processor_electronic_element"),
-						IIUtils.getStackWithMetaName(IIContent.itemMaterial, "processor_circuit_board")
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED),
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD)
 				),
 				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_processor_usages")
 		);
 
 		ManualHelper.addEntry("data_input_machine", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "data_input_machine0", MultiblockDataInputMachine.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "data_input_machine0", MultiblockDataInputMachine.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "data_input_machine1"),
 				new ManualPages.Text(ManualHelper.getManual(), "data_input_machine2")
 		);
 		ManualHelper.addEntry("arithmetic_logic_machine", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "arithmetic_logic_machine0", MultiblockArithmeticLogicMachine.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "arithmetic_logic_machine0", MultiblockArithmeticLogicMachine.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "arithmetic_logic_machine1"),
 				new ManualPages.Text(ManualHelper.getManual(), "arithmetic_logic_machine2"),
 
@@ -109,18 +109,18 @@ public class IIManualDataAndElectronics extends IIManual
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_advanced_itemstack", new ItemStack(IIContent.itemCircuit, 1, 6))
 		);
 		ManualHelper.addEntry("redstone_interface", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "redstone_interface0", MultiblockRedstoneInterface.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "redstone_interface0", MultiblockRedstoneInterface.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "redstone_interface1")
 		);
 		ManualHelper.addEntry("conveyor_scanner", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "conveyor_scanner1"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "conveyor_scanner", false)
 						.addEntry(new DataTypeItemStack(), 's')
 		);
 
 		ManualHelper.addEntry("printing_press", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "printing_press0", MultiblockPrintingPress.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "printing_press0", MultiblockPrintingPress.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press1"),
 				new ManualPages.Text(ManualHelper.getManual(), "printing_press2"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "printing_press", true)
@@ -138,11 +138,11 @@ public class IIManualDataAndElectronics extends IIManual
 		);
 
 		ManualHelper.addEntry("radio_station", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "radio_station0", MultiblockRadioStation.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "radio_station0", MultiblockRadioStation.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "radio_station1"),
 				new ManualPages.ItemDisplay(ManualHelper.getManual(), "radio_station2",
-						new ItemStack(IIContent.itemRadioConfigurator, 1, 0),
-						new ItemStack(IIContent.itemRadioConfigurator, 1, 1)
+						new ItemStack(IIContent.itemRadioTuner, 1, 0),
+						new ItemStack(IIContent.itemRadioTuner, 1, 1)
 				)
 		);
 

@@ -1,27 +1,34 @@
 package pl.pabilo8.immersiveintelligence.common.item.crafting.material;
 
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 /**
  * @author Pabilo8
  * @since 2019-05-11
  */
-public class ItemIIMaterialDust extends ItemIIBase
+@IBatchOredictRegister(oreDict = "dust")
+public class ItemIIMaterialDust extends ItemIISubItemsBase<MaterialsDust>
 {
 	public ItemIIMaterialDust()
 	{
-		super("material_dust", 64,
-				"advanced_electronic_alloy",
-				"brass",
-				"platinum",
-				"tungsten",
-				"zinc",
-				"silicon",
-				"fluorite",
-				"quartz",
-				"quartz_dirty",
-				"phosphorus",
-				"duraluminium"
-		);
+		super("material_dust", 64, MaterialsDust.values());
+	}
+
+	public enum MaterialsDust implements IIItemEnum
+	{
+		ADVANCED_ELECTRONIC_ALLOY,
+		BRASS,
+		PLATINUM,
+		TUNGSTEN,
+		ZINC,
+		SILICON,
+		FLUORITE,
+		QUARTZ,
+		QUARTZ_DIRTY,
+		PHOSPHORUS,
+		DURALUMINIUM
 	}
 }

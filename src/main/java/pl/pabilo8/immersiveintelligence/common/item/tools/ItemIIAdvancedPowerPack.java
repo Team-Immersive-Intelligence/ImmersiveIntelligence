@@ -58,7 +58,7 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 		setMaxDamage(0);
 		String name = "advanced_powerpack";
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
-		this.setCreativeTab(IIContent.creativeTab);
+		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
 		IIContent.ITEMS.add(this);
 	}
 

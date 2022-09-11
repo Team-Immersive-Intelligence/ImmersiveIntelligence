@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
 
 /**
  * @author Pabilo8

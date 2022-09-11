@@ -190,7 +190,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 		return new ModelMeasuringCup(fluid);
 	}
 
-	public enum CustomModelLoader implements ICustomModelLoader
+	public enum MeasuringCupModelLoader implements ICustomModelLoader
 	{
 		INSTANCE;
 
@@ -209,7 +209,7 @@ public class ModelMeasuringCup extends ModelAbstractItem
 		@Override
 		public void onResourceManagerReload(IResourceManager resourceManager)
 		{
-			// no need to clear cache since we create a new model instance
+			// no need to clear cache since we create a new model INSTANCE
 		}
 	}
 

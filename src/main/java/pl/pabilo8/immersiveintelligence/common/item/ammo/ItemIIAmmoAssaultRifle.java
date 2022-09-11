@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +22,7 @@ public class ItemIIAmmoAssaultRifle extends ItemIIAmmoBase
 {
 	public ItemIIAmmoAssaultRifle()
 	{
-		super("stg_1bCal", 32);
+		super("stg_1bCal", Casings.STG_1BCAL);
 	}
 
 	@Override
@@ -71,12 +72,6 @@ public class ItemIIAmmoAssaultRifle extends ItemIIAmmoBase
 	public float getDamage()
 	{
 		return 4;
-	}
-
-	@Override
-	public ItemStack getCasingStack(int amount)
-	{
-		return IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing,"stg_1bcal",amount);
 	}
 
 	@Override

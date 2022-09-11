@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing.Axis;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.block.wooden.TileEntityMineSign;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityMineSign;
 
 /**
  * @author Pabilo8

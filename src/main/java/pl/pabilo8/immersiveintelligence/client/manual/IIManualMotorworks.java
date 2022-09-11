@@ -5,12 +5,12 @@ import blusunrize.immersiveengineering.api.ManualPageBlueprint;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockCoagulator;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockFuelStation;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockVehicleWorkshop;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockVulcanizer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVehicleWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVulcanizer;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
@@ -44,25 +44,25 @@ public class IIManualMotorworks extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "rubber_production6")
 		);
 		ManualHelper.addEntry("coagulator", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "coagulator0", MultiblockCoagulator.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "coagulator0", MultiblockCoagulator.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "coagulator1")
 		);
 		ManualHelper.addEntry("vulcanizer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "vulcanizer0", MultiblockVulcanizer.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "vulcanizer0", MultiblockVulcanizer.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "vulcanizer1"),
 				new ManualPages.Text(ManualHelper.getManual(), "vulcanizer2"),
 				new ManualPageBlueprint(ManualHelper.getManual(), "vulcanizer3",
 						new ItemStack(IIContent.itemVulcanizerMold, 1, 0),
 						new ItemStack(IIContent.itemVulcanizerMold, 1, 1)
 				),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "vulcanizer4", IIUtils.getStackWithMetaName(IIContent.itemMaterial, "rubber_compound"))
+				new ManualPages.CraftingMulti(ManualHelper.getManual(), "vulcanizer4", IIContent.itemMaterial.getStack(Materials.RUBBER_COMPOUND))
 		);
 		ManualHelper.addEntry("fuel_station", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "fuel_station0", MultiblockFuelStation.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "fuel_station0", MultiblockFuelStation.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "fuel_station1")
 		);
 		ManualHelper.addEntry("vehicle_workshop", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "vehicle_workshop0", MultiblockVehicleWorkshop.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "vehicle_workshop0", MultiblockVehicleWorkshop.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "vehicle_workshop1"),
 				new ManualPages.Text(ManualHelper.getManual(), "vehicle_workshop2"),
 				new ManualPages.Text(ManualHelper.getManual(), "vehicle_workshop3")

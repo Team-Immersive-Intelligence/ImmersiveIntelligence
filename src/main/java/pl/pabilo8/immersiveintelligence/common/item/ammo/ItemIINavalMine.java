@@ -22,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
@@ -31,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMineAnchor;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -45,8 +45,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 {
 	public ItemIINavalMine()
 	{
-		super("naval_mine", 1);
-		this.itemName = "naval_mine";
+		super("naval_mine", "naval_mine", Casings.NAVAL_MINE);
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
 	}
 
@@ -97,7 +96,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	@Override
 	public ItemStack getCasingStack(int amount)
 	{
-		return IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "naval_mine", amount);
+		return IIContent.itemAmmoCasing.getStack(Casings.NAVAL_MINE, amount);
 	}
 
 	@Override

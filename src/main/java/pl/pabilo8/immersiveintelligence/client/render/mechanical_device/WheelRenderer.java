@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.client.model.connector.ModelWheel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.render.direction_transformer.DirectionTransformerWheel;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalWheel;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalWheel;
 
 import javax.annotation.Nullable;
 

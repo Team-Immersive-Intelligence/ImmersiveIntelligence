@@ -41,8 +41,10 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,18 +56,24 @@ import java.util.UUID;
  * @author Pabilo8
  * @since 15-09-2019
  */
-public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, IIEEnergyItem, ITextureOverride
+public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoomTool, IIEEnergyItem, ITextureOverride
 {
 	public static UUID visionUUID = Utils.generateNewUUID();
 
 	public ItemIIBinoculars()
 	{
-		super("binoculars", 1, "binoculars", "infrared_binoculars");
+		super("binoculars", 1, Binoculars.values());
+	}
+
+	public enum Binoculars implements IIItemEnum
+	{
+		BINOCULARS,
+		INFRARED_BINOCULARS
 	}
 
 	public boolean isAdvanced(ItemStack stack)
 	{
-		return stack.getMetadata()==1;
+		return stackToSub(stack)==Binoculars.INFRARED_BINOCULARS;
 	}
 
 	@Override
@@ -163,7 +171,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 	@SideOnly(Side.CLIENT)
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return ItemNBTHelper.getBoolean(stack, "sneaking")?"invisible": (isAdvanced(stack)?("infrared_binoculars_"+((isEnabled(stack))?"on": "off")):"binoculars");
+		return ItemNBTHelper.getBoolean(stack, "sneaking")?"invisible": (isAdvanced(stack)?("infrared_binoculars_"+((isEnabled(stack))?"on": "off")): "binoculars");
 	}
 
 	@Override
@@ -227,7 +235,7 @@ public class ItemIIBinoculars extends ItemIIBase implements IAdvancedZoomTool, I
 	{
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 		if(slot==EntityEquipmentSlot.MAINHAND)
-			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID,"Increased Sight Range (Mobs)", 30.0D, 0));
+			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID, "Increased Sight Range (Mobs)", 30.0D, 0));
 		return multimap;
 	}
 }

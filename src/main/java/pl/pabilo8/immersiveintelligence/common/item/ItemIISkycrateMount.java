@@ -5,68 +5,70 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount.SkycrateMounts;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 /**
  * @author Pabilo8
  * @since 27-12-2019
  */
-public class ItemIISkycrateMount extends ItemIIBase implements ISkycrateMount
+public class ItemIISkycrateMount extends ItemIISubItemsBase<SkycrateMounts> implements ISkycrateMount
 {
 	public ItemIISkycrateMount()
 	{
-		super("skycrate_mount", 1, "mechanical", "electric");
+		super("skycrate_mount", 1, SkycrateMounts.values());
 	}
 
+	public enum SkycrateMounts implements IIItemEnum
+	{
+		MECHANICAL(pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.mechEnergy, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.mechSpeed, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.mechSpeed, false),
+		ELECTRIC(0, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.electricEnergy, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.electricSpeed, true);
+
+		private final float mountEnergy, mountMaxEnergy, electricEnergy;
+		private final boolean isTeslaCharged;
+
+		SkycrateMounts(float mountEnergy, float mountMaxEnergy, float electricEnergy, boolean isTeslaCharged)
+		{
+			this.mountEnergy = mountEnergy;
+			this.mountMaxEnergy = mountMaxEnergy;
+			this.electricEnergy = electricEnergy;
+			this.isTeslaCharged = isTeslaCharged;
+		}
+	}
+
+	// TODO: 01.09.2022 replace with capabilities
 	@Override
 	public double getMountEnergy(ItemStack stack)
 	{
-		if(stack.getMetadata()==0)
-		{
-			return SkycrateMounts.mechEnergy;
-		}
-		return 0;
+		return stackToSub(stack).mountEnergy;
 	}
 
 	@Override
 	public double getMountMaxEnergy(ItemStack stack)
 	{
-		switch(stack.getMetadata())
-		{
-			case 0:
-				return SkycrateMounts.mechSpeed;
-			case 1:
-				return SkycrateMounts.electricEnergy;
-		}
-		return 0;
+		return stackToSub(stack).mountMaxEnergy;
 	}
 
 	@Override
 	public double getPoweredSpeed(ItemStack stack)
 	{
-		switch(stack.getMetadata())
-		{
-			case 0:
-				return SkycrateMounts.mechSpeed;
-			case 1:
-				return SkycrateMounts.electricSpeed;
-		}
-		return 0;
+		return stackToSub(stack).electricEnergy;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void render(ItemStack stack, World world, float partialTicks, double energy)
 	{
-		switch(stack.getMetadata())
+		switch(stackToSub(stack))
 		{
-			case 0:
+			case MECHANICAL:
 				ClientUtils.bindTexture(SkyCrateRenderer.texture_mechanical);
 				SkyCrateRenderer.model_mechanical.render();
 				break;
-			case 1:
+			case ELECTRIC:
 				ClientUtils.bindTexture(SkyCrateRenderer.texture_electric);
 				SkyCrateRenderer.model_electric.render();
 				break;
@@ -76,6 +78,6 @@ public class ItemIISkycrateMount extends ItemIIBase implements ISkycrateMount
 	@Override
 	public boolean isTesla(ItemStack stack)
 	{
-		return stack.getMetadata()==1;
+		return stackToSub(stack).isTeslaCharged;
 	}
 }

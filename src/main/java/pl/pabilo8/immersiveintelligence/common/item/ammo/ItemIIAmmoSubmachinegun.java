@@ -1,15 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +19,7 @@ public class ItemIIAmmoSubmachinegun extends ItemIIAmmoBase
 {
 	public ItemIIAmmoSubmachinegun()
 	{
-		super("smg_1bCal", 48);
+		super("smg_1bCal", Casings.SMG_1BCAL);
 	}
 
 	@Override
@@ -71,12 +69,6 @@ public class ItemIIAmmoSubmachinegun extends ItemIIAmmoBase
 	public float getDamage()
 	{
 		return 3;
-	}
-
-	@Override
-	public ItemStack getCasingStack(int amount)
-	{
-		return IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing,"smg_1bcal",amount);
 	}
 
 	@Override

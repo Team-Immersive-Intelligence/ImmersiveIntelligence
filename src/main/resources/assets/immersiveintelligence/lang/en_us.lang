@@ -303,12 +303,12 @@ item.immersiveintelligence.printed_page.text.name=Printed Text
 item.immersiveintelligence.printed_page.code.name=Printed Code
 item.immersiveintelligence.printed_page.blueprint.name=Printed Construction Scheme
 
-item.immersiveintelligence.precission_tool.precission_buzzsaw.name=Precision Buzzsaw
-item.immersiveintelligence.precission_tool.precission_drill.name=Precision Drill
-item.immersiveintelligence.precission_tool.precission_inserter.name=Precision Inserter
-item.immersiveintelligence.precission_tool.precission_solderer.name=Precision Solderer
-item.immersiveintelligence.precission_tool.precission_welder.name=Precision Welder
-item.immersiveintelligence.precission_tool.precission_hammer.name=Precision Hammer
+item.immersiveintelligence.precission_tool.buzzsaw.name=Precision Buzzsaw
+item.immersiveintelligence.precission_tool.drill.name=Precision Drill
+item.immersiveintelligence.precission_tool.inserter.name=Precision Inserter
+item.immersiveintelligence.precission_tool.solderer.name=Precision Solderer
+item.immersiveintelligence.precission_tool.welder.name=Precision Welder
+item.immersiveintelligence.precission_tool.hammer.name=Precision Hammer
 
 item.immersiveintelligence.sawblade.iron.name=Iron Saw Blade
 item.immersiveintelligence.sawblade.steel.name=Steel Saw Blade
@@ -1125,7 +1125,7 @@ info.immersiveintelligence.current_frequency=Current frequency: %s
 info.immersiveintelligence.requires_advanced_hammer=Advanced engineering requires advanced tools... you need an Electric Hammer to build this machine!
 
 info.immersiveintelligence.tool_durability=Durability: %1$s / %2$s
-info.immersiveintelligence.gear_ratio=Gear Ratio: %1$s : %2$s
+info.immersiveintelligence.gear_ratio=Torque/Speed Ratio: %1$s >> %2$s
 info.immersiveintelligence.charge_with_if=Charge with IF
 
 info.immersiveintelligence.yaw=Yaw: %s

@@ -1128,19 +1128,18 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 			{
 				if(upgrades.hasKey("gasmask"))
 					renderWithEntity(entity, bipedHead, gasmaskModel, scale, TEXTURE_GASMASK);
-				if(upgrades.hasKey("headgear"))
-				{
-					GlStateManager.pushMatrix();
-					GlStateManager.disableCull();
-					if(upgrades.hasKey("infiltrator_gear"))
-						renderWithEntity(entity, bipedHead, infiltratorGogglesModel, scale, TEXTURE_GOGGLES);
-					else if(upgrades.hasKey("technician_gear"))
-						renderWithEntity(entity, bipedHead, technicianGogglesModel, scale, TEXTURE_GOGGLES);
-					else if(upgrades.hasKey("engineer_gear"))
-						renderWithEntity(entity, bipedHead, engineerGogglesModel, scale, TEXTURE_GOGGLES);
-					GlStateManager.enableCull();
-					GlStateManager.popMatrix();
-				}
+
+				GlStateManager.pushMatrix();
+				GlStateManager.disableCull();
+				if(upgrades.hasKey("infiltrator_gear"))
+					renderWithEntity(entity, bipedHead, infiltratorGogglesModel, scale, TEXTURE_GOGGLES);
+				else if(upgrades.hasKey("technician_gear"))
+					renderWithEntity(entity, bipedHead, technicianGogglesModel, scale, TEXTURE_GOGGLES);
+				else if(upgrades.hasKey("engineer_gear"))
+					renderWithEntity(entity, bipedHead, engineerGogglesModel, scale, TEXTURE_GOGGLES);
+				GlStateManager.enableCull();
+				GlStateManager.popMatrix();
+
 				if(hasPlates(upgrades))
 				{
 					setColorForPlates(renderStack, upgrades);

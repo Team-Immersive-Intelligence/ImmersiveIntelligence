@@ -44,7 +44,7 @@ public class ItemIITrenchShovel extends ItemIEShovel
 
 		//Now, reconfigure the block to match our mod.
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+".trench_shovel");
-		this.setCreativeTab(IIContent.creativeTab);
+		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
 
 		//And add it to our registries.
 		IIContent.ITEMS.add(this);

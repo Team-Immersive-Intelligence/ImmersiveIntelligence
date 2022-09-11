@@ -26,10 +26,16 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,17 +43,30 @@ import java.util.stream.Collectors;
  * @author Pabilo8
  * @since 2019-05-11
  */
-public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextureOverride
+public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> implements IAmmo, ITextureOverride
 {
-	public static final int BULLET = 0;
-	public static final int CORE = 1;
 	public final String NAME;
+	@Nullable
+	private final Casings casing;
 
-	public ItemIIAmmoBase(String name, int stacksize)
+	public ItemIIAmmoBase(String name, @Nullable Casings casing)
 	{
-		super("bullet_"+name.toLowerCase(), stacksize, "bullet", "core");
-		setMetaHidden(BULLET, CORE);
+		this("bullet_"+name.toLowerCase(), name, casing);
+	}
+
+	public ItemIIAmmoBase(String fullName, String name, @Nullable Casings casing)
+	{
+		super(fullName, casing==null?64: casing.getStackSize(), AmmoParts.values());
 		this.NAME = name;
+		this.casing = casing;
+	}
+
+	public enum AmmoParts implements IIItemEnum
+	{
+		@IIItemProperties(hidden = true)
+		BULLET,
+		@IIItemProperties(hidden = true)
+		CORE
 	}
 
 	public void makeDefault(ItemStack stack)
@@ -56,7 +75,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 			ItemNBTHelper.setString(stack, "core", "core_brass");
 		if(!ItemNBTHelper.hasKey(stack, "core_type"))
 			ItemNBTHelper.setString(stack, "core_type", getAllowedCoreTypes()[0].getName());
-		if(stack.getMetadata()==BULLET&&!ItemNBTHelper.hasKey(stack, "fuse"))
+		if(stackToSub(stack)==AmmoParts.BULLET&&!ItemNBTHelper.hasKey(stack, "fuse"))
 			ItemNBTHelper.setString(stack, "fuse", getAllowedFuseTypes()[0].getName());
 	}
 
@@ -74,6 +93,12 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 		if(!ItemNBTHelper.hasKey(stack, "core_type"))
 			makeDefault(stack);
 		return EnumCoreTypes.v(ItemNBTHelper.getString(stack, "core_type"));
+	}
+
+	@Override
+	public ItemStack getCasingStack(int amount)
+	{
+		return casing!=null?IIContent.itemAmmoCasing.getStack(casing, amount): ItemStack.EMPTY;
 	}
 
 	@Override
@@ -136,6 +161,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
@@ -143,11 +169,12 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		boolean b = stack.getMetadata()==BULLET;
-		if(b)
+		AmmoParts part = stackToSub(stack);
+		if(part==AmmoParts.BULLET)
 		{
 			tooltip.add(getFormattedBulletTypeName(stack));
 			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.core",
@@ -160,6 +187,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
 			//tooltip.add(getPenetrationTable(stack));
 		}
+
 		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(), "#.#")));
 	}
 
@@ -188,9 +216,10 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack stack)
+	@Nonnull
+	public String getItemStackDisplayName(@Nonnull ItemStack stack)
 	{
-		switch(stack.getMetadata())
+		switch(stackToSub(stack))
 		{
 			case BULLET:
 				return I18n.format("item.immersiveintelligence."+NAME+".bullet.name");
@@ -211,7 +240,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 	@SideOnly(Side.CLIENT)
 	public int getColourForIEItem(ItemStack stack, int pass)
 	{
-		switch(stack.getMetadata())
+		switch(stackToSub(stack))
 		{
 			case BULLET:
 			{
@@ -233,7 +262,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 
 	public ItemStack getBulletWithParams(String core, String coreType, String... components)
 	{
-		ItemStack stack = new ItemStack(this, 1, BULLET);
+		ItemStack stack = getStack(AmmoParts.BULLET);
 		ItemNBTHelper.setString(stack, "core", core);
 		ItemNBTHelper.setString(stack, "core_type", coreType);
 		NBTTagList tagList = new NBTTagList();
@@ -255,7 +284,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 	@Override
 	public ItemStack getBulletCore(String core, String coreType)
 	{
-		ItemStack stack = new ItemStack(this, 1, CORE);
+		ItemStack stack = getStack(AmmoParts.CORE);
 		ItemNBTHelper.setString(stack, "core", core);
 		ItemNBTHelper.setString(stack, "core_type", coreType);
 		return stack;
@@ -264,7 +293,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 	@Override
 	public boolean isBulletCore(ItemStack stack)
 	{
-		return stack.getMetadata()==CORE;
+		return stackToSub(stack)==AmmoParts.CORE;
 	}
 
 	@Override
@@ -307,7 +336,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public FontRenderer getFontRenderer(ItemStack stack)
+	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
 	{
 		return ClientProxy.itemFont;
 	}
@@ -315,7 +344,7 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 	@Override
 	public String getModelCacheKey(ItemStack stack)
 	{
-		return String.format("%s%s_%s%s", stack.getMetadata()==CORE?"core": "bullet", NAME, getPaintColor(stack)==-1?"no_": "paint_", getCoreType(stack).getName());
+		return String.format("%s%s_%s%s", stackToSub(stack).name(), NAME, getPaintColor(stack)==-1?"no_": "paint_", getCoreType(stack).getName());
 	}
 
 	@Override
@@ -323,19 +352,26 @@ public abstract class ItemIIAmmoBase extends ItemIIBase implements IAmmo, ITextu
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();
-		if(stack.getMetadata()==BULLET)
-		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
-			if(getPaintColor(stack)!=-1)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
 
-		}
-		else if(stack.getMetadata()==CORE)
+		switch(stackToSub(stack))
 		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+			case BULLET:
+			{
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+				if(getPaintColor(stack)!=-1)
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
+
+			}
+			break;
+			case CORE:
+			{
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+			}
+			break;
 		}
+
 		return a;
 	}
 }

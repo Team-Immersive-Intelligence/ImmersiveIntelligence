@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialRod.MaterialsRod;
 import twistedgate.immersiveposts.ImmersivePosts;
 import twistedgate.immersiveposts.common.blocks.BlockPost;
 import twistedgate.immersiveposts.enums.EnumPostMaterial;
@@ -46,7 +47,7 @@ public class ImmersivePostsHelper extends IICompatModule
 
 		try
 		{
-			IIContent.itemMaterialRod.setMetaUnhidden(2, 3);
+			IIContent.itemMaterialRod.setMetaUnhidden(MaterialsRod.ZINC, MaterialsRod.PLATINUM);
 			
 			Constructor<EnumPostMaterial> constructor = EnumPostMaterial.class.getDeclaredConstructor(String.class, int.class, String.class, Block.class, boolean.class, boolean.class);
 			constructor.setAccessible(true);

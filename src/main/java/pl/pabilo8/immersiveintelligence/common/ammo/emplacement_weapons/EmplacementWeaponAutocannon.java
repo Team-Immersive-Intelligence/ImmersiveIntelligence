@@ -18,21 +18,21 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,7 +64,7 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack)
 		{
-			if(!OreDictionary.itemMatches(stack, IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "autocannon"), false))
+			if(!OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false))
 				return false;
 			return super.isItemValid(slot, stack);
 		}
@@ -164,8 +164,8 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		{
 			if(reloadDelay==0)
 			{
-				if(inventoryPlatform.stream().anyMatch(stack -> OreDictionary.itemMatches(stack, IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "autocannon"), false)
-						&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0))
+				if(inventoryPlatform.stream().anyMatch(stack -> OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false)
+						&&IIContent.itemBulletMagazine.getRemainingBulletCount(stack) > 0))
 					reloadDelay = 1;
 				else
 					requiresPlatformRefill = true;
@@ -183,10 +183,10 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 				{
 					if(magsLoaded >= 4)
 						break;
-					if(OreDictionary.itemMatches(stack, IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "autocannon"), false)
-							&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0)
+					if(OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.AUTOCANNON), false)
+							&&IIContent.itemBulletMagazine.getRemainingBulletCount(stack) > 0)
 					{
-						magazine.addAll(ItemIIBulletMagazine.takeAll(stack));
+						magazine.addAll(IIContent.itemBulletMagazine.takeAll(stack));
 						magsLoaded++;
 					}
 				}
@@ -233,8 +233,8 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 		else if(magazine.size() > 0)
 		{
 			Vec3d weaponCenter = te.getWeaponCenter().add(vv.scale(-1.85));
-			weaponCenter = weaponCenter.add(vv.rotateYaw(bulletsShot%2==0?90:-90).scale(0.55));
-			weaponCenter = weaponCenter.add(vv.rotatePitch(bulletsShot<2?90:-90).scale(0.25));
+			weaponCenter = weaponCenter.add(vv.rotateYaw(bulletsShot%2==0?90: -90).scale(0.55));
+			weaponCenter = weaponCenter.add(vv.rotatePitch(bulletsShot < 2?90: -90).scale(0.25));
 
 			Vec3d vg = vv.scale(3f);
 			ParticleUtils.spawnGunfireFX(weaponCenter, vg, 4f);

@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.PenetrationHandlerConcreteBricks;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerMetals.PenetrationHandlerSteel;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 
@@ -93,6 +94,7 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 				() -> new ItemStack(ITContent.blockMetalBarrel, 1, BlockType_MetalBarrel.BARREL_STEEL.getMeta()));
 		addMinecartToItem("open_barrel", EntityMinecartBarrelOpen::new,
 				() -> new ItemStack(ITContent.blockMetalBarrel, 1, BlockType_MetalBarrel.BARREL_OPEN.getMeta()));
+		IIContent.itemMinecart.updateValues(Minecarts.values());
 	}
 
 	@Optional.Method(modid = "immersivetech")
@@ -113,9 +115,9 @@ public class ImmersiveTechnologyHelper extends IICompatModule
 				true);
 	}
 
-	public static Minecarts addMinecartToItem(String name, BiFunction<World, Vec3d, EntityMinecart> minecart, Supplier<ItemStack> stack)
+	public static void addMinecartToItem(String name, BiFunction<World, Vec3d, EntityMinecart> minecart, Supplier<ItemStack> stack)
 	{
-		return EnumHelper.addEnum(Minecarts.class, name.toUpperCase(),
+		EnumHelper.addEnum(Minecarts.class, name.toUpperCase(),
 				new Class[]{BiFunction.class, Supplier.class},
 				minecart, stack
 		);

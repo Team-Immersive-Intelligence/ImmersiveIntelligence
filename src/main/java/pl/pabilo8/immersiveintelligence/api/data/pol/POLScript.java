@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.pol.instructions.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuit;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,9 +130,9 @@ public class POLScript
 				// TODO: 17.04.2022 devices
 				case USE: //add a circuit
 				{
-					Circuit circuit = Arrays.stream(Circuit.values())
+					Circuits circuit = Arrays.stream(Circuits.values())
 							.filter(e -> e.getName().equals(rest.toLowerCase()))
-							.findFirst().orElse(Circuit.ARITHMETIC);
+							.findFirst().orElse(Circuits.ARITHMETIC);
 					for(String function : circuit.getFunctions())
 						operations.add(DataOperations.getOperationInstance(function));
 				}

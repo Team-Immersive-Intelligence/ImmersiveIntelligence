@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 /**
  * @author Pabilo8
@@ -20,10 +21,8 @@ public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 	@Override
 	public DataPacket getStoredData(ItemStack stack)
 	{
-		NBTTagCompound tag = stack.serializeNBT();
-		NBTTagCompound realtag = ItemNBTHelper.getTagCompound(stack, "stored_data");
 		DataPacket data = new DataPacket();
-		data.fromNBT(realtag);
+		data.fromNBT(ItemNBTHelper.getTagCompound(stack, "stored_data"));
 		return data;
 	}
 

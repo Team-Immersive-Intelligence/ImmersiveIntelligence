@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Wires;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIISmallWireCoil.SmallWires;
 
 /**
  * @author Pabilo8
@@ -15,22 +15,11 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
  */
 public class IISmallWireType extends WireType
 {
-	public static IISmallWireType SMALL_REDSTONE;
-	public static IISmallWireType SMALL_DATA;
+	private final SmallWires wire;
 
-	public String name;
-	public int meta;
-
-	public IISmallWireType(String name, int meta)
+	public IISmallWireType(SmallWires wire)
 	{
-		this.name = name;
-		this.meta = meta;
-	}
-
-	public static void init()
-	{
-		SMALL_REDSTONE = new IISmallWireType("redstone", 0);
-		SMALL_DATA = new IISmallWireType("data", 1);
+		this.wire = wire;
 	}
 
 	/**
@@ -51,7 +40,7 @@ public class IISmallWireType extends WireType
 	@Override
 	public int getColour(Connection connection)
 	{
-		return meta==0?Wires.smallDataWireColouration:Wires.smallRedstoneWireColouration;
+		return wire.colour;
 	}
 
 	@Override
@@ -70,19 +59,19 @@ public class IISmallWireType extends WireType
 	@Override
 	public int getMaxLength()
 	{
-		return meta==0?Wires.smallDataWireLength:Wires.smallRedstoneWireLength;
+		return wire.length;
 	}
 
 	@Override
 	public ItemStack getWireCoil()
 	{
-		return new ItemStack(IIContent.itemSmallWireCoil, 1, meta);
+		return IIContent.itemSmallWireCoil.getStack(wire);
 	}
 
 	@Override
 	public String getUniqueName()
 	{
-		return name;
+		return "small_"+wire.getName();
 	}
 
 	@Override
@@ -95,12 +84,6 @@ public class IISmallWireType extends WireType
 	public boolean isEnergyWire()
 	{
 		return false;
-	}
-
-	@Override
-	public String getCategory()
-	{
-		return name.toUpperCase();
 	}
 
 	@Override

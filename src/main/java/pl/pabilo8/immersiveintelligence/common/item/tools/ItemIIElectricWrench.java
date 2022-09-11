@@ -30,7 +30,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -54,8 +55,8 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(TextFormatting.ITALIC+I18n.format(IILib.DESCRIPTION_KEY+"wrench")+TextFormatting.RESET);
-		list.add(TextFormatting.ITALIC+I18n.format(IILib.INFO_KEY+"charge_with_if")+TextFormatting.RESET);
+		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"wrench")));
+		list.add(IIUtils.getItalicString(I18n.format(IILib.INFO_KEY+"charge_with_if")));
 		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 	}
 
@@ -88,7 +89,6 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	}
 
 
-
 	@Nonnull
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -98,13 +98,13 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 			IUpgradableMachine te = ((IUpgradableMachine)world.getTileEntity(pos)).getUpgradeMaster();
 			if(te!=null&&te.getCurrentlyInstalled()!=null)
 			{
-				te.addUpgradeInstallProgress(player.isCreative()?999999:Tools.electricWrenchUpgradeProgress);
-				if(te.getInstallProgress()>=te.getCurrentlyInstalled().getProgressRequired())
+				te.addUpgradeInstallProgress(player.isCreative()?999999: Tools.electricWrenchUpgradeProgress);
+				if(te.getInstallProgress() >= te.getCurrentlyInstalled().getProgressRequired())
 				{
 					if(te.addUpgrade(te.getCurrentlyInstalled(), false))
 						te.resetInstallProgress();
 				}
-				damageWrench(player.getHeldItem(hand),player);
+				damageWrench(player.getHeldItem(hand), player);
 				return EnumActionResult.SUCCESS;
 			}
 		}

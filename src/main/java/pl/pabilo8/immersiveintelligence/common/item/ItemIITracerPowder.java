@@ -11,6 +11,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder.Powders;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -19,11 +24,19 @@ import java.util.List;
  * @author Pabilo8
  * @since 10-11-2019
  */
-public class ItemIITracerPowder extends ItemIIBase
+public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>
 {
 	public ItemIITracerPowder()
 	{
-		super("tracer_powder", 64, "tracer_powder", "flare_powder");
+		super("tracer_powder", 64, Powders.values());
+	}
+
+	enum Powders implements IIItemEnum
+	{
+		@IIItemProperties(oreDict = {"dustTracer"})
+		TRACER_POWDER,
+		@IIItemProperties(oreDict = {"dustFlare"})
+		FLARE_POWDER
 	}
 
 	@Override

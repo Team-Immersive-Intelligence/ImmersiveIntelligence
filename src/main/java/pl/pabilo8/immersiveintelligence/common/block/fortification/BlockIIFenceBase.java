@@ -1,11 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.block.fortification;
 
-import blusunrize.immersiveengineering.common.blocks.BlockIEBase;
-import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockWall;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
@@ -17,29 +14,46 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.block.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityChainFence;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
+import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Pabilo8
  * @since 29.08.2020
  */
-public abstract class BlockIIFenceBase<E extends Enum<E> & BlockIEBase.IBlockEnum> extends BlockIIBase<E> implements ITileEntityProvider
+public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> extends BlockIITileProvider<E>
 {
 	public static final PropertyBool FORCED_POST = PropertyBool.create("forced_post");
 
-	public BlockIIFenceBase(String name, Material material, PropertyEnum<E> mainProperty, Class<? extends ItemBlockIEBase> itemBlock, Object... additionalProperties)
+	public BlockIIFenceBase(String name, Material material, PropertyEnum<E> mainProperty, Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock,
+							Object... additionalProperties)
 	{
-		super(name, material, mainProperty, itemBlock, BlockWall.NORTH, BlockWall.SOUTH, BlockWall.WEST, BlockWall.EAST, BlockWall.UP, FORCED_POST, additionalProperties);
+		super(name, material, mainProperty, itemBlock,
+				BlockWall.NORTH, BlockWall.SOUTH, BlockWall.WEST, BlockWall.EAST, BlockWall.UP, FORCED_POST,
+				additionalProperties);
+
+		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
+
+		setToolTypes(IILib.TOOL_HAMMER, IILib.TOOL_WIRECUTTER);
+
+		IIContent.TILE_ENTITIES.add(TileEntityChainFence.class);
 	}
 
 	@Override
@@ -48,32 +62,24 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & BlockIEBase.IBlockEnu
 		return super.getInitDefaultState().withProperty(FORCED_POST, false);
 	}
 
+	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta)
+	public TileEntity createBasicTE(World worldIn, E type)
 	{
 		return new TileEntityChainFence();
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
-	{
-		return BlockRenderLayer.CUTOUT_MIPPED;
-	}
-
-	@Deprecated
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		return EnumBlockRenderType.MODEL;
-	}
-
-	@Override
-	public boolean canBeConnectedTo(IBlockAccess world, BlockPos pos, EnumFacing facing)
+	public boolean canBeConnectedTo(IBlockAccess world, BlockPos pos, @Nonnull EnumFacing facing)
 	{
 		IBlockState connector = world.getBlockState(pos.offset(facing));
 		return connector.getBlock() instanceof BlockIIFenceBase;
 	}
 
 	@Override
+	@Nonnull
+	@SuppressWarnings("deprecation")
+	@ParametersAreNonnullByDefault
 	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side)
 	{
 		return side!=EnumFacing.UP&&side!=EnumFacing.DOWN?BlockFaceShape.MIDDLE_POLE: BlockFaceShape.CENTER;
@@ -84,6 +90,9 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & BlockIEBase.IBlockEnu
 	 * such as fence connections.
 	 */
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
+	@SuppressWarnings("deprecation")
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		state = super.getActualState(state, world, pos);
@@ -116,6 +125,8 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & BlockIEBase.IBlockEnu
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
+	@SuppressWarnings("deprecation")
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState)
 	{
 		state = state.getActualState(worldIn, pos);
@@ -132,6 +143,9 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & BlockIEBase.IBlockEnu
 	}
 
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
+	@SuppressWarnings("deprecation")
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return new AxisAlignedBB(Utils.canFenceConnectTo(world, pos, EnumFacing.WEST, blockMaterial)?0: .375f, 0, Utils.canFenceConnectTo(world, pos, EnumFacing.NORTH, blockMaterial)?0: .375f, Utils.canFenceConnectTo(world, pos, EnumFacing.EAST, blockMaterial)?1: .625f, 1f, Utils.canFenceConnectTo(world, pos, EnumFacing.SOUTH, blockMaterial)?1: .625f);
@@ -139,18 +153,21 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & BlockIEBase.IBlockEnu
 
 	@Nullable
 	@Override
+	@ParametersAreNonnullByDefault
 	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity)
 	{
 		return PathNodeType.FENCE;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return true;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity te = world.getTileEntity(pos);

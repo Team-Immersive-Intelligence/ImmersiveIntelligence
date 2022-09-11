@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityDataConnector;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataConnector;
 
 import java.util.HashMap;
 import java.util.Map;

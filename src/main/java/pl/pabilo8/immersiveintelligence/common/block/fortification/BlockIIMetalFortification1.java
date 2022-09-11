@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.fortification;
 
-import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
@@ -8,8 +7,14 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import pl.pabilo8.immersiveintelligence.common.block.BlockIIBase;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalFortification1;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
+import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * @author Pabilo8
@@ -21,21 +26,25 @@ public class BlockIIMetalFortification1 extends BlockIIBase<IIBlockTypes_MetalFo
 
 	public BlockIIMetalFortification1()
 	{
-		super("metal_fortification1", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalFortification1.class), ItemBlockIEBase.class);
+		super("metal_fortification1", PropertyEnum.create("type", IIBlockTypes_MetalFortification1.class), Material.IRON, ItemBlockIIBase::new);
 		setHardness(3.0F);
 		setResistance(15.0F);
+
+		setToolTypes(IILib.TOOL_HAMMER);
+
 		this.setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
-		this.setAllNotNormalBlock();
-		lightOpacity = 0;
 	}
 
-	@Override
-	public boolean allowHammerHarvest(IBlockState state)
+	public enum IIBlockTypes_MetalFortification1 implements IIBlockEnum
 	{
-		return true;
+		TANK_TRAP
 	}
 
+
 	@Override
+	@ParametersAreNonnullByDefault
+	@SuppressWarnings("deprecation")
+	@Nonnull
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		return AABB;

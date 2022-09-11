@@ -84,7 +84,7 @@ public class DataPacket implements Iterable<IDataType>
 	 * @param preferred type, can be {@link IDataType} for *any* type and an interface annotated with {@link IGenericDataType} a generic/bridging type
 	 * @param actual    actual tag in packet, if null a default value of preferred type will be returned
 	 * @param <T>       the returned datatype
-	 * @return datatype provided in preferred class or a new instance of it
+	 * @return datatype provided in preferred class or a new INSTANCE of it
 	 */
 	@Nonnull
 	public <T extends IDataType> T getVarInType(Class<T> preferred, @Nullable IDataType actual)

@@ -18,8 +18,8 @@ import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElec
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelCoagulator;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityCoagulator;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityCoagulator.CraneAnimation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator.CraneAnimation;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

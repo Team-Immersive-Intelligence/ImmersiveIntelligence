@@ -23,6 +23,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,13 +43,16 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
-import pl.pabilo8.immersiveintelligence.common.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.lang.model.element.AnnotationValue;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
@@ -644,30 +648,6 @@ public class IIUtils
 		return blusunrize.immersiveengineering.common.util.Utils.compareToOreName(stack, oreName);
 	}
 
-	public static ItemStack getStackWithMetaName(BlockIIBase<?> block, String name)
-	{
-		return new ItemStack(block, 1, block.getMetaBySubname(name));
-	}
-
-	public static ItemStack getStackWithMetaName(BlockIIBase<?> block, String name, int count)
-	{
-		ItemStack stack = getStackWithMetaName(block, name);
-		stack.setCount(count);
-		return stack;
-	}
-
-	public static ItemStack getStackWithMetaName(ItemIIBase item, String name)
-	{
-		return new ItemStack(item, 1, item.getMetaBySubname(name));
-	}
-
-	public static ItemStack getStackWithMetaName(ItemIIBase item, String name, int count)
-	{
-		ItemStack stack = getStackWithMetaName(item, name);
-		stack.setCount(count);
-		return stack;
-	}
-
 	public static int RGBAToRGB(int color)
 	{
 		return color-(color>>24&0xFF);
@@ -766,6 +746,11 @@ public class IIUtils
 	public static String getPowerLevelString(int min, int max)
 	{
 		return String.format("%s/%s IF", min, max);
+	}
+
+	public static String getItalicString(String string)
+	{
+		return TextFormatting.ITALIC+string+TextFormatting.RESET;
 	}
 
 	/**
@@ -880,4 +865,20 @@ public class IIUtils
 		return new Vec3d(entity.motionX, entity.motionY, entity.motionZ);
 	}
 
+	/**
+	 * <i>Trust me, I'm an Engineer!</i><br>
+	 * Returns a value of an annotation for an enum extending {@link ISerializableEnum}<br>
+	 * Generally safe to use, but slow. Cache the results.
+	 */
+	@Nullable
+	public static <T extends Annotation> T getEnumAnnotation(Class<T> annotationClass, ISerializableEnum e)
+	{
+		try
+		{
+			Field field = e.getClass().getDeclaredField(e.getName().toUpperCase());
+			if(field.isAnnotationPresent(annotationClass))
+				return field.getAnnotation(annotationClass);
+		} catch(NoSuchFieldException ignored) {}
+		return null;
+	}
 }

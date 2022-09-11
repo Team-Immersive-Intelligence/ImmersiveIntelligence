@@ -3,34 +3,37 @@ package pl.pabilo8.immersiveintelligence.common.item.mechanical;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
+import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Pabilo8
  * @since 27-12-2019
  */
-public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
+// TODO: 04.09.2022 move to capabilities
+@IBatchOredictRegister(oreDict = "gear")
+public class ItemIIMotorGear extends ItemIISubItemsBase<MotorGear> implements IMotorGear
 {
 	public ItemIIMotorGear()
 	{
-		super("motor_gear", 64, MotorGear.getNames());
+		super("motor_gear", 64, MotorGear.values());
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		float mod = getGearTorqueModifier(stack);
@@ -47,10 +50,10 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 	@Override
 	public float getGearTorqueModifier(ItemStack stack)
 	{
-		return MotorGear.valueOf(subNames[stack.getMetadata()].toUpperCase()).torqueMod;
+		return stackToSub(stack).torqueMod;
 	}
 
-	enum MotorGear implements IStringSerializable
+	public enum MotorGear implements IIItemEnum
 	{
 		COPPER(MechanicalDevices.gearTorqueModifier[0]),
 		BRASS(MechanicalDevices.gearTorqueModifier[1]),
@@ -63,20 +66,6 @@ public class ItemIIMotorGear extends ItemIIBase implements IMotorGear
 		MotorGear(float torqueMod)
 		{
 			this.torqueMod = torqueMod;
-		}
-
-		public static String[] getNames()
-		{
-			ArrayList<String> list = new ArrayList<>();
-			for(MotorGear belt : values())
-				list.add(belt.getName());
-			return list.toArray(new String[0]);
-		}
-
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
 		}
 	}
 

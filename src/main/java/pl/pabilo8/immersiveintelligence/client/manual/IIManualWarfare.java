@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualPages.Crafting;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
@@ -18,19 +17,23 @@ import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCo
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.MultiblockArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.MultiblockBallisticComputer;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockAmmunitionWorkshop;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.MultiblockProjectileWorkshop;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalFortification1;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponTypes;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map.Entry;
 
 /**
@@ -83,11 +86,11 @@ public class IIManualWarfare extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "bullet_production3")
 		);
 		ManualHelper.addEntry("ammunition_workshop", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "ammunition_workshop0", MultiblockAmmunitionWorkshop.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "ammunition_workshop0", MultiblockAmmunitionWorkshop.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "ammunition_workshop1")
 		);
 		ManualHelper.addEntry("projectile_workshop", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "projectile_workshop0", MultiblockProjectileWorkshop.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "projectile_workshop0", MultiblockProjectileWorkshop.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "projectile_workshop1"),
 				new ManualPages.Text(ManualHelper.getManual(), "projectile_workshop2")
 		);
@@ -96,20 +99,30 @@ public class IIManualWarfare extends IIManual
 		ArrayList<ManualPages> mg_pages = new ArrayList<>();
 		mg_pages.add(new ManualPages.Crafting(ManualHelper.getManual(), "machinegun0", new ItemStack(IIContent.itemMachinegun)));
 		mg_pages.add(new ManualPages.Text(ManualHelper.getManual(), "machinegun1"));
-		for(int i = 0; i < IIContent.itemWeaponUpgrade.getSubNames().length; i += 1)
-			if(ItemIIWeaponUpgrade.WeaponUpgrades.values()[i].isValidFor("MACHINEGUN"))
-				mg_pages.add(new Crafting(ManualHelper.getManual(), "machinegun_upgrade_"+IIContent.itemWeaponUpgrade.getSubNames()[i], new ItemStack(IIContent.itemWeaponUpgrade, 1, i)));
+
+		Arrays.stream(WeaponUpgrades.values())
+				.filter(u -> !u.isHidden())
+				.filter(u -> u.toolset.contains(WeaponTypes.MACHINEGUN))
+				.forEachOrdered(
+						u -> mg_pages.add(new Crafting(ManualHelper.getManual(),
+								"machinegun_upgrade_"+u.getName(),
+								IIContent.itemWeaponUpgrade.getStack(u)))
+				);
 
 		ManualHelper.addEntry("machinegun", getCategory(), mg_pages.toArray(new ManualPages[]{}));
 
 		ArrayList<ManualPages> smg_pages = new ArrayList<>();
 		smg_pages.add(new ManualPages.Crafting(ManualHelper.getManual(), "submachinegun0", new ItemStack(IIContent.itemSubmachinegun)));
 		smg_pages.add(new ManualPages.Text(ManualHelper.getManual(), "submachinegun1"));
-		for(int i = 0; i < IIContent.itemWeaponUpgrade.getSubNames().length; i += 1)
-			if(ItemIIWeaponUpgrade.WeaponUpgrades.values()[i].isValidFor("SUBMACHINEGUN"))
-				smg_pages.add(new Crafting(ManualHelper.getManual(), "submachinegun_upgrade_"+IIContent.itemWeaponUpgrade.getSubNames()[i], new ItemStack(IIContent.itemWeaponUpgrade, 1, i)));
+		Arrays.stream(WeaponUpgrades.values())
+				.filter(u -> !u.isHidden())
+				.filter(u -> u.toolset.contains(WeaponTypes.SUBMACHINEGUN))
+				.forEachOrdered(
+						u -> mg_pages.add(new Crafting(ManualHelper.getManual(),
+								"submachinegun_upgrade_"+u.getName(),
+								IIContent.itemWeaponUpgrade.getStack(u)))
+				);
 		ManualHelper.addEntry("submachinegun", getCategory(), smg_pages.toArray(new ManualPages[]{}));
-
 
 		ManualHelper.addEntry("grenades", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "grenades0"),
@@ -132,7 +145,7 @@ public class IIManualWarfare extends IIManual
 				new ManualPages.Text(ManualHelper.getManual(), "explosives_mines_satchel1"),
 				new ManualPages.Text(ManualHelper.getManual(), "explosives_mines_satchel2"),
 				new ManualPages.Crafting(ManualHelper.getManual(), "explosives_mines_satchel3",
-						IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "radio_explosives")),
+						IIContent.itemAmmoCasing.getStack(Casings.RADIO_EXPLOSIVES)),
 
 				new ManualPages.Crafting(ManualHelper.getManual(), "explosives_mines_sign", new ItemStack(IIContent.blockMineSign))
 		);
@@ -156,13 +169,17 @@ public class IIManualWarfare extends IIManual
 				new ItemStack(IIContent.itemLightEngineerBoots)
 		));
 		armor_pages.add(new ManualPages.Text(ManualHelper.getManual(), "light_engineer_armor1"));
-		for(int i = 0; i < IIContent.itemArmorUpgrade.getSubNames().length; i += 1)
-			if(!IIContent.itemArmorUpgrade.isMetaHidden(i))
-				armor_pages.add(new Crafting(ManualHelper.getManual(), "light_engineer_armor_upgrade_"+IIContent.itemArmorUpgrade.getSubNames()[i], new ItemStack(IIContent.itemArmorUpgrade, 1, i)));
+		Arrays.stream(ArmorUpgrades.values())
+				.filter(u -> !u.isHidden())
+				.forEachOrdered(
+						u -> armor_pages.add(new Crafting(ManualHelper.getManual(),
+								"light_engineer_armor_upgrade_"+u.getName(),
+								IIContent.itemArmorUpgrade.getStack(u)))
+				);
 		ManualHelper.addEntry("light_engineer_armor", getCategory(), armor_pages.toArray(new ManualPages[]{}));
 
 		ManualHelper.addEntry("emplacement", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "emplacement0", MultiblockEmplacement.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "emplacement0", MultiblockEmplacement.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "emplacement1"),
 				new ManualPages.Text(ManualHelper.getManual(), "emplacement2")
 
@@ -189,7 +206,7 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ManualHelper.addEntry("artillery_howitzer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "artillery_howitzer1", MultiblockArtilleryHowitzer.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "artillery_howitzer1", MultiblockArtilleryHowitzer.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "artillery_howitzer2"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer", true)
 						.addEntry(new DataTypeString(), 'c')
@@ -219,7 +236,7 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ManualHelper.addEntry("ballistic_computer", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "ballistic_computer0", MultiblockBallisticComputer.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "ballistic_computer0", MultiblockBallisticComputer.INSTANCE),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "ballistic_computer", true)
 						.addEntry(new DataTypeInteger(), 'x', 'y', 'z')
 						.addEntry(new DataTypeInteger(), 'm'),
@@ -229,7 +246,7 @@ public class IIManualWarfare extends IIManual
 		);
 
 		ManualHelper.addEntry("flagpole", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "flagpole0", MultiblockFlagpole.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "flagpole0", MultiblockFlagpole.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "flagpole1")
 		);
 

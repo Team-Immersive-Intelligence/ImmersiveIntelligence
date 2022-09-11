@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycrateStation;
 
 import java.util.ArrayList;

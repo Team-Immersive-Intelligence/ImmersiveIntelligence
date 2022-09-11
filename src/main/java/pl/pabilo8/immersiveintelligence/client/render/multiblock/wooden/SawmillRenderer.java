@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSawmill;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 
 /**
  * @author Pabilo8

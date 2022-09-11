@@ -1,6 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.utils;
 
-import pl.pabilo8.immersiveintelligence.common.util.IIMultiblockInterfaces;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

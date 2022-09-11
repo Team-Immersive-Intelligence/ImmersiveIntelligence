@@ -30,11 +30,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.*;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.HansUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
@@ -68,7 +70,8 @@ public class CommandIIHans extends CommandBase
 					{
 						HansUtils.setHelmet(hans);
 
-						ItemStack magazine = ItemIIBulletMagazine.getMagazine("submachinegun", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN,
+								IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
 						HansUtils.setSubmachinegun(hans, magazine);
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, magazine.copy());
@@ -99,7 +102,8 @@ public class CommandIIHans extends CommandBase
 					{
 						HansUtils.setHelmet(hans);
 
-						ItemStack magazine = ItemIIBulletMagazine.getMagazine("submachinegun_drum", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
+								IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_brass", "piercing"));
 						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING);
 						for(int i = 0; i < 4; i++)
 							hans.mainInventory.set(i, magazine.copy());
@@ -115,7 +119,8 @@ public class CommandIIHans extends CommandBase
 					{
 						HansUtils.setHelmet(hans, ArmorUpgrades.INFILTRATOR_GEAR, ArmorUpgrades.COMPOSITE_ARMOR_PLATES);
 
-						ItemStack magazine = ItemIIBulletMagazine.getMagazine("submachinegun_drum", IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing"));
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
+								IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing"));
 						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING, WeaponUpgrades.FOLDING_STOCK, WeaponUpgrades.SUPPRESSOR);
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, magazine.copy());

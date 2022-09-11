@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripMine;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityTripMine;
+import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
 
 /**
  * @author Pabilo8

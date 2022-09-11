@@ -1,24 +1,18 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleExplosion;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBulletMortar6bCal;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,7 +26,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase
 {
 	public ItemIIAmmoMortar()
 	{
-		super("mortar_6bCal", 1);
+		super("mortar_6bCal", Casings.MORTAR_6BCAL);
 	}
 
 	@Override
@@ -86,12 +80,6 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase
 	}
 
 	@Override
-	public ItemStack getCasingStack(int amount)
-	{
-		return IIUtils.getStackWithMetaName(IIContent.itemAmmoCasing, "mortar_6bCal", amount);
-	}
-
-	@Override
 	public EnumCoreTypes[] getAllowedCoreTypes()
 	{
 		return new EnumCoreTypes[]{EnumCoreTypes.PIERCING, EnumCoreTypes.SHAPED, EnumCoreTypes.CANISTER};
@@ -139,7 +127,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase
 	@SideOnly(Side.CLIENT)
 	public int getColourForIEItem(ItemStack stack, int pass)
 	{
-		switch(stack.getMetadata())
+		switch(stackToSub(stack))
 		{
 			case BULLET:
 			{
@@ -164,30 +152,23 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase
 	public List<ResourceLocation> getTextures(ItemStack stack, String key)
 	{
 		ArrayList<ResourceLocation> a = new ArrayList<>();
-		if(stack.getMetadata()==BULLET)
+		switch(stackToSub(stack))
 		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base_"+getCoreType(stack).getName()));
-			if(getPaintColor(stack)!=-1)
-				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
-
-		}
-		else if(stack.getMetadata()==CORE)
-		{
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
-			a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+			case BULLET:
+			{
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/base_"+getCoreType(stack).getName()));
+				if(getPaintColor(stack)!=-1)
+					a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/paint"));
+			}
+			break;
+			case CORE:
+			{
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/core"));
+				a.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/ammo/"+NAME.toLowerCase()+"/"+getCoreType(stack).getName()));
+			}
+			break;
 		}
 		return a;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void doPuff(EntityBullet bullet)
-	{
-		for(int i = 0; i < 20; i += 1)
-		{
-			Vec3d v = bullet.getBaseMotion().rotatePitch(-90f).rotateYaw(i/20f*360f);
-			ParticleExplosion particle = new ParticleExplosion(ClientUtils.mc().world, bullet.getPositionVector(), v.scale(0.125), 3.25f);
-			ParticleUtils.particleRenderer.addEffect(particle);
-		}
 	}
 }

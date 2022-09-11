@@ -40,16 +40,16 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -380,7 +380,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					currentlyLoaded = -1;
 					clipReload = 0;
 					ItemStack mag2 = magazine.copy();
-					ItemIIBulletMagazine.makeDefault(mag2);
+					IIContent.itemBulletMagazine.defaultize(mag2);
 					if(!world.isRemote)
 						blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, entity.getPosition(), mag2);
 					setMagazineToSlot(setTo, ItemStack.EMPTY);
@@ -406,7 +406,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				{
 					if(playerMag.getItem() instanceof ItemIIBulletMagazine&&playerMag.getMetadata()==0)
 					{
-						if(ItemIIBulletMagazine.hasNoBullets(playerMag))
+						if(IIContent.itemBulletMagazine.hasNoBullets(playerMag))
 						{
 							currentlyLoaded = -1;
 							return false;
@@ -445,8 +445,8 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 						if(!world.isRemote)
 						{
 							NBTTagCompound tag = new NBTTagCompound();
-							bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
-							bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
+							bullets1 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine1);
+							bullets2 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine2);
 							writeEntityToNBT(tag);
 							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
 						}
@@ -520,11 +520,11 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			if(compound.hasKey("bullets1"))
 				bullets1 = compound.getInteger("bullets1");
 			else if(!magazine1.isEmpty())
-				bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
+				bullets1 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine1);
 			if(compound.hasKey("bullets2"))
 				bullets2 = compound.getInteger("bullets2");
 			else if(!magazine2.isEmpty())
-				bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
+				bullets2 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine2);
 			if(compound.hasKey("gun"))
 			{
 				gun = new ItemStack(compound.getCompoundTag("gun"));
@@ -828,14 +828,14 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setFloat("recoilPitch", recoilPitch);
 		tag.setFloat("overheating", overheating);
 
-		ItemStack stack = ItemIIBulletMagazine.takeBullet(magazine==1?magazine1: magazine2, true);
+		ItemStack stack = IIContent.itemBulletMagazine.takeBullet(magazine==1?magazine1: magazine2, true);
 
 		if(magazine==1)
 		{
 			mag1Empty = stack.isEmpty();
 			if(!mag1Empty)
 			{
-				bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
+				bullets1 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine1);
 				tag.setInteger("bullets1", bullets1);
 			}
 		}
@@ -844,7 +844,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 			mag2Empty = stack.isEmpty();
 			if(!mag2Empty)
 			{
-				bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
+				bullets2 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine2);
 				tag.setInteger("bullets2", bullets2);
 			}
 		}
@@ -935,9 +935,9 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		}
 
 		if(!magazine1.isEmpty())
-			bullets1 = ItemIIBulletMagazine.getRemainingBulletCount(magazine1);
+			bullets1 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine1);
 		if(!magazine2.isEmpty())
-			bullets2 = ItemIIBulletMagazine.getRemainingBulletCount(magazine2);
+			bullets2 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine2);
 
 		hasInfrared = IIContent.itemMachinegun.getUpgrades(gun).hasKey("infrared_scope");
 		loadedFromCrate = IIContent.itemMachinegun.getUpgrades(gun).hasKey("belt_fed_loader");

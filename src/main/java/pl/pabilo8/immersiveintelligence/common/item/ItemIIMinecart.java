@@ -11,13 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.types.IIBlockTypes_MetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.barrel.EntityMinecartBarrelSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.barrel.EntityMinecartBarrelWooden;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.capacitor.EntityMinecartCapacitorCreative;
@@ -27,8 +26,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.capacitor.EntityM
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateReinforced;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateWooden;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -37,11 +38,50 @@ import java.util.function.Supplier;
  * @author Pabilo8
  * @since 2019-06-01
  */
-public class ItemIIMinecart extends ItemIIBase
+public class ItemIIMinecart extends ItemIISubItemsBase<Minecarts>
 {
 	public ItemIIMinecart()
 	{
-		super("minecart", 1, Arrays.stream(Minecarts.values()).map(Minecarts::getName).toArray(String[]::new));
+		super("minecart", 1, Minecarts.values());
+	}
+
+	public enum Minecarts implements IIItemEnum
+	{
+		WOODEN_CRATE(EntityMinecartCrateWooden::new,
+				() -> new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.CRATE.getMeta())),
+		REINFORCED_CRATE(EntityMinecartCrateReinforced::new,
+				() -> new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta())),
+		STEEL_CRATE(EntityMinecartCrateSteel::new,
+				() -> new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta())),
+
+		WOODEN_BARREL(EntityMinecartBarrelWooden::new,
+				() -> new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.BARREL.getMeta())),
+		METAL_BARREL(EntityMinecartBarrelSteel::new,
+				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.BARREL.getMeta())),
+
+		CAPACITOR_LV(EntityMinecartCapacitorLV::new,
+				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_LV.getMeta())),
+		CAPACITOR_MV(EntityMinecartCapacitorMV::new,
+				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())),
+		CAPACITOR_HV(EntityMinecartCapacitorHV::new,
+				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())),
+		CAPACITOR_CREATIVE(EntityMinecartCapacitorCreative::new,
+				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_CREATIVE.getMeta()));
+
+		public final BiFunction<World, Vec3d, EntityMinecart> minecart;
+		public final Supplier<ItemStack> stack;
+
+		Minecarts(BiFunction<World, Vec3d, EntityMinecart> minecart, Supplier<ItemStack> stack)
+		{
+			this.minecart = minecart;
+			this.stack = stack;
+		}
+
+		@Override
+		public String getName()
+		{
+			return this.toString().toLowerCase(Locale.ENGLISH);
+		}
 	}
 
 	@Override
@@ -81,45 +121,6 @@ public class ItemIIMinecart extends ItemIIBase
 
 			stack.shrink(1);
 			return EnumActionResult.SUCCESS;
-		}
-	}
-
-	public enum Minecarts implements IStringSerializable
-	{
-		WOODEN_CRATE(EntityMinecartCrateWooden::new,
-				() -> new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.CRATE.getMeta())),
-		REINFORCED_CRATE(EntityMinecartCrateReinforced::new,
-				() -> new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta())),
-		STEEL_CRATE(EntityMinecartCrateSteel::new,
-				() -> new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta())),
-
-		WOODEN_BARREL(EntityMinecartBarrelWooden::new,
-				() -> new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.BARREL.getMeta())),
-		METAL_BARREL(EntityMinecartBarrelSteel::new,
-				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.BARREL.getMeta())),
-
-		CAPACITOR_LV(EntityMinecartCapacitorLV::new,
-				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_LV.getMeta())),
-		CAPACITOR_MV(EntityMinecartCapacitorMV::new,
-				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())),
-		CAPACITOR_HV(EntityMinecartCapacitorHV::new,
-				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_HV.getMeta())),
-		CAPACITOR_CREATIVE(EntityMinecartCapacitorCreative::new,
-				() -> new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.CAPACITOR_CREATIVE.getMeta()));
-
-		public final BiFunction<World, Vec3d, EntityMinecart> minecart;
-		public final Supplier<ItemStack> stack;
-
-		Minecarts(BiFunction<World, Vec3d, EntityMinecart> minecart, Supplier<ItemStack> stack)
-		{
-			this.minecart = minecart;
-			this.stack = stack;
-		}
-
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
 		}
 	}
 }

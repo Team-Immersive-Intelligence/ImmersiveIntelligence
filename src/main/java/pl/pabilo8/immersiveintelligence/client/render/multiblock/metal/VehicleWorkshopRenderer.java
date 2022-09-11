@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.vehicle_wo
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityVehicleWorkshop;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVehicleWorkshop;
 
 import static pl.pabilo8.immersiveintelligence.client.IIClientUtils.drawRope;
 

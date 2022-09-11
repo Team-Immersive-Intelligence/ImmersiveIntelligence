@@ -10,198 +10,137 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
+public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> implements IUpgrade
 {
 	public ItemIIWeaponUpgrade()
 	{
-		super("weapon_upgrade", 1, WeaponUpgrades.parse());
+		super("weapon_upgrade", 1, WeaponUpgrades.values());
 	}
 
-	public static TextFormatting getFormattingForWeapon(String weapon)
+	public enum WeaponTypes implements ISerializableEnum
 	{
-		switch(weapon)
+		MACHINEGUN(TextFormatting.YELLOW),
+		SUBMACHINEGUN(TextFormatting.GOLD),
+		RAILGUN(TextFormatting.DARK_GREEN),
+		REVOLVER(TextFormatting.BLUE),
+		AUTOREVOLVER(TextFormatting.DARK_BLUE),
+		ASSAULT_RIFLE(TextFormatting.RED),
+		SPIGOT_MORTAR(TextFormatting.DARK_PURPLE);
+
+		private final TextFormatting color;
+
+		WeaponTypes(TextFormatting color)
 		{
-			case "MACHINEGUN":
-				return TextFormatting.YELLOW;
-			case "SUBMACHINEGUN":
-				return TextFormatting.GOLD;
-			case "RAILGUN":
-				return TextFormatting.DARK_GREEN;
-			case "REVOLVER":
-				return TextFormatting.BLUE;
-			case "AUTOREVOLVER":
-				return TextFormatting.DARK_BLUE;
-			case "ASSAULT_RIFLE":
-				return TextFormatting.RED;
-			case "SPIGOT_MORTAR":
-				return TextFormatting.DARK_PURPLE;
+			this.color = color;
 		}
-		return TextFormatting.RESET;
 	}
 
-	public enum WeaponUpgrades
+	public enum WeaponUpgrades implements IIItemEnum
 	{
-		///Machinegun
+		//--- Machinegun ---//
 
 		//Increases fire rate
-		HEAVY_BARREL(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("water_cooling"),
-				(upgrade, modifications) -> modifications.setBoolean("heavy_barrel", true)),
-
+		HEAVY_BARREL(WeaponTypes.MACHINEGUN, "water_cooling"),
 		//Uses water to speed up gun cooling
-		WATER_COOLING(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("heavy_barrel"),
-				(upgrade, modifications) -> modifications.setBoolean("water_cooling", true)),
-
+		WATER_COOLING(WeaponTypes.MACHINEGUN, "heavy_barrel"),
 		//Allows to load ammo from ammo crate below the player
-		BELT_FED_LOADER(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("second_magazine"),
-				(upgrade, modifications) -> modifications.setBoolean("belt_fed_loader", true)),
-
+		BELT_FED_LOADER(WeaponTypes.MACHINEGUN, "second_magazine"),
 		//Adds a second magazine, increases reload time a little bit
-		SECOND_MAGAZINE(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("belt_fed_loader"),
-				(upgrade, modifications) -> modifications.setBoolean("second_magazine", true)),
+		SECOND_MAGAZINE(WeaponTypes.MACHINEGUN, "belt_fed_loader"),
 
 		//Speeds up mg setting up time, but increases recoil
-		HASTY_BIPOD(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("precise_bipod"),
-				(upgrade, modifications) -> modifications.setBoolean("hasty_bipod", true)),
-
+		HASTY_BIPOD(WeaponTypes.MACHINEGUN, "precise_bipod", "tripod"),
 		//Slows down mg setting up time, but decreases recoil
-		PRECISE_BIPOD(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("hasty_bipod"),
-				(upgrade, modifications) -> modifications.setBoolean("precise_bipod", true)),
-
+		PRECISE_BIPOD(WeaponTypes.MACHINEGUN, "hasty_bipod", "tripod"),
 		//3 x Magnification
-		SCOPE(ImmutableSet.of("MACHINEGUN", "AUTOREVOLVER", "ASSAULT_RIFLE"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("infrared_scope"),
-				(upgrade, modifications) -> modifications.setBoolean("scope", true)),
-
+		SCOPE(new WeaponTypes[]{WeaponTypes.MACHINEGUN, WeaponTypes.AUTOREVOLVER, WeaponTypes.ASSAULT_RIFLE}, "infrared_scope"),
 		//Allows nightvision + 2 x magnification, uses energy from player's backpack
-		INFRARED_SCOPE(ImmutableSet.of("MACHINEGUN", "ASSAULT_RIFLE"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("scope"),
-				(upgrade, modifications) -> modifications.setBoolean("infrared_scope", true)),
-
+		INFRARED_SCOPE(new WeaponTypes[]{WeaponTypes.MACHINEGUN, WeaponTypes.ASSAULT_RIFLE}, "scope"),
 		//Deflects projectiles
-		SHIELD(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("shield"),
-				(upgrade, modifications) -> modifications.setBoolean("shield", true)),
-
+		SHIELD(WeaponTypes.MACHINEGUN),
 		//Slows down mg setting up time, almost eliminates recoil, increases yaw and pitch angles
-		TRIPOD(ImmutableSet.of("MACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("tripod"),
-				(upgrade, modifications) -> modifications.setBoolean("tripod", true)),
+		TRIPOD(WeaponTypes.MACHINEGUN, "hasty_bipod", "precise_bipod"),
 
-		///Submachinegun
+		//--- Submachinegun ---//
 
 		//Adds a velocity, penetration and suppression boost, lowers the firerate
-		STURDY_BARREL(ImmutableSet.of("SUBMACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("sturdy_barrel"),
-				(upgrade, modifications) -> modifications.setBoolean("sturdy_barrel", true)),
-
+		STURDY_BARREL(WeaponTypes.SUBMACHINEGUN),
 		//Makes gunshots (almost) silent
-		SUPPRESSOR(ImmutableSet.of("SUBMACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("suppressor"),
-				(upgrade, modifications) -> modifications.setBoolean("suppressor", true)),
-
+		SUPPRESSOR(WeaponTypes.SUBMACHINEGUN),
 		//Allows using drum magazines
-		BOTTOM_LOADING(ImmutableSet.of("SUBMACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("bottom_loading"),
-				(upgrade, modifications) -> modifications.setBoolean("bottom_loading", true)),
-
+		BOTTOM_LOADING(WeaponTypes.SUBMACHINEGUN),
 		//Reduces aiming time
-		FOLDING_STOCK(ImmutableSet.of("SUBMACHINEGUN"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("folding_stock"),
-				(upgrade, modifications) -> modifications.setBoolean("folding_stock", true));
+		FOLDING_STOCK(WeaponTypes.SUBMACHINEGUN);
 
-		/*
+/*
 
-		///Autorevolver
+		//--- Autorevolver ---//
 
 		//Increases velocity, penetration and suppression
-		HEAVY_SPRINGBOX(ImmutableSet.of("AUTOREVOLVER"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("heavy_springbox"),
-				(upgrade, modifications) -> modifications.setBoolean("heavy_springbox", true)),
+		HEAVY_SPRINGBOX(WeaponTypes.AUTOREVOLVER),
 
-		//Assault Rifle
+		//--- Assault Rifle ---//
 
 		//Shows yaw and pitch, allows to send a packet with player's yaw and pitch (+distance if a rangefinder is installed, +position data if player has a radio backpack)
-		RADIO_MARKER(ImmutableSet.of("ASSAULT_RIFLE"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("radio_marker"),
-				(upgrade, modifications) -> modifications.setBoolean("radio_marker", true)),
-
+		RADIO_MARKER(WeaponTypes.ASSAULT_RIFLE),
 		//Allows shooting railgun grenades at a lower range, requires energy
-		RIFLE_GRENADE_LAUNCHER(ImmutableSet.of("ASSAULT_RIFLE"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("stereoscopic_rangefinder"),
-				(upgrade, modifications) -> modifications.setBoolean("rifle_grenade_launcher", true)),
-
+		RIFLE_GRENADE_LAUNCHER(WeaponTypes.ASSAULT_RIFLE, "stereoscopic_rangefinder"),
 		//Shows distance to target
-		STEREOSCOPIC_RANGEFINDER(ImmutableSet.of("ASSAULT_RIFLE"), 1,
-				(target, upgrade) -> !((IUpgradeableTool)target.getItem()).getUpgrades(target).hasKey("rifle_grenade_launcher"),
-				(upgrade, modifications) -> modifications.setBoolean("stereoscopic_rangefinder", true));
+		STEREOSCOPIC_RANGEFINDER(WeaponTypes.ASSAULT_RIFLE, "rifle_grenade_launcher");
+*/
 
-		 */
-
-		private final ImmutableSet<String> toolset;
-		private final int stackSize;
+		public final ImmutableSet<WeaponTypes> toolset;
 		private final BiPredicate<ItemStack, ItemStack> applyCheck;
 		private final BiConsumer<ItemStack, NBTTagCompound> function;
 
-		WeaponUpgrades(ImmutableSet<String> toolset, BiConsumer<ItemStack, NBTTagCompound> function)
+		WeaponUpgrades(WeaponTypes type, String... incompatible)
 		{
-			this(toolset, 1, function);
+			this(new WeaponTypes[]{type}, incompatible);
 		}
 
-		WeaponUpgrades(ImmutableSet<String> toolset, int stackSize, BiConsumer<ItemStack, NBTTagCompound> function)
+		WeaponUpgrades(WeaponTypes[] types, final String... incompatible)
 		{
-			this(toolset, stackSize, null, function);
-		}
+			this.toolset = ImmutableSet.copyOf(types);
+			this.applyCheck = (target, upgrade) -> {
+				//check for incompatible upgrades
+				NBTTagCompound upgrades = ((IUpgradeableTool)target.getItem()).getUpgrades(target);
 
-		WeaponUpgrades(ImmutableSet<String> toolset, int stackSize, BiPredicate<ItemStack, ItemStack> applyCheck, BiConsumer<ItemStack, NBTTagCompound> function)
-		{
-			this.toolset = toolset;
-			this.stackSize = stackSize;
-			this.applyCheck = applyCheck;
-			this.function = function;
-		}
+				//one upgrade can't be installed 2 times
+				if(upgrades.hasKey(getName()))
+					return false;
 
-		static String[] parse()
-		{
-			String[] ret = new String[values().length];
-			for(int i = 0; i < ret.length; i++)
-				ret[i] = values()[i].toString().toLowerCase(Locale.US);
-			return ret;
-		}
-
-		static WeaponUpgrades get(int meta)
-		{
-			if(meta >= 0&&meta < values().length)
-				return values()[meta];
-			return HEAVY_BARREL;
-		}
-
-		public boolean isValidFor(String weapon)
-		{
-			return toolset.contains(weapon);
+				for(String s : incompatible)
+					if(upgrades.hasKey(s))
+						return false; //found
+				//not found
+				return true;
+			};
+			this.function = (upgrade, modifications) -> modifications.setBoolean(getName(), true);
 		}
 	}
 
@@ -209,49 +148,46 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 	 * allows items to add custom lines of information to the mouseover description
 	 */
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
 	{
-		if(stack.getItemDamage() < getSubNames().length)
-		{
-			for(String upgradeType : this.getUpgradeTypes(stack))
-				list.add(getFormattingForWeapon(upgradeType)+I18n.format(IILib.DESCRIPTION_KEY+"toolupgrade.item."+upgradeType.toLowerCase()));
-			String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
-					I18n.format(IILib.DESCRIPTION_KEY+"toolupgrade."+this.getSubNames()[stack.getItemDamage()]),
-					200);
-			Arrays.stream(flavour).map(s -> TextFormatting.ITALIC+s+TextFormatting.RESET).forEach(list::add);
-		}
+		WeaponUpgrades sub = stackToSub(stack);
+		//add valid weapon types
+		for(WeaponTypes type : sub.toolset)
+			list.add(type.color+I18n.format(IILib.DESCRIPTION_KEY+"toolupgrade.item."+type.getName()));
+
+		//add description
+		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
+				I18n.format(IILib.DESCRIPTION_KEY+"toolupgrade."+sub.getName()), 200);
+		Arrays.stream(flavour).map(IIUtils::getItalicString).forEach(list::add);
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack)
+	public Set<String> getUpgradeTypes(ItemStack stack)
 	{
-		return WeaponUpgrades.get(stack.getMetadata()).stackSize;
-	}
-
-	@Override
-	public Set<String> getUpgradeTypes(ItemStack upgrade)
-	{
-		return WeaponUpgrades.get(upgrade.getMetadata()).toolset;
+		return stackToSub(stack).toolset.stream()
+				.map(ISerializableEnum::getName)
+				.map(String::toUpperCase)
+				.collect(Collectors.toSet());
 	}
 
 	@Override
 	public boolean canApplyUpgrades(ItemStack target, ItemStack upgrade)
 	{
-		BiPredicate<ItemStack, ItemStack> check = WeaponUpgrades.get(upgrade.getMetadata()).applyCheck;
-		if(check!=null&&target.getItem() instanceof IUpgradeableTool)
-			return check.test(target, upgrade);
-		return true;
+		if(target.getItem() instanceof IUpgradeableTool)
+			return stackToSub(upgrade).applyCheck.test(target, upgrade);
+		return false;
 	}
 
 	@Override
 	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
 	{
-		WeaponUpgrades.get(upgrade.getMetadata()).function.accept(upgrade, modifications);
+		stackToSub(upgrade).function.accept(upgrade, modifications);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void addUpgradesToRender()
 	{
-		//mg
+		//--- Machinegun ---//
 
 		MachinegunRenderer.upgrades.put(
 				stack -> (IIContent.itemMachinegun.getUpgrades(stack).getBoolean("water_cooling")),
@@ -334,7 +270,7 @@ public class ItemIIWeaponUpgrade extends ItemIIBase implements IUpgrade
 						tmtNamedBoxGroups.add(MachinegunRenderer.model.shieldBox)
 		);
 
-		//smg
+		//--- Submachinegun ---//
 
 		SubmachinegunItemStackRenderer.upgrades.put(
 				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("sturdy_barrel")),

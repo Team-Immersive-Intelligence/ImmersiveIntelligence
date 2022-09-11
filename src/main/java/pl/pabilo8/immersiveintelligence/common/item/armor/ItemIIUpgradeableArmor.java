@@ -67,7 +67,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 
 		String name = (getMaterialName(getArmorMaterial())+"_"+getNameForPart(slot)).replace(ImmersiveIntelligence.MODID+":", "");
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+name);
-		this.setCreativeTab(IIContent.creativeTab);
+		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
 		this.setMaxStackSize(1);
 		IIContent.ITEMS.add(this);
 		//MinecraftForge.EVENT_BUS.register(this);

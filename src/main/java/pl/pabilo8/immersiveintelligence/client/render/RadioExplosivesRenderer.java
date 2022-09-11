@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelRadioExplosives;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
 
 /**
  * @author Pabilo8

@@ -20,20 +20,20 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.CPDS;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.TileEntityEmplacement.EmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +79,7 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack)
 		{
-			if(!OreDictionary.itemMatches(stack, IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "cpds_drum"), false))
+			if(!OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false))
 				return false;
 			return super.isItemValid(slot, stack);
 		}
@@ -249,8 +249,8 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		{
 			if(reloadDelay==0)
 			{
-				if(inventoryPlatform.stream().anyMatch(stack -> OreDictionary.itemMatches(stack, IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "cpds_drum"), false)
-						&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0))
+				if(inventoryPlatform.stream().anyMatch(stack -> OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false)
+						&&IIContent.itemBulletMagazine.getRemainingBulletCount(stack) > 0))
 					reloadDelay = 1;
 				else
 					requiresPlatformRefill = true;
@@ -265,10 +265,10 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 
 				for(ItemStack stack : inventoryPlatform)
 				{
-					if(OreDictionary.itemMatches(stack, IIUtils.getStackWithMetaName(IIContent.itemBulletMagazine, "cpds_drum"), false)
-							&&ItemIIBulletMagazine.getRemainingBulletCount(stack) > 0)
+					if(OreDictionary.itemMatches(stack, IIContent.itemBulletMagazine.getMagazine(Magazines.CPDS_DRUM), false)
+							&&IIContent.itemBulletMagazine.getRemainingBulletCount(stack) > 0)
 					{
-						magazine.addAll(ItemIIBulletMagazine.takeAll(stack));
+						magazine.addAll(IIContent.itemBulletMagazine.takeAll(stack));
 						break;
 					}
 				}

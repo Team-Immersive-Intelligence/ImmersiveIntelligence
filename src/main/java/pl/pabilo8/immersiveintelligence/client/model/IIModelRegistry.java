@@ -1,16 +1,20 @@
 package pl.pabilo8.immersiveintelligence.client.model;
 
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
+import blusunrize.immersiveengineering.client.models.ModelItemDynamicOverride;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,17 +54,52 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	}
 
 	//This
-	public void registerCustomItemModel(ItemStack stack, ItemModelReplacement replacement, String modname)
+	public void registerCustomItemModel(ItemIIBase item, String modID, ItemModelReplacement replacement)
 	{
-		if(stack.getItem() instanceof ItemIEBase)
+		if(item instanceof ItemIISubItemsBase)
 		{
-			ResourceLocation loc;
-			if(((ItemIEBase)stack.getItem()).getSubNames()!=null&&((ItemIEBase)stack.getItem()).getSubNames().length > 1)
-				loc = new ResourceLocation(modname, ((ItemIEBase)stack.getItem()).itemName+"/"+((ItemIEBase)stack.getItem()).getSubNames()[stack.getMetadata()]);
-			else
-				loc = new ResourceLocation(modname, ((ItemIEBase)stack.getItem()).itemName);
-			itemModelReplacements.put(new ModelResourceLocation(loc, "inventory"), replacement);
+			ItemIISubItemsBase<?> itemSub = (ItemIISubItemsBase<?>)item;
+			for(IIItemEnum subItem : itemSub.getSubItems())
+				itemModelReplacements.put(new ModelResourceLocation(
+								new ResourceLocation(modID, itemSub.itemName+"/"+subItem.getName()), "inventory"),
+						replacement);
 		}
+		else
+		{
+			itemModelReplacements.put(new ModelResourceLocation(
+							new ResourceLocation(modID, item.itemName), "inventory"),
+					replacement);
+		}
+	}
+
+	public void registerCustomItemModel(ItemIEBase item, String modID, int... IDs)
+	{
+		for(int id : IDs)
+			itemModelReplacements.put(new ModelResourceLocation(
+							new ResourceLocation(modID, item.itemName+"/"+item.getSubNames()[id]), "inventory"),
+					new ImmersiveModelRegistry.ItemModelReplacement()
+					{
+						@Override
+						public IBakedModel createBakedModel(IBakedModel existingModel)
+						{
+							return new ModelItemDynamicOverride(existingModel, null);
+						}
+					});
+	}
+
+	/**
+	 * Overloaded method
+	 */
+	public void registerCustomItemModel(ItemIIBase item)
+	{
+		registerCustomItemModel(item, ImmersiveIntelligence.MODID, new ImmersiveModelRegistry.ItemModelReplacement()
+		{
+			@Override
+			public IBakedModel createBakedModel(IBakedModel existingModel)
+			{
+				return new ModelItemDynamicOverride(existingModel, null);
+			}
+		});
 	}
 
 	public void addReloadableModel(IReloadableModelContainer<?> model, ResourceLocation modelName)

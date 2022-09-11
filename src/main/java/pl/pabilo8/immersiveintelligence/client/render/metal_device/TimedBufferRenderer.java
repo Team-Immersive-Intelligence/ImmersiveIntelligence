@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelTimedBuffer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityTimedBuffer;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityTimedBuffer;
 
 /**
  * @author Pabilo8

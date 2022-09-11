@@ -20,7 +20,7 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 {
 	public ItemIIAmmoRailgunGrenade()
 	{
-		super("railgun_grenade_4bCal", 8);
+		super("railgun_grenade_4bCal", null);
 	}
 
 	@Override
@@ -81,6 +81,6 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 	@Override
 	public EnumFuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED,EnumFuseTypes.PROXIMITY};
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.TIMED, EnumFuseTypes.PROXIMITY};
 	}
 }

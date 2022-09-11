@@ -9,7 +9,6 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.IECustomStateMapper;
 import blusunrize.immersiveengineering.client.IEDefaultColourHandlers;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry;
-import blusunrize.immersiveengineering.client.models.ModelItemDynamicOverride;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
 import blusunrize.immersiveengineering.client.render.EntityRenderNone;
 import blusunrize.immersiveengineering.client.render.ItemRendererIEOBJ;
@@ -35,7 +34,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -89,7 +87,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGasCloud;
-import pl.pabilo8.immersiveintelligence.client.gui.*;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
@@ -108,6 +106,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVari
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
+import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.MeasuringCupModelLoader;
 import pl.pabilo8.immersiveintelligence.client.render.*;
 import pl.pabilo8.immersiveintelligence.client.render.RadioExplosivesRenderer.RadioExplosivesItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.TellermineRenderer.TellermineItemStackRenderer;
@@ -123,42 +122,70 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.*;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden.*;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.common.*;
-import pl.pabilo8.immersiveintelligence.common.block.BlockIIBase;
-import pl.pabilo8.immersiveintelligence.common.block.BlockIIFluid;
-import pl.pabilo8.immersiveintelligence.common.block.metal.*;
-import pl.pabilo8.immersiveintelligence.common.block.metal.conveyors.*;
-import pl.pabilo8.immersiveintelligence.common.block.metal.inserter.TileEntityAdvancedInserter;
-import pl.pabilo8.immersiveintelligence.common.block.metal.inserter.TileEntityInserter;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockAluminiumFenceGate.TileEntityAluminiumFenceGate;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockSteelChainFenceGate.TileEntitySteelChainFenceGate;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockSteelFenceGate.TileEntitySteelFenceGate;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.first.*;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.metal.tileentities.second.*;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.wooden.*;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityGearbox;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalConnectable;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalPump;
-import pl.pabilo8.immersiveintelligence.common.block.rotary.TileEntityMechanicalWheel;
-import pl.pabilo8.immersiveintelligence.common.block.types.*;
-import pl.pabilo8.immersiveintelligence.common.block.wooden.TileEntityMineSign;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.*;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityMineSign;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityChemicalDispenser;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityLatexCollector;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedInserter;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserter;
+import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
+import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTellermine;
+import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityTripMine;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumFenceGate.TileEntityAluminiumFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockSteelChainFenceGate.TileEntitySteelChainFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockSteelFenceGate.TileEntitySteelFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockChemicalBath;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockChemicalPainter;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSawmill;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCratePost;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalConnector;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalConnectable;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalPump;
+import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalWheel;
+import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.*;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.*;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
-import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeadPerm;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -211,8 +238,7 @@ public class ClientProxy extends CommonProxy
 		WireApi.registerConnectorForRender("empty", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
 		WireApi.registerConnectorForRender("tripwire", new ResourceLocation(ImmersiveIntelligence.MODID+":block/tripwire_connector.obj"), null);
 
-		IIContent.itemMeasuringCup.specialModelMap.put(0, ModelMeasuringCup.MODEL);
-
+		// TODO: 06.09.2022 rework
 		for(Block block : IIContent.BLOCKS)
 		{
 			final ResourceLocation loc = Block.REGISTRY.getNameForObject(block);
@@ -238,18 +264,15 @@ public class ClientProxy extends CommonProxy
 					{
 						String location = loc.toString();
 						String prop = ieMetaBlock.appendPropertiesToState()?("inventory,"+ieMetaBlock.getMetaProperty().getName()+"="+ieMetaBlock.getMetaEnums()[meta].toString().toLowerCase(Locale.US)): null;
-						if(ieMetaBlock.useCustomStateMapper())
-						{
-							String custom = ieMetaBlock.getCustomStateMapping(meta, true);
-							//Use @Nullable annotation!
-							if(custom!=null)
-								location += "_"+custom;
-						}
+
+						String custom = ieMetaBlock.getCustomStateMapping(meta, true);
+						if(custom!=null)
+							location += "_"+custom;
+
 						try
 						{
 							ModelLoader.setCustomModelResourceLocation(blockItem, meta, new ModelResourceLocation(location, prop));
-						}
-						catch(NullPointerException npe)
+						} catch(NullPointerException npe)
 						{
 							throw new RuntimeException("WELP! apparently "+ieMetaBlock+" lacks an item!", npe);
 						}
@@ -261,36 +284,45 @@ public class ClientProxy extends CommonProxy
 				ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation(loc, "inventory"));
 		}
 
+		//measuring cup
+		ModelLoaderRegistry.registerLoader(MeasuringCupModelLoader.INSTANCE);
+		ModelLoader.setCustomMeshDefinition(IIContent.itemMeasuringCup, stack -> ModelMeasuringCup.MODEL.getLocation());
+		ModelBakery.registerItemVariants(IIContent.itemMeasuringCup, ModelMeasuringCup.MODEL.getLocation());
+
 		for(Item item : IIContent.ITEMS)
 		{
 			if(item instanceof ItemBlock)
 				continue;
-			if(item instanceof ItemIEBase)
+			if(item instanceof ItemIIBase)
 			{
-				ItemIEBase ieMetaItem = (ItemIEBase)item;
-				if(ieMetaItem.registerSubModels&&ieMetaItem.getSubNames()!=null&&ieMetaItem.getSubNames().length > 0)
+				ItemIIBase ieMetaItem = (ItemIIBase)item;
+				if(ieMetaItem instanceof ItemIISubItemsBase)
 				{
-					for(int meta = 0; meta < ieMetaItem.getSubNames().length; meta++)
+					for(IIItemEnum subItem : ((ItemIISubItemsBase<?>)ieMetaItem).getSubItems())
 					{
-						ResourceLocation loc = new ResourceLocation(ImmersiveIntelligence.MODID, ieMetaItem.itemName+"/"+ieMetaItem.getSubNames()[meta]);
+						ResourceLocation loc = new ResourceLocation(ImmersiveIntelligence.MODID, ieMetaItem.itemName+"/"+subItem.getName());
 						ModelBakery.registerItemVariants(ieMetaItem, loc);
-						ModelLoader.setCustomModelResourceLocation(ieMetaItem, meta, new ModelResourceLocation(loc, "inventory"));
+						ModelLoader.setCustomModelResourceLocation(ieMetaItem, subItem.getMeta(), new ModelResourceLocation(loc, "inventory"));
 					}
 				}
 				else
 				{
-					if(item instanceof ItemIIBase&&((ItemIIBase)ieMetaItem).specialModelMap.containsKey(0))
-					{
-						ModelLoaderRegistry.registerLoader(((ItemIIBase)ieMetaItem).specialModelMap.get(0).getInstance());
-						ModelLoader.setCustomMeshDefinition(ieMetaItem, stack -> ((ItemIIBase)ieMetaItem).specialModelMap.get(0).getLocation());
-						ModelBakery.registerItemVariants(ieMetaItem, ((ItemIIBase)ieMetaItem).specialModelMap.get(0).getLocation());
-					}
-					else
-					{
-						final ResourceLocation loc = new ResourceLocation(ImmersiveIntelligence.MODID, ieMetaItem.itemName);
-						ModelBakery.registerItemVariants(ieMetaItem, loc);
-						ModelLoader.setCustomMeshDefinition(ieMetaItem, stack -> new ModelResourceLocation(loc, "inventory"));
-					}
+					final ResourceLocation loc = new ResourceLocation(ImmersiveIntelligence.MODID, ieMetaItem.itemName);
+					ModelBakery.registerItemVariants(ieMetaItem, loc);
+					ModelLoader.setCustomMeshDefinition(ieMetaItem, stack -> new ModelResourceLocation(loc, "inventory"));
+				}
+			}
+			else if(item instanceof ItemIEBase&&item.getHasSubtypes())
+			{
+				ItemIEBase ieBase = (ItemIEBase)item;
+
+				String[] subNames = ieBase.getSubNames();
+				for(int i = 0, subNamesLength = subNames.length; i < subNamesLength; i++)
+				{
+					String sub = subNames[i];
+					ResourceLocation loc = new ResourceLocation(ImmersiveIntelligence.MODID, ieBase.itemName+"/"+sub);
+					ModelBakery.registerItemVariants(ieBase, loc);
+					ModelLoader.setCustomModelResourceLocation(ieBase, i, new ModelResourceLocation(loc, "inventory"));
 				}
 			}
 			else
@@ -410,78 +442,15 @@ public class ClientProxy extends CommonProxy
 		for(IAmmo bullet : AmmoRegistry.INSTANCE.registeredBulletItems.values())
 		{
 			if(bullet instanceof ItemIINavalMine)
-			{
-
-			}
-			else if(bullet instanceof ItemIIAmmoBase)
-			{
-				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoBase)bullet, 1, ItemIIAmmoBase.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
-				{
-					@Override
-					public IBakedModel createBakedModel(IBakedModel existingModel)
-					{
-						return new ModelItemDynamicOverride(existingModel, null);
-					}
-				}, ImmersiveIntelligence.MODID);
-				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoBase)bullet, 1, ItemIIAmmoBase.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
-				{
-					@Override
-					public IBakedModel createBakedModel(IBakedModel existingModel)
-					{
-						return new ModelItemDynamicOverride(existingModel, null);
-					}
-				}, ImmersiveIntelligence.MODID);
-			}
+				continue;
+			if(bullet instanceof ItemIIAmmoBase)
+				IIModelRegistry.instance.registerCustomItemModel(((ItemIIAmmoBase)bullet));
 			else if(bullet instanceof ItemIIAmmoRevolver)
-			{
-				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.BULLET), new ImmersiveModelRegistry.ItemModelReplacement()
-				{
-					@Override
-					public IBakedModel createBakedModel(IBakedModel existingModel)
-					{
-						return new ModelItemDynamicOverride(existingModel, null);
-					}
-				}, ImmersiveIntelligence.MODID);
-				IIModelRegistry.instance.registerCustomItemModel(new ItemStack((ItemIIAmmoRevolver)bullet, 1, ItemIIAmmoRevolver.CORE), new ImmersiveModelRegistry.ItemModelReplacement()
-				{
-					@Override
-					public IBakedModel createBakedModel(IBakedModel existingModel)
-					{
-						return new ModelItemDynamicOverride(existingModel, null);
-					}
-				}, ImmersiveIntelligence.MODID);
-			}
+				IIModelRegistry.instance.registerCustomItemModel((ItemIIAmmoRevolver)bullet, ImmersiveIntelligence.MODID, ItemIIAmmoRevolver.BULLET, ItemIIAmmoRevolver.CORE);
 		}
 
-		for(int i = 0; i < IIContent.itemBulletMagazine.getSubNames().length; i++)
-		{
-			IIModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBulletMagazine, 1, i), new ImmersiveModelRegistry.ItemModelReplacement()
-			{
-				@Override
-				public IBakedModel createBakedModel(IBakedModel existingModel)
-				{
-					return new ModelItemDynamicOverride(existingModel, null);
-				}
-			}, ImmersiveIntelligence.MODID);
-		}
-
-
-		IIModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 0), new ImmersiveModelRegistry.ItemModelReplacement()
-		{
-			@Override
-			public IBakedModel createBakedModel(IBakedModel existingModel)
-			{
-				return new ModelItemDynamicOverride(existingModel, null);
-			}
-		}, ImmersiveIntelligence.MODID);
-		IIModelRegistry.instance.registerCustomItemModel(new ItemStack(IIContent.itemBinoculars, 1, 1), new ImmersiveModelRegistry.ItemModelReplacement()
-		{
-			@Override
-			public IBakedModel createBakedModel(IBakedModel existingModel)
-			{
-				return new ModelItemDynamicOverride(existingModel, null);
-			}
-		}, ImmersiveIntelligence.MODID);
+		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemBulletMagazine);
+		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemBinoculars);
 
 		IIContent.itemMotorBelt.setRenderModels();
 		Config.manual_bool.put("petroleumHere", false);
@@ -495,7 +464,6 @@ public class ClientProxy extends CommonProxy
 			IILogger.info("registering sprite for bullet casing: "+s.getKey());
 			s.getValue().registerSprites(event.getMap());
 		}
-
 
 		for(String s : IIContent.itemBulletMagazine.getSubNames())
 		{
@@ -526,7 +494,7 @@ public class ClientProxy extends CommonProxy
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 			ApiUtils.getRegisterSprite(event.getMap(), s.getValue().texture.replace("textures/", ""));
 
-		for(DrillHeadPerm perm : IIContent.itemDrillhead.perms)
+		for(DrillHeads perm : DrillHeads.values())
 			perm.sprite = ApiUtils.getRegisterSprite(event.getMap(), perm.texture);
 
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":blocks/data_connector_feedtrough");
@@ -642,10 +610,10 @@ public class ClientProxy extends CommonProxy
 
 		ShaderUtil.init();
 
-		TileEntityFluidInserter.conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityFluidInserter.conn_data = new ItemStack(IIContent.blockDataConnector, 1, BlockIIDataDevice.IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityFluidInserter.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
-		TileEntityChemicalDispenser.conn_data = new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
+		TileEntityChemicalDispenser.conn_data = new ItemStack(IIContent.blockDataConnector, 1, BlockIIDataDevice.IIBlockTypes_Connector.DATA_CONNECTOR.getMeta());
 		TileEntityChemicalDispenser.conn_mv = new ItemStack(IEContent.blockConnectors, 1, BlockTypes_Connector.CONNECTOR_MV.getMeta());
 
 		//TODO:Advanced Fluid Inserter
@@ -672,18 +640,18 @@ public class ClientProxy extends CommonProxy
 		IIManualMotorworks.INSTANCE.addPages();
 
 		ManualHelper.addEntry("chemical_bath", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_bath0", MultiblockChemicalBath.instance)
+				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_bath0", MultiblockChemicalBath.INSTANCE)
 		);
 		ManualHelper.addEntry("precission_assembler", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "precission_assembler0", MultiblockPrecissionAssembler.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "precission_assembler0", MultiblockPrecissionAssembler.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "precission_assembler1")
 		);
 		ManualHelper.addEntry("electrolyzer", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "electrolyzer0", MultiblockElectrolyzer.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "electrolyzer0", MultiblockElectrolyzer.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "electrolyzer1")
 		);
 		ManualHelper.addEntry("chemical_painter", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_painter0", MultiblockChemicalPainter.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_painter0", MultiblockChemicalPainter.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter1"),
 				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter2"),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "filler", true)
@@ -699,7 +667,7 @@ public class ClientProxy extends CommonProxy
 						.addEntry(new DataTypeInteger(), "get_energy")
 		);
 		ManualHelper.addEntry("filler", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "filler0", MultiblockFiller.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "filler0", MultiblockFiller.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "filler1")
 		);
 
@@ -709,22 +677,22 @@ public class ClientProxy extends CommonProxy
 				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power2", new ItemStack(IIContent.blockMechanicalConnector)),
 				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power3", new ItemStack(IIContent.itemMotorBelt, 1, 0), new ItemStack(IIContent.itemMotorBelt, 1, 1), new ItemStack(IIContent.itemMotorBelt, 1, 2)),
 				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power4", new ItemStack(IIContent.blockGearbox)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power5", new ItemStack(IIContent.blockMechanicalDevice, 1, IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX.getMeta()))
+				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power5", new ItemStack(IIContent.blockMechanicalDevice, 1, BlockIIMechanicalDevice.IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX.getMeta()))
 		);
 
 		ManualHelper.addEntry("sawmill", ManualHelper.CAT_MACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "sawmill0", MultiblockSawmill.instance),
+				new ManualPageMultiblock(ManualHelper.getManual(), "sawmill0", MultiblockSawmill.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "sawmill1"),
 				new ManualPages.Text(ManualHelper.getManual(), "sawmill2")
 		);
 
 		ManualHelper.addEntry("medicrate", ManualHelper.CAT_MACHINES,
-				new ManualPages.Crafting(ManualHelper.getManual(), "medicrate0", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.MEDIC_CRATE.getMeta())),
+				new ManualPages.Crafting(ManualHelper.getManual(), "medicrate0", new ItemStack(IIContent.blockMetalDevice, 1, BlockIIMetalDevice.IIBlockTypes_MetalDevice.MEDIC_CRATE.getMeta())),
 				new ManualPages.Text(ManualHelper.getManual(), "medicrate1")
 		);
 
 		ManualHelper.addEntry("repair_crate", ManualHelper.CAT_MACHINES,
-				new ManualPages.Crafting(ManualHelper.getManual(), "repair_crate0", new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta())),
+				new ManualPages.Crafting(ManualHelper.getManual(), "repair_crate0", new ItemStack(IIContent.blockMetalDevice, 1, BlockIIMetalDevice.IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta())),
 				new ManualPages.Text(ManualHelper.getManual(), "repair_crate1")
 		);
 
@@ -801,10 +769,10 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLatexCollector.class, new LatexCollectorRenderer());
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.TIMED_BUFFER.getMeta(), TileEntityTimedBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.REDSTONE_BUFFER.getMeta(), TileEntityRedstoneBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.SMALL_DATA_BUFFER.getMeta(), TileEntitySmallDataBuffer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalDevice), BlockIIMetalDevice.IIBlockTypes_MetalDevice.DATA_MERGER.getMeta(), TileEntityDataMerger.class);
 
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalPump.class, new MechanicalPumpRenderer().subscribeToList("mechanical_pump"));
@@ -814,19 +782,19 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMineSign.class, new MineSignRenderer());
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.DATA_DUPLEX_CONNECTOR.getMeta(), TileEntityDataCallbackConnector.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.DATA_CONNECTOR.getMeta(), TileEntityDataConnector.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.DATA_RELAY.getMeta(), TileEntityDataRelay.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.DATA_DUPLEX_CONNECTOR.getMeta(), TileEntityDataCallbackConnector.class);
 
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), TileEntityAdvancedInserter.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), TileEntityChemicalDispenser.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.ADVANCED_INSERTER.getMeta(), TileEntityAdvancedInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.FLUID_INSERTER.getMeta(), TileEntityFluidInserter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockDataConnector), BlockIIDataDevice.IIBlockTypes_Connector.CHEMICAL_DISPENSER.getMeta(), TileEntityChemicalDispenser.class);
 		//ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
 
 		//Tools
 		IIContent.itemTachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
-		IIContent.itemRadioConfigurator.setTileEntityItemStackRenderer(RadioConfiguratorItemStackRenderer.instance);
+		IIContent.itemRadioTuner.setTileEntityItemStackRenderer(RadioTunerItemStackRenderer.instance);
 		IIContent.itemTripodPeriscope.setTileEntityItemStackRenderer(TripodPeriscopeRenderer.instance);
 		IIContent.itemMortar.setTileEntityItemStackRenderer(MortarRenderer.instance);
 		IIContent.itemMineDetector.setTileEntityItemStackRenderer(MineDetectorRenderer.instance);
@@ -845,78 +813,78 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkyCratePost.class, new SkyCratePostRenderer().subscribeToList("skycrate_post"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioStation.class, new RadioStationRenderer().subscribeToList("radio_station"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.RADIO_STATION.getMeta(), TileEntityRadioStation.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.RADIO_STATION.getMeta(), TileEntityRadioStation.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDataInputMachine.class, new DataInputMachineRenderer().subscribeToList("data_input_machine"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArithmeticLogicMachine.class, new ArithmeticLogicMachineRenderer().subscribeToList("arithmetic_logic_machine"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrintingPress.class, new PrintingPressRenderer().subscribeToList("printing_press"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta(), TileEntityPrintingPress.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.PRINTING_PRESS.getMeta(), TileEntityPrintingPress.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalBath.class, new ChemicalBathRenderer().subscribeToList("chemical_bath"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta(), TileEntityChemicalBath.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH.getMeta(), TileEntityChemicalBath.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectrolyzer.class, new ElectrolyzerRenderer().subscribeToList("electrolyzer"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), TileEntityElectrolyzer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta(), TileEntityElectrolyzer.class);
 
 		//TODO: Fix misspeling during the Split, it could break stuff
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrecissionAssembler.class, new PrecissionAssemblerRenderer().subscribeToList("precision_assembler"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), TileEntityPrecissionAssembler.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER.getMeta(), TileEntityPrecissionAssembler.class);
 
 		//Deprecated, but not for deletion, as 0.1 players would *explode*
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionFactory.class, new AmmunitionFactoryRenderer());
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta(), TileEntityAmmunitionFactory.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY.getMeta(), TileEntityAmmunitionFactory.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAmmunitionWorkshop.class, new AmmunitionWorkshopRenderer().subscribeToList("ammunition_workshop"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.AMMUNITION_WORKSHOP.getMeta(), TileEntityAmmunitionWorkshop.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.AMMUNITION_WORKSHOP.getMeta(), TileEntityAmmunitionWorkshop.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProjectileWorkshop.class, new ProjectileWorkshopRenderer().subscribeToList("projectile_workshop"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.PROJECTILE_WORKSHOP.getMeta(), TileEntityProjectileWorkshop.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.PROJECTILE_WORKSHOP.getMeta(), TileEntityProjectileWorkshop.class);
 
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySawmill.class, new SawmillRenderer().subscribeToList("sawmill"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockWoodenMultiblock), IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta(), TileEntitySawmill.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockWoodenMultiblock), BlockIIWoodenMultiblock.IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta(), TileEntitySawmill.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer().subscribeToList("conveyor_scanner"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer().subscribeToList("artillery_howitzer"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), TileEntityArtilleryHowitzer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta(), TileEntityArtilleryHowitzer.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPacker.class, new PackerRenderer().subscribeToList("packer"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), IIBlockTypes_MetalMultiblock0.PACKER.getMeta(), TileEntityPacker.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0.PACKER.getMeta(), TileEntityPacker.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRedstoneInterface.class, new RedstoneInterfaceRenderer().subscribeToList("redstone_data_interface"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalPainter.class, new ChemicalPainterRenderer().subscribeToList("chemical_painter"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.CHEMICAL_PAINTER.getMeta(), TileEntityChemicalPainter.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.CHEMICAL_PAINTER.getMeta(), TileEntityChemicalPainter.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFiller.class, new FillerRenderer().subscribeToList("casing_filler"));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEmplacement.class, new EmplacementRenderer().subscribeToList("emplacement"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.EMPLACEMENT.getMeta(), TileEntityEmplacement.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadar.class, new RadarRenderer().subscribeToList("radar"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.RADAR.getMeta(), TileEntityRadar.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.RADAR.getMeta(), TileEntityRadar.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFlagpole.class, new FlagpoleRenderer().subscribeToList("flagpole"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.FLAGPOLE.getMeta(), TileEntityFlagpole.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.FLAGPOLE.getMeta(), TileEntityFlagpole.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFuelStation.class, new FuelStationRenderer().subscribeToList("fuel_station"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.FUEL_STATION.getMeta(), TileEntityFuelStation.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.FUEL_STATION.getMeta(), TileEntityFuelStation.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVehicleWorkshop.class, new VehicleWorkshopRenderer().subscribeToList("vehicle_workshop"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.VEHICLE_WORKSHOP.getMeta(), TileEntityVehicleWorkshop.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.VEHICLE_WORKSHOP.getMeta(), TileEntityVehicleWorkshop.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVulcanizer.class, new VulcanizerRenderer().subscribeToList("vulcanizer"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.VULCANIZER.getMeta(), TileEntityVulcanizer.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.VULCANIZER.getMeta(), TileEntityVulcanizer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoagulator.class, new CoagulatorRenderer().subscribeToList("coagulator"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), IIBlockTypes_MetalMultiblock1.COAGULATOR.getMeta(), TileEntityCoagulator.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1.COAGULATOR.getMeta(), TileEntityCoagulator.class);
 
 		mech_con_renderer = new MechanicalConnectorRenderer().subscribeToList("motor_belts");
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalConnectable.class, mech_con_renderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalWheel.class, new WheelRenderer().subscribeToList("wheel"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMechanicalConnector), IIBlockTypes_MechanicalConnector.WOODEN_WHEEL.getMeta(), TileEntityMechanicalWheel.class);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMechanicalConnector), BlockIIMechanicalConnector.IIBlockTypes_MechanicalConnector.WOODEN_WHEEL.getMeta(), TileEntityMechanicalWheel.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenFenceGate.class, new FenceGateRenderer<>());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWoodenChainFenceGate.class, new FenceGateRenderer<>());

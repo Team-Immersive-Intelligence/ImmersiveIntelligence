@@ -15,7 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
-import pl.pabilo8.immersiveintelligence.common.block.multiblocks.gate.TileEntityGateBase;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

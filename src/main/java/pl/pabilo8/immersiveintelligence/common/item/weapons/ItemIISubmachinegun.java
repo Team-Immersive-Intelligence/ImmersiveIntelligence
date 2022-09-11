@@ -37,13 +37,13 @@ import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemKeybind;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleGunfire;
@@ -150,7 +150,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 						reloading = 0;
 						if(!worldIn.isRemote)
 						{
-							ItemIIBulletMagazine.makeDefault(magazine);
+							IIContent.itemBulletMagazine.defaultize(magazine);
 							if(entityIn.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
 							{
 								IItemHandler capability = entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
@@ -229,7 +229,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 				Vec3d vv = player.getPositionVector().addVector(0, (double)player.getEyeHeight()-0.10000000149011612D, 0);
 
 
-				ItemStack s2 = ItemIIBulletMagazine.takeBullet(magazine, true);
+				ItemStack s2 = IIContent.itemBulletMagazine.takeBullet(magazine, true);
 				boolean sturdyBarrel = getUpgrades(stack).hasKey("sturdy_barrel");
 
 				EntityBullet a = AmmoUtils.createBullet(worldIn, s2, vv, vec, sturdyBarrel?Submachinegun.sturdyBarrelVelocityMod: 1f);
@@ -318,7 +318,7 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 
 		//Now, reconfigure the block to match our mod.
 		this.setUnlocalizedName(ImmersiveIntelligence.MODID+"."+this.itemName);
-		this.setCreativeTab(IIContent.creativeTab);
+		this.setCreativeTab(IIContent.II_CREATIVE_TAB);
 
 		//And add it to our registries.
 		IIContent.ITEMS.add(this);
@@ -396,9 +396,13 @@ public class ItemIISubmachinegun extends ItemUpgradeableTool implements IAdvance
 	{
 		if(stack.isEmpty())
 			return false;
-		if(stack.getItem() instanceof ItemIIBulletMagazine)
-			return ItemIIBulletMagazine.getMatchingType(stack)==IIContent.itemAmmoSubmachinegun&&!ItemIIBulletMagazine.hasNoBullets(stack)&&
-					(stack.getMetadata()!=3||getUpgrades(weapon).hasKey("bottom_loading"));
+		if(stack.getItem()==IIContent.itemBulletMagazine)
+		{
+			Magazines magazine = IIContent.itemBulletMagazine.stackToSub(stack);
+
+			return magazine.ammo==IIContent.itemAmmoSubmachinegun&&!IIContent.itemBulletMagazine.hasNoBullets(stack)&&
+					(magazine!=Magazines.SUBMACHINEGUN_DRUM||getUpgrades(weapon).hasKey("bottom_loading"));
+		}
 		return false;
 	}
 }

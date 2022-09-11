@@ -138,7 +138,7 @@ public class TmtTessellator extends Tessellator
 	private int normal;
 
 	/**
-	 * The static instance of the Tessellator.
+	 * The static INSTANCE of the Tessellator.
 	 */
 	public static TmtTessellator instance = new TmtTessellator();
 

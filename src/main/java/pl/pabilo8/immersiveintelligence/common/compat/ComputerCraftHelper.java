@@ -8,7 +8,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.fml.common.Optional;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.common.block.metal.TileEntityDataConnector;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataConnector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
