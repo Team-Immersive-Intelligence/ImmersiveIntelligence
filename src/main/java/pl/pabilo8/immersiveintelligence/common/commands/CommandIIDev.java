@@ -1,8 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.commands.ii;
 
+import blusunrize.immersiveengineering.api.MultiblockHandler;
+import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -50,10 +53,8 @@ import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -84,6 +85,7 @@ public class CommandIIDev extends CommandBase
 		OPTIONS.add("parachute");
 		OPTIONS.add("deth");
 		OPTIONS.add("get_mb");
+		OPTIONS.add("place_mb");
 	}
 
 	/**
@@ -137,6 +139,8 @@ public class CommandIIDev extends CommandBase
 					sender.sendMessage(getMessageForCommand("tree", "creates a happy little [R E B B U R] tree"));
 					sender.sendMessage(getMessageForCommand("parachute", "spawns and mounts the command user on a parachute"));
 					sender.sendMessage(getMessageForCommand("deth", "removes the entity player is looking at"));
+					sender.sendMessage(getMessageForCommand("get_mb", "gets the internal data of a multiblock player is looking at"));
+					sender.sendMessage(getMessageForCommand("place_mb", "places a multiblock","<id>"));
 
 				}
 				break;
@@ -417,6 +421,41 @@ public class CommandIIDev extends CommandBase
 						);
 				}
 				break;
+				case "place_mb":
+				{
+					RayTraceResult traceResult = getRayTraceResult(senderEntity, 40f);
+					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
+						return;
+
+					for(IMultiblock mb : MultiblockHandler.getMultiblocks())
+					{
+						if(mb.getUniqueName().equals(args[1]))
+						{
+							BlockPos placed = traceResult.getBlockPos().up();
+
+							ItemStack[][][] manual = mb.getStructureManual();
+							int hh = manual.length, ww = manual[0][0].length, ll = manual[0].length;
+
+							for(int y = 0; y < hh; y++)
+								for(int z = 0; z < ll; z++)
+									for(int x = 0; x < ww; x++)
+									{
+										ItemStack stack = manual[y][z][x];
+										if(stack==null||stack.isEmpty())
+											continue;
+										IBlockState state = mb.getBlockstateFromStack((y*ww*ll)+(z*ww)+x, stack);
+
+										if(state!=null)
+											senderEntity.world.setBlockState(placed.add(x, y, z), state);
+
+									}
+
+							break;
+						}
+					}
+
+				}
+				break;
 			}
 
 		}
@@ -457,7 +496,27 @@ public class CommandIIDev extends CommandBase
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
 	{
-		return getListOfStringsMatchingLastWord(args, OPTIONS);
+		switch(args.length)
+		{
+			case 1:
+				return getListOfStringsMatchingLastWord(args, OPTIONS);
+			case 2:
+			{
+				switch(args[0])
+				{
+					case "place_mb":
+						return MultiblockHandler.getMultiblocks()
+								.stream()
+								.map(IMultiblock::getUniqueName)
+								.map(s -> s.startsWith("II:")?(TextFormatting.GOLD+s+TextFormatting.RESET):s)
+								.collect(Collectors.toList());
+					default:
+						return Collections.emptyList();
+				}
+			}
+		}
+
+		return super.getTabCompletions(server, sender, args, targetPos);
 	}
 
 	/**

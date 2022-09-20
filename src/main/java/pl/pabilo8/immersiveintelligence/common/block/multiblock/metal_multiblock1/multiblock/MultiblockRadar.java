@@ -9,7 +9,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +35,7 @@ public class MultiblockRadar extends MultiblockStuctureBase<TileEntityRadar>
 	@Nullable
 	protected TileEntityRadar placeTile(World world, BlockPos pos)
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(IIBlockTypes_MetalMultiblock1.RADAR.getMeta()));
+		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.RADAR.getMeta()));
 		return (TileEntityRadar)world.getTileEntity(pos);
 	}
 

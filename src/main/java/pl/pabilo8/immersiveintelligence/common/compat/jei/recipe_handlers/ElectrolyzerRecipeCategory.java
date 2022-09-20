@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
@@ -34,12 +34,12 @@ public class ElectrolyzerRecipeCategory extends IIRecipeCategory<ElectrolyzerRec
 				"tile."+ImmersiveIntelligence.MODID+".metal_multiblock.electrolyzer.name",
 				helper.createBlankDrawable(140, 64),
 				ElectrolyzerRecipe.class,
-				new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta())
+				new ItemStack(IIContent.blockMetalMultiblock0, 1, MetalMultiblocks0.ELECTROLYZER.getMeta())
 		);
 		tankOverlay =helper.drawableBuilder(texture, 0, 52, 20, 51)
 				.addPadding(-2, 2, -2, 2)
 				.build();
-		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, IIBlockTypes_MetalMultiblock0.ELECTROLYZER.getMeta());
+		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, MetalMultiblocks0.ELECTROLYZER.getMeta());
 	}
 
 	@Override

@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.IIBlockTypes_WoodenMultiblock;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
@@ -38,9 +38,9 @@ public class SawmillRecipeCategory extends IIRecipeCategory<SawmillRecipe, Sawmi
 				"tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.sawmill.name",
 				helper.createBlankDrawable(156, 68),
 				SawmillRecipe.class,
-				new ItemStack(IIContent.blockWoodenMultiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta())
+				new ItemStack(IIContent.blockWoodenMultiblock, 1, WoodenMultiblocks.SAWMILL.getMeta())
 		);
-		machineStack = new ItemStack(IIContent.blockWoodenMultiblock, 1, IIBlockTypes_WoodenMultiblock.SAWMILL.getMeta());
+		machineStack = new ItemStack(IIContent.blockWoodenMultiblock, 1, WoodenMultiblocks.SAWMILL.getMeta());
 	}
 
 	@Override

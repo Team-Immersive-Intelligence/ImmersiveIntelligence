@@ -64,7 +64,7 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 
 	@Nullable
 	@Override
-	public TileEntity createBasicTE(World worldIn, E type)
+	public TileEntity createBasicTE(E type)
 	{
 		return new TileEntityChainFence();
 	}

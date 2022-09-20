@@ -29,15 +29,15 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.ArrayUtils;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIAssemblyScheme;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -49,7 +49,7 @@ import java.util.ArrayList;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<TileEntityPrecissionAssembler, PrecissionAssemblerRecipe> implements IGuiTile, ISoundTile, IBooleanAnimatedPartsBlock
+public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<TileEntityPrecisionAssembler, PrecissionAssemblerRecipe> implements IGuiTile, ISoundTile, IBooleanAnimatedPartsBlock
 {
 	//3 x tool slots, 1x scheme slot, 1x main component slot, 3 x secondary component slots, 1 x output slot, 1 x trash output slot
 	//0 1 2, 3, 4, 5 6 7, 8, 9
@@ -69,9 +69,9 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 
 	IItemHandler insertionHandler = new IEInventoryHandler(5, this, 4, true, false);
 
-	public TileEntityPrecissionAssembler()
+	public TileEntityPrecisionAssembler()
 	{
-		super(MultiblockPrecissionAssembler.INSTANCE, new int[]{3, 3, 5}, PrecissionAssembler.energyCapacity, true);
+		super(MultiblockPrecisionAssembler.INSTANCE, new int[]{3, 3, 5}, PrecisionAssembler.energyCapacity, true);
 	}
 
 	@Override
@@ -193,17 +193,17 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 				processTimeMax = recipe.getTotalProcessTime();
 
 				String t0 = "", t1 = "", t2 = "";
-				if(!inventory.get(0).isEmpty()&&inventory.get(0).getItem() instanceof IPrecissionTool)
+				if(!inventory.get(0).isEmpty()&&inventory.get(0).getItem() instanceof IPrecisionTool)
 				{
-					t0 = ((IPrecissionTool)inventory.get(0).getItem()).getPrecissionToolType(inventory.get(0));
+					t0 = ((IPrecisionTool)inventory.get(0).getItem()).getPrecissionToolType(inventory.get(0));
 				}
-				if(!inventory.get(1).isEmpty()&&inventory.get(1).getItem() instanceof IPrecissionTool)
+				if(!inventory.get(1).isEmpty()&&inventory.get(1).getItem() instanceof IPrecisionTool)
 				{
-					t1 = ((IPrecissionTool)inventory.get(1).getItem()).getPrecissionToolType(inventory.get(1));
+					t1 = ((IPrecisionTool)inventory.get(1).getItem()).getPrecissionToolType(inventory.get(1));
 				}
-				if(!inventory.get(2).isEmpty()&&inventory.get(2).getItem() instanceof IPrecissionTool)
+				if(!inventory.get(2).isEmpty()&&inventory.get(2).getItem() instanceof IPrecisionTool)
 				{
-					t2 = ((IPrecissionTool)inventory.get(2).getItem()).getPrecissionToolType(inventory.get(2));
+					t2 = ((IPrecisionTool)inventory.get(2).getItem()).getPrecissionToolType(inventory.get(2));
 				}
 
 				toolOrder = new String[]{t0, t1, t2};
@@ -318,7 +318,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 					check = false;
 					break test;
 				}
-				if(!((IPrecissionTool)inventory.get(0).getItem()).getPrecissionToolType(inventory.get(0)).equals(toolOrder[0]))
+				if(!((IPrecisionTool)inventory.get(0).getItem()).getPrecissionToolType(inventory.get(0)).equals(toolOrder[0]))
 				{
 					check = false;
 					break test;
@@ -332,7 +332,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 					check = false;
 					break test;
 				}
-				if(!((IPrecissionTool)inventory.get(1).getItem()).getPrecissionToolType(inventory.get(1)).equals(toolOrder[1]))
+				if(!((IPrecisionTool)inventory.get(1).getItem()).getPrecissionToolType(inventory.get(1)).equals(toolOrder[1]))
 				{
 					check = false;
 					break test;
@@ -346,7 +346,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 					check = false;
 					break test;
 				}
-				if(!((IPrecissionTool)inventory.get(2).getItem()).getPrecissionToolType(inventory.get(2)).equals(toolOrder[2]))
+				if(!((IPrecisionTool)inventory.get(2).getItem()).getPrecissionToolType(inventory.get(2)).equals(toolOrder[2]))
 				{
 					check = false;
 				}
@@ -378,11 +378,11 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	{
 
 		if(!toolOrder[0].equals(""))
-			((IPrecissionTool)inventory.get(0).getItem()).damagePrecissionTool(inventory.get(0), 1);
+			((IPrecisionTool)inventory.get(0).getItem()).damagePrecissionTool(inventory.get(0), 1);
 		if(!toolOrder[1].equals(""))
-			((IPrecissionTool)inventory.get(1).getItem()).damagePrecissionTool(inventory.get(1), 1);
+			((IPrecisionTool)inventory.get(1).getItem()).damagePrecissionTool(inventory.get(1), 1);
 		if(!toolOrder[2].equals(""))
-			((IPrecissionTool)inventory.get(2).getItem()).damagePrecissionTool(inventory.get(2), 1);
+			((IPrecisionTool)inventory.get(2).getItem()).damagePrecissionTool(inventory.get(2), 1);
 
 		((ItemIIAssemblyScheme)inventory.get(3).getItem()).increaseCreatedItems(inventory.get(3), process.recipe.output.getCount());
 
@@ -417,7 +417,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		if(slot==0||slot==1||slot==2)
-			return stack.getItem() instanceof IPrecissionTool;
+			return stack.getItem() instanceof IPrecisionTool;
 		if(slot==3)
 			return stack.getItem() instanceof ItemIIAssemblyScheme;
 		if(slot >= 4&&slot <= 7)
@@ -554,7 +554,7 @@ public class TileEntityPrecissionAssembler extends TileEntityMultiblockMetal<Til
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&pos==9)
 		{
-			TileEntityPrecissionAssembler master = master();
+			TileEntityPrecisionAssembler master = master();
 			return (T)master.insertionHandler;
 		}
 

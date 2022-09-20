@@ -241,27 +241,27 @@ public class Config
 			//Durability
 
 
-			@Comment({"The durability (max number of uses) of the Precission Buzzsaw."})
+			@Comment({"The durability (max number of uses) of the Precision Buzzsaw."})
 			@RequiresMcRestart
 			public static int precissionToolBuzzsawDurability = 150;
 
-			@Comment({"The durability (max number of uses) of the Precission Drill."})
+			@Comment({"The durability (max number of uses) of the Precision Drill."})
 			@RequiresMcRestart
 			public static int precissionToolDrillDurability = 250;
 
-			@Comment({"The durability (max number of uses) of the Precission Inserter."})
+			@Comment({"The durability (max number of uses) of the Precision Inserter."})
 			@RequiresMcRestart
 			public static int precissionToolInserterDurability = 200;
 
-			@Comment({"The durability (max number of uses) of the Precission Solderer."})
+			@Comment({"The durability (max number of uses) of the Precision Solderer."})
 			@RequiresMcRestart
 			public static int precissionToolSoldererDurability = 150;
 
-			@Comment({"The durability (max number of uses) of the Precission Welder."})
+			@Comment({"The durability (max number of uses) of the Precision Welder."})
 			@RequiresMcRestart
 			public static int precissionToolWelderDurability = 250;
 
-			@Comment({"The durability (max number of uses) of the Precission Hammer."})
+			@Comment({"The durability (max number of uses) of the Precision Hammer."})
 			@RequiresMcRestart
 			public static int precissionToolHammerDurability = 200;
 
@@ -279,27 +279,27 @@ public class Config
 
 			//Usage Time
 
-			@Comment({"The usage time of the Precission Buzzsaw."})
+			@Comment({"The usage time of the Precision Buzzsaw."})
 			@RequiresMcRestart
 			public static int precissionToolBuzzsawUsageTime = 140;
 
-			@Comment({"The usage time of the Precission Drill."})
+			@Comment({"The usage time of the Precision Drill."})
 			@RequiresMcRestart
 			public static int precissionToolDrillUsageTime = 140;
 
-			@Comment({"The usage time of the Precission Inserter."})
+			@Comment({"The usage time of the Precision Inserter."})
 			@RequiresMcRestart
 			public static int precissionToolInserterUsageTime = 60;
 
-			@Comment({"The usage time of the Precission Solderer."})
+			@Comment({"The usage time of the Precision Solderer."})
 			@RequiresMcRestart
 			public static int precissionToolSoldererUsageTime = 80;
 
-			@Comment({"The usage time of the Precission Welder."})
+			@Comment({"The usage time of the Precision Welder."})
 			@RequiresMcRestart
 			public static int precissionToolWelderUsageTime = 160;
 
-			@Comment({"The usage time of the Precission Hammer."})
+			@Comment({"The usage time of the Precision Hammer."})
 			@RequiresMcRestart
 			public static int precissionToolHammerUsageTime = 40;
 
@@ -366,7 +366,7 @@ public class Config
 			@SubConfig
 			public static Electrolyzer electrolyzer;
 			@SubConfig
-			public static PrecissionAssembler precissionAssembler;
+			public static PrecisionAssembler precissionAssembler;
 			@SubConfig
 			public static Coagulator coagulator;
 			@SubConfig
@@ -656,7 +656,7 @@ public class Config
 				public static int fluidCapacity = 12000;
 			}
 
-			public static class PrecissionAssembler
+			public static class PrecisionAssembler
 			{
 				@Comment({"Energy capacity of the chemical bath."})
 				public static int energyCapacity = 16000;

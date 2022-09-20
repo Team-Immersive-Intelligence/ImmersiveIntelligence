@@ -1,7 +1,9 @@
-package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler;
+package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precision_assembler;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
@@ -13,13 +15,13 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelPrecissionSyringe extends ModelIIBase
+public class ModelPrecisionInserter extends ModelIIBase
 {
-	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable;
+	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterItemPicker1, inserterItemPicker2, inserterOutput, inserterInput;
 	int textureX = 64;
 	int textureY = 32;
 
-	public ModelPrecissionSyringe() //Same as Filename
+	public ModelPrecisionInserter() //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[1];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // BaseBoxTop
@@ -83,28 +85,39 @@ public class ModelPrecissionSyringe extends ModelIIBase
 
 		inserterMidAxle[0].addBox(-2F, 0F, -0.5F, 4, 1, 1, 0F); // InserterAxle2
 
-		inserterUpperArm = new ModelRendererTurbo[10];
+		inserterUpperArm = new ModelRendererTurbo[2];
 		inserterUpperArm[0] = new ModelRendererTurbo(this, 60, 19, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[1] = new ModelRendererTurbo(this, 14, 0, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[2] = new ModelRendererTurbo(this, 14, 6, textureX, textureY); // InserterArm2SoldererBack
-		inserterUpperArm[3] = new ModelRendererTurbo(this, 12, 10, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[4] = new ModelRendererTurbo(this, 12, 10, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[5] = new ModelRendererTurbo(this, 22, 8, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[6] = new ModelRendererTurbo(this, 16, 11, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[7] = new ModelRendererTurbo(this, 11, 14, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[8] = new ModelRendererTurbo(this, 22, 11, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[9] = new ModelRendererTurbo(this, 22, 11, textureX, textureY); // InserterArm2Top
+		inserterUpperArm[1] = new ModelRendererTurbo(this, 32, 27, textureX, textureY); // InserterArm2End
 
-		inserterUpperArm[0].addBox(-0.5F, -7.5F, -0.5F, 1, 7, 1, 0F); // InserterArm2Top
-		inserterUpperArm[1].addBox(-1.5F, -10.5F, -1.5F, 3, 3, 3, 0F); // InserterArm2Top
-		inserterUpperArm[2].addBox(-1F, -10F, 1.5F, 2, 2, 2, 0F); // InserterArm2SoldererBack
-		inserterUpperArm[3].addBox(-1.5F, -10.5F, -3.5F, 3, 3, 1, 0F); // InserterArm2Top
-		inserterUpperArm[4].addBox(-1.5F, -10.5F, -5.5F, 3, 3, 1, 0F); // InserterArm2Top
-		inserterUpperArm[5].addBox(-1F, -10F, -4.5F, 2, 2, 1, 0F); // InserterArm2Top
-		inserterUpperArm[6].addBox(-1F, -10F, -9.5F, 2, 2, 4, 0F); // InserterArm2Top
-		inserterUpperArm[7].addBox(-0.5F, -9.5F, -12.5F, 1, 1, 3, 0F); // InserterArm2Top
-		inserterUpperArm[8].addBox(1.5F, -10F, -4.5F, 1, 2, 6, 0F); // InserterArm2Top
-		inserterUpperArm[9].addBox(-2.5F, -10F, -4.5F, 1, 2, 6, 0F); // InserterArm2Top
+		inserterUpperArm[0].addBox(-0.5F, -9F, -0.5F, 1, 9, 1, 0F); // InserterArm2Top
+		//inserterUpperArm[0].setRotationPoint(8F, -21.5F, 8F);
+
+		inserterUpperArm[1].addFlexTrapezoid(-2.5F, -10F, -0.5F, 5, 1, 1, 0F, -1.00F, -1.00F, 0.00F, 0.00F, 0.00F, 0.00F, ModelRendererTurbo.MR_BOTTOM); // InserterArm2End
+		//inserterUpperArm[1].setRotationPoint(8F, -21.5F, 8F);
+
+		inserterItemPicker1 = new ModelRendererTurbo[1];
+		inserterItemPicker2 = new ModelRendererTurbo[1];
+		inserterItemPicker1[0] = new ModelRendererTurbo(this, 25, 20, textureX, textureY); // InserterArm2End
+		inserterItemPicker2[0] = new ModelRendererTurbo(this, 25, 20, textureX, textureY); // InserterArm2End
+
+		inserterItemPicker1[0].addBox(-0.5F, -3.5F, -0.5F, 1, 3, 1, 0F); // InserterArm2End
+		//inserterItemPicker1[0].setRotationPoint(6F, -31.5F, 8F);
+
+		inserterItemPicker2[0].addBox(-0.5F, -3.5F, -0.5F, 1, 3, 1, 0F); // InserterArm2End
+		//inserterItemPicker2[0].setRotationPoint(10F, -31.5F, 8F);
+
+		inserterOutput = new ModelRendererTurbo[1];
+		inserterOutput[0] = new ModelRendererTurbo(this, 48, 7, textureX, textureY); // BaseOutputBox
+
+		inserterOutput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseOutputBox
+		inserterOutput[0].setRotationPoint(8F, -4F, 8F);
+
+		inserterInput = new ModelRendererTurbo[1];
+		inserterInput[0] = new ModelRendererTurbo(this, 40, 23, textureX, textureY); // BaseInputBox
+
+		inserterInput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseInputBox
+		inserterInput[0].setRotationPoint(8F, -4F, 8F);
+
 		flipAll();
 
 	}
@@ -117,6 +130,10 @@ public class ModelPrecissionSyringe extends ModelIIBase
 		flip(inserterLowerArm);
 		flip(inserterUpperArm);
 		flip(inserterBaseTurntable);
+		flip(inserterItemPicker1);
+		flip(inserterItemPicker2);
+		flip(inserterOutput);
+		flip(inserterInput);
 	}
 
 	@Override
@@ -127,6 +144,10 @@ public class ModelPrecissionSyringe extends ModelIIBase
 		translate(inserterLowerArm, x, y, z);
 		translate(inserterUpperArm, x, y, z);
 		translate(inserterBaseTurntable, x, y, z);
+		translate(inserterItemPicker1, x, y, z);
+		translate(inserterItemPicker2, x, y, z);
+		translate(inserterOutput, x, y, z);
+		translate(inserterInput, x, y, z);
 	}
 
 	@Override
@@ -137,6 +158,8 @@ public class ModelPrecissionSyringe extends ModelIIBase
 		rotate(inserterLowerArm, x, y, z);
 		rotate(inserterUpperArm, x, y, z);
 		rotate(inserterBaseTurntable, x, y, z);
+		rotate(inserterItemPicker1, x, y, z);
+		rotate(inserterItemPicker2, x, y, z);
 	}
 
 	@Override
@@ -148,31 +171,32 @@ public class ModelPrecissionSyringe extends ModelIIBase
 
 	}
 
-	public void renderProgress(float progress, float angle, float maxProgress)
+	public void renderProgress(float progress, float angle, float maxProgress, ItemStack stack)
 	{
 		GlStateManager.pushMatrix();
 
-		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/syringe.png");
+		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/inserter.png");
 
 		render();
 
-		progress = progress < 0.25?progress*4: progress > 0.75?1f-((progress-0.75f)*4): 1f;
+		progress = progress < 0.5?progress*2: 1f-((progress-0.5f)*2);
+		float progress2 = progress*maxProgress;
 
 		GlStateManager.translate(0.5f, 0.125f, -0.5);
 		GlStateManager.rotate(angle*progress, 0f, 1f, 0f);
-		progress *= maxProgress;
 
 		for(ModelRendererTurbo mod : inserterBaseTurntable)
 			mod.render(0.0625f);
 
+
 		GlStateManager.translate(0f, 0.125f, 0);
-		GlStateManager.rotate(15+55*progress, 1, 0, 0);
+		GlStateManager.rotate(15+55*progress2, 1, 0, 0);
 
 		for(ModelRendererTurbo mod : inserterLowerArm)
 			mod.render(0.0625f);
 
 		GlStateManager.translate(0f, 0.875f, 0);
-		GlStateManager.rotate(135-(95f*progress), 1, 0, 0);
+		GlStateManager.rotate(135-(95f*progress2), 1, 0, 0);
 		GlStateManager.translate(0f, 0.0625f, 0.03125f);
 
 		for(ModelRendererTurbo mod : inserterMidAxle)
@@ -180,6 +204,33 @@ public class ModelPrecissionSyringe extends ModelIIBase
 
 		for(ModelRendererTurbo mod : inserterUpperArm)
 			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.625f, 0.03125f);
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
+
+		GlStateManager.rotate(-45f*progress, 0f, 0f, 1f);
+
+		for(ModelRendererTurbo mod : inserterItemPicker1)
+			mod.render(0.0625f);
+
+		GlStateManager.popMatrix();
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(-0.125f, -0.03125f, -0.03125f);
+
+		GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
+
+		for(ModelRendererTurbo mod : inserterItemPicker2)
+			mod.render(0.0625f);
+
+		GlStateManager.popMatrix();
+
+		if(stack!=null&&!stack.isEmpty())
+			ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.GROUND);
 
 		GlStateManager.popMatrix();
 	}

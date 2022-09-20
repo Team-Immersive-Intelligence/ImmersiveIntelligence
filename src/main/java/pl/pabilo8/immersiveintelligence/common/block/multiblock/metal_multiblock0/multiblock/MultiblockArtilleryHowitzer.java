@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 
 import javax.annotation.Nullable;
 
@@ -43,7 +43,7 @@ public class MultiblockArtilleryHowitzer extends MultiblockStuctureBase<TileEnti
 	@Override
 	protected TileEntityArtilleryHowitzer placeTile(World world, BlockPos pos)
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.ARTILLERY_HOWITZER.getMeta()));
+		world.setBlockState(pos, IIContent.blockMetalMultiblock0.getStateFromMeta(MetalMultiblocks0.ARTILLERY_HOWITZER.getMeta()));
 		return (TileEntityArtilleryHowitzer)world.getTileEntity(pos);
 	}
 

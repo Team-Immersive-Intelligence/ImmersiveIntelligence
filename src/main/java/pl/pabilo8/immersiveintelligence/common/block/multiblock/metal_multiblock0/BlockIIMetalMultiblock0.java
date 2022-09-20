@@ -2,22 +2,13 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multibloc
 
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
@@ -26,20 +17,18 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.TernaryValue;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 
 /**
  * @author Pabilo8
  * @since 20-06-2019
  */
-public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_MetalMultiblock0>
+public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0>
 {
 	public BlockIIMetalMultiblock0()
 	{
-		super("metal_multiblock", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalMultiblock0.class),
+		super("metal_multiblock", Material.IRON, PropertyEnum.create("type", MetalMultiblocks0.class),
 				IEProperties.FACING_HORIZONTAL,
 				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER,
 				IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
@@ -51,14 +40,14 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		setToolTypes(IILib.TOOL_HAMMER);
 
 		addToTESRMap(
-				IIBlockTypes_MetalMultiblock0.PRINTING_PRESS, IIBlockTypes_MetalMultiblock0.RADIO_STATION,
-				IIBlockTypes_MetalMultiblock0.AMMUNITION_FACTORY, IIBlockTypes_MetalMultiblock0.ELECTROLYZER,
-				IIBlockTypes_MetalMultiblock0.CHEMICAL_BATH, IIBlockTypes_MetalMultiblock0.PRECISSION_ASSEMBLER,
-				IIBlockTypes_MetalMultiblock0.PACKER
+				MetalMultiblocks0.PRINTING_PRESS, MetalMultiblocks0.RADIO_STATION,
+				MetalMultiblocks0.AMMUNITION_FACTORY, MetalMultiblocks0.ELECTROLYZER,
+				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER,
+				MetalMultiblocks0.PACKER
 		);
 	}
 
-	public enum IIBlockTypes_MetalMultiblock0 implements IITileMultiblockEnum
+	public enum MetalMultiblocks0 implements IITileMultiblockEnum
 	{
 		@EnumMultiblockProvider(tile = TileEntityRadioStation.class, multiblock = MultiblockRadioStation.class)
 		RADIO_STATION,
@@ -74,9 +63,9 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		@EnumMultiblockProvider(tile = TileEntityElectrolyzer.class, multiblock = MultiblockElectrolyzer.class)
 		@IIBlockProperties(needsCustomState = true)
 		ELECTROLYZER,
-		@EnumMultiblockProvider(tile = TileEntityPrecissionAssembler.class, multiblock = MultiblockPrecissionAssembler.class)
+		@EnumMultiblockProvider(tile = TileEntityPrecisionAssembler.class, multiblock = MultiblockPrecisionAssembler.class)
 		@IIBlockProperties(needsCustomState = true)
-		PRECISSION_ASSEMBLER,
+		PRECISION_ASSEMBLER,
 		@EnumMultiblockProvider(tile = TileEntityBallisticComputer.class, multiblock = MultiblockBallisticComputer.class)
 		@IIBlockProperties(needsCustomState = true)
 		BALLISTIC_COMPUTER,
@@ -84,15 +73,15 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<IIBlockTypes_Meta
 		@IIBlockProperties(needsCustomState = true)
 		ARTILLERY_HOWITZER,
 
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		PERISCOPE, //not implemented
 
 		@EnumMultiblockProvider(tile = TileEntityConveyorScanner.class, multiblock = MultiblockConveyorScanner.class)
 		CONVEYOR_SCANNER,
 
-		@EnumMultiblockProvider(tile = TileEntityPacker.class, multiblock = MultiblockPacker.class)
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		AMMUNITION_FACTORY, //deprecated
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		@EnumMultiblockProvider(tile = TileEntityPacker.class, multiblock = MultiblockPacker.class)
 		PACKER_OLD, //deprecated
 
 		@EnumMultiblockProvider(tile = TileEntityPacker.class, multiblock = MultiblockPacker.class)

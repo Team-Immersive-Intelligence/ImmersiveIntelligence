@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,7 @@ public class MultiblockAmmunitionWorkshop extends MultiblockStuctureBase<TileEnt
 	@Nullable
 	protected TileEntityAmmunitionWorkshop placeTile(World world, BlockPos pos)
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(IIBlockTypes_MetalMultiblock1.AMMUNITION_WORKSHOP.getMeta()));
+		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.AMMUNITION_WORKSHOP.getMeta()));
 		return (TileEntityAmmunitionWorkshop)world.getTileEntity(pos);
 	}
 

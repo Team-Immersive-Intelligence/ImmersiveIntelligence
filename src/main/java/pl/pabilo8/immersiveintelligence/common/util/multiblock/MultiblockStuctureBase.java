@@ -301,6 +301,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 */
 	private boolean checkState(IBlockState state, IngredientStack stack, @Nullable World world, @Nullable BlockPos pos)
 	{
+		//air blocks
+		if(stack==null)
+			return true;
+
 		// TODO: 08.08.2021 conveyor facing check
 		if(stack.stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.stack.getItem()).getBlock()==IEContent.blockConveyor)
 		{

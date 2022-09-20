@@ -10,8 +10,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecissionAssemblerRenderer;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecisionTool;
+import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecisionAssemblerRenderer;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -26,7 +26,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 19-08-2019
  */
-public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> implements IPrecissionTool
+public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> implements IPrecisionTool
 {
 	public ItemIIPrecisionTool()
 	{
@@ -136,22 +136,22 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 		switch(stackToSub(stack))
 		{
 			case BUZZSAW:
-				PrecissionAssemblerRenderer.modelBuzzsaw.renderProgress(progress, angle, maxProgress);
+				PrecisionAssemblerRenderer.modelBuzzsaw.renderProgress(progress, angle, maxProgress);
 				break;
 			case DRILL:
-				PrecissionAssemblerRenderer.modelDrill.renderProgress(progress, angle, maxProgress);
+				PrecisionAssemblerRenderer.modelDrill.renderProgress(progress, angle, maxProgress);
 				break;
 			case INSERTER:
-				PrecissionAssemblerRenderer.modelInserter.renderProgress(progress, angle, maxProgress, renderedStack);
+				PrecisionAssemblerRenderer.modelInserter.renderProgress(progress, angle, maxProgress, renderedStack);
 				break;
 			case SOLDERER:
-				PrecissionAssemblerRenderer.modelSolderer.renderProgress(progress, angle, maxProgress);
+				PrecisionAssemblerRenderer.modelSolderer.renderProgress(progress, angle, maxProgress);
 				break;
 			case WELDER:
-				PrecissionAssemblerRenderer.modelWelder.renderProgress(progress, angle, maxProgress);
+				PrecisionAssemblerRenderer.modelWelder.renderProgress(progress, angle, maxProgress);
 				break;
 			case HAMMER:
-				PrecissionAssemblerRenderer.modelHammer.renderProgress(progress, angle, maxProgress);
+				PrecisionAssemblerRenderer.modelHammer.renderProgress(progress, angle, maxProgress);
 				break;
 		}
 	}

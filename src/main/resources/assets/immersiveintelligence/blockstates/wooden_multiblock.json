@@ -62,7 +62,9 @@
     },
     "_0multiblockslave": {
       "false": {},
-      "true": {}
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
     }
   }
 }

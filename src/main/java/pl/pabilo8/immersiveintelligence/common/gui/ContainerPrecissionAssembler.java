@@ -5,17 +5,17 @@ import blusunrize.immersiveengineering.common.gui.IESlot.Output;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecisionTool;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIAssemblyScheme;
 
 /**
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrecissionAssembler>
+public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrecisionAssembler>
 {
-	public ContainerPrecissionAssembler(InventoryPlayer inventoryPlayer, TileEntityPrecissionAssembler tile)
+	public ContainerPrecissionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
 	{
 		super(inventoryPlayer, tile);
 
@@ -26,7 +26,7 @@ public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrec
 				@Override
 				public boolean isItemValid(ItemStack stack)
 				{
-					return stack.getItem() instanceof IPrecissionTool;
+					return stack.getItem() instanceof IPrecisionTool;
 				}
 			});
 

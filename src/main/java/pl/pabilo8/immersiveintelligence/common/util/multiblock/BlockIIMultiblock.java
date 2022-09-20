@@ -33,6 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInter
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * @author Pabilo8
@@ -54,6 +55,8 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 					IIContent.MULTIBLOCKS.add(mb.newInstance());
 				} catch(InstantiationException|IllegalAccessException ignored) {}
 		}
+		//does not need the property to be set
+		Arrays.fill(this.hidden, true);
 
 		setLightOpacity(0);
 		setFullCube(false);

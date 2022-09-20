@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
-import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecisionAssembler;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIAssemblyScheme;
 
@@ -30,7 +30,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 	public String[] tools;
 	public String[] animations;
 
-	public static HashMap<String, IPrecissionTool> toolMap = new HashMap<>();
+	public static HashMap<String, IPrecisionTool> toolMap = new HashMap<>();
 	public static ArrayList<PrecissionAssemblerRecipe> recipeList = new ArrayList<>();
 
 	int totalProcessTime;
@@ -46,7 +46,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 			this.inputs[io] = ApiUtils.createIngredientStack(itemInputs[io]);
 
 		//Open time + close time
-		int processDuration = 2*PrecissionAssembler.hatchTime;
+		int processDuration = 2*PrecisionAssembler.hatchTime;
 
 		for(String animation : animations)
 		{
@@ -133,8 +133,8 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 				ArrayList<String> availableTools = new ArrayList<>();
 				for(ItemStack toolstack : tools)
 				{
-					if(!toolstack.isEmpty()&&toolstack.getItem() instanceof IPrecissionTool)
-						availableTools.add(((IPrecissionTool)toolstack.getItem()).getPrecissionToolType(toolstack));
+					if(!toolstack.isEmpty()&&toolstack.getItem() instanceof IPrecisionTool)
+						availableTools.add(((IPrecisionTool)toolstack.getItem()).getPrecissionToolType(toolstack));
 				}
 
 				for(String tool : neededTools)
@@ -219,7 +219,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 		return this.totalProcessEnergy;
 	}
 
-	public static void registerToolType(String name, IPrecissionTool tool)
+	public static void registerToolType(String name, IPrecisionTool tool)
 	{
 		toolMap.put(name, tool);
 	}

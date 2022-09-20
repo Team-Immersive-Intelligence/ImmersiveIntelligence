@@ -8,7 +8,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.IIBlockTypes_MetalMultiblock0;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 
 import javax.annotation.Nullable;
 
@@ -43,7 +43,7 @@ public class MultiblockBallisticComputer extends MultiblockStuctureBase<TileEnti
 	@Override
 	protected TileEntityBallisticComputer placeTile(World world, BlockPos pos)
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock0.getStateFromMeta(IIBlockTypes_MetalMultiblock0.BALLISTIC_COMPUTER.getMeta()));
+		world.setBlockState(pos, IIContent.blockMetalMultiblock0.getStateFromMeta(MetalMultiblocks0.BALLISTIC_COMPUTER.getMeta()));
 		return (TileEntityBallisticComputer)world.getTileEntity(pos);
 	}
 

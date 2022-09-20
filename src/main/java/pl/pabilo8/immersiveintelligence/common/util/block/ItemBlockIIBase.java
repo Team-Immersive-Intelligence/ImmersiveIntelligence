@@ -39,8 +39,7 @@ public class ItemBlockIIBase extends ItemBlock
 	{
 		super(block);
 		this.block = block;
-		if(block.enumValues.length > 1)
-			setHasSubtypes(true);
+		setHasSubtypes(true);
 	}
 
 	/**

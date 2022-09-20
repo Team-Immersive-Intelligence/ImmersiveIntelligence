@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 19-08-2019
  */
-public interface IPrecissionTool
+public interface IPrecisionTool
 {
 	String getPrecissionToolType(ItemStack stack);
 

@@ -10,35 +10,35 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.ArrayUtils;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.IPrecissionTool;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrecissionAssembler;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler.*;
+import pl.pabilo8.immersiveintelligence.api.utils.IPrecisionTool;
+import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrecisionAssembler;
+import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precision_assembler.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 
 /**
  * @author Pabilo8
  * @since 21-06-2019
  */
-public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecissionAssembler> implements IReloadableModelContainer<PrecissionAssemblerRenderer>
+public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecisionAssembler> implements IReloadableModelContainer<PrecisionAssemblerRenderer>
 {
 	//Tool Models (if you want to add custom tools from your mod, you have to init them in your own class)
-	public static ModelPrecissionInserter modelInserter = new ModelPrecissionInserter();
-	public static ModelPrecissionDrill modelDrill = new ModelPrecissionDrill();
-	public static ModelPrecissionBuzzsaw modelBuzzsaw = new ModelPrecissionBuzzsaw();
-	public static ModelPrecissionSolderer modelSolderer = new ModelPrecissionSolderer();
-	public static ModelPrecissionWelder modelWelder = new ModelPrecissionWelder();
-	public static ModelPrecissionHammer modelHammer = new ModelPrecissionHammer();
+	public static ModelPrecisionInserter modelInserter = new ModelPrecisionInserter();
+	public static ModelPrecisionDrill modelDrill = new ModelPrecisionDrill();
+	public static ModelPrecisionBuzzsaw modelBuzzsaw = new ModelPrecisionBuzzsaw();
+	public static ModelPrecisionSolderer modelSolderer = new ModelPrecisionSolderer();
+	public static ModelPrecisionWelder modelWelder = new ModelPrecisionWelder();
+	public static ModelPrecisionHammer modelHammer = new ModelPrecisionHammer();
 	private static final RenderItem renderItem = ClientUtils.mc().getRenderItem();
-	private static ModelPrecissionAssembler model;
-	private static ModelPrecissionAssembler modelFlipped;
+	private static ModelPrecisionAssembler model;
+	private static ModelPrecisionAssembler modelFlipped;
 
 	@Override
-	public void render(TileEntityPrecissionAssembler te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	public void render(TileEntityPrecisionAssembler te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
 		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler.png";
 		if(te!=null&&!te.isDummy())
@@ -57,7 +57,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 
 			//A bit of trick here, because it's pointless to rewrite the whole code just because only one part is mirrored :v
 			GlStateManager.pushMatrix();
-			ModelPrecissionAssembler currentModel = te.mirrored?modelFlipped: model;
+			ModelPrecisionAssembler currentModel = te.mirrored?modelFlipped: model;
 			currentModel.getBlockRotation(te.facing, te.mirrored);
 			currentModel.render();
 
@@ -83,12 +83,12 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			float f5 = 1F/16F;
 
 			float hatchProgress = te.active?135f: 0f;
-			if(te.active&&te.processTime < PrecissionAssembler.hatchTime)
-				hatchProgress = 135f*((te.processTime+(partialTicks/20f))/PrecissionAssembler.hatchTime);
-			else if(te.active&&te.processTime > te.processTimeMax-PrecissionAssembler.hatchTime)
+			if(te.active&&te.processTime < PrecisionAssembler.hatchTime)
+				hatchProgress = 135f*((te.processTime+(partialTicks/20f))/PrecisionAssembler.hatchTime);
+			else if(te.active&&te.processTime > te.processTimeMax-PrecisionAssembler.hatchTime)
 			{
 
-				hatchProgress = 135f*(te.processTimeMax-(te.processTime+(partialTicks/20f)))/(float)PrecissionAssembler.hatchTime;
+				hatchProgress = 135f*(te.processTimeMax-(te.processTime+(partialTicks/20f)))/(float)PrecisionAssembler.hatchTime;
 			}
 
 			GlStateManager.pushMatrix();
@@ -123,7 +123,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			check:
 			if(te.active)
 			{
-				if(te.animationPrepared.size() > 0&&te.processTime > PrecissionAssembler.hatchTime&&te.processTime < te.processTimeMax-PrecissionAssembler.hatchTime)
+				if(te.animationPrepared.size() > 0&&te.processTime > PrecisionAssembler.hatchTime&&te.processTime < te.processTimeMax-PrecisionAssembler.hatchTime)
 				{
 					for(int i = 0; i < te.animationPrepared.size(); i += 1)
 					{
@@ -230,16 +230,16 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.rotate(-90, 0f, 1f, 0f);
 
 			if(!te.inventory.get(0).isEmpty())
-				((IPrecissionTool)te.inventory.get(0).getItem()).renderInMachine(te.inventory.get(0), moved_tool==0?time_between: 0f, moved_tool==0?angle: 0, max_progress, te.stackPicked1);
+				((IPrecisionTool)te.inventory.get(0).getItem()).renderInMachine(te.inventory.get(0), moved_tool==0?time_between: 0f, moved_tool==0?angle: 0, max_progress, te.stackPicked1);
 
 			GlStateManager.translate(0.5f, 0, 0);
 			if(!te.inventory.get(1).isEmpty())
-				((IPrecissionTool)te.inventory.get(1).getItem()).renderInMachine(te.inventory.get(1), moved_tool==1?time_between: 0f, moved_tool==1?angle: 0, max_progress, te.stackPicked2);
+				((IPrecisionTool)te.inventory.get(1).getItem()).renderInMachine(te.inventory.get(1), moved_tool==1?time_between: 0f, moved_tool==1?angle: 0, max_progress, te.stackPicked2);
 
 			GlStateManager.translate(0.5f, 0, 0);
 
 			if(!te.inventory.get(2).isEmpty())
-				((IPrecissionTool)te.inventory.get(2).getItem()).renderInMachine(te.inventory.get(2), moved_tool==2?time_between: 0f, moved_tool==2?angle: 0, max_progress, te.stackPicked3);
+				((IPrecisionTool)te.inventory.get(2).getItem()).renderInMachine(te.inventory.get(2), moved_tool==2?time_between: 0f, moved_tool==2?angle: 0, max_progress, te.stackPicked3);
 
 			GlStateManager.popMatrix();
 
@@ -248,11 +248,11 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 			GlStateManager.pushMatrix();
 
 			hatchProgress = te.active?1f: 0f;
-			if(te.active&&te.processTime < PrecissionAssembler.hatchTime)
-				hatchProgress = ((te.processTime+(partialTicks/20f))/PrecissionAssembler.hatchTime);
-			else if(te.active&&te.processTime > te.processTimeMax-PrecissionAssembler.hatchTime)
+			if(te.active&&te.processTime < PrecisionAssembler.hatchTime)
+				hatchProgress = ((te.processTime+(partialTicks/20f))/PrecisionAssembler.hatchTime);
+			else if(te.active&&te.processTime > te.processTimeMax-PrecisionAssembler.hatchTime)
 			{
-				hatchProgress = 1f-(((te.processTime-te.processTimeMax+PrecissionAssembler.hatchTime)+(partialTicks/20f))/PrecissionAssembler.hatchTime);
+				hatchProgress = 1f-(((te.processTime-te.processTimeMax+PrecisionAssembler.hatchTime)+(partialTicks/20f))/PrecisionAssembler.hatchTime);
 			}
 
 			GlStateManager.translate(0f, 0.75f*hatchProgress, 0f);
@@ -267,7 +267,7 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 
 				GlStateManager.pushMatrix();
 				GlStateManager.scale(1.25f, 1.25f, 1.25f);
-				if(te.processTime < te.processTimeMax-PrecissionAssembler.hatchTime)
+				if(te.processTime < te.processTimeMax-PrecisionAssembler.hatchTime)
 					renderItem.renderItem(te.inventory.get(4), TransformType.GROUND);
 				else
 					renderItem.renderItem(te.effect, TransformType.GROUND);
@@ -360,15 +360,15 @@ public class PrecissionAssemblerRenderer extends TileEntitySpecialRenderer<TileE
 	@Override
 	public void reloadModels()
 	{
-		modelInserter = new ModelPrecissionInserter();
-		modelDrill = new ModelPrecissionDrill();
-		modelBuzzsaw = new ModelPrecissionBuzzsaw();
-		modelSolderer = new ModelPrecissionSolderer();
-		modelWelder = new ModelPrecissionWelder();
-		modelHammer = new ModelPrecissionHammer();
+		modelInserter = new ModelPrecisionInserter();
+		modelDrill = new ModelPrecisionDrill();
+		modelBuzzsaw = new ModelPrecisionBuzzsaw();
+		modelSolderer = new ModelPrecisionSolderer();
+		modelWelder = new ModelPrecisionWelder();
+		modelHammer = new ModelPrecisionHammer();
 
-		model = new ModelPrecissionAssembler(false);
-		modelFlipped = new ModelPrecissionAssembler(true);
+		model = new ModelPrecisionAssembler(false);
+		modelFlipped = new ModelPrecisionAssembler(true);
 		modelFlipped.flipAllZ();
 	}
 }

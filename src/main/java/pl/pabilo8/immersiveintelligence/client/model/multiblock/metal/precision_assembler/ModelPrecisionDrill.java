@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler;
+package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precision_assembler;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,13 +13,13 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelPrecissionWelder extends ModelIIBase
+public class ModelPrecisionDrill extends ModelIIBase
 {
-	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterItemPicker1, inserterItemPicker2, inserterOutput, inserterInput;
+	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterDrill;
 	int textureX = 64;
 	int textureY = 32;
 
-	public ModelPrecissionWelder() //Same as Filename
+	public ModelPrecisionDrill() //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[1];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // BaseBoxTop
@@ -83,23 +83,36 @@ public class ModelPrecissionWelder extends ModelIIBase
 
 		inserterMidAxle[0].addBox(-2F, 0F, -0.5F, 4, 1, 1, 0F); // InserterAxle2
 
-		inserterUpperArm = new ModelRendererTurbo[8];
+		inserterUpperArm = new ModelRendererTurbo[2];
 		inserterUpperArm[0] = new ModelRendererTurbo(this, 60, 19, textureX, textureY); // InserterArm2Top
 		inserterUpperArm[1] = new ModelRendererTurbo(this, 14, 0, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[2] = new ModelRendererTurbo(this, 20, 0, textureX, textureY); // InserterArmSolderer
-		inserterUpperArm[3] = new ModelRendererTurbo(this, 14, 6, textureX, textureY); // InserterArm2SoldererBack
-		inserterUpperArm[4] = new ModelRendererTurbo(this, 45, 24, textureX, textureY); // InserterArmSolderer
-		inserterUpperArm[5] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // InserterArmSolderer
-		inserterUpperArm[6] = new ModelRendererTurbo(this, 46, 0, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[7] = new ModelRendererTurbo(this, 50, 24, textureX, textureY); // InserterArmSolderer
+
 		inserterUpperArm[0].addBox(-0.5F, -7.5F, -0.5F, 1, 7, 1, 0F); // InserterArm2Top
+
 		inserterUpperArm[1].addBox(-1.5F, -10.5F, -1.5F, 3, 3, 3, 0F); // InserterArm2Top
-		inserterUpperArm[2].addShapeBox(-1F, -10F, -9.5F, 2, 2, 6, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F); // InserterArmSolderer
-		inserterUpperArm[3].addBox(-1F, -10F, 1.5F, 2, 2, 2, 0F); // InserterArm2SoldererBack
-		inserterUpperArm[4].addBox(0.5F, -10F, -4.5F, 1, 2, 3, 0F); // InserterArmSolderer
-		inserterUpperArm[5].addBox(-1.5F, -10F, -4.5F, 1, 2, 3, 0F); // InserterArmSolderer
-		inserterUpperArm[6].addBox(-4.5F, -11F, -3.5F, 3, 4, 6, 0F); // InserterArm2Top
-		inserterUpperArm[7].addShapeBox(-1F, -10F, -3.5F, 2, 2, 1, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F); // InserterArmSolderer
+
+
+		inserterDrill = new ModelRendererTurbo[5];
+		inserterDrill[0] = new ModelRendererTurbo(this, 26, 0, textureX, textureY); // InserterArmDrill
+		inserterDrill[1] = new ModelRendererTurbo(this, 35, 4, textureX, textureY); // InserterArmDrill
+		inserterDrill[2] = new ModelRendererTurbo(this, 36, 0, textureX, textureY); // InserterArmDrill
+		inserterDrill[3] = new ModelRendererTurbo(this, 42, 0, textureX, textureY); // InserterArmDrill
+		inserterDrill[4] = new ModelRendererTurbo(this, 42, 2, textureX, textureY); // InserterArmDrill
+
+
+		inserterDrill[0].addBox(-2F, -2F, -1.5F, 4, 4, 1, 0F); // InserterArmDrill
+
+		inserterDrill[1].addBox(-1.5F, -1.5F, -2.5F, 3, 3, 1, 0F); // InserterArmDrill
+		inserterDrill[1].rotateAngleZ = 0.78539816F;
+
+		inserterDrill[2].addBox(-1F, -1F, -3.5F, 2, 2, 1, 0F); // InserterArmDrill
+
+		inserterDrill[3].addBox(-0.5F, -0.5F, -4.5F, 1, 1, 1, 0F); // InserterArmDrill
+		inserterDrill[3].rotateAngleZ = 0.78539816F;
+
+		inserterDrill[4].addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, 0F); // InserterArmDrill
+		inserterDrill[4].rotateAngleZ = 0.78539816F;
+
 		flipAll();
 
 	}
@@ -112,6 +125,7 @@ public class ModelPrecissionWelder extends ModelIIBase
 		flip(inserterLowerArm);
 		flip(inserterUpperArm);
 		flip(inserterBaseTurntable);
+		flip(inserterDrill);
 	}
 
 	@Override
@@ -122,6 +136,7 @@ public class ModelPrecissionWelder extends ModelIIBase
 		translate(inserterLowerArm, x, y, z);
 		translate(inserterUpperArm, x, y, z);
 		translate(inserterBaseTurntable, x, y, z);
+		translate(inserterDrill, x, y, z);
 	}
 
 	@Override
@@ -132,6 +147,7 @@ public class ModelPrecissionWelder extends ModelIIBase
 		rotate(inserterLowerArm, x, y, z);
 		rotate(inserterUpperArm, x, y, z);
 		rotate(inserterBaseTurntable, x, y, z);
+		rotate(inserterDrill, x, y, z);
 	}
 
 	@Override
@@ -147,11 +163,12 @@ public class ModelPrecissionWelder extends ModelIIBase
 	{
 		GlStateManager.pushMatrix();
 
-		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/welder.png");
+		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/drill.png");
 
 		render();
 
-		progress = progress < 0.25?progress*4: progress > 0.75?1f-((progress-0.75f)*4): 1f;
+		float progress2 = progress < 0.25f?0f: progress > 0.75f?0f: (progress-0.25f)/0.5f;
+		progress = progress < 0.33?progress*3: progress > 0.66?1f-((progress-0.66f)*3): 1f;
 
 		GlStateManager.translate(0.5f, 0.125f, -0.5);
 		GlStateManager.rotate(angle*progress, 0f, 1f, 0f);
@@ -175,6 +192,18 @@ public class ModelPrecissionWelder extends ModelIIBase
 
 		for(ModelRendererTurbo mod : inserterUpperArm)
 			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.625f, 0.03125f);
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(0f, -0.03125f*2, 0.0625*1.5);
+
+		GlStateManager.rotate(progress2*2880, 0f, 0f, 1f);
+		for(ModelRendererTurbo mod : inserterDrill)
+			mod.render(0.0625f);
+
+		GlStateManager.popMatrix();
 
 		GlStateManager.popMatrix();
 	}

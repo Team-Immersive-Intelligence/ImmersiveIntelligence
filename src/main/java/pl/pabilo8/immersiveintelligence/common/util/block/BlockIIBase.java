@@ -431,7 +431,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		for(E type : this.enumValues)
-			if(type.listForCreative()&&!this.hidden[type.getMeta()]) list.add(new ItemStack(this, 1, type.getMeta()));
+			if(!this.hidden[type.getMeta()])
+				list.add(new ItemStack(this, 1, type.getMeta()));
 	}
 
 	//--- SubBlocks ---//

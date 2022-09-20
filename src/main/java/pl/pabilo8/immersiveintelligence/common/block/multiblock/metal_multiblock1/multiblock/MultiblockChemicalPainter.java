@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock;
+package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -6,9 +6,9 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityChemicalPainter;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,7 @@ public class MultiblockChemicalPainter extends MultiblockStuctureBase<TileEntity
 	@Nullable
 	protected TileEntityChemicalPainter placeTile(World world, BlockPos pos)
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(IIBlockTypes_MetalMultiblock1.CHEMICAL_PAINTER.getMeta()));
+		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.CHEMICAL_PAINTER.getMeta()));
 		return (TileEntityChemicalPainter)world.getTileEntity(pos);
 	}
 

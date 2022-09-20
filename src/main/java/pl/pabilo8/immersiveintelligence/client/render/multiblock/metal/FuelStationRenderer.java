@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFuelStation;
@@ -37,10 +38,26 @@ public class FuelStationRenderer extends TileEntitySpecialRenderer<TileEntityFue
 			}
 
 			model.getBlockRotation(te.facing, false);
+
+			if(te.mirrored)
+			{
+				GlStateManager.scale(-1,1,1);
+				GlStateManager.translate(-1,0,0);
+				GlStateManager.cullFace(CullFace.FRONT);
+			}
+
 			model.render();
 
 			GlStateManager.translate(1f, 1f, 0);
 			float f = te.calculateInserterAnimation(partialTicks);
+
+			if(te.mirrored)
+			{
+				GlStateManager.scale(-1,1,1);
+				GlStateManager.translate(-1,0,0);
+				GlStateManager.cullFace(CullFace.BACK);
+			}
+
 			modelInserter.renderProgress(f*0.5f, te.facing.getHorizontalAngle()-te.calculateInserterAngle(partialTicks)+180, te.calculateDistance(partialTicks));
 
 			GlStateManager.popMatrix();

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler;
+package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precision_assembler;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,13 +13,13 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelPrecissionHammer extends ModelIIBase
+public class ModelPrecisionWelder extends ModelIIBase
 {
-	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterOutput, inserterInput;
+	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterItemPicker1, inserterItemPicker2, inserterOutput, inserterInput;
 	int textureX = 64;
 	int textureY = 32;
 
-	public ModelPrecissionHammer() //Same as Filename
+	public ModelPrecisionWelder() //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[1];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // BaseBoxTop
@@ -83,29 +83,23 @@ public class ModelPrecissionHammer extends ModelIIBase
 
 		inserterMidAxle[0].addBox(-2F, 0F, -0.5F, 4, 1, 1, 0F); // InserterAxle2
 
-		inserterUpperArm = new ModelRendererTurbo[4];
+		inserterUpperArm = new ModelRendererTurbo[8];
 		inserterUpperArm[0] = new ModelRendererTurbo(this, 60, 19, textureX, textureY); // InserterArm2Top
-		inserterUpperArm[1] = new ModelRendererTurbo(this, 0, 13, textureX, textureY); // InserterArm2End
-		inserterUpperArm[2] = new ModelRendererTurbo(this, 14, 0, textureX, textureY); // InserterHamer
-		inserterUpperArm[3] = new ModelRendererTurbo(this, 32, 0, textureX, textureY); // InserterArm2End
-
-		inserterUpperArm[0].addBox(-0.5F, -9F, -0.5F, 1, 9, 1, 0F); // InserterArm2Top
-		inserterUpperArm[1].addShapeBox(-2.5F, -10F, -1.5F, 5, 1, 3, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.5F); // InserterArm2End
-		inserterUpperArm[2].addBox(-2.5F, -14F, -4F, 5, 4, 8, 0F); // InserterHamer
-		inserterUpperArm[3].addBox(-1F, -15F, -1F, 2, 1, 2, 0F); // InserterArm2End
-
-		inserterOutput = new ModelRendererTurbo[1];
-		inserterOutput[0] = new ModelRendererTurbo(this, 48, 7, textureX, textureY); // BaseOutputBox
-
-		inserterOutput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseOutputBox
-		inserterOutput[0].setRotationPoint(8F, -4F, 8F);
-
-		inserterInput = new ModelRendererTurbo[1];
-		inserterInput[0] = new ModelRendererTurbo(this, 40, 23, textureX, textureY); // BaseInputBox
-
-		inserterInput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseInputBox
-		inserterInput[0].setRotationPoint(8F, -4F, 8F);
-
+		inserterUpperArm[1] = new ModelRendererTurbo(this, 14, 0, textureX, textureY); // InserterArm2Top
+		inserterUpperArm[2] = new ModelRendererTurbo(this, 20, 0, textureX, textureY); // InserterArmSolderer
+		inserterUpperArm[3] = new ModelRendererTurbo(this, 14, 6, textureX, textureY); // InserterArm2SoldererBack
+		inserterUpperArm[4] = new ModelRendererTurbo(this, 45, 24, textureX, textureY); // InserterArmSolderer
+		inserterUpperArm[5] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // InserterArmSolderer
+		inserterUpperArm[6] = new ModelRendererTurbo(this, 46, 0, textureX, textureY); // InserterArm2Top
+		inserterUpperArm[7] = new ModelRendererTurbo(this, 50, 24, textureX, textureY); // InserterArmSolderer
+		inserterUpperArm[0].addBox(-0.5F, -7.5F, -0.5F, 1, 7, 1, 0F); // InserterArm2Top
+		inserterUpperArm[1].addBox(-1.5F, -10.5F, -1.5F, 3, 3, 3, 0F); // InserterArm2Top
+		inserterUpperArm[2].addShapeBox(-1F, -10F, -9.5F, 2, 2, 6, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.5F, -0.5F, 0F, -0.5F, -0.5F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F); // InserterArmSolderer
+		inserterUpperArm[3].addBox(-1F, -10F, 1.5F, 2, 2, 2, 0F); // InserterArm2SoldererBack
+		inserterUpperArm[4].addBox(0.5F, -10F, -4.5F, 1, 2, 3, 0F); // InserterArmSolderer
+		inserterUpperArm[5].addBox(-1.5F, -10F, -4.5F, 1, 2, 3, 0F); // InserterArmSolderer
+		inserterUpperArm[6].addBox(-4.5F, -11F, -3.5F, 3, 4, 6, 0F); // InserterArm2Top
+		inserterUpperArm[7].addShapeBox(-1F, -10F, -3.5F, 2, 2, 1, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F, -0.25F, -0.25F, 0F); // InserterArmSolderer
 		flipAll();
 
 	}
@@ -118,8 +112,6 @@ public class ModelPrecissionHammer extends ModelIIBase
 		flip(inserterLowerArm);
 		flip(inserterUpperArm);
 		flip(inserterBaseTurntable);
-		flip(inserterOutput);
-		flip(inserterInput);
 	}
 
 	@Override
@@ -130,8 +122,6 @@ public class ModelPrecissionHammer extends ModelIIBase
 		translate(inserterLowerArm, x, y, z);
 		translate(inserterUpperArm, x, y, z);
 		translate(inserterBaseTurntable, x, y, z);
-		translate(inserterOutput, x, y, z);
-		translate(inserterInput, x, y, z);
 	}
 
 	@Override
@@ -157,28 +147,27 @@ public class ModelPrecissionHammer extends ModelIIBase
 	{
 		GlStateManager.pushMatrix();
 
-		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/hammer.png");
+		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/welder.png");
 
 		render();
 
-		progress = progress < 0.5?progress*2: 1f-((progress-0.5f)*2);
-		float progress2 = progress*maxProgress;
+		progress = progress < 0.25?progress*4: progress > 0.75?1f-((progress-0.75f)*4): 1f;
 
 		GlStateManager.translate(0.5f, 0.125f, -0.5);
 		GlStateManager.rotate(angle*progress, 0f, 1f, 0f);
+		progress *= maxProgress;
 
 		for(ModelRendererTurbo mod : inserterBaseTurntable)
 			mod.render(0.0625f);
 
-
 		GlStateManager.translate(0f, 0.125f, 0);
-		GlStateManager.rotate(15-75*progress2, 1, 0, 0);
+		GlStateManager.rotate(15+55*progress, 1, 0, 0);
 
 		for(ModelRendererTurbo mod : inserterLowerArm)
 			mod.render(0.0625f);
 
 		GlStateManager.translate(0f, 0.875f, 0);
-		GlStateManager.rotate(135-(95f*progress2), 1, 0, 0);
+		GlStateManager.rotate(135-(95f*progress), 1, 0, 0);
 		GlStateManager.translate(0f, 0.0625f, 0.03125f);
 
 		for(ModelRendererTurbo mod : inserterMidAxle)

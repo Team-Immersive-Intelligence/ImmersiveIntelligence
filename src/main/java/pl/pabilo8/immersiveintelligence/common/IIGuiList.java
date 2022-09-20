@@ -109,8 +109,8 @@ public enum IIGuiList
 			(player, te) -> new ContainerElectrolyzer(player.inventory, (TileEntityElectrolyzer)te)
 	),
 
-	GUI_PRECISSION_ASSEMBLER(TileEntityPrecissionAssembler.class,
-			(player, te) -> new ContainerPrecissionAssembler(player.inventory, (TileEntityPrecissionAssembler)te)
+	GUI_PRECISSION_ASSEMBLER(TileEntityPrecisionAssembler.class,
+			ContainerPrecissionAssembler::new
 	),
 
 	GUI_FUEL_STATION(TileEntityFuelStation.class,

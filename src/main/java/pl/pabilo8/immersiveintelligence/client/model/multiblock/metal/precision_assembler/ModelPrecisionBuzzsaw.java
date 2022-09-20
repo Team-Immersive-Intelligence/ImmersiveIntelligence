@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precission_assembler;
+package pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precision_assembler;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,13 +13,13 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  * @author Pabilo8
  * @since 17-07-2019
  */
-public class ModelPrecissionBuzzsaw extends ModelIIBase
+public class ModelPrecisionBuzzsaw extends ModelIIBase
 {
 	public ModelRendererTurbo[] inserterLowerArm, inserterMidAxle, inserterUpperArm, inserterBaseTurntable, inserterSaw;
 	int textureX = 64;
 	int textureY = 32;
 
-	public ModelPrecissionBuzzsaw() //Same as Filename
+	public ModelPrecisionBuzzsaw() //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[1];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 19, textureX, textureY); // BaseBoxTop

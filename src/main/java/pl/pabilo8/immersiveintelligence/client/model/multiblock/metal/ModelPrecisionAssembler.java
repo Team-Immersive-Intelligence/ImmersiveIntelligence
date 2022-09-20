@@ -9,14 +9,14 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  * @author Pabilo8
  * @since 20-06-2019
  */
-public class ModelPrecissionAssembler extends ModelIIBase
+public class ModelPrecisionAssembler extends ModelIIBase
 {
 	public ModelRendererTurbo[] lowerBox, drawer1Model, drawer2Model, doorLeftModel, doorRightModel, schemeModel;
 
 	int textureX = 256;
 	int textureY = 256;
 
-	public ModelPrecissionAssembler(boolean flip) //Same as Filename
+	public ModelPrecisionAssembler(boolean flip) //Same as Filename
 	{
 		baseModel = new ModelRendererTurbo[59];
 		baseModel[0] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // MainBox

@@ -27,10 +27,11 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVehicleWorkshop;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 
 public class MultiblockVehicleWorkshop implements IMultiblock
 {
+	// TODO: 20.09.2022 fully replace
 	static final IngredientStack[] materials = new IngredientStack[]{
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 11, BlockTypes_MetalDecoration0.HEAVY_ENGINEERING.getMeta())),
 			new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 10, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())),
@@ -159,7 +160,7 @@ public class MultiblockVehicleWorkshop implements IMultiblock
 					int ww = mirrored?-l: l;
 					BlockPos pos2 = pos.offset(side, w).offset(side.rotateY(), ww).add(0, h, 0);
 
-					world.setBlockState(pos2, IIContent.blockMetalMultiblock1.getStateFromMeta(IIBlockTypes_MetalMultiblock1.VEHICLE_WORKSHOP.getMeta()));
+					world.setBlockState(pos2, IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.VEHICLE_WORKSHOP.getMeta()));
 					TileEntity curr = world.getTileEntity(pos2);
 					if(curr instanceof TileEntityVehicleWorkshop)
 					{

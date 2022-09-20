@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.IIBlockTypes_MetalMultiblock1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
 
@@ -28,9 +28,9 @@ public class VulcanizerRecipeCategory extends IIRecipeCategory<VulcanizerRecipe,
 				"tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.vulcanizer.name",
 				helper.createBlankDrawable(156, 74),
 				VulcanizerRecipe.class,
-				new ItemStack(IIContent.blockMetalMultiblock1, 1, IIBlockTypes_MetalMultiblock1.VULCANIZER.getMeta())
+				new ItemStack(IIContent.blockMetalMultiblock1, 1, MetalMultiblocks1.VULCANIZER.getMeta())
 		);
-		machineStack = new ItemStack(IIContent.blockMetalMultiblock1, 1, IIBlockTypes_MetalMultiblock1.VULCANIZER.getMeta());
+		machineStack = new ItemStack(IIContent.blockMetalMultiblock1, 1, MetalMultiblocks1.VULCANIZER.getMeta());
 	}
 
 	@Override

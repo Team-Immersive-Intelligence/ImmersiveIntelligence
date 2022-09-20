@@ -43,7 +43,7 @@ public class IIBlockInterfaces
 		default boolean listForCreative()
 		{
 			IIBlockProperties properties = getProperties();
-			return properties==null||!properties.hidden().isTrue();
+			return properties==null||properties.hidden()!=TernaryValue.TRUE;
 		}
 	}
 

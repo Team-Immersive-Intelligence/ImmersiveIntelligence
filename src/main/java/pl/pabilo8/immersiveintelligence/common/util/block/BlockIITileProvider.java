@@ -48,15 +48,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
-import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -98,14 +101,14 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
-		return true;
+		return tiles[getMetaFromState(state)]!=null;
 	}
 
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		TileEntity basic = createBasicTE(world, state.getValue(property));
+		TileEntity basic = createBasicTE(state.getValue(property));
 		Collection<IProperty<?>> keys = state.getPropertyKeys();
 		if(basic instanceof IDirectionalTile)
 		{
@@ -162,10 +165,11 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	}
 
 	@Nullable
-	public TileEntity createBasicTE(World worldIn, E type)
+	public TileEntity createBasicTE(E type)
 	{
 		if(tiles[type.ordinal()]!=null)
-			try {return tiles[type.ordinal()].newInstance();} catch(InstantiationException|IllegalAccessException ignored) {}
+			try {return tiles[type.ordinal()].newInstance();} catch(InstantiationException|
+																	IllegalAccessException ignored) {}
 		return null;
 	}
 

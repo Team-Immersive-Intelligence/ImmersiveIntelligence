@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -24,10 +24,10 @@ import java.util.ArrayList;
 public class GuiPrecissionAssembler extends GuiIEContainerBase
 {
 	public static final String texture_precission_assembler = ImmersiveIntelligence.MODID+":textures/gui/precission_assembler.png";
-	TileEntityPrecissionAssembler tile;
+	TileEntityPrecisionAssembler tile;
 	boolean first_opened;
 
-	public GuiPrecissionAssembler(InventoryPlayer inventoryPlayer, TileEntityPrecissionAssembler tile)
+	public GuiPrecissionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
 	{
 		super(new ContainerPrecissionAssembler(inventoryPlayer, tile));
 		this.ySize = 168;
