@@ -22,6 +22,11 @@ setVersion(modVersion)
 setGroup(modGroup)
 setArchivesBaseName(modName)
 
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 minecraft {
     version = modForge
     runDir = "run"
