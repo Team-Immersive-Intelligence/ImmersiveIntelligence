@@ -12,6 +12,7 @@ import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
@@ -26,6 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.*;
 import pl.pabilo8.immersiveintelligence.common.crafting.RecipeMinecart;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoRevolver;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
@@ -97,9 +99,9 @@ public class JEIHelper implements IModPlugin
 			jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(stack);
 		}
 
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.blockWoodenMultiblock, 1, OreDictionary.WILDCARD_VALUE));
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.blockMetalMultiblock0, 1, OreDictionary.WILDCARD_VALUE));
-		jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(IIContent.blockMetalMultiblock1, 1, OreDictionary.WILDCARD_VALUE));
+		for(Block block : IIContent.BLOCKS)
+			if(block instanceof BlockIIMultiblock)
+				jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
 
 		IILogger.info("JEI has just requested our recipes, it seems that we even have a class for registering them!");
 
