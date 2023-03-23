@@ -75,7 +75,13 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 	}
 
 	@Override
-	public TileEntity createBasicTE(IIBlockTypes_Mine type)
+	public final boolean hasTileEntity(IBlockState state)
+	{
+		return state.getValue(property)==IIBlockTypes_Mine.MAIN;
+	}
+
+	@Override
+	public final TileEntity createBasicTE(IIBlockTypes_Mine type)
 	{
 		return type==IIBlockTypes_Mine.MAIN?getMineTileEntity(): null;
 	}
