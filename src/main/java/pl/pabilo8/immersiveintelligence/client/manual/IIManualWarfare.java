@@ -4,15 +4,13 @@ import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import blusunrize.lib.manual.ManualPages.Crafting;
+import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.api.bullets.BulletRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IBulletCore;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
@@ -164,8 +162,23 @@ public class IIManualWarfare extends IIManual
 		ManualHelper.addEntry("emplacement", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "emplacement0", MultiblockEmplacement.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "emplacement1"),
-				new ManualPages.Text(ManualHelper.getManual(), "emplacement2")
-
+				new ManualPages.Text(ManualHelper.getManual(), "emplacement2"),
+				new ManualPages.Text(ManualHelper.getManual(), "emplacement3"),
+				new ManualPages.Text(ManualHelper.getManual(), "emplacement4"),
+				new ManualPages.Text(ManualHelper.getManual(), "emplacement5"),
+				new ManualPages.Text(ManualHelper.getManual(), "emplacement6"),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "emplacement", true)
+						.addEntry(new DataTypeString(), 'c')
+						.addEntry(new DataTypeBoolean(), 'b')
+						.addEntry(new DataTypeInteger(), 'i'),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "emplacement2", true)
+						.addEntry(new DataTypeEntity(), 'e')
+						.addEntry(new DataTypeInteger(), 'x', 'y', 'z')
+						.addEntry(new DataTypeInteger(), 'a'),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "emplacement3", true)
+						.addEntry(new DataTypeInteger(), 'y')
+						.addEntry(new DataTypeInteger(), 'p')
+						.addEntry(new DataTypeInteger(), 'd')
 		);
 
 		ManualHelper.addEntry("emplacement_weapons", getCategory(),
@@ -191,12 +204,15 @@ public class IIManualWarfare extends IIManual
 		ManualHelper.addEntry("artillery_howitzer", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "artillery_howitzer1", MultiblockArtilleryHowitzer.instance),
 				new ManualPages.Text(ManualHelper.getManual(), "artillery_howitzer2"),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer", true)
+				new ManualPages.Text(ManualHelper.getManual(), "artillery_howitzer3"),
+		new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer", true)
 						.addEntry(new DataTypeString(), 'c')
 						.addEntry(new DataTypeInteger(), 'f')
 						.addEntry(new DataTypeInteger(), 'y'),
 				new IIManualPageDataVariables(ManualHelper.getManual(), "artillery_howitzer2", true)
-						.addEntry(new DataTypeInteger(), 'p'),
+						.addEntry(new DataTypeInteger(), 'p')
+						.addEntry(new DataTypeInteger(), 'v')
+						.addEntry(new DataTypeInteger(), 'h'),
 				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "artillery_howitzer1")
 						.addEntry(new DataTypeInteger(), "get_energy")
 						.addEntry(new DataTypeString(), "get_state")
