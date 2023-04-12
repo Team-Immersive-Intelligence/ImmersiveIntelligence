@@ -119,15 +119,27 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
 		super.neighborChanged(state, world, pos, blockIn, fromPos);
-		TileEntity te = world.getTileEntity(pos);
-		if(te instanceof TileEntityDataConnector||te instanceof TileEntityDataRelay)
+
+		switch(state.getValue(property))
 		{
-			TileEntityImmersiveConnectable connector = (TileEntityImmersiveConnectable & IDirectionalTile)te;
-			if(world.isAirBlock(pos.offset(((IDirectionalTile)connector).getFacing())))
+			case DATA_CONNECTOR:
+			case DATA_DUPLEX_CONNECTOR:
+			case DATA_RELAY:
 			{
-				this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
-				connector.getWorld().setBlockToAir(pos);
+				TileEntity te = world.getTileEntity(pos);
+				if(te==null)
+					break;
+
+				TileEntityImmersiveConnectable connector = (TileEntityImmersiveConnectable & IDirectionalTile)te;
+				if(world.isAirBlock(pos.offset(((IDirectionalTile)connector).getFacing())))
+				{
+					this.dropBlockAsItem(connector.getWorld(), pos, world.getBlockState(pos), 0);
+					connector.getWorld().setBlockToAir(pos);
+				}
 			}
+			break;
+			default:
+				break;
 		}
 	}
 

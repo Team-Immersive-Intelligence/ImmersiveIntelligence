@@ -26,6 +26,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -48,8 +49,8 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 		ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IBlockOverlayText,
 		IPeripheralTile
 {
-	public EnumFacing facing = EnumFacing.DOWN;
-	public int color = 0;
+	protected EnumFacing facing = EnumFacing.DOWN;
+	private int color = 0;
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
 
@@ -306,6 +307,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 
 	@Nullable
 	@Override
+	@Optional.Method(modid = "computercraft")
 	public IPeripheral getPeripheral(@Nonnull EnumFacing facing)
 	{
 		return facing==this.facing?ComputerCraftHelper.createConnectorPeripheral(this): null;
