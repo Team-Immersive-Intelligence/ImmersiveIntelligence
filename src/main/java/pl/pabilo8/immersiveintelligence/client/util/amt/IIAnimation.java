@@ -65,12 +65,16 @@ public class IIAnimation
 		@Nullable
 		final IIBooleanLine visibility;
 		@Nullable
-		final IIFloatLine alpha;
+		final IIFloatLine alpha, property;
 
 		/**
 		 * For manual usage only
 		 */
-		public IIAnimationGroup(String groupName, @Nullable IIVectorLine position, @Nullable IIVectorLine scale, @Nullable IIVectorLine color, @Nullable IIVectorLine rotation, @Nullable IIBooleanLine visibility, @Nullable IIFloatLine alpha)
+		public IIAnimationGroup(String groupName,
+								@Nullable IIVectorLine position, @Nullable IIVectorLine scale,
+								@Nullable IIVectorLine color, @Nullable IIVectorLine rotation,
+								@Nullable IIBooleanLine visibility,
+								@Nullable IIFloatLine alpha, @Nullable IIFloatLine property)
 		{
 			this.groupName = groupName;
 			this.position = position;
@@ -78,6 +82,7 @@ public class IIAnimation
 			this.rotation = rotation;
 			this.visibility = visibility;
 			this.alpha = alpha;
+			this.property = property;
 		}
 
 		public IIAnimationGroup(String groupName, JsonObject json)
@@ -91,6 +96,7 @@ public class IIAnimation
 			alpha = json.has("alpha")?loadFloatLine(json, "alpha"): null;
 
 			visibility = json.has("visibility")?loadBooleanLine(json, "visibility"): null;
+			property = json.has("property")?loadFloatLine(json, "property"): null;
 		}
 
 		// TODO: 05.04.2022 attempt to streamline the code more

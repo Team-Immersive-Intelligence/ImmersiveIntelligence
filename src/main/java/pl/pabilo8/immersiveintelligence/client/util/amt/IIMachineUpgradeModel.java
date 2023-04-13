@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * @author Pabilo8
@@ -28,24 +29,36 @@ public class IIMachineUpgradeModel
 	private final MachineUpgrade upgrade;
 	private final IIAnimationCompiledMap animation, alpha;
 	private final AMT[] model;
+	private final int steps;
 
 	public IIMachineUpgradeModel(MachineUpgrade upgrade, ResourceLocation model, ResourceLocation animation)
 	{
+		this(upgrade,
+				IIAnimationUtils.getAMTFromRes(model, new ResourceLocation(model.getResourceDomain(),
+						model.getResourcePath().replace(".obj.ie", ".obj.amt"))),
+				animation);
+	}
+
+	public IIMachineUpgradeModel(MachineUpgrade upgrade, AMT[] model, ResourceLocation animation)
+	{
 		this.upgrade = upgrade;
-		this.model = IIAnimationUtils.getAMTFromRes(model, new ResourceLocation(model.getResourceDomain(),
-				model.getResourcePath().replace(".obj.ie", ".obj.amt")));
 
 		IIAnimation anim = IIAnimationLoader.loadAnimation(animation), alpha;
 
 		alpha = new IIAnimation(new ResourceLocation(""),
 				Arrays.stream(anim.groups)
-						.map(g -> new IIAnimationGroup(g.groupName, null, null, null, null, null, vecToAlpha(g.position)))
+						.map(g -> new IIAnimationGroup(g.groupName, null, null, null, null, null, vecToAlpha(g.position),null))
 						.toArray(IIAnimationGroup[]::new));
 
-		this.animation = IIAnimationCompiledMap.create(this.model, anim);
-		this.alpha = IIAnimationCompiledMap.create(this.model, alpha);
+		this.animation = IIAnimationCompiledMap.create(model, anim);
+		this.alpha = IIAnimationCompiledMap.create(model, alpha);
 
-		upgrade.setRequiredSteps(this.model.length);
+		//get only base level models (model), contained in animation
+		this.model = Arrays.stream(model)
+				.filter(this.animation::containsKey)
+				.toArray(AMT[]::new);
+
+		upgrade.setRequiredSteps(this.steps = this.animation.size());
 	}
 
 	@Nullable
@@ -61,10 +74,10 @@ public class IIMachineUpgradeModel
 		});
 	}
 
-	public boolean renderConstruction(IUpgradableMachine machine, Tessellator tes, BufferBuilder buf, float partialTicks)
+	public UpgradeStage renderConstruction(IUpgradableMachine machine, Tessellator tes, BufferBuilder buf, float partialTicks)
 	{
 		if(machine.getCurrentlyInstalled()!=upgrade)
-			return machine.hasUpgrade(upgrade);
+			return machine.hasUpgrade(upgrade)?UpgradeStage.INSTALLED:UpgradeStage.NOT_INSTALLED;
 
 		//calculate progress per part
 		final int maxProgress = IIContent.UPGRADE_INSERTER.getProgressRequired();
@@ -92,7 +105,7 @@ public class IIMachineUpgradeModel
 		for(AMT mod : model)
 			mod.render(tes, buf);
 
-		return false;
+		return UpgradeStage.IN_PROGRESS;
 	}
 
 	public IIMachineUpgradeModel disposeOf()
@@ -117,6 +130,13 @@ public class IIMachineUpgradeModel
 	public AMT getPart(String name)
 	{
 		return IIAnimationUtils.getPart(model, name);
+	}
+
+	public enum UpgradeStage
+	{
+		INSTALLED,
+		IN_PROGRESS,
+		NOT_INSTALLED,
 	}
 
 }

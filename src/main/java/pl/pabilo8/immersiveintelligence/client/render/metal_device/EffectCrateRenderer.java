@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -45,7 +46,7 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 		GlStateManager.popMatrix();
 
 		//render upgrade
-		if(modelUpgrade.renderConstruction(te, tes, buf, partialTicks))
+		if(modelUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
 		{
 			modelUpgrade.defaultize();
 			IIAnimationUtils.setModelRotation(partInserter, 0, -te.calculateInserterAngle(partialTicks), 0);

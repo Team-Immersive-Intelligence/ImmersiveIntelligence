@@ -18,8 +18,9 @@
       "repair_crate": {
         "model": "immersiveengineering:smartmodel/connector",
         "custom": {
-          "base": "immersiveintelligence:block/metal_device/effect_crate/repair_crate_base.obj.ie",
-          "layers": ["SOLID"]
+          "base": "immersiveintelligence:block/metal_device/effect_crate/repair_crate_base.obj",
+          "layers": ["CUTOUT_MIPPED"],
+          "flip-v": true
         }
       }
     },

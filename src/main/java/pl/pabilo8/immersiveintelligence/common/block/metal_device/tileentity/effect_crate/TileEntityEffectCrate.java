@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
@@ -8,7 +7,6 @@ import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -305,7 +303,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		{
 			//Subtracts two vector and calculates angle (in degrees) using atan
 			Vec3d vec3d = IIUtils.getEntityCenter(focusedEntity)
-					.add(new Vec3d(focusedEntity.motionX,0,focusedEntity.motionZ).scale(partialTicks))
+					.add(new Vec3d(focusedEntity.motionX, 0, focusedEntity.motionZ).scale(partialTicks))
 					.subtract(new Vec3d(this.pos));
 			float yaw;
 			if(vec3d.x < 0&&vec3d.z >= 0)
@@ -337,6 +335,14 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
+		if(hasUpgrade(IIContent.UPGRADE_INSERTER))
+		{
+			if(open)
+				IIPacketHandler.INSTANCE.sendToDimension(new MessageBooleanAnimatedPartsSync(open = false, 0, this.pos), this.world.provider.getDimension());
+
+			return false;
+		}
+
 		if(player.isSneaking())
 		{
 			open = !open;

@@ -51,8 +51,5 @@ public class HansPlatoon
 
 		commander.getNavigator().setPath(commander.getNavigator().getPathToPos(pos), 1f);
 		Vec3d direction = new Vec3d(commander.getPosition().subtract(pos)).normalize();
-
-
-
 	}
 }

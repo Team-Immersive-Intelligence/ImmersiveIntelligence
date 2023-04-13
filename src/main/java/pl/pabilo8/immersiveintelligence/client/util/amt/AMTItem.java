@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
 /**
+ * AMT type for drawing items ({@link ItemStack}s)
  * @author Pabilo8
  * @since 26.07.2022
  */
@@ -22,12 +23,33 @@ public class AMTItem extends AMT
 	}
 
 	@Override
+	protected void preDraw()
+	{
+		if(off!=null)
+			GlStateManager.translate(-off.x, off.y, off.z);
+
+		GlStateManager.translate(originPos.x, originPos.y, originPos.z);
+
+		if(rot!=null)
+		{
+			GlStateManager.rotate((float)rot.y, 0, 1, 0);
+			GlStateManager.rotate((float)rot.z, 0, 0, 1);
+			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
+		}
+
+		GlStateManager.scale(1f,-1f,1f);
+
+		if(scale!=null)
+			GlStateManager.scale(scale.x, scale.y, scale.z);
+	}
+
+	@Override
 	protected void draw(Tessellator tes, BufferBuilder buf)
 	{
 		if(stack!=null)
 		{
 			//GlStateManager.scale(0.0625,0.0625,0.0625);
-			GlStateManager.translate(originPos.x,originPos.y,originPos.z);
+			//GlStateManager.translate(originPos.x,originPos.y,originPos.z);
 			ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
 		}
 	}
