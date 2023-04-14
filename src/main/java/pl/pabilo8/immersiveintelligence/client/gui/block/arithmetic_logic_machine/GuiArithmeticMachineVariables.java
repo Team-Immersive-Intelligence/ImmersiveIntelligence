@@ -1,14 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiDataVariableList;
@@ -121,7 +118,7 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 									.sorted(Comparator.comparingInt(o -> ArrayUtils.indexOf(DataPacket.varCharacters, o)))
 									.toArray(Character[]::new)[variableList.selectedOption]
 					);
-					IIContent.itemCircuit.writeDataToItem(list,handler.getStackInSlot(page));
+					IIContent.itemCircuit.writeDataToItem(list, tile.inventory.get(page));
 					syncDataToServer();
 					initGui();
 				}

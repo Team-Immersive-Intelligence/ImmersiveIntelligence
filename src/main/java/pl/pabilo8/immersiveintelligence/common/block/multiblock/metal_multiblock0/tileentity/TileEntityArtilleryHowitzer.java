@@ -416,7 +416,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void fireGun(int i)
 	{
-		double yawFireAngle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
+		double yawFireAngle = Math.toRadians(180-turretYaw);
 		double yawPitchAngle = Math.toRadians(-(-90-turretPitch));
 
 		Vec3d gunEnd = IIUtils.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
@@ -436,7 +436,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			a.world.spawnEntity(a);
 		}
 
-		loadedShells.set(i, IIContent.itemAmmoArtillery.getCasingStack(1));
+		//loadedShells.set(i, IIContent.itemAmmoArtillery.getCasingStack(1));
 	}
 
 	private boolean isAimed()
@@ -747,9 +747,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		if(packet.getPacketVariable('y') instanceof IDataTypeNumeric)
 		{
-			plannedYaw = ((IDataTypeNumeric)packet.getPacketVariable('y')).floatValue()%360;
-			if(plannedYaw < 0)
-				plannedYaw = 360f-plannedYaw;
+			plannedYaw = ((IDataTypeNumeric)packet.getPacketVariable('y')).floatValue();
 		}
 
 		if(packet.getPacketVariable('p') instanceof IDataTypeNumeric)

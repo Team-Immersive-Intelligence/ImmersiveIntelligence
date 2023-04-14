@@ -167,10 +167,8 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	@Override
 	public DataPacket getStoredData(ItemStack stack)
 	{
-		stack.serializeNBT();
-		NBTTagCompound realtag = ItemNBTHelper.getTagCompound(stack, "operations");
 		DataPacket data = new DataPacket();
-		data.fromNBT(realtag);
+		data.fromNBT(ItemNBTHelper.getTagCompound(stack, "operations"));
 		return data;
 	}
 

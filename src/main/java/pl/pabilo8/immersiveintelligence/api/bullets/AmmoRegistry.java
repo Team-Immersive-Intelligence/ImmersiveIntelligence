@@ -20,6 +20,8 @@ import java.util.function.Function;
  */
 public class AmmoRegistry
 {
+	private static final AmmoCoreMissingNo MISSING_CORE = new AmmoCoreMissingNo();
+
 	public static AmmoRegistry INSTANCE = new AmmoRegistry();
 	public LinkedHashMap<String, IAmmoComponent> registeredComponents = new LinkedHashMap<>();
 	public LinkedHashMap<String, IAmmoCore> registeredBulletCores = new LinkedHashMap<>();
@@ -86,10 +88,10 @@ public class AmmoRegistry
 		return registeredBulletItems.get(name);
 	}
 
-	@Nullable
+	@Nonnull
 	public IAmmoCore getCore(String name)
 	{
-		return registeredBulletCores.get(name);
+		return registeredBulletCores.getOrDefault(name, MISSING_CORE);
 	}
 
 	@Nullable
