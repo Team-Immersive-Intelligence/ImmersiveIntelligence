@@ -35,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -149,74 +150,6 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		}
 		if(hasWorld()&&!world.isRemote&&rsDirty)
 			wireNetwork.updateValues();
-
-		if(!isDummy()&&!world.isRemote)
-		{
-			/*
-			if(this.productionProgress > 0&&energyStorage.getEnergyStored() > DataInputMachine.energyUsagePunchtape&&productionProgress < DataInputMachine.timePunchtapeProduction)
-			{
-				this.productionProgress += 1;
-			}
-			if((Utils.compareToOreName(inventoryHandler.getStackInSlot(0), "punchtapeEmpty")||inventoryHandler.getStackInSlot(0).getItem() instanceof ItemIIPunchtape))
-			{
-				if(productionProgress==0||inventoryHandler.getStackInSlot(1).isEmpty())
-				{
-					ItemStack test = new ItemStack(IIContent.itemPunchtape, 1, 0);
-
-					((ItemIIPunchtape)test.getItem()).writeDataToItem(this.storedData, test);
-
-					if(!inventoryHandler.insertItem(1, test, true).isEmpty())
-						return;
-				}
-				productionProgress += 1;
-
-				if(productionProgress >= DataInputMachine.timePunchtapeProduction)
-				{
-					productionProgress = 0;
-					ItemStack input = inventoryHandler.extractItem(0, 1, false);
-
-					if(input.getItem() instanceof ItemIIPunchtape)
-					{
-						this.storedData = ((ItemIIPunchtape)input.getItem()).getStoredData(input);
-						inventoryHandler.insertItem(1, input, false);
-
-						NBTTagCompound nbt = new NBTTagCompound();
-						nbt.setTag("inventory", Utils.writeInventory(inventory));
-						nbt.setTag("variables", storedData.toNBT());
-						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.common.Utils.targetPointFromPos(this.getPos(), this.world, 32));
-					}
-					else
-					{
-						ItemStack output = new ItemStack(IIContent.itemPunchtape, 1, 0);
-
-						((ItemIIPunchtape)output.getItem()).writeDataToItem(this.storedData, output);
-
-						inventoryHandler.insertItem(1, output, false);
-
-						NBTTagCompound nbt = new NBTTagCompound();
-						nbt.setTag("inventory", Utils.writeInventory(inventory));
-						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), pl.pabilo8.immersiveintelligence.common.Utils.targetPointFromPos(this.getPos(), this.world, 32));
-
-					}
-
-				}
-
-				if(productionProgress==0||productionProgress==1)
-				{
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setFloat("production_progress", productionProgress);
-					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.common.Utils.targetPointFromPos(this.getPos(), this.world, 32));
-				}
-			}
-			else if(productionProgress!=0f)
-			{
-				productionProgress = 0;
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setFloat("production_progress", productionProgress);
-				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), pl.pabilo8.immersiveintelligence.common.Utils.targetPointFromPos(this.getPos(), this.world, 32));
-			}
-			 */
-		}
 	}
 
 	@Override
@@ -351,10 +284,6 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	{
 		this.markDirty();
 		this.markContainingBlockForUpdate(null);
-		NBTTagCompound tag = new NBTTagCompound();
-
-		if(!tag.hasNoTags())
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), IIUtils.targetPointFromTile(this, 32));
 	}
 
 	@Override

@@ -38,6 +38,6 @@ public class PenetrationHandlerClay implements IPenetrationHandler
 	@Override
 	public SoundEvent getSpecialSound(HitEffect effect)
 	{
-		return effect==RICOCHET?IISounds.ricochetDirt: IISounds.impactDirt;
+		return IISounds.hitDirt.getSpecialSound(effect);
 	}
 }

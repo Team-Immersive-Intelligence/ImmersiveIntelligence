@@ -43,6 +43,9 @@ import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFiller;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -104,11 +107,7 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 		}
 
 		if(world.getTotalWorldTime()%20==0)
-		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setTag("dustStorage", dustStorage.serializeNBT());
-			ImmersiveEngineering.packetHandler.sendToAllTracking(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 16));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withTag("dustStorage", dustStorage.serializeNBT())));
 
 		for(MultiblockProcess<FillerRecipe> process : processQueue)
 		{

@@ -1,13 +1,11 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +23,6 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.ArrayUtils;
@@ -36,11 +33,12 @@ import pl.pabilo8.immersiveintelligence.api.utils.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIAssemblyScheme;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -243,33 +241,19 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 				return;
 			}
 
-			this.markDirty();
-			this.markContainingBlockForUpdate(null);
-			NBTTagCompound tag = new NBTTagCompound();
+			// TODO: 23.09.2022 rework needed
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withInt("processTime", processTime)
+					.withInt("processTimeMax", processTimeMax)
+					.withBoolean("active", this.active)
+					.withTag("inventory", Utils.writeInventory(inventory))
+					.withItemStack("output", effect)
+					.withList("toolOrder", (Object[])toolOrder)
+					.withList("animationOrder", (Object[])animationOrder)
+					.withFloat("animationTimeMod", this.processQueue.size() > 0?this.processQueue.get(0).recipe.timeModifier: 1)
+					.conditionally(beginning, easyNBT -> easyNBT.withBoolean("beginning", true))
+			));
 
-			tag.setInteger("processTime", processTime);
-			tag.setInteger("processTimeMax", processTimeMax);
-			tag.setBoolean("active", this.active);
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			NBTTagCompound itemTag = new NBTTagCompound();
-			effect.writeToNBT(itemTag);
-			tag.setTag("output", itemTag);
-
-			NBTTagList toolList = new NBTTagList();
-			for(String tool : toolOrder)
-				toolList.appendTag(new NBTTagString(tool));
-			tag.setTag("toolOrder", toolList);
-
-			NBTTagList animationList = new NBTTagList();
-			for(String animation : animationOrder)
-				animationList.appendTag(new NBTTagString(animation));
-			tag.setTag("animationOrder", animationList);
-			tag.setFloat("animationTimeMod", this.processQueue.size() > 0?this.processQueue.get(0).recipe.timeModifier: 1);
-
-			if(beginning)
-				tag.setBoolean("beginning", true);
-
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
 			update = false;
 		}
 	}
@@ -538,7 +522,7 @@ public class TileEntityPrecisionAssembler extends TileEntityMultiblockMetal<Tile
 		isDrawerOpened[part] = state;
 
 		for(int i = 0; i < 2; i++)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawerOpened[i], i, getPos()), IIUtils.targetPointFromPos(this.getPos(), this.world, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDrawerOpened[i], i, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 
 	@Override

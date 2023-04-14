@@ -278,14 +278,14 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 			int armor = ((EmplacementHitboxEntity)part).armor;
 			if(armor-damage > 0)
 			{
-				world.playSound(null, getPosition(), IISounds.ricochetMetal, SoundCategory.BLOCKS, 1.5f, armor/damage*0.95f);
+				world.playSound(null, getPosition(), IISounds.hitMetal.getSoundImpact(), SoundCategory.BLOCKS, 1.5f, armor/damage*0.95f);
 				return false;
 			}
 			parent.applyDamage(damage-armor);
-			world.playSound(null, getPosition(), IISounds.impactMetal, SoundCategory.BLOCKS, 1.5f, 0.95f);
+			world.playSound(null, getPosition(), IISounds.hitMetal.getSoundImpact(), SoundCategory.BLOCKS, 1.5f, 0.95f);
 			return true;
 		}
-		world.playSound(null, getPosition(), IISounds.ricochetMetal, SoundCategory.BLOCKS, 1.5f, 0.65f);
+		world.playSound(null, getPosition(), IISounds.hitMetal.getSoundRicochet(), SoundCategory.BLOCKS, 1.5f, 0.65f);
 		return false;
 	}
 

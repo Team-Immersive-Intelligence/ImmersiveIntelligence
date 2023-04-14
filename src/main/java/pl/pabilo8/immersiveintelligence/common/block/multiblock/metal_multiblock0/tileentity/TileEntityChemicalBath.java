@@ -1,13 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler.ChemthrowerEffect;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,16 +25,17 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalBath;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockChemicalBath;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockChemicalBath;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -118,8 +119,8 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 			final ChemthrowerEffect effect = ChemthrowerHandler.getEffect(tanks[0].getFluid().getFluid());
 			if(effect!=null)
 			{
-				AxisAlignedBB aabb = new AxisAlignedBB(getBlockPosForPos(7)).grow(1,0,1).contract(0,1-(tanks[0].getFluidAmount()/(float)tanks[0].getCapacity()),0);
-				world.getEntitiesWithinAABB(EntityLivingBase.class,aabb).forEach(entityLivingBase -> effect.applyToEntity(entityLivingBase,null,ItemStack.EMPTY,tanks[0].getFluid()));
+				AxisAlignedBB aabb = new AxisAlignedBB(getBlockPosForPos(7)).grow(1, 0, 1).contract(0, 1-(tanks[0].getFluidAmount()/(float)tanks[0].getCapacity()), 0);
+				world.getEntitiesWithinAABB(EntityLivingBase.class, aabb).forEach(entityLivingBase -> effect.applyToEntity(entityLivingBase, null, ItemStack.EMPTY, tanks[0].getFluid()));
 			}
 		}
 
@@ -179,17 +180,15 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 		{
 			this.markDirty();
 			this.markContainingBlockForUpdate(null);
-			NBTTagCompound tag = new NBTTagCompound();
 
-			tag.setInteger("processTime", processTime);
-			tag.setInteger("processTimeMax", processTimeMax);
-			tag.setBoolean("active", this.active);
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			NBTTagCompound itemTag = new NBTTagCompound();
-			effect.writeToNBT(itemTag);
-			tag.setTag("output", itemTag);
-			tag.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withInt("processTime", processTime)
+					.withInt("processTimeMax", processTimeMax)
+					.withBoolean("active", this.active)
+					.withTag("inventory", Utils.writeInventory(inventory))
+					.withItemStack("output", effect)
+					.withTag("tank", EasyNBT.newNBT().accept(tanks[0]::writeToNBT))
+			));
 		}
 	}
 
@@ -446,10 +445,9 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 			{
 				if(FluidUtil.interactWithFluidHandler(player, hand, master.tanks[0]))
 				{
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setTag("tank", master.tanks[0].writeToNBT(new NBTTagCompound()));
-					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(master, tag), IIUtils.targetPointFromTile(master, 32));
-					return true;
+					IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+							.withTag("tank", tanks[0].writeToNBT(new NBTTagCompound()))
+					));
 				}
 			}
 		}
@@ -460,7 +458,7 @@ public class TileEntityChemicalBath extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public List<AxisAlignedBB> getBounds(boolean collision)
 	{
-		if(offset[1]==-1&&(facing.getAxis()==Axis.X?(offset[2]==0||offset[2]==-1||offset[2]==1):(offset[0]==0||offset[0]==-1||offset[0]==1)))
+		if(offset[1]==-1&&(facing.getAxis()==Axis.X?(offset[2]==0||offset[2]==-1||offset[2]==1): (offset[0]==0||offset[0]==-1||offset[0]==1)))
 		{
 			ArrayList<AxisAlignedBB> aabb = new ArrayList<>();
 			aabb.add(new AxisAlignedBB(0, 0, 0, 1, 0.3125f, 1).offset(getPos()));

@@ -1,16 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IRedstoneOutput;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -19,12 +16,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
@@ -121,7 +119,8 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"punchtape_reader_mode", new TextComponentTranslation(IILib.INFO_KEY+"punchtape_reader_mode."+mode))), ((EntityPlayerMP)player));
+			IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"punchtape_reader_mode",
+					new TextComponentTranslation(IILib.INFO_KEY+"punchtape_reader_mode."+mode));
 			markDirty();
 			markBlockForUpdate(getPos(), null);
 		}

@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 2019-05-17
  */
+// TODO: 22.09.2022 rework this shite of a device
 public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInteraction, ITickable, IBlockBounds, IDirectionalTile, IDataDevice, IGuiTile, IIEInventory
 {
 	public EnumFacing facing = EnumFacing.NORTH;
@@ -82,9 +83,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 	{
 		super.receiveMessageFromClient(message);
 		if(message.hasKey("mode"))
-		{
 			mode = message.getByte("mode");
-		}
 		if(message.hasKey("packet"))
 			packet.fromNBT(message.getCompoundTag("packet"));
 	}
@@ -158,9 +157,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 		}
 
 		for(char c : DataPacket.varCharacters)
-		{
 			if(this.packet.getPacketVariable(c) instanceof DataTypeInteger)
-			{
 				switch(((DataTypeInteger)this.packet.getPacketVariable(c)).value)
 				{
 					case 0:
@@ -170,9 +167,7 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 					case 2:
 					{
 						if(packetLeft.variables.containsKey(c))
-						{
 							newpacket.setVariable(c, packetLeft.getPacketVariable(c));
-						}
 						else
 							newpacket.removeVariable(c);
 					}
@@ -180,17 +175,13 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 					case 1:
 					{
 						if(packetLeft.variables.containsKey(c))
-						{
 							newpacket.setVariable(c, packetLeft.getPacketVariable(c));
-						}
 					}
 					break;
 					case -2:
 					{
 						if(packetRight.variables.containsKey(c))
-						{
 							newpacket.setVariable(c, packetRight.getPacketVariable(c));
-						}
 						else
 							newpacket.removeVariable(c);
 					}
@@ -198,14 +189,10 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 					case -1:
 					{
 						if(packetRight.variables.containsKey(c))
-						{
 							newpacket.setVariable(c, packetRight.getPacketVariable(c));
-						}
 					}
 					break;
 				}
-			}
-		}
 		if(send&&world.isBlockLoaded(this.pos.offset(facing))&&world.getTileEntity(this.pos.offset(facing)) instanceof IDataConnector)
 			{
 				IDataConnector d = (IDataConnector)world.getTileEntity(this.pos.offset(facing));

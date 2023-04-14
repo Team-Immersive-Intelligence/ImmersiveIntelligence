@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
@@ -41,7 +40,7 @@ public class AmmoComponentFirework implements IAmmoComponent
 	@Override
 	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, pos), IIUtils.targetPointFromPos(pos, world, 96));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageFireworks(tag, pos), IIPacketHandler.targetPointFromPos(pos, world, 96));
 		AmmoUtils.suppress(world, pos.x, pos.y, pos.z, 10f*amount, (int)(255*amount));
 	}
 

@@ -42,6 +42,9 @@ import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nonnull;
@@ -443,27 +446,20 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 	protected void sendUpdate()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setTag("inventory", Utils.writeInventory(inventory));
-
-		nbt.setInteger("pickProgress", pickProgress);
-		nbt.setInteger("takeAmount", takeAmount);
-		nbt.setBoolean("nextTaskAfterFinish", nextTaskAfterFinish);
-
-		nbt.setInteger("outputFacing", defaultOutputFacing.ordinal());
-		nbt.setInteger("inputFacing", defaultInputFacing.ordinal());
-		nbt.setTag("tasks", writeTasks());
-
-		nbt.setInteger("energyStorage", energyStorage);
-
-		if(current!=null)
-		{
-			NBTTagCompound cNBT = current.toNBT();
-			cNBT.setString("name", current.getName());
-			nbt.setTag("current", cNBT);
-		}
-
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 24));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+				.withTag("inventory", Utils.writeInventory(inventory))
+				.withInt("pickProgress", pickProgress)
+				.withInt("takeAmount", takeAmount)
+				.withBoolean("nextTaskAfterFinish", nextTaskAfterFinish)
+				.withInt("outputFacing", defaultOutputFacing.ordinal())
+				.withInt("inputFacing", defaultInputFacing.ordinal())
+				.withTag("tasks", writeTasks())
+				.withInt("energyStorage", energyStorage)
+				.conditionally(current!=null, e -> e.withTag("current",
+						EasyNBT.wrapNBT(current.toNBT())
+								.withString("name", current.getName())
+				))
+		));
 	}
 
 	@Override
@@ -561,11 +557,10 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 			}
 		}
 
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("inputFacing", defaultInputFacing.ordinal());
-		nbt.setInteger("outputFacing", defaultOutputFacing.ordinal());
-
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 24));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+				.withInt("inputFacing", defaultInputFacing.ordinal())
+				.withInt("outputFacing", defaultOutputFacing.ordinal())
+		));
 
 		return true;
 	}

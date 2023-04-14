@@ -8,8 +8,6 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import javax.annotation.Nullable;
 
-import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
-
 /**
  * @author Pabilo8
  * @since 06-03-2020
@@ -40,7 +38,7 @@ public class PenetrationHandlerConcretes
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetStone: IISounds.impactStone;
+			return IISounds.hitStone.getSpecialSound(effect);
 		}
 	}
 
@@ -68,7 +66,7 @@ public class PenetrationHandlerConcretes
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetStone: IISounds.impactStone;
+			return IISounds.hitStone.getSpecialSound(effect);
 		}
 	}
 
@@ -96,7 +94,7 @@ public class PenetrationHandlerConcretes
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetStone: IISounds.impactStone;
+			return IISounds.hitStone.getSpecialSound(effect);
 		}
 	}
 
@@ -124,7 +122,7 @@ public class PenetrationHandlerConcretes
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetStone: IISounds.impactStone;
+			return IISounds.hitStone.getSpecialSound(effect);
 		}
 	}
 
@@ -152,7 +150,7 @@ public class PenetrationHandlerConcretes
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetStone: IISounds.impactStone;
+			return IISounds.hitStone.getSpecialSound(effect);
 		}
 	}
 }

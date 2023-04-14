@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
@@ -15,12 +14,10 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -60,6 +57,9 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import javax.annotation.Nonnull;
@@ -456,11 +456,9 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 		}
 
 		if(update)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), IIUtils.targetPointFromTile(this, 32));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withTag("inventory", Utils.writeInventory(inventory))
+			));
 	}
 
 	@Nonnull
@@ -820,13 +818,11 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	public void onGuiOpened(EntityPlayer player, boolean clientside)
 	{
 		if(!clientside)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			tag.setTag("tasks", writeTasks());
-			tag.setBoolean("repeatActions", repeatActions);
-			ImmersiveEngineering.packetHandler.sendTo(new MessageTileSync(this, tag), ((EntityPlayerMP)player));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withTag("inventory", Utils.writeInventory(inventory))
+					.withTag("tasks", writeTasks())
+					.withBoolean("repeatActions", repeatActions)
+			));
 	}
 
 	@Override

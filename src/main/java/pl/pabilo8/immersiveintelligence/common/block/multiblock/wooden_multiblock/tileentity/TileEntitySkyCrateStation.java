@@ -41,8 +41,9 @@ import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -290,7 +291,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 				IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, mirrored?this.facing.rotateYCCW(): this.facing.rotateY());
 				if(rotation.handleRotation(cap, mirrored?this.facing.rotateYCCW(): this.facing.rotateY()))
 				{
-					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIUtils.targetPointFromTile(master(), 24));
+					IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
 				}
 			}
 			else
@@ -307,7 +308,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			{
 				rotation.grow(0, 0, 0.98f);
 			}
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIUtils.targetPointFromTile(master(), 24));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
 		}
 	}
 
@@ -471,23 +472,23 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 
 	public void sendUpdate(int id)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		if(id==0)
+		EasyNBT tag = EasyNBT.newNBT();
+
+		switch(id)
 		{
-			tag.setTag("inventory", Utils.writeInventory(inventory));
+			case 0:
+				tag.withTag("inventory", Utils.writeInventory(inventory));
+				break;
+			case 1:
+				tag.withInt("animation", animation).withFloat("progress", progress);
+				break;
+			case 2:
+				tag.withTag("rotation", rotation.toNBT()).withTag("inventory", Utils.writeInventory(inventory));
+				break;
 		}
-		if(id==1)
-		{
-			tag.setInteger("animation", animation);
-			tag.setFloat("progress", progress);
-		}
-		if(id==2)
-		{
-			tag.setTag("rotation", rotation.toNBT());
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-		}
-		if(!tag.hasNoTags())
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), IIUtils.targetPointFromTile(this, 32));
+
+		if(tag.size() > 0)
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, tag));
 	}
 
 	@Override

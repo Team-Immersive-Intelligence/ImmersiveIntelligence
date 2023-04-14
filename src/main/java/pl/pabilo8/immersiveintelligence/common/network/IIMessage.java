@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -113,6 +114,26 @@ public abstract class IIMessage implements IMessage
 	protected Vec3d readVec3(ByteBuf buf)
 	{
 		return new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+	}
+
+	/**
+	 * @param buf   buffer to write to
+	 * @param value value to save
+	 * @return buf
+	 */
+	protected ByteBuf writeTagCompound(ByteBuf buf, NBTTagCompound value)
+	{
+		ByteBufUtils.writeTag(buf, value);
+		return buf;
+	}
+
+	/**
+	 * @param buf buffer to read from
+	 * @return value read
+	 */
+	protected NBTTagCompound readTagCompound(ByteBuf buf)
+	{
+		return ByteBufUtils.readTag(buf);
 	}
 
 	//--- Message Handler ---//

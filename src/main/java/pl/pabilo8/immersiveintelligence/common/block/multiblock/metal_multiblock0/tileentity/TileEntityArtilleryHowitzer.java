@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
@@ -102,12 +103,12 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.withSound(2.76, IISounds.howitzerDoorOpen)
 				.withSound(3.68, IISounds.howitzerDoorClose)
 				.withSound(4.36, IISounds.metalLockerOpen)
-				.withSound(5.0, IISounds.howitzerChain)
+				.withSound(5.0, IISounds.chain)
 				.withSound(6.12, IISounds.metalBreadboxOpen)
 				.withSound(8.24, IISounds.metalBreadboxClose)
-				.withSound(8.4, IISounds.howitzerShellPut)
+				.withSound(8.4, IISounds.artilleryShellPut)
 				.withSound(8.92, IISounds.howitzerPlatformStart)
-				.withSound(9.04, IISounds.howitzerChain)
+				.withSound(9.04, IISounds.chain)
 				.withSound(11.28, IISounds.metalBreadboxOpen)
 				.withSound(11.52, IISounds.metalLockerClose)
 				.withSound(11.96, IISounds.inserterForward)
@@ -115,14 +116,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.withSound(12.8, IISounds.inserterForward)
 				.withSound(13.2, IISounds.inserterForward)
 				.withSound(13.24, IISounds.howitzerDoorOpen)
-				.withSound(13.96, IISounds.howitzerShellPick)
+				.withSound(13.96, IISounds.artilleryShellPick)
 				.withSound(14.24, IISounds.inserterForward)
 				.withSound(14.72, IISounds.inserterForward)
 				.withSound(14.96, IISounds.howitzerPlatformStart)
 				.withSound(15.12, IISounds.inserterForward)
 				.withSound(15.56, IISounds.inserterForward)
 				.withSound(15.96, IISounds.inserterForward)
-				.withSound(16.36, IISounds.howitzerShellPut)
+				.withSound(16.36, IISounds.artilleryShellPut)
 				.withSound(16.44, IISounds.inserterForward)
 				.withSound(16.68, IISounds.inserterForward)
 				.withSound(17.0, IISounds.howitzerDoorClose)
@@ -143,14 +144,14 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.withSound(4.16, IISounds.inserterForward)
 				.withSound(4.4, IISounds.metalBreadboxClose)
 				.withSound(4.56, IISounds.inserterForward)
-				.withSound(4.96, IISounds.howitzerShellPick)
+				.withSound(4.96, IISounds.artilleryShellPick)
 				.withSound(5.04, IISounds.inserterForward)
 				.withSound(5.48, IISounds.inserterForward)
 				.withSound(5.92, IISounds.inserterForward)
 				.withSound(6.36, IISounds.inserterForward)
 				.withSound(6.8, IISounds.inserterForward)
 				.withSound(7.08, IISounds.metalBreadboxClose)
-				.withSound(7.72, IISounds.howitzerShellPut)
+				.withSound(7.72, IISounds.artilleryShellPut)
 				.withSound(7.8, IISounds.inserterForward)
 				.withSound(8.24, IISounds.inserterForward)
 				.withSound(8.44, IISounds.inserterForward)
@@ -165,13 +166,13 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.withSound(11.2, IISounds.inserterForward)
 				.withSound(11.68, IISounds.inserterForward)
 				.withSound(12.16, IISounds.inserterForward)
-				.withSound(12.24, IISounds.howitzerShellPick)
+				.withSound(12.24, IISounds.artilleryShellPick)
 				.withSound(12.64, IISounds.inserterBackward)
 				.withSound(13.08, IISounds.inserterBackward)
 				.withSound(13.52, IISounds.inserterBackward)
 				.withSound(13.96, IISounds.inserterForward)
 				.withSound(14.12, IISounds.metalBreadboxClose)
-				.withSound(14.48, IISounds.howitzerShellPut)
+				.withSound(14.48, IISounds.artilleryShellPut)
 				.withSound(14.76, IISounds.inserterBackward)
 				.withSound(15.24, IISounds.inserterBackward)
 				.withSound(15.6, IISounds.inserterBackward)
@@ -185,21 +186,21 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.withSound(0.48, IISounds.inserterForward)
 				.withSound(0.96, IISounds.inserterForward)
 				.withSound(1.24, IISounds.metalBreadboxClose)
-				.withSound(1.36, IISounds.howitzerShellPick)
+				.withSound(1.36, IISounds.artilleryShellPick)
 				.withSound(1.44, IISounds.inserterForward)
 				.withSound(1.92, IISounds.inserterForward)
 				.withSound(2.36, IISounds.inserterForward)
 				.withSound(2.84, IISounds.inserterForward)
 				.withSound(3.32, IISounds.inserterForward)
 				.withSound(3.8, IISounds.inserterForward)
-				.withSound(4.0, IISounds.howitzerShellPut)
+				.withSound(4.0, IISounds.artilleryShellPut)
 				.withSound(4.28, IISounds.inserterForward)
 				.withSound(4.72, IISounds.inserterForward)
 				.withSound(5.16, IISounds.inserterForward)
 				.withSound(5.6, IISounds.inserterForward)
 				.withSound(5.76, IISounds.metalBreadboxClose)
 				.withSound(5.92, IISounds.metalLockerOpen)
-				.withSound(6.6, IISounds.howitzerChain)
+				.withSound(6.6, IISounds.chain)
 				.withSound(8.08, IISounds.howitzerDoorClose)
 				.withSound(9.28, IISounds.metalBreadboxClose)
 				.withSound(10.32, IISounds.howitzerDoorClose)
@@ -251,7 +252,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			isDoorOpened = rs;
 			if(!world.isRemote)
 				IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()),
-						IIUtils.targetPointFromTile(this, 48));
+						IIPacketHandler.targetPointFromTile(this, 48));
 		}
 
 		//operate only if energy is sufficient
@@ -1133,7 +1134,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	{
 		if(part==0)
 			isDoorOpened = state;
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), IIUtils.targetPointFromPos(this.getPos(), this.world, 32));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 
 	@Override
@@ -1244,7 +1245,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		}
 	}
 
-	public enum ArtilleryHowitzerAnimation implements IStringSerializable
+	public enum ArtilleryHowitzerAnimation implements ISerializableEnum
 	{
 		STOP(false, false, GunPosition.NEUTRAL, t -> true, t -> false, 0, null, 1f), //stops current action
 		HIDE(false, false, GunPosition.LOADING, t -> true, t -> t.platformTime==0, 0, null, 1f), //makes howitzer go down
@@ -1314,13 +1315,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			this.animationTime = animationTime;
 			this.alias = alias;
 			this.executeTime = executeTime;
-		}
-
-		@Override
-		@Nonnull
-		public String getName()
-		{
-			return name().toLowerCase();
 		}
 
 		public boolean matchesRequirements(TileEntityArtilleryHowitzer te)

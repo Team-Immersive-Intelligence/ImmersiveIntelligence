@@ -27,6 +27,9 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockRadioStation;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedMultiblockTileEntity;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
@@ -272,9 +275,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 	@Override
 	public void onRadioSend(DataPacket packet)
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("beep", false);
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 6));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withBoolean("beep",false)));
 	}
 
 	@Override
@@ -287,9 +288,7 @@ public class TileEntityRadioStation extends TileEntityMultiblockMetal<TileEntity
 			if(conn!=null)
 			{
 				conn.sendPacket(packet);
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setBoolean("beep", true);
-				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 6));
+				IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withBoolean("beep",true)));
 			}
 			return true;
 		}

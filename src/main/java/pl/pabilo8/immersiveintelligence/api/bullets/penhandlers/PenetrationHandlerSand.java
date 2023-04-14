@@ -38,6 +38,6 @@ public class PenetrationHandlerSand implements IPenetrationHandler
 	@Override
 	public SoundEvent getSpecialSound(HitEffect effect)
 	{
-		return effect==RICOCHET?IISounds.ricochetSand: IISounds.impactSand;
+		return IISounds.hitSand.getSpecialSound(effect);
 	}
 }

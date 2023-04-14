@@ -18,7 +18,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 
@@ -89,7 +88,7 @@ public class MessageBeginMachineUpgrade extends IIMessage
 				}
 				else
 					machine.removeUpgrade(upgrade);
-				IIPacketHandler.INSTANCE.sendToAllTracking(this, IIUtils.targetPointFromTile(tile, 32));
+				IIPacketHandler.INSTANCE.sendToAllTracking(this, IIPacketHandler.targetPointFromTile(tile, 32));
 			}
 		}
 	}

@@ -72,7 +72,7 @@ public class AIHansMachinegun extends EntityAIBase
 
 			NBTTagCompound update = new NBTTagCompound();
 			mg.writeEntityToNBT(update);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(mg, update), IIUtils.targetPointFromEntity(mg, 24));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(mg, update), IIPacketHandler.targetPointFromEntity(mg, 24));
 
 			if(mg.magazine1.isEmpty())
 			{

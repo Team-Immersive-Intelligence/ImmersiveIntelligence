@@ -40,7 +40,7 @@ public class PenetrationHandlerWood
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetDirt: IISounds.impactWood;
+			return IISounds.hitWood.getSpecialSound(effect);
 		}
 	}
 
@@ -68,7 +68,7 @@ public class PenetrationHandlerWood
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetDirt: IISounds.impactWood;
+			return IISounds.hitWood.getSpecialSound(effect);
 		}
 	}
 }

@@ -1,25 +1,23 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentTranslation;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
@@ -71,7 +69,7 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 					if(conn!=null)
 					{
 						conn.sendPacket(packet.clone());
-						packet=new DataPacket();
+						packet = new DataPacket();
 					}
 				}
 				else if(toggle^world.isBlockPowered(this.getPos()))
@@ -142,7 +140,10 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 		if(player.isSneaking())
 		{
 			passtroughMode = !passtroughMode;
-			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"redstone_buffer_mode", new TextComponentTranslation(IILib.INFO_KEY+"redstone_buffer_mode."+(passtroughMode?"passtrough":"signal")))), ((EntityPlayerMP)player));
+			IIPacketHandler.sendChatTranslation(player,
+					IILib.INFO_KEY+"redstone_buffer_mode",
+					new TextComponentTranslation(IILib.INFO_KEY+"redstone_buffer_mode."+(passtroughMode?"passtrough": "signal"))
+			);
 		}
 		return true;
 	}

@@ -17,7 +17,6 @@ import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
@@ -136,7 +135,7 @@ public class TileEntityTransmissionBox extends TileEntityIEBase implements ITick
 			energy.grow(Math.round(speed), Math.round(torque), 0.98f);
 			if(world.getTotalWorldTime()%20==0)
 			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, pos), IIUtils.targetPointFromTile(this, 24));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, pos), IIPacketHandler.targetPointFromTile(this, 24));
 			}
 
 		}

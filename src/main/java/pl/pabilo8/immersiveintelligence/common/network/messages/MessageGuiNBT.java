@@ -31,6 +31,12 @@ public class MessageGuiNBT extends IIMessage
 		this.pos = pos;
 	}
 
+	public MessageGuiNBT(IIGuiList id, TileEntity te)
+	{
+		this(id.ordinal(), te.getPos());
+	}
+
+	@Deprecated
 	public MessageGuiNBT(IIGuiList id, BlockPos pos)
 	{
 		this(id.ordinal(), pos);

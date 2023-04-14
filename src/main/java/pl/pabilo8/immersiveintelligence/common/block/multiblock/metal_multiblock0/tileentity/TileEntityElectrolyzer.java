@@ -1,11 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,11 +13,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Electrolyzer;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
@@ -102,7 +102,6 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 		active = shouldRenderAsActive();
 
 		if(energyStorage.getEnergyStored() > 0&&processQueue.size() < this.getProcessQueueMaxLength())
-		{
 			if(tanks[0].getFluidAmount() > 0)
 			{
 				ElectrolyzerRecipe recipe = ElectrolyzerRecipe.findRecipe(tanks[0].getFluid());
@@ -119,7 +118,6 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 					}
 				}
 			}
-		}
 
 		if(outputFluidToTank(tanks[1], 80, getBlockPosForPos(0), this.world, this.facing.getOpposite()))
 			update = true;
@@ -128,26 +126,22 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 
 		if(world.getTotalWorldTime()%8==0)
 		{
-			if(handleBucketTankInteraction(tanks, inventory, 0, 1, 0,false))
+			if(handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false))
 				update = true;
 			//No, it's not a mistake - you can only put the fluid in into the first tank and get the output from the next
-			if(handleBucketTankInteraction(tanks, inventory, 2, 4, 1,true))
+			if(handleBucketTankInteraction(tanks, inventory, 2, 4, 1, true))
 				update = true;
-			if(handleBucketTankInteraction(tanks, inventory, 3, 5, 2,true))
+			if(handleBucketTankInteraction(tanks, inventory, 3, 5, 2, true))
 				update = true;
 		}
 
 		if(update||wasActive!=active)
-		{
-			this.markDirty();
-			this.markContainingBlockForUpdate(null);
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("processTime", processTime);
-			tag.setInteger("processTimeMax", processTimeMax);
-			tag.setBoolean("active", this.active);
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withInt("processTime", processTime)
+					.withInt("processTimeMax", processTimeMax)
+					.withBoolean("active", this.active)
+					.withTag("inventory", Utils.writeInventory(inventory))
+			));
 	}
 
 	@Override

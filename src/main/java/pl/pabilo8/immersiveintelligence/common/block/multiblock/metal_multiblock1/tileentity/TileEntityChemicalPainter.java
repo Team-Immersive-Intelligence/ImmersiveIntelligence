@@ -41,6 +41,9 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockChemicalPainter;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -289,25 +292,18 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 		}
 
 		if(update||wasActive!=active)
-		{
-			this.markDirty();
-			this.markContainingBlockForUpdate(null);
-			NBTTagCompound tag = new NBTTagCompound();
-
-			tag.setInteger("color", color);
-			tag.setInteger("processTime", processTime);
-			tag.setInteger("processTimeMax", processTimeMax);
-			tag.setBoolean("active", this.active);
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			NBTTagCompound itemTag = new NBTTagCompound();
-			effect.writeToNBT(itemTag);
-			tag.setTag("output", itemTag);
-			tag.setTag("tank1", tanks[0].writeToNBT(new NBTTagCompound()));
-			tag.setTag("tank2", tanks[1].writeToNBT(new NBTTagCompound()));
-			tag.setTag("tank3", tanks[2].writeToNBT(new NBTTagCompound()));
-			tag.setTag("tank4", tanks[3].writeToNBT(new NBTTagCompound()));
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withInt("color", color)
+					.withInt("processTime", processTime)
+					.withInt("processTimeMax", processTimeMax)
+					.withBoolean("active", this.active)
+					.withTag("inventory", Utils.writeInventory(inventory))
+					.withItemStack("output", effect)
+					.withTag("tank1", tanks[0].writeToNBT(new NBTTagCompound()))
+					.withTag("tank2", tanks[1].writeToNBT(new NBTTagCompound()))
+					.withTag("tank3", tanks[2].writeToNBT(new NBTTagCompound()))
+					.withTag("tank4", tanks[3].writeToNBT(new NBTTagCompound()))
+			));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -532,11 +528,11 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 	{
 		if(!clientside)
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("color", color);
-			tag.setInteger("processTime", processTime);
-			tag.setInteger("processTimeMax", processTimeMax);
-			ImmersiveEngineering.packetHandler.sendTo(new MessageTileSync(this, tag), ((EntityPlayerMP)player));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withInt("color", color)
+					.withInt("processTime", processTime)
+					.withInt("processTimeMax", processTimeMax)
+			));
 		}
 	}
 

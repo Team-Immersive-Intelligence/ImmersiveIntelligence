@@ -1,11 +1,9 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,7 +16,9 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
@@ -74,11 +74,9 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 		{
 			timer += 1;
 			if(timer%5==0||timer==1)
-			{
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setInteger("timer", timer);
-				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 24));
-			}
+				IIPacketHandler.sendToClient(this, new MessageIITileSync(this,
+								EasyNBT.newNBT().withInt("timer", timer))
+				);
 		}
 		else if(timer >= maxtimer)
 		{
@@ -147,10 +145,9 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 		{
 			maxtimer = ((DataTypeInteger)packet.getPacketVariable('0')).value;
 
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setInteger("maxtimer", maxtimer);
-			nbt.setInteger("timer", timer);
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 24));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this,
+							EasyNBT.newNBT().withInt("maxtimer", maxtimer).withInt("timer", timer))
+			);
 		}
 	}
 

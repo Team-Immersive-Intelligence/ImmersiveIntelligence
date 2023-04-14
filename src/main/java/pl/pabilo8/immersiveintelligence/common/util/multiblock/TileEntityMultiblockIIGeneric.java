@@ -248,7 +248,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		{
 			T master = master();
 			if(master!=null)
-				sendNBTMessageClient(master.energyStorage.writeToNBT(new NBTTagCompound()), IIUtils.targetPointFromTile(master, 40));
+				master.sendNBTMessageClient(master.energyStorage.writeToNBT(new NBTTagCompound()));
 		}
 	}
 

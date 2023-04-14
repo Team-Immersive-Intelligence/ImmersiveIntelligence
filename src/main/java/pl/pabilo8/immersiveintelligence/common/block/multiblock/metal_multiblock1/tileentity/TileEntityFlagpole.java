@@ -20,8 +20,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
@@ -234,15 +236,9 @@ public class TileEntityFlagpole extends TileEntityMultiblockMetal<TileEntityFlag
 
 	}
 
-	public void sendUpdate(int id)
+	public void sendFlagUpdate()
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		if(id==0)
-		{
-			tag.setTag("flag", flag.serializeNBT());
-		}
-		if(!tag.hasNoTags())
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), IIUtils.targetPointFromTile(this, 32));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withItemStack("flag", flag)));
 	}
 
 	@Override
@@ -258,14 +254,14 @@ public class TileEntityFlagpole extends TileEntityMultiblockMetal<TileEntityFlag
 				master.flag = heldItem.copy();
 				master.flag.setCount(1);
 				heldItem.shrink(1);
-				master.sendUpdate(0);
+				master.sendFlagUpdate();
 				return true;
 			}
 			else if(!master.flag.isEmpty()&&Utils.isWirecutter(heldItem))
 			{
 				player.inventory.addItemStackToInventory(master.flag.copy());
 				master.flag = ItemStack.EMPTY;
-				master.sendUpdate(0);
+				master.sendFlagUpdate();
 				return true;
 			}
 		}

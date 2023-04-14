@@ -39,6 +39,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -238,7 +239,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 		if(!open&&focusedEntity!=null)
 		{
 			focusedEntity = null;
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), IIUtils.targetPointFromTile(this, 16));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 		}
 
 		if(world.isRemote)
@@ -268,7 +269,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 					focusedEntity = entitiesWithinAABB.get(0);
 					inserterAnimation = 0f;
 					inserterHeight = 0f;
-					ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), IIUtils.targetPointFromTile(this, 16));
+					IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 				}
 			}
 			else if(focusedEntity!=null)
@@ -276,7 +277,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 				focusedEntity = null;
 				inserterAnimation = 0f;
 				inserterHeight = 0f;
-				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), IIUtils.targetPointFromTile(this, 16));
+				IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 			}
 		}
 	}

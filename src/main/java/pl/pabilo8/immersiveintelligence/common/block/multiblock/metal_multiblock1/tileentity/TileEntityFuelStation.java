@@ -25,13 +25,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FuelStation;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -104,19 +106,17 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 			inserterAnimation = calculateInserterAnimation(0);
 			inserterAngle = calculateInserterAngle(0);
 
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.fuelStationMid, this, this.inserterAnimation>0.35&&focusedEntity!=null, 0.5f, 1);
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.fuelStationMid, this, this.inserterAnimation > 0.35&&focusedEntity!=null, 0.5f, 1);
 		}
 		else
 		{
-			boolean update = IIUtils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0,false);
+			boolean update = IIUtils.handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false);
 			if(update)
 			{
-				this.markDirty();
-				this.markContainingBlockForUpdate(null);
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setTag("inventory", Utils.writeInventory(inventory));
-				tag.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
-				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
+				IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+						.withTag("inventory", Utils.writeInventory(inventory))
+						.withTag("tank", tanks[0].writeToNBT(new NBTTagCompound()))
+				));
 			}
 		}
 
@@ -134,19 +134,19 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 				IFluidHandler capability = focusedEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 				if(capability!=null)
 				{
-					boolean canFill=false;
+					boolean canFill = false;
 					for(FluidStack fluid : tanks[0].fluids)
 					{
-						if(!VehicleFuelHandler.isFuelValidForVehicle(focusedEntity,fluid.getFluid()))
+						if(!VehicleFuelHandler.isFuelValidForVehicle(focusedEntity, fluid.getFluid()))
 							continue;
-						FluidStack fs = new FluidStack(fluid,Math.min(fluid.amount,FuelStation.fluidTransfer));
+						FluidStack fs = new FluidStack(fluid, Math.min(fluid.amount, FuelStation.fluidTransfer));
 
 						int i = capability.fill(fs, false);
 						i = (energyStorage.extractEnergy(i*FuelStation.energyUsage, false)/FuelStation.energyUsage);
 						capability.fill(new FluidStack(fs, i), true);
-						tanks[0].drain(new FluidStack(fs,i),true);
-						if(i>0)
-							canFill=true;
+						tanks[0].drain(new FluidStack(fs, i), true);
+						if(i > 0)
+							canFill = true;
 
 						break;
 					}
@@ -154,8 +154,8 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 					if(!canFill)
 					{
 						focusedEntity = null;
-						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), IIUtils.targetPointFromTile(this, 16));
-						world.playSound(null,getPos().up(),IISounds.fuelStationEnd, SoundCategory.BLOCKS,0.5f,1f);
+						IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+						world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
 					}
 				}
 			}
@@ -166,16 +166,16 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 					IFluidHandler capability = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 					if(capability==null)
 						break;
-					boolean canFill=false;
+					boolean canFill = false;
 
 					for(FluidStack fluid : tanks[0].fluids)
 					{
-						if(!VehicleFuelHandler.isFuelValidForVehicle(entity,fluid.getFluid()))
+						if(!VehicleFuelHandler.isFuelValidForVehicle(entity, fluid.getFluid()))
 							continue;
-						FluidStack fs = new FluidStack(fluid,Math.min(fluid.amount,FuelStation.fluidTransfer));
-						if(capability.fill(fs, false)>0)
+						FluidStack fs = new FluidStack(fluid, Math.min(fluid.amount, FuelStation.fluidTransfer));
+						if(capability.fill(fs, false) > 0)
 						{
-							canFill=true;
+							canFill = true;
 							break;
 						}
 					}
@@ -184,8 +184,8 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 					{
 						focusedEntity = entity;
 						inserterAnimation = 0f;
-						ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), IIUtils.targetPointFromTile(this, 16));
-						world.playSound(null,getPos().up(),IISounds.fuelStationStart, SoundCategory.BLOCKS,0.5f,1f);
+						IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+						world.playSound(null, getPos().up(), IISounds.fuelStationStart, SoundCategory.BLOCKS, 0.5f, 1f);
 						break;
 					}
 				}
@@ -195,8 +195,8 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 		{
 			focusedEntity = null;
 			inserterAnimation = 0f;
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, makeSyncEntity()), IIUtils.targetPointFromTile(this, 16));
-			world.playSound(null,getPos().up(),IISounds.fuelStationEnd, SoundCategory.BLOCKS,0.5f,1f);
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+			world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
 		}
 	}
 

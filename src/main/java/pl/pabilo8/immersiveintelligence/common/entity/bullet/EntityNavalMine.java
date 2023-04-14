@@ -14,7 +14,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
@@ -95,7 +94,7 @@ public class EntityNavalMine extends EntityBullet
 
 			NBTTagCompound nbt = new NBTTagCompound();
 			writeEntityToNBT(nbt);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), IIUtils.targetPointFromEntity(this, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), IIPacketHandler.targetPointFromEntity(this, 32));
 		}
 		else if(world.isRemote&&!wasSynced)
 			return;

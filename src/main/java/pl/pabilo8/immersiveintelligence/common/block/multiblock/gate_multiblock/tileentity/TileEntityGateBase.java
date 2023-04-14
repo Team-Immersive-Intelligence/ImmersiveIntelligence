@@ -18,7 +18,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
@@ -284,7 +283,7 @@ public abstract class TileEntityGateBase<T extends TileEntityMultiblockMetal<T, 
 		if(state!=open)
 		{
 			open = state;
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(open, 0, getPos()), IIUtils.targetPointFromPos(this.getPos(), this.world, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(open, 0, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 		}
 	}
 

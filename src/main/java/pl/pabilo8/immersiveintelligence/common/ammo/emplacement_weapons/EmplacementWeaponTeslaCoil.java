@@ -44,6 +44,9 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -234,12 +237,12 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 	{
 		if(!te.getWorld().isRemote)
 		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			NBTTagCompound n = new NBTTagCompound();
-			nbt.setString("weaponName", getName());
-			nbt.setTag("currentWeapon", n);
-			n.setInteger("targetEntity", e.getEntityId());
-			ImmersiveEngineering.packetHandler.sendToAllTracking(new MessageTileSync(te, nbt), IIUtils.targetPointFromTile(te, 32));
+			IIPacketHandler.sendToClient(te, new MessageIITileSync(te, EasyNBT.newNBT()
+					.withString("weaponName", getName())
+					.withTag("currentWeapon", EasyNBT.newNBT()
+							.withInt("targetEntity", e.getEntityId())
+					)
+			));
 		}
 	}
 

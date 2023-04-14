@@ -1,26 +1,25 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.TextComponentString;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
@@ -120,10 +119,10 @@ public class TileEntityDataRouter extends TileEntityIEBase implements IPlayerInt
 	}
 
 	@Override
-	public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ)
+	public boolean hammerUseSide(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
 		variable = IIUtils.cycleDataPacketChars(variable, hitY >= 0.5f, false);
-		ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentString(String.valueOf(variable))), (EntityPlayerMP)player);
+		IIPacketHandler.sendChatString(player, String.valueOf(variable));
 		return true;
 	}
 }

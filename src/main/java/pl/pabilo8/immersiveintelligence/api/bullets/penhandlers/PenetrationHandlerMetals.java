@@ -127,7 +127,7 @@ public class PenetrationHandlerMetals
 		@Override
 		public SoundEvent getSpecialSound(HitEffect effect)
 		{
-			return effect==RICOCHET?IISounds.ricochetMetal: IISounds.impactMetal;
+			return IISounds.hitMetal.getSpecialSound(effect);
 		}
 
 		@Override

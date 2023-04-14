@@ -15,7 +15,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -51,10 +50,11 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.Projectil
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -166,73 +166,33 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 				}
 
 
-					if(productionProgress <= 0)
-					{
-						if(!inventory.get(0).isEmpty()&&!componentInside.isEmpty())
-						{
-							effect = inventory.get(0).copy();
-							effect.setCount(1);
-
-							IAmmo bullet = (IAmmo)effect.getItem();
-							if(componentInside.matches(bullet))
-							{
-								productionProgress = (int)(ProjectileWorkshop.fillingTime+ProjectileWorkshop.fillingTime*0.3*bullet.getCaliber());
-
-								int i = 0;
-								while(i < fillAmount&&bullet.hasFreeComponentSlots(effect))
-								{
-									bullet.addComponents(effect, AmmoRegistry.INSTANCE.getComponent(componentInside.name), componentInside.tagCompound);
-									componentInside.subtract(1);
-									i++;
-								}
-
-							}
-							else
-								productionProgress = 1;
-
-
-							inventory.get(0).shrink(1);
-							update = true;
-						}
-					}
-					else
-					{
-						productionProgress--;
-						if(productionProgress==0)
-						{
-							if(!world.isRemote)
-							{
-								outputItem(effect);
-								effect = ItemStack.EMPTY;
-								update = true;
-							}
-
-							productionProgress = 0;
-						}
-					}
-			}
-		}
-		else //production
-		{
-
 				if(productionProgress <= 0)
 				{
-					if(!inventory.get(0).isEmpty())
+					if(!inventory.get(0).isEmpty()&&!componentInside.isEmpty())
 					{
-						Optional<IAmmoCore> first = AmmoRegistry.INSTANCE.registeredBulletCores.values()
-								.stream()
-								.filter(core -> core.getMaterial().matchesItemStackIgnoringSize(inventory.get(0)))
-								.findFirst();
+						effect = inventory.get(0).copy();
+						effect.setCount(1);
 
-						if(first.isPresent()&&inventory.get(0).getCount() >= producedBullet.getCoreMaterialNeeded())
+						IAmmo bullet = (IAmmo)effect.getItem();
+						if(componentInside.matches(bullet))
 						{
-							IAmmo bullet = producedBullet;
-							EnumCoreTypes coreType = this.coreType;
-							effect = bullet.getBulletCore(first.get(), coreType);
-							productionProgress = (int)(ProjectileWorkshop.productionTime+ProjectileWorkshop.productionTime*0.3*bullet.getCaliber());
-							inventory.get(0).shrink(producedBullet.getCoreMaterialNeeded());
-							update = true;
+							productionProgress = (int)(ProjectileWorkshop.fillingTime+ProjectileWorkshop.fillingTime*0.3*bullet.getCaliber());
+
+							int i = 0;
+							while(i < fillAmount&&bullet.hasFreeComponentSlots(effect))
+							{
+								bullet.addComponents(effect, AmmoRegistry.INSTANCE.getComponent(componentInside.name), componentInside.tagCompound);
+								componentInside.subtract(1);
+								i++;
+							}
+
 						}
+						else
+							productionProgress = 1;
+
+
+						inventory.get(0).shrink(1);
+						update = true;
 					}
 				}
 				else
@@ -246,9 +206,49 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 							effect = ItemStack.EMPTY;
 							update = true;
 						}
+
 						productionProgress = 0;
 					}
 				}
+			}
+		}
+		else //production
+		{
+
+			if(productionProgress <= 0)
+			{
+				if(!inventory.get(0).isEmpty())
+				{
+					Optional<IAmmoCore> first = AmmoRegistry.INSTANCE.registeredBulletCores.values()
+							.stream()
+							.filter(core -> core.getMaterial().matchesItemStackIgnoringSize(inventory.get(0)))
+							.findFirst();
+
+					if(first.isPresent()&&inventory.get(0).getCount() >= producedBullet.getCoreMaterialNeeded())
+					{
+						IAmmo bullet = producedBullet;
+						EnumCoreTypes coreType = this.coreType;
+						effect = bullet.getBulletCore(first.get(), coreType);
+						productionProgress = (int)(ProjectileWorkshop.productionTime+ProjectileWorkshop.productionTime*0.3*bullet.getCaliber());
+						inventory.get(0).shrink(producedBullet.getCoreMaterialNeeded());
+						update = true;
+					}
+				}
+			}
+			else
+			{
+				productionProgress--;
+				if(productionProgress==0)
+				{
+					if(!world.isRemote)
+					{
+						outputItem(effect);
+						effect = ItemStack.EMPTY;
+						update = true;
+					}
+					productionProgress = 0;
+				}
+			}
 
 		}
 
@@ -257,14 +257,13 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			this.markDirty();
 			this.markContainingBlockForUpdate(null);
 
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setTag("component_inside", componentInside.serializeNBT());
-			nbt.setString("produced_bullet", producedBullet.getName());
-			nbt.setString("core_type", coreType.getName());
-			nbt.setInteger("production_progress", productionProgress);
-			nbt.setTag("effect", effect.serializeNBT());
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this,32));
-
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withTag("component_inside", componentInside.serializeNBT())
+					.withString("produced_bullet", producedBullet.getName())
+					.withEnum("core_type", coreType)
+					.withInt("production_progress", productionProgress)
+					.withItemStack("effect", effect)
+			));
 		}
 
 
@@ -382,7 +381,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 			producedBullet = bb==null?IIContent.itemAmmoArtillery: bb;
 		}
 		if(message.hasKey("fill_amount"))
-			fillAmount = MathHelper.clamp(message.getInteger("fill_amount"),0,4);
+			fillAmount = MathHelper.clamp(message.getInteger("fill_amount"), 0, 4);
 	}
 
 	@Nullable
@@ -590,11 +589,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 	public void onGuiOpened(EntityPlayer player, boolean clientside)
 	{
 		if(!clientside)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			writeCustomNBT(tag, false);
-			ImmersiveEngineering.packetHandler.sendTo(new MessageTileSync(this, tag), ((EntityPlayerMP)player));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this));
 	}
 
 	@Override
@@ -758,7 +753,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 		this.isDrawerOpened[part] = state;
 
 		for(int i = 0; i < 2; i++)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(this.isDrawerOpened[i], i, getPos()), IIUtils.targetPointFromPos(this.getPos(), this.world, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(this.isDrawerOpened[i], i, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 
 	@Override

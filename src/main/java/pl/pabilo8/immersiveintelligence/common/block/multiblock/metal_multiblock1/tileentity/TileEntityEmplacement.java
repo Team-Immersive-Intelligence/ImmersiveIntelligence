@@ -9,7 +9,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import elucent.albedo.lighting.ILightProvider;
 import elucent.albedo.lighting.Light;
 import net.minecraft.client.renderer.GlStateManager;
@@ -43,10 +42,6 @@ import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -55,18 +50,24 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,7 +164,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		}
 
 		if(!world.isRemote&&wasDoorOpened^isDoorOpened)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()), IIUtils.targetPointFromTile(this, 48));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, this.getPos()), IIPacketHandler.targetPointFromTile(this, 48));
 
 		if(currentWeapon!=null)
 		{
@@ -710,7 +711,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			syncTask();
 		}
 
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, message), IIUtils.targetPointFromTile(this, 32));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, message));
 	}
 
 	private EmplacementWeapon getWeaponFromName(String weaponName)
@@ -751,7 +752,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		NBTTagCompound taskTag = new NBTTagCompound();
 		if(task!=null)
 			taskTag.setTag("task", task.saveToNBT());
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, taskTag), IIUtils.targetPointFromTile(this, 32));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, taskTag));
 	}
 
 	@Override
@@ -766,7 +767,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	{
 		if(part==0)
 			isDoorOpened = state;
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), IIUtils.targetPointFromTile(this, 32));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 1, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
 	}
 
 	@Override
@@ -800,13 +801,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				case "opendoor":
 				{
 					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = true, 0, master.getPos()),
-							IIUtils.targetPointFromTile(master, 48));
+							IIPacketHandler.targetPointFromTile(master, 48));
 				}
 				break;
 				case "closedoor":
 				{
 					IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = false, 0, master.getPos()),
-							IIUtils.targetPointFromTile(master, 48));
+							IIPacketHandler.targetPointFromTile(master, 48));
 				}
 				break;
 				case "door":
@@ -814,7 +815,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 					if(b instanceof DataTypeBoolean)
 					{
 						IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(master.isDoorOpened = ((DataTypeBoolean)b).value, 0, master.getPos()),
-								IIUtils.targetPointFromTile(master, 48));
+								IIPacketHandler.targetPointFromTile(master, 48));
 					}
 				}
 				break;
@@ -1437,12 +1438,10 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		public void syncWithClient(TileEntityEmplacement te)
 		{
 			if(!te.getWorld().isRemote)
-			{
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setString("weaponName", getName());
-				nbt.setTag("currentWeapon", saveToNBT(true));
-				ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(te, nbt), IIUtils.targetPointFromTile(te, 32));
-			}
+				IIPacketHandler.sendToClient(te, new MessageIITileSync(te, EasyNBT.newNBT()
+						.withString("weaponName", getName())
+						.withTag("currentWeapon", saveToNBT(true))
+				));
 		}
 
 		public abstract boolean canShoot(TileEntityEmplacement te);
@@ -1534,9 +1533,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		public void syncWeaponHealth(TileEntityEmplacement te)
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("health", health);
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(te, tag), IIUtils.targetPointFromTile(te, 32));
+			IIPacketHandler.sendToClient(te, new MessageIITileSync(te, EasyNBT.newNBT().withInt("health", health)));
 		}
 
 		public abstract NonNullList<ItemStack> getBaseInventory();

@@ -33,8 +33,10 @@ import pl.pabilo8.immersiveintelligence.api.crafting.AmmunitionWorkshopRecipe;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -157,17 +159,13 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 
 		if(update||wasActive!=active)
 		{
-			this.markDirty();
-			this.markContainingBlockForUpdate(null);
-
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setString("fuse", fuse.getName());
-			nbt.setInteger("fuse_config", fuseConfig);
-			nbt.setInteger("process_time", processTime);
-			nbt.setInteger("process_time_max", processTimeMax);
-			nbt.setTag("effect", effect.serializeNBT());
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 32));
-
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withString("fuse", fuse.getName())
+					.withInt("fuse_config", fuseConfig)
+					.withInt("process_time", processTime)
+					.withInt("process_time_max", processTimeMax)
+					.withTag("effect", effect.serializeNBT())
+			));
 		}
 	}
 
@@ -437,11 +435,7 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 	public void onGuiOpened(EntityPlayer player, boolean clientside)
 	{
 		if(!clientside)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			writeCustomNBT(tag, false);
-			ImmersiveEngineering.packetHandler.sendTo(new MessageTileSync(this, tag), ((EntityPlayerMP)player));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this));
 	}
 
 	@Override

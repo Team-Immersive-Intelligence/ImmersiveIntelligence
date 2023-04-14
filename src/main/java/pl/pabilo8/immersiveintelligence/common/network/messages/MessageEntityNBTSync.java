@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
@@ -17,6 +16,12 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitze
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
+/**
+ * II's version of {@link MessageIITileSync}
+ * @author Pabilo8
+ * @author BluSunrize
+ * @since 22.09.2022
+ */
 public class MessageEntityNBTSync extends IIMessage
 {
 	private int entityID;
@@ -61,13 +66,13 @@ public class MessageEntityNBTSync extends IIMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		this.entityID = buf.readInt();
-		this.tag = ByteBufUtils.readTag(buf);
+		this.tag = readTagCompound(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeInt(this.entityID);
-		ByteBufUtils.writeTag(buf, this.tag);
+		writeTagCompound(buf, this.tag);
 	}
 }

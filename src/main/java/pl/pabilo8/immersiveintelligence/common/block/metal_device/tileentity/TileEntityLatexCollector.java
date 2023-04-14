@@ -19,10 +19,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.LatexCollector;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLog;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIRubberLog.RubberLogs;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
@@ -43,7 +45,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 		bucket = new ItemStack(nbt.getCompoundTag("bucket"));
 		if(nbt.hasKey("noSetup"))
 			bucketTime = 0;
-		nbt.setFloat("timer",timer);
+		nbt.setFloat("timer", timer);
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 		nbt.setTag("bucket", bucket.serializeNBT());
 		if(bucketTime < 10)
 			nbt.setBoolean("noSetup", true);
-		timer=nbt.getFloat("timer");
+		timer = nbt.getFloat("timer");
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 			bucket.setCount(1);
 			heldItem.shrink(1);
 			updateBucket();
-			this.timer=0;
+			this.timer = 0;
 			return true;
 		}
 		else if(!bucket.isEmpty()&&heldItem.isEmpty())
@@ -73,7 +75,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 			player.inventory.addItemStackToInventory(bucket.copy());
 			bucket = ItemStack.EMPTY;
 			updateBucket();
-			this.timer=0;
+			this.timer = 0;
 			return true;
 		}
 		else return heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
@@ -81,9 +83,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 
 	private void updateBucket()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setTag("bucket", bucket.serializeNBT());
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 32));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT().withItemStack("bucket", bucket)));
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class TileEntityLatexCollector extends TileEntityIEBase implements IPlaye
 	public float getIncomeModifier()
 	{
 		int def = 4;
-		if(world.getTileEntity(pos.offset(facing,2)) instanceof TileEntityLatexCollector)
+		if(world.getTileEntity(pos.offset(facing, 2)) instanceof TileEntityLatexCollector)
 			def--;
 		if(world.getTileEntity(pos.offset(facing).offset(facing.rotateY())) instanceof TileEntityLatexCollector)
 			def--;

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
@@ -8,7 +7,6 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -23,7 +21,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ConveyorScanner;
@@ -31,9 +28,12 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockConveyorScanner;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockConveyorScanner;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +126,7 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 				Utils.dropStackAtPos(world, this.getPos().offset(facing), inventoryHandler.extractItem(0, 64, false));
 				processTime = 0;
 				processTimeMax = 20;
+				update = true;
 			}
 			else if(processTime < 20)
 			{
@@ -137,17 +138,12 @@ public class TileEntityConveyorScanner extends TileEntityMultiblockMetal<TileEnt
 			active = false;
 
 		if(update||wasActive!=active)
-		{
-			this.markDirty();
-			this.markContainingBlockForUpdate(null);
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("processTime", processTime);
-			tag.setInteger("processTimeMax", processTimeMax);
-			tag.setBoolean("active", this.active);
-			tag.setTag("inventory", Utils.writeInventory(inventory));
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
-		}
-
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.withInt("processTime", processTime)
+					.withInt("processTimeMax", processTimeMax)
+					.withBoolean("active", this.active)
+					.withTag("inventory", Utils.writeInventory(inventory))
+			));
 	}
 
 	@Override

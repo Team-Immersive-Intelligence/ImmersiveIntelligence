@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
@@ -12,7 +11,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecart;
@@ -43,13 +41,14 @@ import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCartStation;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkycrateInternal;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -170,9 +169,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		{
 			boolean b = false;
 			if(rotation.getRotationSpeed() > SkyCrateStation.rpmBreakingMax||rotation.getTorque() > SkyCrateStation.torqueBreakingMax)
-			{
 				selfDestruct();
-			}
 
 			if(world.getTileEntity(getBlockPosForPos(6).offset(facing.rotateYCCW()))!=null)
 			{
@@ -181,9 +178,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 				{
 					IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY()));
 					if(rotation.handleRotation(cap, (mirrored?this.facing.rotateYCCW(): this.facing.rotateY())))
-					{
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIUtils.targetPointFromTile(master(), 24));
-					}
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
 				}
 				else
 					b = true;
@@ -195,10 +190,8 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 			{
 				// TODO: 26.12.2021 investigate
 				if(b)
-				{
 					rotation.grow(0, 0, 0.98f);
-				}
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIUtils.targetPointFromTile(master(), 24));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, master().getPos()), IIPacketHandler.targetPointFromTile(master(), 24));
 			}
 
 			if(internalEntity==null)
@@ -210,14 +203,10 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 				cart = null;
 				doGraphicalUpdates(1);
 			}
-			else
-			{
-				if(cart.getRidingEntity()==null)
-					cart.startRiding(internalEntity, true);
-			}
+			else if(cart.getRidingEntity()==null)
+				cart.startRiding(internalEntity, true);
 
 			if(animation==1)
-			{
 				if(world.getRedstonePower(getBlockPosForPos(8).offset((mirrored?this.facing.rotateYCCW(): this.facing.rotateY())), facing.rotateYCCW()) > 0)
 				{
 					animation = 3;
@@ -238,13 +227,11 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 					{
 						IItemHandler cap = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 						for(int i = 0; i < cap.getSlots(); i += 1)
-						{
 							if(cap.getStackInSlot(i).getItem() instanceof ISkycrateMount)
 							{
 								mount = cap.extractItem(i, 1, false);
 								break;
 							}
-						}
 						if(!mount.isEmpty())
 						{
 							IMinecartBlockPickable m = (IMinecartBlockPickable)cart;
@@ -261,7 +248,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 
 					}
 				}
-			}
 
 			if(cart!=null&&internalEntity!=null)
 			{
@@ -297,9 +283,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 					internalEntity.updateValues();
 
 					if(cart!=null&&time > 0.65)
-					{
 						dismountCart();
-					}
 
 				}
 				if(cart!=null)
@@ -327,13 +311,10 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 		}
 
 		if(!isDummy())
-		{
 			if(animation > 1)
-			{
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(),3);
+					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(), 3);
 				else
-				{
 					switch(animation)
 					{
 						case 2:
@@ -346,9 +327,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 						{
 							animation = 0;
 							if(!world.isRemote)
-							{
 								dismountCart();
-							}
 							progress = 0;
 						}
 						break;
@@ -410,10 +389,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 						}
 						break;
 					}
-
-				}
-			}
-		}
 	}
 
 	public float getEffectiveEnergy()
@@ -577,27 +552,23 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	@Override
 	public void doGraphicalUpdates(int slot)
 	{
-		this.markDirty();
-		this.markContainingBlockForUpdate(null);
-		NBTTagCompound tag = new NBTTagCompound();
-		if(slot==0)
+		EasyNBT tag = EasyNBT.newNBT();
+
+		switch(slot)
 		{
-			tag.setTag("banner", banner.serializeNBT());
+			case 0:
+				tag.withTag("banner", banner.serializeNBT());
+				break;
+			case 1:
+				tag.withInt("animation", animation).withFloat("progress", progress).withBoolean("occupied", occupied);
+				break;
+			case 2:
+				tag.withTag("rotation", rotation.toNBT()).withItemStack("crate", crate).withItemStack("mount", mount);
+				break;
 		}
-		if(slot==1)
-		{
-			tag.setInteger("animation", animation);
-			tag.setFloat("progress", progress);
-			tag.setBoolean("occupied", occupied);
-		}
-		if(slot==2)
-		{
-			tag.setTag("rotation", rotation.toNBT());
-			tag.setTag("crate", crate.serializeNBT());
-			tag.setTag("mount", mount.serializeNBT());
-		}
-		if(!tag.hasNoTags())
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), IIUtils.targetPointFromTile(this, 32));
+
+		if(tag.size() > 0)
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, tag));
 	}
 
 	@Override
@@ -700,7 +671,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	{
 		super.connectCable(cableType, target, other);
 		if(!world.isRemote)
-		{
 			if(!(other instanceof ISkyCrateConnector))
 			{
 				Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(world, getPos());
@@ -708,7 +678,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 					for(Connection conn : conns)
 						ImmersiveNetHandler.INSTANCE.removeConnectionAndDrop(conn, world, getBlockPosForPos(10));
 			}
-		}
 	}
 
 	@Override
@@ -716,7 +685,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	{
 		TileEntitySkyCartStation master = master();
 		if(pos==20&&master!=null&&!world.isRemote)
-		{
 			if(master.banner.isEmpty()&&heldItem.getItem()==Items.BANNER)
 			{
 				master.banner = heldItem.copy();
@@ -732,7 +700,6 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 				master.doGraphicalUpdates(0);
 				return true;
 			}
-		}
 
 		return false;
 	}
@@ -769,9 +736,7 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 				{
 					cart = (EntityMinecart)internalEntity.getPassengers().get(0);
 					if(animation==0&&progress==0)
-					{
 						animation = 2;
-					}
 				}
 			}
 			else
@@ -841,12 +806,10 @@ public class TileEntitySkyCartStation extends TileEntityMultiblockConnectable<Ti
 	public void updateRotationStorage(float rpm, float torque, int part)
 	{
 		if(world.isRemote)
-		{
 			if(part==0)
 			{
 				rotation.setRotationSpeed(rpm);
 				rotation.setTorque(torque);
 			}
-		}
 	}
 }

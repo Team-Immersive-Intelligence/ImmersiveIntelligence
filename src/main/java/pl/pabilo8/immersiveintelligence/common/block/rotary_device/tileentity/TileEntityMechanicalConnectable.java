@@ -21,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -176,7 +175,7 @@ public abstract class TileEntityMechanicalConnectable extends TileEntityImmersiv
 		markBlockForUpdate(getConnectionPos(), stateHere);
 
 		//IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(energy, 0, getPos()), Utils.targetPointFromTile(this, 32));
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(getNetwork().getEnergyStorage(), 1, getPos()), IIUtils.targetPointFromTile(this, 32));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(getNetwork().getEnergyStorage(), 1, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
 
 	}
 

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.IEProperties.PropertyBoolInverted;
@@ -8,7 +7,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IMirrorAb
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -18,11 +16,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -210,7 +208,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 			NBTTagCompound nbt = new NBTTagCompound();
 			master.writeCustomNBT(nbt, false);
 			nbt.setBoolean("_sync_all_values", true);
-			sendNBTMessageClient(nbt, IIUtils.targetPointFromTile(master, 40));
+			master.sendNBTMessageClient(nbt);
 		}
 	}
 
@@ -219,11 +217,10 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	 * Can be used at both client and server.
 	 *
 	 * @param message to send
-	 * @param to      the TargetPoint, can be easily acquired through methods in {@link IIUtils}
 	 */
-	public void sendNBTMessageClient(NBTTagCompound message, TargetPoint to)
+	public void sendNBTMessageClient(NBTTagCompound message)
 	{
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, message), to);
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, message));
 	}
 
 	/**
@@ -233,6 +230,6 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	 */
 	public void sendNBTMessageServer(NBTTagCompound message)
 	{
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(this, message));
+		IIPacketHandler.sendToServer(new MessageIITileSync(this, message));
 	}
 }

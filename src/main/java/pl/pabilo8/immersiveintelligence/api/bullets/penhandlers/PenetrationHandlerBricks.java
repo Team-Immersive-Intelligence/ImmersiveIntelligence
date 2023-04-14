@@ -38,6 +38,6 @@ public class PenetrationHandlerBricks implements IPenetrationHandler
 	@Override
 	public SoundEvent getSpecialSound(HitEffect effect)
 	{
-		return effect==RICOCHET?IISounds.ricochetStone: IISounds.impactStone;
+		return IISounds.hitStone.getSpecialSound(effect);
 	}
 }
