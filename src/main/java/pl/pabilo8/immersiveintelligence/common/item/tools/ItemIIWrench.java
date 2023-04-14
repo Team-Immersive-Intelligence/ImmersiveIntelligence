@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
@@ -55,9 +56,9 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 	 * allows items to add custom lines of information to the mouseover description
 	 */
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(TextFormatting.ITALIC+I18n.format(IILib.DESCRIPTION_KEY+"wrench")+TextFormatting.RESET);
+		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"wrench")));
 	}
 
 	@Override
@@ -175,7 +176,7 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 			IUpgradableMachine te = ((IUpgradableMachine)world.getTileEntity(pos)).getUpgradeMaster();
 			if(te!=null&&te.getCurrentlyInstalled()!=null)
 			{
-				te.addUpgradeInstallProgress(player.isCreative()?999999:Tools.wrenchUpgradeProgress);
+				te.addUpgradeInstallProgress(player.isCreative()?999999: Tools.wrenchUpgradeProgress);
 				if(te.getInstallProgress() >= te.getCurrentlyInstalled().getProgressRequired())
 				{
 					if(te.addUpgrade(te.getCurrentlyInstalled(), false))

@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.item.tools;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
-import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.immersiveengineering.common.items.ItemPowerpack;
@@ -36,6 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelAdvancedPowerpack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
@@ -93,11 +93,12 @@ public class ItemIIAdvancedPowerPack extends ItemArmor implements ISpecialArmor,
 		list.add(I18n.format(Lib.DESC_INFO+"colour", "<hexcol="+hexCol+":#"+hexCol+">"));
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
+	@Nullable
+	@Override
 	public FontRenderer getFontRenderer(ItemStack stack)
 	{
-		return ClientProxy.itemFont;
+		return IIClientUtils.fontRegular;
 	}
 
 	@Override

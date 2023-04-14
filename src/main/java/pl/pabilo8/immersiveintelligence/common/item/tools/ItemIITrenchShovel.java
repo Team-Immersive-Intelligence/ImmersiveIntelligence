@@ -6,6 +6,8 @@ import blusunrize.immersiveengineering.common.items.tools.ItemIEShovel;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -17,8 +19,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author Pabilo8
@@ -48,6 +57,14 @@ public class ItemIITrenchShovel extends ItemIEShovel
 
 		//And add it to our registries.
 		IIContent.ITEMS.add(this);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	{
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		tooltip.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"electric_hammer")));
 	}
 
 	@Override

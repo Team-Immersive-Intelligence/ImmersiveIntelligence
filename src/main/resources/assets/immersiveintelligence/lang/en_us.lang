@@ -1006,6 +1006,8 @@ desc.immersiveintelligence.measuring_cup_size=Capacity: %s / %s mB
 desc.immersiveintelligence.measuring_cup_cant_resize=Cannot change size when contains fluid.
 desc.immersiveintelligence.functional_circuit_shift=§6Hold Shift§r - Performed Operations
 desc.immersiveintelligence.functional_circuit=Allows the machine to do operations such as:
+desc.immersiveintelligence.data_storage_shift=%s - Stored Data
+desc.immersiveintelligence.data_storage=Stored Data:
 desc.immersiveintelligence.upgrade_toolbox=Can be used to upgrade machines
 desc.immersiveintelligence.cost=Material Cost:
 
@@ -1013,6 +1015,9 @@ desc.immersiveintelligence.printed_page.blank=An empty page ready to be printed.
 desc.immersiveintelligence.printed_page.text=A page containing some text.
 desc.immersiveintelligence.printed_page.code=A page containing some code written in a programming language.
 desc.immersiveintelligence.printed_page.blueprint=A page containing information on how to build a structure.
+
+desc.immersiveintelligence.punchtape.empty=No variables written
+desc.immersiveintelligence.punchtape.written=Written
 
 desc.immersiveintelligence.infrared_enabled=§4Infrared§r Vision Active!
 desc.immersiveintelligence.infrared_disabled=§cInfrared§r Vision Disabled!

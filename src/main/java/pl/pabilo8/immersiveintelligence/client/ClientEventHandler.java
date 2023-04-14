@@ -982,24 +982,138 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	@SubscribeEvent()
 	public void onRenderTooltip(RenderTooltipEvent.PostText event)
 	{
+		int currentX = event.getX();
+		ArrayList<Integer> currentYs = findTooltipY(event);
 		ItemStack stack = event.getStack();
-		if(stack.getItem() instanceof ItemIIBulletMagazine)
-		{
 
-			int currentX = event.getX();
-			int currentY = event.getY();
-			for(int i = 0; i < event.getLines().size(); i += 1)
-				if(event.getLines().get(i).contains("   "))
+		if(currentYs.size()==0)
+			return;
+
+		if(stack.getItem()==IIContent.itemCircuit)
+		{
+			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "", null))
+			{
+				CircuitTypes circuit = IIContent.itemCircuit.stackToSub(stack).tier;
+				List<String> operationsList = IIContent.itemCircuit.getOperationsList(stack);
+
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(currentX, currentYs.get(0), 700);
+				GlStateManager.scale(.5f, .5f, 1);
+
+				int i = 0;
+				for(String op : operationsList)
 				{
-					currentY += i*10;
-					break;
+					IDataType type = DataPacket.getVarInstance(DataOperations.getOperationInstance(op).expectedResult);
+					GlStateManager.color(1f, 1f, 1f, 1f);
+					ClientUtils.bindTexture(type.textureLocation());
+					Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
+					i++;
 				}
 
+				GlStateManager.popMatrix();
+			}
+		}
+		else if(stack.getItem() instanceof IDataStorageItem)
+		{
+			IDataStorageItem ds = (IDataStorageItem)stack.getItem();
+			DataPacket packet = ds.getStoredData(stack);
+
 			GlStateManager.pushMatrix();
-			GlStateManager.enableBlend();
-			GlStateManager.enableRescaleNormal();
-			GlStateManager.translate(currentX, currentY, 700);
+			GlStateManager.translate(currentX, currentYs.get(0), 700);
 			GlStateManager.scale(.5f, .5f, 1);
+
+			int i = 0;
+			for(IDataType type : packet)
+			{
+				GlStateManager.color(1f, 1f, 1f, 1f);
+				ClientUtils.bindTexture(type.textureLocation());
+				Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
+				i++;
+			}
+
+			GlStateManager.popMatrix();
+
+		}
+		else if(stack.getItem()==IIContent.itemAssemblyScheme)
+		{
+			PrecissionAssemblerRecipe recipe = IIContent.itemAssemblyScheme.getRecipeForStack(stack);
+			if(recipe==null)
+				return;
+			boolean upper = IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "", null);
+
+			if(upper)
+				drawItemList(currentX, currentYs.get(0),
+						Arrays.stream(recipe.inputs).map(IngredientStack::getExampleStack).toArray(ItemStack[]::new));
+			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, "", null))
+				drawItemList(currentX, currentYs.get(upper?1: 0),
+						Arrays.stream(recipe.tools)
+								.map(PrecissionAssemblerRecipe::getExampleToolStack)
+								.toArray(ItemStack[]::new)
+				);
+		}
+		else if(stack.getItem() instanceof IAmmo)
+		{
+			IAmmoComponent[] components = ((IAmmo)stack.getItem()).getComponents(stack);
+			if(components.length > 0&&IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "", null))
+				drawItemList(currentX, currentYs.get(0),
+						Arrays.stream(components)
+								.map(c -> c.getMaterial().getExampleStack())
+								.toArray(ItemStack[]::new)
+				);
+		}
+		else if(stack.getItem()==IIContent.itemBulletMagazine&&!IIContent.itemBulletMagazine.hasNoBullets(stack))
+			drawItemList(currentX, currentYs.get(0),
+					ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", 10));
+		else if(stack.getItem() instanceof ItemIIGunBase)
+			drawItemList(currentX, currentYs.get(0), ((ItemIIGunBase)stack.getItem()).getAmmoList(stack));
+	}
+
+	private ArrayList<Integer> findTooltipY(RenderTooltipEvent.PostText event)
+	{
+		return findTooltipY(event.getLines(), event.getY(), event.getFontRenderer());
+	}
+
+	private ArrayList<Integer> findTooltipY(List<String> lines, int y, FontRenderer font)
+	{
+		ArrayList<Integer> list = new ArrayList<>();
+		final int size = lines.size();
+		boolean lastLine = false;
+
+		for(int i = 0; i < size; i++)
+			if(StringUtils.stripControlCodes(lines.get(i)).startsWith("   "))
+			{
+				if(!lastLine)
+				{
+					list.add(y+i*10+2); //height+spacing
+					lastLine = true;
+				}
+			}
+			else if(lastLine)
+				lastLine = false;
+
+		if(list.size() > 1)
+			IILogger.info("o");
+
+		return list;
+	}
+
+	private void drawItemList(int x, int y, NBTTagList stacks)
+	{
+		ItemStack[] array = new ItemStack[stacks.tagCount()];
+		for(int i = 0; i < stacks.tagCount(); i++)
+			array[i] = new ItemStack(stacks.getCompoundTagAt(i));
+		drawItemList(x, y, array);
+	}
+
+	private void drawItemList(int x, int y, ItemStack[] stacks)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		GlStateManager.enableRescaleNormal();
+		RenderHelper.enableGUIStandardItemLighting();
+		GlStateManager.enableDepth();
+		GlStateManager.translate(x, y, 700);
+		GlStateManager.scale(.5f, .5f, 1);
 
 			MachinegunRenderer.drawBulletsList(stack);
 

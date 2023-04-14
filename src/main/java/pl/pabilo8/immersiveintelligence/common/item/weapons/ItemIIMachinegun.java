@@ -5,7 +5,9 @@ import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import blusunrize.immersiveengineering.common.util.IEItemFluidHandler;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -31,16 +33,21 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -83,26 +90,35 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-		String skin = getSkinnableCurrentSkin(stack);
-		if(!skin.isEmpty()&&CustomSkinHandler.specialSkins.containsKey(skin))
+		super.addInformation(stack, world, tooltip, flag);
+
+		if(getUpgrades(stack).hasKey("second_magazine"))
 		{
-			tooltip.add(TextFormatting.WHITE+I18n.format(String.format("skin.%1$s.%2$s.name", ImmersiveIntelligence.MODID, skin)));
-			tooltip.add(TextFormatting.GRAY.toString()+TextFormatting.ITALIC+I18n.format(String.format("skin.%1$s.%2$s.desc", ImmersiveIntelligence.MODID, skin)));
+			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"weapon.magazine1", tooltip))
+				IIContent.itemBulletMagazine.addInformation(
+						ItemNBTHelper.getItemStack(stack, "magazine1")
+						, world, tooltip, flag);
+			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"weapon.magazine2", tooltip))
+				IIContent.itemBulletMagazine.addInformation(
+						ItemNBTHelper.getItemStack(stack, "magazine2"),
+						world, tooltip, flag);
 		}
+		else
+			IIContent.itemBulletMagazine.addInformation(
+					ItemNBTHelper.getItemStack(stack, "magazine1"),
+					world, tooltip, flag);
+
+
+		addSkinTooltip(stack, tooltip);
 	}
 
 	@Override
 	public IRarity getForgeRarity(ItemStack stack)
 	{
-		String skin = getSkinnableCurrentSkin(stack);
-		if(!skin.isEmpty()&&CustomSkinHandler.specialSkins.containsKey(skin))
-		{
-			return CustomSkinHandler.specialSkins.get(skin).rarity;
-		}
-		return super.getForgeRarity(stack);
+		IRarity skin = getSkinRarity(stack);
+		return skin!=null?skin: super.getForgeRarity(stack);
 	}
 
 	@Override
@@ -127,9 +143,7 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 		RayTraceResult raytraceresult = worldIn.rayTraceBlocks(vec3d, vec3d1, false);
 
 		if(raytraceresult==null)
-		{
 			return new ActionResult<>(EnumActionResult.PASS, itemstack);
-		}
 		else
 		{
 			Vec3d vec3d2 = playerIn.getLook(1.0F);
@@ -137,26 +151,18 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 			List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(vec3d2.x*5.0D, vec3d2.y*5.0D, vec3d2.z*5.0D).grow(1.0D));
 
 			for(Entity entity : list)
-			{
 				if(entity.canBeCollidedWith())
 				{
 					AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
 
 					if(axisalignedbb.contains(vec3d))
-					{
 						flag = true;
-					}
 				}
-			}
 
 			if(flag)
-			{
 				return new ActionResult<>(EnumActionResult.PASS, itemstack);
-			}
 			else if(raytraceresult.typeOfHit!=RayTraceResult.Type.BLOCK)
-			{
 				return new ActionResult<>(EnumActionResult.PASS, itemstack);
-			}
 			else
 			{
 				AxisAlignedBB aabb = worldIn.getBlockState(raytraceresult.getBlockPos()).getCollisionBoundingBox(playerIn.world, raytraceresult.getBlockPos());
@@ -188,16 +194,12 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 				boolean intersects = IIUtils.isAABBContained(fence, aabb);
 
 				if(!intersects)
-				{
 					return new ActionResult<>(EnumActionResult.PASS, itemstack);
-				}
 
 				EntityMachinegun maschinengewehr = new EntityMachinegun(worldIn, raytraceresult.getBlockPos(), playerIn.getRotationYawHead(), pitch, itemstack.copy());
 
 				if(!worldIn.isRemote)
-				{
 					worldIn.spawnEntity(maschinengewehr);
-				}
 				playerIn.startRiding(maschinengewehr);
 
 				itemstack.shrink(1);
@@ -268,6 +270,14 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	public boolean allowFluid(ItemStack container, FluidStack fluid)
 	{
 		return getUpgrades(container).hasKey("water_cooling")&&MachinegunCoolantHandler.isValidCoolant(fluid);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Nullable
+	@Override
+	public FontRenderer getFontRenderer(ItemStack stack)
+	{
+		return IIClientUtils.fontRegular;
 	}
 
 	@Override
