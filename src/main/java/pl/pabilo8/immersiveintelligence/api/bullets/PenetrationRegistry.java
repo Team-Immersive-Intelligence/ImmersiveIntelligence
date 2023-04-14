@@ -4,9 +4,13 @@ import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.Config;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.*;
@@ -41,7 +45,7 @@ public class PenetrationRegistry
 		@Override
 		public boolean add(DamageBlockPos damageBlockPos)
 		{
-			if(size() > 16)
+			if(size() > Graphics.maxPenetratedBlocks)
 				remove(0);
 			return super.add(damageBlockPos);
 		}
@@ -56,6 +60,7 @@ public class PenetrationRegistry
 		AmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.blockMetalDecoration,
 				IIContent.blockMetalMultiblock0, IIContent.blockMetalMultiblock1);
 		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "logWood"), new PenetrationHandlerLog());
+		AmmoUtils.batchRegisterHandler(new PenetrationHandlerDirt(),Blocks.GRASS, Blocks.DIRT);
 
 		AmmoUtils.registerMetalMaterial(new PenetrationHandlerIron(), "iron");
 		AmmoUtils.registerMetalMaterial(new PenetrationHandlerCopper(), "copper");

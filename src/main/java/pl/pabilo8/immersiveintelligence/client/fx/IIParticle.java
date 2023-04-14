@@ -1,6 +1,8 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
@@ -42,6 +44,40 @@ public abstract class IIParticle extends Particle
 	protected Vec3d getMotion()
 	{
 		return new Vec3d(this.motionX, this.motionY, this.motionZ);
+	}
+
+	protected float getProgress(float partialTicks)
+	{
+		return MathHelper.clamp((this.particleAge+partialTicks)/(float)this.particleMaxAge,
+				0.0F, 1.0F);
+	}
+
+	//--- For Use with AMT ---//
+
+	public int getMaxAge()
+	{
+		return particleMaxAge;
+	}
+
+	@Override
+	public void setMaxAge(int value)
+	{
+		super.setMaxAge(value);
+	}
+
+	public int getAge()
+	{
+		return particleMaxAge;
+	}
+
+	public void setAge(int value)
+	{
+		particleAge = value;
+	}
+
+	public void setWorld(World world)
+	{
+		this.world = world;
 	}
 
 	@Nonnull

@@ -3,10 +3,16 @@ package pl.pabilo8.immersiveintelligence.client.fx.particles;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
 
@@ -18,12 +24,17 @@ import javax.annotation.Nonnull;
  */
 public class ParticleGunfire extends IIParticle
 {
-	final Vec3d dir;
+	public static TextureAtlasSprite[] TEXTURES;
+	final float rotationYaw, rotationPitch;
 
 	public ParticleGunfire(World world, Vec3d pos, Vec3d motion, float size)
 	{
-		super(world, pos, motion);
-		this.dir = motion.normalize();
+		super(world, pos.x, pos.y, pos.z, motion.x, motion.y, motion.z);
+
+		Vec3d normalized = motion.normalize();
+		float motionXZ = MathHelper.sqrt(normalized.x*normalized.x+normalized.z*normalized.z);
+		this.rotationYaw = (float)((Math.atan2(normalized.x, normalized.z)*180D)/3.1415927410125732D);
+		this.rotationPitch = -(float)((Math.atan2(normalized.y, motionXZ)*180D)/3.1415927410125732D);
 
 		this.particleScale = (size+Utils.RAND.nextFloat());
 		this.particleMaxAge = (int)(2+(3*Utils.RAND.nextGaussian()));
@@ -31,18 +42,12 @@ public class ParticleGunfire extends IIParticle
 
 	public void onUpdate()
 	{
-		motionX *= 0.6f;
+		/*motionX *= 0.6f;
 		motionY *= 0.6f;
-		motionZ *= 0.6f;
+		motionZ *= 0.6f;*/
 
 		if(this.particleAge++ >= this.particleMaxAge)
 			this.setExpired();
-	}
-
-	@Override
-	public int getFXLayer()
-	{
-		return 3;
 	}
 
 	@Override
@@ -51,51 +56,75 @@ public class ParticleGunfire extends IIParticle
 		return 240<<16|240;
 	}
 
+	public int getFXLayer()
+	{
+		return 2;
+	}
+
 	/**
 	 * Renders the particle
 	 */
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
 	{
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25f);
-		float x = (float)((float)posX-entityIn.posX);
-		float y = (float)((float)posY-entityIn.posY);
-		float z = (float)((float)posZ-entityIn.posZ);
+		Tessellator tes = Tessellator.getInstance();
+		VertexFormat format = buffer.getVertexFormat();
 
-		float x2 = (float)((float)posX-(motionX)-entityIn.posX);
-		float y2 = (float)((float)prevPosY-(motionY)-entityIn.posY);
-		float z2 = (float)((float)prevPosZ-(motionZ)-entityIn.posZ);
+		tes.draw();
 
-		float f = ((float)this.particleAge+partialTicks)/(float)this.particleMaxAge;
-		f = MathHelper.clamp(f, 0.0F, 1.0F);
+		GlStateManager.pushMatrix();
+		float x = (float)(this.prevPosX+(this.posX-this.prevPosX)*(double)partialTicks-interpPosX);
+		float y = (float)(this.prevPosY+(this.posY-this.prevPosY)*(double)partialTicks-interpPosY);
+		float z = (float)(this.prevPosZ+(this.posZ-this.prevPosZ)*(double)partialTicks-interpPosZ);
 
-		float[] color = new float[]{1f, 0.2f+(0.75f*f), (0.25f*f)};
-		float[] colorEnd = new float[]{1f, 0.3f+(0.55f*f), (0.25f*f)};
-		float exp = this.particleScale/16f;
+		TextureAtlasSprite tex = TEXTURES[(int)(MathHelper.clamp(particleAge/(float)particleMaxAge, 0, 1)*7)];
+		float u = tex.getMinU(), v = tex.getInterpolatedV(8), uu = tex.getInterpolatedU(8), vv = tex.getMaxV();
 
-		buffer.pos(x, y+exp, z).color(color[0], color[1], color[2], 1f).endVertex();
-		buffer.pos(x2, y2+exp, z2).color(colorEnd[0], colorEnd[1], colorEnd[2], 0.125f).endVertex();
-		buffer.pos(x, y-exp, z).color(color[0], color[1], color[2], 1f).endVertex();
-		buffer.pos(x2, y2-exp, z2).color(colorEnd[0], colorEnd[1], colorEnd[2], 0.125f).endVertex();
+		GlStateManager.translate(x, y, z);
+		GlStateManager.rotate(rotationYaw+90, 0, 1f, 0);
+		GlStateManager.rotate(rotationPitch, 0, 0, 1);
 
-		buffer.pos(x, y, z+exp).color(color[0], color[1], color[2], 1f).endVertex();
-		buffer.pos(x2, y2, z2+exp).color(colorEnd[0], colorEnd[1], colorEnd[2], 0.125f).endVertex();
-		buffer.pos(x, y, z-exp).color(color[0], color[1], color[2], 1f).endVertex();
-		buffer.pos(x2, y2, z2-exp).color(colorEnd[0], colorEnd[1], colorEnd[2], 0.125f).endVertex();
+		float scale = particleScale*0.25f;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.translate(0, 0.25, 0);
 
-		/*
-		buffer.pos(x+exp, y, z-exp).color(color[0],color[1],color[2],0.125f).endVertex();
-		buffer.pos(x2+exp, y2, z2-exp).color(color2[0],color2[1],color2[2],1f).endVertex();
-		buffer.pos(x2-exp, y2, z2+exp).color(color2[0],color2[1],color2[2],1f).endVertex();
-		buffer.pos(x-exp, y, z+exp).color(color[0],color[1],color[2],0.125f).endVertex();
-		 */
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		IIClientUtils.drawFace(buffer, 0.385, -0.5, -0.5, 0.385, 0.5, 0.5,
+				u, uu, v, vv);
+		u = tex.getInterpolatedU(8);
+		uu = tex.getMaxU();
+		IIClientUtils.drawFace(buffer, 0.125, -0.5, -0.5, 0.125, 0.5, 0.5,
+				u, uu, v, vv);
 
+		Tessellator.getInstance().draw();
+
+
+		//set texture to the "beam" part
+		u = tex.getMinU();
+		uu = tex.getMaxU();
+		v = tex.getMinV();
+		vv = tex.getInterpolatedV(8);
+
+		GlStateManager.enableBlend();
+		GlStateManager.enableAlpha();
+		for(int i = 0; i < 4; i++)
+		{
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			IIClientUtils.drawFace(buffer, 0, -0.5, 0, 2, 0.5, 0,
+					u, uu, v, vv);
+			Tessellator.getInstance().draw();
+			GlStateManager.rotate(45, 1, 0, 0);
+		}
+
+		GlStateManager.popMatrix();
+
+		buffer.begin(GL11.GL_QUADS, format);
 	}
 
 	@Nonnull
 	@Override
 	public DrawingStages getDrawStage()
 	{
-		return DrawingStages.TRACER;
+		return DrawingStages.CUSTOM_ADDITIVE;
 	}
 }

@@ -271,13 +271,30 @@ public interface IAmmo
 		return getComponents(stack).length < getCoreType(stack).getComponentSlots();
 	}
 
+	/**
+	 * @param stack ammunition stack
+	 * @return time in ticks for timed fuse, distance in blocks for proximity fuse
+	 */
 	default int getFuseParameter(ItemStack stack)
 	{
 		return ItemNBTHelper.getInt(stack, "fuse_param");
 	}
 
+	/**
+	 * Sets a parameter for the fuse - time in ticks for timed fuse, distance in blocks for proximity fuse
+	 * @param stack ammunition stack the value is applied to
+	 * @param p value to be set
+	 */
 	default void setFuseParameter(ItemStack stack, int p)
 	{
 		ItemNBTHelper.setInt(stack, "fuse_param",p);
+	}
+
+	/**
+	 * @return whether this ammo is a projectile (and not, i.e. a mine)
+	 */
+	default boolean isProjectile()
+	{
+		return true;
 	}
 }
