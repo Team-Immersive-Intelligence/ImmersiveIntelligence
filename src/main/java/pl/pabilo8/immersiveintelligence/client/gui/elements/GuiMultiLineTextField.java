@@ -13,6 +13,7 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This is a direct copy of a gist made by Draco18s
@@ -100,12 +101,8 @@ public class GuiMultiLineTextField extends GuiTextField
 		if (this.validator.apply(textIn))
 		{
 			String[] lines = textIn.split("\n");
-			//this.text = textIn.substring(0, this.maxStringLength);
-			for(int l=0;l<lines.length;l++)
-				if(lines[l].length() > this.maxStringLength)
-					text.set(l, lines[l].substring(0, this.maxStringLength));
-				else if(text.size() <= l) text.add(lines[l]);
-				else text.set(l, lines[l]);
+			text.clear();
+			text.addAll(Arrays.asList(lines));
 			this.setCursorPositionEnd();
 		}
 	}

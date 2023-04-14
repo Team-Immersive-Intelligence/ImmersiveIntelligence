@@ -3,12 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.AIHansBase;
 
@@ -133,7 +135,23 @@ public abstract class AIHansHandWeapon extends AIHansBase
 	{
 		super.updateTask();
 		this.hans.hasAmmo = hasAnyAmmo();
+
+		MotionState prevMotionState = motionState;
 		this.motionState = getMotionState();
+
+		if(motionState==MotionState.FALLBACK&&motionState!=prevMotionState)
+		{
+			int radius = 15;
+			List<EntityHans> hanses = this.hans.world.getEntitiesWithinAABB(EntityHans.class,
+					new AxisAlignedBB(new BlockPos(hans.posX, hans.posY, hans.posZ)).grow(radius, radius, radius),
+					input -> input!=null&&input!=hans&&input.getTeam()==hans.getTeam());
+			for(EntityHans anotherHans : hanses)
+			{
+				if(anotherHans.getAttackTarget()==null)
+					anotherHans.setAttackTarget(this.hans.getAttackTarget());
+			}
+			hans.playSound(SoundEvents.ENTITY_VILLAGER_YES, 1f, 1f);
+		}
 
 		if(this.attackTarget==null||this.attackTarget.isDead||!this.hans.hasAmmo)
 		{
@@ -178,7 +196,7 @@ public abstract class AIHansHandWeapon extends AIHansBase
 			//enemy is dangerously close, run away
 			if(hans.getNavigator().noPath())
 			{
-				Vec3d away = RandomPositionGenerator.findRandomTargetBlockAwayFrom(hans, safeAttackDistance, 10, enemy.getPositionVector());
+				Vec3d away = RandomPositionGenerator.findRandomTargetBlockAwayFrom(hans, safeAttackDistance, 0, enemy.getPositionVector());
 
 				if(away!=null)
 				{

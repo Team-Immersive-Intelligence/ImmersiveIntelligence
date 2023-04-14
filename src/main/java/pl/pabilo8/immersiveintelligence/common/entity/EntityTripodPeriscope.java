@@ -9,9 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -73,7 +76,7 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 	{
 		if(world.isRemote&&passenger instanceof EntityPlayerSP)
 		{
-			CameraHandler.INSTANCE.setEnabled(false);
+			CameraHandler.setEnabled(false);
 			ZoomHandler.isZooming = false;
 		}
 		super.removePassenger(passenger);
@@ -187,15 +190,17 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 
 	private static class TripodZoom implements IAdvancedZoomTool
 	{
+		private static final ResourceLocation SIGHTS_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/binoculars.png");
 
 		@Override
-		public String getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
+		@SideOnly(Side.CLIENT)
+		public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
 		{
-			return ImmersiveIntelligence.MODID+":textures/gui/item/binoculars.png";
+			return SIGHTS_TEXTURE;
 		}
 
 		@Override
-		public boolean canZoom(ItemStack stack, EntityPlayer player)
+		public boolean shouldZoom(ItemStack stack, EntityPlayer player)
 		{
 			return true;
 		}

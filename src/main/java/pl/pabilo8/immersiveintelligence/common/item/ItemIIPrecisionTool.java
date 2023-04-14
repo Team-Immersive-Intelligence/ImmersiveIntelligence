@@ -5,6 +5,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -99,7 +100,7 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IILib.INFO_KEY_TOOL_DURABILITY, getPrecissionToolDamage(stack), getPrecissionToolMaxDamage(stack)));
+		tooltip.add(I18n.format(IILib.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getPrecissionToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getPrecissionToolMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override

@@ -16,8 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
-import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
@@ -321,26 +321,6 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 		}
 
 		GlStateManager.popMatrix();
-	}
-
-	public static void drawBulletsList(ItemStack stack)
-	{
-		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.enableDepth();
-
-		RenderItem ir = ClientUtils.mc().getRenderItem();
-		NBTTagList listDict = ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", 10);
-
-		if(ItemNBTHelper.hasKey(stack, "bullet0"))
-			ir.renderItemIntoGUI(new ItemStack(listDict.getCompoundTagAt(0)), 0, 0);
-		if(ItemNBTHelper.hasKey(stack, "bullet1"))
-			ir.renderItemIntoGUI(new ItemStack(listDict.getCompoundTagAt(1)), 0, 22);
-		if(ItemNBTHelper.hasKey(stack, "bullet2"))
-			ir.renderItemIntoGUI(new ItemStack(listDict.getCompoundTagAt(2)), 0, 44);
-		if(ItemNBTHelper.hasKey(stack, "bullet3"))
-			ir.renderItemIntoGUI(new ItemStack(listDict.getCompoundTagAt(3)), 0, 66);
-
-		GlStateManager.disableDepth();
 	}
 
 	/**

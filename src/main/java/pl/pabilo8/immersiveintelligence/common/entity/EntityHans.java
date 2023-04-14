@@ -204,7 +204,7 @@ public class EntityHans extends EntityCreature implements INpc
 			//idle + combat animations
 			HansLegAnimation currentLeg = legAnimation;
 			HansArmAnimation currentArm = armAnimation;
-			legAnimation = isInWater()?HansLegAnimation.SWIMMING:HansLegAnimation.STANDING;
+			legAnimation = isInWater()?HansLegAnimation.SWIMMING: HansLegAnimation.STANDING;
 			armAnimation = HansArmAnimation.NORMAL;
 
 			tasks.taskEntries.removeIf(entry -> entry.action instanceof AIHansBase&&((AIHansBase)entry.action).shouldBeRemoved());
@@ -230,7 +230,7 @@ public class EntityHans extends EntityCreature implements INpc
 		}
 
 		//update held item
-		getHeldItemMainhand().getItem().onUpdate(getHeldItemMainhand(),world,this,0,true);
+		getHeldItemMainhand().getItem().onUpdate(getHeldItemMainhand(), world, this, 0, true);
 
 		if(prevLegAnimation!=legAnimation)
 		{
@@ -306,13 +306,28 @@ public class EntityHans extends EntityCreature implements INpc
 		super.initEntityAI();
 
 		//Attack mobs and enemies focused on the Hans first
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLiving.class, 1, false, false,
-				input -> input.isEntityAlive()&&(input instanceof IMob||input.getAttackTarget()==this)
-		));
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<EntityLiving>(this, EntityLiving.class, 1, true, false,
+						input -> input.isEntityAlive()&&(input instanceof IMob||input.getAttackTarget()==this))
+				{
+					@Override
+					protected AxisAlignedBB getTargetableArea(double targetDistance)
+					{
+						return this.taskOwner.getEntityBoundingBox().grow(targetDistance, targetDistance*0.66f, targetDistance);
+					}
+				}
+
+		);
 		//Attack entities with different team, stay neutral on default
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 1, false, false,
-				input -> input!=null&&isValidTarget(input)
-		));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class, 1, true, false,
+						input -> input!=null&&isValidTarget(input))
+				{
+					@Override
+					protected AxisAlignedBB getTargetableArea(double targetDistance)
+					{
+						return this.taskOwner.getEntityBoundingBox().grow(targetDistance, targetDistance*0.66f, targetDistance);
+					}
+				}
+		);
 		//Call other hanses for help when attacked
 		this.targetTasks.addTask(2, new AIHansAlertOthers(this, true));
 
@@ -345,7 +360,6 @@ public class EntityHans extends EntityCreature implements INpc
 			this.tasks.addTask(3, weaponTask);
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.125f, true));
 	}
-
 
 	@Override
 	public boolean startRiding(@Nonnull Entity entity)

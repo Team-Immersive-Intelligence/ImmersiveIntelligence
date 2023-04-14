@@ -6,14 +6,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
-import pl.pabilo8.immersiveintelligence.CustomSkinHandler;
-import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelSubmachinegun;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.function.Predicate;
  * @author Pabilo8
  * @since 13-10-2019
  */
-public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<SubmachinegunItemStackRenderer>
+public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<SubmachinegunItemStackRenderer>, ISpecificHandRenderer
 {
 	public static SubmachinegunItemStackRenderer instance = new SubmachinegunItemStackRenderer().subscribeToList("submachinegun");
 	public static final String texture = "submachinegun.png";
@@ -220,5 +221,60 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 	{
 		model = new ModelSubmachinegun();
 		addDefaultModelParts();
+	}
+
+	@Override
+	public boolean doHandRender(ItemStack stack, EnumHand hand, float partialTicks, float swingProgress)
+	{
+		int aiming = ItemNBTHelper.getInt(stack, "aiming");
+		int reloading = ItemNBTHelper.getInt(stack, "reloading");
+		int maxReload = ItemNBTHelper.getBoolean(stack, "isDrum")?Submachinegun.drumReloadTime: Submachinegun.clipReloadTime;
+		float reload = MathHelper.clamp(
+				reloading+(reloading > 0?partialTicks: 0),
+				0,
+				maxReload
+		);
+		reload /= maxReload;
+
+		boolean foldingStock = IIContent.itemSubmachinegun.getUpgrades(stack).hasKey("folding_stock");
+		float preciseAim = MathHelper.clamp(
+				aiming+(aiming > 0?Minecraft.getMinecraft().player.isSneaking()?partialTicks: -3*partialTicks: 0),
+				0,
+				foldingStock?Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime
+		);
+		preciseAim /= foldingStock?Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime;
+
+		GlStateManager.pushMatrix();
+		GlStateManager.color(1f, 1f, 1f, 1f);
+		GlStateManager.translate(11.5/16f, -11/16f, -1.25+2/16f);
+		GlStateManager.rotate(2f, 1, 0, 0);
+		GlStateManager.rotate(8.5f, 0, 1, 0);
+
+		if(swingProgress > 0)
+			GlStateManager.translate(0, 0, -0.5f*(1f-Math.abs((swingProgress-0.5f)/0.5f)));
+
+		if(reloading > 0)
+		{
+			float rpart = reload <= 0.33?reload/0.33f: reload <= 0.66?1f: 1f-(reload-0.66f)/0.33f;
+			GlStateManager.rotate(rpart*90f, 0, 1, 0);
+			GlStateManager.rotate(rpart*85f, 0, 0, 1);
+		}
+		if(preciseAim > 0)
+		{
+			GlStateManager.translate(-preciseAim*0.725, 0.2*preciseAim, 0);
+			GlStateManager.rotate(preciseAim*-8.5f, 0, 1, 0);
+			GlStateManager.rotate(preciseAim*-2.25f, 1, 0, 0);
+
+		}
+		SubmachinegunItemStackRenderer.instance.renderByItem(stack, partialTicks);
+		GlStateManager.popMatrix();
+
+		return true;
+	}
+
+	@Override
+	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
+	{
+		return ItemNBTHelper.getInt(stack, "aiming") > Submachinegun.aimTime*0.75;
 	}
 }

@@ -46,10 +46,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.*;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.*;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMortar;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIISlab;
@@ -142,6 +139,21 @@ public class IIContent
 	public static ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
 	public static ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
 
+	//ammo
+	public static ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
+	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
+	public static ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
+	public static ItemIIAmmoLightArtillery itemAmmoLightArtillery = new ItemIIAmmoLightArtillery();
+	public static ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
+	public static ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
+	public static ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
+	public static ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
+	public static ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
+	public static ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
+	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
+
+	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
+
 	//tools
 	public static ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
 	public static ItemIILighter itemLighter = new ItemIILighter();
@@ -169,6 +181,8 @@ public class IIContent
 	public static ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();
 	public static ItemIIMachinegun itemMachinegun = new ItemIIMachinegun();
 	public static ItemIISubmachinegun itemSubmachinegun = new ItemIISubmachinegun();
+	public static ItemIIAssaultRifle itemAssaultRifle = new ItemIIAssaultRifle();
+	public static ItemIIRifle itemRifle = new ItemIIRifle();
 	public static ItemIIMortar itemMortar = new ItemIIMortar();
 	public static ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
 
@@ -184,22 +198,8 @@ public class IIContent
 	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 
-	//ammo
-	public static ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
-	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
-	public static ItemIIAmmoMortar itemAmmoMortar = new ItemIIAmmoMortar();
-	public static ItemIIAmmoLightArtillery itemAmmoLightArtillery = new ItemIIAmmoLightArtillery();
-	public static ItemIIAmmoAutocannon itemAmmoAutocannon = new ItemIIAmmoAutocannon();
-	public static ItemIIAmmoGrenade itemGrenade = new ItemIIAmmoGrenade();
-	public static ItemIIAmmoRailgunGrenade itemRailgunGrenade = new ItemIIAmmoRailgunGrenade();
-	public static ItemIIAmmoMachinegun itemAmmoMachinegun = new ItemIIAmmoMachinegun();
-	public static ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
-	public static ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
-	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
-
-	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
-
 	//data
+	@IBatchOredictRegister(oreDict = "punchtape")
 	public static ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();
 	public static ItemIIPrintedPage itemPrintedPage = new ItemIIPrintedPage();
 	public static ItemIITracerPowder itemTracerPowder = new ItemIITracerPowder();

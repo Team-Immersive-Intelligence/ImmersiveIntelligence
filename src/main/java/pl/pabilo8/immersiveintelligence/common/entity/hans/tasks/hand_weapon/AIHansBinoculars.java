@@ -53,7 +53,7 @@ public class AIHansBinoculars extends AIHansHandWeapon
 
 		if(this.rangedAttackTime < 20)
 		{
-			for(EntityHans anotherHans : this.hans.world.getEntitiesWithinAABB(EntityHans.class, hans.getEntityBoundingBox().grow(20), input -> input!=null&&input!=this.hans))
+			for(EntityHans anotherHans : this.hans.world.getEntitiesWithinAABB(EntityHans.class, hans.getEntityBoundingBox().grow(20), input -> input!=null&&input!=this.hans&&input.getTeam()==hans.getTeam()))
 				if(anotherHans.getAttackTarget()!=attackTarget&&anotherHans.isValidTarget(attackTarget))
 				{
 					anotherHans.tasks.addTask(2, new AIHansSalute(anotherHans, this.hans));

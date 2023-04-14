@@ -59,7 +59,7 @@ public class AIHansAlertOthers extends EntityAITarget
 	{
 		double d0 = this.getTargetDistance();
 		for(EntityHans anotherHans : this.hans.world.getEntitiesWithinAABB(EntityHans.class, getAABB().grow(d0, 10.0D, d0),
-				input -> input!=null&&input.isOnSameTeam(hans)
+				input -> input!=null&&input.getTeam()==hans.getTeam()
 		))
 		{
 			if(anotherHans.isValidTarget(this.hans.getRevengeTarget()))

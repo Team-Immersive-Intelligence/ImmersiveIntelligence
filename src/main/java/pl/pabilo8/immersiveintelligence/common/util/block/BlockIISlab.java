@@ -16,13 +16,15 @@ import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 
+import javax.annotation.Nullable;
+
 public class BlockIISlab<E extends Enum<E> & IIBlockEnum> extends BlockIIBase<E>
 {
 	public static final PropertyInteger prop_SlabType = PropertyInteger.create("slabtype", 0, 2);
 
 	public BlockIISlab(BlockIIBase<E> base)
 	{
-		super(base.name+"_slab", base.property, base.materials[0], ItemBlockIISlabs::new);
+		super(base.name+"_slab", base.property, base.materials[0], ItemBlockIISlabs::new, prop_SlabType);
 	}
 
 	/**
@@ -45,7 +47,12 @@ public class BlockIISlab<E extends Enum<E> & IIBlockEnum> extends BlockIIBase<E>
 		return true;
 	}
 
-
+	@Nullable
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
+		return new TileEntityIESlab();
+	}
 
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)

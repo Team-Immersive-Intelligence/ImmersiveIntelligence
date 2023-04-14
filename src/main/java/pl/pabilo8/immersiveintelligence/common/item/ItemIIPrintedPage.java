@@ -37,9 +37,13 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 
 	public enum SubItems implements IIItemEnum
 	{
+		@IIItemProperties(oreDict = "pageEmpty")
 		BLANK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = {"pageText","pageWritten"})
 		TEXT(IIGuiList.GUI_PRINTED_PAGE_TEXT),
+		@IIItemProperties(oreDict = {"pageCode","pageWritten"})
 		CODE(IIGuiList.GUI_PRINTED_PAGE_CODE),
+		@IIItemProperties(oreDict = {"pageBlueprint","pageWritten"})
 		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT);
 
 		private final IIGuiList guiPage;

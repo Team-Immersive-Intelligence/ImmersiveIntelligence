@@ -128,13 +128,14 @@ public class EntityShrapnel extends EntityIEProjectile implements ILightProvider
 	@Override
 	public Light provideLight()
 	{
-		Shrapnel s = ShrapnelHandler.registry.get(shrapnel);
+		//Kurwa a nie kod
+		/*Shrapnel s = ShrapnelHandler.registry.get(shrapnel);
 		if(s!=null)
 		{
 			int light = this.isBurning()?15: Math.round(s.brightness*15f);
 			if(light > 0)
 				return Light.builder().pos(this).radius(.05f*light).color(s.color,false).build();
-		}
+		}*/
 		return null;
 	}
 

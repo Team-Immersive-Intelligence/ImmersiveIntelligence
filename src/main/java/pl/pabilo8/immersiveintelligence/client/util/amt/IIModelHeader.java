@@ -5,9 +5,11 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Defines offsets and hierarchy for an animated model's parts
@@ -45,6 +47,30 @@ public class IIModelHeader
 					hierarchy.put(entry.getKey(), entry.getValue().getAsString());
 			}
 		}
+	}
+
+	/**
+	 * Joins multiple headers into one
+	 *
+	 * @param headers model headers
+	 */
+	public IIModelHeader(@Nullable IIModelHeader... headers)
+	{
+		hierarchy = new HashMap<>();
+		offsets = new HashMap<>();
+
+		if(headers!=null)
+			for(IIModelHeader h : headers)
+			{
+				hierarchy.putAll(h.hierarchy);
+				offsets.putAll(h.offsets);
+			}
+
+	}
+
+	public Set<String> getAffectedElements()
+	{
+		return offsets.keySet();
 	}
 
 	/**

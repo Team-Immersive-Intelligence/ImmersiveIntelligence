@@ -75,7 +75,7 @@ public class BlockIIRadioExplosives extends BlockIIMine
 		@Override
 		public float getInitialMass()
 		{
-			return 0.75f;
+			return 1f;
 		}
 
 		@Override

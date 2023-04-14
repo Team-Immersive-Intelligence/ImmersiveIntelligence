@@ -19,7 +19,7 @@ public class DataTypeArray implements IDataTypeIterable
 	public DataTypeArray(IDataType... i)
 	{
 		this.value = new IDataType[Math.min(i.length, 255)];
-		System.arraycopy(i, 0, this.value, 0, 255);
+		System.arraycopy(i, 0, this.value, 0, this.value.length);
 	}
 
 	public DataTypeArray()

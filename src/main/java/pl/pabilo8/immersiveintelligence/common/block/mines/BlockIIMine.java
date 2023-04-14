@@ -241,6 +241,12 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 		}
 
 		@Override
+		public boolean isProjectile()
+		{
+			return false;
+		}
+
+		@Override
 		public IAmmoComponent[] getComponents(ItemStack stack)
 		{
 			if(ItemNBTHelper.hasKey(stack, "components"))

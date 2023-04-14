@@ -28,11 +28,11 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 
 	public enum ConcreteDecorations implements IIBlockEnum
 	{
-		@IIBlockProperties(hardness = 2, blastResistance = 360, harvestLevel = 1)
+		@IIBlockProperties(hardness = 2, blastResistance = 360, harvestLevel = 1, oreDict = "bricksConcrete")
 		CONCRETE_BRICKS,
-		@IIBlockProperties(hardness = 6, blastResistance = 1600, harvestLevel = 2)
+		@IIBlockProperties(hardness = 6, blastResistance = 1600, harvestLevel = 2, oreDict = "sturdyBricksConcrete")
 		STURDY_CONCRETE_BRICKS,
-		@IIBlockProperties(hardness = 10, blastResistance = 2400, harvestLevel = 3)
+		@IIBlockProperties(hardness = 10, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcrete")
 		UBERCONCRETE
 	}
 

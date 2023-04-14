@@ -64,7 +64,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	@Override
 	public float getInitialMass()
 	{
-		return 0f;
+		return 1f;
 	}
 
 	@Override
@@ -229,5 +229,11 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 	public EnumFuseTypes[] getAllowedFuseTypes()
 	{
 		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.PROXIMITY};
+	}
+
+	@Override
+	public boolean isProjectile()
+	{
+		return false;
 	}
 }
