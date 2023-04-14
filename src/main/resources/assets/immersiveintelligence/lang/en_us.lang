@@ -543,6 +543,9 @@ tile.immersiveintelligence.small_crate.wooden_crate_wide.name=Small Wooden Crate
 tile.immersiveintelligence.small_crate.metal_crate_box.name=Small Metal Crate (Box)
 tile.immersiveintelligence.small_crate.metal_crate_cube.name=Small Metal Crate (Cube)
 tile.immersiveintelligence.small_crate.metal_crate_wide.name=Small Metal Crate (Wide)
+tile.immersiveintelligence.small_crate.reinforced_crate_box.name=Small Reinforced Crate (Box)
+tile.immersiveintelligence.small_crate.reinforced_crate_cube.name=Small Reinforced Crate (Cube)
+tile.immersiveintelligence.small_crate.reinforced_crate_wide.name=Small Reinforced Crate (Wide)
 
 tile.immersiveintelligence.metal_fortification.steel_chain_fence.name=Steel Chain Fence
 tile.immersiveintelligence.metal_fortification.brass_chain_fence.name=Brass Chain Fence

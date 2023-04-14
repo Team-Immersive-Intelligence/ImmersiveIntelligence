@@ -49,7 +49,10 @@ public class BlockIISmallCrate extends BlockIITileProvider<IIBlockTypes_SmallCra
 		WOODEN_CRATE_WIDE,
 		METAL_CRATE_BOX,
 		METAL_CRATE_CUBE,
-		METAL_CRATE_WIDE;
+		METAL_CRATE_WIDE,
+		REINFORCED_CRATE_BOX,
+		REINFORCED_CRATE_CUBE,
+		REINFORCED_CRATE_WIDE;
 
 		@Override
 		public Class<? extends TileEntity> getTile()

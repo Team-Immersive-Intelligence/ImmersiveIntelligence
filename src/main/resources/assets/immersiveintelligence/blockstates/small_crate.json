@@ -53,6 +53,30 @@
         }
       }
     ],
+    "inventory,type=reinforced_crate_box": [
+      {
+        "model": "immersiveintelligence:small_crate/box",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/reinforced"
+        }
+      }
+    ],
+    "inventory,type=reinforced_crate_cube": [
+      {
+        "model": "immersiveintelligence:small_crate/cube",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/reinforced"
+        }
+      }
+    ],
+    "inventory,type=reinforced_crate_wide": [
+      {
+        "model": "immersiveintelligence:small_crate/wide",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/reinforced"
+        }
+      }
+    ],
     "type": {
       "wooden_crate_box": {
         "model": "immersiveintelligence:small_crate/box",
@@ -93,6 +117,27 @@
         "model": "immersiveintelligence:small_crate/wide",
         "textures": {
           "texture": "immersiveintelligence:blocks/small_crate/metal",
+          "particle": "immersiveengineering:blocks/storage_steel"
+        }
+      },
+      "reinforced_crate_box": {
+        "model": "immersiveintelligence:small_crate/box",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/reinforced",
+          "particle": "immersiveengineering:blocks/storage_steel"
+        }
+      },
+      "reinforced_crate_cube": {
+        "model": "immersiveintelligence:small_crate/cube",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/reinforced",
+          "particle": "immersiveengineering:blocks/storage_steel"
+        }
+      },
+      "reinforced_crate_wide": {
+        "model": "immersiveintelligence:small_crate/wide",
+        "textures": {
+          "texture": "immersiveintelligence:blocks/small_crate/reinforced",
           "particle": "immersiveengineering:blocks/storage_steel"
         }
       }
