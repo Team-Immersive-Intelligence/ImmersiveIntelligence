@@ -8,6 +8,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.util.function.BiConsumer;
+
 /**
  * <p>
  * This class provides efficient drawing of multiple rects using {@link net.minecraft.client.renderer.BufferBuilder}.<br>
@@ -35,6 +37,7 @@ public class IIDrawUtils
 	 * Class is used in a builder-like fashion
 	 */
 	private static final IIDrawUtils INSTANCE = new IIDrawUtils();
+	private VertexFormat format;
 	private BufferBuilder buf;
 	private Tessellator tes;
 	private float offX, offY;
@@ -42,6 +45,7 @@ public class IIDrawUtils
 	//--- Begin Methods ---//
 	private static IIDrawUtils start(BufferBuilder buf, VertexFormat format)
 	{
+		INSTANCE.format = format;
 		INSTANCE.offX = 0;
 		INSTANCE.offY = 0;
 		INSTANCE.buf = buf;
@@ -143,6 +147,30 @@ public class IIDrawUtils
 		return this;
 	}
 
+	public IIDrawUtils drawColorGradient(int x, float y, int w, int h, int colorBottom, int colorTop)
+	{
+		int r = (colorBottom>>16)&0x0ff, g = (colorBottom>>8)&0x0ff, b = colorBottom&0x0ff, a = colorBottom<<8;
+		int r2 = (colorTop>>16)&0x0ff, g2 = (colorTop>>8)&0x0ff, b2 = colorTop&0x0ff, a2 = colorTop<<8;
+
+		buf.pos(offX+x, offY+y+h, 0)
+				.tex(0, 0)
+				.color(r, g, b, a)
+				.endVertex();
+		buf.pos(offX+x+w, offY+y+h, 0)
+				.tex(0, 0)
+				.color(r, g, b, a)
+				.endVertex();
+		buf.pos(offX+x+w, offY+y, 0)
+				.tex(0, 0)
+				.color(r2, g2, b2, a2)
+				.endVertex();
+		buf.pos(offX+x, offY+y, 0)
+				.tex(0, 0)
+				.color(r2, g2, b2, a2)
+				.endVertex();
+		return this;
+	}
+
 	public IIDrawUtils drawTexColorRect(int x, float y, int w, int h, float[] argb, float... uv)
 	{
 		return drawTexColorRect(x, y, w, h, argb[0], argb[1], argb[2], 1f, uv);
@@ -182,6 +210,16 @@ public class IIDrawUtils
 	{
 		this.offX += x;
 		this.offY += y;
+		return this;
+	}
+
+	//--- Interrupt Method ---//
+
+	public IIDrawUtils inBetween(BiConsumer<Integer, Integer> draw)
+	{
+		finish();
+		draw.accept((int)offX, (int)offY);
+		buf.begin(GL11.GL_QUADS, format);
 		return this;
 	}
 

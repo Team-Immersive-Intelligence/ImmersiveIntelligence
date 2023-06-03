@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Vector3f;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -72,8 +71,10 @@ public abstract class AMT
 
 		preDraw();
 
-		if(alpha!=1f)
-			ShaderUtil.alpha_static(alpha);
+		/*if(alpha!=1f)
+		{
+			GlStateManager.alphaFunc(GL11.GL_ALPHA_TEST_FUNC, alpha);
+		}*/
 
 		draw(tes, buf);
 
@@ -81,8 +82,10 @@ public abstract class AMT
 			for(AMT child : children)
 				child.render(tes, buf);
 
-		if(alpha!=1f)
-			ShaderUtil.releaseShader();
+		/*if(alpha!=1f)
+		{
+			GlStateManager.alphaFunc(GL11.GL_ALPHA_TEST_FUNC, 1f);
+		}*/
 
 		GlStateManager.popMatrix();
 	}
