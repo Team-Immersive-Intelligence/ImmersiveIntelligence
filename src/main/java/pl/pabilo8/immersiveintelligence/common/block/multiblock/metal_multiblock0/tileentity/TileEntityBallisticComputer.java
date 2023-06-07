@@ -25,15 +25,12 @@ import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeFloat;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataTypeNumeric;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,12 +220,12 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 
 
 		DataPacket new_packet = packet.clone();
-		if(new_packet.hasAnyVariables('x','y','z'))
+		if(new_packet.hasAnyVariables('x', 'y', 'z'))
 		{
-			float x = packet.getVarInType(IDataTypeNumeric.class,new_packet.getPacketVariable('x')).floatValue();
-			float y = packet.getVarInType(IDataTypeNumeric.class,new_packet.getPacketVariable('y')).floatValue();
-			float z = packet.getVarInType(IDataTypeNumeric.class,new_packet.getPacketVariable('z')).floatValue();
-			new_packet.removeVariables('x','y','z');
+			float x = packet.getVarInType(IDataTypeNumeric.class, new_packet.getPacketVariable('x')).floatValue();
+			float y = packet.getVarInType(IDataTypeNumeric.class, new_packet.getPacketVariable('y')).floatValue();
+			float z = packet.getVarInType(IDataTypeNumeric.class, new_packet.getPacketVariable('z')).floatValue();
+			new_packet.removeVariables('x', 'y', 'z');
 
 			float mass = 0;
 			double force = IIContent.itemAmmoArtillery.getDefaultVelocity();
@@ -260,7 +257,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 				}
 
 
-				new_packet.removeVariables('m','f','t');
+				new_packet.removeVariables('m', 'f', 't');
 			}
 
 			float distance = (float)new Vec3d(0, 0, 0).distanceTo(new Vec3d(x, 0, z));
@@ -279,7 +276,13 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 			else
 				yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+270;
 
-			float pitch = IIUtils.calculateBallisticAngle(distance, y, (float)force, gravity, drag, 0.002);
+			float pitch;
+			//direct
+
+			if(packet.getVarInType(DataTypeBoolean.class, packet.getPacketVariable('d')).value)
+				pitch = 90-IIUtils.getDirectFireAngle((float)force, mass, new Vec3d(x, y, z));
+			else //ballistic
+				pitch = IIUtils.calculateBallisticAngle(distance, y, (float)force, gravity, drag, 0.002);
 
 			new_packet.setVariable('y', new DataTypeFloat(yaw));
 			new_packet.setVariable('p', new DataTypeFloat(pitch));
@@ -287,9 +290,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 
 			IDataConnector conn = IIUtils.findConnectorFacing(output.getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
 			if(conn!=null)
-			{
 				conn.sendPacket(new_packet);
-			}
 		}
 	}
 
