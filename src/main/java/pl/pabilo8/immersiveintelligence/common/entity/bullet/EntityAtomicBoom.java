@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullet;
 
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.elytradev.mirage.event.GatherLightsEvent;
+import com.elytradev.mirage.lighting.IEntityLightEventConsumer;
+import com.elytradev.mirage.lighting.Light;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,14 +25,12 @@ import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
-import javax.annotation.Nullable;
-
 /**
  * @author Pabilo8
  * @since 19.12.2020
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, ILightProvider
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer
 {
 	public float size;
 	public int progress = 0;
@@ -44,7 +44,7 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	{
 		this(worldIn);
 		this.size = size;
-		this.ignoreFrustumCheck=true;
+		this.ignoreFrustumCheck = true;
 		setRenderDistanceWeight(32.0);
 	}
 
@@ -239,14 +239,6 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Nullable
-	@Override
-	public Light provideLight()
-	{
-		return Light.builder().pos(this).radius(32*size).color(1, 1, 1).build();
-	}
-
 	@Override
 	public void writeSpawnData(ByteBuf buffer)
 	{
@@ -259,5 +251,13 @@ public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnDa
 	{
 		size = buffer.readFloat();
 		progress = buffer.readInt();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = "mirage")
+	public void gatherLights(GatherLightsEvent gatherLightsEvent, Entity entity)
+	{
+		gatherLightsEvent.add(Light.builder().pos(this).radius(32*size).color(1, 1, 1).build());
 	}
 }

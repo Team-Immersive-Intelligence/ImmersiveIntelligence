@@ -8,12 +8,11 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockM
 import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.elytradev.mirage.event.GatherLightsEvent;
+import com.elytradev.mirage.lighting.ILightEventConsumer;
+import com.elytradev.mirage.lighting.Light;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,12 +20,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -40,14 +42,14 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
-import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,8 +62,8 @@ import java.util.function.Predicate;
  * @author Pabilo8
  * @since 28-06-2019
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEntityChemicalPainter, PaintingRecipe> implements IGuiTile, ISoundTile, IAdvancedBounds, ILightProvider, IDataDevice
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEntityChemicalPainter, PaintingRecipe> implements IGuiTile, ISoundTile, IAdvancedBounds, ILightEventConsumer, IDataDevice
 {
 	private static final Predicate<FluidStack> CYAN = fluidStack -> fluidStack!=null&&fluidStack.getFluid().getName().equals("ink_cyan");
 	private static final Predicate<FluidStack> MAGENTA = fluidStack -> fluidStack!=null&&fluidStack.getFluid().getName().equals("ink_magenta");
@@ -642,21 +644,6 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 	}
 
 	@Override
-	public Light provideLight()
-	{
-		if(pos==47)
-		{
-			TileEntityChemicalPainter master = master();
-			if(master!=null&&master.active)
-			{
-				if(IIUtils.inRange(master.processTime, master.processTimeMax, 0.65f, 0.95f))
-					return Light.builder().pos(getPos()).color(0.8235294f, 0.20392157f, 0.92156863f).radius(5f).build();
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public void onReceive(DataPacket packet, @Nullable EnumFacing side)
 	{
 		TileEntityChemicalPainter master = master();
@@ -722,11 +709,26 @@ public class TileEntityChemicalPainter extends TileEntityMultiblockMetal<TileEnt
 				{
 					int color = Integer.parseInt(p.valueToString(), 16);
 					master.color = MathHelper.clamp(color, 0, 0xffffff);
-				}
-				catch(NumberFormatException ignored)
+				} catch(NumberFormatException ignored)
 				{
 
 				}
+			}
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = "mirage")
+	public void gatherLights(GatherLightsEvent gatherLightsEvent)
+	{
+		if(pos==47)
+		{
+			TileEntityChemicalPainter master = master();
+			if(master!=null&&master.active)
+			{
+				if(IIUtils.inRange(master.processTime, master.processTimeMax, 0.65f, 0.95f))
+					gatherLightsEvent.add(Light.builder().pos(getPos()).color(0.8235294f, 0.20392157f, 0.92156863f).radius(5f).build());
 			}
 		}
 	}

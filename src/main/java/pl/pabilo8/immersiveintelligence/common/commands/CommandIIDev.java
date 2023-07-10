@@ -53,7 +53,10 @@ import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -140,7 +143,7 @@ public class CommandIIDev extends CommandBase
 					sender.sendMessage(getMessageForCommand("parachute", "spawns and mounts the command user on a parachute"));
 					sender.sendMessage(getMessageForCommand("deth", "removes the entity player is looking at"));
 					sender.sendMessage(getMessageForCommand("get_mb", "gets the internal data of a multiblock player is looking at"));
-					sender.sendMessage(getMessageForCommand("place_mb", "places a multiblock","<id>"));
+					sender.sendMessage(getMessageForCommand("place_mb", "places a multiblock", "<id>"));
 
 				}
 				break;
@@ -257,9 +260,9 @@ public class CommandIIDev extends CommandBase
 					Vec3d vec3d1 = senderEntity.getLook(0);
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
 					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), true, false, true, Collections.singletonList(senderEntity), Collections.emptyList());
-					if(rayTracer.hits.size() > 0)
+					if(rayTracer.getHits().isEmpty())
 					{
-						Entity entityHit = rayTracer.hits.get(0).entityHit;
+						Entity entityHit = rayTracer.getHits().get(0).entityHit;
 						if(entityHit!=null&&entityHit.hasCapability(CapabilityEnergy.ENERGY, null))
 						{
 							IEnergyStorage capability = entityHit.getCapability(CapabilityEnergy.ENERGY, null);
@@ -508,7 +511,7 @@ public class CommandIIDev extends CommandBase
 						return MultiblockHandler.getMultiblocks()
 								.stream()
 								.map(IMultiblock::getUniqueName)
-								.map(s -> s.startsWith("II:")?(TextFormatting.GOLD+s+TextFormatting.RESET):s)
+								.map(s -> s.startsWith("II:")?(TextFormatting.GOLD+s+TextFormatting.RESET): s)
 								.collect(Collectors.toList());
 					default:
 						return Collections.emptyList();

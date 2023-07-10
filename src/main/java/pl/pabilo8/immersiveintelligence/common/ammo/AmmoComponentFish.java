@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.ammo;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.entities.EntityChemthrowerShot;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -14,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
 
 /**
  * @author Pabilo8
@@ -44,19 +44,18 @@ public class AmmoComponentFish implements IAmmoComponent
 	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
 		Vec3d v = new Vec3d(0, -1, 0);
-		Vec3d throwerPos = pos.addVector(0,3,0);
+		Vec3d throwerPos = pos.addVector(0, 3, 0);
 		for(int i = 0; i < 100*amount; i++)
 		{
 			Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 
-			EntityChemthrowerShot shot = new EntityChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
-					throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(FluidRegistry.WATER, 1));
+			EntityIIChemthrowerShot shot = new EntityIIChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2, throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(FluidRegistry.WATER, 1));
 			shot.motionX = vecDir.x*2;
 			shot.motionY = vecDir.y*0.05f;
 			shot.motionZ = vecDir.z*2;
 			world.spawnEntity(shot);
 		}
-		Utils.dropStackAtPos(world,new BlockPos(pos).up(),new ItemStack(Items.FISH));
+		Utils.dropStackAtPos(world, new BlockPos(pos).up(), new ItemStack(Items.FISH));
 	}
 
 	@Override

@@ -15,23 +15,23 @@ import net.minecraftforge.fluids.IFluidBlock;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 09.11.2020
- *
+ * <p>
  * A raytracing class used by II in bullets to get all the entities and block a bullet penetrates
  * Probably will be moved to IG
  * The name volumetric is inspired by War Thunder's system name, the term means that shells have a volume (like {@link AxisAlignedBB})
  * This raytracer simply iterates trough all the blocks using length of the aabb's lowest edge size
  * It can be configured in multiple ways, similar to MC's default {@link RayTraceResult}
  */
-public class MultipleRayTracer
+public class MultipleRayTracer implements Iterable<RayTraceResult>
 {
 	private static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
-
-	public ArrayList<RayTraceResult> hits = new ArrayList<>();
+	private ArrayList<RayTraceResult> hits = new ArrayList<>();
 
 	private MultipleRayTracer()
 	{
@@ -46,11 +46,11 @@ public class MultipleRayTracer
 		double px = posStart.x, py = posStart.y, pz = posStart.z;
 		Vec3d pDiff = posEnd.subtract(posStart).normalize();
 		double pxDiff = pDiff.x*precision, pyDiff = pDiff.y*precision, pzDiff = pDiff.z*precision;
-		BlockPos lastPos = null;
 		aabb = aabb.grow(0.25);
 		double dist = posStart.distanceTo(posEnd);
 
 		///kill @e[type=immersiveintelligence:bullet]
+		//REFACTOR: 10.07.2023 get all entities in a box from posStart to posEnd, cache them, and then scan only from this list
 		for(double i = 0; i < dist; i += precision)
 		{
 			px += pxDiff;
@@ -122,6 +122,17 @@ public class MultipleRayTracer
 		return Arrays.toString(this.hits.toArray(new RayTraceResult[0]));
 	}
 
+	@Override
+	public Iterator<RayTraceResult> iterator()
+	{
+		return hits.listIterator();
+	}
+
+	public List<RayTraceResult> getHits()
+	{
+		return hits;
+	}
+
 	public static class MultipleTracerBuilder
 	{
 		private final World world;
@@ -143,10 +154,9 @@ public class MultipleRayTracer
 		}
 
 		/**
-		 *
-		 * @param world the world raytracing is in
+		 * @param world    the world raytracing is in
 		 * @param posStart the start position vector
-		 * @param posEnd the end position vector
+		 * @param posEnd   the end position vector
 		 * @return the builder
 		 */
 		public static MultipleTracerBuilder setPos(World world, Vec3d posStart, Vec3d posEnd)
@@ -155,7 +165,6 @@ public class MultipleRayTracer
 		}
 
 		/**
-		 *
 		 * @param aabb box for volumetric tracing
 		 * @return the builder
 		 */
@@ -166,10 +175,9 @@ public class MultipleRayTracer
 		}
 
 		/**
-		 *
 		 * @param ignoreBlockWithoutBoundingBox whether blocks with no bounding box (i.e. air) should be counted in
-		 * @param stopOnLiquid whether should stop tracing on liquids
-		 * @param allowEntities whether entities should be traced
+		 * @param stopOnLiquid                  whether should stop tracing on liquids
+		 * @param allowEntities                 whether entities should be traced
 		 * @return the builder
 		 */
 		public MultipleTracerBuilder setRules(boolean ignoreBlockWithoutBoundingBox, boolean stopOnLiquid, boolean allowEntities)
@@ -181,7 +189,6 @@ public class MultipleRayTracer
 		}
 
 		/**
-		 *
 		 * @param entityFilter list for filtering entities
 		 * @return the builder
 		 */
@@ -192,7 +199,6 @@ public class MultipleRayTracer
 		}
 
 		/**
-		 *
 		 * @param blockFilter list for filtering blocks
 		 * @return the builder
 		 */
@@ -203,9 +209,8 @@ public class MultipleRayTracer
 		}
 
 		/**
-		 *
 		 * @param entityFilter list for filtering entities
-		 * @param blockFilter list for filtering blocks
+		 * @param blockFilter  list for filtering blocks
 		 * @return the builder
 		 */
 		public MultipleTracerBuilder setFilters(List<Entity> entityFilter, List<BlockPos> blockFilter)

@@ -3,8 +3,9 @@ package pl.pabilo8.immersiveintelligence.common.entity.bullet;
 import blusunrize.immersiveengineering.common.entities.EntityIEProjectile;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.Utils;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.elytradev.mirage.event.GatherLightsEvent;
+import com.elytradev.mirage.lighting.ILightEventConsumer;
+import com.elytradev.mirage.lighting.Light;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,20 +18,19 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
-import javax.annotation.Nullable;
-
 /**
  * @author Pabilo8
  * @since 26-10-2019
  */
 @net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightProvider
+public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer
 {
 	public EntityWhitePhosphorus(World world)
 	{
@@ -119,15 +119,6 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightP
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Nullable
-	@Override
-	public Light provideLight()
-	{
-		return Light.builder().pos(this).radius(.05f).color(1, 1, 1).build();
-	}
-
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender()
@@ -142,5 +133,17 @@ public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightP
 	public float getBrightness()
 	{
 		return 15;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = "mirage")
+	public void gatherLights(GatherLightsEvent evt)
+	{
+		evt.add(Light.builder()
+				.pos(this)
+				.color(1, 1, 1)
+				.radius(.05f)
+				.build());
 	}
 }

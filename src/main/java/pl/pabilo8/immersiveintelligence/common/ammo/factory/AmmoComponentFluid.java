@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.factory;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.entities.EntityChemthrowerShot;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -14,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRo
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityGasCloud;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
 
 /**
  * @author Pabilo8
@@ -45,7 +45,7 @@ public class AmmoComponentFluid implements IAmmoComponent
 	@Override
 	public float getDensity()
 	{
-		return Math.max(fluid.getDensity(),0)/1000f;
+		return Math.max(fluid.getDensity(), 0)/1000f;
 	}
 
 	@Override
@@ -74,7 +74,13 @@ public class AmmoComponentFluid implements IAmmoComponent
 			{
 				Vec3d vecDir = v.addVector(Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f, Utils.RAND.nextGaussian()*.25f);
 
-				EntityChemthrowerShot shot = new EntityChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
+				world.spawnEntity(
+						new EntityIIChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
+								throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(amount*1000)))
+								.withMotion(vecDir.x*2, vecDir.y*0.05f, vecDir.z*2)
+				);
+
+				EntityIIChemthrowerShot shot = new EntityIIChemthrowerShot(world, throwerPos.x+v.x*2, throwerPos.y+v.y*2,
 						throwerPos.z+v.z*2, 0, 0, 0, new FluidStack(fluid, (int)(amount*1000)));
 				shot.motionX = vecDir.x*2;
 				shot.motionY = vecDir.y*0.05f;

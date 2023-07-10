@@ -640,24 +640,15 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIContent.MULTIBLOCKS.forEach(MultiblockHandler::registerMultiblock);
 
 
-		int i = -1;
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_crate"),
-				EntityMinecartCrateWooden.class, "minecart_wooden_crate", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
-				true);
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_reinforced_crate"),
-				EntityMinecartCrateReinforced.class, "minecart_reinforced_crate", i++, ImmersiveIntelligence.INSTANCE,
-				64, 1, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_steel_crate"),
-				EntityMinecartCrateSteel.class, "minecart_steel_crate", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
-				true);
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_wooden_barrel"),
-				EntityMinecartBarrelWooden.class, "minecart_wooden_barrel", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
-				true);
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "minecart_metal_barrel"),
-				EntityMinecartBarrelSteel.class, "minecart_metal_barrel", i++, ImmersiveIntelligence.INSTANCE, 64, 1,
-				true);
-
 		//Entities
+		int i = -1;
+
+		//Minecarts
+		registerEntity(i++, EntityMinecartCrateWooden.class, "minecart_wooden_crate", 64, 1, true);
+		registerEntity(i++, EntityMinecartCrateReinforced.class, "minecart_reinforced_crate", 64, 1, true);
+		registerEntity(i++, EntityMinecartCrateSteel.class, "minecart_steel_crate", 64, 1, true);
+		registerEntity(i++, EntityMinecartBarrelWooden.class, "minecart_wooden_barrel", 64, 1, true);
+		registerEntity(i++, EntityMinecartBarrelSteel.class, "minecart_metal_barrel", 64, 1, true);
 
 		//Finally Skycrates are a thing! ^^
 		registerEntity(i++, EntitySkyCrate.class, "skycrate", 64, 1, true);

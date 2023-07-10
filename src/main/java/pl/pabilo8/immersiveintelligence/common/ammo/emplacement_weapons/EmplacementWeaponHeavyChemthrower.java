@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.entities.EntityChemthrowerShot;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -13,6 +12,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,9 +26,9 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Autocannon;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.HeavyChemthrower;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -36,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 	@Override
 	public void aimAt(float yaw, float pitch)
 	{
-		super.aimAt(yaw,pitch);
+		super.aimAt(yaw, pitch);
 	}
 
 	public boolean isSetUp(boolean door)
@@ -169,39 +170,34 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		int split = Math.min(tank.getFluidAmount()/4, 6);
 
 		if(tank.getFluid()==null)
-		{
 			tank.fill(new FluidStack(IEContent.fluidCreosote, 1000), true);
-		}
 		else if(!te.getWorld().isRemote)
 		{
+			Vec3d g1 = gun.add(vv.rotateYaw(90).scale(0.25f));
+			Vec3d g2 = gun.add(vv.rotateYaw(-90).scale(0.25f));
+			BlockPos[] allBlocks = te.getAllBlocks();
+
 			for(int i = 0; i < split; i++)
 			{
 				Vec3d vecDir = vv.scale(-1.0f).normalize().scale(range).add(new Vec3d(Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter, Utils.RAND.nextGaussian()*scatter));
 
-				Vec3d g1 = gun.add(vv.rotateYaw(90).scale(0.25f));
-				Vec3d g2 = gun.add(vv.rotateYaw(-90).scale(0.25f));
-
-				EntityChemthrowerShot chem = new EntityChemthrowerShot(te.getWorld(), g1.x, g1.y, g1.z, vecDir.x, vecDir.y, vecDir.z, tank.getFluid());
-				EntityChemthrowerShot chem2 = new EntityChemthrowerShot(te.getWorld(), g2.x, g2.y, g2.z, vecDir.x, vecDir.y, vecDir.z, tank.getFluid());
-
-				// Apply momentum from the player.
-				chem.motionX = vecDir.x;
-				chem.motionY = vecDir.y;
-				chem.motionZ = vecDir.z;
-				chem2.motionX = vecDir.x;
-				chem2.motionY = vecDir.y;
-				chem2.motionZ = vecDir.z;
-
-				tank.drain(4,true);
+				EntityIIChemthrowerShot chem = new EntityIIChemthrowerShot(te.getWorld(), g1.x, g1.y, g1.z, vecDir.x, vecDir.y, vecDir.z, tank.getFluid())
+						.withShooters(allBlocks)
+						.withMotion(vecDir);
+				EntityIIChemthrowerShot chem2 = new EntityIIChemthrowerShot(te.getWorld(), g2.x, g2.y, g2.z, vecDir.x, vecDir.y, vecDir.z, tank.getFluid())
+						.withShooters(allBlocks)
+						.withMotion(vecDir);
 
 				if(shouldIgnite)
 				{
 					chem.setFire(10);
 					chem2.setFire(10);
 				}
+
 				te.getWorld().spawnEntity(chem);
 				te.getWorld().spawnEntity(chem2);
 			}
+			tank.drain(4*split, true);
 		}
 		shootDelay = Autocannon.bulletFireTime;
 		//bulletsShot++;
@@ -274,9 +270,9 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		GlStateManager.disableCull();
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelHeavyChemthrower.barrelEndModel)
 		{
-			mod.rotateAngleX=0.00000001f;
-			mod.hasOffset=true;
-			mod.offsetZ=(Math.min(setupProgress/0.5f,1f)*-9)+(MathHelper.clamp((setupProgress-0.5f)/0.5f,0,1f)*-9);
+			mod.rotateAngleX = 0.00000001f;
+			mod.hasOffset = true;
+			mod.offsetZ = (Math.min(setupProgress/0.5f, 1f)*-9)+(MathHelper.clamp((setupProgress-0.5f)/0.5f, 0, 1f)*-9);
 			mod.render();
 		}
 		GlStateManager.enableCull();

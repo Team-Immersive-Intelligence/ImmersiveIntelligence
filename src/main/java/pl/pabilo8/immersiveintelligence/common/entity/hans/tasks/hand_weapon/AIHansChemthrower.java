@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Tools;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.entities.EntityChemthrowerShot;
 import blusunrize.immersiveengineering.common.items.ItemChemthrower;
 import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
@@ -16,6 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
 
 /**
  * @author Pabilo8
@@ -124,7 +124,7 @@ public class AIHansChemthrower extends AIHansHandWeapon
 				for(int i = 0; i < split; i++)
 				{
 					Vec3d vecDir = v.addVector(living.getRNG().nextGaussian()*scatter, living.getRNG().nextGaussian()*scatter, living.getRNG().nextGaussian()*scatter);
-					EntityChemthrowerShot chem = new EntityChemthrowerShot(living.world, look.x, look.y, look.z, vecDir.x*0.25, vecDir.y*0.25, vecDir.z*0.25, fs);
+					EntityIIChemthrowerShot chem = new EntityIIChemthrowerShot(living.world, look.x, look.y, look.z, vecDir.x*0.25, vecDir.y*0.25, vecDir.z*0.25, fs);
 
 					// Apply momentum from the player.
 					chem.motionX = living.motionX+vecDir.x*range;

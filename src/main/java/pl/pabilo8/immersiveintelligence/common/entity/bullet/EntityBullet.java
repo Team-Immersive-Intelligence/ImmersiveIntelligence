@@ -1,7 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullet;
 
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.elytradev.mirage.event.GatherLightsEvent;
+import com.elytradev.mirage.lighting.IEntityLightEventConsumer;
+import com.elytradev.mirage.lighting.Light;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -9,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -23,14 +23,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer.MultipleTracerBuilder;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
@@ -43,7 +42,6 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -53,8 +51,8 @@ import java.util.Arrays;
  * Major update on 08-03-2020.
  * Total rewrite on 31-10-2020, almost no old code left
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityBullet extends Entity implements ILightProvider, IEntityAdditionalSpawnData
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+public class EntityBullet extends Entity implements IEntityLightEventConsumer, IEntityAdditionalSpawnData
 {
 	public static final int MAX_TICKS = 600;
 	public static final float DRAG = 0.01f;
@@ -274,7 +272,7 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 
 			int i = 0;
 			penloop:
-			for(RayTraceResult hit : tracer.hits)
+			for(RayTraceResult hit : tracer)
 			{
 				if(hit!=null)
 					switch(hit.typeOfHit)
@@ -664,21 +662,22 @@ public class EntityBullet extends Entity implements ILightProvider, IEntityAddit
 		setEntityBoundingBox(new AxisAlignedBB(-cal, -cal, -cal, cal, cal, cal));
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Nullable
 	@Override
-	public Light provideLight()
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = "mirage")
+	public void gatherLights(GatherLightsEvent evt, Entity entity)
 	{
 		if(this.wasSynced)
-			for(int j = 0; j < components.length; j++)
+			for(int i = 0, componentsLength = components.length; i < componentsLength; i++)
 			{
-				IAmmoComponent c = components[j];
-				if(c.hasTrail())
-				{
-					return Light.builder().pos(this).radius(bullet.getComponentMultiplier()*16f).color(c.getNBTColour(componentNBT[j]), false).build();
-				}
+				IAmmoComponent component = components[i];
+				if(component.hasTrail())
+					evt.add(Light.builder().pos(this)
+							.radius(bullet.getComponentMultiplier()*16f)
+							.color(component.getNBTColour(componentNBT[i]), false)
+							.build());
 			}
-		return null;
+
 	}
 
 	@Override

@@ -9,8 +9,9 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.elytradev.mirage.event.GatherLightsEvent;
+import com.elytradev.mirage.lighting.ILightEventConsumer;
+import com.elytradev.mirage.lighting.Light;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityMultiPart;
@@ -33,6 +34,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -77,8 +79,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 // TODO: 26.09.2021 improve task sync and fix GUI
-@net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISoundTile, IGuiTile, ILightProvider
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityEmplacement, MultiblockRecipe> implements IBooleanAnimatedPartsBlock, IDataDevice, IUpgradableMachine, IAdvancedCollisionBounds, IAdvancedSelectionBounds, ISoundTile, IGuiTile, ILightEventConsumer
 {
 	public static final HashMap<String, Supplier<EmplacementWeapon>> weaponRegistry = new HashMap<>();
 	public static final HashMap<String, BiFunction<NBTTagCompound, TileEntityEmplacement, EmplacementTask>> targetRegistry = new HashMap<>();
@@ -1253,19 +1255,26 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	}
 
 	@Override
-	public Light provideLight()
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = "mirage")
+	public void gatherLights(GatherLightsEvent gatherLightsEvent)
 	{
 		if(isDummy())
-			return null;
+			return;
 
 		if(currentWeapon!=null&&forcedRepair&&progress==0)
 		{
 			BlockPos pp = getBlockPosForPos(31);
 			float f = Math.abs(((world.getTotalWorldTime()%6)/6f)-0.5f)*2f;
 
-			return new Light(pp.getX(), pp.getY(), pp.getZ(), (159+f*40)/255f, (213+f*40)/255f, (215+f*40)/255f, 1f, 3f);
+			gatherLightsEvent.add(Light.builder()
+					.pos(pp)
+					.color((159+f*40)/255f, (213+f*40)/255f, (215+f*40)/255f, 1f)
+					.intensity(3f)
+					.build()
+			);
+
 		}
-		return null;
 	}
 
 	public static abstract class EmplacementWeapon
@@ -1702,10 +1711,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		private boolean canEntityBeSeen(Entity entity, Vec3d vEmplacement, BlockPos[] allBlocks, int maxBlocks)
 		{
 			Vec3d vEntity = entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f);
-
-			ArrayList<RayTraceResult> hits = MultipleRayTracer.volumetricTrace(entity.world, vEmplacement, vEntity, new AxisAlignedBB(-0.00625, -0.00625, -0.00625, 0.00625, 0.00625, 0.00625), true, false, false, Collections.singletonList(entity), Arrays.asList(allBlocks)).hits;
+			MultipleRayTracer rayTraceResults = MultipleRayTracer.volumetricTrace(entity.world, vEmplacement, vEntity, new AxisAlignedBB(-0.00625, -0.00625, -0.00625, 0.00625, 0.00625, 0.00625), true, false, false, Collections.singletonList(entity), Arrays.asList(allBlocks));
 			int h = 0;
-			for(RayTraceResult hit : hits)
+			for(RayTraceResult hit : rayTraceResults)
 			{
 				if(hit.typeOfHit==Type.BLOCK)
 					h++;

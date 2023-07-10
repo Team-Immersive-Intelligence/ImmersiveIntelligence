@@ -1,12 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.entity.bullet;
 
 import blusunrize.immersiveengineering.common.entities.EntityIEProjectile;
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
+import com.elytradev.mirage.event.GatherLightsEvent;
+import com.elytradev.mirage.lighting.IEntityLightEventConsumer;
+import com.elytradev.mirage.lighting.Light;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +16,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,16 +24,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 
-import javax.annotation.Nullable;
-
 import static pl.pabilo8.immersiveintelligence.common.util.IIDamageSources.causeShrapnelDamage;
 
 /**
  * @author Pabilo8
  * @since 26-10-2019
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
-public class EntityShrapnel extends EntityIEProjectile implements ILightProvider, IEntityAdditionalSpawnData
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+public class EntityShrapnel extends EntityIEProjectile implements IEntityLightEventConsumer, IEntityAdditionalSpawnData
 {
 	public String shrapnel;
 
@@ -105,7 +106,7 @@ public class EntityShrapnel extends EntityIEProjectile implements ILightProvider
 			Shrapnel s = ShrapnelHandler.registry.get(shrapnel);
 			if(mop.entityHit!=null)
 			{
-				mop.entityHit.attackEntityFrom(causeShrapnelDamage(this, shootingEntity,mop.entityHit), s.damage);
+				mop.entityHit.attackEntityFrom(causeShrapnelDamage(this, shootingEntity, mop.entityHit), s.damage);
 				mop.entityHit.hurtResistantTime *= .5;
 				if(this.isBurning())
 				{
@@ -123,20 +124,23 @@ public class EntityShrapnel extends EntityIEProjectile implements ILightProvider
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Nullable
 	@Override
-	public Light provideLight()
+	@SideOnly(Side.CLIENT)
+	@Optional.Method(modid = "mirage")
+	public void gatherLights(GatherLightsEvent evt, Entity entity)
 	{
-		//Kurwa a nie kod
-		/*Shrapnel s = ShrapnelHandler.registry.get(shrapnel);
-		if(s!=null)
-		{
-			int light = this.isBurning()?15: Math.round(s.brightness*15f);
-			if(light > 0)
-				return Light.builder().pos(this).radius(.05f*light).color(s.color,false).build();
-		}*/
-		return null;
+		Shrapnel s = ShrapnelHandler.registry.get(shrapnel);
+		if(s==null)
+			return;
+		int light = this.isBurning()?15: Math.round(s.brightness*15f);
+
+		if(light > 0)
+			evt.add(Light.builder()
+					.pos(this)
+					.color(1, 1, 1)
+					.radius(.05f)
+					.build());
+
 	}
 
 

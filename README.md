@@ -22,28 +22,47 @@
 
 ### Credits
 
-The mod author, the developer:
+#### The mod author, the developer:
 - [@Pabilo8](https://github.com/Pabilo8/) - Main Developer, author - the programmer, graphic artist and modeller 
   - [Curseforge](https://www.curseforge.com/members/pabilo8/), 
   - [Twitter](https://twitter.com/PablosferaGames), 
   - [YouTube](https://www.youtube.com/channel/UCXTK248mxwBgwCpV5hikjFg)
 
-The current modeller, author of most of the newer models:
-- [@Carver](https://github.com/Carvercarver1) - Main Modeller, Archivist, Assistant, a fellow howitzer enthusiast and world destroyer
-  - [Curseforge](https://www.curseforge.com/members/john__carver/)
+#### Team Immersive Intelligence
+- [@Carver](https://github.com/Carvercarver1) - Main Modeller, Animator, Archivist, Assistant, a fellow howitzer enthusiast and world destroyer
+  - [Curseforge](https://www.curseforge.com/members/john__carver/)  
+- [@Schäferd](https://github.com/Schaeferd-CZ) - UV Mapper, Texturer, Modeller, Animator, Artist, a fellow retro-futurist and also *The Czech™*
+  - [Curseforge](https://www.curseforge.com/members/john__carver/)  
+- [@Bastian](https://github.com/RexBas07) - Editor of the Engineer's Manual, a fellow logistics enjoyer and *The Other Swede™*
 
-Special thanks to:
-- [@Choroman](https://github.com/Choroman) - Retired Concept Artist, multiblock sketch and blueprint creator, general helper, modeller
-- [@Krystiano0306](https://github.com/Krystiano0306) - Helped at various model-related jobs as a part of his practice, currently retired
-- [@Blacknight]() - Texture artist, created some textures for the mod's items
-- [@Kingcavespider1](https://github.com/kingcavespider1) - added a damage effect for the acid blocks
-- [@CrimsonTwilight](https://github.com/NightmareTwilight) - author of [Immersive Energy](https://www.curseforge.com/minecraft/mc-mods/immersive-energy), an allied modder from Team IG, also a *Swede*
+#### Special thanks to:
+- [@Choroman](https://github.com/Choroman) - Retired Concept Artist, multiblock sketch and blueprint creator, modeller
+- [@Krystiano0306](https://github.com/Krystiano0306) - Helped at various model-related jobs as a part of his practice, retired
+- [@Blacknight](#) - Texture artist, created some textures for the mod's items  
+
+- [@Kingcavespider1](https://github.com/kingcavespider1) - first community contribution to mod's GitHub  
+
+- [@Flaxbeard]() - for code snippets, approval of this mod and friendliness, during its release in 2020
+
+The Old Guard, long time enthusiasts of this mod  
+- [@Morten](https://github.com/Morten1202)
+- [@KingSpios](https://github.com/KingSpios)
+- [@RoyalJelly](https://github.com/Royal-Jelly)
+- [@Cloakable](https://github.com/Royal-Jelly)
+- [@Lgrmszd](https://github.com/Lgmrszd)
+- [@LeKripiY](https://github.com/LeKripiY)
+- @Shadowking
+
+Team IG
+- [@CrimsonTwilight](https://github.com/NightmareTwilight) - author of [Immersive Energy](https://www.curseforge.com/minecraft/mc-mods/immersive-energy), an allied modder from Team IG, also *The Swede™*
   - [Curseforge](https://www.curseforge.com/members/crimsondragonrider)
+- [@MuddyKat](https://github.com/NightmareTwilight) - Lead Developer of [Immersive Geology](https://www.curseforge.com/minecraft/mc-mods/immersive-geology), an allied modder from Team IG, also *The Australian™*
+  - [Curseforge](https://www.curseforge.com/members/crimsondragonrider)  
 
 Proudly using [Blockbench](https://www.blockbench.net/) - the minecraft modelling software:
 - Author: [@JannisX11](https://github.com/JannisX11/)
 
-Partially a fork of Turbo Model Thingy (TMT):
+Partially using a fork of Turbo Model Thingy (TMT):
 - The original author: [@GaryCXJk](https://github.com/GaryCXJk)
 - Licensed from: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)
 
