@@ -1,0 +1,145 @@
+//--- Gradle Dependencies
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: 'idea'
+
+//--- Project SourceSets
+sourceSets {
+    main
+    test
+}
+
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+    module {
+        outputDir = compileJava.destinationDir
+        testOutputDir = compileTestJava.destinationDir
+    }
+}
+
+//--- Project Defaults
+setVersion(modVersion)
+setGroup(modGroup)
+setArchivesBaseName(modName)
+
+//Ensures no compilation errors due to unrecognised unicode characters
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+//--- Settings
+minecraft {
+    version = modForge
+    runDir = "run"
+
+    replace "@VERSION@", modVersion
+    mappings = modMappings
+    useDepAts = true
+}
+
+//--- Include the ModWorks Processor
+if(ii_useModworksPreprocessor.asBoolean())
+    apply from: rootProject.file("gradle/modworks.gradle")
+
+compileJava {
+    logger.log(LogLevel.WARN, 'PRAISE THE GRUMPY GRADLEPHANT!')
+    logger.log(LogLevel.WARN, "     \n" +
+            "                          g@@@@g,\n" +
+            "                           \"  \"B@W\n" +
+            "            ,,ggggg,           ]@@\n" +
+            "          @@@@@@@@@@@@@w     ,g@@@\n" +
+            "         ,%@@@@@@@@@@@@@@@@@@@@@@`  <[ \$#!T! ]\n" +
+            "      ,@@@g]@@@@\$@@@@`  \$@@@@@@@`\n" +
+            "     g@@@@@@wgg@@@@@@@@@-@@@@@@\n" +
+            "    ]@@@@@@@@@@@@@@@@@@@@@@@@\"\n" +
+            "    \$@@@@@@@@@@@@@@@@@@@@@@@\n" +
+            "    @@@@@PPB@@@@@*\"\"*B@@@@@P\n" +
+            "    \$@@@\"   ]@@@       %@@@P\n")
+    logger.log(LogLevel.WARN, ii_gradlephantTitle)
+    logger.log(LogLevel.WARN, ii_gradlephantLink+'\n')
+
+    if(ii_printSourceSets.toBoolean())
+    {
+        logger.log(LogLevel.WARN, 'SourceSets in Project: ')
+        sourceSets.each { srcSet ->
+            println "> ["+srcSet.name+"]"
+//            if(['api','test'].contains(srcSet.name))
+//                return
+            print "   - Sources: "+srcSet.allJava.srcDirs+"\n"
+//            print "- Outputs: "+srcSet.output.classesDirs.files+"\n"
+        }
+        println ""
+    }
+
+    if(ii_generateCoreJar=='true')
+    {
+        println 'This mod will generate a [core jar] and place it inside its [main jar] during build.'
+        println 'For this, a valid fingerprint and configured keystore is needed.'
+    }
+    else
+        println 'This mod will not generate a [core jar] inside its [main jar]. Enable it in [gradle.properties] if needed.'
+
+}
+
+//--- Generating Deobfed Jar
+tasks.register('deobfJar', Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest {
+        attributes 'FMLAT': modATPath
+        attributes 'Maven-Artifact': modGroup + ':' + modName + ':' + modVersion
+    }
+}
+
+artifacts {
+    archives deobfJar
+}
+
+//--- Resource Processing
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", modVersion
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        // replace properties
+        expand 'version': modVersion, 'mcversion': project.minecraft.version
+    }
+
+    // copy everything else except the mcmod.info and excluded files
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+
+//--- Handling custom.gradle
+
+//To use personalized options when working with the mod create a file named custom.gradle
+//The file is not sychronised with GitHub and can be used i.e. to store username and password
+//Thanks to BluSunrize for the idea (taken from IE)
+def customGradle = rootProject.file('custom.gradle')
+if (customGradle.exists()) {
+    apply from: customGradle
+}
+
+tasks.build.doLast(){
+    if(ii_printSourceSets.toBoolean())
+        logger.log(LogLevel.WARN, 'Build Location: '+file("./build/libs/").getPath())
+}
+
+
+//--- Core Jar Generation
+// Create a core jar, sign it and place it inside the main jar
+if(ii_generateCoreJar=='true')
+    apply from: rootProject.file('gradle/corejar.gradle')
+
+//--- IE Addon
+apply from: rootProject.file('gradle/ieaddon.gradle')

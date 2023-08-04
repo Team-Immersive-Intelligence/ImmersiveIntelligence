@@ -1,0 +1,77 @@
+reobf {
+    coreJar { mappingType = 'SEARGE' }
+}
+
+tasks.register('coreJar', Jar) {
+    // Copy all compiled files and resources from the source set to the JAR
+    // If you have additional source sets, add the same logic here
+    from(sourceSets.main.output) {
+        // Don't include the coremod in the main mod
+        // If you have more coremod-related packages that aren't nested in the main one, add exclusions for them
+        include modASMPath
+    }
+    manifest {
+        attributes "FMLCorePlugin": modASMClass
+        attributes 'Maven-Artifact': modGroup + ':' + modName + '-core:' + modVersion
+    }
+    // Add a classifier to the JAR ('-core' at the end of the file name)
+    // Distinguishes the mod JAR from the shipped one
+    classifier 'core'
+    group = 'build'
+}
+
+tasks.register('signCoreJar', SignJar) {
+    onlyIf { // Skip the task if our secret data isn't available
+        hasKeyStore()
+    }
+    dependsOn reobfCoreJar
+
+    keyStore = getOr("SIGNING_KEY_STORE_PATH", project.keyStore)
+    alias = getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias)
+    storePass = getOr("SIGNING_KEY_PASSWORD", project.keyStorePass)
+    keyPass = getOr("SIGNING_STORE_PASSWORD", project.keyStorePass)
+    inputFile = coreJar.archivePath
+    outputFile = coreJar.archivePath
+}
+
+tasks.register('signMainJar', SignJar) {
+    onlyIf { // Skip the task if our secret data isn't available
+        hasKeyStore()
+    }
+    dependsOn reobfJar
+
+    keyStore = getOr("SIGNING_KEY_STORE_PATH",project.keyStore)
+    alias = getOr("SIGNING_KEY_ALIAS",project.keyStoreAlias)
+    storePass = getOr("SIGNING_KEY_PASSWORD",project.keyStorePass)
+    keyPass = getOr("SIGNING_STORE_PASSWORD",project.keyStorePass)
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+build.dependsOn signMainJar
+jar.dependsOn signCoreJar
+def libPrefix = 'META-INF/libraries'
+
+jar {
+    manifest {
+        attributes 'ContainedDeps': libPrefix + '/' + coreJar.archivePath.name
+        attributes "FMLAT": modATPath
+        attributes 'Maven-Artifact': modGroup + ':' + modName + ':' + modVersion
+    }
+
+    exclude modASMPath
+    // Add the output of the mod JAR task to the main JAR for later extraction
+    from(coreJar.archivePath.absolutePath) {
+        include '*' // Due to the way Gradle's copy tasks work, we need this line for the JAR to get added
+        into libPrefix
+    }
+}
+
+static String getOr(String projectProp, envProp)
+{
+    return System.getenv(envProp) ?: projectProp
+}
+
+boolean hasKeyStore()
+{
+    return project.hasProperty('keyStore')||!System.getenv("SIGNING_KEY_STORE_PATH").isEmpty()
+}

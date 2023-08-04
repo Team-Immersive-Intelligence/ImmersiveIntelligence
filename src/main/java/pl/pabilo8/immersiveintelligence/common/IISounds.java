@@ -10,6 +10,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.HitSound;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
+import pl.pabilo8.modworks.annotations.sound.ModSound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

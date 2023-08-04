@@ -1,0 +1,39 @@
+def pathJavaGen = file('src/main/generated/java');
+def pathResourceGen = file('src/main/generated/resources');
+
+sourceSets.main.java.srcDirs+=['src/main/generated/java']
+sourceSets.main.resources.srcDirs+=['src/main/generated/resources']
+
+idea {
+    module {
+        sourceDirs += pathJavaGen
+        generatedSourceDirs += pathJavaGen
+        resourceDirs += pathResourceGen
+        generatedSourceDirs += pathResourceGen
+    }
+}
+
+repositories {
+    maven {
+        name = "GitHub Packages"
+        url = uri("https://maven.pkg.github.com/Team-Immersive-Intelligence/ModworksProcessor")
+        credentials {
+            username = project.findProperty("ii_MavenUser") ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("ii_MavenToken") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor "pl.pabilo8:modworks-processor:1.0.0"
+    compileOnly "pl.pabilo8:modworks-processor:1.0.0"
+}
+
+compileJava {
+    options.annotationProcessorGeneratedSourcesDirectory=project.file("src/main/generated")
+    options.compilerArgs.addAll([
+            '-Amodworks.modid='+modName,
+            '-Amodworks.resourcedir='+'resources',
+            '-Amodworks.javadir='+'java'
+    ])
+}

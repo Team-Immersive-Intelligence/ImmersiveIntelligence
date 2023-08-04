@@ -1,3 +1,5 @@
+//--- Boilerplate
+
 buildscript {
     repositories {
         mavenCentral()
@@ -18,261 +20,37 @@ buildscript {
     }
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: 'idea'
+// Apply boilerplate code
+apply from: rootProject.file('gradle/boilerplate.gradle')
 
-setVersion(modVersion)
-setGroup(modGroup)
-setArchivesBaseName(modName)
-
-compileJava.options.encoding = 'UTF-8'
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
-
-minecraft {
-    version = modForge
-    runDir = "run"
-
-    replace "@VERSION@", modVersion
-
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = modMappings
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    useDepAts = true
-}
+//--- Dependencies
 
 repositories {
     maven { // JEI & Tinkers
         name 'DVS1 Maven FS'
         url 'https://dvs1.progwml6.com/files/maven'
     }
-
-    maven { // CraftTweaker
-        name 'jared maven'
-        url 'https://maven.blamejared.com/'
-    }
-
-    maven { // ModMaven, there is a bunch of stuff on there
-        name 'ModMaven'
-        url "https://modmaven.dev/"
-    }
-
-    maven { // Mirage (Albedo)
-        url 'https://repo.elytradev.com/'
-    }
-
-    maven { // CTM
-        name 'tterrag maven'
-        url "https://maven.tterrag.com/"
-    }
-
-    maven {
-        name 'ComputerCraft Maven'
-        url 'https://squiddev.cc/maven/'
-    }
-
-    maven { // OpenComputers
-        name "OpenComputers"
-        url "https://maven.cil.li/"
-    }
-
-    maven { // Baubles
-        name "MCModDev"
-        url "https://maven.mcmoddev.com/"
-    }
-
-    //https://www.cursemaven.com/
-    //for Immersive Petroleum, Posts and Technology
-    maven {
-        url "https://www.cursemaven.com"
-    }
-
-    //Curseforge maven, in case some other maven goes offline
-    repositories {
-        maven {
-            name = "CurseForge"
-            url = "https://minecraft.curseforge.com/api/maven/"
-        }
-    }
-
-    flatDir {
-        dirs("libs")
-    }
-
 }
 
 dependencies {
-    deobfCompile "team.chisel.ctm:CTM:MC1.12.2-1.0.2.31"
-    deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
-
-    // compile against the JEI API but do not include it at runtime
-    compileOnly "mezz.jei:jei_1.12.2:4.16.1.301:api"
     // at runtime, use the full JEI jar
     runtimeOnly "mezz.jei:jei_1.12.2:4.16.1.301"
-
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.8.468"
-    //Formerly called Albedo
-    compileOnly "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
-    //Maybe someday...
-    //deobfCompile "albedo:albedo:1.12.2:1.1.0"
-    compileOnly 'com.azanor:Baubles:1.12-1.5.2'
-
-    compileOnly "org.squiddev:cc-tweaked-1.12.2:1.89.2"
-    compileOnly "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221"
-
-    compileOnly "curse.maven:immersive-petroleum-268250:3382321"
-    compileOnly "curse.maven:immersive-posts-314645:2951672"
-    compileOnly "curse.maven:immersive-technology-359407:3658279"
-
-    annotationProcessor "pl.pabilo8:ModworksProcessor-1.0-SNAPSHOT"
 }
 
-reobf {
-    coreJar { mappingType = 'SEARGE' }
-}
-
-tasks.register('coreJar', Jar) {
-    // Copy all compiled files and resources from the source set to the JAR
-    // If you have additional source sets, add the same logic here
-    from(sourceSets.main.output) {
-        // Don't include the coremod in the main mod
-        // If you have more coremod-related packages that aren't nested in the main one, add exclusions for them
-        include modASMPath
-    }
-    manifest {
-        attributes "FMLCorePlugin": modASMClass
-        attributes 'Maven-Artifact': modGroup + ':' + modName + '-core:' + modVersion
-    }
-    // Add a classifier to the JAR ('-core' at the end of the file name)
-    // Distinguishes the mod JAR from the shipped one
-    classifier 'core'
-    group = 'build'
-}
-
-tasks.register('signCoreJar', SignJar) {
-    onlyIf { // Skip the task if our secret data isn't available
-        project.hasProperty('keyStore')
-    }
-    dependsOn reobfCoreJar
-    if (project.hasProperty('keyStore')) { // This needs to be a path to the keystore file
-        keyStore = project.keyStore
-        alias = project.keyStoreAlias
-        storePass = project.keyStorePass
-        keyPass = project.keyStorePass
-        inputFile = coreJar.archivePath
-        outputFile = coreJar.archivePath
-    }
-}
-
-tasks.register('signMainJar', SignJar) {
-    onlyIf { // Skip the task if our secret data isn't available
-        project.hasProperty('keyStore')
-    }
-    dependsOn reobfJar
-    if (project.hasProperty('keyStore')) { // This needs to be a path to the keystore file
-        keyStore = project.keyStore
-        alias = project.keyStoreAlias
-        storePass = project.keyStorePass
-        keyPass = project.keyStorePass
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-    }
-}
-build.dependsOn signMainJar
-jar.dependsOn signCoreJar
-def libPrefix = 'META-INF/libraries'
-
-jar {
-    manifest {
-        attributes 'ContainedDeps': libPrefix + '/' + coreJar.archivePath.name
-        attributes "FMLAT": modATPath
-        attributes 'Maven-Artifact': modGroup + ':' + modName + ':' + modVersion
-    }
-
-    exclude modASMPath
-    // Add the output of the mod JAR task to the main JAR for later extraction
-    from(coreJar.archivePath.absolutePath) {
-        include '*' // Due to the way Gradle's copy tasks work, we need this line for the JAR to get added
-        into libPrefix
-    }
-}
+//--- Resources
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", modVersion
-    inputs.property "mcversion", project.minecraft.version
-
     //Exclude GIMP images
     exclude '**/*.xcf'
     //Exclude batch
     exclude '**/*.bat'
     //Exclude template textures
     exclude '**/*Template.png'
-    //Exclude the sounds.json generated by IDE
-    //exclude '**/*sounds.json'
 
     //already excluded from gitignore, but still appear to be included in a locally built jar
     exclude '**/desktop.ini'
     exclude '**/Thumbs.db'
     exclude '**/.DS_Store'
-
-    // replace stuff in mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        // replace version and mcversion
-        expand 'version': modVersion, 'mcversion': project.minecraft.version
-    }
-
-    // copy everything else except the mcmod.info and excluded files
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-
-}
-
-tasks.register('deobfJar', Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-    manifest {
-        attributes 'FMLAT': modATPath
-        attributes 'Maven-Artifact': modGroup + ':' + modName + ':' + modVersion
-    }
-}
-
-artifacts {
-    archives deobfJar
-}
-
-//To use personalized options when working with the mod create a file named custom.gradle
-//The file is not sychronised with GitHub and can be used i.e. to store username and password
-//Thanks to BluSunrize for the idea (taken from IE)
-def customGradle = rootProject.file('custom.gradle')
-if (customGradle.exists()) {
-    apply from: customGradle
-}
-
-compileJava {
-    logger.log(LogLevel.WARN, 'PRAISE THE GRUMPY GRADLEPHANT!')
-    logger.log(LogLevel.WARN, "     \n" +
-            "                          g@@@@g,\n" +
-            "                           \"  \"B@W\n" +
-            "            ,,ggggg,           ]@@\n" +
-            "          @@@@@@@@@@@@@w     ,g@@@\n" +
-            "         ,%@@@@@@@@@@@@@@@@@@@@@@`  <[ \$#!T! ]\n" +
-            "      ,@@@g]@@@@\$@@@@`  \$@@@@@@@`\n" +
-            "     g@@@@@@wgg@@@@@@@@@-@@@@@@\n" +
-            "    ]@@@@@@@@@@@@@@@@@@@@@@@@\"\n" +
-            "    \$@@@@@@@@@@@@@@@@@@@@@@@\n" +
-            "    @@@@@PPB@@@@@*\"\"*B@@@@@P\n" +
-            "    \$@@@\"   ]@@@       %@@@P\n")
-    logger.log(LogLevel.WARN, 'A mod brought to you by Team II')
-    logger.log(LogLevel.WARN, 'Check out our Github: https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence\n')
 }
 
 
