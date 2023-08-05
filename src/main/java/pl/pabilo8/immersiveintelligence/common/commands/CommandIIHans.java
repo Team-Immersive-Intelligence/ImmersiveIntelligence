@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii;
+package pl.pabilo8.immersiveintelligence.common.commands;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemToolUpgrade.ToolUpgrades;
@@ -62,6 +62,23 @@ public class CommandIIHans extends CommandBase
 	{
 		squadList.clear();
 
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "rifle"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans);
+						HansUtils.setRifle(hans, ItemStack.EMPTY);
+
+						ItemStack bullet = IIContent.itemAmmoMachinegun.getBulletWithParams("core_steel", "piercing");
+						bullet.setCount(bullet.getMaxStackSize());
+						for(int i = 0; i < 6; i++)
+							hans.mainInventory.set(i, bullet.copy());
+					}
+				}
+		);
+
 		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "smg"),
 				new HansSquadHandWeapon()
 				{
@@ -122,6 +139,23 @@ public class CommandIIHans extends CommandBase
 						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.SUBMACHINEGUN_DRUM,
 								IIContent.itemAmmoSubmachinegun.getBulletWithParams("core_tungsten", "piercing"));
 						HansUtils.setSubmachinegun(hans, magazine, WeaponUpgrades.BOTTOM_LOADING, WeaponUpgrades.FOLDING_STOCK, WeaponUpgrades.SUPPRESSOR);
+						for(int i = 0; i < 6; i++)
+							hans.mainInventory.set(i, magazine.copy());
+					}
+				}
+		);
+
+		squadList.put(new ResourceLocation(ImmersiveIntelligence.MODID, "stg"),
+				new HansSquadHandWeapon()
+				{
+					@Override
+					public void setItems(EntityHans hans, int id)
+					{
+						HansUtils.setHelmet(hans);
+
+						ItemStack magazine = IIContent.itemBulletMagazine.getMagazine(Magazines.ASSAULT_RIFLE,
+								IIContent.itemAmmoAssaultRifle.getBulletWithParams("core_steel", "piercing"));
+						HansUtils.setAssaultRifle(hans, magazine);
 						for(int i = 0; i < 6; i++)
 							hans.mainInventory.set(i, magazine.copy());
 					}

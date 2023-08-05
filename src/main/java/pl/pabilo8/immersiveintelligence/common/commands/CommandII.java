@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common;
+package pl.pabilo8.immersiveintelligence.common.commands;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -6,8 +6,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
-import pl.pabilo8.immersiveintelligence.common.commands.ii.*;
-import pl.pabilo8.immersiveintelligence.common.commands.tmt.CommandTMTReloadModels;
+import pl.pabilo8.immersiveintelligence.common.commands.give.CommandIIGiveBullet;
+import pl.pabilo8.immersiveintelligence.common.commands.give.CommandIIGiveMagazine;
+import pl.pabilo8.immersiveintelligence.common.commands.give.CommandIIGivePunchtape;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,29 +19,24 @@ import java.util.List;
  * @author Pabilo8
  * @since 23-06-2019
  */
-public class IICommandHandler extends CommandTreeBase
+public class CommandII extends CommandTreeBase
 {
-	private final String name;
-
-	public IICommandHandler(String name)
+	public CommandII()
 	{
-		this.name = name;
 
-		switch(name)
-		{
-			case "tmt":
+		addSubcommand(new CommandIIDev());
 
-				addSubcommand(new CommandTMTReloadModels());
-				break;
-			case "ii":
-				addSubcommand(new CommandIIDev());
-				addSubcommand(new CommandIIHans());
-				addSubcommand(new CommandIIGiveBullet());
-				addSubcommand(new CommandIIGiveMagazine());
-				addSubcommand(new CommandIIGivePunchtape());
-				addSubcommand(new CommandReloadSkins());
-				break;
-		}
+		addSubcommand(new CommandIIHans());
+
+		addSubcommand(new CommandIIGiveBullet());
+		addSubcommand(new CommandIIGiveMagazine());
+
+		addSubcommand(new CommandIIGivePunchtape());
+
+		addSubcommand(new CommandReloadSkins());
+		addSubcommand(new CommandReloadModels());
+		addSubcommand(new CommandReloadManual());
+		addSubcommand(new CommandReloadMultiblock());
 
 		addSubcommand(new CommandTreeHelp(this));
 	}
@@ -52,7 +48,7 @@ public class IICommandHandler extends CommandTreeBase
 	@Override
 	public String getName()
 	{
-		return name;
+		return "ii";
 	}
 
 	/**
@@ -71,7 +67,7 @@ public class IICommandHandler extends CommandTreeBase
 	@Override
 	public String getUsage(@Nonnull ICommandSender sender)
 	{
-		return "Use \"/"+name+" help\" for more information";
+		return "Use \"/ii help\" for more information";
 	}
 
 	private static final String start = "<";

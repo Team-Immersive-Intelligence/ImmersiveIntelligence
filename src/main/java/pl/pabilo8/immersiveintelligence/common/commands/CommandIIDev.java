@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.ii;
+package pl.pabilo8.immersiveintelligence.common.commands;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
@@ -41,7 +41,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -49,6 +48,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
+import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nonnull;
@@ -157,15 +157,13 @@ public class CommandIIDev extends CommandBase
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
 
 					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), true, false, true, Collections.singletonList(senderEntity), Collections.emptyList());
-					for(RayTraceResult hit : rayTracer.hits)
-					{
+					for(RayTraceResult hit : rayTracer)
 						if(hit.typeOfHit==Type.ENTITY)
 						{
 							hit.entityHit.setDead();
 							sender.sendMessage(new TextComponentString(hit.entityHit.getDisplayName().getFormattedText()+" is dead, no big surprise."));
 							break;
 						}
-					}
 
 				}
 				break;
@@ -206,13 +204,11 @@ public class CommandIIDev extends CommandBase
 				case "bulletspeed":
 					if(args.length > 1)
 					{
-						EntityBullet.DEV_SLOMO = Float.parseFloat(args[1]);
+						EntityBullet.DEV_SLOMO = (float)parseDouble(args[1]);
 						sender.sendMessage(new TextComponentString("Bullet speed set to "+args[1]));
 					}
 					else
-					{
 						sender.sendMessage(new TextComponentString(TextFormatting.RED+"Please enter a speed value, default 1, current "+(int)EntityBullet.DEV_SLOMO));
-					}
 
 					break;
 				case "killbullets":
@@ -317,11 +313,6 @@ public class CommandIIDev extends CommandBase
 						ItemStack s2 = IIContent.itemAmmoArtillery.getBulletWithParams("core_brass", "canister", "nuke");
 						EntityBullet a = AmmoUtils.createBullet(senderEntity.getEntityWorld(), s2, new Vec3d(pos).addVector(0, 2, 0), new Vec3d(0, -1, 0));
 						senderEntity.getEntityWorld().spawnEntity(a);
-						/*
-						EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(server.getEntityWorld(), 0.5f);
-						entityAtomicBoom.setPosition(pos.getX(), pos.getY()+2, pos.getZ());
-						server.getEntityWorld().spawnEntity(entityAtomicBoom);
-						 */
 						return;
 					}
 					int num = 0;
@@ -409,9 +400,7 @@ public class CommandIIDev extends CommandBase
 				break;
 				case "get_mb":
 				{
-					float blockReachDistance = 40f;
-
-					RayTraceResult traceResult = getRayTraceResult(senderEntity, blockReachDistance);
+					RayTraceResult traceResult = getRayTraceResult(senderEntity, 40f);
 					if(traceResult==null||traceResult.typeOfHit==Type.MISS)
 						return;
 					TileEntity te = senderEntity.getEntityWorld().getTileEntity(traceResult.getBlockPos());
@@ -419,8 +408,8 @@ public class CommandIIDev extends CommandBase
 					if(te instanceof TileEntityMultiblockPart<?>)
 						senderEntity.sendMessage(
 								new TextComponentString(TextFormatting.GOLD+"ID: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).pos+" | ")
-							.appendSibling(new TextComponentString(TextFormatting.GOLD+"Mirrored: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).mirrored+" | "))
-							.appendSibling(new TextComponentString(TextFormatting.GOLD+"Facing: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).facing.name()))
+										.appendSibling(new TextComponentString(TextFormatting.GOLD+"Mirrored: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).mirrored+" | "))
+										.appendSibling(new TextComponentString(TextFormatting.GOLD+"Facing: "+TextFormatting.RESET+((TileEntityMultiblockPart<?>)te).facing.name()))
 						);
 				}
 				break;
