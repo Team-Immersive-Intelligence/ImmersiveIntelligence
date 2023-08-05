@@ -31,7 +31,6 @@ public class IIManualPageBulletComponent extends IIManualPages
 	EnumComponentRole type;
 	float density;
 
-
 	public IIManualPageBulletComponent(ManualInstance manual, IAmmoComponent component)
 	{
 		this(manual, component.getName(), component.getMaterial().getExampleStack(), component.getRole(), component.getDensity());

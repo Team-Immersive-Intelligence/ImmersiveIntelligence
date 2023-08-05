@@ -1,10 +1,11 @@
-package pl.pabilo8.immersiveintelligence.client.manual;
+package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageBlueprint;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockCoagulator;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFuelStation;
@@ -17,9 +18,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IILib;
  * @author Pabilo8
  * @since 18-01-2020
  */
-public class IIManualMotorworks extends IIManual
+public class IIManualCategoryMotorworks extends IIManualCategory
 {
-	public static IIManualMotorworks INSTANCE = new IIManualMotorworks();
+	public static IIManualCategoryMotorworks INSTANCE = new IIManualCategoryMotorworks();
 
 	@Override
 	public String getCategory()

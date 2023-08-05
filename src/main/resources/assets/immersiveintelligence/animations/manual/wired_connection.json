@@ -1,0 +1,135 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"punchtape": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 8, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [-4, 32, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [-4, 32, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 8, 0]
+				},
+				{
+					"time": 1.0,
+					"transform": [0, 8, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.0,
+					"alpha" : 1
+				},
+				{
+					"time": 0.3,
+					"alpha": 0
+				},
+				{
+					"time": 0.5,
+					"alpha": 0
+				},
+				{
+					"time": 0.75,
+					"alpha": 0
+				},
+				{
+					"time": 1.0,
+					"alpha": 1
+				}
+			]
+		},
+		"data": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [-100, 12, 0]
+				},
+				{
+					"time": 0.55,
+					"transform": [-100, 12, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [-100, 4, 0]
+				},
+				{
+					"time": 1.0,
+					"transform": [-100, 4, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.55,
+					"alpha" : 0
+				},
+				{
+					"time": 0.78,
+					"alpha": 1
+				},
+				{
+					"time": 1.0,
+					"alpha": 0
+				}
+			]
+		},
+		"particle": {
+			"position": [
+				{
+					"time": 0.25,
+					"transform": [-28, 28, 150]
+				},
+				{
+					"time": 0.3625,
+					"transform": [-52, 18, 150]
+				},
+				{
+					"time": 0.425,
+					"transform": [-68, 18, 150]
+				},
+				{
+					"time": 0.5,
+					"transform": [-78, 14, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [-78, 14, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.0,
+					"alpha": 0
+				},
+				{
+					"time": 0.2,
+					"alpha": 0
+				},
+				{
+					"time": 0.25,
+					"alpha" : 1
+				},
+				{
+					"time": 0.5,
+					"alpha": 1
+				},
+				{
+					"time": 0.55,
+					"alpha": 0
+				},
+				{
+					"time": 1.0,
+					"alpha": 0
+				}
+			]
+		}
+	}
+}

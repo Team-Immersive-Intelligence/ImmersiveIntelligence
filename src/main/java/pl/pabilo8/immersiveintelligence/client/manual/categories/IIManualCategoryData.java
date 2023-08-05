@@ -1,33 +1,27 @@
-package pl.pabilo8.immersiveintelligence.client.manual;
+package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
-import blusunrize.immersiveengineering.api.ManualHelper;
-import blusunrize.immersiveengineering.api.ManualPageMultiblock;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.lib.manual.ManualPages;
+import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
+import blusunrize.immersiveengineering.common.util.compat.crafttweaker.Blueprint;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataType;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualEntry;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.*;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
+import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
  * @since 18-01-2020
  */
-public class IIManualDataAndElectronics extends IIManual
+public class IIManualCategoryData extends IIManualCategory
 {
-	public static IIManualDataAndElectronics INSTANCE = new IIManualDataAndElectronics();
+	public static IIManualCategoryData INSTANCE = new IIManualCategoryData();
 
 	@Override
 	public String getCategory()
@@ -38,7 +32,124 @@ public class IIManualDataAndElectronics extends IIManual
 	@Override
 	public void addPages()
 	{
-		ManualHelper.addEntry("data_main", getCategory(),
+		super.addPages();
+
+		addEntry("data_main");
+		addEntry("electronic_components")
+				.addSource("circuit_blueprints", getSourceForItems(
+						BlueprintCraftingRecipe.getTypedBlueprint("basic_circuits"),
+						BlueprintCraftingRecipe.getTypedBlueprint("advanced_circuits"),
+						BlueprintCraftingRecipe.getTypedBlueprint("processors")
+				))
+				.addSource("basic_general", getSourceForItems(
+						IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_RAW),
+						IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED),
+						IIRecipes.BASIC_CIRCUIT,
+						IIContent.itemMaterial.getStack(Materials.BASIC_ELECTRONIC_ELEMENT)
+				))
+				.addSource("advanced_general", getSourceForItems(
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_RAW),
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED),
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD),
+						IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT)
+				))
+				.addSource("processor_general", getSourceForItems(
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED),
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD),
+						IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT)
+				));
+		addEntry("data_types");
+		addEntry("data_wiring")
+				.addSource("data_cable", getSourceForItem(IIContent.itemDataWireCoil.getStack(1)))
+				.addSource("connector", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_CONNECTOR)))
+				.addSource("relay", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_RELAY)))
+				.addSource("duplex_connector", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DUPLEX_CONNECTOR)))
+				.addSource("debugger", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER)))
+				.addSource("wired_connection", EasyNBT.newNBT()
+						.withString("animation", ImmersiveIntelligence.MODID+":manual/wired_connection")
+						.withInt("duration", 120)
+						.withList("elements",
+								EasyNBT.parseEasyNBT("{name:\"input\",rot:[0.0,-90.0,0.0],pos:[-2.5,0.0,-1.25],model:\"immersiveintelligence:models/block/metal_device/punchtape_reader.obj\"}"),
+								EasyNBT.parseEasyNBT("{name:\"conn\",rot:[0.0,0.0,90.0],pos:[-1.5,0.0,-1.25],model:\"immersiveintelligence:models/block/connector/data_connector.obj.ie\"}"),
+								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[1.0,0.9,-1.25], end:[0.5,1.0,0.5], diameter: 0.125, type:\"wire\"}"),
+								EasyNBT.parseEasyNBT("{name:\"relay\",pos:[0.0,0.0,0.0],model:\"immersiveintelligence:models/block/connector/data_relay.obj\"}"),
+								EasyNBT.parseEasyNBT("{name:\"debugger\",pos:[1.25,0.0,1.25],model:\"immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj\"}"),
+								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[0.5,1.0,0.5], end:[-0.75,1.1385,1.25], diameter: 0.125, type:\"wire\"}")
+						)
+						.withList("overlay",
+								EasyNBT.parseEasyNBT("{name:\"punchtape\",pos:[0.0,0.0,0.0], type:\"item\", stack:%s}", IIContent.itemPunchtape.getStack(1).serializeNBT()),
+								EasyNBT.parseEasyNBT("{name:\"data\",pos:[0.0,0.0,0.0], type:\"text\", text:\"{...}\"}"),
+								EasyNBT.parseEasyNBT("{name:\"particle\",pos:[0.0,0.0,0.0], type:\"text\", text:\"{...}\"}")
+						)
+						.withList("hovers",
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 76, 10, 32, 32,
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER).serializeNBT().toString()),
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 48, 24, 24, 27,
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_RELAY).serializeNBT().toString()),
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 28, 38, 16, 16,
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_CONNECTOR).serializeNBT().toString()),
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 2, 32, 32, 32,
+										IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER).serializeNBT().toString())
+						)
+				)
+				.addSource("wireless_connection", EasyNBT.newNBT()
+						.withString("animation", ImmersiveIntelligence.MODID+":manual/wired_connection")
+						.withInt("duration", 120)
+						.withList("elements",
+								EasyNBT.parseEasyNBT("{name:\"input\",rot:[0.0,-90.0,0.0],pos:[-2.5,0.0,-1.25],model:\"immersiveintelligence:models/block/metal_device/punchtape_reader.obj\"}"),
+								EasyNBT.parseEasyNBT("{name:\"conn\",rot:[0.0,0.0,90.0],pos:[-1.5,0.0,-1.25],model:\"immersiveintelligence:models/block/connector/data_connector.obj.ie\"}"),
+								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[1.0,0.9,-1.25], end:[0.5,1.0,0.5], diameter: 0.125, type:\"wire\"}"),
+								EasyNBT.parseEasyNBT("{name:\"relay\",pos:[0.0,0.0,0.0],model:\"immersiveintelligence:models/block/connector/data_relay.obj\"}"),
+								EasyNBT.parseEasyNBT("{name:\"debugger\",pos:[1.25,0.0,1.25],model:\"immersiveintelligence:models/block/metal_device/data_debugger/data_debugger.obj\"}"),
+								EasyNBT.parseEasyNBT("{name:\"wire0\",start:[0.5,1.0,0.5], end:[-0.75,1.1385,1.25], diameter: 0.125, type:\"wire\"}")
+						)
+						.withList("overlay",
+								EasyNBT.parseEasyNBT("{name:\"punchtape\",pos:[0.0,0.0,0.0], type:\"item\", stack:%s}", IIContent.itemPunchtape.getStack(1).serializeNBT()),
+								EasyNBT.parseEasyNBT("{name:\"data\",pos:[0.0,0.0,0.0], type:\"text\", text:\"{...}\"}"),
+								EasyNBT.parseEasyNBT("{name:\"particle\",pos:[0.0,0.0,0.0], type:\"text\", text:\"{...}\"}")
+						)
+						.withList("hovers",
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 76, 10, 32, 32,
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_DEBUGGER).serializeNBT().toString()),
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 48, 24, 24, 27,
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_RELAY).serializeNBT().toString()),
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 28, 38, 16, 16,
+										IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.DATA_CONNECTOR).serializeNBT().toString()),
+								EasyNBT.parseEasyNBT("{x:%s,y:%s,w:%s,h:%s,item:%s}", 2, 32, 32, 32,
+										IIContent.blockMetalDevice.getStack(IIBlockTypes_MetalDevice.PUNCHTAPE_READER).serializeNBT().toString())
+						)
+				);
+
+		addEntry("data_input_machine")
+				.addSource("punchtape", getSourceForItem(IIContent.itemPunchtape.getStack(1)))
+				.addSource("data_coil", getSourceForItem(IIContent.itemDataWireCoil.getStack(1)));
+		addEntry("punchtapes");
+		addEntry("arithmetic_logic_machine");
+		IIManualEntry functionalCircuits = addEntry("functional_circuits")
+				.addSource("circuit_blueprints", getSourceForItems(
+						BlueprintCraftingRecipe.getTypedBlueprint("basic_functional_circuits"),
+						BlueprintCraftingRecipe.getTypedBlueprint("advanced_functional_circuits"),
+						BlueprintCraftingRecipe.getTypedBlueprint("processor_functional_circuits")
+				));
+		for(Circuits circuit : Circuits.values())
+			functionalCircuits.addSource(circuit.getName(), getSourceForItem(IIContent.itemCircuit.getStack(circuit)));
+
+
+		addEntry("redstone_interface");
+
+		addEntry("small_data_devices");
+
+		addEntry("radio_station");
+		addEntry("printing_press");
+		addEntry("conveyor_scanner");
+
+		addEntry("chemical_bath");
+		addEntry("chemical_painter");
+		addEntry("electrolyzer");
+		addEntry("precision_assembler");
+
+		/*ManualHelper.addEntry("data_main", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "data_main0"),
 				new ManualPages.Text(ManualHelper.getManual(), "data_main1")
 		);
@@ -162,6 +273,6 @@ public class IIManualDataAndElectronics extends IIManual
 						.addEntry(new DataTypeString(), 's')
 						.addEntry(new DataTypeInteger(), 'v')
 						.addEntry(new DataTypeInteger(), 't')
-		);
+		);*/
 	}
 }

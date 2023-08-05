@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.manual;
+package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
@@ -8,6 +8,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
@@ -28,9 +29,9 @@ import java.util.ArrayList;
  * @author Pabilo8
  * @since 18-01-2020
  */
-public class IIManualLogistics extends IIManual
+public class IIManualCategoryLogistics extends IIManualCategory
 {
-	public static IIManualLogistics INSTANCE = new IIManualLogistics();
+	public static IIManualCategoryLogistics INSTANCE = new IIManualCategoryLogistics();
 
 	@Override
 	public String getCategory()

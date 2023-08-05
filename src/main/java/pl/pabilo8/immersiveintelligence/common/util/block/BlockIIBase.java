@@ -310,7 +310,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 
 	public String getTranslationKey(ItemStack stack)
 	{
-		return super.getUnlocalizedName()+"."+enumValues[stack.getMetadata()].getName();
+		return super.getUnlocalizedName()+"."+enumValues[stack.getMetadata()%enumValues.length].getName();
 	}
 
 	protected static Object[] combineProperties(Object[] currentProperties, Object... addedProperties)

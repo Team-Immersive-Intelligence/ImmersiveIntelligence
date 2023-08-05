@@ -348,7 +348,7 @@ public class MultiblockVehicleWorkshop implements IMultiblock
 		}
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-1, 2, 0);
-		ImmersiveIntelligence.proxy.renderTile(te);
+		//ImmersiveIntelligence.proxy.renderTile(te);
 		GlStateManager.popMatrix();
 	}
 }

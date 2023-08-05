@@ -71,7 +71,7 @@ public class DataTypeFloat implements IDataTypeNumeric
 	@Override
 	public int getTypeColour()
 	{
-		return 0x094543;
+		return 0x0d6b68;
 	}
 
 	public DataTypeInteger asInt()

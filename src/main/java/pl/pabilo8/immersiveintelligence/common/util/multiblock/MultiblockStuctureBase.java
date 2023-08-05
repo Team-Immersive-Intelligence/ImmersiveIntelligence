@@ -14,15 +14,23 @@ import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonStreamParser;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.datafix.DataFixesManager;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -32,14 +40,17 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.AxisAlignedFacingBB;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -49,25 +60,48 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 {
 	static final TemplateManager RES_LOC_TEMPLATE_MANAGER = new TemplateManager("Blue Sunrise is a wanker", DataFixesManager.createFixer());
 
-	//the resLoc for the .nbt file
+	/**
+	 * The resLoc for the .nbt file
+	 */
 	private final ResourceLocation loc;
-	//the name generated from resLoc
+	/**
+	 * The name generated from resLoc
+	 */
 	private final String name;
-	//the .nbt file
+	/**
+	 * The .nbt file
+	 */
 	private Template template;
 
-	//stacks for manual list
+	/**
+	 * Stacks for manual list
+	 */
 	private IngredientStack[] materials = null;
-	//stacks for manual block display
+	/**
+	 * Stacks for manual block display
+	 */
 	private ItemStack[][][] structure = null;
-	//check array for blockstates
+	/**
+	 * Check array for blockstates
+	 */
 	private IngredientStack[][][] checkStructure = null;
-	//offset for trigger block
+	/**
+	 * Offset for trigger block
+	 */
 	protected Vec3i offset = Vec3i.NULL_VECTOR;
-	//multiblock dimensions
+	/**
+	 * Multiblock dimensions
+	 */
 	private Vec3i size = Vec3i.NULL_VECTOR;
-	//scale for manual display
+	/**
+	 * Scale for manual display
+	 */
 	private float manualScale = 0;
+
+	/**
+	 * Bounding boxes for collision and interaction detection at [pos] [facing (ordinal)]
+	 */
+	private ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
 
 	public MultiblockStuctureBase(ResourceLocation loc)
 	{
@@ -78,12 +112,14 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 	public void updateStructure()
 	{
+		//Load structure template
 		template = RES_LOC_TEMPLATE_MANAGER.getTemplate(null, loc);
 		size = template.getSize();
 
-		//sets manual display scale
+		//Set manual display scale, based on structure size
 		this.manualScale = 7f/(Math.max(Math.max(size.getX(), size.getZ()), size.getY())/12f);
 
+		//Set structure ItemStacks to default
 		structure = new ItemStack[size.getY()][size.getZ()][size.getX()];
 		for(int x = 0; x < size.getX(); x++)
 			for(int y = 0; y < size.getY(); y++)
@@ -94,6 +130,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		List<BlockInfo> blocks = template.blocks;
 		Set<IngredientStack> matsSet = new HashSet<>();
 
+		//Set ItemStacks and BlockStates
 		for(BlockInfo info : blocks)
 		{
 			IngredientStack here = getIngredientStackForBlockInfo(info);
@@ -109,6 +146,79 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			}
 		}
 		materials = matsSet.toArray(new IngredientStack[0]);
+
+		//Update AABB from json
+		updateAABB();
+	}
+
+	public void updateAABB()
+	{
+		//Set AABB
+		int tiles = size.getX()*size.getY()*size.getZ();
+		AABBs.clear();
+
+		//Collect from file
+		JsonObject file = loadAABBFromJSON();
+		if(file==null)
+			return;
+
+		//Collect AABB dictionary
+		Map<String, AxisAlignedFacingBB> allBounds = file.get("bounds").getAsJsonObject()
+				.entrySet().stream()
+				.map(e -> {
+					//Get "bounds" property from json object
+					JsonArray b = e.getValue().getAsJsonObject().getAsJsonArray("bounds");
+					//Bind together
+					return new Tuple<>(e.getKey(), new AxisAlignedFacingBB(b));
+				})
+				.collect(Collectors.toMap(Tuple::getFirst, Tuple::getSecond));
+
+		//Map JSON positions
+		JsonObject positionsJSON = file.get("positions").getAsJsonObject();
+		HashMap<Integer, ArrayList<AxisAlignedFacingBB>> mapped = new HashMap<>();
+
+		for(Entry<String, JsonElement> entry : positionsJSON.entrySet())
+		{
+			//Get position IDs
+			Integer[] IDs = Arrays.stream(entry.getKey().split(","))
+					.map(Integer::parseInt)
+					.toArray(Integer[]::new);
+			//Get assigned aabb names
+			JsonArray array = entry.getValue().getAsJsonArray();
+
+			//Gather all bounding boxes
+			ArrayList<AxisAlignedFacingBB> group = new ArrayList<>();
+			array.forEach(j -> group.add(allBounds.get(j.getAsString())));
+
+			//Add elements to map
+			for(Integer id : IDs)
+				mapped.compute(id, (k, v) -> {
+					//Create new list with elements, or add them to an existing list
+					if(v==null)
+						return new ArrayList<>(group);
+					v.addAll(group);
+					return v;
+				});
+		}
+
+		//Finally, turn them into a list!
+		for(int i = 0; i < tiles; i++)
+			AABBs.add(mapped.getOrDefault(i, new ArrayList<>()));
+	}
+
+	private JsonObject loadAABBFromJSON()
+	{
+		ResLoc res = ResLoc.of(IILib.RES_AABB, "multiblock/"+name.substring(3))
+				.withExtension(ResLoc.EXT_JSON);
+
+		try
+		{
+			InputStream stream = MinecraftServer.class.getResourceAsStream("/assets/"+res.getResourceDomain()+"/"+res.getResourcePath());
+			assert stream!=null;
+			JsonElement object = new JsonStreamParser(new InputStreamReader(stream)).next();
+			return object.getAsJsonObject();
+		} catch(Exception ignored) {} //
+		return null;
 	}
 
 	@Override
@@ -270,6 +380,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	}
 
 	private T te;
+	@SideOnly(Side.CLIENT)
+	private TileEntitySpecialRenderer<T> tesr;
 
 	@Override
 	public void renderFormedStructure()
@@ -278,13 +390,18 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		{
 			te = getMBInstance();
 			te.facing = EnumFacing.NORTH;
+			tesr = TileEntityRendererDispatcher.instance.getRenderer(te);
 		}
+
+		if(tesr==null)
+			return;
+
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(
+		tesr.render(te,
 				size.getX()/2f-offset.getX(),
 				size.getY()/2f-offset.getY(),
-				size.getZ()/2f-offset.getZ());
-		ImmersiveIntelligence.proxy.renderTile(te);
+				size.getZ()/2f-offset.getZ(),
+				0, 0, 0);
 		GlStateManager.popMatrix();
 	}
 
@@ -305,7 +422,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		if(stack==null)
 			return true;
 
-		// TODO: 08.08.2021 conveyor facing check
 		if(stack.stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.stack.getItem()).getBlock()==IEContent.blockConveyor)
 		{
 			if(world!=null)
@@ -375,6 +491,14 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	}
 
 	/**
+	 * @return the multiblock XYZ offset vector
+	 */
+	public Vec3i getOffset()
+	{
+		return offset;
+	}
+
+	/**
 	 * @param h height (y)
 	 * @param l length (z)
 	 * @param w width (x)
@@ -392,5 +516,13 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		EnumFacing sf = EnumFacing.getFront(ItemNBTHelper.getInt(stack, "conveyorFacing"));
 		EnumFacing ff = EnumFacing.getHorizontal(sf.getHorizontalIndex()+facing.getHorizontalIndex());//
 		return new Tuple<>(rl, ff);
+	}
+
+	public List<AxisAlignedBB> getAABB(int pos, BlockPos blockPos, EnumFacing facing, boolean mirrored)
+	{
+		return AABBs.get(pos).stream()
+				.map(aafbb -> aafbb.getFacing(facing, mirrored))
+				.map(aafbb -> aafbb.offset(blockPos))
+				.collect(Collectors.toList());
 	}
 }

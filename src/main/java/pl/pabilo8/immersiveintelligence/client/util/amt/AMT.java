@@ -45,10 +45,33 @@ public abstract class AMT
 	 * Whether this AMT should be rendered
 	 */
 	protected boolean visible;
+	/**
+	 * Offset (XYZ), Scale (XYZ)
+	 */
 	protected Vec3d off, scale;
-	protected Vector3f color;
+	/**
+	 * Rotation (XYZ) with values in degrees
+	 */
 	protected Vec3d rot;
-	protected float alpha;
+
+	//--- Extended Mutable Properties ---//
+	/**
+	 * Current shader type and values passed to it.<br>
+	 * Only one shader is allowed to be used at the same time
+	 */
+	@Nullable
+	protected Shaders shader;
+	@Nonnull
+	protected Float[] shaderValue;
+	/**
+	 * Custom Property Value, used by some AMT components
+	 */
+	protected float property;
+
+	public AMT(String name, IIModelHeader header)
+	{
+		this(name, header.getOffset(name));
+	}
 
 	public AMT(String name, Vec3d originPos)
 	{
@@ -140,8 +163,13 @@ public abstract class AMT
 	{
 		visible = true;
 		off = scale = rot = null;
-		color = null;
-		alpha = 1f;
+		shader = null;
+		shaderValue = new Float[0];
+		property = 0f;
+
+		if(children!=null)
+			for(AMT mod : children)
+				mod.defaultize();
 	}
 
 	/**
@@ -149,7 +177,7 @@ public abstract class AMT
 	 */
 	public abstract void disposeOf();
 
-	final void setChildren(AMT[] children)
+	public final void setChildren(AMT[] children)
 	{
 		this.children = children;
 	}

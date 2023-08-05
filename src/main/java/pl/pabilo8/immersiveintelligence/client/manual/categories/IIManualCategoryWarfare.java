@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.manual;
+package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
@@ -12,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
@@ -40,9 +41,9 @@ import java.util.Map.Entry;
  * @author Pabilo8
  * @since 18-01-2020
  */
-public class IIManualWarfare extends IIManual
+public class IIManualCategoryWarfare extends IIManualCategory
 {
-	public static IIManualWarfare INSTANCE = new IIManualWarfare();
+	public static IIManualCategoryWarfare INSTANCE = new IIManualCategoryWarfare();
 
 	@Override
 	public String getCategory()
