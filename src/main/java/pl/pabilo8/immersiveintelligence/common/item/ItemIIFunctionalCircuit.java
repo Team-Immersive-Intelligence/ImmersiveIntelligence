@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Pabilo8
@@ -141,13 +140,6 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		public String[] getFunctions()
 		{
 			return functions;
-		}
-
-		@Nonnull
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
 		}
 	}
 

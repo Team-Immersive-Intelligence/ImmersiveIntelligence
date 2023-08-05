@@ -8,8 +8,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityInserterBase;
 
 import java.util.function.Function;
@@ -60,6 +60,7 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 					animationFrontFront.apply(totalProgress); //same direction
 					break;
 				case 1:
+				case 3:
 					//depends on side, required due to abs() making the result always positive
 					(teIn.rotateY()==teOut?animationFrontRight: animationFrontLeft)
 							.apply(totalProgress);

@@ -3,10 +3,12 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.opengl.GL11;
 
 /**
  * AMT type for drawing items ({@link ItemStack}s)
@@ -50,7 +52,21 @@ public class AMTItem extends AMT
 		{
 			//GlStateManager.scale(0.0625,0.0625,0.0625);
 			//GlStateManager.translate(originPos.x,originPos.y,originPos.z);
+
+//			GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+//			GlStateManager.cullFace();
+//			IILogger.info();
+			GlStateManager.pushMatrix();
+			CullFace cf = (GL11.glGetInteger(GL11.GL_CULL_FACE_MODE)==GL11.GL_FRONT)?CullFace.FRONT: CullFace.BACK;
+//			GlStateManager.scale(-1, -1, -1);
+
 			ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
+
+			GlStateManager.cullFace(cf);
+			GlStateManager.popMatrix();
+
+
+//			IILogger.info(GL11.glGetInteger(GL11.GL_CULL_FACE_MODE));
 		}
 	}
 

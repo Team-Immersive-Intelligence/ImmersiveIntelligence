@@ -6,15 +6,20 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataDebugger;
 
 /**
  * @author Pabilo8
  * @since 30.08.2020
  */
+@SideOnly(Side.CLIENT)
+@RegisteredTileRenderer(name = "data_debugger", clazz = TileEntityDataDebugger.class)
 public class DataDebuggerRenderer extends IITileRenderer<TileEntityDataDebugger>
 {
 	private static IIAnimation construction;

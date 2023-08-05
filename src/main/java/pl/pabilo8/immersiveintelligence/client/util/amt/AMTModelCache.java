@@ -31,6 +31,10 @@ public abstract class AMTModelCache<T> extends HashMap<String, AMT[]> implements
 	private final IIModelHeader header;
 	@Nonnull
 	private final BiFunction<T, IIModelHeader, AMT[]> modelProvider;
+	/**
+	 * Whether the {@link net.minecraft.client.renderer.vertex.VertexFormat} should be BLOCK or ITEM
+	 */
+	private final boolean isBlock;
 
 	/**
 	 * The base model, from which the other models are derived from
@@ -42,7 +46,7 @@ public abstract class AMTModelCache<T> extends HashMap<String, AMT[]> implements
 	private AMT[] lastPicked = null;
 
 	public AMTModelCache(@Nonnull OBJModel[] models, @Nonnull BiFunction<ResourceLocation, T, TextureAtlasSprite> textureProvider,
-						 @Nullable IIModelHeader[] headers, @Nonnull BiFunction<T, IIModelHeader, AMT[]> modelProvider)
+						 @Nullable IIModelHeader[] headers, @Nonnull BiFunction<T, IIModelHeader, AMT[]> modelProvider, boolean isBlock)
 	{
 		super();
 		this.models = models;
@@ -52,6 +56,7 @@ public abstract class AMTModelCache<T> extends HashMap<String, AMT[]> implements
 		this.modelProvider = modelProvider;
 
 		this.base = getVariant("", getDefaultParameter());
+		this.isBlock = isBlock;
 	}
 
 	//--- HashMap ---//
@@ -121,7 +126,7 @@ public abstract class AMTModelCache<T> extends HashMap<String, AMT[]> implements
 
 				//get quads
 				BakedQuad[] quads = objModel
-						.bake(objState, DefaultVertexFormats.ITEM, res -> textureProvider.apply(res, parameter))
+						.bake(objState, isBlock?DefaultVertexFormats.BLOCK: DefaultVertexFormats.ITEM, res -> textureProvider.apply(res, parameter))
 						.getQuads(null, null, 0L).toArray(new BakedQuad[0]);
 
 				//do not add empty AMTs

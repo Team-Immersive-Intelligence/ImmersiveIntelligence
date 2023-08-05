@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt;
 
-import javafx.animation.Animation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -10,9 +9,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIBooleanLin
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * A map used for easily animating an array of AMTs
@@ -50,8 +47,8 @@ public class IIAnimationCachedMap
 	 * Creates a "visibility animation", that makes the elements contained in header visible and other elements invisible<br>
 	 * Used by items with upgrades
 	 *
-	 * @param model  model
-	 * @param header header providing elements
+	 * @param model     model cache
+	 * @param mainModel primary model of the cache
 	 * @return visibility animation
 	 */
 	public static IIAnimationCachedMap createVisibilityAnimation(@Nonnull AMTModelCache<?> model, @Nonnull OBJModel mainModel)
@@ -61,7 +58,7 @@ public class IIAnimationCachedMap
 				.filter(amt -> amt instanceof AMTQuads)
 				.filter(amt -> !present.contains(amt.name))
 				.map(amt ->
-						new IIAnimationGroup(amt.name, null, null, null, null,
+						new IIAnimationGroup(amt.name, null, null, null,
 								new IIBooleanLine(new float[]{0}, new Boolean[]{false}),
 								null, null)
 				)

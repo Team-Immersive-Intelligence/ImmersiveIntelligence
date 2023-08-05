@@ -4,7 +4,6 @@ import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -15,7 +14,7 @@ import java.util.HashMap;
  * @author Pabilo8
  * @since 05.04.2022
  */
-public class IIAnimationCompiledMap  extends HashMap<AMT, IIAnimationGroup>
+public class IIAnimationCompiledMap extends HashMap<AMT, IIAnimationGroup>
 {
 	private IIAnimationCompiledMap()
 	{

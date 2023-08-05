@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.
  */
 public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends TileEntitySpecialRenderer<T>
 {
+	//TODO: 16.07.2023 bring to AMT
 	@Override
 	public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{

@@ -30,7 +30,6 @@ import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
-import java.util.Locale;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -75,12 +74,6 @@ public class ItemIIMinecart extends ItemIISubItemsBase<Minecarts>
 		{
 			this.minecart = minecart;
 			this.stack = stack;
-		}
-
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
 		}
 	}
 

@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTItem;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
@@ -17,6 +18,7 @@ import java.util.function.Function;
  * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
+@RegisteredTileRenderer(name = "inserter_advanced", clazz = TileEntityAdvancedInserter.class)
 public class AdvancedInserterRenderer extends InserterBaseRenderer<TileEntityAdvancedInserter>
 {
 	//reference to model parts

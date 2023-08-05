@@ -4,6 +4,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 
 /**
@@ -11,6 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
  * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
+@RegisteredTileRenderer(name = "ammunition_crate", clazz = TileEntityAmmunitionCrate.class)
 public class AmmunitionCrateRenderer extends EffectCrateRenderer<TileEntityAmmunitionCrate>
 {
 	private final ResourceLocation openAnimation = new ResourceLocation(ImmersiveIntelligence.MODID, "repair_crate_open");

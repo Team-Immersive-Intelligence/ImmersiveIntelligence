@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment;
 import blusunrize.immersiveengineering.api.tool.IElectricEquipment.ElectricSource;
 import blusunrize.immersiveengineering.client.ClientUtils;
@@ -10,7 +9,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityTeslaCoil.L
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import blusunrize.immersiveengineering.common.util.IEDamageSources.ElectricDamageSource;
 import blusunrize.immersiveengineering.common.util.IEPotions;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -34,12 +32,12 @@ import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.TeslaCoil;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
@@ -338,7 +336,7 @@ public class EmplacementWeaponTeslaCoil extends EmplacementWeapon
 		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
 		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 
-		ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
 		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
 		{
 			EmplacementRenderer.modelTeslaCoilConstruction[i].render(0.0625f);

@@ -319,7 +319,7 @@ public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 		GlStateManager.translate(0.03125f, 0f, -0.01325f);
 		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 
-		ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
 		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
 		{
 			EmplacementRenderer.modelHeavyChemthrowerConstruction[i].render(0.0625f);

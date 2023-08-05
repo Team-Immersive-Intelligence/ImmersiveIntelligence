@@ -21,14 +21,14 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapo
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
@@ -330,11 +330,11 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 			//-75 100 220 0
 			//-75 100 220 -0.5f
 
-			inserterYaw=-75;
-			inserterPitch1=100;
-			inserterPitch2=220;
-			inserterProgress=-0.5f;
-			if(reloadDelay>0)
+			inserterYaw = -75;
+			inserterPitch1 = 100;
+			inserterPitch2 = 220;
+			inserterProgress = -0.5f;
+			if(reloadDelay > 0)
 			{
 				for(ModelRendererTurbo mod : EmplacementRenderer.modelMachinegun.ammoCrateModel)
 					mod.render();
@@ -424,7 +424,7 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
 		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 
-		ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
 		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
 		{
 			EmplacementRenderer.modelMachinegunConstruction[i].render(0.0625f);

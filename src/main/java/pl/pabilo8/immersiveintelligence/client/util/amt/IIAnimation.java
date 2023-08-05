@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,23 +66,26 @@ public class IIAnimation
 		@Nullable
 		final IIBooleanLine visibility;
 		@Nullable
-		final IIFloatLine alpha, property;
+		final IIShaderLine shader;
+		@Nullable
+		final IIFloatLine property;
 
 		/**
 		 * For manual usage only
 		 */
 		public IIAnimationGroup(String groupName,
 								@Nullable IIVectorLine position, @Nullable IIVectorLine scale,
-								@Nullable IIVectorLine color, @Nullable IIVectorLine rotation,
+								@Nullable IIVectorLine rotation,
 								@Nullable IIBooleanLine visibility,
-								@Nullable IIFloatLine alpha, @Nullable IIFloatLine property)
+								@Nullable IIShaderLine shader,
+								@Nullable IIFloatLine property)
 		{
 			this.groupName = groupName;
 			this.position = position;
 			this.scale = scale;
 			this.rotation = rotation;
 			this.visibility = visibility;
-			this.alpha = alpha;
+			this.shader = shader;
 			this.property = property;
 		}
 
@@ -93,13 +97,21 @@ public class IIAnimation
 			position = json.has("position")?loadPositionLine(loadLine(json, "position")): null;
 			scale = json.has("scale")?loadVectorLine(loadLine(json, "scale")): null;
 			rotation = json.has("rotation")?loadVectorLine(loadLine(json, "rotation")): null;
-			alpha = json.has("alpha")?loadFloatLine(json, "alpha"): null;
+
+			IIShaderLine shaderLine = null;
+			for(Shaders value : Shaders.values())
+				if(json.has(value.getName()))
+				{
+					shaderLine = loadShaderLine(json, value);
+					break;
+				}
+			shader = shaderLine;
 
 			visibility = json.has("visibility")?loadBooleanLine(json, "visibility"): null;
 			property = json.has("property")?loadFloatLine(json, "property"): null;
 		}
 
-		// TODO: 05.04.2022 attempt to streamline the code more
+		//TODO: 05.04.2022 attempt to streamline the code more
 
 		private Tuple<ArrayList<Float>, ArrayList<Vec3d>> loadLine(JsonObject json, String id)
 		{
@@ -122,24 +134,16 @@ public class IIAnimation
 
 		private IIVectorLine loadPositionLine(Tuple<ArrayList<Float>, ArrayList<Vec3d>> tuple)
 		{
-			//to array
-			float[] arr = new float[tuple.getFirst().size()];
-			for(int i = 0; i < tuple.getFirst().size(); i++)
-				arr[i] = tuple.getFirst().get(i);
-
 			//get line
-			return new IIVectorLine(arr, tuple.getSecond().toArray(new Vec3d[0]), 0.0625f);
+			return new IIVectorLine(convertTimeframes(tuple.getFirst()),
+					tuple.getSecond().toArray(new Vec3d[0]), 0.0625f);
 		}
 
 		private IIVectorLine loadVectorLine(Tuple<ArrayList<Float>, ArrayList<Vec3d>> tuple)
 		{
-			//to array
-			float[] arr = new float[tuple.getFirst().size()];
-			for(int i = 0; i < tuple.getFirst().size(); i++)
-				arr[i] = tuple.getFirst().get(i);
-
 			//get line
-			return new IIVectorLine(arr, tuple.getSecond().toArray(new Vec3d[0]));
+			return new IIVectorLine(convertTimeframes(tuple.getFirst()),
+					tuple.getSecond().toArray(new Vec3d[0]));
 		}
 
 		private IIFloatLine loadFloatLine(JsonObject json, String id)
@@ -155,14 +159,8 @@ public class IIAnimation
 					values.add(obj.get(id).getAsFloat());
 				}
 
-			//to array
-			float[] arr = new float[timeframes.size()];
-			for(int i = 0; i < timeframes.size(); i++)
-				arr[i] = timeframes.get(i);
-
-
 			//get line
-			return new IIFloatLine(arr, values.toArray(new Float[0]));
+			return new IIFloatLine(convertTimeframes(timeframes), values.toArray(new Float[0]));
 		}
 
 		private IIBooleanLine loadBooleanLine(JsonObject json, String id)
@@ -179,14 +177,51 @@ public class IIAnimation
 					values.add(obj.get(id).getAsBoolean());
 				}
 
+			//get line
+			return new IIBooleanLine(convertTimeframes(timeframes), values.toArray(new Boolean[0]));
+		}
+
+		private IIShaderLine loadShaderLine(JsonObject json, Shaders shader)
+		{
+			String shaderName = shader.getName();
+			JsonArray array = json.getAsJsonArray(shaderName);
+			ArrayList<Float> timeframes = new ArrayList<>();
+			ArrayList<Float[]> values = new ArrayList<>();
+
+			if(array!=null)
+				for(JsonElement jsonElement : array)
+				{
+					JsonObject obj = jsonElement.getAsJsonObject();
+
+					//Get time values
+					timeframes.add(obj.get("time").getAsFloat());
+
+					//Get parameter values of the shader
+					JsonElement value = obj.get(shaderName);
+					if(value.isJsonArray())
+					{
+						JsonArray valueSet = obj.get(shaderName).getAsJsonArray();
+						Float[] parameters = new Float[valueSet.size()];
+						for(int i = 0; i < parameters.length; i++)
+							parameters[i] = valueSet.get(i).getAsFloat();
+						values.add(parameters);
+					}
+					else
+						values.add(new Float[]{value.getAsFloat()});
+
+				}
+
+
+			return new IIShaderLine(shader, convertTimeframes(timeframes), values.toArray(new Float[0][0]));
+		}
+
+		private static float[] convertTimeframes(ArrayList<Float> timeframes)
+		{
 			//to array
 			float[] arr = new float[timeframes.size()];
 			for(int i = 0; i < timeframes.size(); i++)
 				arr[i] = timeframes.get(i);
-
-
-			//get line
-			return new IIBooleanLine(arr, values.toArray(new Boolean[0]));
+			return arr;
 		}
 	}
 
@@ -228,6 +263,7 @@ public class IIAnimation
 			return values[0];
 		}
 	}
+
 
 	/**
 	 * Used for vector values, such as position, scale, color
@@ -300,6 +336,35 @@ public class IIAnimation
 		public Float interpolate(Float t1, Float t2, float value)
 		{
 			return (t1+t2)*0.5f;
+		}
+	}
+
+	public static class IIShaderLine extends IIAnimationLine<Float[]>
+	{
+		private final Shaders shader;
+
+		public IIShaderLine(Shaders shader, float[] timeframes, Float[][] values)
+		{
+			super(timeframes, values);
+			this.shader = shader;
+		}
+
+		@Override
+		public Float[] interpolate(Float[] t1, Float[] t2, float value)
+		{
+			if(value==0)
+				return t1;
+			if(value==1)
+				return t2;
+			Float[] interpolated = new Float[Math.min(t1.length, t2.length)];
+			for(int i = 0; i < interpolated.length; i++)
+				interpolated[i] = (t1[i]+t2[i])*0.5f;
+			return interpolated;
+		}
+
+		public Shaders getShader()
+		{
+			return shader;
 		}
 	}
 }

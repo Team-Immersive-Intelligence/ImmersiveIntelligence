@@ -14,6 +14,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalPump;
 
 /**
@@ -21,6 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.Ti
  * @since 2019-05-26
  */
 @SideOnly(Side.CLIENT)
+@RegisteredTileRenderer(name = "mechanical_pump", clazz = TileEntityMechanicalPump.class)
 public class MechanicalPumpRenderer extends IITileRenderer<TileEntityMechanicalPump>
 {
 	private static IIAnimation rotation, pumping;

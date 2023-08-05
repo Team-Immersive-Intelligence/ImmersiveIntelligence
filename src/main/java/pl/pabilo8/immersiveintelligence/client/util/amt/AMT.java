@@ -7,6 +7,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
@@ -39,8 +40,10 @@ public abstract class AMT
 	 */
 	private boolean isChild = false;
 
-	//--- Mutable Properties ---//
-
+	//--- Basic Mutable Properties ---//
+	/**
+	 * Whether this AMT should be rendered
+	 */
 	protected boolean visible;
 	protected Vec3d off, scale;
 	protected Vector3f color;
@@ -64,30 +67,41 @@ public abstract class AMT
 	 */
 	public final void render(Tessellator tes, BufferBuilder buf)
 	{
-		if(!visible||alpha==0)
+		if(!visible)
 			return;
 
 		GlStateManager.pushMatrix();
 
+		//Translation, Rotation, Scaling, overridden by AMT subclasses
 		preDraw();
 
-		/*if(alpha!=1f)
-		{
-			GlStateManager.alphaFunc(GL11.GL_ALPHA_TEST_FUNC, alpha);
-		}*/
-
+		//Draw current element
+		preShaders();
 		draw(tes, buf);
 
 		if(children!=null)
 			for(AMT child : children)
 				child.render(tes, buf);
 
-		/*if(alpha!=1f)
-		{
-			GlStateManager.alphaFunc(GL11.GL_ALPHA_TEST_FUNC, 1f);
-		}*/
-
 		GlStateManager.popMatrix();
+	}
+
+	/**
+	 * Used to enable shaders before drawing this AMT
+	 */
+	private void preShaders()
+	{
+		if(shader!=null)
+			ShaderUtil.useShader(shader, shaderValue);
+	}
+
+	/**
+	 * Used to enable shaders for drawing this AMT
+	 */
+	private void postShaders()
+	{
+		if(shader!=null)
+			ShaderUtil.releaseShader();
 	}
 
 	/**

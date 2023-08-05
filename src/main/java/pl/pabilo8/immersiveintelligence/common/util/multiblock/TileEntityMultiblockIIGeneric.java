@@ -12,6 +12,7 @@ import blusunrize.immersiveengineering.common.util.ChatUtils;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IEForgeEnergyWrapper;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEInternalFluxHandler;
 import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -66,7 +67,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		if(isDummy())
 			return;
 
-		if(!descPacket)
+//		if(!descPacket)
 		{
 			if(energyStorage.getMaxEnergyStored()!=0)
 				energyStorage.readFromNBT(nbt);
@@ -84,7 +85,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		if(isDummy())
 			return;
 
-		if(!descPacket)
+//		if(!descPacket)
 		{
 			if(energyStorage.getMaxEnergyStored()!=0)
 				energyStorage.writeToNBT(nbt);
@@ -208,6 +209,17 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		return Utils.calcRedstoneFromInventory(master);
 	}
 
+	protected final IEInventoryHandler getSingleInventoryHandler(int slotID)
+	{
+		return getSingleInventoryHandler(slotID, true, true);
+	}
+
+	protected final IEInventoryHandler getSingleInventoryHandler(int slotID, boolean canInput, boolean canOutput)
+	{
+		return new IEInventoryHandler(1, this, slotID, canInput, canOutput);
+	}
+
+	//REFACTOR: 18.07.2023 different types of energy (ELECTRIC,ROTARY,HEAT) using an enum
 	@Nonnull
 	public abstract int[] getEnergyPos();
 

@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
@@ -14,11 +13,11 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationG
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIFloatLine;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIVectorLine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Set;
 
 /**
  * @author Pabilo8
@@ -26,6 +25,7 @@ import java.util.Set;
  */
 public class IIMachineUpgradeModel
 {
+	//REFACTOR: 29.07.2023 use shaders
 	private final MachineUpgrade upgrade;
 	private final IIAnimationCompiledMap animation, alpha;
 	private final AMT[] model;
@@ -47,7 +47,7 @@ public class IIMachineUpgradeModel
 
 		alpha = new IIAnimation(new ResourceLocation(""),
 				Arrays.stream(anim.groups)
-						.map(g -> new IIAnimationGroup(g.groupName, null, null, null, null, null, vecToAlpha(g.position),null))
+						.map(g -> new IIAnimationGroup(g.groupName, null, null, null, null, null, null))
 						.toArray(IIAnimationGroup[]::new));
 
 		this.animation = IIAnimationCompiledMap.create(model, anim);
@@ -77,7 +77,7 @@ public class IIMachineUpgradeModel
 	public UpgradeStage renderConstruction(IUpgradableMachine machine, Tessellator tes, BufferBuilder buf, float partialTicks)
 	{
 		if(machine.getCurrentlyInstalled()!=upgrade)
-			return machine.hasUpgrade(upgrade)?UpgradeStage.INSTALLED:UpgradeStage.NOT_INSTALLED;
+			return machine.hasUpgrade(upgrade)?UpgradeStage.INSTALLED: UpgradeStage.NOT_INSTALLED;
 
 		//calculate progress per part
 		final int maxProgress = IIContent.UPGRADE_INSERTER.getProgressRequired();
@@ -90,7 +90,7 @@ public class IIMachineUpgradeModel
 			mod.defaultize();
 
 		//draw blueprint
-		ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
 		//alpha.apply(1f-install);
 		for(AMT mod : model)
 			mod.render(tes, buf);

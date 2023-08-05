@@ -23,12 +23,12 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.HeavyRailgun;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
@@ -130,7 +130,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 					float speed = 20;
 					EntityRailgunShot shot = new EntityRailgunShot(te.getWorld(), entity,
 							scale.x*speed, scale.y*speed, scale.z*speed, s2.copy());
-					shot.setPosition(weaponCenter.x,weaponCenter.y,weaponCenter.z);
+					shot.setPosition(weaponCenter.x, weaponCenter.y, weaponCenter.z);
 					te.getWorld().spawnEntity(shot);
 				}
 			}
@@ -441,7 +441,7 @@ public class EmplacementWeaponHeavyRailgun extends EmplacementWeapon
 		GlStateManager.translate(0.0625f/2f, 0f, -0.0265f/2f);
 		//float flicker = (te.getWorld().rand.nextInt(10)==0)?0.75F: (te.getWorld().rand.nextInt(20)==0?0.5F: 1F);
 
-		ShaderUtil.blueprint_static(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
+		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
 		for(int i = l-1; i >= Math.max((l*progress)-1, 0); i--)
 		{
 			EmplacementRenderer.modelHeavyRailgunConstruction[i].render(0.0625f);

@@ -60,11 +60,8 @@ public class AMTQuads extends AMT
 				for(BakedQuad bakedquad : quads)
 				{
 					buf.addVertexData(bakedquad.getVertexData());
-					if(color!=null&&bakedquad.hasTintIndex())
-						buf.putColorRGB_F4(color.x, color.y, color.z);
-					else
-						buf.putColorRGB_F4(1f, 1f, 1f);
-					Vec3i vec3i = bakedquad.getFace().getDirectionVec();
+					buf.putColorRGB_F4(1f, 1f, 1f);
+					Vec3i vec3i = hasLighting?(bakedquad.getFace().getDirectionVec()): NO_LIGHTING_NORMAL;
 					buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
 				}
 				tes.draw();
