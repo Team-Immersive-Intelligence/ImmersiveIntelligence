@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.math.Vec3d;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,11 +22,13 @@ public class IIModelHeader
 {
 	private final HashMap<String, String> hierarchy;
 	private final HashMap<String, Vec3d> offsets;
+	private final HashMap<String, EasyNBT> properties;
 
 	public IIModelHeader(JsonObject json)
 	{
 		offsets = new HashMap<>();
 		hierarchy = new HashMap<>();
+		properties = new HashMap<>();
 
 		//get origins, if not contained Vec3D.ZERO will be used
 		if(json.has("origins"))
@@ -47,6 +50,17 @@ public class IIModelHeader
 					hierarchy.put(entry.getKey(), entry.getValue().getAsString());
 			}
 		}
+
+		if(json.has("properties"))
+		{
+			JsonObject prop = json.getAsJsonObject("properties");
+			for(Entry<String, JsonElement> entry : prop.entrySet())
+			{
+				//put into property map
+				if(entry.getValue().isJsonObject())
+					properties.put(entry.getKey(), EasyNBT.parseEasyNBT(entry.getValue().toString()));
+			}
+		}
 	}
 
 	/**
@@ -58,12 +72,14 @@ public class IIModelHeader
 	{
 		hierarchy = new HashMap<>();
 		offsets = new HashMap<>();
+		properties = new HashMap<>();
 
 		if(headers!=null)
 			for(IIModelHeader h : headers)
 			{
 				hierarchy.putAll(h.hierarchy);
 				offsets.putAll(h.offsets);
+				properties.putAll(h.properties);
 			}
 
 	}
@@ -99,6 +115,15 @@ public class IIModelHeader
 
 			if(children.length > 0)
 				amt.setChildren(children);
+
+			//Apply properties
+			EasyNBT nbt = properties.get(amt.name);
+			//REFACTOR: 30.07.2023 more universal handling
+			if(nbt!=null)
+			{
+				if(amt instanceof AMTQuads)
+					nbt.checkSetBoolean("lighting", ((AMTQuads)amt)::setLighting);
+			}
 		}
 
 	}

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item.tools;
+package pl.pabilo8.immersiveintelligence.common.item.tools.backpack;
 
 /**
  * @author Pabilo8

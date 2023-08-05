@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
@@ -16,7 +15,6 @@ import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -713,8 +711,10 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 					distanceOut = nbt.getInteger("distanceOut");
 			}
 			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
-			isJob = nbt.getBoolean("isJob");
-			strictAmount = nbt.getBoolean("strictAmount");
+			if(nbt.hasKey("isJob"))
+				isJob = nbt.getBoolean("isJob");
+			if(nbt.hasKey("strictAmount"))
+				strictAmount = nbt.getBoolean("strictAmount");
 			if(nbt.hasKey("overrideTakeAmount"))
 				overrideTakeAmount = nbt.getInteger("overrideTakeAmount");
 		}

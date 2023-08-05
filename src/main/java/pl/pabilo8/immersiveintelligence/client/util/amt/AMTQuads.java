@@ -17,10 +17,25 @@ import org.lwjgl.opengl.GL11;
 public class AMTQuads extends AMT
 {
 	/**
+	 * Default normal of an unlit quad.
+	 */
+	private static final Vec3i NO_LIGHTING_NORMAL = new Vec3i(1, 1, 1);
+
+	/**
 	 * Quads acquired from a {@link blusunrize.immersiveengineering.client.models.IESmartObjModel}
 	 */
 	private final BakedQuad[] quads;
+	/**
+	 * GL CallList ID
+	 */
 	private int listID = -1;
+
+	/**
+	 * Whether this element has lighting (darkening the face when viewed from another angle) enabled<br>
+	 * Use on static half-transparent elements, such as dust, glass, straw, etc..<br>
+	 * When set to true, tint may be darker/lighter during rotation.
+	 */
+	private boolean hasLighting = true;
 
 	public AMTQuads(String name, Vec3d originPos, BakedQuad[] quads)
 	{
@@ -65,5 +80,10 @@ public class AMTQuads extends AMT
 	{
 		if(listID!=-1)
 			GlStateManager.glDeleteLists(listID, 1);
+	}
+
+	public void setLighting(boolean hasLighting)
+	{
+		this.hasLighting = hasLighting;
 	}
 }
