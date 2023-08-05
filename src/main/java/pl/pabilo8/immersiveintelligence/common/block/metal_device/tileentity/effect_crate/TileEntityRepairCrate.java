@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.ef
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
+import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IItemDamageableIE;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
@@ -111,7 +112,23 @@ public class TileEntityRepairCrate extends TileEntityEffectCrate implements ISou
 	@Override
 	boolean checkEntity(Entity entity)
 	{
-		return entity instanceof IEntitySpecialRepairable||(entity instanceof EntityLivingBase);
+		if(entity instanceof IEntitySpecialRepairable)
+			return true;
+		if(!(entity instanceof EntityLivingBase))
+			return false;
+
+		EntityLivingBase entityLivingBase = (EntityLivingBase)entity;
+		for(ItemStack stack : entityLivingBase.getEquipmentAndArmor())
+		{
+			if(stack.getItem() instanceof IItemDamageableIE)
+			{
+				IItemDamageableIE item = (IItemDamageableIE)stack.getItem();
+				return item.getItemDamageIE(stack) < item.getMaxDamageIE(stack);
+			}
+			else if(stack.isItemDamaged()&&stack.getItem().isRepairable())
+				return true;
+		}
+		return false;
 	}
 
 	@Override

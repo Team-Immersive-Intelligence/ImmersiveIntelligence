@@ -22,8 +22,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon;
 
@@ -37,7 +38,7 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 17.07.2021
  */
-public class EntityEmplacementWeapon extends EntityLivingBase implements IEntityMultiPart
+public class EntityEmplacementWeapon extends EntityLivingBase implements IEntityMultiPart, IEntitySpecialRepairable
 {
 	EmplacementWeapon parent = null;
 	public EmplacementHitboxEntity[] partArray = new EmplacementHitboxEntity[0];
@@ -307,6 +308,35 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public boolean canRepair()
+	{
+		if(parent==null)
+			return false;
+
+		return parent.getHealth()!=parent.getMaxHealth();
+	}
+
+	@Override
+	public boolean repair(int repairPoints)
+	{
+		if(parent==null)
+			return false;
+
+		int maxAmount = MathHelper.clamp(repairPoints, 0, parent.getMaxHealth()-parent.getHealth());
+		parent.applyDamage(-maxAmount);
+		return true;
+	}
+
+	@Override
+	public int getRepairCost()
+	{
+		if(parent==null)
+			return 0;
+
+		return 4;
 	}
 
 	public static class EmplacementHitboxEntity extends MultiPartEntityPart

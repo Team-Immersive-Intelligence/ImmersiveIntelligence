@@ -236,12 +236,13 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public void update()
 	{
 		updateLid();
-		if(!open&&focusedEntity!=null)
+		if(focusedEntity!=null)
 		{
 			focusedEntity = null;
 			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 		}
 
+		//TODO: 23.05.2023 animation
 		if(world.isRemote)
 		{
 			if(energyStorage > 0&&hasUpgrade(IIContent.UPGRADE_INSERTER))
@@ -253,7 +254,7 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 			else if(clientUpgradeProgress < getMaxClientProgress())
 				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
 		}
-		else if(energyStorage > energyDrain&&open&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
+		else if(energyStorage > energyDrain&&hasUpgrade(IIContent.UPGRADE_INSERTER)&&isSupplied()&&world.getTotalWorldTime()%getEffectTime()==0)
 		{
 			//get all in range
 			//effect
