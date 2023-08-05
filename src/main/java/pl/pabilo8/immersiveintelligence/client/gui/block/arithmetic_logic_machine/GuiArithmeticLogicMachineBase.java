@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
@@ -66,12 +67,12 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	//this is due to the machine sending a close door message to the server and producing an annoying sound
 	protected boolean preparedForChange = false;
 
-	public GuiArithmeticLogicMachineBase(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, IIGuiList gui)
+	public GuiArithmeticLogicMachineBase(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGuiList gui)
 	{
-		super(gui.container.apply(inventoryPlayer.player, tile));
+		super(gui.container.apply(player, tile));
 		this.thisTexture = gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE?TEXTURE_STORAGE: gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT?TEXTURE_EDIT: TEXTURE_VARIABLES;
 		this.ySize = 222;
-		this.playerInv = inventoryPlayer;
+		this.playerInv = player.inventory;
 		this.thisGui = gui;
 		this.tile = tile;
 		this.handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
@@ -81,7 +82,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	@Override
 	public void initGui()
 	{
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
 
 		buttonList.clear();
 		labelList.clear();
@@ -122,7 +123,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 			syncDataToServer();
 			saveBasicData();
 			preparedForChange = true;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageGuiNBT(TABS.get(button), tile));
 		}
 	}
 
@@ -186,7 +187,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	{
 		syncDataToServer();
 		if(!preparedForChange)
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
 		super.onGuiClosed();
 	}
 

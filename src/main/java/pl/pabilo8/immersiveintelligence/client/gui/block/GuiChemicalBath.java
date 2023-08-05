@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
@@ -26,9 +27,9 @@ public class GuiChemicalBath extends GuiIEContainerBase
 	public static final String texture_chemical_bath = ImmersiveIntelligence.MODID+":textures/gui/chemical_bath.png";
 	TileEntityChemicalBath tile;
 
-	public GuiChemicalBath(InventoryPlayer inventoryPlayer, TileEntityChemicalBath tile)
+	public GuiChemicalBath(EntityPlayer player, TileEntityChemicalBath tile)
 	{
-		super(new ContainerChemicalBath(inventoryPlayer, tile));
+		super(new ContainerChemicalBath(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 	}

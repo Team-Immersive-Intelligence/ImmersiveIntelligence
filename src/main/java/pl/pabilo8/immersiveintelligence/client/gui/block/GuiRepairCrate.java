@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates;
@@ -31,9 +32,9 @@ public class GuiRepairCrate extends GuiIEContainerBase
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/repair_crate.png";
 	GuiButtonState buttonHealing = null, buttonBoost = null;
 
-	public GuiRepairCrate(InventoryPlayer inventoryPlayer, TileEntityRepairCrate tile)
+	public GuiRepairCrate(EntityPlayer player, TileEntityRepairCrate tile)
 	{
-		super(new ContainerRepairCrate(inventoryPlayer, tile));
+		super(new ContainerRepairCrate(player, tile));
 		this.tile = tile;
 		this.ySize = 168;
 	}
@@ -57,13 +58,13 @@ public class GuiRepairCrate extends GuiIEContainerBase
 		{
 			tile.shouldRepairArmor = !tile.shouldRepairArmor;
 			buttonHealing.state = tile.shouldRepairArmor;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldRepairArmor, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldRepairArmor, 1, tile.getPos()));
 		}
 		else if(button==buttonBoost)
 		{
 			tile.shouldRepairVehicles = !tile.shouldRepairVehicles;
 			buttonBoost.state = tile.shouldRepairVehicles;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldRepairVehicles, 2, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldRepairVehicles, 2, tile.getPos()));
 		}
 	}
 

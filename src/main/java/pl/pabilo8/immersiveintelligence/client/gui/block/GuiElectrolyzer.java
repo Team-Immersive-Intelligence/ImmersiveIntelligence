@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -24,9 +25,9 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 	public static final String texture_electrolyzer = ImmersiveIntelligence.MODID+":textures/gui/electrolyzer.png";
 	TileEntityElectrolyzer tile;
 
-	public GuiElectrolyzer(InventoryPlayer inventoryPlayer, TileEntityElectrolyzer tile)
+	public GuiElectrolyzer(EntityPlayer player, TileEntityElectrolyzer tile)
 	{
-		super(new ContainerElectrolyzer(inventoryPlayer, tile));
+		super(new ContainerElectrolyzer(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 	}

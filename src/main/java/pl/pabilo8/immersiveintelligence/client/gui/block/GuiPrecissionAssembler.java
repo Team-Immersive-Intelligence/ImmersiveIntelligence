@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -29,16 +29,16 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 
 	public GuiPrecissionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
 	{
-		super(new ContainerPrecissionAssembler(inventoryPlayer, tile));
+		super(new ContainerPrecissionAssembler(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 
 		first_opened = Math.random() < 0.5d;
 
 		if(first_opened)
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
 		else
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(true, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 1, tile.getPos()));
 
 	}
 
@@ -46,9 +46,9 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 	public void onGuiClosed()
 	{
 		if(first_opened)
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
 		else
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
 		super.onGuiClosed();
 	}
 

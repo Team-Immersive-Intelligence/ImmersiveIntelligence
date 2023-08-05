@@ -7,6 +7,7 @@ import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -49,9 +50,9 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 	@Nullable
 	private GuiDataEditor<? extends IDataType> editor = null;
 
-	public GuiDataInputMachineEdit(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile)
+	public GuiDataInputMachineEdit(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
-		super(inventoryPlayer, tile, IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT);
+		super(player, tile, IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT);
 		title = I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.edit");
 		refreshStoredData();
 	}
@@ -139,7 +140,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 			saveBasicData();
 			syncDataToServer();
 			preparedForChange=true;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile));
 		}
 		else if(button==buttonVariableHelp)
 		{

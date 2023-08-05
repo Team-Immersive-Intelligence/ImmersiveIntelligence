@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -19,9 +20,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IILib;
 public class GuiAmmunitionCrate extends GuiIEContainerBase
 {
 	public boolean upgraded;
-	public GuiAmmunitionCrate(InventoryPlayer inventoryPlayer, TileEntityAmmunitionCrate tile)
+	public GuiAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
-		super(new ContainerAmmunitionCrate(inventoryPlayer, tile));
+		super(new ContainerAmmunitionCrate(player, tile));
 		upgraded=tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
 		this.ySize = 222;
 	}

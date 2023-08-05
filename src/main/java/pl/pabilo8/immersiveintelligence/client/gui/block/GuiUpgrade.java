@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -47,9 +48,9 @@ public class GuiUpgrade extends GuiIEContainerBase
 	GuiButtonIE buttonInfo = null, buttonUpgrade = null, buttonQuit = null;
 	private String textUpgradeMachine, textInfo, textUpgrade, textRemove, textBack;
 
-	public <T extends TileEntity & IUpgradableMachine> GuiUpgrade(InventoryPlayer inventoryPlayer, T tile)
+	public <T extends TileEntity & IUpgradableMachine> GuiUpgrade(EntityPlayer player, T tile)
 	{
-		super(new ContainerUpgrade(inventoryPlayer, tile));
+		super(new ContainerUpgrade(player, tile));
 		this.ySize = 168;
 		this.upgradableMachine = tile;
 		this.tileEntity = tile;
@@ -104,7 +105,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 			info ^= true;
 		else if(button.id==1)
 		{
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(), mc.player, !previewInstalled));
+			IIPacketHandler.sendToServer(new MessageBeginMachineUpgrade(tileEntity, previewed.getName(), mc.player, !previewInstalled));
 			mc.player.closeScreen();
 		}
 		else if(button.id==2)

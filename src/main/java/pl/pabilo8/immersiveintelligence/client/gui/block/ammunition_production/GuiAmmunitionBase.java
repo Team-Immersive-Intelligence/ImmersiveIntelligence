@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockM
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -15,6 +16,9 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +34,9 @@ public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>
 	protected static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/manual.png");
 	T tile;
 
-	public GuiAmmunitionBase(InventoryPlayer inventoryPlayer, T tile, BiFunction<InventoryPlayer, T, ContainerIEBase<T>> container)
+	public GuiAmmunitionBase(EntityPlayer player, T tile, BiFunction<EntityPlayer, T, ContainerIEBase<T>> container)
 	{
-		super(container.apply(inventoryPlayer, tile));
+		super(container.apply(player, tile));
 		this.xSize = 220;
 		this.ySize = 176;
 		this.tile = tile;
@@ -77,9 +81,7 @@ public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>
 
 	void sendList(String name, String value)
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString(name, value);
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, nbt));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withString(name,value)));
 	}
 
 	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)

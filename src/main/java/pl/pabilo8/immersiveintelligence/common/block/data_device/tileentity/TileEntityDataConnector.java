@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
@@ -9,9 +8,9 @@ import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConne
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
+import blusunrize.immersiveengineering.common.util.Utils;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import net.minecraft.block.state.IBlockState;
@@ -22,6 +21,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -29,11 +29,12 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.compat.ComputerCraftHelper;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
@@ -46,7 +47,7 @@ import javax.annotation.Nullable;
  */
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralTile", modid = "computercraft")
 public class TileEntityDataConnector extends TileEntityImmersiveConnectable implements
-		ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IBlockOverlayText,
+		ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay,
 		IPeripheralTile
 {
 	protected EnumFacing facing = EnumFacing.DOWN;
@@ -289,20 +290,12 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		if(hammer)
-			return new String[]{
-					I18n.format(Lib.DESC_INFO+"redstoneChannel", I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(color).getUnlocalizedName()))
-			};
+		if(Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return new String[]{I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(color).getUnlocalizedName())};
 		else
-			return new String[0];
-	}
-
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
+			return null;
 	}
 
 	@Nullable

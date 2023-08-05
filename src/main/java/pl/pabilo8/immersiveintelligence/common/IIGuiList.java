@@ -8,10 +8,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.client.gui.GuiPrintedPage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.*;
+import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticLogicMachineStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine.GuiArithmeticMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineEdit;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiDataInputMachineVariables;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
+import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityMedicalCrate;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
@@ -34,56 +47,56 @@ import java.util.function.BiFunction;
 public enum IIGuiList
 {
 	GUI_METAL_CRATE(TileEntityMetalCrate.class,
-			(player, te) -> new ContainerMetalCrate(player.inventory, (TileEntityMetalCrate)te)
+			ContainerMetalCrate::new
 	),
 	GUI_AMMUNITION_CRATE(TileEntityAmmunitionCrate.class,
-			(player, te) -> new ContainerAmmunitionCrate(player.inventory, (TileEntityAmmunitionCrate)te)
+			ContainerAmmunitionCrate::new
 	),
 	GUI_MEDICRATE(TileEntityMedicalCrate.class,
-			(player, te) -> new ContainerMedicalCrate(player.inventory, (TileEntityMedicalCrate)te)
+			ContainerMedicalCrate::new
 	),
 	GUI_REPAIR_CRATE(TileEntityRepairCrate.class,
-			(player, te) -> new ContainerRepairCrate(player.inventory, (TileEntityRepairCrate)te)
+			ContainerRepairCrate::new
 	),
 
 	GUI_SMALL_CRATE(TileEntitySmallCrate.class,
-			(player, te) -> new ContainerSmallCrate(player.inventory, (TileEntitySmallCrate)te)
+			ContainerSmallCrate::new
 	),
 
 	GUI_SKYCRATE_STATION(TileEntitySkyCrateStation.class,
-			(player, te) -> new ContainerSkycrateStation(player.inventory, (TileEntitySkyCrateStation)te)
+			ContainerSkycrateStation::new
 	),
 	GUI_SKYCART_STATION(TileEntitySkyCartStation.class,
-			(player, te) -> new ContainerSkycartStation(player.inventory, (TileEntitySkyCartStation)te)
+			ContainerSkycartStation::new
 	),
 
 	GUI_DATA_INPUT_MACHINE_STORAGE(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te, true)
+			(player, te) -> new ContainerDataInputMachine(player, te, true)
 	),
 	GUI_DATA_INPUT_MACHINE_VARIABLES(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te, false)
+			(player, te) -> new ContainerDataInputMachine(player, te, false)
 	),
 	GUI_DATA_INPUT_MACHINE_EDIT(TileEntityDataInputMachine.class,
-			(player, te) -> new ContainerDataInputMachine(player.inventory, (TileEntityDataInputMachine)te, false)
+			(player, te) -> new ContainerDataInputMachine(player, te, false)
 	),
 
 	GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 0)
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 0)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 0)
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 0)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 1)
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 1)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 2)
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 2)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 1, 3)
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 1, 3)
 	),
 	GUI_ARITHMETIC_LOGIC_MACHINE_EDIT(TileEntityArithmeticLogicMachine.class,
-			(player, te) -> new ContainerArithmeticLogicMachine(player.inventory, (TileEntityArithmeticLogicMachine)te, 2)
+			(player, te) -> new ContainerArithmeticLogicMachine(player, te, 2)
 	),
 
 	GUI_PRINTED_PAGE_BLANK(),
@@ -92,21 +105,21 @@ public enum IIGuiList
 	GUI_PRINTED_PAGE_BLUEPRINT(),
 
 	GUI_DATA_REDSTONE_INTERFACE_DATA(TileEntityRedstoneInterface.class,
-			(player, te) -> new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te)
+			ContainerRedstoneDataInterface::new
 	),
 	GUI_DATA_REDSTONE_INTERFACE_REDSTONE(TileEntityRedstoneInterface.class,
-			(player, te) -> new ContainerRedstoneDataInterface(player.inventory, (TileEntityRedstoneInterface)te)
+			ContainerRedstoneDataInterface::new
 	),
 
 	GUI_PRINTING_PRESS(TileEntityPrintingPress.class,
-			(player, te) -> new ContainerPrintingPress(player.inventory, (TileEntityPrintingPress)te)
+			ContainerPrintingPress::new
 	),
 
 	GUI_CHEMICAL_BATH(TileEntityChemicalBath.class,
-			(player, te) -> new ContainerChemicalBath(player.inventory, (TileEntityChemicalBath)te)
+			ContainerChemicalBath::new
 	),
 	GUI_ELECTROLYZER(TileEntityElectrolyzer.class,
-			(player, te) -> new ContainerElectrolyzer(player.inventory, (TileEntityElectrolyzer)te)
+			ContainerElectrolyzer::new
 	),
 
 	GUI_PRECISSION_ASSEMBLER(TileEntityPrecisionAssembler.class,
@@ -114,58 +127,57 @@ public enum IIGuiList
 	),
 
 	GUI_FUEL_STATION(TileEntityFuelStation.class,
-			(player, te) -> new ContainerFuelStation(player.inventory, (TileEntityFuelStation)te)
+			ContainerFuelStation::new
 	),
 
 	GUI_DATA_MERGER(TileEntityDataMerger.class,
-			(player, te) -> new ContainerDataMerger(player.inventory, (TileEntityDataMerger)te)
+			ContainerDataMerger::new
 	),
 
 	GUI_GEARBOX(TileEntityGearbox.class,
-			(player, te) -> new ContainerGearbox(player.inventory, (TileEntityGearbox)te)
+			ContainerGearbox::new
 	),
 
 	GUI_PACKER(TileEntityPacker.class,
-			(player, te) -> new ContainerPacker(player.inventory, (TileEntityPacker)te)
+			ContainerPacker::new
 	),
-	//GUI_UNPACKER,
 
 	GUI_SAWMILL(TileEntitySawmill.class,
-			(player, te) -> new ContainerSawmill(player.inventory, (TileEntitySawmill)te)
+			ContainerSawmill::new
 	),
 
 	GUI_UPGRADE(TileEntity.class,
-			(player, te) -> new ContainerUpgrade(player.inventory, (TileEntity & IUpgradableMachine)te)
+			(player, te) -> new ContainerUpgrade(player, (TileEntity & IUpgradableMachine)te)
 	),
 
 	GUI_VULCANIZER(TileEntityVulcanizer.class,
-			(player, te) -> new ContainerVulcanizer(player.inventory, (TileEntityVulcanizer)te)
+			ContainerVulcanizer::new
 	),
 
 	GUI_EMPLACEMENT_STORAGE(TileEntityEmplacement.class,
-			(player, te) -> new ContainerEmplacementStorage(player.inventory, (TileEntityEmplacement)te)
+			ContainerEmplacementStorage::new
 	),
 	GUI_EMPLACEMENT_TASKS(TileEntityEmplacement.class,
-			(player, te) -> new ContainerEmplacement(player.inventory, (TileEntityEmplacement)te)
+			ContainerEmplacement::new
 	),
 	GUI_EMPLACEMENT_STATUS(TileEntityEmplacement.class,
-			(player, te) -> new ContainerEmplacement(player.inventory, (TileEntityEmplacement)te)
+			ContainerEmplacement::new
 	),
 
 	GUI_FILLER(TileEntityFiller.class,
-			(player, te) -> new ContainerFiller(player.inventory, (TileEntityFiller)te)
+			ContainerFiller::new
 	),
 
 	GUI_CHEMICAL_PAINTER(TileEntityChemicalPainter.class,
-			(player, te) -> new ContainerChemicalPainter(player.inventory, (TileEntityChemicalPainter)te)
+			ContainerChemicalPainter::new
 	),
 
 	GUI_COAGULATOR(TileEntityCoagulator.class,
-			(player, te) -> new ContainerCoagulator(player.inventory, (TileEntityCoagulator)te)
+			ContainerCoagulator::new
 	),
 
 	GUI_PROJECTILE_WORKSHOP(TileEntityProjectileWorkshop.class,
-			(player, te) -> new ContainerProjectileWorkshop(player.inventory, (TileEntityProjectileWorkshop)te)
+			ContainerProjectileWorkshop::new
 	),
 	GUI_AMMUNITION_WORKSHOP(TileEntityAmmunitionWorkshop.class,
 			(player, te) -> new ContainerAmmunitionWorkshop(player.inventory, (TileEntityAmmunitionWorkshop)te)
@@ -181,10 +193,10 @@ public enum IIGuiList
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, ItemStack, GuiScreen> guiFromStack;
 
-	IIGuiList(@Nonnull Class<? extends TileEntity> teClass, BiFunction<EntityPlayer, TileEntity, Container> container)
+	<T extends TileEntity> IIGuiList(@Nonnull Class<T> teClass, BiFunction<EntityPlayer, T, Container> container)
 	{
 		this.teClass = teClass;
-		this.container = container;
+		this.container = (player, tileEntity) -> container.apply(player, (T)tileEntity);
 		this.item = false;
 	}
 
@@ -196,9 +208,63 @@ public enum IIGuiList
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setClientGui(BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile)
+	public static void initClientGUIs()
 	{
-		this.guiFromTile = guiFromTile;
+		IIGuiList.GUI_SAWMILL.setClientGui(GuiSawmill::new);
+		IIGuiList.GUI_PACKER.setClientGui(GuiPacker::new);
+		IIGuiList.GUI_GEARBOX.setClientGui(GuiGearbox::new);
+
+		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA.setClientGui(GuiDataRedstoneInterfaceData::new);
+		IIGuiList.GUI_DATA_REDSTONE_INTERFACE_REDSTONE.setClientGui(GuiDataRedstoneInterfaceRedstone::new);
+		IIGuiList.GUI_PRINTING_PRESS.setClientGui(GuiPrintingPress::new);
+		IIGuiList.GUI_CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
+		IIGuiList.GUI_ELECTROLYZER.setClientGui(GuiElectrolyzer::new);
+		IIGuiList.GUI_PRECISSION_ASSEMBLER.setClientGui(GuiPrecissionAssembler::new);
+		IIGuiList.GUI_FUEL_STATION.setClientGui(GuiFuelStation::new);
+		IIGuiList.GUI_DATA_MERGER.setClientGui(GuiDataMerger::new);
+
+		IIGuiList.GUI_METAL_CRATE.setClientGui(GuiMetalCrate::new);
+		IIGuiList.GUI_AMMUNITION_CRATE.setClientGui(GuiAmmunitionCrate::new);
+		IIGuiList.GUI_MEDICRATE.setClientGui(GuiMedicalCrate::new);
+		IIGuiList.GUI_REPAIR_CRATE.setClientGui(GuiRepairCrate::new);
+		IIGuiList.GUI_SMALL_CRATE.setClientGui(GuiSmallCrate::new);
+		IIGuiList.GUI_SKYCRATE_STATION.setClientGui(GuiSkycrateStation::new);
+		IIGuiList.GUI_SKYCART_STATION.setClientGui(GuiSkycartStation::new);
+		IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE.setClientGui(GuiDataInputMachineStorage::new);
+		IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES.setClientGui(GuiDataInputMachineVariables::new);
+		IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT.setClientGui(GuiDataInputMachineEdit::new);
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE.setClientGui(GuiArithmeticLogicMachineStorage::new);
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 0));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 1));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 2));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3.setClientGui((player, te) -> new GuiArithmeticMachineVariables(player, (TileEntityArithmeticLogicMachine)te, 3));
+		IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT.setClientGui(GuiArithmeticLogicMachineEdit::new);
+
+		IIGuiList.GUI_PRINTED_PAGE_BLANK.setClientStackGui(GuiPrintedPage::new);
+		IIGuiList.GUI_PRINTED_PAGE_TEXT.setClientStackGui(GuiPrintedPage::new);
+		IIGuiList.GUI_PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
+		IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
+
+		IIGuiList.GUI_UPGRADE.setClientGui((player, te) -> new GuiUpgrade(player, ((TileEntity & IUpgradableMachine)te)));
+
+		IIGuiList.GUI_VULCANIZER.setClientGui(GuiVulcanizer::new);
+		IIGuiList.GUI_EMPLACEMENT_STORAGE.setClientGui(GuiEmplacementPageStorage::new);
+		IIGuiList.GUI_EMPLACEMENT_TASKS.setClientGui(GuiEmplacementPageTasks::new);
+		IIGuiList.GUI_EMPLACEMENT_STATUS.setClientGui(GuiEmplacementPageStatus::new);
+
+		IIGuiList.GUI_FILLER.setClientGui(GuiFiller::new);
+		IIGuiList.GUI_CHEMICAL_PAINTER.setClientGui(GuiChemicalPainter::new);
+
+		IIGuiList.GUI_AMMUNITION_WORKSHOP.setClientGui(GuiAmmunitionWorkshop::new);
+		IIGuiList.GUI_PROJECTILE_WORKSHOP.setClientGui(GuiProjectileWorkshop::new);
+
+		IIGuiList.RADAR.setClientGui(GuiRadar::new);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public <T extends TileEntity> void setClientGui(BiFunction<EntityPlayer, T, GuiScreen> guiFromTile)
+	{
+		this.guiFromTile = (player, tileEntity) -> guiFromTile.apply(player, (T)tileEntity);
 	}
 
 	@SideOnly(Side.CLIENT)

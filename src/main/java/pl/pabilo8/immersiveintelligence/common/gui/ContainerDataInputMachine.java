@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.gui.IESlot.Output;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -16,9 +16,9 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  */
 public class ContainerDataInputMachine extends ContainerIEBase<TileEntityDataInputMachine>
 {
-	public ContainerDataInputMachine(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile, boolean storage)
+	public ContainerDataInputMachine(EntityPlayer player, TileEntityDataInputMachine tile, boolean storage)
 	{
-		super(inventoryPlayer, tile);
+		super(player.inventory, tile);
 
 		this.addSlotToContainer(new FilteredDataInput(this, this.inv, 0, 5, 21));
 		this.addSlotToContainer(new Output(this, this.inv, 1, 5, 100));
@@ -32,9 +32,9 @@ public class ContainerDataInputMachine extends ContainerIEBase<TileEntityDataInp
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(inventoryPlayer, j+i*9+9, 8+j*18, 141+i*18));
+				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 141+i*18));
 		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8+i*18, 199));
+			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 199));
 	}
 
 	public static class FilteredDataInput extends IESlot

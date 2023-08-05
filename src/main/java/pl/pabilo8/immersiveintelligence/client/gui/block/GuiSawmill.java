@@ -4,12 +4,12 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSawmill;
 
@@ -26,9 +26,9 @@ public class GuiSawmill extends GuiIEContainerBase
 	public static final String texture_skycrate_station = ImmersiveIntelligence.MODID+":textures/gui/sawmill.png";
 	TileEntitySawmill tile;
 
-	public GuiSawmill(InventoryPlayer inventoryPlayer, TileEntitySawmill tile)
+	public GuiSawmill(EntityPlayer player, TileEntitySawmill tile)
 	{
-		super(new ContainerSawmill(inventoryPlayer, tile));
+		super(new ContainerSawmill(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 	}

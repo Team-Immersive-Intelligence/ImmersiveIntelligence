@@ -14,7 +14,9 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -32,9 +34,9 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 
 
 	//It was necessary to make the Gui control the Container
-	public GuiArithmeticMachineVariables(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile, int page)
+	public GuiArithmeticMachineVariables(EntityPlayer player, TileEntityArithmeticLogicMachine tile, int page)
 	{
-		super(inventoryPlayer, tile, getPage(page));
+		super(player, tile, getPage(page));
 		this.page = page;
 	}
 
@@ -83,8 +85,8 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 							refreshStoredData();
 							syncDataToServer();
 
-							preparedForChange=true;
-							IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos()));
+							preparedForChange = true;
+							IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile));
 
 							break;
 						}
@@ -107,8 +109,8 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 					refreshStoredData();
 					syncDataToServer();
 
-					preparedForChange=true;
-					IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile.getPos()));
+					preparedForChange = true;
+					IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT, tile));
 				}
 				else if(variableList.delete)
 				{
@@ -162,13 +164,12 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 		super.syncDataToServer();
 
 		DataPacket storedData = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
-		NBTTagCompound tag = new NBTTagCompound();
-		NBTTagCompound expTag = new NBTTagCompound();
-
-		expTag.setInteger("page", page);
-		expTag.setTag("list", storedData.toNBT());
-		tag.setTag("expressions",expTag);
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+				.withTag("expressions", EasyNBT.newNBT()
+						.withInt("page", page)
+						.withTag("list", storedData.toNBT())
+				)
+		));
 	}
 
 	@Override

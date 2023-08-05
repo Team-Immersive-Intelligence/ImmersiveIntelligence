@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.block;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
@@ -17,9 +18,9 @@ public class GuiSmallCrate extends GuiIEContainerBase
 {
 	private final String texture;
 
-	public GuiSmallCrate(InventoryPlayer inventoryPlayer, TileEntitySmallCrate tile)
+	public GuiSmallCrate(EntityPlayer player, TileEntitySmallCrate tile)
 	{
-		super(new ContainerSmallCrate(inventoryPlayer, tile));
+		super(new ContainerSmallCrate(player, tile));
 		texture = tile.getBlockMetadata() < 3?"immersiveengineering:textures/gui/crate.png": ImmersiveIntelligence.MODID+":textures/gui/metal_crate.png";
 		this.ySize = 168;
 	}

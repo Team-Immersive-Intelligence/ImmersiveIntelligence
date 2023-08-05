@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -44,9 +45,9 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	private final IIGuiList thisGui;
 	private GuiElementProgressBar barEnergy, barArmor;
 
-	public GuiEmplacement(InventoryPlayer inventoryPlayer, TileEntityEmplacement tile, IIGuiList gui)
+	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGuiList gui)
 	{
-		super(gui==IIGuiList.GUI_EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(inventoryPlayer, tile):new ContainerEmplacement(inventoryPlayer, tile));
+		super(gui==IIGuiList.GUI_EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(player, tile):new ContainerEmplacement(player, tile));
 		this.tile = tile;
 		thisGui = gui;
 		this.xSize = 240;
@@ -113,7 +114,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		if(button instanceof GuiButtonTab)
 		{
 			syncDataToServer();
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageGuiNBT(TABS.get(button), tile));
 		}
 	}
 

@@ -1,28 +1,27 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalPainter;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -50,9 +49,9 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 	GuiButtonIE buttonActiveColor;
 	int colorDelay = 0;
 
-	public GuiChemicalPainter(InventoryPlayer inventoryPlayer, TileEntityChemicalPainter tile)
+	public GuiChemicalPainter(EntityPlayer player, TileEntityChemicalPainter tile)
 	{
-		super(new ContainerChemicalPainter(inventoryPlayer, tile));
+		super(new ContainerChemicalPainter(player, tile));
 		this.ySize = 203;
 		this.tile = tile;
 		this.color = tile.color;
@@ -207,7 +206,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 
 		if(!tooltip.isEmpty())
 		{
-			ClientUtils.drawHoveringText(tooltip, mx, my, ClientProxy.itemFont, guiLeft+xSize, -1);
+			ClientUtils.drawHoveringText(tooltip, mx, my, IIClientUtils.fontRegular, guiLeft+xSize, -1);
 			RenderHelper.enableGUIStandardItemLighting();
 		}
 	}
@@ -228,9 +227,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 
 	public void saveBasicData()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("color", color);
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, nbt));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withInt("color", color)));
 	}
 
 	@Override

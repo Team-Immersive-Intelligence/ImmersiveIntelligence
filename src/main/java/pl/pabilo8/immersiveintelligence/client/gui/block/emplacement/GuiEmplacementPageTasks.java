@@ -10,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +27,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDro
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,9 +65,9 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	private boolean tasksModified = false;
 	private final ArrayList<TaskFilter> taskFilters = new ArrayList<>();
 
-	public GuiEmplacementPageTasks(InventoryPlayer inventoryPlayer, TileEntityEmplacement tile)
+	public GuiEmplacementPageTasks(EntityPlayer player, TileEntityEmplacement tile)
 	{
-		super(inventoryPlayer, tile, IIGuiList.GUI_EMPLACEMENT_TASKS);
+		super(player, tile, IIGuiList.GUI_EMPLACEMENT_TASKS);
 		title = I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.tasks");
 	}
 
@@ -138,9 +142,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		NBTTagList tagList = nbt.getTagList("filters", 10);
 		for(NBTBase nbtBase : tagList)
 			if(nbtBase instanceof NBTTagCompound)
-			{
 				taskFilters.add(new TaskFilter(((NBTTagCompound)nbtBase)));
-			}
 	}
 
 	@Override
@@ -184,23 +186,18 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		{
 			if(buttonTaskList.selectedOption==-1)
 				selected = null;
-			else
+			else if(isShiftKeyDown())
 			{
-				if(isShiftKeyDown())
-				{
-					if(taskFilters.get(buttonTaskList.selectedOption)==selected)
-						selected = null;
-					taskFilters.remove(buttonTaskList.selectedOption);
-				}
-				else
-					selected = taskFilters.get(buttonTaskList.selectedOption);
+				if(taskFilters.get(buttonTaskList.selectedOption)==selected)
+					selected = null;
+				taskFilters.remove(buttonTaskList.selectedOption);
 			}
+			else
+				selected = taskFilters.get(buttonTaskList.selectedOption);
 			initGui();
 		}
 		else if(button==buttonInverted)
-		{
 			selected.negation = buttonInverted.state;
-		}
 		else if(button==buttonTypeNext)
 		{
 			selected.type = EnumTaskType.values()[IIUtils.cycleInt(true, selected.type.ordinal(), 0, EnumTaskType.values().length-1)];
@@ -217,32 +214,27 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	protected void syncDataToServer()
 	{
 		super.syncDataToServer();
-		NBTTagCompound nbt = new NBTTagCompound();
+		EasyNBT nbt = EasyNBT.newNBT();
+
+
 		if(buttonEnabled.state)
-		{
-			tile.defaultTargetMode = currentTab;
-			nbt.setInteger("defaultTargetMode", currentTab);
-		}
+			nbt.withInt("defaultTargetMode", tile.defaultTargetMode = currentTab);
 		else if(tile.defaultTargetMode==currentTab)
-		{
-			tile.defaultTargetMode = -1;
-			nbt.setInteger("defaultTargetMode", -1);
-		}
+			nbt.withInt("defaultTargetMode", tile.defaultTargetMode = -1);
 
-		NBTTagCompound filterTag = new NBTTagCompound();
-		NBTTagList tagList = new NBTTagList();
-		for(TaskFilter filter : taskFilters)
-		{
-			NBTTagCompound cc = new NBTTagCompound();
-			cc.setString("type", filter.type.getName().toLowerCase());
-			cc.setBoolean("negation", filter.negation);
-			cc.setString("filter", filter.filter);
-			tagList.appendTag(cc);
-		}
-		filterTag.setTag("filters", tagList);
-		nbt.setTag("defaultTaskNBT"+(currentTab+1), filterTag);
-
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(this.tile, nbt));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt
+				.withTag("defaultTaskNBT"+(currentTab+1), EasyNBT.newNBT()
+						.withList("filters",
+									taskFilters.stream()
+											.map(filter -> EasyNBT.newNBT()
+													.withString("type", filter.type.getName())
+													.withBoolean("negation", filter.negation)
+													.withString("filter", filter.filter)
+											)
+											.toArray()
+								)
+				)
+		));
 	}
 
 	@Override
@@ -280,9 +272,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 				super.keyTyped(par1, par2);
 		}
 		else
-		{
 			super.keyTyped(par1, par2);
-		}
 	}
 
 	@Override

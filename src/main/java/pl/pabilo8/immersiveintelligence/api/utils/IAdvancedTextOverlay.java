@@ -7,9 +7,7 @@ import net.minecraft.util.math.RayTraceResult;
  * @author Pabilo8
  * @since 27-12-2019
  */
-public interface IEntityOverlayText
+public interface IAdvancedTextOverlay
 {
-	String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer);
-
-	boolean useNixieFont(EntityPlayer player, RayTraceResult mop);
+	String[] getOverlayText(EntityPlayer player, RayTraceResult mop);
 }

@@ -1,14 +1,13 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -16,9 +15,13 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataMerger;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,12 +37,13 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	public TileEntityDataMerger tile;
 	public InventoryPlayer playerInv;
 	public DataPacket packet;
+	public GuiButtonIE buttonForward, buttonBackward;
 
-	public GuiDataMerger(InventoryPlayer inventoryPlayer, TileEntityDataMerger tile)
+	public GuiDataMerger(EntityPlayer player, TileEntityDataMerger tile)
 	{
-		super(new ContainerDataMerger(inventoryPlayer, tile));
+		super(new ContainerDataMerger(player, tile));
 		this.ySize = 222;
-		this.playerInv = inventoryPlayer;
+		this.playerInv = player.inventory;
 		this.tile = tile;
 		this.packet = tile.packet;
 	}
@@ -50,8 +54,8 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 		super.initGui();
 
 		this.buttonList.clear();
-		this.buttonList.add(new GuiButtonIE(0, guiLeft+4, guiTop+16, 8, 6, "", texture, 128, 222).setHoverOffset(8, 0));
-		this.buttonList.add(new GuiButtonIE(1, guiLeft+4, guiTop+24, 8, 6, "", texture, 128, 228).setHoverOffset(8, 0));
+		addButton(buttonForward = new GuiButtonIE(0, guiLeft+4, guiTop+16, 8, 6, "", texture, 128, 222).setHoverOffset(8, 0));
+		addButton(buttonBackward = new GuiButtonIE(1, guiLeft+4, guiTop+24, 8, 6, "", texture, 128, 228).setHoverOffset(8, 0));
 
 	}
 
@@ -64,22 +68,12 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		if(button.id==0)
+		if(button==buttonForward||button==buttonBackward)
 		{
-			tile.mode += 1;
-			if(tile.mode > 2)
-				tile.mode = 0;
-			tag.setShort("mode", tile.mode);
-			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
-		}
-		else if(button.id==1)
-		{
-			tile.mode -= 1;
-			if(tile.mode < 0)
-				tile.mode = 2;
-			tag.setShort("mode", tile.mode);
-			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
+			//cycle the mode depending on button
+			tile.mode = (byte)IIUtils.cycleInt(button==buttonForward, tile.mode, 0, 2);
+			//send update to server side
+			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withByte("mode", tile.mode)));
 		}
 	}
 
@@ -124,9 +118,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	@Override
 	public void onGuiClosed()
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setTag("packet", packet.toNBT());
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("packet", packet.toNBT())));
 		super.onGuiClosed();
 	}
 
@@ -138,23 +130,16 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 		{
 			boolean fw;
 			if(mouseButton==0&&!Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-			{
 				fw = true;
-			}
 			else if(mouseButton==1||Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-			{
 				fw = false;
-			}
 			else
 				return;
 
 			int i_pos_x = (int)Math.floor((mouseX-guiLeft-54)/20f);
 			int i_pos_y = (int)Math.floor((mouseY-guiTop-16)/20f);
 
-			if(!(mouseX <= guiLeft+(i_pos_x*20)+12+54&&mouseY <= guiTop+(i_pos_y*20)+12+16))
-			{
-			}
-			else
+			if(mouseX <= guiLeft+(i_pos_x*20)+12+54&&mouseY <= guiTop+(i_pos_y*20)+12+16)
 				switchMode(DataPacket.varCharacters[i_pos_y+(i_pos_x*6)], fw);
 		}
 	}
@@ -173,17 +158,13 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	void switchMode(char c, boolean forward)
 	{
 		IDataType p = packet.getPacketVariable(c);
+		//increment or decrement the number, clamp it between -2 and 2
 		if(p instanceof DataTypeInteger)
-		{
-			int i = ((DataTypeInteger)p).value;
-			i += forward?1: -1;
-			if(i > 2)
-				i = -2;
-			else if(i < -2)
-				i = 2;
-			packet.setVariable(c, new DataTypeInteger(i));
-		}
+			packet.setVariable(c, new DataTypeInteger(
+					MathHelper.clamp(((DataTypeInteger)p).value+(forward?1: -1), -2, 2)
+			));
 		else
+			//if there's no such variable, set it to -1 or 1, as 0 is the default state
 			packet.setVariable(c, new DataTypeInteger(forward?1: -1));
 	}
 

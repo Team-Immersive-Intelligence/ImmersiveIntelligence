@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockM
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -29,9 +30,9 @@ public class GuiVulcanizer extends GuiIEContainerBase
 	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/vulcanizer.png";
 	public TileEntityVulcanizer tile;
 
-	public GuiVulcanizer(InventoryPlayer inventoryPlayer, TileEntityVulcanizer tile)
+	public GuiVulcanizer(EntityPlayer player, TileEntityVulcanizer tile)
 	{
-		super(new ContainerVulcanizer(inventoryPlayer, tile));
+		super(new ContainerVulcanizer(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 	}

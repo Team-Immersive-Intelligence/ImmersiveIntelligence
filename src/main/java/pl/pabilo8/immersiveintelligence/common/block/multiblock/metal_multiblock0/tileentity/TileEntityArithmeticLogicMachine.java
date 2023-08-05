@@ -1,12 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +18,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArithmeticLogicMachine;
@@ -31,14 +28,16 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -247,8 +246,7 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 		if(world.isRemote&&slot >= 0&&slot < renderCircuit.length)
 		{
 			ItemStack stack = inventoryHandler.getStackInSlot(slot);
-			renderCircuit[slot] = stack.isEmpty()?"":
-					((ItemIIFunctionalCircuit)stack.getItem()).getTESRRenderTexture(stack);
+			renderCircuit[slot] = stack.isEmpty()?"": ((ItemIIFunctionalCircuit)stack.getItem()).getTESRRenderTexture(stack);
 		}
 	}
 
@@ -381,9 +379,9 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 	{
 		if(!clientside)
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			writeCustomNBT(tag, false);
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+					.accept(tag -> writeCustomNBT(tag, false))
+			));
 		}
 	}
 
@@ -404,6 +402,6 @@ public class TileEntityArithmeticLogicMachine extends TileEntityMultiblockMetal<
 			isDoorOpened = state;
 		}
 
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, getPos()), IIUtils.targetPointFromPos(this.getPos(), this.world, 32));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageBooleanAnimatedPartsSync(isDoorOpened, 0, getPos()), IIPacketHandler.targetPointFromPos(this.getPos(), this.world, 32));
 	}
 }

@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
@@ -26,9 +27,9 @@ public class GuiSkycrateStation extends GuiIEContainerBase
 	public static final String texture_skycrate_station = ImmersiveIntelligence.MODID+":textures/gui/wooden_gearbox.png";
 	TileEntitySkyCrateStation tile;
 
-	public GuiSkycrateStation(InventoryPlayer inventoryPlayer, TileEntitySkyCrateStation tile)
+	public GuiSkycrateStation(EntityPlayer player, TileEntitySkyCrateStation tile)
 	{
-		super(new ContainerSkycrateStation(inventoryPlayer, tile));
+		super(new ContainerSkycrateStation(player, tile));
 		this.ySize = 176;
 		this.tile = tile;
 	}

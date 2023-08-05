@@ -1,22 +1,22 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import net.minecraft.entity.player.EntityPlayer;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionWorkshop;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,9 +31,9 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 	private GuiTextField valueEdit;
 	HashMap<GuiButtonState, EnumFuseTypes> fuseButtons = new HashMap<>();
 
-	public GuiAmmunitionWorkshop(InventoryPlayer inventoryPlayer, TileEntityAmmunitionWorkshop tile)
+	public GuiAmmunitionWorkshop(EntityPlayer player, TileEntityAmmunitionWorkshop tile)
 	{
-		super(inventoryPlayer, tile, ContainerAmmunitionWorkshop::new);
+		super(player, tile, ContainerAmmunitionWorkshop::new);
 	}
 
 	@Override
@@ -161,18 +161,12 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 	{
 		super.onGuiClosed();
 
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("fuse", tile.fuse.getName());
 		if(valueEdit!=null)
-		{
-			try
-			{
-				nbt.setInteger("fuse_config", Integer.parseInt(valueEdit.getText()));
-			}
-			catch(NumberFormatException ignored)
-			{
-			}
-		}
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, nbt));
+			valueEdit.setText(String.valueOf(tile.fuseConfig));
+
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+				.withString("fuse", tile.fuse.getName())
+				.conditionally(valueEdit!=null, e -> e.withInt("fuse_config", Integer.parseInt(valueEdit.getText())))
+		));
 	}
 }

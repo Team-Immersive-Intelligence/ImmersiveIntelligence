@@ -1,42 +1,42 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -79,12 +79,12 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	//this is due to the machine sending a close door message to the server and producing an annoying sound
 	protected boolean preparedForChange = false;
 
-	public GuiDataInputMachineBase(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile, IIGuiList gui)
+	public GuiDataInputMachineBase(EntityPlayer player, TileEntityDataInputMachine tile, IIGuiList gui)
 	{
-		super(new ContainerDataInputMachine(inventoryPlayer, tile, gui==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE));
+		super(new ContainerDataInputMachine(player, tile, gui==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE));
 		this.thisTexture = gui==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE?TEXTURE_STORAGE: gui==IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES?TEXTURE_VARIABLES: TEXTURE_EDIT;
 		this.ySize = 222;
-		this.playerInv = inventoryPlayer;
+		this.playerInv = player.inventory;
 		this.thisGui = gui;
 		this.tile = tile;
 		this.list = tile.storedData;
@@ -95,8 +95,8 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	public void initGui()
 	{
 		boolean isStorage = thisGui==IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE;
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(isStorage, 0, tile.getPos()));
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(!isStorage, 1, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(isStorage, 0, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(!isStorage, 1, tile.getPos()));
 
 		buttonList.clear();
 		labelList.clear();
@@ -130,21 +130,19 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		super.actionPerformed(button);
 		if(button==sendPacketButton)
 		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setBoolean("send_packet", true);
-			if(!list.toNBT().hasNoTags())
-				ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
+			//nothing to send
+			if(list.toNBT().hasNoTags())
+				return;
+			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withBoolean("send_packet", true)));
 		}
 		else if(button==manualButton)
-		{
 			saveBasicData();
-		}
 		else if(button instanceof GuiButtonTab)
 		{
 			syncDataToServer();
 			saveBasicData();
 			preparedForChange = true;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(TABS.get(button), tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageGuiNBT(TABS.get(button), tile));
 		}
 	}
 
@@ -217,8 +215,8 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		//Close the hatches
 		if(!preparedForChange)
 		{
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
 		}
 		super.onGuiClosed();
 	}
@@ -263,11 +261,8 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		trueManual.previousSelectedEntry = sideManual.previousSelectedEntry;
 		trueManual.page = sideManual.page;
 
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setTag("variables", this.list.toNBT());
 		tile.storedData = list.clone();
-
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("variables", this.list.toNBT())));
 	}
 
 	protected void addTab(IIGuiList gui, String name)
@@ -316,6 +311,6 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		syncDataToServer();
 
 		preparedForChange = true;
-		IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));
 	}
 }

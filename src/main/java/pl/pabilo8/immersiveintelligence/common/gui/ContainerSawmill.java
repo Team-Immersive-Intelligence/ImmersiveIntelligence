@@ -19,9 +19,9 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
  */
 public class ContainerSawmill extends ContainerIEBase<TileEntitySawmill>
 {
-	public ContainerSawmill(InventoryPlayer inventoryPlayer, TileEntitySawmill tile)
+	public ContainerSawmill(EntityPlayer player, TileEntitySawmill tile)
 	{
-		super(inventoryPlayer, tile);
+		super(player.inventory, tile);
 		//Input/Output Slots
 
 		this.addSlotToContainer(new SawmillInput(this, this.inv, 0, 13, 36));
@@ -35,9 +35,9 @@ public class ContainerSawmill extends ContainerIEBase<TileEntitySawmill>
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(inventoryPlayer, j+i*9+9, 8+j*18, 86+i*18));
+				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 86+i*18));
 		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8+i*18, 144));
+			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 144));
 	}
 
 	public static class SawmillInput extends IESlot

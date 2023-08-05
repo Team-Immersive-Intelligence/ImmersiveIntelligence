@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
@@ -28,9 +29,9 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 {
 	private GuiDataVariableList variableList;
 
-	public GuiDataInputMachineVariables(InventoryPlayer inventoryPlayer, TileEntityDataInputMachine tile)
+	public GuiDataInputMachineVariables(EntityPlayer player, TileEntityDataInputMachine tile)
 	{
-		super(inventoryPlayer, tile, IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES);
+		super(player, tile, IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES);
 		title = I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.programming");
 	}
 
@@ -66,7 +67,7 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 						syncDataToServer();
 
 						preparedForChange=true;
-						IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos()));
+						IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));
 
 						break;
 					}
@@ -89,7 +90,7 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 				syncDataToServer();
 
 				preparedForChange=true;
-				IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile.getPos()));
+				IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));
 			}
 			else if(variableList.delete)
 			{

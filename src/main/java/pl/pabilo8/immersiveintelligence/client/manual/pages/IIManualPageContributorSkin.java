@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.CustomSkinHandler.SpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 
 import java.util.List;

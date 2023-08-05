@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +31,10 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker.PackerPutMode;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker.PackerTask;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPacker;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -61,9 +64,9 @@ public class GuiPacker extends GuiIEContainerBase
 	private GuiButtonSwitch switchOreDict, switchNBT;//, switchExpire;
 	private GuiTextField textFieldAmount;//, textFieldExpire;
 
-	public GuiPacker(InventoryPlayer inventoryPlayer, TileEntityPacker tile)
+	public GuiPacker(EntityPlayer player, TileEntityPacker tile)
 	{
-		super(new ContainerPacker(inventoryPlayer, tile));
+		super(new ContainerPacker(player, tile));
 		this.xSize = 256;
 		this.ySize = 211;
 		this.tile = tile;
@@ -359,8 +362,7 @@ public class GuiPacker extends GuiIEContainerBase
 		try
 		{
 			t.stack.inputSize = Integer.parseInt(textFieldAmount.getText());
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 
 		}
@@ -372,12 +374,10 @@ public class GuiPacker extends GuiIEContainerBase
 		if(taskList.selectedOption!=-1)
 			saveGuiToTask(taskList.selectedOption);
 
-		NBTTagCompound tag = new NBTTagCompound();
-
-		tag.setTag("tasks", tile.writeTasks());
-		tag.setBoolean("repeatActions", buttonRepeat.state);
-
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+				.withBoolean("repeatActions", buttonRepeat.state)
+				.withTag("tasks", tile.writeTasks())
+		));
 	}
 
 }

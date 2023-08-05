@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
@@ -16,7 +17,10 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
 
@@ -29,9 +33,9 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 	GuiButtonSwitch switchRSControl, switchDataControl, switchSendTarget;
 	GuiSliderII sliderRepair;
 
-	public GuiEmplacementPageStatus(InventoryPlayer inventoryPlayer, TileEntityEmplacement tile)
+	public GuiEmplacementPageStatus(EntityPlayer player, TileEntityEmplacement tile)
 	{
-		super(inventoryPlayer, tile, IIGuiList.GUI_EMPLACEMENT_STATUS);
+		super(player, tile, IIGuiList.GUI_EMPLACEMENT_STATUS);
 		title = I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.status");
 	}
 
@@ -131,12 +135,12 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 	protected void syncDataToServer()
 	{
 		super.syncDataToServer();
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("redstoneControl", switchRSControl.state);
-		nbt.setBoolean("dataControl", switchDataControl.state);
-		nbt.setBoolean("sendAttackSignal", switchSendTarget.state);
-		nbt.setFloat("autoRepairAmount", (float)sliderRepair.sliderValue);
 
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(this.tile, nbt));
+		IIPacketHandler.sendToServer(new MessageIITileSync(this.tile, EasyNBT.newNBT()
+				.withBoolean("redstoneControl", switchRSControl.state)
+				.withBoolean("dataControl", switchDataControl.state)
+				.withBoolean("sendAttackSignal", switchSendTarget.state)
+				.withFloat("autoRepairAmount", (float)sliderRepair.sliderValue)
+		));
 	}
 }

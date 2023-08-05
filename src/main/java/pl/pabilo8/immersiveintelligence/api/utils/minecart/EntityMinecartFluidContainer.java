@@ -25,7 +25,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 27-12-2019
  */
-public abstract class EntityMinecartFluidContainer extends EntityMinecartII implements IEntityOverlayText
+public abstract class EntityMinecartFluidContainer extends EntityMinecartII implements IAdvancedTextOverlay
 {
 	public FluidTank tank = new FluidTank(getTankCapacity());
 	SidedFluidHandler fluidHandler = new SidedFluidHandler(this, null);
@@ -159,7 +159,7 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecartII impl
 	public abstract int getTankCapacity();
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
 		if(Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
 		{
@@ -173,11 +173,7 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecartII impl
 		return null;
 	}
 
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
-	}
+
 
 	static class SidedFluidHandler implements IFluidHandler
 	{

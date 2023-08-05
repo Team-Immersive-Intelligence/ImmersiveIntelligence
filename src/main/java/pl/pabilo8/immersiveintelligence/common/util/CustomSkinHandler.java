@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence;
+package pl.pabilo8.immersiveintelligence.common.util;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.lib.manual.ManualInstance.ManualEntry;
@@ -7,7 +7,6 @@ import com.google.gson.*;
 import net.minecraft.item.EnumRarity;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.io.InputStreamReader;
 import java.net.URL;

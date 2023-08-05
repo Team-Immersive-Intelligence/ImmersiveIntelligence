@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.client.gui.elements.GuiButtonState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates;
@@ -31,9 +32,9 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/medical_crate.png";
 	GuiButtonState buttonHealing = null, buttonBoost = null;
 
-	public GuiMedicalCrate(InventoryPlayer inventoryPlayer, TileEntityMedicalCrate tile)
+	public GuiMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)
 	{
-		super(new ContainerMedicalCrate(inventoryPlayer, tile));
+		super(new ContainerMedicalCrate(player, tile));
 		this.tile = tile;
 		this.ySize = 168;
 	}
@@ -57,13 +58,13 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 		{
 			tile.shouldHeal = !tile.shouldHeal;
 			buttonHealing.state = tile.shouldHeal;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldHeal, 1, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldHeal, 1, tile.getPos()));
 		}
 		else if(button==buttonBoost)
 		{
 			tile.shouldBoost = !tile.shouldBoost;
 			buttonBoost.state = tile.shouldBoost;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldBoost, 2, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(tile.shouldBoost, 2, tile.getPos()));
 		}
 	}
 

@@ -20,11 +20,11 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoMachinegun;
  */
 public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmunitionCrate>
 {
-	public ContainerAmmunitionCrate(InventoryPlayer inventoryPlayer, TileEntityAmmunitionCrate tile)
+	public ContainerAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
 		//Normal bullet slots
 
-		super(inventoryPlayer, tile);
+		super(player.inventory, tile);
 		for(int i = 0; i < 20; i++)
 			this.addSlotToContainer(new Slot(this.inv, i, 8+(i%5)*18, 18+(i/5)*18)
 			{
@@ -83,9 +83,9 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(inventoryPlayer, j+i*9+9, 8+j*18, 141+i*18));
+				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 141+i*18));
 		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8+i*18, 199));
+			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 199));
 	}
 
 	public static class GhostFilteredBullet extends IESlot.Ghost

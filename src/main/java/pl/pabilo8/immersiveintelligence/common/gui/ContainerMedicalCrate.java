@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -14,11 +15,11 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
  */
 public class ContainerMedicalCrate extends ContainerIEBase<TileEntityMedicalCrate>
 {
-	public ContainerMedicalCrate(InventoryPlayer inventoryPlayer, TileEntityMedicalCrate tile)
+	public ContainerMedicalCrate(EntityPlayer player, TileEntityMedicalCrate tile)
 	{
 		//Normal bullet slots
 
-		super(inventoryPlayer, tile);
+		super(player.inventory, tile);
 		int shift = tile.hasUpgrade(IIContent.UPGRADE_INSERTER)?0:27;
 
 		this.addSlotToContainer(new IESlot.FluidContainer(this, this.inv, 0, 41+shift, 21, 2));
@@ -38,8 +39,8 @@ public class ContainerMedicalCrate extends ContainerIEBase<TileEntityMedicalCrat
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(inventoryPlayer, j+i*9+9, 8+j*18, 87+i*18));
+				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 8+j*18, 87+i*18));
 		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8+i*18, 145));
+			addSlotToContainer(new Slot(player.inventory, i, 8+i*18, 145));
 	}
 }

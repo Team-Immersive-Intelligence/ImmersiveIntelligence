@@ -1,30 +1,29 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ProjectileWorkshop;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,10 +40,10 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 	int coreIconID = 0;
 	private GuiTextField valueEdit;
 
-	public GuiProjectileWorkshop(InventoryPlayer inventoryPlayer, TileEntityProjectileWorkshop tile)
+	public GuiProjectileWorkshop(EntityPlayer player, TileEntityProjectileWorkshop tile)
 	{
-		super(inventoryPlayer, tile, ContainerProjectileWorkshop::new);
-		IIPacketHandler.INSTANCE.sendToServer(
+		super(player, tile, ContainerProjectileWorkshop::new);
+		IIPacketHandler.sendToServer(
 				new MessageBooleanAnimatedPartsSync(true, blusunrize.immersiveengineering.common.util.Utils.RAND.nextInt(2),
 						tile.getPos()));
 	}
@@ -219,18 +218,14 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 		{
 			try
 			{
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setInteger("fill_amount", Integer.parseInt(valueEdit.getText()));
-				ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, nbt));
-			}
-			catch(NumberFormatException ignored)
-			{
-
-			}
+				IIPacketHandler.sendToServer(new MessageIITileSync(tile,
+						EasyNBT.newNBT().withInt("fill_amount", Integer.parseInt(valueEdit.getText()))
+				));
+			} catch(NumberFormatException ignored) {}
 		}
 
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
 	}
 
 	@Override

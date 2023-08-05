@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -24,9 +25,9 @@ public class GuiFiller extends GuiIEContainerBase
 	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/filler.png";
 	TileEntityFiller tile;
 
-	public GuiFiller(InventoryPlayer inventoryPlayer, TileEntityFiller tile)
+	public GuiFiller(EntityPlayer player, TileEntityFiller tile)
 	{
-		super(new ContainerFiller(inventoryPlayer, tile));
+		super(new ContainerFiller(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 	}

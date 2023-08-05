@@ -26,9 +26,9 @@ public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 	public Runnable ghostUpdateFunction;
 	DummyInventory ghostInv = new DummyInventory();
 
-	public ContainerPacker(InventoryPlayer inventoryPlayer, TileEntityPacker tile)
+	public ContainerPacker(EntityPlayer player, TileEntityPacker tile)
 	{
-		super(inventoryPlayer, tile);
+		super(player.inventory, tile);
 
 		slots = new Slot[tile.getInventory().size()];
 		assert this.inv!=null;
@@ -59,9 +59,9 @@ public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(inventoryPlayer, j+i*9+9, 48+j*18, 130+i*18));
+				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 48+j*18, 130+i*18));
 		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(inventoryPlayer, i, 48+i*18, 161+27));
+			addSlotToContainer(new Slot(player.inventory, i, 48+i*18, 161+27));
 	}
 
 	private static class DummyInventory implements IInventory

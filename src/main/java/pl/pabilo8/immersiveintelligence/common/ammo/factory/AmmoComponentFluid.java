@@ -9,6 +9,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
@@ -34,6 +36,13 @@ public class AmmoComponentFluid implements IAmmoComponent
 	public String getName()
 	{
 		return (fluid.isGaseous()?"gas_": "fluid_")+name;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getTranslatedName()
+	{
+		return fluid.getLocalizedName(null);
 	}
 
 	@Override

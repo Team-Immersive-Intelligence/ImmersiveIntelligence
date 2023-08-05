@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
@@ -25,9 +26,9 @@ public class GuiFuelStation extends GuiIEContainerBase
 	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/fuel_station.png";
 	TileEntityFuelStation tile;
 
-	public GuiFuelStation(InventoryPlayer inventoryPlayer, TileEntityFuelStation tile)
+	public GuiFuelStation(EntityPlayer player, TileEntityFuelStation tile)
 	{
-		super(new ContainerFuelStation(inventoryPlayer, tile));
+		super(new ContainerFuelStation(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 	}

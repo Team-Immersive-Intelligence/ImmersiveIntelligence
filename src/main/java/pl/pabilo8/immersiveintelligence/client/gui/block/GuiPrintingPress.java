@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
@@ -26,9 +27,9 @@ public class GuiPrintingPress extends GuiIEContainerBase
 	public static final String texture_printing_press = ImmersiveIntelligence.MODID+":textures/gui/printing_press.png";
 	TileEntityPrintingPress tile;
 
-	public GuiPrintingPress(InventoryPlayer inventoryPlayer, TileEntityPrintingPress tile)
+	public GuiPrintingPress(EntityPlayer player, TileEntityPrintingPress tile)
 	{
-		super(new ContainerPrintingPress(inventoryPlayer, tile));
+		super(new ContainerPrintingPress(player, tile));
 		this.ySize = 176;
 		this.tile = tile;
 	}

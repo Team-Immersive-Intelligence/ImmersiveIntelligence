@@ -15,7 +15,6 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
@@ -38,7 +37,11 @@ import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataTypeNumeric;
+import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
@@ -50,7 +53,6 @@ import java.util.Set;
  */
 public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IBlockBounds, IDataConnector
 {
-	public static ItemStack conn_data, conn_mv;
 	public int energyStorage = 0, plannedAmount = 0, scatter = 0;
 	public float pitch = 0, plannedPitch = 0, yaw = 0, plannedYaw = 0;
 	public boolean shouldIgnite = false;
@@ -119,13 +121,9 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 			return false;
 
 		if(conn==0)
-		{
 			return attachCat.equals(IIDataWireType.DATA_CATEGORY)&&limitType==null;
-		}
 		else if(conn==1)
-		{
 			return acceptablePowerWires.contains(attachCat)&&secondCable==null;
-		}
 
 		return false;
 	}
@@ -200,7 +198,6 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 
 
 		if(data)
-		{
 			switch(facing)
 			{
 				default:
@@ -219,10 +216,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 				case WEST:
 					return new Vec3d(0.5, 0.875, 0.875);
 			}
-
-		}
 		else
-		{
 			switch(facing)
 			{
 				default:
@@ -241,8 +235,6 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 				case WEST:
 					return new Vec3d(0.5, 0.125, 0.125);
 			}
-
-		}
 	}
 
 	public int getTargetedConnector(TargetingInfo target)
@@ -252,81 +244,57 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 			case UP:
 			{
 				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitZ <= 0.25f&&target.hitZ >= 0f)
-				{
 					return 0;
-				}
 				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitZ <= 1&&target.hitZ >= 0.75)
-				{
 					return 1;
-				}
 			}
 			break;
 			case DOWN:
 			{
 				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitZ <= 0.25f&&target.hitZ >= 0f)
-				{
 					return 0;
-				}
 				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitZ <= 1&&target.hitZ >= 0.75)
-				{
 					return 1;
-				}
 			}
 			break;
 			case NORTH:
 			{
 				// 0.125, 0.875, 0.5
 				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitY <= 1&&target.hitY >= 0.75)
-				{
 					return 0;
-				}
 				// 0.875, 0.125, 0.5
 				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitY <= 0.25f&&target.hitY >= 0f)
-				{
 					return 1;
-				}
 			}
 			break;
 			case SOUTH:
 			{
 				// 0.125, 0.125, 0.5
 				if(target.hitX <= 0.25&&target.hitX >= 0&&target.hitY <= 0.25f&&target.hitY >= 0f)
-				{
 					return 0;
-				}
 				// 0.875, 0.875, 0.5
 				if(target.hitX <= 1f&&target.hitX >= 0.75f&&target.hitY <= 1&&target.hitY >= 0.75)
-				{
 					return 1;
-				}
 			}
 			break;
 			case WEST:
 			{
 				// 0.5, 0.875, 0.875
 				if(target.hitZ <= 1f&&target.hitZ >= 0.75f&&target.hitY <= 1&&target.hitY >= 0.75)
-				{
 					return 0;
-				}
 				// 0.5, 0.125, 0.125
 				if(target.hitZ <= 0.25&&target.hitZ >= 0&&target.hitY <= 0.25f&&target.hitY >= 0f)
-				{
 					return 1;
-				}
 			}
 			break;
 			case EAST:
 			{
 				// 0.5, 0.875, 0.125
 				if(target.hitZ <= 0.25&&target.hitZ >= 0&&target.hitY <= 1&&target.hitY >= 0.75)
-				{
 					return 0;
-				}
 				// 0.5, 0.875, 0.875
 				if(target.hitZ <= 1f&&target.hitZ >= 0.75f&&target.hitY <= 0.25f&&target.hitY >= 0f)
-				{
 					return 1;
-				}
 			}
 			break;
 		}
@@ -483,9 +451,7 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 				Vec3d v = new Vec3d(vi.getX(), vi.getY(), vi.getZ()).rotateYaw((float)Math.toRadians(yaw)*((facing.getAxisDirection()==AxisDirection.POSITIVE)?-1: 1));
 
 				if(facing.getHorizontalIndex()!=-1)
-				{
 					v = v.addVector(0, Math.toRadians(pitch), 0);
-				}
 				else
 				{
 					v = new Vec3d(vi.getX(), vi.getY(), vi.getZ());
@@ -519,12 +485,10 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 					world.spawnEntity(chem);
 				}
 				if(world.getTotalWorldTime()%4==0)
-				{
 					if(shouldIgnite)
 						world.playSound(null, pos.getX()+0.5f, pos.getY()-0.5f, pos.getZ()+0.5f, IESounds.sprayFire, SoundCategory.PLAYERS, .5f, 1.5f);
 					else
 						world.playSound(null, pos.getX()+0.5f, pos.getY()-0.5f, pos.getZ()+0.5f, IESounds.spray, SoundCategory.PLAYERS, .5f, .75f);
-				}
 			}
 			tank.drain(Math.min(plannedAmount, consumed), true);
 			plannedAmount -= consumed;
@@ -564,47 +528,32 @@ public class TileEntityChemicalDispenser extends TileEntityImmersiveConnectable 
 	@Override
 	public void onPacketReceive(DataPacket packet)
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
+		if(packet.getPacketVariable('p') instanceof IDataTypeNumeric)
+			this.plannedPitch = MathHelper.clamp(
+					packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('p')).floatValue(),
+					-45, 45);
 
-		if(packet.getPacketVariable('p') instanceof DataTypeInteger)
-		{
-			this.plannedPitch = ((DataTypeInteger)packet.getPacketVariable('p')).value;
-			this.plannedPitch = MathHelper.clamp(this.plannedPitch, -45, 45);
-
-			nbt.setFloat("plannedPitch", plannedPitch);
-			nbt.setFloat("pitch", pitch);
-		}
-
-		if(packet.getPacketVariable('y') instanceof DataTypeInteger)
-		{
-			this.plannedYaw = ((DataTypeInteger)packet.getPacketVariable('y')).value;
-			this.plannedYaw = MathHelper.clamp(this.plannedYaw, -45, 45);
-
-			nbt.setFloat("plannedYaw", plannedYaw);
-			nbt.setFloat("yaw", yaw);
-
-		}
+		if(packet.getPacketVariable('y') instanceof IDataTypeNumeric)
+			this.plannedYaw = MathHelper.clamp(
+					packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('y')).floatValue(),
+					-45, 45);
 
 		if(packet.getPacketVariable('a') instanceof DataTypeInteger)
-		{
 			this.plannedAmount = ((DataTypeInteger)packet.getPacketVariable('a')).value;
-			nbt.setInteger("plannedAmount", plannedAmount);
-		}
 		if(packet.getPacketVariable('s') instanceof DataTypeInteger)
-		{
-			this.scatter = ((DataTypeInteger)packet.getPacketVariable('s')).value;
-			this.scatter = MathHelper.clamp(this.scatter, 0, 100);
-			nbt.setInteger("scatter", scatter);
-		}
+			this.scatter = MathHelper.clamp(((DataTypeInteger)packet.getPacketVariable('s')).value, 0, 100);
 		if(packet.getPacketVariable('i') instanceof DataTypeBoolean)
-		{
 			this.shouldIgnite = ((DataTypeBoolean)packet.getPacketVariable('i')).value;
-			nbt.setBoolean("shouldIgnite", shouldIgnite);
-		}
 
-		if(!nbt.hasNoTags())
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 24));
-
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+				.withFloat("plannedPitch", plannedPitch)
+				.withFloat("pitch", pitch)
+				.withFloat("plannedYaw", plannedYaw)
+				.withFloat("yaw", yaw)
+				.withInt("plannedAmount", plannedAmount)
+				.withInt("scatter", scatter)
+				.withBoolean("shouldIgnite", shouldIgnite)
+		));
 	}
 
 	@Override

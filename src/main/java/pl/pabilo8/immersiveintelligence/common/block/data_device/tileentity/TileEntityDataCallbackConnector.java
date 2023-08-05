@@ -12,6 +12,9 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBou
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
+import blusunrize.immersiveengineering.common.util.Utils;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,12 +23,14 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
@@ -41,7 +46,7 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 2019-05-31
  */
-public class TileEntityDataCallbackConnector extends TileEntityImmersiveConnectable implements ITickable, IDirectionalTile, IHammerInteraction, IBlockBounds, IDataConnector, IOBJModelCallback<IBlockState>, IBlockOverlayText
+public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 {
 	public int colorIn = 0;
 	public int colorOut = 1;
@@ -174,20 +179,14 @@ public class TileEntityDataCallbackConnector extends TileEntityImmersiveConnecta
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		if(hammer)
+		if(Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND)))
 			return new String[]{
 					I18n.format(Lib.DESC_INFO+"blockSide.io.0")+": "+I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(colorIn).getUnlocalizedName()),
 					I18n.format(Lib.DESC_INFO+"blockSide.io.1")+": "+I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(colorOut).getUnlocalizedName())
 			};
 		else
 			return new String[0];
-	}
-
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
 	}
 }

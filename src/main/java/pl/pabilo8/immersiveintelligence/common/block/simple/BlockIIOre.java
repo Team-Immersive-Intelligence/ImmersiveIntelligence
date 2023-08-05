@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 01.09.2020
  */
-@IBatchOredictRegister(oreDict = "ore")
 public class BlockIIOre extends BlockIIBase<Ores>
 {
 	public BlockIIOre()

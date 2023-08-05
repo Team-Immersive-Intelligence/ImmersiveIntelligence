@@ -19,22 +19,22 @@ public class BlockIIMetalBase extends BlockIIBase<Metals>
 		super(name, PropertyEnum.create("type", Metals.class), Material.IRON, ItemBlockIIBase::new);
 		setFullCube(true);
 
-		setHardness(3.0F);
+		setHardness(5.0F);
 		setResistance(10.0F);
 	}
 
 	public enum Metals implements IIBlockEnum
 	{
 		// TODO: 05.09.2022 values
-		@IIBlockProperties(hardness = 3, blastResistance = 10)
+		@IIBlockProperties(hardness = 5, blastResistance = 10)
 		PLATINUM,
-		@IIBlockProperties(hardness = 3, blastResistance = 10)
+		@IIBlockProperties(hardness = 4, blastResistance = 10)
 		ZINC,
-		@IIBlockProperties(hardness = 3, blastResistance = 10)
+		@IIBlockProperties(hardness = 10, blastResistance = 10)
 		TUNGSTEN,
-		@IIBlockProperties(hardness = 3, blastResistance = 10)
+		@IIBlockProperties(hardness = 5, blastResistance = 10)
 		BRASS,
-		@IIBlockProperties(hardness = 3, blastResistance = 10)
+		@IIBlockProperties(hardness = 6, blastResistance = 10)
 		DURALUMINIUM
 	}
 }

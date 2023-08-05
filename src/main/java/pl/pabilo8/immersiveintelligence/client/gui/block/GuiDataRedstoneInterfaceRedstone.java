@@ -1,16 +1,15 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,20 +18,22 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRedstoneDataInterface;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.ArrayList;
 
@@ -54,13 +55,13 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	private boolean wasDown = false;
 
 	//It was necessary to make the Gui control the Container
-	public GuiDataRedstoneInterfaceRedstone(InventoryPlayer inventoryPlayer, TileEntityRedstoneInterface tile)
+	public GuiDataRedstoneInterfaceRedstone(EntityPlayer player, TileEntityRedstoneInterface tile)
 	{
 		//Tricky, but definitely doable!
-		super(new ContainerRedstoneDataInterface(inventoryPlayer, tile));
+		super(new ContainerRedstoneDataInterface(player, tile));
 
 		this.ySize = 222;
-		this.playerInv = inventoryPlayer;
+		this.playerInv = player.inventory;
 		this.tile = tile;
 		this.container = (ContainerRedstoneDataInterface)this.inventorySlots;
 
@@ -70,10 +71,8 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 		ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
 		if(positionEqual(proxy, tile))
-		{
 			if(proxy.storedGuiData.hasKey("scrollPercent"))
 				scroll = Math.round(proxy.storedGuiData.getFloat("scrollPercent")*maxScroll);
-		}
 
 		refreshstoredRedstone();
 	}
@@ -97,13 +96,11 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		if(button.id==0)
 		{
 			syncDataToServer();
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA, tile.getPos()));
+			IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_REDSTONE_INTERFACE_DATA, tile));
 
 		}
 		else if(button.id==1)
-		{
 			this.initGui();
-		}
 	}
 
 	/**
@@ -154,7 +151,6 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 		int i = 0;
 		for(char c : DataPacket.varCharacters)
-		{
 			if(list.variables.containsKey(c))
 			{
 				IDataType data = list.getPacketVariable(c);
@@ -229,9 +225,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 				this.drawTexturedModalRect(drawx+52, drawy+10, 64, 248, 8, 6);
 
 				if(IIUtils.isPointInRectangle(drawx+62, drawy+4, drawx+125, drawy+17, mx, my))
-				{
 					changeButton = 5;
-				}
 
 				if(list.getPacketVariable(c) instanceof DataTypeArray)
 				{
@@ -253,7 +247,6 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 					DataTypeInteger i2 = (DataTypeInteger)array.value[1];
 
 					if(Mouse.isButtonDown(0)&&!wasDown)
-					{
 						switch(changeButton)
 						{
 							case 0:
@@ -304,7 +297,6 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 							}
 							break;
 						}
-					}
 
 				}
 
@@ -331,7 +323,6 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 				i += 1;
 			}
-		}
 		GL11.glPushMatrix();
 
 		//Draw 'add' button
@@ -345,16 +336,13 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		this.fontRenderer.drawString("+", guiLeft+93, guiTop+17+(i*24)-scroll, hovered?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
 
 		if(hovered)
-		{
 			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"variable_add_desc"));
-		}
 
 		//Check for button click
 		if(hovered&&!wasDown&&Mouse.isButtonDown(0))
 		{
 			boolean done = false;
 			for(char c : DataPacket.varCharacters)
-			{
 				if(!list.variables.containsKey(c))
 				{
 					//Save gui scroll, tile pos for validation
@@ -367,7 +355,6 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 					break;
 				}
-			}
 
 		}
 
@@ -388,8 +375,8 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 	public void onGuiClosed()
 	{
 		syncDataToServer();
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
-		IIPacketHandler.INSTANCE.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 1, tile.getPos()));
 		super.onGuiClosed();
 	}
 
@@ -408,9 +395,7 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 		scroll -= Integer.signum(mouseChange)*40;
 
 		if((isPointInRegion(161, 12, 9, 114, mx, my))&&Mouse.isButtonDown(0))
-		{
 			scroll = (int)((my-(15./2)-guiTop-10.)*maxScroll)/114;
-		}
 
 		scroll = Math.min(scroll, maxScroll);
 		scroll = Math.max(0, scroll);
@@ -431,16 +416,9 @@ public class GuiDataRedstoneInterfaceRedstone extends GuiIEContainerBase impleme
 
 	void syncDataToServer()
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-
-		tag.setTag("storedRedstone", this.list.toNBT());
-
 		if(tile==null)
-		{
 			return;
-		}
-		ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
-
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withTag("storedRedstone", this.list.toNBT())));
 	}
 
 	//Stolen from Flaxbeard (https://github.com/Flaxbeard/QuestionablyImmersive/blob/dev/src/main/java/flaxbeard/questionablyimmersive/client/gui/GuiCokeOvenBattery.java)

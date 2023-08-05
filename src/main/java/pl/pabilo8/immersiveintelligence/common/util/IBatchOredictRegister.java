@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * i.e. <pre>@IBatchOredictRegister(oredict="ingot")</pre> with subtype <pre>steel</pre> is registered as <pre>ingotSteel</pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.TYPE_USE})
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.TYPE_USE})
 public @interface IBatchOredictRegister
 {
 	String[] oreDict() default {};

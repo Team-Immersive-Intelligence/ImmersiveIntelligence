@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
@@ -12,7 +11,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IComparat
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,6 +38,9 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
@@ -52,7 +53,6 @@ import java.util.Set;
 // TODO: 26.07.2022 rework
 public class TileEntityFluidInserter extends TileEntityImmersiveConnectable implements ITileDrop, IComparatorOverride, IHammerInteraction, ITickable, IBlockBounds, IDataConnector
 {
-	public static ItemStack conn_data, conn_mv;
 	public int energyStorage = 0;
 	public EnumFacing outputFacing = EnumFacing.NORTH;
 	public EnumFacing inputFacing = EnumFacing.SOUTH;
@@ -368,11 +368,10 @@ public class TileEntityFluidInserter extends TileEntityImmersiveConnectable impl
 
 		markContainingBlockForUpdate(null);
 
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("inputFacing", inputFacing.ordinal());
-		nbt.setInteger("outputFacing", outputFacing.ordinal());
-
-		ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, nbt), IIUtils.targetPointFromTile(this, 24));
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+				.withInt("inputFacing", inputFacing.ordinal())
+				.withInt("outputFacing", outputFacing.ordinal())
+		));
 
 		return true;
 	}
