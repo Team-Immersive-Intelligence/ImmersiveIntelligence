@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.overlay.gun;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.GuiOverlayBase;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
@@ -17,26 +18,36 @@ public abstract class GuiOverlayGunBase extends GuiOverlayBase
 {
 	void drawMagazine(ItemStack magazine, int width, int height)
 	{
-		NonNullList<ItemStack> cartridge = IIContent.itemBulletMagazine.readInventory(magazine);
+		drawMagazine(width, height,
+				IIContent.itemBulletMagazine.readInventory(magazine)
+		);
+	}
+
+	public void drawMagazine(int width, int height, NonNullList<ItemStack> ammo)
+	{
 		IIDrawUtils draw = IIDrawUtils.startTexturedColored();
 		draw.drawTexColorRect(width-38, height-27, 36, 25, IIDrawUtils.NO_COLOR, 15/256f, (15+36)/256f, 29/256f, (29+25)/256f);
 
 		//Draw bullets
-		int bullets=0;
-		boolean offset=false;
-		if(!cartridge.isEmpty())
+		int bullets = 0;
+		boolean offset = false;
+		IAmmo ammoItem = null;
+		if(!ammo.isEmpty())
 		{
 			draw.setOffset(width-38+3, height-17);
-			for(ItemStack bullet : cartridge)
+			for(ItemStack bullet : ammo)
 			{
 				if(bullet.isEmpty())
 					break;
+				if(ammoItem==null)
+					ammoItem = (IAmmo)bullet.getItem();
+
 				bullets++;
 				draw.drawTexColorRect(offset?1: 0, 0, 30, 6, IIDrawUtils.NO_COLOR, 51/256f, (51+30)/256f, 33/256f, (33+6)/256f);
-				int cc = IIContent.itemAmmoAssaultRifle.getPaintColor(bullet);
+				int cc = ammoItem.getPaintColor(bullet);
 				if(cc!=-1)
 					draw.drawTexColorRect(offset?11: 10, 0, 4, 6, IIUtils.rgbIntToRGB(cc), 61/256f, (65)/256f, 27/256f, (27+6)/256f);
-				draw.drawTexColorRect(offset?25: 24, 0, 6, 6, IIUtils.rgbIntToRGB(IIContent.itemAmmoAssaultRifle.getCore(bullet).getColour()),
+				draw.drawTexColorRect(offset?25: 24, 0, 6, 6, IIUtils.rgbIntToRGB(ammoItem.getCore(bullet).getColour()),
 						75/256f, (81)/256f, 27/256f, (27+6)/256f);
 
 				draw.addOffset(0, -6);

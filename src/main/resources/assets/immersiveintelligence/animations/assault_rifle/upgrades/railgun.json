@@ -1,0 +1,29 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"railgun": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"energy_upgrade": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"energy_upgrade_lower": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

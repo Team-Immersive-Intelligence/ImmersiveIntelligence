@@ -5,6 +5,7 @@ itemGroup.immersiveintelligence=Immersive Intelligence
 item.immersiveintelligence.material.basic_circuit_board_raw.name=Raw Basic Circuit Board
 item.immersiveintelligence.material.basic_circuit_board_etched.name=Etched Basic Circuit Board
 item.immersiveintelligence.material.basic_electronic_element.name=Basic Electronic Component
+item.immersiveintelligence.material.circuit_template.name=Circuit Template
 
 item.immersiveintelligence.material.advanced_circuit_board_raw.name=Raw Advanced Circuit Board
 item.immersiveintelligence.material.advanced_circuit_board_etched.name=Etched Advanced Circuit Board
@@ -20,7 +21,6 @@ item.immersiveintelligence.material.transistor.name=Transistor
 item.immersiveintelligence.material.compact_electric_engine.name=Compact Electric Engine
 item.immersiveintelligence.material.compact_electric_engine_advanced.name=Advanced Compact Electric Engine
 item.immersiveintelligence.material.carbon_brush.name=Carbon Brush
-item.immersiveintelligence.material.wire_tungsten.name=Tungsten Wire
 item.immersiveintelligence.material.glass_fibre_cable.name=Glass Fibre Cable
 
 item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
@@ -92,6 +92,7 @@ item.immersiveintelligence.material_nugget.silicon.name=Silicon Piece
 item.immersiveintelligence.material_nugget.duraluminium.name=Duraluminium Nugget
 
 item.immersiveintelligence.material_wire.tungsten.name=Tungsten Wire
+item.immersiveintelligence.material_wire.brass.name=Brass Wire
 
 item.immersiveintelligence.material_gem.fluorite.name=Nether Fluorite
 #Based on real-life mineral glauconite, though the word phosphorus is easier to remember
@@ -137,6 +138,9 @@ item.immersiveintelligence.circuit_functional.array.name=Array Operations Circui
 item.immersiveintelligence.circuit_functional.entity.name=Entity Operations Circuit
 item.immersiveintelligence.circuit_functional.document.name=Document Circuit
 item.immersiveintelligence.circuit_functional.type_conversion.name=Type Conversion Circuit
+item.immersiveintelligence.circuit_functional.fluidstack.name=Fluidstack Operations Circuit
+item.immersiveintelligence.circuit_functional.map.name=Map Operations Circuit
+item.immersiveintelligence.circuit_functional.vector_arithmetic.name=Vector Arithmetic Circuit
 
 item.immersiveintelligence.minecart.wooden_crate.name=Minecart with Wooden Crate
 item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforced Crate
@@ -174,6 +178,8 @@ item.immersiveintelligence.machinegun.name=Machinegun
 item.immersiveintelligence.assault_rifle.name=Assault Rifle
 item.immersiveintelligence.submachinegun.name=Submachinegun
 item.immersiveintelligence.autorevolver.name=Autorevolver
+item.immersiveintelligence.rifle.name=Rifle
+item.immersiveintelligence.rifle_handmade.name=Handmade Rifle
 
 #Drillheads
 item.immersiveintelligence.drillhead.tungsten.name=Tungsten Drill Head
@@ -202,6 +208,12 @@ item.immersiveintelligence.weapon_upgrade.heavy_springbox.name=Heavy Springbox
 item.immersiveintelligence.weapon_upgrade.radio_marker.name=Radio Marker
 item.immersiveintelligence.weapon_upgrade.rifle_grenade_launcher.name=Rifle Grenade Launcher
 item.immersiveintelligence.weapon_upgrade.stereoscopic_rangefinder.name=Stereoscopic Rangefinder
+item.immersiveintelligence.weapon_upgrade.gyroscopic_stabilizer.name=Gyroscopic Stabilizer
+item.immersiveintelligence.weapon_upgrade.electric_firing_motor.name=Electric Firing Motor
+item.immersiveintelligence.weapon_upgrade.railgun_assisted_chamber.name=Railgun-Assisted Chamber
+
+item.immersiveintelligence.weapon_upgrade.semi_automatic.name=Semi-Automatic Firing Mechanism
+item.immersiveintelligence.weapon_upgrade.extended_barrel.name=Extended Barrel
 
 item.immersiveintelligence.armor_upgrade.gasmask.name=Gas Mask
 item.immersiveintelligence.armor_upgrade.infiltrator_gear.name=Infiltrator's Headgear
@@ -231,6 +243,8 @@ item.immersiveintelligence.skycrate_mount.electric.name=Electric Skycrate Mount
 desc.immersiveintelligence.electric_hammer=Rotates blocks, toggles machine ports, forms multiblocks.
 desc.immersiveintelligence.electric_wirecutter=Cuts wires and motor belts, works as shears.
 desc.immersiveintelligence.wrench=Installs upgrades on compatible machines.
+desc.immersiveintelligence.tachometer=Measures speed and torque of rotary devices.
+desc.immersiveintelligence.binoculars=Allows to see distant things.
 
 desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
 desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
@@ -239,6 +253,7 @@ desc.immersiveintelligence.toolupgrade.item.submachinegun=Submachinegun
 desc.immersiveintelligence.toolupgrade.item.mortar=Mortar
 desc.immersiveintelligence.toolupgrade.item.assault_rifle=Assault Rifle
 desc.immersiveintelligence.toolupgrade.item.autorevolver=Autorevolver
+desc.immersiveintelligence.toolupgrade.item.rifle=Rifle
 
 desc.immersiveintelligence.filled_casing=Filled with Gunpowder
 desc.immersiveintelligence.explosives_programmed=Programmed with a Data Packet
@@ -266,9 +281,14 @@ desc.immersiveintelligence.toolupgrade.folding_stock=Decreases reload and aiming
 
 desc.immersiveintelligence.toolupgrade.heavy_springbox=Increases bullet velocity, giving them a higher penetrating power. Increases time between each shot.
 
-desc.immersiveintelligence.toolupgrade.radio_marker=Allows to send data signals with the current player position.
-desc.immersiveintelligence.toolupgrade.rifle_grenade_launcher=Allows to shoot railgun grenades within a slightly lower range.
+desc.immersiveintelligence.toolupgrade.rifle_grenade_launcher=Allows to shoot railgun grenades. Significantly lower range than a standard railgun.
 desc.immersiveintelligence.toolupgrade.stereoscopic_rangefinder=Shows range to current target. Combined with radio marker, allows sending enemy positions trough data.
+desc.immersiveintelligence.toolupgrade.gyroscopic_stabilizer=Automatically stabilizes the gun after shooting, decreases recoil in all firing modes. Requires energy.
+desc.immersiveintelligence.toolupgrade.electric_firing_motor=Increases the gun's fire rate in automatic mode. Requires energy.
+desc.immersiveintelligence.toolupgrade.railgun_assisted_chamber=Increases velocity of bullets fired in manual fire mode. Requires energy.
+
+desc.immersiveintelligence.toolupgrade.semi_automatic=Allows loading ammunition from magazines, increasing fire rate.
+desc.immersiveintelligence.toolupgrade.extended_barrel=Increases velocity of bullets fired in manual fire mode. Decreases fire rate.
 
 desc.immersiveintelligence.toolupgrade.gasmask=Protects the user from hazardous gasses.
 
@@ -320,7 +340,7 @@ item.immersiveintelligence.ammo_casing.artillery_8bcal.name=Artillery Shell Casi
 item.immersiveintelligence.artillery_8bCal.core.name=Artillery Shell Core
 item.immersiveintelligence.artillery_8bCal.bullet.name=Artillery Shell
 
-item.immersiveintelligence.ammo_casing.mortar_6bCal.name=Mortar Shell Casing
+item.immersiveintelligence.ammo_casing.mortar_6bcal.name=Mortar Shell Casing
 item.immersiveintelligence.mortar_6bCal.core.name=Mortar Shell Core
 item.immersiveintelligence.mortar_6bCal.bullet.name=Mortar Shell
 
@@ -383,6 +403,7 @@ item.immersiveintelligence.bullet_magazine.automatic_revolver.name=Automatic Rev
 item.immersiveintelligence.bullet_magazine.assault_rifle.name=Assault Rifle Magazine
 item.immersiveintelligence.bullet_magazine.autocannon.name=Autocannon Magazine
 item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS Drum Magazine
+item.immersiveintelligence.bullet_magazine.rifle.name=Rifle Magazine
 
 item.immersiveintelligence.motor_gear.copper.name=Copper Gear
 item.immersiveintelligence.motor_gear.brass.name=Brass Gear
@@ -554,7 +575,7 @@ tile.immersiveintelligence.metal_fortification.aluminium_chain_fence.name=Alumin
 tile.immersiveintelligence.wooden_fortification.wooden_steel_chain_fence.name=Wooden Steel Chain Fence
 tile.immersiveintelligence.wooden_fortification.wooden_brass_chain_fence.name=Wooden Brass Chain Fence
 
-tile.immersiveintelligence.metal_fortification1.tank_trap.name=Anti-Tank Trap
+tile.immersiveintelligence.metal_fortification1.tank_trap.name=Czech Hedgehog
 
 tile.immersiveintelligence.metal_multiblock.data_input_machine.storage=Data Input Machine - Storage
 tile.immersiveintelligence.metal_multiblock.data_input_machine.programming=Data Input Machine - Programming
@@ -571,9 +592,9 @@ tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.3=Int. (0-2
 tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.4=Int. (0-100)
 tile.immersiveintelligence.metal_multiblock.redstone_interface.modes.5=String
 
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Arithmetic Logic Machine - Storage
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Arithmetic Logic Machine - Programming
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithmetic Logic Machine - Editing an Expression
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.storage=Arithmetic-Logic Machine - Storage
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.programming=Arithmetic-Logic Machine - Programming
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.edit=Arithmetic-Logic Machine - Editing an Expression
 
 tile.immersiveintelligence.data_connector.data_connector.name=Data Connector
 tile.immersiveintelligence.data_connector.data_relay.name=Data Relay
@@ -601,7 +622,7 @@ tile.immersiveintelligence.wooden_multiblock.skycart_station.name=SkyCart Statio
 tile.immersiveintelligence.wooden_multiblock.skycrate_post.name=SkyCrate Post
 tile.immersiveintelligence.wooden_multiblock.sawmill.name=Sawmill
 tile.immersiveintelligence.metal_multiblock.data_input_machine.name=Data Input Machine
-tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithmetic Logic Machine
+tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name=Arithmetic-Logic Machine
 tile.immersiveintelligence.metal_multiblock.radio_station.name=Radio Station
 tile.immersiveintelligence.metal_multiblock.printing_press.name=Printing Press
 tile.immersiveintelligence.metal_multiblock.chemical_bath.name=Chemical Bath
@@ -708,7 +729,7 @@ desc.immersiveengineering.info.multiblock.II:SkyCartStation=SkyCart Station
 desc.immersiveengineering.info.multiblock.II:SkyCratePost=SkyCrate Post
 desc.immersiveengineering.info.multiblock.II:Sawmill=Sawmill
 desc.immersiveengineering.info.multiblock.II:DataInputMachine=Data Input Machine
-desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Arithmetic Logic Machine
+desc.immersiveengineering.info.multiblock.II:ArithmeticLogicMachine=Arithmetic-Logic Machine
 desc.immersiveengineering.info.multiblock.II:RadioStation=Radio Station
 desc.immersiveengineering.info.multiblock.II:PrintingPress=Printing Press
 desc.immersiveengineering.info.multiblock.II:ChemicalBath=Chemical Bath
@@ -775,40 +796,76 @@ fluid.latex=Latex
 #Dusts
 dust.gunpowder=Gunpowder
 dust.sulfur=Sulfur
-
+dust.sawdust=Sawdust
+dust.sand=Sand
+dust.gravel=Gravel
 
 #Sounds
 
 subtitle.immersiveintelligence.siren=Siren Howling
-subtitle.immersiveintelligence.printing_press=Printing Press Working
+subtitle.immersiveintelligence.punchtape_reader=Punchtape Operation
 subtitle.immersiveintelligence.paper_eject=Paper Falling
-
-subtitle.immersiveintelligence.machinegun_shot_def=Machinegun Noises
-subtitle.immersiveintelligence.machinegun_shot_hb=Heavy Barrel Machinegun Noises
-subtitle.immersiveintelligence.machinegun_shot_wc=Water Cooled Machinegun Noises
-subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
-
-subtitle.immersiveintelligence.submachinegun_shot=Submachinegun Shots
-subtitle.immersiveintelligence.submachinegun_reload=Submachinegun Reloading
-
-subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
-subtitle.immersiveintelligence.howitzer_shell_pick=Artillery Shell Picked
-subtitle.immersiveintelligence.howitzer_shell_put=Artillery Shell Placed
-subtitle.immersiveintelligence.howitzer_platform=Gun Platform Moving
-subtitle.immersiveintelligence.howitzer_rotating=Howitzer Moving
-subtitle.immersiveintelligence.howitzer_door_open=Howitzer Doors Opening
-subtitle.immersiveintelligence.howitzer_door_close=Howitzer Doors Closing
-
-subtitle.immersiveintelligence.inserter=Inserter Noises
 
 subtitle.immersiveintelligence.radio_beep=Short Radio Beeps
 subtitle.immersiveintelligence.radio_noise=Radio Noise
 
+subtitle.immersiveintelligence.rolling=Rolling Mechanism in Motion
+subtitle.immersiveintelligence.chain=Chain Being Lifted
+subtitle.immersiveintelligence.lamp=Lamp Buzzing
+subtitle.immersiveintelligence.heating=Heating Element Working
+subtitle.immersiveintelligence.saw=Sawblade Rotating
+subtitle.immersiveintelligence.saw_idle=Sawblade Cutting
+
+subtitle.immersiveintelligence.electric_motor_forward=Electric Motor Humming
+subtitle.immersiveintelligence.electric_motor_backward=Electric Motor Reversing
+subtitle.immersiveintelligence.electric_motor_heavy_forward=Heavy Electric Motor Humming
+subtitle.immersiveintelligence.electric_motor_heavy_backward=Heavy Electric Motor Reversing
+subtitle.immersiveintelligence.turntable_forward=Turntable Rotating Right
+subtitle.immersiveintelligence.turntable_backward=Turntable Rotating Left
+subtitle.immersiveintelligence.turntable_heavy_forward=Heavy Turntable Rotating Right
+subtitle.immersiveintelligence.turntable_heavy_backward=Heavy Turntable Rotating Left
+subtitle.immersiveintelligence.sliding_door_open=Sliding Doors Opening
+subtitle.immersiveintelligence.sliding_door_close=Sliding Doors Closing
+
+subtitle.immersiveintelligence.gun_platform_rotating=Gun Platform Rotates
+
+subtitle.immersiveintelligence.distant_artillery=Distant Artillery Firing
+subtitle.immersiveintelligence.distant_artillery_impact=Distant Artillery Impact
+subtitle.immersiveintelligence.distant_gunshot=Distant Gunshots
+subtitle.immersiveintelligence.dryfire=Gun Being Unable to Fire
+
+subtitle.immersiveintelligence.machinegun_shot=Machinegun Firing
+subtitle.immersiveintelligence.machinegun_shot_distant=Machinegun Firing in Distance
+subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
+
+subtitle.immersiveintelligence.submachinegun_shot=Submachinegun Firing
+subtitle.immersiveintelligence.submachinegun_shot_distant=Submachinegun Firing in Distance
+subtitle.immersiveintelligence.submachinegun_reload=Submachinegun Reloading
+
+subtitle.immersiveintelligence.assault_rifle_shot=Assault Rifle Firing
+subtitle.immersiveintelligence.assault_rifle_shot_distant=Assault Rifle Firing in Distance
+subtitle.immersiveintelligence.assault_rifle_reload=Assault Rifle Reloading
+subtitle.immersiveintelligence.assault_rifle_mode_change=Fire Selector Flipping
+
+subtitle.immersiveintelligence.rifle_shot=Rifle Firing
+subtitle.immersiveintelligence.rifle_shot_distant=Rifle Firing in Distance
+subtitle.immersiveintelligence.rifle_reload=Rifle Reloading
+
+subtitle.immersiveintelligence.howitzer_shot=Howitzer Firing
+subtitle.immersiveintelligence.howitzer_shot_distant=Howitzer Firing in Distance
+subtitle.immersiveintelligence.howitzer_shell_pick=Artillery Shell Picked
+subtitle.immersiveintelligence.howitzer_shell_put=Artillery Shell Placed
+
+subtitle.immersiveintelligence.inserter=Inserter Noises
+
 subtitle.immersiveintelligence.impact_metal=Projectile breaking trough metal
 subtitle.immersiveintelligence.ricochet_metal=Projectile bouncing off metal
 
-subtitle.immersiveintelligence.bullet_impact=Projectile impact
-subtitle.immersiveintelligence.bullet_ricochet=Projectile ricocheting off
+subtitle.immersiveintelligence.grenade_throw=Grenade Throw
+subtitle.immersiveintelligence.artillery_impact=Artillery Shell Falling
+subtitle.immersiveintelligence.bullet_flyby=Bullet Flying
+subtitle.immersiveintelligence.bullet_impact=Projectile Impact
+subtitle.immersiveintelligence.bullet_ricochet=Projectile Ricochets Off
 
 subtitle.immersiveintelligence.motorbike_start=Starting a Motorbike
 subtitle.immersiveintelligence.motorbike_engine=Motorbike Engine Noise
@@ -816,21 +873,18 @@ subtitle.immersiveintelligence.motorbike_horn=Motorbike Horn
 
 subtitle.immersiveintelligence.fuel_station=Fuel pumping
 subtitle.immersiveintelligence.welding=Welding
-subtitle.immersiveintelligence.sawmill=Saw in action
-
-subtitle.immersiveintelligence.vulcanizer_heating=Vulcanizer Heater Noise
-subtitle.immersiveintelligence.vulcanizer_motor=Vulcanizer Rotates
 
 subtitle.immersiveintelligence.drawer_open=Drawer Slides Out
 subtitle.immersiveintelligence.drawer_close=Drawer Slides In
 subtitle.immersiveintelligence.metal_locker_open=Locker Door Opens
 subtitle.immersiveintelligence.metal_locker_close=Locker Door Shuts
-
-subtitle.immersiveintelligence.chemical_painter_lights=UV Lights Buzz
-subtitle.immersiveintelligence.chemical_painter_lift_up=Conveyor Ascends
-subtitle.immersiveintelligence.chemical_painter_lift_down=Conveyor Descends
+subtitle.immersiveintelligence.metal_hatch_open=Metal Hatch Opens
+subtitle.immersiveintelligence.metal_hatch_close=Metal Hatch Shuts
+subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
+subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
 
 subtitle.immersiveintelligence.autocannon_shot=Autocannon Firing
+subtitle.immersiveintelligence.autocannon_shot_distant=Autocannon Firing in Distance
 subtitle.immersiveintelligence.autocannon_reload=Autocannon Reloading
 
 subtitle.immersiveintelligence.explosion_flare=Flare Deploying
@@ -841,13 +895,7 @@ subtitle.immersiveintelligence.mortar_shot=Mortar Firing
 subtitle.immersiveintelligence.mortar_load=Mortar Loading
 
 subtitle.immersiveintelligence.mine_detector=Mine Detector Beeps
-
 subtitle.immersiveintelligence.construction=Hammer-Assisted Construction
-
-subtitle.immersiveintelligence.emplacement_rotation=Emplacement Weapon Rotation
-subtitle.immersiveintelligence.emplacement_platform=Emplacement Platform Moving
-subtitle.immersiveintelligence.emplacement_door_open=Emplacement Doors Opening
-subtitle.immersiveintelligence.emplacement_door_close=Emplacement Doors Closing
 
 #Entities
 
@@ -997,14 +1045,14 @@ machineupgrade.immersiveintelligence.radio_locators=Radio Locators
 machineupgrade.immersiveintelligence.radio_locators.desc=Allows the Radar to detect radio signals and compute points of their origin. Increases the amount of energy required to operate.
 
 #Descriptions
-desc.immersiveintelligence.radio_configurator_basic=Allows to set frequency for basic radio devices.
-desc.immersiveintelligence.radio_configurator_advanced=An upgraded model for setting higher frequencies.
+desc.immersiveintelligence.radio_configurator_basic=Allows changing the frequency of basic radio devices.
+desc.immersiveintelligence.radio_configurator_advanced=An upgraded radio tuner, allows setting even higher frequencies.
 desc.immersiveintelligence.radio_configurator_frequency=Frequency: %s
 desc.immersiveintelligence.radio_configurator_max_frequency=Max Frequency: %s
 desc.immersiveintelligence.naval_mine_chain_length=Max Chain Length: %s
 desc.immersiveintelligence.measuring_cup_size=Capacity: %s / %s mB
 desc.immersiveintelligence.measuring_cup_cant_resize=Cannot change size when contains fluid.
-desc.immersiveintelligence.functional_circuit_shift=§6Hold Shift§r - Performed Operations
+desc.immersiveintelligence.functional_circuit_shift=%s - Performed Operations
 desc.immersiveintelligence.functional_circuit=Allows the machine to do operations such as:
 desc.immersiveintelligence.data_storage_shift=%s - Stored Data
 desc.immersiveintelligence.data_storage=Stored Data:
@@ -1025,14 +1073,18 @@ desc.immersiveintelligence.infrared_disabled=§cInfrared§r Vision Disabled!
 desc.immersiveintelligence.assembly_scheme.used_to_create=Used to create: %s
 desc.immersiveintelligence.assembly_scheme.items_created=Items Created: %s
 
-desc.immersiveengineering.info.holdControl=§4Hold Control§r
-desc.immersiveengineering.info.holdControlForInfo=§cHold Control for more info§r
+desc.immersiveintelligence.info.holdControl=Hold [Ctrl]
+desc.immersiveintelligence.info.holdShift=Hold [Shift]
+desc.immersiveintelligence.info.holdAlt=Hold [Alt]
+desc.immersiveintelligence.info.holdTab=Hold [Tab]
 
-
-desc.immersiveintelligence.assembly_scheme.info_hold1=§6Hold Shift§r - Materials Used
-desc.immersiveintelligence.assembly_scheme.info_hold2=§4Hold Control§r - Tools Used
+desc.immersiveintelligence.assembly_scheme.info_hold1=%s - Materials Used
+desc.immersiveintelligence.assembly_scheme.info_hold2=%s - Tools Used
 desc.immersiveintelligence.assembly_scheme.materials=Materials used:
 desc.immersiveintelligence.assembly_scheme.tools=Tools used:
+
+desc.immersiveintelligence.weapon.magazine1=%s - Magazine #1
+desc.immersiveintelligence.weapon.magazine2=%s - Magazine #2
 
 
 desc.immersiveintelligence.storage_module=Storage
@@ -1097,6 +1149,9 @@ desc.immersiveintelligence.bullets.fuse=%s Fuse
 desc.immersiveintelligence.bullets.mass=Mass: %s
 desc.immersiveintelligence.bullets.caliber=Caliber: %s bCal
 
+desc.immersiveintelligence.bullet_magazine.remaining=Remaining Bullets: %s
+desc.immersiveintelligence.bullet_magazine.empty=Empty
+
 desc.immersiveintelligence.data_merger.0=Both
 desc.immersiveintelligence.data_merger.1=Left
 desc.immersiveintelligence.data_merger.2=Right
@@ -1160,7 +1215,7 @@ info.immersiveintelligence.tachometer_message.advanced=Internal: speed %s RPM / 
 info.immersiveintelligence.tachometer.internal_torque=Internal Torque: %s
 info.immersiveintelligence.tachometer.external_torque=External Torque: %s
 info.immersiveintelligence.tachometer.internal_speed=Internal Speed: %s
-info.immersiveintelligence.tachometer.external_speed=Enternal Speed: %s
+info.immersiveintelligence.tachometer.external_speed=External Speed: %s
 info.immersiveintelligence.tachometer.torque=Torque: %s
 info.immersiveintelligence.tachometer.speed=Speed: %s
 
@@ -1320,9 +1375,9 @@ desc.immersiveengineering.info.blueprint.basic_circuits=Basic Circuits
 desc.immersiveengineering.info.blueprint.advanced_circuits=Advanced Circuits
 desc.immersiveengineering.info.blueprint.processors=Processors
 
-desc.immersiveengineering.info.blueprint.basic_functional_circuits=Basic Functional Circuits
-desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced Functional Circuits
-desc.immersiveengineering.info.blueprint.processor_functional_circuits=Programmed Processors
+desc.immersiveengineering.info.blueprint.basic_functional_circuits=Basic Function Circuits
+desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced Function Circuits
+desc.immersiveengineering.info.blueprint.processor_functional_circuits=Programmable Processors
 
 desc.immersiveengineering.info.blueprint.metal_springs=Springs
 desc.immersiveengineering.info.blueprint.ammo_molds=Ammunition Molds
@@ -1471,44 +1526,22 @@ advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Experience a how
 
 #Manual Categories
 
-ie.manual.category.ii_data.name=Data Transmission
+ie.manual.category.ii_data.name=Data and Electronics
 ie.manual.category.ii_warfare.name=Warfare
 ie.manual.category.ii_logi.name=Logistics
 ie.manual.category.ii_intel.name=Intelligence
 ie.manual.category.ii_motorworks.name=Motorworks
 
+ie.manual.entry.multiblock_forming=The %1$s can be formed by using an %2$s on the %3$s %4$s
+ie.manual.entry.multiblock_forming_short=It can be formed by using an %2$s on the %3$s %4$s
+
+ie.manual.entry.immersiveposts.posts_brass=Brass<br><br><br><br><br><br>The Ornamental
+ie.manual.entry.immersiveposts.posts_tungsten=Tungsten<br><br><br><br><br><br>The Tough
+ie.manual.entry.immersiveposts.posts_zinc=Zinc<br><br><br><br><br><br>The Fragile
+ie.manual.entry.immersiveposts.posts_platinum=Platinum<br><br><br><br><br><br>[The World]
+ie.manual.entry.immersiveposts.posts_duraluminium=Duraluminium<br><br><br><br><br><br>The Airborne
+
 #Data and Electronics
-
-#Reference to... flow control... yeah, really, that boring
-ie.manual.entry.data_main.name=Data
-ie.manual.entry.data_main.subtext=Controlling the Flow
-ie.manual.entry.data_main0=When you want to control an automated factory, power plant or a different complicated facility you need some kind of a control system. <br>Redstone is good for a start, but with lots of machines the messy nature of it starts to show - and that's an appropriate moment to introduce The Data System.
-ie.manual.entry.data_main1=Data, in contrast to a redstone signal, is sent in a asynchronous way via packets. This means, that the signal isn't being sent all the time, but only once. Each packet can contain up to 36 <link;data_variable_types;§n§oVariables§r;> of different types, labelled by one of the 26 letters and numbers 0-9. The packets are received and sent instantly, allowing them to travel vast distances without any loss in data they store.
-
-#Reference to possibly a box of foodstuffs
-ie.manual.entry.data_variable_types.name=Data types
-ie.manual.entry.data_variable_types.subtext=Results May Vary
-ie.manual.entry.data_variable_types=There are multiple types of the variables a packet can hold. Each type has a default value (not to be confused with <link;data_variable_types;§o§nNull§r;1>) and other parameters specific to it.<br> The Basic Types are: <link;data_variable_types;§o§nNull§r;1>, <link;data_variable_types;§o§nInteger§r;2>, <link;data_variable_types;§o§nString§r;3>, <link;data_variable_types;§o§nBoolean§r;4>. There are also a few Compound Types, these include <link;data_variable_types;§o§nItemStack§r;5>, <link;data_variable_types;§o§nArray§r;6>, <link;data_variable_types;§o§nFluidStack§r;7>, <link;data_variable_types;§o§nVector§r;7>, <link;data_variable_types;§o§nEntity§r;7> and <link;data_variable_types;§o§nMap§r;8>.
-
-ie.manual.entry.data_variable_types_null=§lNull§r is a special data type, which has §6no value§r.<br>It is the default type of an §6undefined§r variable.
-
-ie.manual.entry.data_variable_types_integer=§lInteger§r is a number data type. It can store a §6number§r without its fractional component.<br>It is mainly used in calculations and number comparisons.
-ie.manual.entry.data_variable_types_float=§lFloat§r is a number data type. It can store a §6number§r along with its fractional component.<br>It is used in high-precision calculations, i.e. computing angles of a long-distance ballistic trajectory.
-ie.manual.entry.data_variable_types_vector=§lVector§r is a data type storing 3 number values. It can store §6integers§r, §6floats§r or a mix of them.<br>It is used to represent values in 3-dimensional space, such as position or motion of objects.
-
-ie.manual.entry.data_variable_types_string=§lString§r is a §6text§r data type, which can hold multiple characters.<br>It is used by many devices for commands, queries and input/output messages.
-
-ie.manual.entry.data_variable_types_boolean=§lBoolean§r is a §6logic§r data type, it can hold one of two values - §6True§r or §6False§r. Its primary use is in logic functions using Boolean Algebra.
-
-ie.manual.entry.data_variable_types_itemstack=§lItemStack§r is a data type which holds information about a specific §6stack§r of items: its §6id§r, §6amount§r, §6metadata§r (damage) and §6NBT component§r.
-ie.manual.entry.data_variable_types_fluidstack=§lFluidStack§r is a data type which holds information about a specific §6fluid§r of fluid: its §6name§r, §6amount§r and §6NBT component§r.
-ie.manual.entry.data_variable_types_entity=§lEntity§r is a data type which holds information about a specific in-world §6entity§r: its §6name§r, §6id§r, §6position§r, §6motion§r and §6NBT data§r.
-
-ie.manual.entry.data_variable_types_array=§lArray§r is a collection of data types, ordered by their §6index§r number starting from 0, it can hold any data type.
-ie.manual.entry.data_variable_types_map=§lMap§r is a collection of pairs of 2 data types called §6entries§r.<br>The first element of an entry is called a §6key§r and second is called a §6value§r.<br>The first can be used to get the second and in reverse.<br>An entry can hold any data type both in key and value field.
-
-ie.manual.entry.data_variable_types_expression=§lExpression§r is a special data type used by the circuits of Arithetic-Logic Machine. It performs a pre-programmed function on input parameters in form of values or their accessors and returns a value.
-ie.manual.entry.data_variable_types_accessor=§lAccessor§r is a data type used to get the value of another variable in a packet. Accessors are often used inside Expressions to get a value dynamically from a packet instead of having a fixed one.
 
 ie.manual.entry.def_value=Default Value
 ie.manual.entry.min_value=Minimum Value
@@ -1526,42 +1559,11 @@ ie.manual.entry.variables_input=Input Variables:
 ie.manual.entry.variables_output=Output Variables:
 ie.manual.entry.variables_callback=Callback Variables:
 
-ie.manual.entry.circuit_production.name=Circuitry
-ie.manual.entry.circuit_production.subtext=Not really Beep-Boop yet
-ie.manual.entry.circuit_production0=Circuits are one of the most important and commonly used electronic parts. There are three kinds of circuits: <link;circuit_production_basic;§n§obasic§r;> - made using vacuum tubes and redstone, <link;circuit_production_advanced;§o§nadvanced§r;> - made using Advanced Electronic Alloy™ and upgraded vacuum tubes. The most sophisticated are the <link;circuit_production_processor;§o§nprocessor§r;> circuits, which are made mainly of silicon in a complicated <link;precision_assembler;§o§nassembly§r;> process.
-ie.manual.entry.circuit_production_basic=Basic circuits are the common, primary and cheap circuits. They can be refitted to perform simple arithmetic, logic and text operations, but their main use is construction of various machines. To produce a basic circuit a raw circuit board has to be <chemical_bath;§o§netched§r;> in acid and then a chip made of vacuum tubes in the <link;precission_assembler;§o§nPrecision §o§nAssembler§r;> has to be installed onto them.
-ie.manual.entry.circuit_production_basic_usages=Basic circuits are used to make basic-tier electronic devices and machines, such as the Printing Press, the <link;arithmetic_logic_machine;§o§nArithmetic-Logic §o§nMachine§r;> and the <link;data_input_machine;§o§nData §o§nInput §o§nMachine§r;>.
-ie.manual.entry.circuit_production_advanced=Advanced circuits are a direct upgrade to their predecessors, they still use vacuum tubes, but because of the new alloy used, their capabilities are much better. They are made of an upgraded circuit board and a chip composed of upgraded vacuum tubes.
-ie.manual.entry.circuit_production_advanced_usages=Because of their fast transmission rate, they can be refitted for performing more advanced arithmetic, logic, text and even item-processing operations. Because of their superior speed, they are used in wireless transmission and advanced computing machines.
-ie.manual.entry.circuit_production_processor=Processor circuits are the most advanced and powerful circuits in the world, crafted using silicon, advanced electronic alloy and various other materials during a multi-step assembly process.
-ie.manual.entry.circuit_production_processor_usages=Currently processors are not used in making anything, so build them more as a challenge than an actually needed item.
-
-#Reference to a Polish tinkerer/Baumeister slang word meaning doohickey, thingamabob, but in exact meaning a device that makes the "bul bul" (splash splash?) noise
-ie.manual.entry.chemical_bath.name=Chemical Bath
-ie.manual.entry.chemical_bath.subtext=The Bulbulator
-ie.manual.entry.chemical_bath0=The Chemical Bath is a machine, constructed of an industrial-size steel bathtub and a moving carriage with a grasper. The machine is commonly used for etching raw circuits in acid. To form it use a hammer on the middle sheetmetal block.
-
-#Reference to Dr.Stone
-ie.manual.entry.precission_assembler.name=Precision Assembler
-ie.manual.entry.precission_assembler.subtext=The Godly Artisan
-ie.manual.entry.precission_assembler0=The Precision Assembler is an advanced machine used for crafting items with high precision. It requires an Assembly Scheme and some precise tools for operation. To form it, use a hammer on the wooden scaffolding block.
-ie.manual.entry.precission_assembler1=the machine uses only the amount it needs and outputs scrap along with the produced item. Its most common use is electonic component production.
-
-ie.manual.entry.electrolyzer.name=Electrolyzer
-ie.manual.entry.electrolyzer.subtext=The fluid shock therapy
-ie.manual.entry.electrolyzer0=The Electrolyzer is a machine which uses the electrolysis process to split a fluid into two different ones. It can split water into hydrogen and oxygen and brine into chlorine and hydrogen. It requires electricity to operate. To form the block, use a hammer on the heavy engineering block in front of the machine.
-ie.manual.entry.electrolyzer1=The fluid has to be provided to the side of the machine, after the process is finishes the two created fluids will be outputted to the front. Although the machine's internal tanks allow storing small amount of the liquid, consider construction of <link;tank;§o§nproper §o§ntanks§r;> for an industrial-scale electrolysis.
-
 ie.manual.entry.filler.name=Filler
 ie.manual.entry.filler.subtext=Churning all the dusts
 ie.manual.entry.filler0=The filler is a device used to fill containers with dust. It's most important purpose is filling bullet casings with gunpowder. To form the filler, use a hammer on the middle conveyor block.
 ie.manual.entry.filler1=To operate the filler requires electricity, a container to fill and an appropriate amount of dust. When dust is placed into the input slot it is moved to the main tank, the total amount of dust stored there is shown in mB. The machine can store only one dust type at a time. Only way to remove dust from the machine, except filling containers is to break the machine.
 
-ie.manual.entry.chemical_painter.name=Chemical Painter
-ie.manual.entry.chemical_painter.subtext=Worth a thousand brushes
-ie.manual.entry.chemical_painter0=The Chemical Painter is a machine used to paint items in a precisely set color using ink. To form it, use a hammer on the middle light engineering block.
-ie.manual.entry.chemical_painter1=Painting items manually is tedious and not very precise, a lot of dye can be wasted on just trying to get the wanted color. Chemical Painter eliminates this problem. Cyan, Magenta, Yellow and Black Ink have to be provided to four fluid input slots on the back of the device. Electricity has to be provided trough the top input port. Items can be inserted manually or trough the inward facing conveyor.
-ie.manual.entry.chemical_painter2=To set the color use the interface or data system. In the interface there are 3 buttons, which allow switching the color model: R- RGB, C -CMYK and H - HSV.<br>The chemical painter can be used to paint bullets to mark their purpose. Remember that most items can be cleaned using <link;chemical_bath;§o§nChemical §o§nBath§r;>.
 #Chemical Painter output variables
 ie.manual.entry.chemical_painter.vars_in.p.main=Output mode
 #Chemical Painter callback variables
@@ -1572,12 +1574,6 @@ ie.manual.entry.chemical_painter.vars_callback.get_ink_cyan=Returns cyan ink amo
 ie.manual.entry.chemical_painter.vars_callback.get_ink_yellow=Returns yellow ink amount
 ie.manual.entry.chemical_painter.vars_callback.get_ink_magenta=Returns magenta ink amount
 ie.manual.entry.chemical_painter.vars_callback.get_energy=Returns stored energy amount
-
-ie.manual.entry.printing_press.name=Printing Press
-ie.manual.entry.printing_press.subtext=The Engineer's Book & Quill
-ie.manual.entry.printing_press0=The Printing Press is a machine which can print out text on demand when it receives a data packet. The Press requires ink and paper to operate. To form it, use a hammer on the light engineering block in front of the machine.
-ie.manual.entry.printing_press1=The printing paper is a special thinned version of a standard one used in books, it is created by pressing a paper in a metal press. Machine requires different ink colors, depending on the CMYK values of the currently printed color.
-ie.manual.entry.printing_press2=The amount of inks depends on the color of currently printed character. Outputted printed pages should be removed immediately, as the press can only store 12 of them in its basket.
 
 #Printing Press output variables
 ie.manual.entry.printing_press.vars_in.m.main=Output mode
@@ -1593,48 +1589,6 @@ ie.manual.entry.printing_press.vars_callback.get_ink_yellow=Returns yellow ink a
 ie.manual.entry.printing_press.vars_callback.get_ink_magenta=Returns magenta ink amount
 ie.manual.entry.printing_press.vars_callback.get_energy=Returns stored energy amount
 ie.manual.entry.printing_press.vars_callback.get_paper=Returns blank paper pages amount
-
-ie.manual.entry.data_input_machine.name=Data Input Machine
-ie.manual.entry.data_input_machine.subtext=The Input Outputter
-ie.manual.entry.data_input_machine0=The Data Input Machine is an electronic device which consists of a wooden desk with a keyboard on top and a steel machine casing. A user can input data into it and send it by applying a redstone signal. After sending a data packet, the variables remain there and the machine can be used again. To operate, the device requires electricity. To form it use a hammer on the light engineering block to the left.
-ie.manual.entry.data_input_machine1=The machine's interface consists of two parts. The storage part which is used to store punchtapes with data written on them and the data part. A punchtape can be inserted into a slot to read it (if the punchtape is written) or to write the machine's data packet into it (when the punchtape is empty). In the data section, variables can be added by using the '+' button. Then they can be edited or removed (hold shift).
-ie.manual.entry.data_input_machine2=When editing a variable, you can change it's letter by using the up and down arrows, to change it's type hold shift when clicking it.
-
-#Reference to a song
-ie.manual.entry.arithmetic_logic_machine.name=Arithmetic-Logic Machine
-ie.manual.entry.arithmetic_logic_machine.subtext=Does Quick Maths
-ie.manual.entry.arithmetic_logic_machine0=The Arithmetic-Logic Machine is an electronic device, which primary task is to process and modify data. It requires energy and to operate.
-ie.manual.entry.arithmetic_logic_machine1=When a data packet is received at the left side of the machine, it uses functional circuits placed into 4 slots in the rack to change variables accordingly. The machine iterates trough all the circuits and then trough variables alphabetically and sets their values to the result of the given Expression. The expression consists of 2 values and an operator (+,-,*, etc.). Each circuit has a list of available expressions. The expression can also have a Conditional Variable (a Boolean),
-ie.manual.entry.arithmetic_logic_machine2=The machine also offers a non-standard datatype, the Accessor, which doesn't hold any value of its own, but can get the value most recently assigned to the variable from the received packet. The variable in an expression can be toggled to an Accessor by clicking the '@' button.
-ie.manual.entry.arithmetic_logic_machine_fcircuit_arithmetic=Arithmetic Circuit<br>This circuit  is used to calculate basic math expressions such as addition, subtraction, multiplication and division.
-ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_arithmetic=Advanced Arithmetic Circuit<br> This circuit allows to calculate more advanced math expressions such as raising a number to a power, getting a square root or getting the lowest or highest number from two.
-ie.manual.entry.arithmetic_logic_machine_fcircuit_logic=Logic Circuit<br> This circuit is used for basic logic expressions (like a logic gate) such as AND, OR, NOT.
-ie.manual.entry.arithmetic_logic_machine_fcircuit_comparator=Comparator Circuit<br>This circuit allows to compare two integers and returns a boolean.
-ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_logic=Advanced Logic Circuit<br> This circuit can perform advanced logic operations, such as NAND, NOR, XOR and XNOR and the basic ones.
-ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_text=Text Processor Circuit<br> This circuit can do basic text processing, currently only allows to merge two Strings.
-ie.manual.entry.arithmetic_logic_machine_fcircuit_advanced_itemstack=ItemStack Operations Circuit<br> This circuit can get and manipulate the properties of an ItemStack datatype, it can be used for getting/setting the stack's NBT, meta and id. Can be used in combination with other circuits to control a logistic system.
-
-#Reference to Fullmetal Alchemist
-ie.manual.entry.redstone_interface.name=Redstone Interface
-ie.manual.entry.redstone_interface.subtext=The Equivalent Exchange
-ie.manual.entry.redstone_interface0=The Redstone Interface is a bridge between the old, but still used redstone and the new data system. It can convert data from and to a redstone signal. Because it's only a converter, the machine doesn't use any power.
-ie.manual.entry.redstone_interface1=The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, but the most important ones are the data input port, on which a connector needs to be placed and a built-in redstone output connector, to which you can attach a wire. In the user interface there are two sections, data to redstone and the opposite. After you add an entry, you have to specify the variable letter and the corresponding redstone colour.
-
-#Reference to a meme
-ie.manual.entry.conveyor_scanner.name=Scanning Conveyor
-ie.manual.entry.conveyor_scanner.subtext=Get the camera!
-ie.manual.entry.conveyor_scanner0=The Scanning Conveyor is a device consisting of a conveyor, a camera and a few electronic circuits used for precise item detection. When an item passes through the Conveyor Scanner, its properties are read and immediately sent in the form of a Data Packet using the ItemStack data type.
-ie.manual.entry.conveyor_scanner1=To operate, the machine requires electricity. To form it use a hammer on the conveyor facing the same direction as you.<br>The Scanning Conveyor is not very capable on its own, to process the signal you can use an ALM with the proper circuit. It is most commonly used as a part of an item counter or a trigger, activated by a specific item.
-
-ie.manual.entry.conveyor_scanner.vars_out.s.main=Scanned item
-ie.manual.entry.conveyor_scanner.vars_out.s.sub=Scanned item (with its id, durability and NBT), process using the ItemStack circuit
-
-#Reference to Factorio
-ie.manual.entry.inserters.name=Inserters
-ie.manual.entry.inserters.subtext=No yellow this time!
-ie.manual.entry.inserters0=The Precision Insertion Device, also known as the Inserter is a device used to transfer items from one inventory to another. Item inserters consists of an arm and motors for rotation and handling the item pickup. Fluid inserters use pipes and automatic valves. Inserters are able to take and output from and to any horizontal side desired.
-ie.manual.entry.inserters1=The Inserter's sides can be configured with a hammer (sneak to set output). Inserters require electricity to run and data to tell them what to do.
-ie.manual.entry.inserters_basic=The basic inserter is used for simple, but controlled item transfer. Made of basic circuits and mechanical components, it is a cheap and easy way to transfer a precise amount of items from one container to other.
 
 ie.manual.entry.inserters_basic.vars_in.c.main=Command
 ie.manual.entry.inserters_basic.vars_in.c.sub=Possible values: "add", "remove", "clear"
@@ -1656,29 +1610,15 @@ ie.manual.entry.inserters_basic.vars_in.1.sub=Optional. Integer 1-2.
 ie.manual.entry.inserters_basic.vars_in.0.main=Output Distance
 ie.manual.entry.inserters_basic.vars_in.0.sub=Optional. Integer 1-2
 
-
 ie.manual.entry.inserter_obsolete.vars_in.m.main=Item take mode (Deprecated)
 ie.manual.entry.inserter_obsolete.vars_in.m.sub=Possible values: "set", "add"
 ie.manual.entry.inserter_obsolete.vars_in.c.main=Amount of items (Deprecated)
 ie.manual.entry.inserter_obsolete.vars_in.c.sub=
 
-ie.manual.entry.inserters_advanced=The advanced inserter is an upgraded version, which allows to filter picking certain items and allows picking up crates and barrels from minecarts. The Advanced Inserters are much faster, but they also drain more power.
-ie.manual.entry.inserters_fluid=The fluid inserter is a precise limiter of fluid transfer. In some situations you want to insert only a required amount, this device does exactly that.
-
 ie.manual.entry.inserters_fluid.vars_in.m.main=Fluid take mode
 ie.manual.entry.inserters_fluid.vars_in.m.sub=Possible values: "set", "add"
 ie.manual.entry.inserters_fluid.vars_in.c.main=Amount of fluid to take
 ie.manual.entry.inserters_fluid.vars_in.c.sub=in Milibuckets (mB)
-
-#Reference to IndustrialCraft's siren addon
-ie.manual.entry.alarm_siren.name=Alarm Siren
-ie.manual.entry.alarm_siren.subtext=The reactor is OK, was, at least.
-ie.manual.entry.alarm_siren0=The alarm siren is a device, which emits a loud noise when provided a redstone signal (volume depends on signal strength). Redstone wire can be attached from any side. The siren, like every redstone connector, can be reconfigured to use a different redstone channel (default is white).
-
-#Reference to Choroman's radar concept drawings
-ie.manual.entry.programmable_speaker.name=Programmable Speaker
-ie.manual.entry.programmable_speaker.subtext=Happy Engineer Noises
-ie.manual.entry.programmable_speaker0=The Programmable Speaker is a device, which emits a sound when provided a redstone signal. Redstone and data wire can be attached from any side. Data can be used to set the sound and its pitch, while redstone sets the volume.
 
 ie.manual.entry.programmable_speaker.vars_in.o.main=Play Once
 ie.manual.entry.programmable_speaker.vars_in.o.sub=If true, sound is played once, regardless of redstone signal
@@ -1688,33 +1628,6 @@ ie.manual.entry.programmable_speaker.vars_in.v.main=Volume
 ie.manual.entry.programmable_speaker.vars_in.v.sub=Value must be between 0 and 100
 ie.manual.entry.programmable_speaker.vars_in.t.main=Tone/Pitch
 ie.manual.entry.programmable_speaker.vars_in.t.sub=Value must be between -100 and 100
-
-#Reference to an event from my life
-ie.manual.entry.radio_station.name=Radio Station
-ie.manual.entry.radio_station.subtext=The Wireless Wire™
-ie.manual.entry.radio_station0=The Radio Station is a device for sending and receiving data wirelessly. Radio stations can only communicate, when they are in range (which is lower in bad weather), when they work on the same frequency and when both towers are given enough electrical energy.
-ie.manual.entry.radio_station1=The Radio Station is an advanced multiblock, which means it can be only built using an Electric Engineer's Hammer in a 2-step process. In the first stage the multiblock must be built and then a hammer has to be used on the upper advanced electronic engineering block, in the second energy (trough using the electric hammer) has to be provided to finish it.
-ie.manual.entry.radio_station2=The Radio Station's frequency can be set by using a Radio Tuner. There are 2 versions of the tuner with different ranges of frequencies. The radio station can use only the basic range.
-
-#Reference to... Immersive Engineering's Curse Description
-ie.manual.entry.small_data_devices.name=Small Data Devices
-ie.manual.entry.small_data_devices.subtext=The Gray Future Cubes
-ie.manual.entry.data_merger=The data merger is a machine which can combine two data inputs from the sides into an output to the front. The machine has a toggle for the preferred side to take variable from. Each variable also has a side override mode, green is the left and red is the right, darker colours remove the variable if the latest packet from that side doesn't contain the variable.
-ie.manual.entry.data_router=Data router allows to direct a packet into a specific side, which is defined by one of the packet's variables (can be set on the router by sneak using hammer). The variable has to be an integer.<br>Top - 0, Bottom - 1<br>North - 2, South - 3<br>East - 4, West - 5
-ie.manual.entry.redstone_buffer=The redstone buffer is a device which can hold an incoming data packet, until it doesn't receive a redstone signal.
-ie.manual.entry.timed_buffer=The timed buffer is a device, which can hold an incoming data packet for a given amount of time. The duration is set by the variable '0' (a number of ticks to wait).
-ie.manual.entry.small_data_buffer=The small data buffer is a device which can hold up to 4 packets and can release them using the First-In-First-Out method when given a redstone signal.
-
-ie.manual.entry.data_wires.name=Data Wiring
-ie.manual.entry.data_wires.subtext=Not really powerlines
-ie.manual.entry.data_wires0=Trough the wires, data is sent and received immediately. In some cases using <link;radio_station;§o§nWireless §o§nTransmission§r;> might be better, but wires offer better stability during harsh weather and are cheaper.
-ie.manual.entry.data_wires1=Data wires like most cabling have their own relays and connectors, which split and connect machines. These can be used to create great logistic, warfare, intelligence and production networks.
-
-ie.manual.entry.tools.name=Data Wiring
-ie.manual.entry.tools.subtext=Not really powerlines
-ie.manual.entry.tools0=Trough the wires, data is sent and received immediately. In some cases using <link;radio_station;§o§nWireless §o§nTransmission§r;> might be better, but wires offer better stability during harsh weather and are cheaper.
-ie.manual.entry.tools1=Data wires like most cabling have their own relays and connectors, which split and connect machines. These can be used to create great logistic, warfare, intelligence and production networks.
-
 
 #Intelligence
 
@@ -1787,9 +1700,11 @@ ie.manual.entry.submachinegun_upgrade_folding_stock=The §6folding stock§r make
 
 ie.manual.entry.autorevolver_upgrade_heavy_springbox=The §6heavy springbox§r is an upgrade for the autorevolver. It uses mechanical power to compress the air in the bullet chamber, adding a lot of velocity to the bullets. The drawbacks are the slower reload speed and lower accuracy.
 
-ie.manual.entry.assault_rifle_upgrade_radio_marker=
 ie.manual.entry.assault_rifle_upgrade_rifle_grenade_launcher=
 ie.manual.entry.assault_rifle_upgrade_stereoscopic_rangefinder=
+ie.manual.entry.assault_rifle_upgrade_gyroscopic_stabilizer=
+ie.manual.entry.assault_rifle_upgrade_electric_firing_motor=
+ie.manual.entry.assault_rifle_upgrade_railgun_assisted_chamber=
 
 ie.manual.entry.mortar.name=Mortar
 ie.manual.entry.mortar.subtext=Death from Above

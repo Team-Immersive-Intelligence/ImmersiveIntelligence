@@ -8,17 +8,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -44,19 +46,22 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 
 	public enum WeaponTypes implements ISerializableEnum
 	{
-		MACHINEGUN(TextFormatting.YELLOW),
-		SUBMACHINEGUN(TextFormatting.GOLD),
-		RAILGUN(TextFormatting.DARK_GREEN),
-		REVOLVER(TextFormatting.BLUE),
-		AUTOREVOLVER(TextFormatting.DARK_BLUE),
-		ASSAULT_RIFLE(TextFormatting.RED),
-		SPIGOT_MORTAR(TextFormatting.DARK_PURPLE);
+		MACHINEGUN(0xdc3939, '\u24b6'),
+		SUBMACHINEGUN(0xff5940, '\u24b7'),
+		RAILGUN(0x3d6753, '\u24b8'),
+		REVOLVER(0x3e4481, '\u24b9'),
+		AUTOREVOLVER(0x2c305b, '\u24ba'),
+		ASSAULT_RIFLE(0xff6440, '\u24bb'),
+		SPIGOT_MORTAR(0x7a538d, '\u24bc'),
+		RIFLE(0x84820e, '\u24bd');
 
-		private final TextFormatting color;
+		public final int color;
+		public final char symbol;
 
-		WeaponTypes(TextFormatting color)
+		WeaponTypes(int color, char symbol)
 		{
 			this.color = color;
+			this.symbol = symbol;
 		}
 	}
 
@@ -78,9 +83,15 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		//Slows down mg setting up time, but decreases recoil
 		PRECISE_BIPOD(WeaponTypes.MACHINEGUN, "hasty_bipod", "tripod"),
 		//3 x Magnification
-		SCOPE(new WeaponTypes[]{WeaponTypes.MACHINEGUN, WeaponTypes.AUTOREVOLVER, WeaponTypes.ASSAULT_RIFLE}, "infrared_scope"),
+		SCOPE(new WeaponTypes[]{WeaponTypes.MACHINEGUN, WeaponTypes.AUTOREVOLVER, WeaponTypes.ASSAULT_RIFLE, WeaponTypes.RIFLE}, "infrared_scope"),
 		//Allows nightvision + 2 x magnification, uses energy from player's backpack
-		INFRARED_SCOPE(new WeaponTypes[]{WeaponTypes.MACHINEGUN, WeaponTypes.ASSAULT_RIFLE}, "scope"),
+		INFRARED_SCOPE(new WeaponTypes[]{WeaponTypes.MACHINEGUN, WeaponTypes.ASSAULT_RIFLE},
+				(stack, nbt) -> {
+					//Assault Rifle
+					if(stack.getItem() instanceof ItemIIGunBase)
+						nbt.setBoolean("energy", true);
+				},
+				"scope"),
 		//Deflects projectiles
 		SHIELD(WeaponTypes.MACHINEGUN),
 		//Slows down mg setting up time, almost eliminates recoil, increases yaw and pitch angles
@@ -95,35 +106,63 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		//Allows using drum magazines
 		BOTTOM_LOADING(WeaponTypes.SUBMACHINEGUN),
 		//Reduces aiming time
-		FOLDING_STOCK(WeaponTypes.SUBMACHINEGUN);
-
-/*
-
-		//--- Autorevolver ---//
-
-		//Increases velocity, penetration and suppression
-		HEAVY_SPRINGBOX(WeaponTypes.AUTOREVOLVER),
+		FOLDING_STOCK(WeaponTypes.SUBMACHINEGUN),
 
 		//--- Assault Rifle ---//
 
-		//Shows yaw and pitch, allows to send a packet with player's yaw and pitch (+distance if a rangefinder is installed, +position data if player has a radio backpack)
-		RADIO_MARKER(WeaponTypes.ASSAULT_RIFLE),
 		//Allows shooting railgun grenades at a lower range, requires energy
-		RIFLE_GRENADE_LAUNCHER(WeaponTypes.ASSAULT_RIFLE, "stereoscopic_rangefinder"),
-		//Shows distance to target
-		STEREOSCOPIC_RANGEFINDER(WeaponTypes.ASSAULT_RIFLE, "rifle_grenade_launcher");
-*/
+		RIFLE_GRENADE_LAUNCHER(WeaponTypes.ASSAULT_RIFLE,
+				(stack, nbt) -> nbt.setBoolean("energy", true),
+				"stereoscopic_rangefinder"),
+		//Displays range to point where the gun is aimed at, requires energy
+		STEREOSCOPIC_RANGEFINDER(WeaponTypes.ASSAULT_RIFLE,
+				(stack, nbt) -> nbt.setBoolean("energy", true),
+				"rifle_grenade_launcher"),
+
+		//Decreases recoil, requires energy
+		GYROSCOPIC_STABILIZER(WeaponTypes.ASSAULT_RIFLE,
+				(stack, nbt) -> nbt.setBoolean("energy", true),
+				"electric_firing_motor", "railgun_assisted_chamber"),
+		//Increases firing rate for auto mode, requires energy
+		ELECTRIC_FIRING_MOTOR(WeaponTypes.ASSAULT_RIFLE,
+				(stack, nbt) -> nbt.setBoolean("energy", true),
+				"gyroscopic_stabilizer", "railgun_assisted_chamber"),
+		//Increases velocity of bullets in manual mode, requires energy
+		RAILGUN_ASSISTED_CHAMBER(WeaponTypes.ASSAULT_RIFLE,
+				(stack, nbt) -> nbt.setBoolean("energy", true),
+				"gyroscopic_stabilizer", "electric_firing_motor"),
+
+		//--- Autorevolver ---//
+//
+//		//Increases velocity, penetration and suppression
+//		HEAVY_SPRINGBOX(WeaponTypes.AUTOREVOLVER),
+
+		//--- Rifle ---//
+
+		SEMI_AUTOMATIC(WeaponTypes.RIFLE, "extended_barrel"),
+		EXTENDED_BARREL(WeaponTypes.RIFLE, "semi_automatic");
 
 		public final ImmutableSet<WeaponTypes> toolset;
 		private final BiPredicate<ItemStack, ItemStack> applyCheck;
 		private final BiConsumer<ItemStack, NBTTagCompound> function;
 
-		WeaponUpgrades(WeaponTypes type, String... incompatible)
+		WeaponUpgrades(final WeaponTypes type, String... incompatible)
 		{
 			this(new WeaponTypes[]{type}, incompatible);
 		}
 
-		WeaponUpgrades(WeaponTypes[] types, final String... incompatible)
+		WeaponUpgrades(final WeaponTypes[] types, final String... incompatible)
+		{
+			this(types, (stack, nbt) -> {
+			}, incompatible);
+		}
+
+		WeaponUpgrades(final WeaponTypes type, @Nullable BiConsumer<ItemStack, NBTTagCompound> appliedTag, final String... incompatible)
+		{
+			this(new WeaponTypes[]{type}, appliedTag, incompatible);
+		}
+
+		WeaponUpgrades(final WeaponTypes[] types, @Nullable BiConsumer<ItemStack, NBTTagCompound> appliedTag, final String... incompatible)
 		{
 			this.toolset = ImmutableSet.copyOf(types);
 			this.applyCheck = (target, upgrade) -> {
@@ -140,7 +179,10 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 				//not found
 				return true;
 			};
-			this.function = (upgrade, modifications) -> modifications.setBoolean(getName(), true);
+
+			//Set function applying NBT data to item
+			BiConsumer<ItemStack, NBTTagCompound> nbtFunction = (upgrade, modifications) -> modifications.setBoolean(getName(), true);
+			this.function = (appliedTag!=null)?nbtFunction.andThen(appliedTag): nbtFunction;
 		}
 	}
 
@@ -153,7 +195,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		WeaponUpgrades sub = stackToSub(stack);
 		//add valid weapon types
 		for(WeaponTypes type : sub.toolset)
-			list.add(type.color+I18n.format(IILib.DESCRIPTION_KEY+"toolupgrade.item."+type.getName()));
+			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+type.getName())));
 
 		//add description
 		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
@@ -182,6 +224,11 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
 	{
 		stackToSub(upgrade).function.accept(upgrade, modifications);
+	}
+
+	private static Predicate<EasyNBT> hasUpgrade(@Nonnull WeaponUpgrades upgrade)
+	{
+		return easyNBT -> easyNBT.hasKey(upgrade.getName());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -315,5 +362,22 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 				(stack, tmtNamedBoxGroups) ->
 						tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.bayonetBox)
 		);
+
+		//--- Assault Rifle ---//
+		IIUpgradableItemRendererAMT<?> stg = IIContent.itemAssaultRifle.getItemRenderer();
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.SCOPE), "scope");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.INFRARED_SCOPE), "infrared_scope");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.STEREOSCOPIC_RANGEFINDER), "rangefinder");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER), "railgun");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.RIFLE_GRENADE_LAUNCHER), "grenade_launcher");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.ELECTRIC_FIRING_MOTOR), "electric_motor");
+		stg.addUpgradePart(hasUpgrade(WeaponUpgrades.GYROSCOPIC_STABILIZER), "stabilizer");
+
+		//--- Rifle ---//
+		IIUpgradableItemRendererAMT<?> rifle = IIContent.itemRifle.getItemRenderer();
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrades.SCOPE), "scope");
+		rifle.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrades.EXTENDED_BARREL), "extended_barrel");
+		rifle.addUpgradePart(hasUpgrade(WeaponUpgrades.SEMI_AUTOMATIC), "semi_automatic");
 	}
 }

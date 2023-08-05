@@ -408,7 +408,7 @@ public class EntityHans extends EntityCreature implements INpc
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
-			if(facing==null) return (T)joinedHandler;
+			if(facing==null) return (T)invHandler;
 			else if(facing.getAxis().isVertical()) return (T)handHandler;
 			else if(facing.getAxis().isHorizontal()) return (T)armorHandler;
 		}

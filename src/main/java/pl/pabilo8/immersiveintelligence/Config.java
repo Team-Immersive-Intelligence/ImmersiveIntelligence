@@ -27,20 +27,28 @@ public class Config
 	public static class IIConfig
 	{
 		@SubConfig
+		@LangKey("Graphics")
+		public static Graphics graphics;
+		@SubConfig
+		@LangKey("Ores")
 		public static Ores ores;
 		@SubConfig
+		@LangKey("Machines")
 		public static Machines machines;
 		@SubConfig
+		@LangKey("Mechanical Devices")
 		public static MechanicalDevices mechanicalDevices;
 		@SubConfig
+		@LangKey("Tools")
 		public static Tools tools;
 		@SubConfig
+		@LangKey("Weapons")
 		public static Weapons weapons;
 		@SubConfig
-		public static Bullets bullets;
-		@SubConfig
+		@LangKey("Wires")
 		public static Wires wires;
 		@SubConfig
+		@LangKey("Vehicles")
 		public static Vehicles vehicles;
 
 		@Comment({"A list of all mods that IEn has integrated compatability for", "Setting any of these to false disables the respective compat"})
@@ -50,6 +58,7 @@ public class Config
 		public static int radioBasicMaxFrequency = 32;
 
 		@Comment({"The maximum frequency for advanced radios."})
+		@LangKey("Wires")
 		public static int radioAdvancedMaxFrequency = 256;
 
 		@Comment({"Whether basic circuits should be produced in II or IE way"})
@@ -68,6 +77,28 @@ public class Config
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"
 		};
+
+
+		public static class Graphics
+		{
+			@Comment({"Whether gun recoil is visible in first-person view."})
+			public static boolean cameraRecoil = true;
+
+			@Comment({"Roll the camera when turning the motorbike."})
+			public static boolean cameraRoll = false;
+
+			@Comment({"Determines how hand animations should be displayed on II models",
+					"0 - disabled",
+					"1 - first person only",
+					"2 - 1st and 3rd person (may be incompatible with mods modifying the player model)"})
+			@RangeInt(min = 0, max = 2)
+			public static int AMTHandDisplayMode = 1;
+
+			@RequiresMcRestart
+			@Comment({"Max amount of block penetrations that will be rendered. 0 will disable rendering."})
+			public static int maxPenetratedBlocks = 64;
+
+		}
 
 		public static class Ores
 		{
@@ -919,21 +950,47 @@ public class Config
 
 		public static class Weapons
 		{
+			//thanks for reminding me, trainmaniac ^^
+			@Comment({"Whether blocks should be damaged when hit by bullets"})
+			public static boolean blockDamage = true;
+
+			@Comment({"Whether bullets should whistle, when flying close to player (slightly affects performance)"})
+			public static boolean bulletsWhistleSound = true;
+			@Comment({"Whether artillery shells should whistle, when about to impact"})
+			public static boolean artilleryImpactSound = true;
+
 			@SubConfig
+			@LangKey("Ammunition")
+			public static Ammunition ammunition;
+			@SubConfig
+			@LangKey("Submachinegun")
 			public static Submachinegun submachinegun;
 			@SubConfig
+			@LangKey("Machinegun")
 			public static Machinegun machinegun;
 			@SubConfig
+			@LangKey("Rifle")
+			public static Rifle rifle;
+			@SubConfig
+			@LangKey("Assault Rifle")
+			public static AssaultRifle assaultRifle;
+			@SubConfig
+			@LangKey("Mortar")
 			public static Mortar mortar;
 			@SubConfig
+			@LangKey("Emplacement Weapons")
 			public static EmplacementWeapons emplacementWeapons;
 			@SubConfig
+			@LangKey("Railgun")
 			public static Railgun railgun;
 			@SubConfig
+			@LangKey("Grenade")
 			public static Grenade grenade;
 			@SubConfig
+			@LangKey("Mines")
 			public static Mines mines;
 			@SubConfig
+			@LangKey("Light Engineer Armor")
 			public static LightEngineerArmor lightEngineerArmor;
 
 			public static class LightEngineerArmor
@@ -1248,11 +1305,50 @@ public class Config
 
 			}
 
+			public static class Rifle
+			{
+				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})
+				public static int bulletReloadTime = 20;
+
+				@Comment({"Time required to reload a drum magazine in SMG. (in ticks)"})
+				public static int magazineReloadTime = 65;
+
+				@Comment({"Time required to aim the SMG. (in ticks)"})
+				public static int clipSize = 4;
+
+				@Comment({"Time required to aim the SMG. (in ticks)"})
+				public static int aimTime = 15;
+
+				@Comment({"Time required to fire a single bullet."})
+				public static int bulletFireTime = 20;
+
+				@Comment({"Time required to fire a single bullet."})
+				public static int bulletFireTimeSemiAuto = 10;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float longBarrelVelocityMod = 1.5f;
+
+				@Comment({"Amount of horizontal recoil after taking a shot."})
+				public static float recoilHorizontal = 0.5f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilVertical = 2.75f;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float maxRecoilHorizontal = 3.5f;
+
+				@Comment({"Maximum amount of vertical recoil."})
+				public static float maxRecoilVertical = 12f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilSemiAutoVertical = 1f;
+
+				@Comment({"Range in which enemies will be attracted to the gunshot."})
+				public static int enemyAttractRange = 32;
+			}
+
 			public static class Submachinegun
 			{
-				@Comment({"Whether the recoil is visible in first-person view."})
-				public static boolean cameraRecoil = true;
-
 				@Comment({"Time required to reload a stick magazine in SMG. (in ticks)"})
 				public static int clipReloadTime = 45;
 
@@ -1272,16 +1368,74 @@ public class Config
 				public static float sturdyBarrelVelocityMod = 1.25f;
 
 				@Comment({"Amount of horizontal recoil after taking a shot."})
-				public static float recoilHorizontal = 3.5f;
+				public static float recoilHorizontal = 0.345f;
 
 				@Comment({"Amount of vertical recoil after taking a shot."})
-				public static float recoilVertical = 5f;
+				public static float recoilVertical = 0.625f;
 
 				@Comment({"Maximum amount of horizontal recoil."})
-				public static float maxRecoilHorizontal = 30f;
+				public static float maxRecoilHorizontal = 14.5f;
 
 				@Comment({"Maximum amount of vertical recoil."})
-				public static float maxRecoilVertical = 45f;
+				public static float maxRecoilVertical = 9f;
+
+				@Comment({"Range in which enemies will be attracted to the gunshot."})
+				public static int enemyAttractRange = 36;
+
+				@Comment({"Range in which enemies will be attracted to the gunshot for a suppressed SMG."})
+				public static int enemyAttractRangeSuppressor = 6;
+			}
+
+			public static class AssaultRifle
+			{
+				//--- Stock ---//
+
+				@Comment({"Time required to reload a magazine in AR. (in ticks)"})
+				public static int clipReloadTime = 45;
+
+				@Comment({"Time required to load a railgun grenade to an upgraded AR. (in ticks)"})
+				public static int grenadeReloadTime = 80;
+
+				@Comment({"Time required to aim the AR. (in ticks)"})
+				public static int aimTime = 15;
+
+				@Comment({"Time required to fire a single bullet in Auto mode."})
+				public static int bulletFireTimeAuto = 2;
+
+				@Comment({"Time required to fire a single bullet in Semi-Auto mode."})
+				public static int bulletFireTimeSemiAuto = 5;
+
+				@Comment({"Amount of horizontal recoil after taking a shot."})
+				public static float recoilHorizontal = 0.345f;
+
+				@Comment({"Amount of vertical recoil after taking a shot."})
+				public static float recoilVertical = 0.425f;
+
+				@Comment({"Maximum amount of horizontal recoil."})
+				public static float maxRecoilHorizontal = 8.5f;
+
+				@Comment({"Maximum amount of vertical recoil."})
+				public static float maxRecoilVertical = 8.5f;
+
+				@Comment({"Range in which enemies will be attracted to the gunshot."})
+				public static int enemyAttractRange = 36;
+
+				//--- Upgrades ---//
+
+				@Comment({"Energy used per tick by the Infrared Scope upgrade."})
+				public static int upgradeIRScopeEnergy = 20;
+
+				@Comment({"Energy used per shot by the Electric Firing Motor upgrade."})
+				public static int upgradeFiringMotorEnergy = 10;
+
+				@Comment({"Energy used per shot by the Railgun Chamber upgrade."})
+				public static int upgradeRailgunChamberEnergy = 40;
+
+				@Comment({"Energy used per tick by the Gyroscopic Stabilizer upgrade."})
+				public static int upgradeStabilizerEnergy = 10;
+
+				@Comment({"Energy used per tick by the Stereoscopic Rangefinder upgrade."})
+				public static int upgradeRangefinderEnergy = 1024;
 			}
 
 			public static class Machinegun
@@ -1361,7 +1515,7 @@ public class Config
 			}
 		}
 
-		public static class Bullets
+		public static class Ammunition
 		{
 			@Comment({"Default velocity of a light howitzer shell."})
 			public static float mortarVelocity = 8f;
@@ -1446,9 +1600,6 @@ public class Config
 				@Comment({"Damage resistance of the fuel tank."})
 				public static int fuelTankDurability = 80;
 
-				@Comment({"Roll the camera when turning the motorbike."})
-				public static boolean cameraRoll = false;
-
 				@Comment({"Amount of fuel burn per time, dependent on diesel generator fluids (in mB)"})
 				public static int fuelBurnAmount = 8;
 
@@ -1522,8 +1673,6 @@ public class Config
 	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
 	{
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
-		{
-			ConfigManager.sync(ImmersiveIntelligence.MODID, net.minecraftforge.common.config.Config.Type.INSTANCE);
-		}
+			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
 	}
 }

@@ -13,6 +13,8 @@ import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import javax.annotation.Nullable;
 
 /**
+ * AMT type for drawing bullets/ammunition from II system
+ *
  * @author Pabilo8
  * @since 26.07.2022
  */
@@ -29,6 +31,12 @@ public class AMTBullet extends AMT
 	public AMTBullet(String name, Vec3d originPos, @Nullable IBulletModel model)
 	{
 		super(name, originPos);
+		this.model = model;
+	}
+
+	public AMTBullet(String name, IIModelHeader header, @Nullable IBulletModel model)
+	{
+		super(name, header);
 		this.model = model;
 	}
 
@@ -71,6 +79,7 @@ public class AMTBullet extends AMT
 						model.renderBulletUnused(coreColour, coreType, paintColour);
 					break;
 			}
+			GlStateManager.color(1f, 1f, 1f, 1f);
 			//TMT uses texture directly, not from main atlas
 			ClientUtils.bindAtlas();
 		}

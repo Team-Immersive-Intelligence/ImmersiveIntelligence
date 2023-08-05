@@ -8,6 +8,8 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.function.Supplier;
 
 /**
+ * For drawing fluids in tanks
+ *
  * @author Pabilo8
  * @since 26.07.2022
  */

@@ -25,6 +25,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -34,12 +35,12 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  */
 public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssaultRifle> implements ISpecificHandRenderer
 {
-	IIAnimationCachedMap load, unload, modeSwitch, fire, handAngle;
+	IIAnimationCachedMap load, unload, modeSwitch, fire, handAngle, offHandAngle;
 	IIAnimationCachedMap loadGrenade, fireGrenade, stabilizer;
 	private AMTCrossVariantReference<AMT> magazine, hand;
 	private AMTCrossVariantReference<AMTParticle> muzzleFlash;
 	private AMTCrossVariantReference<AMTText> nixie1, nixie2;
-	private AMTCrossVariantReference<AMTBullet> grenade;
+	private AMTCrossVariantReference<AMTBullet> grenade, casingFired;
 
 	public AssaultRifleRenderer()
 	{
@@ -66,6 +67,12 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				.rotate(Math.toRadians(7.5f), 0, 1, 0)
 				.rotate(Math.toRadians(5), 1, 0, 0)
 				.translate(0, 0, -0.5f);
+		Matrix4 fppOffhand = new Matrix4()
+				.scale(0.55, 0.55, 0.55)
+				.translate(1f-0.25f, -1f, 0)
+				.rotate(Math.toRadians(82.5), 0, 1, 0)
+				.rotate(Math.toRadians(2.5), 1, 0, 0)
+				.translate(0, 0, -0.5f);
 
 		return model
 				.setTransformations(TransformType.GROUND, new Matrix4()
@@ -84,7 +91,8 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 						.rotate(Math.toRadians(35), 1, 0, 0)
 						.rotate(Math.toRadians(135), 0, 1, 0)
 				)
-				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, fpp);
+				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, fpp)
+				.setTransformations(TransformType.FIRST_PERSON_LEFT_HAND, fppOffhand);
 	}
 
 	@Override
@@ -95,7 +103,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
-		// TODO: 12.04.2023 skins and shaders
+		//TODO: 12.04.2023 skins and shaders
 //		model.getVariant(nbt.hasKey("handmade")?"diy": "", stack);
 		model.forEach(AMT::defaultize);
 
@@ -147,13 +155,21 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				if(recoil > 0)
 					GlStateManager.translate(0, -recoil*(0.155-0.1*preciseAim), recoil*0.25);
 			}
-			handAngle.apply(preciseAim);
+			(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
 		}
 
-		(fireMode==2?fireGrenade: fire).apply(1f-((firing-partialTicks)/(float)(firingDelay)));
+		fireGrenade.apply(0);
+		//Choose and apply firing animation
 
-		IIAnimationUtils.setModelVisibility(muzzleFlash.get(), transform!=TransformType.GUI);
+		(fireMode==2?fireGrenade: fire).apply((1f-((firing-partialTicks)/firingDelay)));
+		//Don't show muzzle flash GUI
+		if(transform==TransformType.GUI)
+		{
+			IIAnimationUtils.setModelVisibility(muzzleFlash.get(), false);
+			IIAnimationUtils.setModelVisibility(casingFired.get(), false);
+		}
 
+		//Display the grenade mounted
 		this.grenade.get().withStack(grenade, BulletState.BULLET_USED);
 
 		IIAnimationUtils.setModelVisibility(this.magazine.get(), !magazine.isEmpty());
@@ -166,6 +182,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 					partialTicks
 			);
 
+			float rpart = v <= 0.33?v/0.33f: v <= 0.66?1f: 1f-(v-0.66f)/0.33f;
 			switch(fireMode)
 			{
 				//Regular Rifle
@@ -173,11 +190,9 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				case 1:
 				{
 					(magazine.isEmpty()?load: unload).apply(v);
-
-					//Rotate the gun held 80 degrees
+					//Rotate the gun held 80 degrees during reload
 					if(handRender)
 					{
-						float rpart = v <= 0.33?v/0.33f: v <= 0.66?1f: 1f-(v-0.66f)/0.33f;
 						GlStateManager.rotate(rpart*80f, 1, 0, 0);
 						GlStateManager.translate(0, -rpart*0.75, -rpart*1.5);
 					}
@@ -188,19 +203,19 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				{
 					loadGrenade.apply(v);
 					this.grenade.get().withStack(nbt.getItemStack("found"), BulletState.BULLET_UNUSED);
-
-					//Rotate the gun held 80 degrees
+					//Rotate the gun held 35 degrees during reload
 					if(handRender)
 					{
-						float rpart = v <= 0.33?v/0.33f: v <= 0.66?1f: 1f-(v-0.66f)/0.33f;
 						GlStateManager.rotate(rpart*35f, 1, 0, 0);
 						GlStateManager.translate(0, -rpart*0.35, 0);
 					}
+
 				}
 				break;
 				default:
 					break;
 			}
+
 		}
 
 		//Animate fire mode switching
@@ -228,6 +243,9 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 				if(fireMode==2)
 					value = (int)MathHelper.clamp((1f-((firing-partialTicks)/(float)(firingDelay)))*99, 0, 99);
 			}
+			if(item.hasIIUpgrade(stack, WeaponUpgrades.GYROSCOPIC_STABILIZER))
+				stabilizer.apply(IIAnimationUtils.getDebugProgress(Minecraft.getMinecraft().world, 30, partialTicks));
+
 			nixie1.get().setText(String.valueOf(value/10));
 			nixie2.get().setText(String.valueOf(value%10));
 		}
@@ -267,12 +285,11 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 										.withState(BulletState.CASING),
 
 								//Upgrades
-								new AMTLocator("rangefinder", combinedHeader),
-								new AMTText("rangefinder_text_1", combinedHeader)
+								new AMTText("nixie_text1", combinedHeader)
 										.setText("0")
 										.setFontSize(0.015625f)
 										.setColor(Lib.colour_nixieTubeText),
-								new AMTText("rangefinder_text_2", combinedHeader)
+								new AMTText("nixie_text2", combinedHeader)
 										.setText("0")
 										.setFontSize(0.015625f)
 										.setColor(Lib.colour_nixieTubeText)
@@ -284,9 +301,10 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		this.hand = new AMTCrossVariantReference<>("hand", this.model);
 		this.muzzleFlash = new AMTCrossVariantReference<>("muzzle_flash", this.model);
 
-		this.nixie1 = new AMTCrossVariantReference<>("rangefinder_text_1", this.model);
-		this.nixie2 = new AMTCrossVariantReference<>("rangefinder_text_2", this.model);
+		this.nixie1 = new AMTCrossVariantReference<>("nixie_text1", this.model);
+		this.nixie2 = new AMTCrossVariantReference<>("nixie_text2", this.model);
 		this.grenade = new AMTCrossVariantReference<>("grenade", this.model);
+		this.casingFired = new AMTCrossVariantReference<>("casing_fired", this.model);
 
 		//Add upgrade visibility animations
 		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
@@ -296,6 +314,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		modeSwitch = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "mode_manual"));
 		fire = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire"));
 		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
+		offHandAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
 
 		loadGrenade = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_grenade"));
 		fireGrenade = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire_grenade"));
@@ -310,9 +329,9 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 	}
 
 	@Override
-	public boolean doHandRender(ItemStack stack, EnumHand hand, float partialTicks, float swingProgress)
+	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)
 	{
-		return false;
+		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof ItemIIGunBase;
 	}
 
 	@Override

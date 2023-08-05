@@ -1,0 +1,30 @@
+{
+	"origins": {
+		"scope": [1.5, 36, 8.5],
+		"infrared_scope": [-1.25, 35, 4.1],
+		"infrared_on": [-1.25, 35, 4.1],
+		"infrared_off": [-1.25, 35, 4.1],
+		"energy_upgrade": [8, -2, 12],
+		"energy_upgrade_lower": [0, 0, 0],
+		"railgun": [-3.21875, 29.33438, -18.45312],
+		"rangefinder": [-3.21875, 29.33438, -18.45312],
+		"nixie_base": [-3.21875, 29.33438, -18.45312],
+		"nixie_display": [-3.21875, 29.33438, -18.45312],
+		"nixie_text1": [-6, 27.25, 7.5],
+		"nixie_text2": [-6, 25, 7.5],
+		"electric_motor": [0, 0, 0],
+        "stabilizer": [-6, 27.5, -12],
+        "stabilizer_rotato": [-6, 27.5, -12],
+        "grenade_launcher": [0, 0, 0],
+        "grenade": [0, 19, -20]
+	},
+	"hierarchy": {
+		"infrared_on": "infrared_scope",
+		"infrared_off": "infrared_scope",
+		"nixie_text1": "nixie_base",
+		"nixie_text2": "nixie_base",
+		"nixie_display": "nixie_text2",
+        "grenade": "grenade_launcher",
+        "stabilizer": "stabilizer_rotato"
+	}
+}

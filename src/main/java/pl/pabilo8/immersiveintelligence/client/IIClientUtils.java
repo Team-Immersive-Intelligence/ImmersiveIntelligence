@@ -1,7 +1,10 @@
 package pl.pabilo8.immersiveintelligence.client;
 
-import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsIE;
+import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -17,25 +20,45 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.*;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
+import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRendererCustomGlyphs;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -44,6 +67,10 @@ import java.util.Arrays;
 @SideOnly(Side.CLIENT)
 public class IIClientUtils
 {
+	@SideOnly(Side.CLIENT)
+	public static IIFontRenderer fontRegular;
+	@SideOnly(Side.CLIENT)
+	public static IIFontRendererCustomGlyphs fontEngineerTimes, fontNormung, fontKaiser, fontTinkerer;
 
 	@SideOnly(Side.CLIENT)
 	public static void drawStringCentered(FontRenderer fontRenderer, String string, int x, int y, int w, int h, int colour)
@@ -63,58 +90,55 @@ public class IIClientUtils
 
 	//Cheers, Blu ^^
 	@SideOnly(Side.CLIENT)
-	public static void tesselateBlockBreak(Tessellator tessellatorIn, WorldClient world, DamageBlockPos blockpos, float partialTicks)
+	public static void drawBlockBreak(WorldClient world, float partialTicks, DamageBlockPos... positions)
 	{
-		tesselateBlockBreak(tessellatorIn, world, blockpos, blockpos.damage, partialTicks);
-	}
-
-	//Cheers, Blu ^^
-	@SideOnly(Side.CLIENT)
-	public static void tesselateBlockBreak(Tessellator tessellatorIn, WorldClient world, DimensionBlockPos blockpos, Float value, float partialTicks)
-	{
-		BufferBuilder worldRendererIn = tessellatorIn.getBuffer();
+		Tessellator tes = Tessellator.getInstance();
+		BufferBuilder buf = tes.getBuffer();
+		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
+		TextureManager tex = Minecraft.getMinecraft().renderEngine;
 		EntityPlayer player = ClientUtils.mc().player;
-		double d0 = player.lastTickPosX+(player.posX-player.lastTickPosX)*(double)partialTicks;
-		double d1 = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
-		double d2 = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
-		TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
-		int progress = 9-(int)MathHelper.clamp(value*10f, 0f, 10f); // 0-10
-		if(progress < 0)
-			return;
-		renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		//preRenderDamagedBlocks BEGIN
+
+		//get rendering centre position
+		double posX = player.lastTickPosX+(player.posX-player.lastTickPosX)*(double)partialTicks;
+		double posY = player.lastTickPosY+(player.posY-player.lastTickPosY)*(double)partialTicks;
+		double posZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*(double)partialTicks;
+
+		tex.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.pushMatrix();
-		GlStateManager.tryBlendFuncSeparate(774, 768, 1, 1);
 		GlStateManager.enableBlend();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
+		GlStateManager.tryBlendFuncSeparate(774, 768, 1, 1);
+		GlStateManager.enableAlpha();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1F);
 		GlStateManager.doPolygonOffset(-3.0F, -3.0F);
 		GlStateManager.enablePolygonOffset();
-		//GlStateManager.alphaFunc(516, 0.1F);
-		GlStateManager.enableAlpha();
 
 
-		worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		worldRendererIn.setTranslation(-d0, -d1, -d2);
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		buf.setTranslation(-posX, -posY, -posZ);
+		buf.noColor();
 
-		Block block = world.getBlockState(blockpos).getBlock();
-		TileEntity te = world.getTileEntity(blockpos);
-		boolean hasBreak = block instanceof BlockChest||block instanceof BlockEnderChest
-				||block instanceof BlockSign||block instanceof BlockSkull||block instanceof BlockIIMultiblock<?>;
-		if(!hasBreak) hasBreak = te!=null&&te.canRenderBreaking();
-		if(!hasBreak)
+		for(DamageBlockPos pos : positions)
 		{
-			IBlockState iblockstate = world.getBlockState(blockpos);
-			if(iblockstate.getMaterial()!=Material.AIR)
-			{
-				TextureAtlasSprite textureatlassprite = ClientUtils.destroyBlockIcons[progress];
-				BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-				blockrendererdispatcher.renderBlockDamage(iblockstate, blockpos, textureatlassprite, world);
-			}
-		}
-		tessellatorIn.draw();
+			IBlockState state = world.getBlockState(pos);
+			int progress = 9-(int)MathHelper.clamp(pos.damage*10f, 0f, 10f); // 0-10
+			if(progress < 0||state.getMaterial()==Material.AIR)
+				continue;
 
-		worldRendererIn.setTranslation(0.0D, 0.0D, 0.0D);
-		// postRenderDamagedBlocks BEGIN
+			Block block = state.getBlock();
+			TileEntity te = world.getTileEntity(pos);
+			boolean shouldOmit = block instanceof BlockIIMultiblock<?>;
+			if(!shouldOmit)
+				shouldOmit = te!=null&&te.canRenderBreaking();
+
+			if(shouldOmit)
+				continue;
+
+			brd.renderBlockDamage(state, pos, ClientUtils.destroyBlockIcons[progress], world);
+		}
+
+
+		tes.draw();
+		buf.setTranslation(0.0D, 0.0D, 0.0D);
 		GlStateManager.disableAlpha();
 		GlStateManager.doPolygonOffset(0.0F, 0.0F);
 		GlStateManager.disablePolygonOffset();
@@ -124,7 +148,6 @@ public class IIClientUtils
 
 		GlStateManager.depthMask(true);
 		GlStateManager.popMatrix();
-
 	}
 
 	//Thanks Blu, these stencil buffers look really capable
@@ -272,4 +295,184 @@ public class IIClientUtils
 
 		return output;
 	}
+
+	@SideOnly(Side.CLIENT)
+	public static boolean addExpandableTooltip(int key, String message, @Nullable List<String> tooltip)
+	{
+		String keyName;
+		String keyColor;
+		switch(key)
+		{
+			case Keyboard.KEY_LCONTROL:
+				if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
+					return true;
+				keyName = IILib.DESC_HOLD_CTRL;
+				keyColor = IILib.COLORS_HIGHLIGHT_S[0];
+				break;
+			case Keyboard.KEY_LSHIFT:
+				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+					return true;
+				keyName = IILib.DESC_HOLD_SHIFT;
+				keyColor = IILib.COLORS_HIGHLIGHT_S[1];
+				break;
+			case Keyboard.KEY_LMENU:
+				if(Keyboard.isKeyDown(Keyboard.KEY_LMENU)||Keyboard.isKeyDown(Keyboard.KEY_RMENU))
+					return true;
+				keyName = IILib.DESC_HOLD_ALT;
+				keyColor = IILib.COLORS_HIGHLIGHT_S[2];
+				break;
+			case Keyboard.KEY_TAB:
+				if(Keyboard.isKeyDown(key))
+					return true;
+				keyName = IILib.DESC_HOLD_TAB;
+				keyColor = IILib.COLORS_HIGHLIGHT_S[3];
+				break;
+			default:
+				return true;
+		}
+
+		//format the "button icon"
+		String buttonIcon = I18n.format(keyName)
+				.replace("[", "<hexcol="+keyColor+":[")
+				.replace("]", "]>")+TextFormatting.GRAY;
+		//add the tooltip
+		if(tooltip!=null)
+			tooltip.add(I18n.format(message, buttonIcon));
+		return false;
+	}
+
+	public static void createAmmoTooltip(IAmmo ammo, ItemStack stack, @Nullable World worldIn, List<String> tooltip)
+	{
+		tooltip.add(getFormattedBulletTypeName(ammo, stack));
+		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
+		{
+			//get parameters
+			EnumFuseTypes fuse = ammo.getFuseType(stack);
+			IAmmoCore core = ammo.getCore(stack);
+			EnumCoreTypes coreType = ammo.getCoreType(stack);
+			IAmmoComponent[] components = ammo.getComponents(stack);
+
+			//list general information
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1], "Details:"));
+
+			//core + type
+			if(ammo.isProjectile())
+			{
+				tooltip.add("⦳ "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.core",
+						I18n.format(IILib.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName()),
+						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
+				));
+
+				//fuse
+				tooltip.add(fuse.symbol+" "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.fuse",
+						I18n.format(IILib.DESCRIPTION_KEY+"bullet_fuse."+fuse.getName())
+				));
+			}
+			else
+			{
+				tooltip.add("⦳ "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.core", "",
+						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
+				));
+			}
+
+			//mass
+			tooltip.add("\u2696 "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.mass", Utils.formatDouble(ammo.getMass(stack), "0.##")));
+
+			//list components
+			if(components.length > 0)
+			{
+				tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1], "Components:"));
+				for(IAmmoComponent comp : components)
+					tooltip.add("   "+comp.getTranslatedName());
+			}
+		}
+
+		if(ammo.isProjectile()&&!ammo.isBulletCore(stack)&&IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
+		{
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], "Performance:"));
+			tooltip.add(String.format("\u2295 "+"Damage Dealt: %s", ammo.getDamage()));
+			tooltip.add(String.format("\u29c1 "+"Standard Velocity: %s B/s", ammo.getDefaultVelocity()));
+
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], "Armor Penetration:"));
+
+			float hardness = ammo.getCore(stack).getPenetrationHardness();
+			EnumCoreTypes coreType = ammo.getCoreType(stack);
+
+			listPenetratedAmount(tooltip, ammo, hardness, coreType, Blocks.GLASS, 0);
+			listPenetratedAmount(tooltip, ammo, hardness, coreType, Blocks.LOG, 0);
+			listPenetratedAmount(tooltip, ammo, hardness, coreType, IEContent.blockStoneDecoration, BlockTypes_StoneDecoration.CONCRETE_TILE.getMeta());
+			listPenetratedAmount(tooltip, ammo, hardness, coreType, IEContent.blockStorage, BlockTypes_MetalsIE.STEEL.getMeta());
+			listPenetratedAmount(tooltip, ammo, hardness, coreType, IIContent.blockMetalStorage, Metals.TUNGSTEN.getMeta());
+		}
+	}
+
+	private static void listPenetratedAmount(List<String> tooltip, IAmmo ammo, float penetrationHardness, EnumCoreTypes coreType, Block block, int meta)
+	{
+		int penetratedAmount = getPenetratedAmount(ammo, penetrationHardness, coreType, block, meta);
+		String displayName = new ItemStack(block, 1, meta).getDisplayName();
+
+		if(penetratedAmount < 1)
+			tooltip.add(TextFormatting.RED+"✕ "+displayName);
+		else
+			tooltip.add(TextFormatting.DARK_GREEN+String.format("⦴ %s: %d B", displayName, penetratedAmount));
+
+	}
+
+	private static int getPenetratedAmount(IAmmo ammo, float penetrationHardness, EnumCoreTypes coreType, Block block, int meta)
+	{
+		IPenetrationHandler penHandler = PenetrationRegistry.getPenetrationHandler(block.getStateFromMeta(meta));
+		double realDrag = 1d-(EntityBullet.DRAG*EntityBullet.DEV_SLOMO);
+		float density = penHandler.getDensity(), hardness = block.blockHardness, force = 1;
+		int count = 0, speed = (int)(ammo.getDefaultVelocity());
+
+		while(force > 0.1)
+		{
+			float pen = penetrationHardness*coreType.getPenMod(penHandler.getPenetrationType());
+			if(pen > hardness/density)
+				count++;
+			else
+				return count;
+
+			penetrationHardness -= ((hardness*16f)/pen);
+			if(count%speed==0)
+			{
+				force *= realDrag;
+				force *= 0.85;
+			}
+
+			/*
+			if(((hardness*1.5f)/pen)==1)
+				return 64;
+			 */
+		}
+
+		return count;
+	}
+
+	private static String getFormattedBulletTypeName(IAmmo ammo, ItemStack stack)
+	{
+		Set<EnumComponentRole> collect = new HashSet<>();
+		if(ammo.getCoreType(stack).getRole()!=null)
+			collect.add(ammo.getCoreType(stack).getRole());
+		collect.addAll(Arrays.stream(ammo.getComponents(stack)).map(IAmmoComponent::getRole).collect(Collectors.toSet()));
+		StringBuilder builder = new StringBuilder();
+		for(EnumComponentRole enumComponentRole : collect)
+		{
+			if(enumComponentRole==EnumComponentRole.GENERAL_PURPOSE)
+				continue;
+			builder.append(IIUtils.getHexCol(enumComponentRole.getColor(), I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName())));
+			builder.append(" - ");
+		}
+		if(builder.toString().isEmpty())
+		{
+			builder.append(I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
+			builder.append(" - ");
+		}
+		//trim last " - "
+		builder.delete(builder.length()-3, builder.length());
+		if(stack.hasDisplayName())
+			builder.append(" ").append(TextFormatting.GRAY).append(stack.getItem().getItemStackDisplayName(stack));
+		return builder.toString();
+	}
+
 }

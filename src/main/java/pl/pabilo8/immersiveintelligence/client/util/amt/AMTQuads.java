@@ -11,6 +11,8 @@ import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 
 /**
+ * AMT type for drawing 3d models using quads
+ *
  * @author Pabilo8
  * @since 26.07.2022
  */

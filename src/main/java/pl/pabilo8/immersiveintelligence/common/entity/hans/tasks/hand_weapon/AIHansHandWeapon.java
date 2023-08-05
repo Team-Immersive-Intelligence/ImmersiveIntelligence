@@ -159,7 +159,8 @@ public abstract class AIHansHandWeapon extends AIHansBase
 			return;
 		}
 
-		executeTask();
+		if(canFire)
+			executeTask();
 	}
 
 	/**
@@ -179,7 +180,7 @@ public abstract class AIHansHandWeapon extends AIHansBase
 		if(enemy==null)
 			return MotionState.IN_POSITION;
 
-		double targetDist = this.hans.getPositionVector().distanceTo(new Vec3d(enemy.posX, hans.posY, enemy.posZ));
+		double targetDist = this.hans.getPositionVector().distanceTo(new Vec3d(enemy.posX, enemy.posY, enemy.posZ));
 		canFire = this.attackTarget!=null&&
 				(!hasToSeeEnemy()||this.hans.getEntitySenses().canSee(this.attackTarget))&&
 				canShootEntity(this.attackTarget);
@@ -203,7 +204,9 @@ public abstract class AIHansHandWeapon extends AIHansBase
 					List<EntityLiving> enemies = hans.world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(new BlockPos(away)).grow(minAttackDistance), input -> input.getAttackTarget()==hans);
 					if(enemies.size()==0)
 					{
-						this.hans.getNavigator().tryMoveToXYZ(away.x, away.y, away.z, this.moveSpeed*1.125f);
+						float v = enemies.stream().map(EntityLiving::getAIMoveSpeed).max(Float::compareTo).orElse(1f)*1.5f;
+
+						this.hans.getNavigator().tryMoveToXYZ(away.x, away.y, away.z, v);
 						this.hans.setSprinting(true);
 						resetTask();
 						return MotionState.FALLBACK;
@@ -225,7 +228,7 @@ public abstract class AIHansHandWeapon extends AIHansBase
 
 		//come towards enemy
 		this.hans.setSprinting(false);
-		Vec3d towards = RandomPositionGenerator.findRandomTargetBlockTowards(hans, (int)minAttackDistance, 10, this.attackTarget.getPositionVector());
+		Vec3d towards = RandomPositionGenerator.findRandomTargetBlockTowards(hans, (int)Math.abs(minAttackDistance-targetDist), 10, this.attackTarget.getPositionVector());
 		if(towards!=null)
 			this.hans.getNavigator().tryMoveToXYZ(towards.x, towards.y, towards.z, this.moveSpeed);
 		this.hans.getNavigator().tryMoveToEntityLiving(this.attackTarget, this.moveSpeed);
@@ -248,7 +251,7 @@ public abstract class AIHansHandWeapon extends AIHansBase
 	{
 		assert attackTarget!=null;
 		//final Vec3d add = this.attackTarget.getPositionVector().add(this.attackTarget.getLookVec());
-		this.hans.getLookHelper().setLookPositionWithEntity(attackTarget, hans.getHorizontalFaceSpeed(), hans.getVerticalFaceSpeed());
+		this.hans.getLookHelper().setLookPositionWithEntity(attackTarget, 40f, hans.getVerticalFaceSpeed());
 	}
 
 	protected abstract void executeTask();

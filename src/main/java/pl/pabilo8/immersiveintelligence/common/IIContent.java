@@ -46,6 +46,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.*;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.*;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.*;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;

@@ -1,0 +1,18 @@
+{
+	"origins": {
+		"semi_automatic": [5, -2, -5],
+		"bolt_semiauto": [5, 22, 3],
+		"big_magazine": [1.5, 15.625, 4.34211],
+		"scope": [0, 0, 0],
+		"bayonet": [1.5, 17.75, -6],
+		"long_barrel": [6.5, 20.5, -17]
+	},
+	"hierarchy": {
+		"semi_automatic": "rifle",
+		"bolt_semiauto": "rifle",
+		"big_magazine": "rifle",
+		"scope": "rifle",
+		"bayonet": "rifle",
+		"long_barrel": "rifle"
+	}
+}

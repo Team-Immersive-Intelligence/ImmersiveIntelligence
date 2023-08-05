@@ -1,0 +1,153 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"bolt": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.1,
+					"transform": [0, 0, 90]
+				},
+				{
+					"time": 0.9,
+					"transform": [0, 0, 90]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.1,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.23333,
+					"transform": [0, 0, 9]
+				},
+				{
+					"time": 0.76667,
+					"transform": [0, 0, 9]
+				},
+				{
+					"time": 0.9,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"bullet": {
+			"rotation": [
+				{
+					"time": 0.36667,
+					"transform": [47.5, 0, -20]
+				},
+				{
+					"time": 0.63333,
+					"transform": [90, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.36667,
+					"transform": [-1, 5, -1]
+				},
+				{
+					"time": 0.5,
+					"transform": [0.2, 2.8, -1]
+				},
+				{
+					"time": 0.63333,
+					"transform": [0, -1, -1]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.31,
+					"alpha": 0.0
+				},
+				{
+					"time": 0.36667,
+					"alpha": 1.0
+				},
+				{
+					"time": 1.0,
+					"alpha": 1.0
+				}
+			]
+		},
+		"hand_right": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [9.75392, 6.94027, 75.94724]
+				},
+				{
+					"time": 0.1,
+					"transform": [16.86081, 13.902, 50.89579]
+				},
+				{
+					"time": 0.36667,
+					"transform": [9.75392, 6.94027, 75.94724]
+				},
+				{
+					"time": 0.86667,
+					"transform": [16.86081, 13.902, 50.89579]
+				},
+				{
+					"time": 1,
+					"transform": [15.6094, 15.3008, 55.8566]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [-1, 4, 0]
+				},
+				{
+					"time": 0.1,
+					"transform": [-1, 9, -1.5]
+				},
+				{
+					"time": 0.23333,
+					"transform": [-1, 9, 8]
+				},
+				{
+					"time": 0.36667,
+					"transform": [1, 12, -5]
+				},
+				{
+					"time": 0.5,
+					"transform": [1, 8, -5]
+				},
+				{
+					"time": 0.56667,
+					"transform": [1, 8, -5]
+				},
+				{
+					"time": 0.7,
+					"transform": [-1, 9, 8]
+				},
+				{
+					"time": 0.76667,
+					"transform": [-1, 9, 8]
+				},
+				{
+					"time": 0.86667,
+					"transform": [-1, 9, -1.5]
+				},
+				{
+					"time": 1,
+					"transform": [-1, 4, 0]
+				}
+			]
+		}
+	}
+}

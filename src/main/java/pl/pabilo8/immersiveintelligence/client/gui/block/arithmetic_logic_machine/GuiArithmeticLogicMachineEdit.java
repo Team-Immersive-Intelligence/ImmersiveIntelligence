@@ -1,12 +1,9 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.arithmetic_logic_machine;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
@@ -20,7 +17,9 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,10 +42,9 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	@Nullable
 	private GuiDataEditorExpression editor = null;
 
-	public GuiArithmeticLogicMachineEdit(InventoryPlayer inventoryPlayer, TileEntityArithmeticLogicMachine tile)
+	public GuiArithmeticLogicMachineEdit(EntityPlayer player, TileEntityArithmeticLogicMachine tile)
 	{
-		super(inventoryPlayer, tile, IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT);
-		refreshStoredData();
+		super(player, tile, IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT);
 	}
 
 	@Override
@@ -112,8 +110,8 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 				this.dataType = this.editor.outputType();
 			saveBasicData();
 			syncDataToServer();
-			preparedForChange=true;
-			IIPacketHandler.INSTANCE.sendToServer(new MessageGuiNBT(getPage(page), tile.getPos()));
+			preparedForChange = true;
+			IIPacketHandler.sendToServer(new MessageGuiNBT(getPage(page), tile));
 		}
 
 	}
@@ -182,27 +180,28 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 	{
 		ArrayList<String> tooltip = super.getTooltip(mx, my);
 		if(editor!=null)
-			editor.getTooltip(tooltip,mx,my);
+			editor.getTooltip(tooltip, mx, my);
 		return tooltip;
 	}
 
 	@Override
 	protected void syncDataToServer()
 	{
+		super.syncDataToServer();
+
 		proxy.storedGuiData.setString("variableToEdit", String.valueOf(variableToEdit));
 		if(editor!=null)
 		{
 			DataPacket storedData = IIContent.itemCircuit.getStoredData(handler.getStackInSlot(page));
 			storedData.setVariable(variableToEdit, editor.outputType());
-			NBTTagCompound tag = new NBTTagCompound();
-			NBTTagCompound expTag = new NBTTagCompound();
 
-			expTag.setInteger("page", page);
-			expTag.setTag("list", storedData.toNBT());
-			tag.setTag("expressions", expTag);
-			ImmersiveEngineering.packetHandler.sendToServer(new MessageTileSync(tile, tag));
+			IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT()
+					.withTag("expressions", EasyNBT.newNBT()
+							.withInt("page", page)
+							.withTag("list", storedData.toNBT())
+					)
+			));
 		}
 
-		super.syncDataToServer();
 	}
 }

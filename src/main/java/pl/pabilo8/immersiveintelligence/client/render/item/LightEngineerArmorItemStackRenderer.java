@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
-import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
  * @author Pabilo8

@@ -1,17 +1,17 @@
 package pl.pabilo8.immersiveintelligence.api.bullets;
 
-import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
+import pl.pabilo8.immersiveintelligence.common.ammo.cores.AmmoCoreMissingNo;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.function.Function;
 
 /**
@@ -65,8 +65,7 @@ public class AmmoRegistry
 					IBulletModel iBulletModel = casing.getModel().newInstance();
 					iBulletModel.subscribeToList(casing.getName());
 					registeredModels.put(casing.getName(), iBulletModel);
-				}
-				catch(InstantiationException|IllegalAccessException e)
+				} catch(InstantiationException|IllegalAccessException e)
 				{
 					e.printStackTrace();
 				}
@@ -101,22 +100,31 @@ public class AmmoRegistry
 		return registeredModels.get(bullet.getName());
 	}
 
-	public enum EnumComponentRole implements IStringSerializable
+	public enum EnumComponentRole implements ISerializableEnum
 	{
-		GENERAL_PURPOSE,
-		SHRAPNEL,
-		PIERCING,
-		EXPLOSIVE,
-		INCENDIARY,
-		TRACER,
-		FLARE,
-		CHEMICAL,
-		SPECIAL;
+		GENERAL_PURPOSE(0xaaaaaa),
+		SHRAPNEL(0x5592405),
+		PIERCING(0xdc3939),
+		EXPLOSIVE(0xdcb365),
+		INCENDIARY(0x762d2d),
+		TRACER(0x6390dc),
+		FLARE(0xb863dc),
+		CHEMICAL(0x81dc64),
+		SPECIAL(0x63dcc1);
 
-		@Override
-		public String getName()
+		/**
+		 * Used for item tooltips (if II font is enabled)
+		 */
+		private final int color;
+
+		EnumComponentRole(int color)
 		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
+			this.color = color;
+		}
+
+		public int getColor()
+		{
+			return color;
 		}
 
 		@Nonnull
@@ -127,7 +135,7 @@ public class AmmoRegistry
 		}
 	}
 
-	public enum EnumCoreTypes implements IStringSerializable
+	public enum EnumCoreTypes implements ISerializableEnum
 	{
 		SOFTPOINT(2, 0.5f, 1f, 1f, EnumComponentRole.GENERAL_PURPOSE)
 				{
@@ -205,12 +213,6 @@ public class AmmoRegistry
 			return componentEffectivenessMod;
 		}
 
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
-		}
-
 		@Nullable
 		public EnumComponentRole getRole()
 		{
@@ -225,16 +227,17 @@ public class AmmoRegistry
 		}
 	}
 
-	public enum EnumFuseTypes implements IStringSerializable
+	public enum EnumFuseTypes implements ISerializableEnum
 	{
-		CONTACT,
-		TIMED,
-		PROXIMITY;
+		CONTACT('\u29b0'),
+		TIMED('\u29b1'),
+		PROXIMITY('\u29b2');
 
-		@Override
-		public String getName()
+		public final char symbol;
+
+		EnumFuseTypes(char symbol)
 		{
-			return this.toString().toLowerCase(Locale.ENGLISH);
+			this.symbol = symbol;
 		}
 
 		@Nonnull

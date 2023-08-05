@@ -28,7 +28,7 @@ public class IICompTest
 
 	public static void main(String[] args)
 	{
-		execute(readFile("trigonometry"));
+		execute(readFile("loading_bar"));
 	}
 
 	/**
@@ -45,8 +45,7 @@ public class IICompTest
 			MEMORY.putScript(name, POLScript.prepareScript(c));
 			reader.close();
 			return name;
-		}
-		catch(IOException ignored)
+		} catch(IOException ignored)
 		{
 
 		}
@@ -110,8 +109,7 @@ public class IICompTest
 			try
 			{
 				Thread.sleep(value*20L);
-			}
-			catch(InterruptedException ignored)
+			} catch(InterruptedException ignored)
 			{
 			}
 		}

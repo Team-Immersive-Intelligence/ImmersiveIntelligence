@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
@@ -25,7 +24,6 @@ import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.items.ItemToolUpgrade.ToolUpgrades;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -34,8 +32,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -50,7 +48,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -103,7 +100,6 @@ import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentFluid;
 import pl.pabilo8.immersiveintelligence.common.ammo.factory.AmmoComponentShrapnel;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.conveyors.*;
-import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
@@ -122,12 +118,12 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.capacitor.EntityM
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateReinforced;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateWooden;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
-import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -140,12 +136,14 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen.EnumOreType;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -338,20 +336,39 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 							OreDictionary.registerOre(ore, new ItemStack(block, 1, meta));
 				}
 			}
-
 		}
 
-		//Punchtapes
-		OreDictionary.registerOre("punchtape", new ItemStack(IIContent.itemPunchtape, 1, 0));
+		//for fields only
+		for(Field field : IIContent.class.getFields())
+		{
+			if(field.isAnnotationPresent(IBatchOredictRegister.class))
+			{
+				IBatchOredictRegister annotation = field.getAnnotation(IBatchOredictRegister.class);
+				String[] ores = annotation.oreDict();
+				try
+				{
+					Object o = field.get(null);
 
-		OreDictionary.registerOre("pageEmpty", new ItemStack(IIContent.itemPrintedPage, 1, 0));
-		OreDictionary.registerOre("pageText", new ItemStack(IIContent.itemPrintedPage, 1, 1));
-		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.itemPrintedPage, 1, 1));
+					if(o instanceof BlockIIBase)
+					{
+						//separate name for each meta
+						BlockIIBase<?> block = (BlockIIBase<?>)field.get(null);
+						for(IIBlockEnum enumValue : block.enumValues)
+							for(String ore : ores)
+								OreDictionary.registerOre(IIUtils.toCamelCase(ore+"_"+enumValue.getName(), true),
+										new ItemStack(block, 1, enumValue.getMeta()));
+					}
+					else if(o instanceof ItemIIBase)
+					{
+						//meta insensitive
+						ItemIIBase item = (ItemIIBase)field.get(null);
+						for(String ore : ores)
+							OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
+					}
 
-		OreDictionary.registerOre("pageCode", new ItemStack(IIContent.itemPrintedPage, 1, 2));
-		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.itemPrintedPage, 1, 2));
-		OreDictionary.registerOre("pageBlueprint", new ItemStack(IIContent.itemPrintedPage, 1, 3));
-		OreDictionary.registerOre("pageWritten", new ItemStack(IIContent.itemPrintedPage, 1, 3));
+				} catch(IllegalAccessException ignored) {}
+			}
+		}
 
 		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
 		OreDictionary.registerOre("listAllMeatRaw", Items.BEEF);
@@ -364,13 +381,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("blockLeaves", new ItemStack(IIContent.blockRubberLeaves));
 
-		//building blocks
+		OreDictionary.registerOre("tnt", new ItemStack(Blocks.TNT));
+		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT));
 
 		OreDictionary.registerOre("leadedConcrete", new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()));
-
-		OreDictionary.registerOre("bricksConcrete", new ItemStack(IIContent.blockConcreteDecoration, 1, ConcreteDecorations.CONCRETE_BRICKS.getMeta()));
-		OreDictionary.registerOre("sturdyBricksConcrete", new ItemStack(IIContent.blockConcreteDecoration, 1, ConcreteDecorations.STURDY_CONCRETE_BRICKS.getMeta()));
-		OreDictionary.registerOre("uberConcrete", new ItemStack(IIContent.blockConcreteDecoration, 1, ConcreteDecorations.UBERCONCRETE.getMeta()));
 	}
 
 	@SubscribeEvent
@@ -487,7 +501,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		CapabilityRotaryEnergy.register();
 		if(Railgun.enableRailgunOverride)
 			IEContent.itemRailgun = new ItemIIRailgunOverride();
-		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN"), "toolset");
+		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN", "RIFLE"), "toolset");
 
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 
@@ -538,6 +552,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		DustUtils.registerDust(new IngredientStack("dustSulfur", 100), "sulfur", 0xbba31d);
 		DustUtils.registerDust(new IngredientStack("dustSmallSulfur", 25), "sulfur");
 
+		DustUtils.registerDust(new IngredientStack("dustWood", 100), "sawdust", 0x8c8269);
+		DustUtils.registerDust(new IngredientStack("dustSmallWood", 25), "sawdust", 0x8c8269);
+		DustUtils.registerDust(new IngredientStack("sand", 100), "sand", 0xaca37b);
+		DustUtils.registerDust(new IngredientStack("gravel", 100), "gravel", 0x383937);
+
 		ShrapnelHandler.addShrapnel("aluminum", 0xd9ecea, "immersiveengineering:textures/blocks/sheetmetal_aluminum", 1, 0.05f, 0f);
 		ShrapnelHandler.addShrapnel("zinc", 0xdee3dc, "immersiveintelligence:textures/blocks/metal/sheetmetal_zinc", 1, 0.15f, 0f);
 		ShrapnelHandler.addShrapnel("copper", 0xe37c26, "immersiveengineering:textures/blocks/sheetmetal_copper", 2, 0.25f, 0f);
@@ -584,7 +603,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public void init()
 	{
 		IICompatModule.doModulesInit();
-		reInitGui();
 
 		for(Fluid f : FluidRegistry.getRegisteredFluids().values())
 		{
@@ -681,6 +699,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerEntity(i++, EntityMinecartCapacitorHV.class, "minecart_capacitor", 64, 1, true);
 		registerEntity(i++, EntityMinecartCapacitorCreative.class, "minecart_capacitor_creative", 64, 1, true);
 
+		registerEntity(i++, EntityDrone.class, "drone", 64, 1, true);
+
+		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
+
 		/*
 		Soon™
 		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "panzer"),
@@ -720,40 +742,32 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		}
 	}
 
-	public void reInitGui()
-	{
-
-	}
-
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
 
-		if(ID==IIGuiList.GUI_UPGRADE.ordinal())
+		if(ID==IIGuiList.GUI_UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
 		{
-			if(te instanceof IUpgradableMachine)
-			{
-				TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
-				if(upgradeMaster!=null)
-					return new ContainerUpgrade(player.inventory, (TileEntity & IUpgradableMachine)upgradeMaster);
-			}
+			TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
+			if(upgradeMaster!=null)
+				return new ContainerUpgrade(player, (TileEntity & IUpgradableMachine)upgradeMaster);
 		}
 
-		Container gui;
 		if(IIGuiList.values().length > ID)
 		{
-			IIGuiList guiBuilder = IIGuiList.values()[ID];
-			if(guiBuilder.item)
+			IIGuiList gui = IIGuiList.values()[ID];
+
+			if(gui.teClass==null||gui.container==null||gui.guiFromTile==null)
 				return null;
-			else if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))
+			else if(te instanceof IGuiTile&&gui.teClass.isInstance(te))
 			{
-				gui = guiBuilder.container.apply(player, te);
-				if(gui!=null)
+				Container opened = gui.container.apply(player, te);
+				if(opened!=null)
 				{
 					((IGuiTile)te).onGuiOpened(player, false);
-					return gui;
+					return opened;
 				}
 			}
 		}
@@ -765,10 +779,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		return getServerGuiElement(ID, player, world, x, y, z);
-	}
-
-	public void renderTile(TileEntity te)
-	{
 	}
 
 	public void onServerGuiChangeRequest(TileEntity tile, int gui, EntityPlayer player)
@@ -832,7 +842,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		{
 			PenetrationRegistry.blockDamage.remove(dpos);
 			dpos.damage = 0;
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(dpos), IIUtils.targetPointFromPos(dpos, event.getWorld(), 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(dpos), IIPacketHandler.targetPointFromPos(dpos, event.getWorld(), 32));
 		}
 	}
 
@@ -845,13 +855,18 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			if(!IIUtils.isAdvancedHammer(event.getHammer()))
 			{
 				if(!event.getEntityPlayer().getEntityWorld().isRemote)
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation("info.immersiveintelligence.requires_advanced_hammer")), (EntityPlayerMP)event.getEntityPlayer());
+					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer");
 				event.setCanceled(true);
 			}
 		}
 	}
 
 	public void reloadModels()
+	{
+
+	}
+
+	public void reloadManual()
 	{
 
 	}

@@ -224,7 +224,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 	}
 
 	@Override
-	public boolean doHandRender(ItemStack stack, EnumHand hand, float partialTicks, float swingProgress)
+	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)
 	{
 		int aiming = ItemNBTHelper.getInt(stack, "aiming");
 		int reloading = ItemNBTHelper.getInt(stack, "reloading");

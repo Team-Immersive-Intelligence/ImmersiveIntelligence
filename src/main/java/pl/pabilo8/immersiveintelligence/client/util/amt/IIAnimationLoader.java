@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.models.IESmartObjModel;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJModel;
 import com.google.gson.JsonElement;
@@ -9,10 +8,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonStreamParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
@@ -20,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 /**
  * @author Pabilo8
@@ -38,10 +38,10 @@ public class IIAnimationLoader
 		} catch(Exception exception)
 		{
 			IILogger.error("[AMT] Couldn't load animation "+
-							TextFormatting.GOLD+
+					TextFormatting.GOLD+
 					res.toString()
-							.replaceFirst("animations/","")
-							.replaceFirst(".json","")+
+							.replaceFirst("animations/", "")
+							.replaceFirst(".json", "")+
 					TextFormatting.RESET+
 					", "+exception.getClass().getCanonicalName());
 		}
@@ -69,28 +69,53 @@ public class IIAnimationLoader
 		return new IIModelHeader(readFileToJSON(res));
 	}
 
-	// TODO: 22.07.2022 make it work
-	public static void preloadTexturesFromMTL(@Nonnull ResourceLocation res)
+	public static HashMap<String, ResourceLocation> loadMTL(@Nonnull ResourceLocation res)
 	{
+		HashMap<String, ResourceLocation> map = new HashMap<>();
 		try
 		{
 			//try to register each texture, used by direct model loading
 			IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(res);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-			reader.lines()
-					.filter(s -> s.startsWith("map_Kd"))
-					.map(s -> s.split(" ")[1])
-					.forEach(s -> ApiUtils.getRegisterSprite(ClientUtils.mc().getTextureMapBlocks(), s+".png"));
 
+			String line, lastMaterial = null;
+			while((line = reader.readLine())!=null)
+			{
+				String[] split = line.split(" ");
+				if(split.length < 2)
+					continue;
+
+				switch(split[0])
+				{
+					case "newmtl":
+						lastMaterial = split[1];
+						break;
+					case "map_Kd":
+					{
+						if(lastMaterial==null)
+							throw new IOException("No material defined before map_Kd");
+						map.put(lastMaterial, new ResourceLocation(split[1]));
+						lastMaterial = null;
+					}
+					break;
+					default:
+						break;
+				}
+			}
 		} catch(IOException exception)
 		{
 			IILogger.error("[AMT] Couldn't load MTL file "+
 					TextFormatting.GOLD+
 					res.toString()
-							.replaceFirst("models/","")+
+							.replaceFirst("models/", "")+
 					TextFormatting.RESET+
 					", "+exception.getClass().getCanonicalName());
 		}
+		return map;
+	}
 
+	public static void preloadTexturesFromMTL(@Nonnull ResourceLocation mtl, TextureMap map)
+	{
+		loadMTL(mtl).values().forEach(res -> ApiUtils.getRegisterSprite(map, res));
 	}
 }

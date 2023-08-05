@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectile
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -33,7 +34,9 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -46,11 +49,9 @@ import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.lang.model.element.AnnotationValue;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -101,26 +102,6 @@ public class IIUtils
 				return conn;
 		}
 		return null;
-	}
-
-	public static TargetPoint targetPointFromPos(BlockPos pos, World world, int range)
-	{
-		return new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range);
-	}
-
-	public static TargetPoint targetPointFromPos(Vec3d pos, World world, int range)
-	{
-		return new TargetPoint(world.provider.getDimension(), pos.x, pos.y, pos.z, range);
-	}
-
-	public static TargetPoint targetPointFromEntity(Entity entity, int range)
-	{
-		return new TargetPoint(entity.world.provider.getDimension(), entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), range);
-	}
-
-	public static TargetPoint targetPointFromTile(TileEntity tile, int range)
-	{
-		return new TargetPoint(tile.getWorld().provider.getDimension(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), range);
 	}
 
 	/**
@@ -753,6 +734,16 @@ public class IIUtils
 		return TextFormatting.ITALIC+string+TextFormatting.RESET;
 	}
 
+	public static String getHexCol(int color, String text)
+	{
+		return getHexCol(Integer.toHexString(color), text);
+	}
+
+	public static String getHexCol(String color, String text)
+	{
+		return String.format("<hexcol=%s:%s>", color, text);
+	}
+
 	/**
 	 * Rightfully stolen from StackOverflow
 	 * <a href="https://stackoverflow.com/a/35833800/9876980">https://stackoverflow.com/a/35833800/9876980</a>
@@ -847,6 +838,19 @@ public class IIUtils
 		packet.setVariable('c', new DataTypeString(parameter));
 		packet.setVariable('g', value);
 		return packet;
+	}
+
+	public static void giveOrDropStack(@Nonnull Entity entity, ItemStack stack)
+	{
+		//attempt to give the item
+		if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			stack = ItemHandlerHelper.insertItem(capability, stack, false);
+		}
+		//if can't do that, drop it on the entity's position
+		if(!stack.isEmpty())
+			Utils.dropStackAtPos(entity.world, entity.getPosition(), stack);
 	}
 
 	/**

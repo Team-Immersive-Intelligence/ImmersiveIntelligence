@@ -1,0 +1,32 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"knob": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.3125,
+					"transform": [90, 0, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [90, 0, 0]
+				},
+				{
+					"time": 0.8125,
+					"transform": [180, 0, 0]
+				},
+				{
+					"time": 1.0,
+					"transform": [180, 0, 0]
+				}
+			]
+		},
+		"hand": {
+
+		}
+	}
+}

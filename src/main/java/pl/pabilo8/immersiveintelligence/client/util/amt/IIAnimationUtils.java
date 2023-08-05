@@ -4,9 +4,8 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.models.IESmartObjModel;
-import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
-import blusunrize.immersiveengineering.client.models.obj.IEOBJModel;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -21,14 +20,20 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.Group;
+import net.minecraftforge.client.model.obj.OBJModel.MaterialLibrary;
 import net.minecraftforge.client.model.obj.OBJModel.OBJState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,11 +49,14 @@ import java.util.function.Function;
 @SideOnly(Side.CLIENT)
 public class IIAnimationUtils
 {
+	//--- Empty OBJ Model Placeholder ---//
+	private static final OBJModel EMPTY = new OBJModel(new MaterialLibrary(), ResLoc.of(IILib.RES_BLOCK_MODEL, "empty.obj"));
+
 	//--- Time Calculation ---//
 
 	public static float getDebugProgress(World world, float max, float partialTicks)
 	{
-		return (world.getTotalWorldTime()%max+partialTicks)/max;
+		return (ClientUtils.mc().world.getTotalWorldTime()%max+partialTicks)/max;
 	}
 
 	public static float getAnimationProgress(float current, float max, boolean invert, float partialTicks)
@@ -116,10 +124,26 @@ public class IIAnimationUtils
 		if(group.scale!=null)
 			model.scale = group.scale.getForTime(time);
 
-		if(group.alpha!=null)
-			model.alpha = group.alpha.getForTime(time);
+		if(group.shader!=null)
+		{
+			model.shader = group.shader.getShader();
+			model.shaderValue = group.shader.getForTime(time);
+		}
+
+		if(group.property!=null)
+			model.property = group.property.getForTime(time);
 
 	}
+
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void setModelVisibility(AMT[] models, boolean visible)
+	{
+		for(AMT model : models)
+			model.visible = visible;
+	}
+
 	/**
 	 * Manual approach, use in things requiring a direct value instead of an animation
 	 */
@@ -144,6 +168,14 @@ public class IIAnimationUtils
 		if(model.rot==null)
 			setModelRotation(model, pitch, yaw, roll);
 		else model.rot = new Vec3d(model.rot.x+pitch, model.rot.y+yaw, model.rot.z+roll);
+	}
+
+	/**
+	 * Manual approach, use in things requiring a direct value instead of an animation
+	 */
+	public static void setModelRotation(AMT amt, Vec3d rotation)
+	{
+		setModelRotation(amt, rotation.x, rotation.y, rotation.z);
 	}
 
 	/**
@@ -216,11 +248,25 @@ public class IIAnimationUtils
 		return organise(models.toArray(new AMT[0])); //remove children from array
 	}
 
-	private static Vec3d getHeaderOffset(IIModelHeader header, String name)
+	public static Vec3d getHeaderOffset(IIModelHeader header, String name)
 	{
 		if(header!=null)
 			return header.getOffset(name);
 		return Vec3d.ZERO;
+	}
+
+	public static OBJModel modelFromRes(ResourceLocation res)
+	{
+		try
+		{
+			OBJModel model = (OBJModel)OBJLoader.INSTANCE.loadModel(res);
+			return ((OBJModel)model.process(ImmutableMap.of("flip-v", String.valueOf(true))));
+		} catch(Exception ignored)
+		{
+			IILogger.error("Couldn't load model for {}, either the path used is incorrect or a model file may be missing!", res);
+			return EMPTY;
+//			return ((OBJModel)ModelLoaderRegistry.getMissingModel());
+		}
 	}
 
 	public static AMT[] getAMTFromRes(ResourceLocation res, @Nullable ResourceLocation headerRes)
@@ -234,7 +280,8 @@ public class IIAnimationUtils
 		{
 			/*IIAnimationLoader.preloadTexturesFromMTL(new ResourceLocation(
 					res.getResourceDomain(), res.getResourcePath().replace(".obj.ie", ".mtl")));*/
-			IEOBJModel model = ((IEOBJModel)IEOBJLoader.instance.loadModel(res));
+			OBJModel model = (OBJModel)OBJLoader.INSTANCE.loadModel(res).process(ImmutableMap.of("flip-v", String.valueOf(true)));
+
 			IIModelHeader header = headerRes==null?null: IIAnimationLoader.loadHeader(headerRes);
 
 			return getAMTInternal(null, model, header, custom);
@@ -245,7 +292,7 @@ public class IIAnimationUtils
 		return new AMT[0];
 	}
 
-	private static AMT[] getAMTInternal(@Nullable IBlockState bState, @Nonnull IEOBJModel model, @Nullable IIModelHeader header, @Nonnull Function<IIModelHeader, AMT[]> custom)
+	private static AMT[] getAMTInternal(@Nullable IBlockState bState, @Nonnull OBJModel model, @Nullable IIModelHeader header, @Nonnull Function<IIModelHeader, AMT[]> custom)
 	{
 		//get group list from the unbaked model
 		Map<String, Group> groups = model.getMatLib().getGroups();
@@ -283,6 +330,44 @@ public class IIAnimationUtils
 		return organise(models.toArray(new AMT[0])); //remove children from array
 	}
 
+	public static AMT[] getAMTItemModel(@Nonnull OBJModel model, @Nullable IIModelHeader header, @Nonnull Function<IIModelHeader, AMT[]> custom)
+	{
+		//get group list from the unbaked model
+		Map<String, Group> groups = model.getMatLib().getGroups();
+
+		ArrayList<AMT> models = new ArrayList<>();
+
+		//turn .obj groups into AMT
+		for(String group : groups.keySet())
+		{
+			//get default, non rotated model state
+			OBJState objState = new OBJState(ImmutableList.of(group), true, ModelRotation.X0_Y0);
+
+			//get rotation offset
+			Vec3d origin = getHeaderOffset(header, group);
+
+			//get quads
+			BakedQuad[] quads = model
+					.bake(objState, DefaultVertexFormats.ITEM, ClientUtils::getSprite)
+					.getQuads(null, null, 0L).toArray(new BakedQuad[0]);
+
+			//do not add empty AMTs
+			if(quads.length==0)
+				continue;
+
+			models.add(new AMTQuads(group, origin, quads));
+		}
+
+		//add custom AMTs | item/fluid placeholders
+		models.addAll(Arrays.asList(custom.apply(header)));
+
+		//apply hierarchy from header file
+		if(header!=null)
+			header.applyHierarchy(models);
+
+		return organise(models.toArray(new AMT[0])); //remove children from array
+	}
+
 	/**
 	 * If passed a non-null value, disposes of the AMTs' GLCallLists to free up memory. <br>
 	 * Call upon destruction
@@ -292,6 +377,12 @@ public class IIAnimationUtils
 		if(array!=null)
 			Arrays.stream(array).forEach(AMT::disposeOf);
 		return array;
+	}
+
+	public static void disposeOf(@Nullable AMTModelCache<?> model)
+	{
+		if(model!=null)
+			model.clear();
 	}
 
 	public static AMT[] organise(AMT[] array)

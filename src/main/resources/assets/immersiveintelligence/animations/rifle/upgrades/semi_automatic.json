@@ -1,0 +1,45 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"semi_automatic": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"bolt_semiauto": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"bolt_action": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": false
+				}
+			]
+		},
+		"magazine": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": false
+				}
+			]
+		},
+		"big_magazine": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

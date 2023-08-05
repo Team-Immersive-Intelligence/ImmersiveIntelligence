@@ -1,0 +1,13 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"long_barrel": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

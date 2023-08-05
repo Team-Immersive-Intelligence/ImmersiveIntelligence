@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
@@ -52,7 +53,7 @@ public class AIHansHolsterWeapon extends EntityAIBase
 
 	public boolean isWeapon(ItemStack stack)
 	{
-		return stack.getItem() instanceof ItemIISubmachinegun
+		return stack.getItem() instanceof ItemIIGunBase
 				||stack.getItem() instanceof ItemIIMachinegun
 				||stack.getItem() instanceof ItemIIBinoculars
 				||stack.getItem() instanceof ItemIIRailgunOverride

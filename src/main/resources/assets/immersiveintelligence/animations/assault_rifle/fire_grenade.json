@@ -1,0 +1,155 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "trigger": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.05263,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.07895,
+          "transform": [42.5, 0, 0]
+        },
+        {
+          "time": 0.97368,
+          "transform": [42.5, 0, 0]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.05263,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.07895,
+          "transform": [0, 0, 0.25]
+        },
+        {
+          "time": 0.97368,
+          "transform": [0, 0, 0.25]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ]
+    },
+    "grenade": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [90, 0, 0]
+        },
+        {
+          "time": 0.26316,
+          "transform": [90, 0, 360]
+        },
+        {
+          "time": 0.44737,
+          "transform": [90, 0, 720]
+        },
+        {
+          "time": 0.56579,
+          "transform": [90, 0, 1080]
+        },
+        {
+          "time": 0.68421,
+          "transform": [90, 0, 1440]
+        },
+        {
+          "time": 0.78947,
+          "transform": [90, 0, 1800]
+        },
+        {
+          "time": 0.89474,
+          "transform": [90, 0, 2160]
+        },
+        {
+          "time": 1,
+          "transform": [90, 0, 2520]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [0, 0, -15]
+        },
+        {
+          "time": 0.0657900000,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.14474,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.27632,
+          "transform": [0, 0, 0]
+        },
+        {
+          "time": 0.64474,
+          "transform": [0, 0, 1]
+        },
+        {
+          "time": 1,
+          "transform": [0, 0, 1]
+        }
+      ]
+    },
+    "muzzle_flash": {
+      "alpha": [
+        {
+          "time": 0.0,
+          "alpha": 0.0
+        },
+        {
+          "time": 1.0,
+          "alpha": 0.0
+        }
+      ],
+      "visibility": [
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ]
+    },
+    "casing_fired": {
+      "rotation": [
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "position": [
+        {
+          "time": 1,
+          "transform": [0, 0, 0]
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": false
+        },
+        {
+          "time": 1,
+          "visibility": false
+        }
+      ]
+    }
+  }
+}

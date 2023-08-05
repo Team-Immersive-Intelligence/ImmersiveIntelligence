@@ -28,7 +28,6 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
@@ -190,12 +189,12 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 
 		if(hasIIUpgrade(weapon, WeaponUpgrades.ELECTRIC_FIRING_MOTOR)&&stored >= AssaultRifle.upgradeFiringMotorEnergy)
 		{
-			world.playSound(null,pos.x,pos.y,pos.z, IESounds.spark, SoundCategory.PLAYERS, 0.5f,1.5f);
+			world.playSound(null, pos.x, pos.y, pos.z, IESounds.spark, SoundCategory.PLAYERS, 0.5f, 1.5f);
 			extractEnergy(weapon, AssaultRifle.upgradeFiringMotorEnergy, false);
 		}
 		if(hasIIUpgrade(weapon, WeaponUpgrades.RAILGUN_ASSISTED_CHAMBER)&&stored >= AssaultRifle.upgradeRailgunChamberEnergy)
 		{
-			world.playSound(null,pos.x,pos.y,pos.z, IESounds.railgunFire, SoundCategory.PLAYERS, 0.5f,1f);
+			world.playSound(null, pos.x, pos.y, pos.z, IESounds.railgunFire, SoundCategory.PLAYERS, 0.5f, 1f);
 			extractEnergy(weapon, AssaultRifle.upgradeRailgunChamberEnergy, false);
 		}
 
@@ -339,7 +338,7 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	@Override
 	public void onScroll(ItemStack stack, boolean forward, EntityPlayerMP player)
 	{
-		if(ItemNBTHelper.getInt(stack, FIRE_MODE_TIMER)==0)
+		if(ItemNBTHelper.getInt(stack, RELOADING)==0&&ItemNBTHelper.getInt(stack, FIRE_MODE_TIMER)==0)
 		{
 			int mode = ItemNBTHelper.getInt(stack, FIRE_MODE);
 			int switched = MathHelper.clamp(mode+(forward?1: -1), 0,

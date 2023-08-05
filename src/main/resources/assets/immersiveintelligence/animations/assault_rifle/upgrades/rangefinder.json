@@ -1,0 +1,53 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"rangefinder": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"energy_upgrade": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"nixie_base": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"nixie_display": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"nixie_text1": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"nixie_text2": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

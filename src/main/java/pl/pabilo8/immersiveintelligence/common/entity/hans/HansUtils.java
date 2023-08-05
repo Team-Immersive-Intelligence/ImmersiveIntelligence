@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.hans;
 
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockFenceGate;
@@ -18,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.hans.tasks.hand_weapon.*;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 
 import javax.annotation.Nullable;
@@ -37,7 +38,9 @@ public class HansUtils
 	public static void init()
 	{
 		WEAPON_MAP.put(IEContent.itemRevolver, AIHansRevolver::new);
-		WEAPON_MAP.put(IIContent.itemSubmachinegun, AIHansSubmachinegun::new);
+		WEAPON_MAP.put(IIContent.itemSubmachinegun, hans -> new AIHansAbstractGun(hans,IIContent.itemSubmachinegun,3,12,10){});
+		WEAPON_MAP.put(IIContent.itemAssaultRifle, hans -> new AIHansAbstractGun(hans,IIContent.itemAssaultRifle,5,16,5){});
+		WEAPON_MAP.put(IIContent.itemRifle, hans -> new AIHansAbstractGun(hans,IIContent.itemRifle,6,24,40){});
 		WEAPON_MAP.put(IEContent.itemRailgun, AIHansRailgun::new);
 		WEAPON_MAP.put(IEContent.itemChemthrower, AIHansChemthrower::new);
 		WEAPON_MAP.put(IIContent.itemBinoculars, AIHansBinoculars::new);
@@ -80,9 +83,24 @@ public class HansUtils
 
 	public static void setSubmachinegun(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
 	{
-		ItemStack stack = new ItemStack(IIContent.itemSubmachinegun);
+		setHandGun(hans, IIContent.itemSubmachinegun, magazine, weaponUpgrades);
+	}
+
+	public static void setAssaultRifle(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	{
+		setHandGun(hans, IIContent.itemAssaultRifle, magazine, weaponUpgrades);
+	}
+
+	public static void setRifle(EntityHans hans, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	{
+		setHandGun(hans, IIContent.itemRifle, magazine, weaponUpgrades);
+	}
+
+	public static void setHandGun(EntityHans hans, ItemUpgradeableTool item, ItemStack magazine, WeaponUpgrades... weaponUpgrades)
+	{
+		ItemStack stack = new ItemStack(item);
 		ItemNBTHelper.setItemStack(stack, "magazine", magazine);
-		int i = IIContent.itemSubmachinegun.getSlotCount(stack);
+		int i = item.getSlotCount(stack);
 		NonNullList<ItemStack> upgrades = NonNullList.withSize(i, ItemStack.EMPTY);
 		for(WeaponUpgrades upgrade : weaponUpgrades)
 		{
@@ -90,9 +108,9 @@ public class HansUtils
 			if(i==0)
 				break;
 		}
-		IIContent.itemSubmachinegun.setContainedItems(stack, upgrades);
-		IIContent.itemSubmachinegun.recalculateUpgrades(stack);
-		IIContent.itemSubmachinegun.finishUpgradeRecalculation(stack);
+		item.setContainedItems(stack, upgrades);
+		item.recalculateUpgrades(stack);
+		item.finishUpgradeRecalculation(stack);
 		hans.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
 	}
 

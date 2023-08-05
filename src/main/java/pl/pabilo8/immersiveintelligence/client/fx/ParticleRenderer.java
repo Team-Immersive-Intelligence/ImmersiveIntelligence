@@ -128,6 +128,11 @@ public class ParticleRenderer
 		}
 	}
 
+	public void reload()
+	{
+		particles.clear();
+	}
+
 	public enum DrawingStages
 	{
 		//Normal particles render just like minecraft's default particles

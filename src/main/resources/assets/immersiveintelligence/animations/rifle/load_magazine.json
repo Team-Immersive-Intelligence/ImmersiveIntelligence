@@ -1,0 +1,115 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"big_magazine": {
+			"rotation": [
+				{
+					"time": 0.48,
+					"transform": [10, 0, 0]
+				},
+				{
+					"time": 0.66,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.48,
+					"transform": [0, -10, 0]
+				},
+				{
+					"time": 0.66,
+					"transform": [0, -4, 0]
+				},
+				{
+					"time": 0.74,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.8,
+					"transform": [0, 1, 0]
+				},
+				{
+					"time": 0.92,
+					"transform": [0, 0, 0]
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.4,
+					"alpha" : 0
+				},
+				{
+					"time": 0.48,
+					"alpha": 1
+				},
+				{
+					"time": 1.0,
+					"alpha": 1
+				}
+			]
+		},
+		"hand": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [67.6094, -15.3008, -55.8566]
+				},
+				{
+					"time": 0.4,
+					"transform": [45.11, -15.3, -55.86]
+				},
+				{
+					"time": 0.66,
+					"transform": [45.0032, -10.2589, -44.12566]
+				},
+				{
+					"time": 0.72,
+					"transform": [45.0032, -10.2589, -44.12566]
+				},
+				{
+					"time": 0.78,
+					"transform": [47.61, -15.3, -55.86]
+				},
+				{
+					"time": 1,
+					"transform": [67.6094, -15.3008, -55.8566]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.2,
+					"transform": [1.5, -6.5, 7]
+				},
+				{
+					"time": 0.4,
+					"transform": [-1, -13, 14]
+				},
+				{
+					"time": 0.48,
+					"transform": [-1, -13, 14]
+				},
+				{
+					"time": 0.66,
+					"transform": [-1, -7, 14]
+				},
+				{
+					"time": 0.76,
+					"transform": [-1, -4, 14]
+				},
+				{
+					"time": 0.86,
+					"transform": [1, -4, 7]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

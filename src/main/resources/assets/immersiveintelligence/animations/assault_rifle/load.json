@@ -1,0 +1,347 @@
+{
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "magazine": {
+      "position": [
+        {
+          "time": 0.275,
+          "transform": [
+            0,
+            -7,
+            0
+          ]
+        },
+        {
+          "time": 0.525,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.5875,
+          "transform": [
+            0,
+            0.5,
+            0
+          ]
+        },
+        {
+          "time": 0.6375,
+          "transform": [
+            0,
+            0.5,
+            0
+          ]
+        },
+        {
+          "time": 0.6625,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.7,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "alpha": [
+        {
+          "time": 0.275,
+          "alpha": 0
+        },
+        {
+          "time": 0.525,
+          "alpha": 1
+        },
+        {
+          "time": 1.0,
+          "alpha": 1
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0,
+          "visibility": true
+        }
+      ]
+    },
+    "slider": {
+      "position": [
+        {
+          "time": 0.0,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.7,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.8,
+          "transform": [
+            0,
+            0,
+            6
+          ]
+        },
+        {
+          "time": 0.825,
+          "transform": [
+            0,
+            0,
+            6
+          ]
+        },
+        {
+          "time": 0.8875,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1.0,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "casing_ejector": {
+      "rotation": [
+        {
+          "time": 0.7375,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.8,
+          "transform": [
+            0,
+            0,
+            112.5
+          ]
+        },
+        {
+          "time": 0.8375,
+          "transform": [
+            0,
+            0,
+            112.5
+          ]
+        },
+        {
+          "time": 0.8875,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "hand": {
+      "rotation": [
+        {
+          "time": 0,
+          "transform": [
+            67.6094,
+            -15.3008,
+            -55.8566
+          ]
+        },
+        {
+          "time": 0.05,
+          "transform": [
+            46.8263,
+            -24.8328,
+            -89.0459
+          ]
+        },
+        {
+          "time": 0.1375,
+          "transform": [
+            27.5,
+            0,
+            -90
+          ]
+        },
+        {
+          "time": 0.275,
+          "transform": [
+            27.5,
+            0,
+            -90
+          ]
+        },
+        {
+          "time": 0.575,
+          "transform": [
+            27.5,
+            0,
+            -90
+          ]
+        },
+        {
+          "time": 0.625,
+          "transform": [
+            27.5,
+            0,
+            -90
+          ]
+        },
+        {
+          "time": 0.7,
+          "transform": [
+            12.5,
+            0,
+            -90
+          ]
+        },
+        {
+          "time": 0.825,
+          "transform": [
+            45,
+            0,
+            -90
+          ]
+        },
+        {
+          "time": 0.8625,
+          "transform": [
+            45,
+            0,
+            -90
+          ]
+        },
+        {
+          "time": 0.92,
+          "transform": [
+            67.6094,
+            -15.3008,
+            -55.8566
+          ]
+        },
+        {
+          "time": 1,
+          "transform": [
+            67.6094,
+            -15.3008,
+            -55.8566
+          ]
+        }
+      ],
+      "position": [
+        {
+          "time": 0,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 0.05,
+          "transform": [
+            0,
+            -9,
+            0
+          ]
+        },
+        {
+          "time": 0.1375,
+          "transform": [
+            0,
+            -12,
+            15
+          ]
+        },
+        {
+          "time": 0.275,
+          "transform": [
+            0,
+            -12,
+            15
+          ]
+        },
+        {
+          "time": 0.575,
+          "transform": [
+            0,
+            -5,
+            15
+          ]
+        },
+        {
+          "time": 0.625,
+          "transform": [
+            0,
+            -5,
+            15
+          ]
+        },
+        {
+          "time": 0.7,
+          "transform": [
+            2.25,
+            5.25,
+            8.25
+          ]
+        },
+        {
+          "time": 0.825,
+          "transform": [
+            2.25,
+            5.25,
+            14.25
+          ]
+        },
+        {
+          "time": 0.8625,
+          "transform": [
+            2.25,
+            5.25,
+            14.25
+          ]
+        },
+        {
+          "time": 0.92,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "transform": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  }
+}

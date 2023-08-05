@@ -1,0 +1,37 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"stabilizer": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"stabilizer_rotato": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"energy_upgrade": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		},
+		"energy_upgrade_lower": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": true
+				}
+			]
+		}
+	}
+}

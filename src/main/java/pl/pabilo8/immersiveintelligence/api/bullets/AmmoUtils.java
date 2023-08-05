@@ -9,9 +9,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
@@ -35,8 +36,11 @@ public class AmmoUtils
 		return new EntityBullet(world, stack, pos.x, pos.y, pos.z, 1f, dir.x, dir.y, dir.z);
 	}
 
-	public static void dealBlockDamage(World world, float bulletDamage, BlockPos pos, IPenetrationHandler pen)
+	public static void dealBlockDamage(World world, Vec3d direction, float bulletDamage, BlockPos pos, IPenetrationHandler pen)
 	{
+		if(!Weapons.blockDamage)
+			return;
+
 		DamageBlockPos dimensionBlockPos = new DamageBlockPos(pos, world, pen.getIntegrity());
 		float newHp = PenetrationRegistry.getBlockHitpoints(pen, pos, world)-(bulletDamage*pen.getDensity());
 		if(newHp > 0)
@@ -46,17 +50,19 @@ public class AmmoUtils
 				list.forEach(damageBlockPos -> damageBlockPos.damage = newHp);
 			else
 				PenetrationRegistry.blockDamage.add(new DamageBlockPos(dimensionBlockPos, newHp));
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getDensity()))), IIUtils.targetPointFromPos(dimensionBlockPos, world, 32));
+
+			IIPacketHandler.sendToClient(dimensionBlockPos, world,
+					new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getDensity())), direction));
 		}
 		else if(newHp <= 0)
 		{
 			PenetrationRegistry.blockDamage.removeIf(damageBlockPos -> damageBlockPos.equals(dimensionBlockPos));
 			world.getBlockState(pos).getBlock().breakBlock(world, pos, world.getBlockState(pos));
 			world.destroyBlock(dimensionBlockPos, false);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, 0f)), IIUtils.targetPointFromPos(dimensionBlockPos, world, 32));
+
+			IIPacketHandler.sendToClient(dimensionBlockPos, world,
+					new MessageBlockDamageSync(new DamageBlockPos(dimensionBlockPos, newHp/(pen.getIntegrity()/pen.getDensity())), direction));
 		}
-
-
 	}
 
 	public static void registerMetalMaterial(IPenetrationHandler handler, String name)
