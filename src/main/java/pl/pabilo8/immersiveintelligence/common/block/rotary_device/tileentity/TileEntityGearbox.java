@@ -17,22 +17,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IBlockOverlayText, IConfigurableSides, IComparatorOverride, ITileDrop, IGuiTile, IIEInventory, IRotationalEnergyBlock
+public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IAdvancedTextOverlay, IConfigurableSides,
+		IComparatorOverride, ITileDrop, IGuiTile, IIEInventory, IRotationalEnergyBlock
 {
 	public SideConfig[] sideConfig = {SideConfig.NONE, SideConfig.INPUT, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE};
 	public int comparatorOutput = 0;
@@ -215,9 +217,9 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		if(hammer&&IEConfig.colourblindSupport)
+		if(Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND))&&IEConfig.colourblindSupport)
 		{
 			SideConfig i = sideConfig[Math.min(sideConfig.length-1, mop.sideHit.ordinal())];
 			SideConfig j = sideConfig[Math.min(sideConfig.length-1, mop.sideHit.getOpposite().ordinal())];
@@ -229,12 +231,6 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IB
 			};
 		}
 		return null;
-	}
-
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
 	}
 
 	@Override

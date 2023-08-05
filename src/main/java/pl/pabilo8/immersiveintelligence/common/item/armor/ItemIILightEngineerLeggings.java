@@ -57,9 +57,7 @@ public class ItemIILightEngineerLeggings extends ItemIILightEngineerArmorBase im
 			if(world.isRemote)
 			{
 				if(ClientProxy.keybind_armorExosuit.isPressed())
-				{
-					IIPacketHandler.INSTANCE.sendToServer(new MessageItemKeybind(2));
-				}
+					IIPacketHandler.sendToServer(new MessageItemKeybind(MessageItemKeybind.KEYBIND_EXOSKELETON));
 			}
 
 			int mode = ItemNBTHelper.getInt(stack, "exoskeletonMode");
@@ -104,7 +102,7 @@ public class ItemIILightEngineerLeggings extends ItemIILightEngineerArmorBase im
 	}
 
 	@Override
-	String getMaterialName(ArmorMaterial material)
+	protected String getMaterialName(ArmorMaterial material)
 	{
 		return "light_engineer_armor";
 	}

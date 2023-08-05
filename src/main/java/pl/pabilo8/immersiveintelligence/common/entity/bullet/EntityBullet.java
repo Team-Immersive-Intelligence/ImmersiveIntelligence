@@ -36,10 +36,12 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
+import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
+import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
+import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer.MultipleTracerBuilder;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -211,15 +213,9 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 
 		if(!world.isRemote&&ticksExisted==1)
 		{
-
-			/*
-			if(this.shooter==null)
-				this.shooter = FakePlayerUtil.getFakePlayer(world);
-			 */
-
 			NBTTagCompound nbt = new NBTTagCompound();
 			writeEntityToNBT(nbt);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), IIUtils.targetPointFromEntity(this, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), IIPacketHandler.targetPointFromEntity(this, 32));
 		}
 		else if(world.isRemote&&!wasSynced)
 			return;
@@ -287,21 +283,23 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 								float pen = penetrationHardness*coreType.getPenMod(penType);
 								float dmg = baseDamage*coreType.getDamageMod(penType)/4f;
 								float hardness = world.getBlockState(pos).getBlockHardness(world, pos);
-								if(world.getBlockState(pos).getBlock()==Blocks.BEDROCK)
-									hardness = pen*20;
 
 								if(hardness < 0)
-									hardness = Integer.MAX_VALUE+hardness;
+									pen = -1;
 
 								if(pen > hardness/penetrationHandler.getDensity())
 								{
 									//thanks lgmrszd
-									if(!world.isRemote&&!world.getBlockState(pos).getMaterial().isLiquid())
+									if(!world.getBlockState(pos).getMaterial().isLiquid())
 									{
-										AmmoUtils.dealBlockDamage(world, dmg, pos, penetrationHandler);
-										playHitSound(HitEffect.IMPACT, world, hit.getBlockPos(), penetrationHandler);
+										if(!world.isRemote)
+										{
+											AmmoUtils.dealBlockDamage(world, getBaseMotion(), dmg, pos, penetrationHandler);
+											playHitSound(HitEffect.IMPACT, world, hit.getBlockPos(), penetrationHandler);
+										}
 									}
-									penetrationHardness *= ((hardness*1.5f)/pen);
+
+									penetrationHardness *= ((hardness*16f)/pen);
 									force *= 0.85f;
 								}
 								else if(pen > 0)
@@ -310,12 +308,13 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 									{
 										if(!world.getBlockState(pos).getMaterial().isLiquid())
 										{
-											AmmoUtils.dealBlockDamage(world, dmg*(hardness/penetrationHandler.getDensity()), pos, penetrationHandler);
+											AmmoUtils.dealBlockDamage(world, getBaseMotion(), dmg*(hardness/penetrationHandler.getDensity()), pos, penetrationHandler);
 											playHitSound(HitEffect.IMPACT, world, hit.getBlockPos(), penetrationHandler);
 										}
 										if(fuse==-1)
 											performEffect(hit);
 									}
+
 									stopAtPoint(hit);
 									penetrationHardness = 0;
 									break penloop;
@@ -490,7 +489,7 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 			NBTTagCompound nbt = new NBTTagCompound();
 			writeEntityToNBT(nbt);
 			nbt.setBoolean("stopped", true);
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), IIUtils.targetPointFromEntity(this, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, nbt), IIPacketHandler.targetPointFromEntity(this, 32));
 		}
 	}
 
@@ -645,7 +644,7 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 		}
 		MinecraftServer server = world.getMinecraftServer();
 		if(server!=null)
-			server.getPlayerList().sendToAllNearExcept(null, posX, posY, posZ, 8D, this.world.provider.getDimension(), new SPacketSoundEffect(event, SoundCategory.BLOCKS, posX, posY, posZ, 0.5f, 1f));
+			server.getPlayerList().sendToAllNearExcept(null, posX, posY, posZ, 24D, this.world.provider.getDimension(), new SPacketSoundEffect(event, SoundCategory.BLOCKS, posX, posY, posZ, 0.5f, 1f));
 	}
 
 	public Vec3d getBaseMotion()

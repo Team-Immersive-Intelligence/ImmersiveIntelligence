@@ -2,11 +2,9 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
-import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
@@ -27,12 +25,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -188,18 +187,6 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		boolean b = stack.getMetadata()==BULLET;
-		if(b)
-		{
-			tooltip.add(getFormattedBulletTypeName(stack));
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.core",
-					I18n.format(IILib.DESCRIPTION_KEY+"bullet_core_type."+getCoreType(stack).getName()),
-					I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+getCore(stack).getName()+".name")
-			));
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
-			//tooltip.add(getPenetrationTable(stack));
-		}
-		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(), "#.#")));
 	}
 
 	private String getFormattedBulletTypeName(ItemStack stack)
@@ -357,10 +344,11 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Nullable
 	@Override
 	public FontRenderer getFontRenderer(ItemStack stack)
 	{
-		return ClientProxy.itemFont;
+		return IIClientUtils.fontRegular;
 	}
 
 	@Override
@@ -417,7 +405,7 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 	@Override
 	public float getDefaultVelocity()
 	{
-		return Bullets.revolverVelocity;
+		return Ammunition.revolverVelocity;
 	}
 
 	@Override

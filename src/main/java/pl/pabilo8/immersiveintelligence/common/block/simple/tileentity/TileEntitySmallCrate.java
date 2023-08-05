@@ -113,14 +113,17 @@ public class TileEntitySmallCrate extends TileEntityWoodenCrate implements IGuiT
 		{
 			case METAL_CRATE_BOX:
 			case WOODEN_CRATE_BOX:
+			case REINFORCED_CRATE_BOX:
 				return facing.getAxis()==Axis.X?
 						BOX_X:
 						BOX_Z;
 			case METAL_CRATE_CUBE:
 			case WOODEN_CRATE_CUBE:
+			case REINFORCED_CRATE_CUBE:
 				return CUBE;
 			case METAL_CRATE_WIDE:
 			case WOODEN_CRATE_WIDE:
+			case REINFORCED_CRATE_WIDE:
 				return facing.getAxis()==Axis.X?
 						WIDE_X:
 						WIDE_Z;

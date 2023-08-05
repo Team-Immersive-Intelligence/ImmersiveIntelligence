@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.item.tools;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
@@ -8,7 +7,6 @@ import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -27,7 +25,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -40,8 +37,10 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -58,6 +57,7 @@ import java.util.UUID;
  */
 public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements IAdvancedZoomTool, IIEEnergyItem, ITextureOverride
 {
+	private static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/binoculars.png");
 	public static UUID visionUUID = Utils.generateNewUUID();
 
 	public ItemIIBinoculars()
@@ -80,6 +80,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
+		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"binoculars")));
 		if(isAdvanced(stack))
 		{
 			String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
@@ -108,22 +109,22 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 					if(ItemNBTHelper.getBoolean(stack, "wasUsed"))
 					{
 						ItemNBTHelper.setBoolean(stack, "wasUsed", false);
-						((EntityLivingBase)entityIn).removePotionEffect(IIPotions.infraredVision);
+						((EntityLivingBase)entityIn).removePotionEffect(MobEffects.NIGHT_VISION);
 					}
 				}
 			}
 			else
 			{
-				if(worldIn.getTotalWorldTime()%5==0&&(entityIn.isSneaking()||entityIn.getLowestRidingEntity() instanceof EntityFieldHowitzer)&&entityIn instanceof EntityPlayerMP)
+				if(entityIn instanceof EntityPlayerMP&&worldIn.getTotalWorldTime()%5==0&&(entityIn.isSneaking()||entityIn.getLowestRidingEntity() instanceof EntityFieldHowitzer))
 				{
 					float yaw = (360+((EntityLivingBase)entityIn).rotationYawHead)%360;
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"yaw", yaw)), (EntityPlayerMP)entityIn);
+					IIPacketHandler.sendChatTranslation(((EntityPlayerMP)entityIn), IILib.INFO_KEY+"yaw", yaw);
 				}
 
 				if(do_tick&&isEnabled(stack)&&isAdvanced(stack))
 				{
 					if(worldIn.getLightBrightness(entityIn.getPosition()) <= 0.5f)
-						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(IIPotions.infraredVision, 240, 1, true, false));
+						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 240, 1, true, false));
 					else
 						((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 240, 1, false, false));
 					ItemNBTHelper.setBoolean(stack, "wasUsed", true);
@@ -143,9 +144,9 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	}
 
 	@Override
-	public boolean canZoom(ItemStack stack, EntityPlayer player)
+	public boolean shouldZoom(ItemStack stack, EntityPlayer player)
 	{
-		return (player).moveForward==0;
+		return player.isSneaking()&&player.moveForward==0;
 	}
 
 	@Override
@@ -161,9 +162,9 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	}
 
 	@Override
-	public String getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
+	public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
 	{
-		return ImmersiveIntelligence.MODID+":textures/gui/item/binoculars.png";
+		return OVERLAY_TEXTURE;
 	}
 
 	// TODO: 15.07.2021 make it properly, not the current lazy way 

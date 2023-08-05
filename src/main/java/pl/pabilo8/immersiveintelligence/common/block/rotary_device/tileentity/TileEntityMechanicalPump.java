@@ -18,6 +18,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -34,9 +35,9 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.MechanicalPump;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
@@ -49,7 +50,8 @@ import java.util.HashMap;
  * @author Pabilo8
  * @since 03.10.2020
  */
-public class TileEntityMechanicalPump extends TileEntityIEBase implements ITickable, IBlockBounds, IHasDummyBlocks, IConfigurableSides, IFluidPipe, IBlockOverlayText, IRotationalEnergyBlock, IDirectionalTile
+public class TileEntityMechanicalPump extends TileEntityIEBase implements ITickable, IBlockBounds, IHasDummyBlocks, IConfigurableSides, 
+		IFluidPipe, IAdvancedTextOverlay, IRotationalEnergyBlock, IDirectionalTile
 {
 	public int[] sideConfig = new int[]{0, -1, -1, -1, -1, -1};
 	public boolean dummy = false;
@@ -162,7 +164,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 			IRotaryEnergy cap = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing);
 			if(rotation.handleRotation(cap, facing))
 			{
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIUtils.targetPointFromTile(this, 24));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
 			}
 		}
 		else
@@ -174,7 +176,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 				{
 					rotation.grow(0, 0, 0.98f);
 				}
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIUtils.targetPointFromTile(this, 24));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 24));
 			}
 		return b;
 	}
@@ -372,9 +374,9 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		if(hammer&&IEConfig.colourblindSupport&&!dummy)
+		if(Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND))&&IEConfig.colourblindSupport&&!dummy)
 		{
 			int i = sideConfig[Math.min(sideConfig.length-1, mop.sideHit.ordinal())];
 			int j = sideConfig[Math.min(sideConfig.length-1, mop.sideHit.getOpposite().ordinal())];
@@ -388,11 +390,7 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return null;
 	}
 
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
-	}
+	
 
 	@Override
 	public void updateRotationStorage(float rpm, float torque, int part)

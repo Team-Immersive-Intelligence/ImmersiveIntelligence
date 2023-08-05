@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.IEProperties.PropertyBoolInverted;
 import blusunrize.immersiveengineering.api.TargetingInfo;
@@ -12,12 +11,10 @@ import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
-import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -31,24 +28,30 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.model.TRSRTransformation;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import org.apache.commons.lang3.StringUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageChatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
  * @since 11-06-2019
  */
-public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IBlockOverlayText, IActiveState
+public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay, IActiveState
 {
 	private boolean toggle = false;
 	public int mode = 0;
@@ -124,25 +127,35 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		}
 	}
 
-	// TODO: 21.12.2021 make it use hexcol
 	private String[] compilePacketString()
 	{
 		//gets variables in format l:{Value:0}
-		return lastPacket.variables.entrySet().stream()
-				/*map(entry -> String.format("<hexcol=%s:%s> %s = %s",
-						String.format("%06X", entry.getValue().getTypeColour()),*/
-				.map(entry -> {
-					TextFormatting ff = TextFormatting.getValueByName(IIUtils.getRGBTextFormatting(entry.getValue().getTypeColour()).getName());
-					if(ff==TextFormatting.BLACK)
-						ff = TextFormatting.DARK_GRAY;
-					return String.format("%s%s§r %s = %s",
-							ff,
-							entry.getValue().getName(),
-							entry.getKey(),
-							entry.getValue().valueToString()
-					);
-				})
-				.toArray(String[]::new);
+		return minimizeArrays(
+				lastPacket.variables.entrySet().stream()
+						/*map(entry -> String.format("",
+								,*/
+						.map(entry -> String.format("<hexcol=%s:%s> %s = %s",
+								String.format("%06X", entry.getValue().getTypeColour()),
+								entry.getValue().getName(),
+								entry.getKey(),
+								entry.getValue().valueToString().replace(
+												"\n", "\n"+StringUtils.repeat(' ', (entry.getValue().getName().length()+7)))
+										.trim()
+						))
+						.map(s -> s.split("\n"))
+						.toArray(String[][]::new)
+		);
+	}
+
+	/**
+	 * Joins 2d string arrays into a single dimension one
+	 */
+	private String[] minimizeArrays(String[][] array)
+	{
+		ArrayList<String> joined = new ArrayList<>();
+		for(String[] strings : array)
+			joined.addAll(Arrays.asList(strings));
+		return joined.toArray(new String[0]);
 	}
 
 	@Override
@@ -153,7 +166,9 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"debugger_mode", new TextComponentTranslation(IILib.INFO_KEY+"debugger_mode."+mode))), ((EntityPlayerMP)player));
+			IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"debugger_mode",
+					new TextComponentTranslation(IILib.INFO_KEY+"debugger_mode."+mode)
+			);
 			markDirty();
 			markBlockForUpdate(pos, null);
 		}
@@ -235,7 +250,8 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		if(this.mode==0||mode==2)
 		{
 			this.lastPacket = packet;
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageNoSpamChatComponents(new TextComponentString(packet.toString())), IIUtils.targetPointFromTile(this, 8));
+			/*IIPacketHandler.INSTANCE.sendToAllAround(new MessageChatInfo(new TextComponentString(packet.toString())),
+					IIPacketHandler.targetPointFromTile(this, 8));*/
 			markDirty();
 			markBlockForUpdate(this.pos, null);
 		}
@@ -289,7 +305,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
 		String s_out = I18n.format(IILib.INFO_KEY+"debugger_mode", I18n.format(IILib.INFO_KEY+"debugger_mode."+mode));
 		if(lastPacket!=null)
@@ -301,11 +317,6 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 		return new String[]{s_out};
 	}
 
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
-	}
 
 	@Override
 	public PropertyBoolInverted getBoolProperty(Class<? extends IUsesBooleanProperty> inf)

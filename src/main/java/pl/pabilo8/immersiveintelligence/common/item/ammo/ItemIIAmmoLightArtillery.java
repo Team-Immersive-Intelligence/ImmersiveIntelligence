@@ -1,19 +1,16 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleExplosion;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet6bCal;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 
@@ -57,7 +54,7 @@ public class ItemIIAmmoLightArtillery extends ItemIIAmmoBase
 	@Override
 	public float getDefaultVelocity()
 	{
-		return Bullets.lightHowiVelocity;
+		return Ammunition.lightHowiVelocity;
 	}
 
 	@Override

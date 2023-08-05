@@ -12,10 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -194,7 +191,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 		hasChanged = u^gunPitchUp||d^gunPitchDown||fk^fireKeyPress;
 
 		if(hasChanged)
-			IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(this, updateKeys()));
+			IIPacketHandler.sendToServer(new MessageEntityNBTSync(this, updateKeys()));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -247,7 +244,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 	{
 		if(world.isRemote&&passenger instanceof EntityPlayerSP)
 		{
-			CameraHandler.INSTANCE.setEnabled(false);
+			CameraHandler.setEnabled(false);
 			ZoomHandler.isZooming = false;
 		}
 		super.removePassenger(passenger);
@@ -393,21 +390,20 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 
 	private static class MortarSights implements IAdvancedZoomTool
 	{
+		private static final ResourceLocation SIGHTS_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/mortar.png");
+
 		@Override
-		public String getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
+		@SideOnly(Side.CLIENT)
+		public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
 		{
-			return ImmersiveIntelligence.MODID+":textures/gui/item/mortar.png";
+			return SIGHTS_TEXTURE;
 		}
 
 		@Override
-		public boolean canZoom(ItemStack stack, EntityPlayer player)
+		public boolean shouldZoom(ItemStack stack, EntityPlayer player)
 		{
 			Entity ridingEntity = player.getRidingEntity();
-			if(ridingEntity instanceof EntityMortar)
-			{
-				return ((EntityMortar)ridingEntity).shootingProgress==0;
-			}
-			return false;
+			return ridingEntity instanceof EntityMortar&&((EntityMortar)ridingEntity).shootingProgress==0;
 		}
 
 		@Override
@@ -415,9 +411,7 @@ public class EntityMortar extends Entity implements IEntityAdditionalSpawnData, 
 		{
 			Entity ridingEntity = player.getRidingEntity();
 			if(ridingEntity instanceof EntityMortar)
-			{
 				return new float[]{1f-Math.min(0.75f/(ridingEntity.rotationPitch/-90f), 0.975f)};
-			}
 			return new float[]{0};
 		}
 	}

@@ -1,11 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.item;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,8 +12,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
@@ -30,8 +31,6 @@ import java.util.List;
  */
 public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implements IDataStorageItem
 {
-	public static final String[] TEXTURES = {"redstone_circuits", "electronic_circuits", "advanced_circuits"};
-
 	public ItemIIFunctionalCircuit()
 	{
 		super("circuit_functional", 1, Circuits.values());
@@ -39,37 +38,37 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 
 	public enum Circuits implements IIItemEnum
 	{
-		ARITHMETIC(1,
+		ARITHMETIC(CircuitTypes.BASIC,
 				"add", "subtract", "multiply", "divide",
 				"modulo",
 				"abs"
 		),
-		ADVANCED_ARITHMETIC(2, ARITHMETIC,
+		ADVANCED_ARITHMETIC(CircuitTypes.ADVANCED, ARITHMETIC,
 				"power", "root",
 				"min", "max",
 				"sign",
 				"ceil", "round", "floor",
 				"sin", "cos", "tan"
 		),
-		LOGIC(0,
+		LOGIC(CircuitTypes.BASIC,
 				"and",
 				"or",
 				"not"
 		),
-		COMPARATOR(1,
+		COMPARATOR(CircuitTypes.BASIC,
 				"greater",
 				"less",
 				"greater_or_equal",
 				"less_or_equal",
 				"equal"
 		),
-		ADVANCED_LOGIC(2, LOGIC,
+		ADVANCED_LOGIC(CircuitTypes.ADVANCED, LOGIC,
 				"nand",
 				"nor",
 				"xor",
 				"xnor"
 		),
-		TEXT(1,
+		TEXT(CircuitTypes.BASIC,
 				"string_join", "equal",
 				"string_split",
 				"string_length",
@@ -80,7 +79,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"string_lowercase", "string_uppercase", "string_snake_case", "string_camel_case",
 				"string_reverse"
 		),
-		ITEMSTACK(2,
+		ITEMSTACK(CircuitTypes.ADVANCED,
 				"get_quantity",
 				"set_quantity",
 				"get_durability",
@@ -92,13 +91,13 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"can_stack_with",
 				"matches_oredict"
 		),
-		ARRAY(1,
+		ARRAY(CircuitTypes.BASIC,
 				"array_get", "array_set",
 				"array_length",
 				"array_push", "array_pop",
 				"array_swap"
 		),
-		ENTITY(2,
+		ENTITY(CircuitTypes.ADVANCED,
 				"entity_get_id",
 				"entity_get_type",
 				"entity_get_name",
@@ -107,14 +106,38 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"entity_get_y",
 				"entity_get_z"
 		),
-		DOCUMENT(2,
+		DOCUMENT(CircuitTypes.ADVANCED,
 				"document_read_page",
 				"document_read_all_pages_array",
 				"document_read_all_pages_string",
 				"document_get_author",
 				"document_get_title"
 		),
-		TYPE_CONVERSION(1,
+		TYPE_CONVERSION(CircuitTypes.BASIC,
+				"is_null",
+				"to_integer",
+				"to_float",
+				"to_string",
+				"to_boolean",
+				"to_null"
+		),
+		FLUIDSTACK(CircuitTypes.BASIC,
+				"is_null",
+				"to_integer",
+				"to_float",
+				"to_string",
+				"to_boolean",
+				"to_null"
+		),
+		MAP(CircuitTypes.BASIC,
+				"is_null",
+				"to_integer",
+				"to_float",
+				"to_string",
+				"to_boolean",
+				"to_null"
+		),
+		VECTOR_ARITHMETIC(CircuitTypes.PROCESSOR,
 				"is_null",
 				"to_integer",
 				"to_float",
@@ -124,15 +147,15 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		);
 
 		private final String[] functions;
-		public final int tier;
+		public final CircuitTypes tier;
 
-		Circuits(int tier, String... functions)
+		Circuits(CircuitTypes tier, String... functions)
 		{
 			this.tier = tier;
 			this.functions = functions;
 		}
 
-		Circuits(int tier, Circuits parent, String... functions)
+		Circuits(CircuitTypes tier, Circuits parent, String... functions)
 		{
 			this(tier, ArrayUtils.addAll(parent.functions, functions));
 		}
@@ -143,17 +166,41 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		}
 	}
 
+	public enum CircuitTypes implements ISerializableEnum
+	{
+		BASIC("basic_circuits", "circuitBasic"),
+		ADVANCED("advanced_circuits", "circuitAdvanced"),
+		CRYPTOGRAPHIC("cryptography_circuits", "circuitCryptographic"),
+		PROCESSOR("processor_circuits", "circuitProcessor");
+
+		public final String texture, material;
+
+		CircuitTypes(String texture, String material)
+		{
+			this.texture = texture;
+			this.material = material;
+		}
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, @Nonnull ITooltipFlag flag)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> tooltip, @Nonnull ITooltipFlag flag)
 	{
-		boolean b = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
-		list.add(I18n.format(IILib.DESCRIPTION_KEY+(b?"functional_circuit": "functional_circuit_shift")));
-		if(b)
-			for(String s : getOperationsList(stack))
-			{
-				list.add("-"+I18n.format(IILib.DATA_KEY+"function."+s));
-			}
+		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"functional_circuit_shift", tooltip))
+		{
+			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"functional_circuit"));
+			getOperationsList(stack).stream()
+					.map(s -> "   "+I18n.format(IILib.DATA_KEY+"function."+s))
+					.forEach(tooltip::add);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Nullable
+	@Override
+	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
+	{
+		return IIClientUtils.fontRegular;
 	}
 
 	@Override
@@ -183,8 +230,6 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 
 	public String getTESRRenderTexture(ItemStack stack)
 	{
-		if(stack.getMetadata() < Circuits.values().length)
-			return TEXTURES[Circuits.values()[stack.getMetadata()].tier];
-		return "";
+		return stackToSub(stack).tier.texture;
 	}
 }

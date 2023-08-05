@@ -68,9 +68,7 @@ public class ItemIISmallWireCoil extends ItemIISubItemsBase<SmallWires> implemen
 		{
 			int[] link = ItemNBTHelper.getIntArray(stack, "linkingPos");
 			if(link.length > 3)
-			{
 				tooltip.add(I18n.format(Lib.DESC_INFO+"attachedToDim", link[1], link[2], link[3], link[0]));
-			}
 		}
 	}
 

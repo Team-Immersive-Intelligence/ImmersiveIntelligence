@@ -1,10 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.item.tools;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.immersiveengineering.common.util.network.MessageNoSpamChatComponents;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +24,8 @@ import pl.pabilo8.immersiveintelligence.api.data.radio.IRadioDevice;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner.RadioTuners;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -65,11 +64,11 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 	{
 		RadioTuners tuner = stackToSub(stack);
 
-		list.add(TextFormatting.ITALIC+I18n.format(IILib.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName()));
+		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName())));
 		list.add(I18n.format(IILib.DESCRIPTION_KEY+"radio_configurator_max_frequency",
 				TextFormatting.GOLD.toString()+tuner.maxFrequency+TextFormatting.RESET));
 		list.add(I18n.format(IILib.DESCRIPTION_KEY+"radio_configurator_frequency",
-				TextFormatting.GOLD.toString()+ItemNBTHelper.getInt(stack, "Frequency")+tuner.maxFrequency+TextFormatting.RESET));
+				TextFormatting.GOLD.toString()+ItemNBTHelper.getInt(stack, "Frequency")+TextFormatting.RESET));
 	}
 
 	@Override
@@ -89,21 +88,21 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 			if(!player.isSneaking()) //set frequency
 			{
 				if(frequency > maxFrequency)
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"frequency_invalid", maxFrequency)), (EntityPlayerMP)player);
+					IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"frequency_invalid", maxFrequency);
 				else
 				{
 					device.setFrequency(frequency);
-					ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"frequency_set", device.getFrequency())), (EntityPlayerMP)player);
+					IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"frequency_set", device.getFrequency());
 				}
 			}
 			else //get frequency
 			{
 				// TODO: 06.09.2022 make shift+click copy frequency to device ; add frequency display, like with goggles
-				ImmersiveEngineering.packetHandler.sendTo(new MessageNoSpamChatComponents(new TextComponentTranslation(IILib.INFO_KEY+"current_frequency", String.valueOf(device.getFrequency()))), (EntityPlayerMP)player);
+				IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"current_frequency", device.getFrequency());
 			}
 
 			//sync
-			ImmersiveEngineering.packetHandler.sendToAll(new MessageTileSync((TileEntityIEBase)tile, tile.serializeNBT()));
+			IIPacketHandler.sendToClient(tile, new MessageIITileSync(((TileEntityIEBase)tile)));
 			return EnumActionResult.SUCCESS;
 		}
 		else

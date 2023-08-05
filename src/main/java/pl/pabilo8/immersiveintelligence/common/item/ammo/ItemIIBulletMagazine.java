@@ -2,6 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,16 +11,23 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +38,10 @@ import java.util.Optional;
  */
 public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride
 {
+	private final ResLoc magazineTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/");
+	private final ResLoc bulletTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/common/bullet");
+	private final ResLoc paintTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/common/paint");
+
 	public ItemIIBulletMagazine()
 	{
 		super("bullet_magazine", 1, Magazines.values());
@@ -37,21 +50,29 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	public enum Magazines implements IIItemEnum
 	{
 		MACHINEGUN(48, IIContent.itemAmmoMachinegun),
-		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun),
-		@IIItemProperties(hidden = true)
-		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver),
+		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun,true),
+		RIFLE(12, IIContent.itemAmmoMachinegun),
 		SUBMACHINEGUN_DRUM(64, IIContent.itemAmmoSubmachinegun),
-		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle),
+		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle,true),
 		AUTOCANNON(16, IIContent.itemAmmoAutocannon),
-		CPDS_DRUM(128, IIContent.itemAmmoMachinegun);
+		CPDS_DRUM(128, IIContent.itemAmmoMachinegun),
+		@IIItemProperties(hidden = true)
+		AUTOMATIC_REVOLVER(16, IIContent.itemAmmoRevolver);
 
 		public final int capacity;
 		public final IAmmo ammo;
+		public final boolean hasDisplayTexture;
 
 		Magazines(int capacity, IAmmo ammo)
 		{
+			this(capacity, ammo, false);
+		}
+
+		Magazines(int capacity, IAmmo ammo, boolean hasDisplayTexture)
+		{
 			this.capacity = capacity;
 			this.ammo = ammo;
+			this.hasDisplayTexture = hasDisplayTexture;
 		}
 	}
 
@@ -97,6 +118,28 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			}
 	}
 
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	{
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		int bullets = getRemainingBulletCount(stack);
+
+		tooltip.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
+		NBTTagList listDict = ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", NBT.TAG_COMPOUND);
+
+		if(ItemNBTHelper.getTag(stack).hasKey("bullet0"))
+			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(0)).getDisplayName());
+		if(ItemNBTHelper.getTag(stack).hasKey("bullet1"))
+			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(1)).getDisplayName());
+		if(ItemNBTHelper.getTag(stack).hasKey("bullet2"))
+			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(2)).getDisplayName());
+		if(ItemNBTHelper.getTag(stack).hasKey("bullet3"))
+			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(3)).getDisplayName());
+	}
+
 	//--- ITextureOverride ---//
 
 	@Override
@@ -111,12 +154,11 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	{
 		ArrayList<ResourceLocation> l = new ArrayList<>();
 		Magazines subItem = stackToSub(stack);
-		String name = subItem.getName();
 
-		if(ItemNBTHelper.hasKey(stack, "bullet0")&&(subItem==Magazines.SUBMACHINEGUN||subItem==Magazines.ASSAULT_RIFLE))
-			l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/main_disp"));
+		if(ItemNBTHelper.hasKey(stack, "bullet0")&&(subItem.hasDisplayTexture))
+			l.add(ResLoc.of(magazineTexture, subItem.getName(), "_disp"));
 		else
-			l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/main"));
+			l.add(ResLoc.of(magazineTexture, subItem.getName()));
 
 		if(stack.getTagCompound()==null||stack.getTagCompound().hasNoTags())
 			return l;
@@ -124,9 +166,10 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		for(int i = 0; i < 3; i++)
 			if(ItemNBTHelper.hasKey(stack, "bullet"+i))
 			{
-				l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/bullet"+i));
+
+				l.add(ResLoc.of(bulletTexture, i));
 				if(ItemNBTHelper.hasKey(stack, "colour"+i)&&ItemNBTHelper.getInt(stack, "colour"+i)!=-1)
-					l.add(new ResourceLocation(ImmersiveIntelligence.MODID+":items/bullets/magazines/"+name+"/paint"+i));
+					l.add(ResLoc.of(paintTexture, i));
 			}
 
 		return l;
@@ -191,7 +234,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	{
 		//xaxaxa, trick! optimization device!
 		NBTTagCompound nbt = ItemNBTHelper.getTagCompound(stack, "bullets");
-		return nbt.getTagList("inventory", 3).tagCount();
+		return nbt.getTagList("inventory", NBT.TAG_INT).tagCount();
 	}
 
 	//--- Inventory Storage ---//
@@ -207,8 +250,8 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		NonNullList<ItemStack> inv = NonNullList.withSize(magazine.capacity, ItemStack.EMPTY);
 		ArrayList<ItemStack> dictionary = new ArrayList<>();
 
-		NBTTagList listDict = nbt.getTagList("dictionary", 10);
-		NBTTagList listInventory = nbt.getTagList("inventory", 3);
+		NBTTagList listDict = nbt.getTagList("dictionary", NBT.TAG_COMPOUND);
+		NBTTagList listInventory = nbt.getTagList("inventory", NBT.TAG_INT);
 
 		for(NBTBase tag : listDict)
 			if(tag instanceof NBTTagCompound)
@@ -270,8 +313,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	public NonNullList<ItemStack> takeAll(ItemStack stack)
 	{
 		NonNullList<ItemStack> bullets = readInventory(stack);
-		writeInventory(stack, bullets);
-
+		writeInventory(stack, NonNullList.create());
 		defaultize(stack);
 		return bullets;
 	}
@@ -295,7 +337,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	{
 		//safety(tm)
 		NBTTagCompound nbt = ItemNBTHelper.getTagCompound(stack, "bullets");
-		return nbt.hasNoTags()||nbt.getTagList("inventory", 3).tagCount()==0;
+		return nbt.hasNoTags()||nbt.getTagList("inventory", NBT.TAG_INT).tagCount()==0;
 	}
 
 	public ItemStack getMagazine(Magazines type, ItemStack... bullets)
@@ -304,8 +346,9 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 
 		NonNullList<ItemStack> l = NonNullList.withSize(type.capacity, ItemStack.EMPTY);
 		//fill with bullets
-		for(int i = 0; i < l.size(); i++)
-			l.set(i, bullets[i%bullets.length]);
+		if(bullets.length > 0)
+			for(int i = 0; i < l.size(); i++)
+				l.set(i, bullets[i%bullets.length]);
 		//parse with optimized method
 		writeInventory(stack, l);
 		//apply colors, etc.

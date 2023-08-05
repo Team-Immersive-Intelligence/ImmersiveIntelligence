@@ -12,6 +12,7 @@ import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNet
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
+import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +30,10 @@ import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import java.util.Objects;
@@ -38,7 +43,7 @@ import java.util.Objects;
  * @since 15-06-2019
  */
 public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectable
-		implements IRedstoneConnector, IDataConnector, ITickable, IHammerInteraction, IBlockOverlayText, ISoundTile
+		implements IRedstoneConnector, IDataConnector, ITickable, IHammerInteraction, IAdvancedTextOverlay, ISoundTile
 {
 	public int redstoneChannel = 0;
 	public boolean rsDirty = false;
@@ -160,13 +165,12 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 
 	private void sendSoundUpdate()
 	{
-		NBTTagCompound message = new NBTTagCompound();
-		message.setBoolean("active", active);
-		message.setFloat("tone", tone);
-		message.setFloat("volume", soundVolume);
-		message.setString("sound", soundID);
-
-		ImmersiveEngineering.packetHandler.sendToDimension(new MessageTileSync(this, message), this.world.provider.getDimension());
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+				.withBoolean("active",active)
+				.withFloat("tone", tone)
+				.withFloat("volume", soundVolume)
+				.withString("sound", soundID)
+		));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -329,19 +333,15 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		if(!hammer)
+		if(!Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND)))
 			return null;
 		return new String[]{I18n.format(Lib.DESC_INFO+"redstoneChannel",
 				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getUnlocalizedName()))};
 	}
 
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
-	}
+	
 
 	@Override
 	public boolean shoudlPlaySound(String sound)

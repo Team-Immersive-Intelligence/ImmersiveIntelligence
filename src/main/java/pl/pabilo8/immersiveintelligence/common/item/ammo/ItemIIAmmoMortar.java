@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
@@ -56,7 +56,7 @@ public class ItemIIAmmoMortar extends ItemIIAmmoBase
 	@Override
 	public float getDefaultVelocity()
 	{
-		return Bullets.mortarVelocity;
+		return Ammunition.mortarVelocity;
 	}
 
 	@Override

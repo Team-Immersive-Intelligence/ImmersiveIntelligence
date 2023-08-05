@@ -1,9 +1,8 @@
-package pl.pabilo8.immersiveintelligence.common.item.armor;
+package pl.pabilo8.immersiveintelligence.common.util.item;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.IUpgrade;
 import blusunrize.immersiveengineering.api.tool.IUpgradeableTool;
-import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.gui.IESlot.Upgrades;
 import blusunrize.immersiveengineering.common.util.IELogger;
@@ -37,6 +36,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIArmorItemStackHandler;
 
@@ -56,7 +56,7 @@ import java.util.UUID;
  */
 public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgradeableTool
 {
-	static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+	protected static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 	String upgradeType;
 	public static final String NBT_Colour = "colour";
 
@@ -73,7 +73,7 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		//MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	abstract String getMaterialName(ArmorMaterial material);
+	protected abstract String getMaterialName(ArmorMaterial material);
 
 
 	public static boolean isArmorWithUpgrade(ItemStack stack, String... upgrades)
@@ -83,10 +83,8 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 
 		ItemIIUpgradeableArmor item = (ItemIIUpgradeableArmor)stack.getItem();
 		for(String u : upgrades)
-		{
 			if(item.hasUpgrade(stack, u))
 				return true;
-		}
 		return false;
 	}
 
@@ -297,11 +295,11 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
-	@SideOnly(Side.CLIENT)
-	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
+	public FontRenderer getFontRenderer(ItemStack stack)
 	{
-		return ClientProxy.itemFont;
+		return IIClientUtils.fontRegular;
 	}
 }

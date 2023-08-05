@@ -45,7 +45,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 	}
 
 	@Override
-	String getMaterialName(ArmorMaterial material)
+	protected String getMaterialName(ArmorMaterial material)
 	{
 		return "light_engineer_armor";
 	}

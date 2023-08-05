@@ -1,15 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet8bCal;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 
 import javax.annotation.Nonnull;
@@ -52,7 +49,7 @@ public class ItemIIAmmoArtillery extends ItemIIAmmoBase
 	@Override
 	public float getDefaultVelocity()
 	{
-		return Bullets.artilleryHowiVelocity;
+		return Ammunition.artilleryHowiVelocity;
 	}
 
 	@Override
@@ -83,7 +80,7 @@ public class ItemIIAmmoArtillery extends ItemIIAmmoBase
 	@Override
 	public EnumFuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED,EnumFuseTypes.PROXIMITY};
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.TIMED, EnumFuseTypes.PROXIMITY};
 	}
 
 	@Override

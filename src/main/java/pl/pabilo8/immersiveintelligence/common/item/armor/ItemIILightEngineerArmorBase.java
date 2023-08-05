@@ -7,6 +7,7 @@ import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEqui
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.ICorrosionProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
  * @author Pabilo8
@@ -44,7 +45,7 @@ public abstract class ItemIILightEngineerArmorBase extends ItemIIUpgradeableArmo
 	}
 
 	@Override
-	String getMaterialName(ArmorMaterial material)
+	protected String getMaterialName(ArmorMaterial material)
 	{
 		return "light_engineer_armor";
 	}

@@ -14,20 +14,26 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOve
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +44,7 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.REDSTONE
  * @since 15-06-2019
  */
 public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
-		implements IRedstoneConnector, ITickable, IDirectionalTile, IHammerInteraction, IBlockOverlayText, ISoundTile
+		implements IRedstoneConnector, ITickable, IDirectionalTile, IHammerInteraction, IAdvancedTextOverlay, ISoundTile
 {
 	public int redstoneChannel = 0;
 	public boolean rsDirty = false;
@@ -212,10 +218,10 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 
 	private void sendSoundUpdate()
 	{
-		NBTTagCompound message = new NBTTagCompound();
-		message.setBoolean("active", active);
-		message.setFloat("volume", soundVolume);
-		ImmersiveEngineering.packetHandler.sendToDimension(new MessageTileSync(this, message), this.world.provider.getDimension());
+		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
+				.withBoolean("active", active)
+				.withFloat("volume", soundVolume)
+		));
 	}
 
 	@Override
@@ -254,23 +260,17 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
-	{
-		if(!hammer)
-			return null;
-		return new String[]{I18n.format(Lib.DESC_INFO+"redstoneChannel",
-				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getUnlocalizedName()))};
-	}
-
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
-	}
-
-	@Override
 	public boolean shoudlPlaySound(String sound)
 	{
 		return active;
+	}
+
+	@Override
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
+	{
+		if(!Utils.isHammer(player.getHeldItem(EnumHand.MAIN_HAND)))
+			return null;
+		return new String[]{I18n.format(Lib.DESC_INFO+"redstoneChannel",
+				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getUnlocalizedName()))};
 	}
 }

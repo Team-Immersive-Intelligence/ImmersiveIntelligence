@@ -1,6 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
 import blusunrize.immersiveengineering.api.Lib;
+import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.util.text.TextFormatting;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+
+import java.util.Arrays;
 
 /**
  * @author Pabilo8
@@ -29,8 +35,25 @@ public class IILib
 	public static final String INFO_KEY_TOOL_DURABILITY = INFO_KEY+"tool_durability";
 	public static final String DESC_TOOLUPGRADE = DESCRIPTION_KEY+"toolupgrade.";
 
+	public static final String DESC_HOLD_CTRL = DESCRIPTION_KEY+"info.holdControl";
+	public static final String DESC_HOLD_SHIFT = DESCRIPTION_KEY+"info.holdShift";
+	public static final String DESC_HOLD_ALT = DESCRIPTION_KEY+"info.holdAlt";
+	public static final String DESC_HOLD_TAB = DESCRIPTION_KEY+"info.holdTab";
+
+	//--- Patterns ---//
+	public static final ResLoc RES_II = ResLoc.root(ImmersiveIntelligence.MODID);
+
+	//Models
+	public static final ResLoc RES_ITEM_MODEL = ResLoc.of(RES_II, "models/item/");
+	public static final ResLoc RES_BLOCK_MODEL = ResLoc.of(RES_II, "models/item/");
+	public static final ResLoc RES_AABB = ResLoc.of(RES_II, "aabb/");
+
+	//Sounds
+	public static final ResLoc RES_SOUND = ResLoc.of(RES_II, "sounds/");
+
 	//--- Paths ---//
 	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
+
 
 	//--- Manual ---//
 
@@ -48,4 +71,15 @@ public class IILib
 	public static final int COLOR_ARMORBAR_2 = 0x0cfcfcfc;
 	public static final int COLOR_H1 = 0x0a0a0a;
 	public static final int COLOR_H2 = 0x1a1a1a;
+
+	public static final int[] COLORS_HIGHLIGHT_I = new int[]{
+			0x486c94, //prussian blue
+			Lib.COLOUR_I_ImmersiveOrange-0xff000000, //immersive orange
+			ClientUtils.getFormattingColour(TextFormatting.GOLD), //light orange
+			ClientUtils.getFormattingColour(TextFormatting.BLUE) //light blue
+	};
+
+	//why copy if you can *process*
+	public static final String[] COLORS_HIGHLIGHT_S = Arrays.stream(COLORS_HIGHLIGHT_I)
+			.mapToObj(Integer::toHexString).toArray(String[]::new);
 }

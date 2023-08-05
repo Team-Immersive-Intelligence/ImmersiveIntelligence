@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.item;
 
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.client.ClientProxy;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -11,12 +10,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIITracerPowder.Powders;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum.IIItemProperties;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -47,11 +46,12 @@ public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>
 		tooltip.add(I18n.format(Lib.DESC_INFO+"colour", "<hexcol="+Integer.toHexString(col)+":#"+Integer.toHexString(col)+">"));
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
-	public FontRenderer getFontRenderer(ItemStack stack)
+	@Nullable
+	@Override
+	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
 	{
-		return ClientProxy.itemFont;
+		return IIClientUtils.fontRegular;
 	}
 
 

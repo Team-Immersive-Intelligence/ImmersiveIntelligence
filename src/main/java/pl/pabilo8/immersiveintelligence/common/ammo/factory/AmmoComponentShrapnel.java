@@ -2,9 +2,12 @@ package pl.pabilo8.immersiveintelligence.common.ammo.factory;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
@@ -30,6 +33,13 @@ public class AmmoComponentShrapnel implements IAmmoComponent
 	public String getName()
 	{
 		return "shrapnel_"+name;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getTranslatedName()
+	{
+		return I18n.format("ie.manual.entry.bullet_component."+getName());
 	}
 
 	@Override

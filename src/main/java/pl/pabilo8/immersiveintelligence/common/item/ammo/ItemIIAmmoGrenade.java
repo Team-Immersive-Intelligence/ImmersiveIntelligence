@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Bullets;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Grenade;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
@@ -60,7 +60,7 @@ public class ItemIIAmmoGrenade extends ItemIIAmmoBase
 	@Override
 	public float getDefaultVelocity()
 	{
-		return Bullets.grenadeVelocity;
+		return Ammunition.grenadeVelocity;
 	}
 
 	@Override

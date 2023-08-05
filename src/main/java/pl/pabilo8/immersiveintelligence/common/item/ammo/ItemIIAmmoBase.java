@@ -1,32 +1,40 @@
 package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.client.ClientProxy;
+import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsIE;
+import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.ITextureOverride;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
+import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
@@ -169,52 +177,6 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 	}
 
 	@Override
-	@ParametersAreNonnullByDefault
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-	{
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-		AmmoParts part = stackToSub(stack);
-		if(part==AmmoParts.BULLET)
-		{
-			tooltip.add(getFormattedBulletTypeName(stack));
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.core",
-					I18n.format(IILib.DESCRIPTION_KEY+"bullet_core_type."+getCoreType(stack).getName()),
-					I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+getCore(stack).getName()+".name")
-			));
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.fuse",
-					I18n.format(IILib.DESCRIPTION_KEY+"bullet_fuse."+getFuseType(stack).getName())
-			));
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.mass", getMass(stack)));
-			//tooltip.add(getPenetrationTable(stack));
-		}
-
-		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"bullets.caliber", Utils.formatDouble(getCaliber(), "#.#")));
-	}
-
-	private String getFormattedBulletTypeName(ItemStack stack)
-	{
-		Set<EnumComponentRole> collect = new HashSet<>();
-		if(getCoreType(stack).getRole()!=null)
-			collect.add(getCoreType(stack).getRole());
-		collect.addAll(Arrays.stream(getComponents(stack)).map(IAmmoComponent::getRole).collect(Collectors.toSet()));
-		StringBuilder builder = new StringBuilder();
-		for(EnumComponentRole enumComponentRole : collect)
-		{
-			if(enumComponentRole==EnumComponentRole.GENERAL_PURPOSE)
-				continue;
-			builder.append(I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName()));
-			builder.append(" - ");
-		}
-		if(builder.toString().isEmpty())
-		{
-			builder.append(I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
-			builder.append(" - ");
-		}
-		String s = builder.toString();
-		return I18n.format(s.substring(0, Math.max(s.length()-3, 0)));
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	@Nonnull
 	public String getItemStackDisplayName(@Nonnull ItemStack stack)
@@ -335,10 +297,11 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Nullable
 	@Override
 	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
 	{
-		return ClientProxy.itemFont;
+		return IIClientUtils.fontRegular;
 	}
 
 	@Override
