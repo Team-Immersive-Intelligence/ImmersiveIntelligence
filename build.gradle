@@ -112,7 +112,7 @@ dependencies {
     deobfCompile 'baubles:Baubles:1.12:1.5.2'
 
     compileOnly "org.squiddev:cc-tweaked-1.12.2:1.89.2"
-    compileOnly "opencomputers:OpenComputers:MC1.12.2:1.7.2.67"
+    compileOnly "li.cil.oc:OpenComputers:MC1.12.2-1.7.5.221:api"
 
     compileOnly "curse.maven:immersive-petroleum-268250:2544919"
     compileOnly "curse.maven:immersive-posts-314645:2951672"
