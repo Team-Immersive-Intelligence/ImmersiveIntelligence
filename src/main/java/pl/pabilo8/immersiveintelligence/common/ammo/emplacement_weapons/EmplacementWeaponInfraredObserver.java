@@ -77,11 +77,7 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 	@Override
 	public void aimAt(float yaw, float pitch)
 	{
-		//Only pitch, no yaw rotation
-		nextPitch = pitch;
-		float p = pitch-this.pitch;
-		this.pitch += Math.signum(p)*MathHelper.clamp(Math.abs(p), 0, this.getPitchTurnSpeed());
-		this.pitch = this.pitch%180;
+		super.aimAt(yaw, pitch);
 	}
 
 	public boolean isSetUp(boolean door)
