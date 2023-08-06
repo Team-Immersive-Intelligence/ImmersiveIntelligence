@@ -306,6 +306,7 @@ public class TileEntityDataConnector extends TileEntityImmersiveConnectable impl
 
 	@Nullable
 	@Override
+	@Optional.Method(modid = "computercraft")
 	public IPeripheral getPeripheral(@Nonnull EnumFacing facing)
 	{
 		return facing==this.facing?ComputerCraftHelper.createConnectorPeripheral(this): null;
