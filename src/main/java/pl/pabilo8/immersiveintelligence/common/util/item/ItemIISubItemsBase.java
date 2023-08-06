@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.util.item;
 import blusunrize.immersiveengineering.api.ComparableItemStack;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
@@ -59,6 +60,15 @@ public class ItemIISubItemsBase<E extends Enum<E> & IIItemEnum> extends ItemIIBa
 						.map(i -> i==-1?maxStackSize: i) //if -1 was returned, it means the sub item uses the default stack size
 						.toArray(Integer[]::new)
 		);
+	}
+
+	@Override
+	public Item setMaxStackSize(int maxStackSize)
+	{
+		super.setMaxStackSize(maxStackSize);
+		if(subItems!=null)
+			updateValues(subItems);
+		return this;
 	}
 
 	//--- SubItem Names ---//

@@ -21,6 +21,7 @@ public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 	public ItemIIAmmoRailgunGrenade()
 	{
 		super("railgun_grenade_4bCal", null);
+		setMaxStackSize(8);
 	}
 
 	@Override
