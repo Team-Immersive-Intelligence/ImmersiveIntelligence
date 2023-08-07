@@ -1,24 +1,35 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Radar;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedMultiblockTileEntity;
+import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeArray;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEntity;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.RadarRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedMultiblockTileEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +40,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 04.03.2021
  */
-public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, MultiblockRecipe> implements IAdvancedMultiblockTileEntity, IUpgradableMachine
+public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, MultiblockRecipe> implements IAdvancedMultiblockTileEntity, IUpgradableMachine, IGuiTile
 {
 	public static int PART_AMOUNT = 1;
 	public int construction = 0, clientConstruction = 0;
@@ -63,7 +74,25 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 				clientConstruction = (int)Math.min(clientConstruction+(Tools.electricHammerEnergyPerUseConstruction/4.25f), maxConstruction);
 			if(clientUpgradeProgress < getMaxClientProgress())
 				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
+			return;
 		}
+
+		if(!active||world.getTotalWorldTime()%20!=0)
+			return;
+
+		DataPacket packet = new DataPacket();
+		final BlockPos center = this.getBlockPosForPos(272);
+		final AxisAlignedBB aabb = new AxisAlignedBB(center).offset(0, -8, 0).grow(90, 0, 90).expand(0, 50, 0);
+		List<EntityLivingBase> hostiles = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb, input -> input instanceof IMob);
+		DataTypeEntity[] entities = hostiles.stream().map(entity -> new DataTypeEntity(entity, center)).toArray(DataTypeEntity[]::new);
+		DataTypeArray arr = new DataTypeArray(entities);
+
+		packet.setVariable('e', arr);
+
+		IDataConnector conn = IIUtils.findConnectorFacing(getBlockPosForPos(77), world, facing.rotateYCCW());
+		if(conn!=null)
+			conn.sendPacket(packet);
+
 	}
 
 	@Override
@@ -358,5 +387,24 @@ public class TileEntityRadar extends TileEntityMultiblockMetal<TileEntityRadar, 
 	public void removeUpgrade(MachineUpgrade upgrade)
 	{
 		upgrades.remove(upgrade);
+	}
+
+	@Override
+	public boolean canOpenGui()
+	{
+		return true;
+	}
+
+	@Override
+	public int getGuiID()
+	{
+		return IIGuiList.RADAR.ordinal();
+	}
+
+	@Nullable
+	@Override
+	public TileEntity getGuiMaster()
+	{
+		return master();
 	}
 }

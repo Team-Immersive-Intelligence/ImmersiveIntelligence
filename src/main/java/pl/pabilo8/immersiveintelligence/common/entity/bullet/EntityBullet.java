@@ -322,7 +322,7 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 								else
 								{
 									//can't ricochet if penetrates multiple blocks
-									if(force > hardness&&penetrationHandler.getPenetrationType().canRicochetOff()&&i==0)
+									if(pen!=-1&&force > hardness&&penetrationHandler.getPenetrationType().canRicochetOff()&&i==0)
 									{
 										ricochet(hardness/2f, pos);
 										if(!world.isRemote)

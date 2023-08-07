@@ -180,7 +180,11 @@ public enum IIGuiList
 			ContainerProjectileWorkshop::new
 	),
 	GUI_AMMUNITION_WORKSHOP(TileEntityAmmunitionWorkshop.class,
-			(player, te) -> new ContainerAmmunitionWorkshop(player.inventory, (TileEntityAmmunitionWorkshop)te)
+			ContainerAmmunitionWorkshop::new
+	),
+
+	RADAR(TileEntityRadar.class,
+			ContainerRadar::new
 	);
 
 	//GUI_PERISCOPE,
