@@ -1,0 +1,149 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"Cylinder1": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, -0.1, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0.1, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"Cylinder2": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, -0.1, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0.1, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"Cylinder3": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0.1, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, -0.1, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"Cylinder4": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0.1, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, -0.1, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"Cylinder5": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, -0.1, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0.1, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"Cylinder6": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0.1, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, -0.1, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

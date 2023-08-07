@@ -1,0 +1,243 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"WeaponMount1" : {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [90, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, -2, 10]
+				}
+			]
+		},
+		"WeaponMount2" : {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [90, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, -2, 10]
+				}
+			]
+		},
+		"WeaponMount3" : {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [90, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, -2, 10]
+				}
+			]
+		},
+
+		"WeaponMount4" : {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [90, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, -2, 10]
+				}
+			]
+		},
+
+		"IRMount": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 15, 0]
+				},
+				{
+					"time": 0.31034,
+					"transform": [0, 15, 0]
+				},
+				{
+					"time": 0.63218,
+					"transform": [0, -7, 0]
+				},
+				{
+					"time": 0.72414,
+					"transform": [0, -7, 0]
+				},
+				{
+					"time": 0.87356,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"IRBall": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [90, 0, 0]
+				},
+				{
+					"time": 0.65517,
+					"transform": [90, 0, 0]
+				},
+				{
+					"time": 0.73563,
+					"transform": [10, 0, 0]
+				},
+				{
+					"time": 0.89655,
+					"transform": [10, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"WingRight": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, -180]
+				},
+				{
+					"time": 0.11494,
+					"transform": [0, 0, -180]
+				},
+				{
+					"time": 0.4023,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.41379,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"WingLeft": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 180]
+				},
+				{
+					"time": 0.11494,
+					"transform": [0, 0, 180]
+				},
+				{
+					"time": 0.4023,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.41379,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"IRDoorBack": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.02299,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.06897,
+					"transform": [115, 0, 0]
+				},
+				{
+					"time": 0.08046,
+					"transform": [115, 0, 0]
+				},
+				{
+					"time": 0.13793,
+					"transform": [72.5, 0, 0]
+				},
+				{
+					"time": 0.18391,
+					"transform": [92.5, 0, 0]
+				},
+				{
+					"time": 0.21839,
+					"transform": [87.5, 0, 0]
+				},
+				{
+					"time": 0.25287,
+					"transform": [90, 0, 0]
+				},
+				{
+					"time": 0.6092,
+					"transform": [90, 0, 0]
+				},
+				{
+					"time": 0.74713,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"IRDoorFront": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.02299,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.06897,
+					"transform": [-115, 0, 0]
+				},
+				{
+					"time": 0.08046,
+					"transform": [-115, 0, 0]
+				},
+				{
+					"time": 0.13793,
+					"transform": [-72.5, 0, 0]
+				},
+				{
+					"time": 0.18391,
+					"transform": [-92.5, 0, 0]
+				},
+				{
+					"time": 0.21839,
+					"transform": [-87.5, 0, 0]
+				},
+				{
+					"time": 0.25287,
+					"transform": [-90, 0, 0]
+				},
+				{
+					"time": 0.6092,
+					"transform": [-90, 0, 0]
+				},
+				{
+					"time": 0.74713,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

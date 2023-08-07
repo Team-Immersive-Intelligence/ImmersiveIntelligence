@@ -2,19 +2,21 @@ package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 
 /**
  * @author Pabilo8
  * @since 13.07.2020
  */
-public class EntityVehicleWheel extends EntityVehicleMultiPart
+public class EntityVehicleWheel extends EntityVehiclePart
 {
 	public int wheelTraverse = 0;
-	public EntityVehicleWheel(IVehicleMultiPart parent, String partName, float width, float height)
+	public EntityVehicleWheel(IVehicleMultiPart parent, String partName, Vec3d offset, AxisAlignedBB aabb)
 	{
-		super(parent, partName, width, height);
+		super(parent, partName, offset, aabb);
 		stepHeight = 0.75f;
 	}
 

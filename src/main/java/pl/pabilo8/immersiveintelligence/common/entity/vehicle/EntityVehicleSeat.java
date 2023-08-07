@@ -8,8 +8,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
+import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 
 import java.util.Optional;
 
@@ -31,6 +31,7 @@ public class EntityVehicleSeat extends Entity
 	public EntityVehicleSeat(World worldIn)
 	{
 		super(worldIn);
+
 		//requires size so it's bounding box is visible
 		setSize(0.25f, 0.25f);
 	}
@@ -120,9 +121,8 @@ public class EntityVehicleSeat extends Entity
 	/**
 	 * @param vehicle that requests the seat
 	 * @param id      of the seat
-	 * @param <T>     an entity that implements the common vehicle interface
 	 */
-	public static <T extends Entity & IVehicleMultiPart> EntityVehicleSeat getOrCreateSeat(T vehicle, int id)
+	public static EntityVehicleSeat getOrCreateSeat(Entity vehicle, int id)
 	{
 		Optional<Entity> probableSeat = vehicle.getPassengers().stream().filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID==id).findFirst();
 		if(!probableSeat.isPresent()||!(probableSeat.get() instanceof EntityVehicleSeat))
@@ -149,7 +149,7 @@ public class EntityVehicleSeat extends Entity
 	{
 		if(world.isRemote&&passenger instanceof EntityPlayerSP)
 		{
-			CameraHandler.INSTANCE.setEnabled(false);
+			CameraHandler.setEnabled(false);
 			ZoomHandler.isZooming = false;
 		}
 		super.removePassenger(passenger);

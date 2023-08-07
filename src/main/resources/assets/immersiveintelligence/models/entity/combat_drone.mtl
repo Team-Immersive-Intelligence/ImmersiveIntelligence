@@ -1,0 +1,6 @@
+# Made in Blockbench 4.5.2
+newmtl m_8856f74c-e526-35bb-a3b0-d202eb504b7f
+map_Kd immersiveintelligence:entity/combat_drone
+newmtl m_e0e569bd-743d-c5c1-4799-34f64269b7f2
+map_Kd immersiveintelligence:entity/mount_infrared
+newmtl none

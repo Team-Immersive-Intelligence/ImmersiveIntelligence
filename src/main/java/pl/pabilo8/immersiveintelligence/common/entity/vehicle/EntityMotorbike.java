@@ -32,20 +32,20 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
-import pl.pabilo8.immersiveintelligence.client.carversound.sounds.MovingSoundMotorbikeEngine;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.render.MotorbikeRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.MovingSoundMotorbikeEngine;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
-import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
+import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nullable;
@@ -59,6 +59,16 @@ import java.util.List;
  */
 public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntitySpecialRepairable, IEntityAdditionalSpawnData
 {
+	//--- AABBs ---//
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(-2.5, 0, -2.5, 2.5, 1.5, 2.5);
+	private static final AxisAlignedBB AABB_WHEEL = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
+	private static final AxisAlignedBB AABB_TANK = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
+	private static final AxisAlignedBB AABB_STORAGE = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
+	private static final AxisAlignedBB AABB_ENGINE = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
+	private static final AxisAlignedBB AABB_WOODGAS = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
+	private static final AxisAlignedBB AABB_SEAT = new AxisAlignedBB(-0.3, -0.25d, 0.3, 0.3, 0.25d, -0.3);
+
+	//--- DataMarkers ---//
 	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.COMPOUND_TAG);
 	private static final DataParameter<Integer> dataMarkerFluidCap = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.VARINT);
 
@@ -80,22 +90,16 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	private static final DataParameter<String> dataMarkerUpgrade = EntityDataManager.createKey(EntityMotorbike.class, DataSerializers.STRING);
 
-	private final EntityVehicleMultiPart[] partArray;
-
-	public EntityVehicleWheel partWheelFront = new EntityVehicleWheel(this, "wheel_front", 1F, 1.0F);
-	public EntityVehicleWheel partWheelBack = new EntityVehicleWheel(this, "wheel_back", 1F, 1.0F);
-	public EntityVehicleMultiPart partFuelTank = new EntityVehicleMultiPart(this, "fuel_tank", 1.0F, 0.45F);
-	public EntityVehicleMultiPart partEngine = new EntityVehicleMultiPart(this, "engine", 1.0F, 0.45F);
-
-	public EntityVehicleMultiPart partSeat = new EntityVehicleMultiPart(this, "seat", 1.0F, 0.125F);
-	public EntityVehicleMultiPart partUpgradeSeat = new EntityVehicleMultiPart(this, "upgrade_seat", 1.0F, 0.125F);
-	public EntityVehicleMultiPart partUpgradeCargo = new EntityVehicleMultiPart(this, "upgrade_cargo", 1.0F, 0.45F);
+	//--- Entity Variables ---//
+	private final EntityVehiclePart[] partArray;
+	public EntityVehicleWheel partWheelFront, partWheelBack;
+	public EntityVehiclePart partFuelTank, partEngine;
+	public EntityVehiclePart partSeat, partUpgradeSeat, partUpgradeCargo;
 
 	private int destroyTimer = -1;
 
 	public FluidTank tank = new FluidTank(12000)
 	{
-
 	};
 	NonSidedFluidHandler fluidHandler = new NonSidedFluidHandler(this);
 
@@ -106,19 +110,20 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	public String upgrade = "";
 
-	static AxisAlignedBB aabb = new AxisAlignedBB(-2.5, 0, -2.5, 2.5, 1.5, 2.5);
-	static AxisAlignedBB aabb_wheel = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
-	static AxisAlignedBB aabb_tank = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
-	static AxisAlignedBB aabb_storage = new AxisAlignedBB(-0.35, 0d, 0.35, 0.35, 0.55d, -0.35);
-	static AxisAlignedBB aabb_engine = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
-	static AxisAlignedBB aabb_woodgas = new AxisAlignedBB(-0.5, 0d, 0.5, 0.5, 1d, -0.5);
-	static AxisAlignedBB aabb_seat = new AxisAlignedBB(-0.3, -0.25d, 0.3, 0.3, 0.25d, -0.3);
-
 	public EntityMotorbike(World worldIn)
 	{
 		super(worldIn);
 		setSize(2.5f, 1.5f);
-		partArray = new EntityVehicleMultiPart[]{partWheelFront, partWheelBack, partFuelTank, partEngine, partSeat, partUpgradeSeat, partUpgradeCargo};
+		partArray = new EntityVehiclePart[]{
+				partWheelFront = new EntityVehicleWheel(this, "wheel_front", new Vec3d(1.25, 0, 0), AABB_WHEEL),
+				partWheelBack = new EntityVehicleWheel(this, "wheel_back", new Vec3d(-1.5, 0, 0), AABB_WHEEL),
+				partFuelTank = new EntityVehiclePart(this, "fuel_tank", new Vec3d(0.1, 1.175, 0), AABB_TANK),
+				partEngine = new EntityVehiclePart(this, "engine", Vec3d.ZERO, AABB_ENGINE),
+				partSeat = new EntityVehiclePart(this, "seat", new Vec3d(-0.65, 1, 0), AABB_SEAT),
+				partUpgradeSeat = new EntityVehiclePart(this, "upgrade_seat", new Vec3d(-1.35, 1, 0), AABB_SEAT),
+				partUpgradeCargo = new EntityVehiclePart(this, "upgrade_cargo", new Vec3d(-1.35, 1, 0), AABB_STORAGE)
+		};
+
 		frontWheelDurability = Motorbike.wheelDurability;
 		backWheelDurability = Motorbike.wheelDurability;
 		engineDurability = Motorbike.engineDurability;
@@ -158,6 +163,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		ClientUtils.mc().getSoundHandler().playSound(new MovingSoundMotorbikeEngine(this));
 	}
 
+	//--- NBT Handling ---//
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
@@ -212,6 +218,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		return false;
 	}
 
+	//--- Parts Handling ---//
 	@Override
 	protected boolean canFitPassenger(Entity passenger)
 	{
@@ -303,6 +310,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			passenger.attackEntityFrom(IIDamageSources.causeMotorbikeDamageGetOut(this), 4.5f*speed);
 	}
 
+	//--- Main ---//
 	@Override
 	public void onUpdate()
 	{
@@ -314,7 +322,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 				EntityVehicleSeat.getOrCreateSeat(this, 1);
 				EntityVehicleSeat.getOrCreateSeat(this, 2);
 			}
-			updateParts(false);
+			updateParts(this);
 
 		}
 
@@ -326,7 +334,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			handleClientKeyOutput();
 			if(pre instanceof EntityVehicleSeat&&pre.getRidingEntity()==this&&((EntityVehicleSeat)pre).seatID==0)
 			{
-				updateParts(false);
+				updateParts(this);
 				handleClientKeyInput();
 			}
 
@@ -423,7 +431,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 		 */
 		//if(!world.isRemote)
-		updateParts(false);
+		updateParts(this);
 		handleMovement();
 
 		if(tilt!=0&&speed > 0)
@@ -436,7 +444,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 				rotationYaw += tilt*0.5;
 			}
 
-		updateParts(true);
+		updateParts(this);
 		super.onUpdate();
 
 	}
@@ -535,6 +543,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	}
 
+	//--- Input/Controls Handling and Sync ---//
 	private void handleClientKeyInput()
 	{
 		boolean a = accelerated, b = brake, tl = turnLeft, tr = turnRight, en = engineWorking;
@@ -565,7 +574,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 					towingKeyPress = true;
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setBoolean("startTowing", true);
-					IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(this, tag));
+					IIPacketHandler.sendToServer(new MessageEntityNBTSync(this, tag));
 				}
 			}
 			else
@@ -573,7 +582,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		}
 
 		if(a^accelerated||b^brake||tl^turnLeft||tr^turnRight||en^engineWorking)
-			IIPacketHandler.INSTANCE.sendToServer(new MessageEntityNBTSync(this, updateKeys()));
+			IIPacketHandler.sendToServer(new MessageEntityNBTSync(this, updateKeys()));
 	}
 
 	public void selfDestruct()
@@ -585,7 +594,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 				world.newExplosion(null, posX, posY, posZ, tank.getFluidAmount()/12000f*4, false, false);
 			}
 			// TODO: 30.08.2022 improve
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(new Vec3d(this.getEntityId(), 0, 0), "motorbike_explosion"), IIUtils.targetPointFromEntity(this, 48));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(new Vec3d(this.getEntityId(), 0, 0), "motorbike_explosion"), IIPacketHandler.targetPointFromEntity(this, 48));
 			setDead();
 		}
 		else
@@ -613,10 +622,11 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		return tank.getFluidAmount() > 0;
 	}
 
+	//--- Collision ---//
 	@Override
 	public AxisAlignedBB getEntityBoundingBox()
 	{
-		return aabb.offset(posX, posY, posZ);
+		return AABB.offset(posX, posY, posZ);
 	}
 
 	@Nullable
@@ -685,14 +695,14 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			engineDurability -= amount*0.85;
 			dataManager.set(dataMarkerEngineDurability, engineDurability);
 			if(world.isRemote)
-				playSound(IISounds.impactMetal, Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.hitMetal.getSoundImpact(), Math.min(amount/16f, 1f), 1f);
 		}
 		else if((part==partFuelTank||part==partSeat)&&source.isProjectile()||source.isExplosion()||source.isFireDamage())
 		{
 			fuelTankDurability -= amount*0.85;
 			dataManager.set(dataMarkerFuelTankDurability, fuelTankDurability);
 			if(world.isRemote)
-				playSound(IISounds.impactMetal, Math.min(amount/16f, 1f), 1f);
+				playSound(IISounds.hitMetal.getSoundImpact(), Math.min(amount/16f, 1f), 1f);
 		}
 		else if(part==partWheelFront)
 		{
@@ -799,7 +809,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	}
 
 	@Override
-	public boolean onInteractWithPart(EntityVehicleMultiPart part, EntityPlayer player, EnumHand hand)
+	public boolean onInteractWithPart(EntityVehiclePart part, EntityPlayer player, EnumHand hand)
 	{
 		if(!getRecursivePassengers().contains(player))
 		{
@@ -829,7 +839,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	}
 
 	@Override
-	public String[] getOverlayTextOnPart(EntityVehicleMultiPart part, EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayTextOnPart(EntityVehiclePart part, EntityPlayer player, RayTraceResult mop)
 	{
 		if(!isPassenger(player)&&(part==partEngine||part==partFuelTank))
 		{
@@ -1004,79 +1014,10 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 
 	}
 
-	public Entity[] getParts()
+	@Override
+	public EntityVehiclePart[] getParts()
 	{
 		return partArray;
-	}
-
-	private void updateParts(boolean wheelHandle)
-	{
-		double true_angle = Math.toRadians((-rotationYaw) > 180?360f-(-rotationYaw): (-rotationYaw));
-
-		Vec3d pos_x = IIUtils.offsetPosDirection(1f, true_angle, 0);
-
-		Vec3d pos1_x = pos_x.scale(1.25);
-		Vec3d pos2_x = pos_x.scale(-1.5);
-		Vec3d pos3_x = pos_x.scale(0.1);
-		Vec3d pos4_x = pos_x.scale(-0.55);
-		Vec3d pos5_x = pos_x.scale(-1.35);
-
-		this.partSeat.setLocationAndAngles(posX+pos4_x.x, posY+1.175, posZ+pos4_x.z, 0.0F, 0);
-		this.partSeat.setEntityBoundingBox(aabb_seat.offset(this.partSeat.posX, this.partSeat.posY, this.partSeat.posZ));
-		if(world.isRemote)
-			IIUtils.setEntityVelocity(this.partSeat, this.motionX, this.motionY, this.motionZ);
-		this.partSeat.onUpdate();
-
-		this.partUpgradeSeat.setLocationAndAngles(posX+pos5_x.x, posY+1.175, posZ+pos5_x.z, 0.0F, 0);
-		if(world.isRemote)
-			IIUtils.setEntityVelocity(this.partUpgradeSeat, this.motionX, this.motionY, this.motionZ);
-
-		this.partUpgradeCargo.setLocationAndAngles(posX+pos5_x.x, posY+1, posZ+pos5_x.z, 0.0F, 0);
-		if(world.isRemote)
-			IIUtils.setEntityVelocity(this.partUpgradeCargo, this.motionX, this.motionY, this.motionZ);
-
-		if(upgrade.equals("seat"))
-		{
-			this.partUpgradeSeat.setEntityBoundingBox(aabb_seat.offset(this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ));
-			this.partUpgradeCargo.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ, this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
-		}
-		else
-		{
-			this.partUpgradeSeat.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ, this.partUpgradeSeat.posX, this.partUpgradeSeat.posY, this.partUpgradeSeat.posZ));
-			if(!upgrade.isEmpty())
-				this.partUpgradeCargo.setEntityBoundingBox((upgrade.equals("woodgas")?aabb_woodgas: upgrade.equals("tank")?aabb_tank: aabb_storage).offset(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
-			else
-				this.partUpgradeCargo.setEntityBoundingBox(new AxisAlignedBB(this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ, this.partUpgradeCargo.posX, this.partUpgradeCargo.posY, this.partUpgradeCargo.posZ));
-
-		}
-		this.partUpgradeSeat.onUpdate();
-		this.partUpgradeCargo.onUpdate();
-
-		this.partWheelFront.setLocationAndAngles(posX+pos1_x.x, wheelHandle?partWheelFront.posY: posY, posZ+pos1_x.z, 0.0F, 0);
-		this.partWheelFront.setEntityBoundingBox(aabb_wheel.offset(this.partWheelFront.posX, this.partWheelFront.posY, this.partWheelFront.posZ));
-		if(world.isRemote)
-			IIUtils.setEntityVelocity(this.partWheelFront, this.motionX, this.motionY, this.motionZ);
-		this.partWheelFront.onUpdate();
-
-		this.partWheelBack.setLocationAndAngles(posX+pos2_x.x, wheelHandle?partWheelBack.posY: posY, posZ+pos2_x.z, 0.0F, 0);
-		this.partWheelBack.setEntityBoundingBox(aabb_wheel.offset(this.partWheelBack.posX, this.partWheelBack.posY, this.partWheelBack.posZ));
-		if(world.isRemote)
-			IIUtils.setEntityVelocity(this.partWheelBack, this.motionX, this.motionY, this.motionZ);
-		this.partWheelBack.onUpdate();
-
-		this.partEngine.setLocationAndAngles(posX, posY, posZ, 0.0F, 0);
-		this.partEngine.setEntityBoundingBox(aabb_engine.offset(this.partEngine.posX, this.partEngine.posY, this.partEngine.posZ));
-		if(world.isRemote)
-			IIUtils.setEntityVelocity(this.partEngine, this.motionX, this.motionY, this.motionZ);
-		this.partEngine.onUpdate();
-
-		this.partFuelTank.setLocationAndAngles(posX+pos3_x.x, posY+1, posZ+pos3_x.z, 0.0F, 0);
-		this.partFuelTank.setEntityBoundingBox(aabb_tank.offset(this.partFuelTank.posX, this.partFuelTank.posY, this.partFuelTank.posZ));
-		if(world.isRemote)
-			IIUtils.setEntityVelocity(this.partFuelTank, this.motionX, this.motionY, this.motionZ);
-		this.partFuelTank.onUpdate();
-
-
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -1124,7 +1065,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 		{
 			DamageSource temp_source = new DamageSource("bullet").setProjectile().setDamageBypassesArmor();
 			//attack every part
-			for(EntityVehicleMultiPart part : new EntityVehicleMultiPart[]{partWheelFront, partWheelBack, partFuelTank, partEngine})
+			for(EntityVehiclePart part : new EntityVehiclePart[]{partWheelFront, partWheelBack, partFuelTank, partEngine})
 				attackEntityFromPart(part, temp_source, amount);
 			return true;
 		}

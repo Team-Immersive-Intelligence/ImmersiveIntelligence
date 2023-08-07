@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  */
 public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> implements IReloadableModelContainer<IITileRenderer<T>>
 {
-	boolean unCompiled = true;
+	private boolean unCompiled = true;
 
 	//--- rendering wrapper ---//
 
