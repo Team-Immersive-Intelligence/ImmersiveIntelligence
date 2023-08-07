@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
@@ -21,9 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -34,10 +31,12 @@ public class IIManualEntry extends ManualEntry
 {
 	private final LinkedHashMap<String, String> texts = new LinkedHashMap<>();
 	private final LinkedHashMap<String, EasyNBT> dataSources = new LinkedHashMap<>();
+	private final String fullFilePath;
 
 	public IIManualEntry(String name, String category)
 	{
-		super(name, category);
+		super(name.contains("/")?name.substring(name.lastIndexOf("/")+1): name, category);
+		this.fullFilePath = name;
 		loadTexts(true);
 	}
 
@@ -118,7 +117,7 @@ public class IIManualEntry extends ManualEntry
 		try
 		{
 			return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(ImmersiveIntelligence.MODID,
-					String.format("ie_manual/%s/%s/%s.md", language, getCategory(), getName())));
+					String.format("ie_manual/%s/%s/%s.md", language, getCategory(), fullFilePath)));
 		} catch(IOException ignored) {}
 		return null;
 	}
@@ -129,6 +128,7 @@ public class IIManualEntry extends ManualEntry
 	 * @param name   source id
 	 * @param source source tag compound
 	 */
+	//TODO: 08.08.2023 Adding sources from json files
 	public IIManualEntry addSource(String name, EasyNBT source)
 	{
 		dataSources.put(name, source);

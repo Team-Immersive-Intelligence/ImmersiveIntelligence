@@ -1439,7 +1439,7 @@ advancement.immersiveintelligence.craft_ir_binoculars=The Infiltrator
 advancement.immersiveintelligence.craft_ir_binoculars.desc=Craft the Infrared Binoculars
 
 #Reference to Fullmetal Alchemist: Brotherhood (Lust death scene)
-advancement.immersiveintelligence.craft_lighter=Comeback of the Zippo Guy
+advancement.immersiveintelligence.craft_lighter=Return of the Zippo Guy
 advancement.immersiveintelligence.craft_lighter.desc=Craft a Lighter
 
 advancement.immersiveintelligence.craft_mg=Property of Hans
@@ -1531,6 +1531,12 @@ ie.manual.category.ii_warfare.name=Warfare
 ie.manual.category.ii_logi.name=Logistics
 ie.manual.category.ii_intel.name=Intelligence
 ie.manual.category.ii_motorworks.name=Motorworks
+
+#todo: automated way to do it
+ie.manual.folder.functions=Function Reference
+ie.manual.folder.folder=Folder
+ie.manual.folder.device=Device
+ie.manual.folder.sekritdokuments=Sekrit Dokuments
 
 ie.manual.entry.multiblock_forming=The %1$s can be formed by using an %2$s on the %3$s %4$s
 ie.manual.entry.multiblock_forming_short=It can be formed by using an %2$s on the %3$s %4$s

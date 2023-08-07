@@ -237,6 +237,7 @@ public class EasyNBT extends Constants.NBT
 
 	/**
 	 * Removes a Tag from the Compound
+	 *
 	 * @param key name of this tag
 	 */
 	public EasyNBT without(String key)
@@ -251,11 +252,11 @@ public class EasyNBT extends Constants.NBT
 	 * Performs an action when a condition is met. Allows branching.<br>
 	 * For example:<br>
 	 * <code>
-	 *     nbt.conditionally(obj!=null, obj.toNBT()) //will not add the object if it's null
+	 * nbt.conditionally(obj!=null, obj.toNBT()) //will not add the object if it's null
 	 * </code>
 	 *
 	 * @param condition condition to be met
-	 * @param whenTrue action taken
+	 * @param whenTrue  action taken
 	 */
 	public EasyNBT conditionally(boolean condition, Consumer<EasyNBT> whenTrue)
 	{
@@ -266,6 +267,7 @@ public class EasyNBT extends Constants.NBT
 
 	/**
 	 * Merges tags of this Compound into tags of another one
+	 *
 	 * @param accepted other Compound
 	 * @return this
 	 */
@@ -279,6 +281,7 @@ public class EasyNBT extends Constants.NBT
 
 	/**
 	 * Merges Tags of another Compound into this one
+	 *
 	 * @param other other Compound
 	 * @return this
 	 */
@@ -291,6 +294,7 @@ public class EasyNBT extends Constants.NBT
 
 	/**
 	 * Merges Tags of another Compound into this one
+	 *
 	 * @param other other Compound
 	 * @return this
 	 */
@@ -406,14 +410,26 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
-	 * Gets an {@link NBTTagList}
+	 * Streams an {@link NBTTagList}
 	 *
-	 * @param key  name of this tag
-	 * @param type of the contained tags, i.e. {@link #TAG_INT}, {@link #TAG_STRING}
+	 * @param clazz class of the tags, must to extend {@link NBTBase}
+	 * @param key   name of this tag
+	 * @param type  of the contained tags, i.e. {@link #TAG_INT}, {@link #TAG_STRING}
 	 */
 	public <T extends NBTBase> Stream<T> streamList(Class<T> clazz, String key, int type)
 	{
 		return wrapped.getTagList(key, type).tagList.stream().map(n -> (T)n);
+	}
+
+	/**
+	 * Streams an {@link NBTTagList}, gets an automatic
+	 *
+	 * @param key   name of this tag
+	 * @param clazz class of the tags, must to extend {@link NBTBase}
+	 */
+	public <T extends NBTBase> Stream<T> streamList(Class<T> clazz, String key)
+	{
+		return streamList(clazz, key, getTagIDByClass(clazz));
 	}
 
 	/**
@@ -692,6 +708,17 @@ public class EasyNBT extends Constants.NBT
 		{
 			//well, at least I think so
 			return new NBTTagCompound();
+		}
+	}
+
+	public <T extends NBTBase> byte getTagIDByClass(Class<T> clazz)
+	{
+		try
+		{
+			return clazz.newInstance().getId();
+		} catch(InstantiationException|IllegalAccessException ignored)
+		{
+			return 0;
 		}
 	}
 

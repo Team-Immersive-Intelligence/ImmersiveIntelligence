@@ -2,11 +2,16 @@ package pl.pabilo8.immersiveintelligence.client.manual;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.client.manual.IEManualInstance;
+import blusunrize.lib.manual.IManualPage;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageFolder;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * @author Pabilo8
@@ -29,11 +34,59 @@ public abstract class IIManualCategory
 		((LinkedHashSet<String>)ReflectionHelper.getPrivateValue(IEManualInstance.class, manual, "categorySet")).add(getCategory());
 	}
 
+	public static void cleanFolderEntries()
+	{
+		IEManualInstance manual = (IEManualInstance)ManualHelper.getManual();
+		List<ManualEntry> remaining = manual.manualContents.get(ManualHelper.CAT_UPDATE);
+		remaining.removeIf(entry -> entry.getPages().length!=1||!(entry.getPages()[0] instanceof IIManualPageFolder));
+
+		//Well, one way or another...
+		for(ManualEntry folder : remaining)
+			manual.manualContents.remove(ManualHelper.CAT_UPDATE, folder);
+	}
+
 	protected final IIManualEntry addEntry(String name)
 	{
+		IIManualPageFolder folder = createSubFolder(name, null);
 		IIManualEntry entry = new IIManualEntry(name, getCategory());
-		ManualHelper.getManual().manualContents.put(getCategory(), entry);
+
+		if(folder==null)
+			ManualHelper.getManual().manualContents.put(getCategory(), entry);
+		else
+			folder.addEntry(entry);
+
 		return entry;
+	}
+
+	@Nullable
+	private IIManualPageFolder createSubFolder(String fileName, @Nullable IIManualPageFolder folder)
+	{
+		//No folders or last folder
+		if(!fileName.contains("/"))
+			return folder;
+
+		int i = fileName.indexOf("/");
+		String folderName = fileName.substring(0, i);
+		String remaining = fileName.substring(i+1);
+
+		//Checking in root directory
+		if(folder==null)
+		{
+			List<ManualEntry> entries = ManualHelper.getManual().manualContents.get(folderName);
+			if(!entries.isEmpty())
+			{
+				IManualPage[] pages = entries.get(0).getPages();
+				if(pages.length > 0&&pages[0] instanceof IIManualPageFolder)
+					folder = ((IIManualPageFolder)pages[0]);
+			}
+			else
+				folder = new IIManualPageFolder(ManualHelper.getManual(), folderName, getCategory());
+
+			return createSubFolder(remaining, folder);
+		}
+
+		//Add the folder to root
+		return createSubFolder(remaining, folder.getOrCreateSubFolder(folderName));
 	}
 
 	protected final EasyNBT getSourceForItem(ItemStack stack)

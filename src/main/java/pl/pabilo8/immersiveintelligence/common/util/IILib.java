@@ -51,6 +51,10 @@ public class IILib
 	//Sounds
 	public static final ResLoc RES_SOUND = ResLoc.of(RES_II, "sounds/");
 
+	public static final ResLoc RES_TEXTURES = ResLoc.of(RES_II, "textures/");
+	public static final ResLoc RES_TEXTURES_GUI = ResLoc.of(RES_TEXTURES, "gui");
+	public static final ResLoc RES_TEXTURES_MANUAL = ResLoc.of(RES_TEXTURES, "gui/manual/");
+
 	//--- Paths ---//
 	public static final String SKIN_LOCATION = "immersiveintelligence:textures/skins/";
 

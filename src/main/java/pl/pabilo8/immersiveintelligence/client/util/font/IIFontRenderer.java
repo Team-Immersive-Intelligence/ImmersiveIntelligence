@@ -50,6 +50,9 @@ public class IIFontRenderer extends FontRenderer
 		unicodeReplacements.put('\u29b1', new CharReplacement(1, 2)); //proximity
 		unicodeReplacements.put('\u29b2', new CharReplacement(2, 2)); //timed
 
+		//Manual Directory Symbol
+		unicodeReplacements.put('\u2348', new CharReplacement(2, 3)); //folder
+
 		//Weapon Classes
 		unicodeReplacements.put('\u24b6', new CharReplacement(0, 3)); //mg
 		unicodeReplacements.put('\u24b7', new CharReplacement(1, 3)); //smg

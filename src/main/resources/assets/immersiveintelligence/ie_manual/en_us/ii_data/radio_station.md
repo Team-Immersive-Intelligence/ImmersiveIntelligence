@@ -3,6 +3,7 @@ Radio Station
 The Wireless Wire™
 
 # 0
+@hammer_electric;level_circuits
 |[multiblock]{mb:"II:RadioStation"}|
 The Radio Station is a device for sending and receiving data wirelessly.
 Radio stations can only communicate when they are in range (which is **lower** in bad weather), work on the same frequency and when both towers are given enough electrical energy.

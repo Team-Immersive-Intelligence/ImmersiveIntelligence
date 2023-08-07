@@ -187,6 +187,14 @@ public class IIRecipes
 					new ItemStack(IEContent.blockStoneDecoration, 2, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()),
 					"plateCopper"
 			);
+
+			/*BlueprintCraftingRecipe.addRecipe("basic_circuits",
+					IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_RAW, 3),
+					new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()),
+					"plateCopper",
+					"templateCircuit"
+			);*/
+
 			BlueprintCraftingRecipe.addRecipe("basic_circuits", BASIC_CIRCUIT,
 					"circuitBasicEtched",
 					new IngredientStack("chipBasic", 2)

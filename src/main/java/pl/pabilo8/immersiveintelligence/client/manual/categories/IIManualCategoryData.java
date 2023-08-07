@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
-import blusunrize.immersiveengineering.common.util.compat.crafttweaker.Blueprint;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualEntry;
@@ -134,7 +132,8 @@ public class IIManualCategoryData extends IIManualCategory
 				));
 		for(Circuits circuit : Circuits.values())
 			functionalCircuits.addSource(circuit.getName(), getSourceForItem(IIContent.itemCircuit.getStack(circuit)));
-
+		//TODO: 08.08.2023 Perhaps more automation?
+		addEntry("functions/arithmetic");
 
 		addEntry("redstone_interface");
 
@@ -148,6 +147,7 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("chemical_painter");
 		addEntry("electrolyzer");
 		addEntry("precision_assembler");
+		addEntry("folder/device/sekritdokuments/data_pol");
 
 		/*ManualHelper.addEntry("data_main", getCategory(),
 				new ManualPages.Text(ManualHelper.getManual(), "data_main0"),

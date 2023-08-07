@@ -55,11 +55,11 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "punchtapeEmpty")
 		PUNCHTAPE_EMPTY,
 
-		@IIItemProperties(oreDict = {"materialRDX","materialHexogen"})
+		@IIItemProperties(oreDict = {"materialRDX", "materialHexogen"})
 		DUST_RDX,
-		@IIItemProperties(oreDict = {"materialHMX","materialOctogen"})
+		@IIItemProperties(oreDict = {"materialHMX", "materialOctogen"})
 		DUST_HMX,
-		@IIItemProperties(oreDict = {"dustWhitePhosphorus","whitePhosphorus"})
+		@IIItemProperties(oreDict = {"dustWhitePhosphorus", "whitePhosphorus"})
 		WHITE_PHOSPHORUS,
 		@IIItemProperties(oreDict = "dustSalt")
 		DUST_SALT,
@@ -79,7 +79,7 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		PULP_WOOD,
 		@IIItemProperties(oreDict = "pulpWoodTreated")
 		PULP_WOOD_TREATED,
-		@IIItemProperties(oreDict = {"leather","leatherArtificial"})
+		@IIItemProperties(oreDict = {"leather", "leatherArtificial"})
 		ARTIFICIAL_LEATHER,
 
 		@IIItemProperties(oreDict = "rubberRaw")

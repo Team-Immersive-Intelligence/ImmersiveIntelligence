@@ -9,6 +9,7 @@ import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiButtonManual;
 import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -18,8 +19,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject.ManualObjectInfo;
 import pl.pabilo8.immersiveintelligence.client.manual.objects.*;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nullable;
@@ -57,6 +62,7 @@ public class IIManualPage extends ManualPages
 
 
 	private final ArrayList<IIManualObject> manualObjects = new ArrayList<>();
+	private final ArrayList<PageTraits> traits = new ArrayList<>();
 
 	static
 	{
@@ -66,15 +72,21 @@ public class IIManualPage extends ManualPages
 		registeredObjects.put("scenario", IIManualScenario::new);
 		//registeredObjects.put("chart", IIManualChart::new);
 
+		registeredObjects.put("hr", IIManualHorizontalLine::new);
+
 		registeredObjects.put("multiblock", IIManualMultiblock::new);
 		registeredObjects.put("crafting", IIManualCraftingRecipe::new);
 		registeredObjects.put("blueprint", IIManualBlueprint::new);
+		//TODO: 07.08.2023 Machine recipes
 		//registeredObjects.put("machine_recipe", IIManualMachineRecipe::new);
 
 		registeredObjects.put("item_display", IIManualItemDisplay::new);
+		registeredObjects.put("upgrade_display", IIManualUpgradeDisplay::new);
+
 		registeredObjects.put("datatype", IIManualDataType::new);
 		registeredObjects.put("data_packet", IIManualDataPacket::new);
-		registeredObjects.put("upgrade_display", IIManualUpgradeDisplay::new);
+		registeredObjects.put("data_variable", IIManualDataVariable::new);
+		registeredObjects.put("data_callback", IIManualDataCallback::new);
 	}
 
 	private IIManualEntry entry;
@@ -106,6 +118,9 @@ public class IIManualPage extends ManualPages
 
 		if(file!=null&&!file.isEmpty())
 		{
+			//load traits from the first line
+			file = addTraits(file);
+
 			//turn markdown into IE tags
 
 			//object
@@ -136,6 +151,23 @@ public class IIManualPage extends ManualPages
 		}
 	}
 
+	private String addTraits(String file)
+	{
+		traits.clear();
+		if(!file.startsWith("@"))
+			return file;
+		int endIndex = file.indexOf("\n");
+
+		for(String trait : file.substring(file.indexOf("@")+1, endIndex).split(";"))
+		{
+			PageTraits found = PageTraits.find(trait.trim());
+			if(found!=null)
+				traits.add(found);
+		}
+
+		return file.substring(endIndex);
+	}
+
 	private String addLinks(String file)
 	{
 		return matchReplace(patternLink, file, (stringBuilder, matcher) ->
@@ -154,7 +186,7 @@ public class IIManualPage extends ManualPages
 							List<ManualEntry> manualEntries = manual.manualContents.values().stream()
 									.filter(me -> me.getName().equals(split[0]))
 									.collect(Collectors.toList());
-							if(manualEntries.size() > 0)
+							if(!manualEntries.isEmpty())
 							{
 								IManualPage[] pages = manualEntries.get(0).getPages();
 								link = split[0];
@@ -201,6 +233,16 @@ public class IIManualPage extends ManualPages
 			ManualUtils.drawSplitString(manual.fontRenderer, localizedText, x, y, WIDTH, manual.getTextColour());
 
 		GlStateManager.enableBlend();
+
+		GlStateManager.pushMatrix();
+		GlStateManager.color(1, 1, 1, 0.25f);
+		for(int i = 0, traitsSize = traits.size(); i < traitsSize; i++)
+		{
+			IIClientUtils.bindTexture(traits.get(i).textureLocation);
+			Gui.drawModalRectWithCustomSizedTexture(x+100, y+(i*18), 0, 0, 16, 16, 16, 16);
+		}
+		GlStateManager.color(1, 1, 1, 1f);
+		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
 		for(IIManualObject object : manualObjects)
@@ -361,7 +403,39 @@ public class IIManualPage extends ManualPages
 				RenderHelper.enableGUIStandardItemLighting();
 			}
 		}
+	}
 
+	private enum PageTraits implements ISerializableEnum
+	{
+		//Indicates game progression suggested for contents of this page
+		LEVEL_BEGINNER, //starter
+		LEVEL_EARLY_INDUSTRIAL, //after coke oven; rotary machines
+		LEVEL_INDUSTRIAL, //first energy powered machines
+		LEVEL_ADVANCED_INDUSTRIAL, //blast furnace and steel
+		LEVEL_CIRCUITS, //after arc furnace; basic and advanced circuits
+		LEVEL_COMPUTER, //computers
 
+		//Multiblocks
+		HAMMER,
+		HAMMER_ELECTRIC,
+
+		//Traits
+		UPGRADABLE, //Machine can be upgraded
+		REPAIRABLE, //Machine has hitpoints and could require repair
+		DECORATIONS, //Machine can be decorated
+		PAINTABLE //Machine can be painted (skinned) in a pattern or color
+		;
+
+		private final ResLoc textureLocation;
+
+		PageTraits()
+		{
+			this.textureLocation = ResLoc.of(IILib.RES_TEXTURES_MANUAL, "traits/", getName()).withExtension(ResLoc.EXT_PNG);
+		}
+
+		public static PageTraits find(String name)
+		{
+			return Arrays.stream(values()).filter(p -> p.getName().equals(name)).findFirst().orElse(null);
+		}
 	}
 }
