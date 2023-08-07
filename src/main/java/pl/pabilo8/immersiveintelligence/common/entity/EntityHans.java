@@ -144,6 +144,14 @@ public class EntityHans extends EntityCreature implements INpc
 	public void onUpdate()
 	{
 		super.onUpdate();
+
+		tasks.taskEntries.removeIf(entry -> entry.action instanceof AIHansBase&&((AIHansBase)entry.action).shouldBeRemoved());
+		for(EntityAITaskEntry entry : tasks.taskEntries)
+		{
+			if(entry.action instanceof AIHansBase)
+				((AIHansBase)entry.action).setRequiredAnimation();
+		}
+		
 		if(world.isRemote)
 		{
 			if(dataManager.isDirty())
@@ -207,13 +215,6 @@ public class EntityHans extends EntityCreature implements INpc
 			legAnimation = isInWater()?HansLegAnimation.SWIMMING: HansLegAnimation.STANDING;
 			armAnimation = HansArmAnimation.NORMAL;
 
-			tasks.taskEntries.removeIf(entry -> entry.action instanceof AIHansBase&&((AIHansBase)entry.action).shouldBeRemoved());
-			for(EntityAITaskEntry entry : tasks.taskEntries)
-			{
-				if(entry.action instanceof AIHansBase)
-					((AIHansBase)entry.action).setRequiredAnimation();
-			}
-
 			if(currentLeg!=legAnimation)
 			{
 				this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(getWalkSpeed());
@@ -223,9 +224,7 @@ public class EntityHans extends EntityCreature implements INpc
 			//dataManager.set(DATA_MARKER_ARM_ANIMATION, HansArmAnimation.NORMAL.name().toLowerCase());
 
 			if(currentArm!=armAnimation)
-			{
 				dataManager.set(DATA_MARKER_ARM_ANIMATION, armAnimation.name().toLowerCase());
-			}
 
 		}
 

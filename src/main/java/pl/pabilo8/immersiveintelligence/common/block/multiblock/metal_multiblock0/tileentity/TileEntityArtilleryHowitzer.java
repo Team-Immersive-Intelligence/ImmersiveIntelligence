@@ -7,10 +7,13 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -28,21 +31,24 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
+import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
+import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTTagCollector;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,48 +96,41 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	private static final IISoundAnimation unloadingSoundAnimation;
 	private static final IISoundAnimation firingSoundAnimation;
 
+	@SideOnly(Side.CLIENT)
+	private ConditionCompoundSound soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
+
 	static
 	{
 		loadingSoundAnimation = new IISoundAnimation(18);
 		unloadingSoundAnimation = new IISoundAnimation(18);
 		firingSoundAnimation = new IISoundAnimation(15.96);
 
+		//TODO: 21.04.2023 do it properly
 		loadingSoundAnimation
-				.withSound(0.64, IISounds.metalBreadboxOpen)
-				.withSound(0.84, IISounds.howitzerDoorOpen)
-				.withSound(1.88, IISounds.howitzerDoorOpen)
-				.withSound(2.76, IISounds.howitzerDoorOpen)
-				.withSound(3.68, IISounds.howitzerDoorClose)
+				.withRepeatedSound(0.64, 3.6, IISounds.slidingDoorOpenM)
+
 				.withSound(4.36, IISounds.metalLockerOpen)
-				.withSound(5.0, IISounds.chain)
-				.withSound(6.12, IISounds.metalBreadboxOpen)
-				.withSound(8.24, IISounds.metalBreadboxClose)
-				.withSound(8.4, IISounds.artilleryShellPut)
+				.withRepeatedSound(5.0, 11.28, IISounds.chainM)
+
+				.withSound(8.4, IISounds.artilleryShellPlace)
+				.withSound(9, SoundEvents.ENTITY_MINECART_RIDING)
 				.withSound(8.92, IISounds.howitzerPlatformStart)
-				.withSound(9.04, IISounds.chain)
-				.withSound(11.28, IISounds.metalBreadboxOpen)
+
 				.withSound(11.52, IISounds.metalLockerClose)
-				.withSound(11.96, IISounds.inserterForward)
-				.withSound(12.44, IISounds.inserterForward)
-				.withSound(12.8, IISounds.inserterForward)
-				.withSound(13.2, IISounds.inserterForward)
-				.withSound(13.24, IISounds.howitzerDoorOpen)
+
+				.withRepeatedSound(11.96, 13.24, IISounds.inserterYawM)
 				.withSound(13.96, IISounds.artilleryShellPick)
-				.withSound(14.24, IISounds.inserterForward)
-				.withSound(14.72, IISounds.inserterForward)
-				.withSound(14.96, IISounds.howitzerPlatformStart)
-				.withSound(15.12, IISounds.inserterForward)
-				.withSound(15.56, IISounds.inserterForward)
-				.withSound(15.96, IISounds.inserterForward)
-				.withSound(16.36, IISounds.artilleryShellPut)
-				.withSound(16.44, IISounds.inserterForward)
-				.withSound(16.68, IISounds.inserterForward)
-				.withSound(17.0, IISounds.howitzerDoorClose)
-				.withSound(17.3, IISounds.metalLockerOpen)
+				.withSound(14, SoundEvents.ENTITY_MINECART_RIDING)
+				.withRepeatedSound(14.24, 14.96, IISounds.inserterPitchM)
+				.withRepeatedSound(15.12, 15.90, IISounds.inserterYawM)
+				.withSound(16.36, IISounds.artilleryShellPlace)
+				.withRepeatedSound(15.12, 16.68, IISounds.inserterPitchM)
+
+				.withRepeatedSound(17.0, 18.0, IISounds.slidingDoorCloseM)
 				.compile(ArtilleryHowitzer.loadRackTime);
 
 		firingSoundAnimation
-				.withSound(0.0, IISounds.metalBreadboxOpen)
+				/*.withSound(0.0, IISounds.metalBreadboxOpen)
 				.withSound(0.52, IISounds.inserterForward)
 				.withSound(1.0, IISounds.inserterForward)
 				.withSound(1.32, IISounds.inserterForward)
@@ -176,35 +175,30 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.withSound(14.76, IISounds.inserterBackward)
 				.withSound(15.24, IISounds.inserterBackward)
 				.withSound(15.6, IISounds.inserterBackward)
-				.withSound(15.72, IISounds.metalBreadboxOpen)
+				.withSound(15.72, IISounds.metalBreadboxOpen)*/
 				.compile(ArtilleryHowitzer.gunFireTime);
 
 		unloadingSoundAnimation
-				.withSound(0.0, IISounds.inserterForward)
-				.withSound(0.04, IISounds.metalBreadboxOpen)
-				.withSound(0.36, IISounds.howitzerDoorOpen)
-				.withSound(0.48, IISounds.inserterForward)
-				.withSound(0.96, IISounds.inserterForward)
-				.withSound(1.24, IISounds.metalBreadboxClose)
+				.withRepeatedSound(0.04, 1.24, IISounds.inserterYawM)
+
+				.withRepeatedSound(0.36, 1, IISounds.slidingDoorCloseM)
+
 				.withSound(1.36, IISounds.artilleryShellPick)
-				.withSound(1.44, IISounds.inserterForward)
-				.withSound(1.92, IISounds.inserterForward)
-				.withSound(2.36, IISounds.inserterForward)
-				.withSound(2.84, IISounds.inserterForward)
-				.withSound(3.32, IISounds.inserterForward)
-				.withSound(3.8, IISounds.inserterForward)
-				.withSound(4.0, IISounds.artilleryShellPut)
-				.withSound(4.28, IISounds.inserterForward)
-				.withSound(4.72, IISounds.inserterForward)
-				.withSound(5.16, IISounds.inserterForward)
-				.withSound(5.6, IISounds.inserterForward)
-				.withSound(5.76, IISounds.metalBreadboxClose)
+				.withSound(2, SoundEvents.ENTITY_MINECART_RIDING)
+
+				.withRepeatedSound(1.44, 3.8, IISounds.inserterYawM)
+				.withSound(4.0, IISounds.artilleryShellPlace)
+				.withSound(4.5, SoundEvents.ENTITY_MINECART_RIDING)
+
+
+				.withRepeatedSound(4.28, 5.8, IISounds.inserterYawM)
+
 				.withSound(5.92, IISounds.metalLockerOpen)
-				.withSound(6.6, IISounds.chain)
-				.withSound(8.08, IISounds.howitzerDoorClose)
-				.withSound(9.28, IISounds.metalBreadboxClose)
-				.withSound(10.32, IISounds.howitzerDoorClose)
+				.withRepeatedSound(6.6, 9.28, IISounds.chainM)
+				.withSound(8, IISounds.artilleryShellPick)
 				.withSound(12.44, IISounds.metalLockerClose)
+
+				.withRepeatedSound(8.08, 10.5, IISounds.slidingDoorCloseM)
 				.compile(ArtilleryHowitzer.loadRackTime);
 	}
 
@@ -224,6 +218,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	public NonNullList<ItemStack> loadedShells;
 	public IItemHandler inventoryHandler, insertionHandler;
 
+	@SideOnly(Side.CLIENT)
+	private final List<TimedCompoundSound> soundsList = new ArrayList<>();
+
 
 	public TileEntityArtilleryHowitzer()
 	{
@@ -237,7 +234,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		inventoryHandler = new IEInventoryHandler(inventory.size(), this, 0, true, true);
 		insertionHandler = new IEInventoryHandler(1, this, 0, true, false);
 	}
-
 
 	@Override
 	public void onUpdate()
@@ -426,7 +422,11 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			Vec3d gun_end_particle = gunVec.scale(4.5);
 			ParticleUtils.spawnGunfireFX(getGunPosition().add(gun_end_particle), gunVec, 8f);
 		}
-		world.playSound(null, getPos(), IISounds.howitzerShot, SoundCategory.BLOCKS, 1, 1);
+
+		IIPacketHandler.playRangedSound(world, gunEnd,
+				IISounds.howitzerShot, SoundCategory.PLAYERS, 155, 1.5f,
+				1.25f+(float)(Utils.RAND.nextGaussian()*0.02)
+		);
 
 		if(!world.isRemote)
 		{
@@ -648,21 +648,12 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 		if(current!=null)
 		{
-			SoundEvent[] sounds = current.getSounds(animationTime);
-			if(sounds!=null)
-				for(SoundEvent sound : sounds)
-				{
-					Vec3d vv = new Vec3d(getBlockPosForPos(202)).addVector(
-							Utils.RAND.nextFloat(),
-							Utils.RAND.nextFloat(),
-							Utils.RAND.nextFloat()
-					);
-					world.playSound(ClientUtils.mc().player, vv.x, vv.y, vv.z, sound, SoundCategory.BLOCKS, .75f, 1);
-				}
-
+			BlockPos soundPos = getBlockPosForPos(202);
+			current.handleSounds(soundsList, soundPos, animationTime, .75f);
 		}
 	}
 
+	//TODO: 15.05.2023 rework
 	//for handling repeated sounds
 	@SideOnly(Side.CLIENT)
 	private void handleSounds()
@@ -673,37 +664,45 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		boolean platformOK = animation==ArtilleryHowitzerAnimation.STOP||platformTime==(platformPosition?ArtilleryHowitzer.platformTime: 0);
 		boolean yawOK = turretYaw==MathHelper.wrapDegrees(plannedYaw);
 		boolean pitchOK = turretPitch==plannedPitch;
-		if(platformOK)
-		{
-			if(!yawOK)
-			{
-				if(world.getTotalWorldTime()%20==0)
-					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzerRotationV, SoundCategory.BLOCKS, .5f, 1);
-			}
-			else if(!pitchOK)
-				if(world.getTotalWorldTime()%20==0)
-					world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), IISounds.howitzerRotationH, SoundCategory.BLOCKS, .5f, 1);
-		}
-		else if(hasEnergy)
-		{
-			boolean isStart = platformTime==1, isFinish = platformTime==ArtilleryHowitzer.platformTime-1;
-			if(platformPosition?isStart: isFinish)
-				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).down(), IISounds.howitzerPlatformStart, SoundCategory.BLOCKS, .5f, 1);
-			if(platformPosition?isFinish: isStart)
-				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).down(), IISounds.howitzerPlatformEnd, SoundCategory.BLOCKS, .5f, 1);
 
-			if(world.getTotalWorldTime()%20==0)
-				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525), platformPosition?IISounds.howitzerPlatformRaise: IISounds.howitzerPlatformLower, SoundCategory.BLOCKS, .5f, 1);
+		Vec3d posDoor = new Vec3d(getBlockPosForPos(525));
+		soundDoorOpen = playRepeatedSound(soundDoorOpen, IISounds.slidingDoorOpenM, posDoor, .5f, 1f,
+				hasEnergy&&isDoorOpened&&doorTime < ArtilleryHowitzer.doorTime
+		);
+		soundDoorClose = playRepeatedSound(soundDoorClose, IISounds.slidingDoorCloseM, posDoor, .5f, 1f,
+				hasEnergy&&!isDoorOpened&&doorTime > 0
+		);
+
+		soundRotationH = playRepeatedSound(soundRotationH, IISounds.turntableHeavyForwardM, posDoor, .5f, 1f,
+				hasEnergy&&platformOK&&!yawOK
+		);
+		soundRotationV = playRepeatedSound(soundRotationV, IISounds.electricMotorHeavyForwardM, posDoor, .5f, 1f,
+				hasEnergy&&platformOK&&!pitchOK
+		);
+
+		/*soundRotationV = playRepeatedSound(soundRotationV, IISounds.howitzerPlatformLower, posDoor, .5f, 1f,
+				hasEnergy&&platformOK&&!pitchOK
+		);*/
+
+		//TODO: 16.05.2023 platform lowering
+
+	}
+
+	private ConditionCompoundSound playRepeatedSound(ConditionCompoundSound current, MultiSound sound, Vec3d pos, float volume, float pitch, boolean condition)
+	{
+		if(!condition)
+		{
+			if(current!=null)
+				current.forceStop();
+			return null;
 		}
 
-		if(isDoorOpened&&doorTime < ArtilleryHowitzer.doorTime)
+		if(current==null)
 		{
-			if(hasActiveEnergy&&world.getTotalWorldTime()%20==0)
-				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzerDoorOpen, SoundCategory.BLOCKS, .5f, 1);
+			current = new ConditionCompoundSound(sound, SoundCategory.BLOCKS, pos, volume, pitch, () -> true);
+			ClientUtils.mc().getSoundHandler().playSound(current);
 		}
-		else if(!isDoorOpened&&doorTime > 0)
-			if(hasActiveEnergy&&world.getTotalWorldTime()%20==0)
-				world.playSound(ClientUtils.mc().player, getBlockPosForPos(525).up(), IISounds.howitzerDoorClose, SoundCategory.BLOCKS, .5f, 1);
+		return current;
 	}
 
 	@Nonnull
@@ -781,9 +780,9 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 						{
 							float vOffset = 0, hOffset = 0;
 							if(packet.hasVariable('v')) //v - vertical
-								vOffset = packet.getVarInType(IDataTypeNumeric.class,packet.getPacketVariable('v')).floatValue();
+								vOffset = packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('v')).floatValue();
 							if(packet.hasVariable('h')) //h - horizontal
-								hOffset = packet.getVarInType(IDataTypeNumeric.class,packet.getPacketVariable('v')).floatValue();
+								hOffset = packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('v')).floatValue();
 
 							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE1, plannedPitch-vOffset, plannedYaw-hOffset));
 							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE2, plannedPitch+vOffset, plannedYaw+hOffset));
@@ -1079,20 +1078,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 						list.add(AABB_EMPTY.offset(getPos()));
 						break;
 				}
-				break;
-			//ladder
-			case 66:
-			case 147:
-			case 228:
-			case 309:
-			case 390:
-			case 471:
-				//shell input
-			case 410:
-				list.add(AABB_LADDER[facing.getIndex()-2].offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				break;
-			default:
-				list.add(AABB_FULL.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 				break;
 		}
 

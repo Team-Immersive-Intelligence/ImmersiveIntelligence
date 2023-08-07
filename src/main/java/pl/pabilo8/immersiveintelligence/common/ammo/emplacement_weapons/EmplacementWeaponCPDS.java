@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon.EmplacementHitboxEntity;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,8 +125,12 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 			s2 = magazine.size() > 0?magazine.removeFirst(): ItemStack.EMPTY;
 			if(!s2.isEmpty())
 			{
-				te.getWorld().playSound(null, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), IISounds.autocannonFiring, SoundCategory.PLAYERS, 2f, 1.25f);
-				EntityBullet a = AmmoUtils.createBullet(te.getWorld(), s2, te.getWeaponCenter(), vv.scale(-1f), 3f);
+				Vec3d weaponCenter = te.getWeaponCenter();
+				IIPacketHandler.playRangedSound(te.getWorld(), weaponCenter,
+						IISounds.autocannonShot, SoundCategory.PLAYERS, 65, 1.5f,
+						1.25f+(float)(Utils.RAND.nextGaussian()*0.02)
+				);
+				EntityBullet a = AmmoUtils.createBullet(te.getWorld(), s2, weaponCenter, vv.scale(-1f), 3f);
 				a.setShootPos(te.getAllBlocks());
 				if(entity!=null)
 					a.setShooters(entity, entity.partArray);

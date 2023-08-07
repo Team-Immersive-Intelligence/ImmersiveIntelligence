@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.util.carversound;
 
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,7 +43,12 @@ public class ConditionCompoundSound extends CompoundSound
 		if(initialTick)
 		{
 			playBeginSound();
-			initialTick=false;
+			initialTick = false;
 		}
+	}
+
+	public void forceStop()
+	{
+		this.forceStop = true;
 	}
 }

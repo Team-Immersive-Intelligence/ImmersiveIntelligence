@@ -20,7 +20,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageExplosion;
 
@@ -33,12 +32,28 @@ import java.util.Set;
  */
 public class IIExplosion extends Explosion
 {
+	/**
+	 * The loss of energy for a explosion line trace
+	 */
+	private static final float LOSS = 0.3F*0.75F*5;
 	private final float power;
+	private final boolean doDrops;
 
-	public IIExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, float power, boolean flaming, boolean damagesTerrain)
+	public IIExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, float power, boolean flaming, boolean damagesTerrain, boolean doDrops)
 	{
 		super(worldIn, entityIn, x, y, z, size, flaming, damagesTerrain);
 		this.power = power;
+		this.doDrops = doDrops;
+	}
+
+	public IIExplosion(World worldIn, Entity entityIn, double x, double y, double z, float size, float power, boolean flaming, boolean damagesTerrain)
+	{
+		this(worldIn, entityIn, x, y, z, size, power, flaming, damagesTerrain, true);
+	}
+
+	public IIExplosion(World worldIn, Entity entityIn, Vec3d pos, float size, float power, boolean flaming, boolean damagesTerrain, boolean doDrops)
+	{
+		this(worldIn, entityIn, pos.x, pos.y, pos.z, size, power, flaming, damagesTerrain, doDrops);
 	}
 
 	public IIExplosion(World worldIn, Entity entityIn, Vec3d pos, float size, float power, boolean flaming, boolean damagesTerrain)
@@ -62,7 +77,6 @@ public class IIExplosion extends Explosion
 		Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
 
 		for(Entity entity : list)
-		{
 			if(!entity.isDead&&!entity.isImmuneToExplosions())
 			{
 				double d12 = entity.getDistance(this.x, this.y, this.z)/(double)f3;
@@ -85,9 +99,7 @@ public class IIExplosion extends Explosion
 						double d11 = d10;
 
 						if(entity instanceof EntityLivingBase)
-						{
 							d11 = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, d10);
-						}
 
 						entity.motionX += d5*d11;
 						entity.motionY += d7*d11;
@@ -98,65 +110,84 @@ public class IIExplosion extends Explosion
 							EntityPlayer entityplayer = (EntityPlayer)entity;
 
 							if(!entityplayer.isSpectator()&&(!entityplayer.isCreative()||!entityplayer.capabilities.isFlying))
-							{
 								this.playerKnockbackMap.put(entityplayer, new Vec3d(d5*d10, d7*d10, d9*d10));
-							}
 						}
 					}
 				}
 			}
-		}
 	}
 
+	/**
+	 * Based on ICBM Classic explosion code.<br>
+	 * Huge thanks to DarkGuardsman ^^
+	 *
+	 * @return set of positions to be affected by explosion
+	 */
 	public Set<BlockPos> generateAffectedBlockPositions()
 	{
+		float power, yaw, pitch;
 		Set<BlockPos> set = Sets.newHashSet();
 
-		for(int j = 0; j < 16; ++j)
-		{
-			for(int k = 0; k < 16; ++k)
+		//Steps per rotation
+		final int steps = MathHelper.ceil(Math.PI*size);
+		//Block center, currently scanned position, scan direction
+		Vec3d center = getPosition(), current, direction;
+
+
+		final int lineDensityScale = 2;
+		for(int yawSlices = 0; yawSlices < lineDensityScale*steps; yawSlices++)
+			for(int pitchSlice = 0; pitchSlice < steps; pitchSlice++)
 			{
-				for(int l = 0; l < 16; ++l)
+				//Calculate power
+				power = this.power-(this.size*world.rand.nextFloat()/2);
+				//Get angles for rotation steps
+				yaw = (float)((Math.PI/steps)*yawSlices);
+				pitch = (float)((Math.PI/steps)*pitchSlice);
+
+				//Figure out vector to move for trace (cut in half to improve trace skipping blocks)
+				direction = new Vec3d(
+						MathHelper.sin(pitch)*MathHelper.cos(yaw)*0.5,
+						MathHelper.cos(pitch)*0.5,
+						MathHelper.sin(pitch)*MathHelper.sin(yaw)*0.5
+				);
+
+				//Revert position to explosion center
+				current = center;
+
+				//Trace from start to end
+				while(center.distanceTo(current) <= size&&power > 0)
 				{
-					if(j==0||j==15||k==0||k==15||l==0||l==15)
+					//Consume power per loop
+					power -= LOSS;
+
+					//Convert double position to int position as block pos
+					final BlockPos pos = new BlockPos(MathHelper.floor(current.x), MathHelper.floor(current.y), MathHelper.floor(current.z));
+
+					//Stops from scanning the same position twice
+					if(!set.contains(pos))
 					{
-						double d0 = (float)j/15.0F*2.0F-1.0F;
-						double d1 = (float)k/15.0F*2.0F-1.0F;
-						double d2 = (float)l/15.0F*2.0F-1.0F;
-						double d3 = Math.sqrt(d0*d0+d1*d1+d2*d2);
-						d0 = d0/d3;
-						d1 = d1/d3;
-						d2 = d2/d3;
-						float f = this.size*(0.7F+this.world.rand.nextFloat()*0.6F);
-						double d4 = this.x;
-						double d6 = this.y;
-						double d8 = this.z;
+						//Cannot destroy unloaded blocks
+						if(!world.isBlockLoaded(pos))
+							continue;
 
-						while(f > 0.0F)
+						//Get block state and block from position
+						final IBlockState state = world.getBlockState(pos);
+						final Block block = state.getBlock();
+
+						//Ignore air blocks && Only break block that can be broken
+						if(!block.isAir(state, world, pos)&&state.getBlockHardness(world, pos) >= 0)
 						{
-							BlockPos blockpos = new BlockPos(d4, d6, d8);
-							IBlockState iblockstate = this.world.getBlockState(blockpos);
-
-							if(iblockstate.getMaterial()!=Material.AIR)
-							{
-								float f2 = this.exploder!=null?this.exploder.getExplosionResistance(this, this.world, blockpos, iblockstate): iblockstate.getBlock().getExplosionResistance(world, blockpos, null, this);
-								f -= (f2+0.3F)*0.3F;
-
-								if(f > 0.0F&&(this.exploder==null||this.exploder.canExplosionDestroyBlock(this, this.world, blockpos, iblockstate, f)))
-								{
-									set.add(blockpos);
-								}
-
-							}
-							d4 += d0*0.30000001192092896D;
-							d6 += d1*0.30000001192092896D;
-							d8 += d2*0.30000001192092896D;
-							f -= 1;
+							//Check if block can be destroyed
+							if(power > 0.0F&&(this.exploder==null||this.exploder.canExplosionDestroyBlock(this, this.world, pos, state, power)))
+								set.add(pos);
 						}
 					}
+
+					//Move forward
+					current = current.add(direction);
 				}
 			}
-		}
+
 		return set;
 	}
 
@@ -164,20 +195,15 @@ public class IIExplosion extends Explosion
 	public void doExplosionB(boolean spawnParticles)
 	{
 		float pitch = (1.0F+(Utils.RAND.nextFloat()-Utils.RAND.nextFloat())*0.2F)*0.7F;
-		if(causesFire)
-		{
-			this.world.playSound(this.x, this.y, this.z, IISounds.explosionIncendiaryHigh, SoundCategory.NEUTRAL, 4.0F+size, pitch, true);
-			this.world.playSound(this.x, this.y, this.z, IISounds.explosionIncendiaryLow, SoundCategory.NEUTRAL, 12.0F+size, pitch, true);
-		}
-		else
-			this.world.playSound(this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 4.0F+size, pitch, true);
+		//play explosion sound
+		IIPacketHandler.playRangedSound(world, getPosition(),
+				causesFire?IISounds.explosionIncendiary: IISounds.explosion,
+				SoundCategory.NEUTRAL, (int)(72*size), 1f, pitch);
 
 		if(spawnParticles)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageExplosion(this.causesFire, this.damagesTerrain, this.size, this.power, getPosition()), IIUtils.targetPointFromPos(getPos(), world, (int)(64+size)));
-
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageExplosion(this.causesFire, this.damagesTerrain, this.size, this.power, getPosition()), IIPacketHandler.targetPointFromPos(getPos(), world, (int)(64+size)));
 
 		if(this.damagesTerrain)
-		{
 			for(BlockPos blockpos : this.affectedBlockPositions)
 			{
 				IBlockState iblockstate = this.world.getBlockState(blockpos);
@@ -185,26 +211,32 @@ public class IIExplosion extends Explosion
 
 				if(iblockstate.getMaterial()!=Material.AIR)
 				{
-					if(block.canDropFromExplosion(this))
-					{
+					if(doDrops&&block.canDropFromExplosion(this))
 						block.dropBlockAsItemWithChance(this.world, blockpos, this.world.getBlockState(blockpos), 1.0F/this.size, 0);
-					}
 
 					block.onBlockExploded(this.world, blockpos, this);
 				}
 			}
-		}
 
 		if(this.causesFire)
-		{
 			for(BlockPos blockpos1 : this.affectedBlockPositions)
-			{
 				if(this.world.getBlockState(blockpos1).getMaterial()==Material.AIR&&this.world.getBlockState(blockpos1.down()).isFullBlock()&&this.random.nextInt(3)==0)
-				{
 					this.world.setBlockState(blockpos1, Blocks.FIRE.getDefaultState());
-				}
-			}
+	}
+
+	public IIExplosion doExplosion()
+	{
+		return doExplosion(true);
+	}
+
+	public IIExplosion doExplosion(boolean spawnParticles)
+	{
+		if(!net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, this))
+		{
+			doExplosionA();
+			doExplosionB(spawnParticles);
 		}
+		return this;
 	}
 
 	private BlockPos getPos()

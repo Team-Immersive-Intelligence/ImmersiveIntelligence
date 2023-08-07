@@ -36,12 +36,8 @@ public class AmmoComponentRDX implements IAmmoComponent
 	@Override
 	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
-		IIExplosion e = new IIExplosion(world, null, pos.x, pos.y, pos.z, 10*amount, 8, false, true);
-		if(!net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, e))
-		{
-			e.doExplosionA();
-			e.doExplosionB(true);
-		}
+		new IIExplosion(world, null, pos.x, pos.y, pos.z, 9*amount, 8, false, true)
+				.doExplosion();
 	}
 
 	@Override

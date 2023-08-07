@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -36,6 +37,12 @@ public class ParticleRenderer
 
 	public void updateParticles()
 	{
+		if(ClientUtils.mc().world==null)
+		{
+			particles.clear();
+			return;
+		}
+
 		int count = 0;
 		// go through every particle indiscriminately
 		for(Queue<IIParticle> particleQueue : particles.values())
@@ -44,15 +51,11 @@ public class ParticleRenderer
 			{
 				// particles cost a lot less to update than to render so we can update more of them
 				if(++count > MAX_PARTICLES)
-				{
 					break;
-				}
 				IIParticle particle = iterator.next();
 				particle.onUpdate();
 				if(!particle.isAlive())
-				{
 					iterator.remove();
-				}
 			}
 		}
 	}

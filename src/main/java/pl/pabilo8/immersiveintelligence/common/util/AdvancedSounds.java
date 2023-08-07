@@ -6,6 +6,7 @@ import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -25,7 +26,11 @@ public class AdvancedSounds
 	public static class MultiSound
 	{
 		public final int id;
-		private final SoundEvent soundBegin, soundMid, soundEnd;
+		@Nullable
+		private final SoundEvent soundBegin, soundEnd;
+		@Nonnull
+		private final SoundEvent soundMid;
+
 
 		public MultiSound(SoundEvent soundBegin, SoundEvent soundMid, SoundEvent soundEnd)
 		{
@@ -37,16 +42,19 @@ public class AdvancedSounds
 			this.soundEnd = soundEnd;
 		}
 
+		@Nullable
 		public SoundEvent getSoundBegin()
 		{
 			return soundBegin;
 		}
 
+		@Nonnull
 		public SoundEvent getSoundMid()
 		{
 			return soundMid;
 		}
 
+		@Nullable
 		public SoundEvent getSoundEnd()
 		{
 			return soundEnd;

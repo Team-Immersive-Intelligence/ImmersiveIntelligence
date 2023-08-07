@@ -27,10 +27,13 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityAtomicBoom;
+import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
 
 import java.util.ArrayList;
 
@@ -62,19 +65,9 @@ public class AmmoComponentNuke implements IAmmoComponent
 	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
 		BlockPos ppos = new BlockPos(pos);
-		Explosion[] explosions = new Explosion[]{
-				new Explosion(world, null, pos.x, pos.y, pos.z, 32*amount, false, true),
-				new Explosion(world, null, pos.x+12, pos.y, pos.z+12, 32*amount, false, true),
-				new Explosion(world, null, pos.x-12, pos.y, pos.z+12, 32*amount, false, true),
-				new Explosion(world, null, pos.x-12, pos.y, pos.z-12, 32*amount, false, true),
-				new Explosion(world, null, pos.x+12, pos.y, pos.z-12, 32*amount, false, true)
-		};
-		for(Explosion e : explosions)
-			if(!net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, e))
-			{
-				e.doExplosionA();
-				e.doExplosionB(false);
-			}
+		new IIExplosion(world, null, pos, 56*amount, 60, false, true, false)
+				.doExplosion();
+
 		EntityLivingBase[] entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(75*amount)).toArray(new EntityLivingBase[0]);
 		for(EntityLivingBase e : entities)
 		{
@@ -86,12 +79,9 @@ public class AmmoComponentNuke implements IAmmoComponent
 		}
 		entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(ppos).grow(50*amount)).toArray(new EntityLivingBase[0]);
 		for(EntityLivingBase e : entities)
-		{
 			e.addPotionEffect(new PotionEffect(IIPotions.radiation, 4000, 0));
-		}
 
-		world.playSound(pos.x, pos.y, pos.z, IISounds.explosionNukeHigh, SoundCategory.NEUTRAL, 12.0F, 0f, true);
-		world.playSound(pos.x, pos.y, pos.z, IISounds.explosionNukeLow, SoundCategory.NEUTRAL, 64.0F, 0f, true);
+		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionNuke, SoundCategory.NEUTRAL, 72, 1f, 0f);
 
 		EntityAtomicBoom entityAtomicBoom = new EntityAtomicBoom(world, amount);
 		entityAtomicBoom.setPosition(pos.x, pos.y, pos.z);
@@ -99,7 +89,7 @@ public class AmmoComponentNuke implements IAmmoComponent
 
 
 		final int endRad = (int)(24*amount);
-		final int biome = Biome.getIdForBiome(IIContent.biomeWasteland);
+		final int biomeWasteland = Biome.getIdForBiome(IIContent.biomeWasteland);
 
 		int wastelandRadius = (int)(5*amount)*16; //16 blocks in chunk
 
@@ -115,20 +105,24 @@ public class AmmoComponentNuke implements IAmmoComponent
 		for(int i = -wastelandRadius; i <= wastelandRadius; i++)
 			for(int j = -wastelandRadius; j <= wastelandRadius; j++)
 			{
-				Chunk chunk = world.getChunkFromChunkCoords((ppos.getX()+i) >> 4, (ppos.getZ()+j) >> 4);
+				float dist = MathHelper.sqrt(i*i+j*j);
+				if(dist > wastelandRadius)
+					continue;
+
+				Chunk chunk = world.getChunkFromChunkCoords((ppos.getX()+i)>>4, (ppos.getZ()+j)>>4);
 				if(!radiatedChunks.contains(chunk))
 					radiatedChunks.add(chunk);
 
-				byte[] wasteland = chunk.getBiomeArray();
+				byte[] ground = chunk.getBiomeArray();
 
 				int posID = ((ppos.getZ()+j)&15)<<4|(ppos.getX()+i)&15;
-				int val = Math.max(Math.max(Math.abs(i), Math.abs(j))-(wastelandRadius-endRad), 0);
-				boolean result = MathHelper.getInt(Utils.RAND, 0, val)==0;
+				int val = (int)Math.max(dist-(wastelandRadius-endRad), 0);
+				boolean result = MathHelper.getInt(Utils.RAND, 0, val/2)==0;
 
 				//bloks[i+wastelandRadius][j+wastelandRadius] = result?' ': 'o';
-				wasteland[posID] = result?(byte)biome: wasteland[posID];
+				ground[posID] = result?(byte)biomeWasteland: ground[posID];
 
-				chunk.setBiomeArray(wasteland);
+				chunk.setBiomeArray(ground);
 				chunk.setModified(true);
 			}
 

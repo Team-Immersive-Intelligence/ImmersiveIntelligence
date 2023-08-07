@@ -40,6 +40,7 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 			Tuple<IBlockState, IBakedModel> model = IIAnimationUtils.getAnimationBakedModel(te);
 			if(model.getSecond() instanceof IESmartObjModel)
 			{
+				nullifyModels();
 				compileModels(model);
 				unCompiled = false;
 			}
@@ -85,8 +86,8 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 	protected final void mirrorRender()
 	{
 		GlStateManager.cullFace(CullFace.FRONT);
-		GlStateManager.scale(-1,1,1);
-		GlStateManager.translate(-1,0,0);
+		GlStateManager.scale(-1, 1, 1);
+		GlStateManager.translate(-1, 0, 0);
 	}
 
 	protected final void unMirrorRender()
@@ -98,7 +99,6 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 	public final void reloadModels()
 	{
 		unCompiled = true;
-		nullifyModels();
 	}
 
 	//--- abstract methods ---//

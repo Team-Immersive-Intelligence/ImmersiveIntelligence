@@ -11,7 +11,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockM
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +29,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
@@ -45,6 +43,8 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPrintingPress;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -152,7 +152,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 
 		if(world.isRemote)
 		{
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.printingPress, this, active, .5f, 1);
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.rolling, this, active, .5f, 1);
 			if(processTimeLeft > 0&&active)
 			{
 				processTimeLeft -= 1;
@@ -231,16 +231,14 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 			tag.setBoolean("active", active);
 		}
 
-		if(IIUtils.handleBucketTankInteraction(tanks, inventory, 2, 3, 0,false))
+		if(IIUtils.handleBucketTankInteraction(tanks, inventory, 2, 3, 0, false))
 		{
 			update = true;
 			tag.setTag("tank", tanks[0].writeToNBT(new NBTTagCompound()));
 		}
 
-		//this.markDirty();
-		//this.markContainingBlockForUpdate(null);
 		if(update)
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, tag));
 
 
 	}
@@ -662,7 +660,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 		{
 			list.add(new AxisAlignedBB(0, 0.8125, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 
-			switch(mirrored^pos==1?facing.getOpposite():facing)
+			switch(mirrored^pos==1?facing.getOpposite(): facing)
 			{
 				case NORTH:
 					list.add(new AxisAlignedBB(0.0625, 0, 0.0625, 0.25, 0.8125, 0.25).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
@@ -806,10 +804,7 @@ public class TileEntityPrintingPress extends TileEntityMultiblockMetal<TileEntit
 	public void onGuiOpened(EntityPlayer player, boolean clientside)
 	{
 		if(!clientside)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			ImmersiveEngineering.packetHandler.sendToAllAround(new MessageTileSync(this, tag), new TargetPoint(this.world.provider.getDimension(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 32));
-		}
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this));
 	}
 
 	@Override

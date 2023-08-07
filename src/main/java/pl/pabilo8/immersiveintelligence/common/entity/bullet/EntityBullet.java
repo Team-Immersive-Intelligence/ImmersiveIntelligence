@@ -80,6 +80,9 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 	//Additional motion variables, multiplied by force, that can decrease when the bullet hits an obstacle
 	public double baseMotionX = 0, baseMotionY = 0, baseMotionZ = 0;
 
+	//Whether the bullet has already played its flyby sound
+	boolean flybySound = false;
+
 	public double gravityMotionY = 0;
 
 	/*
@@ -211,6 +214,9 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 	{
 		onUpdateSuper();
 
+		if(isDead)
+			return;
+
 		if(!world.isRemote&&ticksExisted==1)
 		{
 			NBTTagCompound nbt = new NBTTagCompound();
@@ -233,17 +239,6 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 				return;
 			}
 		}
-
-		if(world.getTotalWorldTime()%6==0)
-		{
-			// TODO: 25.09.2021 proper flyby sound
-			//world.playSound(null,posX,posY,posZ,IISounds.bullet_wind,getSoundCategory(),0.25f,1);
-			//playFlySound(0);
-		}
-
-		if(isDead)
-			return;
-
 
 		if(penetrationHardness==0)
 		{
@@ -452,6 +447,17 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 		posY += motionY;
 		posZ += motionZ;
 		setPosition(posX, posY, posZ);
+
+		//Play artillery shell flyby sound
+		if(Weapons.artilleryImpactSound&&!flybySound&&ticksExisted > 5&&bullet.shouldLoadChunks())
+		{
+			if(motionY < 0)
+			{
+				BlockPos top = world.getTopSolidOrLiquidBlock(new BlockPos(getNextPositionVector())).up();
+				IIPacketHandler.playRangedSound(world, new Vec3d(top), IISounds.artilleryImpact, SoundCategory.PLAYERS, 24, 0.75f, 1.3f);
+				flybySound = true;
+			}
+		}
 
 		if(world.isRemote)
 		{
@@ -719,10 +725,11 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 		return true;
 	}
 
+	//TODO: 20.04.2023 play sound
 	@Override
 	protected float playFlySound(float delay)
 	{
-		this.playSound(IISounds.bulletWind, 2F, (1/this.bullet.getCaliber()));
+//		this.playSound(IISounds.bulletWind, 2F, (1/this.bullet.getCaliber()));
 		return delay+5;
 	}
 }

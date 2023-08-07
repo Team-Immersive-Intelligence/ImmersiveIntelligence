@@ -49,8 +49,11 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	public final void update()
 	{
 		ApiUtils.checkForNeedlessTicking(this);
-		if(!isDummy())
-			onUpdate();
+		if(master()!=this)
+			return;
+
+		//Tick
+		onUpdate();
 	}
 
 	/**

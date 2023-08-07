@@ -36,13 +36,8 @@ public class AmmoComponentTNT implements IAmmoComponent
 	@Override
 	public void onEffect(float amount, EnumCoreTypes coreType, NBTTagCompound tag, Vec3d pos, Vec3d dir, World world)
 	{
-		IIExplosion e = new IIExplosion(world, null, pos.x, pos.y, pos.z, 8*amount, 4, false, true);
-		if(!net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, e))
-		{
-			e.doExplosionA();
-			e.doExplosionB(true);
-		}
-		//world.createExplosion(bullet, pos.getX(), pos.getY(), pos.getZ(), amount*8f, true);
+		new IIExplosion(world, null, pos.x, pos.y, pos.z, 6*amount, 4, false, true)
+				.doExplosion();
 	}
 
 	@Override

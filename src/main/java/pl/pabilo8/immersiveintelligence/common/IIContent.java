@@ -7,6 +7,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.EnumHelper;
@@ -336,12 +337,11 @@ public class IIContent
 				.setPotionEffects(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
 		IIContent.blockGasHydrogen = new BlockIIFluid("mustard_gas", IIContent.gasMustardGas, Material.WATER)
 				.setPotionEffects(new PotionEffect(MobEffects.POISON, 60, 0));
-
 	}
 
 	//dummy method, called so that static fields above get loaded
 	static void init()
 	{
-
+		new ItemStack(IIContent.itemLightEngineerHelmet);
 	}
 }

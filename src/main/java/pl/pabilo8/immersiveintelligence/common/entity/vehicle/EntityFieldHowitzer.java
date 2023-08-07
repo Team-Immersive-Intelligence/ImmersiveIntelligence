@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -348,7 +349,10 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 					}
 					else
 					{
-						world.playSound(null, posX, posY, posZ, IISounds.howitzerShot, SoundCategory.PLAYERS, 1.25f, 0.5f);
+						IIPacketHandler.playRangedSound(world, getPositionVector(),
+								IISounds.howitzerShot, SoundCategory.PLAYERS, 90, 0.75f,
+								1.25f+(float)(Utils.RAND.nextGaussian()*0.02)
+						);
 						EntityBullet a = AmmoUtils.createBullet(world, shell.copy(), getPositionVector().add(gun_end.scale(-1)).addVector(0, 1, 0), gun_end.scale(-1).normalize());
 						a.setShooters(this, getParts());
 						world.spawnEntity(a);

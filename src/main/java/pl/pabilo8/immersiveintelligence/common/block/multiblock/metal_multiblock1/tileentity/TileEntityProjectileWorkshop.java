@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
@@ -10,7 +9,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTil
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -748,7 +746,7 @@ public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<Tile
 		if(part >= 2)
 			return;
 		if(state!=isDrawerOpened[part])
-			world.playSound(null, getPos(), state?IISounds.metalBreadboxOpen: IISounds.metalBreadboxClose, SoundCategory.BLOCKS, 0.5F, 0.5f);
+			world.playSound(null, getPos(), state?IISounds.metalBreadboxOpen: IISounds.metalBreadboxClose, SoundCategory.BLOCKS, 0.5F, 1f);
 
 		this.isDrawerOpened[part] = state;
 

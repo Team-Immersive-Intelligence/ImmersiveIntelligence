@@ -4,7 +4,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.util.vector.Vector3f;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -101,7 +102,9 @@ public abstract class AMT
 		//Draw current element
 		preShaders();
 		draw(tes, buf);
+		postShaders();
 
+		//Render child elements, shader values should be passed individually to them
 		if(children!=null)
 			for(AMT child : children)
 				child.render(tes, buf);

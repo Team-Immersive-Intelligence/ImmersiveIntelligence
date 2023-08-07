@@ -16,7 +16,6 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityWhitePhosphorus;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
@@ -50,10 +49,10 @@ public class AmmoComponentWhitePhosphorus implements IAmmoComponent
 	{
 		if(world.isRemote)
 			return;
-		BlockPos ppos = new BlockPos(pos);
+
+		//if using shaped core, make the effect face the bullet direction
 		Vec3d v = coreType==EnumCoreTypes.SHAPED?dir: dir.scale(-1);
-		world.playSound(null, ppos, IISounds.explosionIncendiaryLow, SoundCategory.BLOCKS, 8f, 1f/amount);
-		world.playSound(null, ppos, IISounds.explosionIncendiaryHigh, SoundCategory.BLOCKS, 4f, 1f/amount);
+		IIPacketHandler.playRangedSound(world, pos, IISounds.explosionIncendiary, SoundCategory.NEUTRAL, (int)(40*amount), 1f, 1f);
 
 		//fragments
 		for(int i = 0; i < 30*amount; i++)
@@ -71,7 +70,7 @@ public class AmmoComponentWhitePhosphorus implements IAmmoComponent
 			world.spawnEntity(shrap);
 		}
 
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(pos.addVector(0,1,0), "white_phosphorus"), IIUtils.targetPointFromPos(pos, world, (48)));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageParticleEffect(pos.addVector(0, 1, 0), "white_phosphorus"), IIPacketHandler.targetPointFromPos(pos, world, (48)));
 
 		//main
 		EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, pos.x+v.x, pos.y+v.y+1f, pos.z+v.z);

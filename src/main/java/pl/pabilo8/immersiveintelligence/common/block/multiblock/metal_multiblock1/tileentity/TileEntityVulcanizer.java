@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
@@ -10,14 +9,12 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockM
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
@@ -32,8 +29,6 @@ import pl.pabilo8.immersiveintelligence.api.crafting.VulcanizerRecipe;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleShockwave;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVulcanizer;
 
 import javax.annotation.Nullable;
@@ -62,6 +57,7 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 	@Override
 	public void update()
 	{
+		//TODO: 14.04.2023 refactor
 		super.update();
 
 		if(isDummy()||isRSDisabled())
@@ -70,20 +66,21 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 
 		if(world.isRemote)
 		{
-			TileEntityVulcanizer t1 = getTileForPos(70);
+			/*TileEntityVulcanizer t1 = getTileForPos(70);
 			TileEntityVulcanizer t2 = getTileForPos(55);
 			TileEntityVulcanizer t3 = getTileForPos(49);
 			TileEntityVulcanizer t4 = getTileForPos(25);
+			//REFACTOR: 25.04.2023 sounds
 
-			ImmersiveEngineering.proxy.handleTileSound(IISounds.vulcanizerHeating, this, shoudlPlaySound("immersiveintelligence:vulcanizer_heating"), 1.5f, 1f);
+			ImmersiveEngineering.proxy.handleTileSound(IISounds.heating, this, shoudlPlaySound("immersiveintelligence:vulcanizer_heating"), 1.5f, 1f);
 			if(t1!=null)
-				ImmersiveEngineering.proxy.handleTileSound(IISounds.printingPress, t1, shoudlPlaySound("immersiveintelligence:printing_press"), 1.5f, 0.5f);
+				ImmersiveEngineering.proxy.handleTileSound(IISounds.rolling, t1, shoudlPlaySound("immersiveintelligence:printing_press"), 1.5f, 0.5f);
 			if(t2!=null)
 				ImmersiveEngineering.proxy.handleTileSound(IISounds.howitzerRotationH, t2, shoudlPlaySound("immersiveintelligence:howitzer_rotation_h"), 1.5f, 0.5f);
 			if(t3!=null)
 				ImmersiveEngineering.proxy.handleTileSound(IISounds.inserterBackward, t3, shoudlPlaySound("immersiveintelligence:inserter_backward"), 1.5f, 0.5f);
 			if(t4!=null)
-				ImmersiveEngineering.proxy.handleTileSound(IISounds.inserterForward, t4, shoudlPlaySound("immersiveintelligence:inserter_forward"), 1.5f, 0.5f);
+				ImmersiveEngineering.proxy.handleTileSound(IISounds.inserterForward, t4, shoudlPlaySound("immersiveintelligence:inserter_forward"), 1.5f, 0.5f);*/
 
 			int max = getMaxProcessPerTick();
 			int i = 0;
@@ -127,7 +124,9 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 
 		for(MultiblockProcess<VulcanizerRecipe> process : processQueue)
 		{
-			if(process.processTick==Math.ceil(0.16*process.maxTicks))
+			//REFACTOR: 25.04.2023 sounds
+
+			/*if(process.processTick==Math.ceil(0.16*process.maxTicks))
 				world.playSound(null, getBlockPosForPos(70), IISounds.vulcanizerPullStart, SoundCategory.BLOCKS, .65F, 1.5f);
 			if(process.processTick==Math.ceil(0.86*process.maxTicks))
 				world.playSound(null, getBlockPosForPos(49), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, .65F, 0.75f);
@@ -144,7 +143,7 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 			else if(process.processTick==Math.ceil(0.93*process.maxTicks))
 				world.playSound(null, getBlockPosForPos(73), IISounds.vulcanizerPullStart, SoundCategory.BLOCKS, 1, 1f);
 			else if(process.processTick==Math.ceil(0.95*process.maxTicks))
-				world.playSound(null, getBlockPosForPos(73), IISounds.vulcanizerPullStart, SoundCategory.BLOCKS, 1, 0.5f);
+				world.playSound(null, getBlockPosForPos(73), IISounds.vulcanizerPullStart, SoundCategory.BLOCKS, 1, 0.5f);*/
 
 			if(process.processTick==Math.floor(process.maxTicks*0.9)&&process.canProcess(this))
 			{
@@ -467,7 +466,10 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 	@Override
 	public boolean shoudlPlaySound(String sound)
 	{
-		TileEntityVulcanizer master = master();
+
+		//REFACTOR: 25.04.2023 sounds
+
+		/*TileEntityVulcanizer master = master();
 		if(master!=null&&master.processQueue.size() > 0)
 		{
 			MultiblockProcess<VulcanizerRecipe> process = master.processQueue.get(0);
@@ -491,7 +493,7 @@ public class TileEntityVulcanizer extends TileEntityMultiblockMetal<TileEntityVu
 				case "immersiveintelligence:inserter_backward":
 					return IIUtils.inRange(process.processTick, process.maxTicks, 0.85, 0.86);
 			}
-		}
+		}*/
 
 		return false;
 	}

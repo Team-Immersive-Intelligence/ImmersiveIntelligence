@@ -3,9 +3,9 @@ package pl.pabilo8.immersiveintelligence.client.util.carversound;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,12 +43,14 @@ public abstract class CompoundSound extends PositionedSound implements ITickable
 
 	protected final void playBeginSound()
 	{
-		ClientUtils.mc().world.playSound(xPosF, yPosF, zPosF, soundBegin, category, volume*1.1f, pitch, false);
+		if(soundBegin!=null)
+			ClientUtils.mc().getSoundHandler().playSound(new PositionedSoundRecord(soundBegin, category, volume*1.1f, pitch, xPosF, yPosF, zPosF));
 	}
 
 	protected final void playEndSound()
 	{
-		ClientUtils.mc().world.playSound(xPosF, yPosF, zPosF, soundEnd, category, volume*1.1f, pitch, false);
+		if(soundEnd!=null)
+			ClientUtils.mc().getSoundHandler().playSound(new PositionedSoundRecord(soundEnd, category, volume*1.1f, pitch, xPosF, yPosF, zPosF));
 	}
 
 }

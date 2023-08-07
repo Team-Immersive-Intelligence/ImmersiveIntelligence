@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
@@ -148,13 +149,13 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 
 				// TODO: 11.08.2022 add parameter handling to animation system and remove this mess
 				if(animationProgress < 0.1f)
-					turretPitch = lerp(turretPitch, 90,Math.min(animationProgress/0.1f, 1f));
+					turretPitch = lerp(turretPitch, 90, Math.min(animationProgress/0.1f, 1f));
 				else if(animationProgress > 0.9f)
 					turretPitch = lerp(90, turretPitch, (animationProgress-0.9f)/0.1f);
 				else if(animationProgress > secondMarker&&animationProgress < firstMarker)
 					turretPitch = lerp(90, turretPitch, (float)((animationProgress-secondMarker)/dist));
 				else if(animationProgress > firstMarker2&&animationProgress < secondMarker2)
-					turretPitch = lerp(turretPitch, 90,(float)((animationProgress-firstMarker2)/dist2));
+					turretPitch = lerp(turretPitch, 90, (float)((animationProgress-firstMarker2)/dist2));
 				else if(animationProgress < secondMarker||animationProgress > secondMarker2)
 					turretPitch = 90;
 			}
@@ -238,7 +239,16 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 
 						shellLoaded = createDefaultShellAMT(header, "shell_loaded"),
 						shellEjected = createDefaultShellAMT(header, "shell_hatch"),
-						shellHeld = createDefaultShellAMT(header, "shell_held")
+						shellHeld = createDefaultShellAMT(header, "shell_held"),
+
+						new AMTParticle("muzzle_flash", header)
+								.setParticle(new ParticleGunfire(
+										null,
+										Vec3d.ZERO,
+										new Vec3d(0, 1, 0),
+										32f
+								)
+						)
 				}
 		);
 		allParts = IIAnimationUtils.getChildrenRecursive(model);
@@ -296,6 +306,6 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 
 	float lerp(float a, float b, float f)
 	{
-		return a * (1.0f - f)+b * f;
+		return a*(1.0f-f)+b*f;
 	}
 }

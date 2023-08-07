@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.tool.ZoomHandler;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.common.util.Utils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -19,10 +20,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -40,8 +38,8 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
-import pl.pabilo8.immersiveintelligence.api.utils.IEntityOverlayText;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
@@ -55,6 +53,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessagePlayerAimAnimationSync;
+import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.RangedSound;
 
 import javax.annotation.Nullable;
 
@@ -62,13 +61,16 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IEntityOverlayText, IEntitySpecialRepairable, IEntityZoomProvider
+public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnData, IAdvancedTextOverlay, IEntitySpecialRepairable, IEntityZoomProvider
 {
+	private static final ResourceLocation SIGHTS_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/machinegun/scope.png");
+	private static final ResourceLocation IR_SIGHTS_TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/item/machinegun/scope_infrared.png");
+
 	//TODO: switch nbt sending to DataParameters
 	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMachinegun.class, DataSerializers.COMPOUND_TAG);
 	private static final DataParameter<Integer> dataMarkerFluidCap = EntityDataManager.createKey(EntityMachinegun.class, DataSerializers.VARINT);
 
-	private static final MachinegunZoom SCOPE = new MachinegunZoom();
+	private final MachinegunZoom SCOPE = new MachinegunZoom();
 	//Second magazine is an upgrade
 	public ItemStack gun = ItemStack.EMPTY, magazine1 = ItemStack.EMPTY, magazine2 = ItemStack.EMPTY;
 	public int bulletDelay = 0, bulletDelayMax = 0, clipReload = 0, setupTime = Machinegun.setupTime, maxSetupTime = Machinegun.setupTime, overheating = 0, tankCapacity = 0, bullets1 = 0, bullets2 = 0;
@@ -226,7 +228,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setBoolean("forClient", true);
 				writeEntityToNBT(tag);
-				IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
+				IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
 			}
 		}
 
@@ -393,7 +395,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					{
 						NBTTagCompound tag = new NBTTagCompound();
 						writeEntityToNBT(tag);
-						IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
 					}
 					if(!world.isRemote&&clipReload==1)
 						world.playSound(null, getPosition(), IISounds.machinegunUnload, SoundCategory.BLOCKS, 1F, 1f);
@@ -448,7 +450,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 							bullets1 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine1);
 							bullets2 = IIContent.itemBulletMagazine.getRemainingBulletCount(magazine2);
 							writeEntityToNBT(tag);
-							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
+							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
 						}
 						return true;
 					}
@@ -672,7 +674,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	{
 		if(world.isRemote&&passenger instanceof EntityPlayerSP)
 		{
-			CameraHandler.INSTANCE.setEnabled(false);
+			CameraHandler.setEnabled(false);
 			ZoomHandler.isZooming = false;
 		}
 		shoot = false;
@@ -728,14 +730,19 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	public boolean shootFromStack(ItemStack stack)
 	{
 		if(stack.isEmpty())
-			return false;
+			world.playSound(null, posX, posY, posZ, IISounds.machinegunShotDry, SoundCategory.PLAYERS, 0.25f, 0.9f);
+		NBTTagCompound upgrades = IIContent.itemMachinegun.getUpgrades(gun);
 
-		if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("heavy_barrel"))
-			world.playSound(null, getPosition(), IISounds.machinegunShotHeavybarrel, SoundCategory.PLAYERS, 1F, 0.75f);
-		else if(IIContent.itemMachinegun.getUpgrades(gun).hasKey("water_cooling"))
-			world.playSound(null, getPosition(), IISounds.machinegunShotHeavybarrel, SoundCategory.PLAYERS, 1F, 0.25f);
-		else
-			world.playSound(null, getPosition(), IISounds.machinegunShotHeavybarrel, SoundCategory.PLAYERS, 1F, 0.55f);
+		RangedSound sound = IISounds.machinegunShot;
+		if(upgrades.hasKey("heavy_barrel"))
+			sound = IISounds.machinegunShotHeavyBarrel;
+		else if(upgrades.hasKey("water_cooling"))
+			sound = IISounds.machinegunShotWaterCooled;
+
+		IIPacketHandler.playRangedSound(world, getPositionVector(),
+				sound, SoundCategory.PLAYERS, 75, 1.5f,
+				1f+(float)(Utils.RAND.nextGaussian()*0.02)
+		);
 
 		double true_angle = Math.toRadians(360f-rotationYaw);
 		double true_angle2 = Math.toRadians(-(rotationPitch));
@@ -791,11 +798,13 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 				for(int i = 38; i < 50; i++)
 				{
 					ItemStack stack = crate.getInventory().get(i);
+					if(stack.isEmpty())
+						continue;
 					if(shootFromStack(stack))
 					{
 						crate.insertionHandler.extractItem(i, 1, false);
 						if(!world.isRemote)
-							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
+							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
 						return true;
 					}
 				}
@@ -853,7 +862,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setBoolean("mag2Empty", mag2Empty);
 
 		if(!world.isRemote)
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
 
 		return shootFromStack(stack);
 	}
@@ -951,7 +960,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		NBTTagCompound tag = new NBTTagCompound();
 		writeEntityToNBT(tag);
-		IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIUtils.targetPointFromEntity(this, 24));
+		IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
 	}
 
 	void dropItem()
@@ -1022,7 +1031,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 	}
 
 	@Override
-	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop, boolean hammer)
+	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
 		if(blusunrize.immersiveengineering.common.util.Utils.isFluidRelatedItemStack(player.getHeldItem(EnumHand.MAIN_HAND)))
 		{
@@ -1036,11 +1045,6 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		return null;
 	}
 
-	@Override
-	public boolean useNixieFont(EntityPlayer player, RayTraceResult mop)
-	{
-		return false;
-	}
 
 	@Override
 	public boolean canRepair()
@@ -1073,21 +1077,20 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		return gun;
 	}
 
-	private static class MachinegunZoom implements IAdvancedZoomTool
+	private class MachinegunZoom implements IAdvancedZoomTool
 	{
-
 		@Override
-		public String getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
+		public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
 		{
 			NBTTagCompound nbt = IIContent.itemMachinegun.getUpgrades(stack);
-			return ImmersiveIntelligence.MODID+":textures/gui/item/machinegun/"+(nbt.hasKey("scope")?"scope": "scope_infrared")+".png";
+			return nbt.hasKey("scope")?SIGHTS_TEXTURE: IR_SIGHTS_TEXTURE;
 		}
 
 		@Override
-		public boolean canZoom(ItemStack stack, EntityPlayer player)
+		public boolean shouldZoom(ItemStack stack, EntityPlayer player)
 		{
 			NBTTagCompound nbt = IIContent.itemMachinegun.getUpgrades(stack);
-			return nbt.hasKey("scope")||nbt.hasKey("infrared_scope");
+			return EntityMachinegun.this.aiming&&(nbt.hasKey("scope")||nbt.hasKey("infrared_scope"));
 		}
 
 		@Override
