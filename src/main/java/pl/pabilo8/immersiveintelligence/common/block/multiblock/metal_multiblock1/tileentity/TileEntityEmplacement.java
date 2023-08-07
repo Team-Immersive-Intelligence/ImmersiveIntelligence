@@ -59,6 +59,7 @@ import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.Emplaceme
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.ammunition_system.emplacement_weapons.EmplacementWeaponMachinegun;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
@@ -307,7 +308,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				{
 					if(progress > 0)
 						progress--;
-					currentWeapon.aimAt(facing.getHorizontalAngle(), -90);
+					if(currentWeapon instanceof EmplacementWeaponMachinegun){ //machine gun yaw is limited, use special method
+						((EmplacementWeaponMachinegun) currentWeapon).aimAtUnrestricted(facing.getHorizontalAngle(), -90);
+					}
+					else{
+						currentWeapon.aimAt(facing.getHorizontalAngle(), -90);
+					}
 				}
 				else
 					currentWeapon.doSetUp(false);
