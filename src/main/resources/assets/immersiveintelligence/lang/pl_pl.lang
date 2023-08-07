@@ -432,12 +432,13 @@ desc.immersiveintelligence.infrared_disabled=Wizja §cPodczerwona§r wyłączona
 desc.immersiveintelligence.assembly_scheme.used_to_create=Używana do stworzenia: %s
 desc.immersiveintelligence.assembly_scheme.items_created=Przedmioty stworzone: %s
 
-desc.immersiveengineering.info.holdControl=§4Przytrzymaj Control§r
-desc.immersiveengineering.info.holdControlForInfo=§cPrzytrzymaj Control by pokazać informacje§r
+desc.immersiveintelligence.info.holdControl=Przytrzymaj [Ctrl]
+desc.immersiveintelligence.info.holdShift=Przytrzymaj [Shift]
+desc.immersiveintelligence.info.holdAlt=Przytrzymaj [Alt]
+desc.immersiveintelligence.info.holdTab=Przytrzymaj [Tab]
 
-
-desc.immersiveintelligence.assembly_scheme.info_hold1=§6Przytrzymaj Shift§r - Potrzebne Materiały
-desc.immersiveintelligence.assembly_scheme.info_hold2=§4Przytrzymaj Control§r - Potrzebne Narzędzia
+desc.immersiveintelligence.assembly_scheme.info_hold1=%s - Potrzebne Materiały
+desc.immersiveintelligence.assembly_scheme.info_hold2=%s - Potrzebne Narzędzia
 desc.immersiveintelligence.assembly_scheme.materials=Potrzebne Materiały:
 desc.immersiveintelligence.assembly_scheme.tools=Potrzebne Narzędzia:
 
@@ -472,7 +473,7 @@ desc.immersiveintelligence.bullet_type.flare=Flarowy
 desc.immersiveintelligence.bullet_type.chemical=Chemiczny
 desc.immersiveintelligence.bullet_type.special=Specjalnego Przeznaczenia
 
-desc.immersiveintelligence.bullets.core=Wyposażony w %s
+desc.immersiveintelligence.bullets.core=Wyposażony w %2$s %3$s kalibru %1$s bCal
 desc.immersiveintelligence.bullets.mass=Masa: %s
 desc.immersiveintelligence.bullets.caliber=Kaliber: %s bCal
 

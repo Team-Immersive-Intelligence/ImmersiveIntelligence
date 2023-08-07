@@ -437,12 +437,13 @@ desc.immersiveintelligence.infrared_disabled=§c红外§r视觉关闭！
 desc.immersiveintelligence.assembly_scheme.used_to_create=被用于合成: %s
 desc.immersiveintelligence.assembly_scheme.items_created=Items Created: %s
 
-desc.immersiveengineering.info.holdControl=§4按住Ctrl§r
-desc.immersiveengineering.info.holdControlForInfo=§c按住Ctrl显示更多信息§r
+desc.immersiveintelligence.info.holdControl=按住[Ctrl]
+desc.immersiveintelligence.info.holdShift=按住[Shift]
+desc.immersiveintelligence.info.holdAlt=按住[Alt]
+desc.immersiveintelligence.info.holdTab=按住[Tab]
 
-
-desc.immersiveintelligence.assembly_scheme.info_hold1=§6按住Shift§r - 所需原料
-desc.immersiveintelligence.assembly_scheme.info_hold2=§4按住Ctrl§r - 所需机械臂
+desc.immersiveintelligence.assembly_scheme.info_hold1=%s - 所需原料
+desc.immersiveintelligence.assembly_scheme.info_hold2=%s - 所需机械臂
 desc.immersiveintelligence.assembly_scheme.materials=所需原料：
 desc.immersiveintelligence.assembly_scheme.tools=所需机械臂：
 
@@ -477,7 +478,7 @@ desc.immersiveintelligence.bullet_type.flare=照明弹
 desc.immersiveintelligence.bullet_type.chemical=化学弹
 desc.immersiveintelligence.bullet_type.special=特种弹
 
-desc.immersiveintelligence.bullets.core=配备：%s
+desc.immersiveintelligence.bullets.core=配备：%1$s bCal %2$s %3$s
 desc.immersiveintelligence.bullets.mass=质量：%s
 desc.immersiveintelligence.bullets.caliber=口径：%s bCal
 

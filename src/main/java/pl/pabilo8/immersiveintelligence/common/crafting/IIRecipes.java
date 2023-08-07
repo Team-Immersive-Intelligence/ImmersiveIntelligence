@@ -45,7 +45,6 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIUpgradeableArmor;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMetalPressMold.PressMolds;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold.VulcanizerMolds;
@@ -56,12 +55,13 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialPlate.MaterialsPlate;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialSpring.MaterialsSpring;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
-import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIAdvancedPowerPack;
+import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -69,7 +69,7 @@ import java.util.List;
  */
 public class IIRecipes
 {
-	private static ItemStack BASIC_CIRCUIT, TOOL_HAMMER, TOOL_CUTTERS;
+	public static ItemStack BASIC_CIRCUIT, TOOL_HAMMER, TOOL_CUTTERS;
 
 	public static void doRecipes(IForgeRegistry<IRecipe> recipeRegistry)
 	{
@@ -169,7 +169,7 @@ public class IIRecipes
 	private static void addColoringRecipe(IForgeRegistry<IRecipe> registry, Item item, int meta, String colorTag, String recipeName)
 	{
 		registry.register(new RecipeRGBColouration((s) ->
-				(OreDictionary.itemMatches(new ItemStack(item,1,meta==-1?0:meta), s, meta!=-1)),
+				(OreDictionary.itemMatches(new ItemStack(item, 1, meta==-1?0: meta), s, meta!=-1)),
 				(s) -> (ItemNBTHelper.hasKey(s, colorTag)?ItemNBTHelper.getInt(s, colorTag): 0xffffff),
 				(s, i) -> ItemNBTHelper.setInt(s, colorTag, i)).setRegistryName(ImmersiveIntelligence.MODID, recipeName));
 	}
@@ -183,7 +183,7 @@ public class IIRecipes
 			BlueprintCraftingRecipe.recipeList.get("components").removeIf(blueprintCraftingRecipe -> blueprintCraftingRecipe.output.isItemEqual(BASIC_CIRCUIT));
 
 			BlueprintCraftingRecipe.addRecipe("basic_circuits",
-					IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_RAW),
+					IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_RAW, 3),
 					new ItemStack(IEContent.blockStoneDecoration, 2, BlockTypes_StoneDecoration.INSULATING_GLASS.getMeta()),
 					"plateCopper"
 			);
@@ -205,8 +205,8 @@ public class IIRecipes
 
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
-					new IngredientStack("circuitAdvancedRaw", 4),
-					new IngredientStack("plateAdvancedElectronicAlloy", 2)
+					new IngredientStack("circuitAdvancedRaw", 2),
+					new IngredientStack("plateAdvancedElectronicAlloy", 1)
 			);
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD),
@@ -217,9 +217,9 @@ public class IIRecipes
 		}
 
 		//Circuits
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 15000, 360);
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 150000, 560);
-		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 4000), 1500000, 720);
+		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitBasicRaw"), FluidRegistry.getFluidStack("etching_acid", 500), 15000, 360);
+		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitAdvancedRaw"), FluidRegistry.getFluidStack("etching_acid", 1000), 150000, 560);
+		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720);
 
 //4x Vacuum tube + 1 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
 		PrecissionAssemblerRecipe.addRecipe(
@@ -452,27 +452,10 @@ public class IIRecipes
 	public static void addFunctionalCircuits()
 	{
 		for(Circuits value : Circuits.values())
-		{
-			BlueprintCraftingRecipe.addRecipe(getNameForCircuitTier(value.tier),
+			BlueprintCraftingRecipe.addRecipe(value.tier.getName()+"_functional_circuits",
 					IIContent.itemCircuit.getStack(value),
-					new IngredientStack("circuitBasic", 2), TOOL_CUTTERS
+					new IngredientStack(value.tier.material), TOOL_CUTTERS
 			);
-		}
-	}
-
-	@Nonnull
-	private static String getNameForCircuitTier(int tier)
-	{
-		switch(tier)
-		{
-			default:
-			case 0:
-				return "basic_functional_circuits";
-			case 1:
-				return "advanced_functional_circuits";
-			case 2:
-				return "processor_functional_circuits";
-		}
 	}
 
 	public static void addSpringRecipes()
@@ -659,72 +642,42 @@ public class IIRecipes
 
 	public static void addChemicalBathCleaningRecipes()
 	{
-		String[] dyes =
-				{
-						"Black",
-						"Red",
-						"Green",
-						"Brown",
-						"Blue",
-						"Purple",
-						"Cyan",
-						"LightGray",
-						"Gray",
-						"Pink",
-						"Lime",
-						"Yellow",
-						"LightBlue",
-						"Magenta",
-						"Orange",
-						"White"
-				};
+		addBathingCleaningRecipe(
+				new ItemStack(Blocks.WOOL, 1),
+				new IngredientStack("wool"),
+				1000, 1024, 200, true, false, false
+		);
+		addBathingCleaningRecipe(
+				new ItemStack(Blocks.GLASS, 1),
+				new IngredientStack("blockGlass"),
+				1000, 1024, 200, true
+		);
+		addBathingCleaningRecipe(
+				new ItemStack(Blocks.GLASS_PANE, 1),
+				new IngredientStack("paneGlass"),
+				1000, 1024, 200, true
+		);
 
-		for(String dye : dyes)
-		{
-			addBathingCleaningRecipe(
-					new ItemStack(Blocks.WOOL, 1),
-					new IngredientStack("wool"+dye),
-					1000, 1024, 200, true, false, false
-			);
+		addBathingCleaningRecipe(
+				new ItemStack(Blocks.BED, 1),
+				new IngredientStack(new ItemStack(Blocks.BED, 1, OreDictionary.WILDCARD_VALUE)),
+				2000,
+				3096, 240, true, false, false
+		);
 
-			addBathingCleaningRecipe(
-					new ItemStack(Blocks.GLASS, 1),
-					new IngredientStack("blockGlass"+dye),
-					1000, 1024, 200, true
-			);
+		addBathingCleaningRecipe(
+				new ItemStack(Blocks.CARPET, 1),
+				new IngredientStack(new ItemStack(Blocks.CARPET, 1, OreDictionary.WILDCARD_VALUE)),
+				2000,
+				3096, 240, true, false, false
+		);
 
-			addBathingCleaningRecipe(
-					new ItemStack(Blocks.GLASS_PANE, 1),
-					new IngredientStack("paneGlass"+dye),
-					1000, 1024, 200, true
-			);
-		}
-
-		for(int i = 0; i < 16; i += 1)
-		{
-			if(i!=0)
-			{
-				addBathingCleaningRecipe(
-						new ItemStack(Blocks.BED, 1),
-						new IngredientStack(new ItemStack(Blocks.BED, 1, i)),
-						2000,
-						3096, 240, true, false, false
-				);
-
-				addBathingCleaningRecipe(
-						new ItemStack(Blocks.CARPET, 1),
-						new IngredientStack(new ItemStack(Blocks.CARPET, 1, i)),
-						2000,
-						3096, 240, true, false, false
-				);
-			}
-			addBathingCleaningRecipe(
-					new ItemStack(Blocks.HARDENED_CLAY, 1),
-					new IngredientStack(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, i)),
-					2000,
-					1440, 280, false, true, true
-			);
-		}
+		addBathingCleaningRecipe(
+				new ItemStack(Blocks.HARDENED_CLAY, 1),
+				new IngredientStack(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, OreDictionary.WILDCARD_VALUE)),
+				2000,
+				1440, 280, false, true, true
+		);
 
 		Block[] shulker_boxes = new Block[]{
 				Blocks.ORANGE_SHULKER_BOX,
@@ -742,19 +695,16 @@ public class IIRecipes
 				Blocks.RED_SHULKER_BOX
 		};
 
-		for(Block shulker_box : shulker_boxes)
-		{
-			addBathingCleaningRecipe(
-					new ItemStack(Blocks.WHITE_SHULKER_BOX, 1),
-					new IngredientStack(new ItemStack(shulker_box, 1)),
-					2000,
-					4096, 120, false, true, true
-			);
-		}
+		addBathingCleaningRecipe(
+				new ItemStack(Blocks.PURPLE_SHULKER_BOX, 1),
+				new IngredientStack(Arrays.stream(shulker_boxes).map(ItemStack::new).collect(Collectors.toList())),
+				2000,
+				4096, 120, false, true, true
+		);
 
 		addBathingCleaningRecipe(
-				new ItemStack(Items.BANNER, 1),
-				new IngredientStack(new ItemStack(Items.BANNER, 1)),
+				new ItemStack(Items.BANNER, 1, OreDictionary.WILDCARD_VALUE),
+				new IngredientStack(new ItemStack(Items.BANNER, 1, 15)),
 				2000,
 				1024, 160, true, false, false
 		);

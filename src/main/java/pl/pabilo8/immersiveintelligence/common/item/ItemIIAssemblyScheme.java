@@ -9,15 +9,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 /**
@@ -36,38 +40,35 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
 		ItemStack s = ItemNBTHelper.getItemStack(stack, "recipeItem");
-		list.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.used_to_create", s.getDisplayName()+(s.getCount() > 1?" x"+s.getCount(): "")));
-		list.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.items_created", ItemNBTHelper.getInt(stack, "createdItems")));
+		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.used_to_create",
+				TextFormatting.GOLD+s.getDisplayName()
+				+(s.getCount() > 1?TextFormatting.GRAY+" x "+TextFormatting.GOLD+s.getCount(): "")));
+		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.items_created",
+				TextFormatting.GOLD+String.valueOf(ItemNBTHelper.getInt(stack, "createdItems"))));
 
-		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+		PrecissionAssemblerRecipe recipe = getRecipeForStack(stack);
+		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT,
+				IILib.DESCRIPTION_KEY+"assembly_scheme.info_hold1", tooltip))
 		{
-			list.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.materials"));
-			PrecissionAssemblerRecipe recipe = getRecipeForStack(stack);
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1],I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.materials")));
 			if(recipe!=null)
-			{
 				for(IngredientStack ingredient : recipe.inputs)
-					list.add(ingredient.getExampleStack().getDisplayName()+(ingredient.inputSize > 1?" x"+ingredient.inputSize: ""));
-			}
+					tooltip.add("   "+TextFormatting.GOLD+ingredient.getExampleStack().getDisplayName()+(
+							ingredient.inputSize > 1?
+									TextFormatting.GRAY+" x "+TextFormatting.GOLD+ingredient.inputSize: ""));
 		}
-		else if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
+		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"assembly_scheme.info_hold2", tooltip))
 		{
-			list.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.tools"));
-			PrecissionAssemblerRecipe recipe = getRecipeForStack(stack);
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0],
+					I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.tools")));
 			if(recipe!=null)
-			{
 				for(String tool : recipe.tools)
-					list.add(PrecissionAssemblerRecipe.getExampleToolStack(tool).getDisplayName());
-			}
+					tooltip.add("   "+TextFormatting.GOLD+PrecissionAssemblerRecipe.getExampleToolStack(tool).getDisplayName());
 		}
-		else
-		{
-			list.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.info_hold1"));
-			list.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.info_hold2"));
-		}
-
 	}
 
 	@Override
@@ -101,10 +102,8 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 		ItemStack recipe_stack = new ItemStack(tag);
 
 		for(PrecissionAssemblerRecipe recipe : PrecissionAssemblerRecipe.recipeList)
-		{
 			if(recipe.output.isItemEqual(recipe_stack))
 				return recipe;
-		}
 
 		return null;
 	}

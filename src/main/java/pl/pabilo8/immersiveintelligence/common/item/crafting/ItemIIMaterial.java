@@ -89,6 +89,9 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		@IIItemProperties(oreDict = "tireRubber")
 		RUBBER_TIRE,
 		@IIItemProperties(oreDict = "dustVulcanizationCompound")
-		RUBBER_COMPOUND
+		RUBBER_COMPOUND,
+
+		@IIItemProperties(oreDict = "templateCircuit", hidden = true)
+		CIRCUIT_TEMPLATE
 	}
 }

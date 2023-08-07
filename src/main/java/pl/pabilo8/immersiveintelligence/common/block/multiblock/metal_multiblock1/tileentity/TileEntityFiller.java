@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
@@ -10,7 +9,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBel
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.Entity;
@@ -238,19 +236,19 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 	@Override
 	public int getMaxProcessPerTick()
 	{
-		return 3;
+		return 5;
 	}
 
 	@Override
 	public int getProcessQueueMaxLength()
 	{
-		return 3;
+		return 5;
 	}
 
 	@Override
 	public float getMinProcessDistance(MultiblockProcess<FillerRecipe> process)
 	{
-		return 63.75f/120f;
+		return process.maxTicks/320f;
 	}
 
 	@Override
@@ -521,44 +519,44 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 				list.add(new AxisAlignedBB(0.5, 0, 0.5, 0.5, 1, 0.5)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
 						.offset(d.scale(0.5f-0.0625f))
-						.grow(zz.x,zz.y,zz.z)
-						.expand(ddd.x,ddd.y,ddd.z)
+						.grow(zz.x, zz.y, zz.z)
+						.expand(ddd.x, ddd.y, ddd.z)
 				);
 
 				list.add(new AxisAlignedBB(0.5, 0.375, 0.5, 0.5, 1, 0.5)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
 						.offset(d.scale(-0.5+0.0625f))
-						.grow(zzF.x,zzF.y,zzF.z)
-						.expand(ddd.x,ddd.y,ddd.z)
+						.grow(zzF.x, zzF.y, zzF.z)
+						.expand(ddd.x, ddd.y, ddd.z)
 				);
 
 				list.add(new AxisAlignedBB(0.5, 0.375, 0.5, 0.5, 1, 0.5)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
 						.offset(z.scale(0.5f-0.0625f))
-						.grow(dd.x,dd.y,dd.z)
-						.expand(zzz.x,zzz.y,zzz.z)
+						.grow(dd.x, dd.y, dd.z)
+						.expand(zzz.x, zzz.y, zzz.z)
 				);
 
 				list.add(new AxisAlignedBB(0.5, 0.375, 0.5, 0.5, 1, 0.5)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
 						.offset(z.scale(-0.5f))
-						.grow(dd.x,dd.y,dd.z)
-						.expand(zzz.x,zzz.y,zzz.z)
+						.grow(dd.x, dd.y, dd.z)
+						.expand(zzz.x, zzz.y, zzz.z)
 				);
 
 				list.add(new AxisAlignedBB(0.5, 0, 0.5, 0.5, 0.375, 0.5)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
 						.offset(d.scale(0.125f))
-						.grow(zz.x,zz.y,zz.z)
-						.grow(ddF.x,ddF.y,ddF.z)
-						.expand(ddd.x,ddd.y,ddd.z)
+						.grow(zz.x, zz.y, zz.z)
+						.grow(ddF.x, ddF.y, ddF.z)
+						.expand(ddd.x, ddd.y, ddd.z)
 				);
 
 				list.add(new AxisAlignedBB(0.5, 0.125f, 0.5, 0.5, 0.375, 0.5)
 						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
 						.offset(d.scale(-0.25f))
-						.grow(zz.x,zz.y,zz.z)
-						.grow(ddFF.x,ddFF.y,ddFF.z)
+						.grow(zz.x, zz.y, zz.z)
+						.grow(ddFF.x, ddFF.y, ddFF.z)
 				);
 
 
@@ -589,8 +587,8 @@ public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller
 				);
 
 				list.add(new AxisAlignedBB(0.5, 0.625, 0.5, 0.5, 1, 0.5)
-						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
-						.grow(0.25, 0, 0.25)
+								.offset(getPos().getX(), getPos().getY(), getPos().getZ())
+								.grow(0.25, 0, 0.25)
 						//.offset(d)
 						//.expand(d.x, d.y, d.z)
 				);

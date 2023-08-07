@@ -439,12 +439,13 @@ desc.immersiveintelligence.infrared_disabled=§cИнфракрасное§r Зр
 desc.immersiveintelligence.assembly_scheme.used_to_create=Используется для создания: %s
 desc.immersiveintelligence.assembly_scheme.items_created=Созданные Предметы: %s
 
-desc.immersiveengineering.info.holdControl=§4Удерживайте Ctrl§r
-desc.immersiveengineering.info.holdControlForInfo=§cУдерживайте Ctrl для большей информации§r
+desc.immersiveintelligence.info.holdControl=Удерживайте [Ctrl]
+desc.immersiveintelligence.info.holdShift=Удерживайте [Shift]
+desc.immersiveintelligence.info.holdAlt=Удерживайте [Alt]
+desc.immersiveintelligence.info.holdTab=Удерживайте [Tab]
 
-
-desc.immersiveintelligence.assembly_scheme.info_hold1=§6Удерживайте Shift§r - Материалы Использованы:
-desc.immersiveintelligence.assembly_scheme.info_hold2=§4Удержиавйте Ctrl§r - Инстременты Использованы:
+desc.immersiveintelligence.assembly_scheme.info_hold1=%s - Материалы Использованы:
+desc.immersiveintelligence.assembly_scheme.info_hold2=%s - Инстременты Использованы:
 desc.immersiveintelligence.assembly_scheme.materials=Материалы Использованы:
 desc.immersiveintelligence.assembly_scheme.tools=Инстременты Использованы:
 
@@ -479,7 +480,7 @@ desc.immersiveintelligence.bullet_type.flare=Вспышка
 desc.immersiveintelligence.bullet_type.chemical=Химический
 desc.immersiveintelligence.bullet_type.special=Спец. назначения
 
-desc.immersiveintelligence.bullets.core=Заполнен: %s
+desc.immersiveintelligence.bullets.core=Заполнен: %1$s bCal %2$s %3$s
 desc.immersiveintelligence.bullets.mass=Масса: %s
 desc.immersiveintelligence.bullets.caliber=Калибр: %s bCal
 
