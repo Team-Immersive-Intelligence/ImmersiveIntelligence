@@ -307,7 +307,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				{
 					if(progress > 0)
 						progress--;
-					currentWeapon.aimAt(0, -90);
+					currentWeapon.aimAt(facing.getHorizontalAngle(), -90);
 				}
 				else
 					currentWeapon.doSetUp(false);
@@ -1384,6 +1384,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				health = getMaxHealth();
 				te.sendAttackSignal = false;
 				this.nextPitch = this.pitch = -90;
+				this.nextYaw = this.yaw = te.facing.getHorizontalAngle();
 
 
 				if(!te.world.isRemote)
