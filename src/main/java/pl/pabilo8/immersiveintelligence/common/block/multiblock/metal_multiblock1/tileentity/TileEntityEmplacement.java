@@ -1740,7 +1740,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		@Override
 		public void updateTargets(TileEntityEmplacement emplacement)
 		{
-			spottedEntities = emplacement.world.getEntitiesWithinAABB(Entity.class, emplacement.currentWeapon.getVisionAABB(), input -> emplacement.currentWeapon.canSeeEntity(input)&&predicate.test(input)).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
+			spottedEntities = emplacement.world.getEntitiesWithinAABB(Entity.class, emplacement.currentWeapon.getVisionAABB(), input -> predicate.test(input)&&emplacement.currentWeapon.canSeeEntity(input)).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
 			if(!emplacement.world.isRemote&&emplacement.sendAttackSignal)
 				emplacement.handleSendingEnemyPos(spottedEntities);
 		}
