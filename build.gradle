@@ -37,20 +37,4 @@ dependencies {
     runtimeOnly "mezz.jei:jei_1.12.2:4.16.1.301"
 }
 
-//--- Resources
-
-processResources {
-    //Exclude GIMP images
-    exclude '**/*.xcf'
-    //Exclude batch
-    exclude '**/*.bat'
-    //Exclude template textures
-    exclude '**/*Template.png'
-
-    //already excluded from gitignore, but still appear to be included in a locally built jar
-    exclude '**/desktop.ini'
-    exclude '**/Thumbs.db'
-    exclude '**/.DS_Store'
-}
-
 

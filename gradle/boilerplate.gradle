@@ -117,6 +117,18 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
+    //Exclude GIMP images
+    exclude '**/*.xcf'
+    //Exclude batch
+    exclude '**/*.bat'
+    //Exclude template textures
+    exclude '**/*Template.png'
+
+    //already excluded from gitignore, but still appear to be included in a locally built jar
+    exclude '**/desktop.ini'
+    exclude '**/Thumbs.db'
+    exclude '**/.DS_Store'
 }
 
 

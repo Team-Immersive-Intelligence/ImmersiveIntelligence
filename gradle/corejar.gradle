@@ -28,7 +28,7 @@ tasks.register('signCoreJar', SignJar) {
 
     keyStore = getOr("SIGNING_KEY_STORE_PATH", project.keyStore)
     alias = getOr("SIGNING_KEY_ALIAS", project.keyStoreAlias)
-    storePass = getOr("SIGNING_KEY_PASSWORD", project.keyStorePass)
+    storePass = getOr("SIGNING_KEY_PASSWORD", project.keyStoreKeyPass)
     keyPass = getOr("SIGNING_STORE_PASSWORD", project.keyStorePass)
     inputFile = coreJar.archivePath
     outputFile = coreJar.archivePath
@@ -42,7 +42,7 @@ tasks.register('signMainJar', SignJar) {
 
     keyStore = getOr("SIGNING_KEY_STORE_PATH",project.keyStore)
     alias = getOr("SIGNING_KEY_ALIAS",project.keyStoreAlias)
-    storePass = getOr("SIGNING_KEY_PASSWORD",project.keyStorePass)
+    storePass = getOr("SIGNING_KEY_PASSWORD",project.keyStoreKeyPass)
     keyPass = getOr("SIGNING_STORE_PASSWORD",project.keyStorePass)
     inputFile = jar.archivePath
     outputFile = jar.archivePath
@@ -66,7 +66,7 @@ jar {
     }
 }
 
-static String getOr(String projectProp, envProp)
+static String getOr(String envProp, projectProp)
 {
     return System.getenv(envProp) ?: projectProp
 }
