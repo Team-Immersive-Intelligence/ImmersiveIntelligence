@@ -413,10 +413,11 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void fireGun(int i)
 	{
-		double true_angle = Math.toRadians((-turretYaw) > 180?360f-(-turretYaw): (-turretYaw));
-		double true_angle2 = Math.toRadians(-(-90-turretPitch));
+		//east is towards positive X, 0 position
+		double true_yaw = Math.toRadians(EnumFacing.EAST.getHorizontalAngle()+MathHelper.wrapDegrees(turretYaw));
+		double true_pitch = Math.toRadians(turretPitch+90);
 
-		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(3, true_angle, true_angle2);
+		Vec3d gun_end = pl.pabilo8.immersiveintelligence.api.Utils.offsetPosDirection(3, true_yaw, true_pitch);
 		Vec3d gun_dir = gun_end.normalize();
 		if(world.isRemote)
 		{
