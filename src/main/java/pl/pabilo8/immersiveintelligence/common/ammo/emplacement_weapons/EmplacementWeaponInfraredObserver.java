@@ -176,6 +176,8 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			else if(f instanceof DataTypeString)
 			{
 				EnumFacing facing = EnumFacing.byName(f.valueToString());
+				if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
+					facing = facing.getOpposite();
 				if(facing!=null)
 					nextYaw = facing.getHorizontalAngle();
 			}
