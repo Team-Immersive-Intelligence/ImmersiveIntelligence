@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * AMT type for drawing items ({@link ItemStack}s)
+ *
  * @author Pabilo8
  * @since 26.07.2022
  */
@@ -22,6 +23,11 @@ public class AMTItem extends AMT
 	public AMTItem(String name, Vec3d originPos)
 	{
 		super(name, originPos);
+	}
+
+	public AMTItem(String name, IIModelHeader header)
+	{
+		super(name, header);
 	}
 
 	@Override
@@ -39,7 +45,7 @@ public class AMTItem extends AMT
 			GlStateManager.rotate((float)-rot.x, 1, 0, 0);
 		}
 
-		GlStateManager.scale(1f,-1f,1f);
+		GlStateManager.scale(-1f, 1f, -1f);
 
 		if(scale!=null)
 			GlStateManager.scale(scale.x, scale.y, scale.z);

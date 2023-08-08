@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.MechanicalPump;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -53,7 +52,7 @@ public class MechanicalPumpRenderer extends IITileRenderer<TileEntityMechanicalP
 		rotationMap.apply(rotation_progress%1f);
 		pumpingMap.apply(pumping_progress);
 
-		GlStateManager.translate(0,1,0);
+		GlStateManager.translate(0, 1, 0);
 
 		//apply rotation for block facing
 		applyStandardRotation(te.getFacing());

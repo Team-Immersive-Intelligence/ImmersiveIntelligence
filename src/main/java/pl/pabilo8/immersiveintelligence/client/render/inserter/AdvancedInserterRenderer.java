@@ -7,7 +7,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTItem;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIModelHeader;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.inserter.TileEntityAdvancedInserter;
 
@@ -29,7 +28,6 @@ public class AdvancedInserterRenderer extends InserterBaseRenderer<TileEntityAdv
 	{
 		//set held stack
 		item.setStack(te.insertionHandler.getStackInSlot(0));
-		IIAnimationUtils.setModelRotation(item, 90, 0, 0);
 	}
 
 	@Override

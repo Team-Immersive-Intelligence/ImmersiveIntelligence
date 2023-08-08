@@ -1,0 +1,241 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"cardan1": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [60, 0, 0]
+				},
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.98333,
+					"transform": [60, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, -1]
+				},
+				{
+					"time": 0.98333,
+					"transform": [0, 0, -1]
+				}
+			]
+		},
+		"cardan1_motor": {
+			"rotation": [
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [-3.75, 0, -180]
+				},
+				{
+					"time": 0.6,
+					"transform": [-3.75, 0, -180]
+				}
+			]
+		},
+		"cardan2": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 4, -3]
+				},
+				{
+					"time": 0.16667,
+					"transform": [0, 2.5, -1.5]
+				},
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [0, 0.3, 0]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 0.3, 0]
+				},
+				{
+					"time": 0.73333,
+					"transform": [0, 2.79, -1.62]
+				},
+				{
+					"time": 0.98333,
+					"transform": [0, 4, -3]
+				}
+			]
+		},
+		"inserter_rotato": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [-360, 0, 0]
+				},
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.98333,
+					"transform": [-360, 0, 0]
+				}
+			]
+		},
+		"grabber": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, -7]
+				},
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.98333,
+					"transform": [0, 0, -7]
+				}
+			]
+		},
+		"grabber_rotato": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [-720, 0, 0]
+				},
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.98333,
+					"transform": [-720, 0, 0]
+				}
+			]
+		},
+		"cardan3": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [-70, 0, 0]
+				},
+				{
+					"time": 0.33333,
+					"transform": [6.75, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.98333,
+					"transform": [-70, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0.5, 0.75]
+				},
+				{
+					"time": 0.98333,
+					"transform": [0, 0.5, 0.75]
+				}
+			]
+		},
+		"cardan3_motor": {
+			"rotation": [
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.45,
+					"transform": [0, 0, -180]
+				},
+				{
+					"time": 0.6,
+					"transform": [0, 0, -180]
+				}
+			]
+		},
+		"grabber_clamp_left": {
+			"position": [
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.46667,
+					"transform": [-1, 0, 0]
+				},
+				{
+					"time": 0.61667,
+					"transform": [-1, 0, 0]
+				}
+			]
+		},
+		"grabber_clamp_right": {
+			"position": [
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.46667,
+					"transform": [1, 0, 0]
+				},
+				{
+					"time": 0.61667,
+					"transform": [1, 0, 0]
+				}
+			]
+		}
+	}
+}

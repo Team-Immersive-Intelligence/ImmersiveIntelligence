@@ -1,0 +1,41 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"sawdust": {
+			"scale": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"item_input": {
+			"scale": [
+				{
+					"time": 1,
+					"transform": [0.385, 0.385, 0.385]
+				}
+			]
+		},
+		"item_output": {
+			"scale": [
+				{
+					"time": 1,
+					"transform": [0.385, 0.385, 0.385]
+				}
+			]
+		},
+		"item_inserter": {
+			"scale": [
+				{
+					"time": 1,
+					"transform": [0.385, 0.385, 0.385]
+				}
+			]
+		}
+	}
+}

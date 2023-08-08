@@ -1,0 +1,10 @@
+# Made in Blockbench 4.7.4
+newmtl m_7c0f7692-fe41-7bf1-95f7-925eecd3ad62
+map_Kd immersiveintelligence:blocks/multiblock/sawmill
+newmtl m_c88a1b34-29a8-3fb0-2197-e313f397507a
+map_Kd immersiveintelligence:blocks/multiblock/sawmill2
+newmtl m_7b3d81f3-fd54-868c-1fe7-c7a82635a608
+map_Kd immersiveengineering:blocks/stone_decoration_concrete_tile
+newmtl m_61989cdd-fe00-fd72-7d86-424014dac813
+map_Kd immersiveintelligence:blocks/multiblock/sawmill/sawdust
+newmtl none

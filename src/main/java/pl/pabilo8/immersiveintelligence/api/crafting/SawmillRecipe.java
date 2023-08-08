@@ -8,8 +8,9 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.api.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
+import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +24,7 @@ import java.util.List;
 public class SawmillRecipe extends MultiblockRecipe
 {
 	private static final int DEFAULT_COLOR = IIUtils.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
-	public static float torqueModifier = 1.0F;
-	public static float timeModifier = 1.0F;
+
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput, itemSecondaryOutput;
@@ -32,6 +32,8 @@ public class SawmillRecipe extends MultiblockRecipe
 	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
 	public static ArrayList<SawmillRecipe> recipeList = new ArrayList<>();
 	int totalProcessTime;
+
+	IISoundAnimation soundAnimation;
 
 	public int getTorque()
 	{
@@ -52,20 +54,28 @@ public class SawmillRecipe extends MultiblockRecipe
 		this.itemOutput = itemOutput;
 		this.itemSecondaryOutput = itemSecondaryOutput;
 		this.itemInput = ApiUtils.createIngredientStack(itemInput);
-		this.torque = (int)Math.floor(torque*torqueModifier);
-		this.totalProcessTime = (int)Math.floor(time*timeModifier);
+		this.torque = torque;
+		this.totalProcessTime = time;
 		this.hardness = hardness;
 
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItems(this.itemOutput, this.itemSecondaryOutput);
 		this.dustColor = IIUtils.rgbIntToRGB(dustColor);
+
+//		0 - 0.1 - grabbing sound
+//		0.1 - 1 - cutting,
+//		sections each through 0.4/3-1.5/3
+//		rolling each 1.5/3 - 2.5/3, landing 3/3
+
+		this.soundAnimation = new IISoundAnimation(totalProcessTime);
+		/*for(int i = 0; i < itemOutput.getCount(); i++)
+			this.soundAnimation.withSound();*/
+		this.soundAnimation.compile(totalProcessTime);
 	}
 
 	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness)
 	{
-		return addRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness,
-				DEFAULT_COLOR
-		);
+		return addRecipe(itemOutput, itemInput, itemSecondaryOutput, torque, time, hardness, DEFAULT_COLOR);
 	}
 
 	public static SawmillRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, int dustColor)
@@ -136,6 +146,7 @@ public class SawmillRecipe extends MultiblockRecipe
 		return findRecipe(item_input.stack);
 	}
 
+	@Override
 	public int getTotalProcessTime()
 	{
 		return this.totalProcessTime;

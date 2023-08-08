@@ -1,18 +1,27 @@
 package pl.pabilo8.immersiveintelligence.common.item.crafting;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
-import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
+import pl.pabilo8.immersiveintelligence.api.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,6 +31,8 @@ import java.util.Optional;
 // TODO: 05.09.2022 move to Capabilities
 public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISawblade
 {
+	private final static String NBT_DAMAGE = "damage";
+
 	public ItemIISawBlade()
 	{
 		super("sawblade", 1, SawBlades.values());
@@ -34,7 +45,15 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	public void onCreated(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull EntityPlayer playerIn)
 	{
 		super.onCreated(stack, worldIn, playerIn);
-		ItemNBTHelper.setInt(stack, "damage", getSawbladeMaxDamage(stack));
+		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getSawbladeMaxDamage(stack));
+	}
+
+	@Override
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+	{
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		tooltip.add(I18n.format(IILib.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getSawbladeDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getSawbladeMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override
@@ -46,10 +65,10 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	@Override
 	public void damageSawblade(ItemStack stack, int amount)
 	{
-		if(!ItemNBTHelper.hasKey(stack, "damage"))
-			ItemNBTHelper.setInt(stack, "damage", getSawbladeMaxDamage(stack));
+		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
+			ItemNBTHelper.setInt(stack, NBT_DAMAGE, getSawbladeMaxDamage(stack));
 
-		ItemNBTHelper.setInt(stack, "damage", getSawbladeDamage(stack)-amount);
+		ItemNBTHelper.setInt(stack, NBT_DAMAGE, getSawbladeDamage(stack)-amount);
 
 		if(getSawbladeDamage(stack) < 0)
 			stack.setCount(0);
@@ -58,9 +77,9 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	@Override
 	public int getSawbladeDamage(ItemStack stack)
 	{
-		if(!ItemNBTHelper.hasKey(stack, "damage"))
+		if(!ItemNBTHelper.hasKey(stack, NBT_DAMAGE))
 			return getSawbladeMaxDamage(stack);
-		return ItemNBTHelper.getInt(stack, "damage");
+		return ItemNBTHelper.getInt(stack, NBT_DAMAGE);
 	}
 
 	@Override
@@ -97,25 +116,26 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 		return getStack(found.orElse(SawBlades.IRON));
 	}
 
-	public int getSawbladeDisplayMeta(ItemStack stack)
+	@Override
+	public ResourceLocation getSawbladeTexture(ItemStack stack)
 	{
-		return stackToSub(stack).displayMeta;
+		return stackToSub(stack).texture;
 	}
 
 	public enum SawBlades implements IIItemEnum
 	{
-		IRON(2, Tools.sawbladeIronDurability, 8),
-		STEEL(3, Tools.sawbladeSteelDurability, 9),
-		TUNGSTEN(4, Tools.sawbladeTungstenDurability, 10);
+		IRON(2, Tools.sawbladeIronDurability),
+		STEEL(3, Tools.sawbladeSteelDurability),
+		TUNGSTEN(4, Tools.sawbladeTungstenDurability);
 
-		// TODO: 05.09.2022 Replace displayMeta with obj model path
-		final int hardness, durability, displayMeta;
+		final int hardness, durability;
+		final ResourceLocation texture;
 
-		SawBlades(int hardness, int durability, int displayMeta)
+		SawBlades(int hardness, int durability)
 		{
 			this.hardness = hardness;
 			this.durability = durability;
-			this.displayMeta = displayMeta;
+			this.texture = ResLoc.of(IILib.RES_II, "blocks/multiblock/sawmill/"+getName());
 		}
 	}
 

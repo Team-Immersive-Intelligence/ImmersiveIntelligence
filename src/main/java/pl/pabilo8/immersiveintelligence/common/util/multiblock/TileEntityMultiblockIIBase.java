@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T> implements IMirrorAble, IIEInventory
 {
 	//The multiblock INSTANCE, for easy access
-	private final MultiblockStuctureBase<T> multiblock;
+	protected final MultiblockStuctureBase<T> multiblock;
 
 	protected TileEntityMultiblockIIBase(MultiblockStuctureBase<T> multiblock)
 	{
@@ -48,12 +48,19 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	@Override
 	public final void update()
 	{
+		//Optimize
 		ApiUtils.checkForNeedlessTicking(this);
 		if(master()!=this)
 			return;
 
 		//Tick
 		onUpdate();
+	}
+
+	@Override
+	public void onLoad()
+	{
+
 	}
 
 	/**

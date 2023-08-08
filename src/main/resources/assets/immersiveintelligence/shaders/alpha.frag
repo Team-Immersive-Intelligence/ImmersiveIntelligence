@@ -1,11 +1,20 @@
 #version 130
 
 //Author: Pabilo8
-//Simple alpha fragment shader
+//Alpha fragment shader
 uniform float alpha;// Passed in by callback
-uniform sampler2D bgl_RenderedTexture;
+
+//Texture (GL_TEXTURE0)
+uniform sampler2D texture;
+//Lightmap Texture (GL_TEXTURE1)
+//uniform sampler2D lightmap;
+
+/*vec3 vanillaLight() {
+    return clamp(texture2D(lightmap, gl_TexCoord[1].st).xyz, 0.0f, 1.0f);
+}*/
 
 void main()
 {
-    gl_FragColor = texture2D(bgl_RenderedTexture, vec2(gl_TexCoord[0])) * gl_Color * vec4(1f, 1f, 1f, alpha);
+    //    gl_FragColor = texture2D(texture, gl_TexCoord[0].st) * gl_Color * vec4(vanillaLight(), alpha);
+    gl_FragColor = texture2D(texture, gl_TexCoord[0].st) * gl_Color * vec4(1, 1, 1, alpha);
 }

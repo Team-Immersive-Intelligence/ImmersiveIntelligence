@@ -1,6 +1,7 @@
-package pl.pabilo8.immersiveintelligence.api.utils;
+package pl.pabilo8.immersiveintelligence.api.tools;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
@@ -21,8 +22,7 @@ public interface ISawblade
 	int getHardness(ItemStack stack);
 
 	@Nonnull
-	ItemStack getToolPresentationStack(String tool_name);
+	ItemStack getToolPresentationStack(String toolName);
 
-	//A hacky way of registering models, works tho
-	int getSawbladeDisplayMeta(ItemStack stack);
+	ResourceLocation getSawbladeTexture(ItemStack stack);
 }

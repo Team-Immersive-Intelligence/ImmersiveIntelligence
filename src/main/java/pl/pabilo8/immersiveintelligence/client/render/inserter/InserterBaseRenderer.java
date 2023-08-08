@@ -21,7 +21,7 @@ import java.util.function.Function;
 public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> extends IITileRenderer<T>
 {
 	//inserter animations for all directions
-	private IIAnimationCompiledMap animationFrontBack = null, animationFrontRight = null, animationFrontLeft = null, animationFrontFront = null;
+	private IIAnimationCompiledMap animationDefaults, animationFrontBack, animationFrontRight, animationFrontLeft, animationFrontFront;
 	//directions + actual inserter
 	private AMT[] model = null;
 	//reference to model parts
@@ -37,6 +37,7 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 		//defaultize model angles
 		for(AMT mod : model)
 			mod.defaultize();
+		animationDefaults.apply(0); //apply default animation
 
 		//apply input box direction
 		IIAnimationUtils.setModelRotation(inBox, 0, -te.defaultInputFacing.getHorizontalAngle(), 0);
@@ -93,6 +94,7 @@ public abstract class InserterBaseRenderer<T extends TileEntityInserterBase> ext
 		outBox = IIAnimationUtils.getPart(model, "output");
 		turntable = IIAnimationUtils.getPart(model, "turntable");
 
+		animationDefaults = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/item"));
 		animationFrontBack = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_back"));
 		animationFrontRight = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_right"));
 		animationFrontLeft = IIAnimationCompiledMap.create(model, new ResourceLocation(ImmersiveIntelligence.MODID, "inserter/front_left"));

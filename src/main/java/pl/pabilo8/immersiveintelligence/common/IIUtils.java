@@ -745,20 +745,18 @@ public class IIUtils
 	}
 
 	/**
-	 * Rightfully stolen from StackOverflow
-	 * <a href="https://stackoverflow.com/a/35833800/9876980">https://stackoverflow.com/a/35833800/9876980</a>
-	 *
 	 * @param number   to be rounded
 	 * @param decimals after the separator
 	 * @return a (efficiently) rounded number
 	 */
 	public static float roundFloat(float number, int decimals)
 	{
-		int pow = 10;
-		for(int i = 1; i < decimals; i++)
+		int pow = 1;
+		for(int i = 0; i < decimals; i++)
 			pow *= 10;
 		float tmp = number*pow;
-		return ((float)((int)((tmp-(int)tmp) >= 0.5f?tmp+1: tmp)))/pow;
+
+		return (float)Math.round(tmp)/pow;
 	}
 
 	public static String toSnakeCase(String value)

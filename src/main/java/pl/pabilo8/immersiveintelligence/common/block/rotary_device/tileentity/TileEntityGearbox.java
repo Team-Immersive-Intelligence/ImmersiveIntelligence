@@ -3,7 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity;
 import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IComparatorOverride;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IConfigurableSides;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ITileDrop;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -89,14 +92,24 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 	@Override
 	public void update()
 	{
-		if(!world.isRemote&&world.getTotalWorldTime()%20==0)
+		if(world.isRemote)
+			return;
+
+		//Do not output power if redstone is supplied
+		if(world.isBlockPowered(pos))
+		{
+			rotation.grow(0, 0, 0.98f);
+			return;
+		}
+
+		if(world.getTotalWorldTime()%20==0)
 		{
 			rotation.setRotationSpeed(0);
 			rotation.setTorque(0);
 			ArrayList<IRotaryEnergy> in = new ArrayList<>();
 			ArrayList<IRotaryEnergy> out = new ArrayList<>();
-			ArrayList<EnumFacing> out_sides = new ArrayList<>();
-			for(int i = 0; i < sideConfig.length; i += 1)
+
+			for(int i = 0; i < sideConfig.length; i++)
 			{
 				SideConfig s = sideConfig[i];
 
@@ -120,12 +133,9 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 					in.add(energy);
 				}
 				else
-				{
 					out.add(energy);
-					out_sides.add(f.getOpposite());
-				}
-
 			}
+
 			in.forEach((iRotationalEnergy ->
 			{
 				rotation.setTorque(rotation.getCombinedTorque(iRotationalEnergy));
@@ -138,7 +148,7 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 			rotation.setRotationSpeed((rotation.getRotationSpeed()*eff)/tmod);
 			rotation.setTorque(rotation.getTorque()*eff*tmod);
 
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIUtils.targetPointFromTile(this, 32));
+			IIPacketHandler.INSTANCE.sendToAllAround(new MessageRotaryPowerSync(rotation, 0, getPos()), IIPacketHandler.targetPointFromTile(this, 32));
 		}
 	}
 

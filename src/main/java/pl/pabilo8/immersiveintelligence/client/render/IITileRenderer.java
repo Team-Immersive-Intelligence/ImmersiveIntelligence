@@ -18,6 +18,10 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 
 import javax.annotation.Nullable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Pabilo8
@@ -130,5 +134,15 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 	protected boolean shouldNotRender(T te)
 	{
 		return te==null;
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+	public @interface RegisteredTileRenderer
+	{
+		String name();
+
+		Class<? extends TileEntity> clazz();
+
 	}
 }

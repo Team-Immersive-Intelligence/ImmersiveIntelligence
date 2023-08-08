@@ -12,6 +12,8 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSawmill;
+import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 
 import java.util.ArrayList;
 
@@ -31,6 +33,15 @@ public class GuiSawmill extends GuiIEContainerBase
 		super(new ContainerSawmill(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
+
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(true, 0, tile.getPos()));
+	}
+
+	@Override
+	public void onGuiClosed()
+	{
+		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));
+		super.onGuiClosed();
 	}
 
 	/**
@@ -45,9 +56,10 @@ public class GuiSawmill extends GuiIEContainerBase
 		fontRenderer.drawString(tile.getCurrentEfficiency()*100+"%", 45, 48, 0xd99747);
 
 		ClientUtils.bindTexture(texture_skycrate_station);
-		if(tile.processTimeMax!=0)
+		//TODO: 13.04.2023 progress bar rendering
+		if(tile.currentProcess!=null)
 		{
-			float progress = Math.min(1f, tile.processTime/(float)tile.processTimeMax);
+			float progress = tile.getProductionProgress(tile.currentProcess, 0);
 			this.drawTexturedModalRect(33, 38, 0, 168, Math.round(49f*progress), 12);
 		}
 	}
@@ -68,7 +80,6 @@ public class GuiSawmill extends GuiIEContainerBase
 	public void drawScreen(int mx, int my, float partial)
 	{
 		super.drawScreen(mx, my, partial);
-		this.renderHoveredToolTip(mx, my);
 
 		//Thanks Flaxbeard!
 		ArrayList<String> tooltip = new ArrayList<>();

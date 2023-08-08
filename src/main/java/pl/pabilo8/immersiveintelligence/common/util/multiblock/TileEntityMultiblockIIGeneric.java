@@ -19,18 +19,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants.NBT;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A standard II "medium-high tier" multiblock.<br>
@@ -45,6 +48,8 @@ import java.util.Arrays;
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
 		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride, IAdvancedBounds
 {
+	private List<AxisAlignedBB> aabb = null;
+
 	protected boolean redstoneControlInverted = false;
 	public NonNullList<ItemStack> inventory;
 	IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
@@ -270,6 +275,47 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 			T master = master();
 			if(master!=null)
 				master.sendNBTMessageClient(master.energyStorage.writeToNBT(new NBTTagCompound()));
+		}
+	}
+
+	//--- IAdvancedBounds ---//
+
+	@Override
+	public List<AxisAlignedBB> getBounds(boolean collision)
+	{
+		//Use or create AABB cache
+		if(pos!=-1&&aabb==null)
+			aabb = multiblock.getAABB(pos, getPos(), facing, mirrored);
+		return aabb;
+	}
+
+	/**
+	 * Represents an animated part of the multiblock, like a drawer
+	 */
+	public static class MultiblockInteractablePart
+	{
+		boolean opened = false;
+		float progress = 0;
+		final float maxProgress;
+
+		public MultiblockInteractablePart(float maxProgress)
+		{
+			this.maxProgress = maxProgress;
+		}
+
+		public float getProgress(float partialTicks)
+		{
+			return MathHelper.clamp(progress+(opened?partialTicks: -partialTicks), 0, maxProgress)/maxProgress;
+		}
+
+		public void update()
+		{
+			this.progress = MathHelper.clamp(progress+(opened?1: -1), 0, maxProgress);
+		}
+
+		public void setState(boolean state)
+		{
+			this.opened = state;
 		}
 	}
 

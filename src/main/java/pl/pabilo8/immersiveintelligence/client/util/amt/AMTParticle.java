@@ -1,5 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -53,17 +55,21 @@ public class AMTParticle extends AMT
 		if(particle==null||particle.getAge()==0)
 			return;
 
-		// TODO: 31.12.2022 actually use particles...
+		if(particle instanceof ParticleGunfire)
+		{
+			drawGunshot(buf);
+			return;
+		}
 
 		//Uses the custom property value for age
-		/*particle.setAge((int)(property*particle.getMaxAge()));
-		particle.setWorld(ClientUtils.mc().world);*/
+		particle.setAge((int)(property*particle.getMaxAge()));
+		particle.setWorld(ClientUtils.mc().world);
 
 		GlStateManager.translate(originPos.x, originPos.y-0.5, originPos.z);
 		GlStateManager.rotate(90, 0, 1, 0);
 
 		//Set up BufferBuilder with the particle stage
-		/*particle.getDrawStage().prepareRender(buf);
+		particle.getDrawStage().prepareRender(buf);
 
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
@@ -80,7 +86,16 @@ public class AMTParticle extends AMT
 				ActiveRenderInfo.getRotationXY()
 		);
 		tes.draw();
-		particle.getDrawStage().clear();*/
+		particle.getDrawStage().clear();
+	}
+
+	/**
+	 * A very temporary solution, pls don't howitzize
+	 */
+	private void drawGunshot(BufferBuilder buf)
+	{
+		GlStateManager.translate(originPos.x, originPos.y-0.5, originPos.z);
+		GlStateManager.rotate(90, 0, 1, 0);
 
 		TextureAtlasSprite tex = ParticleGunfire.TEXTURES[(int)(property*7)];
 		float u = tex.getMinU(), v = tex.getInterpolatedV(8), uu = tex.getInterpolatedU(8), vv = tex.getMaxV();
@@ -124,8 +139,6 @@ public class AMTParticle extends AMT
 		GlStateManager.enableLighting();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
-
-
 	}
 
 	@Override

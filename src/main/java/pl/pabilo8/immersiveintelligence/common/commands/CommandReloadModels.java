@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.tmt;
+package pl.pabilo8.immersiveintelligence.common.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 23-06-2020
  */
-public class CommandTMTReloadModels extends CommandBase
+public class CommandReloadModels extends CommandBase
 {
 	/**
 	 * Gets the name of the command
@@ -26,7 +26,7 @@ public class CommandTMTReloadModels extends CommandBase
 	@Override
 	public String getName()
 	{
-		return "reloadmodels";
+		return "relmod";
 	}
 
 	/**
@@ -49,9 +49,7 @@ public class CommandTMTReloadModels extends CommandBase
 		if(args.length > 0)
 		{
 			for(String arg : args)
-			{
 				success = IIModelRegistry.instance.reloadModel(new ResourceLocation(arg))||success;
-			}
 		}
 		else
 		{

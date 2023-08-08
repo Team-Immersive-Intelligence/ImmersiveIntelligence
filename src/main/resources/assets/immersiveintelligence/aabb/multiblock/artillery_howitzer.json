@@ -1,0 +1,98 @@
+{
+  "bounds": {
+    "empty": {
+      "bounds": [
+        0,
+        13.0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "rotate": false
+    },
+    "door": {
+      "bounds": [
+        0,
+        0,
+        0,
+        1,
+        2.0,
+        1
+      ],
+      "rotate": false
+    },
+    "taller_floor": {
+      "bounds": [
+        0,
+        0,
+        0,
+        1,
+        7.0,
+        1
+      ],
+      "rotate": false
+    },
+    "lower_floor": {
+      "bounds": [
+        0,
+        0,
+        0,
+        1,
+        3.0,
+        1
+      ],
+      "rotate": false
+    },
+    "table_top": {
+      "bounds": [
+        0,
+        0,
+        0,
+        1,
+        4.0,
+        1
+      ],
+      "rotate": false
+    },
+    "ladder": {
+      "bounds": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        15.0
+      ],
+      "rotate": false
+    },
+    "door_holders_right": {
+      "bounds": [
+        0,
+        0,
+        0,
+        8.0,
+        10.0,
+        1
+      ],
+      "rotate": false
+    },
+    "door_holders_left": {
+      "bounds": [
+        8.0,
+        0,
+        0,
+        1,
+        10.0,
+        1
+      ],
+      "rotate": false
+    }
+  },
+  "positions": {
+    "66,147,228,309,390,471,410": [
+      "ladder"
+    ],
+    "461,380,299,218,137,429,348,267,186,105": []
+  }
+}

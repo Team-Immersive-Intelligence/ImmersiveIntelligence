@@ -1,312 +1,178 @@
 package pl.pabilo8.immersiveintelligence.client.render.multiblock.wooden;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import blusunrize.immersiveengineering.client.models.IESmartObjModel;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.api.utils.ISawblade;
-import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSawmill;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Tuple;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
+import pl.pabilo8.immersiveintelligence.api.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 /**
  * @author Pabilo8
  * @since 21-06-2019
  */
-public class SawmillRenderer extends TileEntitySpecialRenderer<TileEntitySawmill> implements IReloadableModelContainer<SawmillRenderer>
+@SideOnly(Side.CLIENT)
+@RegisteredTileRenderer(name = "sawmill", clazz = TileEntitySawmill.class)
+public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 {
-	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
-	private static ModelSawmill model;
-	private static ModelSawmill modelFlipped;
+	private AMTModelCache<TileEntity> model;
+	private IIAnimationCachedMap animationRotate, animationDustPile, animationInteract;
+	private IIAnimationCachedMap animationProductionStart, animationProductionLoop, animationProductionReach;
+
+	private AMTCrossVariantReference<AMTQuads> partSawblade;
+	private AMTCrossVariantReference<AMTItem> partItemInput, partItemOutput, partItemInserter;
 
 	@Override
-	public void render(TileEntitySawmill te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+	protected boolean shouldNotRender(TileEntitySawmill te)
 	{
-		String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/table_saw.png";
-		if(te!=null&&!te.isDummy())
-		{
-			ClientUtils.bindTexture(texture);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate((float)x, (float)y, (float)z);
-			GlStateManager.rotate(180F, 0F, 1F, 0F);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			double world_rpm = -1;
-			if(te.hasWorld())
-			{
-				GlStateManager.translate(0f, 1f, 1f);
-				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				RenderHelper.enableStandardItemLighting();
-				//RenderHelper.enableGUIStandardItemLighting();
-
-				world_rpm = (te.getWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
-			}
-			ModelSawmill modelCurrent = te.mirrored?modelFlipped: model;
-			float mirrorMod = te.mirrored?-1: 1;
-			modelCurrent.getBlockRotation(te.facing, te.mirrored);
-
-
-			for(ModelRendererTurbo mod : modelCurrent.baseModel)
-				mod.render(0.0625f);
-
-			GlStateManager.pushMatrix();
-			GlStateManager.enableBlend();
-			for(ModelRendererTurbo mod : modelCurrent.baseTransparentModel)
-				mod.render(0.0625f);
-			GlStateManager.disableBlend();
-			GlStateManager.popMatrix();
-
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(2.5f, 0.6875f, 0f);
-			if(world_rpm > -1)
-				GlStateManager.rotate((float)-(world_rpm*360f*te.rotation.getRotationSpeed()), 0, 0, 1);
-
-			for(ModelRendererTurbo mod : modelCurrent.axleModel)
-				mod.render(0.0625f);
-
-			if(world_rpm > -1&&te.inventory.get(1).getItem() instanceof ISawblade)
-			{
-				GlStateManager.translate(0, 0, -0.0625*mirrorMod);
-
-				renderItem.renderItem(new ItemStack(te.inventory.get(1).getItem(), 1, ((ISawblade)te.inventory.get(1).getItem()).getSawbladeDisplayMeta(te.inventory.get(1))), TransformType.FIXED);
-				ClientUtils.bindTexture(texture);
-			}
-
-			GlStateManager.popMatrix();
-			boolean renderInput = !te.inventory.get(0).isEmpty();
-
-			if(te.processPrimary.getCount() > 0)
-			{
-				GlStateManager.pushMatrix();
-
-				//IILogger.info(te.processTime+" / "+te.processTimeMax);
-				float ptime = Math.min(te.processTime+partialTicks, te.processTimeMax);
-				float timeFull = ptime/(float)te.processTimeMax;
-				boolean renderStack = false, time_half = false;
-
-				float single, time_inserter = 0, inserter_backpush_time = 0, inserter_push = 0;
-				int iteration = 0;
-
-				if(timeFull < 0.125f)
-				{
-					timeFull /= 0.125f;
-					renderStack = timeFull > 0.5;
-					renderInput = !renderStack||te.inventory.get(0).getCount() > 1;
-					inserter_push = (1f-(Math.abs(timeFull-0.5f)/0.5f))*0.75f;
-
-
-				}
-				else if(timeFull < 0.875f)
-				{
-					//timeFull=(timeFull-0.125f)/0.6255f;
-
-					single = (te.processTimeMax*0.75f)/(float)te.processPrimary.getCount();
-					ptime -= te.processTimeMax*0.125f;
-					time_inserter = ((ptime)%single)/(single);
-					iteration = (int)Math.floor(ptime/single);
-					time_half = time_inserter > 0.5f;
-					inserter_backpush_time = time_inserter > 0.75f?(time_inserter-0.75f)/0.25f: 0;
-					time_inserter = 1f-(Math.abs(Math.min(time_inserter, 1f)-0.5f)/0.5f);
-					renderStack = !(iteration+(time_half?1: 0) >= te.processPrimary.getCount());
-
-					if(!time_half&&time_inserter > 0.45f&&getWorld().getTotalWorldTime()%2==0)
-						te.active = true;
-
-					if(time_half||iteration > 0)
-					{
-						GlStateManager.pushMatrix();
-
-						GlStateManager.translate(2.5, 1.25, -0.325f*mirrorMod);
-
-						if(time_half)
-						{
-							float time = (1f-Math.min(time_inserter/0.65f, 1));
-							GlStateManager.translate(-0.65*(time > 0.25f?(time-0.25f)/0.75f: 0f), -0.25*Math.min(time/0.25f, 1f), 0f);
-							GlStateManager.rotate(-65*(1f-Math.min(time_inserter/0.65f, 1)), 1, 0, 0);
-						}
-						else
-						{
-							float time = (Math.min(time_inserter/0.65f, 1));
-							GlStateManager.translate(-0.65, -0.25, 0f);
-							GlStateManager.translate(-0.95*(time < 0.75f?time/0.75f: 1f), 0f, 0f);
-							GlStateManager.translate(-0.45*(time > 0.75f?(time-0.75f)/0.25f: 0f), -0.45*(time > 0.75f?(time-0.75f)/0.25f: 0f), 0f);
-							GlStateManager.rotate(-75-(25*(1f-Math.min(time_inserter/0.65f, 1))), 1, 0, 0);
-
-							GlStateManager.scale(1-(0.15f*time_inserter), 1-(0.15f*time_inserter), 1-(0.15f*time_inserter));
-							//GlStateManager.rotate(-120*(time_inserter>0.65f?(time_inserter-0.65f)/0.35f:0f),1,0,0);
-
-							if(time_inserter > 0.65&&time_inserter < 0.75)
-								te.spawnLast = true;
-						}
-
-						GlStateManager.scale(0.75f, 0.75f, 0.55f);
-						renderItem.renderItem(te.processPrimary, TransformType.FIXED);
-
-
-						GlStateManager.popMatrix();
-						ClientUtils.bindTexture(texture);
-					}
-
-				}
-				else
-				{
-					iteration = te.processPrimary.getCount();
-					//inserter_backpush_time=-((timeFull-0.825f)/0.125f)*te.processPrimary.getCount();
-
-					GlStateManager.pushMatrix();
-
-					GlStateManager.translate(2.5, 1.25, -0.325f*mirrorMod);
-					float time = Math.min((timeFull-0.875f)/0.125f, 1f);
-					GlStateManager.translate(-0.65, -0.25, 0f);
-					GlStateManager.translate(-0.95*(time < 0.75f?time/0.75f: 1f), 0f, 0f);
-					GlStateManager.translate(-0.45*(time > 0.75f?(time-0.75f)/0.25f: 0f), -0.45*(time > 0.75f?(time-0.75f)/0.25f: 0f), 0f);
-					GlStateManager.rotate(-75-(25*(1f-Math.min(time_inserter/0.65f, 1))), 1, 0, 0);
-
-					GlStateManager.scale(1-(0.15f*time_inserter), 1-(0.15f*time_inserter), 1-(0.15f*time_inserter));
-
-					GlStateManager.scale(0.75f, 0.75f, 0.55f);
-					renderItem.renderItem(te.processPrimary, TransformType.FIXED);
-
-					if(time > 0.9&&getWorld().getTotalWorldTime()%4==0)
-						te.spawnLast = true;
-
-					GlStateManager.popMatrix();
-					ClientUtils.bindTexture(texture);
-
-				}
-
-				GlStateManager.translate(time_inserter*-1.125f, 0f, 0f);
-
-				for(ModelRendererTurbo mod : modelCurrent.inserterBaseModel)
-					mod.render(0.0625f);
-
-				GlStateManager.translate(0, 0, mirrorMod*(0.5+(Math.min((iteration+inserter_backpush_time)/(float)te.processPrimary.getCount(), 1)*-0.325)-inserter_push));
-				for(ModelRendererTurbo mod : modelCurrent.inserterMovingPartModel)
-					mod.render(0.0625f);
-
-				GlStateManager.translate(3.5, 1.25, -0.325f*mirrorMod);
-				GlStateManager.scale(0.95f, 0.95f, 0.95f-Math.max((iteration+(time_half?1: 0))/(float)te.processPrimary.getCount(), 0));
-
-				if(renderStack)
-					renderItem.renderItem(te.inventory.get(0), TransformType.FIXED);
-
-				GlStateManager.popMatrix();
-
-				if(!te.inventory.get(2).isEmpty()||iteration > 0)
-				{
-					GlStateManager.pushMatrix();
-					int total = Math.min(9, te.inventory.get(2).getCount()+iteration+(!time_half?-1: 0));
-					ItemStack stack = te.processPrimary.getCount() > 0?te.processPrimary: te.inventory.get(2);
-
-					GlStateManager.translate(0.25, 0.15, -0.25*mirrorMod);
-					GlStateManager.rotate(-45f, 1, 0, 0);
-
-					for(int i = 0; i < total; i += 1)
-					{
-						GlStateManager.pushMatrix();
-						GlStateManager.rotate(45f, 1, 0, 0);
-						GlStateManager.translate(i%3*0.25f, (i/3)*0.25f, (i/3)*-0.15*mirrorMod);
-						GlStateManager.rotate(-45f, 1, 0, 0);
-						GlStateManager.scale(0.75, 0.75, 0.75);
-
-						renderItem.renderItem(stack, TransformType.FIXED);
-						GlStateManager.popMatrix();
-					}
-
-					GlStateManager.popMatrix();
-				}
-
-
-				ClientUtils.bindTexture(texture);
-			}
-			else
-			{
-				for(ModelRendererTurbo mod : modelCurrent.inserterBaseModel)
-					mod.render(0.0625f);
-
-				for(ModelRendererTurbo mod : modelCurrent.inserterMovingPartModel)
-					mod.render(0.0625f);
-			}
-
-			if(renderInput)
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.translate(3.5, 1.25, -0.35f*mirrorMod);
-				GlStateManager.scale(0.9f, 0.9f, 0.9f);
-				renderItem.renderItem(te.inventory.get(0), TransformType.FIXED);
-				GlStateManager.popMatrix();
-				ClientUtils.bindTexture(texture);
-			}
-
-			if(!te.inventory.get(3).isEmpty())
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.enableBlend();
-				GlStateManager.translate(2.375f, 0f, 0f);
-				float scale = Math.min(1, (float)te.inventory.get(3).getCount()*2f/(float)te.inventory.get(3).getMaxStackSize());
-				GlStateManager.scale(scale, scale, scale);
-				for(ModelRendererTurbo mod : modelCurrent.sawdustModel)
-					mod.render(0.0625f);
-				GlStateManager.disableBlend();
-				GlStateManager.popMatrix();
-			}
-
-			GlStateManager.popMatrix();
-
-		}
-		else if(te==null)
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x-0.75, y-0.25, z+0.35);
-			GlStateManager.rotate(7.5f, 0, 0, 1);
-			GlStateManager.rotate(-7.5f, 1, 0, 0);
-			GlStateManager.scale(0.45, 0.45, 0.45);
-			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-			ClientUtils.bindTexture(texture);
-			for(ModelRendererTurbo mod : model.baseModel)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.baseTransparentModel)
-				mod.render(0.0625f);
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(2.5f, 0.6875f, 0f);
-			for(ModelRendererTurbo mod : model.axleModel)
-				mod.render(0.0625f);
-			GlStateManager.popMatrix();
-			for(ModelRendererTurbo mod : model.inserterBaseModel)
-				mod.render(0.0625f);
-			for(ModelRendererTurbo mod : model.inserterMovingPartModel)
-				mod.render(0.0625f);
-			GlStateManager.translate(2.375f, 0f, 0f);
-			for(ModelRendererTurbo mod : model.sawdustModel)
-				mod.render(0.0625f);
-			GlStateManager.popMatrix();
-		}
+		return te==null||te.isDummy();
 	}
 
 	@Override
-	public void reloadModels()
+	public void draw(TileEntitySawmill te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		model = new ModelSawmill(false);
-		modelFlipped = new ModelSawmill(true);
-		modelFlipped.flipAllZ();
+		//Prepare variables
+		ItemStack sawBlade = te.inventory.get(TileEntitySawmill.SLOT_SAWBLADE);
+		ItemStack sawDust = te.getInventory().get(TileEntitySawmill.SLOT_SAWDUST);
+		float progress = te.getProductionProgress(te.currentProcess, partialTicks);
 
-		modelFlipped.parts.values().forEach(modelRendererTurbos ->
+		//Get model variant, defaultize
+		applyStandardRotation(te.facing);
+		model.getVariant(sawBlade.isEmpty()?"": ((ISawblade)sawBlade.getItem()).getMaterialName(sawBlade), te);
+		for(AMT mod : model)
+			mod.defaultize();
+
+		//Set item display
+		partItemInput.get().setStack(te.inventory.get(TileEntitySawmill.SLOT_INPUT));
+		//TODO: 30.07.2023 different output
+		partItemOutput.get().setStack(te.inventory.get(TileEntitySawmill.SLOT_OUTPUT));
+		partItemInserter.get().setStack(ItemStack.EMPTY);
+
+		//Dust pile size
+		animationDustPile.apply(sawDust.isEmpty()?0f: sawDust.getCount()/(float)sawDust.getMaxStackSize());
+
+		//Saw Blade model visibility
+		IIAnimationUtils.setModelVisibility(partSawblade.get(), !te.getInventory().get(TileEntitySawmill.SLOT_SAWBLADE).isEmpty());
+
+		//Rotation
+		animationRotate.apply(IIAnimationUtils.getDebugProgress(getWorld(), 20, partialTicks));
+
+		//Production animation
+		if(progress > 0)
 		{
-			for(ModelRendererTurbo m : modelRendererTurbos)
+			assert te.currentProcess!=null;
+			SawmillRecipe recipe = te.currentProcess.recipe;
+
+			//Beginning "grab" animation
+			if(progress < 0.1f)
+				animationProductionStart.apply(progress/0.1f);
+			else
 			{
-				m.rotateAngleX *= -1;
-				m.offsetX *= -1;
-				m.offsetY *= -1;
-				m.offsetZ *= -1;
+				progress -= 0.1f;
+				//Individual animation of each plank being cut
+				double individual = ((progress*recipe.itemOutput.getCount())%0.9)/0.9f;
+
+				animationProductionLoop.apply((float)individual);
+				animationProductionReach.apply(progress);
 			}
 
-		});
+			//Currently held item
+			partItemInserter.get().setStack(recipe.itemInput.getExampleStack());
+			partItemOutput.get().setStack(recipe.itemOutput);
+		}
+		else
+			animationProductionReach.apply(0f);
+
+		//GUI/Interaction animation
+		animationInteract.apply(te.vice.getProgress(partialTicks));
+
+		//Flip
+		if(!te.mirrored) mirrorRender();
+
+		//Render
+		for(AMT mod : model)
+			mod.render(tes, buf);
+
+		//Revert
+		if(!te.mirrored) unMirrorRender();
+	}
+
+	@Override
+	public void compileModels(Tuple<IBlockState, IBakedModel> sModel)
+	{
+		model = AMTModelCacheBuilder.startTileEntityModel()
+				.withModel(((IESmartObjModel)sModel.getSecond()).getModel())
+				.withModel(ResLoc.of(IILib.RES_BLOCK_MODEL, "multiblock/sawmill/sawblade.obj"))
+				.withModel(ResLoc.of(IILib.RES_BLOCK_MODEL, "multiblock/sawmill/sawdust.obj"))
+				.withHeader(IIAnimationLoader.loadHeader(sModel.getSecond()))
+				.withModelProvider((tile, header) -> new AMT[]{
+						new AMTItem("item_input", header),
+						new AMTItem("item_output", header),
+						new AMTItem("item_inserter", header),
+						new AMTLocator("cardan1", header),
+						new AMTLocator("cardan3", header)
+				})
+				//TODO: 18.07.2023 dust colors
+				.withTextureProvider((res, tile) -> {
+					//Default
+					if(!(tile instanceof TileEntitySawmill)||!tile.hasWorld()) return ClientUtils.getSprite(res);
+
+					TileEntitySawmill sawmill = (TileEntitySawmill)tile;
+					ItemStack sawblade = sawmill.inventory.get(TileEntitySawmill.SLOT_SAWBLADE);
+
+					//Sawblade
+					if(res.getResourcePath().endsWith("iron")&&sawblade.getItem() instanceof ISawblade)
+						return ClientUtils.getSprite(((ISawblade)sawblade.getItem()).getSawbladeTexture(sawblade));
+
+					//Dust
+
+					return ClientUtils.getSprite(res);
+				})
+				.build();
+
+		partSawblade = new AMTCrossVariantReference<>("sawblade", model);
+		partItemInput = new AMTCrossVariantReference<>("item_input", model);
+		partItemOutput = new AMTCrossVariantReference<>("item_output", model);
+		partItemInserter = new AMTCrossVariantReference<>("item_inserter", model);
+
+		animationInteract = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/interact"));
+		animationRotate = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/rotate"));
+		animationDustPile = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/sawdust"));
+
+		animationProductionStart = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/production_start"));
+		animationProductionLoop = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/production_loop"));
+		animationProductionReach = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/production_reach"));
+
+	}
+
+	@Override
+	public void registerSprites(TextureMap map)
+	{
+		super.registerSprites(map);
+		//In case of other mods that want II compat, register your sprites separately
+		for(SawBlades value : SawBlades.values())
+			map.registerSprite(IIContent.itemSawblade.getSawbladeTexture(IIContent.itemSawblade.getStack(value)));
+	}
+
+	@Override
+	protected void nullifyModels()
+	{
+		IIAnimationUtils.disposeOf(model);
 	}
 }

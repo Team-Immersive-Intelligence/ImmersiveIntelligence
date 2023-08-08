@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.in
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
+import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AdvancedInserter;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -37,25 +37,25 @@ public class TileEntityAdvancedInserter extends TileEntityInserter
 	@Override
 	public int getPickupSpeed()
 	{
-		return Inserter.taskTime;
+		return AdvancedInserter.taskTime;
 	}
 
 	@Override
 	public int getEnergyUsage()
 	{
-		return Inserter.energyUsage;
+		return AdvancedInserter.energyUsage;
 	}
 
 	@Override
 	public int getEnergyCapacity()
 	{
-		return Inserter.energyCapacity;
+		return AdvancedInserter.energyCapacity;
 	}
 
 	@Override
 	public int getMaxTakeAmount()
 	{
-		return Inserter.maxTake;
+		return AdvancedInserter.maxTake;
 	}
 
 	@Nonnull

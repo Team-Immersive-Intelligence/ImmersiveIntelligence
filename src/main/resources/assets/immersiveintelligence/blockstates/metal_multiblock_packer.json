@@ -10,14 +10,14 @@
     }
   },
   "variants": {
-    "inventory,type=artillery_howitzer": [
+    "inventory,type=packer": [
       {
-        "model": "immersiveintelligence:multiblock/artillery_howitzer_inv.obj",
+        "model": "immersiveintelligence:multiblock/packer_inv.obj",
         "transform": {
-          "scale": 0.25,
+          "scale": 0.2,
           "translation": [
-            0,
-            -0.375,
+            -0.125,
+            -0.25,
             0
           ],
           "rotation": [
@@ -25,14 +25,14 @@
               "x": 20
             },
             {
-              "y": -45
+              "y": -225
             }
           ]
         }
       }
     ],
     "type": {
-      "artillery_howitzer": {}
+      "packer": {}
     },
     "facing": {
       "north": {
@@ -66,10 +66,10 @@
     },
     "boolean0": {
       "false": {
-        "model": "immersiveintelligence:multiblock/artillery_howitzer_base.obj"
+        "model": "immersiveintelligence:multiblock/packer_base.obj"
       },
       "true": {
-        "model": "immersiveintelligence:multiblock/artillery_howitzer_base_flipped.obj"
+        "model": "immersiveintelligence:multiblock/packer_base_flipped.obj"
       }
     },
     "boolean1": {
@@ -85,7 +85,7 @@
     "_1dynamicrender": {
       "false": {},
       "true": {
-        "model": "immersiveintelligence:multiblock/artillery_howitzer.obj.ie"
+        "model": "immersiveintelligence:multiblock/packer.obj.ie"
       }
     }
   }

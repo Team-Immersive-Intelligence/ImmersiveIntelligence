@@ -112,15 +112,12 @@ public interface IRotaryEnergy
 	default boolean grow(float other_speed, float other_torque, float percent)
 	{
 		float t = this.getTorque(), r = this.getRotationSpeed();
-		if(other_torque >= this.getTorque())
-			this.setTorque(Math.min(getTorque()+(percent*other_torque), other_torque));
-		else
-			this.setTorque(Math.min(0, Math.max(getTorque()-(percent*other_torque), other_torque)));
+		float minT = Math.min(other_torque, t), maxT = Math.max(other_torque, t);
+		float minR = Math.min(other_speed, r), maxR = Math.max(other_speed, r);
 
-		if(other_speed >= this.getRotationSpeed())
-			this.setRotationSpeed(Math.min(getRotationSpeed()+(percent*other_speed), other_speed));
-		else
-			this.setRotationSpeed(Math.min(0, Math.max(getRotationSpeed()-(percent*other_speed), other_speed)));
+		this.setTorque(Math.min(minT+Math.max(percent*maxT, 0.1f), maxT));
+		this.setRotationSpeed(Math.min(minR+Math.max(percent*maxR, 0.1f), maxR));
+
 		return getTorque()!=t||getRotationSpeed()!=r;
 	}
 

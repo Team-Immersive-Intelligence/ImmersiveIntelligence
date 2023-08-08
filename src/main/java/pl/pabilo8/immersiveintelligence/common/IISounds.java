@@ -174,6 +174,15 @@ public class IISounds
 	@ModSound(sounds = {"device/welding/end"}, subtitle = "welding")
 	public static SoundEvent weldingEnd = registerSound("welding_end");
 
+	@ModSound(sounds = {"device/sawmill/start"}, subtitle = "sawmill_idle")
+	public static SoundEvent sawmillIdle = registerSound("sawmill_start");
+	@ModSound(sounds = {"device/sawmill/start"}, subtitle = "sawmill")
+	public static SoundEvent sawmillStart = registerSound("sawmill_start");
+	@ModSound(sounds = {"device/sawmill/mid"}, subtitle = "sawmill")
+	public static SoundEvent sawmillMid = registerSound("sawmill_mid");
+	@ModSound(sounds = {"device/sawmill/end"}, subtitle = "sawmill")
+	public static SoundEvent sawmillEnd = registerSound("sawmill_end");
+
 	@ModSound(sounds = {"device/fuel_station/start"}, subtitle = "fuel_station")
 	public static SoundEvent fuelStationStart = registerSound("fuel_station_start");
 	@ModSound(sounds = {"device/fuel_station/mid"}, subtitle = "fuel_station")
