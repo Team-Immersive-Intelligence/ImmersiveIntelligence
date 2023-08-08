@@ -45,7 +45,7 @@ jobs:
            build/libs/*-deobf.jar
            build/libs/*-sources.jar
      - name: Notify Discord
-       uses: rguillaume/discord-action-embed@v1.0.2
+       uses: rguillaume/discord-action-embed@v1.0.4
        with:
          webhook: ${{ secrets.DISCORD_WEBHOOK }}
          message: ""
