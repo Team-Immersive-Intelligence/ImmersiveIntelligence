@@ -146,14 +146,34 @@ public class TileEntityDataMerger extends TileEntityIEBase implements IPlayerInt
 		if(side==facing.rotateYCCW())
 		{
 			packetLeft = packet.clone();
-			send=send||mode==1;
+			send = send||mode==1;
+			if(send&&packetRight.hasAnyVariables())
+			{
+				for(char c : packetRight.variables.keySet())
+				{
+					if(!packetLeft.hasVariable(c))
+					{
+						newpacket.setVariable(c, packetRight.getPacketVariable(c));
+					}
+				}
+			}
 		}
 
 		//Right 1 2 (2)
 		if(side==facing.rotateY())
 		{
 			packetRight = packet.clone();
-			send=send||mode==2;
+			send = send||mode==2;
+			if(send&&packetLeft.hasAnyVariables())
+			{
+				for(char c : packetLeft.variables.keySet())
+				{
+					if(!packetRight.hasVariable(c))
+					{
+						newpacket.setVariable(c, packetLeft.getPacketVariable(c));
+					}
+				}
+			}
 		}
 
 		for(char c : DataPacket.varCharacters)
