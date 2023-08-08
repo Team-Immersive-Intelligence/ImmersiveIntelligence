@@ -29,7 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.IIPotions;
  * @author Pabilo8
  * @since 19.12.2020
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityAtomicBoom extends Entity implements IEntityAdditionalSpawnData, IEntityLightEventConsumer
 {
 	public float size;

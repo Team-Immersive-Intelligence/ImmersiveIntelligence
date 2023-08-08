@@ -44,6 +44,7 @@ import java.util.Arrays;
  * @author Pabilo8
  * @since 08.07.2023
  */
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEntityLightEventConsumer
 {
 	private final ArrayList<Entity> hitEntities = new ArrayList<>();

@@ -29,7 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
  * @author Pabilo8
  * @since 26-10-2019
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
 public class EntityWhitePhosphorus extends EntityIEProjectile implements ILightEventConsumer
 {
 	public EntityWhitePhosphorus(World world)

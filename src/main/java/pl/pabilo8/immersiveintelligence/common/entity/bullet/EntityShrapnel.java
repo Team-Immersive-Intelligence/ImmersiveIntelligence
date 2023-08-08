@@ -30,7 +30,7 @@ import static pl.pabilo8.immersiveintelligence.common.util.IIDamageSources.cause
  * @author Pabilo8
  * @since 26-10-2019
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityShrapnel extends EntityIEProjectile implements IEntityLightEventConsumer, IEntityAdditionalSpawnData
 {
 	public String shrapnel;

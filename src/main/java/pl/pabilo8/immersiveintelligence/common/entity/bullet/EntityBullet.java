@@ -53,7 +53,7 @@ import java.util.Arrays;
  * Major update on 08-03-2020.
  * Total rewrite on 31-10-2020, almost no old code left
  */
-@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.ILightEventConsumer", modid = "mirage")
+@net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityBullet extends Entity implements IEntityLightEventConsumer, IEntityAdditionalSpawnData
 {
 	public static final int MAX_TICKS = 600;
