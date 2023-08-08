@@ -99,6 +99,8 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		{
 			case BALLISTIC_COMPUTER:
 			case ARTILLERY_HOWITZER:
+			case RAILWAY_PACKER:
+			case PACKER:
 				return EnumBlockRenderType.MODEL;
 			default:
 				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;

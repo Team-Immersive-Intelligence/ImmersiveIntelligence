@@ -512,7 +512,7 @@ public class Config
 				public static int energyCapacity = 16000;
 
 				@Comment({"Additional energy capacity of the packer when the charging module upgrade is present."})
-				public static int energyCapacityUpgrade = 4000000;
+				public static int energyCapacityUpgrade = 16000000;
 
 				@Comment({"Additional fluid capacity of the packer when the pump module upgrade is present."})
 				public static int fluidCapacityUpgrade = 96000;

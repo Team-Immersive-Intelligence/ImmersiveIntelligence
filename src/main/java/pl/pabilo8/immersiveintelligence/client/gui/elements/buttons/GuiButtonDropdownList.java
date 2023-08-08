@@ -79,6 +79,10 @@ public class GuiButtonDropdownList extends GuiButton
 		for(int i = 0; i < Math.max(width+2-24, 0); i += 16)
 			this.drawTexturedModalRect(x-1+firstX+i, y-1, (i%32) > 16?207: 175, 103, MathHelper.clamp(width+2-24-i, 0, 16), 12);
 
+		GlStateManager.pushMatrix();
+		GlStateManager.enableDepth();
+		GlStateManager.translate(0,0,1);
+
 		if(dropped)
 		{
 			int yDropDown = y+2+fr.FONT_HEIGHT;
@@ -118,7 +122,6 @@ public class GuiButtonDropdownList extends GuiButton
 					this.drawTexturedModalRect(x+width-5, yDropDown+silderShift+3+i, 227, 117, 4, 1);
 			}
 
-			GlStateManager.scale(1, 1, 1);
 			this.hovered = mx >= x&&mx < x+width&&my >= yDropDown&&my < yDropDown+hh;
 			boolean hasTarget = false;
 			for(int i = 0; i < Math.min(perPage, entries.length); i++)
@@ -177,6 +180,7 @@ public class GuiButtonDropdownList extends GuiButton
 			fr.drawString(fr.trimStringToWidth(text, maxW), x+1, y+1, dropped?Lib.COLOUR_I_ImmersiveOrange: (enabled?0xE0E0E0: 0x202020), false);
 		}
 		fr.drawString(dropped?"▼": "▶", x+0.5f+width-7, y+1, dropped?Lib.COLOUR_I_ImmersiveOrange: (enabled?0xE0E0E0: 0x202020), false);
+		GlStateManager.popMatrix();
 
 	}
 

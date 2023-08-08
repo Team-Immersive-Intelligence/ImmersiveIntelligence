@@ -1,0 +1,183 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"lid_left": {
+			"rotation": [
+				{
+					"time": 0.25714,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.3,
+					"transform": [0, 0, 120]
+				},
+				{
+					"time": 0.32857,
+					"transform": [0, 0, 97.5]
+				},
+				{
+					"time": 0.36429,
+					"transform": [0, 0, 77.5]
+				},
+				{
+					"time": 0.39286,
+					"transform": [0, 0, 90]
+				},
+				{
+					"time": 0.82143,
+					"transform": [0, 0, 90]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"lid_right": {
+			"rotation": [
+				{
+					"time": 0.25714,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.3,
+					"transform": [0, 0, -110]
+				},
+				{
+					"time": 0.34286,
+					"transform": [0, 0, -72.5]
+				},
+				{
+					"time": 0.37857,
+					"transform": [0, 0, -90]
+				},
+				{
+					"time": 0.82143,
+					"transform": [0, 0, -90]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"conveyor_item": {
+			"scale": [
+				{
+					"time": 0,
+					"transform": [0.785, 0.785, 0.785]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.14286,
+					"transform": [24, 0, 0]
+				},
+				{
+					"time": 0.28571,
+					"transform": [24, 0, 0]
+				},
+				{
+					"time": 0.42857,
+					"transform": [24, 25, 0]
+				},
+				{
+					"time": 0.57143,
+					"transform": [24, 25, 0]
+				},
+				{
+					"time": 0.71429,
+					"transform": [24, 0, 0]
+				},
+				{
+					"time": 0.85714,
+					"transform": [24, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [48, 0, 0]
+				}
+			]
+		},
+		"clamp": {
+			"position": [
+				{
+					"time": 0.14286,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.21429,
+					"transform": [0, -14, 0]
+				},
+				{
+					"time": 0.28571,
+					"transform": [0, -14, 0]
+				},
+				{
+					"time": 0.42857,
+					"transform": [0, 10, 0]
+				},
+				{
+					"time": 0.57143,
+					"transform": [0, 10, 0]
+				},
+				{
+					"time": 0.71429,
+					"transform": [0, -15, 0]
+				},
+				{
+					"time": 0.78571,
+					"transform": [0, -15, 0]
+				},
+				{
+					"time": 0.825,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"clamp_left": {
+			"position": [
+				{
+					"time": 0.19286,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.28571,
+					"transform": [1.5, 0, 0]
+				},
+				{
+					"time": 0.71429,
+					"transform": [1.5, 0, 0]
+				},
+				{
+					"time": 0.78571,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"clamp_right": {
+			"position": [
+				{
+					"time": 0.19286,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.28571,
+					"transform": [-1.5, 0, 0]
+				},
+				{
+					"time": 0.71429,
+					"transform": [-1.5, 0, 0]
+				},
+				{
+					"time": 0.78571,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

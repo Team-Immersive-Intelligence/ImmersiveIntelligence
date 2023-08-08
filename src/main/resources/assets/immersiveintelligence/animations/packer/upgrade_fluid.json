@@ -1,0 +1,111 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"fluid": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": true
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		},
+		"fluid_input": {
+			"position": [
+				{
+					"time": 0.625,
+					"transform": [0, 0, 16]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"fluid_gauge": {
+			"rotation": [
+				{
+					"time": 0.5,
+					"transform": [0, -360, 0]
+				},
+				{
+					"time": 0.625,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.375,
+					"transform": [0, 12, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"fluid_pipe_holder": {
+			"position": [
+				{
+					"time": 0.125,
+					"transform": [0, 14, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"fluid_back": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 16, 0]
+				},
+				{
+					"time": 0.125,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"fluid_pipe": {
+			"position": [
+				{
+					"time": 0.25,
+					"transform": [0, 0, 10]
+				},
+				{
+					"time": 0.375,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"container_fluids": {
+			"position": [
+				{
+					"time": 0.75,
+					"transform": [0, 36, 0]
+				},
+				{
+					"time": 0.875,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"fluid_output": {
+			"position": [
+				{
+					"time": 0.875,
+					"transform": [1, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

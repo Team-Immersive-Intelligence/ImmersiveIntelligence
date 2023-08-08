@@ -1,15 +1,18 @@
 package pl.pabilo8.immersiveintelligence.common.crafting;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
+import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
+import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
 import blusunrize.immersiveengineering.common.crafting.RecipeRGBColouration;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -23,11 +26,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
@@ -58,6 +66,8 @@ import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.M
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -104,6 +114,8 @@ public class IIRecipes
 
 		addColouringRecipes(recipeRegistry);
 		addChemicalPainterRecipes();
+
+		addPackerHandling();
 
 		//Immersive Engineering can into space???
 		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 750),
@@ -820,11 +832,20 @@ public class IIRecipes
 
 	public static void addUpgradeRecipes()
 	{
+		//Effect Crates
+
 		IIContent.UPGRADE_INSERTER
 				.addStack(new IngredientStack(IIContent.itemPrecissionTool.getStack(PrecisionTools.INSERTER)))
 				.addStack(new IngredientStack("scaffoldingSteel"))
 				.setRequiredProgress(20000)
 				.setRequiredSteps(12);
+
+		IIContent.UPGRADE_MG_LOADER
+				.addStack(new IngredientStack("plateSteel", 8))
+				.setRequiredProgress(20000)
+				.setRequiredSteps(10);
+
+		//Sawmill
 
 		IIContent.UPGRADE_SAW_UNREGULATOR
 				.addStack(new IngredientStack(IIContent.itemMotorGear.getStack(MotorGear.STEEL)))
@@ -838,26 +859,28 @@ public class IIRecipes
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
 				.setRequiredProgress(32000);
 
-		IIContent.UPGRADE_MG_LOADER
-				.addStack(new IngredientStack("plateSteel", 8))
-				.setRequiredProgress(20000)
-				.setRequiredSteps(10);
-
-		IIContent.UPGRADE_UNPACKER_CONVERSION
-				.setRequiredProgress(20000)
-				.setRequiredSteps(25);
+		//Packer
 
 		IIContent.UPGRADE_PACKER_FLUID
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.FLUID_PUMP.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.BARREL.getMeta())))
-				.setRequiredProgress(20000)
-				.setRequiredSteps(25);
+				.setRequiredProgress(20000);
 
 		IIContent.UPGRADE_PACKER_ENERGY
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice1, 1, BlockTypes_MetalDevice1.TESLA_COIL.getMeta())))
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDevice0, 2, BlockTypes_MetalDevice0.CAPACITOR_MV.getMeta())))
-				.setRequiredProgress(20000)
-				.setRequiredSteps(25);
+				.setRequiredProgress(20000);
+
+		IIContent.UPGRADE_PACKER_RAILWAY
+				.addStack(new IngredientStack("gravel", 3))
+				.addStack(new IngredientStack("rail", 3))
+				.setRequiredProgress(40000);
+
+		IIContent.UPGRADE_PACKER_NAMING
+				.addStack(new IngredientStack("circuitBasic", 2))
+				.setRequiredProgress(20000);
+
+		//Radar
 
 		IIContent.UPGRADE_RADIO_LOCATORS
 				.addStack(new IngredientStack("plateSteel", 4))
@@ -1158,6 +1181,165 @@ public class IIRecipes
 				new ItemStack(Items.IRON_NUGGET),
 				600, 640,
 				"dustCopper", "dustZinc", "dustIron", "dustSilicon"
+		);
+	}
+
+	public static void addPackerHandling()
+	{
+		//Items
+
+		final ItemStack[] crates = new ItemStack[]{
+				new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.CRATE.getMeta()),
+				new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta()),
+				new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()),
+
+				new ItemStack(IIContent.blockSmallCrate, 1, 0),
+				new ItemStack(IIContent.blockSmallCrate, 1, 1),
+				new ItemStack(IIContent.blockSmallCrate, 1, 2),
+				new ItemStack(IIContent.blockSmallCrate, 1, 3),
+				new ItemStack(IIContent.blockSmallCrate, 1, 4),
+				new ItemStack(IIContent.blockSmallCrate, 1, 5),
+		};
+
+		PackerHandler.registerItem(
+				stack -> Arrays.stream(crates).anyMatch(s -> s.isItemEqual(stack)),
+				stack -> new ItemStackHandler(blusunrize.immersiveengineering.common.util.Utils.readInventory(ItemNBTHelper.getTag(stack).getTagList("inventory", 10), 27))
+				{
+					final ItemStack ss = stack;
+
+					@Override
+					public boolean isItemValid(int slot, @Nonnull ItemStack stack)
+					{
+						return IEApi.isAllowedInCrate(stack);
+					}
+
+					@Override
+					protected void onContentsChanged(int slot)
+					{
+						super.onContentsChanged(slot);
+						ItemNBTHelper.getTag(ss).setTag("inventory", blusunrize.immersiveengineering.common.util.Utils.writeInventory(this.stacks));
+					}
+				}
+		);
+
+		final ItemStack[] shulkerBoxes = new ItemStack[]{
+				new ItemStack(Blocks.WHITE_SHULKER_BOX),
+				new ItemStack(Blocks.ORANGE_SHULKER_BOX),
+				new ItemStack(Blocks.MAGENTA_SHULKER_BOX),
+				new ItemStack(Blocks.LIGHT_BLUE_SHULKER_BOX),
+				new ItemStack(Blocks.YELLOW_SHULKER_BOX),
+				new ItemStack(Blocks.LIME_SHULKER_BOX),
+				new ItemStack(Blocks.PINK_SHULKER_BOX),
+				new ItemStack(Blocks.GRAY_SHULKER_BOX),
+				new ItemStack(Blocks.SILVER_SHULKER_BOX),
+				new ItemStack(Blocks.CYAN_SHULKER_BOX),
+				new ItemStack(Blocks.PURPLE_SHULKER_BOX),
+				new ItemStack(Blocks.BLUE_SHULKER_BOX),
+				new ItemStack(Blocks.BROWN_SHULKER_BOX),
+				new ItemStack(Blocks.GREEN_SHULKER_BOX),
+				new ItemStack(Blocks.RED_SHULKER_BOX)
+		};
+
+		PackerHandler.registerItem(
+				stack -> Arrays.stream(shulkerBoxes).anyMatch(s -> s.isItemEqual(stack)),
+				stack -> new ItemStackHandler(blusunrize.immersiveengineering.common.util.Utils.readInventory(ItemNBTHelper.getTag(stack).getCompoundTag("BlockEntityTag").getTagList("Items", 10), 27))
+				{
+					final ItemStack ss = stack;
+
+					@Override
+					public boolean isItemValid(int slot, @Nonnull ItemStack stack)
+					{
+						return !(Block.getBlockFromItem(stack.getItem()) instanceof BlockShulkerBox);
+					}
+
+					@Override
+					protected void onContentsChanged(int slot)
+					{
+						super.onContentsChanged(slot);
+						NBTTagCompound tag = ItemNBTHelper.getTagCompound(stack, "BlockEntityTag");
+						tag.setTag("Items", blusunrize.immersiveengineering.common.util.Utils.writeInventory(this.stacks));
+						ItemNBTHelper.setTagCompound(ss, "BlockEntityTag", tag);
+					}
+				}
+		);
+
+		PackerHandler.registerItem(
+				stack -> stack.getItem()==IIContent.itemBulletMagazine,
+				stack -> new ItemStackHandler(IIContent.itemBulletMagazine.readInventory(stack))
+				{
+					final ItemStack ss = stack;
+
+					@Override
+					public boolean isItemValid(int slot, @Nonnull ItemStack stack)
+					{
+
+						return stack.getItem()==IIContent.itemBulletMagazine.stackToSub(ss).ammo;
+					}
+
+					@Override
+					public int getSlotLimit(int slot)
+					{
+						return 1;
+					}
+
+					@Override
+					protected void onContentsChanged(int slot)
+					{
+						super.onContentsChanged(slot);
+						IIContent.itemBulletMagazine.writeInventory(ss, stacks);
+					}
+				}
+		);
+
+
+		PackerHandler.registerItem(
+				stack -> stack.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null),
+				stack -> stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
+		);
+
+		//Fluids
+
+		final ItemStack[] barrels = new ItemStack[]{
+				new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.BARREL.getMeta()),
+				new ItemStack(IEContent.blockMetalDevice0, 1, BlockTypes_MetalDevice0.BARREL.getMeta())
+		};
+
+		PackerHandler.registerFluid(
+				stack -> Arrays.stream(barrels).anyMatch(s -> s.isItemEqual(stack)),
+				stack -> new FluidHandlerItemStack(stack, 12000)
+				{
+					@Nullable
+					@Override
+					public FluidStack getFluid()
+					{
+						NBTTagCompound tagCompound = container.getTagCompound();
+						if(tagCompound==null||!tagCompound.hasKey("tank"))
+							return null;
+						return FluidStack.loadFluidStackFromNBT(tagCompound.getCompoundTag("tank"));
+					}
+
+					@Override
+					protected void setFluid(FluidStack fluid)
+					{
+						if(!container.hasTagCompound())
+							container.setTagCompound(new NBTTagCompound());
+
+						NBTTagCompound fluidTag = new NBTTagCompound();
+						fluid.writeToNBT(fluidTag);
+						container.getTagCompound().setTag("tank", fluidTag);
+					}
+
+					@Override
+					protected void setContainerToEmpty()
+					{
+						container.getTagCompound().removeTag("tank");
+					}
+				}
+		);
+
+		PackerHandler.registerFluid(
+				stack -> stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null),
+				stack -> stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
 		);
 	}
 }

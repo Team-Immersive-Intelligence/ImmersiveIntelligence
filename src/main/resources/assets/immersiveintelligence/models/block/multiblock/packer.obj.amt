@@ -1,0 +1,16 @@
+{
+	"origins": {
+		"lid_right": [0, 16, -8],
+		"lid_left": [16, 16, -8],
+		"clamp": [8, -16, 8],
+		"clamp_left": [24, -16, 8],
+		"clamp_right": [9, -16, 8],
+		"conveyor_item": [32, -6, -8],
+		"conveyor": [0, 0, 0],
+		"conveyor_active": [0, 0, 0]
+	},
+	"hierarchy": {
+		"clamp_left": "clamp",
+		"clamp_right": "clamp"
+	}
+}

@@ -1,0 +1,329 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"energy": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": true
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		},
+		"container_energy": {
+			"position": [
+				{
+					"time": 0.875,
+					"transform": [0, 36, 0]
+				},
+				{
+					"time": 0.9375,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"energy_input": {
+			"position": [
+				{
+					"time": 0.0625,
+					"transform": [0, 0, 16]
+				},
+				{
+					"time": 0.125,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"energy_back": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 16, 0]
+				},
+				{
+					"time": 0.0625,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"cable1": {
+			"position": [
+				{
+					"time": 0.125,
+					"transform": [0, 3, 0]
+				},
+				{
+					"time": 0.1875,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.125,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.1875,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable2": {
+			"position": [
+				{
+					"time": 0.1875,
+					"transform": [0, 3, 0]
+				},
+				{
+					"time": 0.25,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.1875,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.25,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable3": {
+			"position": [
+				{
+					"time": 0.25,
+					"transform": [0, 2, 0]
+				},
+				{
+					"time": 0.3125,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.25,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.3125,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable4": {
+			"position": [
+				{
+					"time": 0.3125,
+					"transform": [0, 0, 3]
+				},
+				{
+					"time": 0.375,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.3125,
+					"transform": [1, 1, 0]
+				},
+				{
+					"time": 0.375,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable5": {
+			"position": [
+				{
+					"time": 0.625,
+					"transform": [0, 3, 0]
+				},
+				{
+					"time": 0.6875,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.625,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.6875,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable6": {
+			"position": [
+				{
+					"time": 0.6875,
+					"transform": [0, 3, 0]
+				},
+				{
+					"time": 0.75,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.6875,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.75,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable7": {
+			"position": [
+				{
+					"time": 0.75,
+					"transform": [0, 2, 0]
+				},
+				{
+					"time": 0.8125,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.75,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.8125,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable8": {
+			"position": [
+				{
+					"time": 0.8125,
+					"transform": [0, 0, 3]
+				},
+				{
+					"time": 0.875,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.8125,
+					"transform": [1, 1, 0]
+				},
+				{
+					"time": 0.875,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable9": {
+			"position": [
+				{
+					"time": 0.375,
+					"transform": [0, 2, 0]
+				},
+				{
+					"time": 0.4375,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.375,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.4375,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable10": {
+			"position": [
+				{
+					"time": 0.4375,
+					"transform": [0, 3, 0]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.4375,
+					"transform": [1, 0, 1]
+				},
+				{
+					"time": 0.5,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable11": {
+			"position": [
+				{
+					"time": 0.5,
+					"transform": [0, 0, -2]
+				},
+				{
+					"time": 0.5625,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.5,
+					"transform": [1, 1, 0]
+				},
+				{
+					"time": 0.5625,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"cable12": {
+			"position": [
+				{
+					"time": 0.5625,
+					"transform": [0, 0, -3]
+				},
+				{
+					"time": 0.625,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.5625,
+					"transform": [1, 1, 0]
+				},
+				{
+					"time": 0.625,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"energy_output": {
+			"position": [
+				{
+					"time": 0.9375,
+					"transform": [1, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

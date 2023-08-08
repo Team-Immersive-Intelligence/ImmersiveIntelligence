@@ -73,6 +73,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 				energyStorage.readFromNBT(nbt);
 			if(inventory.size()!=0)
 				inventory = Utils.readInventory(nbt.getTagList("inventory", NBT.TAG_COMPOUND), inventory.size());
+			redstoneControlInverted = nbt.getBoolean("redstone_control");
 		}
 
 	}
@@ -91,6 +92,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 				energyStorage.writeToNBT(nbt);
 			if(inventory.size()!=0)
 				nbt.setTag("inventory", Utils.writeInventory(inventory));
+			nbt.setBoolean("redstone_control", redstoneControlInverted);
 		}
 	}
 
@@ -106,6 +108,8 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 			inventory = Utils.readInventory(message.getTagList("inventory", 10), inventory.size());
 		if(message.hasKey("ifluxEnergy"))
 			energyStorage.readFromNBT(message);
+		if(message.hasKey("redstone_control"))
+			redstoneControlInverted = message.getBoolean("redstone_control");
 
 	}
 
@@ -116,6 +120,11 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public final boolean isRedstonePos(boolean input)
 	{
 		return Arrays.stream(getRedstonePos(input)).anyMatch(i -> pos==i);
+	}
+
+	public boolean getRedstoneAtPos(int id)
+	{
+		return (world.isBlockPowered(getBlockPosForPos(getRedstonePos(true)[id])))^redstoneControlInverted;
 	}
 
 	@Override

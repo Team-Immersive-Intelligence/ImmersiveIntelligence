@@ -1,0 +1,54 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"item": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": true
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		},
+		"container_items": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": true
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		},
+		"item_input": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": true
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		},
+		"item_output": {
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": true
+				},
+				{
+					"time": 1.0,
+					"visibility": true
+				}
+			]
+		}
+
+	}
+}

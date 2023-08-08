@@ -1,72 +1,68 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.IEApi;
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorAttachable;
-import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.Config.IEConfig.Machines;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.blocks.wooden.BlockTypes_WoodenDevice0;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerPutMode;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PackerRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -74,128 +70,8 @@ import java.util.function.Predicate;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker, IMultiblockRecipe> implements IDataDevice, IAdvancedBounds, IConveyorAttachable, IGuiTile, IUpgradableMachine
+public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker> implements IConveyorAttachable, IGuiTile, IUpgradableMachine, IPlayerInteraction
 {
-	/**
-	 * Used for handling item I/O
-	 */
-	public static HashMap<Predicate<ItemStack>, Function<ItemStack, IItemHandler>> itemHandleMap = new HashMap<>();
-	/**
-	 * Used for handling fluid I/O
-	 */
-	public static HashMap<Predicate<ItemStack>, Function<ItemStack, FluidHandlerItemStack>> fluidHandleMap = new HashMap<>();
-
-	static
-	{
-		final ItemStack[] crates = new ItemStack[]{
-				new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.CRATE.getMeta()),
-				new ItemStack(IEContent.blockWoodenDevice0, 1, BlockTypes_WoodenDevice0.REINFORCED_CRATE.getMeta()),
-				new ItemStack(IIContent.blockMetalDevice, 1, IIBlockTypes_MetalDevice.METAL_CRATE.getMeta()),
-
-				new ItemStack(IIContent.blockSmallCrate, 1, 0),
-				new ItemStack(IIContent.blockSmallCrate, 1, 1),
-				new ItemStack(IIContent.blockSmallCrate, 1, 2),
-				new ItemStack(IIContent.blockSmallCrate, 1, 3),
-				new ItemStack(IIContent.blockSmallCrate, 1, 4),
-				new ItemStack(IIContent.blockSmallCrate, 1, 5),
-		};
-
-		itemHandleMap.put(
-				stack -> Arrays.stream(crates).anyMatch(s -> s.isItemEqual(stack)),
-				stack -> new ItemStackHandler(Utils.readInventory(ItemNBTHelper.getTag(stack).getTagList("inventory", 10), 27))
-				{
-					final ItemStack ss = stack;
-
-					@Override
-					public boolean isItemValid(int slot, @Nonnull ItemStack stack)
-					{
-						return IEApi.isAllowedInCrate(stack);
-					}
-
-					@Override
-					protected void onContentsChanged(int slot)
-					{
-						super.onContentsChanged(slot);
-						ItemNBTHelper.getTag(ss).setTag("inventory", Utils.writeInventory(this.stacks));
-					}
-				}
-		);
-
-		final ItemStack[] shulkerBoxes = new ItemStack[]{
-				new ItemStack(Blocks.WHITE_SHULKER_BOX),
-				new ItemStack(Blocks.ORANGE_SHULKER_BOX),
-				new ItemStack(Blocks.MAGENTA_SHULKER_BOX),
-				new ItemStack(Blocks.LIGHT_BLUE_SHULKER_BOX),
-				new ItemStack(Blocks.YELLOW_SHULKER_BOX),
-				new ItemStack(Blocks.LIME_SHULKER_BOX),
-				new ItemStack(Blocks.PINK_SHULKER_BOX),
-				new ItemStack(Blocks.GRAY_SHULKER_BOX),
-				new ItemStack(Blocks.SILVER_SHULKER_BOX),
-				new ItemStack(Blocks.CYAN_SHULKER_BOX),
-				new ItemStack(Blocks.PURPLE_SHULKER_BOX),
-				new ItemStack(Blocks.BLUE_SHULKER_BOX),
-				new ItemStack(Blocks.BROWN_SHULKER_BOX),
-				new ItemStack(Blocks.GREEN_SHULKER_BOX),
-				new ItemStack(Blocks.RED_SHULKER_BOX)
-		};
-
-		itemHandleMap.put(
-				stack -> Arrays.stream(shulkerBoxes).anyMatch(s -> s.isItemEqual(stack)),
-				stack -> new ItemStackHandler(Utils.readInventory(ItemNBTHelper.getTag(stack).getCompoundTag("BlockEntityTag").getTagList("Items", 10), 27))
-				{
-					final ItemStack ss = stack;
-
-					@Override
-					public boolean isItemValid(int slot, @Nonnull ItemStack stack)
-					{
-						return !(Block.getBlockFromItem(stack.getItem()) instanceof BlockShulkerBox);
-					}
-
-					@Override
-					protected void onContentsChanged(int slot)
-					{
-						super.onContentsChanged(slot);
-						NBTTagCompound tag = ItemNBTHelper.getTagCompound(stack, "BlockEntityTag");
-						tag.setTag("Items", Utils.writeInventory(this.stacks));
-						ItemNBTHelper.setTagCompound(stack, "BlockEntityTag", tag);
-					}
-				}
-		);
-
-		itemHandleMap.put(
-				stack -> stack.getItem()==IIContent.itemBulletMagazine,
-				stack -> new ItemStackHandler(IIContent.itemBulletMagazine.readInventory(stack))
-				{
-					final ItemStack ss = stack;
-
-					@Override
-					public boolean isItemValid(int slot, @Nonnull ItemStack stack)
-					{
-						return stack.getItem()==IIContent.itemBulletMagazine.stackToSub(ss).ammo;
-					}
-
-					@Override
-					public int getSlotLimit(int slot)
-					{
-						return 1;
-					}
-
-					@Override
-					protected void onContentsChanged(int slot)
-					{
-						super.onContentsChanged(slot);
-						IIContent.itemBulletMagazine.writeInventory(this.ss, this.stacks);
-					}
-				}
-		);
-
-
-		itemHandleMap.put(
-				stack -> stack.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null),
-				stack -> stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
-		);
-	}
-
 	public boolean repeatActions = false;
 	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
@@ -205,106 +81,30 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 
 	public ArrayList<PackerTask> tasks = new ArrayList<>();
 
-	/**
-	 * Actual Inventory + [54] container item
-	 */
-	public NonNullList<ItemStack> inventory = NonNullList.withSize(54+1, ItemStack.EMPTY);
-
 	public IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
-	IItemHandler inventoryHandler = new IEInventoryHandler(54, this, 1, true, true);
+	IItemHandler inventoryInHandler = new IEInventoryHandler(54, this, 1, true, true);
+	IItemHandler inventoryOutHandler = new IEInventoryHandler(54, this, 54+1, true, true);
 
-	public FluxStorageAdvanced energyStorageUpgrade = new FluxStorageAdvanced(Packer.energyCapacityUpgrade);
-	public MultiFluidTank fluidTank = new MultiFluidTank(Packer.fluidCapacityUpgrade);
+	public FluxStorageAdvanced energyStorageUpgrade;
+	public MultiFluidTank fluidTank;
 
 	public TileEntityPacker()
 	{
-		super(MultiblockPacker.INSTANCE, MultiblockPacker.INSTANCE.getSize(), Packer.energyCapacity, true);
+		super(MultiblockPacker.INSTANCE);
+
+		this.energyStorage = new FluxStorageAdvanced(Packer.energyCapacity);
+		inventory = NonNullList.withSize(54+54+1, ItemStack.EMPTY);
+
+		energyStorageUpgrade = new FluxStorageAdvanced(Packer.energyCapacityUpgrade);
+		fluidTank = new MultiFluidTank(Packer.fluidCapacityUpgrade);
 	}
 
 	@Override
-	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	protected void onUpdate()
 	{
-		super.readCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		if(!descPacket)
-			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), inventory.size());
-		getUpgradesFromNBT(nbt);
-		repeatActions = nbt.getBoolean("repeatActions");
-		if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
-			energyStorage.readFromNBT(nbt.getCompoundTag("energy_upgrade"));
-		readTasks(nbt.getTagList("tasks", 10));
-	}
-
-	@Override
-	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
-	{
-		super.writeCustomNBT(nbt, descPacket);
-		if(isDummy())
-			return;
-
-		if(!descPacket)
-			nbt.setTag("inventory", Utils.writeInventory(inventory));
-		saveUpgradesToNBT(nbt);
-		nbt.setBoolean("repeatActions", repeatActions);
-
-		if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
-			nbt.setTag("energy_upgrade", energyStorage.writeToNBT(new NBTTagCompound()));
-
-		nbt.setTag("tasks", writeTasks());
-	}
-
-	@Override
-	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), inventory.size());
-		if(message.hasKey("repeatActions"))
-			repeatActions = message.getBoolean("repeatActions");
-		if(message.hasKey("tasks"))
-			readTasks(message.getTagList("tasks", 10));
-	}
-
-	@Override
-	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
-	{
-		super.receiveMessageFromServer(message);
-		if(message.hasKey("repeatActions"))
-			repeatActions = message.getBoolean("repeatActions");
-		if(message.hasKey("tasks"))
-			readTasks(message.getTagList("tasks", 10));
-	}
-
-	public NBTTagList writeTasks()
-	{
-		NBTTagList tagTasks = new NBTTagList();
-		for(PackerTask task : tasks)
-		{
-			tagTasks.appendTag(task.toNBT());
-		}
-		return tagTasks;
-	}
-
-	private void readTasks(NBTTagList tagTasks)
-	{
-		tasks.clear();
-		for(NBTBase task : tagTasks)
-		{
-			if(task instanceof NBTTagCompound)
-				tasks.add(new PackerTask(((NBTTagCompound)task)));
-		}
-	}
-
-	@Override
-	public void update()
-	{
-		super.update();
 		boolean update = false;
 
-		if(!containerHandler.getStackInSlot(0).isEmpty())
-		{
+		if(!getRedstoneAtPos(0)&&!containerHandler.getStackInSlot(0).isEmpty())
 			if(processTime < Packer.actionTime)
 			{
 				if(processTime==0)
@@ -313,15 +113,13 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 				processTime++;
 				if(processTime==Packer.actionTime*0.5)
 				{
-					// TODO: 07.10.2021 play sounds
-					// TODO: 07.10.2021 fill container item
-
 					ItemStack packedItem = containerHandler.getStackInSlot(0);
+					//energy handling
 					if(!packedItem.isEmpty()&&energyStorage.getEnergyStored() >= Packer.energyUsage)
 					{
 						energyStorage.extractEnergy(Packer.energyUsage, false);
 
-						boolean unpacker = hasUpgrade(IIContent.UPGRADE_UNPACKER_CONVERSION);
+//						boolean unpacker = hasUpgrade(IIContent.UPGRADE_UNPACKER_CONVERSION);
 
 						boolean repeat = true;
 						int repeats = 0;
@@ -338,25 +136,29 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 								boolean isLimited = task.expirationAmount!=-1;
 
 								//skip due to bugs
-								// TODO: 31.12.2021 examine
-								if(world.isRemote&&unpacker)
+								if(world.isRemote&&task.unpack)
 									break;
 
 								switch(task.actionType)
 								{
 									case ITEM:
 									{
-										Optional<Function<ItemStack, IItemHandler>> handlerFunction = itemHandleMap.entrySet().stream().filter(p -> p.getKey().test(packedItem)).map(Entry::getValue).findFirst();
+										Optional<Function<ItemStack, IItemHandler>> handlerFunction = PackerHandler.streamItems()
+												.filter(p -> p.getKey().test(packedItem))
+												.map(Entry::getValue)
+												.findFirst();
+
 										if(!handlerFunction.isPresent())
 											break;
 
 										IItemHandler handler = handlerFunction.get().apply(packedItem);
 
-										IItemHandler handlerIn = unpacker?handler: inventoryHandler;
-										IItemHandler handlerOut = unpacker?inventoryHandler: handler;
+										//common handling, just replace in and out inventory handler
+										IItemHandler handlerIn = task.unpack?handler: inventoryInHandler;
+										IItemHandler handlerOut = task.unpack?inventoryOutHandler: handler;
 
-										int slots = Math.min(task.mode==PackerPutMode.SLOT?task.stack.inputSize: Integer.MAX_VALUE, isLimited?task.expirationAmount: Integer.MAX_VALUE);
-										int amount = Math.min(task.mode==PackerPutMode.AMOUNT?task.stack.inputSize: Integer.MAX_VALUE, isLimited?task.expirationAmount: Integer.MAX_VALUE);
+										int slots = Math.min(task.mode==PackerHandler.PackerPutMode.SLOT?task.stack.inputSize: Integer.MAX_VALUE, isLimited?task.expirationAmount: Integer.MAX_VALUE);
+										int amount = Math.min(task.mode==PackerHandler.PackerPutMode.AMOUNT?task.stack.inputSize: Integer.MAX_VALUE, isLimited?task.expirationAmount: Integer.MAX_VALUE);
 
 										for(int i = 0; i < handlerIn.getSlots(); i++)
 										{
@@ -383,25 +185,65 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 									break;
 									case FLUID:
 									{
-										if(unpacker)
+										Optional<Function<ItemStack, IFluidHandlerItem>> handlerFunction = PackerHandler.streamFluids()
+												.filter(p -> p.getKey().test(packedItem))
+												.map(Entry::getValue)
+												.findFirst();
+
+										if(!handlerFunction.isPresent())
+											break;
+
+										IFluidHandlerItem handler = handlerFunction.get().apply(packedItem);
+
+										// TODO: 26.08.2022 proper extraction amount
+										int amount = Math.min(task.mode==PackerHandler.PackerPutMode.AMOUNT?task.stack.inputSize: Integer.MAX_VALUE, isLimited?task.expirationAmount: Integer.MAX_VALUE);
+
+										if(task.unpack)
 										{
+											FluidStack fs = handler.drain(amount, true);
+											if(fs!=null&&("*".equals(task.stack.oreName)||fs.isFluidEqual(task.stack.fluid)))
+											{
+												//check how much fluid was transferred, then subtract to get what's left and put it back in machine tank
+												int accepted = fluidTank.fill(fs.copy(), true);
+												fs.amount -= accepted;
+												handler.fill(fs, true);
+											}
 
 										}
 										else
 										{
+											for(FluidStack fluid : fluidTank.fluids)
+											{
+												if("*".equals(task.stack.oreName)||fluid.isFluidEqual(task.stack.fluid))
+												{
+													FluidStack fs = fluidTank.drain(amount, true);
+													assert fs!=null;
 
+													//check how much fluid was transferred, then subtract to get what's left and put it back in machine tank
+													int accepted = handler.fill(fs.copy(), true);
+													fs.amount -= accepted;
+													fluidTank.fill(fs, true);
+												}
+											}
 										}
 									}
 									break;
 									case ENERGY:
 									{
-										if(unpacker)
+										if(task.unpack)
 										{
-											EnergyHelper.insertFlux(packedItem, energyStorageUpgrade.receiveEnergy(EnergyHelper.extractFlux(packedItem, 10000000, false), false), false);
+											//ah, yes, the inconsistency
+											int extracted = EnergyHelper.extractFlux(packedItem, 10000000, false);
+											int accepted = energyStorageUpgrade.receiveEnergy(extracted, false);
+
+											EnergyHelper.insertFlux(packedItem, accepted-extracted, false);
 										}
 										else
 										{
-											energyStorageUpgrade.receiveEnergy(EnergyHelper.insertFlux(packedItem, energyStorageUpgrade.extractEnergy(10000000, false), false), false);
+											int extracted = energyStorageUpgrade.extractEnergy(10000000, false);
+											int accepted = EnergyHelper.insertFlux(packedItem, extracted, false);
+
+											energyStorageUpgrade.receiveEnergy(accepted-extracted, false);
 										}
 
 									}
@@ -433,39 +275,156 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 				}
 				update = true;
 			}
-		}
 
 		if(world.isRemote)
 		{
 			if(clientUpgradeProgress < getMaxClientProgress())
 				clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
 		}
-		else if(hasUpgrade(IIContent.UPGRADE_UNPACKER_CONVERSION))
+		else //storage output
 		{
-			BlockPos pos = getBlockPosForPos(23).offset(facing);
-			TileEntity inventoryTile = this.world.getTileEntity(pos);
-			if(inventoryTile!=null)
-				for(int i = 0; i < inventory.size(); i++)
+			BlockPos pos = getBlockPosForPos(15)
+					.offset(mirrored?facing.rotateY(): facing.rotateYCCW());
+			TileEntity te = this.world.getTileEntity(pos);
+			EnumFacing outputFacing = mirrored?this.facing.rotateYCCW(): this.facing.rotateY();
+
+			if(te!=null)
+			{
+				if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
 				{
-					ItemStack output = inventory.get(i);
-					if(output.isEmpty())
-						continue;
-					output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
-					inventory.set(i, output);
+					if(te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, outputFacing))
+					{
+						IFluidHandler cap = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, outputFacing);
+						assert cap!=null;
+
+						for(FluidStack fluid : fluidTank.fluids)
+						{
+							FluidStack fs = fluidTank.drain(fluid.copy(), false);
+							assert fs!=null;
+
+							fs.amount -= cap.fill(fs, false);
+							fluidTank.fill(fs, false);
+						}
+					}
 				}
+				else if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+				{
+					if(te.hasCapability(CapabilityEnergy.ENERGY, outputFacing))
+					{
+						IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, outputFacing);
+						assert cap!=null;
+
+						int extracted = energyStorageUpgrade.extractEnergy(Machines.capacitorHV_output, false);
+						int accepted = cap.receiveEnergy(extracted, false);
+						energyStorageUpgrade.receiveEnergy(accepted-extracted, false);
+					}
+				}
+				else
+				{
+					//output items
+					for(int i = 55; i < inventory.size(); i++)
+					{
+						ItemStack output = inventory.get(i);
+						if(output.isEmpty())
+							continue;
+						output = Utils.insertStackIntoInventory(te, output, this.facing.getOpposite());
+						inventory.set(i, output);
+					}
+				}
+			}
+
 		}
 
 		if(update)
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-					.withTag("inventory", Utils.writeInventory(inventory))
-			));
+			forceTileUpdate();
 	}
 
-	@Nonnull
+	//--- NBT ---//
+
 	@Override
-	public float[] getBlockBounds()
+	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
-		return new float[]{0, 0, 0, 1, 1, 1};
+		super.readCustomNBT(nbt, descPacket);
+		if(isDummy())
+			return;
+
+		getUpgradesFromNBT(nbt);
+		repeatActions = nbt.getBoolean("repeatActions");
+
+		processTime = nbt.getInteger("process_time");
+
+		if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+			energyStorage.readFromNBT(nbt.getCompoundTag("energy_upgrade"));
+		else if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+			fluidTank.readFromNBT(nbt.getCompoundTag("fluid_tank"));
+
+		readTasks(nbt.getTagList("tasks", 10));
+	}
+
+	@Override
+	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
+	{
+		super.writeCustomNBT(nbt, descPacket);
+		if(isDummy())
+			return;
+
+		saveUpgradesToNBT(nbt);
+		nbt.setBoolean("repeatActions", repeatActions);
+
+		nbt.setInteger("process_time", processTime);
+
+		if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+			nbt.setTag("energy_upgrade", energyStorage.writeToNBT(new NBTTagCompound()));
+		else if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+			nbt.setTag("fluid_tank", fluidTank.writeToNBT(new NBTTagCompound()));
+
+		nbt.setTag("tasks", writeTasks());
+	}
+
+	@Override
+	public void receiveMessageFromServer(@Nonnull NBTTagCompound message)
+	{
+		super.receiveMessageFromServer(message);
+		if(message.hasKey("inventory"))
+			inventory = Utils.readInventory(message.getTagList("inventory", 10), inventory.size());
+		if(message.hasKey("repeatActions"))
+			repeatActions = message.getBoolean("repeatActions");
+		if(message.hasKey("tasks"))
+			readTasks(message.getTagList("tasks", 10));
+
+		if(message.hasKey("energy_upgrade"))
+			processTime = message.getInteger("process_time");
+
+		if(message.hasKey("energy_upgrade"))
+			energyStorage.readFromNBT(message.getCompoundTag("energy_upgrade"));
+		else if(message.hasKey("fluid_tank"))
+			fluidTank.readFromNBT(message.getCompoundTag("fluid_tank"));
+	}
+
+	@Override
+	public void receiveMessageFromClient(@Nonnull NBTTagCompound message)
+	{
+		super.receiveMessageFromServer(message);
+		if(message.hasKey("repeatActions"))
+			repeatActions = message.getBoolean("repeatActions");
+		if(message.hasKey("tasks"))
+			readTasks(message.getTagList("tasks", 10));
+	}
+
+	public NBTTagList writeTasks()
+	{
+		NBTTagList tagTasks = new NBTTagList();
+		for(PackerTask task : tasks)
+			tagTasks.appendTag(task.toNBT());
+		return tagTasks;
+	}
+
+	private void readTasks(NBTTagList tagTasks)
+	{
+		tasks.clear();
+		for(NBTBase task : tagTasks)
+			if(task instanceof NBTTagCompound)
+				tasks.add(new PackerTask(((NBTTagCompound)task)));
 	}
 
 	@Nonnull
@@ -477,56 +436,9 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 
 	@Nonnull
 	@Override
-	public int[] getRedstonePos()
+	public int[] getRedstonePos(boolean input)
 	{
-		return new int[]{10};
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return false;
-	}
-
-	@Override
-	public void doProcessOutput(@Nonnull ItemStack output)
-	{
-
-	}
-
-	@Override
-	public void doProcessFluidOutput(@Nonnull FluidStack output)
-	{
-	}
-
-	@Override
-	public void onProcessFinish(@Nonnull MultiblockProcess<IMultiblockRecipe> process)
-	{
-
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(@Nonnull MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return 0;
-	}
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return inventory;
+		return input?new int[]{10}: new int[0];
 	}
 
 	@Override
@@ -541,81 +453,55 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 		return slot==0?1: 64;
 	}
 
-	@Nonnull
-	@Override
-	public int[] getOutputSlots()
-	{
-		return new int[]{};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getOutputTanks()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public boolean additionalCanProcessCheck(@Nonnull MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return false;
-	}
-
-	@Nonnull
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return new IFluidTank[]{};
-	}
+	// TODO: 19.08.2022 fluidTank
 
 	@Nonnull
 	@Override
 	protected IFluidTank[] getAccessibleFluidTanks(@Nonnull EnumFacing side)
 	{
+		if(pos==23||pos==15)
+		{
+			TileEntityPacker master = master();
+			if(master!=null&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+				return new IFluidTank[]{master.fluidTank};
+		}
 		return new FluidTank[0];
 	}
 
 	@Override
 	protected boolean canFillTankFrom(int iTank, @Nonnull EnumFacing side, @Nonnull FluidStack resource)
 	{
-		return false;
+		if(pos==23)
+		{
+			TileEntityPacker master = master();
+			return master!=null&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID);
+		}
+		return super.canFillTankFrom(iTank, side, resource);
 	}
 
 	@Override
 	protected boolean canDrainTankFrom(int iTank, @Nonnull EnumFacing side)
 	{
-		return false;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-
-	}
-
-	@Override
-	@Nullable
-	public IMultiblockRecipe findRecipeForInsertion(@Nonnull ItemStack inserting)
-	{
-		return null;
-	}
-
-	@Override
-	@Nullable
-	protected IMultiblockRecipe readRecipeFromNBT(@Nonnull NBTTagCompound tag)
-	{
-		return null;
-	}
-
-	@Override
-	public void onReceive(DataPacket packet, EnumFacing side)
-	{
-		TileEntityPacker master = master();
-		if(master==null)
-			return;
-
-		if(this.pos==9)
+		if(pos==15)
 		{
+			TileEntityPacker master = master();
+			return master!=null&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID);
+		}
+		return super.canDrainTankFrom(iTank, side);
+	}
+
+	//--- Data ---//
+
+	@Nonnull
+	@Override
+	public int[] getDataPos(boolean input)
+	{
+		return new int[]{9};
+	}
+
+	@Override
+	public void receiveData(DataPacket packet, int pos)
+	{
 			/*
 			c: command: add/remove/clear
 			a: action: pack/unpack/fill/drain/charge/discharge
@@ -623,28 +509,28 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 			e: (optional) expires after @e items/MBs
 			s: (optional) {stack} or string
 			*/
-			IDataType a = packet.getPacketVariable('a');
-			IDataType m = packet.getPacketVariable('m');
-			IDataType e = packet.getPacketVariable('e');
-			IDataType s = packet.getPacketVariable('s');
-			IDataType c = packet.getPacketVariable('c');
+		IDataType a = packet.getPacketVariable('a');
+		IDataType m = packet.getPacketVariable('m');
+		IDataType e = packet.getPacketVariable('e');
+		IDataType s = packet.getPacketVariable('s');
+		IDataType c = packet.getPacketVariable('c');
 
-			switch(c.valueToString())
+		switch(c.valueToString())
+		{
+			case "add":
 			{
-				case "add":
-				{
-					PackerPutMode mode = PackerPutMode.fromName(m.valueToString());
-					PackerActionType action = PackerActionType.fromName(a.valueToString());
-					IngredientStack stack = IIUtils.ingredientFromData(s);
-					PackerTask packerTask = new PackerTask(mode, action, stack);
-					if(packet.hasVariable('e'))
-						packerTask.expirationAmount = packet.getVarInType(DataTypeInteger.class, e).value;
-					master.tasks.add(packerTask);
+				PackerPutMode mode = PackerHandler.PackerPutMode.fromName(m.valueToString());
+				PackerActionType action = PackerHandler.PackerActionType.fromName(a.valueToString());
+				IngredientStack stack = IIUtils.ingredientFromData(s);
+				PackerTask packerTask = new PackerTask(mode, action, stack);
+				if(packet.hasVariable('e'))
+					packerTask.expirationAmount = packet.getVarInType(DataTypeInteger.class, e).value;
+				tasks.add(packerTask);
 
-				}
-				break;
-				case "remove":
-				{
+			}
+			break;
+			case "remove":
+			{
 					/*uses action, but parameter is optional
 					{
 					 by stack
@@ -652,36 +538,34 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 					}
 					by id (int)
 					*/
-					if(a instanceof DataTypeInteger)
-					{
-						master.tasks.remove(((DataTypeInteger)a).value);
-					}
-					else
-					{
-						Predicate<PackerTask> p;
-						if(s instanceof DataTypeString)
-							p = packerTask -> packerTask.stack.oreName.equals(s.valueToString());
-						else if(s instanceof DataTypeItemStack)
-							p = packerTask -> packerTask.stack.equals(IIUtils.ingredientFromData(s));
-						else
-							p = packerTask -> true;
-
-						if(packet.hasVariable('m'))
-							p = p.and(packerTask -> packerTask.mode==PackerPutMode.fromName(m.valueToString()));
-						if(packet.hasVariable('a'))
-							p = p.and(packerTask -> packerTask.actionType==PackerActionType.fromName(a.valueToString()));
-						master.tasks.removeIf(p);
-					}
-				}
-				break;
-				case "clear":
+				if(a instanceof DataTypeInteger)
+					tasks.remove(((DataTypeInteger)a).value);
+				else
 				{
-					master.tasks.clear();
+					Predicate<PackerTask> p;
+					if(s instanceof DataTypeString)
+						p = packerTask -> packerTask.stack.oreName.equals(s.valueToString());
+					else if(s instanceof DataTypeItemStack)
+						p = packerTask -> packerTask.stack.equals(IIUtils.ingredientFromData(s));
+					else
+						p = packerTask -> true;
+
+					if(packet.hasVariable('m'))
+						p = p.and(packerTask -> packerTask.mode==PackerHandler.PackerPutMode.fromName(m.valueToString()));
+					if(packet.hasVariable('a'))
+						p = p.and(packerTask -> packerTask.actionType==PackerHandler.PackerActionType.fromName(a.valueToString()));
+					tasks.removeIf(p);
 				}
-				break;
 			}
+			break;
+			case "clear":
+				tasks.clear();
+				break;
 		}
+
 	}
+
+	//--- Colision ---//
 
 	@Nonnull
 	@Override
@@ -740,7 +624,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 		}
 
 		if(pos==1||pos==13)
-		{
 			switch(facing)
 			{
 				case NORTH:
@@ -756,7 +639,6 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 					list.add(new AxisAlignedBB(0, 0, 1-0.625f, 0.125, 1, 1-0.375f).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
 					break;
 			}
-		}
 
 		return list;
 	}
@@ -772,17 +654,53 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing)
 	{
-		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		TileEntityPacker master = master();
+		if(master!=null)
 		{
-			TileEntityPacker master = master();
-			if(master==null)
-				return null;
-			if(pos==23)
-				return (T)master.inventoryHandler;
-			else if(pos==0)
+			if(pos==0&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 				return (T)master.containerHandler;
+
+			if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+			{
+				/*if(pos==23)
+					return */
+			}
+			else if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			{
+				if(!hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY)&&!hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+				{
+					if(pos==23)
+						return (T)master.inventoryInHandler;
+					if(pos==15)
+						return (T)master.inventoryOutHandler;
+				}
+			}
 		}
+
+
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
+	{
+		if(world.isRemote)
+			return false;
+
+		TileEntityPacker master = master();
+		if(master!=null&&(pos==18||pos==21||pos==22||(pos > 29&&pos < 35)||(pos > 41&&pos < 47))&&master.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
+		{
+			if(heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+			{
+				if(FluidUtil.interactWithFluidHandler(player, hand, master.fluidTank))
+				{
+					forceTileUpdate();
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -790,15 +708,18 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	{
 		if(pos==23)
 			return new EnumFacing[]{facing}; //i/o conveyor
+		if(pos==15)
+			return new EnumFacing[]{mirrored?facing.rotateYCCW(): facing.rotateY()}; //i/o conveyor
 		else if(pos==0)
 			return new EnumFacing[]{facing.rotateY()}; //3x conveyors
 		return new EnumFacing[0];
 	}
 
+	// TODO: 19.08.2022 add
 	@Override
 	public void onEntityCollision(@Nonnull World world, @Nonnull Entity entity)
 	{
-		/*if(pos==1&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty() &&pl.pabilo8.immersiveintelligence.common.Utils.getDistanceBetweenPos(entity.getPosition(),this.getPos().offset(facing.getOpposite()),false)==0f)
+		/*if(pos==1&&!world.isRemote&&entity!=null&&!entity.isDead&&entity instanceof EntityItem&&!((EntityItem)entity).getItem().isEmpty() &&IIUtils.getDistanceBetweenPos(entity.getPosition(),this.getPos().offset(facing.getOpposite()),false)==0f)
 		{
 			ItemStack stack = ((EntityItem)entity).getItem();
 			if(stack.isEmpty())
@@ -818,11 +739,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	public void onGuiOpened(EntityPlayer player, boolean clientside)
 	{
 		if(!clientside)
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-					.withTag("inventory", Utils.writeInventory(inventory))
-					.withTag("tasks", writeTasks())
-					.withBoolean("repeatActions", repeatActions)
-			));
+			forceTileUpdate();
 	}
 
 	@Override
@@ -862,7 +779,7 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	@Override
 	public boolean upgradeMatches(MachineUpgrade upgrade)
 	{
-		return upgrade==IIContent.UPGRADE_UNPACKER_CONVERSION||
+		return upgrade==IIContent.UPGRADE_PACKER_RAILWAY||upgrade==IIContent.UPGRADE_PACKER_NAMING||
 				(upgrade==IIContent.UPGRADE_PACKER_FLUID&&!hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))||
 				(upgrade==IIContent.UPGRADE_PACKER_ENERGY&&!hasUpgrade(IIContent.UPGRADE_PACKER_FLUID));
 	}
@@ -891,7 +808,8 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 	@Override
 	public void renderWithUpgrades(MachineUpgrade... upgrades)
 	{
-		PackerRenderer.renderWithUpgrades(upgrades);
+		// TODO: 19.08.2022 upgrade rendering
+		//PackerRenderer.renderWithUpgrades(upgrades);
 	}
 
 	public ArrayList<MachineUpgrade> getUpgrades()
@@ -937,12 +855,12 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 		}
 		Predicate<PackerTask> task;
 		if(hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
-			task = p -> p.actionType==PackerActionType.ENERGY;
+			task = p -> p.actionType==PackerHandler.PackerActionType.FLUID;
 		else if(hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
-			task = p -> p.actionType==PackerActionType.FLUID;
+			task = p -> p.actionType==PackerHandler.PackerActionType.ENERGY;
 		else
-			task = p -> p.actionType!=PackerActionType.ITEM;
-		tasks.removeIf(task);
+			task = p -> p.actionType==PackerHandler.PackerActionType.ITEM;
+		tasks.removeIf(task.negate());
 
 		return false;
 	}
@@ -961,106 +879,4 @@ public class TileEntityPacker extends TileEntityMultiblockMetal<TileEntityPacker
 		upgrades.remove(upgrade);
 	}
 
-	public enum PackerPutMode implements IStringSerializable
-	{
-		ALL_POSSIBLE,
-		SLOT,
-		AMOUNT;
-
-		@Nonnull
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase();
-		}
-
-		public static PackerPutMode fromName(String name)
-		{
-			switch(name.toLowerCase())
-			{
-				default:
-				case "all_possible":
-					return ALL_POSSIBLE;
-				case "slot":
-					return SLOT;
-				case "amount":
-					return AMOUNT;
-			}
-		}
-	}
-
-	public enum PackerActionType
-	{
-		ITEM,
-		FLUID,
-		ENERGY;
-
-		public String getActionName(boolean unpacker)
-		{
-			switch(this)
-			{
-				default:
-				case ITEM:
-					return unpacker?"unpack": "pack";
-				case FLUID:
-					return unpacker?"discharge": "charge";
-				case ENERGY:
-					return unpacker?"drain": "fill";
-			}
-		}
-
-		public static PackerActionType fromName(String name)
-		{
-			switch(name.toLowerCase())
-			{
-				default:
-				case "item":
-					return ITEM;
-				case "fluid":
-					return FLUID;
-				case "energy":
-					return ENERGY;
-			}
-		}
-	}
-
-	@ParametersAreNonnullByDefault
-	public static class PackerTask
-	{
-		public PackerPutMode mode;
-		public PackerActionType actionType;
-		public IngredientStack stack;
-		public int expirationAmount = -1;
-
-		public PackerTask(PackerPutMode mode, PackerActionType actionType, IngredientStack stack)
-		{
-			this.actionType = actionType;
-			this.mode = mode;
-			this.stack = stack;
-		}
-
-		public PackerTask(NBTTagCompound nbt)
-		{
-			this(
-					PackerPutMode.valueOf(nbt.getString("mode").toUpperCase()),
-					PackerActionType.valueOf(nbt.getString("action_type").toUpperCase()),
-					IngredientStack.readFromNBT(nbt.getCompoundTag("stack"))
-			);
-
-			if(nbt.hasKey("expiration_amount"))
-				expirationAmount = nbt.getInteger("expiration_amount");
-		}
-
-		public NBTTagCompound toNBT()
-		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setString("mode", mode.getName());
-			nbt.setString("action_type", actionType.name().toLowerCase());
-			nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
-			if(expirationAmount!=-1)
-				nbt.setInteger("expiration_amount", expirationAmount);
-
-			return nbt;
-		}
-	}
 }

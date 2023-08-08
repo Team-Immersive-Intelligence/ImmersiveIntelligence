@@ -80,6 +80,11 @@ public class IIContent
 
 	//--- Upgrades ---//
 
+	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
+	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy"); //allows charging items with IF
+	public static final MachineUpgrade UPGRADE_PACKER_NAMING = CommonProxy.createMachineUpgrade("packer_naming"); //allows (re)naming items on conveyor
+	public static final MachineUpgrade UPGRADE_PACKER_RAILWAY = CommonProxy.createMachineUpgrade("packer_railway"); //makes packer accept minecarts instead of items
+
 	//used by effect crates
 	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter");
 	//increases machine speed
@@ -88,13 +93,6 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator");
 	//allows to use belt fed upgrade for mg
 	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader");
-
-	//converts a packer to an unpacker
-	public static final MachineUpgrade UPGRADE_UNPACKER_CONVERSION = CommonProxy.createMachineUpgrade("unpacker_conversion");
-	//allows filling items with fluids
-	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid");
-	//allows charging items with IF
-	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy");
 
 	//allows the radar to detect radio signal emitters and send their positions
 	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators");

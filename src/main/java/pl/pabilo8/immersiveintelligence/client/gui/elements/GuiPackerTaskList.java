@@ -16,9 +16,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker.PackerTask;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -33,7 +33,6 @@ import java.util.function.Consumer;
  */
 public class GuiPackerTaskList extends GuiButton
 {
-	boolean unpacker;
 	private final ArrayList<PackerTask> entries;
 	private final Consumer<Integer> taskChange;
 	private static final ResourceLocation TEXTURE_PACKER = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/packer.png");
@@ -43,10 +42,9 @@ public class GuiPackerTaskList extends GuiButton
 	public int hoveredOption = -1;
 	public int selectedOption = -1;
 
-	public GuiPackerTaskList(int id, int x, int y, int w, int h, boolean unpacker, ArrayList<PackerTask> entries, Consumer<Integer> taskChange)
+	public GuiPackerTaskList(int id, int x, int y, int w, int h, ArrayList<PackerTask> entries, Consumer<Integer> taskChange)
 	{
 		super(id, x, y, w, h, "");
-		this.unpacker = unpacker;
 		this.entries = entries;
 		this.taskChange = taskChange;
 		recalculateEntries();
@@ -130,7 +128,7 @@ public class GuiPackerTaskList extends GuiButton
 		GlStateManager.popMatrix();
 	}
 
-	void drawEntry(Minecraft mc, int x, int y, boolean hovered, PackerTask action)
+	void drawEntry(Minecraft mc, int x, int y, boolean hovered, PackerTask task)
 	{
 		//Base
 		GL11.glPushMatrix();
@@ -145,9 +143,9 @@ public class GuiPackerTaskList extends GuiButton
 		this.drawTexturedModalRect(x, y, 96, 211, 65, 20);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+action.actionType.getActionName(unpacker)), x+2, y+7, IILib.COLOR_H1, false);
+		mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+task.actionType.getActionName(task.unpack)), x+2, y+7, IILib.COLOR_H1, false);
 
-		if(Objects.equals(action.stack.oreName, "*"))
+		if(Objects.equals(task.stack.oreName, "*"))
 		{
 			boolean u = mc.fontRenderer.getUnicodeFlag();
 			mc.fontRenderer.setUnicodeFlag(true);
@@ -163,12 +161,12 @@ public class GuiPackerTaskList extends GuiButton
 		{
 			RenderHelper.enableGUIStandardItemLighting();
 			long rand = mc.player.ticksExisted;
-			ItemStack stack = action.stack.stack;
-			if(stack.isEmpty()&&action.stack.stackList!=null&&action.stack.stackList.size() > 0)
-				stack = action.stack.stackList.get((int)(rand/20)%action.stack.stackList.size());
-			if(stack.isEmpty()&&action.stack.oreName!=null)
+			ItemStack stack = task.stack.stack;
+			if(stack.isEmpty()&&task.stack.stackList!=null&&task.stack.stackList.size() > 0)
+				stack = task.stack.stackList.get((int)(rand/20)%task.stack.stackList.size());
+			if(stack.isEmpty()&&task.stack.oreName!=null)
 			{
-				List<ItemStack> ores = OreDictionary.getOres(action.stack.oreName);
+				List<ItemStack> ores = OreDictionary.getOres(task.stack.oreName);
 				if(ores!=null)
 				{
 					for(ItemStack next : ores)

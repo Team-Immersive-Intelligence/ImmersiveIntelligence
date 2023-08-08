@@ -4,12 +4,12 @@ import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPacker;
 
 import javax.annotation.Nonnull;
@@ -33,35 +33,52 @@ public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 		slots = new Slot[tile.getInventory().size()];
 		assert this.inv!=null;
 
-		for(int i = 0; i < tile.getInventory().size()-1; i++)
+		if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_FLUID))
 		{
-			slots[i] = this.addSlotToContainer(new Slot(this.inv, i+1, 0, 0)
+			addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
+			addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
+			this.slotCount = 2;
+		}
+		else if(tile.hasUpgrade(IIContent.UPGRADE_PACKER_ENERGY))
+		{
+			addSlotToContainer(new IESlot.FluidContainer(this, ghostInv, 1, 309, 35, 0));
+			addSlotToContainer(new IESlot.Output(this, ghostInv, 2, 309, 71));
+			this.slotCount = 2;
+		}
+		else
+		{
+			for(int i = 0; i < tile.getInventory().size()-1; i++)
+			{
+				slots[i] = this.addSlotToContainer(new Slot(this.inv, i+1, 0, 0)
+				{
+					@Override
+					public boolean isItemValid(@Nonnull ItemStack stack)
+					{
+						return IEApi.isAllowedInCrate(stack);
+					}
+				});
+			}
+
+			addSlotToContainer(ghostSlot = new IESlot.Ghost(this, ghostInv, 0, 0, 0)
 			{
 				@Override
-				public boolean isItemValid(@Nonnull ItemStack stack)
+				public void onSlotChanged()
 				{
-					return IEApi.isAllowedInCrate(stack);
+					super.onSlotChanged();
+					if(ghostUpdateFunction!=null)
+						ghostUpdateFunction.run();
 				}
 			});
+			this.slotCount = tile.getInventory().size();
 		}
-		addSlotToContainer(ghostSlot = new IESlot.Ghost(this, ghostInv, 0, 0, 0)
-		{
-			@Override
-			public void onSlotChanged()
-			{
-				super.onSlotChanged();
-				if(ghostUpdateFunction!=null)
-					ghostUpdateFunction.run();
-			}
-		});
-		this.slotCount = tile.getInventory().size();
+
 		this.tile = tile;
 
 		for(int i = 0; i < 3; i++)
 			for(int j = 0; j < 9; j++)
-				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 48+j*18, 130+i*18));
+				addSlotToContainer(new Slot(player.inventory, j+i*9+9, 89+j*18, 130+i*18));
 		for(int i = 0; i < 9; i++)
-			addSlotToContainer(new Slot(player.inventory, i, 48+i*18, 161+27));
+			addSlotToContainer(new Slot(player.inventory, i, 89+i*18, 161+27));
 	}
 
 	private static class DummyInventory implements IInventory
@@ -150,7 +167,9 @@ public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 		}
 
 		@Override
-		public void setField(int i, int i1) {}
+		public void setField(int i, int i1)
+		{
+		}
 
 		@Override
 		public int getFieldCount()
@@ -159,7 +178,9 @@ public class ContainerPacker extends ContainerIEBase<TileEntityPacker>
 		}
 
 		@Override
-		public void clear() {}
+		public void clear()
+		{
+		}
 
 		@Nonnull
 		@Override

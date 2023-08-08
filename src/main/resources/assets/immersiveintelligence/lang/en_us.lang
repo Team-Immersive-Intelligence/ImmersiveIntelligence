@@ -682,7 +682,13 @@ desc.immersiveintelligence.metal_multiblock1.packer.task.drain=Drain
 
 desc.immersiveintelligence.metal_multiblock1.packer.mode.amount=Amount
 desc.immersiveintelligence.metal_multiblock1.packer.mode.slot=Slot
-desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=Possible space
+desc.immersiveintelligence.metal_multiblock1.packer.mode.all_possible=All possible
+desc.immersiveintelligence.metal_multiblock1.packer.mode.at_most_container=At most in container
+desc.immersiveintelligence.metal_multiblock1.packer.mode.at_least_packer=At least in packer
+
+desc.immersiveintelligence.metal_multiblock1.packer.side_input=Items to be put in a container
+desc.immersiveintelligence.metal_multiblock1.packer.side_output=Items taken from a container
+desc.immersiveintelligence.metal_multiblock1.packer.switch_direction=Switch Task Direction
 
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.mobs=Mobs
 desc.immersiveintelligence.metal_multiblock1.emplacement.target.animals=Animals
@@ -1032,14 +1038,17 @@ machineupgrade.immersiveintelligence.tesla.desc=The Tesla Tower uses high voltag
 machineupgrade.immersiveintelligence.core_filler=Projectile Filler
 machineupgrade.immersiveintelligence.core_filler.desc=Equipping the Projectile Workshop with an inserter allows precise filling of the projectiles with desired components.
 
-machineupgrade.immersiveintelligence.unpacker_conversion=Unpacker Conversion
-machineupgrade.immersiveintelligence.unpacker_conversion.desc=Reverses the function of the machine so it can unload items from containers and drain liquids and power from containers (requires additional upgrades)
+machineupgrade.immersiveintelligence.packer_fluid=Fluid Loader
+machineupgrade.immersiveintelligence.packer_fluid.desc=Installing a fluid container and some pipes allows to fill and drain fluids from containers. Due to safety reasons the packer can handle either items, fluids or energy.
 
-machineupgrade.immersiveintelligence.packer_fluid=Pump Module
-machineupgrade.immersiveintelligence.packer_fluid.desc=Installing a fluid tank allows to fill items with liquids, decreases item storage space by half, due to safety reasons a Charging Module cannot be installed along with this upgrade
+machineupgrade.immersiveintelligence.packer_energy=Energy Loader
+machineupgrade.immersiveintelligence.packer_energy.desc=Installing a fluid container and some pipes allows to fill and drain fluids from containers. Due to safety reasons the packer can handle either items, fluids or energy.
 
-machineupgrade.immersiveintelligence.packer_energy=Charging Module
-machineupgrade.immersiveintelligence.packer_energy.desc=Installing a fluid tank allows to charge items with IF, decreases item storage space by half, due to safety reasons a Pump Module cannot be installed along with this upgrade
+machineupgrade.immersiveintelligence.packer_railway=Railway Conversion
+machineupgrade.immersiveintelligence.packer_railway.desc=Replaces the Packer's conveyor belt with railway tracks, which allows loading and unloading minecarts.
+
+machineupgrade.immersiveintelligence.packer_naming=Naming Stamp
+machineupgrade.immersiveintelligence.packer_naming.desc=Allows the Packer to name the loaded containers, can use filters and data.
 
 machineupgrade.immersiveintelligence.radio_locators=Radio Locators
 machineupgrade.immersiveintelligence.radio_locators.desc=Allows the Radar to detect radio signals and compute points of their origin. Increases the amount of energy required to operate.

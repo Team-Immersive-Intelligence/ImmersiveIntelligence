@@ -98,6 +98,10 @@ public class GuiButtonDataLetterList extends GuiButton
 
 		if(dropped)
 		{
+			GlStateManager.pushMatrix();
+			GlStateManager.enableDepth();
+			GlStateManager.translate(0,0,1);
+
 			this.drawTexturedModalRect(xx, y+height, 56, 115, 96, 32);
 			this.drawTexturedModalRect(xx, y+height+32, 56, 195-4, 96, 20);
 
@@ -153,6 +157,7 @@ public class GuiButtonDataLetterList extends GuiButton
 					cx = 0;
 				}
 			}
+			GlStateManager.popMatrix();
 		}
 
 		fr.drawString(String.valueOf(selectedEntry==' '?'_': selectedEntry), xx+9-(int)Math.floor(fr.getCharWidth(selectedEntry==' '?'_': selectedEntry)/2f), y+5, Lib.COLOUR_I_ImmersiveOrange, true);
