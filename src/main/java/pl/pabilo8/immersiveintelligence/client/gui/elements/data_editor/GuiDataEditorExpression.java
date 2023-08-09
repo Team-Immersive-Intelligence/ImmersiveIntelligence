@@ -9,8 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
@@ -23,6 +21,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDat
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -40,12 +40,11 @@ import java.util.stream.Collectors;
  */
 public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 {
+	@Nonnull
+	private final List<String> operations;
 	int page = 0;
 	@Nullable
 	private GuiDataEditor<? extends IDataType> pageEditor;
-	@Nonnull
-	private final List<String> operations;
-
 	private GuiButtonDropdownList dropdownOperationPicker;
 	private GuiButtonDataLetterList dropdownLetterPicker;
 

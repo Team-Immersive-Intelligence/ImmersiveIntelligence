@@ -14,13 +14,12 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
  */
 public class ModelSubmachinegun extends ModelIIBase
 {
-	int textureX = 64;
-	int textureY = 128;
-
-	ModelRendererTurbo[] loaderModel, barrelModel, sightsModel, triggerModel, ammoModel, slideModel, gripModel, stockModel, casingEjectionModel;
-	ModelRendererTurbo[] bottomLoaderModel, magDrumModel, magBottomModel, sturdyBarrelModel, silencerModel, foldingStockHolderModel, foldingStockModel, bayonetModel;
 	public TmtNamedBoxGroup baseBox, loaderBox, barrelBox, sightsBox, triggerBox, ammoBox, slideBox, gripBox, stockBox, casingEjectionBox;
 	public TmtNamedBoxGroup bottomLoaderBox, magDrumBox, magBottomBox, sturdyBarrelBox, silencerBox, foldingStockHolderBox, foldingStockBox, bayonetBox;
+	int textureX = 64;
+	int textureY = 128;
+	ModelRendererTurbo[] loaderModel, barrelModel, sightsModel, triggerModel, ammoModel, slideModel, gripModel, stockModel, casingEjectionModel;
+	ModelRendererTurbo[] bottomLoaderModel, magDrumModel, magBottomModel, sturdyBarrelModel, silencerModel, foldingStockHolderModel, foldingStockModel, bayonetModel;
 
 	//ModelRendererTurbo[] heavyBarrelModel;
 	//public TmtNamedBoxGroup heavyBarrelBox;

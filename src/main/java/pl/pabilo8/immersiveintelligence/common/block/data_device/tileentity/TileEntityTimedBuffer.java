@@ -75,7 +75,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 			timer += 1;
 			if(timer%5==0||timer==1)
 				IIPacketHandler.sendToClient(this, new MessageIITileSync(this,
-								EasyNBT.newNBT().withInt("timer", timer))
+						EasyNBT.newNBT().withInt("timer", timer))
 				);
 		}
 		else if(timer >= maxtimer)
@@ -146,7 +146,7 @@ public class TileEntityTimedBuffer extends TileEntityIEBase implements IPlayerIn
 			maxtimer = ((DataTypeInteger)packet.getPacketVariable('0')).value;
 
 			IIPacketHandler.sendToClient(this, new MessageIITileSync(this,
-							EasyNBT.newNBT().withInt("maxtimer", maxtimer).withInt("timer", timer))
+					EasyNBT.newNBT().withInt("maxtimer", maxtimer).withInt("timer", timer))
 			);
 		}
 	}

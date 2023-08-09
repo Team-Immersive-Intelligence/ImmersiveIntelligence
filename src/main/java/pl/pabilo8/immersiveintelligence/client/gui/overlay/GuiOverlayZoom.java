@@ -44,7 +44,7 @@ public class GuiOverlayZoom extends GuiOverlayBase
 		//Start drawing
 		IIClientUtils.bindTexture(TEXTURE_IE_HUD);
 		IIDrawUtils draw = IIDrawUtils.startTextured()
-				.setOffset(100/256f*resMin,0)
+				.setOffset(100/256f*resMin, 0)
 				.drawTexRect(218/256f*resMin, 64/256f*resMin, 24/256f*resMin, 128/256f*resMin, 64/256f, 88/256f, 96/256f, 224/256f);
 
 		int curStep = -1;

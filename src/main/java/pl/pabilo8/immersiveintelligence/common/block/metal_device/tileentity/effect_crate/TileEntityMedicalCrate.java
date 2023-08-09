@@ -24,12 +24,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.MedicalCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,20 +46,18 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 	public static final Predicate<FluidStack> HEALTH_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:regeneration");
 	public static final Predicate<FluidStack> BOOST_POTION = resource -> resource.getFluid()==IEContent.fluidPotion&&resource.tag!=null&&resource.tag.getString("Potion").equals("minecraft:absorption");
 	public static final Predicate<ItemStack> BOOST_POTION_ITEM = resource -> resource.getItem()==Items.GOLDEN_APPLE;
-
+	public FluidTank[] tanks = new FluidTank[]{
+			new FluidTank(mediCrateTankSize),
+			new FluidTank(mediCrateTankSize)
+	};
+	public boolean shouldHeal = true;
+	public boolean shouldBoost = true;
+	FluidWrapper fluidWrapper = new FluidWrapper(this);
 	public TileEntityMedicalCrate()
 	{
 		inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 		insertionHandler = new IEInventoryHandler(4, this);
 	}
-
-	public FluidTank[] tanks = new FluidTank[]{
-			new FluidTank(mediCrateTankSize),
-			new FluidTank(mediCrateTankSize)
-	};
-	FluidWrapper fluidWrapper = new FluidWrapper(this);
-	public boolean shouldHeal = true;
-	public boolean shouldBoost = true;
 
 	@Override
 	@Nonnull
@@ -199,6 +197,33 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 		return super.getCapability(capability, facing);
 	}
 
+	private boolean canFillTankFrom(int i, FluidStack resource)
+	{
+		return i==0?HEALTH_POTION.test(resource): BOOST_POTION.test(resource);
+	}
+
+	@Override
+	public void onAnimationChangeClient(boolean state, int part)
+	{
+		if(part==1)
+			shouldHeal = state;
+		else if(part==2)
+			shouldBoost = state;
+		else
+			super.onAnimationChangeClient(state, part);
+	}
+
+	@Override
+	public void onAnimationChangeServer(boolean state, int part)
+	{
+		if(part==1)
+			shouldHeal = state;
+		else if(part==2)
+			shouldBoost = state;
+		else
+			super.onAnimationChangeServer(state, part);
+	}
+
 	public static class FluidWrapper implements IFluidHandler
 	{
 		final TileEntityMedicalCrate tile;
@@ -260,32 +285,5 @@ public class TileEntityMedicalCrate extends TileEntityEffectCrate implements ITi
 		{
 			return null;
 		}
-	}
-
-	private boolean canFillTankFrom(int i, FluidStack resource)
-	{
-		return i==0?HEALTH_POTION.test(resource): BOOST_POTION.test(resource);
-	}
-
-	@Override
-	public void onAnimationChangeClient(boolean state, int part)
-	{
-		if(part==1)
-			shouldHeal = state;
-		else if(part==2)
-			shouldBoost = state;
-		else
-			super.onAnimationChangeClient(state, part);
-	}
-
-	@Override
-	public void onAnimationChangeServer(boolean state, int part)
-	{
-		if(part==1)
-			shouldHeal = state;
-		else if(part==2)
-			shouldBoost = state;
-		else
-			super.onAnimationChangeServer(state, part);
 	}
 }

@@ -162,6 +162,14 @@ import java.util.Map.Entry;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)
 public class ClientProxy extends CommonProxy
 {
+	public static KeyBinding keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
+	public static KeyBinding keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
+	public static KeyBinding keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
+	public static KeyBinding keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
+	public static KeyBinding keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
+	public static KeyBinding keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
+	public static MechanicalConnectorRenderer mech_con_renderer;
+	public NBTTagCompound storedGuiData = new NBTTagCompound();
 	IKeyConflictContext passenger_action = new IKeyConflictContext()
 	{
 		@Override
@@ -176,15 +184,6 @@ public class ClientProxy extends CommonProxy
 			return other==KeyConflictContext.IN_GAME&&other!=this;
 		}
 	};
-
-	public static KeyBinding keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
-	public static KeyBinding keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
-	public static KeyBinding keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
-	public static KeyBinding keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
-	public static KeyBinding keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
-	public static KeyBinding keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
-	public static MechanicalConnectorRenderer mech_con_renderer;
-	public NBTTagCompound storedGuiData = new NBTTagCompound();
 
 	public ClientProxy()
 	{
@@ -314,6 +313,57 @@ public class ClientProxy extends CommonProxy
 		ModelBakery.registerItemVariants(item, loc);
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(loc.toString()));
 		ModelLoader.setCustomMeshDefinition(item, stack -> new ModelResourceLocation(loc, "inventory"));
+	}
+
+	@SubscribeEvent
+	public static void guiOpen(GuiOpenEvent event)
+	{
+		// TODO: 26.08.2021 investigate
+		if(event.getGui() instanceof GuiManual)
+			CustomSkinHandler.getManualPages();
+		else if(ClientEventHandler.lastGui instanceof GuiManual)
+		{
+			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
+			String name = null;
+
+			ManualInstance inst = gui.getManual();
+			if(inst!=null)
+			{
+				ManualEntry entry = inst.getEntry(gui.getSelectedEntry());
+				if(entry!=null)
+				{
+					IManualPage page = entry.getPages()[gui.page];
+					if(page instanceof IIManualPageContributorSkin)
+					{
+						name = ((IIManualPageContributorSkin)page).skin.name;
+					}
+				}
+			}
+			EntityPlayer p = ClientUtils.mc().player;
+
+			ItemStack mainItem = p.getHeldItemMainhand();
+			ItemStack offItem = p.getHeldItemOffhand();
+
+			boolean main = !mainItem.isEmpty()&&mainItem.getItem()==IEContent.itemTool&&mainItem.getItemDamage()==3;
+			boolean off = !offItem.isEmpty()&&offItem.getItem()==IEContent.itemTool&&offItem.getItemDamage()==3;
+			ItemStack target = main?mainItem: offItem;
+
+			if(main||off)
+			{
+				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
+
+				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
+				{
+					ItemNBTHelper.remove(target, "lastSkin");
+				}
+				else if(name!=null)
+				{
+					ItemNBTHelper.setString(target, "lastSkin", name);
+				}
+			}
+		}
+
+		ClientEventHandler.lastGui = event.getGui();
 	}
 
 	@Override
@@ -800,7 +850,9 @@ public class ClientProxy extends CommonProxy
 		{
 			IITileRenderer<T> tileRenderer = clazz.newInstance();
 			ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), tileRenderer.subscribeToList(rt.name()));
-		} catch(InstantiationException|IllegalAccessException ignored) {}
+		} catch(InstantiationException|IllegalAccessException ignored)
+		{
+		}
 	}
 
 	@Override
@@ -808,57 +860,6 @@ public class ClientProxy extends CommonProxy
 	{
 		if(!event.getWorld().isRemote)
 			super.onBreakBlock(event);
-	}
-
-	@SubscribeEvent
-	public static void guiOpen(GuiOpenEvent event)
-	{
-		// TODO: 26.08.2021 investigate
-		if(event.getGui() instanceof GuiManual)
-			CustomSkinHandler.getManualPages();
-		else if(ClientEventHandler.lastGui instanceof GuiManual)
-		{
-			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
-			String name = null;
-
-			ManualInstance inst = gui.getManual();
-			if(inst!=null)
-			{
-				ManualEntry entry = inst.getEntry(gui.getSelectedEntry());
-				if(entry!=null)
-				{
-					IManualPage page = entry.getPages()[gui.page];
-					if(page instanceof IIManualPageContributorSkin)
-					{
-						name = ((IIManualPageContributorSkin)page).skin.name;
-					}
-				}
-			}
-			EntityPlayer p = ClientUtils.mc().player;
-
-			ItemStack mainItem = p.getHeldItemMainhand();
-			ItemStack offItem = p.getHeldItemOffhand();
-
-			boolean main = !mainItem.isEmpty()&&mainItem.getItem()==IEContent.itemTool&&mainItem.getItemDamage()==3;
-			boolean off = !offItem.isEmpty()&&offItem.getItem()==IEContent.itemTool&&offItem.getItemDamage()==3;
-			ItemStack target = main?mainItem: offItem;
-
-			if(main||off)
-			{
-				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
-
-				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
-				{
-					ItemNBTHelper.remove(target, "lastSkin");
-				}
-				else if(name!=null)
-				{
-					ItemNBTHelper.setString(target, "lastSkin", name);
-				}
-			}
-		}
-
-		ClientEventHandler.lastGui = event.getGui();
 	}
 
 	@Override

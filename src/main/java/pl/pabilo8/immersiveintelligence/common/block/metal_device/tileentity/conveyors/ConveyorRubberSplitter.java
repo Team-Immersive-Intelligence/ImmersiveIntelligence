@@ -14,13 +14,12 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
  */
 public class ConveyorRubberSplitter extends ConveyorSplit
 {
+	public static ResourceLocation texture_on = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/conveyors/split");
+	public static ResourceLocation texture_off = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/conveyors/split_off");
 	public ConveyorRubberSplitter(EnumFacing startingOutputFace)
 	{
 		super(startingOutputFace);
 	}
-
-	public static ResourceLocation texture_on = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/conveyors/split");
-	public static ResourceLocation texture_off = new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/conveyors/split_off");
 
 	@Override
 	public ResourceLocation getActiveTexture()

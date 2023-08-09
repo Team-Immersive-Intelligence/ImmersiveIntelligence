@@ -69,10 +69,13 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 */
 	private final String name;
 	/**
+	 * Offset for trigger block
+	 */
+	protected Vec3i offset = Vec3i.NULL_VECTOR;
+	/**
 	 * The .nbt file
 	 */
 	private Template template;
-
 	/**
 	 * Stacks for manual list
 	 */
@@ -86,10 +89,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 */
 	private IngredientStack[][][] checkStructure = null;
 	/**
-	 * Offset for trigger block
-	 */
-	protected Vec3i offset = Vec3i.NULL_VECTOR;
-	/**
 	 * Multiblock dimensions
 	 */
 	private Vec3i size = Vec3i.NULL_VECTOR;
@@ -101,7 +100,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	/**
 	 * Bounding boxes for collision and interaction detection at [pos] [facing (ordinal)]
 	 */
-	private ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
+	private final ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
+	private T te;
+	@SideOnly(Side.CLIENT)
+	private TileEntitySpecialRenderer<T> tesr;
 
 	public MultiblockStuctureBase(ResourceLocation loc)
 	{
@@ -217,7 +219,9 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			assert stream!=null;
 			JsonElement object = new JsonStreamParser(new InputStreamReader(stream)).next();
 			return object.getAsJsonObject();
-		} catch(Exception ignored) {} //
+		} catch(Exception ignored)
+		{
+		} //
 		return null;
 	}
 
@@ -378,10 +382,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	{
 		return true;
 	}
-
-	private T te;
-	@SideOnly(Side.CLIENT)
-	private TileEntitySpecialRenderer<T> tesr;
 
 	@Override
 	public void renderFormedStructure()

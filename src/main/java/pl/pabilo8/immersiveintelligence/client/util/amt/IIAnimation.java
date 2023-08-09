@@ -113,6 +113,15 @@ public class IIAnimation
 
 		//TODO: 05.04.2022 attempt to streamline the code more
 
+		private static float[] convertTimeframes(ArrayList<Float> timeframes)
+		{
+			//to array
+			float[] arr = new float[timeframes.size()];
+			for(int i = 0; i < timeframes.size(); i++)
+				arr[i] = timeframes.get(i);
+			return arr;
+		}
+
 		private Tuple<ArrayList<Float>, ArrayList<Vec3d>> loadLine(JsonObject json, String id)
 		{
 			JsonArray array = json.getAsJsonArray(id);
@@ -213,15 +222,6 @@ public class IIAnimation
 
 
 			return new IIShaderLine(shader, convertTimeframes(timeframes), values.toArray(new Float[0][0]));
-		}
-
-		private static float[] convertTimeframes(ArrayList<Float> timeframes)
-		{
-			//to array
-			float[] arr = new float[timeframes.size()];
-			for(int i = 0; i < timeframes.size(); i++)
-				arr[i] = timeframes.get(i);
-			return arr;
 		}
 	}
 

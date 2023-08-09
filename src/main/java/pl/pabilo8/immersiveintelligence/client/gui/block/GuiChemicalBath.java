@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ChemicalBath;
@@ -99,12 +98,12 @@ public class GuiChemicalBath extends GuiIEContainerBase
 		if(fluid!=null&&fluid.amount > 0)
 		{
 			float tfluid = 1f-(fluid.amount/(float)tile.tanks[0].getCapacity());
-			if(isPointInRegion(32,39+(int)(32*tfluid),102, (int)(32*(1f-tfluid)),mx,my))
+			if(isPointInRegion(32, 39+(int)(32*tfluid), 102, (int)(32*(1f-tfluid)), mx, my))
 			{
 				if(!(
-						IIUtils.isPointInTriangle(30,57,30,70,43,70,mx-guiLeft,my-guiTop)||
-								IIUtils.isPointInTriangle(122,70,135,70,135,57,mx-guiLeft,my-guiTop)))
-					ClientUtils.addFluidTooltip(fluid,tooltip, ChemicalBath.fluidCapacity);
+						IIUtils.isPointInTriangle(30, 57, 30, 70, 43, 70, mx-guiLeft, my-guiTop)||
+								IIUtils.isPointInTriangle(122, 70, 135, 70, 135, 57, mx-guiLeft, my-guiTop)))
+					ClientUtils.addFluidTooltip(fluid, tooltip, ChemicalBath.fluidCapacity);
 			}
 		}
 

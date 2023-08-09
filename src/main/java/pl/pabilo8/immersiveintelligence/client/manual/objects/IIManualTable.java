@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
-import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

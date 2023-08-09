@@ -20,11 +20,10 @@ import java.util.Map.Entry;
  */
 public class CoagulatorRecipe extends MultiblockRecipe
 {
-	public final FluidStack fluidInput, coagulantInput;
-	public final ItemStack itemOutput;
-
 	public static LinkedList<CoagulatorRecipe> recipeList = new LinkedList<>();
 	public static HashMap<ItemStack, Integer> dryingMap = new HashMap<>();
+	public final FluidStack fluidInput, coagulantInput;
+	public final ItemStack itemOutput;
 	int totalProcessTime;
 	int totalProcessEnergy;
 
@@ -90,20 +89,6 @@ public class CoagulatorRecipe extends MultiblockRecipe
 		return new FluidStack(FluidRegistry.WATER, 1000);
 	}
 
-	@Override
-	public int getMultipleProcessTicks()
-	{
-		return 0;
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-	{
-		nbt.setTag("fluid_input", fluidInput.writeToNBT(new NBTTagCompound()));
-		nbt.setTag("coagulant_input", coagulantInput.writeToNBT(new NBTTagCompound()));
-		return nbt;
-	}
-
 	public static CoagulatorRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
@@ -118,6 +103,20 @@ public class CoagulatorRecipe extends MultiblockRecipe
 		return dryingMap.entrySet().stream()
 				.filter(e -> OreDictionary.itemMatches(e.getKey(), stack, false))
 				.map(Entry::getValue).findFirst().orElse(Coagulator.bucketTime);
+	}
+
+	@Override
+	public int getMultipleProcessTicks()
+	{
+		return 0;
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	{
+		nbt.setTag("fluid_input", fluidInput.writeToNBT(new NBTTagCompound()));
+		nbt.setTag("coagulant_input", coagulantInput.writeToNBT(new NBTTagCompound()));
+		return nbt;
 	}
 
 	public int getTotalProcessTime()

@@ -48,12 +48,6 @@ public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_StoneDecor
 		setToolTypes(IILib.TOOL_HAMMER);
 	}
 
-	public enum IIBlockTypes_StoneDecoration implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntitySandbags.class)
-		SANDBAGS
-	}
-
 	@Override
 	protected IBlockState getInitDefaultState()
 	{
@@ -112,5 +106,11 @@ public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_StoneDecor
 	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity)
 	{
 		return PathNodeType.FENCE;
+	}
+
+	public enum IIBlockTypes_StoneDecoration implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntitySandbags.class)
+		SANDBAGS
 	}
 }

@@ -21,9 +21,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMine;
  */
 public class NavalMineRenderer extends Render<EntityNavalMine> implements IReloadableModelContainer<NavalMineRenderer>
 {
+	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/naval_mine.png";
 	public static NavalMineItemstackRenderer instance = new NavalMineItemstackRenderer();
 	public static ModelNavalMine model = new ModelNavalMine();
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/naval_mine.png";
 
 	public NavalMineRenderer(RenderManager renderManager)
 	{

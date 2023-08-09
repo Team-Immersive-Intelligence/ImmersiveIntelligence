@@ -24,6 +24,11 @@ public class DustStack
 		this(nbt.getString("name"), nbt.getInteger("amount"));
 	}
 
+	public static DustStack getEmptyStack()
+	{
+		return new DustStack("", 0);
+	}
+
 	public DustStack getSubtracted(DustStack dust)
 	{
 		if(amount > dust.amount)
@@ -34,11 +39,6 @@ public class DustStack
 	public boolean isEmpty()
 	{
 		return "".equals(name)||amount==0;
-	}
-
-	public static DustStack getEmptyStack()
-	{
-		return new DustStack("", 0);
 	}
 
 	public DustStack copy()

@@ -123,6 +123,12 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 	private static final ArrayList<GuiOverlayBase> HUDBackgrounds = new ArrayList<>();
 	private static final ArrayList<TextOverlayBase> textOverlays = new ArrayList<>();
 	private static final ArrayList<InWorldOverlayBase> inWorldOverlays = new ArrayList<>();
+	public static LinkedHashMap<EntityLivingBase, Float> gunshotEntities = new LinkedHashMap<>();
+	public static boolean mgAiming = false;
+	public static ArrayList<EntityLivingBase> aimingPlayers = new ArrayList<>();
+	public static GuiScreen lastGui = null;
+	//Whether the Light Engineer Armor is worn
+	public static boolean gotTheDrip;
 
 	static
 	{
@@ -150,12 +156,602 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		inWorldOverlays.add(new WrenchOverlay());
 	}
 
-	public static LinkedHashMap<EntityLivingBase, Float> gunshotEntities = new LinkedHashMap<>();
-	public static boolean mgAiming = false;
-	public static ArrayList<EntityLivingBase> aimingPlayers = new ArrayList<>();
-	public static GuiScreen lastGui = null;
-	//Whether the Light Engineer Armor is worn
-	public static boolean gotTheDrip;
+	@SuppressWarnings("unused")
+	public static void handleBipedRotations(ModelBiped model, Entity entity)
+	{
+		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.concealed))
+			model.setVisible(false);
+
+		if(!Config.IEConfig.fancyItemHolding)
+			return;
+
+		model.bipedHead.rotateAngleZ = 0f;
+		model.bipedHeadwear.rotateAngleZ = 0f;
+
+		if(entity instanceof EntityLivingBase)
+		{
+			EntityLivingBase player = (EntityLivingBase)entity;
+
+			// TODO: 26.09.2020 Find a better way, or make an animation API!
+			if(aimingPlayers.contains(entity))
+			{
+				model.bipedHead.rotateAngleZ = -0.35f;
+				model.bipedHeadwear.rotateAngleZ = -0.35f;
+			}
+
+			Entity ridingEntity = player.getRidingEntity();
+			if(ridingEntity instanceof EntityMachinegun)
+			{
+				EntityMachinegun mg = (EntityMachinegun)ridingEntity;
+
+				float ff = (float)(-1.35f-Math.toRadians(mg.gunPitch)*1.25);
+				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead-mg.setYaw);
+
+				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
+				float wtime;
+
+				ridingEntity.applyOrientationToEntity(player);
+				model.bipedHead.rotateAngleX *= -0.35f;
+				model.bipedHeadwear.rotateAngleX *= -0.35f;
+				model.bipedLeftArm.rotateAngleY = .08726f+3.14f/6f;
+
+				IBlockState state = player.world.getBlockState(player.getPosition());
+				if(!mg.tripod&&state.getMaterial().isSolid()&&!(state.getBlock()==IIContent.blockMetalDevice&&state.getValue(IIContent.blockMetalDevice.property)==IIBlockTypes_MetalDevice.AMMUNITION_CRATE))
+				{
+					if(Math.abs(mg.gunYaw-true_head_angle) > 5)
+					{
+						wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%20/20f-0.5f)/0.5f;
+						wtime *= 0.25f;
+
+						if(mg.setupTime > 0)
+							wtime = 0;
+						if(mg.gunYaw < true_head_angle)
+						{
+							model.bipedRightLeg.rotateAngleY = -wtime*2f;
+							model.bipedLeftLeg.rotateAngleY = wtime*2f;
+						}
+						else if(mg.gunYaw > true_head_angle)
+						{
+							model.bipedRightLeg.rotateAngleY = -wtime*2f;
+							model.bipedLeftLeg.rotateAngleY = wtime*2f;
+						}
+					}
+
+					model.bipedBody.rotateAngleX += 1.5f;
+					model.bipedRightLeg.rotateAngleX += 1.5f;
+					model.bipedLeftLeg.rotateAngleX += 1.5f;
+
+					model.bipedRightArm.rotateAngleX += ff-0.5;
+					model.bipedLeftArm.rotateAngleX += ff-0.5;
+
+					model.bipedRightLeg.rotationPointY = 0f;
+					model.bipedLeftLeg.rotationPointY = 0f;
+
+					model.bipedRightLeg.rotationPointZ = 12f;
+					model.bipedLeftLeg.rotationPointZ = 12f;
+
+					float maxRotation = mg.tripod?82.5F: 45.0F;
+
+					model.bipedRightLeg.rotateAngleY += mg.gunYaw/maxRotation;
+					model.bipedLeftLeg.rotateAngleY += mg.gunYaw/maxRotation;
+
+					//model.bipedLeftLeg.rotateAngleY += ff+1f;
+
+				}
+				else
+				{
+					wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40/40f-0.5f)/0.5f-0.5f;
+					wtime *= 0.65f;
+					if(mg.setupTime > 0)
+						wtime = 0;
+					model.bipedBody.rotateAngleX -= 0.0625f;
+					if(Math.abs(mg.gunYaw-true_head_angle) > 5)
+						if(mg.gunYaw < true_head_angle)
+						{
+							model.bipedRightLeg.rotateAngleX = wtime*2f;
+							model.bipedLeftLeg.rotateAngleX = -wtime*2f;
+						}
+						else if(mg.gunYaw > true_head_angle)
+						{
+							model.bipedRightLeg.rotateAngleX = -wtime*2f;
+							model.bipedLeftLeg.rotateAngleX = wtime*2f;
+						}
+
+					model.bipedRightArm.rotateAngleX = ff;
+					model.bipedLeftArm.rotateAngleX = ff;
+				}
+
+
+				//model.bipedRightArm.rotateAngleY = -.08726f+model.bipedHead.rotateAngleY;
+			}
+			else if(ridingEntity instanceof EntityMortar)
+			{
+				EntityMortar mortar = (EntityMortar)ridingEntity;
+
+				float ff = 1;
+				if(mortar.shootingProgress > 0)
+				{
+					float v = mortar.shootingProgress/Mortar.shootTime;
+					//rise up
+					if(v < 0.1)
+						ff = 1f-v/0.1f;
+					else if(v < 0.2)
+					{
+						//turn, put shell
+						ff = 0;
+						float firing = (v-0.1f)/0.1f;
+
+						model.bipedLeftArm.rotateAngleY = firing*0.15f;
+						model.bipedRightArm.rotateAngleY = firing*-0.65f;
+						model.bipedRightArm.rotationPointX += 1*firing;
+						model.bipedRightArm.rotationPointZ -= 2*firing;
+
+						model.bipedLeftArm.rotateAngleX = firing*-2.15f;
+						model.bipedRightArm.rotateAngleX = firing*-2.15f;
+					}
+					else if(v < 0.3)
+					{
+						//unturn
+						ff = 0;
+
+						float firing = 1f-(v-0.2f)/0.1f;
+
+						model.bipedLeftArm.rotateAngleY = firing*0.15f;
+						model.bipedRightArm.rotateAngleY = firing*-0.65f;
+						model.bipedRightArm.rotationPointX += 1*firing;
+						model.bipedRightArm.rotationPointZ -= 2*firing;
+
+						model.bipedLeftArm.rotateAngleX = firing*-2.15f;
+						model.bipedRightArm.rotateAngleX = firing*-2.15f;
+					}
+					else //get down
+						if(v < 0.4)
+							ff = (v-0.3f)/0.1f;
+						else
+						{
+							float firing = (v-0.4f)/0.6f;
+							float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
+							model.bipedHead.rotateAngleX = Math.min(progress/0.85f, 1f)*0.85f;
+							model.bipedHeadwear.rotateAngleX = Math.min(progress/0.85f, 1f)*0.85f;
+							model.bipedHead.rotateAngleY = 0;
+							model.bipedHeadwear.rotateAngleY = 0;
+
+							model.bipedLeftArm.rotateAngleZ = progress*-0.15f;
+							model.bipedRightArm.rotateAngleZ = progress*0.15f;
+							model.bipedLeftArm.rotateAngleX = progress*-2.55f;
+							model.bipedRightArm.rotateAngleX = progress*-2.55f;
+						}
+				}
+
+				model.bipedLeftLeg.rotateAngleX = 1.45f*ff;
+				model.bipedLeftLeg.rotateAngleY = 0.125f*ff;
+				model.bipedRightLeg.rotateAngleX = 1.45f*ff;
+				model.bipedRightLeg.rotateAngleY = -0.25f*ff;
+
+			}
+			else if(ridingEntity instanceof EntityTripodPeriscope)
+			{
+				EntityTripodPeriscope mg = (EntityTripodPeriscope)ridingEntity;
+				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead);
+
+				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
+				float wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40/40f-0.5f)/0.5f-0.5f;
+
+				model.bipedRightArm.rotateAngleX = -1.75f;
+				model.bipedRightArm.rotateAngleY = -0.5f;
+
+				model.bipedLeftArm.rotateAngleX = -2.25f;
+				model.bipedLeftArm.rotateAngleY = 0.25f;
+
+				model.bipedHead.rotateAngleX = 0;
+				model.bipedHeadwear.rotateAngleX = 0;
+				model.bipedHead.rotateAngleY = 0;
+				model.bipedHeadwear.rotateAngleY = 0;
+
+
+				if(Math.abs(mg.periscopeYaw-true_head_angle) > 5)
+					if(mg.periscopeYaw < true_head_angle)
+					{
+						model.bipedRightLeg.rotateAngleZ = -(1f-wtime)*0.25f;
+						model.bipedLeftLeg.rotateAngleZ = -wtime*0.25f-0.25f;
+					}
+					else if(mg.periscopeYaw > true_head_angle)
+					{
+						model.bipedRightLeg.rotateAngleZ = (1f-wtime)*0.25f+0.25f;
+						model.bipedLeftLeg.rotateAngleZ = wtime*0.25f;
+					}
+
+			}
+			else if(ridingEntity instanceof EntityParachute)
+			{
+				model.bipedLeftArm.rotateAngleX -= 2.75;
+				model.bipedLeftArm.rotateAngleZ += 0.35;
+
+				model.bipedRightArm.rotateAngleX += 3.5;
+				model.bipedRightArm.rotateAngleZ -= 0.35;
+			}
+			else if(ridingEntity instanceof EntityVehicleSeat)
+			{
+				EntityVehicleSeat seat = (EntityVehicleSeat)ridingEntity;
+				((IVehicleMultiPart)seat.getRidingEntity()).getSeatRidingAngle(seat.seatID, entity);
+
+
+				if(player.getLowestRidingEntity() instanceof EntityMotorbike)
+				{
+					if(seat.seatID==0)
+					{
+						model.bipedBody.rotateAngleX += 0.25;
+						model.bipedRightLeg.rotationPointZ = 2;
+						model.bipedLeftLeg.rotationPointZ = 2;
+
+						model.bipedRightArm.rotateAngleZ = 0;
+						model.bipedLeftArm.rotateAngleZ = 0;
+
+						model.bipedRightArm.rotationPointZ = -1.5f;
+						model.bipedLeftArm.rotationPointZ = -1.5f;
+
+						model.bipedRightArm.rotateAngleX = -1.35f;
+						model.bipedRightArm.rotateAngleY = 0.5f;
+						model.bipedLeftArm.rotateAngleX = -1.35f;
+						model.bipedLeftArm.rotateAngleY = -0.5f;
+					}
+
+					model.bipedRightLeg.rotateAngleY = 0.65f;
+					model.bipedLeftLeg.rotateAngleY = -0.65f;
+					model.bipedRightLeg.rotateAngleX = -0.65f;
+					model.bipedLeftLeg.rotateAngleX = -0.65f;
+
+				}
+				else if(player.getLowestRidingEntity() instanceof EntityFieldHowitzer)
+				{
+					EntityFieldHowitzer howitzer = (EntityFieldHowitzer)player.getLowestRidingEntity();
+					float partialTicks = ClientUtils.mc().getRenderPartialTicks();
+					float tt = entity.world.getTotalWorldTime()+partialTicks;
+					float firing = (howitzer.shootingProgress+(howitzer.shootingProgress > 0?partialTicks: 0))/FieldHowitzer.fireTime;
+					float reloading = (howitzer.reloadProgress+(howitzer.reloadProgress > 0?partialTicks: 0))/FieldHowitzer.reloadTime;
+					//float reloading = (tt%60)/60f;
+
+					if(howitzer.setupTime > 0)
+					{
+						float progress = MathHelper.clamp((howitzer.setupTime+
+								partialTicks*(howitzer.turnLeft||howitzer.turnRight||howitzer.forward||howitzer.backward?1: -1)
+						)/(FieldHowitzer.setupTime*0.2f), 0, 1);
+
+						float wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%30/30f-0.5f)/0.5f;
+						float stime = howitzer.setupTime/(float)FieldHowitzer.setupTime;
+						wtime *= (float)Math.floor(stime);
+
+						model.bipedRightLeg.rotationPointZ = progress*8f;
+						model.bipedLeftLeg.rotationPointZ = progress*8f;
+
+						//model.bipedBody.rotateAngleY=seat.seatID==0?0.25f:-0.25f;
+						model.bipedBody.rotateAngleX += progress*0.385f;
+						model.isSneak = true;
+						if(seat.seatID==1)
+						{
+							model.bipedRightArm.rotateAngleX = progress*-0.5f;
+							model.bipedRightArm.rotateAngleZ = progress*1.5f;
+							model.bipedLeftArm.rotateAngleX = progress*-0.55f;
+
+							if(howitzer.turnLeft||howitzer.forward)
+							{
+								model.bipedRightLeg.rotateAngleZ = -(1f-wtime)*0.25f*stime;
+								model.bipedLeftLeg.rotateAngleZ = (-wtime*0.25f-0.25f)*stime;
+							}
+							else if(howitzer.turnRight||howitzer.backward)
+							{
+								model.bipedRightLeg.rotateAngleZ = ((1f-wtime)*0.25f+0.25f)*stime;
+								model.bipedLeftLeg.rotateAngleZ = wtime*0.25f*stime;
+							}
+						}
+						else
+						{
+							model.bipedLeftArm.rotateAngleX = progress*-0.5f;
+							model.bipedLeftArm.rotateAngleZ = -progress*1.125f;
+							model.bipedRightArm.rotateAngleX = progress*0.125f;
+							model.bipedRightArm.rotateAngleZ = progress*0.5f;
+
+							if(howitzer.turnLeft||howitzer.backward)
+							{
+								model.bipedRightLeg.rotateAngleZ = (-(1f-wtime)*0.25f+0.25f)*stime;
+								model.bipedLeftLeg.rotateAngleZ = -wtime*0.25f*stime;
+							}
+							else if(howitzer.turnRight||howitzer.forward)
+							{
+								model.bipedRightLeg.rotateAngleZ = (1f-wtime)*0.25f*stime;
+								model.bipedLeftLeg.rotateAngleZ = (wtime*0.25f-0.25f)*stime;
+							}
+						}
+					}
+					else if(reloading > 0)
+					{
+						if(seat.seatID==0)
+						{
+							if(reloading < 0.2)
+								model.bipedLeftArm.rotateAngleZ = (1f-reloading/0.2f)*-1.25f;
+
+							if(reloading > 0.2f)
+							{
+								float ff = 0;
+								if(reloading < 0.4f)
+									ff = (reloading-0.2f)/0.2f;
+								else if(reloading < 0.5f)
+									ff = 1f-(reloading-0.4f)/0.1f;
+								model.bipedBody.rotateAngleX = ff*0.25f;
+								model.bipedLeftLeg.rotationPointZ = ff*3;
+								model.bipedRightLeg.rotationPointZ = ff*3;
+								model.bipedRightArm.rotateAngleX = ff*-1.25f;
+								model.bipedRightArm.rotateAngleZ = ff*-1.5f;
+							}
+
+							if(reloading < 0.1)
+								model.bipedLeftArm.rotateAngleX = reloading/0.1f*-1.25f;
+							else if(reloading < 0.9)
+								model.bipedLeftArm.rotateAngleX = -1.25f;
+							else
+								model.bipedLeftArm.rotateAngleX = (1f-(reloading-0.9f)/0.1f)*-1.25f;
+						}
+					}
+					else if(firing > 0)
+						if(seat.seatID==1)
+						{
+							float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
+							model.isSneak = true;
+							model.bipedHead.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
+							model.bipedHeadwear.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
+							model.bipedHead.rotateAngleY = 0;
+							model.bipedHeadwear.rotateAngleY = 0;
+
+							model.bipedBody.rotateAngleX += progress*0.25f;
+
+							model.bipedLeftArm.rotateAngleX = progress*-3f;
+							model.bipedRightArm.rotateAngleX = progress*-3f;
+							model.bipedLeftLeg.rotateAngleX = Math.min(progress/0.65f, 1f)*-0.35f;
+
+							model.bipedRightLeg.rotationPointZ = 5f+progress*2f;
+							model.bipedLeftLeg.rotationPointZ = 5f+progress*2f;
+
+							//model.bipedRightLeg.rotateAngleX = progress*0.25f;
+							//model.bipedLeftArm.rotateAngleY = progress*3.14f;
+						}
+						else
+						{
+							if(firing < 0.3)
+								model.bipedRightArm.rotateAngleY = -0.385f;
+							if(firing < 0.1f)
+								model.bipedRightArm.rotateAngleX = -1.65f*(firing/0.1f);
+							else if(firing < 0.2f)
+								model.bipedRightArm.rotateAngleX = -1.65f+0.8f*((firing-0.1f)/0.1f);
+							else if(firing < 0.3)
+								model.bipedRightArm.rotateAngleX = -0.85f*(1f-(firing-0.2f)/0.1f);
+							else
+							{
+								firing = (firing-0.3f)/0.7f;
+								float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
+								model.isSneak = true;
+								model.bipedHead.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
+								model.bipedHeadwear.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
+								model.bipedHead.rotateAngleY = 0;
+								model.bipedHeadwear.rotateAngleY = 0;
+
+								model.bipedLeftArm.rotateAngleX = progress*-3f;
+								model.bipedRightArm.rotateAngleX = progress*-3f;
+								model.bipedRightLeg.rotateAngleX = Math.min(progress/0.65f, 1f)*0.35f;
+
+								model.bipedRightLeg.rotationPointZ = 5f;
+								model.bipedLeftLeg.rotationPointZ = 5f;
+							}
+
+						}
+					else if(seat.seatID==0&&(howitzer.gunPitchDown||howitzer.gunPitchUp))
+					{
+						float limbSwing = Math.abs((tt%8-4)/8f);
+						if(howitzer.gunPitchUp)
+							limbSwing = -limbSwing;
+						model.isSneak = true;
+						model.bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing*0.6662F)-1.125f;
+						model.bipedRightArm.rotateAngleY = MathHelper.cos(limbSwing*0.6662F)-1f;
+						model.bipedRightArm.rotateAngleZ = 0;
+
+						model.bipedLeftArm.rotateAngleX = MathHelper.cos(limbSwing*0.6662F)-2f;
+						model.bipedLeftArm.rotateAngleY = MathHelper.cos(limbSwing*0.6662F)+0.5f;
+						model.bipedLeftArm.rotateAngleZ = 0;
+					}
+
+				}
+
+			}
+			else
+				for(EnumHand hand : EnumHand.values())
+				{
+					ItemStack heldItem = player.getHeldItem(hand);
+					if(!heldItem.isEmpty())
+					{
+						Item item = heldItem.getItem();
+						boolean right = (hand==EnumHand.MAIN_HAND)==(player.getPrimaryHand()==EnumHandSide.RIGHT);
+						if(item==IIContent.itemMachinegun)
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX *= 0.25f;
+								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX *= 0.25f;
+								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							}
+						else if(item==IIContent.itemMortar)
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX *= 0.25f;
+								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX-0.25f;
+								model.bipedLeftArm.rotateAngleZ = -0.35f;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX *= 0.25f;
+								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							}
+						else if((item instanceof ItemIIGunBase
+								||item instanceof ItemIIRailgunOverride)
+								&&hand!=EnumHand.OFF_HAND)
+							if(right)
+							{
+								player.setRenderYawOffset(player.rotationYawHead);
+								boolean rail = item instanceof ItemIIRailgunOverride;
+
+								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
+								model.bipedLeftArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX+0.0625f;
+
+								//-1.5707964 up
+								//0 middle
+								//1.5707964 down
+								float v = (model.bipedHead.rotateAngleX+1.5707964f)/3.1415927f;
+
+								model.bipedRightArm.rotateAngleY += IIUtils.clampedLerp3Par(0, -0.45f, 0f, v);
+								model.bipedRightArm.rotateAngleZ += IIUtils.clampedLerp3Par(0.25f, 0, -0.45f, v);
+								model.bipedLeftArm.rotateAngleZ += IIUtils.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
+								model.bipedLeftArm.rotateAngleY += IIUtils.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
+
+								model.bipedLeftArm.rotationPointX += IIUtils.clampedLerp3Par(-2f, -1f, -2f, v);
+								model.bipedLeftArm.rotationPointZ += IIUtils.clampedLerp3Par(0, -2f, 0, v);
+
+								model.bipedRightArm.rotationPointZ += IIUtils.clampedLerp3Par(0, 2f, 0, v);
+
+
+								//up
+								/*
+								model.bipedRightArm.rotateAngleZ += 0.25f;
+								model.bipedLeftArm.rotateAngleZ = -0.65f;
+								model.bipedLeftArm.rotationPointX -= 2;
+								 */
+
+								//mid
+								/*
+								model.bipedRightArm.rotateAngleY -= 0.35f;
+								model.bipedLeftArm.rotateAngleY = 0.65f;
+								model.bipedLeftArm.rotateAngleZ = 0;
+
+								model.bipedRightArm.rotationPointZ += 1;
+
+								model.bipedLeftArm.rotationPointX -= 1;
+								model.bipedLeftArm.rotationPointZ -= 2;
+								 */
+
+								//down
+								/*
+								model.bipedRightArm.rotateAngleZ -= 0.45f;
+								model.bipedLeftArm.rotateAngleZ = 0.65f;
+								model.bipedLeftArm.rotationPointX -= 2;
+								 */
+							}
+							else
+							{
+								// TODO: 19.09.2021 animation for left hand (requires model offset changes)
+							}
+							// TODO: 19.05.2021 change railgun and chemthrower animation
+						/*
+						else if(heldItem.getItem() instanceof ItemIIRailgunOverride&&hand!=EnumHand.OFF_HAND)
+						{
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
+								model.bipedRightArm.rotateAngleY = -0.25f;
+								model.bipedLeftArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
+								model.bipedLeftArm.rotateAngleY = 0.75f;
+								model.bipedLeftArm.rotationPointZ = -1.25F;
+								//model.bipedRightArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
+
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
+								model.bipedLeftArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
+							}
+						}
+						 */
+						else if(player.isSneaking()&&item==IIContent.itemBinoculars)
+						{
+							model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
+							model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
+
+							model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
+							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+
+							int id = heldItem.getMetadata();
+							BinocularsRenderer.INSTANCE.render(id==1?ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1: id, model.bipedHead, true);
+						}
+						else if(item==IIContent.itemMineDetector)
+						{
+							float v = MineDetectorRenderer.instance.renderBase(player, 2.125f, true);
+
+							model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
+							model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
+
+							model.bipedRightArm.rotateAngleX = -1.25f-(1f-v)*0.5f;
+							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+						}
+						else if(item==IIContent.itemNavalMine)
+							if(right)
+							{
+								model.bipedRightArm.rotateAngleX -= 0.5f;
+								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
+							}
+							else
+							{
+								model.bipedLeftArm.rotateAngleX -= 0.5f;
+								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
+							}
+						else if(item==IIContent.itemGrenade)
+						{
+							float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
+							if(right)
+							{
+								model.rightArmPose = ArmPose.EMPTY;
+								//model.leftArmPose=ArmPose.EMPTY;
+								float hh = -(4.5f-model.bipedHead.rotateAngleX);
+								model.bipedRightArm.rotateAngleX = use!=1?use > 0f?use < 0.35f?use/0.35f*hh: hh: 0f: 0f;
+							}
+						}
+
+					}
+				}
+
+			if(!gunshotEntities.isEmpty())
+			{
+				Float v = gunshotEntities.remove(entity);
+				if(v!=null)
+				{
+					ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
+					if(heldItem.getItem() instanceof ItemIIGunBase)
+					{
+						//float recoilH = ItemNBTHelper.getFloat(heldItem, "recoilH");
+						//float recoilV = ItemNBTHelper.getFloat(heldItem, "recoilV");
+
+						Vec3d vec =
+								IIUtils.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
+										.scale(-1);
+
+						double true_angle = Math.toRadians(-player.getRotationYawHead() > 180?360f- -player.getRotationYawHead(): -player.getRotationYawHead());
+						double true_angle2 = Math.toRadians(-player.getRotationYawHead()-90 > 180?360f-(-player.getRotationYawHead()-90): -player.getRotationYawHead()-90);
+
+						Vec3d pos1_x = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f+0.185f, true_angle, 0);
+						Vec3d pos1_z = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f-0.125f-0.0625f, true_angle2, 0);
+						Vec3d pos1_y = IIUtils.offsetPosDirection(3/16f, true_angle, 90);
+
+						Vec3d vv = player.getPositionVector()
+								.addVector(0, entity.isSneaking()?-0.275: 0, 0)
+								.addVector(0, (24.0F-model.bipedRightArm.rotationPointY)/16f, 0)
+								.add(pos1_x).add(pos1_z).add(pos1_y)
+								.add(vec.scale(-1.25f));
+						//.add(arm.rotatePitch(-90f).scale(0.5f));
+
+						ParticleUtils.spawnGunfireFX(vv, vec, v);
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate)
@@ -778,603 +1374,6 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 		if(CameraHandler.isEnabled())
 			event.setRoll(CameraHandler.getRoll());
-	}
-
-	@SuppressWarnings("unused")
-	public static void handleBipedRotations(ModelBiped model, Entity entity)
-	{
-		if(entity instanceof EntityLivingBase&&((EntityLivingBase)entity).isPotionActive(IIPotions.concealed))
-			model.setVisible(false);
-
-		if(!Config.IEConfig.fancyItemHolding)
-			return;
-
-		model.bipedHead.rotateAngleZ = 0f;
-		model.bipedHeadwear.rotateAngleZ = 0f;
-
-		if(entity instanceof EntityLivingBase)
-		{
-			EntityLivingBase player = (EntityLivingBase)entity;
-
-			// TODO: 26.09.2020 Find a better way, or make an animation API!
-			if(aimingPlayers.contains(entity))
-			{
-				model.bipedHead.rotateAngleZ = -0.35f;
-				model.bipedHeadwear.rotateAngleZ = -0.35f;
-			}
-
-			Entity ridingEntity = player.getRidingEntity();
-			if(ridingEntity instanceof EntityMachinegun)
-			{
-				EntityMachinegun mg = (EntityMachinegun)ridingEntity;
-
-				float ff = (float)(-1.35f-Math.toRadians(mg.gunPitch)*1.25);
-				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead-mg.setYaw);
-
-				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
-				float wtime;
-
-				ridingEntity.applyOrientationToEntity(player);
-				model.bipedHead.rotateAngleX *= -0.35f;
-				model.bipedHeadwear.rotateAngleX *= -0.35f;
-				model.bipedLeftArm.rotateAngleY = .08726f+3.14f/6f;
-
-				IBlockState state = player.world.getBlockState(player.getPosition());
-				if(!mg.tripod&&state.getMaterial().isSolid()&&!(state.getBlock()==IIContent.blockMetalDevice&&state.getValue(IIContent.blockMetalDevice.property)==IIBlockTypes_MetalDevice.AMMUNITION_CRATE))
-				{
-					if(Math.abs(mg.gunYaw-true_head_angle) > 5)
-					{
-						wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%20/20f-0.5f)/0.5f;
-						wtime *= 0.25f;
-
-						if(mg.setupTime > 0)
-							wtime = 0;
-						if(mg.gunYaw < true_head_angle)
-						{
-							model.bipedRightLeg.rotateAngleY = -wtime*2f;
-							model.bipedLeftLeg.rotateAngleY = wtime*2f;
-						}
-						else if(mg.gunYaw > true_head_angle)
-						{
-							model.bipedRightLeg.rotateAngleY = -wtime*2f;
-							model.bipedLeftLeg.rotateAngleY = wtime*2f;
-						}
-					}
-
-					model.bipedBody.rotateAngleX += 1.5f;
-					model.bipedRightLeg.rotateAngleX += 1.5f;
-					model.bipedLeftLeg.rotateAngleX += 1.5f;
-
-					model.bipedRightArm.rotateAngleX += ff-0.5;
-					model.bipedLeftArm.rotateAngleX += ff-0.5;
-
-					model.bipedRightLeg.rotationPointY = 0f;
-					model.bipedLeftLeg.rotationPointY = 0f;
-
-					model.bipedRightLeg.rotationPointZ = 12f;
-					model.bipedLeftLeg.rotationPointZ = 12f;
-
-					float maxRotation = mg.tripod?82.5F: 45.0F;
-
-					model.bipedRightLeg.rotateAngleY += mg.gunYaw/maxRotation;
-					model.bipedLeftLeg.rotateAngleY += mg.gunYaw/maxRotation;
-
-					//model.bipedLeftLeg.rotateAngleY += ff+1f;
-
-				}
-				else
-				{
-					wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40/40f-0.5f)/0.5f-0.5f;
-					wtime *= 0.65f;
-					if(mg.setupTime > 0)
-						wtime = 0;
-					model.bipedBody.rotateAngleX -= 0.0625f;
-					if(Math.abs(mg.gunYaw-true_head_angle) > 5)
-						if(mg.gunYaw < true_head_angle)
-						{
-							model.bipedRightLeg.rotateAngleX = wtime*2f;
-							model.bipedLeftLeg.rotateAngleX = -wtime*2f;
-						}
-						else if(mg.gunYaw > true_head_angle)
-						{
-							model.bipedRightLeg.rotateAngleX = -wtime*2f;
-							model.bipedLeftLeg.rotateAngleX = wtime*2f;
-						}
-
-					model.bipedRightArm.rotateAngleX = ff;
-					model.bipedLeftArm.rotateAngleX = ff;
-				}
-
-
-				//model.bipedRightArm.rotateAngleY = -.08726f+model.bipedHead.rotateAngleY;
-			}
-			else if(ridingEntity instanceof EntityMortar)
-			{
-				EntityMortar mortar = (EntityMortar)ridingEntity;
-
-				float ff = 1;
-				if(mortar.shootingProgress > 0)
-				{
-					float v = mortar.shootingProgress/Mortar.shootTime;
-					//rise up
-					if(v < 0.1)
-						ff = 1f-v/0.1f;
-					else if(v < 0.2)
-					{
-						//turn, put shell
-						ff = 0;
-						float firing = (v-0.1f)/0.1f;
-
-						model.bipedLeftArm.rotateAngleY = firing*0.15f;
-						model.bipedRightArm.rotateAngleY = firing*-0.65f;
-						model.bipedRightArm.rotationPointX += 1*firing;
-						model.bipedRightArm.rotationPointZ -= 2*firing;
-
-						model.bipedLeftArm.rotateAngleX = firing*-2.15f;
-						model.bipedRightArm.rotateAngleX = firing*-2.15f;
-					}
-					else if(v < 0.3)
-					{
-						//unturn
-						ff = 0;
-
-						float firing = 1f-(v-0.2f)/0.1f;
-
-						model.bipedLeftArm.rotateAngleY = firing*0.15f;
-						model.bipedRightArm.rotateAngleY = firing*-0.65f;
-						model.bipedRightArm.rotationPointX += 1*firing;
-						model.bipedRightArm.rotationPointZ -= 2*firing;
-
-						model.bipedLeftArm.rotateAngleX = firing*-2.15f;
-						model.bipedRightArm.rotateAngleX = firing*-2.15f;
-					}
-					else //get down
-						if(v < 0.4)
-							ff = (v-0.3f)/0.1f;
-						else
-						{
-							float firing = (v-0.4f)/0.6f;
-							float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
-							model.bipedHead.rotateAngleX = Math.min(progress/0.85f, 1f)*0.85f;
-							model.bipedHeadwear.rotateAngleX = Math.min(progress/0.85f, 1f)*0.85f;
-							model.bipedHead.rotateAngleY = 0;
-							model.bipedHeadwear.rotateAngleY = 0;
-
-							model.bipedLeftArm.rotateAngleZ = progress*-0.15f;
-							model.bipedRightArm.rotateAngleZ = progress*0.15f;
-							model.bipedLeftArm.rotateAngleX = progress*-2.55f;
-							model.bipedRightArm.rotateAngleX = progress*-2.55f;
-						}
-				}
-
-				model.bipedLeftLeg.rotateAngleX = 1.45f*ff;
-				model.bipedLeftLeg.rotateAngleY = 0.125f*ff;
-				model.bipedRightLeg.rotateAngleX = 1.45f*ff;
-				model.bipedRightLeg.rotateAngleY = -0.25f*ff;
-
-			}
-			else if(ridingEntity instanceof EntityTripodPeriscope)
-			{
-				EntityTripodPeriscope mg = (EntityTripodPeriscope)ridingEntity;
-				float true_head_angle = MathHelper.wrapDegrees(player.prevRotationYawHead);
-
-				float partialTicks = ClientUtils.mc().getRenderPartialTicks();
-				float wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%40/40f-0.5f)/0.5f-0.5f;
-
-				model.bipedRightArm.rotateAngleX = -1.75f;
-				model.bipedRightArm.rotateAngleY = -0.5f;
-
-				model.bipedLeftArm.rotateAngleX = -2.25f;
-				model.bipedLeftArm.rotateAngleY = 0.25f;
-
-				model.bipedHead.rotateAngleX = 0;
-				model.bipedHeadwear.rotateAngleX = 0;
-				model.bipedHead.rotateAngleY = 0;
-				model.bipedHeadwear.rotateAngleY = 0;
-
-
-				if(Math.abs(mg.periscopeYaw-true_head_angle) > 5)
-					if(mg.periscopeYaw < true_head_angle)
-					{
-						model.bipedRightLeg.rotateAngleZ = -(1f-wtime)*0.25f;
-						model.bipedLeftLeg.rotateAngleZ = -wtime*0.25f-0.25f;
-					}
-					else if(mg.periscopeYaw > true_head_angle)
-					{
-						model.bipedRightLeg.rotateAngleZ = (1f-wtime)*0.25f+0.25f;
-						model.bipedLeftLeg.rotateAngleZ = wtime*0.25f;
-					}
-
-			}
-			else if(ridingEntity instanceof EntityParachute)
-			{
-				model.bipedLeftArm.rotateAngleX -= 2.75;
-				model.bipedLeftArm.rotateAngleZ += 0.35;
-
-				model.bipedRightArm.rotateAngleX += 3.5;
-				model.bipedRightArm.rotateAngleZ -= 0.35;
-			}
-			else if(ridingEntity instanceof EntityVehicleSeat)
-			{
-				EntityVehicleSeat seat = (EntityVehicleSeat)ridingEntity;
-				((IVehicleMultiPart)seat.getRidingEntity()).getSeatRidingAngle(seat.seatID, entity);
-
-
-				if(player.getLowestRidingEntity() instanceof EntityMotorbike)
-				{
-					if(seat.seatID==0)
-					{
-						model.bipedBody.rotateAngleX += 0.25;
-						model.bipedRightLeg.rotationPointZ = 2;
-						model.bipedLeftLeg.rotationPointZ = 2;
-
-						model.bipedRightArm.rotateAngleZ = 0;
-						model.bipedLeftArm.rotateAngleZ = 0;
-
-						model.bipedRightArm.rotationPointZ = -1.5f;
-						model.bipedLeftArm.rotationPointZ = -1.5f;
-
-						model.bipedRightArm.rotateAngleX = -1.35f;
-						model.bipedRightArm.rotateAngleY = 0.5f;
-						model.bipedLeftArm.rotateAngleX = -1.35f;
-						model.bipedLeftArm.rotateAngleY = -0.5f;
-					}
-
-					model.bipedRightLeg.rotateAngleY = 0.65f;
-					model.bipedLeftLeg.rotateAngleY = -0.65f;
-					model.bipedRightLeg.rotateAngleX = -0.65f;
-					model.bipedLeftLeg.rotateAngleX = -0.65f;
-
-				}
-				else if(player.getLowestRidingEntity() instanceof EntityFieldHowitzer)
-				{
-					EntityFieldHowitzer howitzer = (EntityFieldHowitzer)player.getLowestRidingEntity();
-					float partialTicks = ClientUtils.mc().getRenderPartialTicks();
-					float tt = entity.world.getTotalWorldTime()+partialTicks;
-					float firing = (howitzer.shootingProgress+(howitzer.shootingProgress > 0?partialTicks: 0))/FieldHowitzer.fireTime;
-					float reloading = (howitzer.reloadProgress+(howitzer.reloadProgress > 0?partialTicks: 0))/FieldHowitzer.reloadTime;
-					//float reloading = (tt%60)/60f;
-
-					if(howitzer.setupTime > 0)
-					{
-						float progress = MathHelper.clamp((howitzer.setupTime+
-								partialTicks*(howitzer.turnLeft||howitzer.turnRight||howitzer.forward||howitzer.backward?1: -1)
-						)/(FieldHowitzer.setupTime*0.2f), 0, 1);
-
-						float wtime = Math.abs((entity.getEntityWorld().getTotalWorldTime()+partialTicks)%30/30f-0.5f)/0.5f;
-						float stime = howitzer.setupTime/(float)FieldHowitzer.setupTime;
-						wtime *= (float)Math.floor(stime);
-
-						model.bipedRightLeg.rotationPointZ = progress*8f;
-						model.bipedLeftLeg.rotationPointZ = progress*8f;
-
-						//model.bipedBody.rotateAngleY=seat.seatID==0?0.25f:-0.25f;
-						model.bipedBody.rotateAngleX += progress*0.385f;
-						model.isSneak = true;
-						if(seat.seatID==1)
-						{
-							model.bipedRightArm.rotateAngleX = progress*-0.5f;
-							model.bipedRightArm.rotateAngleZ = progress*1.5f;
-							model.bipedLeftArm.rotateAngleX = progress*-0.55f;
-
-							if(howitzer.turnLeft||howitzer.forward)
-							{
-								model.bipedRightLeg.rotateAngleZ = -(1f-wtime)*0.25f*stime;
-								model.bipedLeftLeg.rotateAngleZ = (-wtime*0.25f-0.25f)*stime;
-							}
-							else if(howitzer.turnRight||howitzer.backward)
-							{
-								model.bipedRightLeg.rotateAngleZ = ((1f-wtime)*0.25f+0.25f)*stime;
-								model.bipedLeftLeg.rotateAngleZ = wtime*0.25f*stime;
-							}
-						}
-						else
-						{
-							model.bipedLeftArm.rotateAngleX = progress*-0.5f;
-							model.bipedLeftArm.rotateAngleZ = -progress*1.125f;
-							model.bipedRightArm.rotateAngleX = progress*0.125f;
-							model.bipedRightArm.rotateAngleZ = progress*0.5f;
-
-							if(howitzer.turnLeft||howitzer.backward)
-							{
-								model.bipedRightLeg.rotateAngleZ = (-(1f-wtime)*0.25f+0.25f)*stime;
-								model.bipedLeftLeg.rotateAngleZ = -wtime*0.25f*stime;
-							}
-							else if(howitzer.turnRight||howitzer.forward)
-							{
-								model.bipedRightLeg.rotateAngleZ = (1f-wtime)*0.25f*stime;
-								model.bipedLeftLeg.rotateAngleZ = (wtime*0.25f-0.25f)*stime;
-							}
-						}
-					}
-					else if(reloading > 0)
-					{
-						if(seat.seatID==0)
-						{
-							if(reloading < 0.2)
-								model.bipedLeftArm.rotateAngleZ = (1f-reloading/0.2f)*-1.25f;
-
-							if(reloading > 0.2f)
-							{
-								float ff = 0;
-								if(reloading < 0.4f)
-									ff = (reloading-0.2f)/0.2f;
-								else if(reloading < 0.5f)
-									ff = 1f-(reloading-0.4f)/0.1f;
-								model.bipedBody.rotateAngleX = ff*0.25f;
-								model.bipedLeftLeg.rotationPointZ = ff*3;
-								model.bipedRightLeg.rotationPointZ = ff*3;
-								model.bipedRightArm.rotateAngleX = ff*-1.25f;
-								model.bipedRightArm.rotateAngleZ = ff*-1.5f;
-							}
-
-							if(reloading < 0.1)
-								model.bipedLeftArm.rotateAngleX = reloading/0.1f*-1.25f;
-							else if(reloading < 0.9)
-								model.bipedLeftArm.rotateAngleX = -1.25f;
-							else
-								model.bipedLeftArm.rotateAngleX = (1f-(reloading-0.9f)/0.1f)*-1.25f;
-						}
-					}
-					else if(firing > 0)
-						if(seat.seatID==1)
-						{
-							float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
-							model.isSneak = true;
-							model.bipedHead.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
-							model.bipedHeadwear.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
-							model.bipedHead.rotateAngleY = 0;
-							model.bipedHeadwear.rotateAngleY = 0;
-
-							model.bipedBody.rotateAngleX += progress*0.25f;
-
-							model.bipedLeftArm.rotateAngleX = progress*-3f;
-							model.bipedRightArm.rotateAngleX = progress*-3f;
-							model.bipedLeftLeg.rotateAngleX = Math.min(progress/0.65f, 1f)*-0.35f;
-
-							model.bipedRightLeg.rotationPointZ = 5f+progress*2f;
-							model.bipedLeftLeg.rotationPointZ = 5f+progress*2f;
-
-							//model.bipedRightLeg.rotateAngleX = progress*0.25f;
-							//model.bipedLeftArm.rotateAngleY = progress*3.14f;
-						}
-						else
-						{
-							if(firing < 0.3)
-								model.bipedRightArm.rotateAngleY = -0.385f;
-							if(firing < 0.1f)
-								model.bipedRightArm.rotateAngleX = -1.65f*(firing/0.1f);
-							else if(firing < 0.2f)
-								model.bipedRightArm.rotateAngleX = -1.65f+0.8f*((firing-0.1f)/0.1f);
-							else if(firing < 0.3)
-								model.bipedRightArm.rotateAngleX = -0.85f*(1f-(firing-0.2f)/0.1f);
-							else
-							{
-								firing = (firing-0.3f)/0.7f;
-								float progress = MathHelper.clamp(firing < 0.75?firing/0.2f: 1f-(firing-0.85f)/0.15f, 0, 1);
-								model.isSneak = true;
-								model.bipedHead.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
-								model.bipedHeadwear.rotateAngleX = Math.min(progress/0.85f, 1f)*0.15f;
-								model.bipedHead.rotateAngleY = 0;
-								model.bipedHeadwear.rotateAngleY = 0;
-
-								model.bipedLeftArm.rotateAngleX = progress*-3f;
-								model.bipedRightArm.rotateAngleX = progress*-3f;
-								model.bipedRightLeg.rotateAngleX = Math.min(progress/0.65f, 1f)*0.35f;
-
-								model.bipedRightLeg.rotationPointZ = 5f;
-								model.bipedLeftLeg.rotationPointZ = 5f;
-							}
-
-						}
-					else if(seat.seatID==0&&(howitzer.gunPitchDown||howitzer.gunPitchUp))
-					{
-						float limbSwing = Math.abs((tt%8-4)/8f);
-						if(howitzer.gunPitchUp)
-							limbSwing = -limbSwing;
-						model.isSneak = true;
-						model.bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing*0.6662F)-1.125f;
-						model.bipedRightArm.rotateAngleY = MathHelper.cos(limbSwing*0.6662F)-1f;
-						model.bipedRightArm.rotateAngleZ = 0;
-
-						model.bipedLeftArm.rotateAngleX = MathHelper.cos(limbSwing*0.6662F)-2f;
-						model.bipedLeftArm.rotateAngleY = MathHelper.cos(limbSwing*0.6662F)+0.5f;
-						model.bipedLeftArm.rotateAngleZ = 0;
-					}
-
-				}
-
-			}
-			else
-				for(EnumHand hand : EnumHand.values())
-				{
-					ItemStack heldItem = player.getHeldItem(hand);
-					if(!heldItem.isEmpty())
-					{
-						Item item = heldItem.getItem();
-						boolean right = (hand==EnumHand.MAIN_HAND)==(player.getPrimaryHand()==EnumHandSide.RIGHT);
-						if(item==IIContent.itemMachinegun)
-							if(right)
-							{
-								model.bipedRightArm.rotateAngleX *= 0.25f;
-								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-							}
-							else
-							{
-								model.bipedLeftArm.rotateAngleX *= 0.25f;
-								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
-							}
-						else if(item==IIContent.itemMortar)
-							if(right)
-							{
-								model.bipedRightArm.rotateAngleX *= 0.25f;
-								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX-0.25f;
-								model.bipedLeftArm.rotateAngleZ = -0.35f;
-							}
-							else
-							{
-								model.bipedLeftArm.rotateAngleX *= 0.25f;
-								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
-							}
-						else if((item instanceof ItemIIGunBase
-								||item instanceof ItemIIRailgunOverride)
-								&&hand!=EnumHand.OFF_HAND)
-							if(right)
-							{
-								player.setRenderYawOffset(player.rotationYawHead);
-								boolean rail = item instanceof ItemIIRailgunOverride;
-
-								model.bipedRightArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX;
-								model.bipedLeftArm.rotateAngleX = -1.65f+model.bipedHead.rotateAngleX+0.0625f;
-
-								//-1.5707964 up
-								//0 middle
-								//1.5707964 down
-								float v = (model.bipedHead.rotateAngleX+1.5707964f)/3.1415927f;
-
-								model.bipedRightArm.rotateAngleY += IIUtils.clampedLerp3Par(0, -0.45f, 0f, v);
-								model.bipedRightArm.rotateAngleZ += IIUtils.clampedLerp3Par(0.25f, 0, -0.45f, v);
-								model.bipedLeftArm.rotateAngleZ += IIUtils.clampedLerp3Par(rail?-0.25f: -0.65f, 0, rail?0.25f: 0.65f, v);
-								model.bipedLeftArm.rotateAngleY += IIUtils.clampedLerp3Par(0f, rail?0.25f: 0.7f, 0f, v);
-
-								model.bipedLeftArm.rotationPointX += IIUtils.clampedLerp3Par(-2f, -1f, -2f, v);
-								model.bipedLeftArm.rotationPointZ += IIUtils.clampedLerp3Par(0, -2f, 0, v);
-
-								model.bipedRightArm.rotationPointZ += IIUtils.clampedLerp3Par(0, 2f, 0, v);
-
-
-								//up
-								/*
-								model.bipedRightArm.rotateAngleZ += 0.25f;
-								model.bipedLeftArm.rotateAngleZ = -0.65f;
-								model.bipedLeftArm.rotationPointX -= 2;
-								 */
-
-								//mid
-								/*
-								model.bipedRightArm.rotateAngleY -= 0.35f;
-								model.bipedLeftArm.rotateAngleY = 0.65f;
-								model.bipedLeftArm.rotateAngleZ = 0;
-
-								model.bipedRightArm.rotationPointZ += 1;
-
-								model.bipedLeftArm.rotationPointX -= 1;
-								model.bipedLeftArm.rotationPointZ -= 2;
-								 */
-
-								//down
-								/*
-								model.bipedRightArm.rotateAngleZ -= 0.45f;
-								model.bipedLeftArm.rotateAngleZ = 0.65f;
-								model.bipedLeftArm.rotationPointX -= 2;
-								 */
-							}
-							else
-							{
-								// TODO: 19.09.2021 animation for left hand (requires model offset changes)
-							}
-							// TODO: 19.05.2021 change railgun and chemthrower animation
-						/*
-						else if(heldItem.getItem() instanceof ItemIIRailgunOverride&&hand!=EnumHand.OFF_HAND)
-						{
-							if(right)
-							{
-								model.bipedRightArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
-								model.bipedRightArm.rotateAngleY = -0.25f;
-								model.bipedLeftArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
-								model.bipedLeftArm.rotateAngleY = 0.75f;
-								model.bipedLeftArm.rotationPointZ = -1.25F;
-								//model.bipedRightArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
-
-							}
-							else
-							{
-								model.bipedLeftArm.rotateAngleX = -1.39626f+model.bipedHead.rotateAngleX;
-								model.bipedLeftArm.rotateAngleY = .08726f+model.bipedHead.rotateAngleY;
-							}
-						}
-						 */
-						else if(player.isSneaking()&&item==IIContent.itemBinoculars)
-						{
-							model.bipedRightArm.rotateAngleY = model.bipedHead.rotateAngleY-0.25f;
-							model.bipedLeftArm.rotateAngleY = model.bipedHead.rotateAngleY+0.25f;
-
-							model.bipedRightArm.rotateAngleX = model.bipedHead.rotateAngleX-2f;
-							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-
-							int id = heldItem.getMetadata();
-							BinocularsRenderer.INSTANCE.render(id==1?ItemNBTHelper.getBoolean(heldItem, "wasUsed")?2: 1: id, model.bipedHead, true);
-						}
-						else if(item==IIContent.itemMineDetector)
-						{
-							float v = MineDetectorRenderer.instance.renderBase(player, 2.125f, true);
-
-							model.bipedRightArm.rotateAngleY = model.bipedBody.rotateAngleY-0.45f;
-							model.bipedLeftArm.rotateAngleY = model.bipedBody.rotateAngleY+0.45f;
-
-							model.bipedRightArm.rotateAngleX = -1.25f-(1f-v)*0.5f;
-							model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-						}
-						else if(item==IIContent.itemNavalMine)
-							if(right)
-							{
-								model.bipedRightArm.rotateAngleX -= 0.5f;
-								model.bipedLeftArm.rotateAngleX = model.bipedRightArm.rotateAngleX;
-							}
-							else
-							{
-								model.bipedLeftArm.rotateAngleX -= 0.5f;
-								model.bipedRightArm.rotateAngleX = model.bipedLeftArm.rotateAngleX;
-							}
-						else if(item==IIContent.itemGrenade)
-						{
-							float use = 1f-MathHelper.clamp(((EntityLivingBase)entity).getItemInUseCount()/(float)heldItem.getMaxItemUseDuration(), 0, 1);
-							if(right)
-							{
-								model.rightArmPose = ArmPose.EMPTY;
-								//model.leftArmPose=ArmPose.EMPTY;
-								float hh = -(4.5f-model.bipedHead.rotateAngleX);
-								model.bipedRightArm.rotateAngleX = use!=1?use > 0f?use < 0.35f?use/0.35f*hh: hh: 0f: 0f;
-							}
-						}
-
-					}
-				}
-
-			if(!gunshotEntities.isEmpty())
-			{
-				Float v = gunshotEntities.remove(entity);
-				if(v!=null)
-				{
-					ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-					if(heldItem.getItem() instanceof ItemIIGunBase)
-					{
-						//float recoilH = ItemNBTHelper.getFloat(heldItem, "recoilH");
-						//float recoilV = ItemNBTHelper.getFloat(heldItem, "recoilV");
-
-						Vec3d vec =
-								IIUtils.getVectorForRotation(player.rotationPitch, player.getRotationYawHead())
-										.scale(-1);
-
-						double true_angle = Math.toRadians(-player.getRotationYawHead() > 180?360f- -player.getRotationYawHead(): -player.getRotationYawHead());
-						double true_angle2 = Math.toRadians(-player.getRotationYawHead()-90 > 180?360f-(-player.getRotationYawHead()-90): -player.getRotationYawHead()-90);
-
-						Vec3d pos1_x = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointZ/16f+0.185f, true_angle, 0);
-						Vec3d pos1_z = IIUtils.offsetPosDirection(-model.bipedRightArm.rotationPointX/16f-0.125f-0.0625f, true_angle2, 0);
-						Vec3d pos1_y = IIUtils.offsetPosDirection(3/16f, true_angle, 90);
-
-						Vec3d vv = player.getPositionVector()
-								.addVector(0, entity.isSneaking()?-0.275: 0, 0)
-								.addVector(0, (24.0F-model.bipedRightArm.rotationPointY)/16f, 0)
-								.add(pos1_x).add(pos1_z).add(pos1_y)
-								.add(vec.scale(-1.25f));
-						//.add(arm.rotatePitch(-90f).scale(0.5f));
-
-						ParticleUtils.spawnGunfireFX(vv, vec, v);
-					}
-				}
-			}
-		}
 	}
 
 	@SubscribeEvent

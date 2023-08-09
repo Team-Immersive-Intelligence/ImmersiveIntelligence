@@ -13,9 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelCoagulator extends ModelIIBase
 {
-	public ModelRendererTurbo[] tankRightModel, valveRightModel, pistonsRightModel, tankLeftModel, valveLeftModel, pistonsLeftModel, mixerModel, starterSlideModel, bucketHolderModel, bucketRailModel, bucketTimerModel, cartModel, cartWheelsModel,bucketModel, bucketHandleModel;
 	final int textureX = 256;
 	final int textureY = 256;
+	public ModelRendererTurbo[] tankRightModel, valveRightModel, pistonsRightModel, tankLeftModel, valveLeftModel, pistonsLeftModel, mixerModel, starterSlideModel, bucketHolderModel, bucketRailModel, bucketTimerModel, cartModel, cartWheelsModel, bucketModel, bucketHandleModel;
 
 	public ModelCoagulator()
 	{
@@ -1287,22 +1287,22 @@ public class ModelCoagulator extends ModelIIBase
 		parts.put("bucket", bucketModel);
 		parts.put("bucket_handle", bucketHandleModel);
 
-		translate(mixerModel,-56F,0,-41f);
-		translate(tankRightModel,-14F, 56.5f,0);
-		translate(valveRightModel,-14F, 56.5f,0);
-		translate(valveRightModel,-22f, 3,0);
+		translate(mixerModel, -56F, 0, -41f);
+		translate(tankRightModel, -14F, 56.5f, 0);
+		translate(valveRightModel, -14F, 56.5f, 0);
+		translate(valveRightModel, -22f, 3, 0);
 
-		translate(tankLeftModel,-93F, 56.5f,0);
-		translate(valveLeftModel,-93F, 56.5f,0);
-		translate(valveLeftModel,16f, 3,0);
+		translate(tankLeftModel, -93F, 56.5f, 0);
+		translate(valveLeftModel, -93F, 56.5f, 0);
+		translate(valveLeftModel, 16f, 3, 0);
 
-		translate(bucketModel,-8f, 0f, -2.5f);
-		translate(bucketRailModel,-8f, 0f, 0);
-		translate(bucketTimerModel,-8f, 0f, -0);
-		translate(bucketHolderModel,-8f, 0f, 0);
+		translate(bucketModel, -8f, 0f, -2.5f);
+		translate(bucketRailModel, -8f, 0f, 0);
+		translate(bucketTimerModel, -8f, 0f, -0);
+		translate(bucketHolderModel, -8f, 0f, 0);
 
-		translate(bucketHandleModel,-8f, 0, -2.5f);
-		translate(bucketHandleModel,0, 9f, 11.5f);
+		translate(bucketHandleModel, -8f, 0, -2.5f);
+		translate(bucketHandleModel, 0, 9f, 11.5f);
 
 		flipAll();
 	}
@@ -1315,20 +1315,20 @@ public class ModelCoagulator extends ModelIIBase
 			case NORTH:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-4:3, 0f, 2f);
+				GlStateManager.translate(mirrored?-4: 3, 0f, 2f);
 
 			}
 			break;
 			case SOUTH:
 			{
 				GlStateManager.rotate(0, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-3f:4f, 0f, 3f);
+				GlStateManager.translate(mirrored?-3f: 4f, 0f, 3f);
 			}
 			break;
 			case EAST:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-4f:3, 0f, 3f);
+				GlStateManager.translate(mirrored?-4f: 3, 0f, 3f);
 
 			}
 			break;
@@ -1336,7 +1336,7 @@ public class ModelCoagulator extends ModelIIBase
 			{
 				GlStateManager.rotate(-90F, 0F, 1F, 0F);
 
-				GlStateManager.translate(mirrored?-3:4, 0f, 2f);
+				GlStateManager.translate(mirrored?-3: 4, 0f, 2f);
 
 			}
 			break;

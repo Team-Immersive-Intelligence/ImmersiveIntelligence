@@ -122,16 +122,16 @@ public class AmmoRegistry
 			this.color = color;
 		}
 
-		public int getColor()
-		{
-			return color;
-		}
-
 		@Nonnull
 		public static EnumComponentRole v(String s)
 		{
 			String ss = s.toUpperCase();
 			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(GENERAL_PURPOSE);
+		}
+
+		public int getColor()
+		{
+			return color;
 		}
 	}
 
@@ -193,6 +193,13 @@ public class AmmoRegistry
 			this.role = role;
 		}
 
+		@Nonnull
+		public static EnumCoreTypes v(String s)
+		{
+			String ss = s.toUpperCase();
+			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(SOFTPOINT);
+		}
+
 		public float getPenMod(PenMaterialTypes p)
 		{
 			return getPenEffectiveness.apply(p);
@@ -217,13 +224,6 @@ public class AmmoRegistry
 		public EnumComponentRole getRole()
 		{
 			return role;
-		}
-
-		@Nonnull
-		public static EnumCoreTypes v(String s)
-		{
-			String ss = s.toUpperCase();
-			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(SOFTPOINT);
 		}
 	}
 
@@ -268,15 +268,15 @@ public class AmmoRegistry
 			this.ricochet = ricochet;
 		}
 
-		public boolean canRicochetOff()
-		{
-			return ricochet;
-		}
-
 		public static PenMaterialTypes v(String s)
 		{
 			String ss = s.toUpperCase();
 			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(METAL);
+		}
+
+		public boolean canRicochetOff()
+		{
+			return ricochet;
 		}
 	}
 }

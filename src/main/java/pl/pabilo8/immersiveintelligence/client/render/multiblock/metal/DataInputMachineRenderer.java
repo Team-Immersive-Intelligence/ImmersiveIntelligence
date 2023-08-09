@@ -40,8 +40,8 @@ public class DataInputMachineRenderer extends TileEntitySpecialRenderer<TileEnti
 
 			if(te.mirrored)
 			{
-				GlStateManager.scale(-1,1,1);
-				GlStateManager.translate(-1,0,0);
+				GlStateManager.scale(-1, 1, 1);
+				GlStateManager.translate(-1, 0, 0);
 				GlStateManager.cullFace(CullFace.FRONT);
 			}
 

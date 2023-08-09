@@ -28,13 +28,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
  */
 public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalDevice1>
 {
-	public enum IIBlockTypes_MetalDevice1 implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityCO2Filter.class)
-		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT)
-		CO2_FILTER
-	}
-
 	public BlockIIMetalDevice1()
 	{
 		super("metal_device1", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MetalDevice1.class), ItemBlockIIBase::new,
@@ -76,5 +69,12 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 			}
 		}
 		return true;
+	}
+
+	public enum IIBlockTypes_MetalDevice1 implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityCO2Filter.class)
+		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT)
+		CO2_FILTER
 	}
 }

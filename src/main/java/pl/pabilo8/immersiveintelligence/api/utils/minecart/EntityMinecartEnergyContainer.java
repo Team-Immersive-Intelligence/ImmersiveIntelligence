@@ -23,8 +23,8 @@ import javax.annotation.Nullable;
  */
 public abstract class EntityMinecartEnergyContainer extends EntityMinecartII implements IFluxReceiver
 {
-	MinecartEnergyStorage energyStorage = new MinecartEnergyStorage(getEnergyCapacity(), getMaxReceive(), getMaxExtract(), 0);
 	private static final DataParameter<Integer> dataMarkerEnergy = EntityDataManager.createKey(EntityMinecartEnergyContainer.class, DataSerializers.VARINT);
+	MinecartEnergyStorage energyStorage = new MinecartEnergyStorage(getEnergyCapacity(), getMaxReceive(), getMaxExtract(), 0);
 
 	public EntityMinecartEnergyContainer(World worldIn)
 	{

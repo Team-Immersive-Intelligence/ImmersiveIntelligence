@@ -45,13 +45,13 @@ import java.util.List;
 
 public class EmplacementWeaponHeavyChemthrower extends EmplacementWeapon
 {
-	private AxisAlignedBB vision;
 	int setupDelay = 0;
 	float shootDelay = HeavyChemthrower.sprayTime;
 	boolean shouldIgnite = false;
 	FluidTank tank = new FluidTank(HeavyChemthrower.tankCapacity);
-	private Vec3d vv;
 	SidedFluidHandler fluidHandler = new SidedFluidHandler(this);
+	private AxisAlignedBB vision;
+	private Vec3d vv;
 
 	@Override
 	public String getName()

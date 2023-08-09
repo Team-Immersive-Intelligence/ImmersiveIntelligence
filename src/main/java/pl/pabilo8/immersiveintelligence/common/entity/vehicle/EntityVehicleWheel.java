@@ -14,6 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 public class EntityVehicleWheel extends EntityVehiclePart
 {
 	public int wheelTraverse = 0;
+
 	public EntityVehicleWheel(IVehicleMultiPart parent, String partName, Vec3d offset, AxisAlignedBB aabb)
 	{
 		super(parent, partName, offset, aabb);

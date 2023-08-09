@@ -13,10 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 public class ModelAmmunitionCrate extends ModelIIBase //Same as Filename
 {
+	public ModelRendererTurbo[] lidModel;
 	int textureX = 64;
 	int textureY = 32;
-
-	public ModelRendererTurbo[] lidModel;
 
 	public ModelAmmunitionCrate()
 	{
@@ -73,7 +72,7 @@ public class ModelAmmunitionCrate extends ModelIIBase //Same as Filename
 		baseModel[11].addBox(0F, 0F, 0F, 1, 1, 1, 0F); // Holder2
 		baseModel[11].setRotationPoint(10F, -5F, 11.5F);
 
-		baseModel[12].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(0, 1, 0, 1) }), 1, 6, 1, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {2 ,6 ,2 ,4}); // Shape 13
+		baseModel[12].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(0, 1, 0, 1)}), 1, 6, 1, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{2, 6, 2, 4}); // Shape 13
 		baseModel[12].setRotationPoint(11F, -3F, 12.5F);
 
 		baseModel[13].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(1, 0, 1, 0), new Coord2D(5, 0, 5, 0), new Coord2D(6, 1, 6, 1), new Coord2D(0, 1, 0, 1)}), 1, 6, 1, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{2, 6, 2, 4}); // Shape 13

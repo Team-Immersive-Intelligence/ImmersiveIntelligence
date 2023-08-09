@@ -4,12 +4,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -17,15 +17,14 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class ModelTripMine extends ModelIIBase implements IBulletModel
 {
-	int textureX = 32;
-	int textureY = 32;
 	public static final ResourceLocation[] TEXTURES = new ResourceLocation[]{
 			new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine.png"), //IE steel gray, default option
 			new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine_alt.png"), //green
 			new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/mine/tripmine_alt2.png") //dull-yellow, S-Mine original color
 	};
-
 	public ModelRendererTurbo[] coreModel;
+	int textureX = 32;
+	int textureY = 32;
 
 	public ModelTripMine() //Same as Filename
 	{
@@ -120,8 +119,8 @@ public class ModelTripMine extends ModelIIBase implements IBulletModel
 		coreModel[10].rotateAngleY = 1.53588974F;
 		coreModel[10].rotateAngleZ = 0.78539816F;
 
-		parts.put("base",baseModel);
-		parts.put("core",coreModel);
+		parts.put("base", baseModel);
+		parts.put("core", coreModel);
 
 		translateAll(-8, 1f, -8);
 

@@ -24,13 +24,22 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBT
  */
 public class EntityNavalMine extends EntityBullet
 {
+	private static final DataParameter<Integer> dataMarkerMaxLength = EntityDataManager.createKey(EntityNavalMine.class, DataSerializers.VARINT);
 	public int maxLength = 5;
 	boolean isNotRiding = false;
-	private static final DataParameter<Integer> dataMarkerMaxLength = EntityDataManager.createKey(EntityNavalMine.class, DataSerializers.VARINT);
 
 	public EntityNavalMine(World worldIn)
 	{
 		super(worldIn);
+	}
+
+	public EntityNavalMine(World worldIn, ItemStack stack, double x, double y, double z)
+	{
+		super(worldIn);
+		fromStack(stack);
+		this.setPosition(x, y, z);
+		this.force = 0;
+		this.initialForce = 0;
 	}
 
 	@Override
@@ -54,15 +63,6 @@ public class EntityNavalMine extends EntityBullet
 			this.maxLength = ItemNBTHelper.getInt(stack, "length");
 		else
 			this.maxLength = 5;
-	}
-
-	public EntityNavalMine(World worldIn, ItemStack stack, double x, double y, double z)
-	{
-		super(worldIn);
-		fromStack(stack);
-		this.setPosition(x, y, z);
-		this.force = 0;
-		this.initialForce = 0;
 	}
 
 	@Override

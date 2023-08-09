@@ -41,7 +41,7 @@ public class AmmoComponentFlarePowder extends AmmoComponentTracerPowder
 	{
 		if(world.isRemote)
 			return;
-		world.playSound(null,pos.x, pos.y+1f, pos.z, IISounds.explosionFlare, SoundCategory.NEUTRAL,4,0.5f);
+		world.playSound(null, pos.x, pos.y+1f, pos.z, IISounds.explosionFlare, SoundCategory.NEUTRAL, 4, 0.5f);
 		EntityFlare flare = new EntityFlare(world, getNBTColour(tag));
 		flare.setPosition(pos.x, pos.y+1f, pos.z);
 		world.spawnEntity(flare);

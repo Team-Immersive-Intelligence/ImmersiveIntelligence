@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
 
@@ -27,6 +26,8 @@ public abstract class IICompatModule
 
 	public static boolean serene = false;
 	public static boolean ii = false;
+	//We don't want this to happen multiple times after all >_>
+	public static boolean serverStartingDone = false;
 
 	static
 	{
@@ -65,8 +66,7 @@ public abstract class IICompatModule
 					IICompatModule m = e.getValue().newInstance();
 					modules.add(m);
 					m.preInit();
-				}
-				catch(Exception exception)
+				} catch(Exception exception)
 				{
 					IILogger.error("Compat module for "+e.getKey()+" could not be preInitialized. Report this and include the error message below!", exception);
 				}
@@ -78,8 +78,7 @@ public abstract class IICompatModule
 			try
 			{
 				compat.registerRecipes();
-			}
-			catch(Exception exception)
+			} catch(Exception exception)
 			{
 				IILogger.error("Compat module for "+compat+" could not register recipes. Report this and include the error message below!", exception);
 			}
@@ -91,8 +90,7 @@ public abstract class IICompatModule
 			try
 			{
 				compat.init();
-			}
-			catch(Exception exception)
+			} catch(Exception exception)
 			{
 				IILogger.error("Compat module for "+compat+" could not be initialized. Report this and include the error message below!", exception);
 			}
@@ -104,15 +102,11 @@ public abstract class IICompatModule
 			try
 			{
 				compat.postInit();
-			}
-			catch(Exception exception)
+			} catch(Exception exception)
 			{
 				IILogger.error("Compat module for "+compat+" could not be postInitialized. Report this and include the error message below!", exception);
 			}
 	}
-
-	//We don't want this to happen multiple times after all >_>
-	public static boolean serverStartingDone = false;
 
 	public static void doModulesLoadComplete()
 	{
@@ -124,8 +118,7 @@ public abstract class IICompatModule
 				{
 					compat.loadComplete();
 
-				}
-				catch(Exception exception)
+				} catch(Exception exception)
 				{
 					IILogger.error("Compat module for "+compat+" could not be initialized. Report this and include the error message below!", exception);
 				}

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedCollisionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
@@ -8,11 +7,9 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTil
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -49,17 +46,6 @@ import java.util.List;
  */
 public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<TileEntityAmmunitionWorkshop, AmmunitionWorkshopRecipe> implements ISoundTile, IGuiTile, IAdvancedSelectionBounds, IAdvancedCollisionBounds, IDataDevice
 {
-	public EnumFuseTypes fuse = EnumFuseTypes.CONTACT;
-	public int fuseConfig = 0; //dependent on fuse type: time for timed fuse, distance for proximity fuse
-
-	public NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY); //core, casing
-	IItemHandler coreInputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 18
-	IItemHandler casingInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 20
-
-	public int processTime = 0, processTimeMax = 0;
-	public ItemStack effect = ItemStack.EMPTY;
-	public boolean active = false;
-
 	//required calculation, so pre-calculated here
 	private static final AxisAlignedBB[] BLOCKER_AABB = new AxisAlignedBB[4];
 
@@ -82,6 +68,15 @@ public class TileEntityAmmunitionWorkshop extends TileEntityMultiblockMetal<Tile
 			BLOCKER_AABB[i] = aabb;
 		}
 	}
+
+	public EnumFuseTypes fuse = EnumFuseTypes.CONTACT;
+	public int fuseConfig = 0; //dependent on fuse type: time for timed fuse, distance for proximity fuse
+	public NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY); //core, casing
+	public int processTime = 0, processTimeMax = 0;
+	public ItemStack effect = ItemStack.EMPTY;
+	public boolean active = false;
+	IItemHandler coreInputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 18
+	IItemHandler casingInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 20
 
 	public TileEntityAmmunitionWorkshop()
 	{

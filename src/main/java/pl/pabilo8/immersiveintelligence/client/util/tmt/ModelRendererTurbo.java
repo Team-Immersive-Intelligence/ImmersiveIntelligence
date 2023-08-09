@@ -26,6 +26,35 @@ import java.util.*;
  */
 public class ModelRendererTurbo extends ModelRenderer
 {
+	public static final int MR_FRONT = 0;
+	public static final int MR_BACK = 1;
+	public static final int MR_LEFT = 2;
+	public static final int MR_RIGHT = 3;
+	public static final int MR_TOP = 4;
+	public static final int MR_BOTTOM = 5;
+	private static final float pi = (float)Math.PI;
+	public final String boxName;
+	private final Map<String, TextureGroup> textureGroup;
+	public boolean mirror;
+	public boolean flip;
+	public boolean showModel;
+	public boolean hasOffset = false;
+	public boolean field_1402_i;
+	public boolean forcedRecompile;
+	public boolean useLegacyCompiler;
+	public ArrayList<ModelRenderer> childModels;
+	private PositionTextureVertex[] vertices;
+	private TexturedPolygon[] faces;
+	private int textureOffsetX;
+	private int textureOffsetY;
+	private boolean compiled;
+	private int displayList;
+	private int[] displayListArray;
+	private Map<String, TransformGroup> transformGroup;
+	private TransformGroup currentGroup;
+	private TextureGroup currentTextureGroup;
+	private String defaultTexture;
+
 	public ModelRendererTurbo(ModelBase modelbase, String s)
 	{
 		super(modelbase, s);
@@ -916,7 +945,6 @@ public class ModelRendererTurbo extends ModelRenderer
 
 		addRectShape(v, v1, v2, v3, v4, v5, v6, v7, w, h, d);
 	}
-
 
 	/**
 	 * Creates a shape from a 2D vector shape.
@@ -1929,6 +1957,16 @@ public class ModelRendererTurbo extends ModelRenderer
 	}
 
 	/**
+	 * Gets the current texture group.
+	 *
+	 * @return a TextureGroup object.
+	 */
+	public TextureGroup getTextureGroup()
+	{
+		return currentTextureGroup;
+	}
+
+	/**
 	 * Sets the current texture group, which is used to switch the
 	 * textures on a per-model base. Do note that any model that is
 	 * rendered afterwards will use the same texture. To counter it,
@@ -1943,16 +1981,6 @@ public class ModelRendererTurbo extends ModelRenderer
 		if(!textureGroup.containsKey(groupName))
 			textureGroup.put(groupName, new TextureGroup());
 		currentTextureGroup = textureGroup.get(groupName);
-	}
-
-	/**
-	 * Gets the current texture group.
-	 *
-	 * @return a TextureGroup object.
-	 */
-	public TextureGroup getTextureGroup()
-	{
-		return currentTextureGroup;
 	}
 
 	/**
@@ -2006,7 +2034,6 @@ public class ModelRendererTurbo extends ModelRenderer
 	{
 		render(0.0625f);
 	}
-
 
 	/**
 	 * Renders the shape
@@ -2179,38 +2206,6 @@ public class ModelRendererTurbo extends ModelRenderer
 		this.rotateAngleY = y;
 		this.rotateAngleZ = z;
 	}
-
-	private PositionTextureVertex[] vertices;
-	private TexturedPolygon[] faces;
-	private int textureOffsetX;
-	private int textureOffsetY;
-	private boolean compiled;
-	private int displayList;
-	private int[] displayListArray;
-	private Map<String, TransformGroup> transformGroup;
-	private final Map<String, TextureGroup> textureGroup;
-	private TransformGroup currentGroup;
-	private TextureGroup currentTextureGroup;
-	public boolean mirror;
-	public boolean flip;
-	public boolean showModel;
-	public boolean hasOffset = false;
-	public boolean field_1402_i;
-	public boolean forcedRecompile;
-	public boolean useLegacyCompiler;
-	public ArrayList<ModelRenderer> childModels;
-	public final String boxName;
-
-	private String defaultTexture;
-
-	public static final int MR_FRONT = 0;
-	public static final int MR_BACK = 1;
-	public static final int MR_LEFT = 2;
-	public static final int MR_RIGHT = 3;
-	public static final int MR_TOP = 4;
-	public static final int MR_BOTTOM = 5;
-
-	private static final float pi = (float)Math.PI;
 
 	public boolean isCompiled()
 	{

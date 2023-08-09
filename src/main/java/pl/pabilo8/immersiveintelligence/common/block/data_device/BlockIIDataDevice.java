@@ -10,23 +10,16 @@ import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.*;
@@ -43,7 +36,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.Tern
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author Pabilo8
@@ -61,32 +53,6 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 		setToolTypes(IILib.TOOL_HAMMER);
 
 		addToTESRMap(IIBlockTypes_Connector.FLUID_INSERTER);
-	}
-
-	public enum IIBlockTypes_Connector implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityDataConnector.class)
-		DATA_CONNECTOR,
-		@EnumTileProvider(tile = TileEntityDataRelay.class)
-		DATA_RELAY,
-		@EnumTileProvider(tile = TileEntityAlarmSiren.class)
-		ALARM_SIREN,
-		@EnumTileProvider(tile = TileEntityInserter.class)
-		INSERTER,
-		@EnumTileProvider(tile = TileEntityFluidInserter.class)
-		FLUID_INSERTER,
-		@EnumTileProvider(tile = TileEntityAdvancedInserter.class)
-		ADVANCED_INSERTER,
-		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		ADVANCED_FLUID_INSERTER,
-		@EnumTileProvider(tile = TileEntityChemicalDispenser.class)
-		CHEMICAL_DISPENSER,
-		@EnumTileProvider(tile = TileEntityProgrammableSpeaker.class)
-		PROGRAMMABLE_SPEAKER,
-		@EnumTileProvider(tile = TileEntityDataDebugger.class)
-		DATA_DEBUGGER,
-		@EnumTileProvider(tile = TileEntityDataCallbackConnector.class)
-		DATA_DUPLEX_CONNECTOR
 	}
 
 	@Override
@@ -227,5 +193,31 @@ public class BlockIIDataDevice extends BlockIITileProvider<IIBlockTypes_Connecto
 			}
 		}
 		return super.getPickBlock(state, target, world, pos, player);
+	}
+
+	public enum IIBlockTypes_Connector implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityDataConnector.class)
+		DATA_CONNECTOR,
+		@EnumTileProvider(tile = TileEntityDataRelay.class)
+		DATA_RELAY,
+		@EnumTileProvider(tile = TileEntityAlarmSiren.class)
+		ALARM_SIREN,
+		@EnumTileProvider(tile = TileEntityInserter.class)
+		INSERTER,
+		@EnumTileProvider(tile = TileEntityFluidInserter.class)
+		FLUID_INSERTER,
+		@EnumTileProvider(tile = TileEntityAdvancedInserter.class)
+		ADVANCED_INSERTER,
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		ADVANCED_FLUID_INSERTER,
+		@EnumTileProvider(tile = TileEntityChemicalDispenser.class)
+		CHEMICAL_DISPENSER,
+		@EnumTileProvider(tile = TileEntityProgrammableSpeaker.class)
+		PROGRAMMABLE_SPEAKER,
+		@EnumTileProvider(tile = TileEntityDataDebugger.class)
+		DATA_DEBUGGER,
+		@EnumTileProvider(tile = TileEntityDataCallbackConnector.class)
+		DATA_DUPLEX_CONNECTOR
 	}
 }

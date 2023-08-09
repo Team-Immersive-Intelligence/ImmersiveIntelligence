@@ -25,8 +25,6 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.Level;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
@@ -46,12 +44,14 @@ import static blusunrize.immersiveengineering.api.energy.wires.WireType.*;
  */
 public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultiblockMetal<T, R>, R extends IMultiblockRecipe> extends TileEntityMultiblockMetal<T, R> implements IImmersiveConnectable
 {
+	private final List<Pair<Float, Consumer<Float>>> sources = new ArrayList<>();
+	protected WireType limitType = null;
+	private long lastSourceUpdate = 0;
+
 	public TileEntityMultiblockConnectable(IMultiblock mutliblockInstance, int[] structureDimensions, int energyCapacity, boolean redstoneControl)
 	{
 		super(mutliblockInstance, structureDimensions, energyCapacity, redstoneControl);
 	}
-
-	protected WireType limitType = null;
 
 	protected boolean canTakeLV()
 	{
@@ -157,9 +157,6 @@ public abstract class TileEntityMultiblockConnectable<T extends TileEntityMultib
 			world.notifyBlockUpdate(this.getPos(), state, state, 3);
 		}
 	}
-
-	private final List<Pair<Float, Consumer<Float>>> sources = new ArrayList<>();
-	private long lastSourceUpdate = 0;
 
 	@Override
 	public void addAvailableEnergy(float amount, Consumer<Float> consume)

@@ -48,12 +48,11 @@ import java.util.List;
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
 		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride, IAdvancedBounds
 {
-	private List<AxisAlignedBB> aabb = null;
-
-	protected boolean redstoneControlInverted = false;
 	public NonNullList<ItemStack> inventory;
-	IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
 	public FluxStorageAdvanced energyStorage;
+	protected boolean redstoneControlInverted = false;
+	IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
+	private List<AxisAlignedBB> aabb = null;
 
 	//--- Constructor, Initialization ---//
 
@@ -294,9 +293,9 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	 */
 	public static class MultiblockInteractablePart
 	{
+		final float maxProgress;
 		boolean opened = false;
 		float progress = 0;
-		final float maxProgress;
 
 		public MultiblockInteractablePart(float maxProgress)
 		{

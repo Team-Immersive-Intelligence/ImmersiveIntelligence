@@ -16,12 +16,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -71,6 +71,25 @@ public class BulletTweaker
 				return "Removed shrapnel for "+shrapnel;
 			}
 		});
+	}
+
+	@ZenMethod
+	public static void removeCore(String name)
+	{
+		AmmoRegistry.INSTANCE.registeredBulletCores.remove(name);
+	}
+
+	@ZenMethod
+	public static void removeComponent(String name)
+	{
+		AmmoRegistry.INSTANCE.registeredComponents.remove(name);
+	}
+
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.IComponentFunction")
+	@ZenRegister
+	public interface IComponentFunction
+	{
+		void process(IWorld world, IVector3d pos, IVector3d dir, String coreType, float amount, IData nbt);
 	}
 
 	@ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.CoreMaterialBuilder")
@@ -332,24 +351,5 @@ public class BulletTweaker
 				return "Adding Bullet Core for material "+component.name;
 			}
 		}
-	}
-
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".bullet.IComponentFunction")
-	@ZenRegister
-	public interface IComponentFunction
-	{
-		void process(IWorld world, IVector3d pos, IVector3d dir, String coreType, float amount, IData nbt);
-	}
-
-	@ZenMethod
-	public static void removeCore(String name)
-	{
-		AmmoRegistry.INSTANCE.registeredBulletCores.remove(name);
-	}
-
-	@ZenMethod
-	public static void removeComponent(String name)
-	{
-		AmmoRegistry.INSTANCE.registeredComponents.remove(name);
 	}
 }

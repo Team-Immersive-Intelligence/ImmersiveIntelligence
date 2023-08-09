@@ -72,7 +72,7 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		IIClientUtils.drawPowerBar(guiLeft+159, guiTop+22, 7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		IIClientUtils.drawPowerBar(guiLeft+159, guiTop+22, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		if(tile.active&&tile.processTimeMax!=0)
 		{

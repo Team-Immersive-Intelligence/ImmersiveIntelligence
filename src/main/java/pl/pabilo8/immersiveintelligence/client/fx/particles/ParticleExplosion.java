@@ -25,9 +25,9 @@ public class ParticleExplosion extends IIParticle
 	public ParticleExplosion(World world, Vec3d pos, Vec3d motion, float size)
 	{
 		super(world, pos, motion);
-		this.motionX*=1.55;
-		this.motionY*=0.65;
-		this.motionZ*=1.55;
+		this.motionX *= 1.55;
+		this.motionY *= 0.65;
+		this.motionZ *= 1.55;
 
 		this.particleScale = (float)(size*0.85+(size*0.15*Utils.RAND.nextGaussian()))*2f;
 		this.actualParticleScale = this.particleScale;

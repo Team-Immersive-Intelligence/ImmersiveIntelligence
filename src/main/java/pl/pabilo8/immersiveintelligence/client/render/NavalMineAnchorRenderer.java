@@ -17,8 +17,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMineAnch
  */
 public class NavalMineAnchorRenderer extends Render<EntityNavalMineAnchor> implements IReloadableModelContainer<NavalMineAnchorRenderer>
 {
-	public static ModelNavalMineAnchor model = new ModelNavalMineAnchor();
 	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/entity/bullets/naval_mine_anchor.png";
+	public static ModelNavalMineAnchor model = new ModelNavalMineAnchor();
 
 	public NavalMineAnchorRenderer(RenderManager renderManager)
 	{

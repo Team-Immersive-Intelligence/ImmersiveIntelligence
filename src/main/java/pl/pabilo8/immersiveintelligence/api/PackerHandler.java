@@ -25,11 +25,11 @@ public class PackerHandler
 	/**
 	 * Used for handling item I/O
 	 */
-	private static HashMap<Predicate<ItemStack>, Function<ItemStack, IItemHandler>> itemHandleMap = new HashMap<>();
+	private static final HashMap<Predicate<ItemStack>, Function<ItemStack, IItemHandler>> itemHandleMap = new HashMap<>();
 	/**
 	 * Used for handling fluid I/O
 	 */
-	private static HashMap<Predicate<ItemStack>, Function<ItemStack, IFluidHandlerItem>> fluidHandleMap = new HashMap<>();
+	private static final HashMap<Predicate<ItemStack>, Function<ItemStack, IFluidHandlerItem>> fluidHandleMap = new HashMap<>();
 
 	public static void registerItem(Predicate<ItemStack> check, Function<ItemStack, IItemHandler> handler)
 	{
@@ -64,13 +64,6 @@ public class PackerHandler
 		//fill until x is inside packer
 		AT_LEAST_PACKER;
 
-		@Nonnull
-		@Override
-		public String getName()
-		{
-			return this.toString().toLowerCase();
-		}
-
 		public static PackerPutMode fromName(String name)
 		{
 			String ss = name.toUpperCase();
@@ -79,6 +72,13 @@ public class PackerHandler
 					.findFirst()
 					.orElse(ALL_POSSIBLE);
 		}
+
+		@Nonnull
+		@Override
+		public String getName()
+		{
+			return this.toString().toLowerCase();
+		}
 	}
 
 	public enum PackerActionType
@@ -86,20 +86,6 @@ public class PackerHandler
 		ITEM,
 		FLUID,
 		ENERGY;
-
-		public String getActionName(boolean unpacker)
-		{
-			switch(this)
-			{
-				default:
-				case ITEM:
-					return unpacker?"unpack": "pack";
-				case FLUID:
-					return unpacker?"drain": "fill";
-				case ENERGY:
-					return unpacker?"discharge": "charge";
-			}
-		}
 
 		public static PackerActionType fromName(String name)
 		{
@@ -112,6 +98,20 @@ public class PackerHandler
 					return FLUID;
 				case "energy":
 					return ENERGY;
+			}
+		}
+
+		public String getActionName(boolean unpacker)
+		{
+			switch(this)
+			{
+				default:
+				case ITEM:
+					return unpacker?"unpack": "pack";
+				case FLUID:
+					return unpacker?"drain": "fill";
+				case ENERGY:
+					return unpacker?"discharge": "charge";
 			}
 		}
 	}

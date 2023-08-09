@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui.tooltip;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -39,7 +38,7 @@ public class TextOverlayMechanical extends TextOverlayBase
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		assert te!=null;
 
@@ -53,8 +52,8 @@ public class TextOverlayMechanical extends TextOverlayBase
 
 		if(intTorque!=extTorque&&intSpeed!=extSpeed)
 			return new String[]{
-					IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0],"\u2296 "+I18n.format(IILib.INFO_KEY+"tachometer.internal_torque", intTorque)),
-					IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0],"\u29c1 "+I18n.format(IILib.INFO_KEY+"tachometer.internal_speed", intSpeed)),
+					IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], "\u2296 "+I18n.format(IILib.INFO_KEY+"tachometer.internal_torque", intTorque)),
+					IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], "\u29c1 "+I18n.format(IILib.INFO_KEY+"tachometer.internal_speed", intSpeed)),
 					"\u2296 "+I18n.format(IILib.INFO_KEY+"tachometer.external_torque", extTorque),
 					"\u29c1 "+I18n.format(IILib.INFO_KEY+"tachometer.external_speed", extSpeed)
 			};

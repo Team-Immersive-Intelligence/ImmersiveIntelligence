@@ -18,16 +18,14 @@ import java.util.function.Function;
  */
 public class GuiButtonDropdownList extends GuiButton
 {
-	private boolean needsSlider;
-	public boolean dropped = false;
 	private final int perPage;
+	private final String[] entries;
+	public boolean dropped = false;
+	public int selectedEntry = -1;
+	private boolean needsSlider;
 	private int offset;
 	private int maxOffset;
-
 	private Function<String, String> translationFunction;
-	private final String[] entries;
-
-	public int selectedEntry = -1;
 	private int hoveredEntry = -1;
 	private int hoverTimer = 0;
 	private long prevWheelNano = 0;
@@ -81,7 +79,7 @@ public class GuiButtonDropdownList extends GuiButton
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableDepth();
-		GlStateManager.translate(0,0,1);
+		GlStateManager.translate(0, 0, 1);
 
 		if(dropped)
 		{

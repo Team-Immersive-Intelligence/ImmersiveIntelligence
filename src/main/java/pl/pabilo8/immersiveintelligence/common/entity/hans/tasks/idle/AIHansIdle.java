@@ -16,15 +16,21 @@ import javax.annotation.Nullable;
  */
 public class AIHansIdle extends AIHansBase
 {
+	private static final HansLegAnimation[] ANIMATIONS = new HansLegAnimation[]{HansLegAnimation.KNEELING, HansLegAnimation.SQUATTING};
 	/**
 	 * distance Hans will walk {@link #wandersBeforeIdling} times before idling
 	 */
 	private final int wanderDistance;
 	/**
+	 * Position hans wanders to
+	 */
+	protected double x;
+	protected double y;
+	protected double z;
+	/**
 	 * How many walks hans should perform, generated after idling by {@link #reGenerateWanders()}
 	 */
 	private int wandersBeforeIdling;
-	private static final HansLegAnimation[] ANIMATIONS = new HansLegAnimation[]{HansLegAnimation.KNEELING, HansLegAnimation.SQUATTING};
 	/**
 	 * X offset to look at
 	 */
@@ -33,12 +39,6 @@ public class AIHansIdle extends AIHansBase
 	 * Z offset to look at
 	 */
 	private double lookZ;
-	/**
-	 * Position hans wanders to
-	 */
-	protected double x;
-	protected double y;
-	protected double z;
 	/**
 	 * A decrementing tick that stops the entity from being idle once it reaches 0.
 	 */

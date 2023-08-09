@@ -39,6 +39,6 @@ public class VulcanizerGuiHandler implements IAdvancedGuiHandler<GuiVulcanizer>
 	@Override
 	public Object getIngredientUnderMouse(GuiVulcanizer guiContainer, int mouseX, int mouseY)
 	{
-		return guiContainer.getPreviewedItem(mouseX,mouseY);
+		return guiContainer.getPreviewedItem(mouseX, mouseY);
 	}
 }

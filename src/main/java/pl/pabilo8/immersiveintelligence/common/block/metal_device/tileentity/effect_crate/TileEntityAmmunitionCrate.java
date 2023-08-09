@@ -25,7 +25,6 @@ import pl.pabilo8.immersiveintelligence.client.render.metal_device.AmmunitionCra
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityEffectCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoMachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;

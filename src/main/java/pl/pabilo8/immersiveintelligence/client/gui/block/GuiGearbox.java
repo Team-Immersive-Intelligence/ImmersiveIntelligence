@@ -5,11 +5,10 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityGearbox;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerGearbox;
 
@@ -52,7 +51,7 @@ public class GuiGearbox extends GuiIEContainerBase
 		ClientUtils.bindTexture(texture_skycrate_station);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		RotaryUtils.renderEnergyBars(guiLeft+148, guiTop+20, tile.rotation,0,100);
+		RotaryUtils.renderEnergyBars(guiLeft+148, guiTop+20, tile.rotation, 0, 100);
 	}
 
 	@Override

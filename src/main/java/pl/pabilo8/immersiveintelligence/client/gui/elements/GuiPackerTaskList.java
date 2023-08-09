@@ -33,14 +33,14 @@ import java.util.function.Consumer;
  */
 public class GuiPackerTaskList extends GuiButton
 {
+	private static final ResourceLocation TEXTURE_PACKER = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/packer.png");
 	private final ArrayList<PackerTask> entries;
 	private final Consumer<Integer> taskChange;
-	private static final ResourceLocation TEXTURE_PACKER = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/packer.png");
+	public int hoveredOption = -1;
+	public int selectedOption = -1;
 	private long prevWheelNano = 0;
 	private int scroll;
 	private int maxScroll;
-	public int hoveredOption = -1;
-	public int selectedOption = -1;
 
 	public GuiPackerTaskList(int id, int x, int y, int w, int h, ArrayList<PackerTask> entries, Consumer<Integer> taskChange)
 	{
@@ -59,20 +59,20 @@ public class GuiPackerTaskList extends GuiButton
 	}
 
 	/**
+	 * @return scroll percent (current/max)
+	 */
+	public float getScrollPercent()
+	{
+		return scroll/(float)maxScroll;
+	}
+
+	/**
 	 * Sets and refreshes scroll value
 	 */
 	public void setScrollPercent(float percent)
 	{
 		recalculateEntries();
 		this.scroll = Math.round(MathHelper.clamp(percent*maxScroll, 0, maxScroll));
-	}
-
-	/**
-	 * @return scroll percent (current/max)
-	 */
-	public float getScrollPercent()
-	{
-		return scroll/(float)maxScroll;
 	}
 
 	/**

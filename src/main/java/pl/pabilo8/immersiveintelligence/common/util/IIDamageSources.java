@@ -8,10 +8,10 @@ import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityShrapnel;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 
 import java.util.Arrays;
 

@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsIE;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

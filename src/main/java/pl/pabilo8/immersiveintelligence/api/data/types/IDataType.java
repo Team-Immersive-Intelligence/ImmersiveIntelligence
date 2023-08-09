@@ -73,6 +73,7 @@ public interface IDataType
 
 	/**
 	 * Used by interfaces extending IDataType to provide a generic "bridge" between data types
+	 *
 	 * @see IDataTypeNumeric
 	 */
 	@Retention(RetentionPolicy.RUNTIME)

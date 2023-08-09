@@ -35,8 +35,7 @@ public class DataOperationToInteger extends DataOperation
 		try
 		{
 			e = Integer.parseInt(packet.getVarInType(IDataType.class, f).valueToString());
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 
 		}

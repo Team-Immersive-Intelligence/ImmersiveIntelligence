@@ -47,20 +47,31 @@ import static pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons.E
 
 public class EmplacementWeaponAutocannon extends EmplacementWeapon
 {
-	private AxisAlignedBB vision;
+	private static final int[] reloadTimers = new int[]{
+			(int)(0.15*Autocannon.reloadTime), (int)(0.25*Autocannon.reloadTime), (int)(0.35*Autocannon.reloadTime), (int)(0.45*Autocannon.reloadTime),
+			(int)(0.55*Autocannon.reloadTime), (int)(0.65*Autocannon.reloadTime), (int)(0.75*Autocannon.reloadTime), (int)(0.85*Autocannon.reloadTime)
+	};
+	private static final Runnable INSERTER_ANIM_NONE = () -> IIClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+	private static final Runnable INSERTER_ANIM_LEFT = () -> {
+		IIClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		GlStateManager.rotate(-55, 1, 0, 0);
+		GlStateManager.translate(0, 0, 0.0625f);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineLeftModel)
+			mod.render();
+	};
+	private static final Runnable INSERTER_ANIM_RIGHT = () -> {
+		IIClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
+		GlStateManager.rotate(-55, 1, 0, 0);
+		GlStateManager.translate(0, 0, 0.0625f);
+		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineRightModel)
+			mod.render();
+	};
 	float flaps = 0;
 	float shootDelay = 0;
 	int reloadDelay = 0;
 	int bulletsShot = 0;
-
+	private AxisAlignedBB vision;
 	private NonNullList<ItemStack> inventory = NonNullList.withSize(18, ItemStack.EMPTY);
-	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(8, ItemStack.EMPTY);
-	private int casingsToDrop = 0;
-	private boolean requiresPlatformRefill = false;
-
-	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
-	private ItemStack s2 = ItemStack.EMPTY;
-
 	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
 	{
 		@Override
@@ -82,27 +93,11 @@ public class EmplacementWeaponAutocannon extends EmplacementWeapon
 			return itemStack;
 		}
 	};
-
-	private static final int[] reloadTimers = new int[]{
-			(int)(0.15*Autocannon.reloadTime), (int)(0.25*Autocannon.reloadTime), (int)(0.35*Autocannon.reloadTime), (int)(0.45*Autocannon.reloadTime),
-			(int)(0.55*Autocannon.reloadTime), (int)(0.65*Autocannon.reloadTime), (int)(0.75*Autocannon.reloadTime), (int)(0.85*Autocannon.reloadTime)
-	};
-
-	private static final Runnable INSERTER_ANIM_NONE = () -> IIClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
-	private static final Runnable INSERTER_ANIM_LEFT = () -> {
-		IIClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
-		GlStateManager.rotate(-55, 1, 0, 0);
-		GlStateManager.translate(0, 0, 0.0625f);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineLeftModel)
-			mod.render();
-	};
-	private static final Runnable INSERTER_ANIM_RIGHT = () -> {
-		IIClientUtils.bindTexture(EmplacementRenderer.textureAutocannon);
-		GlStateManager.rotate(-55, 1, 0, 0);
-		GlStateManager.translate(0, 0, 0.0625f);
-		for(ModelRendererTurbo mod : EmplacementRenderer.modelAutocannon.magazineRightModel)
-			mod.render();
-	};
+	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(8, ItemStack.EMPTY);
+	private int casingsToDrop = 0;
+	private boolean requiresPlatformRefill = false;
+	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
+	private ItemStack s2 = ItemStack.EMPTY;
 	private Vec3d vv;
 
 	@Override

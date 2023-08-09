@@ -79,8 +79,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 			Fluid[] a = map.keySet().stream().map(FluidRegistry::getFluid).toArray(Fluid[]::new);
 			motorboatAmountTick1.setAccessible(false);
 			VehicleFuelHandler.addVehicle(EntitySpeedboat.class, a);
-		}
-		catch(NoSuchFieldException|IllegalAccessException ignored)
+		} catch(NoSuchFieldException|IllegalAccessException ignored)
 		{
 			IILogger.info("Failed to add IP Motorboat fuel station compat!");
 		}

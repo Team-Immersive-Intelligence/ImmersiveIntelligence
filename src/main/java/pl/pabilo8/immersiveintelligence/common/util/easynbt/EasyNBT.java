@@ -62,6 +62,89 @@ public class EasyNBT extends Constants.NBT
 
 	//--- With ---//
 
+	public static NBTTagCompound parseNBT(String format, Object... arguments)
+	{
+		String json = String.format(format, arguments);
+		//Error-Proof(tm)
+		try
+		{
+			return JsonToNBT.getTagFromJson(json);
+		} catch(NBTException ignored)
+		{
+			//well, at least I think so
+			return new NBTTagCompound();
+		}
+	}
+
+	/**
+	 * Thus spoke EasyNBT - a parser for all and none
+	 *
+	 * @param elements valid objects such as {@link net.minecraft.nbt.NBTBase}, int, float, double, boolean,
+	 *                 {@link EasyNBT}, {@link BlockPos}, {@link net.minecraft.util.math.Vec3d}, {@link net.minecraft.item.ItemStack},
+	 *                 {@link net.minecraftforge.fluids.FluidStack} and {@link java.util.Collection} or array of the above
+	 * @implNote Accepts only a single type of object, will not work if multiple types are passed
+	 */
+	public static NBTTagList listOf(Object... elements)
+	{
+		NBTTagList list = new NBTTagList();
+
+		for(Object element : elements)
+		{
+			if(element instanceof NBTBase)
+				list.appendTag(((NBTBase)element));
+
+			else if(element instanceof Integer)
+				list.appendTag(new NBTTagInt(((Integer)element)));
+			else if(element instanceof Float)
+				list.appendTag(new NBTTagFloat(((Float)element)));
+			else if(element instanceof Double)
+				list.appendTag(new NBTTagDouble(((Double)element)));
+			else if(element instanceof Boolean)
+				list.appendTag(new NBTTagByte((byte)(((Boolean)element)?1: 0)));
+
+			else if(element instanceof EasyNBT)
+				list.appendTag(((EasyNBT)element).wrapped);
+
+			else if(element instanceof DimensionBlockPos)
+			{
+				DimensionBlockPos pos = (DimensionBlockPos)element;
+				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ(), pos.dimension));
+			}
+			else if(element instanceof BlockPos)
+			{
+				BlockPos pos = (BlockPos)element;
+				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ()));
+			}
+			else if(element instanceof Vec3d)
+			{
+				Vec3d pos = (Vec3d)element;
+				list.appendTag(listOf(pos.x, pos.y, pos.z));
+			}
+
+			else if(element instanceof ItemStack)
+			{
+				list.appendTag(((ItemStack)element).serializeNBT());
+			}
+			else if(element instanceof FluidStack)
+			{
+				list.appendTag(((FluidStack)element).writeToNBT(new NBTTagCompound()));
+			}
+
+			else if(element instanceof Object[])
+				list.appendTag(listOf(element));
+			else if(element instanceof Collection)
+				list.appendTag(listOf(((Collection<?>)element).toArray(new Object[0])));
+
+		}
+
+		return list;
+	}
+
+	public static NBTTagIntArray intArrayOf(int... ints)
+	{
+		return new NBTTagIntArray(ints);
+	}
+
 	/**
 	 * Appends an integer
 	 *
@@ -203,6 +286,8 @@ public class EasyNBT extends Constants.NBT
 		return withIntArray(key, value.getX(), value.getY(), value.getZ(), value.dimension);
 	}
 
+	//--- Remove ---//
+
 	/**
 	 * Appends a Vec3d
 	 *
@@ -212,6 +297,8 @@ public class EasyNBT extends Constants.NBT
 	{
 		return withList(key, value.x, value.y, value.z);
 	}
+
+	//--- Lambda Expessions ---//
 
 	/**
 	 * Appends an ItemStack
@@ -233,7 +320,7 @@ public class EasyNBT extends Constants.NBT
 		return withTag(key, value.writeToNBT(new NBTTagCompound()));
 	}
 
-	//--- Remove ---//
+	//--- Merging ---//
 
 	/**
 	 * Removes a Tag from the Compound
@@ -245,8 +332,6 @@ public class EasyNBT extends Constants.NBT
 		wrapped.removeTag(key);
 		return this;
 	}
-
-	//--- Lambda Expessions ---//
 
 	/**
 	 * Performs an action when a condition is met. Allows branching.<br>
@@ -265,6 +350,8 @@ public class EasyNBT extends Constants.NBT
 		return this;
 	}
 
+	//--- Getting ---//
+
 	/**
 	 * Merges tags of this Compound into tags of another one
 	 *
@@ -276,8 +363,6 @@ public class EasyNBT extends Constants.NBT
 		accepted.accept(wrapped);
 		return this;
 	}
-
-	//--- Merging ---//
 
 	/**
 	 * Merges Tags of another Compound into this one
@@ -304,8 +389,6 @@ public class EasyNBT extends Constants.NBT
 			wrapped.merge(other.wrapped);
 		return this;
 	}
-
-	//--- Getting ---//
 
 	/**
 	 * Checks if a tag exists
@@ -498,6 +581,8 @@ public class EasyNBT extends Constants.NBT
 		return new DimensionBlockPos(BlockPos.ORIGIN, 0);
 	}
 
+	//--- Check-Action ---//
+
 	/**
 	 * Appends a Vec3d
 	 *
@@ -542,8 +627,6 @@ public class EasyNBT extends Constants.NBT
 	{
 		return FluidStack.loadFluidStackFromNBT(getCompound(key));
 	}
-
-	//--- Check-Action ---//
 
 	public void checkSetInt(String key, Consumer<Integer> ifPresent, int ifNot)
 	{
@@ -629,6 +712,8 @@ public class EasyNBT extends Constants.NBT
 			ifPresent.accept(wrapped.getString(key));
 	}
 
+	//--- Pseudo - Map ---//
+
 	public void checkSetCompound(String key, Consumer<NBTTagCompound> ifPresent, NBTTagCompound ifNot)
 	{
 		if(wrapped.hasKey(key))
@@ -653,7 +738,7 @@ public class EasyNBT extends Constants.NBT
 		}
 	}
 
-	//--- Pseudo - Map ---//
+	//--- Unwrapping ---//
 
 	public int size()
 	{
@@ -670,7 +755,7 @@ public class EasyNBT extends Constants.NBT
 		return key instanceof String&&wrapped.hasKey(((String)key));
 	}
 
-	//--- Unwrapping ---//
+	//--- General Utils ---//
 
 	/**
 	 * @return the NBT created using this wrapper
@@ -698,19 +783,6 @@ public class EasyNBT extends Constants.NBT
 		return wrapped.toString();
 	}
 
-	//--- General Utils ---//
-
-	public static NBTTagCompound parseNBT(String format, Object... arguments)
-	{
-		String json = String.format(format, arguments);
-		//Error-Proof(tm)
-		try {return JsonToNBT.getTagFromJson(json);} catch(NBTException ignored)
-		{
-			//well, at least I think so
-			return new NBTTagCompound();
-		}
-	}
-
 	public <T extends NBTBase> byte getTagIDByClass(Class<T> clazz)
 	{
 		try
@@ -720,77 +792,5 @@ public class EasyNBT extends Constants.NBT
 		{
 			return 0;
 		}
-	}
-
-	/**
-	 * Thus spoke EasyNBT - a parser for all and none
-	 *
-	 * @param elements valid objects such as {@link net.minecraft.nbt.NBTBase}, int, float, double, boolean,
-	 *                 {@link EasyNBT}, {@link BlockPos}, {@link net.minecraft.util.math.Vec3d}, {@link net.minecraft.item.ItemStack},
-	 *                 {@link net.minecraftforge.fluids.FluidStack} and {@link java.util.Collection} or array of the above
-	 * @implNote Accepts only a single type of object, will not work if multiple types are passed
-	 */
-	public static NBTTagList listOf(Object... elements)
-	{
-		NBTTagList list = new NBTTagList();
-
-		if(elements.length==0)
-			return list;
-
-		for(Object element : elements)
-		{
-			if(element instanceof NBTBase)
-				list.appendTag(((NBTBase)element));
-
-			else if(element instanceof Integer)
-				list.appendTag(new NBTTagInt(((Integer)element)));
-			else if(element instanceof Float)
-				list.appendTag(new NBTTagFloat(((Float)element)));
-			else if(element instanceof Double)
-				list.appendTag(new NBTTagDouble(((Double)element)));
-			else if(element instanceof Boolean)
-				list.appendTag(new NBTTagByte((byte)(((Boolean)element)?1: 0)));
-
-			else if(element instanceof EasyNBT)
-				list.appendTag(((EasyNBT)element).wrapped);
-
-			else if(element instanceof DimensionBlockPos)
-			{
-				DimensionBlockPos pos = (DimensionBlockPos)element;
-				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ(), pos.dimension));
-			}
-			else if(element instanceof BlockPos)
-			{
-				BlockPos pos = (BlockPos)element;
-				list.appendTag(listOf(pos.getX(), pos.getY(), pos.getZ()));
-			}
-			else if(element instanceof Vec3d)
-			{
-				Vec3d pos = (Vec3d)element;
-				list.appendTag(listOf(pos.x, pos.y, pos.z));
-			}
-
-			else if(element instanceof ItemStack)
-			{
-				list.appendTag(((ItemStack)element).serializeNBT());
-			}
-			else if(element instanceof FluidStack)
-			{
-				list.appendTag(((FluidStack)element).writeToNBT(new NBTTagCompound()));
-			}
-
-			else if(element instanceof Object[])
-				list.appendTag(listOf(element));
-			else if(element instanceof Collection)
-				list.appendTag(listOf(((Collection<?>)element).toArray(new Object[0])));
-
-		}
-
-		return list;
-	}
-
-	public static NBTTagIntArray intArrayOf(int... ints)
-	{
-		return new NBTTagIntArray(ints);
 	}
 }

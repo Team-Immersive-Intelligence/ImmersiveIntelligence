@@ -60,24 +60,20 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	protected static final ResourceLocation TEXTURE_STORAGE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/data_input_machine_inventory.png");
 	protected static final ResourceLocation TEXTURE_EDIT = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/data_input_machine_editing.png");
 	protected static final ResourceLocation TEXTURE_VARIABLES = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/data_input_machine.png");
-	private final IIGuiList thisGui;
 	public final LinkedHashMap<GuiButtonTab, IIGuiList> TABS = new LinkedHashMap<>();
-	protected String title = I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.name");
+	private final IIGuiList thisGui;
 	private final ResourceLocation thisTexture;
-
+	public GuiWidgetManualWrapper sideManual = null;
+	protected String title = I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.name");
 	protected ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
 	protected TileEntityDataInputMachine tile;
 	protected InventoryPlayer playerInv;
-
-	private GuiManual trueManual;
-	public GuiWidgetManualWrapper sideManual = null;
 	protected GuiButtonState manualButton;
-
-	private GuiButtonIE sendPacketButton;
-
-	DataPacket list;
 	//this is due to the machine sending a close door message to the server and producing an annoying sound
 	protected boolean preparedForChange = false;
+	DataPacket list;
+	private GuiManual trueManual;
+	private GuiButtonIE sendPacketButton;
 
 	public GuiDataInputMachineBase(EntityPlayer player, TileEntityDataInputMachine tile, IIGuiList gui)
 	{

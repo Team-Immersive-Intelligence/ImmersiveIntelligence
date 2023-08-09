@@ -40,12 +40,11 @@ import javax.annotation.Nullable;
  */
 public class TileEntityRadioExplosives extends TileEntityImmersiveConnectable implements ITickable, IBlockBounds, ITileDrop, IPlayerInteraction, IDirectionalTile, IRadioDevice, IRedstoneConnector
 {
+	private static final Vec3d CONN_OFFSET = new Vec3d(0.5, 0.25, 0.5);
 	public int frequency = 0;
 	public DataPacket programmedPacket = new DataPacket();
 	public int coreColor = 0xffffff;
 	public ItemStack mineStack = ItemStack.EMPTY;
-
-	private static final Vec3d CONN_OFFSET = new Vec3d(0.5, 0.25, 0.5);
 	public EnumFacing facing = EnumFacing.NORTH;
 
 	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
@@ -251,15 +250,15 @@ public class TileEntityRadioExplosives extends TileEntityImmersiveConnectable im
 	}
 
 	@Override
-	public void setNetwork(RedstoneWireNetwork net)
-	{
-		wireNetwork = net;
-	}
-
-	@Override
 	public RedstoneWireNetwork getNetwork()
 	{
 		return wireNetwork;
+	}
+
+	@Override
+	public void setNetwork(RedstoneWireNetwork net)
+	{
+		wireNetwork = net;
 	}
 
 	@Override

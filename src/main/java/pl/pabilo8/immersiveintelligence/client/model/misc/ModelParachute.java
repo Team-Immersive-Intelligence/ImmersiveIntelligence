@@ -11,10 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelParachute extends ModelIIBase
 {
+	public ModelRendererTurbo[] linkThingyModel;
 	int textureX = 128;
 	int textureY = 64;
-
-	public ModelRendererTurbo[] linkThingyModel;
 
 	public ModelParachute() //Same as Filename
 	{
@@ -50,7 +49,7 @@ public class ModelParachute extends ModelIIBase
 		baseModel[0].rotateAngleY = -3.14159265F;
 
 		baseModel[1].setFlipped(true);
-		baseModel[1].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0) }), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[] {8 ,16 ,16 ,8 ,12}); // Shape 26
+		baseModel[1].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0)}), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 16, 16, 8, 12}); // Shape 26
 		baseModel[1].setRotationPoint(-8F, -120F, 27F);
 		baseModel[1].rotateAngleX = -1.57079633F;
 		baseModel[1].rotateAngleY = 1.57079633F;
@@ -113,66 +112,66 @@ public class ModelParachute extends ModelIIBase
 		baseModel[12].rotateAngleY = -4.71238898F;
 
 		baseModel[13].setFlipped(true);
-		baseModel[13].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0) }), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[] {8 ,16 ,16 ,8 ,12}); // Shape 26
+		baseModel[13].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0)}), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 16, 16, 8, 12}); // Shape 26
 		baseModel[13].setRotationPoint(24F, -120F, 11F);
 		baseModel[13].rotateAngleX = -1.57079633F;
 
 		baseModel[14].setFlipped(true);
-		baseModel[14].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0) }), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[] {8 ,16 ,16 ,8 ,12}); // Shape 26
+		baseModel[14].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0)}), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 16, 16, 8, 12}); // Shape 26
 		baseModel[14].setRotationPoint(8F, -120F, -21F);
 		baseModel[14].rotateAngleX = -1.57079633F;
 		baseModel[14].rotateAngleY = -1.57079633F;
 
 		baseModel[15].setFlipped(true);
-		baseModel[15].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0) }), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[] {8 ,16 ,16 ,8 ,12}); // Shape 26
+		baseModel[15].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 8, 0, 8), new Coord2D(8, 16, 8, 16), new Coord2D(16, 16, 16, 16), new Coord2D(16, 0, 16, 0), new Coord2D(0, 0, 0, 0)}), 1, 16, 16, 60, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 16, 16, 8, 12}); // Shape 26
 		baseModel[15].setRotationPoint(-24F, -120F, -5F);
 		baseModel[15].rotateAngleX = -1.57079633F;
 		baseModel[15].rotateAngleY = 3.14159265F;
 
 		baseModel[16].setFlipped(true);
-		baseModel[16].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0) }), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[] {30 ,16 ,12 ,16}); // Shape 26
+		baseModel[16].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0)}), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[]{30, 16, 12, 16}); // Shape 26
 		baseModel[16].setRotationPoint(37F, -112F, -13F);
 		baseModel[16].rotateAngleX = -0.78539816F;
 		baseModel[16].rotateAngleY = 0.78539816F;
 
 		baseModel[17].setFlipped(true);
-		baseModel[17].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0) }), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[] {30 ,16 ,12 ,16}); // Shape 26
+		baseModel[17].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0)}), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[]{30, 16, 12, 16}); // Shape 26
 		baseModel[17].setRotationPoint(16F, -112F, 40F);
 		baseModel[17].rotateAngleX = -0.78539816F;
 		baseModel[17].rotateAngleY = 2.35619449F;
 
 		baseModel[18].setFlipped(true);
-		baseModel[18].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0) }), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[] {30 ,16 ,12 ,16}); // Shape 26
+		baseModel[18].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0)}), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[]{30, 16, 12, 16}); // Shape 26
 		baseModel[18].setRotationPoint(-37F, -112F, 19F);
 		baseModel[18].rotateAngleX = -0.78539816F;
 		baseModel[18].rotateAngleY = -2.35619449F;
 
 		baseModel[19].setFlipped(true);
-		baseModel[19].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0) }), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[] {30 ,16 ,12 ,16}); // Shape 26
+		baseModel[19].addShape3D(0F, 0F, -1.12F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(9, 13, 9, 13), new Coord2D(21, 13, 21, 13), new Coord2D(30, 0, 30, 0)}), 1, 30, 13, 74, 1, ModelRendererTurbo.MR_FRONT, new float[]{30, 16, 12, 16}); // Shape 26
 		baseModel[19].setRotationPoint(-16F, -112F, -34F);
 		baseModel[19].rotateAngleX = -0.78539816F;
 		baseModel[19].rotateAngleY = -0.78539816F;
 
 		baseModel[20].setFlipped(true);
-		baseModel[20].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0) }), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[] {39 ,17 ,30 ,17}); // Shape 26
+		baseModel[20].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0)}), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[]{39, 17, 30, 17}); // Shape 26
 		baseModel[20].setRotationPoint(40F, -95F, -10F);
 		baseModel[20].rotateAngleX = -0.31415927F;
 		baseModel[20].rotateAngleY = -5.49778714F;
 
 		baseModel[21].setFlipped(true);
-		baseModel[21].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0) }), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[] {39 ,17 ,30 ,17}); // Shape 26
+		baseModel[21].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0)}), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[]{39, 17, 30, 17}); // Shape 26
 		baseModel[21].setRotationPoint(13F, -95F, 43F);
 		baseModel[21].rotateAngleX = -0.31415927F;
 		baseModel[21].rotateAngleY = -3.92699082F;
 
 		baseModel[22].setFlipped(true);
-		baseModel[22].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0) }), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[] {39 ,17 ,30 ,17}); // Shape 26
+		baseModel[22].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0)}), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[]{39, 17, 30, 17}); // Shape 26
 		baseModel[22].setRotationPoint(-13F, -95F, -37F);
 		baseModel[22].rotateAngleX = -0.31415927F;
 		baseModel[22].rotateAngleY = -0.78539816F;
 
 		baseModel[23].setFlipped(true);
-		baseModel[23].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0) }), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[] {39 ,17 ,30 ,17}); // Shape 26
+		baseModel[23].addShape3D(0F, 0F, 4.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 16, 4, 16), new Coord2D(34, 16, 34, 16), new Coord2D(39, 0, 39, 0)}), 1, 39, 16, 103, 1, ModelRendererTurbo.MR_FRONT, new float[]{39, 17, 30, 17}); // Shape 26
 		baseModel[23].setRotationPoint(-40F, -95F, 16F);
 		baseModel[23].rotateAngleX = -0.31415927F;
 		baseModel[23].rotateAngleY = -2.37364778F;
@@ -189,8 +188,8 @@ public class ModelParachute extends ModelIIBase
 		linkThingyModel[1].setRotationPoint(6F, -31F, -2F);
 
 
-		parts.put("base",baseModel);
-		parts.put("linkThingy",linkThingyModel);
+		parts.put("base", baseModel);
+		parts.put("linkThingy", linkThingyModel);
 
 		flipAll();
 	}

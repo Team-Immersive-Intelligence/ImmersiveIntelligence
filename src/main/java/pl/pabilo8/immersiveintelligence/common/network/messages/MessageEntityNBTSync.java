@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**
  * II's version of {@link MessageIITileSync}
+ *
  * @author Pabilo8
  * @author BluSunrize
  * @since 22.09.2022

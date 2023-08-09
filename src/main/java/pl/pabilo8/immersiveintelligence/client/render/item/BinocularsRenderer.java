@@ -19,13 +19,13 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 @SideOnly(Side.CLIENT)
 public class BinocularsRenderer implements IReloadableModelContainer<BinocularsRenderer>
 {
-	public static ModelBinoculars model = new ModelBinoculars();
-	public static BinocularsRenderer INSTANCE = new BinocularsRenderer().subscribeToList("binoculars");
 	private final static String[] TEXTURES = new String[]{
 			ImmersiveIntelligence.MODID+":textures/items/binoculars/model/binoculars.png",
 			ImmersiveIntelligence.MODID+":textures/items/binoculars/model/binoculars_infrared_off.png",
 			ImmersiveIntelligence.MODID+":textures/items/binoculars/model/binoculars_infrared_on.png"
 	};
+	public static ModelBinoculars model = new ModelBinoculars();
+	public static BinocularsRenderer INSTANCE = new BinocularsRenderer().subscribeToList("binoculars");
 
 	public void render(int type, ModelRenderer head, boolean sneaking)
 	{

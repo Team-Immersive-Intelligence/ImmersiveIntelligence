@@ -107,7 +107,8 @@ public class AMTHand extends AMT
 	public void disposeOf()
 	{
 		if(handModel==null)
-			return;
+		{
+		}
 		// TODO: 11.02.2023 do it the hacky way
 		/*if(listID!=-1)
 			GlStateManager.glDeleteLists(listID, 1);*/

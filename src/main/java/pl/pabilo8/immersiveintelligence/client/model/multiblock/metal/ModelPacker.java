@@ -260,7 +260,7 @@ public class ModelPacker extends ModelIIBase
 		baseModel[50].setRotationPoint(1F, 3F, 1F);
 		baseModel[50].rotateAngleX = 1.57079633F;
 
-		baseModel[51].addShape3D(0F, -0.05F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(8, 16, 8, 16), new Coord2D(0, 10, 0, 10)}), 16, 16, 16, 60, 16, ModelRendererTurbo.MR_FRONT, new float[]{10, 10, 8, 16, 16},true); // Shape 50
+		baseModel[51].addShape3D(0F, -0.05F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(16, 16, 16, 16), new Coord2D(8, 16, 8, 16), new Coord2D(0, 10, 0, 10)}), 16, 16, 16, 60, 16, ModelRendererTurbo.MR_FRONT, new float[]{10, 10, 8, 16, 16}, true); // Shape 50
 		baseModel[51].setRotationPoint(0F, -13F, -0.01F);
 		baseModel[51].rotateAngleY = 1.57079633F;
 		baseModel[51].flip = true;
@@ -351,7 +351,7 @@ public class ModelPacker extends ModelIIBase
 			case NORTH:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-1f:0, 0f, -1f);
+				GlStateManager.translate(mirrored?-1f: 0, 0f, -1f);
 
 			}
 			break;
@@ -365,14 +365,14 @@ public class ModelPacker extends ModelIIBase
 			case EAST:
 			{
 				GlStateManager.rotate(0F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-1f:0, 0f, 0f);
+				GlStateManager.translate(mirrored?-1f: 0, 0f, 0f);
 
 			}
 			break;
 			case WEST:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?0:1, 0f, -1f);
+				GlStateManager.translate(mirrored?0: 1, 0f, -1f);
 
 			}
 			break;

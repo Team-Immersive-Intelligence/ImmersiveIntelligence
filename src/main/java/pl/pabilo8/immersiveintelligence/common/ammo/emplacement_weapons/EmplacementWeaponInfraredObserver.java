@@ -41,10 +41,6 @@ import java.util.stream.StreamSupport;
 
 public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 {
-	private AxisAlignedBB vision;
-	int setupDelay = 0;
-	boolean requiresPlatformRefill = false;
-
 	private static final Runnable INSERTER_ANIM_LENS = () -> {
 		IIClientUtils.bindTexture(EmplacementRenderer.textureInfraredObserver);
 		GlStateManager.translate(-0.3125, 0.4225, 1.375);
@@ -52,9 +48,11 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 		for(ModelRendererTurbo mod : EmplacementRenderer.modelInfraredObserver.lensModel)
 			mod.render();
 	};
-
 	private static final Runnable INSERTER_ANIM_NONE = () -> {
 	};
+	int setupDelay = 0;
+	boolean requiresPlatformRefill = false;
+	private AxisAlignedBB vision;
 
 	@Override
 	public String getName()

@@ -7,7 +7,6 @@ import net.minecraft.util.EnumHand;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;

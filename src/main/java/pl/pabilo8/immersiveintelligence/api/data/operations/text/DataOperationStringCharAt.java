@@ -18,7 +18,7 @@ public class DataOperationStringCharAt extends DataOperation
 		//Gets a character in string at given position
 		name = "string_char_at";
 		allowedTypes = new Class[]{DataTypeString.class, DataTypeInteger.class};
-		params = new String[]{"text","index"};
+		params = new String[]{"text", "index"};
 		expectedResult = DataTypeString.class;
 	}
 

@@ -33,7 +33,7 @@ public class AtomicBoomRenderer extends Render<EntityAtomicBoom>
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		RenderHelper.disableStandardItemLighting();
 		float f = ((float)entity.progress+partialTicks)/400.0F;
-		float f1 = entity.progress>380?(1f-Math.max((entity.progress+partialTicks-380)/20f,0)):(Math.min((entity.progress+partialTicks)/40f,1));
+		float f1 = entity.progress > 380?(1f-Math.max((entity.progress+partialTicks-380)/20f, 0)): (Math.min((entity.progress+partialTicks)/40f, 1));
 
 		Random random = new Random(432L);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

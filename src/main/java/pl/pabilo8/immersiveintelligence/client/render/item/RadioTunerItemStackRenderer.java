@@ -22,11 +22,11 @@ import javax.annotation.Nonnull;
  */
 public class RadioTunerItemStackRenderer extends TileEntityItemStackRenderer
 {
-	public static RadioTunerItemStackRenderer instance = new RadioTunerItemStackRenderer();
 	@SideOnly(Side.CLIENT)
 	private static final ModelRadioTuner model_basic = new ModelRadioTuner();
 	@SideOnly(Side.CLIENT)
 	private static final ModelAdvancedRadioTuner model_advanced = new ModelAdvancedRadioTuner();
+	public static RadioTunerItemStackRenderer instance = new RadioTunerItemStackRenderer();
 
 	@Override
 	public void renderByItem(@Nonnull ItemStack itemStackIn, float partialTicks)

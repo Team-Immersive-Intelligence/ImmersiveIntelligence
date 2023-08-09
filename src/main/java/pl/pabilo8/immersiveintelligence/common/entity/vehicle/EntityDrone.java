@@ -39,17 +39,26 @@ import java.util.List;
  */
 public class EntityDrone extends EntityFlying implements IIIEntity<EntityDrone>, IVehicleMultiPart, IEntitySpecialRepairable
 {
-	//--- Parts ---//
-	private final EntityVehiclePart[] partArray;
-	//sub-entities for colision and hitboxes
-	private EntityVehiclePart partMain, partTankRight1, partTankRight2, partTankLeft1, partTankLeft2, partEngine;
-	private EntityVehiclePart partRotorFrontRight, partRotorFrontLeft, partRotorBackRight, partRotorBackLeft;
-	private EntityVehiclePart exhaust1, exhaust2;
 	//part durability (health)
 	@AutoSerialized
 	private static VehicleDurability durabilityMain, durabilityTankLeft, durabilityTankRight, durabilityEngine;
 	@AutoSerialized
-	private static VehicleDurability[] durabilityRotors = new VehicleDurability[4];
+	private static final VehicleDurability[] durabilityRotors = new VehicleDurability[4];
+	//--- Parts ---//
+	private final EntityVehiclePart[] partArray;
+	//sub-entities for colision and hitboxes
+	private final EntityVehiclePart partMain;
+	private final EntityVehiclePart partTankRight1;
+	private final EntityVehiclePart partTankRight2;
+	private final EntityVehiclePart partTankLeft1;
+	private final EntityVehiclePart partTankLeft2;
+	private final EntityVehiclePart partEngine;
+	private final EntityVehiclePart partRotorFrontRight;
+	private final EntityVehiclePart partRotorFrontLeft;
+	private final EntityVehiclePart partRotorBackRight;
+	private final EntityVehiclePart partRotorBackLeft;
+	private final EntityVehiclePart exhaust1;
+	private final EntityVehiclePart exhaust2;
 
 	public EntityDrone(World world)
 	{

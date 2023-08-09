@@ -27,6 +27,6 @@ public class DataOperationDocumentGetAuthor extends DataOperation
 	public IDataType execute(DataPacket packet, DataTypeExpression data)
 	{
 		ItemStack stack = packet.getVarInType(DataTypeItemStack.class, data.getArgument(0)).value;
-		return new DataTypeString(ItemNBTHelper.getString(stack,"author"));
+		return new DataTypeString(ItemNBTHelper.getString(stack, "author"));
 	}
 }

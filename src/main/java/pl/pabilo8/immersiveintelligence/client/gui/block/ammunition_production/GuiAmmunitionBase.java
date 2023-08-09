@@ -1,21 +1,17 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -28,7 +24,7 @@ import java.util.function.BiFunction;
  * @author Pabilo8
  * @since 10-07-2019
  */
-public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>> extends GuiIEContainerBase
+public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T, ?>> extends GuiIEContainerBase
 {
 	protected static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/ammunition_workshop.png");
 	protected static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/manual.png");
@@ -81,7 +77,7 @@ public abstract class GuiAmmunitionBase<T extends TileEntityMultiblockMetal<T,?>
 
 	void sendList(String name, String value)
 	{
-		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withString(name,value)));
+		IIPacketHandler.sendToServer(new MessageIITileSync(tile, EasyNBT.newNBT().withString(name, value)));
 	}
 
 	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)

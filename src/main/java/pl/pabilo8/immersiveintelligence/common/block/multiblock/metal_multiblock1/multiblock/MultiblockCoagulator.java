@@ -6,9 +6,9 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityCoagulator;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +19,7 @@ public class MultiblockCoagulator extends MultiblockStuctureBase<TileEntityCoagu
 	public MultiblockCoagulator()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/coagulator"));
-		offset = new Vec3i(3,1, 0);
+		offset = new Vec3i(3, 1, 0);
 		INSTANCE = this;
 	}
 

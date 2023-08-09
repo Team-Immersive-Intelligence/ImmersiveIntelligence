@@ -32,13 +32,6 @@ import javax.annotation.Nonnull;
  */
 public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_MechanicalDevice1>
 {
-	public enum IIBlockTypes_MechanicalDevice1 implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityMechanicalPump.class)
-		@IIBlockProperties(renderLayer = BlockRenderLayer.CUTOUT)
-		MECHANICAL_PUMP
-	}
-
 	public BlockIIMechanicalDevice1()
 	{
 		super("mechanical_device1", Material.IRON, PropertyEnum.create("type", IIBlockTypes_MechanicalDevice1.class), ItemBlockIIBase::new,
@@ -79,5 +72,12 @@ public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_M
 		if(state.getValue(IEProperties.MULTIBLOCKSLAVE))
 			return 0;
 		return super.getLightOpacity(state, world, pos);
+	}
+
+	public enum IIBlockTypes_MechanicalDevice1 implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityMechanicalPump.class)
+		@IIBlockProperties(renderLayer = BlockRenderLayer.CUTOUT)
+		MECHANICAL_PUMP
 	}
 }

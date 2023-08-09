@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import java.io.IOException;
@@ -24,13 +24,12 @@ import java.util.ArrayList;
  */
 public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 {
+	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
+	private final RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private GuiTextField metaEdit, countEdit;
-
 	// TODO: 27.12.2021 implement it in a way extending Slot while making handling it not as painful as it would be using the "default method"
 	private ItemStack scanned;
 	private String valueLabel;
-	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
-	private final RenderItem renderItem = ClientUtils.mc().getRenderItem();
 
 	public GuiDataEditorItemStack(int buttonId, DataTypeItemStack dataType)
 	{
@@ -151,8 +150,7 @@ public class GuiDataEditorItemStack extends GuiDataEditor<DataTypeItemStack>
 		try
 		{
 			return Integer.parseInt(field.getText());
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 			return defaultValue;
 		}

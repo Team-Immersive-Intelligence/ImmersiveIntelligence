@@ -24,9 +24,8 @@ import java.util.Optional;
  */
 public class EntityVehicleSeat extends Entity
 {
-	public int seatID;
-
 	private static final DataParameter<Integer> dataMarkerSeatID = EntityDataManager.createKey(EntityVehicleSeat.class, DataSerializers.VARINT);
+	public int seatID;
 
 	public EntityVehicleSeat(World worldIn)
 	{
@@ -34,6 +33,26 @@ public class EntityVehicleSeat extends Entity
 
 		//requires size so it's bounding box is visible
 		setSize(0.25f, 0.25f);
+	}
+
+	/**
+	 * @param vehicle that requests the seat
+	 * @param id      of the seat
+	 */
+	public static EntityVehicleSeat getOrCreateSeat(Entity vehicle, int id)
+	{
+		Optional<Entity> probableSeat = vehicle.getPassengers().stream().filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID==id).findFirst();
+		if(!probableSeat.isPresent()||!(probableSeat.get() instanceof EntityVehicleSeat))
+		{
+			EntityVehicleSeat seat = new EntityVehicleSeat(vehicle.world);
+			seat.setSeatID(id);
+			seat.setPosition(vehicle.posX, vehicle.posY, vehicle.posZ);
+			vehicle.world.spawnEntity(seat);
+			seat.startRiding(vehicle);
+			return seat;
+		}
+		else
+			return (EntityVehicleSeat)probableSeat.get();
 	}
 
 	@Override
@@ -116,26 +135,6 @@ public class EntityVehicleSeat extends Entity
 		}
 		else
 			super.updatePassenger(passenger);
-	}
-
-	/**
-	 * @param vehicle that requests the seat
-	 * @param id      of the seat
-	 */
-	public static EntityVehicleSeat getOrCreateSeat(Entity vehicle, int id)
-	{
-		Optional<Entity> probableSeat = vehicle.getPassengers().stream().filter(entity -> entity instanceof EntityVehicleSeat&&((EntityVehicleSeat)entity).seatID==id).findFirst();
-		if(!probableSeat.isPresent()||!(probableSeat.get() instanceof EntityVehicleSeat))
-		{
-			EntityVehicleSeat seat = new EntityVehicleSeat(vehicle.world);
-			seat.setSeatID(id);
-			seat.setPosition(vehicle.posX, vehicle.posY, vehicle.posZ);
-			vehicle.world.spawnEntity(seat);
-			seat.startRiding(vehicle);
-			return seat;
-		}
-		else
-			return (EntityVehicleSeat)probableSeat.get();
 	}
 
 	@Override

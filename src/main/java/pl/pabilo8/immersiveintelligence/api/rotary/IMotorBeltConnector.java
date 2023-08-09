@@ -10,16 +10,16 @@ import net.minecraft.world.World;
 public interface IMotorBeltConnector
 {
 	/**
+	 * @return the MotorBeltNetwork this connector is connected to.
+	 */
+	MotorBeltNetwork getNetwork();
+
+	/**
 	 * Sets the MotorBeltNetwork this connector is connected to.
 	 *
 	 * @param net the new network for this connector.
 	 */
 	void setNetwork(MotorBeltNetwork net);
-
-	/**
-	 * @return the MotorBeltNetwork this connector is connected to.
-	 */
-	MotorBeltNetwork getNetwork();
 
 	/**
 	 * Called whenever the DataWireNetwork is changed in some way (both adding/removing connectors and changes in RPM value).

@@ -29,9 +29,9 @@ import java.util.HashMap;
  */
 public class ParticleGasCloud extends IIParticle
 {
-	private final Fluid fluid;
-	public static TextureAtlasSprite TEXTURE;
 	public static final HashMap<Fluid, float[]> CACHED_COLORS = new HashMap<>();
+	public static TextureAtlasSprite TEXTURE;
+	private final Fluid fluid;
 
 	public ParticleGasCloud(World world, Vec3d pos, float size, Fluid fluid)
 	{
@@ -112,6 +112,30 @@ public class ParticleGasCloud extends IIParticle
 		return DrawingStages.CUSTOM;
 	}
 
+	public float[] getFluidColor(Fluid fluid)
+	{
+		if(CACHED_COLORS.containsKey(fluid))
+			return CACHED_COLORS.get(fluid);
+
+		InputStream is;
+		BufferedImage image;
+		float[] texture;
+		try
+		{
+			final ResourceLocation f = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/"+fluid.getStill().getResourcePath()+".png");
+			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(f);
+			is = resource.getInputStream();
+			image = ImageIO.read(is);
+			texture = IIUtils.rgbIntToRGB((image.getRGB(0, 0)-0xff000000)<<2);
+		} catch(IOException e)
+		{
+			IILogger.error("Could not load fluid texture file for ParticleGasCloud");
+			texture = new float[]{1f, 1f, 1f};
+		}
+		CACHED_COLORS.put(fluid, texture);
+		return texture;
+	}
+
 	public static class ParticleFlareFlash extends ParticleGasCloud
 	{
 		public ParticleFlareFlash(World world, Vec3d pos, int colour, float size)
@@ -135,29 +159,5 @@ public class ParticleGasCloud extends IIParticle
 		{
 			return DrawingStages.CUSTOM_ADDITIVE;
 		}
-	}
-
-	public float[] getFluidColor(Fluid fluid)
-	{
-		if(CACHED_COLORS.containsKey(fluid))
-			return CACHED_COLORS.get(fluid);
-
-		InputStream is;
-		BufferedImage image;
-		float[] texture;
-		try
-		{
-			final ResourceLocation f = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/"+fluid.getStill().getResourcePath()+".png");
-			final IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(f);
-			is = resource.getInputStream();
-			image = ImageIO.read(is);
-			texture = IIUtils.rgbIntToRGB((image.getRGB(0, 0)-0xff000000)<<2);
-		} catch(IOException e)
-		{
-			IILogger.error("Could not load fluid texture file for ParticleGasCloud");
-			texture = new float[]{1f, 1f, 1f};
-		}
-		CACHED_COLORS.put(fluid, texture);
-		return texture;
 	}
 }

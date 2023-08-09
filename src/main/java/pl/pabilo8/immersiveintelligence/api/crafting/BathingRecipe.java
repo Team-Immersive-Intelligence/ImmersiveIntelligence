@@ -18,13 +18,11 @@ import java.util.*;
  */
 public class BathingRecipe extends MultiblockRecipe
 {
+	public static final LinkedList<BathingRecipe> recipeList = new LinkedList<>();
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
 	public final boolean isWashing;
-
 	public final FluidStack fluidInput;
-
-	public static final LinkedList<BathingRecipe> recipeList = new LinkedList<>();
 	final int totalProcessTime;
 	final int totalProcessEnergy;
 
@@ -45,14 +43,14 @@ public class BathingRecipe extends MultiblockRecipe
 
 	public static BathingRecipe addRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
 	{
-		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time,false);
+		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time, false);
 		recipeList.add(r);
 		return r;
 	}
 
 	public static BathingRecipe addWashingRecipe(ItemStack itemOutput, IngredientStack itemInput, FluidStack fluidInput, int energy, int time)
 	{
-		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time,true);
+		BathingRecipe r = new BathingRecipe(itemOutput, itemInput, fluidInput, energy, time, true);
 		recipeList.add(r);
 		return r;
 	}
@@ -100,6 +98,14 @@ public class BathingRecipe extends MultiblockRecipe
 		return list;
 	}
 
+	public static BathingRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
+		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
+
+		return findRecipe(item_input.stack, fluid_input);
+	}
+
 	@Override
 	public int getMultipleProcessTicks()
 	{
@@ -112,14 +118,6 @@ public class BathingRecipe extends MultiblockRecipe
 		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
 		nbt.setTag("fluid_input", fluidInput.writeToNBT(new NBTTagCompound()));
 		return nbt;
-	}
-
-	public static BathingRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
-		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
-
-		return findRecipe(item_input.stack, fluid_input);
 	}
 
 	public int getTotalProcessTime()

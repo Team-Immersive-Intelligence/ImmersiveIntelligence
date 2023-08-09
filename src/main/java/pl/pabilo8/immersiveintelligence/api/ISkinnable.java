@@ -30,7 +30,8 @@ public interface ISkinnable
 
 	/**
 	 * Applies a skin to the ItemStack
-	 * @param stack of a skinnable item
+	 *
+	 * @param stack    of a skinnable item
 	 * @param skinName skin ID
 	 */
 	default void applySkinnableSkin(ItemStack stack, String skinName)

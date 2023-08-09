@@ -14,11 +14,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -31,10 +31,10 @@ public class GuiDataVariableList extends GuiButton
 {
 	private static final ResourceLocation TEXTURE_VARIABLES = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/data_input_machine.png");
 	private final DataPacket packet;
-	private int scroll;
-	private int maxScroll;
 	public boolean edit = false, delete = false, add = false;
 	public int selectedOption = -1;
+	private int scroll;
+	private int maxScroll;
 
 	public GuiDataVariableList(int id, int x, int y, int w, int h, DataPacket packet)
 	{
@@ -55,20 +55,20 @@ public class GuiDataVariableList extends GuiButton
 	}
 
 	/**
+	 * @return scroll percent (current/max)
+	 */
+	public float getScrollPercent()
+	{
+		return scroll/(float)maxScroll;
+	}
+
+	/**
 	 * Sets and refreshes scroll value
 	 */
 	public void setScrollPercent(float percent)
 	{
 		recalculateEntries();
 		this.scroll = Math.round(MathHelper.clamp(percent*maxScroll, 0, maxScroll));
-	}
-
-	/**
-	 * @return scroll percent (current/max)
-	 */
-	public float getScrollPercent()
-	{
-		return scroll/(float)maxScroll;
 	}
 
 	/**

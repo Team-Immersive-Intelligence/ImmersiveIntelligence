@@ -29,6 +29,8 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 {
 	public EnumFacing facing = EnumFacing.DOWN;
 	boolean firstTick = true;
+	@SideOnly(Side.CLIENT)
+	private AxisAlignedBB renderAABB;
 
 	@Override
 	public void update()
@@ -125,7 +127,6 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 			facing = EnumFacing.getFront(nbt.getInteger("facing"));
 	}
 
-
 	@Override
 	public Vec3d getConnectionOffset(Connection con)
 	{
@@ -133,9 +134,6 @@ public class TileEntityDataRelay extends TileEntityImmersiveConnectable
 		double conRadius = con.cableType.getRenderDiameter()/2;
 		return new Vec3d(.5+side.getFrontOffsetX()*(.5-conRadius), 0.5+side.getFrontOffsetY()*(.5-conRadius), .5+side.getFrontOffsetZ()*(.5-conRadius));
 	}
-
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@SideOnly(Side.CLIENT)
 	@Override

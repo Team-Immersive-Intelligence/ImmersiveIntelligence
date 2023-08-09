@@ -22,12 +22,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
 
 import javax.annotation.Nullable;
@@ -41,11 +41,11 @@ import java.util.function.Consumer;
  */
 public class SkyCrateStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCrateStation> implements IReloadableModelContainer<SkyCrateStationRenderer>
 {
-	private static ModelSkyCrateStation model;
-	private static ModelSkyCrateStation modelFlipped;
 	private static final TileEntityBanner banner = new TileEntityBanner();
 	private static final ModelBanner modelBanner = new ModelBanner();
 	private static final String texture = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/skycrate_station.png";
+	private static ModelSkyCrateStation model;
+	private static ModelSkyCrateStation modelFlipped;
 
 	static
 	{

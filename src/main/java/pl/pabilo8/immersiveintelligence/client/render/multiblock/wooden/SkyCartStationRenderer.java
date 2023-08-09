@@ -17,12 +17,12 @@ import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCartStation;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.wooden.ModelSkyCartStation;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 
 import java.util.Set;
@@ -33,10 +33,10 @@ import java.util.Set;
  */
 public class SkyCartStationRenderer extends TileEntitySpecialRenderer<TileEntitySkyCartStation> implements IReloadableModelContainer<SkyCartStationRenderer>
 {
-	private static ModelSkyCartStation model;
-	private static ModelSkyCartStation modelFlipped;
 	private static final TileEntityBanner banner = new TileEntityBanner();
 	private static final ModelBanner modelBanner = new ModelBanner();
+	private static ModelSkyCartStation model;
+	private static ModelSkyCartStation modelFlipped;
 
 	static
 	{

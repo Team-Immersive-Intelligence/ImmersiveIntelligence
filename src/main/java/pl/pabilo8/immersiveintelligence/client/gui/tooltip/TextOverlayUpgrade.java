@@ -9,7 +9,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
@@ -38,7 +37,7 @@ public class TextOverlayUpgrade extends TextOverlayBase
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		assert te!=null;
 		IUpgradableMachine teU = (IUpgradableMachine)te;

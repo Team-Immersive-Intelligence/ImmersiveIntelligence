@@ -9,8 +9,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -21,13 +21,11 @@ import java.util.function.Supplier;
  */
 public class GuiButtonDataLetterList extends GuiButton
 {
+	public final boolean hasEmpty;
 	private final ArrowsAlignment arrows;
 	@Nullable
 	private final GuiButtonIE buttonNext, buttonPrev;
-
 	public boolean dropped = false;
-	public final boolean hasEmpty;
-
 	public char selectedEntry;
 	private char hoveredEntry;
 	@Nullable
@@ -100,7 +98,7 @@ public class GuiButtonDataLetterList extends GuiButton
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.enableDepth();
-			GlStateManager.translate(0,0,1);
+			GlStateManager.translate(0, 0, 1);
 
 			this.drawTexturedModalRect(xx, y+height, 56, 115, 96, 32);
 			this.drawTexturedModalRect(xx, y+height+32, 56, 195-4, 96, 20);
@@ -144,11 +142,11 @@ public class GuiButtonDataLetterList extends GuiButton
 
 			cx = 0;
 			cy = 0;
-			DataPacket pack = avoidGetter!=null?avoidGetter.get():null;
+			DataPacket pack = avoidGetter!=null?avoidGetter.get(): null;
 			for(char c : hasEmpty?ArrayUtils.add(DataPacket.varCharacters, ' '): DataPacket.varCharacters)
 			{
 				fr.drawString(String.valueOf(c==' '?'_': c), xx+4+cx*fr.FONT_HEIGHT, y+height+4+cy*12,
-						c==selectedEntry?Lib.COLOUR_I_ImmersiveOrange: ((pack!=null&&pack.hasVariable(c))?0x202020:(c==hoveredEntry?Lib.colour_nixieTubeText: 0xE0E0E0))
+						c==selectedEntry?Lib.COLOUR_I_ImmersiveOrange: ((pack!=null&&pack.hasVariable(c))?0x202020: (c==hoveredEntry?Lib.colour_nixieTubeText: 0xE0E0E0))
 				);
 				cx++;
 				if(cx > 9)

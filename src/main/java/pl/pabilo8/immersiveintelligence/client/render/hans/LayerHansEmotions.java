@@ -42,6 +42,16 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 		this.modelHans = (ModelBiped)hansRenderer.mainModel;
 	}
 
+	public static void drawTexturedModalRect(BufferBuilder buff, double x, double y, double z, double width, double height, double depth, double hdiff, float[] rgb)
+	{
+		float us = 0f, vs = 0f, ue = 1f, ve = 1f;
+
+		buff.pos(x, y, z).tex(us, vs).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
+		buff.pos(x, y+height, z+depth).tex(us, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
+		buff.pos(x+width, y+height+hdiff, z+depth).tex(ue, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
+		buff.pos(x+width, y+hdiff, z).tex(ue, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
+	}
+
 	public void doRenderLayer(EntityHans hans, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
 	{
 		GlStateManager.pushMatrix();
@@ -131,16 +141,6 @@ public class LayerHansEmotions implements LayerRenderer<EntityHans>
 	public boolean shouldCombineTextures()
 	{
 		return true;
-	}
-
-	public static void drawTexturedModalRect(BufferBuilder buff, double x, double y, double z, double width, double height, double depth, double hdiff, float[] rgb)
-	{
-		float us = 0f, vs = 0f, ue = 1f, ve = 1f;
-
-		buff.pos(x, y, z).tex(us, vs).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
-		buff.pos(x, y+height, z+depth).tex(us, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
-		buff.pos(x+width, y+height+hdiff, z+depth).tex(ue, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
-		buff.pos(x+width, y+hdiff, z).tex(ue, ve).color(rgb[0], rgb[1], rgb[2], 1f).endVertex();
 	}
 
 	private void drawHansEyes(BufferBuilder buffer, double lookOffset, double eyebrowThickness, double eyebrowHeightDiffRight, double eyebrowHeightDiffLeft, double eyeBlinkProgress, float[] eyeColour)

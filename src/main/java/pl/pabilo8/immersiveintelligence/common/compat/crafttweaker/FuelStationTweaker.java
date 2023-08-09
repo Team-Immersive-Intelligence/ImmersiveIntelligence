@@ -32,8 +32,7 @@ public class FuelStationTweaker
 			if(c.isAssignableFrom(Entity.class))
 				VehicleFuelHandler.addVehicle(((Class<Entity>)c), f);
 			CraftTweakerAPI.getLogger().logInfo("The Fuel Station will now recognise "+classPath+" as a supported vehicle");
-		}
-		catch(ClassNotFoundException e)
+		} catch(ClassNotFoundException e)
 		{
 			CraftTweakerAPI.getLogger().logError("Couldn't add "+classPath+" as a supported vehicle, class doesn't exist");
 		}

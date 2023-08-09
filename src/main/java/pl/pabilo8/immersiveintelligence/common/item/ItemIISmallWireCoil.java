@@ -36,23 +36,6 @@ public class ItemIISmallWireCoil extends ItemIISubItemsBase<SmallWires> implemen
 		super("small_wirecoil", 64, SmallWires.values());
 	}
 
-	public enum SmallWires implements IIItemEnum
-	{
-		REDSTONE(Wires.smallRedstoneWireColouration, Wires.smallRedstoneWireLength),
-		DATA(Wires.smallDataWireColouration, Wires.smallDataWireLength);
-
-		public final int colour;
-		public final int length;
-		private final IISmallWireType type;
-
-		SmallWires(int colour, int length)
-		{
-			this.colour = colour;
-			this.length = length;
-			this.type = new IISmallWireType(this);
-		}
-	}
-
 	@Override
 	public WireType getWireType(ItemStack stack)
 	{
@@ -78,5 +61,22 @@ public class ItemIISmallWireCoil extends ItemIISubItemsBase<SmallWires> implemen
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		return EnumActionResult.FAIL;
+	}
+
+	public enum SmallWires implements IIItemEnum
+	{
+		REDSTONE(Wires.smallRedstoneWireColouration, Wires.smallRedstoneWireLength),
+		DATA(Wires.smallDataWireColouration, Wires.smallDataWireLength);
+
+		public final int colour;
+		public final int length;
+		private final IISmallWireType type;
+
+		SmallWires(int colour, int length)
+		{
+			this.colour = colour;
+			this.length = length;
+			this.type = new IISmallWireType(this);
+		}
 	}
 }

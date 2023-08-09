@@ -6,9 +6,9 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +23,7 @@ public class MultiblockBallisticComputer extends MultiblockStuctureBase<TileEnti
 	public MultiblockBallisticComputer()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/ballistic_computer"));
-		offset = new Vec3i(0,0, 0);
+		offset = new Vec3i(0, 0, 0);
 		INSTANCE = this;
 	}
 

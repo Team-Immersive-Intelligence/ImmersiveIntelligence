@@ -16,10 +16,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class TachometerItemStackRenderer extends TileEntityItemStackRenderer
 {
-	public static TachometerItemStackRenderer instance = new TachometerItemStackRenderer();
 	@SideOnly(Side.CLIENT)
 	private static final ModelTachometer model = new ModelTachometer();
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/items/tools/tachometer.png";
+	public static TachometerItemStackRenderer instance = new TachometerItemStackRenderer();
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn, float partialTicks)

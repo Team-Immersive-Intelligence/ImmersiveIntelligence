@@ -46,36 +46,10 @@ import java.util.List;
 
 public class EmplacementWeaponCPDS extends EmplacementWeapon
 {
-	/**
-	 * CPDS Q&A
-	 * <p>
-	 * Q: Is CPDS a real life thing?
-	 * A: Not really, it's based on CIWS, but in II it performs a counter-projectile role with anti-aircraft as secondary task
-	 * <p>
-	 * Q: What does CPDS stand for?
-	 * A: Counter-Projectile Defense System
-	 * <p>
-	 * Q: Why gatling?
-	 * A: It's the most high-tech II can get ^^ Historically, gatling guns were used since the US Civil War, so yes, they existed in interwar/ww2
-	 * Decided to choose it because of the unique design
-	 * <p>
-	 * Q: Isn't it OP? it's 8 barrels
-	 * A: Yes, but it costs a lot
-	 */
-	private AxisAlignedBB vision;
 	int reloadDelay = 0;
 	int bulletsShot = 0;
-	private Vec3d vv;
 	float shootDelay = 0;
-
 	NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
-	NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(3, ItemStack.EMPTY);
-	private int casingsToDrop = 0;
-	private boolean requiresPlatformRefill = false;
-
-	ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
-	private ItemStack s2 = ItemStack.EMPTY;
-
 	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
 	{
 		@Override
@@ -97,6 +71,78 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 			return itemStack;
 		}
 	};
+	NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(3, ItemStack.EMPTY);
+	ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
+	/**
+	 * CPDS Q&A
+	 * <p>
+	 * Q: Is CPDS a real life thing?
+	 * A: Not really, it's based on CIWS, but in II it performs a counter-projectile role with anti-aircraft as secondary task
+	 * <p>
+	 * Q: What does CPDS stand for?
+	 * A: Counter-Projectile Defense System
+	 * <p>
+	 * Q: Why gatling?
+	 * A: It's the most high-tech II can get ^^ Historically, gatling guns were used since the US Civil War, so yes, they existed in interwar/ww2
+	 * Decided to choose it because of the unique design
+	 * <p>
+	 * Q: Isn't it OP? it's 8 barrels
+	 * A: Yes, but it costs a lot
+	 */
+	private AxisAlignedBB vision;
+	private Vec3d vv;
+	private int casingsToDrop = 0;
+	private boolean requiresPlatformRefill = false;
+	private ItemStack s2 = ItemStack.EMPTY;
+
+	/**
+	 * <a href="https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/">https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/</a><br>
+	 * Originally written in C#
+	 *
+	 * @param bulletVelocity       velocity of the bullet
+	 * @param targetPosRelative    position of the target relative to shooter
+	 * @param targetMotionRelative motion of the target
+	 * @return
+	 * @author JamesLeeNZ
+	 */
+	public static double getInterceptTime(float bulletVelocity, Vec3d targetPosRelative, Vec3d targetMotionRelative)
+	{
+		double velocitySquared = targetMotionRelative.lengthSquared();
+		if(velocitySquared < 0.001f)
+			return 0f;
+
+		double a = velocitySquared-bulletVelocity*bulletVelocity;
+
+		//handle similar velocities
+		if(Math.abs(a) < 0.001f)
+		{
+			double t = -targetPosRelative.lengthSquared()/(2f*targetMotionRelative.dotProduct(targetPosRelative));
+			return Math.max(t, 0f); //don't shoot back in time
+		}
+
+		double b = 2f*targetMotionRelative.dotProduct(targetPosRelative);
+		double c = targetPosRelative.lengthSquared();
+		double determinant = b*b-4f*a*c;
+
+		if(determinant > 0f)
+		{ //determinant > 0; two intercept paths (most common)
+			double t1 = (-b+Math.sqrt(determinant))/(2f*a),
+					t2 = (-b-Math.sqrt(determinant))/(2f*a);
+			if(t1 > 0f)
+			{
+				if(t2 > 0f)
+					return Math.min(t1, t2); //both are positive
+				else
+					return t1; //only t1 is positive
+			}
+			else
+				return Math.max(t2, 0f); //don't shoot back in time
+		}
+		else if(determinant < 0f) //determinant < 0; no intercept path
+			return 0f;
+		else //determinant = 0; one intercept path, pretty much never happens
+			return Math.max(-b/(2f*a), 0f); //don't shoot back in time
+	}
 
 	@Override
 	public String getName()
@@ -190,55 +236,6 @@ public class EmplacementWeaponCPDS extends EmplacementWeapon
 		float pp = (float)Math.toDegrees((Math.atan2(vv.y, vv.distanceTo(new Vec3d(0, vv.y, 0)))));
 
 		return new float[]{yy, pp};
-	}
-
-	/**
-	 * <a href="https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/">https://forum.unity.com/threads/projectile-trajectory-accounting-for-gravity-velocity-mass-distance.425560/</a><br>
-	 * Originally written in C#
-	 *
-	 * @param bulletVelocity       velocity of the bullet
-	 * @param targetPosRelative    position of the target relative to shooter
-	 * @param targetMotionRelative motion of the target
-	 * @return
-	 * @author JamesLeeNZ
-	 */
-	public static double getInterceptTime(float bulletVelocity, Vec3d targetPosRelative, Vec3d targetMotionRelative)
-	{
-		double velocitySquared = targetMotionRelative.lengthSquared();
-		if(velocitySquared < 0.001f)
-			return 0f;
-
-		double a = velocitySquared-bulletVelocity*bulletVelocity;
-
-		//handle similar velocities
-		if(Math.abs(a) < 0.001f)
-		{
-			double t = -targetPosRelative.lengthSquared()/(2f*targetMotionRelative.dotProduct(targetPosRelative));
-			return Math.max(t, 0f); //don't shoot back in time
-		}
-
-		double b = 2f*targetMotionRelative.dotProduct(targetPosRelative);
-		double c = targetPosRelative.lengthSquared();
-		double determinant = b*b-4f*a*c;
-
-		if(determinant > 0f)
-		{ //determinant > 0; two intercept paths (most common)
-			double t1 = (-b+Math.sqrt(determinant))/(2f*a),
-					t2 = (-b-Math.sqrt(determinant))/(2f*a);
-			if(t1 > 0f)
-			{
-				if(t2 > 0f)
-					return Math.min(t1, t2); //both are positive
-				else
-					return t1; //only t1 is positive
-			}
-			else
-				return Math.max(t2, 0f); //don't shoot back in time
-		}
-		else if(determinant < 0f) //determinant < 0; no intercept path
-			return 0f;
-		else //determinant = 0; one intercept path, pretty much never happens
-			return Math.max(-b/(2f*a), 0f); //don't shoot back in time
 	}
 
 	@Override

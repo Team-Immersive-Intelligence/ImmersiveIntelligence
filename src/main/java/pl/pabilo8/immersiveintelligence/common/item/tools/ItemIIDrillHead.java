@@ -46,37 +46,6 @@ public class ItemIIDrillHead extends ItemIISubItemsBase<DrillHeads> implements I
 		super("drillhead", 1, DrillHeads.values());
 	}
 
-	public enum DrillHeads implements IIItemEnum
-	{
-		TUNGSTEN("ingotTungsten", 5, 1, 4, 11, 10, 14000,
-				ImmersiveIntelligence.MODID+":items/drillhead/display/tungsten"),
-		IRON_DIAMOND_TIP("ingotIron", 2, 1, 3, 9, 8, 8000,
-				ImmersiveIntelligence.MODID+":items/drillhead/display/iron_tip"),
-		STEEL_DIAMOND_TIP("ingotSteel", 3, 1, 4, 10, 9, 12000,
-				ImmersiveIntelligence.MODID+":items/drillhead/display/steel_tip"),
-		TUNGSTEN_DIAMOND_TIP("ingotTungsten", 5, 1, 5, 11, 12, 18000,
-				ImmersiveIntelligence.MODID+":items/drillhead/display/tungsten_tip");
-
-		public final String texture;
-		final String repairMaterial;
-		final int size, miningDepth, miningLevel, speed, durability;
-		final float attackDamage;
-		@SideOnly(Side.CLIENT)
-		public TextureAtlasSprite sprite;
-
-		DrillHeads(String repairMaterial, int size, int miningDepth, int miningLevel, int speed, int attackDamage, int durability, String texture)
-		{
-			this.repairMaterial = repairMaterial;
-			this.size = size;
-			this.miningDepth = miningDepth;
-			this.miningLevel = miningLevel;
-			this.speed = speed;
-			this.attackDamage = attackDamage;
-			this.durability = durability;
-			this.texture = texture;
-		}
-	}
-
 	/**
 	 * allows items to add custom lines of information to the mouseover description
 	 */
@@ -247,5 +216,36 @@ public class ItemIIDrillHead extends ItemIISubItemsBase<DrillHeads> implements I
 						b.add(pos);
 				}
 		return b.build();
+	}
+
+	public enum DrillHeads implements IIItemEnum
+	{
+		TUNGSTEN("ingotTungsten", 5, 1, 4, 11, 10, 14000,
+				ImmersiveIntelligence.MODID+":items/drillhead/display/tungsten"),
+		IRON_DIAMOND_TIP("ingotIron", 2, 1, 3, 9, 8, 8000,
+				ImmersiveIntelligence.MODID+":items/drillhead/display/iron_tip"),
+		STEEL_DIAMOND_TIP("ingotSteel", 3, 1, 4, 10, 9, 12000,
+				ImmersiveIntelligence.MODID+":items/drillhead/display/steel_tip"),
+		TUNGSTEN_DIAMOND_TIP("ingotTungsten", 5, 1, 5, 11, 12, 18000,
+				ImmersiveIntelligence.MODID+":items/drillhead/display/tungsten_tip");
+
+		public final String texture;
+		final String repairMaterial;
+		final int size, miningDepth, miningLevel, speed, durability;
+		final float attackDamage;
+		@SideOnly(Side.CLIENT)
+		public TextureAtlasSprite sprite;
+
+		DrillHeads(String repairMaterial, int size, int miningDepth, int miningLevel, int speed, int attackDamage, int durability, String texture)
+		{
+			this.repairMaterial = repairMaterial;
+			this.size = size;
+			this.miningDepth = miningDepth;
+			this.miningLevel = miningLevel;
+			this.speed = speed;
+			this.attackDamage = attackDamage;
+			this.durability = durability;
+			this.texture = texture;
+		}
 	}
 }

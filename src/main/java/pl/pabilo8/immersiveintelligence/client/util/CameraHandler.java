@@ -22,15 +22,14 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 @SideOnly(Side.CLIENT)
 public class CameraHandler
 {
-	//--- CameraHandler ---//
-	private static EntityCamera camera;
-	private static boolean enabled = false;
-
 	//--- ZoomHandler ---//
 	public static float fovZoom = 1;
 	public static ZoomType type = null;
 	public static IAdvancedZoomTool zoom;
 	public static ItemStack stack;
+	//--- CameraHandler ---//
+	private static EntityCamera camera;
+	private static boolean enabled = false;
 
 	public static void setCameraPos(BlockPos pos)
 	{
@@ -55,16 +54,16 @@ public class CameraHandler
 		camera.rotationRoll = roll;
 	}
 
+	public static boolean isEnabled()
+	{
+		return enabled;
+	}
+
 	public static void setEnabled(boolean enabled)
 	{
 		CameraHandler.enabled = enabled;
 		ensureExists();
 		ClientUtils.mc().setRenderViewEntity(enabled?camera: ClientUtils.mc().player);
-	}
-
-	public static boolean isEnabled()
-	{
-		return enabled;
 	}
 
 	public static float getYaw()

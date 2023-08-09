@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelAdvancedInserter;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelInserter;
@@ -33,15 +33,73 @@ import java.util.List;
  */
 public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEntityAmmunitionWorkshop> implements IReloadableModelContainer<AmmunitionWorkshopRenderer>
 {
-	private static final ResourceLocation TEXTURE = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/ammunition_workshop.png");
 	public static final ResourceLocation TEXTURE_INSERTER = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/emplacement/inserter_gray.png");
 	public static final ResourceLocation TEXTURE_INSERTER2 = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/emplacement/inserter_gray_advanced.png");
-
+	private static final ResourceLocation TEXTURE = new ResourceLocation("immersiveintelligence:textures/blocks/multiblock/ammunition_workshop.png");
 	private static IConveyorBelt con;
 	private static ModelAmmunitionWorkshop model;
 
 	private static ModelInserter modelInserter;
 	private static ModelAdvancedInserter modelInserterAdvanced;
+
+	public static void renderInserter(ModelInserter inserter, float yaw, float pitch1, float pitch2, float progress, Runnable function)
+	{
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(-0.5, -0.5, 0.5);
+		inserter.baseModel[1].render();
+		GlStateManager.translate(0.5, 0.385, -0.5);
+
+		GlStateManager.rotate(yaw, 0, 1, 0);
+		for(ModelRendererTurbo mod : inserter.inserterBaseTurntable)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.125f, 0);
+
+		GlStateManager.rotate(pitch1, 1, 0, 0);
+		for(ModelRendererTurbo mod : inserter.inserterLowerArm)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.875f, 0);
+		GlStateManager.rotate(-pitch1, 1, 0, 0);
+		GlStateManager.translate(0f, 0.0625f, 0.03125f);
+
+		for(ModelRendererTurbo mod : inserter.inserterMidAxle)
+			mod.render(0.0625f);
+
+		GlStateManager.rotate(pitch2, 1, 0, 0);
+
+		for(ModelRendererTurbo mod : inserter.inserterUpperArm)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.625f, 0.03125f);
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
+
+		GlStateManager.rotate(-45.0f*progress, 0f, 0f, 1f);
+
+		for(ModelRendererTurbo mod : inserter.inserterItemPicker1)
+			mod.render(0.0625f);
+
+		GlStateManager.popMatrix();
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(-0.125f, -0.03125f, -0.03125f);
+
+		GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
+
+		for(ModelRendererTurbo mod : inserter.inserterItemPicker2)
+			mod.render(0.0625f);
+
+		GlStateManager.popMatrix();
+
+		function.run();
+
+		GlStateManager.popMatrix();
+	}
 
 	@Override
 	public void render(@Nullable TileEntityAmmunitionWorkshop te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -217,7 +275,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			final IBulletModel finalBulletModel = bulletModel;
 
 			ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER);
-			renderInserter(modelInserter,0, i1Pitch, i1Pitch2, 0,
+			renderInserter(modelInserter, 0, i1Pitch, i1Pitch2, 0,
 					model!=null?
 							() -> {
 								if(progress < 0.15||progress > 0.56)
@@ -239,7 +297,7 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			GlStateManager.translate(1, 0, 0);
 			//Core
 			ClientUtils.mc().getTextureManager().bindTexture(TEXTURE_INSERTER2);
-			renderInserter(modelInserterAdvanced,0, i2Pitch, i2Pitch2, 0, () -> {
+			renderInserter(modelInserterAdvanced, 0, i2Pitch, i2Pitch2, 0, () -> {
 			});
 			GlStateManager.popMatrix();
 
@@ -314,64 +372,5 @@ public class AmmunitionWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 		modelInserter = new ModelInserter();
 		modelInserterAdvanced = new ModelAdvancedInserter();
-	}
-
-	public static void renderInserter(ModelInserter inserter, float yaw, float pitch1, float pitch2, float progress, Runnable function)
-	{
-		GlStateManager.pushMatrix();
-
-		GlStateManager.translate(-0.5, -0.5, 0.5);
-		inserter.baseModel[1].render();
-		GlStateManager.translate(0.5, 0.385, -0.5);
-
-		GlStateManager.rotate(yaw, 0, 1, 0);
-		for(ModelRendererTurbo mod : inserter.inserterBaseTurntable)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 0.125f, 0);
-
-		GlStateManager.rotate(pitch1, 1, 0, 0);
-		for(ModelRendererTurbo mod : inserter.inserterLowerArm)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 0.875f, 0);
-		GlStateManager.rotate(-pitch1, 1, 0, 0);
-		GlStateManager.translate(0f, 0.0625f, 0.03125f);
-
-		for(ModelRendererTurbo mod : inserter.inserterMidAxle)
-			mod.render(0.0625f);
-
-		GlStateManager.rotate(pitch2, 1, 0, 0);
-
-		for(ModelRendererTurbo mod : inserter.inserterUpperArm)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 0.625f, 0.03125f);
-
-		GlStateManager.pushMatrix();
-
-		GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
-
-		GlStateManager.rotate(-45.0f*progress, 0f, 0f, 1f);
-
-		for(ModelRendererTurbo mod : inserter.inserterItemPicker1)
-			mod.render(0.0625f);
-
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-
-		GlStateManager.translate(-0.125f, -0.03125f, -0.03125f);
-
-		GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
-
-		for(ModelRendererTurbo mod : inserter.inserterItemPicker2)
-			mod.render(0.0625f);
-
-		GlStateManager.popMatrix();
-
-		function.run();
-
-		GlStateManager.popMatrix();
 	}
 }

@@ -13,11 +13,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelDataInputMachine extends ModelIIBase
 {
-	int textureX = 128;
-	int textureY = 256;
-
 	public ModelRendererTurbo[] lidModel;
 	public ModelRendererTurbo[] drawerModel;
+	int textureX = 128;
+	int textureY = 256;
 
 	public ModelDataInputMachine() //Same as Filename
 	{
@@ -262,23 +261,31 @@ public class ModelDataInputMachine extends ModelIIBase
 	@Override
 	public void getBlockRotation(EnumFacing facing, boolean mirrored)
 	{
-		switch (facing)
+		switch(facing)
 		{
-			case NORTH: {
+			case NORTH:
+			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				GlStateManager.translate(0f, -2f, 2f);
-			} break;
-			case SOUTH: {
+			}
+			break;
+			case SOUTH:
+			{
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
 				GlStateManager.translate(-1f, -2f, -1f);
-			} break;
-			case EAST: {
+			}
+			break;
+			case EAST:
+			{
 				GlStateManager.translate(1f, -2f, 0f);
-			} break;
-			case WEST: {
+			}
+			break;
+			case WEST:
+			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
 				GlStateManager.translate(-2f, -2f, 1f);
-			} break;
+			}
+			break;
 		}
 	}
 }

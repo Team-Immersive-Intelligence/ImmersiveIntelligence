@@ -20,14 +20,13 @@ public class GuiEmplacementTaskList extends GuiButton
 {
 	private final TaskFilter[] entries;
 	private final int[] padding = {0, 0, 0, 0};
+	public int selectedOption = -1;
 	private boolean needsSlider = false;
 	private int perPage;
 	private float textScale = 1;
 	private boolean unicode = false;
-
 	private int offset;
 	private int maxOffset;
-
 	private long prevWheelNano = 0;
 	private int targetEntry = -1;
 	private int hoverTimer = 0;
@@ -108,7 +107,7 @@ public class GuiEmplacementTaskList extends GuiButton
 		for(int i = 0; i < Math.min(perPage, entries.length); i++)
 		{
 			int j = offset+i;
-			int col = selectedOption==i?Lib.COLOUR_I_ImmersiveOrange:0xE0E0E0;
+			int col = selectedOption==i?Lib.COLOUR_I_ImmersiveOrange: 0xE0E0E0;
 			boolean selectionHover = hovered&&mmY >= i*fr.FONT_HEIGHT&&mmY < (i+1)*fr.FONT_HEIGHT;
 			if(selectionHover)
 			{
@@ -161,8 +160,6 @@ public class GuiEmplacementTaskList extends GuiButton
 				offset--;
 		}
 	}
-
-	public int selectedOption = -1;
 
 	/**
 	 * Returns true if the mouse has been pressed on this control. Equivalent of MouseListener.mousePressed(MouseEvent e).

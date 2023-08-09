@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.ItemBullet;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -78,7 +77,7 @@ public class ContainerAmmunitionCrate extends ContainerIEBase<TileEntityAmmuniti
 				});
 		}
 
-		this.slotCount = mg?50:38;
+		this.slotCount = mg?50: 38;
 		this.tile = tile;
 
 		for(int i = 0; i < 3; i++)

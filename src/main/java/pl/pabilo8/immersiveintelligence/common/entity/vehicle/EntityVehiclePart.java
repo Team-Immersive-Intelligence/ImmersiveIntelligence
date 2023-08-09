@@ -75,7 +75,7 @@ public class EntityVehiclePart extends MultiPartEntityPart implements IAdvancedT
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
 		if(hitbox!=null)
-			hitbox.attackFrom(source,amount);
+			hitbox.attackFrom(source, amount);
 		return false;
 	}
 

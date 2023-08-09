@@ -50,8 +50,6 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 {
 	private static final Vec3d CONN_OFFSET = new Vec3d(0.5, 0.25, 0.5);
 	private static final AxisAlignedBB[] AABB = new AxisAlignedBB[16];
-	public int coreColor = 0xffffff;
-	public ItemStack mineStack = ItemStack.EMPTY;
 
 	static
 	{
@@ -62,9 +60,11 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		}
 	}
 
-	private boolean armed = true;
+	public int coreColor = 0xffffff;
+	public ItemStack mineStack = ItemStack.EMPTY;
 	public boolean grass = false;
 	public int digLevel = 0;
+	private boolean armed = true;
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)
@@ -73,7 +73,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		armed = nbtTagCompound.getBoolean("armed");
 		grass = nbtTagCompound.getBoolean("grass");
 		digLevel = nbtTagCompound.getInteger("digLevel");
-		this.readOnPlacement(null,new ItemStack(nbtTagCompound.getCompoundTag("mineStack")));
+		this.readOnPlacement(null, new ItemStack(nbtTagCompound.getCompoundTag("mineStack")));
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		if(!world.isRemote&&mineStack.getItem() instanceof IAmmo)
 		{
 			EntityBullet bullet = AmmoUtils.createBullet(world, mineStack, new Vec3d(pos).addVector(0.5, 0.5, 0.5), new Vec3d(0, 1, 0), 0.5f);
-			bullet.fuse=20;
+			bullet.fuse = 20;
 			world.spawnEntity(bullet);
 		}
 		world.setBlockToAir(this.getPos());
@@ -164,10 +164,10 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 		}
 		else if(armed&&heldItem.getItem().getToolClasses(heldItem).contains(Lib.TOOL_WIRECUTTER))
 		{
-			heldItem.damageItem(8,player);
+			heldItem.damageItem(8, player);
 			world.playSound(pos.getX(), pos.getY()+1, pos.getZ(), SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.BLOCKS, 1f, 1f, false);
-			armed=false;
-			grass=false;
+			armed = false;
+			grass = false;
 		}
 
 		return false;
@@ -192,7 +192,7 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	public void onEntityCollision(World world, Entity entity)
 	{
 		super.onEntityCollision(world, entity);
-		if(digLevel>6||entity.posY > this.getPos().getY())
+		if(digLevel > 6||entity.posY > this.getPos().getY())
 			this.explode();
 	}
 
@@ -217,6 +217,6 @@ public class TileEntityTripMine extends TileEntityImmersiveConnectable implement
 	public NonNullList<ItemStack> getTileDrops(@Nullable EntityPlayer player, IBlockState state)
 	{
 		explode();
-		return NonNullList.from(armed?ItemStack.EMPTY:mineStack);
+		return NonNullList.from(armed?ItemStack.EMPTY: mineStack);
 	}
 }

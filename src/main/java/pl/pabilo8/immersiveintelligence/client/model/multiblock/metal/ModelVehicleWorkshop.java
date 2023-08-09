@@ -834,8 +834,6 @@ public class ModelVehicleWorkshop extends ModelIIBase
 		doorLeftModel[0].setRotationPoint(0F, -46F, 47.5F);
 
 
-
-
 		doorRightModel = new ModelRendererTurbo[8];
 		doorRightModel[0] = new ModelRendererTurbo(this, 192, 9, textureX, textureY); // Box 4
 		doorRightModel[1] = new ModelRendererTurbo(this, 256, 44, textureX, textureY); // Box 4
@@ -924,19 +922,19 @@ public class ModelVehicleWorkshop extends ModelIIBase
 		winchModel[3].addShapeBox(0F, -2F, -2F, 24, 4, 4, 0F, 0.125F, 0.25F, 0.25F, 0.125F, 0.25F, 0.25F, 0.125F, 0.25F, 0.25F, 0.125F, 0.25F, 0.25F, 0.125F, 0.25F, 0.25F, 0.125F, 0.25F, 0.25F, 0.125F, 0.25F, 0.25F, 0.125F, 0.25F, 0.25F); // Box 4
 		winchModel[3].setRotationPoint(4F, -43F, 52F);
 
-		parts.put("base",baseModel);
-		parts.put("platform",platformModel);
-		parts.put("scissor1",scissor1Model);
-		parts.put("scissor2",scissor2Model);
-		parts.put("drawer1",drawer1Model);
-		parts.put("drawer2",drawer2Model);
-		parts.put("engine",engineModel);
-		parts.put("craneShaft",craneShaftModel);
-		parts.put("engineShaft",engineShaftModel);
-		parts.put("doorLeft",doorLeftModel);
-		parts.put("doorRight",doorRightModel);
-		parts.put("rail",railModel);
-		parts.put("winch",winchModel);
+		parts.put("base", baseModel);
+		parts.put("platform", platformModel);
+		parts.put("scissor1", scissor1Model);
+		parts.put("scissor2", scissor2Model);
+		parts.put("drawer1", drawer1Model);
+		parts.put("drawer2", drawer2Model);
+		parts.put("engine", engineModel);
+		parts.put("craneShaft", craneShaftModel);
+		parts.put("engineShaft", engineShaftModel);
+		parts.put("doorLeft", doorLeftModel);
+		parts.put("doorRight", doorRightModel);
+		parts.put("rail", railModel);
+		parts.put("winch", winchModel);
 
 		flipAll();
 	}
@@ -948,26 +946,26 @@ public class ModelVehicleWorkshop extends ModelIIBase
 		{
 			case NORTH:
 			{
-				GlStateManager.translate(mirrored?3:-2, 0f, 3f);
+				GlStateManager.translate(mirrored?3: -2, 0f, 3f);
 			}
 			break;
 			case SOUTH:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?2:-3, 0f, 2f);
+				GlStateManager.translate(mirrored?2: -3, 0f, 2f);
 			}
 			break;
 			case EAST:
 			{
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?3f:-2f, 0f, 2f);
+				GlStateManager.translate(mirrored?3f: -2f, 0f, 2f);
 
 			}
 			break;
 			case WEST:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?2f:-3f, 0f, 3f);
+				GlStateManager.translate(mirrored?2f: -3f, 0f, 3f);
 
 			}
 			break;

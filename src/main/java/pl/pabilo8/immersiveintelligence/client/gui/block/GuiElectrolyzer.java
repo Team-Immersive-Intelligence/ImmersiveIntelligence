@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -59,7 +58,7 @@ public class GuiElectrolyzer extends GuiIEContainerBase
 
 		this.drawTexturedModalRect(guiLeft+50, guiTop+21, 196, 0, 15, 51);
 
-		IIClientUtils.drawPowerBar(guiLeft+161, guiTop+24,7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		IIClientUtils.drawPowerBar(guiLeft+161, guiTop+24, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		if(tile.active&&tile.processTimeMax!=0)
 		{

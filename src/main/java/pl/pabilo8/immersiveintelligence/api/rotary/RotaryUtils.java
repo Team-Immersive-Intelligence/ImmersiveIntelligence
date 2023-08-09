@@ -213,7 +213,8 @@ public class RotaryUtils
 											}
 											return false;
 										},
-										(p) -> {}, start, end);
+										(p) -> {
+										}, start, end);
 								if(canSee)
 								{
 									Connection conn = ImmersiveNetHandler.INSTANCE.addAndGetConnection(world,
@@ -500,7 +501,7 @@ public class RotaryUtils
 
 	public static float getGearEffectiveness(NonNullList<ItemStack> inventory, float modifier)
 	{
-		return getGearEffectiveness(inventory, modifier,inventory.size());
+		return getGearEffectiveness(inventory, modifier, inventory.size());
 	}
 
 	public static float getGearTorqueRatio(NonNullList<ItemStack> inventory)

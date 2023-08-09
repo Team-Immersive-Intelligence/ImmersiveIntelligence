@@ -11,8 +11,8 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.PaintingRecipe;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -49,6 +49,13 @@ public class ChemicalPainterTweaker
 	public static void removeRecipe(IItemStack output)
 	{
 		CraftTweakerAPI.apply(new Remove(CraftTweakerHelper.toStack(output)));
+	}
+
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IChemicalPainterFunction")
+	@ZenRegister
+	public interface IChemicalPainterFunction
+	{
+		IItemStack process(IItemStack input, int color, int baseColor);
 	}
 
 	private static class Add implements IAction
@@ -94,13 +101,6 @@ public class ChemicalPainterTweaker
 		{
 			return "Removing Chemical Painter Recipe for "+input.getDisplayName();
 		}
-	}
-
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IChemicalPainterFunction")
-	@ZenRegister
-	public interface IChemicalPainterFunction
-	{
-		IItemStack process(IItemStack input, int color, int baseColor);
 	}
 
 }

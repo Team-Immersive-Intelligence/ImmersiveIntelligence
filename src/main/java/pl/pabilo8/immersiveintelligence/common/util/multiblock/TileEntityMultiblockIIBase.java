@@ -162,7 +162,10 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 			int l = (pos%blocksPerLevel/structureDimensions[2]);
 			int w = (pos%structureDimensions[2]);
 			s = this.multiblock.getStructureManual()[h][l][w];
-		} catch(Exception e) {IILogger.info(e);}
+		} catch(Exception e)
+		{
+			IILogger.info(e);
+		}
 		return s.copy();
 	}
 

@@ -22,9 +22,6 @@ import java.util.regex.Pattern;
 public class IIFontRenderer extends FontRenderer
 {
 	static HashMap<Character, CharReplacement> unicodeReplacements = new HashMap<>();
-	private final Pattern hexColPattern = Pattern.compile("<hexcol=(......):(.*)>");
-	private final int hexColWidth = getStringWidth("<hexcol=012345:>");
-	private final int hexColLength = "<hexcol=012345:>".length();
 
 	static
 	{
@@ -70,12 +67,13 @@ public class IIFontRenderer extends FontRenderer
 		unicodeReplacements.put('\u24c1', new CharReplacement(3, 5)); //boots
 	}
 
-	int[] backupColours;
-	String colourFormattingKeys = "0123456789abcdef";
+	private final Pattern hexColPattern = Pattern.compile("<hexcol=(......):(.*)>");	private final int hexColWidth = getStringWidth("<hexcol=012345:>");
+	private final int hexColLength = "<hexcol=012345:>".length();
 	public float customSpaceWidth = 4f;
 	public float spacingModifier = 0f;
 	public boolean verticalBoldness = false;
-
+	int[] backupColours;
+	String colourFormattingKeys = "0123456789abcdef";
 	public IIFontRenderer(ResourceLocation res)
 	{
 		super(ClientUtils.mc().gameSettings, res, ClientUtils.mc().renderEngine, false);
@@ -145,7 +143,6 @@ public class IIFontRenderer extends FontRenderer
 			return (int)i;
 		}
 	}
-
 
 	/**
 	 * Render a single line string at the current (posX,posY) and update posX
@@ -314,7 +311,6 @@ public class IIFontRenderer extends FontRenderer
 		return (k!=i&&l!=-1&&l < k?l: k)+m*hexColLength;
 	}
 
-
 	static class CharReplacement
 	{
 		private final ResourceLocation textureSheet;
@@ -354,4 +350,7 @@ public class IIFontRenderer extends FontRenderer
 			return 8.02f;
 		}
 	}
+
+
+
 }

@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 /**

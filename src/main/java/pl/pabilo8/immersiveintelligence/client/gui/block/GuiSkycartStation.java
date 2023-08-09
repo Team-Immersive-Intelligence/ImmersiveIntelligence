@@ -5,12 +5,11 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCartStation;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSkycartStation;
 
@@ -41,7 +40,7 @@ public class GuiSkycartStation extends GuiIEContainerBase
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		IIClientUtils.drawStringCentered(fontRenderer, I18n.format("tile."+ImmersiveIntelligence.MODID+".wooden_multiblock.skycart_station.name"), 0, 0, getXSize(), 6, 0xd99747);
-		fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(),3)*100)+"%", 76, 47, 0xd99747);
+		fontRenderer.drawString((RotaryUtils.getGearEffectiveness(tile.getInventory(), tile.getEfficiencyMultiplier(), 3)*100)+"%", 76, 47, 0xd99747);
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class GuiSkycartStation extends GuiIEContainerBase
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		ClientUtils.bindTexture(texture_skycrate_station);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, SkyCrateStation.rpmMin , SkyCrateStation.torqueMin);
+		renderEnergyBars(guiLeft+148, guiTop+20, 7, 48, 2, tile.rotation, SkyCrateStation.rpmMin, SkyCrateStation.torqueMin);
 	}
 
 	@Override

@@ -21,6 +21,38 @@ public class DataWireNetwork
 {
 	public List<WeakReference<IDataConnector>> connectors = new ArrayList<>();
 
+	public static void updateConnectors(BlockPos start, World world, DataWireNetwork network)
+	{
+		int dimension = world.provider.getDimension();
+		Set<BlockPos> open = new HashSet<>();
+		open.add(start);
+		Set<BlockPos> closed = new HashSet<>();
+		network.connectors.clear();
+		while(!open.isEmpty())
+		{
+			Iterator<BlockPos> it = open.iterator();
+			BlockPos next = it.next();
+			it.remove();
+			IImmersiveConnectable iic = ApiUtils.toIIC(next, world);
+			closed.add(next);
+			Set<Connection> connsAtBlock = INSTANCE.getConnections(dimension, next);
+
+			if(iic instanceof IDataConnector)
+			{
+				((IDataConnector)iic).setDataNetwork(network);
+				network.connectors.add(new WeakReference<>((IDataConnector)iic));
+			}
+			if(connsAtBlock!=null&&iic!=null)
+				for(Connection c : connsAtBlock)
+				{
+					if(Objects.equals(c.cableType.getCategory(), IIDataWireType.DATA_CATEGORY)&&
+							iic.allowEnergyToPass(c)&&
+							!closed.contains(c.end))
+						open.add(c.end);
+				}
+		}
+	}
+
 	public DataWireNetwork add(IDataConnector connector)
 	{
 		connectors.add(new WeakReference<>(connector));
@@ -66,38 +98,6 @@ public class DataWireNetwork
 			}
 		}
 
-	}
-
-	public static void updateConnectors(BlockPos start, World world, DataWireNetwork network)
-	{
-		int dimension = world.provider.getDimension();
-		Set<BlockPos> open = new HashSet<>();
-		open.add(start);
-		Set<BlockPos> closed = new HashSet<>();
-		network.connectors.clear();
-		while(!open.isEmpty())
-		{
-			Iterator<BlockPos> it = open.iterator();
-			BlockPos next = it.next();
-			it.remove();
-			IImmersiveConnectable iic = ApiUtils.toIIC(next, world);
-			closed.add(next);
-			Set<Connection> connsAtBlock = INSTANCE.getConnections(dimension, next);
-
-			if(iic instanceof IDataConnector)
-			{
-				((IDataConnector)iic).setDataNetwork(network);
-				network.connectors.add(new WeakReference<>((IDataConnector)iic));
-			}
-			if(connsAtBlock!=null&&iic!=null)
-				for(Connection c : connsAtBlock)
-				{
-					if(Objects.equals(c.cableType.getCategory(), IIDataWireType.DATA_CATEGORY)&&
-							iic.allowEnergyToPass(c)&&
-							!closed.contains(c.end))
-						open.add(c.end);
-				}
-		}
 	}
 
 	//Ethernet-like data packet sending

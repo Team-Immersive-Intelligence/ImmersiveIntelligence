@@ -35,8 +35,7 @@ public class DataOperationToFloat extends DataOperation
 		try
 		{
 			e = Float.parseFloat(packet.getVarInType(IDataType.class, f).valueToString());
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 
 		}

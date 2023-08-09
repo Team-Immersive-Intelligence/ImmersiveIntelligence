@@ -17,7 +17,7 @@ public class DataOperationXNOR extends DataOperation
 		//A boolean version of the 'equals' operation
 		name = "xnor";
 		expression = "!^";
-		allowedTypes = new Class[]{DataTypeBoolean.class,DataTypeBoolean.class};
+		allowedTypes = new Class[]{DataTypeBoolean.class, DataTypeBoolean.class};
 		expectedResult = DataTypeBoolean.class;
 	}
 

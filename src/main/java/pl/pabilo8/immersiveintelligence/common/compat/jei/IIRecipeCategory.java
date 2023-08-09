@@ -37,6 +37,7 @@ public abstract class IIRecipeCategory<T, W extends IRecipeWrapper> implements I
 		this.recipeClass = recipeClass;
 		this.displayStacks = displayStacks;
 	}
+
 	public void addCatalysts(IModRegistry registry)
 	{
 		for(ItemStack stack : displayStacks)

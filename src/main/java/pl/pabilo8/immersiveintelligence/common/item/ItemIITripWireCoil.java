@@ -32,13 +32,12 @@ import java.util.List;
  */
 public class ItemIITripWireCoil extends ItemIIBase implements IWireCoil
 {
+	public static final String TRIPWIRE_CATEGORY = "TRIPWIRE";
+	public static IITripWireType TRIPWIRE = new IITripWireType();
 	public ItemIITripWireCoil()
 	{
 		super("trip_wire", 64);
 	}
-
-	public static IITripWireType TRIPWIRE = new IITripWireType();
-	public static final String TRIPWIRE_CATEGORY = "TRIPWIRE";
 
 	@Override
 	public WireType getWireType(ItemStack stack)

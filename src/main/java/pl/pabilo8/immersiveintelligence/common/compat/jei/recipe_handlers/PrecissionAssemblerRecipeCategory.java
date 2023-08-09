@@ -90,9 +90,9 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 
 	public static class PrecissionAssemblerRecipeWrapper extends IIMultiblockRecipeWrapper
 	{
-		final int inputCount, toolCount;
 		protected final List<ItemStack> tools = new ArrayList<>();
 		protected final ItemStack scheme;
+		final int inputCount, toolCount;
 
 		public PrecissionAssemblerRecipeWrapper(PrecissionAssemblerRecipe recipe)
 		{
@@ -101,8 +101,8 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 				if(PrecissionAssemblerRecipe.toolMap.containsKey(tool))
 					tools.add(PrecissionAssemblerRecipe.toolMap.get(tool).getToolPresentationStack(tool));
 			scheme = IIContent.itemAssemblyScheme.getStackForRecipe(recipe);
-			inputCount=recipe.inputs.length;
-			toolCount=tools.size();
+			inputCount = recipe.inputs.length;
+			toolCount = tools.size();
 		}
 
 		@Override

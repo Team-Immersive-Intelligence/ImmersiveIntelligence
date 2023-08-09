@@ -24,6 +24,11 @@ public class IIBipedLayerRenderer implements LayerRenderer<EntityLivingBase>
 	public static boolean rendersAssigned = false;
 	public static Map<UUID, Pair<ItemStack, Integer>> ADVANCED_POWERPACK_PLAYERS = new HashMap<>();
 
+	public static void addWornAdvancedPowerpack(EntityLivingBase living, ItemStack powerpack)
+	{
+		ADVANCED_POWERPACK_PLAYERS.put(living.getUniqueID(), Pair.of(powerpack, 5));
+	}
+
 	@Override
 	public void doRenderLayer(EntityLivingBase living, float limbSwing, float prevLimbSwing, float partialTicks, float rotation, float yaw, float pitch, float scale)
 	{
@@ -43,11 +48,6 @@ public class IIBipedLayerRenderer implements LayerRenderer<EntityLivingBase>
 			else
 				ADVANCED_POWERPACK_PLAYERS.put(living.getUniqueID(), Pair.of(entry.getLeft(), time));
 		}
-	}
-
-	public static void addWornAdvancedPowerpack(EntityLivingBase living, ItemStack powerpack)
-	{
-		ADVANCED_POWERPACK_PLAYERS.put(living.getUniqueID(), Pair.of(powerpack, 5));
 	}
 
 	private void renderAdvancedPowerpack(ItemStack powerpack, EntityLivingBase living, float limbSwing, float prevLimbSwing, float partialTicks, float rotation, float yaw, float pitch, float scale)

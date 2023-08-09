@@ -10,8 +10,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
@@ -42,13 +42,13 @@ public class ItemIIMineDetector extends ItemIIBase
 			RayTraceResult traceResult = worldIn.rayTraceBlocks(vec3d, vec3d2, false, false, true);
 			if(traceResult!=null&&traceResult.typeOfHit==Type.BLOCK)
 			{
-				final BlockPos dPos = new BlockPos(traceResult.getBlockPos().getX(),entityIn.posY,traceResult.getBlockPos().getZ());
+				final BlockPos dPos = new BlockPos(traceResult.getBlockPos().getX(), entityIn.posY, traceResult.getBlockPos().getZ());
 				for(int x = -3; x < 4; x++)
 					for(int z = -3; z < 4; z++)
 						if(worldIn.getBlockState(dPos.add(x, 0, z)).getBlock() instanceof BlockIIMine)
 						{
 							final BlockPos pp = dPos.add(x, 0, z);
-							float dist = Math.max((float)new Vec3d(pp).distanceTo(entityIn.getPositionVector()),0.125f);
+							float dist = Math.max((float)new Vec3d(pp).distanceTo(entityIn.getPositionVector()), 0.125f);
 
 							if(worldIn.getTotalWorldTime()%(int)(dist*4)==0)
 								worldIn.playSound(pp.getX(), pp.getY(), pp.getZ(), IISounds.mineDetector, SoundCategory.PLAYERS, 1, 0.5f, false);

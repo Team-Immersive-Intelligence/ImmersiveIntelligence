@@ -27,6 +27,7 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Adds the model container to the II Model Registry
+	 *
 	 * @param name name of the model in II namespace
 	 * @return this
 	 */
@@ -37,6 +38,7 @@ public interface IReloadableModelContainer<T>
 
 	/**
 	 * Adds the model container to the II Model Registry
+	 *
 	 * @param modelName full name of this model
 	 * @return this
 	 */

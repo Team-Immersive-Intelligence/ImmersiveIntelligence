@@ -28,8 +28,8 @@ import java.util.List;
 
 public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, BathingRecipeCategory.BathingRecipeWrapper>
 {
-	private final IDrawable tankOverlay;
 	static ItemStack machineStack;
+	private final IDrawable tankOverlay;
 
 	public BathingRecipeCategory(IGuiHelper helper, boolean washing)
 	{

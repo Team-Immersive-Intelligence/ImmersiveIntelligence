@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.manual.objects;
 
-import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualPages.PositionedItemStack;
 import blusunrize.lib.manual.ManualUtils;
 import blusunrize.lib.manual.gui.GuiButtonManualNavigation;
@@ -36,10 +35,10 @@ import java.util.stream.IntStream;
  */
 public class IIManualCraftingRecipe extends IIManualObject
 {
+	final ArrayList<PositionedItemStack[]> recipes = new ArrayList<>();
 	GuiButtonManualNavigation buttonNext, buttonPrev;
 	NonNullList<ItemStack> stacks;
 	ItemStack highlighted = ItemStack.EMPTY;
-	final ArrayList<PositionedItemStack[]> recipes = new ArrayList<>();
 	int recipePage;
 	int yOff;
 

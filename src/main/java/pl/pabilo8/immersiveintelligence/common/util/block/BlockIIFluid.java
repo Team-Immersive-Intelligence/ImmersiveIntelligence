@@ -30,9 +30,9 @@ import javax.annotation.Nullable;
  */
 public class BlockIIFluid extends BlockFluidClassic
 {
+	public boolean isAcid;
 	private int flammability = 0;
 	private int fireSpread = 0;
-	public boolean isAcid;
 	private PotionEffect[] potionEffects;
 
 	public BlockIIFluid(String name, Fluid fluid, Material material)

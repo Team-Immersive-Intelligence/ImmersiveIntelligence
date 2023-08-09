@@ -7,11 +7,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 public class ModelCPDS extends ModelIIBase
 {
-	int textureX = 128;
-	int textureY = 128;
-
 	//Counter-Projectile Defense System
 	public ModelRendererTurbo[] gunModel, barrelsModel, observeModel, internalsModel, hatchModel;
+	int textureX = 128;
+	int textureY = 128;
 
 	public ModelCPDS(boolean doOffsets) //Same as Filename
 	{
@@ -132,11 +131,11 @@ public class ModelCPDS extends ModelIIBase
 		baseModel[23].setRotationPoint(-15F, -19F, -14F);
 		baseModel[23].rotateAngleY = 1.57079633F;
 
-		baseModel[24].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10) }), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[] {15 ,10 ,10}); // COVER24
+		baseModel[24].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10)}), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[]{15, 10, 10}); // COVER24
 		baseModel[24].setRotationPoint(-15F, -19F, -15F);
 		baseModel[24].rotateAngleY = -1.57079633F;
 
-		baseModel[25].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10) }), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[] {15 ,10 ,10}); // COVER25
+		baseModel[25].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10)}), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[]{15, 10, 10}); // COVER25
 		baseModel[25].setRotationPoint(-6F, -19F, -15F);
 		baseModel[25].rotateAngleY = -1.57079633F;
 
@@ -144,11 +143,11 @@ public class ModelCPDS extends ModelIIBase
 		baseModel[26].setRotationPoint(7F, -29F, -5F);
 		baseModel[26].rotateAngleX = -0.78539816F;
 
-		baseModel[27].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10) }), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[] {15 ,10 ,10}); // COVER26
+		baseModel[27].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10)}), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[]{15, 10, 10}); // COVER26
 		baseModel[27].setRotationPoint(16F, -19F, -15F);
 		baseModel[27].rotateAngleY = -1.57079633F;
 
-		baseModel[28].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10) }), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[] {15 ,10 ,10}); // COVER27
+		baseModel[28].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 10, 10, 10)}), 1, 10, 10, 35, 1, ModelRendererTurbo.MR_FRONT, new float[]{15, 10, 10}); // COVER27
 		baseModel[28].setRotationPoint(7F, -19F, -15F);
 		baseModel[28].rotateAngleY = -1.57079633F;
 
@@ -324,10 +323,10 @@ public class ModelCPDS extends ModelIIBase
 		gunModel[30].setRotationPoint(5F, -17F, 1F);
 		gunModel[30].rotateAngleZ = 3.14159265F;
 
-		gunModel[31].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2) }), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[] {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3}); // Shape 133
+		gunModel[31].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2)}), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[]{3, 3, 3, 3, 3, 3, 3, 3}); // Shape 133
 		gunModel[31].setRotationPoint(3.5F, -15.5F, -33F);
 
-		gunModel[32].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2) }), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[] {3 ,3 ,3 ,3 ,3 ,3 ,3 ,3}); // Shape 133
+		gunModel[32].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(5, 0, 5, 0), new Coord2D(7, 2, 7, 2), new Coord2D(7, 5, 7, 5), new Coord2D(5, 7, 5, 7), new Coord2D(2, 7, 2, 7), new Coord2D(0, 5, 0, 5), new Coord2D(0, 2, 0, 2)}), 3, 7, 7, 24, 3, ModelRendererTurbo.MR_FRONT, new float[]{3, 3, 3, 3, 3, 3, 3, 3}); // Shape 133
 		gunModel[32].setRotationPoint(3.5F, -15.5F, -24F);
 
 		barrelsModel = new ModelRendererTurbo[16];
@@ -618,7 +617,7 @@ public class ModelCPDS extends ModelIIBase
 		hatchModel[0].addShapeBox(0F, 0F, -1F, 8, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // YEET01
 		hatchModel[0].setRotationPoint(-15F, -9F, 16F);
 
-		parts.put("base",  baseModel);
+		parts.put("base", baseModel);
 		parts.put("hatch", hatchModel);
 		parts.put("internals", internalsModel);
 		parts.put("observe", observeModel);
@@ -627,9 +626,9 @@ public class ModelCPDS extends ModelIIBase
 
 		if(doOffsets)
 		{
-			translate(gunModel,0f, 19.50F, 7.5F);
-			translate(barrelsModel,0f, 19F, 6F);
-			translate(observeModel,0,31.5f,-2.5f);
+			translate(gunModel, 0f, 19.50F, 7.5F);
+			translate(barrelsModel, 0f, 19F, 6F);
+			translate(observeModel, 0, 31.5f, -2.5f);
 		}
 
 		flipAll();

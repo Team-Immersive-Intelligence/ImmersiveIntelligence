@@ -19,10 +19,10 @@ import java.util.ArrayList;
  */
 public class GuiDataEditorInteger extends GuiDataEditor<DataTypeInteger>
 {
+	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 	private GuiButtonIE buttonInt, buttonHex, buttonBin;
 	private GuiTextField valueEdit;
 	private String valueLabel;
-	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 	private int mode = 10;
 
 	public GuiDataEditorInteger(int buttonId, DataTypeInteger dataType)
@@ -130,8 +130,7 @@ public class GuiDataEditorInteger extends GuiDataEditor<DataTypeInteger>
 		try
 		{
 			return Integer.parseInt(valueEdit.getText(), mode);
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 			return 0;
 		}

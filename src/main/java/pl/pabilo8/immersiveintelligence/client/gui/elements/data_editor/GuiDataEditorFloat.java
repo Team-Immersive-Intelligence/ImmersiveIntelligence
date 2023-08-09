@@ -16,9 +16,9 @@ import java.io.IOException;
  */
 public class GuiDataEditorFloat extends GuiDataEditor<DataTypeFloat>
 {
+	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 	private GuiTextField valueEdit;
 	private String valueLabel;
-	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 
 	public GuiDataEditorFloat(int buttonId, DataTypeFloat dataType)
 	{
@@ -94,8 +94,7 @@ public class GuiDataEditorFloat extends GuiDataEditor<DataTypeFloat>
 		try
 		{
 			return Float.parseFloat(valueEdit.getText());
-		}
-		catch(NumberFormatException ignored)
+		} catch(NumberFormatException ignored)
 		{
 			return 0;
 		}

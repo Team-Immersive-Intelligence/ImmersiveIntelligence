@@ -1,7 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util.easynbt;
 
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import java.util.Collections;

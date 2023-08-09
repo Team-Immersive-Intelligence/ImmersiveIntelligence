@@ -44,22 +44,18 @@ import java.util.stream.Collectors;
  */
 public class IIManualMultiblock extends IIManualObject
 {
+	GuiButtonManualNavigation buttonStop, buttonPause, buttonUp, buttonDown;
+	List<String> componentTooltip;
+	MultiblockRenderInfo renderInfo;
+	MultiblockBlockAccess blockAccess;
 	private IMultiblock multiblock;
-
 	private boolean canTick = true;
 	private boolean showCompleted = false;
 	private int tick = 0;
-
 	private float scale = 50f;
 	private float transX = 0, transY = 0;
 	private float rotX = 0, rotY = 0;
 	private int half;
-
-	GuiButtonManualNavigation buttonStop, buttonPause, buttonUp, buttonDown;
-
-	List<String> componentTooltip;
-	MultiblockRenderInfo renderInfo;
-	MultiblockBlockAccess blockAccess;
 
 	//--- Setup ---//
 
@@ -424,15 +420,14 @@ public class IIManualMultiblock extends IIManualObject
 	static class MultiblockRenderInfo
 	{
 		public final IMultiblock multiblock;
+		private final int maxBlockIndex;
 		public ItemStack[][][] data;
 		public int[] countPerLevel;
 		public int structureHeight = 0;
 		public int structureLength = 0;
 		public int structureWidth = 0;
 		public int showLayer = -1;
-
 		private int blockIndex;
-		private final int maxBlockIndex;
 
 		public MultiblockRenderInfo(IMultiblock multiblock)
 		{

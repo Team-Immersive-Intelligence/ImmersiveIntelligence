@@ -25,7 +25,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
@@ -33,6 +32,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

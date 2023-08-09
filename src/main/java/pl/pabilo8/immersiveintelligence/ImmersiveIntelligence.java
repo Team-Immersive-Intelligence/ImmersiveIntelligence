@@ -11,7 +11,10 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
-import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IISaveData;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.commands.CommandII;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
@@ -27,10 +30,12 @@ public class ImmersiveIntelligence
 {
 	public static final String MODID = "immersiveintelligence";
 	public static final String VERSION = "@VERSION@";
+	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
+	private static final String[] alternativeCerts = {
 
+	};
 	@SidedProxy(clientSide = "pl.pabilo8.immersiveintelligence.client.ClientProxy", serverSide = "pl.pabilo8.immersiveintelligence.common.CommonProxy")
 	public static CommonProxy proxy;
-
 	@Instance(MODID)
 	public static ImmersiveIntelligence INSTANCE;
 
@@ -98,11 +103,6 @@ public class ImmersiveIntelligence
 	{
 		event.registerServerCommand(new CommandII());
 	}
-
-	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
-	private static final String[] alternativeCerts = {
-
-	};
 
 	@Mod.EventHandler
 	public void wrongSignature(FMLFingerprintViolationEvent event)

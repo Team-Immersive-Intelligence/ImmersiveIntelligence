@@ -50,15 +50,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	public static final int SLOT_INPUT = 0, SLOT_SAWBLADE = 1, SLOT_OUTPUT = 2, SLOT_SAWDUST = 3;
 	//Position IDs
 	public static final int POS_ROTARY_INPUT = 6, POS_OUTPUT = 4, POS_INPUT = 15, POS_SAWDUST = 2, POS_SAWDUST2 = 6;
-
-	//Inventory Handlers
-	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
-	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
-	//Recipe Output Handlers
-	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
-
 	public MultiblockInteractablePart vice;
-
 	//Rotary Power
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
@@ -68,6 +60,11 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			return facing==getFacing()?RotationSide.INPUT: RotationSide.NONE;
 		}
 	};
+	//Inventory Handlers
+	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
+	IItemHandler dustExtractionHandler = getSingleInventoryHandler(SLOT_SAWDUST, false, true);
+	//Recipe Output Handlers
+	IItemHandler outputHandler = getSingleInventoryHandler(SLOT_OUTPUT), sawdustOutputHandler = getSingleInventoryHandler(SLOT_SAWDUST);
 
 	public TileEntitySawmill()
 	{

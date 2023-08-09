@@ -21,9 +21,9 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityTripodPeriscope;
  */
 public class TripodPeriscopeRenderer extends Render<EntityTripodPeriscope> implements IReloadableModelContainer<TripodPeriscopeRenderer>
 {
+	public static final String texture = ImmersiveIntelligence.MODID+":textures/entity/tripod_periscope.png";
 	public static TripodPeriscopeItemstackRenderer instance = new TripodPeriscopeItemstackRenderer();
 	public static ModelTripodPeriscope model = new ModelTripodPeriscope();
-	public static final String texture = ImmersiveIntelligence.MODID+":textures/entity/tripod_periscope.png";
 
 	public TripodPeriscopeRenderer(RenderManager renderManager)
 	{

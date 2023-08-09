@@ -47,7 +47,7 @@ public class AMTText extends AMT
 			GlStateManager.disableCull();
 			GlStateManager.translate(originPos.x, originPos.y+0.125, originPos.z);
 
-			GlStateManager.scale(1,-1,-1);
+			GlStateManager.scale(1, -1, -1);
 			if(scale!=null)
 				GlStateManager.scale(scale.x, scale.y, scale.z);
 

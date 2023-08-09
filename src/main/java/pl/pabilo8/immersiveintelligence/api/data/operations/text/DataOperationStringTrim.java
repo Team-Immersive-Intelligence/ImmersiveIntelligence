@@ -19,7 +19,7 @@ public class DataOperationStringTrim extends DataOperation
 		//Gets a substring (from 0 to given integer)
 		name = "string_trim";
 		allowedTypes = new Class[]{DataTypeString.class, DataTypeInteger.class};
-		params = new String[]{"text","to_index"};
+		params = new String[]{"text", "to_index"};
 		expectedResult = DataTypeString.class;
 	}
 

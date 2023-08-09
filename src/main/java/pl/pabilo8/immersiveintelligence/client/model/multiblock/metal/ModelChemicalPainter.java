@@ -965,14 +965,14 @@ public class ModelChemicalPainter extends ModelIIBase
 		conveyorLifterModel[1].addBox(-2F, 0F, -2F, 4, 9, 4, 0F); // MAINFRAME01
 		conveyorLifterModel[1].setRotationPoint(37F+2, -21F, 23F+2);
 
-		parts.put("base",baseModel);
-		parts.put("conveyorLifter",conveyorLifterModel);
-		parts.put("lamps",lampsModel);
-		parts.put("glass",glassModel);
-		parts.put("nozzle",nozzleModel);
+		parts.put("base", baseModel);
+		parts.put("conveyorLifter", conveyorLifterModel);
+		parts.put("lamps", lampsModel);
+		parts.put("glass", glassModel);
+		parts.put("nozzle", nozzleModel);
 
 		translateAll(1F, 0F, -1F);
-		translate(conveyorLifterModel,0,7,0);
+		translate(conveyorLifterModel, 0, 7, 0);
 
 		flipAll();
 	}
@@ -985,20 +985,20 @@ public class ModelChemicalPainter extends ModelIIBase
 			case NORTH:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-2:3, 0f, 2f);
+				GlStateManager.translate(mirrored?-2: 3, 0f, 2f);
 
 			}
 			break;
 			case SOUTH:
 			{
 				GlStateManager.rotate(0, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-3f:2f, 0f, 1f);
+				GlStateManager.translate(mirrored?-3f: 2f, 0f, 1f);
 			}
 			break;
 			case EAST:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-2f:3, 0f, 1f);
+				GlStateManager.translate(mirrored?-2f: 3, 0f, 1f);
 
 			}
 			break;
@@ -1006,7 +1006,7 @@ public class ModelChemicalPainter extends ModelIIBase
 			{
 				GlStateManager.rotate(-90F, 0F, 1F, 0F);
 
-				GlStateManager.translate(mirrored?-3:2, 0f, 2f);
+				GlStateManager.translate(mirrored?-3: 2, 0f, 2f);
 
 			}
 			break;

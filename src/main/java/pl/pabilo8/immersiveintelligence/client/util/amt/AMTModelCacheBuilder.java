@@ -20,11 +20,11 @@ import java.util.function.Supplier;
  */
 public final class AMTModelCacheBuilder<T>
 {
-	private List<OBJModel> models = new ArrayList<>();
-	private List<IIModelHeader> headers = new ArrayList<>();
+	private final Supplier<T> defaultValue;
+	private final List<OBJModel> models = new ArrayList<>();
+	private final List<IIModelHeader> headers = new ArrayList<>();
 	private BiFunction<ResourceLocation, T, TextureAtlasSprite> textureProvider = (res, t) -> ClientUtils.getSprite(res);
 	private BiFunction<T, IIModelHeader, AMT[]> modelProvider = (t, h) -> new AMT[0];
-	private final Supplier<T> defaultValue;
 	private boolean isBlock = false;
 
 	private AMTModelCacheBuilder(Supplier<T> defaultValue)

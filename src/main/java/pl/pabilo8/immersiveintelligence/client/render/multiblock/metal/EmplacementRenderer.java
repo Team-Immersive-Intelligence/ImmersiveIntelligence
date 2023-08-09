@@ -22,26 +22,6 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 
 public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmplacement> implements IReloadableModelContainer<EmplacementRenderer>
 {
-	public static ModelEmplacement model;
-	public static ModelEmplacementWeaponMachinegun modelMachinegun;
-	public static ModelAutocannon modelAutocannon;
-	public static ModelInfraredObserver modelInfraredObserver;
-	public static ModelHeavyChemthrower modelHeavyChemthrower;
-	public static ModelHeavyRailgun modelHeavyRailgun;
-	public static ModelCPDS modelCPDS;
-	public static ModelEmplacementWeaponTeslaCoil modelTeslaCoil;
-
-	public static ModelRendererTurbo[] modelMachinegunConstruction;
-	public static ModelRendererTurbo[] modelAutocannonConstruction;
-	public static ModelRendererTurbo[] modelInfraredObserverConstruction;
-	public static ModelRendererTurbo[] modelHeavyChemthrowerConstruction;
-	public static ModelRendererTurbo[] modelHeavyRailgunConstruction;
-	public static ModelRendererTurbo[] modelCPDSConstruction;
-	public static ModelRendererTurbo[] modelTeslaCoilConstruction;
-
-	public static ModelInserter modelInserter;
-	public static ModelCraneElectric modelCrane;
-
 	public static final ResourceLocation texture = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement.png");
 	public static final ResourceLocation textureMachinegun = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/machinegun.png");
 	public static final ResourceLocation textureAutocannon = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/flak.png");
@@ -52,12 +32,92 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 	public static final ResourceLocation textureMortar = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/mortar.png");
 	public static final ResourceLocation textureLightHowitzer = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/light_howitzer.png");
 	public static final ResourceLocation textureInfraredObserver = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/infrared_observer.png");
-
 	public static final ResourceLocation textureCraneGray = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/crane.png");
 	public static final ResourceLocation textureInserterGreen = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_green.png");
 	public static final ResourceLocation textureInserterGray = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/emplacement/inserter_gray.png");
-
 	private static final float doorAngle = TmtUtil.AngleToTMT(165f);
+	public static ModelEmplacement model;
+	public static ModelEmplacementWeaponMachinegun modelMachinegun;
+	public static ModelAutocannon modelAutocannon;
+	public static ModelInfraredObserver modelInfraredObserver;
+	public static ModelHeavyChemthrower modelHeavyChemthrower;
+	public static ModelHeavyRailgun modelHeavyRailgun;
+	public static ModelCPDS modelCPDS;
+	public static ModelEmplacementWeaponTeslaCoil modelTeslaCoil;
+	public static ModelRendererTurbo[] modelMachinegunConstruction;
+	public static ModelRendererTurbo[] modelAutocannonConstruction;
+	public static ModelRendererTurbo[] modelInfraredObserverConstruction;
+	public static ModelRendererTurbo[] modelHeavyChemthrowerConstruction;
+	public static ModelRendererTurbo[] modelHeavyRailgunConstruction;
+	public static ModelRendererTurbo[] modelCPDSConstruction;
+	public static ModelRendererTurbo[] modelTeslaCoilConstruction;
+	public static ModelInserter modelInserter;
+	public static ModelCraneElectric modelCrane;
+
+	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
+	{
+		modelCrane.renderCrane(textureCraneGray, yaw, distance, drop, grabProgress, function);
+	}
+
+	public static void renderInserter(boolean green, float yaw, float pitch1, float pitch2, float progress, Runnable function)
+	{
+		GlStateManager.pushMatrix();
+		ClientUtils.mc().getTextureManager().bindTexture(green?textureInserterGreen: textureInserterGray);
+
+		GlStateManager.translate(-0.5, -0.5, 0.5);
+		modelInserter.baseModel[1].render();
+		GlStateManager.translate(0.5, 0.385, -0.5);
+
+		GlStateManager.rotate(yaw, 0, 1, 0);
+		for(ModelRendererTurbo mod : modelInserter.inserterBaseTurntable)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.125f, 0);
+
+		GlStateManager.rotate(pitch1, 1, 0, 0);
+		for(ModelRendererTurbo mod : modelInserter.inserterLowerArm)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.875f, 0);
+		GlStateManager.rotate(-pitch1, 1, 0, 0);
+		GlStateManager.translate(0f, 0.0625f, 0.03125f);
+
+		for(ModelRendererTurbo mod : modelInserter.inserterMidAxle)
+			mod.render(0.0625f);
+
+		GlStateManager.rotate(pitch2, 1, 0, 0);
+
+		for(ModelRendererTurbo mod : modelInserter.inserterUpperArm)
+			mod.render(0.0625f);
+
+		GlStateManager.translate(0f, 0.625f, 0.03125f);
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
+
+		GlStateManager.rotate(-45f*progress, 0f, 0f, 1f);
+
+		for(ModelRendererTurbo mod : modelInserter.inserterItemPicker1)
+			mod.render(0.0625f);
+
+		GlStateManager.popMatrix();
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(-0.125f, -0.03125f, -0.03125f);
+
+		GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
+
+		for(ModelRendererTurbo mod : modelInserter.inserterItemPicker2)
+			mod.render(0.0625f);
+
+		GlStateManager.popMatrix();
+
+		function.run();
+
+		GlStateManager.popMatrix();
+	}
 
 	@Override
 	public void render(TileEntityEmplacement te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -195,70 +255,5 @@ public class EmplacementRenderer extends TileEntitySpecialRenderer<TileEntityEmp
 
 		modelInserter = new ModelInserter();
 		modelCrane = new ModelCraneElectric();
-	}
-
-	public static void renderCrane(float yaw, float distance, float drop, float grabProgress, Runnable function)
-	{
-		modelCrane.renderCrane(textureCraneGray, yaw, distance, drop, grabProgress, function);
-	}
-
-	public static void renderInserter(boolean green, float yaw, float pitch1, float pitch2, float progress, Runnable function)
-	{
-		GlStateManager.pushMatrix();
-		ClientUtils.mc().getTextureManager().bindTexture(green?textureInserterGreen: textureInserterGray);
-
-		GlStateManager.translate(-0.5, -0.5, 0.5);
-		modelInserter.baseModel[1].render();
-		GlStateManager.translate(0.5, 0.385, -0.5);
-
-		GlStateManager.rotate(yaw, 0, 1, 0);
-		for(ModelRendererTurbo mod : modelInserter.inserterBaseTurntable)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 0.125f, 0);
-
-		GlStateManager.rotate(pitch1, 1, 0, 0);
-		for(ModelRendererTurbo mod : modelInserter.inserterLowerArm)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 0.875f, 0);
-		GlStateManager.rotate(-pitch1, 1, 0, 0);
-		GlStateManager.translate(0f, 0.0625f, 0.03125f);
-
-		for(ModelRendererTurbo mod : modelInserter.inserterMidAxle)
-			mod.render(0.0625f);
-
-		GlStateManager.rotate(pitch2, 1, 0, 0);
-
-		for(ModelRendererTurbo mod : modelInserter.inserterUpperArm)
-			mod.render(0.0625f);
-
-		GlStateManager.translate(0f, 0.625f, 0.03125f);
-
-		GlStateManager.pushMatrix();
-
-		GlStateManager.translate(0.125f, -0.03125f, -0.03125f);
-
-		GlStateManager.rotate(-45f*progress, 0f, 0f, 1f);
-
-		for(ModelRendererTurbo mod : modelInserter.inserterItemPicker1)
-			mod.render(0.0625f);
-
-		GlStateManager.popMatrix();
-
-		GlStateManager.pushMatrix();
-
-		GlStateManager.translate(-0.125f, -0.03125f, -0.03125f);
-
-		GlStateManager.rotate(45f*progress, 0f, 0f, 1f);
-
-		for(ModelRendererTurbo mod : modelInserter.inserterItemPicker2)
-			mod.render(0.0625f);
-
-		GlStateManager.popMatrix();
-
-		function.run();
-
-		GlStateManager.popMatrix();
 	}
 }

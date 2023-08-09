@@ -23,12 +23,12 @@ import java.util.HashMap;
  */
 public class TMTArmorModel extends ModelBiped
 {
+	private final String texture;
 	public ModelRendererTurbo[] headModel, bodyModel, leftArmModel, rightArmModel, leftLegModel, rightLegModel, leftFootModel, rightFootModel;
 	//List of parts for group flipping / translation / rotation
 	public HashMap<String, ModelRendererTurbo[]> parts = new HashMap<>();
-	private final String texture;
-	private ItemStack renderStack = ItemStack.EMPTY;
 	protected EntityEquipmentSlot renderSlot = EntityEquipmentSlot.HEAD;
+	private ItemStack renderStack = ItemStack.EMPTY;
 
 	public TMTArmorModel(int textureWidthIn, int textureHeightIn, String texture)
 	{
@@ -100,7 +100,6 @@ public class TMTArmorModel extends ModelBiped
 				mod.render(0.0625f);
 			renderAddons(renderStack, renderSlot, rightLegModel, 0, false, 0.0625f);
 			GlStateManager.popMatrix();
-
 
 
 		}

@@ -74,17 +74,12 @@ public class IIContent
 	public static final List<IMultiblock> MULTIBLOCKS = new ArrayList<>();
 
 	public static final IICreativeTab II_CREATIVE_TAB = new IICreativeTab(MODID);
-
-	//Shares code with Immersive Energy, long live II-IEn Cooperation!
-	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
+	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
 
 	//--- Upgrades ---//
-
-	public static final MachineUpgrade UPGRADE_PACKER_FLUID = CommonProxy.createMachineUpgrade("packer_fluid"); //allows filling items with fluids
 	public static final MachineUpgrade UPGRADE_PACKER_ENERGY = CommonProxy.createMachineUpgrade("packer_energy"); //allows charging items with IF
 	public static final MachineUpgrade UPGRADE_PACKER_NAMING = CommonProxy.createMachineUpgrade("packer_naming"); //allows (re)naming items on conveyor
 	public static final MachineUpgrade UPGRADE_PACKER_RAILWAY = CommonProxy.createMachineUpgrade("packer_railway"); //makes packer accept minecarts instead of items
-
 	//used by effect crates
 	public static final MachineUpgrade UPGRADE_INSERTER = CommonProxy.createMachineUpgrade("inserter");
 	//increases machine speed
@@ -93,25 +88,21 @@ public class IIContent
 	public static final MachineUpgrade UPGRADE_SAW_UNREGULATOR = CommonProxy.createMachineUpgrade("saw_unregulator");
 	//allows to use belt fed upgrade for mg
 	public static final MachineUpgrade UPGRADE_MG_LOADER = CommonProxy.createMachineUpgrade("mg_loader");
-
 	//allows the radar to detect radio signal emitters and send their positions
 	public static final MachineUpgrade UPGRADE_RADIO_LOCATORS = CommonProxy.createMachineUpgrade("radio_locators");
-
 	//changes the projectile workshop to *fill* projectiles
 	public static final MachineUpgrade UPGRADE_CORE_FILLER = CommonProxy.createMachineUpgrade("core_filler");
-
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
-
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_AUTOCANNON = EmplacementWeapon.register(EmplacementWeaponAutocannon::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_CHEMTHROWER = EmplacementWeapon.register(EmplacementWeaponHeavyChemthrower::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_HEAVY_RAILGUN = EmplacementWeapon.register(EmplacementWeaponHeavyRailgun::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_SPOTLIGHT_TOWER = EmplacementWeapon.register(EmplacementWeaponSpotlightTower::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_TESLA = EmplacementWeapon.register(EmplacementWeaponTeslaCoil::new);
+	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MORTAR = EmplacementWeapon.register(EmplacementWeaponMortar::new);
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_LIGHT_HOWITZER = EmplacementWeapon.register(EmplacementWeaponLightHowitzer::new);
-
-	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_CPDS = EmplacementWeapon.register(EmplacementWeaponCPDS::new);
+	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
 
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_FALLBACK_GRENADES = CommonProxy.createMachineUpgrade("emplacement_grenades");
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_STURDY_BEARINGS = CommonProxy.createMachineUpgrade("emplacement_bearings");
@@ -121,7 +112,8 @@ public class IIContent
 	//public static final MachineUpgrade UPGRADE_EMPLACEMENT_MACHINEGUN_BUNKER = CommonProxy.createMachineUpgrade("mg_bunker");
 
 	//--- Items ---//
-
+	//Shares code with Immersive Energy, long live II-IEn Cooperation!
+	public static List<Predicate<TileEntity>> tileEntitiesWeDontLike = new ArrayList<>();
 	//materials
 	public static ItemIIMaterial itemMaterial = new ItemIIMaterial();
 	public static ItemIIMaterialIngot itemMaterialIngot = new ItemIIMaterialIngot();
@@ -138,7 +130,6 @@ public class IIContent
 	public static ItemIIFunctionalCircuit itemCircuit = new ItemIIFunctionalCircuit();
 	public static ItemIIMotorBelt itemMotorBelt = new ItemIIMotorBelt();
 	public static ItemIIMotorGear itemMotorGear = new ItemIIMotorGear();
-
 	//ammo
 	public static ItemIIAmmoCasing itemAmmoCasing = new ItemIIAmmoCasing();
 	public static ItemIIAmmoArtillery itemAmmoArtillery = new ItemIIAmmoArtillery();
@@ -151,9 +142,7 @@ public class IIContent
 	public static ItemIIAmmoAssaultRifle itemAmmoAssaultRifle = new ItemIIAmmoAssaultRifle();
 	public static ItemIIAmmoSubmachinegun itemAmmoSubmachinegun = new ItemIIAmmoSubmachinegun();
 	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
-
 	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
-
 	//tools
 	public static ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
 	public static ItemIILighter itemLighter = new ItemIILighter();
@@ -162,10 +151,8 @@ public class IIContent
 	public static ItemIIElectricWirecutter itemWirecutter = new ItemIIElectricWirecutter();
 	public static ItemIIWrench itemWrench = new ItemIIWrench();
 	public static ItemIIElectricWrench itemElectricWrench = new ItemIIElectricWrench();
-
 	public static ItemIITripodPeriscope itemTripodPeriscope = new ItemIITripodPeriscope();
 	public static ItemIIMineDetector itemMineDetector = new ItemIIMineDetector();
-
 	public static ItemIIDrillHead itemDrillhead = new ItemIIDrillHead();
 	//Don't know if i should make a seperate item for a torque meter
 	public static ItemIITachometer itemTachometer = new ItemIITachometer();
@@ -185,7 +172,6 @@ public class IIContent
 	public static ItemIIRifle itemRifle = new ItemIIRifle();
 	public static ItemIIMortar itemMortar = new ItemIIMortar();
 	public static ItemIIWeaponUpgrade itemWeaponUpgrade = new ItemIIWeaponUpgrade();
-
 	//armor
 	public static ArmorMaterial ARMOR_MATERIAL_LIGHT_ENGINEER = EnumHelper.addArmorMaterial("light_engineer_armor",
 			ImmersiveIntelligence.MODID+":light_engineer_armor", 42,
@@ -196,8 +182,6 @@ public class IIContent
 	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
 	public static ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
 	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
-	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
-
 	//data
 	@IBatchOredictRegister(oreDict = "punchtape")
 	public static ItemIIPunchtape itemPunchtape = new ItemIIPunchtape();

@@ -115,7 +115,7 @@ public class EntityMinecartCrateCreative extends EntityMinecartCrateBase impleme
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		return new String[]{TranslationKey.OVERLAY_OSD_CREATIVE_CRATE_NORMAL_FIRST_LINE.format(this.getStackInSlot(0).getDisplayName(),0)};
+		return new String[]{TranslationKey.OVERLAY_OSD_CREATIVE_CRATE_NORMAL_FIRST_LINE.format(this.getStackInSlot(0).getDisplayName(), 0)};
 	}
 
 

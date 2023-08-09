@@ -75,8 +75,8 @@ public class ParticleBlockFragment extends IIParticle
 	protected void multiplyColor(@Nullable BlockPos p_187154_1_)
 	{
 		int i = Minecraft.getMinecraft().getBlockColors().colorMultiplier(this.sourceState, this.world, p_187154_1_, 0);
-		this.particleRed *= (float)(i >> 16&255)/255.0F;
-		this.particleGreen *= (float)(i >> 8&255)/255.0F;
+		this.particleRed *= (float)(i>>16&255)/255.0F;
+		this.particleGreen *= (float)(i>>8&255)/255.0F;
 		this.particleBlue *= (float)(i&255)/255.0F;
 	}
 
@@ -111,7 +111,7 @@ public class ParticleBlockFragment extends IIParticle
 		float f6 = (float)(this.prevPosY+(this.posY-this.prevPosY)*(double)partialTicks-interpPosY);
 		float f7 = (float)(this.prevPosZ+(this.posZ-this.prevPosZ)*(double)partialTicks-interpPosZ);
 		int i = this.getBrightnessForRender(partialTicks);
-		int j = i >> 16&65535;
+		int j = i>>16&65535;
 		int k = i&65535;
 
 		buffer.pos(f5-rotationX*f4-rotationXY*f4, f6-rotationZ*f4, f7-rotationYZ*f4-rotationXZ*f4).tex(f, f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();

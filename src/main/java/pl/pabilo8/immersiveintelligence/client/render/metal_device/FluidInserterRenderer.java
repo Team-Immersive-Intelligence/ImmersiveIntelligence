@@ -6,7 +6,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_Connector;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -19,8 +18,8 @@ import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityFluidInserter;
 
 import javax.annotation.Nullable;
 
@@ -32,9 +31,9 @@ import javax.annotation.Nullable;
 @SideOnly(Side.CLIENT)
 public class FluidInserterRenderer extends TileEntitySpecialRenderer<TileEntityFluidInserter> implements IReloadableModelContainer<FluidInserterRenderer>
 {
-	private static ModelFluidInserter model;
 	public static ItemStack conn_data, conn_mv;
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	private static ModelFluidInserter model;
 
 	@Override
 	public void render(@Nullable TileEntityFluidInserter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

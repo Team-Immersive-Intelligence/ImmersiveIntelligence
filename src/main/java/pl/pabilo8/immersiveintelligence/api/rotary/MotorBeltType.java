@@ -29,32 +29,32 @@ public abstract class MotorBeltType extends WireType
 	}
 
 	/**
-	  @return Category name, similar to how wires handle it
+	 * @return Category name, similar to how wires handle it
 	 */
 	public abstract String getName();
 
 	/**
-	  @return Maximum length in blocks
+	 * @return Maximum length in blocks
 	 */
 	public abstract int getLength();
 
 	/**
-	  @return Width of the belt
+	 * @return Width of the belt
 	 */
 	public abstract int getWidth();
 
 	/**
-	  @return Thickness of the belt
+	 * @return Thickness of the belt
 	 */
 	public abstract int getThickness();
 
 	/**
-	  @return Maximal Torque
+	 * @return Maximal Torque
 	 */
 	public abstract int getMaxTorque();
 
 	/**
-	  @return Torque loss
+	 * @return Torque loss
 	 */
 	public abstract float getTorqueLoss();
 

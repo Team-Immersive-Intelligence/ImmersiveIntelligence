@@ -12,10 +12,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class ModelSkyCartStation extends ModelIIBase
 {
+	public ModelRendererTurbo[] pistonModel, pistonDoorModel, trainBlockerModel, backAxleModel, frontAxleModel, cratePusherModel, cratePusherAxleModel, inserterBaseModel, inserterTopModel, inserterTopperModel;
 	int textureX = 256;
 	int textureY = 128;
-
-	public ModelRendererTurbo[] pistonModel, pistonDoorModel, trainBlockerModel, backAxleModel, frontAxleModel, cratePusherModel, cratePusherAxleModel, inserterBaseModel, inserterTopModel, inserterTopperModel;
 
 	public ModelSkyCartStation() //Same as Filename
 	{

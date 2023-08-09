@@ -95,20 +95,16 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 	public EntityVehicleWheel partWheelFront, partWheelBack;
 	public EntityVehiclePart partFuelTank, partEngine;
 	public EntityVehiclePart partSeat, partUpgradeSeat, partUpgradeCargo;
-
-	private int destroyTimer = -1;
-
 	public FluidTank tank = new FluidTank(12000)
 	{
 	};
-	NonSidedFluidHandler fluidHandler = new NonSidedFluidHandler(this);
-
 	public float acceleration = 0f, speed = 0f, tilt = 0f, brakeProgress = 0f, engineProgress = 0;
 	public boolean accelerated = false, brake = false, engineWorking = false, turnLeft = false, turnRight = false, engineKeyPress = false, towingKeyPress = false;
 	public int frontWheelDurability, backWheelDurability, engineDurability, fuelTankDurability;
 	public int untowingTries = 0;
-
 	public String upgrade = "";
+	NonSidedFluidHandler fluidHandler = new NonSidedFluidHandler(this);
+	private int destroyTimer = -1;
 
 	public EntityMotorbike(World worldIn)
 	{
@@ -877,57 +873,6 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			readEntityFromNBT(tag);
 	}
 
-	static class NonSidedFluidHandler implements IFluidHandler
-	{
-		EntityMotorbike motorbike;
-
-		NonSidedFluidHandler(EntityMotorbike motorbike)
-		{
-			this.motorbike = motorbike;
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill)
-		{
-			if(resource==null)
-				return 0;
-			if(!DieselHandler.isValidFuel(resource.getFluid()))
-				return 0;
-
-			int i = motorbike.tank.fill(resource, doFill);
-			if(i > 0)
-			{
-				motorbike.updateTank(false);
-			}
-			return i;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain)
-		{
-			if(resource==null)
-				return null;
-			return this.drain(resource.amount, doDrain);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain)
-		{
-			FluidStack f = motorbike.tank.drain(maxDrain, doDrain);
-			if(f!=null&&f.amount > 0)
-			{
-				motorbike.updateTank(false);
-			}
-			return f;
-		}
-
-		@Override
-		public IFluidTankProperties[] getTankProperties()
-		{
-			return motorbike.tank.getTankProperties();
-		}
-	}
-
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key)
 	{
@@ -1070,5 +1015,56 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 			return true;
 		}
 		return super.attackEntityFrom(source, amount);
+	}
+
+	static class NonSidedFluidHandler implements IFluidHandler
+	{
+		EntityMotorbike motorbike;
+
+		NonSidedFluidHandler(EntityMotorbike motorbike)
+		{
+			this.motorbike = motorbike;
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill)
+		{
+			if(resource==null)
+				return 0;
+			if(!DieselHandler.isValidFuel(resource.getFluid()))
+				return 0;
+
+			int i = motorbike.tank.fill(resource, doFill);
+			if(i > 0)
+			{
+				motorbike.updateTank(false);
+			}
+			return i;
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain)
+		{
+			if(resource==null)
+				return null;
+			return this.drain(resource.amount, doDrain);
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain)
+		{
+			FluidStack f = motorbike.tank.drain(maxDrain, doDrain);
+			if(f!=null&&f.amount > 0)
+			{
+				motorbike.updateTank(false);
+			}
+			return f;
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties()
+		{
+			return motorbike.tank.getTankProperties();
+		}
 	}
 }

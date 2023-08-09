@@ -9,7 +9,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTil
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -154,7 +153,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 					if(!canFill)
 					{
 						focusedEntity = null;
-						IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+						IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 						world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
 					}
 				}
@@ -184,7 +183,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 					{
 						focusedEntity = entity;
 						inserterAnimation = 0f;
-						IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+						IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 						world.playSound(null, getPos().up(), IISounds.fuelStationStart, SoundCategory.BLOCKS, 0.5f, 1f);
 						break;
 					}
@@ -195,7 +194,7 @@ public class TileEntityFuelStation extends TileEntityMultiblockMetal<TileEntityF
 		{
 			focusedEntity = null;
 			inserterAnimation = 0f;
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this,makeSyncEntity()));
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, makeSyncEntity()));
 			world.playSound(null, getPos().up(), IISounds.fuelStationEnd, SoundCategory.BLOCKS, 0.5f, 1f);
 		}
 	}

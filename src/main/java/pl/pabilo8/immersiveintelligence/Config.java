@@ -23,6 +23,13 @@ public class Config
 	public static final String GEARS = "Gears: Copper, Brass, Iron, Steel, Tungsten";
 	public static final String BELTS = "Belts: Cloth, Steel, Rubber";
 
+	@SubscribeEvent
+	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
+	{
+		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
+			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
+	}
+
 	@net.minecraftforge.common.config.Config(modid = ImmersiveIntelligence.MODID)
 	public static class IIConfig
 	{
@@ -333,6 +340,9 @@ public class Config
 			@Comment({"The usage time of the Precision Hammer."})
 			@RequiresMcRestart
 			public static int precissionToolHammerUsageTime = 40;
+			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
+			@RequiresMcRestart
+			public static int advancedPowerpackCapacity = 1000000;
 
 			public static class SkycrateMounts
 			{
@@ -374,10 +384,6 @@ public class Config
 				@Mapped(mapClass = Config.class, mapName = "manual_floatA")
 				public static float[] tripodZoomSteps = new float[]{0.01f, 0.02f, 0.04f, 0.0625f, 0.0833f, 0.125f, 0.25f, 0.5f};
 			}
-
-			@Comment({"The capacity of the Improved Capacitor Backpack (in IF)."})
-			@RequiresMcRestart
-			public static int advancedPowerpackCapacity = 1000000;
 		}
 
 		public static class Machines
@@ -1667,12 +1673,5 @@ public class Config
 			@Mapped(mapClass = Config.class, mapName = "manual_floatA")
 			public static float dynamoWatermillTorque = 24f;
 		}
-	}
-
-	@SubscribeEvent
-	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
-	{
-		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
-			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
 	}
 }

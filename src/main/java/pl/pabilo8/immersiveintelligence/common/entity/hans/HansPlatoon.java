@@ -13,18 +13,10 @@ import java.util.HashMap;
  */
 public class HansPlatoon
 {
+	public boolean inCombat = false;
 	EntityHans commander;
 	ArrayList<EntityHans> members;
 	HashMap<EntityHans, FormationPosition> positions;
-
-	public boolean inCombat=false;
-
-	public enum FormationPosition
-	{
-		FRONT,
-		RIGHT_FLANK,
-		LEFT_FLANK
-	}
 
 	public void updateSquad()
 	{
@@ -51,5 +43,12 @@ public class HansPlatoon
 
 		commander.getNavigator().setPath(commander.getNavigator().getPathToPos(pos), 1f);
 		Vec3d direction = new Vec3d(commander.getPosition().subtract(pos)).normalize();
+	}
+
+	public enum FormationPosition
+	{
+		FRONT,
+		RIGHT_FLANK,
+		LEFT_FLANK
 	}
 }

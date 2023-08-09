@@ -25,7 +25,7 @@ public class DataOperationSwap extends DataOperation
 		int i1 = packet.getVarInType(DataTypeInteger.class, data.getArgument(1)).value;
 		int i2 = packet.getVarInType(DataTypeInteger.class, data.getArgument(2)).value;
 
-		if(i1>=0&&i2>=0&&i1<array.value.length&&i2<array.value.length)
+		if(i1 >= 0&&i2 >= 0&&i1 < array.value.length&&i2 < array.value.length)
 		{
 			IDataType helper = array.value[i1];
 			array.value[i1] = array.value[i2];

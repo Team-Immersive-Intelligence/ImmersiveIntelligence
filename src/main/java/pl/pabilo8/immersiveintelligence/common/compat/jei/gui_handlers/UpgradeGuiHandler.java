@@ -46,6 +46,6 @@ public class UpgradeGuiHandler implements IAdvancedGuiHandler<GuiUpgrade>
 	@Override
 	public Object getIngredientUnderMouse(GuiUpgrade guiContainer, int mouseX, int mouseY)
 	{
-		return guiContainer.getPreviewedItem(mouseX,mouseY);
+		return guiContainer.getPreviewedItem(mouseX, mouseY);
 	}
 }

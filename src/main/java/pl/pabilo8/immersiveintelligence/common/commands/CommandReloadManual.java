@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;

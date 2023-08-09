@@ -1,16 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiReactiveList;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
@@ -72,7 +68,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 
 		sliderRepair = addSlider(116,
 				28+switchRSControl.getTextHeight(fontRenderer)+switchDataControl.getTextHeight(fontRenderer)+switchSendTarget.getTextHeight(fontRenderer)
-						+fontRenderer.getWordWrappedHeight(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"),70),
+						+fontRenderer.getWordWrappedHeight(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"), 70),
 				80, IILib.COLOR_H1, tile.autoRepairAmount,
 				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));
 

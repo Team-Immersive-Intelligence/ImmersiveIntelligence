@@ -73,20 +73,17 @@ import java.util.function.Predicate;
 public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPacker> implements IConveyorAttachable, IGuiTile, IUpgradableMachine, IPlayerInteraction
 {
 	public boolean repeatActions = false;
+	public int clientUpgradeProgress = 0;
+	public int processTime = 0;
+	public ArrayList<PackerTask> tasks = new ArrayList<>();
+	public IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
+	public FluxStorageAdvanced energyStorageUpgrade;
+	public MultiFluidTank fluidTank;
 	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
 	int upgradeProgress = 0;
-	public int clientUpgradeProgress = 0;
-	public int processTime = 0;
-
-	public ArrayList<PackerTask> tasks = new ArrayList<>();
-
-	public IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
 	IItemHandler inventoryInHandler = new IEInventoryHandler(54, this, 1, true, true);
 	IItemHandler inventoryOutHandler = new IEInventoryHandler(54, this, 54+1, true, true);
-
-	public FluxStorageAdvanced energyStorageUpgrade;
-	public MultiFluidTank fluidTank;
 
 	public TileEntityPacker()
 	{

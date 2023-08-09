@@ -13,10 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtUtil;
 public class ModelArithmeticLogicMachine extends ModelIIBase
 {
 
+	public ModelRendererTurbo[] doorRightModel, doorLeftModel, chip1Model, chip2Model, chip3Model, chip4Model;
 	int textureX = 256;
 	int textureY = 256;
-
-	public ModelRendererTurbo[] doorRightModel, doorLeftModel, chip1Model, chip2Model, chip3Model, chip4Model;
 
 	public ModelArithmeticLogicMachine() //Same as Filename
 	{
@@ -251,23 +250,31 @@ public class ModelArithmeticLogicMachine extends ModelIIBase
 	{
 		if(mirrored)
 			GlStateManager.rotate(180, 0, 1, 0);
-		switch (facing)
+		switch(facing)
 		{
-			case NORTH: {
+			case NORTH:
+			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				GlStateManager.translate(mirrored?-1: 0, -2, mirrored?-3: 3);
-			} break;
-			case SOUTH: {
+			}
+			break;
+			case SOUTH:
+			{
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
 				GlStateManager.translate(mirrored?0: -1, -2, 0);
-			} break;
-			case EAST: {
+			}
+			break;
+			case EAST:
+			{
 				GlStateManager.translate(mirrored?-2f: 1f, -2, mirrored?-1: 1);
-			} break;
-			case WEST: {
+			}
+			break;
+			case WEST:
+			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
 				GlStateManager.translate(mirrored?1: -2, -2, mirrored?-2: 2);
-			} break;
+			}
+			break;
 		}
 	}
 }

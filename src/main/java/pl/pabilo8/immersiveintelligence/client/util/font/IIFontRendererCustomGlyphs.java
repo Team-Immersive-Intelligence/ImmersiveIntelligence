@@ -35,6 +35,9 @@ public class IIFontRendererCustomGlyphs extends IIFontRenderer
 		} catch(IOException ioexception)
 		{
 			super.readGlyphSizes();
-		} finally {IOUtils.closeQuietly(iresource);}
+		} finally
+		{
+			IOUtils.closeQuietly(iresource);
+		}
 	}
 }

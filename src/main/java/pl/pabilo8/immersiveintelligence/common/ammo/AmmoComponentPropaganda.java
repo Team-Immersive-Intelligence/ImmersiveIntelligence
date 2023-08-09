@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 

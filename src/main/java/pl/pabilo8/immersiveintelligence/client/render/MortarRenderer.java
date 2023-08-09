@@ -25,10 +25,10 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
  */
 public class MortarRenderer extends Render<EntityMortar> implements IReloadableModelContainer<MortarRenderer>
 {
+	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/mortar.png");
 	public static MortarItemstackRenderer instance = new MortarItemstackRenderer();
 	public static ModelMortar model;
 	public static ModelBulletMortar6bCal modelShell;
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/mortar.png");
 
 	public MortarRenderer(RenderManager renderManager)
 	{
@@ -105,8 +105,8 @@ public class MortarRenderer extends Render<EntityMortar> implements IReloadableM
 				if(psg instanceof EntityLivingBase)
 				{
 					GlStateManager.pushMatrix();
-					GlStateManager.translate(0,1.25*(1f-f),0);
-					GlStateManager.scale(0.8f,0.8f,0.8f);
+					GlStateManager.translate(0, 1.25*(1f-f), 0);
+					GlStateManager.scale(0.8f, 0.8f, 0.8f);
 					modelShell.renderBulletUnused(((EntityLivingBase)psg).getHeldItem(EnumHand.MAIN_HAND));
 					bindTexture(TEXTURE);
 					GlStateManager.popMatrix();

@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.fx;
 
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -34,16 +33,16 @@ public abstract class IIParticle extends Particle
 
 	//--- Protected Methods ---//
 
+	protected Vec3d getMotion()
+	{
+		return new Vec3d(this.motionX, this.motionY, this.motionZ);
+	}
+
 	protected void setMotion(Vec3d motion)
 	{
 		this.motionX = motion.x;
 		this.motionY = motion.y;
 		this.motionZ = motion.z;
-	}
-
-	protected Vec3d getMotion()
-	{
-		return new Vec3d(this.motionX, this.motionY, this.motionZ);
 	}
 
 	protected float getProgress(float partialTicks)

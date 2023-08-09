@@ -720,7 +720,7 @@ public class ModelRadar extends ModelIIBase
 		baseModel[148].setRotationPoint(39.5F, -52F, 49.25F);
 		baseModel[148].rotateAngleX = 0.34906585F;
 
-		baseModel[149].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(15, 0, 15, 0), new Coord2D(15, 4, 15, 4), new Coord2D(6, 4, 6, 4) }), 12, 15, 4, 36, 12, ModelRendererTurbo.MR_FRONT, new float[] {8 ,9 ,4 ,15}); // TableKeyboardMain
+		baseModel[149].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(15, 0, 15, 0), new Coord2D(15, 4, 15, 4), new Coord2D(6, 4, 6, 4)}), 12, 15, 4, 36, 12, ModelRendererTurbo.MR_FRONT, new float[]{8, 9, 4, 15}); // TableKeyboardMain
 		baseModel[149].setRotationPoint(-15.5F, -2F, 67F);
 		baseModel[149].rotateAngleY = -3.14159265F;
 
@@ -1183,13 +1183,13 @@ public class ModelRadar extends ModelIIBase
 
 		triangulatorsModel[36].addShapeBox(0F, 7F, -2F, 2, 2, 2, 0F, 0F, -2F, 0F, 0F, -2F, 0F, 0F, -2F, 0F, 0F, -2F, 0F, 0F, -1.5F, 0F, 0F, -1.5F, 0F, 0F, -2F, 0F, 0F, -2F, 0F); // Radio23
 		triangulatorsModel[36].setRotationPoint(75F, -10F, 8F);
-		
-		parts.put("base",baseModel);
-		parts.put("radar",radarModel);
-		parts.put("triangulators",triangulatorsModel); //for the upgrade
+
+		parts.put("base", baseModel);
+		parts.put("radar", radarModel);
+		parts.put("triangulators", triangulatorsModel); //for the upgrade
 		translateAll(0, -12F, -48F-16f);
 
-		translate(radarModel,-36-12.5f,0,12.5f);
+		translate(radarModel, -36-12.5f, 0, 12.5f);
 
 		flipAll();
 	}
@@ -1216,7 +1216,7 @@ public class ModelRadar extends ModelIIBase
 			case EAST:
 			{
 				GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(0f, 0f, mirrored?0f:-1f);
+				GlStateManager.translate(0f, 0f, mirrored?0f: -1f);
 
 			}
 			break;

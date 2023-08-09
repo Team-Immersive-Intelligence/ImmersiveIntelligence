@@ -2,7 +2,6 @@ package pl.pabilo8.immersiveintelligence.common.block.simple;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.util.BlockRenderLayer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
@@ -26,16 +25,6 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 		setFullCube(true);
 	}
 
-	public enum ConcreteDecorations implements IIBlockEnum
-	{
-		@IIBlockProperties(hardness = 2, blastResistance = 360, harvestLevel = 1, oreDict = "bricksConcrete")
-		CONCRETE_BRICKS,
-		@IIBlockProperties(hardness = 6, blastResistance = 1600, harvestLevel = 2, oreDict = "sturdyBricksConcrete")
-		STURDY_CONCRETE_BRICKS,
-		@IIBlockProperties(hardness = 10, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcrete")
-		UBERCONCRETE
-	}
-
 	public static BlockIIStairs[] getStairs()
 	{
 		BlockIIStairs[] stairs = new BlockIIStairs[ConcreteDecorations.values().length];
@@ -45,5 +34,15 @@ public class BlockIIConcreteDecoration extends BlockIIBase<ConcreteDecorations>
 			stairs[i] = new BlockIIStairs("concrete_decoration_stairs_"+value.getName(), IIContent.blockConcreteDecoration.getStateFromMeta(i));
 		}
 		return stairs;
+	}
+
+	public enum ConcreteDecorations implements IIBlockEnum
+	{
+		@IIBlockProperties(hardness = 2, blastResistance = 360, harvestLevel = 1, oreDict = "bricksConcrete")
+		CONCRETE_BRICKS,
+		@IIBlockProperties(hardness = 6, blastResistance = 1600, harvestLevel = 2, oreDict = "sturdyBricksConcrete")
+		STURDY_CONCRETE_BRICKS,
+		@IIBlockProperties(hardness = 10, blastResistance = 2400, harvestLevel = 3, oreDict = "uberConcrete")
+		UBERCONCRETE
 	}
 }

@@ -20,7 +20,7 @@ public class DataOperationPush extends DataOperation
 	{
 		name = "array_push";
 		allowedTypes = new Class[]{DataTypeArray.class, IDataType.class};
-		params = new String[]{"array","inserted"};
+		params = new String[]{"array", "inserted"};
 		expectedResult = DataTypeArray.class;
 	}
 

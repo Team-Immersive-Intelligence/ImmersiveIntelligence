@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;

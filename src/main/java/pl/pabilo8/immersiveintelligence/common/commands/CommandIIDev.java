@@ -92,6 +92,24 @@ public class CommandIIDev extends CommandBase
 	}
 
 	/**
+	 * @param entity        entity being the origin point
+	 * @param traceDistance length in which blocks will be traced
+	 * @return a nullable {@link RayTraceResult} of type {@link Type#BLOCK} or {@link Type#MISS}
+	 */
+	@Nullable
+	private static RayTraceResult getRayTraceResult(@Nullable Entity entity, float traceDistance)
+	{
+		if(entity==null)
+			return null;
+
+		Vec3d eyesPos = entity.getPositionEyes(0);
+		Vec3d lookVector = entity.getLook(0);
+		Vec3d traceVector = eyesPos.addVector(lookVector.x*traceDistance, lookVector.y*traceDistance, lookVector.z*traceDistance);
+
+		return entity.getEntityWorld().rayTraceBlocks(eyesPos, traceVector, false, false, true);
+	}
+
+	/**
 	 * Gets the name of the command
 	 */
 	@Nonnull
@@ -456,24 +474,6 @@ public class CommandIIDev extends CommandBase
 	}
 
 	/**
-	 * @param entity        entity being the origin point
-	 * @param traceDistance length in which blocks will be traced
-	 * @return a nullable {@link RayTraceResult} of type {@link Type#BLOCK} or {@link Type#MISS}
-	 */
-	@Nullable
-	private static RayTraceResult getRayTraceResult(@Nullable Entity entity, float traceDistance)
-	{
-		if(entity==null)
-			return null;
-
-		Vec3d eyesPos = entity.getPositionEyes(0);
-		Vec3d lookVector = entity.getLook(0);
-		Vec3d traceVector = eyesPos.addVector(lookVector.x*traceDistance, lookVector.y*traceDistance, lookVector.z*traceDistance);
-
-		return entity.getEntityWorld().rayTraceBlocks(eyesPos, traceVector, false, false, true);
-	}
-
-	/**
 	 * Return the required permission level for this command.
 	 */
 	@Override
@@ -494,17 +494,15 @@ public class CommandIIDev extends CommandBase
 				return getListOfStringsMatchingLastWord(args, OPTIONS);
 			case 2:
 			{
-				switch(args[0])
+				if(args[0].equals("place_mb"))
 				{
-					case "place_mb":
-						return MultiblockHandler.getMultiblocks()
-								.stream()
-								.map(IMultiblock::getUniqueName)
-								.map(s -> s.startsWith("II:")?(TextFormatting.GOLD+s+TextFormatting.RESET): s)
-								.collect(Collectors.toList());
-					default:
-						return Collections.emptyList();
+					return MultiblockHandler.getMultiblocks()
+							.stream()
+							.map(IMultiblock::getUniqueName)
+							.map(s -> s.startsWith("II:")?(TextFormatting.GOLD+s+TextFormatting.RESET): s)
+							.collect(Collectors.toList());
 				}
+				return Collections.emptyList();
 			}
 		}
 

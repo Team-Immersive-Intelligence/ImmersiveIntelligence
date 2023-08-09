@@ -29,9 +29,9 @@ public abstract class IIManualObject extends GuiButtonManual
 	//--- Setup ---//
 
 	@Nonnull
-	protected EasyNBT dataSource;
-	@Nonnull
 	protected final ManualInstance manual;
+	@Nonnull
+	protected EasyNBT dataSource;
 
 	public IIManualObject(ManualObjectInfo info, EasyNBT nbt)
 	{

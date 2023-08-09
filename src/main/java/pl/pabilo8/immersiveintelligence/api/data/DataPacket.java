@@ -20,10 +20,6 @@ import java.util.Map.Entry;
  */
 public class DataPacket implements Iterable<IDataType>
 {
-	public Map<Character, IDataType> variables = new HashMap<>();
-	private EnumDyeColor packetColor = EnumDyeColor.WHITE;
-	private int packetAddress = -1;
-
 	public static final char[] varCharacters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 	public static final Map<String, Class<? extends IDataType>> varTypes = new LinkedHashMap<>();
 
@@ -57,6 +53,10 @@ public class DataPacket implements Iterable<IDataType>
 		varTypes.put("entity", DataTypeEntity.class);
 	}
 
+	public Map<Character, IDataType> variables = new HashMap<>();
+	private EnumDyeColor packetColor = EnumDyeColor.WHITE;
+	private int packetAddress = -1;
+
 	@Nonnull
 	public static IDataType getVarFromNBT(NBTTagCompound nbt)
 	{
@@ -73,8 +73,7 @@ public class DataPacket implements Iterable<IDataType>
 			IDataType data = type.isAnnotationPresent(IGenericDataType.class)?(type.getAnnotation(IGenericDataType.class).defaultType().newInstance()): type.newInstance();
 			data.setDefaultValue();
 			return data;
-		}
-		catch(InstantiationException|IllegalAccessException ignored)
+		} catch(InstantiationException|IllegalAccessException ignored)
 		{
 		}
 		return new DataTypeNull();
@@ -111,8 +110,7 @@ public class DataPacket implements Iterable<IDataType>
 					IDataType p = preferred.newInstance();
 					p.setDefaultValue();
 					return preferred.cast(p);
-				}
-				catch(InstantiationException|IllegalAccessException ignored)
+				} catch(InstantiationException|IllegalAccessException ignored)
 				{
 				}
 			}
@@ -228,8 +226,7 @@ public class DataPacket implements Iterable<IDataType>
 					try
 					{
 						data = varTypes.get(type).newInstance();
-					}
-					catch(InstantiationException|IllegalAccessException e)
+					} catch(InstantiationException|IllegalAccessException e)
 					{
 						e.printStackTrace();
 					}

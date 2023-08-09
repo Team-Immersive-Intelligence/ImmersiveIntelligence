@@ -8,6 +8,8 @@ import java.util.Collections;
 
 public class Shape2D
 {
+	public ArrayList<Coord2D> coords;
+
 	public Shape2D()
 	{
 		coords = new ArrayList<>();
@@ -145,6 +147,4 @@ public class Shape2D
 
 		return new Vec3d(xVec, yVec, zVec);
 	}
-
-	public ArrayList<Coord2D> coords;
 }

@@ -59,11 +59,6 @@ public enum POLKeywords implements IStringSerializable
 		visible = true;
 	}
 
-	public boolean isVisible()
-	{
-		return visible;
-	}
-
 	@Nullable
 	public static POLKeywords v(String ss)
 	{
@@ -71,6 +66,11 @@ public enum POLKeywords implements IStringSerializable
 				.filter(POLKeywords::isVisible)
 				.filter(e -> e.getName().equalsIgnoreCase(ss))
 				.findFirst().orElse(null);
+	}
+
+	public boolean isVisible()
+	{
+		return visible;
 	}
 
 	@Override

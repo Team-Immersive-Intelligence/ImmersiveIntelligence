@@ -14,12 +14,11 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
  */
 public class GuiButtonSwitch extends GuiButtonState
 {
+	final float[] color1, color2;
+	final int MAX_SWITCH_TICKS = 20;
 	private final ResourceLocation TEXTURE;
 	private final int sliderWidth, backWidth, texSliderU, textColor;
-
-	final float[] color1, color2;
 	int timer;
-	final int MAX_SWITCH_TICKS = 20;
 
 	public GuiButtonSwitch(int buttonId, int x, int y, int textWidth, int sliderWidth, int backWidth, int h, int u, int v, boolean state, ResourceLocation texture, int textColor, int color1, int color2, String name, boolean firstTime)
 	{

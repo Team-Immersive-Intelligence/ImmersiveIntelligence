@@ -23,7 +23,7 @@ public class AMTWire extends AMT
 	private Vec3d[] points;
 	private int listID = -1;
 	private int color;
-	private float diameter;
+	private final float diameter;
 
 	public AMTWire(String name, Vec3d originPos, Vec3d start, Vec3d end, int color, float diameter)
 	{

@@ -210,7 +210,7 @@ public class ModelPanzer extends ModelIIBase
 		baseModel[4].setRotationPoint(0F, -6F, -48F);
 		baseModel[4].rotateAngleX = 2.35619449F;
 
-		baseModel[5].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(27, 11, 27, 11), new Coord2D(0, 11, 0, 11) }), 2, 27, 11, 70, 2, ModelRendererTurbo.MR_FRONT, new float[] {11 ,27 ,16 ,16}); // Shape 5
+		baseModel[5].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(27, 11, 27, 11), new Coord2D(0, 11, 0, 11)}), 2, 27, 11, 70, 2, ModelRendererTurbo.MR_FRONT, new float[]{11, 27, 16, 16}); // Shape 5
 		baseModel[5].setRotationPoint(30F, -6F, -32F);
 		baseModel[5].rotateAngleY = 1.57079633F;
 
@@ -260,7 +260,7 @@ public class ModelPanzer extends ModelIIBase
 		baseModel[20].addBox(0F, 0F, 0F, 2, 33, 32, 0F); // Box 0
 		baseModel[20].setRotationPoint(-32F, -39F, 32F);
 
-		baseModel[21].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(27, 11, 27, 11), new Coord2D(0, 11, 0, 11) }), 2, 27, 11, 70, 2, ModelRendererTurbo.MR_FRONT, new float[] {11 ,27 ,16 ,16}); // Shape 5
+		baseModel[21].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 0, 16, 0), new Coord2D(27, 11, 27, 11), new Coord2D(0, 11, 0, 11)}), 2, 27, 11, 70, 2, ModelRendererTurbo.MR_FRONT, new float[]{11, 27, 16, 16}); // Shape 5
 		baseModel[21].setRotationPoint(-32F, -6F, -32F);
 		baseModel[21].rotateAngleY = 1.57079633F;
 
@@ -376,11 +376,11 @@ public class ModelPanzer extends ModelIIBase
 		baseModel[54].addBox(0F, 0F, 0F, 2, 2, 1, 0F); // Box 0
 		baseModel[54].setRotationPoint(29F, -18F, -61F);
 
-		baseModel[55].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(27, 0, 27, 0), new Coord2D(17, 5, 17, 5), new Coord2D(0, 5, 0, 5) }), 2, 27, 5, 61, 2, ModelRendererTurbo.MR_FRONT, new float[] {5 ,17 ,12 ,27}); // Shape 5
+		baseModel[55].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(27, 0, 27, 0), new Coord2D(17, 5, 17, 5), new Coord2D(0, 5, 0, 5)}), 2, 27, 5, 61, 2, ModelRendererTurbo.MR_FRONT, new float[]{5, 17, 12, 27}); // Shape 5
 		baseModel[55].setRotationPoint(30F, -28F, -32F);
 		baseModel[55].rotateAngleY = 1.57079633F;
 
-		baseModel[56].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(27, 0, 27, 0), new Coord2D(17, 5, 17, 5), new Coord2D(0, 5, 0, 5) }), 2, 27, 5, 61, 2, ModelRendererTurbo.MR_FRONT, new float[] {5 ,17 ,12 ,27}); // Shape 5
+		baseModel[56].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(27, 0, 27, 0), new Coord2D(17, 5, 17, 5), new Coord2D(0, 5, 0, 5)}), 2, 27, 5, 61, 2, ModelRendererTurbo.MR_FRONT, new float[]{5, 17, 12, 27}); // Shape 5
 		baseModel[56].setRotationPoint(-32F, -28F, -32F);
 		baseModel[56].rotateAngleY = 1.57079633F;
 
@@ -956,11 +956,11 @@ public class ModelPanzer extends ModelIIBase
 		turretModel[20].addBox(-16F, -4F, 30F, 32, 1, 2, 0F); // Box 11
 		turretModel[20].setRotationPoint(0F, -64F, 2F);
 
-		turretModel[21].addShape3D(20F, -26F, 25F, new Shape2D(new Coord2D[] { new Coord2D(0, 2, 0, 2), new Coord2D(16, 0, 16, 0), new Coord2D(16, 26, 16, 26), new Coord2D(0, 23, 0, 23) }), 4, 16, 26, 81, 4, ModelRendererTurbo.MR_FRONT, new float[] {21 ,17 ,26 ,17}); // Shape 454
+		turretModel[21].addShape3D(20F, -26F, 25F, new Shape2D(new Coord2D[]{new Coord2D(0, 2, 0, 2), new Coord2D(16, 0, 16, 0), new Coord2D(16, 26, 16, 26), new Coord2D(0, 23, 0, 23)}), 4, 16, 26, 81, 4, ModelRendererTurbo.MR_FRONT, new float[]{21, 17, 26, 17}); // Shape 454
 		turretModel[21].setRotationPoint(0F, -67F, 2F);
 		turretModel[21].rotateAngleY = -1.3962634F;
 
-		turretModel[22].addShape3D(-4F, -26F, 25F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 23, 16, 23), new Coord2D(0, 26, 0, 26) }), 4, 16, 26, 81, 4, ModelRendererTurbo.MR_FRONT, new float[] {26 ,17 ,21 ,17}); // Shape 454
+		turretModel[22].addShape3D(-4F, -26F, 25F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 23, 16, 23), new Coord2D(0, 26, 0, 26)}), 4, 16, 26, 81, 4, ModelRendererTurbo.MR_FRONT, new float[]{26, 17, 21, 17}); // Shape 454
 		turretModel[22].setRotationPoint(0F, -67F, 2F);
 		turretModel[22].rotateAngleY = 1.3962634F;
 
@@ -1172,11 +1172,11 @@ public class ModelPanzer extends ModelIIBase
 		turretModel[83].addBox(16F, -6F, 14F, 10, 2, 8, 0F); // Box 11
 		turretModel[83].setRotationPoint(0F, -63F, 2F);
 
-		turretModel[84].addShape3D(28F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(28, 0, 28, 0), new Coord2D(28, 15, 28, 15), new Coord2D(12, 15, 12, 15), new Coord2D(12, 23, 12, 23), new Coord2D(2, 23, 2, 23), new Coord2D(0, 11, 0, 11) }), 2, 28, 23, 101, 2, ModelRendererTurbo.MR_FRONT, new float[] {11 ,13 ,10 ,8 ,16 ,15 ,28}); // Shape 454
+		turretModel[84].addShape3D(28F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(28, 0, 28, 0), new Coord2D(28, 15, 28, 15), new Coord2D(12, 15, 12, 15), new Coord2D(12, 23, 12, 23), new Coord2D(2, 23, 2, 23), new Coord2D(0, 11, 0, 11)}), 2, 28, 23, 101, 2, ModelRendererTurbo.MR_FRONT, new float[]{11, 13, 10, 8, 16, 15, 28}); // Shape 454
 		turretModel[84].setRotationPoint(0F, -67F, 2F);
 		turretModel[84].rotateAngleX = -1.57079633F;
 
-		turretModel[85].addShape3D(0F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(16, 0, 16, 0), new Coord2D(28, 0, 28, 0), new Coord2D(28, 11, 28, 11), new Coord2D(26, 23, 26, 23), new Coord2D(16, 23, 16, 23) }), 2, 28, 23, 69, 2, ModelRendererTurbo.MR_FRONT, new float[] {23 ,10 ,13 ,11 ,12}); // Shape 454
+		turretModel[85].addShape3D(0F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(16, 0, 16, 0), new Coord2D(28, 0, 28, 0), new Coord2D(28, 11, 28, 11), new Coord2D(26, 23, 26, 23), new Coord2D(16, 23, 16, 23)}), 2, 28, 23, 69, 2, ModelRendererTurbo.MR_FRONT, new float[]{23, 10, 13, 11, 12}); // Shape 454
 		turretModel[85].setRotationPoint(0F, -67F, 2F);
 		turretModel[85].rotateAngleX = -1.57079633F;
 
@@ -1192,11 +1192,11 @@ public class ModelPanzer extends ModelIIBase
 		turretModel[89].addBox(-16F, -6F, 8F, 10, 2, 6, 0F); // Box 11
 		turretModel[89].setRotationPoint(0F, -63F, 2F);
 
-		turretModel[90].addShape3D(28F, -27F, -1F, new Shape2D(new Coord2D[] { new Coord2D(4, 0, 4, 0), new Coord2D(28, 0, 28, 0), new Coord2D(28, 18, 28, 18), new Coord2D(0, 18, 0, 18) }), 2, 28, 18, 89, 2, ModelRendererTurbo.MR_FRONT, new float[] {19 ,28 ,18 ,24}); // Shape 454
+		turretModel[90].addShape3D(28F, -27F, -1F, new Shape2D(new Coord2D[]{new Coord2D(4, 0, 4, 0), new Coord2D(28, 0, 28, 0), new Coord2D(28, 18, 28, 18), new Coord2D(0, 18, 0, 18)}), 2, 28, 18, 89, 2, ModelRendererTurbo.MR_FRONT, new float[]{19, 28, 18, 24}); // Shape 454
 		turretModel[90].setRotationPoint(0F, -69.5F, 2F);
 		turretModel[90].rotateAngleX = -1.3962634F;
 
-		turretModel[91].addShape3D(0F, -27F, -1F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(24, 0, 24, 0), new Coord2D(28, 18, 28, 18), new Coord2D(0, 18, 0, 18) }), 2, 28, 18, 89, 2, ModelRendererTurbo.MR_FRONT, new float[] {18 ,28 ,19 ,24}); // Shape 454
+		turretModel[91].addShape3D(0F, -27F, -1F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(24, 0, 24, 0), new Coord2D(28, 18, 28, 18), new Coord2D(0, 18, 0, 18)}), 2, 28, 18, 89, 2, ModelRendererTurbo.MR_FRONT, new float[]{18, 28, 19, 24}); // Shape 454
 		turretModel[91].setRotationPoint(0F, -69.5F, 2F);
 		turretModel[91].rotateAngleX = -1.3962634F;
 
@@ -1596,11 +1596,11 @@ public class ModelPanzer extends ModelIIBase
 		leftFrontWheelModel[2].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		leftFrontWheelModel[2].setRotationPoint(-41F, -21F, -46F);
 
-		leftFrontWheelModel[3].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		leftFrontWheelModel[3].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		leftFrontWheelModel[3].setRotationPoint(34F, -21F, -46F);
 		leftFrontWheelModel[3].rotateAngleY = 1.57079633F;
 
-		leftFrontWheelModel[4].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		leftFrontWheelModel[4].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		leftFrontWheelModel[4].setRotationPoint(38F, -21F, -46F);
 		leftFrontWheelModel[4].rotateAngleY = 1.57079633F;
 
@@ -1613,11 +1613,11 @@ public class ModelPanzer extends ModelIIBase
 		leftFrontWheelModel[7].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		leftFrontWheelModel[7].setRotationPoint(40F, -21F, -46F);
 
-		leftFrontWheelModel[8].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		leftFrontWheelModel[8].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		leftFrontWheelModel[8].setRotationPoint(34F, -21F, 60F);
 		leftFrontWheelModel[8].rotateAngleY = 1.57079633F;
 
-		leftFrontWheelModel[9].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		leftFrontWheelModel[9].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		leftFrontWheelModel[9].setRotationPoint(38F, -21F, 60F);
 		leftFrontWheelModel[9].rotateAngleY = 1.57079633F;
 
@@ -1630,35 +1630,35 @@ public class ModelPanzer extends ModelIIBase
 		leftFrontWheelModel[12].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		leftFrontWheelModel[12].setRotationPoint(40F, -21F, 60F);
 
-		leftFrontWheelModel[13].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		leftFrontWheelModel[13].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		leftFrontWheelModel[13].setRotationPoint(33F, -6F, -28F);
 		leftFrontWheelModel[13].rotateAngleY = 1.57079633F;
 
 		leftFrontWheelModel[14].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		leftFrontWheelModel[14].setRotationPoint(39F, -6F, -28F);
 
-		leftFrontWheelModel[15].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		leftFrontWheelModel[15].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		leftFrontWheelModel[15].setRotationPoint(33F, -6F, -10F);
 		leftFrontWheelModel[15].rotateAngleY = 1.57079633F;
 
 		leftFrontWheelModel[16].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		leftFrontWheelModel[16].setRotationPoint(39F, -6F, -10F);
 
-		leftFrontWheelModel[17].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		leftFrontWheelModel[17].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		leftFrontWheelModel[17].setRotationPoint(33F, -6F, 8F);
 		leftFrontWheelModel[17].rotateAngleY = 1.57079633F;
 
 		leftFrontWheelModel[18].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		leftFrontWheelModel[18].setRotationPoint(39F, -6F, 8F);
 
-		leftFrontWheelModel[19].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		leftFrontWheelModel[19].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		leftFrontWheelModel[19].setRotationPoint(33F, -6F, 26F);
 		leftFrontWheelModel[19].rotateAngleY = 1.57079633F;
 
 		leftFrontWheelModel[20].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		leftFrontWheelModel[20].setRotationPoint(39F, -6F, 26F);
 
-		leftFrontWheelModel[21].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		leftFrontWheelModel[21].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		leftFrontWheelModel[21].setRotationPoint(33F, -6F, 44F);
 		leftFrontWheelModel[21].rotateAngleY = 1.57079633F;
 
@@ -1815,19 +1815,19 @@ public class ModelPanzer extends ModelIIBase
 		rightFrontWheelModel[21] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
 		rightFrontWheelModel[22] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Box 0
 
-		rightFrontWheelModel[0].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		rightFrontWheelModel[0].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		rightFrontWheelModel[0].setRotationPoint(-40F, -21F, -46F);
 		rightFrontWheelModel[0].rotateAngleY = 1.57079633F;
 
-		rightFrontWheelModel[1].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		rightFrontWheelModel[1].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		rightFrontWheelModel[1].setRotationPoint(-36F, -21F, -46F);
 		rightFrontWheelModel[1].rotateAngleY = 1.57079633F;
 
-		rightFrontWheelModel[2].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		rightFrontWheelModel[2].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		rightFrontWheelModel[2].setRotationPoint(-40F, -21F, 60F);
 		rightFrontWheelModel[2].rotateAngleY = 1.57079633F;
 
-		rightFrontWheelModel[3].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2) }), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[] {3 ,14 ,3 ,14 ,3 ,14 ,3 ,14}); // Shape 5
+		rightFrontWheelModel[3].addShape3D(9F, -9F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(16, 0, 16, 0), new Coord2D(18, 2, 18, 2), new Coord2D(18, 16, 18, 16), new Coord2D(16, 18, 16, 18), new Coord2D(2, 18, 2, 18), new Coord2D(0, 16, 0, 16), new Coord2D(0, 2, 0, 2)}), 2, 18, 18, 68, 2, ModelRendererTurbo.MR_FRONT, new float[]{3, 14, 3, 14, 3, 14, 3, 14}); // Shape 5
 		rightFrontWheelModel[3].setRotationPoint(-36F, -21F, 60F);
 		rightFrontWheelModel[3].rotateAngleY = 1.57079633F;
 
@@ -1840,35 +1840,35 @@ public class ModelPanzer extends ModelIIBase
 		rightFrontWheelModel[6].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		rightFrontWheelModel[6].setRotationPoint(-41F, -21F, 60F);
 
-		rightFrontWheelModel[7].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		rightFrontWheelModel[7].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		rightFrontWheelModel[7].setRotationPoint(-39F, -6F, -28F);
 		rightFrontWheelModel[7].rotateAngleY = 1.57079633F;
 
 		rightFrontWheelModel[8].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		rightFrontWheelModel[8].setRotationPoint(-40F, -6F, -28F);
 
-		rightFrontWheelModel[9].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		rightFrontWheelModel[9].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		rightFrontWheelModel[9].setRotationPoint(-39F, -6F, -10F);
 		rightFrontWheelModel[9].rotateAngleY = 1.57079633F;
 
 		rightFrontWheelModel[10].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		rightFrontWheelModel[10].setRotationPoint(-40F, -6F, -10F);
 
-		rightFrontWheelModel[11].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		rightFrontWheelModel[11].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		rightFrontWheelModel[11].setRotationPoint(-39F, -6F, 8F);
 		rightFrontWheelModel[11].rotateAngleY = 1.57079633F;
 
 		rightFrontWheelModel[12].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		rightFrontWheelModel[12].setRotationPoint(-40F, -6F, 8F);
 
-		rightFrontWheelModel[13].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		rightFrontWheelModel[13].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		rightFrontWheelModel[13].setRotationPoint(-39F, -6F, 26F);
 		rightFrontWheelModel[13].rotateAngleY = 1.57079633F;
 
 		rightFrontWheelModel[14].addBox(0F, -4F, -4F, 1, 8, 8, 0F); // Box 11
 		rightFrontWheelModel[14].setRotationPoint(-40F, -6F, 26F);
 
-		rightFrontWheelModel[15].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2) }), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[] {3 ,12 ,3 ,12 ,3 ,12 ,3 ,12}); // Shape 5
+		rightFrontWheelModel[15].addShape3D(8F, -8F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(14, 0, 14, 0), new Coord2D(16, 2, 16, 2), new Coord2D(16, 14, 16, 14), new Coord2D(14, 16, 14, 16), new Coord2D(2, 16, 2, 16), new Coord2D(0, 14, 0, 14), new Coord2D(0, 2, 0, 2)}), 6, 16, 16, 60, 6, ModelRendererTurbo.MR_FRONT, new float[]{3, 12, 3, 12, 3, 12, 3, 12}); // Shape 5
 		rightFrontWheelModel[15].setRotationPoint(-39F, -6F, 44F);
 		rightFrontWheelModel[15].rotateAngleY = 1.57079633F;
 
@@ -2133,7 +2133,7 @@ public class ModelPanzer extends ModelIIBase
 		rightTrackModel[16].addBox(-12F, -1F, -15F, 24, 1, 14, 0F); // Box 0
 		rightTrackModel[16].setRotationPoint(-12F, -43F, -38F);
 
-		rightTrackModel[17].addShape3D(12F, -12F, -1F, new Shape2D(new Coord2D[] { new Coord2D(5, 0, 5, 0), new Coord2D(19, 0, 19, 0), new Coord2D(24, 6, 24, 6), new Coord2D(0, 6, 0, 6) }), 1, 24, 6, 54, 1, ModelRendererTurbo.MR_FRONT, new float[] {8 ,24 ,8 ,14}); // Shape 357
+		rightTrackModel[17].addShape3D(12F, -12F, -1F, new Shape2D(new Coord2D[]{new Coord2D(5, 0, 5, 0), new Coord2D(19, 0, 19, 0), new Coord2D(24, 6, 24, 6), new Coord2D(0, 6, 0, 6)}), 1, 24, 6, 54, 1, ModelRendererTurbo.MR_FRONT, new float[]{8, 24, 8, 14}); // Shape 357
 		rightTrackModel[17].setRotationPoint(-12F, -43F, -38F);
 		rightTrackModel[17].rotateAngleX = 1.57079633F;
 
@@ -2969,32 +2969,32 @@ public class ModelPanzer extends ModelIIBase
 
 		drillHeadModel[3].addBox(-2F, -0.5F, 12F, 4, 2, 1, 0F); // Box 11
 		drillHeadModel[3].setRotationPoint(0F, -68.5F, 32F);
-		
+
 		doTranslations();
 		flipAll();
 	}
 
 	private void doTranslations()
 	{
-		translate(rightTrackModel,12F, 43F, 42F);
+		translate(rightTrackModel, 12F, 43F, 42F);
 
-		parts.put("base",baseModel);
-		parts.put( "bodyDoorOpen",bodyDoorOpenModel); //commander hatch
-		parts.put( "bodyDoorClose",bodyDoorCloseModel); //gunner hatch
-		parts.put( "turret",turretModel); //turret
-		parts.put( "barrel",barrelModel); //barrel
-		parts.put( "leftFrontWheel",leftFrontWheelModel); //left wheels
-		parts.put( "rightFrontWheel",rightFrontWheelModel); //right wheels
-		parts.put( "leftBackWheel",leftBackWheelModel); //left engine door
-		parts.put( "rightBackWheel",rightBackWheelModel); //right engine door
-		parts.put( "leftTrackWheelM",leftTrackWheelModels); //left back door
-		parts.put( "rightTrackWheelM",rightTrackWheelModels); //right back door
-		parts.put( "frontWheel",frontWheelModel); //gear shift lever
-		parts.put( "backWheel",backWheelModel); //driver pedals
-		parts.put( "leftTrack",leftTrackModel); //driver hatch
-		parts.put( "rightTrack",rightTrackModel); //mg turret
-		parts.put( "trailer",trailerModel); //internals
-		parts.put( "steeringWheel",steeringWheelModel); //something on the turret
-		parts.put( "drillHead",drillHeadModel); //turret back door
+		parts.put("base", baseModel);
+		parts.put("bodyDoorOpen", bodyDoorOpenModel); //commander hatch
+		parts.put("bodyDoorClose", bodyDoorCloseModel); //gunner hatch
+		parts.put("turret", turretModel); //turret
+		parts.put("barrel", barrelModel); //barrel
+		parts.put("leftFrontWheel", leftFrontWheelModel); //left wheels
+		parts.put("rightFrontWheel", rightFrontWheelModel); //right wheels
+		parts.put("leftBackWheel", leftBackWheelModel); //left engine door
+		parts.put("rightBackWheel", rightBackWheelModel); //right engine door
+		parts.put("leftTrackWheelM", leftTrackWheelModels); //left back door
+		parts.put("rightTrackWheelM", rightTrackWheelModels); //right back door
+		parts.put("frontWheel", frontWheelModel); //gear shift lever
+		parts.put("backWheel", backWheelModel); //driver pedals
+		parts.put("leftTrack", leftTrackModel); //driver hatch
+		parts.put("rightTrack", rightTrackModel); //mg turret
+		parts.put("trailer", trailerModel); //internals
+		parts.put("steeringWheel", steeringWheelModel); //something on the turret
+		parts.put("drillHead", drillHeadModel); //turret back door
 	}
 }

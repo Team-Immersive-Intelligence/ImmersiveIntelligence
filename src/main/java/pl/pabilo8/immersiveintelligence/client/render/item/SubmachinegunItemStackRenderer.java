@@ -30,8 +30,8 @@ import java.util.function.Predicate;
  */
 public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<SubmachinegunItemStackRenderer>, ISpecificHandRenderer
 {
-	public static SubmachinegunItemStackRenderer instance = new SubmachinegunItemStackRenderer().subscribeToList("submachinegun");
 	public static final String texture = "submachinegun.png";
+	public static SubmachinegunItemStackRenderer instance = new SubmachinegunItemStackRenderer().subscribeToList("submachinegun");
 	public static ModelSubmachinegun model = new ModelSubmachinegun();
 
 	public static HashMap<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> upgrades = new HashMap<>();

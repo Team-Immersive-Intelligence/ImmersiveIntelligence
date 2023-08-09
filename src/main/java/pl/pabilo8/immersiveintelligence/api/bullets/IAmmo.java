@@ -282,12 +282,13 @@ public interface IAmmo
 
 	/**
 	 * Sets a parameter for the fuse - time in ticks for timed fuse, distance in blocks for proximity fuse
+	 *
 	 * @param stack ammunition stack the value is applied to
-	 * @param p value to be set
+	 * @param p     value to be set
 	 */
 	default void setFuseParameter(ItemStack stack, int p)
 	{
-		ItemNBTHelper.setInt(stack, "fuse_param",p);
+		ItemNBTHelper.setInt(stack, "fuse_param", p);
 	}
 
 	/**

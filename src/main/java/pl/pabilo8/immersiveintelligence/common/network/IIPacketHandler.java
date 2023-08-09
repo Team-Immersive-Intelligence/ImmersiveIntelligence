@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
@@ -34,8 +33,8 @@ public class IIPacketHandler
 	 * Immersive Intelligence happens to have 21...<br>
 	 */
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel("immersiveintelli");
-	private static int messageID = 0;
 	public static int DEFAULT_RANGE = 40;
+	private static int messageID = 0;
 
 	public static void preInit()
 	{

@@ -41,19 +41,18 @@ import java.util.List;
 public class TileEntityTellermine extends TileEntityIEBase implements IBlockBounds, IAdvancedCollisionBounds, ITileDrop, IPlayerInteraction
 {
 	public static final Material[] MATCHING_MATERIALS = new Material[]{Material.GROUND, Material.GRASS, Material.SAND, Material.GOURD};
-
-	public int coreColor = 0xffffff;
-	public ItemStack mineStack = ItemStack.EMPTY;
 	private static final ArrayList<AxisAlignedBB> AABB = new ArrayList<>();
-	public int digLevel = 0;
 
 	static
 	{
 		AABB.add(new AxisAlignedBB(0.25f, 0, 0.25f, 0.75f, 0.125f, 0.75f));
 	}
 
-	private boolean armed = true;
+	public int coreColor = 0xffffff;
+	public ItemStack mineStack = ItemStack.EMPTY;
+	public int digLevel = 0;
 	public boolean grass = false;
+	private boolean armed = true;
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbtTagCompound, boolean b)

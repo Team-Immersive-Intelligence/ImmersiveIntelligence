@@ -1077,27 +1077,10 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		return gun;
 	}
 
-	private class MachinegunZoom implements IAdvancedZoomTool
+	@Override
+	public double getYOffset()
 	{
-		@Override
-		public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
-		{
-			NBTTagCompound nbt = IIContent.itemMachinegun.getUpgrades(stack);
-			return nbt.hasKey("scope")?SIGHTS_TEXTURE: IR_SIGHTS_TEXTURE;
-		}
-
-		@Override
-		public boolean shouldZoom(ItemStack stack, EntityPlayer player)
-		{
-			NBTTagCompound nbt = IIContent.itemMachinegun.getUpgrades(stack);
-			return EntityMachinegun.this.aiming&&(nbt.hasKey("scope")||nbt.hasKey("infrared_scope"));
-		}
-
-		@Override
-		public float[] getZoomSteps(ItemStack stack, EntityPlayer player)
-		{
-			return Machinegun.machinegunScopeMaxZoom;
-		}
+		return isRiding()?1D: super.getYOffset();
 	}
 
 	static class NonSidedFluidHandler implements IFluidHandler
@@ -1151,9 +1134,26 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		}
 	}
 
-	@Override
-	public double getYOffset()
+	private class MachinegunZoom implements IAdvancedZoomTool
 	{
-		return isRiding()?1D: super.getYOffset();
+		@Override
+		public ResourceLocation getZoomOverlayTexture(ItemStack stack, EntityPlayer player)
+		{
+			NBTTagCompound nbt = IIContent.itemMachinegun.getUpgrades(stack);
+			return nbt.hasKey("scope")?SIGHTS_TEXTURE: IR_SIGHTS_TEXTURE;
+		}
+
+		@Override
+		public boolean shouldZoom(ItemStack stack, EntityPlayer player)
+		{
+			NBTTagCompound nbt = IIContent.itemMachinegun.getUpgrades(stack);
+			return EntityMachinegun.this.aiming&&(nbt.hasKey("scope")||nbt.hasKey("infrared_scope"));
+		}
+
+		@Override
+		public float[] getZoomSteps(ItemStack stack, EntityPlayer player)
+		{
+			return Machinegun.machinegunScopeMaxZoom;
+		}
 	}
 }

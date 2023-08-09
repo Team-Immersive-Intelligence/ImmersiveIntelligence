@@ -6,11 +6,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiElementProgressBar;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
@@ -18,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwi
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
@@ -37,17 +36,17 @@ import java.util.Map.Entry;
  */
 public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabbedGui
 {
-	protected final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement.png");
 	public final ResourceLocation TEXTURE_ICONS = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement_icons.png");
+	protected final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/emplacement.png");
 	protected final TileEntityEmplacement tile;
-	protected String title = I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.emplacement.name");
 	private final LinkedHashMap<GuiButtonTab, IIGuiList> TABS = new LinkedHashMap<>();
 	private final IIGuiList thisGui;
+	protected String title = I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock1.emplacement.name");
 	private GuiElementProgressBar barEnergy, barArmor;
 
 	public GuiEmplacement(EntityPlayer player, TileEntityEmplacement tile, IIGuiList gui)
 	{
-		super(gui==IIGuiList.GUI_EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(player, tile):new ContainerEmplacement(player, tile));
+		super(gui==IIGuiList.GUI_EMPLACEMENT_STORAGE?new ContainerEmplacementStorage(player, tile): new ContainerEmplacement(player, tile));
 		this.tile = tile;
 		thisGui = gui;
 		this.xSize = 240;
@@ -161,16 +160,17 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 
 	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, int textColor, int color1, int color2, boolean state, String name, boolean firstTime)
 	{
-		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name,firstTime));
+		return addButton(new GuiButtonSwitch(buttonList.size(), guiLeft+x, guiTop+y, textWidth, 8, 18, 9, 18, 52, state, TEXTURE_ICONS, textColor, color1, color2, name, firstTime));
 	}
 
 	protected GuiButtonSwitch addSwitch(int x, int y, int textWidth, int textColor, int color1, int color2, boolean state, String name)
 	{
-		return addSwitch(x, y, textWidth, textColor, color1, color2, state, name,false);
+		return addSwitch(x, y, textWidth, textColor, color1, color2, state, name, false);
 	}
+
 	protected GuiSliderII addSlider(int x, int y, int width, int textColor, float value, String name)
 	{
-		return addButton(new GuiSliderII(buttonList.size(),guiLeft+x, guiTop+y, width, name, value, textColor));
+		return addButton(new GuiSliderII(buttonList.size(), guiLeft+x, guiTop+y, width, name, value, textColor));
 	}
 
 	protected GuiLabelNoShadow addLabel(int x, int y, int textColor, String... text)

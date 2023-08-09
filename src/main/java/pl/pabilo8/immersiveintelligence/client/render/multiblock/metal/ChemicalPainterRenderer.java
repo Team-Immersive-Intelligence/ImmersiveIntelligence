@@ -15,9 +15,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelChemicalPainter;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -34,8 +34,8 @@ import java.util.List;
 public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntityChemicalPainter> implements IReloadableModelContainer<ChemicalPainterRenderer>
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/chemical_painter.png");
-	private static IConveyorBelt con;
 	static RenderItem renderItem = ClientUtils.mc().getRenderItem();
+	private static IConveyorBelt con;
 	private static ModelChemicalPainter model;
 	private static ModelChemicalPainter modelFlipped;
 
@@ -161,7 +161,7 @@ public class ChemicalPainterRenderer extends TileEntitySpecialRenderer<TileEntit
 			GlStateManager.pushMatrix();
 			if(te.active)
 			{
-				GlStateManager.translate((0.25-3.5*conveyorProgress)*(te.mirrored?-1:1)+(te.mirrored?1:0), 0.385+lifterProgress*0.4375, 0.5);
+				GlStateManager.translate((0.25-3.5*conveyorProgress)*(te.mirrored?-1: 1)+(te.mirrored?1: 0), 0.385+lifterProgress*0.4375, 0.5);
 				GlStateManager.rotate(lifterRotate*360, 0, 1, 0);
 				if(te.effect.getItem() instanceof IAmmo)
 				{

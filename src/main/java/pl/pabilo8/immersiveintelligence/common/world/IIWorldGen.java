@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import java.util.ArrayList;
@@ -62,13 +61,13 @@ public class IIWorldGen implements IWorldGenerator
 	{
 		if(Ores.genRubberTrees&&random.nextInt(Ores.genRubberTreesChance)==0)
 		{
-			final int x = chunkX * 16 + 8 + random.nextInt(16);
-			final int z = chunkZ * 16 + 8 + random.nextInt(16);
+			final int x = chunkX*16+8+random.nextInt(16);
+			final int z = chunkZ*16+8+random.nextInt(16);
 			final BlockPos pos = new BlockPos(x, 64, z);
 			final Biome biome = world.getBiomeForCoordsBody(pos);
 
-			if(biome.isHighHumidity()&&biome.getTemperature(pos)>0.9)
-				IIWorldGen.worldGenRubberTree.generate(world,random,world.getTopSolidOrLiquidBlock(pos));
+			if(biome.isHighHumidity()&&biome.getTemperature(pos) > 0.9)
+				IIWorldGen.worldGenRubberTree.generate(world, random, world.getTopSolidOrLiquidBlock(pos));
 
 		}
 	}
@@ -127,8 +126,8 @@ public class IIWorldGen implements IWorldGenerator
 				ChunkPos loc = chunks.get(0);
 				long worldSeed = event.world.getSeed();
 				Random fmlRandom = new Random(worldSeed);
-				long xSeed = (fmlRandom.nextLong() >> 3);
-				long zSeed = (fmlRandom.nextLong() >> 3);
+				long xSeed = (fmlRandom.nextLong()>>3);
+				long zSeed = (fmlRandom.nextLong()>>3);
 				fmlRandom.setSeed(xSeed*loc.x+zSeed*loc.z^worldSeed);
 				this.generateOres(fmlRandom, loc.x, loc.z, event.world, false);
 				chunks.remove(0);

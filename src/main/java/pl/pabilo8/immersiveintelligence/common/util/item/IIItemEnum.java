@@ -9,8 +9,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
 
 /**
  * @author Pabilo8
@@ -52,7 +50,7 @@ public interface IIItemEnum extends ISerializableEnum
 	@Nullable
 	default IIItemProperties getProperties()
 	{
-		return IIUtils.getEnumAnnotation(IIItemProperties.class,this);
+		return IIUtils.getEnumAnnotation(IIItemProperties.class, this);
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

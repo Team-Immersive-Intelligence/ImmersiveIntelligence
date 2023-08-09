@@ -57,6 +57,20 @@ public class CommandIIHans extends CommandBase
 	 * The registry of HansSquads - the methods of spawning groups (or single) Hanses
 	 */
 	static final HashMap<ResourceLocation, HansSquad> squadList = new HashMap<>();
+	/**
+	 * The lines used after a Hans was deployed
+	 */
+	static final String[] DEPLOYMENT_LINES = {
+			"%s ist Einsatzbereit!",
+			"Ein neues %s is Bereit zum Kampf",
+			"%s - bereit zum Einsatz",
+			"%s wartet auf deine Befehle",
+			"%s ist Kampfbereit",
+			"Wir haben ein neues %s!",
+			"Der %s ist bereit!",
+			"%s - bereit zum Dienst!",
+			"Ein neues %s ist Kriegsbereit!"
+	};
 
 	static
 	{
@@ -314,21 +328,6 @@ public class CommandIIHans extends CommandBase
 		);
 
 	}
-
-	/**
-	 * The lines used after a Hans was deployed
-	 */
-	static final String[] DEPLOYMENT_LINES = {
-			"%s ist Einsatzbereit!",
-			"Ein neues %s is Bereit zum Kampf",
-			"%s - bereit zum Einsatz",
-			"%s wartet auf deine Befehle",
-			"%s ist Kampfbereit",
-			"Wir haben ein neues %s!",
-			"Der %s ist bereit!",
-			"%s - bereit zum Dienst!",
-			"Ein neues %s ist Kriegsbereit!"
-	};
 
 	/**
 	 * Gets the name of the command

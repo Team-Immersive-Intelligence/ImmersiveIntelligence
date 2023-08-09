@@ -20,11 +20,10 @@ import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt.M
 
 public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloadableModelContainer<MotorbikeRenderer>
 {
+	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/motorbike.png");
 	public static ModelMotorbike model;
 	public static ModelPanzer modelPanzer;
 	public static MotorBeltData tracks;
-
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/entity/motorbike.png");
 
 	public MotorbikeRenderer(RenderManager renderManager)
 	{
@@ -317,12 +316,12 @@ public class MotorbikeRenderer extends Render<EntityMotorbike> implements IReloa
 		model = new ModelMotorbike();
 		tracks = MotorBeltData.createBeltData(
 				new Vec3d[]{
-						new Vec3d(0,0,0),
-						new Vec3d(0,0,3),
-						new Vec3d(0,-2,1.5)
+						new Vec3d(0, 0, 0),
+						new Vec3d(0, 0, 3),
+						new Vec3d(0, -2, 1.5)
 				},
 				new float[]{
-						8,8,8
+						8, 8, 8
 				},
 				MotorBelt.STEEL.type
 		);

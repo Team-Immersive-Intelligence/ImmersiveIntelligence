@@ -18,8 +18,8 @@ public class DataOperationStringContainsCount extends DataOperation
 	{
 		//A boolean version of the 'equals' operation
 		name = "string_contains_count";
-		allowedTypes = new Class[]{DataTypeString.class,DataTypeString.class};
-		params = new String[]{"text","fragment"};
+		allowedTypes = new Class[]{DataTypeString.class, DataTypeString.class};
+		params = new String[]{"text", "fragment"};
 		expectedResult = DataTypeInteger.class;
 	}
 

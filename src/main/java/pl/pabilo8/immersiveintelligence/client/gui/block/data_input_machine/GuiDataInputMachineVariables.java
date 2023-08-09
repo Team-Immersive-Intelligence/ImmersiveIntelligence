@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiDataVariableList;
@@ -66,7 +65,7 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 						refreshStoredData();
 						syncDataToServer();
 
-						preparedForChange=true;
+						preparedForChange = true;
 						IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));
 
 						break;
@@ -89,7 +88,7 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 				refreshStoredData();
 				syncDataToServer();
 
-				preparedForChange=true;
+				preparedForChange = true;
 				IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_EDIT, tile));
 			}
 			else if(variableList.delete)

@@ -19,6 +19,17 @@ import java.util.List;
  */
 public abstract class IIManualCategory
 {
+	public static void cleanFolderEntries()
+	{
+		IEManualInstance manual = (IEManualInstance)ManualHelper.getManual();
+		List<ManualEntry> remaining = manual.manualContents.get(ManualHelper.CAT_UPDATE);
+		remaining.removeIf(entry -> entry.getPages().length!=1||!(entry.getPages()[0] instanceof IIManualPageFolder));
+
+		//Well, one way or another...
+		for(ManualEntry folder : remaining)
+			manual.manualContents.remove(ManualHelper.CAT_UPDATE, folder);
+	}
+
 	public abstract String getCategory();
 
 	/**
@@ -32,17 +43,6 @@ public abstract class IIManualCategory
 		IEManualInstance manual = (IEManualInstance)ManualHelper.getManual();
 		manual.manualContents.removeAll(getCategory());
 		((LinkedHashSet<String>)ReflectionHelper.getPrivateValue(IEManualInstance.class, manual, "categorySet")).add(getCategory());
-	}
-
-	public static void cleanFolderEntries()
-	{
-		IEManualInstance manual = (IEManualInstance)ManualHelper.getManual();
-		List<ManualEntry> remaining = manual.manualContents.get(ManualHelper.CAT_UPDATE);
-		remaining.removeIf(entry -> entry.getPages().length!=1||!(entry.getPages()[0] instanceof IIManualPageFolder));
-
-		//Well, one way or another...
-		for(ManualEntry folder : remaining)
-			manual.manualContents.remove(ManualHelper.CAT_UPDATE, folder);
 	}
 
 	protected final IIManualEntry addEntry(String name)

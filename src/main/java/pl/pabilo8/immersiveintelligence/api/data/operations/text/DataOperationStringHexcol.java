@@ -18,7 +18,7 @@ public class DataOperationStringHexcol extends DataOperation
 		//Gets a substring (from 0 to given integer)
 		name = "string_hexcol";
 		allowedTypes = new Class[]{DataTypeString.class, DataTypeInteger.class};
-		params = new String[]{"text","color"};
+		params = new String[]{"text", "color"};
 		expectedResult = DataTypeString.class;
 	}
 

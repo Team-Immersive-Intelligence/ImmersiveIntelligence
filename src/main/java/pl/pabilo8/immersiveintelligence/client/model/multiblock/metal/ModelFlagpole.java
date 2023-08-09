@@ -1415,6 +1415,6 @@ public class ModelFlagpole extends ModelIIBase
 		baseModel[282].rotateAngleY = -0.08726646F;
 
 		flipAll();
-		translateAll(-24,-8f,24);
+		translateAll(-24, -8f, 24);
 	}
 }

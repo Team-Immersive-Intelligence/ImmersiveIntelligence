@@ -16,7 +16,7 @@ public class DataOperationMatchesOreDictionary extends DataOperation
 		//Checks whether the Itemstack matches a given oreDict value
 		name = "matches_oredict";
 		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeString.class};
-		params = new String[]{"stack","ore_dictionary"};
+		params = new String[]{"stack", "ore_dictionary"};
 		expectedResult = DataTypeBoolean.class;
 	}
 

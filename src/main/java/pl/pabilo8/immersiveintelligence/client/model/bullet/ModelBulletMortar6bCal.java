@@ -3,13 +3,13 @@ package pl.pabilo8.immersiveintelligence.client.model.bullet;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -46,18 +46,18 @@ public class ModelBulletMortar6bCal extends ModelIIBase implements IBulletModel
 		casingModel[2].addShapeBox(-1F, -5F, -1F, 2, 5, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 0
 		casingModel[2].setRotationPoint(0F, 0F, 0F);
 
-		casingModel[3].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5) }), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {5 ,3 ,4 ,2}); // Shape 9
+		casingModel[3].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5)}), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{5, 3, 4, 2}); // Shape 9
 		casingModel[3].setRotationPoint(0F, 0F, 0F);
 
-		casingModel[4].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5) }), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {5 ,3 ,4 ,2}); // Shape 9
+		casingModel[4].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5)}), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{5, 3, 4, 2}); // Shape 9
 		casingModel[4].setRotationPoint(0F, 0F, 0F);
 		casingModel[4].rotateAngleY = -1.57079633F;
 
-		casingModel[5].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5) }), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {5 ,3 ,4 ,2}); // Shape 9
+		casingModel[5].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5)}), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{5, 3, 4, 2}); // Shape 9
 		casingModel[5].setRotationPoint(0F, 0F, 0F);
 		casingModel[5].rotateAngleY = -3.14159265F;
 
-		casingModel[6].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5) }), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {5 ,3 ,4 ,2}); // Shape 9
+		casingModel[6].addShape3D(-1F, 0F, -0.5F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(2, 0, 2, 0), new Coord2D(2, 4, 2, 4), new Coord2D(0, 5, 0, 5)}), 1, 2, 5, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{5, 3, 4, 2}); // Shape 9
 		casingModel[6].setRotationPoint(0F, 0F, 0F);
 		casingModel[6].rotateAngleY = -4.71238898F;
 
@@ -232,7 +232,7 @@ public class ModelBulletMortar6bCal extends ModelIIBase implements IBulletModel
 		{
 			GlStateManager.pushMatrix();
 			ClientUtils.bindTexture("minecraft:textures/blocks/concrete_powder_black.png");
-			GlStateManager.translate(0, 0.2f+0.15*gunpowderPercentage,0);
+			GlStateManager.translate(0, 0.2f+0.15*gunpowderPercentage, 0);
 			GlStateManager.rotate(90, 1f, 0f, 0f);
 			ClientUtils.drawTexturedRect(-2/16f, -2/16f, 4/16f, 4/16f, 4/16f, 8/16f, 4/16f, 8/16f);
 			GlStateManager.popMatrix();

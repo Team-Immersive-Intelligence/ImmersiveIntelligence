@@ -19,7 +19,7 @@ public class DataOperationStringFormat extends DataOperation
 		//Applies TextFormatting to string
 		name = "string_format";
 		allowedTypes = new Class[]{DataTypeString.class, DataTypeInteger.class};
-		params = new String[]{"text","formatting"};
+		params = new String[]{"text", "formatting"};
 		expectedResult = DataTypeString.class;
 	}
 

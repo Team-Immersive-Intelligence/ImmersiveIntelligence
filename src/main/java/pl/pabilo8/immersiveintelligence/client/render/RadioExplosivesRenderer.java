@@ -25,7 +25,7 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 		GlStateManager.translate(x+0.5, y+0.5, z+0.5);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-		GlStateManager.rotate(-90,0,0,1);
+		GlStateManager.rotate(-90, 0, 0, 1);
 		switch(te.facing)
 		{
 			case UP:
@@ -63,7 +63,7 @@ public class RadioExplosivesRenderer extends TileEntitySpecialRenderer<TileEntit
 			break;
 		}
 
-		GlStateManager.translate(0.125,-0.25,0);
+		GlStateManager.translate(0.125, -0.25, 0);
 
 		model.renderCasing(0f, 0xffffff);
 		model.renderCore(te.coreColor, EnumCoreTypes.CANISTER);

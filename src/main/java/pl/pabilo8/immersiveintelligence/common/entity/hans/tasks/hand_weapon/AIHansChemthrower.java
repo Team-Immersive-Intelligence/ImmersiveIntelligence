@@ -23,9 +23,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityIIChemthrowerShot;
  */
 public class AIHansChemthrower extends AIHansHandWeapon
 {
-	private final int burstTime;
-
 	private final static ItemChemthrower CHEM = (ItemChemthrower)IEContent.itemChemthrower;
+	private final int burstTime;
 
 	public AIHansChemthrower(EntityHans hans)
 	{

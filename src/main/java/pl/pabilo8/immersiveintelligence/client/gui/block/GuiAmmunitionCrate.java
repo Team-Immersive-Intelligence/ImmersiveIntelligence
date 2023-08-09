@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -20,10 +19,11 @@ import pl.pabilo8.immersiveintelligence.common.util.IILib;
 public class GuiAmmunitionCrate extends GuiIEContainerBase
 {
 	public boolean upgraded;
+
 	public GuiAmmunitionCrate(EntityPlayer player, TileEntityAmmunitionCrate tile)
 	{
 		super(new ContainerAmmunitionCrate(player, tile));
-		upgraded=tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
+		upgraded = tile.hasUpgrade(IIContent.UPGRADE_MG_LOADER);
 		this.ySize = 222;
 	}
 
@@ -49,7 +49,7 @@ public class GuiAmmunitionCrate extends GuiIEContainerBase
 		if(upgraded)
 		{
 			this.drawTexturedModalRect(guiLeft+176, guiTop, 176, 0, 49, 133);
-			IIClientUtils.drawStringCentered(fontRenderer, I18n.format(IILib.INFO_KEY+"machineupgrade.mg_loader.gui_tooltip"), guiLeft+176,guiTop+6,49,0, IILib.COLOR_H1);
+			IIClientUtils.drawStringCentered(fontRenderer, I18n.format(IILib.INFO_KEY+"machineupgrade.mg_loader.gui_tooltip"), guiLeft+176, guiTop+6, 49, 0, IILib.COLOR_H1);
 		}
 	}
 }

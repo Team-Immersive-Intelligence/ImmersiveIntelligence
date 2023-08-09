@@ -17,10 +17,9 @@ import java.util.stream.Collectors;
  */
 public class ElectrolyzerRecipe extends MultiblockRecipe
 {
+	public static ArrayList<ElectrolyzerRecipe> recipeList = new ArrayList<>();
 	public final FluidStack fluidInput;
 	public final FluidStack[] fluidOutputs;
-
-	public static ArrayList<ElectrolyzerRecipe> recipeList = new ArrayList<>();
 	int totalProcessTime;
 	int totalProcessEnergy;
 
@@ -73,6 +72,12 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 		return null;
 	}
 
+	public static ElectrolyzerRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
+		return findRecipe(fluid_input);
+	}
+
 	@Override
 	public int getMultipleProcessTicks()
 	{
@@ -84,12 +89,6 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 	{
 		nbt.setTag("fluid_input", fluidInput.writeToNBT(new NBTTagCompound()));
 		return nbt;
-	}
-
-	public static ElectrolyzerRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		FluidStack fluid_input = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid_input"));
-		return findRecipe(fluid_input);
 	}
 
 	public int getTotalProcessTime()

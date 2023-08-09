@@ -221,7 +221,9 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 				IIPacketHandler.sendToServer(new MessageIITileSync(tile,
 						EasyNBT.newNBT().withInt("fill_amount", Integer.parseInt(valueEdit.getText()))
 				));
-			} catch(NumberFormatException ignored) {}
+			} catch(NumberFormatException ignored)
+			{
+			}
 		}
 
 		IIPacketHandler.sendToServer(new MessageBooleanAnimatedPartsSync(false, 0, tile.getPos()));

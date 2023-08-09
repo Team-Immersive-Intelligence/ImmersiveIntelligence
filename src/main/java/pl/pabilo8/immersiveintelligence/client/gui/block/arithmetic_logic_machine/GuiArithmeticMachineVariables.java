@@ -29,8 +29,8 @@ import java.util.Comparator;
  */
 public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 {
-	private GuiDataVariableList variableList;
 	private final int page;
+	private GuiDataVariableList variableList;
 
 
 	//It was necessary to make the Gui control the Container

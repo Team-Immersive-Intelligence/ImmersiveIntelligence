@@ -25,11 +25,10 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 @RegisteredTileRenderer(name = "repair_crate", clazz = TileEntityRepairCrate.class)
 public class RepairCrateRenderer extends EffectCrateRenderer<TileEntityRepairCrate>
 {
-	private ItemStack STACK;
 	private final ResourceLocation openAnimation = new ResourceLocation(ImmersiveIntelligence.MODID, "repair_crate_open");
-
 	private final ResourceLocation inserterUpgrade = new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/metal_device/effect_crate/upgrade/upgrade_welder.obj.ie");
 	private final ResourceLocation inserterUpgradeAnimation = new ResourceLocation(ImmersiveIntelligence.MODID, "inserter_upgrade_construction");
+	private ItemStack STACK;
 
 	@Override
 	public void draw(TileEntityRepairCrate te, BufferBuilder buf, float partialTicks, Tessellator tes)

@@ -107,49 +107,6 @@ public class ShaderUtil
 		ARBShaderObjects.glUseProgramObjectARB(0);
 	}
 
-	public enum Shaders implements ISerializableEnum
-	{
-		ALPHA,
-		BLUEPRINT,
-		COLOR;
-
-		private int programID, fragID, vertID;
-
-		//--- Utility ---//
-
-		boolean use()
-		{
-			if(programID <= 0)
-				return false;
-			ARBShaderObjects.glUseProgramObjectARB(programID);
-			return true;
-		}
-
-		int getRef(String name)
-		{
-			return ARBShaderObjects.glGetUniformLocationARB(programID, name);
-		}
-
-		void setFloat(String name, float value)
-		{
-			ARBShaderObjects.glUniform1fARB(getRef(name), value);
-		}
-
-		void setVec3(String name, float x, float y, float z)
-		{
-			ARBShaderObjects.glUniform3fARB(getRef(name), x, y, z);
-		}
-
-		public static Shaders getByName(String name)
-		{
-			return Arrays.stream(Shaders.values())
-					.filter(shaders -> shaders.getName().equals(name))
-					.findFirst().orElse(ALPHA);
-		}
-	}
-
-	//--- Shader loading methods ---//
-
 	private static void createShader(Shaders shader, @Nullable String vert, @Nullable String frag)
 	{
 		//Attempt loading the shader
@@ -187,6 +144,8 @@ public class ShaderUtil
 
 		IILogger.info(String.format("Succesfully loaded shader '%s'", shader.getName()));
 	}
+
+	//--- Shader loading methods ---//
 
 	private static int createShader(String filename, int shaderType)
 	{
@@ -229,5 +188,46 @@ public class ShaderUtil
 	private static String getLogInfo(int obj)
 	{
 		return ARBShaderObjects.glGetInfoLogARB(obj, ARBShaderObjects.glGetObjectParameteriARB(obj, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
+	}
+
+	public enum Shaders implements ISerializableEnum
+	{
+		ALPHA,
+		BLUEPRINT,
+		COLOR;
+
+		private int programID, fragID, vertID;
+
+		//--- Utility ---//
+
+		public static Shaders getByName(String name)
+		{
+			return Arrays.stream(Shaders.values())
+					.filter(shaders -> shaders.getName().equals(name))
+					.findFirst().orElse(ALPHA);
+		}
+
+		boolean use()
+		{
+			if(programID <= 0)
+				return false;
+			ARBShaderObjects.glUseProgramObjectARB(programID);
+			return true;
+		}
+
+		int getRef(String name)
+		{
+			return ARBShaderObjects.glGetUniformLocationARB(programID, name);
+		}
+
+		void setFloat(String name, float value)
+		{
+			ARBShaderObjects.glUniform1fARB(getRef(name), value);
+		}
+
+		void setVec3(String name, float x, float y, float z)
+		{
+			ARBShaderObjects.glUniform3fARB(getRef(name), x, y, z);
+		}
 	}
 }

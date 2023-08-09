@@ -28,8 +28,8 @@ import java.util.HashMap;
  */
 public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitionWorkshop>
 {
-	private GuiTextField valueEdit;
 	HashMap<GuiButtonState, EnumFuseTypes> fuseButtons = new HashMap<>();
+	private GuiTextField valueEdit;
 
 	public GuiAmmunitionWorkshop(EntityPlayer player, TileEntityAmmunitionWorkshop tile)
 	{

@@ -22,11 +22,10 @@ import java.util.ArrayList;
 @Optional.Interface(iface = "mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper", modid = "jei")
 public class RecipeMinecart extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IShapedCraftingRecipeWrapper
 {
+	public static ArrayList<RecipeMinecart> listAllRecipes = new ArrayList<>();
 	private final ItemStack outputMinecart;
 	private final ItemStack inputBlock;
 	private final ArrayList<ItemStack> inputs;
-
-	public static ArrayList<RecipeMinecart> listAllRecipes = new ArrayList<>();
 
 	public RecipeMinecart(ItemStack outputMinecart, ItemStack inputBlock)
 	{

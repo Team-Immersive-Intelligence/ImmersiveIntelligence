@@ -1,9 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -11,7 +9,6 @@ import net.minecraft.entity.INpc;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,12 +17,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.GameData;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiEmplacementTaskList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonCheckboxII;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
@@ -46,24 +43,20 @@ import java.util.function.Supplier;
  */
 public class GuiEmplacementPageTasks extends GuiEmplacement
 {
+	private final ArrayList<TaskFilter> taskFilters = new ArrayList<>();
 	int currentTab = 0;
 	private GuiButtonIE[] taskTabButtons = new GuiButtonIE[0];
-
 	@Nullable
 	private GuiTextField valueEdit;
 	@Nullable
 	private GuiButtonDropdownList valueList;
-
 	private GuiButtonSwitch buttonEnabled;
 	private GuiButtonCheckboxII buttonInverted;
 	private GuiButtonIE buttonAdd, buttonRemove, buttonDuplicate, buttonClear;
 	private GuiButtonIE buttonTypePrev, buttonTypeNext;
 	private GuiEmplacementTaskList buttonTaskList;
-
 	private TaskFilter selected = null;
-
 	private boolean tasksModified = false;
-	private final ArrayList<TaskFilter> taskFilters = new ArrayList<>();
 
 	public GuiEmplacementPageTasks(EntityPlayer player, TileEntityEmplacement tile)
 	{
@@ -225,14 +218,14 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		IIPacketHandler.sendToServer(new MessageIITileSync(tile, nbt
 				.withTag("defaultTaskNBT"+(currentTab+1), EasyNBT.newNBT()
 						.withList("filters",
-									taskFilters.stream()
-											.map(filter -> EasyNBT.newNBT()
-													.withString("type", filter.type.getName())
-													.withBoolean("negation", filter.negation)
-													.withString("filter", filter.filter)
-											)
-											.toArray()
-								)
+								taskFilters.stream()
+										.map(filter -> EasyNBT.newNBT()
+												.withString("type", filter.type.getName())
+												.withBoolean("negation", filter.negation)
+												.withString("filter", filter.filter)
+										)
+										.toArray()
+						)
 				)
 		));
 	}
@@ -309,25 +302,6 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	}
 
 
-	public static class TaskFilter
-	{
-		public EnumTaskType type;
-		protected boolean negation;
-		protected String filter;
-
-		public TaskFilter(EnumTaskType type, boolean negation, String filter)
-		{
-			this.type = type;
-			this.negation = negation;
-			this.filter = filter;
-		}
-
-		public TaskFilter(NBTTagCompound tag)
-		{
-			this(EnumTaskType.valueOf(tag.getString("type").toUpperCase()), tag.getBoolean("negation"), tag.getString("filter"));
-		}
-	}
-
 	//Yes, this had to be done
 	//Else I'd have to do ATs on internal classes and get it somehow
 	public enum EnumTaskType implements IStringSerializable
@@ -372,6 +346,8 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		TEAM,
 		NAME;
 
+		private final Supplier<String[]> entries;
+
 		EnumTaskType()
 		{
 			this(() -> new String[0]);
@@ -381,8 +357,6 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		{
 			this.entries = entries;
 		}
-
-		private final Supplier<String[]> entries;
 
 		@Nonnull
 		@Override
@@ -394,6 +368,25 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		public String[] getDropdownEntries()
 		{
 			return entries.get();
+		}
+	}
+
+	public static class TaskFilter
+	{
+		public EnumTaskType type;
+		protected boolean negation;
+		protected String filter;
+
+		public TaskFilter(EnumTaskType type, boolean negation, String filter)
+		{
+			this.type = type;
+			this.negation = negation;
+			this.filter = filter;
+		}
+
+		public TaskFilter(NBTTagCompound tag)
+		{
+			this(EnumTaskType.valueOf(tag.getString("type").toUpperCase()), tag.getBoolean("negation"), tag.getString("filter"));
 		}
 	}
 }

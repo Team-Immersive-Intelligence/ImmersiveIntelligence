@@ -12,9 +12,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelRadioTuner extends ModelIIBase
 {
+	public ModelRendererTurbo[] sliderModel1, sliderModel2;
 	int textureX = 64;
 	int textureY = 32;
-	public ModelRendererTurbo[] sliderModel1, sliderModel2;
 
 	public ModelRadioTuner() //Same as Filename
 	{

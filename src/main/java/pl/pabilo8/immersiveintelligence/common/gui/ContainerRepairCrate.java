@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.gui;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -20,7 +19,7 @@ public class ContainerRepairCrate extends ContainerIEBase<TileEntityRepairCrate>
 		//Normal bullet slots
 
 		super(player.inventory, tile);
-		int shift = tile.hasUpgrade(IIContent.UPGRADE_INSERTER)?0:27;
+		int shift = tile.hasUpgrade(IIContent.UPGRADE_INSERTER)?0: 27;
 		for(int i = 0; i < tile.getInventory().size(); i++)
 			this.addSlotToContainer(new Slot(this.inv, i, shift+16+(i%4)*21, 7+(i/4)*18)
 			{

@@ -31,7 +31,7 @@ import java.util.List;
 public class MultipleRayTracer implements Iterable<RayTraceResult>
 {
 	private static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
-	private ArrayList<RayTraceResult> hits = new ArrayList<>();
+	private final ArrayList<RayTraceResult> hits = new ArrayList<>();
 
 	private MultipleRayTracer()
 	{

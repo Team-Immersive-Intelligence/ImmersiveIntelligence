@@ -18,7 +18,7 @@ public class DataOperationStringJoin extends DataOperation
 		name = "string_join";
 		expression = "+";
 		allowedTypes = new Class[]{DataTypeString.class, DataTypeString.class};
-		params = new String[]{"text","joined"};
+		params = new String[]{"text", "joined"};
 		expectedResult = DataTypeString.class;
 	}
 

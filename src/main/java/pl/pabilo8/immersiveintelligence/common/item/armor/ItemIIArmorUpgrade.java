@@ -8,7 +8,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
@@ -37,15 +36,52 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		super("armor_upgrade", 1, ArmorUpgrades.values());
 	}
 
+	@Override
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
+	{
+		ArmorUpgrades sub = stackToSub(stack);
+		//add valid weapon types
+		for(ArmorTypes type : sub.toolset)
+			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+type.getName())));
+
+		//add description
+		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
+				I18n.format(IILib.DESC_TOOLUPGRADE+sub.getName()), 200);
+		Arrays.stream(flavour).map(IIUtils::getItalicString).forEach(list::add);
+	}
+
+	@Override
+	public Set<String> getUpgradeTypes(ItemStack stack)
+	{
+		return stackToSub(stack).toolset.stream()
+				.map(ISerializableEnum::getName)
+				.map(String::toUpperCase)
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public boolean canApplyUpgrades(ItemStack target, ItemStack upgrade)
+	{
+		if(target.getItem() instanceof IUpgradeableTool)
+			return stackToSub(upgrade).check.test(target, upgrade);
+		return false;
+	}
+
+	@Override
+	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
+	{
+		stackToSub(upgrade).function.accept(upgrade, modifications);
+	}
+
 	/**
 	 * Describes armors and their types
 	 */
 	public enum ArmorTypes implements ISerializableEnum
 	{
-		LIGHT_ENGINEER_HELMET(0xff8840,'\u24be'),
-		LIGHT_ENGINEER_CHESTPLATE(0xcc6c33,'\u24bf'),
-		LIGHT_ENGINEER_LEGGINGS(0xff6440,'\u24c0'),
-		LIGHT_ENGINEER_BOOTS(0xcc5033,'\u24c1');
+		LIGHT_ENGINEER_HELMET(0xff8840, '\u24be'),
+		LIGHT_ENGINEER_CHESTPLATE(0xcc6c33, '\u24bf'),
+		LIGHT_ENGINEER_LEGGINGS(0xff6440, '\u24c0'),
+		LIGHT_ENGINEER_BOOTS(0xcc5033, '\u24c1');
 
 		private final int color;
 		private final char symbol;
@@ -187,42 +223,5 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 				return true;
 			};
 		}
-	}
-
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
-	{
-		ArmorUpgrades sub = stackToSub(stack);
-		//add valid weapon types
-		for(ArmorTypes type : sub.toolset)
-			list.add(IIUtils.getHexCol(type.color,type.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+type.getName())));
-
-		//add description
-		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
-				I18n.format(IILib.DESC_TOOLUPGRADE+sub.getName()), 200);
-		Arrays.stream(flavour).map(IIUtils::getItalicString).forEach(list::add);
-	}
-
-	@Override
-	public Set<String> getUpgradeTypes(ItemStack stack)
-	{
-		return stackToSub(stack).toolset.stream()
-				.map(ISerializableEnum::getName)
-				.map(String::toUpperCase)
-				.collect(Collectors.toSet());
-	}
-
-	@Override
-	public boolean canApplyUpgrades(ItemStack target, ItemStack upgrade)
-	{
-		if(target.getItem() instanceof IUpgradeableTool)
-			return stackToSub(upgrade).check.test(target, upgrade);
-		return false;
-	}
-
-	@Override
-	public void applyUpgrades(ItemStack target, ItemStack upgrade, NBTTagCompound modifications)
-	{
-		stackToSub(upgrade).function.accept(upgrade, modifications);
 	}
 }

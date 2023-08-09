@@ -12,16 +12,15 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBeginMachineUpgrade;
@@ -39,12 +38,12 @@ import java.util.List;
 public class GuiUpgrade extends GuiIEContainerBase
 {
 	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/upgrade_lowtier.png";
+	public boolean info = false;
+	public boolean previewInstalled = false;
 	IUpgradableMachine upgradableMachine;
 	TileEntity tileEntity;
 	List<MachineUpgrade> upgrades;
 	MachineUpgrade previewed = null;
-	public boolean info = false;
-	public boolean previewInstalled = false;
 	GuiButtonIE buttonInfo = null, buttonUpgrade = null, buttonQuit = null;
 	private String textUpgradeMachine, textInfo, textUpgrade, textRemove, textBack;
 

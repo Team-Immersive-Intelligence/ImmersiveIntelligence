@@ -3,14 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 

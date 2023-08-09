@@ -148,15 +148,15 @@ public class ModelAdvancedInserter extends ModelInserter
 		inserterInput[0].addBox(4F, 0F, -4F, 4, 1, 8, 0F); // BaseInputBox
 		inserterInput[0].setRotationPoint(8F, -4F, 8F);
 
-		parts.put("base",baseModel);
-		parts.put("inserter_mid_axle",inserterMidAxle);
-		parts.put("inserter_lower_arm",inserterLowerArm);
-		parts.put("inserter_upper_arm",inserterUpperArm);
-		parts.put("inserter_base_turntable",inserterBaseTurntable);
-		parts.put("inserter_item_picker_1",inserterItemPicker1);
-		parts.put("inserter_item_picker_2",inserterItemPicker2);
-		parts.put("inserter_output",inserterOutput);
-		parts.put("inserter_input",inserterInput);
+		parts.put("base", baseModel);
+		parts.put("inserter_mid_axle", inserterMidAxle);
+		parts.put("inserter_lower_arm", inserterLowerArm);
+		parts.put("inserter_upper_arm", inserterUpperArm);
+		parts.put("inserter_base_turntable", inserterBaseTurntable);
+		parts.put("inserter_item_picker_1", inserterItemPicker1);
+		parts.put("inserter_item_picker_2", inserterItemPicker2);
+		parts.put("inserter_output", inserterOutput);
+		parts.put("inserter_input", inserterInput);
 
 		flipAll();
 

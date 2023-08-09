@@ -9,10 +9,9 @@ import java.util.Arrays;
 
 public class ModelAutocannon extends ModelIIBase
 {
+	public ModelRendererTurbo[] turretModel, barrel1Model, barrel2Model, barrel3Model, barrel4Model, magazineLeftBottomModel, magazineLeftTopModel, magazineRightTopModel, magazineRightBottomModel, ammoBoxLidModel, turretTopFlapsModel, gunModel, magazineLeftModel, magazineRightModel;
 	int textureX = 128;
 	int textureY = 128;
-
-	public ModelRendererTurbo[] turretModel, barrel1Model, barrel2Model, barrel3Model, barrel4Model, magazineLeftBottomModel, magazineLeftTopModel, magazineRightTopModel, magazineRightBottomModel, ammoBoxLidModel, turretTopFlapsModel, gunModel, magazineLeftModel, magazineRightModel;
 
 	public ModelAutocannon(boolean doOffsets) //Same as Filename
 	{
@@ -430,15 +429,15 @@ public class ModelAutocannon extends ModelIIBase
 			translate(magazineRightTopModel, 0, 18f, 0);
 		}
 
-		baseModel= Arrays.stream(baseModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
-		turretModel= Arrays.stream(turretModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
-		gunModel= Arrays.stream(gunModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
-		turretTopFlapsModel= Arrays.stream(turretTopFlapsModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY,o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+		baseModel = Arrays.stream(baseModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY, o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+		turretModel = Arrays.stream(turretModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY, o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+		gunModel = Arrays.stream(gunModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY, o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
+		turretTopFlapsModel = Arrays.stream(turretTopFlapsModel).sorted((o1, o2) -> Float.compare(o1.rotationPointY, o2.rotationPointY)).toArray(ModelRendererTurbo[]::new);
 
-		barrel1Model= Arrays.stream(barrel1Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
-		barrel2Model= Arrays.stream(barrel2Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
-		barrel3Model= Arrays.stream(barrel3Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
-		barrel4Model= Arrays.stream(barrel4Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX,o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
+		barrel1Model = Arrays.stream(barrel1Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX, o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
+		barrel2Model = Arrays.stream(barrel2Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX, o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
+		barrel3Model = Arrays.stream(barrel3Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX, o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
+		barrel4Model = Arrays.stream(barrel4Model).sorted((o1, o2) -> Float.compare(o1.rotationPointX, o2.rotationPointX)).toArray(ModelRendererTurbo[]::new);
 
 		flipAll();
 	}

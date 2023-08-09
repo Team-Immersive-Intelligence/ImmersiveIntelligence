@@ -9,10 +9,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class ModelTripodPeriscope extends ModelIIBase
 {
+	public ModelRendererTurbo[] periscopeModel, leverModel, leg1Model, leg2Model, leg3Model;
 	int textureX = 32;
 	int textureY = 32;
-
-	public ModelRendererTurbo[] periscopeModel, leverModel, leg1Model, leg2Model, leg3Model;
 
 	public ModelTripodPeriscope() //Same as Filename
 	{

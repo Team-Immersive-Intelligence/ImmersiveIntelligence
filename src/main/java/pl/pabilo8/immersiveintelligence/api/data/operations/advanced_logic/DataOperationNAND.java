@@ -16,7 +16,7 @@ public class DataOperationNAND extends DataOperation
 	{
 		name = "nand";
 		expression = "!&";
-		allowedTypes = new Class[]{DataTypeBoolean.class,DataTypeBoolean.class};
+		allowedTypes = new Class[]{DataTypeBoolean.class, DataTypeBoolean.class};
 		expectedResult = DataTypeBoolean.class;
 	}
 

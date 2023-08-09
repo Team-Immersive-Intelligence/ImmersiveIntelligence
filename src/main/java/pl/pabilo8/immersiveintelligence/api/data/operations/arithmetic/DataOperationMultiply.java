@@ -14,7 +14,7 @@ public class DataOperationMultiply extends DataOperation
 	{
 		name = "multiply";
 		expression = "*";
-		allowedTypes = new Class[]{IDataTypeNumeric.class,IDataTypeNumeric.class};
+		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
 		expectedResult = IDataTypeNumeric.class;
 	}
 

@@ -13,7 +13,7 @@ public class BiomeWasteland extends Biome
 	public BiomeWasteland()
 	{
 		super((new Biome.BiomeProperties("IIWasteland")).setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(2.0F).setRainfall(0.0F).setWaterColor(0x26332E).setRainDisabled());
-		setRegistryName(new ResourceLocation(ImmersiveIntelligence.MODID,"wasteland"));
+		setRegistryName(new ResourceLocation(ImmersiveIntelligence.MODID, "wasteland"));
 	}
 
 	@Override

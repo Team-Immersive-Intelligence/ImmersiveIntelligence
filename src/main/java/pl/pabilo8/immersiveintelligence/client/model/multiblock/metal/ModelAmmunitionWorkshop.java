@@ -545,7 +545,7 @@ public class ModelAmmunitionWorkshop extends ModelIIBase
 			case SOUTH:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-2, 0f, mirrored?1f:-2f);
+				GlStateManager.translate(-2, 0f, mirrored?1f: -2f);
 
 			}
 			break;

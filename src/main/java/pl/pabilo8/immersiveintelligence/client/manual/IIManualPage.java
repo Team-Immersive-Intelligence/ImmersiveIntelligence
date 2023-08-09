@@ -46,23 +46,18 @@ public class IIManualPage extends ManualPages
 {
 	//--- Statics and Internals ---//
 
-	private static final int WIDTH = 120; //width of a single manual page
 	public static final HashMap<String, BiFunction<ManualObjectInfo, EasyNBT, IIManualObject>> registeredObjects = new HashMap<>();
 	final static Pattern patternObject = Pattern.compile("\\|(.+?)\\|");
 	/**
 	 * thanks to <a href="https://davidwells.io/snippets/regex-match-markdown-links">https://davidwells.io/snippets/regex-match-markdown-links</a> for improved pattern
 	 */
 	final static Pattern patternLink = Pattern.compile("\\[([^\\[]+)]\\((.*?)\\)");
-
 	final static Pattern patternHighlight = Pattern.compile("\\[(.+?)]");
 	final static Pattern patternBold = Pattern.compile("\\*\\*(.+?)\\*\\*");
 	final static Pattern patternItalic = Pattern.compile("\\*(.+?)\\*");
 	final static Pattern patternUnderline = Pattern.compile("__(.+?)__");
 	final static Pattern patternStrikethrough = Pattern.compile("~~(.+?)~~");
-
-
-	private final ArrayList<IIManualObject> manualObjects = new ArrayList<>();
-	private final ArrayList<PageTraits> traits = new ArrayList<>();
+	private static final int WIDTH = 120; //width of a single manual page
 
 	static
 	{
@@ -89,6 +84,8 @@ public class IIManualPage extends ManualPages
 		registeredObjects.put("data_callback", IIManualDataCallback::new);
 	}
 
+	private final ArrayList<IIManualObject> manualObjects = new ArrayList<>();
+	private final ArrayList<PageTraits> traits = new ArrayList<>();
 	private IIManualEntry entry;
 	private HoverTooltipWrapper tooltipWrapper;
 
@@ -385,26 +382,6 @@ public class IIManualPage extends ManualPages
 		return entry.getSource(name);
 	}
 
-	private static class HoverTooltipWrapper extends GuiButtonManual
-	{
-		List<String> tooltip;
-
-		public HoverTooltipWrapper(GuiManual gui)
-		{
-			super(gui, 999, -1, -1, 1, 1, "");
-		}
-
-		@Override
-		public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
-		{
-			if(tooltip!=null&&!tooltip.isEmpty())
-			{
-				ClientUtils.drawHoveringText(tooltip, mx, my, gui.getManual().fontRenderer, gui.width, -1);
-				RenderHelper.enableGUIStandardItemLighting();
-			}
-		}
-	}
-
 	private enum PageTraits implements ISerializableEnum
 	{
 		//Indicates game progression suggested for contents of this page
@@ -436,6 +413,26 @@ public class IIManualPage extends ManualPages
 		public static PageTraits find(String name)
 		{
 			return Arrays.stream(values()).filter(p -> p.getName().equals(name)).findFirst().orElse(null);
+		}
+	}
+
+	private static class HoverTooltipWrapper extends GuiButtonManual
+	{
+		List<String> tooltip;
+
+		public HoverTooltipWrapper(GuiManual gui)
+		{
+			super(gui, 999, -1, -1, 1, 1, "");
+		}
+
+		@Override
+		public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
+		{
+			if(tooltip!=null&&!tooltip.isEmpty())
+			{
+				ClientUtils.drawHoveringText(tooltip, mx, my, gui.getManual().fontRenderer, gui.width, -1);
+				RenderHelper.enableGUIStandardItemLighting();
+			}
 		}
 	}
 }

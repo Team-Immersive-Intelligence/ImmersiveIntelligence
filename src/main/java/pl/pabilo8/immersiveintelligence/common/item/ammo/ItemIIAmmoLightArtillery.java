@@ -7,8 +7,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleExplosion;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
+import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleExplosion;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet6bCal;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
@@ -85,7 +85,7 @@ public class ItemIIAmmoLightArtillery extends ItemIIAmmoBase
 	@Override
 	public EnumFuseTypes[] getAllowedFuseTypes()
 	{
-		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT,EnumFuseTypes.TIMED,EnumFuseTypes.PROXIMITY};
+		return new EnumFuseTypes[]{EnumFuseTypes.CONTACT, EnumFuseTypes.TIMED, EnumFuseTypes.PROXIMITY};
 	}
 
 	@Override

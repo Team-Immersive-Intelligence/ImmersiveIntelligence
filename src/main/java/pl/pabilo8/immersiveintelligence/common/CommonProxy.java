@@ -366,7 +366,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 							OreDictionary.registerOre(IIUtils.toCamelCase(ore, true), new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
 					}
 
-				} catch(IllegalAccessException ignored) {}
+				} catch(IllegalAccessException ignored)
+				{
+				}
 			}
 		}
 
@@ -493,6 +495,40 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIContent.gasOxygen = FluidRegistry.getFluid("oxygen");
 	}
 
+	public static MachineUpgrade createMachineUpgrade(String name)
+	{
+		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
+	}
+
+	@SubscribeEvent
+	public static void hurtEvent(LivingHurtEvent event)
+	{
+		EntityLivingBase entity = event.getEntityLiving();
+		ItemStack head, chest, legs, boots;
+		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+		//plates
+		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
+				event.setCanceled(true);
+		}
+		//heat resist
+		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
+				event.setCanceled(true);
+		}
+		//springs
+		else if(event.getSource()==DamageSource.FALL)
+		{
+			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
+				event.setCanceled(true);
+		}
+	}
 
 	public void preInit()
 	{
@@ -871,11 +907,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	}
 
-	public static MachineUpgrade createMachineUpgrade(String name)
-	{
-		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
-	}
-
 	@Override
 	public void ticketsLoaded(List<Ticket> tickets, World world)
 	{
@@ -919,36 +950,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	@SubscribeEvent
 	public void onLivingAttack(LivingAttackEvent event)
-	{
-		EntityLivingBase entity = event.getEntityLiving();
-		ItemStack head, chest, legs, boots;
-		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
-		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-
-		//plates
-		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
-				event.setCanceled(true);
-		}
-		//heat resist
-		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
-				event.setCanceled(true);
-		}
-		//springs
-		else if(event.getSource()==DamageSource.FALL)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
-				event.setCanceled(true);
-		}
-	}
-
-	@SubscribeEvent
-	public static void hurtEvent(LivingHurtEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 		ItemStack head, chest, legs, boots;

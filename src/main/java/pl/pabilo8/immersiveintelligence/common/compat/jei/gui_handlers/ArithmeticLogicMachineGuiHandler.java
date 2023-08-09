@@ -18,6 +18,7 @@ public class ArithmeticLogicMachineGuiHandler implements IAdvancedGuiHandler<Gui
 	{
 
 	}
+
 	@Override
 	public Class<GuiArithmeticLogicMachineBase> getGuiContainerClass()
 	{

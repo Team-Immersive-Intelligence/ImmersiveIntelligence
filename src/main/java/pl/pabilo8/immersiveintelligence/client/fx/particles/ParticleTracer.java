@@ -6,8 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 
 import javax.annotation.Nonnull;

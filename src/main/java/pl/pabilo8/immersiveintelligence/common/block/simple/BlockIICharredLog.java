@@ -36,12 +36,6 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 		this.setHardness(2.0F);
 	}
 
-	public enum CharredLogs implements IIBlockEnum
-	{
-		@IIBlockProperties(oreDict = {"logWood", "logCharred"})
-		MAIN
-	}
-
 	@Nullable
 	@Override
 	public String getCustomStateMapping(int meta, boolean itemBlock)
@@ -116,5 +110,11 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
 	{
 		return BlockFaceShape.SOLID;
+	}
+
+	public enum CharredLogs implements IIBlockEnum
+	{
+		@IIBlockProperties(oreDict = {"logWood", "logCharred"})
+		MAIN
 	}
 }

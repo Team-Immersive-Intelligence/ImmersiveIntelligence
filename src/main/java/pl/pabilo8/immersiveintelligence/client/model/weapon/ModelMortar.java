@@ -11,10 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelMortar extends ModelIIBase
 {
+	public ModelRendererTurbo[] baseHandleModel, tubeModel, bipodModel, heightRodModel, heightKnobModel, horizontalRodModel, horizontalKnobModel, tubeRodsModel, sightsHolderModel, sightsModel;
 	int textureX = 64;
 	int textureY = 64;
-
-	public ModelRendererTurbo[] baseHandleModel, tubeModel, bipodModel, heightRodModel, heightKnobModel, horizontalRodModel, horizontalKnobModel, tubeRodsModel, sightsHolderModel, sightsModel;
 
 
 	public ModelMortar() //Same as Filename
@@ -39,7 +38,7 @@ public class ModelMortar extends ModelIIBase
 		baseModel[3].addShapeBox(0F, 0F, 0F, 4, 2, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Tube13
 		baseModel[3].setRotationPoint(2F, 5F, 2F);
 
-		baseModel[4].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(12, 0, 12, 0), new Coord2D(14, 2, 14, 2), new Coord2D(14, 12, 14, 12), new Coord2D(12, 14, 12, 14), new Coord2D(2, 14, 2, 14), new Coord2D(0, 12, 0, 12), new Coord2D(0, 2, 0, 2) }), 1, 14, 14, 52, 1, ModelRendererTurbo.MR_FRONT, new float[] {3 ,10 ,3 ,10 ,3 ,10 ,3 ,10}); // Shape 59
+		baseModel[4].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(12, 0, 12, 0), new Coord2D(14, 2, 14, 2), new Coord2D(14, 12, 14, 12), new Coord2D(12, 14, 12, 14), new Coord2D(2, 14, 2, 14), new Coord2D(0, 12, 0, 12), new Coord2D(0, 2, 0, 2)}), 1, 14, 14, 52, 1, ModelRendererTurbo.MR_FRONT, new float[]{3, 10, 3, 10, 3, 10, 3, 10}); // Shape 59
 		baseModel[4].setRotationPoint(11F, 7F, 11F);
 		baseModel[4].rotateAngleX = 1.57079633F;
 
@@ -50,7 +49,7 @@ public class ModelMortar extends ModelIIBase
 		baseHandleModel[2] = new ModelRendererTurbo(this, 20, 47, textureX, textureY); // Base05
 
 		baseHandleModel[0].setFlipped(true);
-		baseHandleModel[0].addShape3D(4F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 1, 0, 1), new Coord2D(0, 5, 0, 5), new Coord2D(1, 6, 1, 6), new Coord2D(1, 0, 1, 0) }), 1, 1, 6, 14, 1, ModelRendererTurbo.MR_FRONT, new float[] {2 ,6 ,2 ,4}); // Shape 59
+		baseHandleModel[0].addShape3D(4F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 1, 0, 1), new Coord2D(0, 5, 0, 5), new Coord2D(1, 6, 1, 6), new Coord2D(1, 0, 1, 0)}), 1, 1, 6, 14, 1, ModelRendererTurbo.MR_FRONT, new float[]{2, 6, 2, 4}); // Shape 59
 		baseHandleModel[0].setRotationPoint(9F, 6F, 7F);
 		baseHandleModel[0].rotateAngleX = 1.57079633F;
 
@@ -110,11 +109,11 @@ public class ModelMortar extends ModelIIBase
 		tubeModel[9].addShapeBox(0F, 0F, 0F, 2, 10, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 62
 		tubeModel[9].setRotationPoint(-2F, -13F, 4.5F);
 
-		tubeModel[10].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(6, 1, 6, 1), new Coord2D(1, 1, 1, 1) }), 22, 7, 1, 16, 22, ModelRendererTurbo.MR_FRONT, new float[] {2 ,5 ,2 ,7}); // Shape 62
+		tubeModel[10].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(6, 1, 6, 1), new Coord2D(1, 1, 1, 1)}), 22, 7, 1, 16, 22, ModelRendererTurbo.MR_FRONT, new float[]{2, 5, 2, 7}); // Shape 62
 		tubeModel[10].setRotationPoint(7.5F, -18F, 1.5F);
 		tubeModel[10].rotateAngleX = 1.57079633F;
 
-		tubeModel[11].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(6, 1, 6, 1), new Coord2D(1, 1, 1, 1) }), 22, 7, 1, 16, 22, ModelRendererTurbo.MR_FRONT, new float[] {2 ,5 ,2 ,7}); // Shape 62
+		tubeModel[11].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(7, 0, 7, 0), new Coord2D(6, 1, 6, 1), new Coord2D(1, 1, 1, 1)}), 22, 7, 1, 16, 22, ModelRendererTurbo.MR_FRONT, new float[]{2, 5, 2, 7}); // Shape 62
 		tubeModel[11].setRotationPoint(0.5F, -18F, 6.5F);
 		tubeModel[11].rotateAngleX = 1.57079633F;
 		tubeModel[11].rotateAngleY = -3.14159265F;
@@ -310,6 +309,6 @@ public class ModelMortar extends ModelIIBase
 
 		flipAll();
 
-		translateAll(-4,8,4);
+		translateAll(-4, 8, 4);
 	}
 }

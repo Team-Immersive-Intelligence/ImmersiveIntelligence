@@ -16,8 +16,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  */
 public class FuelStationRenderer extends TileEntitySpecialRenderer<TileEntityFuelStation> implements IReloadableModelContainer<FuelStationRenderer>
 {
-	private static ModelFuelStation model;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/fuel_station.png";
+	private static ModelFuelStation model;
 	private static ModelHeavyInserter modelInserter;
 
 	@Override
@@ -41,8 +41,8 @@ public class FuelStationRenderer extends TileEntitySpecialRenderer<TileEntityFue
 
 			if(te.mirrored)
 			{
-				GlStateManager.scale(-1,1,1);
-				GlStateManager.translate(-1,0,0);
+				GlStateManager.scale(-1, 1, 1);
+				GlStateManager.translate(-1, 0, 0);
 				GlStateManager.cullFace(CullFace.FRONT);
 			}
 
@@ -53,8 +53,8 @@ public class FuelStationRenderer extends TileEntitySpecialRenderer<TileEntityFue
 
 			if(te.mirrored)
 			{
-				GlStateManager.scale(-1,1,1);
-				GlStateManager.translate(-1,0,0);
+				GlStateManager.scale(-1, 1, 1);
+				GlStateManager.translate(-1, 0, 0);
 				GlStateManager.cullFace(CullFace.BACK);
 			}
 

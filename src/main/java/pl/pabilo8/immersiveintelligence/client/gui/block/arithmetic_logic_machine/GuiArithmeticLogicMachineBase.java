@@ -19,15 +19,15 @@ import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonItemAdvanced;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine.CircuitSlot;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -50,22 +50,19 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	protected static final ResourceLocation TEXTURE_STORAGE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/arithmetic_logic_machine_storage.png");
 	protected static final ResourceLocation TEXTURE_EDIT = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/arithmetic_logic_machine_editing.png");
 	protected static final ResourceLocation TEXTURE_VARIABLES = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/gui/arithmetic_logic_machine_variables.png");
-
-	private final IIGuiList thisGui;
 	public final LinkedHashMap<GuiButton, IIGuiList> TABS = new LinkedHashMap<>();
-	protected String title = I18n.format("tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name");
+	private final IIGuiList thisGui;
 	private final ResourceLocation thisTexture;
-
+	public IItemHandler handler;
+	public GuiWidgetManualWrapper sideManual = null;
+	protected String title = I18n.format("tile.immersiveintelligence.metal_multiblock.arithmetic_logic_machine.name");
 	protected ClientProxy proxy = (ClientProxy)ImmersiveIntelligence.proxy;
 	protected TileEntityArithmeticLogicMachine tile;
-	public IItemHandler handler;
 	protected InventoryPlayer playerInv;
-
-	private GuiManual trueManual;
-	public GuiWidgetManualWrapper sideManual = null;
 	protected GuiButtonState manualButton;
 	//this is due to the machine sending a close door message to the server and producing an annoying sound
 	protected boolean preparedForChange = false;
+	private GuiManual trueManual;
 
 	public GuiArithmeticLogicMachineBase(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGuiList gui)
 	{
@@ -77,6 +74,22 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		this.tile = tile;
 		this.handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		refreshStoredData();
+	}
+
+	protected static IIGuiList getPage(int page)
+	{
+		switch(page)
+		{
+			default:
+			case 0:
+				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0;
+			case 1:
+				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1;
+			case 2:
+				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2;
+			case 3:
+				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3;
+		}
 	}
 
 	@Override
@@ -266,21 +279,5 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	{
 		ITabbedGui.super.saveBasicData(proxy, tile);
 		proxy.storedGuiData.setBoolean("manual", manualButton.state);
-	}
-
-	protected static IIGuiList getPage(int page)
-	{
-		switch(page)
-		{
-			default:
-			case 0:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0;
-			case 1:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_1;
-			case 2:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_2;
-			case 3:
-				return IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_3;
-		}
 	}
 }

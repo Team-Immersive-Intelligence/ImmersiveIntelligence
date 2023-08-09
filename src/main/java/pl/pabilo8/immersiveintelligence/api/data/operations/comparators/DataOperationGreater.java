@@ -17,7 +17,7 @@ public class DataOperationGreater extends DataOperation
 	{
 		name = "greater";
 		expression = ">";
-		allowedTypes = new Class[]{IDataTypeNumeric.class,IDataTypeNumeric.class};
+		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
 		expectedResult = DataTypeBoolean.class;
 	}
 

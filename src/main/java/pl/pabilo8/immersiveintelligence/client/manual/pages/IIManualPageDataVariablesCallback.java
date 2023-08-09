@@ -14,11 +14,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;

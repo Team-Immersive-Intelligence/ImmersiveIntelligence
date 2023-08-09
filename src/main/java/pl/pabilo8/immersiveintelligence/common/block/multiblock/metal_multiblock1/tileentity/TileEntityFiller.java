@@ -56,8 +56,8 @@ import java.util.List;
  */
 public class TileEntityFiller extends TileEntityMultiblockMetal<TileEntityFiller, FillerRecipe> implements IConveyorAttachable, IGuiTile, IAdvancedCollisionBounds, IAdvancedSelectionBounds
 {
-	public DustStack dustStorage = DustStack.getEmptyStack();
 	public final int dustCapacity = Filler.dustCapacity;
+	public DustStack dustStorage = DustStack.getEmptyStack();
 	NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
 
 	IItemHandler insertionHandlerDust = new IEInventoryHandler(1, this, 0, true, false);

@@ -20,13 +20,12 @@ import javax.annotation.Nullable;
  */
 public class AMTBullet extends AMT
 {
-	@Nullable
-	private IBulletModel model;
-	private BulletState state = BulletState.BULLET_UNUSED;
-
 	EnumCoreTypes coreType = null;
 	float gunpowderPercentage = 0;
 	int coreColour = 0xffffff, paintColour = -1;
+	@Nullable
+	private IBulletModel model;
+	private BulletState state = BulletState.BULLET_UNUSED;
 
 	public AMTBullet(String name, Vec3d originPos, @Nullable IBulletModel model)
 	{

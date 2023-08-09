@@ -16,10 +16,10 @@ import pl.pabilo8.immersiveintelligence.common.util.IILib;
 public class GuiDataEditorBoolean extends GuiDataEditor<DataTypeBoolean>
 {
 	private static final String TEX = ImmersiveIntelligence.MODID+":textures/gui/data_input_machine_editing.png";
+	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 	private boolean editedstate = false;
 	private GuiButtonState buttonTrue, buttonFalse;
 	private String valueLabel;
-	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 
 	public GuiDataEditorBoolean(int buttonId, DataTypeBoolean dataType)
 	{

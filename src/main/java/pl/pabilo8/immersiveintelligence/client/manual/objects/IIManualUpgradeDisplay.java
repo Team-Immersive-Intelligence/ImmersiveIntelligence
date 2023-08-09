@@ -47,14 +47,14 @@ public class IIManualUpgradeDisplay extends IIManualObject
 			return;
 
 		ClientUtils.drawColouredRect(x-2, y, width+2, height, 0xaa000000);
-		GlStateManager.color(1f,1f,1f,1f);
+		GlStateManager.color(1f, 1f, 1f, 1f);
 
 		mc.getTextureManager().bindTexture(upgrade.getIcon());
 		GlStateManager.enableBlend();
 		ClientUtils.drawTexturedRect(x, y+2, 16, 16, 0d, 1d, 0d, 1d);
 
 		manual.fontRenderer.setUnicodeFlag(true);
-		manual.fontRenderer.drawSplitString(TextFormatting.ITALIC+"Upgrade applied using a wrench.", x+18, y+2, 100,manual.getHighlightColour());
+		manual.fontRenderer.drawSplitString(TextFormatting.ITALIC+"Upgrade applied using a wrench.", x+18, y+2, 100, manual.getHighlightColour());
 	}
 
 	@Override

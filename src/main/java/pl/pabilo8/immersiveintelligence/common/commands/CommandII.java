@@ -21,6 +21,9 @@ import java.util.List;
  */
 public class CommandII extends CommandTreeBase
 {
+	private static final String start = "<";
+	private static final String end = ">";
+
 	public CommandII()
 	{
 
@@ -69,9 +72,6 @@ public class CommandII extends CommandTreeBase
 	{
 		return "Use \"/ii help\" for more information";
 	}
-
-	private static final String start = "<";
-	private static final String end = ">";
 
 	/**
 	 * Get a list of options for when the user presses the TAB key

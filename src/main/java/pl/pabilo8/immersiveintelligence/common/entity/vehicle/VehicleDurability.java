@@ -1,15 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.entity.vehicle;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
-
-import java.io.IOException;
 
 /**
  * @author Pabilo8
@@ -17,8 +9,8 @@ import java.io.IOException;
  */
 public class VehicleDurability
 {
-	private int durability;
 	public final int maxDurability, armor;
+	private int durability;
 
 	public VehicleDurability(int maxDurability, int armor)
 	{

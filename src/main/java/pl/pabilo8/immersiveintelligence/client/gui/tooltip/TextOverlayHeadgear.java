@@ -32,7 +32,7 @@ public class TextOverlayHeadgear extends TextOverlayBase
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		assert te!=null;
 

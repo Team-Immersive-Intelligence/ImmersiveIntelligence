@@ -404,14 +404,12 @@ public class POLScript
 			try
 			{
 				data = countChars(num, '.') > 0?new DataTypeFloat(Float.parseFloat(num)): new DataTypeInteger(Integer.parseInt(num));
-			}
-			catch(Exception i)
+			} catch(Exception i)
 			{
 				try
 				{
 					data = new DataTypeInteger(Integer.parseInt(num));
-				}
-				catch(Exception i2)
+				} catch(Exception i2)
 				{
 					data = new DataTypeInteger(0);
 				}

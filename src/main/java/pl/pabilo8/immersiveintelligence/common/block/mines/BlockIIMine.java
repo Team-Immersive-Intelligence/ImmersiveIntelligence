@@ -42,14 +42,6 @@ import java.util.function.Function;
  */
 public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 {
-	public enum IIBlockTypes_Mine implements IITileProviderEnum
-	{
-		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		MAIN,
-		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		CORE
-	}
-
 	public BlockIIMine(String name, Class<? extends TileEntity> tileClass, Function<BlockIIMine, ItemBlockMineBase> itemBlock, Object... additionalProperties)
 	{
 		super(name, Material.CIRCUITS, PropertyEnum.create("dummy", IIBlockTypes_Mine.class), i -> itemBlock.apply(((BlockIIMine)i)), additionalProperties);
@@ -122,6 +114,14 @@ public abstract class BlockIIMine extends BlockIITileProvider<IIBlockTypes_Mine>
 				mine.getWorld().setBlockToAir(pos);
 			}
 		}
+	}
+
+	public enum IIBlockTypes_Mine implements IITileProviderEnum
+	{
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		MAIN,
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		CORE
 	}
 
 	public static abstract class ItemBlockMineBase extends ItemBlockIIBase implements IAmmo

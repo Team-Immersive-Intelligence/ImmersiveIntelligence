@@ -20,7 +20,7 @@ public class DataOperationStringSplit extends DataOperation
 		//A boolean version of the 'equals' operation
 		name = "string_split";
 		allowedTypes = new Class[]{DataTypeString.class, DataTypeString.class};
-		params = new String[]{"text","separator"};
+		params = new String[]{"text", "separator"};
 		expectedResult = DataTypeArray.class;
 	}
 

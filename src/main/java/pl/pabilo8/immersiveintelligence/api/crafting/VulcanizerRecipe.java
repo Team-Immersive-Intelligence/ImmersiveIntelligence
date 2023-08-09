@@ -31,20 +31,20 @@ import java.util.function.Function;
  */
 public class VulcanizerRecipe extends MultiblockRecipe
 {
+	public static final ResourceLocation TEXTURE_LATEX = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/latex_strip.png");
+	public static final ResourceLocation TEXTURE_RUBBER = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/rubber_strip.png");
 	public static float energyModifier = 1;
 	public static float timeModifier = 1;
-
+	public static ArrayListMultimap<ComparableItemStack, VulcanizerRecipe> recipeList = ArrayListMultimap.create();
+	public static HashMap<String, Function<NBTTagCompound, VulcanizerRecipe>> deserializers = new HashMap<>();
 	public final IngredientStack input;
 	public final IngredientStack compoundInput;
 	public final IngredientStack sulfurInput;
 	public final ComparableItemStack mold;
 	public final ItemStack output;
+	public final ResourceLocation resIn, resOut;
 	int totalProcessTime;
 	int totalProcessEnergy;
-
-	public final ResourceLocation resIn, resOut;
-	public static final ResourceLocation TEXTURE_LATEX = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/latex_strip.png");
-	public static final ResourceLocation TEXTURE_RUBBER = new ResourceLocation(ImmersiveIntelligence.MODID, "textures/blocks/multiblock/vulcanizer/rubber_strip.png");
 
 	public VulcanizerRecipe(ItemStack output, ComparableItemStack mold, IngredientStack mainInput, IngredientStack compoundInput, IngredientStack sulfurInput, int energy, ResourceLocation resIn, ResourceLocation resOut)
 	{
@@ -57,30 +57,12 @@ public class VulcanizerRecipe extends MultiblockRecipe
 		this.totalProcessEnergy = (int)Math.floor(energy*energyModifier);
 		this.totalProcessTime = (int)Math.floor(1000*timeModifier);
 
-		this.inputList = Lists.newArrayList(this.input, this.compoundInput, this.sulfurInput,new IngredientStack(this.mold.stack));
+		this.inputList = Lists.newArrayList(this.input, this.compoundInput, this.sulfurInput, new IngredientStack(this.mold.stack));
 		this.outputList = ListUtils.fromItem(this.output);
 
 		this.resIn = resIn;
 		this.resOut = resOut;
 	}
-
-	public VulcanizerRecipe setInputSize(int size)
-	{
-		this.input.inputSize = size;
-		return this;
-	}
-
-	public boolean matches(ItemStack mold, ItemStack input)
-	{
-		return this.input.matches(input);
-	}
-
-	public VulcanizerRecipe getActualRecipe(ItemStack mold, ItemStack input)
-	{
-		return this;
-	}
-
-	public static ArrayListMultimap<ComparableItemStack, VulcanizerRecipe> recipeList = ArrayListMultimap.create();
 
 	public static VulcanizerRecipe addRecipe(ItemStack output, ComparableItemStack mold, IngredientStack input, IngredientStack compound, IngredientStack sulfur, int energy)
 	{
@@ -133,13 +115,40 @@ public class VulcanizerRecipe extends MultiblockRecipe
 		return recipeList.containsKey(ApiUtils.createComparableItemStack(itemStack, false));
 	}
 
+	public static VulcanizerRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		if(nbt.hasKey("type")&&deserializers.containsKey(nbt.getString("type")))
+			return deserializers.get(nbt.getString("type")).apply(nbt);
+		IngredientStack input = IngredientStack.readFromNBT(nbt.getCompoundTag("input"));
+		ComparableItemStack mold = ComparableItemStack.readFromNBT(nbt.getCompoundTag("mold"));
+		List<VulcanizerRecipe> list = recipeList.get(mold);
+		for(VulcanizerRecipe recipe : list)
+			if(recipe.input.equals(input))
+				return recipe;
+		return null;
+	}
+
+	public VulcanizerRecipe setInputSize(int size)
+	{
+		this.input.inputSize = size;
+		return this;
+	}
+
+	public boolean matches(ItemStack mold, ItemStack input)
+	{
+		return this.input.matches(input);
+	}
+
+	public VulcanizerRecipe getActualRecipe(ItemStack mold, ItemStack input)
+	{
+		return this;
+	}
+
 	@Override
 	public int getMultipleProcessTicks()
 	{
 		return 0;
 	}
-
-	public static HashMap<String, Function<NBTTagCompound, VulcanizerRecipe>> deserializers = new HashMap<>();
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -159,19 +168,5 @@ public class VulcanizerRecipe extends MultiblockRecipe
 	public int getTotalProcessEnergy()
 	{
 		return this.totalProcessEnergy;
-	}
-
-
-	public static VulcanizerRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		if(nbt.hasKey("type")&&deserializers.containsKey(nbt.getString("type")))
-			return deserializers.get(nbt.getString("type")).apply(nbt);
-		IngredientStack input = IngredientStack.readFromNBT(nbt.getCompoundTag("input"));
-		ComparableItemStack mold = ComparableItemStack.readFromNBT(nbt.getCompoundTag("mold"));
-		List<VulcanizerRecipe> list = recipeList.get(mold);
-		for(VulcanizerRecipe recipe : list)
-			if(recipe.input.equals(input))
-				return recipe;
-		return null;
 	}
 }

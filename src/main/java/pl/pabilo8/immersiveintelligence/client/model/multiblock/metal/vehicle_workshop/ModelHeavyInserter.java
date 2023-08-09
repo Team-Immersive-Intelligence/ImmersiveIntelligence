@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 public class ModelHeavyInserter extends ModelIIBase
 {
 	public ModelRendererTurbo[] inserterLowerArmModel, inserterUpperArmModel, boxDoorLeftModel, boxDoorRightModel, inserterGrabBoxModel, inserterGrabberModel, inserterSoldererModel;
-	
+
 	int textureX = 64;
 	int textureY = 64;
 
@@ -287,19 +287,19 @@ public class ModelHeavyInserter extends ModelIIBase
 		inserterSoldererModel[1].addBox(-1F, -3F, -1F, 2, 3, 2, 0F); // Box 0
 		inserterSoldererModel[1].setRotationPoint(-0.5F, -49.5F, 0.5F);
 
-		translate(inserterLowerArmModel,0F, 7.5F, 0F);
-		translate(inserterUpperArmModel,0F, 24.5F, 0F);
-		translate(boxDoorLeftModel,0F, 24.5F, 0F);
-		translate(boxDoorRightModel,0F, 24.5F, 0F);
+		translate(inserterLowerArmModel, 0F, 7.5F, 0F);
+		translate(inserterUpperArmModel, 0F, 24.5F, 0F);
+		translate(boxDoorLeftModel, 0F, 24.5F, 0F);
+		translate(boxDoorRightModel, 0F, 24.5F, 0F);
 
-		parts.put("base",baseModel);
-		parts.put("inserterLower",inserterLowerArmModel);
-		parts.put("inserterUpper",inserterUpperArmModel);
-		parts.put("doorLeft",boxDoorLeftModel);
-		parts.put("doorRight",boxDoorRightModel);
-		parts.put("boxThingy",inserterGrabBoxModel);
-		parts.put("grabber",inserterGrabberModel);
-		parts.put("solderer",inserterSoldererModel);
+		parts.put("base", baseModel);
+		parts.put("inserterLower", inserterLowerArmModel);
+		parts.put("inserterUpper", inserterUpperArmModel);
+		parts.put("doorLeft", boxDoorLeftModel);
+		parts.put("doorRight", boxDoorRightModel);
+		parts.put("boxThingy", inserterGrabBoxModel);
+		parts.put("grabber", inserterGrabberModel);
+		parts.put("solderer", inserterSoldererModel);
 
 		flipAll();
 	}

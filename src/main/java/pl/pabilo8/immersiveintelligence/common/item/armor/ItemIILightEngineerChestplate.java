@@ -95,7 +95,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
 		super.onArmorTick(world, player, stack);
-		if(player.getAir()!=300&&hasUpgrade(stack, "scuba")&&hasUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD),"gasmask"))
+		if(player.getAir()!=300&&hasUpgrade(stack, "scuba")&&hasUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "gasmask"))
 		{
 			IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(stack);
 			if(fluidHandler!=null&&world.getTotalWorldTime()%20==0)

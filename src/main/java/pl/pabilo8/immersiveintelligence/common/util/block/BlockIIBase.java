@@ -30,7 +30,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 
@@ -48,16 +47,14 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	//--- BlockIIBase ---//
 
 	/**
-	 * The name, used to create the ID of this block
-	 */
-	public final String name;
-
-	/**
 	 * Properties passed to Block in construction
 	 */
 	protected static IProperty<?>[] tempProperties;
 	protected static IUnlistedProperty<?>[] tempUnlistedProperties;
-
+	/**
+	 * The name, used to create the ID of this block
+	 */
+	public final String name;
 	/**
 	 * Enum property, main property defining SubBlocks
 	 */
@@ -71,7 +68,11 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	 * Enum, marking SubBlocks of this block
 	 */
 	public final E[] enumValues;
-
+	/**
+	 * ItemBlock of this block
+	 */
+	@Nullable
+	public final ItemBlockIIBase itemBlock;
 	/**
 	 * Hiding block's ItemBlock by meta<br>
 	 * Whether SubBlocks are not full cubes
@@ -87,15 +88,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	protected final SoundType[] soundTypes;
 	protected final HashMap<E, Set<String>> toolTypes;
 	protected final HashMap<E, Set<BlockRenderLayer>> renderLayers;
-	protected EnumPushReaction[] mobilityFlags;
-
-	/**
-	 * ItemBlock of this block
-	 */
-	@Nullable
-	public final ItemBlockIIBase itemBlock;
-
 	public Map<Integer, String> tesrMap = new HashMap<>();
+	protected EnumPushReaction[] mobilityFlags;
 
 	public BlockIIBase(String name, PropertyEnum<E> mainProperty, Material material, Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock, Object... additionalProperties)
 	{
@@ -163,6 +157,31 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		lightOpacity = 255;
 	}
 
+	private static Material setTempProperties(Material material, PropertyEnum<?> property, Object... additionalProperties)
+	{
+		ArrayList<IProperty<?>> propList = new ArrayList<>();
+		ArrayList<IUnlistedProperty<?>> unlistedPropList = new ArrayList<>();
+		propList.add(property);
+		for(Object o : additionalProperties)
+		{
+			if(o instanceof IProperty) propList.add((IProperty<?>)o);
+			if(o instanceof IProperty[]) Collections.addAll(propList, ((IProperty<?>[])o));
+			if(o instanceof IUnlistedProperty) unlistedPropList.add((IUnlistedProperty<?>)o);
+			if(o instanceof IUnlistedProperty[]) Collections.addAll(unlistedPropList, ((IUnlistedProperty<?>[])o));
+		}
+		tempProperties = propList.toArray(new IProperty[0]);
+		tempUnlistedProperties = unlistedPropList.toArray(new IUnlistedProperty[0]);
+		return material;
+	}
+
+	protected static Object[] combineProperties(Object[] currentProperties, Object... addedProperties)
+	{
+		Object[] array = new Object[currentProperties.length+addedProperties.length];
+		System.arraycopy(currentProperties, 0, array, 0, currentProperties.length);
+		System.arraycopy(addedProperties, 0, array, currentProperties.length, addedProperties.length);
+		return array;
+	}
+
 	public void parseSubBlocks()
 	{
 		for(int i = 0; i < enumValues.length; i++)
@@ -208,6 +227,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		return EnumBlockRenderType.MODEL;
 	}
 
+	//--- TMT TESR Registration ---//
+
 	@Override
 	@Nonnull
 	public SoundType getSoundType(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Entity entity)
@@ -216,32 +237,13 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		return soundTypes[meta];
 	}
 
-	private static Material setTempProperties(Material material, PropertyEnum<?> property, Object... additionalProperties)
-	{
-		ArrayList<IProperty<?>> propList = new ArrayList<>();
-		ArrayList<IUnlistedProperty<?>> unlistedPropList = new ArrayList<>();
-		propList.add(property);
-		for(Object o : additionalProperties)
-		{
-			if(o instanceof IProperty) propList.add((IProperty<?>)o);
-			if(o instanceof IProperty[]) Collections.addAll(propList, ((IProperty<?>[])o));
-			if(o instanceof IUnlistedProperty) unlistedPropList.add((IUnlistedProperty<?>)o);
-			if(o instanceof IUnlistedProperty[]) Collections.addAll(unlistedPropList, ((IUnlistedProperty<?>[])o));
-		}
-		tempProperties = propList.toArray(new IProperty[0]);
-		tempUnlistedProperties = unlistedPropList.toArray(new IUnlistedProperty[0]);
-		return material;
-	}
-
-	//--- TMT TESR Registration ---//
+	//--- IIEMetaBlock ---//
 
 	public void addToTESRMap(E... id)
 	{
 		for(E subBlock : id)
 			tesrMap.put(subBlock.getMeta(), subBlock.name());
 	}
-
-	//--- IIEMetaBlock ---//
 
 	@Override
 	@Nonnull
@@ -300,25 +302,17 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		return null;
 	}
 
+	//--- Utilities ---//
+
 	@Override
 	public boolean appendPropertiesToState()
 	{
 		return true;
 	}
 
-	//--- Utilities ---//
-
 	public String getTranslationKey(ItemStack stack)
 	{
 		return super.getUnlocalizedName()+"."+enumValues[stack.getMetadata()%enumValues.length].getName();
-	}
-
-	protected static Object[] combineProperties(Object[] currentProperties, Object... addedProperties)
-	{
-		Object[] array = new Object[currentProperties.length+addedProperties.length];
-		System.arraycopy(currentProperties, 0, array, 0, currentProperties.length);
-		System.arraycopy(addedProperties, 0, array, currentProperties.length, addedProperties.length);
-		return array;
 	}
 
 	//--- Block ---//

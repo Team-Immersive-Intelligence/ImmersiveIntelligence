@@ -7,13 +7,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -28,8 +27,8 @@ import java.util.ArrayList;
  */
 public class GuiRepairCrate extends GuiIEContainerBase
 {
-	private final TileEntityRepairCrate tile;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/repair_crate.png";
+	private final TileEntityRepairCrate tile;
 	GuiButtonState buttonHealing = null, buttonBoost = null;
 
 	public GuiRepairCrate(EntityPlayer player, TileEntityRepairCrate tile)
@@ -47,8 +46,8 @@ public class GuiRepairCrate extends GuiIEContainerBase
 		addButton(buttonBoost = new GuiButtonState(1, guiLeft+111, guiTop+24, 28, 24, "", tile.shouldRepairVehicles, TEXTURE, 176, 51, 0));
 
 		boolean upgraded = tile.hasUpgrade(IIContent.UPGRADE_INSERTER);
-		buttonHealing.visible=upgraded;
-		buttonBoost.visible=upgraded;
+		buttonHealing.visible = upgraded;
+		buttonBoost.visible = upgraded;
 	}
 
 	@Override
@@ -79,9 +78,9 @@ public class GuiRepairCrate extends GuiIEContainerBase
 		{
 			ArrayList<String> tooltip = new ArrayList<>();
 
-			if(IIUtils.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
+			if(IIUtils.isPointInRectangle(buttonHealing.x, buttonHealing.y, buttonHealing.x+buttonHealing.width, buttonHealing.y+buttonHealing.height, mouseX, mouseY))
 				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"repair_crate.repair_armor"));
-			else if(IIUtils.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
+			else if(IIUtils.isPointInRectangle(buttonBoost.x, buttonBoost.y, buttonBoost.x+buttonBoost.width, buttonBoost.y+buttonBoost.height, mouseX, mouseY))
 				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"repair_crate.repair_vehicles"));
 
 			if(IIUtils.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
@@ -110,6 +109,6 @@ public class GuiRepairCrate extends GuiIEContainerBase
 		this.drawTexturedModalRect(guiLeft, guiTop+79, 0, 79, xSize, ySize-79);
 		this.drawTexturedModalRect(guiLeft+ww, guiTop, 9, 0, upgraded?167: 102, 79);
 
-		IIClientUtils.drawPowerBar(guiLeft+153, guiTop+24, 7,47,tile.energyStorage/(float)EffectCrates.maxEnergyStored);
+		IIClientUtils.drawPowerBar(guiLeft+153, guiTop+24, 7, 47, tile.energyStorage/(float)EffectCrates.maxEnergyStored);
 	}
 }

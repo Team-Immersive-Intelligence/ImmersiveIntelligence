@@ -10,7 +10,6 @@ import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
 
 /**
  * @author Pabilo8

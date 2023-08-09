@@ -40,7 +40,7 @@ public class GuiSliderII extends GuiSliderIE
 			for(int i = 0; i < width-8; i += 2)
 				this.drawTexturedModalRect(x+4+i, y, 13, 128, 2, height);
 			this.mouseDragged(mc, mouseX, mouseY);
-			fontrenderer.drawSplitString(displayString, x, y+1-fontrenderer.getWordWrappedHeight(displayString,width+10), width+10, textColor);
+			fontrenderer.drawSplitString(displayString, x, y+1-fontrenderer.getWordWrappedHeight(displayString, width+10), width+10, textColor);
 		}
 	}
 

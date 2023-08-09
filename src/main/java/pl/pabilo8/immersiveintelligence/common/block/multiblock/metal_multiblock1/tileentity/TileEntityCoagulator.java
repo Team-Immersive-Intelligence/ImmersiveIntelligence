@@ -106,7 +106,7 @@ public class TileEntityCoagulator extends TileEntityMultiblockMetal<TileEntityCo
 
 						this.craneBucket = -1;
 						this.craneProgress = 0;
-						this.craneAnimation=CraneAnimation.NONE;
+						this.craneAnimation = CraneAnimation.NONE;
 					}
 					break;
 				}

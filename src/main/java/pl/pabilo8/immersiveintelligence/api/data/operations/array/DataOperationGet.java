@@ -15,7 +15,7 @@ public class DataOperationGet extends DataOperation
 	{
 		name = "array_get";
 		allowedTypes = new Class[]{DataTypeArray.class, DataTypeInteger.class};
-		params = new String[]{"array","index"};
+		params = new String[]{"array", "index"};
 		expectedResult = IDataType.class;
 	}
 

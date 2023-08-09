@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
@@ -195,12 +194,12 @@ public class IIManualScenario extends IIManualObject
 		GlStateManager.disableLighting();
 
 		GlStateManager.popMatrix();
-		GlStateManager.color(1f,1f,1f,1f);
+		GlStateManager.color(1f, 1f, 1f, 1f);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x+8, y+8, 0);
-		GlStateManager.scale(-16,16,-16);
-		GlStateManager.rotate(180,0,1,0);
+		GlStateManager.scale(-16, 16, -16);
+		GlStateManager.rotate(180, 0, 1, 0);
 		for(AMT mod : this.overlay)
 			mod.render(tes, buf);
 		GlStateManager.popMatrix();
@@ -212,7 +211,7 @@ public class IIManualScenario extends IIManualObject
 				this.hoveredText = hover.text;
 				break;
 			}
-		GlStateManager.color(1f,1f,1f,1f);
+		GlStateManager.color(1f, 1f, 1f, 1f);
 
 
 	}

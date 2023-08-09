@@ -1,9 +1,9 @@
 package pl.pabilo8.immersiveintelligence.api.data.operations.advanced_arithmetic;
 
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -14,7 +14,7 @@ public class DataOperationRoot extends DataOperation
 	public DataOperationRoot()
 	{
 		name = "root";
-		allowedTypes = new Class[]{IDataTypeNumeric.class,IDataTypeNumeric.class};
+		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
 		expectedResult = IDataTypeNumeric.class;
 	}
 

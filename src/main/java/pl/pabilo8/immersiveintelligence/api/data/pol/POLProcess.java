@@ -12,9 +12,9 @@ import java.util.Stack;
 public class POLProcess
 {
 	private final POLScript script;
+	private final Stack<Tuple<Integer, Integer>> returnStack = new Stack<>();
 	private boolean running = true;
 	private int lineID = 0, time = 0;
-	private final Stack<Tuple<Integer, Integer>> returnStack = new Stack<>();
 
 	public POLProcess(POLScript script)
 	{

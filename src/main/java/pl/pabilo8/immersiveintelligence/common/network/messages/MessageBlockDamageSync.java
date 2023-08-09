@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,9 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
-import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleAtomFog;
 import pl.pabilo8.immersiveintelligence.client.fx.nuke.ParticleShockwave;
-import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleBulletHole;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**

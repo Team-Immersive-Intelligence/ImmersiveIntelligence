@@ -30,7 +30,7 @@ public class MovingSoundMotorbikeEngine extends MovingSound
 	 */
 	public void update()
 	{
-		if (this.motorbike.isDead)
+		if(this.motorbike.isDead)
 		{
 			this.donePlaying = true;
 		}
@@ -41,17 +41,17 @@ public class MovingSoundMotorbikeEngine extends MovingSound
 			this.yPosF = (float)this.motorbike.posY;
 			this.zPosF = (float)this.motorbike.posZ;
 
-			if (motorbike.engineProgress>10)
+			if(motorbike.engineProgress > 10)
 			{
-				this.distance = Math.min(1f,distance+0.05f);
+				this.distance = Math.min(1f, distance+0.05f);
 				this.pitch = motorbike.acceleration*1.25f;
 			}
 			else
 			{
-				this.pitch=0;
-				this.distance = Math.max(0f,distance-0.07f);
+				this.pitch = 0;
+				this.distance = Math.max(0f, distance-0.07f);
 			}
-			this.volume=distance*0.95f;
+			this.volume = distance*0.95f;
 		}
 	}
 }

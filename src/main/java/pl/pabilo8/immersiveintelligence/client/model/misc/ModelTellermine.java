@@ -3,13 +3,13 @@ package pl.pabilo8.immersiveintelligence.client.model.misc;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 /**
  * @author Pabilo8
@@ -17,11 +17,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelTellermine extends ModelIIBase implements IBulletModel
 {
+	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/mine/tellermine.png";
+	public ModelRendererTurbo[] coreModel;
 	int textureX = 32;
 	int textureY = 32;
-	public static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/mine/tellermine.png";
-
-	public ModelRendererTurbo[] coreModel;
 
 	public ModelTellermine() //Same as Filename
 	{
@@ -37,7 +36,7 @@ public class ModelTellermine extends ModelIIBase implements IBulletModel
 		baseModel[8] = new ModelRendererTurbo(this, 12, 20, textureX, textureY); // Box 2
 		baseModel[9] = new ModelRendererTurbo(this, 0, 18, textureX, textureY); // Shape 1
 
-		baseModel[0].addShape3D(0F, -6F, -2F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(6, 2, 6, 2), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12) }), 2, 6, 12, 34, 2, ModelRendererTurbo.MR_FRONT, new float[] {12 ,4 ,3 ,8 ,3 ,4}); // Shape 1
+		baseModel[0].addShape3D(0F, -6F, -2F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(6, 2, 6, 2), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12)}), 2, 6, 12, 34, 2, ModelRendererTurbo.MR_FRONT, new float[]{12, 4, 3, 8, 3, 4}); // Shape 1
 		baseModel[0].setRotationPoint(0F, 0F, 0F);
 		baseModel[0].rotateAngleX = 1.57079633F;
 
@@ -71,7 +70,7 @@ public class ModelTellermine extends ModelIIBase implements IBulletModel
 		baseModel[8].setRotationPoint(-2F, -2.5F, 5.5F);
 		baseModel[8].rotateAngleX = -3.47320521F;
 
-		baseModel[9].addShape3D(0F, -6F, -2F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(6, 2, 6, 2), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12) }), 2, 6, 12, 34, 2, ModelRendererTurbo.MR_FRONT, new float[] {12 ,4 ,3 ,8 ,3 ,4}); // Shape 1
+		baseModel[9].addShape3D(0F, -6F, -2F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(4, 0, 4, 0), new Coord2D(6, 2, 6, 2), new Coord2D(6, 10, 6, 10), new Coord2D(4, 12, 4, 12), new Coord2D(0, 12, 0, 12)}), 2, 6, 12, 34, 2, ModelRendererTurbo.MR_FRONT, new float[]{12, 4, 3, 8, 3, 4}); // Shape 1
 		baseModel[9].setRotationPoint(0F, 0F, 0F);
 		baseModel[9].rotateAngleX = 1.57079633F;
 		baseModel[9].rotateAngleY = -3.14159265F;
@@ -83,10 +82,10 @@ public class ModelTellermine extends ModelIIBase implements IBulletModel
 		coreModel[0].addBox(0F, -3F, 0F, 8, 2, 8, 0F); // Box 2
 		coreModel[0].setRotationPoint(-4F, 0F, -4F);
 
-		parts.put("base",baseModel);
-		parts.put("core",coreModel);
+		parts.put("base", baseModel);
+		parts.put("core", coreModel);
 
-		translateAll(0f,1f,0.5f);
+		translateAll(0f, 1f, 0.5f);
 
 		flipAll();
 	}

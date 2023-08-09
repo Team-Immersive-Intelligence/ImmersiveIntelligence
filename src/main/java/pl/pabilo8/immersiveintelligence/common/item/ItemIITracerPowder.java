@@ -30,12 +30,21 @@ public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>
 		super("tracer_powder", 64, Powders.values());
 	}
 
-	enum Powders implements IIItemEnum
+	public static void setColour(ItemStack stack, int rgb)
 	{
-		@IIItemProperties(oreDict = {"dustTracer"})
-		TRACER_POWDER,
-		@IIItemProperties(oreDict = {"dustFlare"})
-		FLARE_POWDER
+		ItemNBTHelper.setInt(stack, "colour", rgb);
+	}
+
+	public static void setColour(ItemStack stack, int r, int g, int b)
+	{
+		setColour(stack, MathHelper.rgb(r, g, b));
+	}
+
+	public static int getColour(ItemStack stack)
+	{
+		if(!ItemNBTHelper.hasKey(stack, "colour"))
+			setColour(stack, 0xffffff);
+		return ItemNBTHelper.getInt(stack, "colour");
 	}
 
 	@Override
@@ -54,33 +63,23 @@ public class ItemIITracerPowder extends ItemIISubItemsBase<Powders>
 		return IIClientUtils.fontRegular;
 	}
 
-
-	public static void setColour(ItemStack stack, int rgb)
-	{
-		ItemNBTHelper.setInt(stack, "colour", rgb);
-	}
-
-	public static void setColour(ItemStack stack, int r, int g, int b)
-	{
-		setColour(stack, MathHelper.rgb(r, g, b));
-	}
-
 	@Override
 	public int getColourForIEItem(ItemStack stack, int pass)
 	{
 		return getColour(stack);
 	}
 
-	public static int getColour(ItemStack stack)
-	{
-		if(!ItemNBTHelper.hasKey(stack, "colour"))
-			setColour(stack, 0xffffff);
-		return ItemNBTHelper.getInt(stack, "colour");
-	}
-
 	@Override
 	public boolean hasCustomItemColours()
 	{
 		return true;
+	}
+
+	enum Powders implements IIItemEnum
+	{
+		@IIItemProperties(oreDict = {"dustTracer"})
+		TRACER_POWDER,
+		@IIItemProperties(oreDict = {"dustFlare"})
+		FLARE_POWDER
 	}
 }

@@ -18,6 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 {
 	public EnumFacing facing = EnumFacing.NORTH;
+	@SideOnly(Side.CLIENT)
+	private AxisAlignedBB renderAABB;
 
 	@Override
 	public EnumFacing getFacing()
@@ -55,7 +57,6 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 		return false;
 	}
 
-
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
@@ -81,9 +82,6 @@ public class TileEntityMechanicalWheel extends TileEntityMechanicalConnectable
 	{
 		refreshBeltNetwork = false;
 	}
-
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@SideOnly(Side.CLIENT)
 	@Override

@@ -10,13 +10,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
@@ -26,24 +26,24 @@ import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 @SideOnly(Side.CLIENT)
 public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadableModelContainer<ModelLightEngineerArmor>
 {
-	static int textureX = 64;
-	static int textureY = 64;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/armor/engineer_light.png";
 	private static final String TEXTURE_GASMASK = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_gasmask.png";
 	private static final String TEXTURE_GOGGLES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_goggles.png";
 	private static final String TEXTURE_PLATES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_plates.png";
 	private static final String TEXTURE_EXOSUIT = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_exosuit.png";
 	private static final String TEXTURE_SCUBA = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_scuba.png";
-
-	ModelRendererTurbo[] capeModel, gasmaskModel, infiltratorGogglesModel, technicianGogglesModel, engineerGogglesModel;
-	ModelRendererTurbo[] scubaTankModel, exoSuitRightLegModel, exoSuitLeftLegModel, racketsModel, flippersModel;
-	ModelRendererTurbo[] platesHelmetModel, platesRightArmModel, platesLeftArmModel, platesChestModel, platesRightLegModel, platesLeftLegModel, platesSkirtRightModel, platesSkirtLeftModel;
+	static int textureX = 64;
+	static int textureY = 64;
+	static ModelLightEngineerArmor modelInstance;
 
 	static
 	{
 		modelInstance = new ModelLightEngineerArmor().subscribeToList("light_engineer_armor");
 	}
 
+	ModelRendererTurbo[] capeModel, gasmaskModel, infiltratorGogglesModel, technicianGogglesModel, engineerGogglesModel;
+	ModelRendererTurbo[] scubaTankModel, exoSuitRightLegModel, exoSuitLeftLegModel, racketsModel, flippersModel;
+	ModelRendererTurbo[] platesHelmetModel, platesRightArmModel, platesLeftArmModel, platesChestModel, platesRightLegModel, platesLeftLegModel, platesSkirtRightModel, platesSkirtLeftModel;
 
 	public ModelLightEngineerArmor()
 	{
@@ -1109,8 +1109,6 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 		flipAll();
 		init();
 	}
-
-	static ModelLightEngineerArmor modelInstance;
 
 	public static ModelLightEngineerArmor getModel(EntityEquipmentSlot part, ItemStack stack)
 	{

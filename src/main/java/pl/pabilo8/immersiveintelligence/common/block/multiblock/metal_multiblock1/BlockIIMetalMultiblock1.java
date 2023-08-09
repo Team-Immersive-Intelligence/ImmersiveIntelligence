@@ -6,8 +6,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumBlockRenderType;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockChemicalPainter;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.*;
@@ -34,6 +32,16 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 				MetalMultiblocks1.VULCANIZER, MetalMultiblocks1.CHEMICAL_PAINTER, MetalMultiblocks1.COAGULATOR,
 				MetalMultiblocks1.PROJECTILE_WORKSHOP, MetalMultiblocks1.AMMUNITION_WORKSHOP
 		);
+	}
+
+	@Deprecated
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{
+		if(state.getValue(property)==MetalMultiblocks1.REDSTONE_DATA_INTERFACE)
+		{
+			return EnumBlockRenderType.MODEL;
+		}
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	public enum MetalMultiblocks1 implements IITileMultiblockEnum
@@ -63,17 +71,5 @@ public class BlockIIMetalMultiblock1 extends BlockIIMultiblock<MetalMultiblocks1
 		CHEMICAL_PAINTER,
 		@EnumMultiblockProvider(multiblock = MultiblockVulcanizer.class, tile = TileEntityVulcanizer.class)
 		VULCANIZER
-	}
-
-	@Deprecated
-	public EnumBlockRenderType getRenderType(IBlockState state)
-	{
-		switch(state.getValue(property))
-		{
-			case REDSTONE_DATA_INTERFACE:
-				return EnumBlockRenderType.MODEL;
-			default:
-				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-		}
 	}
 }

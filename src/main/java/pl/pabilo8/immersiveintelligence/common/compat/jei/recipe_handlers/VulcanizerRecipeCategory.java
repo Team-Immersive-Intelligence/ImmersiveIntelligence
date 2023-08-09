@@ -95,11 +95,11 @@ public class VulcanizerRecipeCategory extends IIRecipeCategory<VulcanizerRecipe,
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0,0,100f);
+			GlStateManager.translate(0, 0, 100f);
 			ClientUtils.drawSlot(61, 41, 16, 16);
 			GlStateManager.popMatrix();
 
-			drawEnergyTimeInfo(minecraft,0,recipeHeight-10);
+			drawEnergyTimeInfo(minecraft, 0, recipeHeight-10);
 		}
 	}
 }

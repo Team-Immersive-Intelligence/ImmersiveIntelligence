@@ -26,6 +26,10 @@ public class DataTypeExpression implements IDataType
 		this.requiredVariable = requiredVariable;
 	}
 
+	public DataTypeExpression()
+	{
+	}
+
 	public IDataType getArgument(int index)
 	{
 		return data[index%data.length];
@@ -34,11 +38,6 @@ public class DataTypeExpression implements IDataType
 	public DataOperation getOperation()
 	{
 		return operation;
-	}
-
-	public char getRequiredVariable()
-	{
-		return requiredVariable;
 	}
 
 	public void setOperation(@Nonnull DataOperation operation)
@@ -62,13 +61,14 @@ public class DataTypeExpression implements IDataType
 		this.data = newData;
 	}
 
+	public char getRequiredVariable()
+	{
+		return requiredVariable;
+	}
+
 	public void setRequiredVariable(char requiredVariable)
 	{
 		this.requiredVariable = requiredVariable;
-	}
-
-	public DataTypeExpression()
-	{
 	}
 
 	public IDataType getValue(DataPacket packet)

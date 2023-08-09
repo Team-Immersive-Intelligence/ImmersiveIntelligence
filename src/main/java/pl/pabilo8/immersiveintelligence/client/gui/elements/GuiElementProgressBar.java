@@ -10,9 +10,9 @@ import pl.pabilo8.immersiveintelligence.common.util.IILib;
  */
 public class GuiElementProgressBar extends Gui
 {
+	private final int color1, color2, w, h;
 	public int x;
 	public int y;
-	private final int color1, color2, w, h;
 
 	public GuiElementProgressBar(int x, int y, int w, int h, int color1, int color2)
 	{

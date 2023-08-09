@@ -23,6 +23,24 @@ public class CustomSkinHandler
 	//For each UUID
 	public static final LinkedHashMap<String, ArrayList<SpecialSkin>> specialSkinsByUUID = new LinkedHashMap<>();
 
+	public static void getManualPages()
+	{
+		ManualHelper.getManual().manualContents.removeAll("contributor_skins");
+		ArrayList<ManualPages> skin_pages = new ArrayList<>();
+		skin_pages.add(new ManualPages.Text(ManualHelper.getManual(), "contributor_skins"));
+		for(SpecialSkin skin : CustomSkinHandler.specialSkins.values())
+			skin_pages.add(new IIManualPageContributorSkin(ManualHelper.getManual(), skin));
+
+		ManualEntry contributor_skins = ManualHelper.getManual().getEntry("contributor_skins");
+		if(contributor_skins==null)
+		{
+			contributor_skins = new ManualEntry("contributor_skins", IILib.CAT_WARFARE);
+			ManualHelper.getManual().manualContents.put(IILib.CAT_WARFARE, contributor_skins);
+		}
+
+		contributor_skins.setPages(skin_pages.toArray(new ManualPages[]{}));
+	}
+
 	public static class SpecialSkin
 	{
 		public final String name;
@@ -144,24 +162,6 @@ public class CustomSkinHandler
 			}
 
 		}
-	}
-
-	public static void getManualPages()
-	{
-		ManualHelper.getManual().manualContents.removeAll("contributor_skins");
-		ArrayList<ManualPages> skin_pages = new ArrayList<>();
-		skin_pages.add(new ManualPages.Text(ManualHelper.getManual(), "contributor_skins"));
-		for(SpecialSkin skin : CustomSkinHandler.specialSkins.values())
-			skin_pages.add(new IIManualPageContributorSkin(ManualHelper.getManual(), skin));
-
-		ManualEntry contributor_skins = ManualHelper.getManual().getEntry("contributor_skins");
-		if(contributor_skins==null)
-		{
-			contributor_skins = new ManualEntry("contributor_skins", IILib.CAT_WARFARE);
-			ManualHelper.getManual().manualContents.put(IILib.CAT_WARFARE,contributor_skins);
-		}
-
-		contributor_skins.setPages(skin_pages.toArray(new ManualPages[]{}));
 	}
 
 

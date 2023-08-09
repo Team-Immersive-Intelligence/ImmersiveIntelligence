@@ -10,7 +10,6 @@ import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConne
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
@@ -30,7 +29,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AlarmSiren;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -48,14 +46,13 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 {
 	public int redstoneChannel = 0;
 	public boolean rsDirty = false;
-
-	EnumFacing facing = EnumFacing.NORTH;
-
 	public boolean active = false;
 	public float soundVolume = 1f;
-
 	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
+	EnumFacing facing = EnumFacing.NORTH;
 	private boolean refreshWireNetwork = false;
+	@SideOnly(Side.CLIENT)
+	private AxisAlignedBB renderAABB;
 
 	@Override
 	public void update()
@@ -119,15 +116,15 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	}
 
 	@Override
-	public void setNetwork(RedstoneWireNetwork net)
-	{
-		wireNetwork = net;
-	}
-
-	@Override
 	public RedstoneWireNetwork getNetwork()
 	{
 		return wireNetwork;
+	}
+
+	@Override
+	public void setNetwork(RedstoneWireNetwork net)
+	{
+		wireNetwork = net;
 	}
 
 	@Override
@@ -235,9 +232,6 @@ public class TileEntityAlarmSiren extends TileEntityImmersiveConnectable
 	{
 		refreshWireNetwork = false;
 	}
-
-	@SideOnly(Side.CLIENT)
-	private AxisAlignedBB renderAABB;
 
 	@SideOnly(Side.CLIENT)
 	@Override

@@ -85,7 +85,7 @@ public class AIHansAssaultRifle extends AIHansHandWeapon
 		if(this.rangedAttackTime < 0)
 		{
 			hans.resetActiveHand();
-			rangedAttackTime ++;
+			rangedAttackTime++;
 		}
 		if(canFire&&aimingAtTarget&&this.rangedAttackTime < burstTime)
 		{
@@ -97,7 +97,7 @@ public class AIHansAssaultRifle extends AIHansHandWeapon
 			}
 			else
 				hans.resetActiveHand();
-			rangedAttackTime ++;
+			rangedAttackTime++;
 
 			if(rangedAttackTime >= burstTime)
 				rangedAttackTime = -(int)(-burstTime*0.75);

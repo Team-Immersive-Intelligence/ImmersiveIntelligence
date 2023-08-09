@@ -14,7 +14,7 @@ public class DataOperationSubtract extends DataOperation
 	{
 		name = "subtract";
 		expression = "-";
-		allowedTypes = new Class[]{IDataTypeNumeric.class,IDataTypeNumeric.class};
+		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
 		expectedResult = IDataTypeNumeric.class;
 	}
 

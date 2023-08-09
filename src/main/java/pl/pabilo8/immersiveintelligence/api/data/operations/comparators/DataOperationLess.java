@@ -17,7 +17,7 @@ public class DataOperationLess extends DataOperation
 	{
 		name = "less";
 		expression = "<";
-		allowedTypes = new Class[]{IDataTypeNumeric.class,IDataTypeNumeric.class};
+		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
 		expectedResult = DataTypeBoolean.class;
 	}
 

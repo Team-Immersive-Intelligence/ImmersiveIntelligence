@@ -13,14 +13,14 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
  */
 public class AIHansAvoidArrows extends AIHansBase
 {
+	//The chance a Hans will dodge
+	private final float dodgeChance;
 	//The horizontal velocity of the entity being avoided.
 	private Vec3d arrowUVec;
 	//Ticks until the entity gives up.
 	private int giveUpDelay;
 	//Used to prevent mobs from leaping all over the place from multiple arrows.
 	private int dodgeDelay;
-	//The chance a Hans will dodge
-	private final float dodgeChance;
 
 	protected AIHansAvoidArrows(EntityHans hans)
 	{
@@ -71,11 +71,13 @@ public class AIHansAvoidArrows extends AIHansBase
 		}
 	}
 
-	private static void tryDodgeArrow( EntityHans entity, double uX, double uZ )
+	private static void tryDodgeArrow(EntityHans entity, double uX, double uZ)
 	{
-		for(EntityAITasks.EntityAITaskEntry entry : entity.tasks.taskEntries.toArray( new EntityAITasks.EntityAITaskEntry[ 0 ] ) ) {
-			if( entry.action instanceof AIHansAvoidArrows) {
-				((AIHansAvoidArrows)entry.action).setDodgeTarget( new Vec3d( uX, 0.0, uZ ) );
+		for(EntityAITasks.EntityAITaskEntry entry : entity.tasks.taskEntries.toArray(new EntityAITasks.EntityAITaskEntry[0]))
+		{
+			if(entry.action instanceof AIHansAvoidArrows)
+			{
+				((AIHansAvoidArrows)entry.action).setDodgeTarget(new Vec3d(uX, 0.0, uZ));
 			}
 		}
 	}

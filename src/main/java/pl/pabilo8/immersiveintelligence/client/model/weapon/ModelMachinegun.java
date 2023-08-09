@@ -17,16 +17,14 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
  */
 public class ModelMachinegun extends ModelIIBase
 {
+	private static final String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
+	public TmtNamedBoxGroup baseBox, barrelBox, sightsBox, triggerBox, ammoBox, slideBox, gripBox, bipodBox;
+	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox, baubleBox, tripodBox;
 	int textureX = 64;
 	int textureY = 128;
-
 	ModelRendererTurbo[] barrelModel, sightsModel, triggerModel, ammoModel, slideModel, gripModel, bipodModel;
-	public TmtNamedBoxGroup baseBox, barrelBox, sightsBox, triggerBox, ammoBox, slideBox, gripBox, bipodBox;
 	ModelRendererTurbo[] heavyBarrelModel, waterCoolingModel, secondMagazineMainModel, secondMagazineMagModel, beltFedLoaderModel, scopeModel, infraredScopeModel, hastyBipodModel, preciseBipodModel, shieldModel, baubleModel;
 	ModelRendererTurbo[] tripodBaseModel, tripodLeg1Model, tripodLeg2Model, tripodLeg3Model;
-	public TmtNamedBoxGroup heavyBarrelBox, waterCoolingBox, secondMagazineMainBox, secondMagazineMagBox, beltFedLoaderBox, scopeBox, infraredScopeBox, hastyBipodBox, preciseBipodBox, shieldBox, baubleBox, tripodBox;
-
-	private static final String texture = ImmersiveIntelligence.MODID+":textures/items/weapons/machinegun.png";
 
 	public ModelMachinegun() //Same as Filename
 	{

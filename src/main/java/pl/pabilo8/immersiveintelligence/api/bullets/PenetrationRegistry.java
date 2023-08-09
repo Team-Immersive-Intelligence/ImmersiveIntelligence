@@ -8,10 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.Config;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Graphics;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.PenMaterialTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerConcretes.*;
@@ -19,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandl
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerWood.PenetrationHandlerLog;
 import pl.pabilo8.immersiveintelligence.api.bullets.penhandlers.PenetrationHandlerWood.PenetrationHandlerPlanks;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,12 +31,12 @@ import java.util.function.Predicate;
  */
 public class PenetrationRegistry
 {
+	private static final IPenetrationHandler DEFAULT = new PenetrationHandlerGeneral();
 	public static HashMap<Predicate<Entity>, IPenetrationHandler> registeredEntities = new HashMap<>();
 	//Blocks first
 	public static HashMap<Predicate<IBlockState>, IPenetrationHandler> registeredBlocks = new HashMap<>();
 	//Materials second
 	public static LinkedHashMap<Predicate<Material>, IPenetrationHandler> registeredMaterials = new LinkedHashMap<>();
-
 	public static ArrayList<DamageBlockPos> blockDamage = new ArrayList<>();
 	public static ArrayList<DamageBlockPos> blockDamageClient = new ArrayList<DamageBlockPos>()
 	{
@@ -51,8 +49,6 @@ public class PenetrationRegistry
 		}
 	};
 
-	private static final IPenetrationHandler DEFAULT = new PenetrationHandlerGeneral();
-
 	static
 	{
 		AmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), IEContent.blockMetalDecoration0,
@@ -60,7 +56,7 @@ public class PenetrationRegistry
 		AmmoUtils.batchRegisterHandler(new PenetrationHandlerSteel(), IIContent.blockMetalDecoration,
 				IIContent.blockMetalMultiblock0, IIContent.blockMetalMultiblock1);
 		registeredBlocks.put(iBlockState -> IIUtils.compareBlockstateOredict(iBlockState, "logWood"), new PenetrationHandlerLog());
-		AmmoUtils.batchRegisterHandler(new PenetrationHandlerDirt(),Blocks.GRASS, Blocks.DIRT);
+		AmmoUtils.batchRegisterHandler(new PenetrationHandlerDirt(), Blocks.GRASS, Blocks.DIRT);
 
 		AmmoUtils.registerMetalMaterial(new PenetrationHandlerIron(), "iron");
 		AmmoUtils.registerMetalMaterial(new PenetrationHandlerCopper(), "copper");
@@ -103,33 +99,6 @@ public class PenetrationRegistry
 		//registeredMaterials.put(material -> true, DEFAULT);
 	}
 
-	public interface IPenetrationHandler
-	{
-		/**
-		 * @return integrity - the block's penetration hp
-		 */
-		float getIntegrity();
-
-		/**
-		 * @return density (constant resistance multiplier)
-		 */
-		float getDensity();
-
-		@Nullable
-		default SoundEvent getSpecialSound(HitEffect effect)
-		{
-			return null;
-		}
-
-		PenMaterialTypes getPenetrationType();
-	}
-
-	public enum HitEffect
-	{
-		IMPACT,
-		RICOCHET
-	}
-
 	public static IPenetrationHandler getPenetrationHandler(IBlockState state)
 	{
 		for(Entry<Predicate<IBlockState>, IPenetrationHandler> e : PenetrationRegistry.registeredBlocks.entrySet())
@@ -157,6 +126,33 @@ public class PenetrationRegistry
 		PenetrationRegistry.blockDamage.add(new DamageBlockPos(blockHitPos, hp));
 		return hp;
 
+	}
+
+	public enum HitEffect
+	{
+		IMPACT,
+		RICOCHET
+	}
+
+	public interface IPenetrationHandler
+	{
+		/**
+		 * @return integrity - the block's penetration hp
+		 */
+		float getIntegrity();
+
+		/**
+		 * @return density (constant resistance multiplier)
+		 */
+		float getDensity();
+
+		@Nullable
+		default SoundEvent getSpecialSound(HitEffect effect)
+		{
+			return null;
+		}
+
+		PenMaterialTypes getPenetrationType();
 	}
 
 }

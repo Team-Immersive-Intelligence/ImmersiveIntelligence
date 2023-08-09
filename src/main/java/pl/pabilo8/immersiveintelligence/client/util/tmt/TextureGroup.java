@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class TextureGroup
 {
+	public ArrayList<TexturedPolygon> poly;
+	public String texture;
+
 	public TextureGroup()
 	{
 		poly = new ArrayList<>();
@@ -36,7 +39,4 @@ public class TextureGroup
 			ClientUtils.mc().renderEngine.bindTexture(new ResourceLocation("", ""));
 		}
 	}
-
-	public ArrayList<TexturedPolygon> poly;
-	public String texture;
 }

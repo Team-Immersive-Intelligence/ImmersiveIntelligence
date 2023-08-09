@@ -24,15 +24,14 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

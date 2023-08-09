@@ -9,8 +9,8 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class ModelNavalMineAnchor extends ModelIIBase
 {
-	int textureX=64;
-	int textureY=32;
+	int textureX = 64;
+	int textureY = 32;
 
 	public ModelNavalMineAnchor()
 	{
@@ -80,6 +80,6 @@ public class ModelNavalMineAnchor extends ModelIIBase
 		baseModel[12].rotateAngleX = 1.57079633F;
 
 		flipAll();
-		translateAll(-8,8,8);
+		translateAll(-8, 8, 8);
 	}
 }

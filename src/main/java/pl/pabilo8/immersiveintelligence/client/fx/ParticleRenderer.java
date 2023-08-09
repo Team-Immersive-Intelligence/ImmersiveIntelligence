@@ -30,10 +30,17 @@ import java.util.*;
 public class ParticleRenderer
 {
 	public static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
-
-	private final Map<DrawingStages, Queue<IIParticle>> particles = new HashMap<>();
 	private static final int MAX_PARTICLES = 2000;
 	private static final int MAX_DRAWN_PARTICLES = 1000;
+	private final Map<DrawingStages, Queue<IIParticle>> particles = new HashMap<>();
+
+	private static void updateParticleFields(float partialTicks, EntityPlayer player)
+	{
+		Particle.interpPosX = player.lastTickPosX+(player.posX-player.lastTickPosX)*partialTicks;
+		Particle.interpPosY = player.lastTickPosY+(player.posY-player.lastTickPosY)*partialTicks;
+		Particle.interpPosZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*partialTicks;
+		Particle.cameraViewDir = player.getLook(partialTicks);
+	}
 
 	public void updateParticles()
 	{
@@ -113,14 +120,6 @@ public class ParticleRenderer
 			GlStateManager.popMatrix();
 		}
 
-	}
-
-	private static void updateParticleFields(float partialTicks, EntityPlayer player)
-	{
-		Particle.interpPosX = player.lastTickPosX+(player.posX-player.lastTickPosX)*partialTicks;
-		Particle.interpPosY = player.lastTickPosY+(player.posY-player.lastTickPosY)*partialTicks;
-		Particle.interpPosZ = player.lastTickPosZ+(player.posZ-player.lastTickPosZ)*partialTicks;
-		Particle.cameraViewDir = player.getLook(partialTicks);
 	}
 
 	public void addEffect(IIParticle p)

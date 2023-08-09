@@ -86,6 +86,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 	public boolean isDrawerOpened = false, isDoorOpened = false;
 	public float drawerAngle = 0, doorAngle = 0;
 	public NonNullList<ItemStack> inventory = NonNullList.withSize(26, ItemStack.EMPTY);
+	IItemHandler inventoryHandler = new IEInventoryHandler(26, this, 0, true, true);
 
 	public TileEntityDataInputMachine()
 	{
@@ -435,8 +436,6 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			return master()!=null;
 		return super.hasCapability(capability, facing);
 	}
-
-	IItemHandler inventoryHandler = new IEInventoryHandler(26, this, 0, true, true);
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)

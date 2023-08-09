@@ -31,6 +31,30 @@ public class ImmersivePostsHelper extends IICompatModule
 	private BlockFence platinumFence;
 	private BlockFence duraluminiumFence;
 
+	@Optional.Method(modid = "immersiveposts")
+	private static BlockPost createMetalPost(EnumPostMaterial postMat)
+	{
+		return new BlockPost(Material.IRON, postMat);
+	}
+
+	private static BlockFence createFence(String name)
+	{
+		return new BlockMetalFence(name);
+	}
+
+	@Nullable
+	@Deprecated
+	@Optional.Method(modid = "immersiveposts")
+	public static EnumPostMaterial addPostMaterial(String name, Block block)
+	{
+		return EnumHelper.addEnum(EnumPostMaterial.class, name.toUpperCase(),
+				new Class[]{
+						String.class, Block.class, boolean.class, boolean.class
+				},
+				name+"post", block, true, true
+		);
+	}
+
 	/**
 	 * <b>Potentially</b> Dangerous alternative prefix `immersiveposts` for name `*insert metal name*`, expected `immersiveintelligence`.
 	 * This could be a intended override, but in <s>most cases</s> <b>no cases at all</b> indicates a broken mod.
@@ -48,7 +72,7 @@ public class ImmersivePostsHelper extends IICompatModule
 		try
 		{
 			IIContent.itemMaterialRod.setMetaUnhidden(MaterialsRod.ZINC, MaterialsRod.PLATINUM);
-			
+
 			Constructor<EnumPostMaterial> constructor = EnumPostMaterial.class.getDeclaredConstructor(String.class, int.class, String.class, Block.class, boolean.class, boolean.class);
 			constructor.setAccessible(true);
 
@@ -80,8 +104,7 @@ public class ImmersivePostsHelper extends IICompatModule
 			);
 			 */
 
-		}
-		catch(NoSuchMethodException e) // |IOException
+		} catch(NoSuchMethodException e) // |IOException
 		{
 			IILogger.info("Couldn't add Immersive Posts Compat :<");
 		}
@@ -109,17 +132,6 @@ public class ImmersivePostsHelper extends IICompatModule
 
 	}
 
-	@Optional.Method(modid = "immersiveposts")
-	private static BlockPost createMetalPost(EnumPostMaterial postMat)
-	{
-		return new BlockPost(Material.IRON, postMat);
-	}
-
-	private static BlockFence createFence(String name)
-	{
-		return new BlockMetalFence(name);
-	}
-
 	public static class BlockMetalFence extends BlockFence
 	{
 		public final String rawName;
@@ -144,18 +156,5 @@ public class ImmersivePostsHelper extends IICompatModule
 			itemBlock = (ItemBlock)new ItemBlock(this).setUnlocalizedName(ImmersiveIntelligence.MODID+".fence_"+name);
 			IIContent.ITEMS.add(itemBlock);
 		}
-	}
-
-	@Nullable
-	@Deprecated
-	@Optional.Method(modid = "immersiveposts")
-	public static EnumPostMaterial addPostMaterial(String name, Block block)
-	{
-		return EnumHelper.addEnum(EnumPostMaterial.class, name.toUpperCase(),
-				new Class[]{
-						String.class, Block.class, boolean.class, boolean.class
-				},
-				name+"post", block, true, true
-		);
 	}
 }

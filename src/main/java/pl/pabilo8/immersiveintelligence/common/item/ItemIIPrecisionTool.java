@@ -38,25 +38,6 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 			PrecissionAssemblerRecipe.registerToolType(e.getName(), this);
 	}
 
-	public enum PrecisionTools implements IIItemEnum
-	{
-		BUZZSAW(Tools.precissionToolBuzzsawDurability, Tools.precissionToolBuzzsawUsageTime),
-		DRILL(Tools.precissionToolDrillDurability, Tools.precissionToolDrillUsageTime),
-		INSERTER(Tools.precissionToolInserterDurability, Tools.precissionToolInserterUsageTime),
-		SOLDERER(Tools.precissionToolSoldererDurability, Tools.precissionToolSoldererUsageTime),
-		WELDER(Tools.precissionToolWelderDurability, Tools.precissionToolWelderUsageTime),
-		HAMMER(Tools.precissionToolHammerDurability, Tools.precissionToolHammerUsageTime);
-
-		private final int durability;
-		private final int usageTime;
-
-		PrecisionTools(int durability, int usageTime)
-		{
-			this.durability = durability;
-			this.usageTime = usageTime;
-		}
-	}
-
 	@Override
 	@ParametersAreNonnullByDefault
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
@@ -154,6 +135,25 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 			case HAMMER:
 				PrecisionAssemblerRenderer.modelHammer.renderProgress(progress, angle, maxProgress);
 				break;
+		}
+	}
+
+	public enum PrecisionTools implements IIItemEnum
+	{
+		BUZZSAW(Tools.precissionToolBuzzsawDurability, Tools.precissionToolBuzzsawUsageTime),
+		DRILL(Tools.precissionToolDrillDurability, Tools.precissionToolDrillUsageTime),
+		INSERTER(Tools.precissionToolInserterDurability, Tools.precissionToolInserterUsageTime),
+		SOLDERER(Tools.precissionToolSoldererDurability, Tools.precissionToolSoldererUsageTime),
+		WELDER(Tools.precissionToolWelderDurability, Tools.precissionToolWelderUsageTime),
+		HAMMER(Tools.precissionToolHammerDurability, Tools.precissionToolHammerUsageTime);
+
+		private final int durability;
+		private final int usageTime;
+
+		PrecisionTools(int durability, int usageTime)
+		{
+			this.durability = durability;
+			this.usageTime = usageTime;
 		}
 	}
 }

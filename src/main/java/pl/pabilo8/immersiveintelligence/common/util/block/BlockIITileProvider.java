@@ -168,8 +168,13 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 	public TileEntity createBasicTE(E type)
 	{
 		if(tiles[type.ordinal()]!=null)
-			try {return tiles[type.ordinal()].newInstance();} catch(InstantiationException|
-																	IllegalAccessException ignored) {}
+			try
+			{
+				return tiles[type.ordinal()].newInstance();
+			} catch(InstantiationException|
+					IllegalAccessException ignored)
+			{
+			}
 		return null;
 	}
 

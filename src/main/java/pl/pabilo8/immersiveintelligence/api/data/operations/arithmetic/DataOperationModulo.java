@@ -14,7 +14,7 @@ public class DataOperationModulo extends DataOperation
 	{
 		name = "modulo";
 		expression = "%";
-		allowedTypes = new Class[]{IDataTypeNumeric.class,IDataTypeNumeric.class};
+		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
 		expectedResult = IDataTypeNumeric.class;
 	}
 

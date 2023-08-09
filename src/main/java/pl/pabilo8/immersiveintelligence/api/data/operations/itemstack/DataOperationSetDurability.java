@@ -18,8 +18,8 @@ public class DataOperationSetDurability extends DataOperation
 	{
 		//Sets the durability of an itemstack
 		name = "set_durability";
-		allowedTypes = new Class[]{DataTypeItemStack.class,DataTypeInteger.class};
-		params = new String[]{"stack","damage"};
+		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeInteger.class};
+		params = new String[]{"stack", "damage"};
 		expectedResult = DataTypeItemStack.class;
 	}
 

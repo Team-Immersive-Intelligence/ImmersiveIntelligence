@@ -418,18 +418,18 @@ public class ModelVulcanizer extends ModelIIBase
 
 		castTopModel[22].addShapeBox(0F, 0F, 0F, 10, 2, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // TOP_TWO03
 		castTopModel[22].setRotationPoint(-23F, -37F, -27F);
-		castTopModel[22].rotateAngleZ=0.000001f;
-		castTopModel[22].hasOffset=true;
+		castTopModel[22].rotateAngleZ = 0.000001f;
+		castTopModel[22].hasOffset = true;
 
 		castTopModel[23].addShapeBox(0F, 0F, 0F, 10, 2, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // TOP_TWO04
 		castTopModel[23].setRotationPoint(-23F, -37F, -22F);
-		castTopModel[23].rotateAngleZ=0.000001f;
-		castTopModel[23].hasOffset=true;
+		castTopModel[23].rotateAngleZ = 0.000001f;
+		castTopModel[23].hasOffset = true;
 
 		castTopModel[24].addShapeBox(0F, 0F, 0F, 10, 2, 2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // TOP_TWO05
 		castTopModel[24].setRotationPoint(-23F, -37F, -17F);
-		castTopModel[24].rotateAngleZ=0.000001f;
-		castTopModel[24].hasOffset=true;
+		castTopModel[24].rotateAngleZ = 0.000001f;
+		castTopModel[24].hasOffset = true;
 
 		castTopModel[25].addShapeBox(0F, 0F, 0F, 12, 0, 7, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // TOP_TWO01
 		castTopModel[25].setRotationPoint(-41F, -27.5F, -44.8F);
@@ -559,7 +559,7 @@ public class ModelVulcanizer extends ModelIIBase
 		translate(castDoorModel, 24-7f, 0, -28F+7f);
 		translate(castHeatingModel, 24-7f, 0, -28F+7f);
 
-		translate(castBoxModel,47.5f, -8.5f-21, -28F+7f);
+		translate(castBoxModel, 47.5f, -8.5f-21, -28F+7f);
 	}
 
 	@Override

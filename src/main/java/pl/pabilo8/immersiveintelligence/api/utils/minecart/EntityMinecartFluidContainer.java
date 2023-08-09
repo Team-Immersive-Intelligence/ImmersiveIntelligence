@@ -35,9 +35,9 @@ import javax.annotation.Nullable;
  */
 public abstract class EntityMinecartFluidContainer extends EntityMinecartII implements IAdvancedTextOverlay
 {
+	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMinecartFluidContainer.class, DataSerializers.COMPOUND_TAG);
 	public FluidTank tank = new FluidTank(getTankCapacity());
 	SidedFluidHandler fluidHandler = new SidedFluidHandler(this, null);
-	private static final DataParameter<NBTTagCompound> dataMarkerFluid = EntityDataManager.createKey(EntityMinecartFluidContainer.class, DataSerializers.COMPOUND_TAG);
 
 	public EntityMinecartFluidContainer(World worldIn)
 	{
@@ -173,7 +173,17 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecartII impl
 		return null;
 	}
 
+	@Override
+	void writeNBTToStack(NBTTagCompound nbt)
+	{
+		writeTank(nbt, true);
+	}
 
+	@Override
+	void readFromStack(ItemStack stack)
+	{
+		readTank(ItemNBTHelper.getTag(stack));
+	}
 
 	static class SidedFluidHandler implements IFluidHandler
 	{
@@ -224,17 +234,5 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecartII impl
 		{
 			return barrel.tank.getTankProperties();
 		}
-	}
-
-	@Override
-	void writeNBTToStack(NBTTagCompound nbt)
-	{
-		writeTank(nbt, true);
-	}
-
-	@Override
-	void readFromStack(ItemStack stack)
-	{
-		readTank(ItemNBTHelper.getTag(stack));
 	}
 }

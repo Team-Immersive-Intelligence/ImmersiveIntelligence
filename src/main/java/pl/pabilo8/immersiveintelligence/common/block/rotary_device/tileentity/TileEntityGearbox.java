@@ -41,8 +41,6 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 {
 	public SideConfig[] sideConfig = {SideConfig.NONE, SideConfig.INPUT, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE, SideConfig.NONE};
 	public int comparatorOutput = 0;
-	NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
-	float efficiency = 0;
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
 		@Override
@@ -59,6 +57,8 @@ public class TileEntityGearbox extends TileEntityIEBase implements ITickable, IA
 			}
 		}
 	};
+	NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
+	float efficiency = 0;
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)

@@ -112,13 +112,13 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	public int progress = 0, upgradeProgress = 0, clientUpgradeProgress = 0;
 	public EmplacementWeapon currentWeapon = null;
-	BlockPos[] allBlocks = null;
 	public boolean isShooting = false;
+	public boolean sendAttackSignal = false;
+	BlockPos[] allBlocks = null;
+	EmplacementTask task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
 	@Nullable
 	private MachineUpgrade currentlyInstalled = null;
-	EmplacementTask task = new EmplacementTaskCustom(defaultTaskNBT[defaultTargetMode]);
 	private float[] target = null;
-	public boolean sendAttackSignal = false;
 
 	//Config, -1 is null, 0-3 are valid
 	//public String defaultTargetMode = "target_mobs";
@@ -126,6 +126,29 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	public TileEntityEmplacement()
 	{
 		super(MultiblockEmplacement.INSTANCE, new int[]{6, 3, 3}, Emplacement.energyCapacity, true);
+	}
+
+	private static float[] getPosForEntityTask(TileEntityEmplacement emplacement, Entity entity)
+	{
+		if(entity!=null&&entity.isEntityAlive())
+		{
+			if(entity instanceof IEntityMultiPart)
+			{
+				Entity[] parts = entity.getParts();
+				if(parts!=null&&parts.length > 0)
+				{
+					//target the biggest hitbox
+					Entity t = Arrays.stream(parts).max((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))).orElse(parts[0]);
+					return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
+							t.getPositionVector().addVector(-t.width/2f, t.height/2f, -t.width/2f),
+							new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+				}
+			}
+			return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
+					entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f),
+					new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+		}
+		return new float[]{emplacement.currentWeapon.yaw, emplacement.currentWeapon.pitch};
 	}
 
 	@Override
@@ -1277,6 +1300,25 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		}
 	}
 
+	public Vec3d getWeaponCenter()
+	{
+		return new Vec3d(this.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5);
+	}
+
+	private NBTTagCompound createDefaultTask()
+	{
+		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		NBTTagCompound taskCompound = new NBTTagCompound();
+
+		taskCompound.setString("type", "mobs");
+		taskCompound.setBoolean("negation", false);
+
+		list.appendTag(taskCompound);
+		compound.setTag("filters", list);
+		return compound;
+	}
+
 	public static abstract class EmplacementWeapon
 	{
 		public EntityEmplacementWeapon entity = null;
@@ -1284,6 +1326,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		protected float pitch = 0, yaw = 0;
 		protected float nextPitch = 0, nextYaw = 0;
 		protected int health = 0;
+
+		public static MachineUpgrade register(Supplier<EmplacementWeapon> supplier)
+		{
+			//hacky way, but works
+			EmplacementWeapon w = supplier.get();
+			weaponRegistry.put(w.getName(), supplier);
+			return new MachineUpgradeEmplacementWeapon(w);
+		}
 
 		/**
 		 * @return name of the emplacement, must be the same as the name in the weapon registry
@@ -1300,6 +1350,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 			return 2;
 		}
 
+		// TODO: 10.07.2021 optimize
+
 		/**
 		 * @param yaw   destination
 		 * @param pitch destination
@@ -1309,8 +1361,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 			return pitch==this.pitch&&MathHelper.wrapDegrees(yaw)==MathHelper.wrapDegrees(this.yaw);
 		}
-
-		// TODO: 10.07.2021 optimize
 
 		/**
 		 * Calculates final aiming angle of the weapon
@@ -1484,14 +1534,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		}
 
-		public static MachineUpgrade register(Supplier<EmplacementWeapon> supplier)
-		{
-			//hacky way, but works
-			EmplacementWeapon w = supplier.get();
-			weaponRegistry.put(w.getName(), supplier);
-			return new MachineUpgradeEmplacementWeapon(w);
-		}
-
 		public void handleSounds(@Nullable TileEntityEmplacement tile, TileEntityEmplacement master)
 		{
 
@@ -1552,29 +1594,6 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		public abstract void performPlatformRefill(TileEntityEmplacement te);
 
-		public static class MachineUpgradeEmplacementWeapon extends MachineUpgrade
-		{
-			private final EmplacementWeapon weapon;
-
-			public MachineUpgradeEmplacementWeapon(EmplacementWeapon weapon)
-			{
-				super(weapon.getName(), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+weapon.getName()+".png"));
-				this.weapon = weapon;
-			}
-
-			@SideOnly(Side.CLIENT)
-			public void render(TileEntityEmplacement te)
-			{
-				weapon.render(te, 0);
-			}
-
-			@SideOnly(Side.CLIENT)
-			public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
-			{
-				weapon.renderUpgradeProgress(clientProgress, serverProgress, partialTicks);
-			}
-		}
-
 		public abstract int getEnergyUpkeepCost();
 
 		public abstract int getMaxHealth();
@@ -1625,6 +1644,29 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 		@SideOnly(Side.CLIENT)
 		protected abstract Tuple<ResourceLocation, List<ModelRendererTurbo>> getDebris();
+
+		public static class MachineUpgradeEmplacementWeapon extends MachineUpgrade
+		{
+			private final EmplacementWeapon weapon;
+
+			public MachineUpgradeEmplacementWeapon(EmplacementWeapon weapon)
+			{
+				super(weapon.getName(), new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+weapon.getName()+".png"));
+				this.weapon = weapon;
+			}
+
+			@SideOnly(Side.CLIENT)
+			public void render(TileEntityEmplacement te)
+			{
+				weapon.render(te, 0);
+			}
+
+			@SideOnly(Side.CLIENT)
+			public void renderUpgradeProgress(int clientProgress, int serverProgress, float partialTicks)
+			{
+				weapon.renderUpgradeProgress(clientProgress, serverProgress, partialTicks);
+			}
+		}
 	}
 
 	public abstract static class EmplacementTask
@@ -1666,14 +1708,12 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 	private static abstract class EmplacementTaskEntities extends EmplacementTask
 	{
 		private final Predicate<Entity> predicate;
-
+		Entity[] spottedEntities = new Entity[0];
+		Entity currentTarget = null;
 		public EmplacementTaskEntities(Predicate<Entity> predicate)
 		{
 			this.predicate = predicate;
 		}
-
-		Entity[] spottedEntities = new Entity[0];
-		Entity currentTarget = null;
 
 		@Override
 		public float[] getPositionVector(TileEntityEmplacement emplacement)
@@ -1945,8 +1985,8 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 
 	private static class EmplacementTaskPosition extends EmplacementTask
 	{
-		int shotAmount;
 		final BlockPos pos;
+		int shotAmount;
 
 		public EmplacementTaskPosition(BlockPos pos, int shotAmount)
 		{
@@ -2003,47 +2043,5 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		{
 
 		}
-	}
-
-	public Vec3d getWeaponCenter()
-	{
-		return new Vec3d(this.getBlockPosForPos(49).up()).addVector(0.5, 0, 0.5);
-	}
-
-	private static float[] getPosForEntityTask(TileEntityEmplacement emplacement, Entity entity)
-	{
-		if(entity!=null&&entity.isEntityAlive())
-		{
-			if(entity instanceof IEntityMultiPart)
-			{
-				Entity[] parts = entity.getParts();
-				if(parts!=null&&parts.length > 0)
-				{
-					//target the biggest hitbox
-					Entity t = Arrays.stream(parts).max((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))).orElse(parts[0]);
-					return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
-							t.getPositionVector().addVector(-t.width/2f, t.height/2f, -t.width/2f),
-							new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
-				}
-			}
-			return emplacement.currentWeapon.getAnglePrediction(emplacement.getWeaponCenter(),
-					entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f),
-					new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
-		}
-		return new float[]{emplacement.currentWeapon.yaw, emplacement.currentWeapon.pitch};
-	}
-
-	private NBTTagCompound createDefaultTask()
-	{
-		NBTTagCompound compound = new NBTTagCompound();
-		NBTTagList list = new NBTTagList();
-		NBTTagCompound taskCompound = new NBTTagCompound();
-
-		taskCompound.setString("type", "mobs");
-		taskCompound.setBoolean("negation", false);
-
-		list.appendTag(taskCompound);
-		compound.setTag("filters", list);
-		return compound;
 	}
 }

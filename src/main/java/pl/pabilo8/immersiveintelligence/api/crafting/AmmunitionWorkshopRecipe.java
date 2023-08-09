@@ -22,11 +22,9 @@ import java.util.function.BiFunction;
  */
 public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 {
+	public static final LinkedList<AmmunitionWorkshopRecipe> recipeList = new LinkedList<>();
 	public final BiFunction<ItemStack, ItemStack, ItemStack> process;
 	public final IngredientStack coreInput, casingInput;
-
-	public static final LinkedList<AmmunitionWorkshopRecipe> recipeList = new LinkedList<>();
-
 	final int totalProcessTime;
 	final int totalProcessEnergy;
 
@@ -41,13 +39,6 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 
 		this.inputList = Lists.newArrayList(this.coreInput, this.casingInput);
 		this.outputList = getExampleItems();
-	}
-
-	private NonNullList<ItemStack> getExampleItems()
-	{
-		return NonNullList.from(ItemStack.EMPTY,
-				process.apply(coreInput.getExampleStack(), casingInput.getExampleStack().copy())
-		);
 	}
 
 	public static AmmunitionWorkshopRecipe addRecipe(BiFunction<ItemStack, ItemStack, ItemStack> process, IngredientStack coreInput, IngredientStack casingInput, int energy, int time)
@@ -81,6 +72,20 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 				.findFirst().orElse(null);
 	}
 
+	public static AmmunitionWorkshopRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		IngredientStack core = IngredientStack.readFromNBT(nbt.getCompoundTag("core"));
+		IngredientStack casing = IngredientStack.readFromNBT(nbt.getCompoundTag("casing"));
+		return findRecipe(core.stack, casing.stack);
+	}
+
+	private NonNullList<ItemStack> getExampleItems()
+	{
+		return NonNullList.from(ItemStack.EMPTY,
+				process.apply(coreInput.getExampleStack(), casingInput.getExampleStack().copy())
+		);
+	}
+
 	@Override
 	public NonNullList<ItemStack> getActualItemOutputs(TileEntity te)
 	{
@@ -101,13 +106,6 @@ public class AmmunitionWorkshopRecipe extends MultiblockRecipe
 		nbt.setTag("core", coreInput.writeToNBT(new NBTTagCompound()));
 		nbt.setTag("casing", casingInput.writeToNBT(new NBTTagCompound()));
 		return nbt;
-	}
-
-	public static AmmunitionWorkshopRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		IngredientStack core = IngredientStack.readFromNBT(nbt.getCompoundTag("core"));
-		IngredientStack casing = IngredientStack.readFromNBT(nbt.getCompoundTag("casing"));
-		return findRecipe(core.stack,casing.stack);
 	}
 
 	public int getTotalProcessTime()

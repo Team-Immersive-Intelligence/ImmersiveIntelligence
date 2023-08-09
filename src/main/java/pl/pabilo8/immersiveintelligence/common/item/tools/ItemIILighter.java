@@ -138,14 +138,14 @@ public class ItemIILighter extends ItemIIBase implements ITool
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
 		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-		return fluidStack!=null?IIUtils.RGBAToRGB(fluidStack.getFluid().getColor()):0;
+		return fluidStack!=null?IIUtils.RGBAToRGB(fluidStack.getFluid().getColor()): 0;
 	}
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
 		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-		return fluidStack!=null?1f-(fluidStack.amount/(float)Tools.lighterCapacity):0;
+		return fluidStack!=null?1f-(fluidStack.amount/(float)Tools.lighterCapacity): 0;
 	}
 
 	@Override

@@ -15,8 +15,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
@@ -38,6 +38,23 @@ public class ProjectileWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 	private static IConveyorBelt con;
 	private static ModelProjectileWorkshop model, modelFlipped;
 
+	public static void renderWithUpgrades(MachineUpgrade[] upgrades)
+	{
+		IIClientUtils.bindTexture(TEXTURE);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.5, 0.5, 0.5);
+		GlStateManager.translate(2, 1, 1.5);
+
+		for(ModelRendererTurbo mod : model.baseModel)
+			mod.render();
+		for(ModelRendererTurbo mod : model.lidLeftModel)
+			mod.render();
+		for(ModelRendererTurbo mod : model.lidRightModel)
+			mod.render();
+
+		GlStateManager.popMatrix();
+	}
+
 	@Override
 	public void render(TileEntityProjectileWorkshop te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
@@ -48,7 +65,7 @@ public class ProjectileWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 			GlStateManager.translate((float)x, (float)y, (float)z);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-			boolean conveyorInConnected=false;
+			boolean conveyorInConnected = false;
 			boolean conveyorOutRunning = false;
 			float drawer1 = MathHelper.clamp(te.drawerAngle[0]+(te.isDrawerOpened[0]?partialTicks: -partialTicks), 0, 20)/20f;
 			float drawer2 = MathHelper.clamp(te.drawerAngle[1]+(te.isDrawerOpened[1]?partialTicks: -partialTicks), 0, 20)/20f;
@@ -129,23 +146,6 @@ public class ProjectileWorkshopRenderer extends TileEntitySpecialRenderer<TileEn
 
 			GlStateManager.popMatrix();
 		}
-	}
-
-	public static void renderWithUpgrades(MachineUpgrade[] upgrades)
-	{
-		IIClientUtils.bindTexture(TEXTURE);
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(0.5, 0.5, 0.5);
-		GlStateManager.translate(2, 1, 1.5);
-
-		for(ModelRendererTurbo mod : model.baseModel)
-			mod.render();
-		for(ModelRendererTurbo mod : model.lidLeftModel)
-			mod.render();
-		for(ModelRendererTurbo mod : model.lidRightModel)
-			mod.render();
-
-		GlStateManager.popMatrix();
 	}
 
 	@Override

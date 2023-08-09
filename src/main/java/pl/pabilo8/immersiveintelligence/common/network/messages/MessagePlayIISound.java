@@ -52,7 +52,7 @@ public class MessagePlayIISound extends IIMessage
 	{
 		this.soundRanged = sound;
 		this.category = category;
-		this.distance=fullDistance;
+		this.distance = fullDistance;
 
 		this.type = Type.RANGED;
 
@@ -86,7 +86,7 @@ public class MessagePlayIISound extends IIMessage
 				ClientUtils.mc().getSoundHandler().playSound(new TimedCompoundSound(soundCompound, category, pos, duration, volume, pitch));
 				break;
 			case RANGED:
-				ClientUtils.mc().getSoundHandler().playSound(new RangedCompoundSound(soundRanged,distance, category, pos, volume, pitch));
+				ClientUtils.mc().getSoundHandler().playSound(new RangedCompoundSound(soundRanged, distance, category, pos, volume, pitch));
 				break;
 		}
 	}

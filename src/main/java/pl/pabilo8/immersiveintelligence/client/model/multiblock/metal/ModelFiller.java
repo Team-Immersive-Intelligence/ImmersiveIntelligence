@@ -132,11 +132,11 @@ public class ModelFiller extends ModelIIBase
 		baseModel[16].addBox(0F, 0F, 0F, 16, 16, 1, 0F); // Box 0
 		baseModel[16].setRotationPoint(32F, -48F, 32F);
 
-		baseModel[17].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(8, 0, 8, 0), new Coord2D(14, 6, 14, 6), new Coord2D(14, 16, 14, 16), new Coord2D(0, 16, 0, 16) }), 1, 14, 16, 57, 1, ModelRendererTurbo.MR_FRONT, new float[] {16 ,14 ,10 ,9 ,8}); // Shape 19
+		baseModel[17].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(8, 0, 8, 0), new Coord2D(14, 6, 14, 6), new Coord2D(14, 16, 14, 16), new Coord2D(0, 16, 0, 16)}), 1, 14, 16, 57, 1, ModelRendererTurbo.MR_FRONT, new float[]{16, 14, 10, 9, 8}); // Shape 19
 		baseModel[17].setRotationPoint(33F, -32F, 33F);
 		baseModel[17].rotateAngleY = -1.57079633F;
 
-		baseModel[18].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(8, 0, 8, 0), new Coord2D(14, 6, 14, 6), new Coord2D(14, 16, 14, 16), new Coord2D(0, 16, 0, 16) }), 1, 14, 16, 57, 1, ModelRendererTurbo.MR_FRONT, new float[] {16 ,14 ,10 ,9 ,8}); // Shape 19
+		baseModel[18].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(8, 0, 8, 0), new Coord2D(14, 6, 14, 6), new Coord2D(14, 16, 14, 16), new Coord2D(0, 16, 0, 16)}), 1, 14, 16, 57, 1, ModelRendererTurbo.MR_FRONT, new float[]{16, 14, 10, 9, 8}); // Shape 19
 		baseModel[18].setRotationPoint(48F, -32F, 33F);
 		baseModel[18].rotateAngleY = -1.57079633F;
 
@@ -275,15 +275,15 @@ public class ModelFiller extends ModelIIBase
 		fanModel[1].addBox(-0.5F, -2.5F, -0.01F, 1, 5, 1, 0F); // Box 0
 		fanModel[1].rotateAngleZ = 1.57079633F;
 
-		parts.put("base",baseModel);
-		parts.put("fan",fanModel);
+		parts.put("base", baseModel);
+		parts.put("fan", fanModel);
 
 		flipAll();
 	}
 
 	public void getLegacyBlockRotation(EnumFacing facing, boolean mirrored)
 	{
-		super.getBlockRotation(facing,mirrored);
+		super.getBlockRotation(facing, mirrored);
 	}
 
 	@Override
@@ -294,7 +294,7 @@ public class ModelFiller extends ModelIIBase
 			case NORTH:
 			{
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				GlStateManager.translate(-1, 0f, mirrored?2f:0f);
+				GlStateManager.translate(-1, 0f, mirrored?2f: 0f);
 
 			}
 			break;
@@ -307,15 +307,15 @@ public class ModelFiller extends ModelIIBase
 			break;
 			case EAST:
 			{
-				GlStateManager.rotate(mirrored?270f:-270f, 0F, 1F, 0F);
+				GlStateManager.rotate(mirrored?270f: -270f, 0F, 1F, 0F);
 				//GlStateManager.rotate(270F, 0F, 1F, 0F);
-				GlStateManager.translate(-2f, 0f, mirrored?2f:0f);
+				GlStateManager.translate(-2f, 0f, mirrored?2f: 0f);
 
 			}
 			break;
 			case WEST:
 			{
-				GlStateManager.rotate(mirrored?90F:-90f, 0F, 1F, 0F);
+				GlStateManager.rotate(mirrored?90F: -90f, 0F, 1F, 0F);
 				GlStateManager.translate(-1f, 0f, 1f);
 
 			}

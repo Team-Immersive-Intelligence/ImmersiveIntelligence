@@ -880,7 +880,9 @@ public class IIUtils
 			Field field = e.getClass().getDeclaredField(e.getName().toUpperCase());
 			if(field.isAnnotationPresent(annotationClass))
 				return field.getAnnotation(annotationClass);
-		} catch(NoSuchFieldException ignored) {}
+		} catch(NoSuchFieldException ignored)
+		{
+		}
 		return null;
 	}
 }

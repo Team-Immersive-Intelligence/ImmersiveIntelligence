@@ -17,7 +17,7 @@ public class DataOperationLessOrEqual extends DataOperation
 	{
 		name = "less_or_equal";
 		expression = "<=";
-		allowedTypes = new Class[]{IDataTypeNumeric.class,IDataTypeNumeric.class};
+		allowedTypes = new Class[]{IDataTypeNumeric.class, IDataTypeNumeric.class};
 		expectedResult = DataTypeBoolean.class;
 	}
 

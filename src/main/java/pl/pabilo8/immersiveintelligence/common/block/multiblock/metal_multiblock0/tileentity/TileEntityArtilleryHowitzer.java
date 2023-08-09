@@ -96,9 +96,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	private static final IISoundAnimation unloadingSoundAnimation;
 	private static final IISoundAnimation firingSoundAnimation;
 
-	@SideOnly(Side.CLIENT)
-	private ConditionCompoundSound soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
-
 	static
 	{
 		loadingSoundAnimation = new IISoundAnimation(18);
@@ -202,8 +199,10 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				.compile(ArtilleryHowitzer.loadRackTime);
 	}
 
-	//--- Variables ---//
+	@SideOnly(Side.CLIENT)
+	private final List<TimedCompoundSound> soundsList = new ArrayList<>();
 
+	//--- Variables ---//
 	public ArrayList<HowitzerOrder> orderList = new ArrayList<>();
 	//currently performed action
 	public ArtilleryHowitzerAnimation animation = ArtilleryHowitzerAnimation.STOP;
@@ -217,9 +216,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	//shells loaded into the rack
 	public NonNullList<ItemStack> loadedShells;
 	public IItemHandler inventoryHandler, insertionHandler;
-
 	@SideOnly(Side.CLIENT)
-	private final List<TimedCompoundSound> soundsList = new ArrayList<>();
+	private ConditionCompoundSound soundRotationV, soundRotationH, soundDoorOpen, soundDoorClose;
 
 
 	public TileEntityArtilleryHowitzer()
@@ -1300,16 +1298,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			this.executeTime = executeTime;
 		}
 
-		public boolean matchesRequirements(TileEntityArtilleryHowitzer te)
-		{
-			return requirements.test(te);
-		}
-
-		public boolean isFulfilled(TileEntityArtilleryHowitzer te)
-		{
-			return fulfilled.test(te);
-		}
-
 		@Nullable
 		public static ArtilleryHowitzerAnimation v(String s, TileEntityArtilleryHowitzer te)
 		{
@@ -1323,6 +1311,16 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 					.findFirst()
 					.orElse(null));
 
+		}
+
+		public boolean matchesRequirements(TileEntityArtilleryHowitzer te)
+		{
+			return requirements.test(te);
+		}
+
+		public boolean isFulfilled(TileEntityArtilleryHowitzer te)
+		{
+			return fulfilled.test(te);
 		}
 	}
 

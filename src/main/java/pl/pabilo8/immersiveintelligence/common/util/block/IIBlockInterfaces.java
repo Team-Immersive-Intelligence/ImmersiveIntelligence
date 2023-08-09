@@ -22,6 +22,27 @@ import java.lang.annotation.Target;
  */
 public class IIBlockInterfaces
 {
+	public enum TernaryValue
+	{
+		//needs a default value
+		UNSET,
+		TRUE,
+		FALSE;
+
+		/**
+		 * Always check if it's set first
+		 */
+		boolean isTrue()
+		{
+			return this!=FALSE;
+		}
+
+		public boolean isSet()
+		{
+			return this!=UNSET;
+		}
+	}
+
 	/**
 	 * Used by Block enums
 	 */
@@ -115,27 +136,6 @@ public class IIBlockInterfaces
 		 * @return render layer(s), if different from block
 		 */
 		BlockRenderLayer[] renderLayer() default {};
-	}
-
-	public enum TernaryValue
-	{
-		//needs a default value
-		UNSET,
-		TRUE,
-		FALSE;
-
-		/**
-		 * Always check if it's set first
-		 */
-		boolean isTrue()
-		{
-			return this!=FALSE;
-		}
-
-		public boolean isSet()
-		{
-			return this!=UNSET;
-		}
 	}
 
 

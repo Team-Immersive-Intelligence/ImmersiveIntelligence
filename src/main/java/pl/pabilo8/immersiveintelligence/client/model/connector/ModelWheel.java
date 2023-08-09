@@ -52,13 +52,13 @@ public class ModelWheel extends ModelIIBase
 		wheel[1] = new ModelRendererTurbo(this, 18, 12, textureX, textureY); // MainBox
 		wheel[2] = new ModelRendererTurbo(this, 0, 0, textureX, textureY); // Shape 5
 
-		wheel[0].addShape3D(6F, -6F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(6, 0, 6, 0), new Coord2D(6, 12, 6, 12), new Coord2D(2, 12, 2, 12), new Coord2D(0, 10, 0, 10), new Coord2D(0, 2, 0, 2) }), 4, 6, 12, 34, 4, ModelRendererTurbo.MR_FRONT, new float[] {3 ,8 ,3 ,4 ,12 ,4}); // Shape 5
+		wheel[0].addShape3D(6F, -6F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(6, 0, 6, 0), new Coord2D(6, 12, 6, 12), new Coord2D(2, 12, 2, 12), new Coord2D(0, 10, 0, 10), new Coord2D(0, 2, 0, 2)}), 4, 6, 12, 34, 4, ModelRendererTurbo.MR_FRONT, new float[]{3, 8, 3, 4, 12, 4}); // Shape 5
 		wheel[0].setRotationPoint(0, 0, 9F);
 
 		wheel[1].addBox(-1F, -1F, 0F, 2, 2, 1, 0F); // MainBox
 		wheel[1].setRotationPoint(0, 0, 10F);
 
-		wheel[2].addShape3D(6F, -6F, 0F, new Shape2D(new Coord2D[] { new Coord2D(2, 0, 2, 0), new Coord2D(6, 0, 6, 0), new Coord2D(6, 12, 6, 12), new Coord2D(2, 12, 2, 12), new Coord2D(0, 10, 0, 10), new Coord2D(0, 2, 0, 2) }), 4, 6, 12, 34, 4, ModelRendererTurbo.MR_FRONT, new float[] {3 ,8 ,3 ,4 ,12 ,4}); // Shape 5
+		wheel[2].addShape3D(6F, -6F, 0F, new Shape2D(new Coord2D[]{new Coord2D(2, 0, 2, 0), new Coord2D(6, 0, 6, 0), new Coord2D(6, 12, 6, 12), new Coord2D(2, 12, 2, 12), new Coord2D(0, 10, 0, 10), new Coord2D(0, 2, 0, 2)}), 4, 6, 12, 34, 4, ModelRendererTurbo.MR_FRONT, new float[]{3, 8, 3, 4, 12, 4}); // Shape 5
 		wheel[2].setRotationPoint(0, 0, 9F);
 		wheel[2].rotateAngleZ = 3.14159265F;
 

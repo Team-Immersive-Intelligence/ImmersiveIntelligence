@@ -47,11 +47,10 @@ import java.util.Arrays;
 @net.minecraftforge.fml.common.Optional.Interface(iface = "com.elytradev.mirage.lighting.IEntityLightEventConsumer", modid = "mirage")
 public class EntityIIChemthrowerShot extends EntityIEProjectile implements IEntityLightEventConsumer
 {
+	private static final DataParameter<Optional<FluidStack>> dataMarker_fluid = EntityDataManager.createKey(EntityIIChemthrowerShot.class, IEFluid.OPTIONAL_FLUID_STACK);
 	private final ArrayList<Entity> hitEntities = new ArrayList<>();
 	private final ArrayList<BlockPos> hitPos = new ArrayList<>();
-
 	private FluidStack fluid;
-	private static final DataParameter<Optional<FluidStack>> dataMarker_fluid = EntityDataManager.createKey(EntityIIChemthrowerShot.class, IEFluid.OPTIONAL_FLUID_STACK);
 
 	public EntityIIChemthrowerShot(World world)
 	{

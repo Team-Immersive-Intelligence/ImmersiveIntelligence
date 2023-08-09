@@ -17,16 +17,16 @@ import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
  */
 public class BlockIITripwireConnector extends BlockIITileProvider<IIBlockTypes_Dummy>
 {
-	public enum IIBlockTypes_Dummy implements IITileProviderEnum
-	{
-		@EnumTileProvider(tile = TileEntityTripwireConnector.class)
-		MAIN
-	}
-
 	public BlockIITripwireConnector()
 	{
 		super("tripwire_connector", Material.WOOD, PropertyEnum.create("dummy", IIBlockTypes_Dummy.class), ItemBlockIIBase::new,
 				IOBJModelCallback.PROPERTY, IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.CONNECTIONS);
 		setLightOpacity(0);
+	}
+
+	public enum IIBlockTypes_Dummy implements IITileProviderEnum
+	{
+		@EnumTileProvider(tile = TileEntityTripwireConnector.class)
+		MAIN
 	}
 }

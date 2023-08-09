@@ -43,11 +43,12 @@ import java.util.function.Function;
  */
 public class ConveyorRubberExtract extends ConveyorBasic
 {
+	static final AxisAlignedBB topBox = new AxisAlignedBB(0, .75, 0, 1, 1, 1);
+	public static ResourceLocation texture_casing = new ResourceLocation("immersiveintelligence:blocks/conveyors/rubber_conveyor_extract_casing");
 	private EnumFacing extractDirection;
 	private int transferCooldown = -1;
 	private int transferTickrate = 8;
 	private float extension = -1;
-	public static ResourceLocation texture_casing = new ResourceLocation("immersiveintelligence:blocks/conveyors/rubber_conveyor_extract_casing");
 
 	public ConveyorRubberExtract(EnumFacing conveyorDir)
 	{
@@ -170,7 +171,6 @@ public class ConveyorRubberExtract extends ConveyorBasic
 		return false;
 	}
 
-
 	@Override
 	public String getModelCacheKey(TileEntity tile, EnumFacing facing)
 	{
@@ -254,7 +254,7 @@ public class ConveyorRubberExtract extends ConveyorBasic
 			{
 				this.transferCooldown--;
 			}
-			if(!isPowered(tile) && this.transferCooldown <= 0)
+			if(!isPowered(tile)&&this.transferCooldown <= 0)
 			{
 				World world = tile.getWorld();
 				BlockPos neighbour = tile.getPos().offset(this.extractDirection);
@@ -285,8 +285,6 @@ public class ConveyorRubberExtract extends ConveyorBasic
 			}
 		}
 	}
-
-	static final AxisAlignedBB topBox = new AxisAlignedBB(0, .75, 0, 1, 1, 1);
 
 	@Override
 	public List<AxisAlignedBB> getColisionBoxes(TileEntity tile, EnumFacing facing)

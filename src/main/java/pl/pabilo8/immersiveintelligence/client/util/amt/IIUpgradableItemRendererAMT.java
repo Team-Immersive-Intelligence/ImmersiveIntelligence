@@ -24,6 +24,7 @@ public abstract class IIUpgradableItemRendererAMT<I extends ItemIIUpgradableTool
 	 * Resource location blueprint of weapon item models
 	 */
 	protected static final ResLoc RES_MODEL_WEAPON = ResLoc.of(IILib.RES_ITEM_MODEL, "weapons/%1$s/%1$s");
+	public final HashMap<Predicate<EasyNBT>, String> UPGRADE_PARTS = new HashMap<>();
 	/**
 	 * Resource location for animations of this model
 	 */
@@ -32,8 +33,6 @@ public abstract class IIUpgradableItemRendererAMT<I extends ItemIIUpgradableTool
 	 * Resource location of the directory, in which the model is stored
 	 */
 	protected final ResLoc directoryRes;
-
-	public final HashMap<Predicate<EasyNBT>, String> UPGRADE_PARTS = new HashMap<>();
 	private final HashMap<Predicate<EasyNBT>, IIAnimationCachedMap> UPGRADES = new HashMap<>();
 
 	protected AMTModelCache<ItemStack> model;

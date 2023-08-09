@@ -35,12 +35,6 @@ public class BlockIIMetalFortification1 extends BlockIIBase<IIBlockTypes_MetalFo
 		this.setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 	}
 
-	public enum IIBlockTypes_MetalFortification1 implements IIBlockEnum
-	{
-		TANK_TRAP
-	}
-
-
 	@Override
 	@ParametersAreNonnullByDefault
 	@SuppressWarnings("deprecation")
@@ -48,5 +42,11 @@ public class BlockIIMetalFortification1 extends BlockIIBase<IIBlockTypes_MetalFo
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		return AABB;
+	}
+
+
+	public enum IIBlockTypes_MetalFortification1 implements IIBlockEnum
+	{
+		TANK_TRAP
 	}
 }

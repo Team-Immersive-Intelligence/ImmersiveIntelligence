@@ -118,7 +118,9 @@ public class IIManualEntry extends ManualEntry
 		{
 			return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(ImmersiveIntelligence.MODID,
 					String.format("ie_manual/%s/%s/%s.md", language, getCategory(), fullFilePath)));
-		} catch(IOException ignored) {}
+		} catch(IOException ignored)
+		{
+		}
 		return null;
 	}
 

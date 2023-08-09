@@ -38,14 +38,10 @@ import java.util.HashMap;
  */
 public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, IBlockBounds, IDirectionalTile, IHasDummyBlocks
 {
-	public int subBlockID = 0;
-	public EnumFacing facing = EnumFacing.NORTH;
-	public FluidTank tank = new FluidTank(1000);
-	FluidWrapper fluidWrapper = new FluidWrapper(this);
-
-	IItemHandler insertionHandler = new CO2ItemHandler(this);
 	public static final HashMap<Class, CO2Handler> handlerMap = new HashMap<>();
-	static {
+
+	static
+	{
 		handlerMap.put(TileEntityFermenter.class,
 				new CO2Handler()
 				{
@@ -60,11 +56,11 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 						TileEntityFermenter fermenter = ((TileEntityFermenter)tile).master();
 						if(fermenter==null)
 							return 0;
-						int i=0;
+						int i = 0;
 						for(MultiblockProcess<FermenterRecipe> process : fermenter.processQueue)
 						{
 							if(process.canProcess(fermenter)&&process.processTick%CO2Collector.fermenterCollectTime==0)
-								i+= CO2Collector.fermenterCollectAmount;
+								i += CO2Collector.fermenterCollectAmount;
 						}
 						return i;
 					}
@@ -86,11 +82,17 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 
 						if(furnace==null)
 							return 0;
-						return (furnace.burnTime%CO2Collector.blastFurnaceCollectTime==0&&furnace.active)?CO2Collector.blastFurnaceCollectAmount:0;
+						return (furnace.burnTime%CO2Collector.blastFurnaceCollectTime==0&&furnace.active)?CO2Collector.blastFurnaceCollectAmount: 0;
 					}
 				}
 		);
 	}
+
+	public int subBlockID = 0;
+	public EnumFacing facing = EnumFacing.NORTH;
+	public FluidTank tank = new FluidTank(1000);
+	FluidWrapper fluidWrapper = new FluidWrapper(this);
+	IItemHandler insertionHandler = new CO2ItemHandler(this);
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
@@ -122,7 +124,7 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 			if(handlerBelow!=null)
 			{
 				int output = handlerBelow.getOutput(world.getTileEntity(pos.offset(facing.getOpposite())));
-				if(output>0)
+				if(output > 0)
 				{
 					EnumFacing ff = (facing==EnumFacing.UP)?EnumFacing.NORTH: facing;
 					TileEntity tile = world.getTileEntity(pos.up().offset(ff));
@@ -242,7 +244,7 @@ public class TileEntityCO2Filter extends TileEntityIEBase implements ITickable, 
 	private CO2Handler getHandlerBelow()
 	{
 		TileEntity te = getWorld().getTileEntity(pos.offset(facing.getOpposite()));
-		return (te!=null)?handlerMap.get(te.getClass()):null;
+		return (te!=null)?handlerMap.get(te.getClass()): null;
 	}
 
 	public static class FluidWrapper implements IFluidHandler

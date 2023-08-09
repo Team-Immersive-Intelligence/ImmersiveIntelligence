@@ -23,7 +23,7 @@ public class TileEntityVehicleWorkshop extends TileEntityMultiblockMetal<TileEnt
 	public FluidTank[] tanks = new FluidTank[]{
 			new FluidTank(VehicleWorkshop.dieselCapacity)
 	};
-	public int progress=0, maxProgress=0;
+	public int progress = 0, maxProgress = 0;
 
 	public TileEntityVehicleWorkshop()
 	{

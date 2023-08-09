@@ -1,8 +1,8 @@
 package pl.pabilo8.immersiveintelligence.common.item.crafting.material;
 
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialGem.MaterialsGem;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
 /**

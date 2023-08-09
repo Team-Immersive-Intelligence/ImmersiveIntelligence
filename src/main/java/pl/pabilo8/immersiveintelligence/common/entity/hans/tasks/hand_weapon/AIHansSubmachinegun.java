@@ -97,7 +97,7 @@ public class AIHansSubmachinegun extends AIHansHandWeapon
 			}
 			else
 				hans.resetActiveHand();
-			rangedAttackTime ++;
+			rangedAttackTime++;
 
 			if(rangedAttackTime >= burstTime)
 				rangedAttackTime = -(int)(-burstTime*0.75);

@@ -11,9 +11,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 public class ModelChemicalDispenser extends ModelIIBase
 {
+	public ModelRendererTurbo[] barrelModel;
 	int textureX = 64;
 	int textureY = 128;
-	public ModelRendererTurbo[] barrelModel;
 
 	public ModelChemicalDispenser() //Same as Filename
 	{

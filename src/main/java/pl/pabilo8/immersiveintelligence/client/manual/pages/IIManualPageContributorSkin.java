@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
 
 import java.util.List;
 
@@ -53,13 +53,13 @@ public class IIManualPageContributorSkin extends IIManualPages
 	{
 		if(localizedName!=null&&!localizedName.isEmpty())
 		{
-			IIClientUtils.drawStringCentered(manual.fontRenderer,TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE+localizedName, x+10, y+40, 100, 0,manual.getTextColour());
+			IIClientUtils.drawStringCentered(manual.fontRenderer, TextFormatting.BOLD.toString()+TextFormatting.UNDERLINE+localizedName, x+10, y+40, 100, 0, manual.getTextColour());
 		}
 
 		if(localizedLore!=null&&!localizedLore.isEmpty())
 			ManualUtils.drawSplitString(manual.fontRenderer, TextFormatting.ITALIC+localizedLore, x, y+52, 120, manual.getTextColour());
 
-		int shift = localizedLore!=null?manual.fontRenderer.getWordWrappedHeight(localizedLore,120):0;
+		int shift = localizedLore!=null?manual.fontRenderer.getWordWrappedHeight(localizedLore, 120): 0;
 
 		if(localizedText!=null&&!localizedText.isEmpty())
 			ManualUtils.drawSplitString(manual.fontRenderer, localizedText, x, y+56+shift, 120, manual.getTextColour());

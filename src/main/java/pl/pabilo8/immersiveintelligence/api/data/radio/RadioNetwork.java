@@ -1,7 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.data.radio;
 
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import java.util.ArrayList;
 

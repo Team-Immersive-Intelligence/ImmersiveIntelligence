@@ -49,10 +49,9 @@ public class GuiPacker extends GuiIEContainerBase
 	private static final ResourceLocation TEXTURE_ICONS = new ResourceLocation("immersiveintelligence:textures/gui/emplacement_icons.png");
 	private static final ResourceLocation TEXTURE_PACKER = new ResourceLocation("immersiveintelligence:textures/gui/packer.png");
 	private static final ResourceLocation TEXTURE_PAGE = new ResourceLocation("immersiveintelligence:textures/gui/printed_page.png");
-	TileEntityPacker tile;
 	final SideResourceDisplay sideDisplay;
 	private final ContainerPacker container;
-
+	TileEntityPacker tile;
 	private GuiButtonIE buttonAdd, buttonRemove, buttonDuplicate, buttonClear, buttonSideInput, buttonSideOutput;
 	private GuiButtonState buttonRepeat;
 	private GuiPackerTaskList taskList;
@@ -377,8 +376,13 @@ public class GuiPacker extends GuiIEContainerBase
 		void saveTask(PackerTask task)
 		{
 			//save number
-			try {task.stack.inputSize = Integer.parseInt(gui.textFieldAmount.getText());} catch(
-					NumberFormatException ignored) {}
+			try
+			{
+				task.stack.inputSize = Integer.parseInt(gui.textFieldAmount.getText());
+			} catch(
+					NumberFormatException ignored)
+			{
+			}
 			task.unpack = gui.switchDirection.state;
 		}
 
@@ -408,9 +412,9 @@ public class GuiPacker extends GuiIEContainerBase
 
 	private static class SideItemDisplay extends SideResourceDisplay
 	{
+		private final int maxScroll;
 		//slot scrolling
 		private int scroll;
-		private final int maxScroll;
 
 		public SideItemDisplay(GuiPacker gui)
 		{

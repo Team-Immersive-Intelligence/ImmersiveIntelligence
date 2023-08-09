@@ -12,9 +12,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelTachometer extends ModelIIBase
 {
+	public ModelRendererTurbo[] gaugeModel;
 	int textureX = 64;
 	int textureY = 16;
-	public ModelRendererTurbo[] gaugeModel;
 
 	public ModelTachometer() //Same as Filename
 	{

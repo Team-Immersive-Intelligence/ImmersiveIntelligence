@@ -64,32 +64,28 @@ import java.util.*;
  */
 public class TileEntityProjectileWorkshop extends TileEntityMultiblockMetal<TileEntityProjectileWorkshop, IMultiblockRecipe> implements ISoundTile, IGuiTile, IAdvancedSelectionBounds, IAdvancedCollisionBounds, IUpgradableMachine, IBooleanAnimatedPartsBlock, IConveyorAttachable, IDataDevice
 {
-	MachineUpgrade currentlyInstalled = null;
-	int upgradeProgress = 0;
-
 	//for core production
 	@Nonnull
 	public IAmmo producedBullet = IIContent.itemAmmoArtillery;
 	@Nonnull
 	public EnumCoreTypes coreType = producedBullet.getAllowedCoreTypes()[0];
-
 	//for core filling
 	public boolean fillerUpgrade = false;
 	//how many slots to fill
 	public int fillAmount = 1;
 	public BulletComponentStack componentInside = new BulletComponentStack();
 	public int productionProgress = 0;
-
-	NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY); //input, componentInput
 	public FluidTank[] tanksFactory = new FluidTank[]{new FluidTank(ProjectileWorkshop.coolantTankCapacity)};
 	public FluidTank[] tanksFiller = new FluidTank[]{new FluidTank(ProjectileWorkshop.componentTankCapacity)};
-	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 15
-	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 22
-
 	//for client
 	public boolean[] isDrawerOpened = {false, false};
 	public float[] drawerAngle = {0f, 0f};
 	public ItemStack effect = ItemStack.EMPTY;
+	MachineUpgrade currentlyInstalled = null;
+	int upgradeProgress = 0;
+	NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY); //input, componentInput
+	IItemHandler inputHandler = new IEInventoryHandler(1, this, 0, true, false); //pos 15
+	IItemHandler componentInputHandler = new IEInventoryHandler(1, this, 1, true, false); //pos 22
 
 	public TileEntityProjectileWorkshop()
 	{

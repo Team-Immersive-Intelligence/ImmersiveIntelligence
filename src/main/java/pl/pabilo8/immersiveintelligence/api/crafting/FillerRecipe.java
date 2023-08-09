@@ -23,10 +23,9 @@ import java.util.List;
  */
 public class FillerRecipe extends MultiblockRecipe
 {
+	public static ArrayList<FillerRecipe> recipeList = new ArrayList<>();
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
-
-	public static ArrayList<FillerRecipe> recipeList = new ArrayList<>();
 	public DustStack dust;
 	int totalProcessTime;
 	int totalProcessEnergy;
@@ -104,15 +103,15 @@ public class FillerRecipe extends MultiblockRecipe
 		return null;
 	}
 
+	public static FillerRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		return findRecipe(IngredientStack.readFromNBT(nbt.getCompoundTag("item_input")), new DustStack(nbt.getCompoundTag("dust")));
+	}
+
 	@Override
 	public int getMultipleProcessTicks()
 	{
 		return 0;
-	}
-
-	public static FillerRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		return findRecipe(IngredientStack.readFromNBT(nbt.getCompoundTag("item_input")), new DustStack(nbt.getCompoundTag("dust")));
 	}
 
 	@Override

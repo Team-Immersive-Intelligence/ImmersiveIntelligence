@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.client.gui.tooltip;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxReceiver;
 import blusunrize.immersiveengineering.client.ClientProxy;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -11,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
 import javax.annotation.Nonnull;
@@ -34,7 +32,7 @@ public class TextOverlayVoltmeterEntities extends TextOverlayBase
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		IFluxReceiver energy = (IFluxReceiver)mouseOver.entityHit;
 

@@ -21,8 +21,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
@@ -53,7 +51,9 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 				try
 				{
 					IIContent.MULTIBLOCKS.add(mb.newInstance());
-				} catch(InstantiationException|IllegalAccessException ignored) {}
+				} catch(InstantiationException|IllegalAccessException ignored)
+				{
+				}
 		}
 		//does not need the property to be set
 		Arrays.fill(this.hidden, true);

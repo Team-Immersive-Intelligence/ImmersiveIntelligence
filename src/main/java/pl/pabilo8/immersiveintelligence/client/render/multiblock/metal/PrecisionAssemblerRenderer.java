@@ -26,6 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  */
 public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEntityPrecisionAssembler> implements IReloadableModelContainer<PrecisionAssemblerRenderer>
 {
+	private static final RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	//Tool Models (if you want to add custom tools from your mod, you have to init them in your own class)
 	public static ModelPrecisionInserter modelInserter = new ModelPrecisionInserter();
 	public static ModelPrecisionDrill modelDrill = new ModelPrecisionDrill();
@@ -33,7 +34,6 @@ public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEn
 	public static ModelPrecisionSolderer modelSolderer = new ModelPrecisionSolderer();
 	public static ModelPrecisionWelder modelWelder = new ModelPrecisionWelder();
 	public static ModelPrecisionHammer modelHammer = new ModelPrecisionHammer();
-	private static final RenderItem renderItem = ClientUtils.mc().getRenderItem();
 	private static ModelPrecisionAssembler model;
 	private static ModelPrecisionAssembler modelFlipped;
 
@@ -62,7 +62,7 @@ public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEn
 			currentModel.render();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[0]+(te.isDrawerOpened[0]?0.4f:-0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
+			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[0]+(te.isDrawerOpened[0]?0.4f: -0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
 			for(ModelRendererTurbo mod : currentModel.drawer1Model)
 			{
 				mod.render(0.0625f);
@@ -70,7 +70,7 @@ public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEn
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[1]+(te.isDrawerOpened[1]?0.4f:-0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
+			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[1]+(te.isDrawerOpened[1]?0.4f: -0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
 			for(ModelRendererTurbo mod : currentModel.drawer2Model)
 			{
 				mod.render(0.0625f);

@@ -49,6 +49,13 @@ public class AmmunitionWorkshopTweaker
 		CraftTweakerAPI.apply(new Remove(CraftTweakerHelper.toStack(output)));
 	}
 
+	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IAmmunitionWorkshopFunction")
+	@ZenRegister
+	public interface IAmmunitionWorkshopFunction
+	{
+		IItemStack process(IItemStack inputCore, IItemStack inputCasing);
+	}
+
 	private static class Add implements IAction
 	{
 		private final AmmunitionWorkshopRecipe recipe;
@@ -92,13 +99,6 @@ public class AmmunitionWorkshopTweaker
 		{
 			return "Removing Ammunition Workshop Recipe for "+input.getDisplayName();
 		}
-	}
-
-	@ZenClass("mods."+ImmersiveIntelligence.MODID+".IAmmunitionWorkshopFunction")
-	@ZenRegister
-	public interface IAmmunitionWorkshopFunction
-	{
-		IItemStack process(IItemStack inputCore, IItemStack inputCasing);
 	}
 
 }

@@ -62,22 +62,20 @@ public abstract class TileEntityEffectCrate extends TileEntityImmersiveConnectab
 	public String name;
 	public boolean open = false;
 	public float lidAngle = 0;
+	public int clientUpgradeProgress = 0;
+	public int energyStorage = 0;
+	@Nonnull
+	public IItemHandler insertionHandler;
 	protected ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	MachineUpgrade currentlyInstalled = null;
 	int upgradeProgress = 0;
-	public int clientUpgradeProgress = 0;
-	public int energyStorage = 0;
-
 	//Client only
 	float inserterAnimation = 0f;
 	float inserterHeight = 0f;
 	float inserterAngle = 0f;
 	Entity focusedEntity = null;
-
 	@Nonnull
 	NonNullList<ItemStack> inventory;
-	@Nonnull
-	public IItemHandler insertionHandler;
 
 	@Override
 	public EnumFacing getFacing()

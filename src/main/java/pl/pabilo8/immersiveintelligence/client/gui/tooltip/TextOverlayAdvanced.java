@@ -28,7 +28,7 @@ public class TextOverlayAdvanced extends TextOverlayBase
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		if(mouseOver.entityHit instanceof IAdvancedTextOverlay)
 			return ((IAdvancedTextOverlay)mouseOver.entityHit).getOverlayText(player, mouseOver);

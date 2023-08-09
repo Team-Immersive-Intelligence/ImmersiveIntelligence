@@ -46,7 +46,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 		ItemStack s = ItemNBTHelper.getItemStack(stack, "recipeItem");
 		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.used_to_create",
 				TextFormatting.GOLD+s.getDisplayName()
-				+(s.getCount() > 1?TextFormatting.GRAY+" x "+TextFormatting.GOLD+s.getCount(): "")));
+						+(s.getCount() > 1?TextFormatting.GRAY+" x "+TextFormatting.GOLD+s.getCount(): "")));
 		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.items_created",
 				TextFormatting.GOLD+String.valueOf(ItemNBTHelper.getInt(stack, "createdItems"))));
 
@@ -54,7 +54,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT,
 				IILib.DESCRIPTION_KEY+"assembly_scheme.info_hold1", tooltip))
 		{
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1],I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.materials")));
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1], I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.materials")));
 			if(recipe!=null)
 				for(IngredientStack ingredient : recipe.inputs)
 					tooltip.add("   "+TextFormatting.GOLD+ingredient.getExampleStack().getDisplayName()+(

@@ -7,10 +7,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 
 public class ModelInfraredObserver extends ModelIIBase
 {
+	public ModelRendererTurbo[] observerModel, hatchModel, lensModel;
 	int textureX = 128;
 	int textureY = 128;
-
-	public ModelRendererTurbo[] observerModel, hatchModel, lensModel;
 
 	public ModelInfraredObserver(boolean doOffsets) //Same as Filename
 	{
@@ -223,11 +222,11 @@ public class ModelInfraredObserver extends ModelIIBase
 		baseModel[50].addBox(0F, 0F, 0F, 3, 3, 1, 0F); // Radio21
 		baseModel[50].setRotationPoint(4.5F, -6F, 7.5F);
 
-		baseModel[51].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 16, 10, 16), new Coord2D(8, 20, 8, 20), new Coord2D(2, 20, 2, 20), new Coord2D(0, 16, 0, 16) }), 2, 10, 20, 58, 2, ModelRendererTurbo.MR_FRONT, new float[] {16 ,5 ,6 ,5 ,16 ,10}); // Shape 77
+		baseModel[51].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 16, 10, 16), new Coord2D(8, 20, 8, 20), new Coord2D(2, 20, 2, 20), new Coord2D(0, 16, 0, 16)}), 2, 10, 20, 58, 2, ModelRendererTurbo.MR_FRONT, new float[]{16, 5, 6, 5, 16, 10}); // Shape 77
 		baseModel[51].setRotationPoint(-13F, -7F, 2.5F);
 		baseModel[51].rotateAngleY = 1.57079633F;
 
-		baseModel[52].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 16, 10, 16), new Coord2D(8, 20, 8, 20), new Coord2D(2, 20, 2, 20), new Coord2D(0, 16, 0, 16) }), 2, 10, 20, 58, 2, ModelRendererTurbo.MR_FRONT, new float[] {16 ,5 ,6 ,5 ,16 ,10}); // Shape 77
+		baseModel[52].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(10, 0, 10, 0), new Coord2D(10, 16, 10, 16), new Coord2D(8, 20, 8, 20), new Coord2D(2, 20, 2, 20), new Coord2D(0, 16, 0, 16)}), 2, 10, 20, 58, 2, ModelRendererTurbo.MR_FRONT, new float[]{16, 5, 6, 5, 16, 10}); // Shape 77
 		baseModel[52].setRotationPoint(10F, -7F, 2.5F);
 		baseModel[52].rotateAngleY = 1.57079633F;
 
@@ -398,17 +397,17 @@ public class ModelInfraredObserver extends ModelIIBase
 		lensModel[8].addBox(0F, 0F, 0F, 1, 3, 1, 0F); // EYEBOX11
 		lensModel[8].setRotationPoint(7F, -29.5F, -25.5F);
 
-		parts.put("base",  baseModel);
+		parts.put("base", baseModel);
 		parts.put("observer", observerModel);
 		parts.put("hatch", hatchModel);
 		parts.put("lens", lensModel);
 
-		translateAll(0.5f,1,0);
+		translateAll(0.5f, 1, 0);
 		if(doOffsets)
 		{
-			translate(observerModel,0,24,3);
-			translate(hatchModel,0,24,3);
-			translate(lensModel,0,24,3);
+			translate(observerModel, 0, 24, 3);
+			translate(hatchModel, 0, 24, 3);
+			translate(lensModel, 0, 24, 3);
 		}
 
 		flipAll();

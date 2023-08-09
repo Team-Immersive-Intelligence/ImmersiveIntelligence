@@ -8,8 +8,6 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 
 import javax.annotation.Nullable;
 
-import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.HitEffect.RICOCHET;
-
 /**
  * @author Pabilo8
  * @since 06-03-2020

@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
@@ -53,7 +52,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 		ClientUtils.bindTexture(texture_printing_press);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		IIClientUtils.drawPowerBar(guiLeft+112, guiTop+23, 7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		IIClientUtils.drawPowerBar(guiLeft+112, guiTop+23, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		float capacity = tile.tanks[0].getCapacity();
 		int yy = guiTop+21+51;

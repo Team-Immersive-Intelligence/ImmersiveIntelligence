@@ -20,7 +20,7 @@ public class DataOperationSetQuantity extends DataOperation
 		name = "set_quantity";
 
 		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeInteger.class};
-		params = new String[]{"stack","count"};
+		params = new String[]{"stack", "count"};
 		expectedResult = DataTypeItemStack.class;
 	}
 

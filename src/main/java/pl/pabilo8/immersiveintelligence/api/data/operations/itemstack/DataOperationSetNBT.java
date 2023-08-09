@@ -21,7 +21,7 @@ public class DataOperationSetNBT extends DataOperation
 		//Sets the NBT of an itemstack
 		name = "set_nbt";
 		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeString.class};
-		params = new String[]{"stack","nbt"};
+		params = new String[]{"stack", "nbt"};
 		expectedResult = DataTypeItemStack.class;
 	}
 

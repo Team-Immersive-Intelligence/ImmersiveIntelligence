@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 
 /**
  * @author BluSunrize - 20.07.2017
- *
  * @author Pabilo8
  * @since 23.09.2020
  */

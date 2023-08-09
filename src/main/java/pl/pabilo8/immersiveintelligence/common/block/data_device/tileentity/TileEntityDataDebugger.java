@@ -9,7 +9,10 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IActiveState;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -23,9 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.StringUtils;
@@ -34,18 +35,14 @@ import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageChatInfo;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -53,12 +50,12 @@ import java.util.stream.Collectors;
  */
 public class TileEntityDataDebugger extends TileEntityImmersiveConnectable implements ITickable, IDataConnector, IHammerInteraction, IDirectionalTile, IOBJModelCallback<IBlockState>, IAdvancedTextOverlay, IActiveState
 {
-	private boolean toggle = false;
 	public int mode = 0;
-	EnumFacing facing = EnumFacing.NORTH;
 	//Purely decorational, client only
 	public int setupTime = 25;
 	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
+	EnumFacing facing = EnumFacing.NORTH;
+	private boolean toggle = false;
 	private boolean refreshWireNetwork = false;
 	private DataPacket lastPacket = null;
 	private String[] packetString = new String[0];
@@ -215,15 +212,15 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	}
 
 	@Override
-	public void setDataNetwork(DataWireNetwork net)
-	{
-		wireNetwork = net;
-	}
-
-	@Override
 	public DataWireNetwork getDataNetwork()
 	{
 		return wireNetwork;
+	}
+
+	@Override
+	public void setDataNetwork(DataWireNetwork net)
+	{
+		wireNetwork = net;
 	}
 
 	@Override

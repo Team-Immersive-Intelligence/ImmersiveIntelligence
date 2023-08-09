@@ -31,15 +31,15 @@ import static blusunrize.immersiveengineering.client.ClientUtils.mc;
  */
 public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemStackRenderer implements IReloadableModelContainer<IIItemRendererAMT<I>>
 {
-	private boolean unCompiled = true;
-	@Nonnull
-	private final ItemModelReplacement_OBJ replacementModel;
-	@Nullable
-	private IESmartObjModel model;
 	@Nonnull
 	protected final ResLoc headerRes;
 	@Nonnull
 	protected final I item;
+	@Nonnull
+	private final ItemModelReplacement_OBJ replacementModel;
+	private boolean unCompiled = true;
+	@Nullable
+	private IESmartObjModel model;
 
 	public IIItemRendererAMT(@Nonnull I item, ResLoc modelRes)
 	{

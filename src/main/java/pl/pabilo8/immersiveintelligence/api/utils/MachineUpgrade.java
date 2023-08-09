@@ -19,12 +19,11 @@ import java.util.stream.Collectors;
 public class MachineUpgrade
 {
 	private static final List<MachineUpgrade> registeredUpgrades = new ArrayList<>();
-
+	private final List<IngredientStack> requiredStacks = new ArrayList<>();
 	protected String name;
 	protected ResourceLocation icon;
-	private int progress=0;
-	private int steps=1;
-	private final List<IngredientStack> requiredStacks = new ArrayList<>();
+	private int progress = 0;
+	private int steps = 1;
 
 	public MachineUpgrade(String name, ResourceLocation icon)
 	{
@@ -37,39 +36,6 @@ public class MachineUpgrade
 	public static MachineUpgrade getUpgradeByID(String id)
 	{
 		return registeredUpgrades.stream().filter(machineUpgrade -> machineUpgrade.name.equals(id)).findFirst().orElse(null);
-	}
-
-	public MachineUpgrade addStack(IngredientStack stack)
-	{
-		requiredStacks.add(stack);
-		return this;
-	}
-
-	public MachineUpgrade setRequiredProgress(int progress)
-	{
-		this.progress=progress;
-		return this;
-	}
-
-	public MachineUpgrade setRequiredSteps(int steps)
-	{
-		this.steps=steps;
-		return this;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public ResourceLocation getIcon()
-	{
-		return icon;
-	}
-
-	public List<IngredientStack> getRequiredStacks()
-	{
-		return requiredStacks;
 	}
 
 	public static List<MachineUpgrade> getUpgradesFromNBT(NBTTagCompound tag)
@@ -86,6 +52,39 @@ public class MachineUpgrade
 	public static List<MachineUpgrade> getMatchingUpgrades(IUpgradableMachine machine)
 	{
 		return registeredUpgrades.stream().filter(machine::upgradeMatches).collect(Collectors.toList());
+	}
+
+	public MachineUpgrade addStack(IngredientStack stack)
+	{
+		requiredStacks.add(stack);
+		return this;
+	}
+
+	public MachineUpgrade setRequiredProgress(int progress)
+	{
+		this.progress = progress;
+		return this;
+	}
+
+	public MachineUpgrade setRequiredSteps(int steps)
+	{
+		this.steps = steps;
+		return this;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public ResourceLocation getIcon()
+	{
+		return icon;
+	}
+
+	public List<IngredientStack> getRequiredStacks()
+	{
+		return requiredStacks;
 	}
 
 	public int getProgressRequired()

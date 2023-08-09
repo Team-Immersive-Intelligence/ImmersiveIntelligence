@@ -16,7 +16,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
@@ -40,6 +39,7 @@ public class JEIHelper implements IModPlugin
 	public static IModRegistry modRegistry;
 	public static IDrawable slotDrawable;
 	public static IEFluidTooltipCallback fluidTooltipCallback = new IEFluidTooltipCallback();
+	LinkedHashMultimap<Class<? extends MultiblockRecipe>, IIRecipeCategory> categories = LinkedHashMultimap.create();
 
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
@@ -56,8 +56,6 @@ public class JEIHelper implements IModPlugin
 	{
 
 	}
-
-	LinkedHashMultimap<Class<? extends MultiblockRecipe>, IIRecipeCategory> categories = LinkedHashMultimap.create();
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry)

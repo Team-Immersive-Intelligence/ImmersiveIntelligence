@@ -58,14 +58,6 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 		this.casing = casing;
 	}
 
-	public enum AmmoParts implements IIItemEnum
-	{
-		@IIItemProperties(hidden = true)
-		BULLET,
-		@IIItemProperties(hidden = true)
-		CORE
-	}
-
 	public void makeDefault(ItemStack stack)
 	{
 		if(!ItemNBTHelper.hasKey(stack, "core"))
@@ -325,5 +317,13 @@ public abstract class ItemIIAmmoBase extends ItemIISubItemsBase<AmmoParts> imple
 		}
 
 		return a;
+	}
+
+	public enum AmmoParts implements IIItemEnum
+	{
+		@IIItemProperties(hidden = true)
+		BULLET,
+		@IIItemProperties(hidden = true)
+		CORE
 	}
 }

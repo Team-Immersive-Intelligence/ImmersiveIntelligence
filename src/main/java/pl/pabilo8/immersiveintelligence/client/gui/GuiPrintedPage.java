@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -31,9 +30,8 @@ public class GuiPrintedPage extends GuiScreen
 	private static final Pattern patternStrikethrough = Pattern.compile("~~(.+?)~~");
 
 	private static final String PAGE_TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/printed_page.png";
-	private int guiLeft=0, guiTop=0;
-
 	private final FormattedTextLine[] lines;
+	private int guiLeft = 0, guiTop = 0;
 
 	public GuiPrintedPage(EntityPlayer player, ItemStack stack)
 	{
@@ -184,7 +182,9 @@ public class GuiPrintedPage extends GuiScreen
 					try
 					{
 						size = Float.parseFloat(s.substring(1));
-					} catch(NumberFormatException ignored) {}
+					} catch(NumberFormatException ignored)
+					{
+					}
 				else
 					break;
 			}

@@ -3,12 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.item.weapons;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
-import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,7 +38,6 @@ import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
@@ -279,7 +276,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 			case SINGULAR_CHARGED:
 			{
 				EasyNBT nbt = getNBT(stack);
-				if(!getAmmoHandler(stack).canFire(stack,nbt))
+				if(!getAmmoHandler(stack).canFire(stack, nbt))
 					break;
 
 				if(count==getMaxItemUseDuration(stack))
@@ -631,16 +628,16 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 		return getAmmoHandler(stack).getAmmoList(stack);
 	}
 
+	@SideOnly(Side.CLIENT)
+	public IIUpgradableItemRendererAMT<?> getItemRenderer()
+	{
+		return ((IIUpgradableItemRendererAMT<?>)getTileEntityItemStackRenderer());
+	}
+
 	public enum FireModeType
 	{
 		AUTOMATIC,
 		SINGULAR,
 		SINGULAR_CHARGED
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIUpgradableItemRendererAMT<?> getItemRenderer()
-	{
-		return ((IIUpgradableItemRendererAMT<?>)getTileEntityItemStackRenderer());
 	}
 }

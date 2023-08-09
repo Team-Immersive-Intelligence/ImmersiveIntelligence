@@ -45,19 +45,6 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 		super("radio_configurator", 1, RadioTuners.values());
 	}
 
-	public enum RadioTuners implements IIItemEnum
-	{
-		BASIC(IIConfig.radioBasicMaxFrequency),
-		ADVANCED(IIConfig.radioAdvancedMaxFrequency);
-
-		final int maxFrequency;
-
-		RadioTuners(int maxFrequency)
-		{
-			this.maxFrequency = maxFrequency;
-		}
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> list, @Nonnull ITooltipFlag flag)
@@ -125,5 +112,18 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR,
 				new TextComponentTranslation(IILib.DESCRIPTION_KEY+"radio_configurator_frequency", frequency), 0, 20, 0);
 		player.connection.sendPacket(packet);
+	}
+
+	public enum RadioTuners implements IIItemEnum
+	{
+		BASIC(IIConfig.radioBasicMaxFrequency),
+		ADVANCED(IIConfig.radioAdvancedMaxFrequency);
+
+		final int maxFrequency;
+
+		RadioTuners(int maxFrequency)
+		{
+			this.maxFrequency = maxFrequency;
+		}
 	}
 }

@@ -36,6 +36,57 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		super("circuit_functional", 1, Circuits.values());
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> tooltip, @Nonnull ITooltipFlag flag)
+	{
+		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"functional_circuit_shift", tooltip))
+		{
+			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"functional_circuit"));
+			getOperationsList(stack).stream()
+					.map(s -> "   "+I18n.format(IILib.DATA_KEY+"function."+s))
+					.forEach(tooltip::add);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Nullable
+	@Override
+	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
+	{
+		return IIClientUtils.fontRegular;
+	}
+
+	@Override
+	public DataPacket getStoredData(ItemStack stack)
+	{
+		DataPacket data = new DataPacket();
+		data.fromNBT(ItemNBTHelper.getTagCompound(stack, "operations"));
+		return data;
+	}
+
+	@Override
+	public void writeDataToItem(DataPacket packet, ItemStack stack)
+	{
+		ItemNBTHelper.setTagCompound(stack, "operations", packet.toNBT());
+	}
+
+	public List<String> getOperationsList(ItemStack stack)
+	{
+		if(stack.getMetadata() < Circuits.values().length)
+		{
+			Circuits circuit = Circuits.values()[stack.getMetadata()];
+			return Arrays.asList(circuit.functions);
+		}
+		return Collections.emptyList();
+	}
+
+	public String getTESRRenderTexture(ItemStack stack)
+	{
+		return stackToSub(stack).tier.texture;
+	}
+
+
 	public enum Circuits implements IIItemEnum
 	{
 		ARITHMETIC(CircuitTypes.BASIC,
@@ -146,8 +197,8 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"to_null"
 		);
 
-		private final String[] functions;
 		public final CircuitTypes tier;
+		private final String[] functions;
 
 		Circuits(CircuitTypes tier, String... functions)
 		{
@@ -180,56 +231,5 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 			this.texture = texture;
 			this.material = material;
 		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> tooltip, @Nonnull ITooltipFlag flag)
-	{
-		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"functional_circuit_shift", tooltip))
-		{
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"functional_circuit"));
-			getOperationsList(stack).stream()
-					.map(s -> "   "+I18n.format(IILib.DATA_KEY+"function."+s))
-					.forEach(tooltip::add);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Nullable
-	@Override
-	public FontRenderer getFontRenderer(@Nonnull ItemStack stack)
-	{
-		return IIClientUtils.fontRegular;
-	}
-
-	@Override
-	public DataPacket getStoredData(ItemStack stack)
-	{
-		DataPacket data = new DataPacket();
-		data.fromNBT(ItemNBTHelper.getTagCompound(stack, "operations"));
-		return data;
-	}
-
-	@Override
-	public void writeDataToItem(DataPacket packet, ItemStack stack)
-	{
-		ItemNBTHelper.setTagCompound(stack, "operations", packet.toNBT());
-	}
-
-
-	public List<String> getOperationsList(ItemStack stack)
-	{
-		if(stack.getMetadata() < Circuits.values().length)
-		{
-			Circuits circuit = Circuits.values()[stack.getMetadata()];
-			return Arrays.asList(circuit.functions);
-		}
-		return Collections.emptyList();
-	}
-
-	public String getTESRRenderTexture(ItemStack stack)
-	{
-		return stackToSub(stack).tier.texture;
 	}
 }

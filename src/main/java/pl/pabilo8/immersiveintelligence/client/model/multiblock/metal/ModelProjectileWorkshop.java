@@ -13,10 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelProjectileWorkshop extends ModelIIBase
 {
+	public ModelRendererTurbo[] insidesModel, lidLeftModel, lidRightModel;
 	int textureX = 128;
 	int textureY = 128;
-
-	public ModelRendererTurbo[] insidesModel, lidLeftModel, lidRightModel;
 
 	public ModelProjectileWorkshop() //Same as Filename
 	{
@@ -208,7 +207,7 @@ public class ModelProjectileWorkshop extends ModelIIBase
 		baseModel[27].setRotationPoint(32F, -9.05F, 0F);
 		baseModel[27].rotateAngleZ = 1.57079633F;
 
-		baseModel[28].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(17, 0, 17, 0), new Coord2D(17, 16, 17, 16), new Coord2D(5, 16, 5, 16), new Coord2D(0, 11, 0, 11) }), 1, 17, 16, 64, 1, ModelRendererTurbo.MR_FRONT, new float[] {11 ,8 ,12 ,16 ,17}); // Shape 93
+		baseModel[28].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(17, 0, 17, 0), new Coord2D(17, 16, 17, 16), new Coord2D(5, 16, 5, 16), new Coord2D(0, 11, 0, 11)}), 1, 17, 16, 64, 1, ModelRendererTurbo.MR_FRONT, new float[]{11, 8, 12, 16, 17}); // Shape 93
 		baseModel[28].setRotationPoint(17F, 0F, 0F);
 		baseModel[28].rotateAngleY = -1.57079633F;
 
@@ -372,11 +371,11 @@ public class ModelProjectileWorkshop extends ModelIIBase
 		baseModel[69].addShapeBox(0F, 0F, 0F, 4, 3, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 51
 		baseModel[69].setRotationPoint(22F, -16F, 47F);
 
-		baseModel[70].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(17, 0, 17, 0), new Coord2D(17, 16, 17, 16), new Coord2D(5, 16, 5, 16), new Coord2D(0, 11, 0, 11) }), 1, 17, 16, 64, 1, ModelRendererTurbo.MR_FRONT, new float[] {11 ,8 ,12 ,16 ,17}); // Shape 93
+		baseModel[70].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(17, 0, 17, 0), new Coord2D(17, 16, 17, 16), new Coord2D(5, 16, 5, 16), new Coord2D(0, 11, 0, 11)}), 1, 17, 16, 64, 1, ModelRendererTurbo.MR_FRONT, new float[]{11, 8, 12, 16, 17}); // Shape 93
 		baseModel[70].setRotationPoint(48F, 0F, 0F);
 		baseModel[70].rotateAngleY = -1.57079633F;
 
-		baseModel[71].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[] { new Coord2D(0, 0, 0, 0), new Coord2D(17, 0, 17, 0), new Coord2D(17, 16, 17, 16), new Coord2D(5, 16, 5, 16), new Coord2D(0, 11, 0, 11) }), 1, 17, 16, 64, 1, ModelRendererTurbo.MR_FRONT, new float[] {11 ,8 ,12 ,16 ,17}); // Shape 93
+		baseModel[71].addShape3D(0F, 0F, 0F, new Shape2D(new Coord2D[]{new Coord2D(0, 0, 0, 0), new Coord2D(17, 0, 17, 0), new Coord2D(17, 16, 17, 16), new Coord2D(5, 16, 5, 16), new Coord2D(0, 11, 0, 11)}), 1, 17, 16, 64, 1, ModelRendererTurbo.MR_FRONT, new float[]{11, 8, 12, 16, 17}); // Shape 93
 		baseModel[71].setRotationPoint(32.5F, 0.1F, 0F);
 		baseModel[71].rotateAngleY = -1.57079633F;
 
@@ -572,15 +571,15 @@ public class ModelProjectileWorkshop extends ModelIIBase
 		lidRightModel[1].addShapeBox(0F, 0F, -1F, 16, 12, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // BoxCover07
 		lidRightModel[1].setRotationPoint(32F, -11.05F, 0F);
 
-		parts.put("base",baseModel);
-		parts.put("insides",insidesModel);
-		parts.put("lid_left",lidLeftModel);
-		parts.put("lid_right",lidRightModel);
+		parts.put("base", baseModel);
+		parts.put("insides", insidesModel);
+		parts.put("lid_left", lidLeftModel);
+		parts.put("lid_right", lidRightModel);
 
 		flipAll();
 
-		translate(lidLeftModel,0,-5,0);
-		translate(lidRightModel,0,-5,0);
+		translate(lidLeftModel, 0, -5, 0);
+		translate(lidRightModel, 0, -5, 0);
 	}
 
 	@Override
@@ -596,14 +595,14 @@ public class ModelProjectileWorkshop extends ModelIIBase
 			break;
 			case WEST:
 			{
-				GlStateManager.translate( mirrored?-1f:2f, 0f,2f);
+				GlStateManager.translate(mirrored?-1f: 2f, 0f, 2f);
 
 			}
 			break;
 			case SOUTH:
 			{
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(mirrored?-2:1, 0f, 2);
+				GlStateManager.translate(mirrored?-2: 1, 0f, 2);
 
 			}
 			break;

@@ -71,20 +71,9 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 	public int fuseParameter = 0;
 	public IAmmoComponent[] components = new IAmmoComponent[0];
 	public NBTTagCompound[] componentNBT = new NBTTagCompound[0];
-
-	protected Entity shooter = null;
-
-	boolean isPainted = false;
-	//Set true only for artillery type bullets, forge can't give the mod unlimited tickets for each entity
-	boolean shouldLoadChunks = false;
 	//Additional motion variables, multiplied by force, that can decrease when the bullet hits an obstacle
 	public double baseMotionX = 0, baseMotionY = 0, baseMotionZ = 0;
-
-	//Whether the bullet has already played its flyby sound
-	boolean flybySound = false;
-
 	public double gravityMotionY = 0;
-
 	/*
 	Paint color and fuse is -1 if not existant
 	 */
@@ -95,11 +84,15 @@ public class EntityBullet extends Entity implements IEntityLightEventConsumer, I
 	On hit, they are multiplied by core type bonuses, so a softpoint bullet has less penetration than an AP round, but has more damage vs unarmored targets
 	 */
 	public float penetrationHardness = 1, force = 1, initialForce = 1, baseDamage = 0, mass = 0;
-
+	protected Entity shooter = null;
+	protected boolean wasSynced;
+	boolean isPainted = false;
+	//Set true only for artillery type bullets, forge can't give the mod unlimited tickets for each entity
+	boolean shouldLoadChunks = false;
+	//Whether the bullet has already played its flyby sound
+	boolean flybySound = false;
 	ArrayList<Entity> hitEntities = new ArrayList<>();
 	ArrayList<BlockPos> hitPos = new ArrayList<>();
-
-	protected boolean wasSynced;
 	private Ticket ticket = null;
 
 	public EntityBullet(World worldIn)

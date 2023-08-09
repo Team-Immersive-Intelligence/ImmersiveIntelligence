@@ -19,7 +19,7 @@ public class DataOperationCanStackWith extends DataOperation
 		//Whether the two itemstacks are compatible
 		name = "can_stack_with";
 		allowedTypes = new Class[]{DataTypeItemStack.class, DataTypeItemStack.class};
-		params = new String[]{"stack","compared"};
+		params = new String[]{"stack", "compared"};
 		expectedResult = DataTypeBoolean.class;
 	}
 

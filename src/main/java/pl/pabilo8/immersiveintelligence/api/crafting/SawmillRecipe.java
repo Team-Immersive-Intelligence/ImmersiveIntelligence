@@ -24,31 +24,16 @@ import java.util.List;
 public class SawmillRecipe extends MultiblockRecipe
 {
 	private static final int DEFAULT_COLOR = IIUtils.rgb(0.22392157f, 0.21372549019607842f, 0.15176470588235294f);
-
+	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
+	public static ArrayList<SawmillRecipe> recipeList = new ArrayList<>();
 	//The tier of the saw required, 1 for cutting wood (bronze), 2 iron, 3 steel, 4 tungsten
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput, itemSecondaryOutput;
-
-	public static HashMap<String, ISawblade> toolMap = new HashMap<>();
-	public static ArrayList<SawmillRecipe> recipeList = new ArrayList<>();
-	int totalProcessTime;
-
-	IISoundAnimation soundAnimation;
-
-	public int getTorque()
-	{
-		return torque;
-	}
-
-	public int getHardness()
-	{
-		return hardness;
-	}
-
 	final int torque;
 	final int hardness;
 	final float[] dustColor;
-
+	int totalProcessTime;
+	IISoundAnimation soundAnimation;
 	public SawmillRecipe(ItemStack itemOutput, Object itemInput, ItemStack itemSecondaryOutput, int torque, int time, int hardness, int dustColor)
 	{
 		this.itemOutput = itemOutput;
@@ -126,6 +111,23 @@ public class SawmillRecipe extends MultiblockRecipe
 		return false;
 	}
 
+	public static SawmillRecipe loadFromNBT(NBTTagCompound nbt)
+	{
+		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
+
+		return findRecipe(item_input.stack);
+	}
+
+	public int getTorque()
+	{
+		return torque;
+	}
+
+	public int getHardness()
+	{
+		return hardness;
+	}
+
 	@Override
 	public int getMultipleProcessTicks()
 	{
@@ -137,13 +139,6 @@ public class SawmillRecipe extends MultiblockRecipe
 	{
 		nbt.setTag("item_input", itemInput.writeToNBT(new NBTTagCompound()));
 		return nbt;
-	}
-
-	public static SawmillRecipe loadFromNBT(NBTTagCompound nbt)
-	{
-		IngredientStack item_input = IngredientStack.readFromNBT(nbt.getCompoundTag("item_input"));
-
-		return findRecipe(item_input.stack);
 	}
 
 	@Override

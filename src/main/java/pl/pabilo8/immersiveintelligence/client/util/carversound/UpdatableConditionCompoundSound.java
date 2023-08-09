@@ -17,9 +17,9 @@ import java.util.function.Function;
 @SideOnly(Side.CLIENT)
 public class UpdatableConditionCompoundSound<T> extends CompoundSound
 {
-	private boolean forceStop = false, initialTick = true;
 	private final T controller;
 	private final Function<T, Boolean> shouldPlay;
+	private boolean forceStop = false, initialTick = true;
 
 	public UpdatableConditionCompoundSound(MultiSound multiSound, SoundCategory category, Vec3d pos, float volume, float pitch, T controller, Function<T, Boolean> shouldPlay)
 	{

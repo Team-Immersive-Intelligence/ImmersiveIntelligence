@@ -28,8 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  */
 public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> implements IReloadableModelContainer<FillerRenderer>
 {
-	private static ModelFiller model, modelFlipped;
 	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/blocks/multiblock/casing_filler.png";
+	private static ModelFiller model, modelFlipped;
 
 	@Override
 	public void render(TileEntityFiller te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -58,14 +58,14 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 				else
 					shift[i] = .5f+(fProcess-(1-transportTime))/transportTime*.5f;
 
-				fill[i] = fProcess>0.45?Math.min((fProcess-0.45f)/0.1f,1f):0f;
+				fill[i] = fProcess > 0.45?Math.min((fProcess-0.45f)/0.1f, 1f): 0f;
 			}
 			if(te.hasWorld())
 			{
 				Vec3i offset = (te.facing.rotateYCCW()).getDirectionVec();
 				if(te.mirrored)
 				{
-					GlStateManager.scale(-1f,1f,1f);
+					GlStateManager.scale(-1f, 1f, 1f);
 					GlStateManager.cullFace(CullFace.FRONT);
 				}
 				else
@@ -90,7 +90,7 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 				mod.render();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(26F/16f, 38F/16f, -43F/16f);
-			GlStateManager.rotate(360*ff,0,0,1);
+			GlStateManager.rotate(360*ff, 0, 0, 1);
 			for(ModelRendererTurbo mod : model.fanModel)
 				mod.render();
 			GlStateManager.popMatrix();
@@ -105,7 +105,7 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
 
 			GlStateManager.popMatrix();
-			GlStateManager.scale(-1,1,1);
+			GlStateManager.scale(-1, 1, 1);
 			GlStateManager.cullFace(CullFace.FRONT);
 			for(int i = 0; i < shift.length; i++)
 			{
@@ -119,7 +119,7 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 				{
 					IBulletModel iBulletModel = AmmoRegistry.INSTANCE.registeredModels.get(bullet.getName());
 					if(iBulletModel!=null)
-						iBulletModel.renderCasing((float)MathHelper.clamp(fill[i],0,1),-1);
+						iBulletModel.renderCasing((float)MathHelper.clamp(fill[i], 0, 1), -1);
 				}
 				else
 				{

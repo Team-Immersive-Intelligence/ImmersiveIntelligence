@@ -12,11 +12,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelMotorbike extends ModelIIBase
 {
-	int textureX = 128;
-	int textureY = 128;
-
 	public ModelRendererTurbo[] accelerationModel, brakeModel, frontWheelModel, backWheelModel, frontThingyModel, frontThingyUpperModel, steeringGearModel, engineModel, exhaustPipesModel, trailerThingyModel;
 	public ModelRendererTurbo[] upgradeSeatModel, upgradeTankModel, upgradeStorageModel;
+	int textureX = 128;
+	int textureY = 128;
 
 	public ModelMotorbike() //Same as Filename
 	{

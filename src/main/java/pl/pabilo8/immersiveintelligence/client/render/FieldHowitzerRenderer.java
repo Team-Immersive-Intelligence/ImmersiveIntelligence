@@ -15,8 +15,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitze
 
 public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implements IReloadableModelContainer<FieldHowitzerRenderer>
 {
-	public static ModelFieldHowitzer model = new ModelFieldHowitzer();
 	public static final String texture = ImmersiveIntelligence.MODID+":textures/entity/field_howitzer.png";
+	public static ModelFieldHowitzer model = new ModelFieldHowitzer();
 
 	public FieldHowitzerRenderer(RenderManager renderManager)
 	{
@@ -67,13 +67,13 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 		{
 			GlStateManager.rotate(yaw, 0, 1, 0);
 			GlStateManager.translate(-0.45, 0.45, 1.65);
-			towing=entity.towingOperation?(entity.setupTime/(float)FieldHowitzer.towingTime):0;
+			towing = entity.towingOperation?(entity.setupTime/(float)FieldHowitzer.towingTime): 0;
 		}
 		else
 		{
 			GlStateManager.rotate(yaw, 0, 1, 0);
 			GlStateManager.translate(-0.45, 0.45, 0.5);
-			towing=1f-((entity.setupTime/(float)FieldHowitzer.setupTime)*1.75f);
+			towing = 1f-((entity.setupTime/(float)FieldHowitzer.setupTime)*1.75f);
 		}
 
 		ClientUtils.bindTexture(texture);
@@ -120,14 +120,14 @@ public class FieldHowitzerRenderer extends Render<EntityFieldHowitzer> implement
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, -0.5f);
-		GlStateManager.rotate(entity.partWheelLeft.wheelTraverse+(entity.turnLeft ?(f1*1.5f): 0)-(entity.turnRight ?(f1*1.5f): 0), 1, 0, 0);
+		GlStateManager.rotate(entity.partWheelLeft.wheelTraverse+(entity.turnLeft?(f1*1.5f): 0)-(entity.turnRight?(f1*1.5f): 0), 1, 0, 0);
 		for(ModelRendererTurbo mod : model.leftWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, -0.5f);
-		GlStateManager.rotate(entity.partWheelRight.wheelTraverse+(entity.turnRight ?(f1*1.5f): 0)-(entity.turnLeft ?(f1*1.5f): 0), 1, 0, 0);
+		GlStateManager.rotate(entity.partWheelRight.wheelTraverse+(entity.turnRight?(f1*1.5f): 0)-(entity.turnLeft?(f1*1.5f): 0), 1, 0, 0);
 		for(ModelRendererTurbo mod : model.rightWheelModel)
 			mod.render(0.0625f);
 		GlStateManager.popMatrix();

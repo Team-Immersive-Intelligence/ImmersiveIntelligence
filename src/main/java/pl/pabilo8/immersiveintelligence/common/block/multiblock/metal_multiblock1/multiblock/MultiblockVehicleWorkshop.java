@@ -23,11 +23,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVehicleWorkshop;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityVehicleWorkshop;
 
 public class MultiblockVehicleWorkshop implements IMultiblock
 {
@@ -150,7 +149,7 @@ public class MultiblockVehicleWorkshop implements IMultiblock
 						continue;
 					else if(h > 1&&l > -1&&w==1)
 						continue;
-					else if(h > 0&&w<1)
+					else if(h > 0&&w < 1)
 						continue;
 					else if(h > 0&&w==2&&l!=1)
 						continue;

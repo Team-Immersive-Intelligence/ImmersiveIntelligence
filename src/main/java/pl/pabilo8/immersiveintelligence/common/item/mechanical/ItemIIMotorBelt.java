@@ -46,6 +46,46 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 		super("motor_belt", 64, MotorBelt.values());
 	}
 
+	@Override
+	public WireType getWireType(ItemStack stack)
+	{
+		return stackToSub(stack).type;
+	}
+
+	@Override
+	public boolean canConnectCable(ItemStack stack, TileEntity targetEntity)
+	{
+		return targetEntity instanceof IMotorBeltConnector;
+	}
+
+	@Override
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
+	{
+		int[] link = ItemNBTHelper.getIntArray(stack, "linkingPos");
+		if(link.length > 3)
+			tooltip.add(I18n.format(Lib.DESC_INFO+"attachedToDim", link[1], link[2], link[3], link[0]));
+	}
+
+	@Nonnull
+	@Override
+	public EnumActionResult onItemUseFirst(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand)
+	{
+		return RotaryUtils.useCoil(this, player, world, pos, hand, side, hitX, hitY, hitZ);
+	}
+
+	/**
+	 * Hey you, yes you, copying that class, <br>
+	 * Please remember to call your version of this method somewhere in your ClientProxy <br>
+	 * Have a nice day ^^ <br>
+	 */
+	@SideOnly(Side.CLIENT)
+	public void setRenderModels()
+	{
+		MotorBelt.CLOTH.model = new ModelClothMotorBelt();
+		MotorBelt.STEEL.model = new ModelSteelMotorBelt();
+		MotorBelt.RUBBER.model = new ModelClothMotorBelt();
+	}
+
 	public enum MotorBelt implements IIItemEnum
 	{
 		CLOTH("light_belts", MechanicalDevices.beltLength[0], 1, 6,
@@ -103,46 +143,6 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 		{
 			return model;
 		}
-	}
-
-	@Override
-	public WireType getWireType(ItemStack stack)
-	{
-		return stackToSub(stack).type;
-	}
-
-	@Override
-	public boolean canConnectCable(ItemStack stack, TileEntity targetEntity)
-	{
-		return targetEntity instanceof IMotorBeltConnector;
-	}
-
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn)
-	{
-		int[] link = ItemNBTHelper.getIntArray(stack, "linkingPos");
-		if(link.length > 3)
-			tooltip.add(I18n.format(Lib.DESC_INFO+"attachedToDim", link[1], link[2], link[3], link[0]));
-	}
-
-	@Nonnull
-	@Override
-	public EnumActionResult onItemUseFirst(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ, @Nonnull EnumHand hand)
-	{
-		return RotaryUtils.useCoil(this, player, world, pos, hand, side, hitX, hitY, hitZ);
-	}
-
-	/**
-	 * Hey you, yes you, copying that class, <br>
-	 * Please remember to call your version of this method somewhere in your ClientProxy <br>
-	 * Have a nice day ^^ <br>
-	 */
-	@SideOnly(Side.CLIENT)
-	public void setRenderModels()
-	{
-		MotorBelt.CLOTH.model = new ModelClothMotorBelt();
-		MotorBelt.STEEL.model = new ModelSteelMotorBelt();
-		MotorBelt.RUBBER.model = new ModelClothMotorBelt();
 	}
 
 }

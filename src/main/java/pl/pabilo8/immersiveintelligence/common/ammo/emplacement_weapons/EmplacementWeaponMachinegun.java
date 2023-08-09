@@ -46,24 +46,16 @@ import java.util.List;
 
 public class EmplacementWeaponMachinegun extends EmplacementWeapon
 {
+	float shootDelay = Machinegun.bulletFireTime;
+	int reloadDelay = 0;
+	int setupDelay = 0;
 	/**
 	 * *reloads the gun* [H] E A V Y  M A C H I N E G U N<br>
 	 * <s>Rawket Lawnchair!</s>
 	 */
 	private AxisAlignedBB vision;
-	float shootDelay = Machinegun.bulletFireTime;
-	int reloadDelay = 0;
 	private Vec3d vv;
-
-	int setupDelay = 0;
-
 	private NonNullList<ItemStack> inventory = NonNullList.withSize(36, ItemStack.EMPTY);
-	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(12, ItemStack.EMPTY);
-	private boolean requiresPlatformRefill = false;
-
-	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
-	private ItemStack s2 = ItemStack.EMPTY;
-
 	private final IItemHandler inventoryHandler = new ItemStackHandler(inventory)
 	{
 		@Override
@@ -85,6 +77,10 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 			return itemStack;
 		}
 	};
+	private NonNullList<ItemStack> inventoryPlatform = NonNullList.withSize(12, ItemStack.EMPTY);
+	private boolean requiresPlatformRefill = false;
+	private ArrayDeque<ItemStack> magazine = new ArrayDeque<>();
+	private ItemStack s2 = ItemStack.EMPTY;
 
 	@Override
 	public String getName()

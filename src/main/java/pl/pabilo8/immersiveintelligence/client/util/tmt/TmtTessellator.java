@@ -20,163 +20,137 @@ public class TmtTessellator extends Tessellator
 {
 	private static final int nativeBufferSize = 0x200000;
 	private static final int trivertsInBuffer = (nativeBufferSize/48)*6;
-	public static boolean renderingWorldRenderer = false;
-	public boolean defaultTexture = false;
-	private int rawBufferSize = 0;
-	public int textureID = 0;
 	/**
 	 * Boolean used to check whether quads should be drawn as two triangles. Initialized to false and never changed.
 	 */
 	private static final boolean convertQuadsToTriangles = false;
-
 	/**
 	 * The byte buffer used for GL allocation.
 	 */
 	private static final ByteBuffer byteBuffer = GLAllocation.createDirectByteBuffer(nativeBufferSize*4);
-
 	/**
 	 * The same memory as byteBuffer, but referenced as an integer buffer.
 	 */
 	private static final IntBuffer intBuffer = byteBuffer.asIntBuffer();
-
 	/**
 	 * The same memory as byteBuffer, but referenced as an float buffer.
 	 */
 	private static final FloatBuffer floatBuffer = byteBuffer.asFloatBuffer();
-
 	/**
 	 * Short buffer
 	 */
 	private static final ShortBuffer shortBuffer = byteBuffer.asShortBuffer();
-
 	/**
-	 * Raw integer array.
+	 * Number of vertex buffer objects allocated for use.
 	 */
-	private int[] rawBuffer;
-
-	/**
-	 * The number of vertices to be drawn in the next draw call. Reset to 0 between draw calls.
-	 */
-	private int vertexCount = 0;
-
-	/**
-	 * The first coordinate to be used for the texture.
-	 */
-	private double textureU;
-
-	/**
-	 * The second coordinate to be used for the texture.
-	 */
-	private double textureV;
-
-	/**
-	 * The fourth coordinate to be used for the texture.
-	 */
-	private double textureW;
-	private int brightness;
-
-	/**
-	 * The color (RGBA) value to be used for the following draw call.
-	 */
-	private int color;
-
-	/**
-	 * Whether the current draw object for this tessellator has color values.
-	 */
-	private boolean hasColor = false;
-
-	/**
-	 * Whether the current draw object for this tessellator has texture coordinates.
-	 */
-	private boolean hasTexture = false;
-	private boolean hasBrightness = false;
-
-	/**
-	 * Whether the current draw object for this tessellator has normal values.
-	 */
-	private boolean hasNormals = false;
-
-	/**
-	 * The index into the raw buffer to be used for the next data.
-	 */
-	private int rawBufferIndex = 0;
-
-	/**
-	 * The number of vertices manually added to the given draw call. This differs from vertexCount because it adds extra
-	 * vertices when converting quads to triangles.
-	 */
-	private int addedVertices = 0;
-
-	/**
-	 * Disables all color information for the following draw call.
-	 */
-	private boolean isColorDisabled = false;
-
-	/**
-	 * The draw mode currently being used by the tessellator.
-	 */
-	public int drawMode;
-
-	/**
-	 * An offset to be applied along the x-axis for all vertices in this draw call.
-	 */
-	public double xOffset;
-
-	/**
-	 * An offset to be applied along the y-axis for all vertices in this draw call.
-	 */
-	public double yOffset;
-
-	/**
-	 * An offset to be applied along the z-axis for all vertices in this draw call.
-	 */
-	public double zOffset;
-
-	/**
-	 * The normal to be applied to the face being drawn.
-	 */
-	private int normal;
-
+	private static final int vboCount = 10;
+	public static boolean renderingWorldRenderer = false;
 	/**
 	 * The static INSTANCE of the Tessellator.
 	 */
 	public static TmtTessellator instance = new TmtTessellator();
-
-	/**
-	 * Whether this tessellator is currently in draw mode.
-	 */
-	public boolean isDrawing = false;
-
 	/**
 	 * Whether we are currently using VBO or not.
 	 */
 	private static boolean useVBO = false;
-
 	/**
 	 * An IntBuffer used to store the indices of vertex buffer objects.
 	 */
 	private static IntBuffer vertexBuffers;
 
+	static
+	{
+		instance.defaultTexture = true;
+		useVBO = false;
+	}
+
+	public boolean defaultTexture = false;
+	public int textureID = 0;
+	/**
+	 * The draw mode currently being used by the tessellator.
+	 */
+	public int drawMode;
+	/**
+	 * An offset to be applied along the x-axis for all vertices in this draw call.
+	 */
+	public double xOffset;
+	/**
+	 * An offset to be applied along the y-axis for all vertices in this draw call.
+	 */
+	public double yOffset;
+	/**
+	 * An offset to be applied along the z-axis for all vertices in this draw call.
+	 */
+	public double zOffset;
+	/**
+	 * Whether this tessellator is currently in draw mode.
+	 */
+	public boolean isDrawing = false;
+	private int rawBufferSize = 0;
+	/**
+	 * Raw integer array.
+	 */
+	private int[] rawBuffer;
+	/**
+	 * The number of vertices to be drawn in the next draw call. Reset to 0 between draw calls.
+	 */
+	private int vertexCount = 0;
+	/**
+	 * The first coordinate to be used for the texture.
+	 */
+	private double textureU;
+	/**
+	 * The second coordinate to be used for the texture.
+	 */
+	private double textureV;
+	/**
+	 * The fourth coordinate to be used for the texture.
+	 */
+	private double textureW;
+	private int brightness;
+	/**
+	 * The color (RGBA) value to be used for the following draw call.
+	 */
+	private int color;
+	/**
+	 * Whether the current draw object for this tessellator has color values.
+	 */
+	private boolean hasColor = false;
+	/**
+	 * Whether the current draw object for this tessellator has texture coordinates.
+	 */
+	private boolean hasTexture = false;
+	private boolean hasBrightness = false;
+	/**
+	 * Whether the current draw object for this tessellator has normal values.
+	 */
+	private boolean hasNormals = false;
+	/**
+	 * The index into the raw buffer to be used for the next data.
+	 */
+	private int rawBufferIndex = 0;
+	/**
+	 * The number of vertices manually added to the given draw call. This differs from vertexCount because it adds extra
+	 * vertices when converting quads to triangles.
+	 */
+	private int addedVertices = 0;
+	/**
+	 * Disables all color information for the following draw call.
+	 */
+	private boolean isColorDisabled = false;
+	/**
+	 * The normal to be applied to the face being drawn.
+	 */
+	private int normal;
 	/**
 	 * The index of the last VBO used. This is used in round-robin fashion, sequentially, through the vboCount vertex
 	 * buffers.
 	 */
 	private int vboIndex = 0;
 
-	/**
-	 * Number of vertex buffer objects allocated for use.
-	 */
-	private static final int vboCount = 10;
-
 	public TmtTessellator()
 	{
 		super(2097152);
-	}
-
-	static
-	{
-		instance.defaultTexture = true;
-		useVBO = false;
 	}
 
 	/**

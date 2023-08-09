@@ -32,13 +32,12 @@ import java.util.ArrayList;
  */
 public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 {
-	private int page;
 	public char variableToEdit = 'a';
 	public IDataType dataType;
 	public GuiButtonDataLetterList buttonLetter;
 	public GuiButtonIE buttonApply;
 	public GuiButtonIE buttonVariableHelp;
-
+	private int page;
 	@Nullable
 	private GuiDataEditorExpression editor = null;
 

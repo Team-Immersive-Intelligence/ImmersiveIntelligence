@@ -13,10 +13,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
  */
 public class ModelPrintingPress extends ModelIIBase
 {
+	public ModelRendererTurbo[] rollerModel, paperInserterDoorModel;
 	int textureX = 256;
 	int textureY = 256;
-
-	public ModelRendererTurbo[] rollerModel, paperInserterDoorModel;
 
 	public ModelPrintingPress(boolean flipped) //Same as Filename
 	{
@@ -408,7 +407,7 @@ public class ModelPrintingPress extends ModelIIBase
 
 		if(flipped)
 			for(ModelRendererTurbo mod : rollerModel)
-				mod.rotateAngleY*=-1;
+				mod.rotateAngleY *= -1;
 
 		parts.put("base", baseModel);
 		parts.put("rollerModel", rollerModel);

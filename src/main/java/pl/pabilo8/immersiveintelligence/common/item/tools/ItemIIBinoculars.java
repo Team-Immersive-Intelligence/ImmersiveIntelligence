@@ -36,7 +36,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
@@ -63,12 +62,6 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	public ItemIIBinoculars()
 	{
 		super("binoculars", 1, Binoculars.values());
-	}
-
-	public enum Binoculars implements IIItemEnum
-	{
-		BINOCULARS,
-		INFRARED_BINOCULARS
 	}
 
 	public boolean isAdvanced(ItemStack stack)
@@ -167,7 +160,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		return OVERLAY_TEXTURE;
 	}
 
-	// TODO: 15.07.2021 make it properly, not the current lazy way 
+	// TODO: 15.07.2021 make it properly, not the current lazy way
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getModelCacheKey(ItemStack stack)
@@ -238,5 +231,11 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 		if(slot==EntityEquipmentSlot.MAINHAND)
 			multimap.put(SharedMonsterAttributes.FOLLOW_RANGE.getName(), new AttributeModifier(visionUUID, "Increased Sight Range (Mobs)", 30.0D, 0));
 		return multimap;
+	}
+
+	public enum Binoculars implements IIItemEnum
+	{
+		BINOCULARS,
+		INFRARED_BINOCULARS
 	}
 }

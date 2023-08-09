@@ -5,10 +5,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 
 public class ModelHeavyChemthrower extends ModelIIBase
 {
+	public ModelRendererTurbo[] turretModel, barrelStartModel, barrelMidModel, barrelEndModel;
 	int textureX = 128;
 	int textureY = 128;
-
-	public ModelRendererTurbo[] turretModel, barrelStartModel,barrelMidModel,barrelEndModel;
 
 	public ModelHeavyChemthrower(boolean doOffsets) //Same as Filename
 	{
@@ -297,18 +296,18 @@ public class ModelHeavyChemthrower extends ModelIIBase
 		barrelEndModel[5].addShapeBox(-1.5f, -1.5f, 0F, 3, 3, 7, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // GUN304
 		barrelEndModel[5].setRotationPoint(20.5F, -14.0f, -26.0f);
 
-		parts.put("base",  baseModel);
-		parts.put("turret",turretModel);
+		parts.put("base", baseModel);
+		parts.put("turret", turretModel);
 		parts.put("barrel_start", barrelStartModel);
 		parts.put("barrel_mid", barrelMidModel);
 		parts.put("barrel_end", barrelEndModel);
 
-		translateAll(-16,0,-16);
+		translateAll(-16, 0, -16);
 		if(doOffsets)
 		{
-			translate(barrelStartModel, -4.5f,14F, 3.0f);
-			translate(barrelMidModel, -4.5f,14F, 3.0f);
-			translate(barrelEndModel, -4.5f,14F, 3.0f);
+			translate(barrelStartModel, -4.5f, 14F, 3.0f);
+			translate(barrelMidModel, -4.5f, 14F, 3.0f);
+			translate(barrelEndModel, -4.5f, 14F, 3.0f);
 		}
 
 		flipAll();

@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -33,27 +32,6 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	public ItemIIPrintedPage()
 	{
 		super("printed_page", 64, SubItems.values());
-	}
-
-	public enum SubItems implements IIItemEnum
-	{
-		@IIItemProperties(oreDict = "pageEmpty")
-		BLANK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
-		@IIItemProperties(oreDict = {"pageText","pageWritten"})
-		TEXT(IIGuiList.GUI_PRINTED_PAGE_TEXT),
-		@IIItemProperties(oreDict = {"pageCode","pageWritten"})
-		CODE(IIGuiList.GUI_PRINTED_PAGE_CODE),
-		@IIItemProperties(oreDict = {"pageBlueprint","pageWritten"})
-		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT);
-
-		private final IIGuiList guiPage;
-		private final String tooltip;
-
-		SubItems(IIGuiList guiPage)
-		{
-			this.guiPage = guiPage;
-			tooltip = IILib.DESCRIPTION_KEY+"printed_page."+getName();
-		}
 	}
 
 	@Override
@@ -84,5 +62,26 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		ItemStack stack = player.getHeldItem(hand);
 		CommonProxy.openGuiForItem(player, hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+	}
+
+	public enum SubItems implements IIItemEnum
+	{
+		@IIItemProperties(oreDict = "pageEmpty")
+		BLANK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = {"pageText", "pageWritten"})
+		TEXT(IIGuiList.GUI_PRINTED_PAGE_TEXT),
+		@IIItemProperties(oreDict = {"pageCode", "pageWritten"})
+		CODE(IIGuiList.GUI_PRINTED_PAGE_CODE),
+		@IIItemProperties(oreDict = {"pageBlueprint", "pageWritten"})
+		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT);
+
+		private final IIGuiList guiPage;
+		private final String tooltip;
+
+		SubItems(IIGuiList guiPage)
+		{
+			this.guiPage = guiPage;
+			tooltip = IILib.DESCRIPTION_KEY+"printed_page."+getName();
+		}
 	}
 }

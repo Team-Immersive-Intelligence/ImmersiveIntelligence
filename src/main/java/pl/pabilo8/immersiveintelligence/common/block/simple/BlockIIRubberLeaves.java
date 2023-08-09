@@ -43,11 +43,6 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 	protected boolean leavesFancy;
 	int[] surroundings;
 
-	public enum RubberStuff implements IIBlockEnum
-	{
-		RUBBER
-	}
-
 	public BlockIIRubberLeaves()
 	{
 		super("rubber_leaves", PropertyEnum.create("type", RubberStuff.class), Material.LEAVES, ItemBlockIILeaves::new,
@@ -282,7 +277,6 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 		drops.addAll(this.captureDrops(false));
 	}
 
-
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings("deprecation")
 	public boolean shouldSideBeRendered(@Nonnull IBlockState blockState, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, @Nonnull EnumFacing side)
@@ -315,6 +309,10 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 		return worldIn!=null&&pos!=null?BiomeColorHelper.getFoliageColorAtPos(worldIn, pos): ColorizerFoliage.getFoliageColorBasic();
 	}
 
+	public enum RubberStuff implements IIBlockEnum
+	{
+		RUBBER
+	}
 
 	public static class ItemBlockIILeaves extends ItemBlockIIBase implements IColouredItem
 	{

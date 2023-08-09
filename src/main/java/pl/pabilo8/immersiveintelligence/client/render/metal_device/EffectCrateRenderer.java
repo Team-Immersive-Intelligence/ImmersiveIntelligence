@@ -7,12 +7,12 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
-import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityEffectCrate;
 
 /**
@@ -27,6 +27,25 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 	private IIMachineUpgradeModel modelUpgrade = null;
 	private AMT partInserter, partLower, partUpper;
 
+	public static void renderWithUpgrade(MachineUpgrade... upgrades)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-0.5, 0, 0.5);
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+		//model.getBlockRotation(EnumFacing.NORTH, false);
+
+		for(MachineUpgrade upgrade : upgrades)
+		{
+			if(upgrade==IIContent.UPGRADE_INSERTER)
+			{
+				GlStateManager.pushMatrix();
+				GlStateManager.popMatrix();
+			}
+		}
+
+		GlStateManager.popMatrix();
+	}
 
 	@Override
 	public void draw(T te, BufferBuilder buf, float partialTicks, Tessellator tes)
@@ -56,8 +75,8 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 			IIAnimationUtils.setModelRotation(partLower, -ins*45-15, 0, 0);
 			IIAnimationUtils.setModelRotation(partUpper, -145+ins*75, 0, 0);
 
-			IIAnimationUtils.addModelRotation(partLower, IIUtils.clampedLerp3Par(35,0,-45,h)*ins, 0, 0);
-			IIAnimationUtils.addModelRotation(partUpper, IIUtils.clampedLerp3Par(75,-10,50,h)*ins, 0, 0);
+			IIAnimationUtils.addModelRotation(partLower, IIUtils.clampedLerp3Par(35, 0, -45, h)*ins, 0, 0);
+			IIAnimationUtils.addModelRotation(partUpper, IIUtils.clampedLerp3Par(75, -10, 50, h)*ins, 0, 0);
 
 
 			modelUpgrade.render(tes, buf);
@@ -87,26 +106,6 @@ public abstract class EffectCrateRenderer<T extends TileEntityEffectCrate> exten
 		modelUpgrade = modelUpgrade==null?null: modelUpgrade.disposeOf();
 
 		animationOpen = null;
-	}
-
-	public static void renderWithUpgrade(MachineUpgrade... upgrades)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(-0.5, 0, 0.5);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
-		//model.getBlockRotation(EnumFacing.NORTH, false);
-
-		for(MachineUpgrade upgrade : upgrades)
-		{
-			if(upgrade==IIContent.UPGRADE_INSERTER)
-			{
-				GlStateManager.pushMatrix();
-				GlStateManager.popMatrix();
-			}
-		}
-
-		GlStateManager.popMatrix();
 	}
 
 	//--- Abstract Methods ---//

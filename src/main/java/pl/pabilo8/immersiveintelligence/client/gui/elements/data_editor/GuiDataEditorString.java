@@ -17,9 +17,9 @@ import java.io.IOException;
  */
 public class GuiDataEditorString extends GuiDataEditor<DataTypeString>
 {
+	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 	private GuiTextField valueEdit;
 	private String valueLabel;
-	private final FontRenderer renderer = ClientUtils.mc().fontRenderer;
 
 	public GuiDataEditorString(int buttonId, DataTypeString dataType)
 	{

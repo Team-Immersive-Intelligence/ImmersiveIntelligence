@@ -31,8 +31,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

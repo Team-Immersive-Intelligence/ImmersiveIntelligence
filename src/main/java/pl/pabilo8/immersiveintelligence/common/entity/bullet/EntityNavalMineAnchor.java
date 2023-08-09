@@ -14,7 +14,7 @@ public class EntityNavalMineAnchor extends Entity
 	public EntityNavalMineAnchor(World worldIn)
 	{
 		super(worldIn);
-		setSize(0.5f,0.5f);
+		setSize(0.5f, 0.5f);
 	}
 
 	@Override
@@ -39,22 +39,22 @@ public class EntityNavalMineAnchor extends Entity
 	public void onUpdate()
 	{
 		handleWaterMovement();
-		move(MoverType.SELF,0,-0.0625f,0);
+		move(MoverType.SELF, 0, -0.0625f, 0);
 
-		if(ticksExisted>400&&getPassengers().size()==0)
+		if(ticksExisted > 400&&getPassengers().size()==0)
 			setDead();
 	}
 
 	public void updatePassenger(Entity passenger)
 	{
-		if (this.isPassenger(passenger))
+		if(this.isPassenger(passenger))
 		{
 			if(passenger instanceof EntityNavalMine)
 			{
 				double dd = 0;
 				double diff = Math.abs(passenger.posY-(this.posY)-0.5);
-				if(diff>((EntityNavalMine)passenger).maxLength)
-					dd=Math.min(diff-((EntityNavalMine)passenger).maxLength,0.125f);
+				if(diff > ((EntityNavalMine)passenger).maxLength)
+					dd = Math.min(diff-((EntityNavalMine)passenger).maxLength, 0.125f);
 				passenger.setPosition(passenger.posX, passenger.posY-dd, passenger.posZ);
 			}
 			else

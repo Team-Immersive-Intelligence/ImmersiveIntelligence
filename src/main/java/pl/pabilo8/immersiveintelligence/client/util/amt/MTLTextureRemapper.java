@@ -41,7 +41,6 @@ public class MTLTextureRemapper implements Function<ResourceLocation, ResourceLo
 	}
 
 	/**
-	 *
 	 * @param source source OBJ model
 	 * @return material->texture map of this model
 	 */

@@ -142,8 +142,7 @@ public class DataOperations
 			try
 			{
 				return c.newInstance();
-			}
-			catch(InstantiationException|IllegalAccessException ignored)
+			} catch(InstantiationException|IllegalAccessException ignored)
 			{
 			}
 		}

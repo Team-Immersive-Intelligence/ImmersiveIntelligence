@@ -14,7 +14,7 @@ public abstract class ModelAbstractItem implements IModel
 {
 	public ModelResourceLocation getLocation()
 	{
-		return new ModelResourceLocation(ImmersiveIntelligence.MODID,"nothing");
+		return new ModelResourceLocation(ImmersiveIntelligence.MODID, "nothing");
 	}
 
 	public ICustomModelLoader getInstance()

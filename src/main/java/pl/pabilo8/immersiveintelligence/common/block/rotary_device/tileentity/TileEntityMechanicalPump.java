@@ -5,7 +5,10 @@ import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.fluid.IFluidPipe;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IConfigurableSides;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHasDummyBlocks;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityFluidPipe;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
@@ -50,7 +53,7 @@ import java.util.HashMap;
  * @author Pabilo8
  * @since 03.10.2020
  */
-public class TileEntityMechanicalPump extends TileEntityIEBase implements ITickable, IBlockBounds, IHasDummyBlocks, IConfigurableSides, 
+public class TileEntityMechanicalPump extends TileEntityIEBase implements ITickable, IBlockBounds, IHasDummyBlocks, IConfigurableSides,
 		IFluidPipe, IAdvancedTextOverlay, IRotationalEnergyBlock, IDirectionalTile
 {
 	public int[] sideConfig = new int[]{0, -1, -1, -1, -1, -1};
@@ -58,13 +61,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 	public FluidTank tank = new FluidTank(1000);
 	public boolean placeCobble = true;
 	public EnumFacing facing = EnumFacing.NORTH;
-
-	boolean checkingArea = false;
-	Fluid searchFluid = null;
-	ArrayList<BlockPos> openList = new ArrayList<>();
-	ArrayList<BlockPos> closedList = new ArrayList<>();
-	ArrayList<BlockPos> checked = new ArrayList<>();
-
 	public RotaryStorage rotation = new RotaryStorage(0, 0)
 	{
 		@Override
@@ -73,6 +69,12 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 			return facing==getFacing()?RotationSide.INPUT: RotationSide.NONE;
 		}
 	};
+	boolean checkingArea = false;
+	Fluid searchFluid = null;
+	ArrayList<BlockPos> openList = new ArrayList<>();
+	ArrayList<BlockPos> closedList = new ArrayList<>();
+	ArrayList<BlockPos> checked = new ArrayList<>();
+	SidedFluidHandler[] sidedFluidHandler = new SidedFluidHandler[6];
 
 	/**
 	 * Like the old updateEntity(), except more generic.
@@ -289,7 +291,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return 0;
 	}
 
-
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
@@ -351,8 +352,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return false;
 	}
 
-	SidedFluidHandler[] sidedFluidHandler = new SidedFluidHandler[6];
-
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
@@ -390,7 +389,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return null;
 	}
 
-	
 
 	@Override
 	public void updateRotationStorage(float rpm, float torque, int part)
@@ -451,48 +449,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return isDummy();
 	}
 
-	static class SidedFluidHandler implements IFluidHandler
-	{
-		TileEntityMechanicalPump pump;
-		EnumFacing facing;
-
-		SidedFluidHandler(TileEntityMechanicalPump pump, EnumFacing facing)
-		{
-			this.pump = pump;
-			this.facing = facing;
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill)
-		{
-			if(resource==null||pump.sideConfig[facing.ordinal()]!=0)
-				return 0;
-			return pump.tank.fill(resource, doFill);
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain)
-		{
-			if(resource==null)
-				return null;
-			return this.drain(resource.amount, doDrain);
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain)
-		{
-			if(pump.sideConfig[facing.ordinal()]!=1)
-				return null;
-			return pump.tank.drain(maxDrain, doDrain);
-		}
-
-		@Override
-		public IFluidTankProperties[] getTankProperties()
-		{
-			return pump.tank.getTankProperties();
-		}
-	}
-
 	@Override
 	public boolean isDummy()
 	{
@@ -540,6 +496,54 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return side!=null&&this.sideConfig[side.ordinal()]==1;
 	}
 
+	private void selfDestruct()
+	{
+		world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 1, true);
+		world.setBlockToAir(this.pos);
+	}
+
+	static class SidedFluidHandler implements IFluidHandler
+	{
+		TileEntityMechanicalPump pump;
+		EnumFacing facing;
+
+		SidedFluidHandler(TileEntityMechanicalPump pump, EnumFacing facing)
+		{
+			this.pump = pump;
+			this.facing = facing;
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill)
+		{
+			if(resource==null||pump.sideConfig[facing.ordinal()]!=0)
+				return 0;
+			return pump.tank.fill(resource, doFill);
+		}
+
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain)
+		{
+			if(resource==null)
+				return null;
+			return this.drain(resource.amount, doDrain);
+		}
+
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain)
+		{
+			if(pump.sideConfig[facing.ordinal()]!=1)
+				return null;
+			return pump.tank.drain(maxDrain, doDrain);
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties()
+		{
+			return pump.tank.getTankProperties();
+		}
+	}
+
 	public static class DirectionalFluidOutput
 	{
 		IFluidHandler output;
@@ -552,11 +556,5 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 			this.direction = direction;
 			this.containingTile = containingTile;
 		}
-	}
-
-	private void selfDestruct()
-	{
-		world.createExplosion(null, getPos().getX(), getPos().getY(), getPos().getZ(), 1, true);
-		world.setBlockToAir(this.pos);
 	}
 }

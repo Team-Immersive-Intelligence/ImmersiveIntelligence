@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
@@ -13,7 +12,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -35,7 +33,6 @@ import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRedstoneInterface;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
@@ -59,6 +56,7 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 	protected RedstoneWireNetwork wireNetwork = new RedstoneWireNetwork().add(this);
 	NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 	byte[] redstoneOutput = new byte[16];
+	IItemHandler inventoryHandler = new IEInventoryHandler(2, this, 0, true, true);
 	private boolean refreshWireNetwork = false;
 	private boolean redstoneChanged = false;
 
@@ -135,9 +133,6 @@ public class TileEntityRedstoneInterface extends TileEntityMultiblockConnectable
 		if(message.hasKey("storedRedstone"))
 			storedRedstone.fromNBT(message.getCompoundTag("storedRedstone"));
 	}
-
-	IItemHandler inventoryHandler = new IEInventoryHandler(2, this, 0, true, true);
-
 
 	@Override
 	public void update()

@@ -70,14 +70,13 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 
 	@Nullable
 	public InserterTask current = null;
+	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
+	public boolean nextTaskAfterFinish = true;
+	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	ArrayList<InserterTask> tasks = new ArrayList<>();
 	NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY); //The currently held item
-	public IItemHandler insertionHandler = new IEInventoryHandler(1, this);
-
-	protected DataWireNetwork wireNetwork = new DataWireNetwork().add(this);
 	private boolean refreshWireNetwork = false;
 	private WireType secondCable;
-	public boolean nextTaskAfterFinish = true;
 
 	@Override
 	protected boolean canTakeLV()
@@ -660,6 +659,16 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 	@SideOnly(Side.CLIENT)
 	protected abstract void handleSounds();
 
+	public final EnumFacing getCurrentInputFacing()
+	{
+		return current==null||current.facingIn==null?defaultInputFacing: current.facingIn;
+	}
+
+	public final EnumFacing getCurrentOutputFacing()
+	{
+		return current==null||current.facingOut==null?defaultOutputFacing: current.facingOut;
+	}
+
 	@ParametersAreNonnullByDefault
 	public static abstract class InserterTask
 	{
@@ -672,11 +681,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		 * Overrides distance if different from -1
 		 */
 		public int distanceIn = -1, distanceOut = -1;
-
-		/**
-		 * Inserter will only take the item if the item matches this
-		 **/
-		IngredientStack stack = new IngredientStack("*");
 		/**
 		 * Max number of items to be taken per operation, overrides {@link #takeAmount} if different from -1
 		 **/
@@ -685,6 +689,10 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		 * If true, the inserter won't take the items if the amount is lower
 		 */
 		public boolean strictAmount = false;
+		/**
+		 * Inserter will only take the item if the item matches this
+		 **/
+		IngredientStack stack = new IngredientStack("*");
 		/**
 		 * Whether the task shouldn't end after items are taken
 		 **/
@@ -762,16 +770,6 @@ public abstract class TileEntityInserterBase extends TileEntityImmersiveConnecta
 		abstract String getName();
 
 		public abstract float getTimeModifier();
-	}
-
-	public final EnumFacing getCurrentInputFacing()
-	{
-		return current==null||current.facingIn==null?defaultInputFacing: current.facingIn;
-	}
-
-	public final EnumFacing getCurrentOutputFacing()
-	{
-		return current==null||current.facingOut==null?defaultOutputFacing: current.facingOut;
 	}
 }
 

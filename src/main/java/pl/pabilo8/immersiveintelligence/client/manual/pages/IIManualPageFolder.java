@@ -26,10 +26,9 @@ import java.util.stream.Collectors;
 public class IIManualPageFolder extends ManualPages
 {
 	private final String fullPath, name;
-	private ManualEntry entry = null;
 	private final ArrayList<IIManualEntry> entries = new ArrayList<>();
 	private final ArrayList<IIManualPageFolder> subFolders = new ArrayList<>();
-
+	private ManualEntry entry = null;
 	private GuiClickableList menu;
 
 	//Subfolder constructor

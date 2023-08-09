@@ -20,6 +20,37 @@ public class HansAnimations
 			entityHans.mouthShapeQueue.add(new Tuple<>((int)((end-start)*20), shape));
 	}
 
+	@Nullable
+	private static MouthShapes getShapeFromChar(char c)
+	{
+		for(MouthShapes shape : MouthShapes.values())
+		{
+			if(shape.alphabeticName==c)
+				return shape;
+		}
+		return null;
+	}
+
+	public static double[] getEyeEmotionInBetween(EyeEmotions e1, EyeEmotions e2, double percent)
+	{
+		return new double[]{
+				MathHelper.clampedLerp(e1.eyebrowHeightDiffRight, e2.eyebrowHeightDiffRight, percent*2.5),
+				MathHelper.clampedLerp(e1.eyebrowHeightDiffLeft, e2.eyebrowHeightDiffLeft, percent*2.5),
+				MathHelper.clampedLerp(e1.eyebrowThickness, e2.eyebrowThickness, percent*2.5)
+		};
+	}
+
+	public static double[] getMouthShapeInBetween(MouthShapes e1, MouthShapes e2, MouthEmotions e3, double percent)
+	{
+		return new double[]{
+				MathHelper.clampedLerp(e1.lipBottomOffset, e2.lipBottomOffset, percent*2)+e3.lipBottomOffset,
+				MathHelper.clampedLerp(e1.lipBottomWidth, e2.lipBottomWidth, percent*2)+e3.lipBottomWidth,
+				MathHelper.clampedLerp(e1.lipTopOffset, e2.lipTopOffset, percent*2)+e3.lipTopOffset,
+				MathHelper.clampedLerp(e1.lipTopWidth, e2.lipTopWidth, percent*2)+e3.lipTopWidth,
+				MathHelper.clampedLerp(e1.tongueHeight, e2.tongueHeight, percent*2)
+		};
+	}
+
 	public enum EyeEmotions
 	{
 		NEUTRAL(0, 0, 1),
@@ -74,13 +105,13 @@ public class HansAnimations
 		L_SHAPE('H', 0.85, 1.35, 0.85, 1.35, false, 1),
 		SPEAKING_PAUSE('X', 0.25, 1.25, 0.25, 1.25, false, 0);
 
-		private final char alphabeticName;
 		public final double lipBottomOffset;
 		public final double lipBottomWidth;
 		public final double lipTopOffset;
 		public final double lipTopWidth;
 		public final double tongueHeight;
 		public final boolean upperTeethVisible;
+		private final char alphabeticName;
 
 		MouthShapes(char c, double lipBottomOffset, double lipBottomWidth, double lipTopOffset, double lipTopWidth, boolean upperTeethVisible, double tongueHeight)
 		{
@@ -98,37 +129,6 @@ public class HansAnimations
 			String ss = s.toUpperCase();
 			return Arrays.stream(values()).filter(e -> e.name().equals(ss)).findFirst().orElse(CLOSED);
 		}
-	}
-
-	@Nullable
-	private static MouthShapes getShapeFromChar(char c)
-	{
-		for(MouthShapes shape : MouthShapes.values())
-		{
-			if(shape.alphabeticName==c)
-				return shape;
-		}
-		return null;
-	}
-
-	public static double[] getEyeEmotionInBetween(EyeEmotions e1, EyeEmotions e2, double percent)
-	{
-		return new double[]{
-				MathHelper.clampedLerp(e1.eyebrowHeightDiffRight, e2.eyebrowHeightDiffRight, percent*2.5),
-				MathHelper.clampedLerp(e1.eyebrowHeightDiffLeft, e2.eyebrowHeightDiffLeft, percent*2.5),
-				MathHelper.clampedLerp(e1.eyebrowThickness, e2.eyebrowThickness, percent*2.5)
-		};
-	}
-
-	public static double[] getMouthShapeInBetween(MouthShapes e1, MouthShapes e2, MouthEmotions e3, double percent)
-	{
-		return new double[]{
-				MathHelper.clampedLerp(e1.lipBottomOffset, e2.lipBottomOffset, percent*2)+e3.lipBottomOffset,
-				MathHelper.clampedLerp(e1.lipBottomWidth, e2.lipBottomWidth, percent*2)+e3.lipBottomWidth,
-				MathHelper.clampedLerp(e1.lipTopOffset, e2.lipTopOffset, percent*2)+e3.lipTopOffset,
-				MathHelper.clampedLerp(e1.lipTopWidth, e2.lipTopWidth, percent*2)+e3.lipTopWidth,
-				MathHelper.clampedLerp(e1.tongueHeight, e2.tongueHeight, percent*2)
-		};
 	}
 
 	public enum HansLegAnimation

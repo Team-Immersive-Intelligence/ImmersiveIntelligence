@@ -22,9 +22,9 @@ import javax.annotation.Nullable;
  */
 public class WheelRenderer extends TileEntitySpecialRenderer<TileEntityMechanicalWheel> implements IReloadableModelContainer<WheelRenderer>
 {
-	private static ModelWheel model;
 	private static final DirectionTransformerWheel t = new DirectionTransformerWheel();
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveIntelligence.MODID+":textures/blocks/mechanical_device/wheel.png");
+	private static ModelWheel model;
 
 	@Override
 	public void render(@Nullable TileEntityMechanicalWheel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -42,7 +42,7 @@ public class WheelRenderer extends TileEntitySpecialRenderer<TileEntityMechanica
 
 			//(te.getFacing().getAxisDirection()==AxisDirection.NEGATIVE?-1f:1)*
 			double world_rpm = (te.getConnectorWorld().getTotalWorldTime()%RotaryUtils.getRPMMax()+partialTicks)/RotaryUtils.getRPMMax();
-			GlStateManager.rotate((float)(world_rpm*(te.facing.getAxisDirection()==AxisDirection.NEGATIVE?-360f:360f)*te.getOutputRPM()), 0, 0, 1);
+			GlStateManager.rotate((float)(world_rpm*(te.facing.getAxisDirection()==AxisDirection.NEGATIVE?-360f: 360f)*te.getOutputRPM()), 0, 0, 1);
 
 			for(ModelRendererTurbo mod : model.wheel)
 				mod.render(0.0625f);

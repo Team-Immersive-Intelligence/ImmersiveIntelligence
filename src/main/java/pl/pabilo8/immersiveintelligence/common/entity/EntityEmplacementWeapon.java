@@ -40,9 +40,9 @@ import java.util.Optional;
  */
 public class EntityEmplacementWeapon extends EntityLivingBase implements IEntityMultiPart, IEntitySpecialRepairable
 {
-	EmplacementWeapon parent = null;
 	public EmplacementHitboxEntity[] partArray = new EmplacementHitboxEntity[0];
 	public AxisAlignedBB aabb = new AxisAlignedBB(-1.5, 0, -1.5, 1.5, 3, 1.5);
+	EmplacementWeapon parent = null;
 
 	public EntityEmplacementWeapon(World worldIn)
 	{
@@ -342,9 +342,9 @@ public class EntityEmplacementWeapon extends EntityLivingBase implements IEntity
 	public static class EmplacementHitboxEntity extends MultiPartEntityPart
 	{
 		protected final EntityEmplacementWeapon parentExt;
-		private final Vec3d mainOffset, gunOffset;
 		protected final AxisAlignedBB aabb;
 		protected final int armor;
+		private final Vec3d mainOffset, gunOffset;
 
 		public EmplacementHitboxEntity(EntityEmplacementWeapon parent, String partName, float width, float height, Vec3d mainOffset, Vec3d gunOffset, int armor)
 		{

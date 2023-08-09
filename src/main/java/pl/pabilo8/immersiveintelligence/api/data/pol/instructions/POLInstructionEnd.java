@@ -12,7 +12,10 @@ import pl.pabilo8.immersiveintelligence.api.data.pol.POLTerminal;
  */
 public class POLInstructionEnd extends POLInstruction
 {
-	public POLInstructionEnd() {super(1);}
+	public POLInstructionEnd()
+	{
+		super(1);
+	}
 
 	@Override
 	public void execute(POLComputerMemory memory, POLTerminal terminal, POLProcess polProcess, int executionTime)

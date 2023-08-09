@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.block.simple;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
@@ -42,15 +41,6 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 
 		setBlockLayer(BlockRenderLayer.SOLID);
 		setSubBlockLayer(RubberLogs.STRIPPED, BlockRenderLayer.CUTOUT);
-	}
-
-	public enum RubberLogs implements IIBlockEnum
-	{
-		RAW,
-		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		REBBUR, //Carver reference, it's truly a great name xD
-		@IIBlockProperties(hidden = TernaryValue.TRUE, fullCube = TernaryValue.FALSE)
-		STRIPPED;
 	}
 
 	@Nullable
@@ -132,5 +122,14 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		return state.getValue(property)==RubberLogs.STRIPPED?new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 1, 0.9375): FULL_BLOCK_AABB;
+	}
+
+	public enum RubberLogs implements IIBlockEnum
+	{
+		RAW,
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
+		REBBUR, //Carver reference, it's truly a great name xD
+		@IIBlockProperties(hidden = TernaryValue.TRUE, fullCube = TernaryValue.FALSE)
+		STRIPPED
 	}
 }

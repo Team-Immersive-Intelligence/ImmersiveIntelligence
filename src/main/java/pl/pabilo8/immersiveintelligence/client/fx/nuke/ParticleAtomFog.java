@@ -4,15 +4,8 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.client.fx.IIParticle;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer;
-import pl.pabilo8.immersiveintelligence.client.fx.ParticleRenderer.DrawingStages;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8

@@ -17,8 +17,8 @@ public class DataOperationStringContains extends DataOperation
 	{
 		//A boolean version of the 'equals' operation
 		name = "string_contains";
-		allowedTypes = new Class[]{DataTypeString.class,DataTypeString.class};
-		params = new String[]{"text","fragment"};
+		allowedTypes = new Class[]{DataTypeString.class, DataTypeString.class};
+		params = new String[]{"text", "fragment"};
 		expectedResult = DataTypeBoolean.class;
 	}
 

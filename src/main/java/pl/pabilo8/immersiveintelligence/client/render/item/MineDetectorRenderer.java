@@ -23,10 +23,10 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
  */
 public class MineDetectorRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<MineDetectorRenderer>
 {
+	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/items/tools/mine_detector.png";
 	public static MineDetectorRenderer instance = new MineDetectorRenderer().subscribeToList("mine_detector");
 	@SideOnly(Side.CLIENT)
 	private static ModelMineDetector model;
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/items/tools/mine_detector.png";
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn, float partialTicks)
@@ -38,7 +38,7 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 			mod.render();
 		for(ModelRendererTurbo mod : model.poleModel)
 		{
-			mod.rotateAngleZ=-0.95993109F;
+			mod.rotateAngleZ = -0.95993109F;
 			mod.render();
 		}
 
@@ -64,31 +64,31 @@ public class MineDetectorRenderer extends TileEntityItemStackRenderer implements
 			RayTraceResult traceResult = player.rayTrace(distance*2, 0);
 			if(traceResult!=null&&traceResult.typeOfHit!=null)
 			{
-				v= (float)traceResult.hitVec.subtract(player.getPositionVector()).distanceTo(Vec3d.ZERO);
+				v = (float)traceResult.hitVec.subtract(player.getPositionVector()).distanceTo(Vec3d.ZERO);
 				if(player.world.getBlockState(traceResult.getBlockPos()).equals(Blocks.AIR.getDefaultState()))
-					v=0.5f;
+					v = 0.5f;
 			}
-			v= (float)MathHelper.clamp(v,0.5,distance);
+			v = (float)MathHelper.clamp(v, 0.5, distance);
 			if(player.isSneaking())
 			{
-				GlStateManager.translate(0,-0.15f,0);
-				v*=1.125f;
+				GlStateManager.translate(0, -0.15f, 0);
+				v *= 1.125f;
 			}
 
 			//v=distance;
 			//v=distance-(((player.world.getTotalWorldTime()%100)/100f)*distance);
 
 			//GlStateManager.rotate(player.cameraPitch,1,0,0);
-			GlStateManager.translate(0,1,-v);
-			GlStateManager.rotate(90,0,1,0);
-			GlStateManager.scale(-1,-1,1);
+			GlStateManager.translate(0, 1, -v);
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.scale(-1, -1, 1);
 			//GlStateManager.rotate(player.rotationYawHead,0,1,0);
 			//GlStateManager.rotate(180,0,1,0);
 			for(ModelRendererTurbo mod : model.baseModel)
 				mod.render();
 
-			v-=0.5;
-			distance-=0.5;
+			v -= 0.5;
+			distance -= 0.5;
 
 			float angle = -((v/distance));
 

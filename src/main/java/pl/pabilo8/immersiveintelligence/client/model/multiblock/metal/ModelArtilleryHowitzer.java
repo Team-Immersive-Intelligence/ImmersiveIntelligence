@@ -193,9 +193,9 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[18].rotateAngleY = 2.35619449F;
 		if(flip)
 		{
-			baseModel[18].rotateAngleY+=3.14f;
-			baseModel[18].rotationPointX+=3;
-			baseModel[18].rotationPointZ+=2.65;
+			baseModel[18].rotateAngleY += 3.14f;
+			baseModel[18].rotationPointX += 3;
+			baseModel[18].rotationPointZ += 2.65;
 		}
 
 		baseModel[19].addBox(0F, 0F, 0F, 2, 14, 2, 0F); // TableLeg
@@ -241,10 +241,10 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[30].rotateAngleY = 2.35619449F;
 		if(flip)
 		{
-			baseModel[30].rotateAngleY+=3.14f/2f;
-			baseModel[30].hasOffset=true;
-			baseModel[30].offsetX=4;
-			baseModel[30].offsetY=-4.5f;
+			baseModel[30].rotateAngleY += 3.14f/2f;
+			baseModel[30].hasOffset = true;
+			baseModel[30].offsetX = 4;
+			baseModel[30].offsetY = -4.5f;
 		}
 
 		baseModel[31].flip = !flip;
@@ -254,10 +254,10 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[31].rotateAngleY = 0.78539816F;
 		if(flip)
 		{
-			baseModel[31].rotateAngleY+=3.14f/2f;
-			baseModel[31].hasOffset=true;
-			baseModel[31].offsetX=4;
-			baseModel[31].offsetY=-4.25f;
+			baseModel[31].rotateAngleY += 3.14f/2f;
+			baseModel[31].hasOffset = true;
+			baseModel[31].offsetX = 4;
+			baseModel[31].offsetY = -4.25f;
 		}
 
 		baseModel[32].flip = !flip;
@@ -267,10 +267,10 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[32].rotateAngleY = 2.35619449F;
 		if(flip)
 		{
-			baseModel[32].rotateAngleY+=3.14f/2f;
-			baseModel[32].hasOffset=true;
-			baseModel[32].offsetX=4;
-			baseModel[32].offsetY=-4f;
+			baseModel[32].rotateAngleY += 3.14f/2f;
+			baseModel[32].hasOffset = true;
+			baseModel[32].offsetX = 4;
+			baseModel[32].offsetY = -4f;
 		}
 
 		baseModel[33].flip = !flip;
@@ -280,10 +280,10 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[33].rotateAngleY = 2.35619449F;
 		if(flip)
 		{
-			baseModel[33].rotateAngleY+=3.14f/2f;
-			baseModel[33].hasOffset=true;
-			baseModel[33].offsetX=4;
-			baseModel[33].offsetY=-4.25f;
+			baseModel[33].rotateAngleY += 3.14f/2f;
+			baseModel[33].hasOffset = true;
+			baseModel[33].offsetX = 4;
+			baseModel[33].offsetY = -4.25f;
 		}
 
 		baseModel[34].flip = !flip;
@@ -293,10 +293,10 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[34].rotateAngleY = 0.78539816F;
 		if(flip)
 		{
-			baseModel[34].rotateAngleY+=3.14f/2f;
-			baseModel[34].hasOffset=true;
-			baseModel[34].offsetX=4;
-			baseModel[34].offsetY=-4.25f;
+			baseModel[34].rotateAngleY += 3.14f/2f;
+			baseModel[34].hasOffset = true;
+			baseModel[34].offsetX = 4;
+			baseModel[34].offsetY = -4.25f;
 		}
 
 		baseModel[35].flip = !flip;
@@ -306,10 +306,10 @@ public class ModelArtilleryHowitzer extends ModelIIBase
 		baseModel[35].rotateAngleY = 1.57079633F;
 		if(flip)
 		{
-			baseModel[35].rotateAngleY-=3.14f/2;
-			baseModel[35].hasOffset=true;
-			baseModel[35].offsetX=0;
-			baseModel[35].offsetY=-0;
+			baseModel[35].rotateAngleY -= 3.14f/2;
+			baseModel[35].hasOffset = true;
+			baseModel[35].offsetX = 0;
+			baseModel[35].offsetY = -0;
 		}
 
 		baseModel[36].addBox(0F, 0F, 0F, 14, 10, 10, 0F); // BoxWooden1
