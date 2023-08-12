@@ -94,6 +94,9 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		RUBBER_COMPOUND,
 
 		@IIItemProperties(oreDict = "templateCircuit", hidden = true)
-		CIRCUIT_TEMPLATE
+		CIRCUIT_TEMPLATE,
+
+		@IIItemProperties(oreDict = "circuitCryptographic")
+		CRYPTOGRAPHIC_CIRCUIT_BOARD,
 	}
 }

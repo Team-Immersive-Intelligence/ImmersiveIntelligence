@@ -139,7 +139,7 @@ import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillH
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -694,7 +694,7 @@ public class ClientProxy extends CommonProxy
 	{
 		// TODO: 26.08.2021 investigate
 		if(event.getGui() instanceof GuiManual)
-			CustomSkinHandler.getManualPages();
+			IISkinHandler.getManualPages();
 		else if(ClientEventHandler.lastGui instanceof GuiManual)
 		{
 			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;

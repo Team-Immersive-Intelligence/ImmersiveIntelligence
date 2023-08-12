@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
 import pl.pabilo8.immersiveintelligence.common.*;
 import pl.pabilo8.immersiveintelligence.common.commands.CommandII;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.MODID;
 import static pl.pabilo8.immersiveintelligence.ImmersiveIntelligence.VERSION;
@@ -46,6 +46,7 @@ public class ImmersiveIntelligence
 		IILogger.logger = event.getModLog();
 		proxy.preInit();
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, proxy);
+		new IISkinHandler.ThreadContributorSpecialsDownloader();
 	}
 
 	@EventHandler
@@ -56,7 +57,6 @@ public class ImmersiveIntelligence
 		proxy.init();
 
 		IISounds.init();
-		new CustomSkinHandler.ThreadContributorSpecialsDownloader();
 	}
 
 	@EventHandler
@@ -101,7 +101,7 @@ public class ImmersiveIntelligence
 
 	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
 	private static final String[] alternativeCerts = {
-
+			"4e1045a33d925770c5393a384c1a60f63f8f50e5"
 	};
 
 	@Mod.EventHandler

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 
 import java.util.List;
@@ -19,11 +19,11 @@ import java.util.List;
  */
 public class IIManualPageContributorSkin extends IIManualPages
 {
-	public SpecialSkin skin;
+	public IISpecialSkin skin;
 	protected String localizedName;
 	protected String localizedLore;
 
-	public IIManualPageContributorSkin(ManualInstance manual, SpecialSkin skin)
+	public IIManualPageContributorSkin(ManualInstance manual, IISpecialSkin skin)
 	{
 		super(manual, "contributor_skin_"+skin.name);
 		this.skin = skin;

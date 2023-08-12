@@ -8,7 +8,7 @@
   },
   "pattern": [
     "BHB",
-    "PPP",
+    "DDD",
     "PPP"
   ],
   "key": {
@@ -19,6 +19,10 @@
     "H": {
       "item": "immersiveengineering:tool",
       "data": 1
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
     },
     "P": {
       "item": "minecraft:paper"

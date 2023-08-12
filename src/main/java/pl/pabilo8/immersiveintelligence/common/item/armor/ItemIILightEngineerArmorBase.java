@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.item.armor;
 import blusunrize.immersiveengineering.common.util.EnergyHelper.IIEEnergyItem;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.ICorrosionProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
@@ -48,5 +49,17 @@ public abstract class ItemIILightEngineerArmorBase extends ItemIIUpgradeableArmo
 	protected String getMaterialName(ArmorMaterial material)
 	{
 		return "light_engineer_armor";
+	}
+
+	@Override
+	public String getSkinnableName()
+	{
+		return "engineer_light";
+	}
+
+	@Override
+	public String getSkinnableDefaultTextureLocation()
+	{
+		return ImmersiveIntelligence.MODID+":textures/armor/";
 	}
 }

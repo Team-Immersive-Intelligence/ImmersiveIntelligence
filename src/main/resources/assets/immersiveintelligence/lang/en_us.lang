@@ -12,6 +12,8 @@ item.immersiveintelligence.material.advanced_circuit_board_etched.name=Etched Ad
 item.immersiveintelligence.material.advanced_circuit_board.name=Advanced Circuit Board
 item.immersiveintelligence.material.advanced_electronic_element.name=Advanced Electronic Component
 
+item.immersiveintelligence.material.cryptographic_circuit_board.name=Cryptographic Circuit Board
+
 item.immersiveintelligence.material.processor_circuit_board_raw.name=Raw Processor Circuit Board
 item.immersiveintelligence.material.processor_circuit_board_etched.name=Etched Processor Circuit Board
 item.immersiveintelligence.material.processor_circuit_board.name=Processor Circuit Board
@@ -141,6 +143,8 @@ item.immersiveintelligence.circuit_functional.type_conversion.name=Type Conversi
 item.immersiveintelligence.circuit_functional.fluidstack.name=Fluidstack Operations Circuit
 item.immersiveintelligence.circuit_functional.map.name=Map Operations Circuit
 item.immersiveintelligence.circuit_functional.vector_arithmetic.name=Vector Arithmetic Circuit
+item.immersiveintelligence.circuit_functional.cryptographer.name=Cryptographer Circuit
+
 
 item.immersiveintelligence.minecart.wooden_crate.name=Minecart with Wooden Crate
 item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforced Crate
@@ -944,6 +948,10 @@ skin.immersiveintelligence.anno_1880.name=Anno 1880
 skin.immersiveintelligence.anno_1880.desc=Refined, precise, ornamental
 skin.immersiveintelligence.anno_1880.text=Rewarded to BluSunrize and Hazard for their great work on Immersive Engineering.
 
+skin.immersiveintelligence.archangel.name=Archangel
+skin.immersiveintelligence.archangel.desc=Our ancestors tried to hide it...
+skin.immersiveintelligence.archangel.text=At first they though that god sent the archangel as a gift for humanity. There is a reason why ancestor were scared of them...
+
 skin.immersiveintelligence.royal.name=Royal
 skin.immersiveintelligence.royal.desc=A relic from an old empire
 skin.immersiveintelligence.royal.text=An retrofuturistic imperial skin. Originally meant to be a skin for the Patreons, now granted as a reward for contribution.
@@ -1361,6 +1369,13 @@ datasystem.immersiveintelligence.function.to_string=To String
 datasystem.immersiveintelligence.function.to_boolean=To Boolean
 datasystem.immersiveintelligence.function.to_null=To Null
 
+datasystem.immersiveintelligence.function.encrypt_text=Encrypt Text
+datasystem.immersiveintelligence.function.encrypt_number=Encrypt Number
+datasystem.immersiveintelligence.function.encrypt_array=Encrypt Array
+datasystem.immersiveintelligence.function.decrypt_text=Decrypt Text
+datasystem.immersiveintelligence.function.decrypt_number=Decrypt Number
+datasystem.immersiveintelligence.function.decrypt_array=Decrypt Array
+
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
 datasystem.immersiveintelligence.datatype.integer=Integer
@@ -1374,6 +1389,7 @@ datasystem.immersiveintelligence.datatype.fluidstack=FluidStack
 datasystem.immersiveintelligence.datatype.array=Array
 datasystem.immersiveintelligence.datatype.map=Map
 datasystem.immersiveintelligence.datatype.entity=Entity
+datasystem.immersiveintelligence.datatype.encrypted=Encrypted
 
 datasystem.immersiveintelligence.datatype.boolean.true=True
 datasystem.immersiveintelligence.datatype.boolean.false=False
@@ -1383,10 +1399,12 @@ datasystem.immersiveintelligence.datatype.boolean.false=False
 desc.immersiveengineering.info.blueprint.basic_circuits=Basic Circuits
 desc.immersiveengineering.info.blueprint.advanced_circuits=Advanced Circuits
 desc.immersiveengineering.info.blueprint.processors=Processors
+desc.immersiveengineering.info.blueprint.cryptography_circuits=Cryptography Circuits
 
 desc.immersiveengineering.info.blueprint.basic_functional_circuits=Basic Function Circuits
 desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced Function Circuits
 desc.immersiveengineering.info.blueprint.processor_functional_circuits=Programmable Processors
+desc.immersiveengineering.info.blueprint.cryptographic_functional_circuits=Cryptographic Processors
 
 desc.immersiveengineering.info.blueprint.metal_springs=Springs
 desc.immersiveengineering.info.blueprint.ammo_molds=Ammunition Molds

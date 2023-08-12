@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType.IGenericDataType;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,6 +56,9 @@ public class DataPacket implements Iterable<IDataType>
 		varTypes.put("itemstack", DataTypeItemStack.class);
 		varTypes.put("fluidstack", DataTypeFluidStack.class);
 		varTypes.put("entity", DataTypeEntity.class);
+
+		//cryptographic types
+		varTypes.put("encrypted", DataTypeEncrypted.class);
 	}
 
 	@Nonnull

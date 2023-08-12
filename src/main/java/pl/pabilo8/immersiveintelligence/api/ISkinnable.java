@@ -3,11 +3,11 @@ package pl.pabilo8.immersiveintelligence.api;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.IRarity;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ public interface ISkinnable
 	 */
 	default String getSkinnableCurrentSkin(ItemStack stack)
 	{
-		return ItemNBTHelper.getTag(stack).getString("contributorSkin");
+		return ItemNBTHelper.getString(stack, IISkinHandler.NBT_ENTRY);
 	}
 
 	/**
@@ -35,39 +35,52 @@ public interface ISkinnable
 	 */
 	default void applySkinnableSkin(ItemStack stack, String skinName)
 	{
-		ItemNBTHelper.setString(stack, "contributorSkin", skinName);
+		ItemNBTHelper.setString(stack, IISkinHandler.NBT_ENTRY, skinName);
 	}
 
 	/**
 	 * @param skin skin ID
 	 * @return true if skin exists
+	 * @deprecated Replaced by <code>IISkinHandler.isValidSkin()</code>
+	 * @see pl.pabilo8.immersiveintelligence.common.util.IISkinHandler#isValidSkin(String)
+	 * @// TODO: 8/12/2023 Replace all usages of this function with <code>IISkinHandler.isValidSkin()</code>
 	 */
 	default boolean isValidSkin(String skin)
 	{
-		return !skin.isEmpty()&&CustomSkinHandler.specialSkins.containsKey(skin);
+		return !skin.isEmpty()&&IISkinHandler.specialSkins.containsKey(skin);
 	}
-
-
 	default void addSkinTooltip(@Nonnull ItemStack stack, @Nonnull List<String> tooltip)
 	{
-		String skin;
-		if(isValidSkin(skin = getSkinnableCurrentSkin(stack)))
+		String skin = getSkinnableCurrentSkin(stack);
+		if(IISkinHandler.isValidSkin(skin))
 		{
-			tooltip.add(TextFormatting.WHITE+I18n.format(String.format("skin.%1$s.%2$s.name", ImmersiveIntelligence.MODID, skin)));
+			IISpecialSkin s = IISkinHandler.specialSkins.get(skin);
+			tooltip.add(s.rarity.rarityColor+I18n.format(String.format("skin.%1$s.%2$s.name", ImmersiveIntelligence.MODID, skin)));
 			tooltip.add(IIUtils.getItalicString(I18n.format(String.format("skin.%1$s.%2$s.desc", ImmersiveIntelligence.MODID, skin))));
 		}
 	}
 
+	/**
+	 *
+	 * @param stack Itemstack to get skin from
+	 * @return Skin rarity if found otherwise <code>null</code>
+	 */
 	@Nullable
 	default IRarity getSkinRarity(@Nonnull ItemStack stack)
 	{
 		String skin = getSkinnableCurrentSkin(stack);
-		if(!skin.isEmpty()&&CustomSkinHandler.specialSkins.containsKey(skin))
-			return CustomSkinHandler.specialSkins.get(skin).rarity;
+		if(IISkinHandler.isValidSkin(skin))
+			return IISkinHandler.getSkin(skin).rarity;
 		return null;
 	}
 
+	/**
+	 * @return Name of the skinnable
+	 */
 	String getSkinnableName();
 
+	/**
+	 * @return Default texture location of the skinnable
+	 */
 	String getSkinnableDefaultTextureLocation();
 }

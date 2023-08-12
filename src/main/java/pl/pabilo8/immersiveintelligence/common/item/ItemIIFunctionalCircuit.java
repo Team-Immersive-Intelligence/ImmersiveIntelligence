@@ -146,6 +146,12 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 				"to_string",
 				"to_boolean",
 				"to_null"
+		),
+		CRYPTOGRAPHER(CircuitTypes.CRYPTOGRAPHIC,
+				"encrypt_text",
+				"encrypt_number",
+				"decrypt_text",
+				"decrypt_number"
 		);
 
 		private final String[] functions;

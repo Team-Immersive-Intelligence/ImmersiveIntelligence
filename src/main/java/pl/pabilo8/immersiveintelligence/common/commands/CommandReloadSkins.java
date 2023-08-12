@@ -4,7 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.ThreadContributorSpecialsDownloader;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.ThreadContributorSpecialsDownloader;
 
 import javax.annotation.Nonnull;
 

@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IRarity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,6 +37,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IIArmorItemStackHandler;
@@ -54,7 +56,7 @@ import java.util.UUID;
  * Based on work on Immersive Energy's armor
  * in cooperation with:
  */
-public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgradeableTool
+public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgradeableTool, ISkinnable
 {
 	protected static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 	String upgradeType;
@@ -105,6 +107,16 @@ public abstract class ItemIIUpgradeableArmor extends ItemArmor implements IUpgra
 			String hexCol = Integer.toHexString(getColor(stack));
 			tooltip.add(I18n.format(Lib.DESC_INFO+"colour", "<hexcol="+hexCol+":#"+hexCol+">"));
 		}
+
+		addSkinTooltip(stack, tooltip);
+	}
+
+	@Nonnull
+	@Override
+	public IRarity getForgeRarity(ItemStack stack)
+	{
+		IRarity skin = getSkinRarity(stack);
+		return skin!=null?skin: super.getForgeRarity(stack);
 	}
 
 	@Override

@@ -2,12 +2,15 @@ package pl.pabilo8.immersiveintelligence.common.crafting;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.ISkinnable;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 
 /**
  * @author Pabilo8
@@ -47,7 +50,7 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 		private final ItemStack output;
 
 		private ISkinnable skinnable;
-		private ItemStack gun;
+		private ItemStack item;
 		private ItemStack manual;
 		int manualStack = 0;
 
@@ -55,13 +58,13 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 		{
 			this.manual = ItemStack.EMPTY;
 			this.canCraft = process(inv);
+
 			if(canCraft)
 			{
-				// TODO: 14.01.2022 check if skin matches
 				remaining = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 				remaining.set(manualStack, manual.copy());
 				String last = ItemNBTHelper.getString(manual, "lastSkin");
-				ItemStack op = gun.copy();
+				ItemStack op = item.copy();
 				skinnable.applySkinnableSkin(op, last);
 				output = op;
 			}
@@ -75,7 +78,7 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 		private boolean process(InventoryCrafting inv)
 		{
 			manual = ItemStack.EMPTY;
-			gun = ItemStack.EMPTY;
+			item = ItemStack.EMPTY;
 			skinnable = null;
 
 			for(int i = 0; i < inv.getSizeInventory(); i++)
@@ -95,18 +98,45 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 					}
 					else if(stack.getItem() instanceof ISkinnable)
 					{
-						if(gun.isEmpty())
+						if(item.isEmpty())
 						{
-							gun = stack;
+							item = stack;
 							skinnable = ((ISkinnable)stack.getItem());
 						}
 					}
 					else
 						return false;
-
 				}
 			}
-			return !manual.isEmpty()&&skinnable!=null;
+
+			boolean result = !manual.isEmpty()&&skinnable!=null;
+			if (result)
+			{
+				String sessionID = Minecraft.getMinecraft().getSession().getSessionID(); // Result: token:FML:X where X is the UUID
+				String uuid = sessionID.substring(sessionID.lastIndexOf(':')+1), skinName = ItemNBTHelper.getString(manual, "lastSkin");
+				if (IISkinHandler.isValidSkin(skinName))
+				{
+					IISpecialSkin skin = IISkinHandler.getSkin(skinName);
+					boolean eligible = false, doesApply = skin.doesApply(skinnable.getSkinnableName());
+
+					for (String id : skin.uuid)
+					{
+						if (id.replace("-", "").equals(uuid))
+						{
+							eligible = true;
+							break;
+						}
+					}
+
+					if (!eligible||!doesApply) return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return result;
 		}
 	}
 

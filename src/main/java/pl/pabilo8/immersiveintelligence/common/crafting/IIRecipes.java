@@ -223,6 +223,11 @@ public class IIRecipes
 					new IngredientStack("chipAdvanced", 2)
 			);
 
+			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
+					IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD),
+					"circuitAdvanced",
+					new ItemStack(IEContent.itemMaterial, 2, 9));
+
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
 					new IngredientStack("circuitAdvancedRaw", 2),

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -19,6 +20,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +39,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	@Nullable
 	private IESmartObjModel model;
 	@Nonnull
-	protected final ResLoc headerRes;
+	protected ResLoc headerRes;
 	@Nonnull
 	protected final I item;
 
@@ -47,6 +49,11 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 		IIModelRegistry.instance.registerCustomItemModel(item, modelRes.getResourceDomain(),
 				setTransformations(this.replacementModel = new ImmersiveModelRegistry.ItemModelReplacement_OBJ(modelRes.withExtension(ResLoc.EXT_OBJ).toString(), true)));
 		this.headerRes = modelRes.withExtension(ResLoc.EXT_OBJAMT);
+	}
+
+	public void setHeaderRes(ResLoc modelRes)
+	{
+		headerRes = modelRes;
 	}
 
 	@Override

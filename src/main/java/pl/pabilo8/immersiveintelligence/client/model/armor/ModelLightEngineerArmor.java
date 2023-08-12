@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -17,6 +18,9 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Coord2D;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
@@ -28,12 +32,12 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 {
 	static int textureX = 64;
 	static int textureY = 64;
-	private static final String TEXTURE = ImmersiveIntelligence.MODID+":textures/armor/engineer_light.png";
-	private static final String TEXTURE_GASMASK = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_gasmask.png";
-	private static final String TEXTURE_GOGGLES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_goggles.png";
-	private static final String TEXTURE_PLATES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_plates.png";
-	private static final String TEXTURE_EXOSUIT = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_exosuit.png";
-	private static final String TEXTURE_SCUBA = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_scuba.png";
+	private static String TEXTURE = ImmersiveIntelligence.MODID+":textures/armor/engineer_light.png";
+	private static String TEXTURE_GASMASK = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_gasmask.png";
+	private static String TEXTURE_GOGGLES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_goggles.png";
+	private static String TEXTURE_PLATES = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_plates.png";
+	private static String TEXTURE_EXOSUIT = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_exosuit.png";
+	private static String TEXTURE_SCUBA = ImmersiveIntelligence.MODID+":textures/armor/engineer_light_scuba.png";
 
 	ModelRendererTurbo[] capeModel, gasmaskModel, infiltratorGogglesModel, technicianGogglesModel, engineerGogglesModel;
 	ModelRendererTurbo[] scubaTankModel, exoSuitRightLegModel, exoSuitLeftLegModel, racketsModel, flippersModel;
@@ -1111,6 +1115,34 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 	}
 
 	static ModelLightEngineerArmor modelInstance;
+
+	private void setSkin(String skin)
+	{
+		String baseName = skin.isEmpty() ? ImmersiveIntelligence.MODID+":textures/armor/engineer_light" : IILib.SKIN_LOCATION+skin+"/engineer_light";
+
+		TEXTURE = baseName+".png";
+		setTexture(TEXTURE);
+		TEXTURE_PLATES = baseName+"_plates.png";
+		TEXTURE_SCUBA = baseName+"_scuba.png";
+		TEXTURE_GOGGLES = baseName+"_goggles.png";
+		TEXTURE_GASMASK = baseName+"_gasmask.png";
+		TEXTURE_EXOSUIT = baseName+"_exosuit.png";
+	}
+
+	@Override
+	protected TMTArmorModel prepareForRender(EntityEquipmentSlot part, ItemStack stack)
+	{
+		String s = IISkinHandler.getCurrentSkin(stack);
+		if (IISkinHandler.isValidSkin(s))
+		{
+			IISpecialSkin skin = IISkinHandler.getSkin(s);
+			if (skin.doesApply(IIContent.itemLightEngineerChestplate.getSkinnableName()))
+				setSkin(s);
+		}
+		else
+			setSkin("");
+		return super.prepareForRender(part, stack);
+	}
 
 	public static ModelLightEngineerArmor getModel(EntityEquipmentSlot part, ItemStack stack)
 	{
