@@ -1,55 +1,113 @@
-name: Build II
+name: Build Project
 
 on:
   push: #Trigger On Push
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
   workflow_dispatch: #Manual Trigger
 
 jobs:
-  build:
+  optimize-assets:
+    continue-on-error: true
+    name: Optimize Assets
     runs-on: ubuntu-latest
     steps:
-     - name: Checkout Repository
-       uses: actions/checkout@v3
-       
-     - name: Setup Java
-       uses: actions/setup-java@v3
-       with:
-        distribution: corretto
-        java-version: 8
-        
-     - name: Setup Gradle
-       uses: gradle/gradle-build-action@v2
-    
-     - name: Execute Gradle build
-       run: chmod +x gradlew ; ./gradlew build --scan
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-     - name: Upload test build
-       uses: actions/upload-artifact@v3
-       with:
-         name: test-build
-         path: |
-           build/libs/
-           !build/libs/*-core.jar
-           !build/libs/*-deobf.jar
-           !build/libs/*-sources.jar
+      - uses: FedericoCarboni/setup-ffmpeg@v2
+        id: setup-ffmpeg
 
-     - name: Upload sources
-       uses: actions/upload-artifact@v3
-       with:
-         name: sources
-         path: |
-           build/libs/*-core.jar
-           build/libs/*-deobf.jar
-           build/libs/*-sources.jar
-     - name: Notify Discord
-       uses: rguillaume/discord-action-embed@v1.0.4
-       with:
-         webhook: ${{ secrets.DISCORD_WEBHOOK }}
-         message: ""
-         embed: '{"title": "Dev Build assembly completed!","color": 3617648,"description": "You are granted access to a new, automatically compiled Dev Build of Immersive Intelligence:tm:. \n\nThis build can be downloaded by clicking on the link above, then on `current-build` in `Artifacts` section.\n\nHappy testing and please report any bugs you encounter. ^^","url": "https://github.com/Pabilo8/ImmersiveIntelligence/actions/runs/${{ github.run_id }}","author": {"name": "Immersive Intelligence","url": "https://github.com/Pabilo8/ImmersiveIntelligence","icon_url": "https://github.com/Pabilo8/ImmersiveIntelligence/raw/master/art/logos/logofullhq.png"}}'
+      - name: Optimize PNGs
+        continue-on-error: true
+        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/opti.sh -i
 
+      - name: Optimize Audio
+        continue-on-error: true
+        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/opti.sh -a
+        env:
+          LOC_FFMPEG: ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }}
+          LOC_FFPROBE: ${{ steps.setup-ffmpeg.outputs.ffprobe-path }}
 
+      - name: Setup Git User
+        uses: fregante/setup-git-user@v2
+
+      - name: Setup Git User
+        run: git config --global user.name "Automated Carver Device(tm)"
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v16
+        continue-on-error: true
+        id: verify-changed-files
+        with:
+          files: |
+            **/*.png
+            **/*.ogg
+
+      - name: Create Pull Request
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        uses: peter-evans/create-pull-request@v5.0.2
+        with:
+          title: Optimized Assets
+          commit-message: optimized assets
+          body: Assets were automatically optimized.
+          token: ${{ secrets.OPTIMIZATION_TOKEN }}
+  build:
+    runs-on: ubuntu-latest
+    name: Create a Dev Build
+    env:
+      GITHUB_USERNAME: ${{ github.actor }}
+      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: 8
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Execute Gradle build
+        run: chmod +x gradlew ; ./gradlew build --scan
+
+      - name: Upload test build
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-build
+          path: |
+            build/libs/
+            !build/libs/*-core.jar
+            !build/libs/*-deobf.jar
+            !build/libs/*-sources.jar
+
+      - name: Upload sources
+        uses: actions/upload-artifact@v3
+        with:
+          name: sources
+          path: |
+            build/libs/*-core.jar
+            build/libs/*-deobf.jar
+            build/libs/*-sources.jar
+
+      - name: Read Properties File
+        id: rp
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: './gradle.properties'
+          properties: 'mcmod_Name mcmod_Developer mcmod_URL'
+
+      - name: Notify Discord
+        uses: rguillaume/discord-action-embed@v1.0.4
+        continue-on-error: true
+        env:
+          MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
+          MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
+          MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          message: ""
+          embed: '{"title": "Dev Build assembly completed!","color": 3617648,"description": "You are granted access to a new, automatically compiled Dev Build of ${{ env.MOD_NAME }}:tm:. \n\nThis build can be downloaded by clicking on the link above, then on `current-build` in `Artifacts` section.\n\nHappy testing and please report any bugs you encounter. ^^","url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}","author": {"name": " ${{ env.MOD_NAME }}","url": "https://github.com/${{ github.repository }}","icon_url": "${{ vars.PROJECT_LOGO }}"}}'
 
