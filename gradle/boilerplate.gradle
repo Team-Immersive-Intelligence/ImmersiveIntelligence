@@ -3,6 +3,11 @@
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: 'idea'
 
+//--- Script Utilties
+project.getOr = {String envProp, projectProp -> System.getenv(envProp) ?: projectProp}
+project.logFile = {LogLevel logLevel, String file ->  logger.log(logLevel, new File('gradle/docs/'+file+'.txt').getText('UTF-8'))}
+project.printDocs = {String file -> println(new File('gradle/docs/'+file+'.txt').getText('UTF-8'))}
+
 //--- Project SourceSets
 sourceSets {
     main
@@ -15,6 +20,7 @@ idea {
         languageLevel = '1.8'
     }
     module {
+        name file("./").name
         outputDir = compileJava.destinationDir
         testOutputDir = compileTestJava.destinationDir
     }
@@ -46,19 +52,7 @@ if(ii_useModworksPreprocessor.asBoolean())
     apply from: rootProject.file("gradle/modworks.gradle")
 
 compileJava {
-    logger.log(LogLevel.WARN, 'PRAISE THE GRUMPY GRADLEPHANT!')
-    logger.log(LogLevel.WARN, "     \n" +
-            "                          g@@@@g,\n" +
-            "                           \"  \"B@W\n" +
-            "            ,,ggggg,           ]@@\n" +
-            "          @@@@@@@@@@@@@w     ,g@@@\n" +
-            "         ,%@@@@@@@@@@@@@@@@@@@@@@`  <[ \$#!T! ]\n" +
-            "      ,@@@g]@@@@\$@@@@`  \$@@@@@@@`\n" +
-            "     g@@@@@@wgg@@@@@@@@@-@@@@@@\n" +
-            "    ]@@@@@@@@@@@@@@@@@@@@@@@@\"\n" +
-            "    \$@@@@@@@@@@@@@@@@@@@@@@@\n" +
-            "    @@@@@PPB@@@@@*\"\"*B@@@@@P\n" +
-            "    \$@@@\"   ]@@@       %@@@P\n")
+    logFile(LogLevel.WARN, "gradlephant")
     logger.log(LogLevel.WARN, ii_gradlephantTitle)
     logger.log(LogLevel.WARN, ii_gradlephantLink+'\n')
 
@@ -67,13 +61,12 @@ compileJava {
         logger.log(LogLevel.WARN, 'SourceSets in Project: ')
         sourceSets.each { srcSet ->
             println "> ["+srcSet.name+"]"
-//            if(['api','test'].contains(srcSet.name))
-//                return
             print "   - Sources: "+srcSet.allJava.srcDirs+"\n"
-//            print "- Outputs: "+srcSet.output.classesDirs.files+"\n"
         }
         println ""
     }
+
+    println 'This mod uses Team II\'s Mod Setup Script, run [gradlew modSetupHelp].'
 
     if(ii_generateCoreJar=='true')
     {
@@ -110,25 +103,19 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
         // replace properties
-        expand 'version': modVersion, 'mcversion': project.minecraft.version
+        expand 'version': modVersion,
+                'mcversion': project.minecraft.version,
+                'modName' : modName,
+                'description': mcmod_Description,
+                'modURL': mcmod_URL,
+                'modContributors': mcmod_Contributors,
+                'modDeveloper': mcmod_Developer
     }
 
     // copy everything else except the mcmod.info and excluded files
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
-
-    //Exclude GIMP images
-    exclude '**/*.xcf'
-    //Exclude batch
-    exclude '**/*.bat'
-    //Exclude template textures
-    exclude '**/*Template.png'
-
-    //already excluded from gitignore, but still appear to be included in a locally built jar
-    exclude '**/desktop.ini'
-    exclude '**/Thumbs.db'
-    exclude '**/.DS_Store'
 }
 
 
@@ -155,3 +142,12 @@ if(ii_generateCoreJar=='true')
 
 //--- IE Addon
 apply from: rootProject.file('gradle/ieaddon.gradle')
+
+//--- Help Function
+tasks.register('modSetupDocs') {
+    group = "Documentation"
+    description = "Displays the Mod Build Script documentation"
+    doLast {
+        printDocs("setup")
+    }
+}
