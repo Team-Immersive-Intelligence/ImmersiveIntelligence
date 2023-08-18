@@ -72,8 +72,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGasCloud;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
-import pl.pabilo8.immersiveintelligence.client.manual.categories.IIManualCategoryData;
-import pl.pabilo8.immersiveintelligence.client.manual.categories.IIManualCategoryLogistics;
+import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
@@ -537,105 +536,6 @@ public class ClientProxy extends CommonProxy
 		IILogger.info("Registering II Manual Pages.");
 		reloadManual();
 
-		/*
-		IIManualDataAndElectronics.INSTANCE.addPages();
-		IIManualLogistics.INSTANCE.addPages();
-		IIManualWarfare.INSTANCE.addPages();
-		IIManualIntelligence.INSTANCE.addPages();
-		IIManualMotorworks.INSTANCE.addPages();
-
-		ManualHelper.addEntry("chemical_bath", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_bath0", MultiblockChemicalBath.INSTANCE)
-		);
-		ManualHelper.addEntry("precission_assembler", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "precission_assembler0", MultiblockPrecisionAssembler.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "precission_assembler1")
-		);
-		ManualHelper.addEntry("electrolyzer", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "electrolyzer0", MultiblockElectrolyzer.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "electrolyzer1")
-		);
-		ManualHelper.addEntry("chemical_painter", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "chemical_painter0", MultiblockChemicalPainter.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter1"),
-				new ManualPages.Text(ManualHelper.getManual(), "chemical_painter2"),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "filler", true)
-						.addEntry(new DataTypeString(), 'p')
-						.addEntry(new DataTypeInteger(), 'p'),
-				new IIManualPageDataVariablesCallback(ManualHelper.getManual(), "filler")
-						.addEntry(new DataTypeInteger(), "get_color")
-						.addEntry(new DataTypeInteger(), "get_color_hex")
-						.addEntry(new DataTypeInteger(), "get_ink", "get_ink_black")
-						.addEntry(new DataTypeInteger(), "get_ink_cyan")
-						.addEntry(new DataTypeInteger(), "get_ink_magenta")
-						.addEntry(new DataTypeInteger(), "get_ink_yellow")
-						.addEntry(new DataTypeInteger(), "get_energy")
-		);
-		ManualHelper.addEntry("filler", ManualHelper.CAT_HEAVYMACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "filler0", MultiblockFiller.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "filler1")
-		);
-
-		ManualHelper.addEntry("rotary_power", ManualHelper.CAT_MACHINES,
-				new ManualPages.Image(ManualHelper.getManual(), "rotary_power0", ImmersiveIntelligence.MODID+":textures/misc/rotary.png;0;0;110;64"),
-				new ManualPages.Text(ManualHelper.getManual(), "rotary_power1"),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power2", new ItemStack(IIContent.blockMechanicalConnector)),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "rotary_power3", new ItemStack(IIContent.itemMotorBelt, 1, 0), new ItemStack(IIContent.itemMotorBelt, 1, 1), new ItemStack(IIContent.itemMotorBelt, 1, 2)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power4", new ItemStack(IIContent.blockGearbox)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "rotary_power5", new ItemStack(IIContent.blockMechanicalDevice, 1, BlockIIMechanicalDevice.IIBlockTypes_MechanicalDevice.WOODEN_TRANSMISSION_BOX.getMeta()))
-		);
-
-		ManualHelper.addEntry("sawmill", ManualHelper.CAT_MACHINES,
-				new ManualPageMultiblock(ManualHelper.getManual(), "sawmill0", MultiblockSawmill.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "sawmill1"),
-				new ManualPages.Text(ManualHelper.getManual(), "sawmill2")
-		);
-
-		ManualHelper.addEntry("medicrate", ManualHelper.CAT_MACHINES,
-				new ManualPages.Crafting(ManualHelper.getManual(), "medicrate0", new ItemStack(IIContent.blockMetalDevice, 1, BlockIIMetalDevice.IIBlockTypes_MetalDevice.MEDIC_CRATE.getMeta())),
-				new ManualPages.Text(ManualHelper.getManual(), "medicrate1")
-		);
-
-		ManualHelper.addEntry("repair_crate", ManualHelper.CAT_MACHINES,
-				new ManualPages.Crafting(ManualHelper.getManual(), "repair_crate0", new ItemStack(IIContent.blockMetalDevice, 1, BlockIIMetalDevice.IIBlockTypes_MetalDevice.REPAIR_CRATE.getMeta())),
-				new ManualPages.Text(ManualHelper.getManual(), "repair_crate1")
-		);
-
-		ManualHelper.addEntry("advanced_powerpack", ManualHelper.CAT_TOOLS,
-				new ManualPages.Crafting(ManualHelper.getManual(), "advanced_powerpack0", new ItemStack(IIContent.itemAdvancedPowerPack)),
-				new ManualPages.Text(ManualHelper.getManual(), "advanced_powerpack1")
-		);
-
-		ManualHelper.addEntry("electric_tools", ManualHelper.CAT_TOOLS,
-				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools0", new ItemStack(IIContent.itemHammer)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools1", new ItemStack(IIContent.itemElectricWrench)),
-				new ManualPages.Crafting(ManualHelper.getManual(), "electric_tools2", new ItemStack(IIContent.itemWirecutter))
-		);
-
-		Fluid[] lighterFluids = LighterFuelHandler.getAllowedFluids();
-		ManualPages[] lighterPages = new ManualPages[1+(int)Math.ceil(lighterFluids.length/12f)];
-		lighterPages[0] = new ManualPages.Crafting(ManualHelper.getManual(), "lighter0", new ItemStack(IIContent.itemLighter));
-
-		for(int i = 0; i < lighterPages.length-1; i++)
-		{
-			int off = (i*12);
-			int j = (lighterFluids.length-off)%12;
-			String[][] tt = new String[j+1][2];
-
-			tt[0][0] = ManualHelper.getManual().formatText("field_fuel");
-			tt[0][1] = ManualHelper.getManual().formatText("field_amount");
-
-			for(int ii = 0; ii < j; ii++)
-			{
-				int amount = LighterFuelHandler.getBurnQuantity(new FluidStack(lighterFluids[off+ii], 1));
-				tt[ii+1][0] = lighterFluids[off+ii].getLocalizedName(new FluidStack(lighterFluids[off+ii], amount));
-				tt[ii+1][1] = String.format("%d mB", amount);
-			}
-
-			lighterPages[i+1] = new Table(ManualHelper.getManual(), "lighter_fuels", tt, true);
-		}
-
-		ManualHelper.addEntry("lighter", ManualHelper.CAT_TOOLS, lighterPages);*/
 
 
 		//Weapons (Items)
@@ -873,5 +773,8 @@ public class ClientProxy extends CommonProxy
 		IIManualCategory.cleanFolderEntries();
 		IIManualCategoryData.INSTANCE.addPages();
 		IIManualCategoryLogistics.INSTANCE.addPages();
+		IIManualCategoryWarfare.INSTANCE.addPages();
+		IIManualCategoryMotorworks.INSTANCE.addPages();
+		IIManualCategoryIntelligence.INSTANCE.addPages();
 	}
 }

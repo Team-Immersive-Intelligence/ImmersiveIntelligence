@@ -3,7 +3,6 @@ Electronic Components
 Assembly complete?
 
 # intro
-
 **Circuits** are one of the most important and commonly used electronic parts. 
 There are three kinds of **Circuits**:  
 [Basic Circuits](#basic_general) - made using vacuum tubes and redstone  
@@ -18,14 +17,14 @@ All types of circuit boards require a specialized blueprint to create them.
 
 
 # basic_general
-|[item_display]{source:"%SECTION%"}|
+|[item_display]{source:"basic_general"}|
 **Basic Circuits** are the common, primary and cheap circuits. 
 Their universal design allows them to be easily [refitted](functional_circuits) to perform simple data operations, 
 but their main use is construction of various **Data Devices**, such as 
 the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_logic_machine) and the [Data Input Machine](data_input_machine).
 
 # basic_components
-|[blueprint]{source:"%SECTION%"}|
+|[item_display]{source:"basic_electronic_element"}|
 **Basic Electronic Components** are created using a [Nickel Plate](metalPress), [Redstone] and a [Vacuum Tubes](components#2) in the [Precision Assembler](precision_assembler).
 
 # circuit_template
@@ -33,7 +32,7 @@ the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_
 Circuit Template
 
 # basic_board
-|[blueprint]{source:"%SECTION%"}|
+|[crafting]{source:"basic_circuit_blueprints"}|
 Basic Board
 
 # advanced_general  
