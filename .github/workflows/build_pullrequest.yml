@@ -2,7 +2,7 @@ name: Check a Pull Request's Quality
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
   
 jobs:
   build:
