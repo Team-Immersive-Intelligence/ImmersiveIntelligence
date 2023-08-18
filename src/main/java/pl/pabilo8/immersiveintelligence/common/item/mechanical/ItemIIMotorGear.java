@@ -13,6 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,6 +54,7 @@ public class ItemIIMotorGear extends ItemIISubItemsBase<MotorGear> implements IM
 		return stackToSub(stack).torqueMod;
 	}
 
+	@GeneratedItemModels(itemName = "motor_gear")
 	public enum MotorGear implements IIItemEnum
 	{
 		COPPER(MechanicalDevices.gearTorqueModifier[0]),

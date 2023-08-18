@@ -158,7 +158,7 @@ apply from: rootProject.file('gradle/ieaddon.gradle')
 
 //--- Help Function
 tasks.register('modSetupDocs') {
-    group = "Documentation"
+    group = "Help"
     description = "Displays the Mod Build Script documentation"
     doLast {
         printDocs("setup")

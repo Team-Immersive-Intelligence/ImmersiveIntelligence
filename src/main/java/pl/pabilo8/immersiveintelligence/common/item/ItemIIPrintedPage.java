@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
@@ -19,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,15 +35,16 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		super("printed_page", 64, SubItems.values());
 	}
 
+	@GeneratedItemModels(itemName = "printed_page")
 	public enum SubItems implements IIItemEnum
 	{
 		@IIItemProperties(oreDict = "pageEmpty")
 		BLANK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
-		@IIItemProperties(oreDict = {"pageText","pageWritten"})
+		@IIItemProperties(oreDict = {"pageText", "pageWritten"})
 		TEXT(IIGuiList.GUI_PRINTED_PAGE_TEXT),
-		@IIItemProperties(oreDict = {"pageCode","pageWritten"})
+		@IIItemProperties(oreDict = {"pageCode", "pageWritten"})
 		CODE(IIGuiList.GUI_PRINTED_PAGE_CODE),
-		@IIItemProperties(oreDict = {"pageBlueprint","pageWritten"})
+		@IIItemProperties(oreDict = {"pageBlueprint", "pageWritten"})
 		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT);
 
 		private final IIGuiList guiPage;

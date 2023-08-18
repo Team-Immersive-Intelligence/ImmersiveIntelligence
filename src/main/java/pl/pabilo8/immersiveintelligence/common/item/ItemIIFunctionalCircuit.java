@@ -18,6 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +37,7 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		super("circuit_functional", 1, Circuits.values());
 	}
 
+	@GeneratedItemModels(itemName = "circuit_functional")
 	public enum Circuits implements IIItemEnum
 	{
 		ARITHMETIC(CircuitTypes.BASIC,

@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 /**
  * @author Pabilo8
@@ -17,6 +18,7 @@ public class ItemIIMaterialSpring extends ItemIISubItemsBase<MaterialsSpring>
 		super("material_spring", 64, MaterialsSpring.values());
 	}
 
+	@GeneratedItemModels(itemName = "material_spring", texturePath = "material/spring")
 	public enum MaterialsSpring implements IIItemEnum
 	{
 		BRASS,

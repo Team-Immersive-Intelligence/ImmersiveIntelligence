@@ -2,8 +2,8 @@ package pl.pabilo8.immersiveintelligence.common.item.ammo;
 
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 /**
  * @author Pabilo8
@@ -24,6 +24,7 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casings>
 		super("ammo_casing", 64, Casings.values());
 	}
 
+	@GeneratedItemModels(itemName = "ammo_casing", texturePath = "bullets/casings")
 	public enum Casings implements IIItemEnum
 	{
 		@IIItemProperties(stackSize = 1)

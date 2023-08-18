@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 /**
  * @author Pabilo8
@@ -17,6 +18,7 @@ public class ItemIIMaterialNugget extends ItemIISubItemsBase<MaterialsNugget>
 		super("material_nugget", 64, MaterialsNugget.values());
 	}
 
+	@GeneratedItemModels(itemName = "material_nugget", texturePath = "material/nugget")
 	public enum MaterialsNugget implements IIItemEnum
 	{
 		ADVANCED_ELECTRONIC_ALLOY,
