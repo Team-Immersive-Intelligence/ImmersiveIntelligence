@@ -1,6 +1,0 @@
-{
-  "parent": "immersiveengineering:item/ie_item_base",
-  "textures": {
-    "layer0": "immersiveintelligence:items/bullets/casings/1bcal_assault_rifle"
-  }
-}

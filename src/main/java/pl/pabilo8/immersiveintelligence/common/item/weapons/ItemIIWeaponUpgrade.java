@@ -22,6 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +48,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 	public enum WeaponTypes implements ISerializableEnum
 	{
 		MACHINEGUN(0xdc3939, '\u24b6'),
-		SUBMACHINEGUN(0xff5940, '\u24b7'),
+		SUBMACHINEGUN(0xff894d, '\u24b7'),
 		RAILGUN(0x3d6753, '\u24b8'),
 		REVOLVER(0x3e4481, '\u24b9'),
 		AUTOREVOLVER(0x2c305b, '\u24ba'),
@@ -65,6 +66,7 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		}
 	}
 
+	@GeneratedItemModels(itemName = "weapon_upgrade")
 	public enum WeaponUpgrades implements IIItemEnum
 	{
 		//--- Machinegun ---//

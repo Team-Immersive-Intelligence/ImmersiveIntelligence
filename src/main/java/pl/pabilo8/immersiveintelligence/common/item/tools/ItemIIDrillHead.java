@@ -30,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,6 +47,7 @@ public class ItemIIDrillHead extends ItemIISubItemsBase<DrillHeads> implements I
 		super("drillhead", 1, DrillHeads.values());
 	}
 
+	@GeneratedItemModels(itemName = "drillhead")
 	public enum DrillHeads implements IIItemEnum
 	{
 		TUNGSTEN("ingotTungsten", 5, 1, 4, 11, 10, 14000,

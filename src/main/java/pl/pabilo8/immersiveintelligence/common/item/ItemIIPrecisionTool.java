@@ -17,6 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrecisionTool.Precisio
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +39,7 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 			PrecissionAssemblerRecipe.registerToolType(e.getName(), this);
 	}
 
+	@GeneratedItemModels(itemName = "precission_tool", texturePath = "precision_tool")
 	public enum PrecisionTools implements IIItemEnum
 	{
 		BUZZSAW(Tools.precissionToolBuzzsawDurability, Tools.precissionToolBuzzsawUsageTime),

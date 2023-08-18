@@ -9,6 +9,9 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelRailgunGrenade;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nonnull;
 
@@ -16,6 +19,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 30-08-2019
  */
+@GeneratedItemModels(itemName = "railgun_grenade_4bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 {
 	public ItemIIAmmoRailgunGrenade()

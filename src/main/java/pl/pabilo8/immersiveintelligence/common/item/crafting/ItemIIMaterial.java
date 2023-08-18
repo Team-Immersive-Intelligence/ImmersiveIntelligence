@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.item.crafting;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 /**
  * @author Pabilo8
@@ -15,6 +16,7 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		super("material", 64, Materials.values());
 	}
 
+	@GeneratedItemModels(itemName = "material")
 	public enum Materials implements IIItemEnum
 	{
 		@IIItemProperties(oreDict = "electronTubeAdvanced")
