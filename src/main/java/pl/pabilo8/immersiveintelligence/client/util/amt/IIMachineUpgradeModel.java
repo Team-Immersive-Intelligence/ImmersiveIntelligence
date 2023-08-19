@@ -9,8 +9,9 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil;
+import pl.pabilo8.immersiveintelligence.client.util.ShaderUtil.Shaders;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIFloatLine;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIShaderLine;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIVectorLine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -25,10 +26,10 @@ import java.util.Arrays;
  */
 public class IIMachineUpgradeModel
 {
-	//REFACTOR: 29.07.2023 use shaders
 	private final MachineUpgrade upgrade;
-	private final IIAnimationCompiledMap animation, alpha;
+	private final IIAnimationCompiledMap animation;
 	private final AMT[] model;
+	private final AMT assembledModel;
 	private final int steps;
 
 	public IIMachineUpgradeModel(MachineUpgrade upgrade, ResourceLocation model, ResourceLocation animation)
@@ -43,35 +44,37 @@ public class IIMachineUpgradeModel
 	{
 		this.upgrade = upgrade;
 
-		IIAnimation anim = IIAnimationLoader.loadAnimation(animation), alpha;
+		IIAnimation loaded = IIAnimationLoader.loadAnimation(animation);
 
-		alpha = new IIAnimation(new ResourceLocation(""),
-				Arrays.stream(anim.groups)
-						.map(g -> new IIAnimationGroup(g.groupName, null, null, null, null, null, null))
-						.toArray(IIAnimationGroup[]::new));
+		this.animation = IIAnimationCompiledMap.create(model, new IIAnimation(new ResourceLocation(""),
+				Arrays.stream(loaded.groups)
+						.map(g -> new IIAnimationGroup(g.groupName, g.position, g.scale, g.rotation, null, vecToAlpha(g.position), null))
+						.toArray(IIAnimationGroup[]::new)));
 
-		this.animation = IIAnimationCompiledMap.create(model, anim);
-		this.alpha = IIAnimationCompiledMap.create(model, alpha);
+		upgrade.setRequiredSteps(this.steps = this.animation.size());
 
 		//get only base level models (model), contained in animation
 		this.model = Arrays.stream(model)
 				.filter(this.animation::containsKey)
 				.toArray(AMT[]::new);
-
-		upgrade.setRequiredSteps(this.steps = this.animation.size());
+		this.assembledModel = IIAnimationUtils.batchMultipleAMTQuads(this.model, "batched");
 	}
 
 	@Nullable
-	private IIFloatLine vecToAlpha(IIVectorLine position)
+	private IIShaderLine vecToAlpha(IIVectorLine position)
 	{
 		if(position==null||position.values.length < 2)
 			return null;
 
-		return new IIFloatLine(new float[]{
-				0f, position.timeframes[0], position.timeframes[position.timeframes.length-1], 1f
-		}, new Float[]{
-				0f, 0f, 1f, 1f
-		});
+		return new IIShaderLine(Shaders.ALPHA,
+				new float[]{0f, position.timeframes[0], position.timeframes[position.timeframes.length-1], 1f},
+				new Float[][]{
+						{0f},
+						{0f},
+						{1f},
+						{1f}
+				}
+		);
 	}
 
 	public UpgradeStage renderConstruction(IUpgradableMachine machine, Tessellator tes, BufferBuilder buf, float partialTicks)
@@ -81,26 +84,21 @@ public class IIMachineUpgradeModel
 
 		//calculate progress per part
 		final int maxProgress = IIContent.UPGRADE_INSERTER.getProgressRequired();
-		double maxClientProgress = IIUtils.getMaxClientProgress(machine.getInstallProgress(), maxProgress, model.length);
+		double maxClientProgress = IIUtils.getMaxClientProgress(machine.getInstallProgress(), maxProgress, steps);
 
 		double currentProgress = (int)Math.min(machine.getClientInstallProgress()+((partialTicks*(Tools.wrenchUpgradeProgress*0.5f))), maxClientProgress);
 		float install = (float)MathHelper.clamp(currentProgress/maxProgress, 0, 1);
 
-		for(AMT mod : model)
-			mod.defaultize();
 
 		//draw blueprint
 		ShaderUtil.useBlueprint(0.35f, ClientUtils.mc().player.ticksExisted+partialTicks);
-		//alpha.apply(1f-install);
-		for(AMT mod : model)
-			mod.render(tes, buf);
+		this.assembledModel.render(tes, buf);
 		ShaderUtil.releaseShader();
 
 		for(AMT mod : model)
 			mod.defaultize();
 
 		//draw construction animation
-		alpha.apply(install);
 		animation.apply(install);
 		for(AMT mod : model)
 			mod.render(tes, buf);
