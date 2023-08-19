@@ -1,22 +1,23 @@
-package pl.pabilo8.immersiveintelligence.common.util;
+package pl.pabilo8.immersiveintelligence.common.util.raytracer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.IFluidBlock;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Pabilo8
@@ -32,88 +33,111 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 {
 	private static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 	private ArrayList<RayTraceResult> hits = new ArrayList<>();
+	private BlockPos lastBLockHit;
 
 	private MultipleRayTracer()
 	{
 
 	}
 
-	public static MultipleRayTracer volumetricTrace(@Nonnull World world, @Nonnull Vec3d posStart, @Nonnull Vec3d posEnd, @Nonnull AxisAlignedBB aabb, boolean ignoreBlockWithoutBoundingBox, boolean stopOnLiquid, boolean allowEntities, @Nonnull List<Entity> entityFilter, @Nonnull List<BlockPos> blockFilter)
+	public static MultipleRayTracer volumetricTrace(@Nonnull World world, @Nonnull Vec3d posStart, @Nonnull Vec3d posEnd, @Nonnull AxisAlignedBB aabb,
+													List<BlockPos> blockFilter, boolean allowEntities, List<Entity> entityFilter, @Nullable Predicate<IBlockState> stopOn)
 	{
 		MultipleRayTracer rayTracer = new MultipleRayTracer();
 		//the precision used in iteration
 		final double precision = Math.abs(aabb.getAverageEdgeLength());
-		double px = posStart.x, py = posStart.y, pz = posStart.z;
-		Vec3d pDiff = posEnd.subtract(posStart).normalize();
-		double pxDiff = pDiff.x*precision, pyDiff = pDiff.y*precision, pzDiff = pDiff.z*precision;
-		aabb = aabb.grow(0.25);
-		double dist = posStart.distanceTo(posEnd);
+		//Expand the bounding box
+		aabb = aabb.grow(0.25).offset(posStart);
+		//Starting Position
+		Vector3d p = new Vector3d(posStart.x, posStart.y, posStart.z);
+		//Step
+		Vector3d pDiff = new Vector3d(posEnd.x, posEnd.y, posEnd.z);
+		pDiff.sub(p);
+		pDiff.normalize();
+		pDiff.scale(precision);
 
-		///kill @e[type=immersiveintelligence:bullet]
-		//REFACTOR: 10.07.2023 get all entities in a box from posStart to posEnd, cache them, and then scan only from this list
+		double dist = posStart.distanceTo(posEnd);
+		//Cache entities
+		List<Entity> allEntities = allowEntities?listAllEntities(world, posStart, posEnd, entityFilter): null;
+
 		for(double i = 0; i < dist; i += precision)
 		{
-			px += pxDiff;
-			py += pyDiff;
-			pz += pzDiff;
+			//Step position
+			p.add(pDiff);
+			aabb = aabb.offset(pDiff.x, pDiff.y, pDiff.z);
 
+			//Collide with entities
 			if(allowEntities)
-				traceEntities(world, rayTracer, aabb.offset(px, py, pz), entityFilter);
-			final BlockPos pos = new BlockPos(px, py, pz);
+				traceEntities(rayTracer, aabb, allEntities);
+			BlockPos pos = new BlockPos(p.x, p.y, p.z);
 
-			if(blockFilter.stream().noneMatch(blockPos -> blockPos.equals(pos)))
-			{
-				IBlockState state = world.getBlockState(pos);
-				if(stopOnLiquid&&state.getBlock() instanceof IFluidBlock)
-					break;
+			if(pos.equals(rayTracer.lastBLockHit))
+				continue;
+			rayTracer.lastBLockHit = pos;
 
-				if(state.getCollisionBoundingBox(world, pos)==Block.NULL_AABB)
-				{
-					if(!ignoreBlockWithoutBoundingBox)
-					{
-						EnumFacing ff = EnumFacing.getFacingFromVector((float)pxDiff, (float)pyDiff, (float)pzDiff);
-						rayTracer.addResultToList(new RayTraceResult(new Vec3d(px, py, pz), ff));
-					}
-				}
-				else
-				{
-					Vec3d bbStart = new Vec3d(aabb.minX, aabb.minY, aabb.minZ).addVector(px, py, pz);
-					Vec3d bbEnd = new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ).addVector(px, py, pz);
-					RayTraceResult traceResult = state.collisionRayTrace(world, pos, bbStart, bbEnd);
-					if(traceResult!=null&&traceResult.typeOfHit!=Type.MISS)
-						rayTracer.addResultToList(traceResult);
-				}
+			//Ignore empty bounding boxes
+			IBlockState state = world.getBlockState(pos);
+			if(state.getCollisionBoundingBox(world, pos)==Block.NULL_AABB)
+				continue;
 
-			}
+			//Stop on this block
+			if(stopOn!=null&&stopOn.test(world.getBlockState(pos)))
+				break;
+
+			//Skip excluded blocks
+			if(traceExcludedBlocks(pos, blockFilter))
+				continue;
+
+			//Perform a precise raytrace on the block
+			RayTraceResult traceResult = state.collisionRayTrace(world, pos,
+					new Vec3d(aabb.minX, aabb.minY, aabb.minZ),
+					new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ)
+			);
+
+			//Doesn't accept null result / miss
+			if(traceResult!=null&&traceResult.typeOfHit!=Type.MISS)
+				rayTracer.addResultToList(traceResult);
 		}
 
 		return rayTracer;
 	}
 
-	private static void traceEntities(World world, MultipleRayTracer t, AxisAlignedBB aabb, List<Entity> filter)
+	private static List<Entity> listAllEntities(@Nonnull World world, @Nonnull Vec3d posStart, @Nonnull Vec3d posEnd, List<Entity> entityFilter)
 	{
-		if(aabb!=null)
-			for(Entity entity : world.getEntitiesInAABBexcluding(null, aabb, input -> !filter.contains(input)))
-			{
-				if(entity.canBeCollidedWith()&&!entity.noClip&&entity.getEntityBoundingBox().intersects(aabb))
-					t.addResultToList(new RayTraceResult(entity));
-			}
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(posStart, posEnd), entity -> entity.canBeCollidedWith()&&!entity.noClip);
+		entities.removeAll(entityFilter);
+		return entities;
 	}
 
-	private void addResultToList(RayTraceResult traceResult)
+	private static void traceEntities(MultipleRayTracer t, AxisAlignedBB aabb, List<Entity> allEntities)
 	{
-		if(traceResult!=null&&this.hits.stream().noneMatch(traceResult1 -> {
-			if(traceResult.typeOfHit==traceResult1.typeOfHit)
-				switch(traceResult1.typeOfHit)
-				{
-					case ENTITY:
-						return traceResult.entityHit.equals(traceResult1.entityHit);
-					case BLOCK:
-						return traceResult.getBlockPos().equals(traceResult1.getBlockPos());
-				}
-			return false;
-		}))
-			this.hits.add(traceResult);
+		Iterator<Entity> it = allEntities.iterator();
+		while(it.hasNext())
+		{
+			Entity next = it.next();
+			if(next.getEntityBoundingBox().intersects(aabb))
+			{
+				t.addResultToList(new RayTraceResult(next));
+				it.remove();
+			}
+		}
+	}
+
+	static boolean traceExcludedBlocks(BlockPos current, List<BlockPos> blockFilter)
+	{
+		Iterator<BlockPos> it = blockFilter.iterator();
+		while(it.hasNext())
+			if(it.next()==current)
+			{
+				it.remove();
+				return true;
+			}
+		return false;
+	}
+
+	private void addResultToList(@Nonnull RayTraceResult traceResult)
+	{
+		this.hits.add(traceResult);
 	}
 
 	@Override
@@ -139,11 +163,10 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 		private final Vec3d posStart;
 		private final Vec3d posEnd;
 		private AxisAlignedBB aabb;
-		private boolean ignoreBlockWithoutBoundingBox = true;
-		private boolean stopOnLiquid = false;
 		private boolean allowEntities = true;
 		private List<Entity> entityFilter;
 		private List<BlockPos> blockFilter;
+		private Predicate<IBlockState> stopOn = null;
 
 		//internal
 		private MultipleTracerBuilder(World world, Vec3d posStart, Vec3d posEnd)
@@ -180,11 +203,10 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 		 * @param allowEntities                 whether entities should be traced
 		 * @return the builder
 		 */
-		public MultipleTracerBuilder setRules(boolean ignoreBlockWithoutBoundingBox, boolean stopOnLiquid, boolean allowEntities)
+		public MultipleTracerBuilder setRules(boolean allowEntities, Predicate<IBlockState> stopOn)
 		{
-			this.ignoreBlockWithoutBoundingBox = ignoreBlockWithoutBoundingBox;
-			this.stopOnLiquid = stopOnLiquid;
 			this.allowEntities = allowEntities;
+			this.stopOn = stopOn;
 			return this;
 		}
 
@@ -230,7 +252,9 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 			if(aabb==null)
 				aabb = MultipleRayTracer.EMPTY_AABB;
 
-			return MultipleRayTracer.volumetricTrace(this.world, this.posStart, posEnd, aabb, ignoreBlockWithoutBoundingBox, stopOnLiquid, allowEntities, entityFilter, blockFilter);
+			return MultipleRayTracer.volumetricTrace(this.world, this.posStart, posEnd, aabb,
+					blockFilter, allowEntities, entityFilter, stopOn
+			);
 		}
 	}
 }

@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  * @author Pabilo8
  * @since 30-08-2019
  */
-@GeneratedItemModels(itemName = "railgun_grenade_4bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
+@GeneratedItemModels(itemName = "bullet_railgun_grenade_4bcal", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED, valueSet = AmmoParts.class)
 public class ItemIIAmmoRailgunGrenade extends ItemIIAmmoBase
 {
 	public ItemIIAmmoRailgunGrenade()

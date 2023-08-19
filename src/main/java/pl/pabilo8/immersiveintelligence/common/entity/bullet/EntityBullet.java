@@ -40,8 +40,8 @@ import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer.MultipleTracerBuilder;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer.MultipleTracerBuilder;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
