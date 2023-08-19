@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common.util;
 
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.client.ClientUtils;
-import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 
@@ -78,9 +76,9 @@ public class IILib
 
 	public static final int[] COLORS_HIGHLIGHT_I = new int[]{
 			0x486c94, //prussian blue
-			Lib.COLOUR_I_ImmersiveOrange-0xff000000, //immersive orange
-			ClientUtils.getFormattingColour(TextFormatting.GOLD), //light orange
-			ClientUtils.getFormattingColour(TextFormatting.BLUE) //light blue
+			0xf78034, //immersive orange
+			0xFFAA00, //gold
+			0x5555FF //light blue
 	};
 
 	//why copy if you can *process*
