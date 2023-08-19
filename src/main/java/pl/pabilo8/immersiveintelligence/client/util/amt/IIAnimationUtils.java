@@ -29,8 +29,8 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
@@ -39,6 +39,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -402,6 +403,27 @@ public class IIAnimationUtils
 		return Arrays.stream(getChildrenRecursive(array))
 				.filter(amt -> amt.name.equals(name))
 				.findFirst().orElse(array[0]);
+	}
+
+	/**
+	 * Creates a single model out of multiple quads for more performant rendering
+	 *
+	 * @param model multiple AMTs
+	 * @param name  batched element name
+	 * @return batched {@link AMTQuads} or {@link AMTLocator} if there's nothing to display
+	 */
+	public static AMT batchMultipleAMTQuads(AMT[] model, String name)
+	{
+		//Add all quads to list
+		List<BakedQuad> quads = new ArrayList<>();
+		for(AMT amt : getChildrenRecursive(model))
+			if(amt instanceof AMTQuads)
+				quads.addAll(Arrays.asList(((AMTQuads)amt).quads));
+
+		//Output
+		return quads.isEmpty()?
+				new AMTLocator(name, Vec3d.ZERO):
+				new AMTQuads(name, Vec3d.ZERO, quads.toArray(new BakedQuad[0]));
 	}
 
 	//--- JSON Parsing ---//
