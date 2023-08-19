@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
 
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author Pabilo8
@@ -30,6 +30,7 @@ public abstract class IICompatModule
 
 	static
 	{
+		moduleClasses.put("immersiveengineering", ImmersiveEngineeringHelper.class);
 		moduleClasses.put("immersivepetroleum", ImmersivePetroleumHelper.class);
 		moduleClasses.put("immersiveposts", ImmersivePostsHelper.class);
 		moduleClasses.put("immersivetech", ImmersiveTechnologyHelper.class);
@@ -49,7 +50,6 @@ public abstract class IICompatModule
 				try
 				{
 					Boolean enabled = IIConfig.compat.get(e.getKey());
-
 					IILogger.info(e.getKey()+Utils.getModVersion(e.getKey()));
 
 					if(moduleMinModVersions.containsKey(e.getKey())&&
@@ -65,50 +65,55 @@ public abstract class IICompatModule
 					IICompatModule m = e.getValue().newInstance();
 					modules.add(m);
 					m.preInit();
-				}
-				catch(Exception exception)
+				} catch(Exception exception)
 				{
-					IILogger.error("Compat module for "+e.getKey()+" could not be preInitialized. Report this and include the error message below!", exception);
+					IILogger.error("Compat module for "+e.getKey()+" could not be pre-initialized. Report this and include the error message below!", exception);
 				}
 	}
 
-	public static void doModulesRecipes()
+	private static void doModuleAction(Consumer<IICompatModule> action, String message)
 	{
 		for(IICompatModule compat : IICompatModule.modules)
 			try
 			{
-				compat.registerRecipes();
-			}
-			catch(Exception exception)
+				action.accept(compat);
+			} catch(Exception exception)
 			{
-				IILogger.error("Compat module for "+compat+" could not register recipes. Report this and include the error message below!", exception);
+				IILogger.error("Compat module for %s %s. Report this and include the error message below!", compat, message);
+				IILogger.error(exception);
 			}
+	}
+
+	//--- Event callers ---//
+
+	public static void doModulesRecipes()
+	{
+		doModuleAction(IICompatModule::registerRecipes, "could not register recipes");
 	}
 
 	public static void doModulesInit()
 	{
-		for(IICompatModule compat : IICompatModule.modules)
-			try
-			{
-				compat.init();
-			}
-			catch(Exception exception)
-			{
-				IILogger.error("Compat module for "+compat+" could not be initialized. Report this and include the error message below!", exception);
-			}
+		doModuleAction(IICompatModule::init, "could not be initialized");
 	}
 
 	public static void doModulesPostInit()
 	{
-		for(IICompatModule compat : IICompatModule.modules)
-			try
-			{
-				compat.postInit();
-			}
-			catch(Exception exception)
-			{
-				IILogger.error("Compat module for "+compat+" could not be postInitialized. Report this and include the error message below!", exception);
-			}
+		doModuleAction(IICompatModule::postInit, "could not be post-initialized");
+	}
+
+	public static void doModulesClientPreInit()
+	{
+		doModuleAction(IICompatModule::clientPreInit, "could not pre-initialize on client side");
+	}
+
+	public static void doModulesClientInit()
+	{
+		doModuleAction(IICompatModule::clientInit, "could not be initialized on client side");
+	}
+
+	public static void doModulesClientPostInit()
+	{
+		doModuleAction(IICompatModule::clientPostInit, "could not be post-initialized on client side");
 	}
 
 	//We don't want this to happen multiple times after all >_>
@@ -119,16 +124,7 @@ public abstract class IICompatModule
 		if(!serverStartingDone)
 		{
 			serverStartingDone = true;
-			for(IICompatModule compat : IICompatModule.modules)
-				try
-				{
-					compat.loadComplete();
-
-				}
-				catch(Exception exception)
-				{
-					IILogger.error("Compat module for "+compat+" could not be initialized. Report this and include the error message below!", exception);
-				}
+			doModuleAction(IICompatModule::loadComplete, "could not complete loading");
 		}
 	}
 

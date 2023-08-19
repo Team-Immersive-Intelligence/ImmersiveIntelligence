@@ -11,20 +11,15 @@ import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorTile;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler.MineralMix;
-import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.common.Config.IEConfig.Tools;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityChargingStation;
-import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
-import blusunrize.immersiveengineering.common.items.ItemToolUpgrade.ToolUpgrades;
 import blusunrize.immersiveengineering.common.util.IEPotions;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -33,7 +28,6 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -72,10 +66,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Railgun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
@@ -125,7 +117,6 @@ import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
@@ -279,8 +270,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public static void registerOreDict()
 	{
-		//IE Circuit Board
-		OreDictionary.registerOre("circuitBasic", new ItemStack(IEContent.itemMaterial, 1, 27));
+		//Add oredict for other mods
+		IIRecipes.addForeignOreDict();
 
 		//Catch them all!
 		for(Item item : IIContent.ITEMS)
@@ -369,22 +360,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				} catch(IllegalAccessException ignored) {}
 			}
 		}
-
-		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
-		OreDictionary.registerOre("listAllMeatRaw", Items.BEEF);
-		OreDictionary.registerOre("listAllMeatRaw", Items.FISH);
-		OreDictionary.registerOre("listAllMeatRaw", Items.CHICKEN);
-		OreDictionary.registerOre("listAllMeatRaw", Items.RABBIT);
-		OreDictionary.registerOre("listAllMeatRaw", Items.MUTTON);
-
-		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
-		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
-		OreDictionary.registerOre("blockLeaves", new ItemStack(IIContent.blockRubberLeaves));
-
-		OreDictionary.registerOre("tnt", new ItemStack(Blocks.TNT));
-		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT));
-
-		OreDictionary.registerOre("leadedConcrete", new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()));
 	}
 
 	@SubscribeEvent
@@ -473,36 +448,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		return fl;
 	}
 
-	public static void refreshFluidReferences()
-	{
-		IIContent.fluidInkBlack = FluidRegistry.getFluid("ink");
-		IIContent.fluidInkCyan = FluidRegistry.getFluid("ink_cyan");
-		IIContent.fluidInkMagenta = FluidRegistry.getFluid("ink_magenta");
-		IIContent.fluidInkYellow = FluidRegistry.getFluid("ink_yellow");
-
-		IIContent.fluidBrine = FluidRegistry.getFluid("brine");
-		IIContent.fluidEtchingAcid = FluidRegistry.getFluid("etching_acid");
-		IIContent.fluidHydrofluoricAcid = FluidRegistry.getFluid("hydrofluoric_acid");
-		IIContent.fluidSulfuricAcid = FluidRegistry.getFluid("sulfuric_acid");
-
-		IIContent.fluidAmmonia = FluidRegistry.getFluid("ammonia");
-		IIContent.fluidMethanol = FluidRegistry.getFluid("methanol");
-
-		IIContent.gasChlorine = FluidRegistry.getFluid("chlorine");
-		IIContent.gasHydrogen = FluidRegistry.getFluid("hydrogen");
-		IIContent.gasOxygen = FluidRegistry.getFluid("oxygen");
-	}
-
-
 	public void preInit()
 	{
 		IIDataWireType.init();
 		IIPacketHandler.preInit();
 		CapabilityRotaryEnergy.register();
-		if(Railgun.enableRailgunOverride)
-			IEContent.itemRailgun = new ItemIIRailgunOverride();
-		ReflectionHelper.setPrivateValue(ToolUpgrades.class, ToolUpgrades.REVOLVER_BAYONET, ImmutableSet.of("REVOLVER", "SUBMACHINEGUN", "RIFLE"), "toolset");
-
 		IEApi.prefixToIngotMap.put("spring", new Integer[]{2, 1});
 
 		IIContent.init();
@@ -635,8 +585,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
 		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
 
-		IILogger.info("Adding Railgun Projectiles");
-		RailgunHandler.registerProjectileProperties(new IngredientStack("stickTungsten"), 32, 1.3).setColourMap(new int[][]{{0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0xCBD1D6, 0x9EA2A7, 0x9EA2A7}});
 
 		//Disallow crates in crates
 		IEApi.forbiddenInCrates.add((stack) ->
@@ -702,12 +650,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerEntity(i++, EntityDrone.class, "drone", 64, 1, true);
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
-
-		/*
-		Soon™
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, "panzer"),
-				EntityMotorbike.class, "panzer", i++, ImmersiveIntelligence.INSTANCE, 64, 1, true);
-		 */
 	}
 
 	public void postInit()
@@ -718,8 +660,6 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 		for(Minecarts value : Minecarts.values())
 			MinecartBlockHelper.blocks.put(stack -> OreDictionary.itemMatches(stack, value.stack.get(), false), world -> value.minecart.apply(world, Vec3d.ZERO));
-
-		// TODO: 07.11.2021 register
 
 		RotaryUtils.ie_rotational_blocks_torque.put(tileEntity -> tileEntity instanceof TileEntityWindmill,
 				aFloat -> aFloat*MechanicalDevices.dynamoWindmillTorque
@@ -736,10 +676,8 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		CorrosionHandler.addItemToBlacklist(new ItemStack(Items.DIAMOND_BOOTS));
 
 		for(IMultiblock mb : MultiblockHandler.getMultiblocks())
-		{
 			if(mb instanceof MultiblockStuctureBase)
 				((MultiblockStuctureBase<?>)mb).updateStructure();
-		}
 	}
 
 	@Override
