@@ -31,8 +31,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer.MultipleTracerBuilder;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer.MultipleTracerBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;

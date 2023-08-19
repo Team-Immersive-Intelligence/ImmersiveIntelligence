@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casing
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.GeneratedSubItemModel;
 
 /**
  * @author Pabilo8
@@ -36,10 +37,13 @@ public class ItemIIAmmoCasing extends ItemIISubItemsBase<Casings>
 
 		@IIItemProperties(stackSize = 24)
 		AUTOCANNON_3BCAL,
+		@GeneratedSubItemModel(customTexturePath = "bullets/casings/machinegun_2bcal")
 		@IIItemProperties(stackSize = 24)
 		MG_2BCAL,
+		@GeneratedSubItemModel(customTexturePath = "bullets/casings/assault_rifle_1bcal")
 		@IIItemProperties(stackSize = 32)
 		STG_1BCAL,
+		@GeneratedSubItemModel(customTexturePath = "bullets/casings/submachinegun_1bcal")
 		@IIItemProperties(stackSize = 48)
 		SMG_1BCAL,
 

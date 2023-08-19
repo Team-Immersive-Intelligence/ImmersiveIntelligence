@@ -41,6 +41,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.commons.lang3.time.StopWatch;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
@@ -48,7 +49,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityParachute;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.IIExplosion;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.BlacklistedRayTracer;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
 import javax.annotation.Nonnull;
@@ -156,7 +158,7 @@ public class CommandIIDev extends CommandBase
 					Vec3d vec3d1 = senderEntity.getLook(0);
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
 
-					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), true, false, true, Collections.singletonList(senderEntity), Collections.emptyList());
+					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), Collections.emptyList(), true, Collections.singletonList(senderEntity), null);
 					for(RayTraceResult hit : rayTracer)
 						if(hit.typeOfHit==Type.ENTITY)
 						{
@@ -246,6 +248,37 @@ public class CommandIIDev extends CommandBase
 						sender.sendMessage(new TextComponentString("Preparing to jump!"));
 					}
 					break;
+				case "vtrace":
+				{
+					float blockReachDistance = 6;
+					Vec3d vec3d = senderEntity.getPositionEyes(0);
+					Vec3d vec3d1 = senderEntity.getLook(0);
+					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
+
+					//Blacklisted tracer
+					StopWatch watch = new StopWatch();
+					watch.start();
+					BlacklistedRayTracer.traceIgnoringBlocks(senderEntity.world, vec3d, vec3d2, Collections.emptyList(), 0);
+					watch.stop();
+					sender.sendMessage(new TextComponentString("Time: "+watch.getNanoTime()+" ns"));
+
+					//Vanilla tracer
+					watch.reset();
+					watch.start();
+					senderEntity.world.rayTraceBlocks(vec3d, vec3d2);
+					watch.stop();
+					sender.sendMessage(new TextComponentString("Time: "+watch.getNanoTime()+" ns"));
+
+					//Volumetric tracer
+					watch.reset();
+					watch.start();
+					MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2,
+							new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), Collections.emptyList(), false, Collections.singletonList(senderEntity), null);
+					watch.stop();
+					sender.sendMessage(new TextComponentString("Time: "+watch.getNanoTime()+" ns"));
+
+				}
+				break;
 				case "power":
 				{
 					if(senderEntity==null)
@@ -255,7 +288,7 @@ public class CommandIIDev extends CommandBase
 					Vec3d vec3d = senderEntity.getPositionEyes(0);
 					Vec3d vec3d1 = senderEntity.getLook(0);
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
-					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), true, false, true, Collections.singletonList(senderEntity), Collections.emptyList());
+					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), Collections.emptyList(), true, Collections.singletonList(senderEntity), null);
 					if(rayTracer.getHits().isEmpty())
 					{
 						Entity entityHit = rayTracer.getHits().get(0).entityHit;
