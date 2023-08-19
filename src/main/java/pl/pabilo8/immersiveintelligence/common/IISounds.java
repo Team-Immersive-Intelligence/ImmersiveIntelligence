@@ -15,9 +15,7 @@ import pl.pabilo8.modworks.annotations.sound.ModSound;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.HashMap;
 
 /**
  * <p>
@@ -47,7 +45,7 @@ import java.util.Set;
  */
 public class IISounds
 {
-	static Set<SoundEvent> registeredEvents = new HashSet<>();
+	static HashMap<ResourceLocation, SoundEvent> registeredEvents = new HashMap<>();
 	public static ArrayList<RangedSound> rangedSounds = new ArrayList<>();
 	public static ArrayList<MultiSound> multiSounds = new ArrayList<>();
 
@@ -453,7 +451,7 @@ public class IISounds
 
 	public static void init()
 	{
-		for(SoundEvent event : registeredEvents)
+		for(SoundEvent event : registeredEvents.values())
 			ForgeRegistries.SOUND_EVENTS.register(event);
 	}
 
@@ -462,14 +460,12 @@ public class IISounds
 	private static SoundEvent registerSound(@Nonnull String name)
 	{
 		ResourceLocation location = new ResourceLocation(ImmersiveIntelligence.MODID, name);
-		Optional<SoundEvent> first = registeredEvents.stream()
-				.filter(soundEvent -> soundEvent.getSoundName().equals(location))
-				.findFirst();
-		if(first.isPresent())
-			return first.get();
+		SoundEvent event = registeredEvents.get(location);
+		if(event!=null)
+			return event;
 
-		SoundEvent event = new SoundEvent(location);
-		registeredEvents.add(event.setRegistryName(location));
+		event = new SoundEvent(location);
+		registeredEvents.put(location, event.setRegistryName(location));
 		return event;
 	}
 
