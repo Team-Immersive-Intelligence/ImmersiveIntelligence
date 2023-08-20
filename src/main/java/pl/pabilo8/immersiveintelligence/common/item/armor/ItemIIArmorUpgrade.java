@@ -8,7 +8,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
@@ -16,6 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,10 +42,10 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 	 */
 	public enum ArmorTypes implements ISerializableEnum
 	{
-		LIGHT_ENGINEER_HELMET(0xff8840,'\u24be'),
-		LIGHT_ENGINEER_CHESTPLATE(0xcc6c33,'\u24bf'),
-		LIGHT_ENGINEER_LEGGINGS(0xff6440,'\u24c0'),
-		LIGHT_ENGINEER_BOOTS(0xcc5033,'\u24c1');
+		LIGHT_ENGINEER_HELMET(0xff8840, '\u24be'),
+		LIGHT_ENGINEER_CHESTPLATE(0xcc6c33, '\u24bf'),
+		LIGHT_ENGINEER_LEGGINGS(0xff6440, '\u24c0'),
+		LIGHT_ENGINEER_BOOTS(0xcc5033, '\u24c1');
 
 		private final int color;
 		private final char symbol;
@@ -60,6 +60,7 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 	/**
 	 * Contains upgrades
 	 */
+	@GeneratedItemModels(itemName = "armor_upgrade")
 	public enum ArmorUpgrades implements IIItemEnum
 	{
 		//--- Helmet ---//
@@ -195,7 +196,7 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		ArmorUpgrades sub = stackToSub(stack);
 		//add valid weapon types
 		for(ArmorTypes type : sub.toolset)
-			list.add(IIUtils.getHexCol(type.color,type.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+type.getName())));
+			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+type.getName())));
 
 		//add description
 		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(

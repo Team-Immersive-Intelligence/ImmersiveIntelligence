@@ -29,6 +29,7 @@ import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IIMotorBeltType;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,6 +47,7 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 		super("motor_belt", 64, MotorBelt.values());
 	}
 
+	@GeneratedItemModels(itemName = "motor_belt")
 	public enum MotorBelt implements IIItemEnum
 	{
 		CLOTH("light_belts", MechanicalDevices.beltLength[0], 1, 6,

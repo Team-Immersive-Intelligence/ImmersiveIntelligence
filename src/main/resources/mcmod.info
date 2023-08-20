@@ -7,8 +7,8 @@
   "mcversion": "${mcversion}",
   "url": "https://www.curseforge.com/minecraft/mc-mods/immersive-intelligence",
   "updateUrl": "",
-  "authorList": ["Pabilo8"],
-  "credits": "Blacknight, Choroman, Carver, Krystiano0306, Lipton, Crimson Twilight and many others from the IG community ^^",
+  "authorList": ["Pabilo8","Carver","Schaeferd-CZ","Bastian","VDeltaGabriel"],
+  "credits": "The II and IG community ^^",
   "logoFile": "assets/immersiveintelligence/logo.png",
   "screenshots": []
 }

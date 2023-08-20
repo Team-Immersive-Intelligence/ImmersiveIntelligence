@@ -68,8 +68,8 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.MultipleRayTracer;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.BlacklistedRayTracer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -1711,18 +1711,9 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		private boolean canEntityBeSeen(Entity entity, Vec3d vEmplacement, BlockPos[] allBlocks, int maxBlocks)
 		{
 			Vec3d vEntity = entity.getPositionVector().addVector(-entity.width/2f, entity.height/2f, -entity.width/2f);
-			MultipleRayTracer rayTraceResults = MultipleRayTracer.volumetricTrace(entity.world, vEmplacement, vEntity, new AxisAlignedBB(-0.00625, -0.00625, -0.00625, 0.00625, 0.00625, 0.00625), true, false, false, Collections.singletonList(entity), Arrays.asList(allBlocks));
-			int h = 0;
-			for(RayTraceResult hit : rayTraceResults)
-			{
-				if(hit.typeOfHit==Type.BLOCK)
-					h++;
+			RayTraceResult rt = BlacklistedRayTracer.traceIgnoringBlocks(entity.world, vEmplacement, vEntity, Arrays.asList(allBlocks), maxBlocks);
 
-				if(h > maxBlocks)
-					return false;
-			}
-
-			return true;
+			return rt==null||rt.typeOfHit==Type.MISS;
 		}
 
 		@Override

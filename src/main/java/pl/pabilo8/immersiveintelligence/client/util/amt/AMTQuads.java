@@ -26,7 +26,7 @@ public class AMTQuads extends AMT
 	/**
 	 * Quads acquired from a {@link blusunrize.immersiveengineering.client.models.IESmartObjModel}
 	 */
-	private final BakedQuad[] quads;
+	protected final BakedQuad[] quads;
 	/**
 	 * GL CallList ID
 	 */

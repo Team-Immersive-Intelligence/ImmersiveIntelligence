@@ -727,10 +727,13 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		gunPitch = MathHelper.clamp(gunPitch, -20, 20);
 	}
 
-	public boolean shootFromStack(ItemStack stack)
+	public void shootFromStack(ItemStack stack)
 	{
 		if(stack.isEmpty())
+		{
 			world.playSound(null, posX, posY, posZ, IISounds.machinegunShotDry, SoundCategory.PLAYERS, 0.25f, 0.9f);
+			return;
+		}
 		NBTTagCompound upgrades = IIContent.itemMachinegun.getUpgrades(gun);
 
 		RangedSound sound = IISounds.machinegunShot;
@@ -756,8 +759,6 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 
 		ItemStack stack2 = ((IAmmo)stack.getItem()).getCasingStack(1);
 		blusunrize.immersiveengineering.common.util.Utils.dropStackAtPos(world, getPosition(), stack2);
-
-		return true;
 	}
 
 	public boolean shootFromCrate()
@@ -800,13 +801,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 					ItemStack stack = crate.getInventory().get(i);
 					if(stack.isEmpty())
 						continue;
-					if(shootFromStack(stack))
-					{
-						crate.insertionHandler.extractItem(i, 1, false);
-						if(!world.isRemote)
-							IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
-						return true;
-					}
+					shootFromStack(stack);
+
+					crate.insertionHandler.extractItem(i, 1, false);
+					if(!world.isRemote)
+						IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
+					return true;
 				}
 			}
 		}
@@ -862,9 +862,12 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		tag.setBoolean("mag2Empty", mag2Empty);
 
 		if(!world.isRemote)
+		{
 			IIPacketHandler.INSTANCE.sendToAllAround(new MessageEntityNBTSync(this, tag), IIPacketHandler.targetPointFromEntity(this, 24));
+			shootFromStack(stack);
+		}
 
-		return shootFromStack(stack);
+		return true;
 	}
 
 	public void getConfigFromItem(ItemStack stack)

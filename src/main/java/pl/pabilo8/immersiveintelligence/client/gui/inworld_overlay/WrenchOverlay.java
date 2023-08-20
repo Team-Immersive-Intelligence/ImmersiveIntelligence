@@ -50,6 +50,9 @@ public class WrenchOverlay extends InWorldOverlayBase
 
 					if(!(te instanceof IUpgradableMachine))
 						continue;
+					IUpgradableMachine machine = (IUpgradableMachine)te;
+					if(machine.getUpgradeMaster().getCurrentlyInstalled()!=null)
+						continue;
 
 					//TODO: 29.05.2023 check
 					world.getBlockState(pos).addCollisionBoxToList(world, pos, full, aabb, player, true);

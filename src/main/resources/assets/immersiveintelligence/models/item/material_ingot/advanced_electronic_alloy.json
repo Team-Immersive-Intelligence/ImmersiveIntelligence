@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "immersiveintelligence:items/material/metal/ingot/advanced_electronic_alloy"
-  }
-}

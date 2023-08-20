@@ -14,19 +14,12 @@ idea {
 }
 
 repositories {
-    maven {
-        name = "GitHub Packages"
-        url = uri("https://maven.pkg.github.com/Team-Immersive-Intelligence/ModworksProcessor")
-        credentials {
-            username = project.findProperty("ii_MavenUser") ?: System.getenv("GITHUB_USERNAME")
-            password = project.findProperty("ii_MavenToken") ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    annotationProcessor "pl.pabilo8:modworks-processor:1.0.0"
-    compileOnly "pl.pabilo8:modworks-processor:1.0.0"
+    annotationProcessor 'com.github.Team-Immersive-Intelligence:ModworksProcessor:1.1.2'
+    compileOnly 'com.github.Team-Immersive-Intelligence:ModworksProcessor:1.1.2'
 }
 
 compileJava {

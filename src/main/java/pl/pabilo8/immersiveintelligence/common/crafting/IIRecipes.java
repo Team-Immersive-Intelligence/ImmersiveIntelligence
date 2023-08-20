@@ -1342,4 +1342,27 @@ public class IIRecipes
 				stack -> stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
 		);
 	}
+
+	public static void addForeignOreDict()
+	{
+		//IE Circuit Board
+		OreDictionary.registerOre("circuitBasic", new ItemStack(IEContent.itemMaterial, 1, 27));
+
+		//Meat for production
+		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
+		OreDictionary.registerOre("listAllMeatRaw", Items.BEEF);
+		OreDictionary.registerOre("listAllMeatRaw", Items.FISH);
+		OreDictionary.registerOre("listAllMeatRaw", Items.CHICKEN);
+		OreDictionary.registerOre("listAllMeatRaw", Items.RABBIT);
+		OreDictionary.registerOre("listAllMeatRaw", Items.MUTTON);
+		
+		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
+		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
+		OreDictionary.registerOre("blockLeaves", new ItemStack(IIContent.blockRubberLeaves));
+
+		OreDictionary.registerOre("tnt", new ItemStack(Blocks.TNT));
+		OreDictionary.registerOre("materialTNT", new ItemStack(Blocks.TNT));
+
+		OreDictionary.registerOre("leadedConcrete", new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()));
+	}
 }

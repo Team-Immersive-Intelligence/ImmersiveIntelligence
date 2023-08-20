@@ -56,10 +56,8 @@ public class ItemIIAssaultRifle extends ItemIIGunBase implements IItemScrollable
 	public static final String ENERGY_UPGRADED = "energy";
 
 	//--- Scope Overlay Textures ---//
-	@SideOnly(Side.CLIENT)
 	public static final ResourceLocation OVERLAY_SCOPE = new ResourceLocation(ImmersiveIntelligence.MODID,
 			"textures/gui/item/machinegun/scope.png");
-	@SideOnly(Side.CLIENT)
 	public static final ResourceLocation OVERLAY_SCOPE_IR = new ResourceLocation(ImmersiveIntelligence.MODID,
 			"textures/gui/item/machinegun/scope_infrared.png");
 

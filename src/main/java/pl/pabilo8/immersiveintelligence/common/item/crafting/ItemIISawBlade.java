@@ -16,6 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawB
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -122,6 +123,7 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 		return stackToSub(stack).texture;
 	}
 
+	@GeneratedItemModels(itemName = "sawblade")
 	public enum SawBlades implements IIItemEnum
 	{
 		IRON(2, Tools.sawbladeIronDurability),

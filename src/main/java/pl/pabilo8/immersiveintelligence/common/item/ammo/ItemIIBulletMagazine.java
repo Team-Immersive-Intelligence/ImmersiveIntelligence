@@ -25,6 +25,8 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Ma
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
+import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -47,13 +49,14 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		super("bullet_magazine", 1, Magazines.values());
 	}
 
+	@GeneratedItemModels(itemName = "bullet_magazine", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
 	public enum Magazines implements IIItemEnum
 	{
 		MACHINEGUN(48, IIContent.itemAmmoMachinegun),
-		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun,true),
+		SUBMACHINEGUN(24, IIContent.itemAmmoSubmachinegun, true),
 		RIFLE(12, IIContent.itemAmmoMachinegun),
 		SUBMACHINEGUN_DRUM(64, IIContent.itemAmmoSubmachinegun),
-		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle,true),
+		ASSAULT_RIFLE(32, IIContent.itemAmmoAssaultRifle, true),
 		AUTOCANNON(16, IIContent.itemAmmoAutocannon),
 		CPDS_DRUM(128, IIContent.itemAmmoMachinegun),
 		@IIItemProperties(hidden = true)

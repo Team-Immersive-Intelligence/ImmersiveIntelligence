@@ -35,7 +35,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 	public static final String HANDMADE = "handmade";
 
 	//--- Scope Overlay Textures ---//
-	@SideOnly(Side.CLIENT)
 	public static final ResourceLocation OVERLAY_SCOPE = new ResourceLocation(ImmersiveIntelligence.MODID,
 			"textures/gui/item/machinegun/scope.png");
 

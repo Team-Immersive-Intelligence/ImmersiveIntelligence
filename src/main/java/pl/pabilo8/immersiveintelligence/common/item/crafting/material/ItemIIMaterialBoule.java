@@ -1,9 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.item.crafting.material;
 
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialBoule.MaterialsBoule;
-import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 /**
  * @author Pabilo8
@@ -17,6 +18,7 @@ public class ItemIIMaterialBoule extends ItemIISubItemsBase<MaterialsBoule>
 		super("material_boule", 64, MaterialsBoule.values());
 	}
 
+	@GeneratedItemModels(itemName = "material_boule", texturePath = "material/dust")
 	public enum MaterialsBoule implements IIItemEnum
 	{
 		SILICON

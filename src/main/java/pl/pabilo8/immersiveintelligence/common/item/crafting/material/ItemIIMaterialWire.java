@@ -4,6 +4,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
+import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 
 /**
  * @author Pabilo8
@@ -17,6 +18,7 @@ public class ItemIIMaterialWire extends ItemIISubItemsBase<MaterialsWire>
 		super("material_wire", 64, MaterialsWire.values());
 	}
 
+	@GeneratedItemModels(itemName = "material_wire", texturePath = "material/wire")
 	public enum MaterialsWire implements IIItemEnum
 	{
 		TUNGSTEN,
