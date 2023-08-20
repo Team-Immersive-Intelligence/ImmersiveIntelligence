@@ -27,13 +27,9 @@ the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_
 |[item_display]{source:"basic_electronic_element"}|
 **Basic Electronic Components** are created using a [Nickel Plate](metalPress), [Redstone] and a [Vacuum Tubes](components#2) in the [Precision Assembler](precision_assembler).
 
-# circuit_template
-|[crafting]{source:"circuit_template"}|
-Circuit Template
-
 # basic_board
 |[crafting]{source:"basic_circuit_blueprints"}|
-Basic Board
+To crate the Raw basic board, [insulate glass] and copper plates
 
 # advanced_general  
 |[item_display]{source:"%SECTION%"}|
