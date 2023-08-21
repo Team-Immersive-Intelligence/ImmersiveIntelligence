@@ -1042,14 +1042,16 @@ public class IIRecipes
 		FillerRecipe.recipeList.clear();
 		FillerRecipe.addRecipe(IIContent.itemAmmoArtillery, 160, 8000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoMortar, 140, 6000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoMachinegun, 60, 800);
 		FillerRecipe.addRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
 		FillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
 		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
 
-
-		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoAutocannon,
+		//Projectiles
+		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar,
+				IIContent.itemAmmoAutocannon,
 				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
 		// TODO: 05.09.2022 , IIContent.itemAmmoRevolver
 		{
@@ -1071,6 +1073,7 @@ public class IIRecipes
 			);
 		}
 
+		//Explosives and Mines
 		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock, IIContent.itemNavalMine})
 		{
 			assert item!=null;
@@ -1089,6 +1092,7 @@ public class IIRecipes
 			);
 		}
 
+		//Grenades
 		AmmunitionWorkshopRecipe.addRecipe(
 				(core, casing) -> {
 
@@ -1355,7 +1359,7 @@ public class IIRecipes
 		OreDictionary.registerOre("listAllMeatRaw", Items.CHICKEN);
 		OreDictionary.registerOre("listAllMeatRaw", Items.RABBIT);
 		OreDictionary.registerOre("listAllMeatRaw", Items.MUTTON);
-		
+
 		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("blockLeaves", new ItemStack(IIContent.blockRubberLeaves));
