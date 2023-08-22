@@ -18,9 +18,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,8 +56,8 @@ public abstract class TileEntityGateBase<T extends TileEntityMultiblockMetal<T, 
 	public void writeCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
-		nbt.setBoolean("open",this.open);
-		nbt.setFloat("gateAngle",gateAngle);
+		nbt.setBoolean("open", this.open);
+		nbt.setFloat("gateAngle", gateAngle);
 	}
 
 	@Override

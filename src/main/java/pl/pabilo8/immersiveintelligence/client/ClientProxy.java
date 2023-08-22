@@ -517,7 +517,6 @@ public class ClientProxy extends CommonProxy
 		reloadManual();
 
 
-
 		//Weapons (Items)
 		IIContent.itemMachinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
 		IIContent.itemSubmachinegun.setTileEntityItemStackRenderer(SubmachinegunItemStackRenderer.instance);
@@ -626,8 +625,7 @@ public class ClientProxy extends CommonProxy
 		registerTileRenderer(PackerRenderer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer().subscribeToList("conveyor_scanner"));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArtilleryHowitzer.class, new ArtilleryHowitzerRenderer().subscribeToList("artillery_howitzer"));
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock0), MetalMultiblocks0.ARTILLERY_HOWITZER.getMeta(), TileEntityArtilleryHowitzer.class);
+		registerTileRenderer(ArtilleryHowitzerRenderer.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));
 

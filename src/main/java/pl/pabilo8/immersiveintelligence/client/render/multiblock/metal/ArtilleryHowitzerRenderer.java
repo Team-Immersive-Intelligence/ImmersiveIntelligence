@@ -14,7 +14,8 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitz
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
@@ -26,7 +27,8 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  * @author Pabilo8
  * @since 29.07.2022
  */
-public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtilleryHowitzer>
+@RegisteredTileRenderer(name = "artillery_howitzer", clazz = TileEntityArtilleryHowitzer.class)
+public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityArtilleryHowitzer>
 {
 	private AMT[] model = null, allParts = null;
 	//animations
@@ -43,13 +45,7 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 	private AMT gunYaw, gunPitch;
 
 	@Override
-	protected boolean shouldNotRender(TileEntityArtilleryHowitzer te)
-	{
-		return te==null||te.isDummy();
-	}
-
-	@Override
-	public void draw(TileEntityArtilleryHowitzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
+	public void drawAnimated(TileEntityArtilleryHowitzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		applyStandardRotation(te.facing);
 		GlStateManager.translate(0, 0, -0.5);
@@ -183,6 +179,23 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 			unMirrorRender();
 	}
 
+	@Override
+	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
+	{
+		GlStateManager.translate(0, 0, -0.5);
+
+		//defaultize
+		for(AMT mod : allParts)
+			mod.defaultize();
+
+		//apply default animation (for inserter angle)
+		animationDefault.apply(0);
+
+		//render
+		for(AMT mod : model)
+			mod.render(tes, buf);
+	}
+
 	private void setupShellDisplay(TileEntityArtilleryHowitzer te, BulletState state, int slot)
 	{
 		shellLoaded.withStack(te.inventory.get(5), state);
@@ -277,6 +290,7 @@ public class ArtilleryHowitzerRenderer extends IITileRenderer<TileEntityArtiller
 	@Override
 	protected void nullifyModels()
 	{
+		super.nullifyModels();
 		model = IIAnimationUtils.disposeOf(model);
 		animationOpen = animationPlatform = null;
 		animationFire = animationLoading = null;

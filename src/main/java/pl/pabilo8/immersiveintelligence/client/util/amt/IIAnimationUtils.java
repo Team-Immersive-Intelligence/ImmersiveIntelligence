@@ -386,6 +386,13 @@ public class IIAnimationUtils
 			model.clear();
 	}
 
+	public static IIMachineUpgradeModel disposeOf(@Nullable IIMachineUpgradeModel model)
+	{
+		if(model!=null)
+			return model.disposeOf();
+		return null;
+	}
+
 	public static AMT[] organise(AMT[] array)
 	{
 		return Arrays.stream(array).filter(amt -> !amt.isChild()).toArray(AMT[]::new);

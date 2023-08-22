@@ -1,17 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFlagpole;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-
-import javax.annotation.Nullable;
 
 public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpole>
 {
@@ -31,17 +27,15 @@ public class MultiblockFlagpole extends MultiblockStuctureBase<TileEntityFlagpol
 	}
 
 	@Override
-	protected void addBlockEvent(World world, BlockPos pos)
+	protected BlockIIMultiblock<MetalMultiblocks1> getBlock()
 	{
-		world.addBlockEvent(pos, IIContent.blockMetalMultiblock1, 255, 0);
+		return IIContent.blockMetalMultiblock1;
 	}
 
 	@Override
-	@Nullable
-	protected TileEntityFlagpole placeTile(World world, BlockPos pos)
+	protected int getMeta()
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.FLAGPOLE.getMeta()));
-		return (TileEntityFlagpole)world.getTileEntity(pos);
+		return MetalMultiblocks1.FLAGPOLE.getMeta();
 	}
 
 	@Override

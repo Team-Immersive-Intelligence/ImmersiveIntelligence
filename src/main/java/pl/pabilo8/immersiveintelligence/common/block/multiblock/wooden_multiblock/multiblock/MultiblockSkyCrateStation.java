@@ -1,16 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.BlockIIWoodenMultiblock.WoodenMultiblocks;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySkyCrateStation;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -33,18 +30,17 @@ public class MultiblockSkyCrateStation extends MultiblockStuctureBase<TileEntity
 		return false;
 	}
 
+
 	@Override
-	protected void addBlockEvent(World world, BlockPos pos)
+	protected BlockIIMultiblock<?> getBlock()
 	{
-		world.addBlockEvent(pos, IIContent.blockWoodenMultiblock, 255, 0);
+		return IIContent.blockWoodenMultiblock;
 	}
 
-	@Nullable
 	@Override
-	protected TileEntitySkyCrateStation placeTile(World world, BlockPos pos)
+	protected int getMeta()
 	{
-		world.setBlockState(pos, IIContent.blockWoodenMultiblock.getStateFromMeta(WoodenMultiblocks.SKYCRATE_STATION.getMeta()));
-		return (TileEntitySkyCrateStation)world.getTileEntity(pos);
+		return WoodenMultiblocks.SKYCRATE_STATION.getMeta();
 	}
 
 	@Override

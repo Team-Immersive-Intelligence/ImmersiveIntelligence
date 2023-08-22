@@ -1,23 +1,36 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler;
+import blusunrize.immersiveengineering.api.tool.ConveyorHandler.ConveyorDirection;
 import blusunrize.immersiveengineering.api.tool.ConveyorHandler.IConveyorBelt;
+import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.client.models.ModelConveyor;
 import blusunrize.immersiveengineering.common.Config;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.ItemBlockIEBase;
+import blusunrize.immersiveengineering.common.blocks.ItemBlockIESlabs;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import flaxbeard.immersivepetroleum.api.energy.FuelHandler;
 import flaxbeard.immersivepetroleum.api.event.SchematicPlaceBlockPostEvent;
 import flaxbeard.immersivepetroleum.api.event.SchematicRenderBlockEvent;
+import flaxbeard.immersivepetroleum.common.IPContent;
+import flaxbeard.immersivepetroleum.common.blocks.ItemBlockIPBase;
+import flaxbeard.immersivepetroleum.common.blocks.metal.BlockTypes_Dummy;
 import flaxbeard.immersivepetroleum.common.entity.EntitySpeedboat;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -35,13 +48,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
+import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIISlabs;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 
 public class ImmersivePetroleumHelper extends IICompatModule
 {
@@ -79,8 +95,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 			Fluid[] a = map.keySet().stream().map(FluidRegistry::getFluid).toArray(Fluid[]::new);
 			motorboatAmountTick1.setAccessible(false);
 			VehicleFuelHandler.addVehicle(EntitySpeedboat.class, a);
-		}
-		catch(NoSuchFieldException|IllegalAccessException ignored)
+		} catch(NoSuchFieldException|IllegalAccessException ignored)
 		{
 			IILogger.info("Failed to add IP Motorboat fuel station compat!");
 		}
@@ -105,13 +120,57 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		ItemStack stack = event.getItemStack();
 
 		if(mb instanceof MultiblockStuctureBase)
-		{
-			if(stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock()==IEContent.blockConveyor)
+			if(stack.getItem() instanceof ItemBlockIESlabs||stack.getItem() instanceof ItemBlockIISlabs)
 			{
-				((MultiblockStuctureBase<?>)mb).renderConveyor(stack);
+				Block block = ((ItemBlock)stack.getItem()).getBlock();
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(0.5f, 0.5f, 0.5f);
+				GlStateManager.translate(-0.5f, -0.5f, 0.5f);
+				GlStateManager.enableBlend();
+				IIAnimationUtils.getBRD().renderBlockBrightness(block.getStateFromMeta(stack.getMetadata()), 1f);
+				GlStateManager.popMatrix();
 				event.setCanceled(true);
 			}
-		}
+			else if(stack.getItem() instanceof ItemBlockIPBase&&((ItemBlockIPBase)stack.getItem()).getBlock()==IPContent.blockDummy)
+			{
+				switch((BlockTypes_Dummy)IPContent.blockDummy.enumValues[stack.getItemDamage()])
+				{
+					case CONVEYOR:
+					{
+						GlStateManager.pushMatrix();
+
+						Tuple<ResourceLocation, EnumFacing> entry = ((MultiblockStuctureBase<?>)mb).getConveyorKey(event.getH(), event.getL(), event.getW(), EnumFacing.SOUTH);
+						EnumFacing facing = entry.getSecond();
+						IConveyorBelt conv = ConveyorHandler.functionRegistry.get(entry.getFirst()).apply(null);
+
+						Tessellator tessellator = Tessellator.getInstance();
+						BufferBuilder buf = tessellator.getBuffer();
+						List<BakedQuad> quads = ModelConveyor.getBaseConveyor(facing, 1, new Matrix4(facing), ConveyorDirection.HORIZONTAL,
+								ClientUtils.getSprite(conv.getActiveTexture()), new boolean[]{true, true}, new boolean[]{true, true}, null, 0);
+
+						quads = conv.modifyQuads(quads, null, facing);
+						GlStateManager.color(1f, 1f, 1f, 0.2f);
+						GlStateManager.scale(0.5, 0.5, 0.5);
+						GlStateManager.translate(-0.5, -0.5, -0.5);
+
+						for(BakedQuad bakedquad : quads)
+						{
+							GlStateManager.enableBlend();
+							buf.begin(7, DefaultVertexFormats.ITEM);
+							buf.addVertexData(bakedquad.getVertexData());
+							Vec3i vec3i = bakedquad.getFace().getDirectionVec();
+							buf.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
+							tessellator.draw();
+						}
+
+						GlStateManager.popMatrix();
+
+						event.setCanceled(true);
+					}
+					case PIPE:
+						break;
+				}
+			}
 	}
 
 	@SubscribeEvent
@@ -135,25 +194,6 @@ public class ImmersivePetroleumHelper extends IICompatModule
 					rl = key.getFirst();
 					facing = key.getSecond();
 				}
-				else
-					switch(mb.getUniqueName())
-					{
-						case "II:ConveyorScanner":
-							rl = new ResourceLocation(ImmersiveEngineering.MODID+":covered");
-							break;
-						case "II:Packer":
-							if(event.getH()==0)
-								rl = new ResourceLocation(ImmersiveEngineering.MODID+":covered");
-							else
-							{
-								rl = new ResourceLocation(ImmersiveEngineering.MODID+":conveyor");
-								facing = event.getRotate().rotateYCCW();
-							}
-							break;
-						default:
-
-							break;
-					}
 
 				if(rl==null)
 					rl = new ResourceLocation("immersiveengineering", "conveyor");

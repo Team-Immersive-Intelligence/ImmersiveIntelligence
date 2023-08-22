@@ -1,16 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -34,17 +31,15 @@ public class MultiblockPrintingPress extends MultiblockStuctureBase<TileEntityPr
 	}
 
 	@Override
-	protected void addBlockEvent(World world, BlockPos pos)
+	protected BlockIIMultiblock<?> getBlock()
 	{
-		world.addBlockEvent(pos, IIContent.blockMetalMultiblock0, 255, 0);
+		return IIContent.blockMetalMultiblock0;
 	}
 
-	@Nullable
 	@Override
-	protected TileEntityPrintingPress placeTile(World world, BlockPos pos)
+	protected int getMeta()
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock0.getStateFromMeta(MetalMultiblocks0.PRINTING_PRESS.getMeta()));
-		return (TileEntityPrintingPress)world.getTileEntity(pos);
+		return MetalMultiblocks0.PRINTING_PRESS.getMeta();
 	}
 
 	@Override

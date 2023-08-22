@@ -18,12 +18,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonStreamParser;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
@@ -40,6 +42,7 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.AxisAlignedFacingBB;
@@ -315,10 +318,21 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		return true;
 	}
 
-	protected abstract void addBlockEvent(World world, BlockPos pos);
+	protected abstract BlockIIMultiblock<?> getBlock();
+
+	protected abstract int getMeta();
+
+	protected void addBlockEvent(World world, BlockPos pos)
+	{
+		world.addBlockEvent(pos, getBlock(), 255, 0);
+	}
 
 	@Nullable
-	protected abstract T placeTile(World world, BlockPos pos);
+	protected T placeTile(World world, BlockPos pos)
+	{
+		world.setBlockState(pos, getBlock().getStateFromMeta(getMeta()));
+		return (T)world.getTileEntity(pos);
+	}
 
 	@Override
 	public ItemStack[][][] getStructureManual()
@@ -340,7 +354,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			renderConveyor(stack);
 			return true;
 		}
-
 		return false;
 	}
 
@@ -354,7 +367,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	{
 		GlStateManager.pushMatrix();
 
-		Tuple<ResourceLocation, EnumFacing> entry = getConveyorKey(stack, EnumFacing.NORTH);
+		Tuple<ResourceLocation, EnumFacing> entry = getConveyorKey(stack, EnumFacing.WEST);
 		EnumFacing facing = entry.getSecond();
 		IConveyorBelt conv = ConveyorHandler.functionRegistry.get(entry.getFirst()).apply(null);
 
@@ -391,6 +404,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			te = getMBInstance();
 			te.facing = EnumFacing.NORTH;
 			tesr = TileEntityRendererDispatcher.instance.getRenderer(te);
+			if(tesr instanceof IIMultiblockRenderer)
+				((IIMultiblockRenderer)tesr).setFastMultiblockState(this, getBlock().getStateFromMeta(getMeta()));
 		}
 
 		if(tesr==null)
@@ -398,14 +413,32 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 		GlStateManager.pushMatrix();
 		tesr.render(te,
-				size.getX()/2f-offset.getX(),
-				size.getY()/2f-offset.getY(),
-				size.getZ()/2f-offset.getZ(),
+				Math.floor(size.getX()/2f)-offset.getX()+1,
+				offset.getY(),
+				Math.floor(size.getZ()/2f)-offset.getZ()-(size.getZ()%2==1?0: 1),
 				0, 0, 0);
 		GlStateManager.popMatrix();
 	}
 
 	protected abstract T getMBInstance();
+
+	@Override
+	public IBlockState getBlockstateFromStack(int index, ItemStack stack)
+	{
+		/*int blocksPerLevel = size.getY()*size.getZ();
+		// dist = target position - current position
+		int distH = (index/blocksPerLevel);
+		int distL = (index%blocksPerLevel/size.getZ());
+		int distW = (index%size.getZ());*/
+
+		if(!stack.isEmpty()&&stack.getItem() instanceof ItemBlock)
+		{
+			Block block = ((ItemBlock)stack.getItem()).getBlock();
+			return block.getStateFromMeta(stack.getItemDamage());
+		}
+
+		return null;
+	}
 
 	/**
 	 * Checks state using IngredientStack
@@ -458,28 +491,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 		}
 
 		return new IngredientStack(stack);
-
-		/*
-		if(state.getBlock()==IEContent.blockSheetmetal)
-			return new IngredientStack(Utils.toCamelCase("block_sheetmetal_"+BlockTypes_MetalsAll.values()[meta].getName().toLowerCase(), true));
-		if(state.getBlock()==IEContent.blockSheetmetalSlabs)
-			return new IngredientStack(Utils.toCamelCase("slab_sheetmetal_"+BlockTypes_MetalsAll.values()[meta].getName().toLowerCase(), true));
-		if(state.getBlock()==IIContent.blockSheetmetal)
-			return new IngredientStack(Utils.toCamelCase("block_sheetmetal_"+IIBlockTypes_Metal.values()[meta].getName().toLowerCase(), true));
-		if(state.getBlock()==IIContent.blockSheetmetalSlabs)
-			return new IngredientStack(Utils.toCamelCase("slab_sheetmetal_"+IIBlockTypes_Metal.values()[meta].getName().toLowerCase(), true));
-
-		if(state.getBlock()==IEContent.blockStorage)
-			return new IngredientStack(Utils.toCamelCase("block_"+BlockTypes_MetalsIE.values()[meta].getName().toLowerCase(), true));
-		if(state.getBlock()==IEContent.blockStorageSlabs)
-			return new IngredientStack(Utils.toCamelCase("slab_"+BlockTypes_MetalsIE.values()[meta].getName().toLowerCase(), true));
-		if(state.getBlock()==IIContent.blockMetalStorage)
-			return new IngredientStack(Utils.toCamelCase("block_"+BlockTypes_MetalsIE.values()[meta].getName().toLowerCase(), true));
-		if(state.getBlock()==IIContent.blockMetalSlabs)
-			return new IngredientStack(Utils.toCamelCase("slab_"+BlockTypes_MetalsIE.values()[meta].getName().toLowerCase(), true));
-
-			return new IngredientStack(new ItemStack(state.getBlock(), 1, meta));
-		 */
 	}
 
 	/**

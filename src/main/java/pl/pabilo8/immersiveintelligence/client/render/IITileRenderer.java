@@ -1,9 +1,11 @@
 package pl.pabilo8.immersiveintelligence.client.render;
 
+import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.models.IESmartObjModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
@@ -15,7 +17,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMT;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationCompiledMap;
-import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationUtils;
 
 import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
@@ -38,10 +39,10 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 	{
 		if(shouldNotRender(te))
 			return;
+		//fixes crash on loading
 		if(te!=null&&unCompiled)
 		{
-			//fixes random crash
-			Tuple<IBlockState, IBakedModel> model = IIAnimationUtils.getAnimationBakedModel(te);
+			Tuple<IBlockState, IBakedModel> model = getModelFromBlockState(te);
 			if(model.getSecond() instanceof IESmartObjModel)
 			{
 				nullifyModels();
@@ -69,6 +70,26 @@ public abstract class IITileRenderer<T extends TileEntity> extends TileEntitySpe
 
 		GlStateManager.cullFace(CullFace.BACK);
 		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public final void renderTileEntityFast(T te, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder buffer)
+	{
+
+	}
+
+	protected Tuple<IBlockState, IBakedModel> getModelFromBlockState(T te)
+	{
+		if(!te.hasWorld())
+			return null;
+
+		//Grab model + dynamic render state
+		final BlockRendererDispatcher blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
+		IBlockState state = te.getWorld().getBlockState(te.getPos());
+
+		state = state.getBlock().getActualState(state, te.getWorld(), te.getPos());
+		state = state.withProperty(IEProperties.DYNAMICRENDER, true);
+		return new Tuple<>(state, blockRenderer.getBlockModelShapes().getModelForState(state));
 	}
 
 	/**
