@@ -1,1 +1,0 @@
-echo F|xcopy /Y "build\libs\immersiveintelligence-0.2.0-core.jar" "run\mods\immersiveintelligence-0.2.0-core.jar"

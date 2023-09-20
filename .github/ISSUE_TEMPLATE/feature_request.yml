@@ -1,0 +1,65 @@
+name: Feature Request
+description: Request a New Feature
+title: "[Feature Request]: "
+labels: ["Feature"]
+projects: ["Team-Immersive-Intelligence/1"]
+assignees:
+  - CarverBot
+body:
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Initial Check
+      description: Before you submit this issue, please check if someone hasn't already requested this feature. In that case, if you have any additional thoughts on what already has been requested, include them in a comment there to avoid duplication.
+      options:
+        - label: I have checked the existing issues and this one is not a duplicate
+          required: true
+
+  - type: dropdown
+    id: core
+    attributes:
+      label: Core Category
+      description: Select the Core Category this feature should be included in. If it doesn't match any of the categories, make sure Immersive Intelligence is the addon that needs this feature.
+      options:
+        - 📻Data and Electronics
+        - 💣Warfare
+        - 📦Logistics
+        - 🕵️‍♂️Intelligence
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Feature Category
+      description: Select the Sub-Category that matches this feature the best
+      options:
+        - 🧱Multiblocks
+        - 📻Smaller Devices
+        - 🧰Items
+        - ✈Vehicles
+        - 🙋‍♂️Hanses
+        - 🧩Compat
+        - 📗Manual
+        - 🧊Rendering
+        - 🔑Utility
+      default: 0
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Description
+      description: |
+        Describe what do you want to add, how it will work, for what price and who's ~~@Pabilo8~~ gonna do all the coding.
+      placeholder: Floating Arithmetical Rotato Device(tm) could greatly benefit II's Data category, due to its rotation and maths and floatingness abilities.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: To Reproduce
+      description: If you have something more about the idea, that's the place to go. If not, leave this empty ^^.
+    validations:
+      required: false

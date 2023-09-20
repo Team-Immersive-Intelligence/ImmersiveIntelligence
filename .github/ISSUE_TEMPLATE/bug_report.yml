@@ -1,0 +1,147 @@
+name: Bug Report
+description: Create a Bug Report
+title: "[Bug]: "
+labels: ["Bug"]
+projects: ["Team-Immersive-Intelligence/1"]
+assignees:
+  - CarverBot
+body:
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Initial Check
+      description: Before you submit this issue, please check previously reported and fixed issues to avoid duplication.
+      options:
+        - label: I have checked the existing issues and this one is not a duplicate
+          required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Category
+      description: Select the category that matches this bug the best
+      options:
+        - 🧱Multiblocks
+        - 📻Smaller Devices
+        - 🧰Items
+        - ✈Vehicles
+        - 🙋‍♂️Hanses
+        - 🧩Compat
+        - 📗Manual
+        - 🧊Rendering
+        - 🔑Utility
+      default: 0
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Description
+      description: |
+        A clear description of what the bug is.
+        
+        Tip: You can attach screenshots by dragging and dropping files into the text area.
+      placeholder: The device started rotating spontaneously, AGAIN.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: side
+    attributes:
+      label: Side
+      description: Select side this bug occurs on. Allows selecting both options.
+      multiple: true
+      options:
+        - Client
+        - Server
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Place a block
+        2. Wait for the block to do things
+        3. See the block doing its things
+        4. Actually it doesn't
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: Expected Behaviour
+      description: A clear description of what you expected to happen. Skip if very obvious.
+      placeholder: The rotating device shouldn't rotate... it just shouldn't do that!
+    validations:
+      required: true
+
+  - type: input
+    id: log
+    attributes:
+      label: Logs
+      description: |
+        If the bug caused a crash or produced some visible evidence in the logs, upload them to [mclo.gs](https://mclo.gs/) and paste a link here. 
+        MCLO.GS is a log upload platform, that makes them convenient to view. 
+
+  - type: textarea
+    id: other-evidence
+    attributes:
+      label: Other Evidence
+      description: |
+        If you have any images or other evidence that would help identify the bug, include them as well.
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: Select your Operating System.
+      options:
+        - Windows 10 or newer
+        - Older Windows versions
+        - Linux
+        - MacOS
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mc-version
+    attributes:
+      label: Minecraft Version
+      description: Select your Minecraft Version.
+      options:
+        - 1.12.2
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mod-version
+    attributes:
+      label: Immersive Intelligence Version
+      description: Select Immersive Intelligence version.
+      options:
+        - 0.3.0 (Recent Dev Build)
+        - 0.3.0 (dev or other experimental branch)
+        - 0.2.2 and older
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ie-version
+    attributes:
+      label: Immersive Engineering Version
+      description: |
+        Select Immersive Engineering version. 
+        If you're using an older version, the mod may not work correctly. In that case, please check if the bug you're reporting occurs in a recent version of IE.
+      options:
+        - 0.98
+        - 0.92
+      default: 0
+    validations:
+      required: true
