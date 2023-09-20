@@ -412,8 +412,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void fireGun(int i)
 	{
-		double yawFireAngle = Math.toRadians(180-turretYaw);
-		double yawPitchAngle = Math.toRadians(-(-90-turretPitch));
+		double yawFireAngle = Math.toRadians(-turretYaw>180 ? 180f+turretYaw : 180f-turretYaw);
+		double yawPitchAngle = Math.toRadians(turretPitch+90);
 
 		Vec3d gunEnd = IIUtils.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
 		Vec3d gunVec = gunEnd.normalize();
