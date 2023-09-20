@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -113,8 +114,8 @@ public class IIManualDataCallback extends IIManualObject
 					IIUtils.getItalicString(name)
 			));
 
-			lines.add(label);
-			lines.add("Returns: "+IIUtils.getItalicString(returns));
+			lines.add(TextFormatting.GRAY+label);
+			lines.add(I18n.format("ie.manual.entry.callback_returns")+" "+TextFormatting.GRAY+IIUtils.getItalicString(returns));
 
 			return lines;
 		}

@@ -41,7 +41,7 @@ public class IIManualDataVariable extends IIManualObject
 	/**
 	 * Name and basic description of this variable
 	 */
-	String letter, name, description;
+	String letter, name, description, value;
 	/**
 	 * Used for variables that have a list of permitted values.<br>
 	 * Formatted as Name - Description
@@ -77,6 +77,8 @@ public class IIManualDataVariable extends IIManualObject
 		dataSource.checkSetString("description", s -> description = s, "");
 		dataSource.checkSetString("direction", b -> inputVariable = b.equals("out"), "in");
 
+		value = null;
+		values = null;
 		if(dataSource.hasKey("values"))
 		{
 			values = new HashMap<>();
@@ -89,7 +91,7 @@ public class IIManualDataVariable extends IIManualObject
 			);
 		}
 		else
-			values = null;
+			dataSource.checkSetString("value", v -> value = v);
 
 		if(dataSource.hasKey("requirements"))
 		{
@@ -173,16 +175,18 @@ public class IIManualDataVariable extends IIManualObject
 			if(values!=null)
 			{
 				lines.add("");
-				lines.add("Allowed Values:");
+				lines.add(I18n.format("ie.manual.entry.allowed_values"));
 				values.forEach((key, value) -> lines.addAll(manual.fontRenderer.listFormattedStringToWidth(
 						TextFormatting.BOLD+" > "+key+TextFormatting.RESET+TextFormatting.GRAY+" - "+value,
 						160)));
 			}
+			else if(value!=null)
+				lines.add(I18n.format("ie.manual.entry.allowed_value")+" "+TextFormatting.GRAY+value);
 
 			if(requirements!=null)
 			{
 				lines.add("");
-				lines.add("Required Variables:");
+				lines.add(I18n.format("ie.manual.entry.required_variables"));
 				requirements.forEach((key, value) -> lines.addAll(manual.fontRenderer.listFormattedStringToWidth(
 						TextFormatting.BOLD+" > "+key+TextFormatting.RESET+" = ["+TextFormatting.GRAY+value+TextFormatting.RESET+"]",
 						160)));

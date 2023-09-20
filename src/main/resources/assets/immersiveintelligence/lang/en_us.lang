@@ -1592,6 +1592,11 @@ ie.manual.entry.variables_input=Input Variables:
 ie.manual.entry.variables_output=Output Variables:
 ie.manual.entry.variables_callback=Callback Variables:
 
+ie.manual.entry.allowed_values=Allowed Values:
+ie.manual.entry.allowed_value=Allowed Value:
+ie.manual.entry.required_variables=Required Variables:
+ie.manual.entry.callback_returns=Returns:
+
 ie.manual.entry.filler.name=Filler
 ie.manual.entry.filler.subtext=Churning all the dusts
 ie.manual.entry.filler0=The filler is a device used to fill containers with dust. It's most important purpose is filling bullet casings with gunpowder. To form the filler, use a hammer on the middle conveyor block.

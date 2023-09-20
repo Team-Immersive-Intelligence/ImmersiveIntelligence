@@ -1,12 +1,12 @@
 # meta
 Binoculars
-To see the fat lady sing
+The Ballerina Onlooker
 
 # 0
 Information is best gather when the observed target don't notice your activity, for when a target don't know that they are observed they will act natural.
 
 This can be done in a variety of ways, one being infiltration and espionage on a more personal level.
-But the far safest option is observation from a far.
+But the safest option of them all is observation from afar.
 
 # 1
 |[crafting]{source:"crafting_binoculars"}|
