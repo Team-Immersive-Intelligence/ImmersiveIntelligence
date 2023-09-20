@@ -214,6 +214,11 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 		super.aimAt(yaw, MathHelper.clamp(pitch, -15, 20));
 	}
 
+	public void aimAtUnrestricted(float yaw, float pitch)
+	{
+		super.aimAt(yaw, pitch);
+	}
+
 	@Override
 	public void init(TileEntityEmplacement te, boolean firstTime)
 	{
