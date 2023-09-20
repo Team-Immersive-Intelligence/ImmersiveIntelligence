@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "immersiveintelligence:items/material/cryptographic_circuit_board"
-  }
-}

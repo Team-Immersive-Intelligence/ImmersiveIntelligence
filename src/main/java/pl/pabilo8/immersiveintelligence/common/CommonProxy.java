@@ -82,7 +82,6 @@ import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.common.ammo.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.cores.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentHMX;
@@ -802,7 +801,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	public void reloadModels()
 	{
-		IIModelRegistry.instance.reloadRegisteredModels();
+
 	}
 
 	public void reloadManual()

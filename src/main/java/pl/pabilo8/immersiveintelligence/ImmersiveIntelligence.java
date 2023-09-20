@@ -11,7 +11,10 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import pl.pabilo8.immersiveintelligence.api.data.radio.RadioNetwork;
-import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.CommonProxy;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
+import pl.pabilo8.immersiveintelligence.common.IISaveData;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.commands.CommandII;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
@@ -101,7 +104,7 @@ public class ImmersiveIntelligence
 
 	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
 	private static final String[] alternativeCerts = {
-			"4e1045a33d925770c5393a384c1a60f63f8f50e5"
+			"4e1045a33d925770c5393a384c1a60f63f8f50e5" //Gabriel
 	};
 
 	@Mod.EventHandler
