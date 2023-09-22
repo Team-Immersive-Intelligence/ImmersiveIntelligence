@@ -8,18 +8,22 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 31-07-2019
  */
-public interface IAmmo
+public interface IAmmo extends IAdvancedTooltipItem
 {
 	/**
 	 * @return Casing Type Name, ie. revolver_1bCal for a Revolver Cartridge
@@ -282,12 +286,13 @@ public interface IAmmo
 
 	/**
 	 * Sets a parameter for the fuse - time in ticks for timed fuse, distance in blocks for proximity fuse
+	 *
 	 * @param stack ammunition stack the value is applied to
-	 * @param p value to be set
+	 * @param p     value to be set
 	 */
 	default void setFuseParameter(ItemStack stack, int p)
 	{
-		ItemNBTHelper.setInt(stack, "fuse_param",p);
+		ItemNBTHelper.setInt(stack, "fuse_param", p);
 	}
 
 	/**
@@ -296,5 +301,18 @@ public interface IAmmo
 	default boolean isProjectile()
 	{
 		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	default void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
+	{
+		IAmmoComponent[] components = getComponents(stack);
+		if(components.length > 0&&ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT))
+			ItemTooltipHandler.drawItemList(offsetX, offsetsY.get(0),
+					Arrays.stream(components)
+							.map(c -> c.getMaterial().getExampleStack())
+							.toArray(ItemStack[]::new)
+			);
 	}
 }

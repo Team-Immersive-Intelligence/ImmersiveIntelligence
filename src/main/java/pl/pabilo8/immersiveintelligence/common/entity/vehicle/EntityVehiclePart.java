@@ -8,7 +8,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 
 import javax.annotation.Nonnull;
@@ -75,7 +75,7 @@ public class EntityVehiclePart extends MultiPartEntityPart implements IAdvancedT
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
 		if(hitbox!=null)
-			hitbox.attackFrom(source,amount);
+			hitbox.attackFrom(source, amount);
 		return false;
 	}
 

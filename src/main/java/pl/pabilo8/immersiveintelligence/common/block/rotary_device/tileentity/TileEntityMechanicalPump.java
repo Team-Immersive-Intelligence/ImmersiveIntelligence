@@ -5,7 +5,10 @@ import blusunrize.immersiveengineering.api.IEEnums.SideConfig;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.fluid.IFluidPipe;
 import blusunrize.immersiveengineering.common.Config.IEConfig;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IConfigurableSides;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHasDummyBlocks;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityFluidPipe;
 import blusunrize.immersiveengineering.common.util.ChatUtils;
@@ -34,9 +37,9 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.MechanicalPump;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
-import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -50,7 +53,7 @@ import java.util.HashMap;
  * @author Pabilo8
  * @since 03.10.2020
  */
-public class TileEntityMechanicalPump extends TileEntityIEBase implements ITickable, IBlockBounds, IHasDummyBlocks, IConfigurableSides, 
+public class TileEntityMechanicalPump extends TileEntityIEBase implements ITickable, IBlockBounds, IHasDummyBlocks, IConfigurableSides,
 		IFluidPipe, IAdvancedTextOverlay, IRotationalEnergyBlock, IDirectionalTile
 {
 	public int[] sideConfig = new int[]{0, -1, -1, -1, -1, -1};
@@ -390,7 +393,6 @@ public class TileEntityMechanicalPump extends TileEntityIEBase implements ITicka
 		return null;
 	}
 
-	
 
 	@Override
 	public void updateRotationStorage(float rpm, float torque, int part)

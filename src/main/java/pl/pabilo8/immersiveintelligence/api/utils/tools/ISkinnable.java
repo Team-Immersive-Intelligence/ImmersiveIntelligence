@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api;
+package pl.pabilo8.immersiveintelligence.api.utils.tools;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
@@ -30,7 +30,8 @@ public interface ISkinnable
 
 	/**
 	 * Applies a skin to the ItemStack
-	 * @param stack of a skinnable item
+	 *
+	 * @param stack    of a skinnable item
 	 * @param skinName skin ID
 	 */
 	default void applySkinnableSkin(ItemStack stack, String skinName)
@@ -41,14 +42,15 @@ public interface ISkinnable
 	/**
 	 * @param skin skin ID
 	 * @return true if skin exists
-	 * @deprecated Replaced by <code>IISkinHandler.isValidSkin()</code>
-	 * @see pl.pabilo8.immersiveintelligence.common.util.IISkinHandler#isValidSkin(String)
 	 * @// TODO: 8/12/2023 Replace all usages of this function with <code>IISkinHandler.isValidSkin()</code>
+	 * @see pl.pabilo8.immersiveintelligence.common.util.IISkinHandler#isValidSkin(String)
+	 * @deprecated Replaced by <code>IISkinHandler.isValidSkin()</code>
 	 */
 	default boolean isValidSkin(String skin)
 	{
 		return !skin.isEmpty()&&IISkinHandler.specialSkins.containsKey(skin);
 	}
+
 	default void addSkinTooltip(@Nonnull ItemStack stack, @Nonnull List<String> tooltip)
 	{
 		String skin = getSkinnableCurrentSkin(stack);
@@ -61,7 +63,6 @@ public interface ISkinnable
 	}
 
 	/**
-	 *
 	 * @param stack Itemstack to get skin from
 	 * @return Skin rarity if found otherwise <code>null</code>
 	 */

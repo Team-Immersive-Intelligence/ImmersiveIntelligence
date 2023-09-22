@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.ISkinnable;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 
@@ -110,25 +110,25 @@ public class RecipeSkinCraftingHandler extends net.minecraftforge.registries.IFo
 			}
 
 			boolean result = !manual.isEmpty()&&skinnable!=null;
-			if (result)
+			if(result)
 			{
 				String sessionID = Minecraft.getMinecraft().getSession().getSessionID(); // Result: token:FML:X where X is the UUID
 				String uuid = sessionID.substring(sessionID.lastIndexOf(':')+1), skinName = ItemNBTHelper.getString(manual, "lastSkin");
-				if (IISkinHandler.isValidSkin(skinName))
+				if(IISkinHandler.isValidSkin(skinName))
 				{
 					IISpecialSkin skin = IISkinHandler.getSkin(skinName);
 					boolean eligible = false, doesApply = skin.doesApply(skinnable.getSkinnableName());
 
-					for (String id : skin.uuid)
+					for(String id : skin.uuid)
 					{
-						if (id.replace("-", "").equals(uuid))
+						if(id.replace("-", "").equals(uuid))
 						{
 							eligible = true;
 							break;
 						}
 					}
 
-					if (!eligible||!doesApply) return false;
+					if(!eligible||!doesApply) return false;
 				}
 				else
 				{

@@ -18,6 +18,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -38,7 +40,7 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride
+public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride, IAdvancedTooltipItem
 {
 	private final ResLoc magazineTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/");
 	private final ResLoc bulletTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/common/bullet");
@@ -48,6 +50,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 	{
 		super("bullet_magazine", 1, Magazines.values());
 	}
+
 
 	@GeneratedItemModels(itemName = "bullet_magazine", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
 	public enum Magazines implements IIItemEnum
@@ -141,6 +144,15 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(2)).getDisplayName());
 		if(ItemNBTHelper.getTag(stack).hasKey("bullet3"))
 			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(3)).getDisplayName());
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
+	{
+		if(!hasNoBullets(stack))
+			ItemTooltipHandler.drawItemList(offsetX, offsetsY.get(0),
+					ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", 10));
 	}
 
 	//--- ITextureOverride ---//

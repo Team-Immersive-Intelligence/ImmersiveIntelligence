@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.utils;
+package pl.pabilo8.immersiveintelligence.api.utils.tools;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

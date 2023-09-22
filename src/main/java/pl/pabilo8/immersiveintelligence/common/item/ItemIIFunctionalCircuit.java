@@ -1,7 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.item;
 
+import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -10,9 +13,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
+import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
+import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -30,7 +39,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 25-06-2019
  */
-public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implements IDataStorageItem
+public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implements IDataStorageItem, IAdvancedTooltipItem
 {
 	public ItemIIFunctionalCircuit()
 	{
@@ -194,12 +203,57 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> tooltip, @Nonnull ITooltipFlag flag)
 	{
-		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"functional_circuit_shift", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"functional_circuit_shift", tooltip))
 		{
 			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"functional_circuit"));
 			getOperationsList(stack).stream()
 					.map(s -> "   "+I18n.format(IILib.DATA_KEY+"function."+s))
 					.forEach(tooltip::add);
+		}
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"functional_circuit_ctrl", tooltip))
+		{
+			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"functional_circuit_data"));
+			for(IDataType type : getStoredData(stack))
+				if(type instanceof DataTypeExpression)
+					tooltip.add("   "+I18n.format(IILib.DATA_KEY+"function."+((DataTypeExpression)type).getOperation().name));
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
+	{
+		//Display all the operations
+		GlStateManager.translate(offsetX, offsetsY.get(0), 700);
+		GlStateManager.scale(.5f, .5f, 1);
+
+		if(ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT))
+		{
+			CircuitTypes circuit = IIContent.itemCircuit.stackToSub(stack).tier;
+			List<String> operationsList = IIContent.itemCircuit.getOperationsList(stack);
+			
+			int i = 0;
+			for(String op : operationsList)
+			{
+				IDataType type = DataPacket.getVarInstance(DataOperations.getOperationInstance(op).expectedResult);
+				GlStateManager.color(1f, 1f, 1f, 1f);
+				ClientUtils.bindTexture(type.textureLocation());
+				Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
+				i++;
+			}
+		}
+		if(ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LCONTROL))
+		{
+			int i = 0;
+			for(IDataType type : getStoredData(stack))
+				if(type instanceof DataTypeExpression)
+				{
+					IDataType operation = DataPacket.getVarInstance(((DataTypeExpression)type).getOperation().expectedResult);
+					GlStateManager.color(1f, 1f, 1f, 1f);
+					ClientUtils.bindTexture(operation.textureLocation());
+					Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
+					i++;
+				}
 		}
 	}
 

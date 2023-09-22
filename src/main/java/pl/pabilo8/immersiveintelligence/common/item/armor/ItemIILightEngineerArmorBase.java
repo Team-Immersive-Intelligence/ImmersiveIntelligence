@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.IAcidProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler.ICorrosionProtectionEquipment;
-import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.utils.armor.IRadiationProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 

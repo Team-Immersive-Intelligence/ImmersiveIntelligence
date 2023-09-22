@@ -16,7 +16,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.api.utils.IGasmask;
+import pl.pabilo8.immersiveintelligence.api.utils.armor.IGasmask;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 
 import java.util.List;

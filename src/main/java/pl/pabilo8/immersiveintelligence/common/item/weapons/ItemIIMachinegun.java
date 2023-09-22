@@ -37,12 +37,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 
@@ -93,11 +94,11 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 
 		if(getUpgrades(stack).hasKey("second_magazine"))
 		{
-			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"weapon.magazine1", tooltip))
+			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"weapon.magazine1", tooltip))
 				IIContent.itemBulletMagazine.addInformation(
 						ItemNBTHelper.getItemStack(stack, "magazine1")
 						, world, tooltip, flag);
-			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"weapon.magazine2", tooltip))
+			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"weapon.magazine2", tooltip))
 				IIContent.itemBulletMagazine.addInformation(
 						ItemNBTHelper.getItemStack(stack, "magazine2"),
 						world, tooltip, flag);

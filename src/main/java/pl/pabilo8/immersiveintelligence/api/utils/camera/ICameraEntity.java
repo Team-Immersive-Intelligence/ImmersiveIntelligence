@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.utils;
+package pl.pabilo8.immersiveintelligence.api.utils.camera;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface ICameraEntity
 {
 	/**
-	 *
 	 * @param cameraPlayer client player
 	 * @param partialTicks partial ticks when rendering
 	 * @return camera pitch angle
@@ -21,7 +20,6 @@ public interface ICameraEntity
 	float getCameraPitch(EntityPlayer cameraPlayer, float partialTicks);
 
 	/**
-	 *
 	 * @param cameraPlayer client player
 	 * @param partialTicks partial ticks when rendering
 	 * @return camera yaw angle
@@ -29,7 +27,6 @@ public interface ICameraEntity
 	float getCameraYaw(EntityPlayer cameraPlayer, float partialTicks);
 
 	/**
-	 *
 	 * @param cameraPlayer client player
 	 * @param partialTicks partial ticks when rendering
 	 * @return camera position (absolute)

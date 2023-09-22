@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.utils;
+package pl.pabilo8.immersiveintelligence.api.utils.minecart;
 
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;

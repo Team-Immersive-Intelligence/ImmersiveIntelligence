@@ -15,21 +15,25 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Pabilo8
  * @since 25-06-2019
  */
-public class ItemIIAssemblyScheme extends ItemIIBase
+public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltipItem
 {
+	private static final String descriptionKey = IILib.DESCRIPTION_KEY+"assembly_scheme.";
+
 	public ItemIIAssemblyScheme()
 	{
 		super("assembly_scheme", 8);
@@ -44,32 +48,52 @@ public class ItemIIAssemblyScheme extends ItemIIBase
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
 		ItemStack s = ItemNBTHelper.getItemStack(stack, "recipeItem");
-		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.used_to_create",
+		tooltip.add(I18n.format(descriptionKey+"used_to_create",
 				TextFormatting.GOLD+s.getDisplayName()
-				+(s.getCount() > 1?TextFormatting.GRAY+" x "+TextFormatting.GOLD+s.getCount(): "")));
-		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.items_created",
+						+(s.getCount() > 1?TextFormatting.GRAY+" x "+TextFormatting.GOLD+s.getCount(): "")));
+		tooltip.add(I18n.format(descriptionKey+"items_created",
 				TextFormatting.GOLD+String.valueOf(ItemNBTHelper.getInt(stack, "createdItems"))));
 
 		PrecissionAssemblerRecipe recipe = getRecipeForStack(stack);
-		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT,
-				IILib.DESCRIPTION_KEY+"assembly_scheme.info_hold1", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT,
+				descriptionKey+"info_hold1", tooltip))
 		{
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1],I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.materials")));
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1], I18n.format(descriptionKey+"materials")));
 			if(recipe!=null)
 				for(IngredientStack ingredient : recipe.inputs)
 					tooltip.add("   "+TextFormatting.GOLD+ingredient.getExampleStack().getDisplayName()+(
 							ingredient.inputSize > 1?
 									TextFormatting.GRAY+" x "+TextFormatting.GOLD+ingredient.inputSize: ""));
 		}
-		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"assembly_scheme.info_hold2", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, descriptionKey+"info_hold2", tooltip))
 		{
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0],
-					I18n.format(IILib.DESCRIPTION_KEY+"assembly_scheme.tools")));
+			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], I18n.format(descriptionKey+"tools")));
 			if(recipe!=null)
 				for(String tool : recipe.tools)
 					tooltip.add("   "+TextFormatting.GOLD+PrecissionAssemblerRecipe.getExampleToolStack(tool).getDisplayName());
 		}
 	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
+	{
+		PrecissionAssemblerRecipe recipe = getRecipeForStack(stack);
+		if(recipe==null)
+			return;
+
+		boolean upper = ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT);
+		if(upper)
+			ItemTooltipHandler.drawItemList(offsetX, offsetsY.get(0),
+					Arrays.stream(recipe.inputs).map(IngredientStack::getExampleStack).toArray(ItemStack[]::new));
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, "", null))
+			ItemTooltipHandler.drawItemList(offsetX, offsetsY.get(upper?1: 0),
+					Arrays.stream(recipe.tools)
+							.map(PrecissionAssemblerRecipe::getExampleToolStack)
+							.toArray(ItemStack[]::new)
+			);
+	}
+
 
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)

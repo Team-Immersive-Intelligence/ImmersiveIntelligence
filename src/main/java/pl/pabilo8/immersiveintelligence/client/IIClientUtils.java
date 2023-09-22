@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsIE;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -40,6 +40,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
@@ -297,54 +298,10 @@ public class IIClientUtils
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static boolean addExpandableTooltip(int key, String message, @Nullable List<String> tooltip)
-	{
-		String keyName;
-		String keyColor;
-		switch(key)
-		{
-			case Keyboard.KEY_LCONTROL:
-				if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
-					return true;
-				keyName = IILib.DESC_HOLD_CTRL;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[0];
-				break;
-			case Keyboard.KEY_LSHIFT:
-				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-					return true;
-				keyName = IILib.DESC_HOLD_SHIFT;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[1];
-				break;
-			case Keyboard.KEY_LMENU:
-				if(Keyboard.isKeyDown(Keyboard.KEY_LMENU)||Keyboard.isKeyDown(Keyboard.KEY_RMENU))
-					return true;
-				keyName = IILib.DESC_HOLD_ALT;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[2];
-				break;
-			case Keyboard.KEY_TAB:
-				if(Keyboard.isKeyDown(key))
-					return true;
-				keyName = IILib.DESC_HOLD_TAB;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[3];
-				break;
-			default:
-				return true;
-		}
-
-		//format the "button icon"
-		String buttonIcon = I18n.format(keyName)
-				.replace("[", "<hexcol="+keyColor+":[")
-				.replace("]", "]>")+TextFormatting.GRAY;
-		//add the tooltip
-		if(tooltip!=null)
-			tooltip.add(I18n.format(message, buttonIcon));
-		return false;
-	}
-
 	public static void createAmmoTooltip(IAmmo ammo, ItemStack stack, @Nullable World worldIn, List<String> tooltip)
 	{
 		tooltip.add(getFormattedBulletTypeName(ammo, stack));
-		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
 		{
 			//get parameters
 			EnumFuseTypes fuse = ammo.getFuseType(stack);
@@ -387,7 +344,7 @@ public class IIClientUtils
 			}
 		}
 
-		if(ammo.isProjectile()&&!ammo.isBulletCore(stack)&&IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
+		if(ammo.isProjectile()&&!ammo.isBulletCore(stack)&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
 		{
 			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], "Performance:"));
 			tooltip.add(String.format("\u2295 "+"Damage Dealt: %s", ammo.getDamage()));

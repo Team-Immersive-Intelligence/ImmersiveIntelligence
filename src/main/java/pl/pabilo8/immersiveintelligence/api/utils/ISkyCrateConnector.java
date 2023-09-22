@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api;
+package pl.pabilo8.immersiveintelligence.api.utils;
 
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
