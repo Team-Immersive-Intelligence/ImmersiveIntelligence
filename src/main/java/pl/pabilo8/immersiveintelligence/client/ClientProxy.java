@@ -8,18 +8,12 @@ import blusunrize.immersiveengineering.client.IEDefaultColourHandlers;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
 import blusunrize.immersiveengineering.client.render.EntityRenderNone;
 import blusunrize.immersiveengineering.common.Config;
-import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IColouredBlock;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IColouredItem;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
-import blusunrize.lib.manual.IManualPage;
-import blusunrize.lib.manual.ManualInstance;
-import blusunrize.lib.manual.ManualInstance.ManualEntry;
-import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,7 +34,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -49,7 +42,6 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -69,7 +61,6 @@ import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.gui.block.GuiUpgrade;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.categories.*;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup;
 import pl.pabilo8.immersiveintelligence.client.model.item.ModelMeasuringCup.MeasuringCupModelLoader;
@@ -137,9 +128,6 @@ import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Ma
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIINavalMine;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIDrillHead.DrillHeads;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
-import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -158,27 +146,7 @@ import java.util.Map.Entry;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ImmersiveIntelligence.MODID)
 public class ClientProxy extends CommonProxy
 {
-	IKeyConflictContext passenger_action = new IKeyConflictContext()
-	{
-		@Override
-		public boolean isActive()
-		{
-			return KeyConflictContext.IN_GAME.isActive();
-		}
-
-		@Override
-		public boolean conflicts(IKeyConflictContext other)
-		{
-			return other==KeyConflictContext.IN_GAME&&other!=this;
-		}
-	};
-
-	public static KeyBinding keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
-	public static KeyBinding keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
-	public static KeyBinding keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
-	public static KeyBinding keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
-	public static KeyBinding keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
-	public static KeyBinding keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
+	public static KeyBinding keybind_manualReload, keybind_armorHelmet, keybind_armorExosuit, keybind_zoom, keybind_motorbikeEngine, keybind_motorbikeTowing;
 	public static MechanicalConnectorRenderer mech_con_renderer;
 	public NBTTagCompound storedGuiData = new NBTTagCompound();
 
@@ -190,7 +158,6 @@ public class ClientProxy extends CommonProxy
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent evt)
 	{
-
 		//You've tricked me
 		//I thought the connector rendering is based on something different, but actually it renders the obj connector model with the wire
 		WireApi.registerConnectorForRender("empty", new ResourceLocation(ImmersiveIntelligence.MODID+":block/empty.obj"), null);
@@ -396,6 +363,7 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemMotorBelt.setRenderModels();
 		Config.manual_bool.put("petroleumHere", false);
 
+		//Compat
 		IICompatModule.doModulesClientPreInit();
 	}
 
@@ -476,15 +444,40 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(handler);
 		((IReloadableResourceManager)ClientUtils.mc().getResourceManager()).registerReloadListener(handler);
 
+		//Register fonts
 		IIClientUtils.fontRegular = new IIFontRenderer(new ResourceLocation("textures/font/ascii.png"));
 		IIClientUtils.fontEngineerTimes = new IIFontRendererCustomGlyphs(new ResourceLocation(ImmersiveIntelligence.MODID, "textures/font/engineer_times.png"));
 		IIClientUtils.fontNormung = new IIFontRendererCustomGlyphs(new ResourceLocation(ImmersiveIntelligence.MODID, "textures/font/normung.png"));
 		IIClientUtils.fontKaiser = new IIFontRendererCustomGlyphs(new ResourceLocation(ImmersiveIntelligence.MODID, "textures/font/kaiser_fraktur.png"));
 		IIClientUtils.fontTinkerer = new IIFontRendererCustomGlyphs(new ResourceLocation(ImmersiveIntelligence.MODID, "textures/font/tinkerer.png"));
 
+		//Register Keybindings
+		IKeyConflictContext passenger_action = new IKeyConflictContext()
+		{
+			@Override
+			public boolean isActive()
+			{
+				return KeyConflictContext.IN_GAME.isActive();
+			}
+
+			@Override
+			public boolean conflicts(IKeyConflictContext other)
+			{
+				return other==KeyConflictContext.IN_GAME&&other!=this;
+			}
+		};
+
+		keybind_manualReload = new KeyBinding("key."+ImmersiveIntelligence.MODID+".manualReload", Keyboard.KEY_R, "key.categories.gameplay");
 		keybind_manualReload.setKeyConflictContext(passenger_action);
+
+		keybind_armorHelmet = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorHelmet", Keyboard.KEY_V, "key.categories.gameplay");
+		keybind_armorExosuit = new KeyBinding("key."+ImmersiveIntelligence.MODID+".armorExosuit", Keyboard.KEY_G, "key.categories.gameplay");
+		keybind_zoom = new KeyBinding("key."+ImmersiveIntelligence.MODID+".mgScope", Keyboard.KEY_Z, "key.categories.gameplay");
 		keybind_zoom.setKeyConflictContext(passenger_action);
+
+		keybind_motorbikeEngine = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeEngine", Keyboard.KEY_R, "key.categories.gameplay");
 		keybind_motorbikeEngine.setKeyConflictContext(passenger_action);
+		keybind_motorbikeTowing = new KeyBinding("key."+ImmersiveIntelligence.MODID+".motorbikeTowing", Keyboard.KEY_Z, "key.categories.gameplay");
 		keybind_motorbikeTowing.setKeyConflictContext(passenger_action);
 
 		ClientRegistry.registerKeyBinding(keybind_manualReload);
@@ -495,8 +488,10 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.registerKeyBinding(keybind_armorHelmet);
 		ClientRegistry.registerKeyBinding(keybind_armorExosuit);
 
+		//Register shaders
 		ShaderUtil.init();
 
+		//Register coloured blocks
 		for(Block block : IIContent.BLOCKS)
 			if(block instanceof IColouredBlock&&((IColouredBlock)block).hasCustomBlockColours())
 				ClientUtils.mc().getBlockColors().registerBlockColorHandler(IEDefaultColourHandlers.INSTANCE, block);
@@ -504,6 +499,7 @@ public class ClientProxy extends CommonProxy
 			if(item instanceof IColouredItem&&((IColouredItem)item).hasCustomItemColours())
 				ClientUtils.mc().getItemColors().registerItemColorHandler(IEDefaultColourHandlers.INSTANCE, item);
 
+		//Compat
 		IICompatModule.doModulesClientInit();
 	}
 
@@ -669,6 +665,8 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAluminiumChainFenceGate.class, new FenceGateRenderer<>());
 
 		reloadModels();
+
+		//Compat
 		IICompatModule.doModulesClientPostInit();
 	}
 
@@ -680,64 +678,6 @@ public class ClientProxy extends CommonProxy
 			IITileRenderer<T> tileRenderer = clazz.newInstance();
 			ClientRegistry.bindTileEntitySpecialRenderer(((Class<T>)rt.clazz()), tileRenderer.subscribeToList(rt.name()));
 		} catch(InstantiationException|IllegalAccessException ignored) {}
-	}
-
-	@Override
-	public void onBreakBlock(BreakEvent event)
-	{
-		if(!event.getWorld().isRemote)
-			super.onBreakBlock(event);
-	}
-
-	@SubscribeEvent
-	public static void guiOpen(GuiOpenEvent event)
-	{
-		// TODO: 26.08.2021 investigate
-		if(event.getGui() instanceof GuiManual)
-			IISkinHandler.getManualPages();
-		else if(ClientEventHandler.lastGui instanceof GuiManual)
-		{
-			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
-			String name = null;
-
-			ManualInstance inst = gui.getManual();
-			if(inst!=null)
-			{
-				ManualEntry entry = inst.getEntry(gui.getSelectedEntry());
-				if(entry!=null)
-				{
-					IManualPage page = entry.getPages()[gui.page];
-					if(page instanceof IIManualPageContributorSkin)
-					{
-						name = ((IIManualPageContributorSkin)page).skin.name;
-					}
-				}
-			}
-			EntityPlayer p = ClientUtils.mc().player;
-
-			ItemStack mainItem = p.getHeldItemMainhand();
-			ItemStack offItem = p.getHeldItemOffhand();
-
-			boolean main = !mainItem.isEmpty()&&mainItem.getItem()==IEContent.itemTool&&mainItem.getItemDamage()==3;
-			boolean off = !offItem.isEmpty()&&offItem.getItem()==IEContent.itemTool&&offItem.getItemDamage()==3;
-			ItemStack target = main?mainItem: offItem;
-
-			if(main||off)
-			{
-				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
-
-				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
-				{
-					ItemNBTHelper.remove(target, "lastSkin");
-				}
-				else if(name!=null)
-				{
-					ItemNBTHelper.setString(target, "lastSkin", name);
-				}
-			}
-		}
-
-		ClientEventHandler.lastGui = event.getGui();
 	}
 
 	@Override

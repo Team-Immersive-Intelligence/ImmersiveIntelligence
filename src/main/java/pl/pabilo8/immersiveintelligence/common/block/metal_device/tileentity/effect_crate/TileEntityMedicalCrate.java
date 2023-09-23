@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.*;
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.*;
 
 /**
  * @author Pabilo8

@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPow
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices.rofConversionRatio;
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices.rofConversionRatio;
 
 /**
  * @author Pabilo8

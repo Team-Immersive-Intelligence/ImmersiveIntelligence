@@ -2,7 +2,12 @@ package pl.pabilo8.immersiveintelligence.client;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.lib.manual.IManualPage;
+import blusunrize.lib.manual.ManualInstance;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
+import blusunrize.lib.manual.gui.GuiManual;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.block.state.IBlockState;
@@ -45,11 +50,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.lwjgl.opengl.GLContext;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Graphics;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
@@ -70,6 +75,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayMachine
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayRifle;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlaySubmachinegun;
 import pl.pabilo8.immersiveintelligence.client.gui.tooltip.*;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer;
@@ -94,7 +100,9 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverrid
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -108,6 +116,8 @@ import java.util.function.Predicate;
 import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.blockDamageClient;
 
 /**
+ * Handles events for client side.
+ *
  * @author Pabilo8
  * @since 27-09-2019
  */
@@ -1272,6 +1282,57 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			event.setCanceled(true);
 		}
 
+	}
+
+	@SubscribeEvent
+	public static void guiOpen(GuiOpenEvent event)
+	{
+		// TODO: 26.08.2021 investigate
+		if(event.getGui() instanceof GuiManual)
+			IISkinHandler.getManualPages();
+		else if(ClientEventHandler.lastGui instanceof GuiManual)
+		{
+			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
+			String name = null;
+
+			ManualInstance inst = gui.getManual();
+			if(inst!=null)
+			{
+				ManualEntry entry = inst.getEntry(gui.getSelectedEntry());
+				if(entry!=null)
+				{
+					IManualPage page = entry.getPages()[gui.page];
+					if(page instanceof IIManualPageContributorSkin)
+					{
+						name = ((IIManualPageContributorSkin)page).skin.name;
+					}
+				}
+			}
+			EntityPlayer p = ClientUtils.mc().player;
+
+			ItemStack mainItem = p.getHeldItemMainhand();
+			ItemStack offItem = p.getHeldItemOffhand();
+
+			boolean main = !mainItem.isEmpty()&&mainItem.getItem()==IEContent.itemTool&&mainItem.getItemDamage()==3;
+			boolean off = !offItem.isEmpty()&&offItem.getItem()==IEContent.itemTool&&offItem.getItemDamage()==3;
+			ItemStack target = main?mainItem: offItem;
+
+			if(main||off)
+			{
+				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
+
+				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
+				{
+					ItemNBTHelper.remove(target, "lastSkin");
+				}
+				else if(name!=null)
+				{
+					ItemNBTHelper.setString(target, "lastSkin", name);
+				}
+			}
+		}
+
+		ClientEventHandler.lastGui = event.getGui();
 	}
 
 	@SubscribeEvent

@@ -26,7 +26,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.CO2Collector;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.CO2Collector;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 import javax.annotation.Nullable;

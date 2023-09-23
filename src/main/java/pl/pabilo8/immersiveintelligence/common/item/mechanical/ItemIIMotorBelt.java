@@ -17,7 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.IModelMotorBelt;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorBeltConnector;
@@ -63,11 +64,11 @@ public class ItemIIMotorBelt extends ItemIISubItemsBase<MotorBelt> implements IW
 		public final String category;
 
 		/**
-		 * See {@link pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices#beltMaxTorque}
+		 * See {@link IIConfigHandler.IIConfig.MechanicalDevices#beltMaxTorque}
 		 */
 		public final int maxTorque;
 		/**
-		 * See {@link pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices#beltTorqueLoss}
+		 * See {@link IIConfigHandler.IIConfig.MechanicalDevices#beltTorqueLoss}
 		 */
 		public final float torqueLoss;
 		/**

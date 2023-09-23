@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.client.render.SkyCrateRenderer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -24,8 +25,8 @@ public class ItemIISkycrateMount extends ItemIISubItemsBase<SkycrateMounts> impl
 
 	public enum SkycrateMounts implements IIItemEnum
 	{
-		MECHANICAL(pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.mechEnergy, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.mechSpeed, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.mechSpeed, false),
-		ELECTRIC(0, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.electricEnergy, pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts.electricSpeed, true);
+		MECHANICAL(IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechEnergy, IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechSpeed, IIConfigHandler.IIConfig.Tools.SkycrateMounts.mechSpeed, false),
+		ELECTRIC(0, IIConfigHandler.IIConfig.Tools.SkycrateMounts.electricEnergy, IIConfigHandler.IIConfig.Tools.SkycrateMounts.electricSpeed, true);
 
 		private final float mountEnergy, mountMaxEnergy, electricEnergy;
 		private final boolean isTeslaCharged;
