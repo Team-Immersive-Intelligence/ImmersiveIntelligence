@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -53,13 +53,13 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 		super.initGui();
 
 		//Properties
-		addLabel(43, 40, 115, 0, false, IILib.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_properties")).setCentered();
+		addLabel(43, 40, 115, 0, false, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_properties")).setCentered();
 		//Type:
-		addLabel(61, 24, IILib.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
+		addLabel(61, 24, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
 		//Variable Type
-		addLabel(152-fontRenderer.getStringWidth(I18n.format(IILib.DATA_KEY+"datatype."+dataType.getName())),
+		addLabel(152-fontRenderer.getStringWidth(I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())),
 				24, MathHelper.multiplyColor(dataType.getTypeColour(), 0xcacaca),
-				I18n.format(IILib.DATA_KEY+"datatype."+dataType.getName())
+				I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())
 		);
 
 		//Apply Button

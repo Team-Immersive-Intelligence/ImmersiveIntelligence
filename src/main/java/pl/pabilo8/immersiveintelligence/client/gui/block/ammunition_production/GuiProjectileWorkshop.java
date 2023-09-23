@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
@@ -54,12 +54,12 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 		super.initGui();
 		if(!tile.fillerUpgrade)
 		{
-			addLabel(guiLeft+122, guiTop+5+5, IILib.COLOR_H1, "Core:");
-			addLabel(guiLeft+122, guiTop+5+32-10+5, IILib.COLOR_H1, "Type:");
+			addLabel(guiLeft+122, guiTop+5+5, IIReference.COLOR_H1, "Core:");
+			addLabel(guiLeft+122, guiTop+5+32-10+5, IIReference.COLOR_H1, "Type:");
 
 			String[] cores = Arrays.stream(tile.producedBullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).toArray(String[]::new);
 			typeList = new GuiButtonDropdownList(buttonList.size(), guiLeft+122, guiTop+20+32-8-7, 72, 12, 3, cores);
-			typeList.setTranslationFunc(s -> I18n.format(IILib.DESCRIPTION_KEY+"bullet_core_type."+s));
+			typeList.setTranslationFunc(s -> I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+s));
 			typeList.selectedEntry = Arrays.asList(cores).indexOf(tile.coreType.getName());
 			addButton(typeList);
 
@@ -82,10 +82,10 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 			this.valueEdit.setText(String.valueOf(tile.fillAmount));
 			this.valueEdit.updateCursorCounter();
 
-			addLabel(guiLeft+122, guiTop+5+5+22+11, IILib.COLOR_H1, "Insert Amount:");
+			addLabel(guiLeft+122, guiTop+5+5+22+11, IIReference.COLOR_H1, "Insert Amount:");
 		}
 
-		addLabel(guiLeft+1, guiTop+8, 118, 0, IILib.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.projectile_workshop.name")).setCentered();
+		addLabel(guiLeft+1, guiTop+8, 118, 0, IIReference.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.projectile_workshop.name")).setCentered();
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 				//reset
 				String[] cores = Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).toArray(String[]::new);
 				typeList = new GuiButtonDropdownList(id, guiLeft+122, guiTop+20+32-8-7, 72, 12, 3, cores);
-				typeList.setTranslationFunc(s -> I18n.format(IILib.DESCRIPTION_KEY+"bullet_core_type."+s));
+				typeList.setTranslationFunc(s -> I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+s));
 				typeList.selectedEntry = Math.max(Arrays.asList(cores).indexOf(selectedType), 0);
 				this.buttonList.add(id, typeList);
 
@@ -175,9 +175,9 @@ public class GuiProjectileWorkshop extends GuiAmmunitionBase<TileEntityProjectil
 				IIClientUtils.drawGradientBar(guiLeft+6+44-6, guiTop+20, 2, 16, cc, cc, tile.componentInside.getAmountPercentage());
 
 
-				IIClientUtils.drawStringCentered(fontRenderer, tile.componentInside.getTranslatedName(), guiLeft+122, guiTop+5, 71, 0, IILib.COLOR_H1);
-				fontRenderer.drawString(TextFormatting.ITALIC+I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+component.getRole().getName())+TextFormatting.RESET,
-						guiLeft+122, guiTop+5+11, IILib.COLOR_H2);
+				IIClientUtils.drawStringCentered(fontRenderer, tile.componentInside.getTranslatedName(), guiLeft+122, guiTop+5, 71, 0, IIReference.COLOR_H1);
+				fontRenderer.drawString(TextFormatting.ITALIC+I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+component.getRole().getName())+TextFormatting.RESET,
+						guiLeft+122, guiTop+5+11, IIReference.COLOR_H2);
 			}
 
 			RenderHelper.enableGUIStandardItemLighting();

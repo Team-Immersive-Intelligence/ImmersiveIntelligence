@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDat
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDropdownList;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,7 +89,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 			dropdownLetterPicker = addButton(new GuiButtonDataLetterList(buttonList.size(), x+2, y+2+24+14, true, dataType.getRequiredVariable(), ArrowsAlignment.RIGHT));
 
 			dropdownOperationPicker = addButton(new GuiButtonDropdownList(buttonList.size(), x+2, y+14, width-4, 20, 4, operations.toArray(new String[0])))
-					.setTranslationFunc(s -> I18n.format(IILib.DATA_KEY+"function."+s));
+					.setTranslationFunc(s -> I18n.format(IIReference.DATA_KEY+"function."+s));
 			dropdownOperationPicker.selectedEntry = operations.indexOf(dataType.getOperation().name);
 			dropdownOperationPicker.enabled = !operations.isEmpty();
 		}
@@ -180,8 +180,8 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 	{
 		if(page==0)
 		{
-			mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"operation"), x+2, y+2, IILib.COLOR_H2, false);
-			mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"conditional_variable"), x+2, y+2+24, IILib.COLOR_H2, false);
+			mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"operation"), x+2, y+2, IIReference.COLOR_H2, false);
+			mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"conditional_variable"), x+2, y+2+24, IIReference.COLOR_H2, false);
 		}
 		else
 		{
@@ -191,7 +191,7 @@ public class GuiDataEditorExpression extends GuiDataEditor<DataTypeExpression>
 			for(int i = 0; i < Math.max(width-24, 0); i += 12)
 				drawTexturedModalRect(x+12+i, y, 192, 142, MathHelper.clamp(width-24-i, 0, 12), 12);
 
-			mc.fontRenderer.drawString("Parameter: ", x+2+12, y+2, IILib.COLOR_H2, false);
+			mc.fontRenderer.drawString("Parameter: ", x+2+12, y+2, IIReference.COLOR_H2, false);
 			mc.fontRenderer.drawString(TextFormatting.ITALIC+paramName,
 					x+width-12-(hasTypeSwitch?7: 0)-mc.fontRenderer.getStringWidth(paramName), y+2, paramColor, false);
 

@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltipItem
 {
-	private static final String descriptionKey = IILib.DESCRIPTION_KEY+"assembly_scheme.";
+	private static final String descriptionKey = IIReference.DESCRIPTION_KEY+"assembly_scheme.";
 
 	public ItemIIAssemblyScheme()
 	{
@@ -58,7 +58,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT,
 				descriptionKey+"info_hold1", tooltip))
 		{
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1], I18n.format(descriptionKey+"materials")));
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], I18n.format(descriptionKey+"materials")));
 			if(recipe!=null)
 				for(IngredientStack ingredient : recipe.inputs)
 					tooltip.add("   "+TextFormatting.GOLD+ingredient.getExampleStack().getDisplayName()+(
@@ -67,7 +67,7 @@ public class ItemIIAssemblyScheme extends ItemIIBase implements IAdvancedTooltip
 		}
 		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, descriptionKey+"info_hold2", tooltip))
 		{
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], I18n.format(descriptionKey+"tools")));
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], I18n.format(descriptionKey+"tools")));
 			if(recipe!=null)
 				for(String tool : recipe.tools)
 					tooltip.add("   "+TextFormatting.GOLD+PrecissionAssemblerRecipe.getExampleToolStack(tool).getDisplayName());

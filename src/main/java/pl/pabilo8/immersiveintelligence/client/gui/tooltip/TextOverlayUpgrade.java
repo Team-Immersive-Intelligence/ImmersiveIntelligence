@@ -9,10 +9,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,8 +45,8 @@ public class TextOverlayUpgrade extends TextOverlayBase
 		teU = teU.getUpgradeMaster();
 		if(teU!=null&&teU.getCurrentlyInstalled()!=null)
 			return new String[]{
-					I18n.format(IILib.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+teU.getCurrentlyInstalled().getName())),
-					I18n.format(IILib.INFO_KEY+"machineupgrade.progress", teU.getInstallProgress(), teU.getCurrentlyInstalled().getProgressRequired())
+					I18n.format(IIReference.INFO_KEY+"machineupgrade.name", I18n.format("machineupgrade.immersiveintelligence."+teU.getCurrentlyInstalled().getName())),
+					I18n.format(IIReference.INFO_KEY+"machineupgrade.progress", teU.getInstallProgress(), teU.getCurrentlyInstalled().getProgressRequired())
 			};
 		return null;
 	}
@@ -55,7 +54,7 @@ public class TextOverlayUpgrade extends TextOverlayBase
 	@Override
 	public int getDefaultFontColour()
 	{
-		return IILib.COLORS_HIGHLIGHT_I[2];
+		return IIReference.COLORS_HIGHLIGHT_I[2];
 	}
 
 	@Nonnull

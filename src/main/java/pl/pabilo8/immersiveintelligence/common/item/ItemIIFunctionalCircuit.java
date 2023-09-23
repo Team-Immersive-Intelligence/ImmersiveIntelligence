@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTo
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -203,19 +203,19 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> tooltip, @Nonnull ITooltipFlag flag)
 	{
-		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"functional_circuit_shift", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESCRIPTION_KEY+"functional_circuit_shift", tooltip))
 		{
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"functional_circuit"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"functional_circuit"));
 			getOperationsList(stack).stream()
-					.map(s -> "   "+I18n.format(IILib.DATA_KEY+"function."+s))
+					.map(s -> "   "+I18n.format(IIReference.DATA_KEY+"function."+s))
 					.forEach(tooltip::add);
 		}
-		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"functional_circuit_ctrl", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESCRIPTION_KEY+"functional_circuit_ctrl", tooltip))
 		{
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"functional_circuit_data"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"functional_circuit_data"));
 			for(IDataType type : getStoredData(stack))
 				if(type instanceof DataTypeExpression)
-					tooltip.add("   "+I18n.format(IILib.DATA_KEY+"function."+((DataTypeExpression)type).getOperation().name));
+					tooltip.add("   "+I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)type).getOperation().name));
 		}
 	}
 

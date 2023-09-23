@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.util;
+package pl.pabilo8.immersiveintelligence.common.util.entity;
 
 /**
  * @author Pabilo8

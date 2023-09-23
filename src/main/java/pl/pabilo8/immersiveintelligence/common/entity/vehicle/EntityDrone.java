@@ -27,7 +27,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.drone.AIDroneTarget;
-import pl.pabilo8.immersiveintelligence.common.util.IIIEntity;
+import pl.pabilo8.immersiveintelligence.common.util.entity.IIIEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

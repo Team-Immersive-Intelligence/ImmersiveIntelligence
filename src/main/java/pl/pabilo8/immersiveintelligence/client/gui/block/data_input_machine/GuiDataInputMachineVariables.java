@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiDataVariableList;
@@ -14,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -115,9 +114,9 @@ public class GuiDataInputMachineVariables extends GuiDataInputMachineBase
 		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(variableList.add)
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+("variable_add_desc")));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+("variable_add_desc")));
 		else if(variableList.selectedOption!=-1&&(variableList.edit||variableList.delete))
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+(variableList.delete?"variable_remove_desc": "variable_set_desc")));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+(variableList.delete?"variable_remove_desc": "variable_set_desc")));
 
 		if(!tooltip.isEmpty())
 		{

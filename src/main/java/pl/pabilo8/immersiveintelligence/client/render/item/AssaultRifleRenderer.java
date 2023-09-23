@@ -28,12 +28,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-
-import java.util.Map;
 
 /**
  * @author Pabilo8
@@ -315,7 +312,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 							String skin = IIContent.itemAssaultRifle.getSkinnableCurrentSkin(stack);
 							if (IISkinHandler.isValidSkin(skin))
 							{
-								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IILib.RES_TEXTURES_SKIN, skin, "/assault_rifle").withExtension(ResLoc.EXT_MTL));
+								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/assault_rifle").withExtension(ResLoc.EXT_MTL));
 								return ClientUtils.getSprite(this.skinRemapper.apply(res));
 							}
 

@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -118,8 +118,8 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 	{
 		model = AMTModelCacheBuilder.startTileEntityModel()
 				.withModel(((IESmartObjModel)sModel.getSecond()).getModel())
-				.withModel(ResLoc.of(IILib.RES_BLOCK_MODEL, "multiblock/sawmill/sawblade.obj"))
-				.withModel(ResLoc.of(IILib.RES_BLOCK_MODEL, "multiblock/sawmill/sawdust.obj"))
+				.withModel(ResLoc.of(IIReference.RES_BLOCK_MODEL, "multiblock/sawmill/sawblade.obj"))
+				.withModel(ResLoc.of(IIReference.RES_BLOCK_MODEL, "multiblock/sawmill/sawdust.obj"))
 				.withHeader(IIAnimationLoader.loadHeader(sModel.getSecond()))
 				.withModelProvider((tile, header) -> new AMT[]{
 						new AMTItem("item_input", header),
@@ -151,13 +151,13 @@ public class SawmillRenderer extends IITileRenderer<TileEntitySawmill>
 		partItemOutput = new AMTCrossVariantReference<>("item_output", model);
 		partItemInserter = new AMTCrossVariantReference<>("item_inserter", model);
 
-		animationInteract = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/interact"));
-		animationRotate = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/rotate"));
-		animationDustPile = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/sawdust"));
+		animationInteract = IIAnimationCachedMap.create(model, ResLoc.of(IIReference.RES_II, "sawmill/interact"));
+		animationRotate = IIAnimationCachedMap.create(model, ResLoc.of(IIReference.RES_II, "sawmill/rotate"));
+		animationDustPile = IIAnimationCachedMap.create(model, ResLoc.of(IIReference.RES_II, "sawmill/sawdust"));
 
-		animationProductionStart = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/production_start"));
-		animationProductionLoop = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/production_loop"));
-		animationProductionReach = IIAnimationCachedMap.create(model, ResLoc.of(IILib.RES_II, "sawmill/production_reach"));
+		animationProductionStart = IIAnimationCachedMap.create(model, ResLoc.of(IIReference.RES_II, "sawmill/production_start"));
+		animationProductionLoop = IIAnimationCachedMap.create(model, ResLoc.of(IIReference.RES_II, "sawmill/production_loop"));
+		animationProductionReach = IIAnimationCachedMap.create(model, ResLoc.of(IIReference.RES_II, "sawmill/production_reach"));
 
 	}
 

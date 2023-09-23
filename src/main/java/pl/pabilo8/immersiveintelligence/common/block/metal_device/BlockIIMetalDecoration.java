@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.BlockRenderLayer;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDecoration.IIBlockTypes_MetalDecoration;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
@@ -32,7 +32,7 @@ public class BlockIIMetalDecoration extends BlockIIBase<IIBlockTypes_MetalDecora
 		setHardness(3.0F);
 		setResistance(15.0F);
 
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 	}

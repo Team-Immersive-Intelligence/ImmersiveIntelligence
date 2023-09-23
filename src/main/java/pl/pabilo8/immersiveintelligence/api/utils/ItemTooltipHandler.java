@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -56,26 +56,26 @@ public class ItemTooltipHandler
 			case Keyboard.KEY_LCONTROL:
 				if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
 					return true;
-				keyName = IILib.DESC_HOLD_CTRL;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[0];
+				keyName = IIReference.DESC_HOLD_CTRL;
+				keyColor = IIReference.COLORS_HIGHLIGHT_S[0];
 				break;
 			case Keyboard.KEY_LSHIFT:
 				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 					return true;
-				keyName = IILib.DESC_HOLD_SHIFT;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[1];
+				keyName = IIReference.DESC_HOLD_SHIFT;
+				keyColor = IIReference.COLORS_HIGHLIGHT_S[1];
 				break;
 			case Keyboard.KEY_LMENU:
 				if(Keyboard.isKeyDown(Keyboard.KEY_LMENU)||Keyboard.isKeyDown(Keyboard.KEY_RMENU))
 					return true;
-				keyName = IILib.DESC_HOLD_ALT;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[2];
+				keyName = IIReference.DESC_HOLD_ALT;
+				keyColor = IIReference.COLORS_HIGHLIGHT_S[2];
 				break;
 			case Keyboard.KEY_TAB:
 				if(Keyboard.isKeyDown(key))
 					return true;
-				keyName = IILib.DESC_HOLD_TAB;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[3];
+				keyName = IIReference.DESC_HOLD_TAB;
+				keyColor = IIReference.COLORS_HIGHLIGHT_S[3];
 				break;
 			default:
 				return true;

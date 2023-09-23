@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -139,9 +139,9 @@ public class GuiArithmeticMachineVariables extends GuiArithmeticLogicMachineBase
 		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(variableList.add)
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+("variable_add_desc")));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+("variable_add_desc")));
 		else if(variableList.selectedOption!=-1&&(variableList.edit||variableList.delete))
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+(variableList.delete?"variable_remove_desc": "variable_set_desc")));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+(variableList.delete?"variable_remove_desc": "variable_set_desc")));
 
 		if(!tooltip.isEmpty())
 		{

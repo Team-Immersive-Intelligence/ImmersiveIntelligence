@@ -7,7 +7,7 @@ import net.minecraft.util.BlockRenderLayer;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice.IIBlockTypes_MechanicalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityTransmissionBox;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityTransmissionBoxCreative;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
@@ -35,6 +35,6 @@ public class BlockIIMechanicalDevice extends BlockIITileProvider<IIBlockTypes_Me
 		setResistance(15.0F);
 		setFullCube(true);
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 }

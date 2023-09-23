@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.api.rotary.IMotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -42,7 +42,7 @@ public class ItemIIMotorGear extends ItemIISubItemsBase<MotorGear> implements IM
 		float speed = mod < 1&&mod!=0?1f/mod: 1;
 		float torque = mod >= 1?mod: 1;
 
-		tooltip.add(I18n.format(IILib.INFO_KEY+"gear_ratio",
+		tooltip.add(I18n.format(IIReference.INFO_KEY+"gear_ratio",
 				speed==(int)speed?String.valueOf((int)speed): String.valueOf(speed),
 				torque==(int)torque?String.valueOf((int)torque): String.valueOf(torque)
 		));

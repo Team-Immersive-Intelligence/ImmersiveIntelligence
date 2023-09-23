@@ -4,11 +4,10 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerSmallCrate;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -31,7 +30,7 @@ public class GuiSmallCrate extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format(((ContainerSmallCrate)this.inventorySlots).tile.getDisplayName().getUnformattedText()), 8, 6, IILib.COLOR_H1);
+		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format(((ContainerSmallCrate)this.inventorySlots).tile.getDisplayName().getUnformattedText()), 8, 6, IIReference.COLOR_H1);
 	}
 
 	/**

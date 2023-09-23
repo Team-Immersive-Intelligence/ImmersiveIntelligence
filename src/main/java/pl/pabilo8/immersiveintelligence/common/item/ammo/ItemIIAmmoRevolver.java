@@ -37,7 +37,7 @@ import pl.pabilo8.immersiveintelligence.client.model.bullet.ModelBullet1bCal;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
 import pl.pabilo8.modworks.annotations.item.ItemModelType;
 
@@ -204,11 +204,11 @@ public class ItemIIAmmoRevolver extends ItemBullet implements IAmmo, BulletHandl
 		{
 			if(enumComponentRole==EnumComponentRole.GENERAL_PURPOSE)
 				continue;
-			builder.append(I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName()));
+			builder.append(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName()));
 			builder.append(" - ");
 		}
 		if(builder.toString().isEmpty())
-			builder.append(I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
+			builder.append(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
 		String s = builder.toString();
 		return I18n.format(s.substring(0, Math.max(s.length()-3, 0)));
 	}

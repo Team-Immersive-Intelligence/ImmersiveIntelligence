@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -80,7 +80,7 @@ public class IIManualDataType extends IIManualObject
 	public List<String> getTooltip(Minecraft mc, int mx, int my)
 	{
 		if(hovered)
-			return Collections.singletonList(I18n.format(IILib.DATA_KEY+"datatype."+type.getName()));
+			return Collections.singletonList(I18n.format(IIReference.DATA_KEY+"datatype."+type.getName()));
 		return null;
 	}
 }

@@ -1,16 +1,12 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiReactiveList;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonSwitch;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiSliderII;
@@ -19,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
@@ -36,7 +32,7 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 	public GuiEmplacementPageStatus(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile, IIGuiList.GUI_EMPLACEMENT_STATUS);
-		title = I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.status");
+		title = I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.status");
 	}
 
 	@Override
@@ -46,8 +42,8 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 
 		addLabel(8, 24, 96, 0, 0xffffff, tile.currentWeapon!=null?(
 				I18n.format("machineupgrade.immersiveintelligence."+tile.currentWeapon.getName())):
-				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.weapon_none")).setCentered();
-		addLabel(8, 86, IILib.COLOR_H1, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.upgrades"));
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.weapon_none")).setCentered();
+		addLabel(8, 86, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.upgrades"));
 		//
 		GuiReactiveList upgradeList = new GuiReactiveList(this, buttonList.size(), guiLeft+11, guiTop+86+6+1, 124, 54,
 				tile.getUpgrades().stream().filter(upgrade -> !(upgrade instanceof MachineUpgradeEmplacementWeapon)).map(MachineUpgrade::getName).toArray(String[]::new))
@@ -56,25 +52,25 @@ public class GuiEmplacementPageStatus extends GuiEmplacement
 				.setFormatting(0.75f, true);
 		addButton(upgradeList);
 
-		addLabel(112, 22, 93, 0, IILib.COLOR_H1,
-				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.settings")).setCentered();
+		addLabel(112, 22, 93, 0, IIReference.COLOR_H1,
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.settings")).setCentered();
 
-		switchRSControl = addSwitch(112, 28, 80, IILib.COLOR_H1, 0x4c7bb1, 0xffb515, tile.redstoneControl,
-				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.redstone_control"));
+		switchRSControl = addSwitch(112, 28, 80, IIReference.COLOR_H1, 0x4c7bb1, 0xffb515, tile.redstoneControl,
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.redstone_control"));
 		switchDataControl = addSwitch(112,
 				28+switchRSControl.getTextHeight(fontRenderer),
-				80, IILib.COLOR_H1, 0x4c7bb1, 0xffb515, tile.dataControl,
-				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.data_control"));
+				80, IIReference.COLOR_H1, 0x4c7bb1, 0xffb515, tile.dataControl,
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.data_control"));
 		switchSendTarget = addSwitch(112,
 				28+switchRSControl.getTextHeight(fontRenderer)+switchDataControl.getTextHeight(fontRenderer),
-				80, IILib.COLOR_H1, 0x4c7bb1, 0xffb515, tile.sendAttackSignal,
-				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.send_attack_signal"));
+				80, IIReference.COLOR_H1, 0x4c7bb1, 0xffb515, tile.sendAttackSignal,
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.send_attack_signal"));
 
 		sliderRepair = addSlider(116,
 				28+switchRSControl.getTextHeight(fontRenderer)+switchDataControl.getTextHeight(fontRenderer)+switchSendTarget.getTextHeight(fontRenderer)
-						+fontRenderer.getWordWrappedHeight(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"),70),
-				80, IILib.COLOR_H1, tile.autoRepairAmount,
-				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));
+						+fontRenderer.getWordWrappedHeight(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"),70),
+				80, IIReference.COLOR_H1, tile.autoRepairAmount,
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.auto_repair_threshold"));
 
 	}
 

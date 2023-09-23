@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -50,7 +50,7 @@ public class ItemIIMeasuringCup extends ItemIIBase implements ITool, IAdvancedFl
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(I18n.format(IILib.DESCRIPTION_KEY+"measuring_cup_size", getCapacity(stack, Tools.measuringCupCapacity), Tools.measuringCupCapacity));
+		list.add(I18n.format(IIReference.DESCRIPTION_KEY+"measuring_cup_size", getCapacity(stack, Tools.measuringCupCapacity), Tools.measuringCupCapacity));
 		FluidStack fs = FluidUtil.getFluidContained(stack);
 		if(fs!=null)
 		{
@@ -126,12 +126,12 @@ public class ItemIIMeasuringCup extends ItemIIBase implements ITool, IAdvancedFl
 		if(fs==null)
 		{
 			ItemNBTHelper.setInt(stack, "maxCap", Math.min(Math.max(ItemNBTHelper.getInt(stack, "maxCap")+(forward?10: -10), 10), Tools.measuringCupCapacity));
-			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IILib.DESCRIPTION_KEY+"measuring_cup_size", ItemNBTHelper.getInt(stack, "maxCap"), Tools.measuringCupCapacity), 0, 20, 0);
+			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"measuring_cup_size", ItemNBTHelper.getInt(stack, "maxCap"), Tools.measuringCupCapacity), 0, 20, 0);
 			player.connection.sendPacket(packet);
 		}
 		else
 		{
-			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IILib.DESCRIPTION_KEY+"measuring_cup_cant_resize"), 0, 20, 0);
+			SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"measuring_cup_cant_resize"), 0, 20, 0);
 			player.connection.sendPacket(packet);
 		}
 	}

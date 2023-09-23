@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +47,7 @@ public class TileEntitySmallCrate extends TileEntityWoodenCrate implements IGuiT
 	@Nullable
 	public ITextComponent getDisplayName()
 	{
-		return name!=null?new TextComponentString(name): new TextComponentTranslation(IILib.BLOCK_KEY+"small_crate."+IIBlockTypes_SmallCrate.values()[getBlockMetadata()].getName()+".name");
+		return name!=null?new TextComponentString(name): new TextComponentTranslation(IIReference.BLOCK_KEY+"small_crate."+IIBlockTypes_SmallCrate.values()[getBlockMetadata()].getName()+".name");
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade.SawBlades;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -54,7 +54,7 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IILib.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getSawbladeDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getSawbladeMaxDamage(stack)+TextFormatting.GRAY));
+		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getSawbladeDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getSawbladeMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class ItemIISawBlade extends ItemIISubItemsBase<SawBlades> implements ISa
 		{
 			this.hardness = hardness;
 			this.durability = durability;
-			this.texture = ResLoc.of(IILib.RES_II, "blocks/multiblock/sawmill/"+getName());
+			this.texture = ResLoc.of(IIReference.RES_II, "blocks/multiblock/sawmill/"+getName());
 		}
 	}
 

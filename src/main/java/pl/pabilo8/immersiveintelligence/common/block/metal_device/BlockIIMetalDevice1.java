@@ -15,7 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice1.IIBlockTypes_MetalDevice1;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityCO2Filter;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
@@ -43,7 +43,7 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 		setHardness(3.0F);
 		setResistance(15.0F);
 		setLightOpacity(0);
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 
 		this.setMetaMobilityFlag(IIBlockTypes_MetalDevice1.CO2_FILTER, EnumPushReaction.BLOCK);

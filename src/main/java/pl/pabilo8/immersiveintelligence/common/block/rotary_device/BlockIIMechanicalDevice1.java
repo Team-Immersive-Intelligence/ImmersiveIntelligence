@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.BlockIIMechanicalDevice1.IIBlockTypes_MechanicalDevice1;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityMechanicalPump;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
@@ -49,7 +49,7 @@ public class BlockIIMechanicalDevice1 extends BlockIITileProvider<IIBlockTypes_M
 		setResistance(15.0F);
 		setBlockLayer(BlockRenderLayer.CUTOUT);
 		this.setMetaMobilityFlag(IIBlockTypes_MechanicalDevice1.MECHANICAL_PUMP, EnumPushReaction.BLOCK);
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 
 	@Override

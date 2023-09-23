@@ -16,7 +16,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +88,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 			}
 		}
 		//specialText = I18n.format("skin.immersiveintelligence."+skin+".name");
-		skin = ((skin.isEmpty()&&!canApply)?IIContent.itemSubmachinegun.getSkinnableDefaultTextureLocation(): IILib.SKIN_LOCATION+skin+"/");
+		skin = ((skin.isEmpty()&&!canApply)?IIContent.itemSubmachinegun.getSkinnableDefaultTextureLocation(): IIReference.SKIN_LOCATION+skin+"/");
 
 		for(Entry<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> s : upgrades.entrySet())
 		{

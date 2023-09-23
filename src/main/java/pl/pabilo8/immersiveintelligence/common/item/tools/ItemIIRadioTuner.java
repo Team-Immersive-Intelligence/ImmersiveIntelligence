@@ -26,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIRadioTuner.RadioTuners;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
@@ -64,10 +64,10 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 	{
 		RadioTuners tuner = stackToSub(stack);
 
-		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName())));
-		list.add(I18n.format(IILib.DESCRIPTION_KEY+"radio_configurator_max_frequency",
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_"+tuner.getName())));
+		list.add(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_max_frequency",
 				TextFormatting.GOLD.toString()+tuner.maxFrequency+TextFormatting.RESET));
-		list.add(I18n.format(IILib.DESCRIPTION_KEY+"radio_configurator_frequency",
+		list.add(I18n.format(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency",
 				TextFormatting.GOLD.toString()+ItemNBTHelper.getInt(stack, "Frequency")+TextFormatting.RESET));
 	}
 
@@ -88,17 +88,17 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 			if(!player.isSneaking()) //set frequency
 			{
 				if(frequency > maxFrequency)
-					IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"frequency_invalid", maxFrequency);
+					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"frequency_invalid", maxFrequency);
 				else
 				{
 					device.setFrequency(frequency);
-					IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"frequency_set", device.getFrequency());
+					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"frequency_set", device.getFrequency());
 				}
 			}
 			else //get frequency
 			{
 				// TODO: 06.09.2022 make shift+click copy frequency to device ; add frequency display, like with goggles
-				IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"current_frequency", device.getFrequency());
+				IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"current_frequency", device.getFrequency());
 			}
 
 			//sync
@@ -123,7 +123,7 @@ public class ItemIIRadioTuner extends ItemIISubItemsBase<RadioTuners> implements
 
 		//send current frequency message
 		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR,
-				new TextComponentTranslation(IILib.DESCRIPTION_KEY+"radio_configurator_frequency", frequency), 0, 20, 0);
+				new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"radio_configurator_frequency", frequency), 0, 20, 0);
 		player.connection.sendPacket(packet);
 	}
 }

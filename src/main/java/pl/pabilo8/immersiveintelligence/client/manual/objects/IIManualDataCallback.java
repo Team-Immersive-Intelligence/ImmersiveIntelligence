@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import java.util.List;
 //TODO: 07.08.2023 clickable links
 public class IIManualDataCallback extends IIManualObject
 {
-	private final static ResLoc TEXTURE_CALLBACK = ResLoc.of(IILib.RES_TEXTURES_MANUAL, "data/callback").withExtension(ResLoc.EXT_PNG);
+	private final static ResLoc TEXTURE_CALLBACK = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/callback").withExtension(ResLoc.EXT_PNG);
 
 	@Nonnull
 	IDataType type = new DataTypeNull();
@@ -110,7 +110,7 @@ public class IIManualDataCallback extends IIManualObject
 			ArrayList<String> lines = new ArrayList<>();
 			lines.add(String.format(
 					"<%s> %s",
-					IIUtils.getHexCol(type.getTypeColour(), I18n.format(IILib.DATA_KEY+"datatype."+type.getName())),
+					IIUtils.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
 					IIUtils.getItalicString(name)
 			));
 

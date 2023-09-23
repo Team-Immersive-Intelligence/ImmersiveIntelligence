@@ -94,7 +94,7 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverrid
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
@@ -501,7 +501,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 
 		if(ItemNBTHelper.hasKey(stack, "ii_FilledCasing"))
-			event.getToolTip().add(TextFormatting.DARK_GRAY+I18n.format(IILib.DESCRIPTION_KEY+"filled_casing"));
+			event.getToolTip().add(TextFormatting.DARK_GRAY+I18n.format(IIReference.DESCRIPTION_KEY+"filled_casing"));
 
 		/*if(stack.getItem()==IEContent.itemToolUpgrades)
 		{

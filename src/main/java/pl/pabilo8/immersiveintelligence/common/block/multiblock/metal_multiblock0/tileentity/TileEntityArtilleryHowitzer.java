@@ -45,7 +45,7 @@ import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAn
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTTagCollector;
+import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
@@ -412,7 +412,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void fireGun(int i)
 	{
-		double yawFireAngle = Math.toRadians(-turretYaw>180 ? 180f+turretYaw : 180f-turretYaw);
+		double yawFireAngle = Math.toRadians(-turretYaw > 180?180f+turretYaw: 180f-turretYaw);
 		double yawPitchAngle = Math.toRadians(turretPitch+90);
 
 		Vec3d gunEnd = IIUtils.offsetPosDirection(3, yawFireAngle, yawPitchAngle);

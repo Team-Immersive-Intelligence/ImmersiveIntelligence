@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author Pabilo8
  * @since 29.08.2022
  */
-public class IILib
+public class IIReference
 {
 	//--- Tool Classes ---//
 	//IE

@@ -32,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,8 +55,8 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"wrench")));
-		list.add(IIUtils.getItalicString(I18n.format(IILib.INFO_KEY+"charge_with_if")));
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"wrench")));
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
 		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 	}
 
@@ -200,7 +200,7 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	@Override
 	public Set<String> getToolClasses(ItemStack stack)
 	{
-		return ImmutableSet.of(IILib.TOOL_WRENCH, IILib.TOOL_ADVANCED_WRENCH);
+		return ImmutableSet.of(IIReference.TOOL_WRENCH, IIReference.TOOL_ADVANCED_WRENCH);
 	}
 
 	@Override
@@ -208,9 +208,9 @@ public class ItemIIElectricWrench extends ItemIIBase implements ITool, IIEEnergy
 	{
 		if(hasEnoughEnergy(stack))
 		{
-			if(state.getBlock().isToolEffective(IILib.TOOL_WRENCH, state))
+			if(state.getBlock().isToolEffective(IIReference.TOOL_WRENCH, state))
 				return true;
-			else return state.getBlock().isToolEffective(IILib.TOOL_ADVANCED_WRENCH, state);
+			else return state.getBlock().isToolEffective(IIReference.TOOL_ADVANCED_WRENCH, state);
 		}
 		return false;
 	}

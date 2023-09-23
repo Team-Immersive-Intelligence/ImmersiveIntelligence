@@ -45,8 +45,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.AxisAlignedFacingBB;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.raytracer.AxisAlignedFacingBB;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
@@ -211,7 +211,7 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 
 	private JsonObject loadAABBFromJSON()
 	{
-		ResLoc res = ResLoc.of(IILib.RES_AABB, "multiblock/"+name.substring(3))
+		ResLoc res = ResLoc.of(IIReference.RES_AABB, "multiblock/"+name.substring(3))
 				.withExtension(ResLoc.EXT_JSON);
 
 		try

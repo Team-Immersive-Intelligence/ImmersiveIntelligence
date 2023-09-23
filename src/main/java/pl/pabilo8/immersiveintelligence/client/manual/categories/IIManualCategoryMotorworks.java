@@ -12,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVehicleWorkshop;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockVulcanizer;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -25,7 +25,7 @@ public class IIManualCategoryMotorworks extends IIManualCategory
 	@Override
 	public String getCategory()
 	{
-		return IILib.CAT_MOTORWORKS;
+		return IIReference.CAT_MOTORWORKS;
 	}
 
 	@Override

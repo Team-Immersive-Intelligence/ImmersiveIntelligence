@@ -32,8 +32,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
-import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.lambda.ArraylistJoinCollector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ import java.util.function.Function;
 public class IIAnimationUtils
 {
 	//--- Empty OBJ Model Placeholder ---//
-	private static final OBJModel EMPTY = new OBJModel(new MaterialLibrary(), ResLoc.of(IILib.RES_BLOCK_MODEL, "empty.obj"));
+	private static final OBJModel EMPTY = new OBJModel(new MaterialLibrary(), ResLoc.of(IIReference.RES_BLOCK_MODEL, "empty.obj"));
 
 	//--- Time Calculation ---//
 

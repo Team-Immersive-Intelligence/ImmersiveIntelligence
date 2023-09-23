@@ -1,56 +1,27 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
-import akka.util.Helpers;
 import blusunrize.immersiveengineering.api.ManualHelper;
-import blusunrize.immersiveengineering.api.ManualPageMultiblock;
-import blusunrize.immersiveengineering.common.Config;
 import blusunrize.lib.manual.ManualPages;
-import blusunrize.lib.manual.ManualPages.Crafting;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoCore;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
-import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
-import pl.pabilo8.immersiveintelligence.client.manual.objects.IIManualItemDisplay;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletComponent;
 import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageBulletCore;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariables;
-import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageDataVariablesCallback;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
-import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockAmmunitionWorkshop;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockFlagpole;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockProjectileWorkshop;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
-import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
-import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
-import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerArmorBase;
-import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars;
-import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIMineDetector;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponTypes;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
-import pl.pabilo8.immersiveintelligence.common.util.IIArmorItemStackHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map.Entry;
-
-import static pl.pabilo8.immersiveintelligence.client.manual.IIManualPage.registeredObjects;
 
 /**
  * @author Pabilo8
@@ -63,7 +34,7 @@ public class IIManualCategoryWarfare extends IIManualCategory {
 
     @Override
     public String getCategory() {
-        return IILib.CAT_WARFARE;
+        return IIReference.CAT_WARFARE;
     }
 
     @Override

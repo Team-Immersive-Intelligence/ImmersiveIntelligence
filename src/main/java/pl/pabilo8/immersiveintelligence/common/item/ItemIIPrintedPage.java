@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -53,7 +53,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		SubItems(IIGuiList guiPage)
 		{
 			this.guiPage = guiPage;
-			tooltip = IILib.DESCRIPTION_KEY+"printed_page."+getName();
+			tooltip = IIReference.DESCRIPTION_KEY+"printed_page."+getName();
 		}
 	}
 

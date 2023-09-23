@@ -25,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 
 		}
 		specialText = I18n.format("skin.immersiveintelligence."+skin+".name");
-		skin = ((skin.isEmpty()&&!canApply)?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): IILib.SKIN_LOCATION+skin+"/");
+		skin = ((skin.isEmpty()&&!canApply)?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): IIReference.SKIN_LOCATION+skin+"/");
 
 
 		ClientUtils.bindTexture(skin+texture);

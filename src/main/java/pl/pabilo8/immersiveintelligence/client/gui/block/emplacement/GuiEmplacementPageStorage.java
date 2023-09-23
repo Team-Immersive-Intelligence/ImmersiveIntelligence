@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -20,7 +20,7 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 	public GuiEmplacementPageStorage(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile, IIGuiList.GUI_EMPLACEMENT_STORAGE);
-		title = I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.storage");
+		title = I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.storage");
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class GuiEmplacementPageStorage extends GuiEmplacement
 		super.initGui();
 		if(tile.currentWeapon!=null&&tile.currentWeapon.getBaseInventory().size() > 0)
 		{
-			addLabel(xSize/2, 8+16, IILib.COLOR_H1, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.base_inventory"))
+			addLabel(xSize/2, 8+16, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.base_inventory"))
 					.setCentered();
 		}
 	}

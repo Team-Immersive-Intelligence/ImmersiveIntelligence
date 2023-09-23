@@ -12,7 +12,7 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumComponentRole;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.List;
 import java.util.Locale;
@@ -58,7 +58,7 @@ public class IIManualPageBulletComponent extends IIManualPages
 			this.localizedLore = manual.formatText(text+".lore");
 			this.localizedName = manual.formatText(text);
 
-			localizedType = I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+type.getName());
+			localizedType = I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+type.getName());
 
 			this.localizedText = addLinks(manual, gui, this.localizedText, x, y+60, 60, pageButtons);
 			if(this.localizedText==null)

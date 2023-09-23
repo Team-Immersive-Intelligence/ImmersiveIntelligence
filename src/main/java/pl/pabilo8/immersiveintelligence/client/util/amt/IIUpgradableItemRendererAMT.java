@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJModel;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
 
@@ -23,7 +23,7 @@ public abstract class IIUpgradableItemRendererAMT<I extends ItemIIUpgradableTool
 	/**
 	 * Resource location blueprint of weapon item models
 	 */
-	protected static final ResLoc RES_MODEL_WEAPON = ResLoc.of(IILib.RES_ITEM_MODEL, "weapons/%1$s/%1$s");
+	protected static final ResLoc RES_MODEL_WEAPON = ResLoc.of(IIReference.RES_ITEM_MODEL, "weapons/%1$s/%1$s");
 	/**
 	 * Resource location for animations of this model
 	 */
@@ -42,7 +42,7 @@ public abstract class IIUpgradableItemRendererAMT<I extends ItemIIUpgradableTool
 	public IIUpgradableItemRendererAMT(@Nonnull I item, ResLoc modelRes)
 	{
 		super(item, modelRes);
-		animationRes = ResLoc.of(IILib.RES_II, item.itemName, "/");
+		animationRes = ResLoc.of(IIReference.RES_II, item.itemName, "/");
 		directoryRes = modelRes.asDirectory();
 	}
 

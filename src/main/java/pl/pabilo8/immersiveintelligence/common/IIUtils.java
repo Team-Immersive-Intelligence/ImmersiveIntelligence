@@ -47,7 +47,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
@@ -509,7 +509,7 @@ public class IIUtils
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_ADVANCED_HAMMER);
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_ADVANCED_HAMMER);
 	}
 
 	public static boolean isAABBContained(@Nonnull AxisAlignedBB compared, @Nonnull AxisAlignedBB comparedTo)
@@ -575,21 +575,21 @@ public class IIUtils
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_WRENCH)&&stack.getItem() instanceof IWrench;
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_WRENCH)&&stack.getItem() instanceof IWrench;
 	}
 
 	public static boolean isTachometer(ItemStack stack)
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_TACHOMETER);
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_TACHOMETER);
 	}
 
 	public static boolean isCrowbar(ItemStack stack)
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_CROWBAR);
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_CROWBAR);
 	}
 
 	public static boolean isVoltmeter(ItemStack stack)

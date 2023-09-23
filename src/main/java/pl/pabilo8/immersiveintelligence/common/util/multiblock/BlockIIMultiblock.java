@@ -21,10 +21,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
@@ -61,7 +59,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 		setLightOpacity(0);
 		setFullCube(false);
 		setBlockLayer(BlockRenderLayer.CUTOUT);
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 
 	//--- Other Methods ---//

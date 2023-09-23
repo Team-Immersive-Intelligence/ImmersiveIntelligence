@@ -14,7 +14,7 @@ import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.PrecisionAssemblerRenderer;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrecisionTool.PrecisionTools;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -102,7 +102,7 @@ public class ItemIIPrecisionTool extends ItemIISubItemsBase<PrecisionTools> impl
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(I18n.format(IILib.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getPrecissionToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getPrecissionToolMaxDamage(stack)+TextFormatting.GRAY));
+		tooltip.add(I18n.format(IIReference.INFO_KEY_TOOL_DURABILITY, TextFormatting.GOLD.toString()+getPrecissionToolDamage(stack)+TextFormatting.GRAY, TextFormatting.GOLD.toString()+getPrecissionToolMaxDamage(stack)+TextFormatting.GRAY));
 	}
 
 	@Override

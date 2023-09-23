@@ -36,7 +36,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
@@ -163,8 +163,8 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"debugger_mode",
-					new TextComponentTranslation(IILib.INFO_KEY+"debugger_mode."+mode)
+			IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"debugger_mode",
+					new TextComponentTranslation(IIReference.INFO_KEY+"debugger_mode."+mode)
 			);
 			markDirty();
 			markBlockForUpdate(pos, null);
@@ -304,7 +304,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		String s_out = I18n.format(IILib.INFO_KEY+"debugger_mode", I18n.format(IILib.INFO_KEY+"debugger_mode."+mode));
+		String s_out = I18n.format(IIReference.INFO_KEY+"debugger_mode", I18n.format(IIReference.INFO_KEY+"debugger_mode."+mode));
 		if(lastPacket!=null)
 		{
 			ArrayList<String> s = new ArrayList<>(Arrays.asList(this.packetString));

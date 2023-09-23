@@ -13,7 +13,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class WrenchOverlay extends InWorldOverlayBase
 	public void draw(EntityPlayer player, World world, RayTraceResult mouseOver, float partialTicks)
 	{
 		ItemStack stack = player.getHeldItemMainhand();
-		if(!stack.getItem().getToolClasses(stack).contains(IILib.TOOL_WRENCH))
+		if(!stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_WRENCH))
 			return;
 
 		AxisAlignedBB full = new AxisAlignedBB(player.getPosition()).grow(16);
@@ -68,7 +68,7 @@ public class WrenchOverlay extends InWorldOverlayBase
 		buf.begin(7, DefaultVertexFormats.POSITION_COLOR);
 		buf.setTranslation(-posX, -posY, -posZ);
 
-		float[] rgb = IIUtils.rgbIntToRGB(IILib.COLORS_HIGHLIGHT_I[1]);
+		float[] rgb = IIUtils.rgbIntToRGB(IIReference.COLORS_HIGHLIGHT_I[1]);
 		final float alpha = 0.25f;
 
 		//Draw

@@ -10,13 +10,12 @@ import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -86,7 +85,7 @@ public class GuiPrintedPage extends GuiScreen
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(guiLeft+8, guiTop+y, 0);
 			GlStateManager.scale(line.size, line.size, line.size);
-			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), IILib.COLOR_H1);
+			line.font.drawSplitString(line.text, 0, 0, (int)(141/line.size), IIReference.COLOR_H1);
 			y += (line.font.getWordWrappedHeight(line.text, (int)(141/line.size)))*line.size;
 			GlStateManager.popMatrix();
 		}

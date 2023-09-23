@@ -2,19 +2,14 @@ package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
-import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
-import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.ManualPages;
-import blusunrize.lib.manual.gui.GuiManual;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
-import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
-import pl.pabilo8.immersiveintelligence.client.manual.objects.IIManualCraftingRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -25,7 +20,7 @@ public class IIManualCategoryIntelligence extends IIManualCategory {
 
     @Override
     public String getCategory() {
-        return IILib.CAT_INTELLIGENCE;
+        return IIReference.CAT_INTELLIGENCE;
     }
 
     @Override

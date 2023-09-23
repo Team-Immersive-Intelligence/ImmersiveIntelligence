@@ -11,7 +11,7 @@ import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.*;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumMultiblockProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
@@ -37,7 +37,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		setLightOpacity(0);
 		setFullCube(false);
 		setBlockLayer(BlockRenderLayer.CUTOUT);
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 
 		addToTESRMap(
 				MetalMultiblocks0.PRINTING_PRESS, MetalMultiblocks0.RADIO_STATION,

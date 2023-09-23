@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 
 import javax.annotation.Nullable;
@@ -38,16 +38,16 @@ public class ItemIIPunchtape extends ItemIIBase implements IDataStorageItem
 		DataPacket packet = getStoredData(stack);
 		if(packet.hasAnyVariables())
 		{
-			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"data_storage_shift", tooltip))
+			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESCRIPTION_KEY+"data_storage_shift", tooltip))
 			{
-				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"data_storage"));
+				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"data_storage"));
 				packet.variables.forEach(
-						(c, t) -> tooltip.add("   "+IIUtils.getHexCol(t.getTypeColour(), I18n.format(IILib.DATA_KEY+"datatype."+t.getName()))+" "+TextFormatting.GRAY+c)
+						(c, t) -> tooltip.add("   "+IIUtils.getHexCol(t.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+t.getName()))+" "+TextFormatting.GRAY+c)
 				);
 			}
 		}
 		else
-			tooltip.add(TextFormatting.ITALIC+I18n.format(IILib.DESCRIPTION_KEY+"punchtape.empty"));
+			tooltip.add(TextFormatting.ITALIC+I18n.format(IIReference.DESCRIPTION_KEY+"punchtape.empty"));
 
 	}
 

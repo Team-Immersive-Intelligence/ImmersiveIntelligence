@@ -33,7 +33,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachi
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,7 +91,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		super.initGui();
 		refreshStoredData();
 
-		addLabel(4, 8, IILib.COLOR_H1, title);
+		addLabel(4, 8, IIReference.COLOR_H1, title);
 
 		addTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE, "storage_module");
 		addItemTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0, 0);
@@ -178,7 +178,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		TABS.keySet().stream().filter(GuiButton::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
 
 		if(this.manualButton.isMouseOver())
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
 		return tooltip;
 	}
 
@@ -230,7 +230,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	{
 		final int vOffset = TABS.size()*24;
 		GuiButtonTab button = new GuiButtonTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
-				TEXTURE_STORAGE, I18n.format(IILib.DESCRIPTION_KEY+name));
+				TEXTURE_STORAGE, I18n.format(IIReference.DESCRIPTION_KEY+name));
 		TABS.put(button, gui);
 		addButton(button);
 	}

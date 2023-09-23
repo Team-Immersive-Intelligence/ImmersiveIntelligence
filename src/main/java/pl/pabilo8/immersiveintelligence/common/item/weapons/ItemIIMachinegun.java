@@ -45,7 +45,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -94,11 +94,11 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 
 		if(getUpgrades(stack).hasKey("second_magazine"))
 		{
-			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"weapon.magazine1", tooltip))
+			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESCRIPTION_KEY+"weapon.magazine1", tooltip))
 				IIContent.itemBulletMagazine.addInformation(
 						ItemNBTHelper.getItemStack(stack, "magazine1")
 						, world, tooltip, flag);
-			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"weapon.magazine2", tooltip))
+			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESCRIPTION_KEY+"weapon.magazine2", tooltip))
 				IIContent.itemBulletMagazine.addInformation(
 						ItemNBTHelper.getItemStack(stack, "magazine2"),
 						world, tooltip, flag);

@@ -24,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -42,9 +42,9 @@ import java.util.Optional;
  */
 public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride, IAdvancedTooltipItem
 {
-	private final ResLoc magazineTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/");
-	private final ResLoc bulletTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/common/bullet");
-	private final ResLoc paintTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/common/paint");
+	private final ResLoc magazineTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/");
+	private final ResLoc bulletTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/common/bullet");
+	private final ResLoc paintTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/common/paint");
 
 	public ItemIIBulletMagazine()
 	{
@@ -133,7 +133,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		int bullets = getRemainingBulletCount(stack);
 
-		tooltip.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
+		tooltip.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
 		NBTTagList listDict = ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", NBT.TAG_COMPOUND);
 
 		if(ItemNBTHelper.getTag(stack).hasKey("bullet0"))

@@ -18,7 +18,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -141,8 +141,8 @@ public class TileEntityRedstoneBuffer extends TileEntityIEBase implements IPlaye
 		{
 			passtroughMode = !passtroughMode;
 			IIPacketHandler.sendChatTranslation(player,
-					IILib.INFO_KEY+"redstone_buffer_mode",
-					new TextComponentTranslation(IILib.INFO_KEY+"redstone_buffer_mode."+(passtroughMode?"passtrough": "signal"))
+					IIReference.INFO_KEY+"redstone_buffer_mode",
+					new TextComponentTranslation(IIReference.INFO_KEY+"redstone_buffer_mode."+(passtroughMode?"passtrough": "signal"))
 			);
 		}
 		return true;

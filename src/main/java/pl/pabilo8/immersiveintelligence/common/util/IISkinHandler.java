@@ -13,7 +13,6 @@ import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimationLoader;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
-import javax.annotation.Nonnull;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
@@ -54,7 +53,7 @@ public class IISkinHandler
 		{
 			IISpecialSkin skin = entry.getValue();
 			if (skin.doesApply(skinnable))
-				IIAnimationLoader.preloadTexturesFromMTL(ResLoc.of(IILib.RES_TEXTURES_SKIN, skin.name, "/", skinnable).withExtension(ResLoc.EXT_MTL), map);
+				IIAnimationLoader.preloadTexturesFromMTL(ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin.name, "/", skinnable).withExtension(ResLoc.EXT_MTL), map);
 		}
 	}
 
@@ -256,8 +255,8 @@ public class IISkinHandler
 		ManualEntry contributor_skins = ManualHelper.getManual().getEntry("contributor_skins");
 		if(contributor_skins==null)
 		{
-			contributor_skins = new ManualEntry("contributor_skins", IILib.CAT_WARFARE);
-			ManualHelper.getManual().manualContents.put(IILib.CAT_WARFARE,contributor_skins);
+			contributor_skins = new ManualEntry("contributor_skins", IIReference.CAT_WARFARE);
+			ManualHelper.getManual().manualContents.put(IIReference.CAT_WARFARE,contributor_skins);
 		}
 
 		contributor_skins.setPages(skin_pages.toArray(new ManualPages[]{}));

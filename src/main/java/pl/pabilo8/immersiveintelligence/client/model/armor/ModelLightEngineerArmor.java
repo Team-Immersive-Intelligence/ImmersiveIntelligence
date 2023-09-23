@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.model.TMTArmorModel;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -20,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.Shape2D;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 /**
@@ -1118,7 +1117,7 @@ public class ModelLightEngineerArmor extends TMTArmorModel implements IReloadabl
 
 	private void setSkin(String skin)
 	{
-		String baseName = skin.isEmpty() ? ImmersiveIntelligence.MODID+":textures/armor/engineer_light" : IILib.SKIN_LOCATION+skin+"/engineer_light";
+		String baseName = skin.isEmpty() ? ImmersiveIntelligence.MODID+":textures/armor/engineer_light" : IIReference.SKIN_LOCATION+skin+"/engineer_light";
 
 		TEXTURE = baseName+".png";
 		setTexture(TEXTURE);

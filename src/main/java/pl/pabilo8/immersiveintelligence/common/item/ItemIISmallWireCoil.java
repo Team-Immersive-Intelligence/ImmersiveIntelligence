@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.Config.IIConfig.Wires;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIISmallWireCoil.SmallWires;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IISmallWireType;
@@ -63,7 +63,7 @@ public class ItemIISmallWireCoil extends ItemIISubItemsBase<SmallWires> implemen
 	@ParametersAreNonnullByDefault
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"small_wirecoil"));
+		tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"small_wirecoil"));
 		if(stack.getTagCompound()!=null&&stack.getTagCompound().hasKey("linkingPos"))
 		{
 			int[] link = ItemNBTHelper.getIntArray(stack, "linkingPos");
