@@ -39,11 +39,12 @@ import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Met
 import pl.pabilo8.immersiveintelligence.common.item.*;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.*;
 import pl.pabilo8.immersiveintelligence.common.item.armor.*;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMetalPressMold;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIISawBlade;
-import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.*;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.*;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIDataWireCoil;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIPunchtape;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIISmallWireCoil;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorBelt;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.*;
@@ -153,6 +154,7 @@ public class IIContent
 	public static ItemIIAmmoRevolver itemAmmoRevolver = new ItemIIAmmoRevolver();
 
 	public static ItemIIBulletMagazine itemBulletMagazine = new ItemIIBulletMagazine();
+	public static ItemIICasingPouch itemCasingPouch = new ItemIICasingPouch();
 
 	//tools
 	public static ItemIISkycrateMount itemSkycrateMount = new ItemIISkycrateMount();
@@ -195,8 +197,11 @@ public class IIContent
 	public static ItemIILightEngineerLeggings itemLightEngineerLeggings = new ItemIILightEngineerLeggings();
 	public static ItemIILightEngineerBoots itemLightEngineerBoots = new ItemIILightEngineerBoots();
 	public static ItemIIArmorUpgrade itemArmorUpgrade = new ItemIIArmorUpgrade();
+
+	//Backpacks
 	public static ItemIIAdvancedPowerPack itemAdvancedPowerPack = new ItemIIAdvancedPowerPack();
 	public static final String NBT_AdvancedPowerpack = "II:Powerpack";
+
 
 	//data
 	@IBatchOredictRegister(oreDict = "punchtape")

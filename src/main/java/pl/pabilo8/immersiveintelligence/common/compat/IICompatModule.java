@@ -25,8 +25,7 @@ public abstract class IICompatModule
 	public static HashMap<String, String> moduleMinModVersions = new HashMap<>();
 	public static Set<IICompatModule> modules = new HashSet<>();
 
-	public static boolean serene = false;
-	public static boolean ii = false;
+	public static boolean serene = false, baubles = false, petroleum = false;
 
 	static
 	{

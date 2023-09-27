@@ -42,6 +42,7 @@ import java.util.Optional;
  */
 public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride, IAdvancedTooltipItem
 {
+	//--- Textures ---//
 	private final ResLoc magazineTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/");
 	private final ResLoc bulletTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/common/bullet");
 	private final ResLoc paintTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/common/paint");

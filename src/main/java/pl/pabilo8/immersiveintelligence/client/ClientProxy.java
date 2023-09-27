@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.client.IECustomStateMapper;
 import blusunrize.immersiveengineering.client.IEDefaultColourHandlers;
 import blusunrize.immersiveengineering.client.models.obj.IEOBJLoader;
 import blusunrize.immersiveengineering.client.render.EntityRenderNone;
-import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IColouredBlock;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IIEMetaBlock;
@@ -271,39 +270,30 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
+		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
-		if(ID==IIGuiList.GUI_UPGRADE.ordinal())
+		if(ID==IIGuiList.GUI_UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
 		{
-			if(te instanceof IUpgradableMachine)
-			{
-				TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
-				if(upgradeMaster!=null)
-					return new GuiUpgrade(player, (TileEntity & IUpgradableMachine)upgradeMaster);
-			}
+			TileEntity upgradeMaster = ((IUpgradableMachine)te).getUpgradeMaster();
+			if(upgradeMaster!=null)
+				return new GuiUpgrade(player, (TileEntity & IUpgradableMachine)upgradeMaster);
 		}
 
-		GuiScreen gui;
+		GuiScreen gui = null;
 		if(IIGuiList.values().length > ID)
 		{
 			IIGuiList guiBuilder = IIGuiList.values()[ID];
 			if(guiBuilder.item)
-			{
-				return guiBuilder.guiFromStack.apply(player, stack);
-			}
-			else if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))
-			{
-				gui = guiBuilder.guiFromTile.apply(player, te);
-				if(gui!=null)
-				{
+				return guiBuilder.guiFromStack.apply(player, stack, hand);
+
+			if(te instanceof IGuiTile&&guiBuilder.teClass.isInstance(te))
+				if((gui = guiBuilder.guiFromTile.apply(player, te))!=null)
 					((IGuiTile)te).onGuiOpened(player, true);
-					return gui;
-				}
-			}
 		}
 
-		return null;
+		return gui;
 	}
 
 	@Override
@@ -359,9 +349,9 @@ public class ClientProxy extends CommonProxy
 
 		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemBulletMagazine);
 		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemBinoculars);
+		IIModelRegistry.instance.registerCustomItemModel(IIContent.itemCasingPouch);
 
 		IIContent.itemMotorBelt.setRenderModels();
-		Config.manual_bool.put("petroleumHere", false);
 
 		//Compat
 		IICompatModule.doModulesClientPreInit();
@@ -390,6 +380,10 @@ public class ClientProxy extends CommonProxy
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/binoculars");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_off");
 		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/binoculars/infrared_binoculars_on");
+
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/casing_pouch/empty");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/casing_pouch/filled");
+		ApiUtils.getRegisterSprite(event.getMap(), ImmersiveIntelligence.MODID+":items/casing_pouch/closed");
 
 		for(Entry<String, Shrapnel> s : ShrapnelHandler.registry.entrySet())
 			ApiUtils.getRegisterSprite(event.getMap(), s.getValue().texture.replace("textures/", ""));

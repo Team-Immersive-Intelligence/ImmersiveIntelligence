@@ -81,6 +81,7 @@ public class ImmersivePetroleumHelper extends IICompatModule
 		//for compat that requires events
 		MinecraftForge.EVENT_BUS.register(this);
 		Config.manual_bool.put("petroleumHere", true);
+		petroleum = true;
 	}
 
 	@Override

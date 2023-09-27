@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.api.utils;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
+import blusunrize.immersiveengineering.common.items.IEItemInterfaces;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -15,6 +16,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -41,6 +43,17 @@ public class ItemTooltipHandler
 	public interface IItemScrollable
 	{
 		void onScroll(ItemStack stack, boolean forward, EntityPlayerMP player);
+	}
+
+	public interface IGuiItem extends IEItemInterfaces.IGuiItem
+	{
+		@Override
+		default int getGuiID(ItemStack stack)
+		{
+			return getGUI(stack).ordinal();
+		}
+
+		IIGuiList getGUI(ItemStack stack);
 	}
 
 	//--- Utility Methods ---//

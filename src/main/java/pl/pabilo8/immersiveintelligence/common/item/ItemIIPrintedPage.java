@@ -1,16 +1,15 @@
 package pl.pabilo8.immersiveintelligence.common.item;
 
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IGuiItem;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -70,9 +69,9 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	}
 
 	@Override
-	public int getGuiID(ItemStack stack)
+	public IIGuiList getGUI(ItemStack stack)
 	{
-		return stackToSub(stack).guiPage.ordinal();
+		return stackToSub(stack).guiPage;
 	}
 
 	/**
@@ -83,7 +82,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		ItemStack stack = player.getHeldItem(hand);
-		CommonProxy.openGuiForItem(player, hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
+		CommonProxy.openGuiForItem(player, hand);
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 }

@@ -5,10 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.*;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.client.gui.block.ammunition_production.GuiProjectileWorkshop;
@@ -21,6 +21,8 @@ import pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine.GuiD
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStatus;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageTasks;
+import pl.pabilo8.immersiveintelligence.client.gui.item.GuiCasingPouch;
+import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityDataMerger;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityMetalCrate;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
@@ -35,6 +37,7 @@ import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.Ti
 import pl.pabilo8.immersiveintelligence.common.block.simple.tileentity.TileEntitySmallCrate;
 import pl.pabilo8.immersiveintelligence.common.gui.*;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
+import pl.pabilo8.immersiveintelligence.common.util.lambda.TriFunction;
 
 import javax.annotation.Nonnull;
 import java.util.function.BiFunction;
@@ -103,6 +106,8 @@ public enum IIGuiList
 	GUI_PRINTED_PAGE_TEXT(),
 	GUI_PRINTED_PAGE_CODE(),
 	GUI_PRINTED_PAGE_BLUEPRINT(),
+
+	GUI_CASING_POUCH(ContainerCasingPouch::new),
 
 	GUI_DATA_REDSTONE_INTERFACE_DATA(TileEntityRedstoneInterface.class,
 			ContainerRedstoneDataInterface::new
@@ -191,23 +196,43 @@ public enum IIGuiList
 
 	public boolean item;
 	public final Class<? extends TileEntity> teClass;
-	public final BiFunction<EntityPlayer, TileEntity, Container> container;
+	public final BiFunction<EntityPlayer, TileEntity, Container> containerFromTile;
+	public final TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack;
 	@SideOnly(Side.CLIENT)
 	public BiFunction<EntityPlayer, TileEntity, GuiScreen> guiFromTile;
 	@SideOnly(Side.CLIENT)
-	public BiFunction<EntityPlayer, ItemStack, GuiScreen> guiFromStack;
+	public TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack;
 
-	<T extends TileEntity> IIGuiList(@Nonnull Class<T> teClass, BiFunction<EntityPlayer, T, Container> container)
+	/**
+	 * TileEntity GUI constructor
+	 */
+	<T extends TileEntity> IIGuiList(@Nonnull Class<T> teClass, BiFunction<EntityPlayer, T, Container> containerFromTile)
 	{
 		this.teClass = teClass;
-		this.container = (player, tileEntity) -> container.apply(player, (T)tileEntity);
+		this.containerFromTile = (player, tileEntity) -> containerFromTile.apply(player, (T)tileEntity);
+		this.containerFromStack = null;
 		this.item = false;
 	}
 
+	/**
+	 * ItemStack GUI constructor
+	 */
+	IIGuiList(TriFunction<EntityPlayer, ItemStack, EnumHand, Container> containerFromStack)
+	{
+		this.teClass = null;
+		this.containerFromTile = null;
+		this.containerFromStack = containerFromStack;
+		this.item = true;
+	}
+
+	/**
+	 * Container-less Item GUI constructor
+	 */
 	IIGuiList()
 	{
 		this.teClass = null;
-		this.container = null;
+		this.containerFromTile = null;
+		this.containerFromStack = null;
 		this.item = true;
 	}
 
@@ -249,6 +274,8 @@ public enum IIGuiList
 		IIGuiList.GUI_PRINTED_PAGE_CODE.setClientStackGui(GuiPrintedPage::new);
 		IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT.setClientStackGui(GuiPrintedPage::new);
 
+		IIGuiList.GUI_CASING_POUCH.setClientStackGui(GuiCasingPouch::new);
+
 		IIGuiList.GUI_UPGRADE.setClientGui((player, te) -> new GuiUpgrade(player, ((TileEntity & IUpgradableMachine)te)));
 
 		IIGuiList.GUI_VULCANIZER.setClientGui(GuiVulcanizer::new);
@@ -272,7 +299,7 @@ public enum IIGuiList
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setClientStackGui(BiFunction<EntityPlayer, ItemStack, GuiScreen> guiFromStack)
+	public void setClientStackGui(TriFunction<EntityPlayer, ItemStack, EnumHand, GuiScreen> guiFromStack)
 	{
 		this.guiFromStack = guiFromStack;
 		item = true;

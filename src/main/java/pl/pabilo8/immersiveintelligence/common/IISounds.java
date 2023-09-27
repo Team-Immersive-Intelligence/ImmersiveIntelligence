@@ -223,6 +223,10 @@ public class IISounds
 
 	//--- Guns ---//
 
+	//Ammo Pickup
+	@ModSound(sounds = {"weapons/rifle/load{0..2}"}, subtitle = "*")
+	public static SoundEvent casingPickup = registerSound("casing_pickup");
+
 	//Machinegun
 	@ModSound(sounds = {"weapons/dryfire{0..1}"}, subtitle = "dryfire")
 	public static SoundEvent machinegunShotDry = registerSound("machinegun_shot_dry");

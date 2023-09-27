@@ -249,6 +249,7 @@ desc.immersiveintelligence.electric_wirecutter=Cuts wires and motor belts, works
 desc.immersiveintelligence.wrench=Installs upgrades on compatible machines.
 desc.immersiveintelligence.tachometer=Measures speed and torque of rotary devices.
 desc.immersiveintelligence.binoculars=Allows to see distant things.
+desc.immersiveintelligence.casing_pouch=Stores spent casings and empty magazines.
 
 desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
 desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
@@ -408,6 +409,8 @@ item.immersiveintelligence.bullet_magazine.assault_rifle.name=Assault Rifle Maga
 item.immersiveintelligence.bullet_magazine.autocannon.name=Autocannon Magazine
 item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS Drum Magazine
 item.immersiveintelligence.bullet_magazine.rifle.name=Rifle Magazine
+
+item.immersiveintelligence.casing_pouch.name=Spent Casings Pouch
 
 item.immersiveintelligence.motor_gear.copper.name=Copper Gear
 item.immersiveintelligence.motor_gear.brass.name=Brass Gear
@@ -844,6 +847,8 @@ subtitle.immersiveintelligence.distant_artillery_impact=Distant Artillery Impact
 subtitle.immersiveintelligence.distant_gunshot=Distant Gunshots
 subtitle.immersiveintelligence.dryfire=Gun Being Unable to Fire
 
+subtitle.immersiveintelligence.casing_pickup=Casings Drop Into a Pouch
+
 subtitle.immersiveintelligence.machinegun_shot=Machinegun Firing
 subtitle.immersiveintelligence.machinegun_shot_distant=Machinegun Firing in Distance
 subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
@@ -1073,7 +1078,7 @@ desc.immersiveintelligence.functional_circuit_shift=%s - Available Operations
 desc.immersiveintelligence.functional_circuit_ctrl=%s - Stored Operations
 desc.immersiveintelligence.functional_circuit=Allows the machine to do operations such as:
 desc.immersiveintelligence.functional_circuit_data=Set to perform following operations:
-desc.immersiveintelligence.data_storage_shift=%s - Stored Data
+desc.immersiveintelligence.data_storage_shift=%s - Stored Dataz
 desc.immersiveintelligence.data_storage=Stored Data:
 desc.immersiveintelligence.upgrade_toolbox=Can be used to upgrade machines
 desc.immersiveintelligence.cost=Material Cost:

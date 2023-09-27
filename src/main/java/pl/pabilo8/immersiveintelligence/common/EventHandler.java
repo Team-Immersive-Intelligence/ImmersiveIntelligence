@@ -12,25 +12,29 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
-import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
+import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
+import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
@@ -192,5 +196,51 @@ public class EventHandler
 			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
 				event.setCanceled(true);
 		}
+	}
+
+	@SubscribeEvent
+	public void onItemPickup(EntityItemPickupEvent event)
+	{
+		ItemStack stack = event.getItem().getItem();
+		EntityPlayer player = event.getEntityPlayer();
+
+		if(!IIRecipes.AMMO_CASINGS.matchesItemStackIgnoringSize(stack)&&!(stack.getItem() instanceof ItemIIBulletMagazine))
+			return;
+
+		for(int i = 0; i < 10; i++)
+		{
+			ItemStack pouchStack;
+			if(i==0)
+				pouchStack = IICompatModule.baubles?BaublesHelper.getWornPouch(player): ItemStack.EMPTY;
+			else
+				pouchStack = player.inventory.getStackInSlot(i-1);
+
+			//Attempt storing in pouch
+			ItemStack output = storeInPouch(pouchStack, stack);
+			if(!output.equals(stack))
+			{
+				//Full or partial success
+				event.getItem().setItem(output);
+				player.world.playSound(null, player.getPosition(), IISounds.casingPickup, SoundCategory.PLAYERS, 1f, 0.88f);
+				event.setCanceled(true);
+				stack = output;
+			}
+
+			if(stack.isEmpty())
+				return;
+		}
+
+	}
+
+	public ItemStack storeInPouch(ItemStack pouchStack, ItemStack stack)
+	{
+		if(!pouchStack.getItem().equals(IIContent.itemCasingPouch))
+			return stack;
+
+		IItemHandler pouchCap = pouchStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		if(pouchCap==null)
+			return stack;
+
+		return ItemHandlerHelper.insertItem(pouchCap, stack, false);
 	}
 }

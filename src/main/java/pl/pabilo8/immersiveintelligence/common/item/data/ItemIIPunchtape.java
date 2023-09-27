@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item;
+package pl.pabilo8.immersiveintelligence.common.item.data;
 
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;

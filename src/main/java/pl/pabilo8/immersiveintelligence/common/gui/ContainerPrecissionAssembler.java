@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIAssemblyScheme;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIAssemblyScheme;
 
 /**
  * @author Pabilo8

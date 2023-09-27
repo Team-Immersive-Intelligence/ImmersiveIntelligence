@@ -1,5 +1,6 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.common.Config;
 import blusunrize.immersiveengineering.common.Config.Mapped;
 import blusunrize.immersiveengineering.common.Config.SubConfig;
 import com.google.common.collect.Maps;
@@ -1673,6 +1674,8 @@ public class IIConfigHandler
 	@SubscribeEvent
 	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent ev)
 	{
+		Config.manual_bool.put("petroleumHere", false);
+		Config.manual_bool.put("baublesHere", false);
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
 			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
 	}

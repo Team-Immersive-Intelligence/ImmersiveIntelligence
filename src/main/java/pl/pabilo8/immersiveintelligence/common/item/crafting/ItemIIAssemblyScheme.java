@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item;
+package pl.pabilo8.immersiveintelligence.common.item.crafting;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;

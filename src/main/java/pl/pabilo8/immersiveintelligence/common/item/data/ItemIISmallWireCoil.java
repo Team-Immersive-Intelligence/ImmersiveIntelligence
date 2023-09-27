@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item;
+package pl.pabilo8.immersiveintelligence.common.item.data;
 
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.wires.IWireCoil;
@@ -14,7 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Wires;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIISmallWireCoil.SmallWires;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIISmallWireCoil.SmallWires;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;

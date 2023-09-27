@@ -19,15 +19,15 @@ import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonItemAdvanced;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine.CircuitSlot;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
@@ -69,7 +69,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 
 	public GuiArithmeticLogicMachineBase(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGuiList gui)
 	{
-		super(gui.container.apply(player, tile));
+		super(gui.containerFromTile.apply(player, tile));
 		this.thisTexture = gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE?TEXTURE_STORAGE: gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT?TEXTURE_EDIT: TEXTURE_VARIABLES;
 		this.ySize = 222;
 		this.playerInv = player.inventory;

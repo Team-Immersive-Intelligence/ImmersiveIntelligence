@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.item;
+package pl.pabilo8.immersiveintelligence.common.item.data;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.Lib;

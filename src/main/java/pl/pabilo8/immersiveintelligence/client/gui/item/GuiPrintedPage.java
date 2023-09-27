@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.client.gui;
+package pl.pabilo8.immersiveintelligence.client.gui.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
@@ -30,13 +31,13 @@ public class GuiPrintedPage extends GuiScreen
 	private static final Pattern patternStrikethrough = Pattern.compile("~~(.+?)~~");
 
 	private static final String PAGE_TEXTURE = ImmersiveIntelligence.MODID+":textures/gui/printed_page.png";
-	private int guiLeft=0, guiTop=0;
+	private int guiLeft = 0, guiTop = 0;
 
 	private final FormattedTextLine[] lines;
 
-	public GuiPrintedPage(EntityPlayer player, ItemStack stack)
+	public GuiPrintedPage(EntityPlayer player, ItemStack heldStack, EnumHand hand)
 	{
-		String text = ItemNBTHelper.getString(stack, "text")
+		String text = ItemNBTHelper.getString(heldStack, "text")
 				.replace("<br>", "\n")
 				.replace("\\n", "\n");
 

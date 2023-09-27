@@ -46,6 +46,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
+import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
@@ -836,6 +838,45 @@ public class IIUtils
 		packet.setVariable('c', new DataTypeString(parameter));
 		packet.setVariable('g', value);
 		return packet;
+	}
+
+	public static void giveOrDropCasingStack(@Nonnull Entity entity, ItemStack stack)
+	{
+		//attempt to give the item
+		if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(capability!=null)
+			{
+				for(int i = 0; i < 10; i++)
+				{
+					if(stack.isEmpty())
+						break;
+
+					ItemStack pouchStack;
+					if(i==0)
+						pouchStack = (IICompatModule.baubles&&entity instanceof EntityPlayer)?
+								BaublesHelper.getWornPouch(((EntityPlayer)entity)):
+								ItemStack.EMPTY;
+					else
+						pouchStack = capability.getStackInSlot(i-1);
+
+					if(!pouchStack.getItem().equals(IIContent.itemCasingPouch))
+						continue;
+
+					IItemHandler pouchCap = pouchStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+					if(pouchCap==null)
+						continue;
+
+					stack = ItemHandlerHelper.insertItem(pouchCap, stack, false);
+					if(entity instanceof EntityPlayer)
+						((EntityPlayer)entity).inventoryContainer.detectAndSendChanges();
+				}
+			}
+		}
+
+		if(!stack.isEmpty())
+			giveOrDropStack(entity, stack);
 	}
 
 	public static void giveOrDropStack(@Nonnull Entity entity, ItemStack stack)

@@ -7,13 +7,12 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.client.gui.GuiPrintedPage;
+import pl.pabilo8.immersiveintelligence.client.gui.item.GuiPrintedPage;
 
 /**
  * @author Pabilo8
@@ -24,12 +23,12 @@ public class PrintedPageRenderer
 	private static ItemStack cachedStack;
 	private static GuiPrintedPage cachedGui;
 
-	private static void renderItem(ItemStack stack)
+	private static void renderItem(ItemStack stack, EnumHand hand)
 	{
 		if(cachedStack==null||stack.getTagCompound()!=cachedStack.getTagCompound())
 		{
 			cachedStack = stack;
-			cachedGui = new GuiPrintedPage(ClientUtils.mc().player, stack);
+			cachedGui = new GuiPrintedPage(ClientUtils.mc().player, stack, hand);
 		}
 
 		final float scale = 0.25F;
@@ -89,7 +88,7 @@ public class PrintedPageRenderer
 		GlStateManager.rotate(f2*-45f, 1f, 0f, 0f);
 		GlStateManager.rotate(offset*f2*-30f, 0f, 1f, 0f);
 
-		renderItem(stack);
+		renderItem(stack, EnumHand.OFF_HAND);
 
 		GlStateManager.popMatrix();
 	}
@@ -118,7 +117,7 @@ public class PrintedPageRenderer
 		GlStateManager.rotate(rX*20f, 1f, 0f, 0f);
 		GlStateManager.scale(2f, 2f, 2f);
 
-		renderItem(stack);
+		renderItem(stack, EnumHand.MAIN_HAND);
 	}
 
 	/**

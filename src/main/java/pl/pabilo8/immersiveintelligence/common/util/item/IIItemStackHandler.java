@@ -1,6 +1,5 @@
-package pl.pabilo8.immersiveintelligence.common.util;
+package pl.pabilo8.immersiveintelligence.common.util.item;
 
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -8,10 +7,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,21 +16,18 @@ import javax.annotation.Nullable;
 /**
  * @author Pabilo8
  * @author BluSunrize
- * @since 09.07.2020
- * <p>
+ * @since 25.09.2023
  * but actually
  */
-public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabilityProvider
+public class IIItemStackHandler extends ItemStackHandler implements ICapabilityProvider
 {
 	private boolean first = true;
 	private ItemStack stack;
-	EnergyHelper.ItemEnergyStorage energyStorage;
 
-	public IIArmorItemStackHandler(ItemStack stack)
+	public IIItemStackHandler(ItemStack stack)
 	{
 		super();
 		this.stack = stack;
-		this.energyStorage = new EnergyHelper.ItemEnergyStorage(stack);
 	}
 
 	@Nullable
@@ -60,7 +54,7 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		return capability==CapabilityEnergy.ENERGY||capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+		return capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
 
 	@Nullable
@@ -69,7 +63,7 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 	{
 		if(first)
 		{
-			int idealSize = ((ItemIIUpgradeableArmor)stack.getItem()).getSlotCount();
+			int idealSize = ((IInventoryItem)stack.getItem()).getSlotCount();
 			NonNullList<ItemStack> newList = NonNullList.withSize(idealSize, ItemStack.EMPTY);
 			for(int i = 0; i < Math.min(stacks.size(), idealSize); i++)
 				newList.set(i, stacks.get(i));
@@ -77,8 +71,6 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 			stack = ItemStack.EMPTY;
 			first = false;
 		}
-		if(capability==CapabilityEnergy.ENERGY)
-			return (T)energyStorage;
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return (T)this;
 		return null;
@@ -87,5 +79,14 @@ public class IIArmorItemStackHandler extends ItemStackHandler implements ICapabi
 	public NonNullList<ItemStack> getContainedItems()
 	{
 		return stacks;
+	}
+
+	/**
+	 * @author Pabilo8
+	 * @since 25.09.2023
+	 */
+	public interface IInventoryItem
+	{
+		int getSlotCount();
 	}
 }

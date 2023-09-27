@@ -29,7 +29,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
@@ -402,14 +401,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 				//Return the casing
 				ItemStack cc = getCasingStack(ammo);
-				if(user.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
-				{
-					IItemHandler capability = user.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-					cc = ItemHandlerHelper.insertItem(capability, cc, false);
-				}
-				if(!cc.isEmpty())
-					Utils.dropStackAtPos(world, user.getPosition(), cc);
-
+				IIUtils.giveOrDropCasingStack(user, cc);
 			}
 
 		}

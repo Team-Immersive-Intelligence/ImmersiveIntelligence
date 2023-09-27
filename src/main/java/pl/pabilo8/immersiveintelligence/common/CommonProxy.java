@@ -55,7 +55,6 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
@@ -67,6 +66,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.ammo.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.cores.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentHMX;
@@ -508,6 +508,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIContent.tileEntitiesWeDontLike.add(tileEntity -> tileEntity instanceof TileEntityChargingStation);
 
 		IEApi.forbiddenInCrates.add((stack) -> stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock() instanceof BlockIISmallCrate);
+		IEApi.forbiddenInCrates.add(stack -> stack.getItem()==IIContent.itemCasingPouch);
 
 		IILogger.info("Adding TileEntities");
 		IIContent.TILE_ENTITIES.stream().distinct().forEach(CommonProxy::registerTile);
@@ -594,8 +595,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
+		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
 		if(ID==IIGuiList.GUI_UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
 		{
@@ -608,11 +610,14 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		{
 			IIGuiList gui = IIGuiList.values()[ID];
 
-			if(gui.teClass==null||gui.container==null||gui.guiFromTile==null)
+			if(gui.item)
+				return gui.containerFromStack==null?null: gui.containerFromStack.apply(player, stack, hand);
+
+			if(gui.teClass==null||gui.containerFromTile==null||gui.guiFromTile==null)
 				return null;
 			else if(te instanceof IGuiTile&&gui.teClass.isInstance(te))
 			{
-				Container opened = gui.container.apply(player, te);
+				Container opened = gui.containerFromTile.apply(player, te);
 				if(opened!=null)
 				{
 					((IGuiTile)te).onGuiOpened(player, false);
@@ -686,9 +691,9 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
 	}
 
-	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EntityEquipmentSlot slot)
+	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
 	{
-		ItemStack stack = player.getItemStackFromSlot(slot);
+		ItemStack stack = player.getItemStackFromSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
 		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem))
 			return;
 		IGuiItem gui = (IGuiItem)stack.getItem();
