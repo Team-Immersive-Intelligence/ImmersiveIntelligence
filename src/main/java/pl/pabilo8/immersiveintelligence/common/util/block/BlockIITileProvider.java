@@ -481,19 +481,21 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		if(tile instanceof IUpgradableMachine&&IIUtils.isWrench(heldItem))
 		{
 			IUpgradableMachine u = ((IUpgradableMachine)tile);
-			if(u.getInstallProgress()==0)
+			TileEntity master = u.getUpgradeMaster();
+			if(u.getInstallProgress()==0&&master!=null)
 			{
-				player.openGui(ImmersiveIntelligence.INSTANCE, IIGuiList.GUI_UPGRADE.ordinal(), tile.getWorld(), tile.getPos().getX(),
-						tile.getPos().getY(), tile.getPos().getZ());
+				player.openGui(ImmersiveIntelligence.INSTANCE, IIGuiList.GUI_UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),
+						master.getPos().getY(), master.getPos().getZ());
 				return true;
 			}
 		}
 		if(tile instanceof IGuiTile&&hand==EnumHand.MAIN_HAND&&!player.isSneaking())
 		{
 			TileEntity master = ((IGuiTile)tile).getGuiMaster();
+
 			if(!world.isRemote&&master!=null&&((IGuiTile)master).canOpenGui(player))
-				player.openGui(ImmersiveIntelligence.INSTANCE, ((IGuiTile)tile).getGuiID(), tile.getWorld(), tile.getPos().getX(),
-						tile.getPos().getY(), tile.getPos().getZ());
+				player.openGui(ImmersiveIntelligence.INSTANCE, ((IGuiTile)master).getGuiID(), master.getWorld(), master.getPos().getX(),
+						master.getPos().getY(), master.getPos().getZ());
 			return true;
 		}
 		return false;

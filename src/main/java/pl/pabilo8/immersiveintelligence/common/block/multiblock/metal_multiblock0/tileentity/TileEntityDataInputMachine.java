@@ -101,8 +101,7 @@ public class TileEntityDataInputMachine extends TileEntityMultiblockMetal<TileEn
 			if(!descPacket)
 				inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 26);
 
-			storedData.variables.clear();
-			storedData.fromNBT(nbt.getCompoundTag("variables"));
+			storedData = new DataPacket().fromNBT(nbt.getCompoundTag("variables"));
 			productionProgress = nbt.getFloat("production_progress");
 		}
 	}
