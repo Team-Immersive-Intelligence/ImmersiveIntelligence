@@ -5,7 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.ArrayUtils;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType.IGenericDataType;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,8 +76,7 @@ public class DataPacket implements Iterable<IDataType>
 			IDataType data = type.isAnnotationPresent(IGenericDataType.class)?(type.getAnnotation(IGenericDataType.class).defaultType().newInstance()): type.newInstance();
 			data.setDefaultValue();
 			return data;
-		}
-		catch(InstantiationException|IllegalAccessException ignored)
+		} catch(InstantiationException|IllegalAccessException ignored)
 		{
 		}
 		return new DataTypeNull();
@@ -115,8 +113,7 @@ public class DataPacket implements Iterable<IDataType>
 					IDataType p = preferred.newInstance();
 					p.setDefaultValue();
 					return preferred.cast(p);
-				}
-				catch(InstantiationException|IllegalAccessException ignored)
+				} catch(InstantiationException|IllegalAccessException ignored)
 				{
 				}
 			}
@@ -232,8 +229,7 @@ public class DataPacket implements Iterable<IDataType>
 					try
 					{
 						data = varTypes.get(type).newInstance();
-					}
-					catch(InstantiationException|IllegalAccessException e)
+					} catch(InstantiationException|IllegalAccessException e)
 					{
 						e.printStackTrace();
 					}

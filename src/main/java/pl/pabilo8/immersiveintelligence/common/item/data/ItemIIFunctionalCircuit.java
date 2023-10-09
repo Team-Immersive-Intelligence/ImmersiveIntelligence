@@ -41,6 +41,10 @@ import java.util.List;
  */
 public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implements IDataStorageItem, IAdvancedTooltipItem
 {
+	private static DataPacket lastStored = null;
+	private static Circuits last = null;
+	private static IDataType[] lastTooltip = null, lastStoredTooltip = null;
+
 	public ItemIIFunctionalCircuit()
 	{
 		super("circuit_functional", 1, Circuits.values());
@@ -227,33 +231,44 @@ public class ItemIIFunctionalCircuit extends ItemIISubItemsBase<Circuits> implem
 		GlStateManager.translate(offsetX, offsetsY.get(0), 700);
 		GlStateManager.scale(.5f, .5f, 1);
 
-		if(ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT))
+		boolean b = ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LSHIFT);
+		if(b)
 		{
-			CircuitTypes circuit = IIContent.itemCircuit.stackToSub(stack).tier;
-			List<String> operationsList = IIContent.itemCircuit.getOperationsList(stack);
+			IDataType[] types;
+			if(last==IIContent.itemCircuit.stackToSub(stack))
+				types = lastTooltip;
+			else
+				lastTooltip = types = IIContent.itemCircuit.getOperationsList(stack).stream()
+						.map(o -> DataPacket.getVarInstance(DataOperations.getOperationInstance(o).expectedResult))
+						.toArray(IDataType[]::new);
 
-			int i = 0;
-			for(String op : operationsList)
+			GlStateManager.color(1f, 1f, 1f, 1f);
+			for(int i = 0; i < types.length; i++)
 			{
-				IDataType type = DataPacket.getVarInstance(DataOperations.getOperationInstance(op).expectedResult);
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				ClientUtils.bindTexture(type.textureLocation());
+				ClientUtils.bindTexture(types[i].textureLocation());
 				Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
-				i++;
 			}
 		}
+
 		if(ItemTooltipHandler.canExpandTooltip(Keyboard.KEY_LCONTROL))
 		{
-			int i = 0;
-			for(IDataType type : getStoredData(stack))
-				if(type instanceof DataTypeExpression)
-				{
-					IDataType operation = DataPacket.getVarInstance(((DataTypeExpression)type).getOperation().expectedResult);
-					GlStateManager.color(1f, 1f, 1f, 1f);
-					ClientUtils.bindTexture(operation.textureLocation());
-					Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
-					i++;
-				}
+			DataPacket storedData = getStoredData(stack);
+			IDataType[] types;
+			if(storedData.equals(lastStored))
+				types = lastStoredTooltip;
+			else
+				lastStoredTooltip = types = storedData.variables.values().stream()
+						.filter(o -> o instanceof DataTypeExpression)
+						.map(o -> DataPacket.getVarInstance(((DataTypeExpression)o).getOperation().expectedResult))
+						.toArray(IDataType[]::new);
+
+			GlStateManager.color(1f, 1f, 1f, 1f);
+			int off = offsetsY.get(b?1: 0)-offsetsY.get(0);
+			for(int i = 0; i < types.length; i++)
+			{
+				ClientUtils.bindTexture(types[i].textureLocation());
+				Gui.drawModalRectWithCustomSizedTexture(0, off+i*20, 0, 0, 16, 16, 16, 16);
+			}
 		}
 	}
 
