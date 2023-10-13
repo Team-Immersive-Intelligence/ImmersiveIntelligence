@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.api.data.operations.cryptographer;
 
-import com.sun.prism.PixelFormat.DataType;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.cryptography.Cryptographer;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeEncrypted;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
@@ -18,7 +16,7 @@ public class DataOperationDecryptText extends DataOperation
 	{
 		name = "decrypt_text";
 		allowedTypes = new Class[]{DataTypeEncrypted.class, DataTypeString.class};
-		params = new String[]{"message","password"};
+		params = new String[]{"message", "password"};
 		expectedResult = DataTypeString.class;
 	}
 

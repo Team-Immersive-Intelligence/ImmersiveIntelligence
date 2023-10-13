@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "II AMT Animation Schema",
+  "description": "Immersive Intelligence AMT Animation Data",
+  "type": "object",
+  "properties": {
+    "comment": {
+      "description": "A general description of this animation",
+      "type": "string",
+      "default": "Made with Blockbench"
+    },
+    "groups": {
+      "description": "Animation Groups of an AMT",
+      "type": "object",
+      "properties": {
+
+      }
+    }
+  },
+  "required": ["groups"]
+}

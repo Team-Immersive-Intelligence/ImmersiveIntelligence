@@ -360,6 +360,9 @@ public class IIUtils
 	 */
 	public static Vec3d offsetPosDirection(float offset, double yaw, double pitch)
 	{
+		if(offset==0)
+			return new Vec3d(0, 0, 0);
+
 		double yy = (MathHelper.sin((float)pitch)*offset);
 		double true_offset = (MathHelper.cos((float)pitch)*offset);
 

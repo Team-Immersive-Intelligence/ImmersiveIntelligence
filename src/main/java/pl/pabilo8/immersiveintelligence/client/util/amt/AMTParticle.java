@@ -94,8 +94,9 @@ public class AMTParticle extends AMT
 	 */
 	private void drawGunshot(BufferBuilder buf)
 	{
-		GlStateManager.translate(originPos.x, originPos.y-0.5, originPos.z);
+		GlStateManager.translate(originPos.x, originPos.y-0.125, originPos.z);
 		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.disableCull();
 
 		TextureAtlasSprite tex = ParticleGunfire.TEXTURES[(int)(property*7)];
 		float u = tex.getMinU(), v = tex.getInterpolatedV(8), uu = tex.getInterpolatedU(8), vv = tex.getMaxV();
@@ -107,10 +108,9 @@ public class AMTParticle extends AMT
 		GlStateManager.disableLighting();
 
 		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.translate(0, 0.25, 0);
 
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		IIClientUtils.drawFace(buf, 0.385, -0.5, -0.5, 0.385, 0.5, 0.5,
+		IIClientUtils.drawFace(buf, 0.385, -0.5, -0.5+0.03125, 0.385, 0.5, 0.5+0.03125,
 				u, uu, v, vv);
 		u = tex.getInterpolatedU(8);
 		uu = tex.getMaxU();
@@ -125,6 +125,7 @@ public class AMTParticle extends AMT
 		v = tex.getMinV();
 		vv = tex.getInterpolatedV(8);
 
+		GlStateManager.translate(0, 0, 0.03125);
 		for(int i = 0; i < 4; i++)
 		{
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

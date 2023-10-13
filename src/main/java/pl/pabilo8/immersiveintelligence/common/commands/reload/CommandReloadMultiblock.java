@@ -4,10 +4,13 @@ import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,6 +63,20 @@ public class CommandReloadMultiblock extends CommandBase
 				{
 					((MultiblockStuctureBase<?>)multiblock).updateStructure();
 					success = true;
+
+					for(TileEntity te : sender.getEntityWorld().loadedTileEntityList)
+						if(te instanceof TileEntityMultiblockIIGeneric)
+						{
+							TileEntityMultiblockIIGeneric<?> teMB = (TileEntityMultiblockIIGeneric<?>)te;
+							(teMB).forceReCacheAABB();
+							if((teMB).isDummy())
+								continue;
+							(teMB).sendNBTMessageClient(
+									EasyNBT.newNBT()
+											.withBoolean(TileEntityMultiblockIIGeneric.KEY_SYNC_AABB, true)
+											.unwrap()
+							);
+						}
 				}
 			}
 		}

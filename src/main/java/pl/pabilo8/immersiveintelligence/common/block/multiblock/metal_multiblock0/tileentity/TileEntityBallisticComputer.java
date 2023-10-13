@@ -1,8 +1,7 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerInteraction;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -14,105 +13,35 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.BallisticComputer;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
-import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.BallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileEntityBallisticComputer, IMultiblockRecipe> implements IDataDevice, IAdvancedBounds, IPlayerInteraction
+public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<TileEntityBallisticComputer> implements IPlayerInteraction
 {
 	public int progress = 0;
 
 	public TileEntityBallisticComputer()
 	{
-		super(MultiblockBallisticComputer.INSTANCE, new int[]{2, 2, 2}, BallisticComputer.energyCapacity, true);
-	}
+		super(MultiblockBallisticComputer.INSTANCE);
 
-	@Override
-	public float[] getBlockBounds()
-	{
-		return new float[]{0, 0, 0, 1, 1, 1};
-	}
-
-	@Override
-	public int[] getEnergyPos()
-	{
-		return new int[]{6};
-	}
-
-	@Override
-	public int[] getRedstonePos()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return false;
-	}
-
-	@Override
-	public void doProcessOutput(ItemStack output)
-	{
-
-	}
-
-	@Override
-	public void doProcessFluidOutput(FluidStack output)
-	{
-	}
-
-	@Override
-	public void onProcessFinish(MultiblockProcess<IMultiblockRecipe> process)
-	{
-
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return 0;
-	}
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return new NonNullList<ItemStack>()
-		{
-		};
+		this.energyStorage = new FluxStorageAdvanced(BallisticComputer.energyCapacity);
+		inventory = NonNullList.withSize(0, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -122,70 +51,9 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	}
 
 	@Override
-	public int getSlotLimit(int slot)
+	protected void onUpdate()
 	{
-		return 0;
-	}
 
-	@Override
-	public int[] getOutputSlots()
-	{
-		return new int[]{1};
-	}
-
-	@Override
-	public int[] getOutputTanks()
-	{
-		return new int[]{};
-	}
-
-	@Override
-	public boolean additionalCanProcessCheck(MultiblockProcess<IMultiblockRecipe> process)
-	{
-		return false;
-	}
-
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return new IFluidTank[]{};
-	}
-
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
-	{
-		return new FluidTank[0];
-	}
-
-	@Override
-	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
-	{
-		return false;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-		this.markDirty();
-		this.markContainingBlockForUpdate(null);
-	}
-
-	@Override
-	public IMultiblockRecipe findRecipeForInsertion(ItemStack inserting)
-	{
-		return null;
-	}
-
-	@Override
-	protected IMultiblockRecipe readRecipeFromNBT(NBTTagCompound tag)
-	{
-		return null;
 	}
 
 	@Override
@@ -203,21 +71,24 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 	}
 
 	@Override
-	public void onReceive(DataPacket packet, EnumFacing side)
+	public int[] getRedstonePos(boolean input)
 	{
-		if(this.pos!=2)
+		return multiblock.getPointsOfInterest("redstone");
+	}
+
+	@Nonnull
+	@Override
+	public int[] getDataPos(boolean input)
+	{
+		return multiblock.getPointsOfInterest("data_input");
+	}
+
+	@Override
+	public void receiveData(DataPacket packet, int pos)
+	{
+		if(energyStorage.getEnergyStored() < BallisticComputer.energyUsage)
 			return;
-
-		TileEntityBallisticComputer master = master();
-		TileEntityBallisticComputer output = getTileForPos(3);
-
-		if(master==null||output==null)
-			return;
-
-		if(master.energyStorage.getEnergyStored() < BallisticComputer.energyUsage)
-			return;
-		master.energyStorage.extractEnergy(BallisticComputer.energyUsage, false);
-
+		energyStorage.extractEnergy(BallisticComputer.energyUsage, false);
 
 		DataPacket new_packet = packet.clone();
 		if(new_packet.hasAnyVariables('x', 'y', 'z'))
@@ -262,9 +133,8 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 
 			float distance = (float)new Vec3d(0, 0, 0).distanceTo(new Vec3d(x, 0, z));
 
-			double drag = 1f-EntityBullet.DRAG;
+			double drag = 0.99f;
 			double gravity = EntityBullet.GRAVITY*mass;
-
 
 			float yaw;
 			if(x < 0&&z >= 0)
@@ -277,8 +147,8 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 				yaw = (float)(Math.atan(Math.abs((double)z/(double)x))/Math.PI*180D)+270;
 
 			float pitch;
-			//direct
 
+			//direct
 			if(packet.getVarInType(DataTypeBoolean.class, packet.getPacketVariable('d')).value)
 				pitch = 90-IIUtils.getDirectFireAngle((float)force, mass, new Vec3d(x, y, z));
 			else //ballistic
@@ -288,85 +158,25 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 			new_packet.setVariable('p', new DataTypeFloat(pitch));
 
 
-			IDataConnector conn = IIUtils.findConnectorFacing(output.getPos(), world, mirrored?facing.rotateYCCW(): facing.rotateY());
+			IDataConnector conn = IIUtils.findConnectorFacing(
+					getBlockPosForPos(multiblock.getPointOfInterest("data_output")),
+					world, mirrored?facing.rotateYCCW(): facing.rotateY());
 			if(conn!=null)
 				conn.sendPacket(new_packet);
 		}
 	}
 
+	@Nonnull
 	@Override
-	public List<AxisAlignedBB> getBounds(boolean collision)
+	public int[] getEnergyPos()
 	{
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-
-		switch(pos)
-		{
-			case 4:
-				switch(facing)
-				{
-					case NORTH:
-						list.add(new AxisAlignedBB(0.125, 0.125, 0, 0.875, 0.75, 0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case SOUTH:
-						list.add(new AxisAlignedBB(0.125, 0.125, 0.9375, 0.875, 0.75, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case EAST:
-						list.add(new AxisAlignedBB(0.9375, 0.125, 0.125, 1, 0.75, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case WEST:
-						list.add(new AxisAlignedBB(0, 0.125, 0.125, 0.0625, 0.75, 0.875).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-				}
-				break;
-			case 1:
-				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.5, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				break;
-			case 7:
-			{
-				Vec3d vv = new Vec3d(facing.getDirectionVec()).scale(0.25);
-				Vec3d vvv = new Vec3d((mirrored?facing.rotateY(): facing.rotateYCCW()).getDirectionVec());
-				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.5, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				list.add(new AxisAlignedBB(0.5-0.125f, 0.5, 0.5-0.125f, 0.5+0.125f, 1-3*0.0625f, 0.5+0.125f)
-						.expand(vvv.x, vvv.y, vvv.z)
-						.expand(-vvv.x*0.1875f, -vvv.y*0.1875f, -vvv.z*0.1875f)
-						.offset(vv)
-						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
-				);
-				list.add(new AxisAlignedBB(0.5-0.125f, 0.5, 0.5-0.125f, 0.5+0.125f, 1-3*0.0625f, 0.5+0.125f)
-						.expand(vvv.x, vvv.y, vvv.z)
-						.expand(-vvv.x*0.1875f, -vvv.y*0.1875f, -vvv.z*0.1875f)
-						.offset(vv.scale(-1))
-						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
-				);
-			}
-			break;
-			case 5:
-			{
-				Vec3d vv = new Vec3d(facing.getDirectionVec()).scale(0.25);
-				Vec3d vvv = new Vec3d((mirrored?facing.rotateYCCW(): facing.rotateY()).getDirectionVec()).scale(0.125);
-				list.add(new AxisAlignedBB(0.25f, -0.125, 0.25f, 0.75, 0.5-0.125, 0.75f)
-						//.expand(vvv.x, vvv.y, vvv.z)
-						//.expand(-vvv.x*0.1875f, -vvv.y*0.1875f, -vvv.z*0.1875f)
-						.offset(vv)
-						.offset(vvv)
-						.expand(vvv.x, vvv.y, vvv.z)
-						.offset(getPos().getX(), getPos().getY(), getPos().getZ())
-				);
-			}
-			break;
-
-			default:
-				list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				break;
-		}
-
-		return list;
+		return multiblock.getPointsOfInterest("energy");
 	}
 
 	@Override
 	public boolean interact(EnumFacing side, EntityPlayer player, EnumHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ)
 	{
-		if(pos==1||pos==5)
+		if(multiblock.isPointOfInterest(pos, "cocoa"))
 		{
 			TileEntityBallisticComputer master = master();
 			if(master==null)
@@ -376,27 +186,27 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 			{
 				player.setItemStackToSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND, new ItemStack(Items.BUCKET));
 				master.progress += 1;
-				master.doGraphicalUpdates(0);
+				forceTileUpdate();
 				return true;
 			}
 			else if(master.progress > 1&&master.progress < 6&&heldItem.getItem()==Items.DYE&&heldItem.getMetadata()==3)
 			{
 				heldItem.shrink(1);
 				master.progress += 1;
-				master.doGraphicalUpdates(0);
+				forceTileUpdate();
 				return true;
 			}
 			else if(master.progress > 5&&master.progress < 10&&heldItem.getItem()==Items.SUGAR)
 			{
 				heldItem.shrink(1);
 				master.progress += 1;
-				master.doGraphicalUpdates(0);
+				forceTileUpdate();
 				return true;
 			}
 			else if(master.progress > 9&&master.progress < 32&&Utils.compareToOreName(heldItem, "stickSteel"))
 			{
 				master.progress += 1;
-				master.doGraphicalUpdates(0);
+				forceTileUpdate();
 				return true;
 			}
 			else if(master.progress >= 32&&heldItem.isEmpty())
@@ -408,7 +218,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockMetal<TileE
 				master.progress = 0;
 				if(!IIUtils.hasUnlockedIIAdvancement(player, "main/secret_cocoa"))
 					IIUtils.unlockIIAdvancement(player, "main/secret_cocoa");
-				master.doGraphicalUpdates(0);
+				forceTileUpdate();
 				return true;
 			}
 		}

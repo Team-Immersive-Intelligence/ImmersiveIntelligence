@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "II AABB Schema",
+  "description": "Immersive Intelligence Axis-Alligned Bounding Box data",
+  "type": "object",
+  "properties": {
+    "bounds": {
+      "type": "object",
+      "description": "Stores named arrays of block bounds in format [X1,Y1,Z1,X2,Y2,Z2]",
+      "uniqueItems": true,
+      "additionalProperties": {
+        "type": "array",
+        "description": "Array of block bounds in format [X1,Y1,Z1,X2,Y2,Z2]",
+        "items": {
+          "type": "number",
+          "minimum": -16,
+          "maximum": 32
+        },
+        "minItems": 6,
+        "maxItems": 6
+      }
+    },
+    "positions": {
+      "type": "object",
+      "description": "Stores position(s) in multiblocks separated by commas (keys) and names of block bounds or arrays of them (values)",
+      "propertyNames": {
+        "pattern": "^[0-9,]*$"
+      },
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string",
+            "$ref": "#/properties/bounds"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "$ref": "#/properties/bounds"
+            }
+          }
+        ]
+      }
+    },
+    "poi": {
+      "type": "object",
+      "description": "Stores Points-Of-Interest in multiblocks. One POI can have multiple blocks assigned and vice versa.",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "description": "Inner position of POI in multiblock",
+            "type": "integer"
+          },
+          {
+            "type": "array",
+            "description": "Inner positions of POI in multiblock",
+            "items": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "tactile": {
+      "type": "object",
+      "description": "Stores AMT Tactiles information. One AMT group can have multiple Tactiles."
+    }
+  },
+  "required": ["bounds", "positions"]
+}

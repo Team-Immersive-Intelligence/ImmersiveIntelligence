@@ -1349,5 +1349,24 @@
 				}
 			]
 		}
-	}
+	},
+	"multisounds": {
+		"sliding_door_open": {
+
+		}
+	},
+	"sounds": [
+		{
+			"id": "@sliding_door_open",
+			"type": "repeated",
+			"begin": 0.64,
+			"end": 3.6
+		},
+		{
+			"id": "@sliding_door_open",
+			"type": "repeated",
+			"begin": 0.64,
+			"end": 3.6
+		}
+	]
 }

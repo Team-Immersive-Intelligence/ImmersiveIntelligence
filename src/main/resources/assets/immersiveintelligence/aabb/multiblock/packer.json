@@ -1,0 +1,94 @@
+{
+  "bounds": {
+    "full": [
+      0, 0, 0,
+      16, 16, 16
+    ],
+    "conveyor": [
+      0, 0, 0,
+      16, 2, 16
+    ],
+
+    "container_top": [
+      0, 0, 0,
+      16, 18, 16
+    ],
+    "container_bottom": [
+      0, 4, 0,
+      16, 16, 16
+    ],
+    "container_rail_left": [
+      1, 0, 0,
+      7, 4, 16
+    ],
+    "container_rail_right": [
+      9, 0, 0,
+      15, 4, 16
+    ],
+
+    "container_port_fl": [
+      8, 0, -8,
+      24, 4, 8
+    ],
+    "container_port_fr": [
+      -8, 0, -8,
+      8, 4, 8
+    ],
+    "container_port_bl": [
+      8, 0, 8,
+      24, 4, 24
+    ],
+    "container_port_br": [
+      -8, 0, 8,
+      8, 4, 24
+    ],
+
+    "panel": [
+      1, -1, 16,
+      15, 15, 17
+    ],
+    "fence": [
+      0, 2, 15.5,
+      16, 16, 15.5
+    ],
+    "picker_rail": [
+      6, 0, 0,
+      10, 16, 2
+    ],
+    "input_block": [
+      0, 2, 14,
+      16, 16, 16
+    ]
+  },
+  "positions": {
+    "0,1,2": [
+      "conveyor",
+      "fence"
+    ],
+    "42,43,45,46": "container_top",
+    "1,13": "picker_rail",
+    "23": [
+      "conveyor",
+      "input_block"
+    ],
+    "17": [
+      "full",
+      "panel"
+    ],
+
+    "18": "container_port_fl",
+    "19": "container_port_fr",
+    "21": "container_port_bl",
+    "22": "container_port_br",
+    "18,19,21,22": "container_bottom",
+    "18,21": "container_rail_left",
+    "19,22": "container_rail_right"
+  },
+  "poi": {
+    "energy": 25,
+    "input": 15,
+    "output": 9,
+    "redstone": 10,
+    "data": 23
+  }
+}

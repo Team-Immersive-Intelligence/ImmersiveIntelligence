@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.api.data.cryptography;
+package pl.pabilo8.immersiveintelligence.api.data.operations.cryptographer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -15,10 +15,10 @@ public class Cryptographer
 		int counter = 0;
 		byte[] encrypted = new byte[data.length];
 
-		for (int i = 0; i < data.length; i++)
+		for(int i = 0; i < data.length; i++)
 		{
-			if (counter >= password.length) counter = 0;
-			encrypted[i] = (byte)(data[i] ^ password[counter]);
+			if(counter >= password.length) counter = 0;
+			encrypted[i] = (byte)(data[i]^password[counter]);
 			counter++;
 		}
 
@@ -27,7 +27,8 @@ public class Cryptographer
 
 	/**
 	 * Encrypt <code>data</code> using xor cipher with <code>password</code>
-	 * @param data Data to be encrypted
+	 *
+	 * @param data     Data to be encrypted
 	 * @param password Password for encryption
 	 * @return Encrypted data
 	 */
@@ -38,7 +39,8 @@ public class Cryptographer
 
 	/**
 	 * Encrypt <code>data</code> using xor cipher with <code>password</code>
-	 * @param data Data to be encrypted
+	 *
+	 * @param data     Data to be encrypted
 	 * @param password Password for encryption
 	 * @return Encrypted data
 	 */
@@ -49,7 +51,8 @@ public class Cryptographer
 
 	/**
 	 * Decrypt <code>data</code> using xor cipher with <code>password</code>
-	 * @param data Data to be decrypted
+	 *
+	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)
 	 * @return Decrypted data
 	 */
@@ -61,7 +64,8 @@ public class Cryptographer
 
 	/**
 	 * Decrypt <code>data</code> using xor cipher with <code>password</code>
-	 * @param data Data to be decrypted
+	 *
+	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)
 	 * @return Decrypted data
 	 */
@@ -72,7 +76,8 @@ public class Cryptographer
 
 	/**
 	 * Decrypt <code>data</code> to string using xor cipher with <code>password</code>
-	 * @param data Data to be decrypted
+	 *
+	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)
 	 * @return Decrypted data
 	 */
@@ -83,7 +88,8 @@ public class Cryptographer
 
 	/**
 	 * Decrypt <code>data</code> to string using xor cipher with <code>password</code>
-	 * @param data Data to be decrypted
+	 *
+	 * @param data     Data to be decrypted
 	 * @param password Password for decryption (must be the same as for encryption)
 	 * @return Decrypted data
 	 */

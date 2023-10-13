@@ -95,6 +95,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.capacitor.EntityM
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateReinforced;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateWooden;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
@@ -560,6 +561,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerEntity(i++, EntityDrone.class, "drone", 64, 1, true);
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
+		registerEntity(i, EntityAMTTactile.class, "tactile", 64, 1, true);
 	}
 
 	public void postInit()

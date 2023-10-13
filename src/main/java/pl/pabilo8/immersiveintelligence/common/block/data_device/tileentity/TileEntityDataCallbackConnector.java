@@ -59,6 +59,12 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 	}
 
 	@Override
+	public boolean isCallbackCapable()
+	{
+		return true;
+	}
+
+	@Override
 	public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
 		if(player.isSneaking())
@@ -169,4 +175,6 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 		else
 			return new String[0];
 	}
+
+
 }

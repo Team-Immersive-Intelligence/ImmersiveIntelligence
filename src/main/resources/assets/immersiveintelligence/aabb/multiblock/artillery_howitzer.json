@@ -1,98 +1,330 @@
 {
   "bounds": {
-    "empty": {
-      "bounds": [
-        0,
-        13.0,
-        0,
-        1,
-        1,
-        1
-      ],
-      "rotate": false
-    },
-    "door": {
-      "bounds": [
-        0,
-        0,
-        0,
-        1,
-        2.0,
-        1
-      ],
-      "rotate": false
-    },
-    "taller_floor": {
-      "bounds": [
-        0,
-        0,
-        0,
-        1,
-        7.0,
-        1
-      ],
-      "rotate": false
-    },
-    "lower_floor": {
-      "bounds": [
-        0,
-        0,
-        0,
-        1,
-        3.0,
-        1
-      ],
-      "rotate": false
-    },
-    "table_top": {
-      "bounds": [
-        0,
-        0,
-        0,
-        1,
-        4.0,
-        1
-      ],
-      "rotate": false
-    },
-    "ladder": {
-      "bounds": [
-        0,
-        0,
-        0,
-        1,
-        1,
-        15.0
-      ],
-      "rotate": false
-    },
-    "door_holders_right": {
-      "bounds": [
-        0,
-        0,
-        0,
-        8.0,
-        10.0,
-        1
-      ],
-      "rotate": false
-    },
-    "door_holders_left": {
-      "bounds": [
-        8.0,
-        0,
-        0,
-        1,
-        10.0,
-        1
-      ],
-      "rotate": false
-    }
+    "empty": [
+      0, 0, 0,
+      0, 0, 0
+    ],
+    "door": [
+      0, 0, 0,
+      16, 2, 16
+    ],
+    "taller_floor": [
+      0, 0, 0,
+      16, 7, 16
+    ],
+    "lower_floor": [
+      0, 0, 0,
+      16, 3, 16
+    ],
+    "metal_box1": [
+      3.5, 0, 8.5,
+      18, 10, 18.5
+    ],
+    "metal_box2": [
+      -3, 0, 3,
+      13, 4, 17
+    ],
+    "table_corner1": [
+      4, 13, -4,
+      20, 16, 6
+    ],
+    "table_corner2": [
+      10, 13, 6,
+      20, 16, 12
+    ],
+    "ladder": [
+      0, 0, 0,
+      16, 16, 15
+    ],
+    "slab_ladder": [
+      0, 0, 0,
+      16, 8, 15
+    ],
+    "door_holders_left": [
+      0, 0, 0,
+      8, 10, 16
+    ],
+    "door_holders_right": [
+      8, 0, 0,
+      16, 10, 16
+    ],
+    "corner_nw": [
+      0, 0, 0,
+      8, 16, 8
+    ],
+    "corner_sw": [
+      0, 0, 8,
+      8, 16, 16
+    ],
+    "corner_ne": [
+      8, 0, 0,
+      16, 16, 8
+    ],
+    "corner_se": [
+      8, 0, 8,
+      16, 16, 16
+    ],
+    "corner_small_mid": [
+      5.35, 0, 5.35,
+      10.65, 16, 10.65
+    ],
+    "corner_small_nw": [
+      0, 0, 0,
+      5.3, 16, 5.3
+    ],
+    "corner_small_sw": [
+      0, 0, 10.7,
+      5.3, 16, 16
+    ],
+    "corner_small_ne": [
+      10.7, 0, 0,
+      16, 16, 5.3
+    ],
+    "corner_small_se": [
+      10.7, 0, 10.7,
+      16, 16, 16
+    ],
+    "slab": [
+      0, 0, 0,
+      16, 8, 16
+    ],
+    "slab_top_n": [
+      0, 8, 0,
+      16, 16, 10
+    ],
+    "slab_top_s": [
+      0, 8, 6,
+      16, 16, 16
+    ],
+    "table_top1": [
+      4, 0, 0,
+      20, 16, 16
+    ],
+    "table_top2": [
+      0, 0, -4,
+      16, 16, 12
+    ],
+    "table_top3": [
+      0, 0, 3,
+      16, 16, 19
+    ],
+    "table_top4": [
+      6, 0, 3,
+      24, 16, 19
+    ],
+    "table_top5": [
+      2, 0, 3,
+      20, 16, 19
+    ],
+    "table_top6": [
+      0, 0, 4,
+      16, 16, 20
+    ],
+    "table_top7": [
+      -4, 0, -3,
+      12, 16, 15
+    ],
+    "table1": [
+      -3, 0, -3,
+      13, 16, 13
+    ],
+    "table2": [
+      -6, 0, 3,
+      12, 16, 19
+    ],
+    "drawer": [
+      1, 0, 1,
+      15, 13, 15
+    ],
+    "drawer_top": [
+      0, 13, 0,
+      16, 16, 16
+    ],
+    "books": [
+      2, 0, 7,
+      15, 6, 18
+    ],
+    "papers": [
+      2, 0, 5,
+      11, 6, 14
+    ],
+    "lamp": [
+      6, 0, 4,
+      14, 12, 12
+    ],
+    "typewriter": [
+      -1, 0, 0,
+      12, 5, 14
+    ],
+    "drawing_board": [
+      0, 0, 4,
+      20, 6, 19.5
+    ],
+    "teletype": [
+      3, 0, 3,
+      21, 6, 16
+    ],
+    "teletype_top": [
+      2, 6, 5,
+      7, 19, 18
+    ],
+    "mess1": [
+      10, 0, 0,
+      18, 4, 16
+    ],
+    "mess2": [
+      10, 0, -8,
+      18, 4, 9
+    ],
+    "mess3": [
+      18, 0, -2,
+      21, 4, 9
+    ],
+    "mess4": [
+      5, 0, 6,
+      16, 4, 17
+    ],
+    "desk_lamp1": [
+      10, 0, 4,
+      16, 4, 10
+    ],
+    "desk_lamp2": [
+      14, 4, 3,
+      18, 10, 7
+    ],
+    "desk_lamp3": [
+      18, 9.5, 3,
+      24, 11, 7
+    ],
+    "console1": [
+      -12, 0, -3,
+      13, 4, 11
+    ],
+    "console2": [
+      5, 0, -3,
+      29, 4, 11
+    ],
+    "platform_base": [
+      0, 0, 0,
+      16, 4, 16
+    ],
+    "platform_elevator1": [
+      2, 4, 2,
+      14, 20, 14
+    ],
+    "platform_elevator2a": [
+      2, 0, 2,
+      14, 4, 14
+    ],
+    "platform_elevator2b": [
+      3, 4, 3,
+      13, 32, 13
+    ],
+    "platform_elevator3": [
+      3, -12, 3,
+      13, 20, 13
+    ]
   },
   "positions": {
-    "66,147,228,309,390,471,410": [
-      "ladder"
+    "66,147,228,309,390,410": "ladder",
+    "471": ["slab_ladder", "slab_top_n"],
+    "472,473": ["slab", "slab_top_n"],
+    "483,474": "table_top1",
+    "466,467": "table_top2",
+    "431,430": "table_top3",
+    "420": "table_top4",
+    "411": "table_top5",
+    "423,424": "table_top6",
+    "407,416": "table_top7",
+    "460": "table1",
+    "470": "table2",
+    "465": ["table_corner1", "table_corner2"],
+    "479": ["drawer", "drawer_top"],
+    "560": "books",
+    "459": "lamp",
+    "564": ["teletype", "teletype_top"],
+    "555": "mess1",
+    "548": "console1",
+    "547": "console2",
+    "488": "typewriter",
+    "497": "papers",
+    "504": "drawing_board",
+    "505,511": "mess4",
+    "546": ["mess2", "mess3"],
+    "501": ["desk_lamp1", "desk_lamp2", "desk_lamp3"],
+    "445,364,283,345,346,347,264,265,266,183,184,185,102,103,104,419,418,417,293,284,275,291,282,273,111,112,113,120,122,129,130,131": "empty",
+    "30,31,32,41,39,48,49,50": "lower_floor",
+    "21,22,23,29,33,38,42,47,51,57,58,59": "taller_floor",
+    "524,525,526,527,528,533,534,535,536,537,543,544,545,515,516,517,518,519,507,508,509,541,551": "empty",
+    "520,529,538": "door_holders_right",
+    "514,523,532": "door_holders_left",
+    "492": "metal_box1",
+    "512": "metal_box2",
+    "540,542,510,506": "empty",
+    "56,20,24,60": "taller_floor",
+    "461,429": ["corner_small_mid", "corner_small_sw", "corner_small_ne"],
+    "56,137,218,299,380": [
+      "corner_nw",
+      "corner_sw",
+      "corner_ne"
     ],
-    "461,380,299,218,137,429,348,267,186,105": []
+    "24,105,186,267,348": [
+      "corner_se",
+      "corner_sw",
+      "corner_ne"
+    ],
+    "425,465": ["corner_small_mid", "corner_small_se", "corner_small_nw"],
+    "60,141,222,303,384": [
+      "corner_se",
+      "corner_ne",
+      "corner_nw",
+      "tes123"
+    ],
+    "20,101,182,263,344": [
+      "corner_nw",
+      "corner_sw",
+      "corner_se"
+    ],
+    "40": ["platform_base", "platform_elevator1"],
+    "121": ["platform_elevator2a", "platform_elevator2b"],
+    "202": ["platform_elevator3"]
+  },
+  "poi": {
+    "energy": 449,
+    "data": 441,
+    "redstone": 481,
+    "item_input": 410,
+    "item_output": 327,
+    "gun": 445,
+    "bunker_door": [
+      524, 525, 526, 527, 528,
+      533, 534, 535, 536, 537,
+      542, 543, 544, 545, 546,
+      515, 516, 517, 518, 519,
+      506, 507, 508, 509, 510
+    ],
+    "ladder": [
+      66, 228, 147, 309, 390, 471
+    ]
+  },
+  "tactile": {
+    "_schema": "immersiveintelligence:block/multiblock/artillery_howitzer.obj.amt",
+    "turret": [
+      {
+        "offset": [-8, 0, 0],
+        "type": "door"
+      }
+    ],
+    "gun": [
+      {
+        "offset": [-8, 0, 0],
+        "bounds": [
+          0, 0, 0,
+          8, 8, 8
+        ]
+      }
+    ],
+    "barrel": [
+    ]
   }
 }

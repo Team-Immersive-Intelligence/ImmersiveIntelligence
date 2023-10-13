@@ -1,225 +1,85 @@
 {
   "bounds": {
-    "table": {
-      "bounds": [
-        0,
-        13,
-        0,
-        16,
-        16,
-        16
-      ],
-      "rotate": false
-    },
-    "table2": {
-      "bounds": [
-        0,
-        13,
-        0,
-        16,
-        15,
-        14
-      ],
-      "rotate": false
-    },
-    "inserter_plate": {
-      "bounds": [
-        0,
-        0,
-        0,
-        16,
-        1,
-        16
-      ],
-      "rotate": false
-    },
-    "inserter_rail": {
-      "bounds": [
-        0,
-        1,
-        7,
-        14,
-        3,
-        12
-      ],
-      "rotate": false
-    },
-    "inserter_rail2": {
-      "bounds": [
-        2,
-        17,
-        7,
-        16,
-        19,
-        12
-      ],
-      "rotate": false
-    },
-    "leg_br": {
-      "bounds": [
-        1,
-        0,
-        1,
-        4,
-        13,
-        4
-      ],
-      "rotate": false
-    },
-    "leg_bl": {
-      "bounds": [
-        12,
-        0,
-        1,
-        15,
-        13,
-        4
-      ],
-      "rotate": false
-    },
-    "leg_fr": {
-      "bounds": [
-        1,
-        0,
-        12,
-        4,
-        13,
-        15
-      ],
-      "rotate": false
-    },
-    "leg_fl": {
-      "bounds": [
-        12,
-        0,
-        12,
-        15,
-        13,
-        15
-      ],
-      "rotate": false
-    },
-    "rotary_port": {
-      "bounds": [
-        4,
-        4,
-        0,
-        12,
-        12,
-        1
-      ],
-      "rotate": false
-    },
-    "rotary_port2": {
-      "bounds": [
-        4,
-        6,
-        1,
-        12,
-        13,
-        6
-      ],
-      "rotate": false
-    },
-    "bottles": {
-      "bounds": [
-        0,
-        0,
-        4,
-        5,
-        13,
-        12
-      ],
-      "rotate": false
-    },
-    "crate": {
-      "bounds": [
-        4,
-        0,
-        0,
-        1,
-        8,
-        12
-      ],
-      "rotate": false
-    },
-    "mug": {
-      "bounds": [
-        9,
-        16,
-        9,
-        13,
-        22.5,
-        13
-      ],
-      "rotate": false
-    },
-    "vice_base": {
-      "bounds": [
-        4,
-        0,
-        -1,
-        12,
-        1,
-        5
-      ],
-      "rotate": false
-    },
-    "vice": {
-      "bounds": [
-        6,
-        1,
-        -8,
-        10,
-        5,
-        6
-      ],
-      "rotate": false
-    },
-    "output_box1": {
-      "bounds": [
-        0,
-        1,
-        0,
-        1,
-        12,
-        1
-      ],
-      "rotate": false
-    },
-    "output_box2": {
-      "bounds": [
-        0,
-        1,
-        1,
-        1,
-        12,
-        1
-      ],
-      "rotate": false
-    },
-    "output_box3": {
-      "bounds": [
-        15,
-        1,
-        1,
-        1,
-        12,
-        1
-      ],
-      "rotate": false
-    },
-    "output_box4": {
-      "bounds": [
-        1,
-        1,
-        1,
-        15,
-        8,
-        8
-      ],
-      "rotate": false
-    }
+    "table": [
+      0, 13, 0,
+      16, 16, 16
+    ],
+    "table2": [
+      0, 13, 0,
+      16, 15, 14
+    ],
+    "inserter_plate": [
+      0, 0, 0,
+      16, 1, 16
+    ],
+    "inserter_rail": [
+      0, 1, 7,
+      14, 3, 12
+    ],
+    "inserter_rail2": [
+      2, 17, 7,
+      16, 19, 12
+    ],
+    "leg_br": [
+      1, 0, 1,
+      4, 13, 4
+    ],
+    "leg_bl": [
+      12, 0, 1,
+      15, 13, 4
+    ],
+    "leg_fr": [
+      1, 0, 12,
+      4, 13, 15
+    ],
+    "leg_fl": [
+      12, 0, 12,
+      15, 13, 15
+    ],
+    "rotary_port": [
+      4, 4, 0,
+      12, 12, 1
+    ],
+    "rotary_port2": [
+      4, 6, 1,
+      12, 13, 6
+    ],
+    "bottles": [
+      0, 0, 4,
+      5, 13, 12
+    ],
+    "crate": [
+      4, 0, 0,
+      1, 8, 12
+    ],
+    "mug": [
+      9, 16, 9,
+      13, 22.5, 13
+    ],
+    "vice_base": [
+      4, 0, -1,
+      12, 1, 5
+    ],
+    "vice": [
+      6, 1, -8,
+      10, 5, 6
+    ],
+    "output_box1": [
+      0, 1, 0,
+      1, 12, 1
+    ],
+    "output_box2": [
+      0, 1, 1,
+      1, 12, 1
+    ],
+    "output_box3": [
+      15, 1, 1,
+      1, 12, 1
+    ],
+    "output_box4": [
+      1, 1, 1,
+      15, 8, 8
+    ]
   },
   "positions": {
     "4": [
@@ -229,15 +89,9 @@
       "inserter_plate",
       "output_box4"
     ],
-    "2": [
-      "inserter_rail2"
-    ],
-    "1,2,3": [
-      "table"
-    ],
-    "5,6,7": [
-      "table2"
-    ],
+    "2": "inserter_rail2",
+    "1,2,3": "table",
+    "5,6,7": "table2",
     "11": [
       "inserter_plate",
       "inserter_rail"
@@ -246,9 +100,7 @@
       "leg_fr",
       "mug"
     ],
-    "3": [
-      "leg_fl"
-    ],
+    "3": "leg_fl",
     "5": [
       "leg_br",
       "bottles"

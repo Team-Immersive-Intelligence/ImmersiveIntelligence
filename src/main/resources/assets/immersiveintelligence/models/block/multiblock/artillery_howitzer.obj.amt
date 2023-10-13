@@ -54,7 +54,7 @@
 		"shell_storage2": [37.5, -60, 84.5],
 		"shell_storage3": [28.5, -60, 93.5],
 		"shell_storage4": [37.5, -60, 93.5],
-		"muzzle_flash": [6, 32, 81]
+		"muzzle_flash": [6, 26, 80]
 	},
 	"hierarchy": {
 		"shell_in": "loading_chamber",

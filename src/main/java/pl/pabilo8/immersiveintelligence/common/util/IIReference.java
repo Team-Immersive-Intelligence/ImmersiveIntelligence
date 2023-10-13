@@ -43,7 +43,7 @@ public class IIReference
 
 	//Models
 	public static final ResLoc RES_ITEM_MODEL = ResLoc.of(RES_II, "models/item/");
-	public static final ResLoc RES_BLOCK_MODEL = ResLoc.of(RES_II, "models/item/");
+	public static final ResLoc RES_BLOCK_MODEL = ResLoc.of(RES_II, "models/block/");
 	public static final ResLoc RES_AABB = ResLoc.of(RES_II, "aabb/");
 
 	//Sounds
