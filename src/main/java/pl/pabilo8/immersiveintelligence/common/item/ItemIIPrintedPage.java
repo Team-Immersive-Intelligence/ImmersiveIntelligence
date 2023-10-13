@@ -44,7 +44,16 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		@IIItemProperties(oreDict = {"pageCode", "pageWritten"})
 		CODE(IIGuiList.GUI_PRINTED_PAGE_CODE),
 		@IIItemProperties(oreDict = {"pageBlueprint", "pageWritten"})
-		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT);
+		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT),
+
+		@IIItemProperties(oreDict = "pageBinded")
+		BOUND_PAGES(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = "pageNewspaper")
+		NEWSPAPER(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = {"pageBook", "book", "bookPrinted"})
+		BOOK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = {"pageLetter", "letter"})
+		LETTER(IIGuiList.GUI_PRINTED_PAGE_BLANK);
 
 		private final IIGuiList guiPage;
 		private final String tooltip;

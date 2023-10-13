@@ -327,6 +327,10 @@ item.immersiveintelligence.printed_page.blank.name=Blank Page
 item.immersiveintelligence.printed_page.text.name=Printed Text
 item.immersiveintelligence.printed_page.code.name=Printed Code
 item.immersiveintelligence.printed_page.blueprint.name=Printed Construction Scheme
+item.immersiveintelligence.printed_page.bound_pages.name=Bound Pages
+item.immersiveintelligence.printed_page.newspaper.name=Newspaper
+item.immersiveintelligence.printed_page.book.name=Book
+item.immersiveintelligence.printed_page.letter.name=Letter
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=Precision Buzzsaw
 item.immersiveintelligence.precission_tool.drill.name=Precision Drill
@@ -1078,15 +1082,19 @@ desc.immersiveintelligence.functional_circuit_shift=%s - Available Operations
 desc.immersiveintelligence.functional_circuit_ctrl=%s - Stored Operations
 desc.immersiveintelligence.functional_circuit=Allows the machine to do operations such as:
 desc.immersiveintelligence.functional_circuit_data=Set to perform following operations:
-desc.immersiveintelligence.data_storage_shift=%s - Stored Dataz
+desc.immersiveintelligence.data_storage_shift=%s - Stored Data
 desc.immersiveintelligence.data_storage=Stored Data:
 desc.immersiveintelligence.upgrade_toolbox=Can be used to upgrade machines
 desc.immersiveintelligence.cost=Material Cost:
 
 desc.immersiveintelligence.printed_page.blank=An empty page ready to be printed.
 desc.immersiveintelligence.printed_page.text=A page containing some text.
-desc.immersiveintelligence.printed_page.code=A page containing some code written in a programming language.
+desc.immersiveintelligence.printed_page.code=A page containing some code written in POL programming language.
 desc.immersiveintelligence.printed_page.blueprint=A page containing information on how to build a structure.
+desc.immersiveintelligence.printed_page.bound_pages=Various pages bound together.
+desc.immersiveintelligence.printed_page.newspaper=Multiple pages bound into a newspaper.
+desc.immersiveintelligence.printed_page.book=Multiple pages bound into a book.
+desc.immersiveintelligence.printed_page.letter=A page packed into an envelope to be sent to someone.
 
 desc.immersiveintelligence.punchtape.empty=No variables written
 desc.immersiveintelligence.punchtape.written=Written
