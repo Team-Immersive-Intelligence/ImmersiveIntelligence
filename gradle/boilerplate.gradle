@@ -26,6 +26,12 @@ idea {
     }
 }
 
+tasks.register('additionalIntellijSettings', Copy) {
+    from 'gradle/docs/idea/*.xml'
+    into '.idea'
+}
+tasks.idea.dependsOn additionalIntellijSettings
+
 //--- Project Defaults
 setVersion(modVersion)
 setGroup(modGroup)
