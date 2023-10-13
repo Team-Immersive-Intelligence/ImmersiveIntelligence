@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands.give;
+package pl.pabilo8.immersiveintelligence.common.commands.ii.item;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -64,8 +64,9 @@ public class CommandIIGiveBullet extends CommandBase
 			for(int i = 4; i < args.length; i++)
 				components.add(AmmoRegistry.INSTANCE.getComponent(args[i]));
 
-			if(casing!=null&&core!=null) {
-				
+			if(casing!=null&&core!=null)
+			{
+
 				player.addItemStackToInventory(casing.getBulletWithParams(core, coreType, components.toArray(new IAmmoComponent[0])));
 				sender.sendMessage(new TextComponentString("Bullets given!"));
 			}
@@ -106,7 +107,7 @@ public class CommandIIGiveBullet extends CommandBase
 		else if(args.length==4)
 		{
 			IAmmo bullet = AmmoRegistry.INSTANCE.registeredBulletItems.get(args[1]);
-			return getListOfStringsMatchingLastWord(args,bullet==null?Collections.emptyList():Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
+			return getListOfStringsMatchingLastWord(args, bullet==null?Collections.emptyList(): Arrays.stream(bullet.getAllowedCoreTypes()).map(EnumCoreTypes::getName).collect(Collectors.toList()));
 		}
 		else if(args.length > 4)
 		{

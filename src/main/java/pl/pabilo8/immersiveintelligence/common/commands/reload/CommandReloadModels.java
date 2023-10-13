@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands;
+package pl.pabilo8.immersiveintelligence.common.commands.reload;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 23-06-2020
  */
-public class CommandReloadManual extends CommandBase
+public class CommandReloadModels extends CommandBase
 {
 	/**
 	 * Gets the name of the command
@@ -26,7 +26,7 @@ public class CommandReloadManual extends CommandBase
 	@Override
 	public String getName()
 	{
-		return "relman";
+		return "relmod";
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class CommandReloadManual extends CommandBase
 	@Override
 	public String getUsage(@Nonnull ICommandSender sender)
 	{
-		return "Reload all Immersive Intelligence manual pages using the Markdown system";
+		return "Reload all registered Turbo Model Thingy models from Immersive Intelligence";
 	}
 
 	/**
@@ -45,8 +45,18 @@ public class CommandReloadManual extends CommandBase
 	@Override
 	public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args)
 	{
-		ImmersiveIntelligence.proxy.reloadManual();
-		sender.sendMessage(new TextComponentString(("Succesfully reloaded all II manual pages")));
+		boolean success = false;
+		if(args.length > 0)
+		{
+			for(String arg : args)
+				success = IIModelRegistry.instance.reloadModel(new ResourceLocation(arg))||success;
+		}
+		else
+		{
+			ImmersiveIntelligence.proxy.reloadModels();
+			success = true;
+		}
+		sender.sendMessage(new TextComponentString((success?"Succesfully reloaded ": "Couldn't reload ")+(args.length==1?args[0]: "all models")));
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands;
+package pl.pabilo8.immersiveintelligence.common.commands.reload;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
 import net.minecraft.command.CommandBase;

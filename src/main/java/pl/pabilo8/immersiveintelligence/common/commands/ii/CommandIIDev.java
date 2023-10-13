@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands;
+package pl.pabilo8.immersiveintelligence.common.commands.ii;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
@@ -6,7 +6,6 @@ import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -41,6 +40,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.server.command.CommandTreeBase;
+import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.time.StopWatch;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
@@ -65,8 +66,13 @@ import java.util.stream.Collectors;
  * @author Pabilo8
  * @since 23-06-2020
  */
-public class CommandIIDev extends CommandBase
+public class CommandIIDev extends CommandTreeHelp
 {
+	public CommandIIDev(CommandTreeBase parent)
+	{
+		super(parent);
+	}
+
 	private static final Set<String> OPTIONS = new HashSet<>();
 
 	static

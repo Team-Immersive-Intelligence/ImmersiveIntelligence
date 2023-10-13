@@ -1,4 +1,4 @@
-package pl.pabilo8.immersiveintelligence.common.commands;
+package pl.pabilo8.immersiveintelligence.common.commands.ii;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -6,9 +6,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.command.CommandTreeHelp;
-import pl.pabilo8.immersiveintelligence.common.commands.give.CommandIIGiveBullet;
-import pl.pabilo8.immersiveintelligence.common.commands.give.CommandIIGiveMagazine;
-import pl.pabilo8.immersiveintelligence.common.commands.give.CommandIIGivePunchtape;
+import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGiveBullet;
+import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGiveMagazine;
+import pl.pabilo8.immersiveintelligence.common.commands.ii.item.CommandIIGivePunchtape;
+import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadManual;
+import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadModels;
+import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadMultiblock;
+import pl.pabilo8.immersiveintelligence.common.commands.reload.CommandReloadSkins;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +28,7 @@ public class CommandII extends CommandTreeBase
 	public CommandII()
 	{
 
-		addSubcommand(new CommandIIDev());
+		addSubcommand(new CommandIIDev(this));
 
 		addSubcommand(new CommandIIHans());
 
