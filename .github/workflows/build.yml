@@ -77,16 +77,11 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: './keystore.jks'
+          fileName: '~/keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Execute Gradle build
         run: chmod +x gradlew ; ./gradlew build --scan
-        env:
-          SIGNING_KEY_STORE_PATH: './keystore.jks'
-          SIGNING_KEY_ALIAS: 'carverbot'
-          SIGNING_KEY_PASSWORD: ${{ secrets.KEYSTORE_USER_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
       - name: Upload test build
         uses: actions/upload-artifact@v3
