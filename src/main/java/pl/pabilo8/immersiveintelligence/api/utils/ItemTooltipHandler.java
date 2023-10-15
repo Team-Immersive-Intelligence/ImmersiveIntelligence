@@ -32,8 +32,6 @@ public class ItemTooltipHandler
 {
 	public static final String tooltipPattern = "";
 
-
-	@SideOnly(Side.CLIENT)
 	public interface IAdvancedTooltipItem
 	{
 		@SideOnly(Side.CLIENT)

@@ -104,7 +104,8 @@ public class ImmersiveIntelligence
 
 	//If anyone wants to acquire a righteously certified loicense:tm:, ask @Pabilo8, it is probable he can grant you one
 	private static final String[] alternativeCerts = {
-			"4e1045a33d925770c5393a384c1a60f63f8f50e5" //Gabriel
+			"4e1045a33d925770c5393a384c1a60f63f8f50e5", //Gabriel
+			"0f6c85efeabec62835f1fb26ff0ad1ae6f1af9cb" //Automated Carver Device(tm)
 	};
 
 	@Mod.EventHandler
