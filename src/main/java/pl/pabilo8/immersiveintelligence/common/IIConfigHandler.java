@@ -67,6 +67,9 @@ public class IIConfigHandler
 		@RequiresMcRestart
 		public static boolean changeCircuitProduction = true;
 
+		@Comment({"Whether the IE revolver should be a Early Engineering-tier weapon"})
+		public static boolean changeRevolverProduction = true;
+
 		@Comment({"Whether Tungsten should be smeltable in the vanilla furnace"})
 		@RequiresMcRestart
 		public static boolean smeltableTungsten = false;
@@ -79,7 +82,6 @@ public class IIConfigHandler
 		public static String[] bulletFakeplayerWhitelist = new String[]{
 				"minecraft:ender_dragon"
 		};
-
 
 		public static class Graphics
 		{

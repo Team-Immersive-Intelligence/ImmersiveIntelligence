@@ -1,26 +1,30 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "rbr",
-    "hbs",
-    " w "
+    " c ",
+    "hbb",
+    "smr"
   ],
   "key": {
-    "w": {
+    "c": {
       "item": "immersiveengineering:material",
-      "data": 13
+      "data": 9
+    },
+    "m": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartAdvanced"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "gunbodyWood"
     },
     "b": {
-      "item": "immersiveengineering:material",
-      "data": 14
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelSteel"
     },
     "h": {
       "item": "immersiveengineering:metal_decoration0",
       "data": 5
-    },
-    "s": {
-      "type": "forge:ore_dict",
-      "ore": "blockTungsten"
     },
     "r": {
       "type": "forge:ore_dict",

@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pc ",
+    "ebb",
+    "sm "
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 8
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "e": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 4
+    },
+    "m": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartBasic"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "gunstockWood"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:rifle",
+    "nbt": "{handmade:1b}",
+    "count": 1
+  }
+}

@@ -11,7 +11,7 @@
       "translate": "advancement.immersiveintelligence.craft_cpds.desc"
     }
   },
-  "parent": "immersiveintelligence:main/craft_handmade_rifle",
+  "parent": "immersiveintelligence:main/emplacement",
   "criteria": {
     "code_trigger": {
       "trigger": "minecraft:impossible"

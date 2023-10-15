@@ -12,8 +12,16 @@
   },
   "parent": "immersiveintelligence:main/craft_handmade_rifle",
   "criteria": {
-    "code_trigger": {
-      "trigger": "minecraft:impossible"
+    "craft": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:rifle",
+            "nbt": "{handmade:0b}"
+          }
+        ]
+      }
     }
   }
 }

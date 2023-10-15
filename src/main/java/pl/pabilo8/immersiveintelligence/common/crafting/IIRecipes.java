@@ -108,7 +108,7 @@ public class IIRecipes
 
 		addFunctionalCircuits();
 		addSpringRecipes();
-		addHandWeaponRecipes();
+		addHandWeaponRecipes(recipeRegistry);
 		addMiscIERecipes();
 
 		addWoodTableSawRecipes();
@@ -509,24 +509,49 @@ public class IIRecipes
 
 	}
 
-	public static void addHandWeaponRecipes()
+	public static void addHandWeaponRecipes(IForgeRegistry<IRecipe> recipeRegistry)
 	{
+		//IE Revolver Tweaks
+		if(IIConfig.changeRevolverProduction)
+		{
+			//TODO: 15.10.2023 change revolver to use iron instead of steel
+		}
+
+		//Crafting Components
+		PrecissionAssemblerRecipe.addRecipe(
+				IIContent.itemMaterial.getStack(Materials.TUNGSTEN_GUN_BARREL),
+				ItemStack.EMPTY,
+				new IngredientStack[]{
+						new IngredientStack("gunbarrelSteel"),
+						new IngredientStack("dustTungsten"),
+				},
+				new String[]{"drill", "inserter", "welder"},
+				new String[]{
+						"drill work main",
+						"inserter pick first", "inserter drop main",
+						"welder work main", "drill work main"},
+				32000,
+				0.9f
+		);
+
 		//Industrial Rifle
 		PrecissionAssemblerRecipe.addRecipe(
 				new ItemStack(IIContent.itemRifle),
 				ItemStack.EMPTY,
 				new IngredientStack[]{
-						new IngredientStack("plankTreatedWood", 2),
-						new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)),
-						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9))
+						new IngredientStack("gunstockWood"),
+						new IngredientStack("gunbarrelSteel", 2),
+						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
+						new IngredientStack("gunpartBasic"),
 				},
-				new String[]{"buzzsaw", "welder", "inserter"},
+				new String[]{"welder", "inserter"},
 				new String[]{
-						"buzzsaw work main",
-						"welder work first", "inserter pick second", "inserter drop main",
-						"inserter pick first", "inserter drop main", "welder work main"},
+						"welder work first", "inserter pick second", "inserter drop third",
+						"inserter pick second", "inserter drop third", "welder work third",
+						"inserter pick third", "inserter drop main",
+				},
 				32000,
-				1.1f
+				1.2f
 		);
 	}
 
@@ -1386,6 +1411,11 @@ public class IIRecipes
 	{
 		//IE Circuit Board
 		OreDictionary.registerOre("circuitBasic", new ItemStack(IEContent.itemMaterial, 1, 27));
+		//IE Gun Parts
+		OreDictionary.registerOre("gungripWood", new ItemStack(IEContent.itemMaterial, 1, 13));
+		OreDictionary.registerOre("gunbarrelSteel", new ItemStack(IEContent.itemMaterial, 1, 14));
+		OreDictionary.registerOre("gunpartRevolver", new ItemStack(IEContent.itemMaterial, 1, 15));
+		OreDictionary.registerOre("gunpartHammer", new ItemStack(IEContent.itemMaterial, 1, 16));
 
 		//Meat for production
 		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);

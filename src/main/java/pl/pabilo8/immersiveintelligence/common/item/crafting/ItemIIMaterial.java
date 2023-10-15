@@ -101,17 +101,15 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 
 		@IIItemProperties(oreDict = "gunbarrelIron")
 		IRON_GUN_BARREL,
-		@IIItemProperties(oreDict = "gunbarrelSteel")
-		STEEL_GUN_BARREL,
 		@IIItemProperties(oreDict = "gunbarrelTungsten")
 		TUNGSTEN_GUN_BARREL,
 		@IIItemProperties(oreDict = "gunstockWood")
 		GUN_STOCK,
 		@IIItemProperties(oreDict = "gunbodyWood")
-		GUN_BODY,
-		@IIItemProperties(oreDict = "gunpartIron")
+		GUN_CASING,
+		@IIItemProperties(oreDict = "gunpartBasic")
 		FIRING_MECHANISM,
-		@IIItemProperties(oreDict = "gunpartSteel")
+		@IIItemProperties(oreDict = "gunpartAdvanced")
 		ADVANCED_FIRING_MECHANISM,
 	}
 }

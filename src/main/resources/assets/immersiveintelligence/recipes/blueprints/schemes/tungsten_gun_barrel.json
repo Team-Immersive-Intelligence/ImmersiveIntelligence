@@ -1,0 +1,35 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:assembly_scheme",
+    "nbt": {
+      "recipeItem": {
+        "id": "immersiveintelligence:material",
+        "Count": 1,
+        "Damage": 35
+      }
+    }
+  },
+  "pattern": [
+    "DBD",
+    "DDD",
+    "PPP"
+  ],
+  "key": {
+    "T": {
+      "type": "forge:ore_dict",
+      "ore": "dustTungsten"
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelSteel"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  }
+}

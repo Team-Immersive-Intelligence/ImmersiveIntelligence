@@ -25,6 +25,17 @@ item.immersiveintelligence.material.compact_electric_engine_advanced.name=Advanc
 item.immersiveintelligence.material.carbon_brush.name=Carbon Brush
 item.immersiveintelligence.material.glass_fibre_cable.name=Glass Fibre Cable
 
+item.immersiveengineering.material.gunpart_barrel.name=Steel Gun Barrel
+item.immersiveintelligence.material.iron_gun_barrel.name=Iron Gun Barrel
+item.immersiveintelligence.material.tungsten_gun_barrel.name=High-Precision Gun Barrel
+item.immersiveintelligence.material.gun_stock.name=Wooden Stock
+item.immersiveintelligence.material.gun_casing.name=Wooden Gun Casing
+
+item.immersiveengineering.material.gunpart_hammer.name=Revolver Hammer
+item.immersiveengineering.material.gunpart_drum.name=Revolver Drum
+item.immersiveintelligence.material.firing_mechanism.name=Bolt-Action Mechanism
+item.immersiveintelligence.material.advanced_firing_mechanism.name=Automatic Firing Mechanism
+
 item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
 
 item.immersiveintelligence.material.punchtape_empty.name=Empty Punchtape
@@ -1442,10 +1453,19 @@ advancement.immersiveintelligence.root.desc=RTFM?
 advancement.immersiveintelligence.connect_belt=Powerful Conveying
 advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
 
+advancement.immersiveintelligence.craft_gun_barrel_iron=A Gunsmith?
+advancement.immersiveintelligence.craft_gun_barrel_iron.desc=Craft the Iron Gun Barrel, that allows you to construct basic firearms.
+
+advancement.immersiveintelligence.craft_gun_barrel_steel=Industrial Gunworks
+advancement.immersiveintelligence.craft_gun_barrel_steel.desc=Craft the Steel Barrel, making your first step into an era of Industrial Warfare.
+
+advancement.immersiveintelligence.craft_gun_barrel_tungsten=Why Precision Counts
+advancement.immersiveintelligence.craft_gun_barrel_tungsten.desc=Craft the High-Precision Gun Barrel, introducing new State-Of-The-Art Firearms into your Arsenal.
+
 advancement.immersiveintelligence.craft_diy=DIY
 advancement.immersiveintelligence.craft_diy.desc=Craft the Handmade Rifle
 
-advancement.immersiveintelligence.craft_rifle=People's Gun
+advancement.immersiveintelligence.craft_rifle=The People's Gun
 advancement.immersiveintelligence.craft_rifle.desc=Create the mass production Rifle
 
 advancement.immersiveintelligence.for_the_emperor=For The Emperor!
@@ -1598,6 +1618,14 @@ advancement.immersiveintelligence.create_motorbike.desc=Construct the motorbike
 #Reference to a certain discord chat
 advancement.immersiveintelligence.secret_sorry_for_ceiling=Sorry for your ceiling!
 advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Experience a howitzer shell breaking a roof to distribute you propaganda.
+
+#Reference to the russian II tutorial video by Ocelot
+advancement.immersiveintelligence.emplacement=The Little Turret is also good...
+advancement.immersiveintelligence.emplacement.desc=Construct the Emplacement, a defensive structure that can be equipped with heavy weaponry.
+
+advancement.immersiveintelligence.flagpole=Stand for Anthem!
+advancement.immersiveintelligence.flagpole.desc=Construct the Flagpole, a decorative landmark and chunkloader.
+
 
 #Manual Categories
 
