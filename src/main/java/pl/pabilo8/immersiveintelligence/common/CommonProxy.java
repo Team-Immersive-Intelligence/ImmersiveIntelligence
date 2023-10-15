@@ -615,7 +615,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			if(gui.item)
 				return gui.containerFromStack==null?null: gui.containerFromStack.apply(player, stack, hand);
 
-			if(gui.teClass==null||gui.containerFromTile==null||gui.guiFromTile==null)
+			if(gui.teClass==null||gui.containerFromTile==null)
 				return null;
 			else if(te instanceof IGuiTile&&gui.teClass.isInstance(te))
 			{

@@ -567,7 +567,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 * @return sound played when trying to fire with no ammo loaded
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract SoundEvent getDryfireSound(ItemStack weapon, EasyNBT nbt);
 
 	/**
@@ -576,7 +575,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 * @return sound played when firing the gun
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract RangedSound getFireSound(ItemStack weapon, EasyNBT nbt);
 
 	/**
@@ -585,7 +583,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 * @return sound played when firing the gun
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected SoundEvent getChargeFireSound(ItemStack weapon, EasyNBT nbt)
 	{
 		return null;

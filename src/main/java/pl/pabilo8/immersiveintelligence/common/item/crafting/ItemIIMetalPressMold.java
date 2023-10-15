@@ -28,6 +28,7 @@ public class ItemIIMetalPressMold extends ItemIISubItemsBase<PressMolds>
 		SUBMACHINEGUN,
 		NAVAL_MINE,
 		TRIPMINE,
-		TELLERMINE
+		TELLERMINE,
+		FIRING_MECHANISM
 	}
 }

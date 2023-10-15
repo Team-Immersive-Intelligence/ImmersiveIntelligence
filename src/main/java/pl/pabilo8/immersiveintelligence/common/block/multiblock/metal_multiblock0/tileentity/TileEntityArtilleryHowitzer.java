@@ -195,7 +195,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	public IItemHandler inventoryHandler, insertionHandler;
 
 	@SideOnly(Side.CLIENT)
-	private final List<TimedCompoundSound> soundsList = new ArrayList<>();
+	private List<TimedCompoundSound> soundsList;
 	private TactileHandler tactileHandler = null;
 
 
@@ -633,12 +633,12 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(current!=null)
 		{
 			BlockPos soundPos = getBlockPosForPos(202);
+			if(soundsList==null)
+				soundsList = new ArrayList<>();
 			current.handleSounds(soundsList, soundPos, animationTime, .75f);
 		}
 	}
 
-	//TODO: 15.05.2023 rework
-	//for handling repeated sounds
 	@SideOnly(Side.CLIENT)
 	private void handleSounds()
 	{
@@ -672,6 +672,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	}
 
+	@SideOnly(Side.CLIENT)
 	private ConditionCompoundSound playRepeatedSound(ConditionCompoundSound current, MultiSound sound, Vec3d pos, float volume, float pitch, boolean condition)
 	{
 		if(!condition)

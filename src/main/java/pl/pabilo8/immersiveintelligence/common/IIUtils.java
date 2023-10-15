@@ -555,6 +555,10 @@ public class IIUtils
 	{
 		if(player instanceof EntityPlayerMP)
 		{
+			//Can't unlock the same advancement twice
+			if(hasUnlockedIIAdvancement(player, name))
+				return;
+
 			PlayerAdvancements advancements = ((EntityPlayerMP)player).getAdvancements();
 			AdvancementManager manager = ((WorldServer)player.getEntityWorld()).getAdvancementManager();
 			Advancement advancement = manager.getAdvancement(new ResourceLocation(ImmersiveIntelligence.MODID, name));

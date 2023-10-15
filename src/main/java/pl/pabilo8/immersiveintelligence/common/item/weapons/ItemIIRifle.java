@@ -10,9 +10,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Rifle;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Rifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
@@ -48,7 +48,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 		super("rifle");
 		ammoHandler = new AmmoHandlerList(this, BULLETS, IIContent.itemAmmoMachinegun, MAG_SIZE)
 		{
-			@SideOnly(Side.CLIENT)
 			@Nullable
 			@Override
 			protected SoundEvent getStartLoadingSound(ItemStack weapon, EasyNBT nbt)
@@ -56,7 +55,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 				return IISounds.rifleLoadStart;
 			}
 
-			@SideOnly(Side.CLIENT)
 			@Nullable
 			@Override
 			protected SoundEvent getReloadSound(ItemStack weapon, EasyNBT nbt)
@@ -64,7 +62,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 				return IISounds.rifleLoad;
 			}
 
-			@SideOnly(Side.CLIENT)
 			@Nullable
 			@Override
 			protected SoundEvent getFinishLoadingSound(ItemStack weapon, EasyNBT nbt)
@@ -80,7 +77,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 				return magazine==Magazines.RIFLE;
 			}
 
-			@SideOnly(Side.CLIENT)
 			@Nullable
 			@Override
 			protected SoundEvent getUnloadSound(ItemStack weapon, EasyNBT nbt)
@@ -88,7 +84,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 				return IISounds.rifleUnloadMagazine;
 			}
 
-			@SideOnly(Side.CLIENT)
 			@Nullable
 			@Override
 			protected SoundEvent getReloadSound(ItemStack weapon, EasyNBT nbt)
@@ -158,7 +153,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 		return super.getUnlocalizedName(stack);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
 	protected SoundEvent getDryfireSound(ItemStack weapon, EasyNBT easyNBT)
@@ -166,7 +160,6 @@ public class ItemIIRifle extends ItemIIGunBase implements IAdvancedZoomTool
 		return IISounds.rifleShotDry;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
 	protected RangedSound getFireSound(ItemStack weapon, EasyNBT easyNBT)

@@ -98,5 +98,20 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 
 		@IIItemProperties(oreDict = "circuitCryptographic")
 		CRYPTOGRAPHIC_CIRCUIT_BOARD,
+
+		@IIItemProperties(oreDict = "gunbarrelIron")
+		IRON_GUN_BARREL,
+		@IIItemProperties(oreDict = "gunbarrelSteel")
+		STEEL_GUN_BARREL,
+		@IIItemProperties(oreDict = "gunbarrelTungsten")
+		TUNGSTEN_GUN_BARREL,
+		@IIItemProperties(oreDict = "gunstockWood")
+		GUN_STOCK,
+		@IIItemProperties(oreDict = "gunbodyWood")
+		GUN_BODY,
+		@IIItemProperties(oreDict = "gunpartIron")
+		FIRING_MECHANISM,
+		@IIItemProperties(oreDict = "gunpartSteel")
+		ADVANCED_FIRING_MECHANISM,
 	}
 }

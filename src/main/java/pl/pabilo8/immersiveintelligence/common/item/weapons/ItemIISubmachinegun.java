@@ -3,11 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.item.weapons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
@@ -37,7 +36,6 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(weapon, WeaponUpgrades.BOTTOM_LOADING);
 			}
 
-			@SideOnly(Side.CLIENT)
 			@Nullable
 			@Override
 			protected SoundEvent getUnloadSound(ItemStack weapon, EasyNBT nbt)
@@ -45,7 +43,6 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 				return IISounds.submachinegunUnload;
 			}
 
-			@SideOnly(Side.CLIENT)
 			@Nullable
 			@Override
 			protected SoundEvent getReloadSound(ItemStack weapon, EasyNBT nbt)
@@ -64,8 +61,10 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		//NBTTagCompound upgrades = getUpgrades(stack);
-		// TODO: 09.08.2020 advancements
+		if(hasIIUpgrade(stack, WeaponUpgrades.STURDY_BARREL, WeaponUpgrades.BOTTOM_LOADING))
+			IIUtils.unlockIIAdvancement(player, "main/infinite_power");
+		if(hasIIUpgrades(stack, WeaponUpgrades.SUPPRESSOR, WeaponUpgrades.FOLDING_STOCK))
+			IIUtils.unlockIIAdvancement(player, "main/the_silent_unseen");
 	}
 
 	@Override
@@ -93,7 +92,6 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 		return Submachinegun.bulletFireTime;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
 	protected SoundEvent getDryfireSound(ItemStack weapon, EasyNBT easyNBT)
@@ -101,7 +99,6 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 		return IISounds.submachinegunShotDry;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Nullable
 	@Override
 	protected RangedSound getFireSound(ItemStack weapon, EasyNBT easyNBT)

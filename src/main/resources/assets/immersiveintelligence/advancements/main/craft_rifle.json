@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:rifle"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_rifle"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_rifle.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_handmade_rifle",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

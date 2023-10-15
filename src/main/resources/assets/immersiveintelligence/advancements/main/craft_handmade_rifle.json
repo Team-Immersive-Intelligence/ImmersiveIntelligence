@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:rifle",
+      "nbt": "{handmade:diy}"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_diy"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_diy.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/root",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

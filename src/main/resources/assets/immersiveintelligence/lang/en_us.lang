@@ -1442,6 +1442,39 @@ advancement.immersiveintelligence.root.desc=RTFM?
 advancement.immersiveintelligence.connect_belt=Powerful Conveying
 advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
 
+advancement.immersiveintelligence.craft_diy=DIY
+advancement.immersiveintelligence.craft_diy.desc=Craft the Handmade Rifle
+
+advancement.immersiveintelligence.craft_rifle=People's Gun
+advancement.immersiveintelligence.craft_rifle.desc=Create the mass production Rifle
+
+advancement.immersiveintelligence.for_the_emperor=For The Emperor!
+advancement.immersiveintelligence.for_the_emperor.desc=Attach a bayonet to the Rifle
+
+advancement.immersiveintelligence.craft_stg=We should all have Sturmgewehr!
+advancement.immersiveintelligence.craft_stg.desc=Craft the Assault Rifle
+
+advancement.immersiveintelligence.weapon_of_war=This... is a weapon of war
+advancement.immersiveintelligence.weapon_of_war.desc=Upgrade the Assault Rifle with a scope and electric firing motor
+
+advancement.immersiveintelligence.the_accelerator=The Accelerator
+advancement.immersiveintelligence.the_accelerator.desc=Upgrade the Assault Rifle with a Grenade Launcher and a Railgun Barrel
+
+advancement.immersiveintelligence.special_operations_initiative=Special Operations Initiative
+advancement.immersiveintelligence.special_operations_initiative.desc=Upgrade the Assault Rifle with a rangefinder
+
+advancement.immersiveintelligence.craft_smg=Tommy's Toy
+advancement.immersiveintelligence.craft_smg.desc=Craft the Submachinegun
+
+advancement.immersiveintelligence.infinite_power=Infinite Power
+advancement.immersiveintelligence.infinite_power.desc=Upgrade the Submachinegun with a Bottom Loader and Sturdy Barrel
+
+advancement.immersiveintelligence.the_silent_unseen=The Silent Unseen
+advancement.immersiveintelligence.the_silent_unseen.desc=Upgrade the Submachinegun with a Folding Stock and Suppressor
+
+advancement.immersiveintelligence.craft_cpds=The cost of firing for 12 seconds
+advancement.immersiveintelligence.craft_cpds.desc=Craft the CPDS magazine
+
 #Reference to Tiger 1 tank memes
 advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission Works!
 advancement.immersiveintelligence.craft_steel_belt.desc=Craft a Steel Motor Belt

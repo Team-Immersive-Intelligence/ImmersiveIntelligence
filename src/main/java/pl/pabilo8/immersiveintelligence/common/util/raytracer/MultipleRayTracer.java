@@ -104,7 +104,7 @@ public class MultipleRayTracer implements Iterable<RayTraceResult>
 
 	private static List<Entity> listAllEntities(@Nonnull World world, @Nonnull Vec3d posStart, @Nonnull Vec3d posEnd, List<Entity> entityFilter)
 	{
-		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(posStart, posEnd), entity -> entity.canBeCollidedWith()&&!entity.noClip);
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(posStart.x, posStart.y, posStart.z, posEnd.x, posEnd.y, posEnd.z), entity -> entity.canBeCollidedWith()&&!entity.noClip);
 		entities.removeAll(entityFilter);
 		return entities;
 	}

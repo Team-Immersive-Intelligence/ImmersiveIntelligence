@@ -108,6 +108,7 @@ public class IIRecipes
 
 		addFunctionalCircuits();
 		addSpringRecipes();
+		addHandWeaponRecipes();
 		addMiscIERecipes();
 
 		addWoodTableSawRecipes();
@@ -506,6 +507,27 @@ public class IIRecipes
 				new IngredientStack("plateBrass", 1), TOOL_HAMMER
 		);
 
+	}
+
+	public static void addHandWeaponRecipes()
+	{
+		//Industrial Rifle
+		PrecissionAssemblerRecipe.addRecipe(
+				new ItemStack(IIContent.itemRifle),
+				ItemStack.EMPTY,
+				new IngredientStack[]{
+						new IngredientStack("plankTreatedWood", 2),
+						new IngredientStack(new ItemStack(IEContent.itemMaterial, 2, 14)),
+						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 9))
+				},
+				new String[]{"buzzsaw", "welder", "inserter"},
+				new String[]{
+						"buzzsaw work main",
+						"welder work first", "inserter pick second", "inserter drop main",
+						"inserter pick first", "inserter drop main", "welder work main"},
+				32000,
+				1.1f
+		);
 	}
 
 	public static void addMiscIERecipes()
