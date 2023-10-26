@@ -20,7 +20,7 @@ public class MultiblockElectrolyzer extends MultiblockStuctureBase<TileEntityEle
 	public MultiblockElectrolyzer()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/electrolyzer"));
-		offset = new Vec3i(0, 1, 1);
+		offset = new Vec3i(1, 1, 0);
 		INSTANCE = this;
 	}
 

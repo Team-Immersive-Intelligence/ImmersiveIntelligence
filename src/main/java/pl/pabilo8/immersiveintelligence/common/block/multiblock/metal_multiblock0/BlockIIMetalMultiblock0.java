@@ -41,7 +41,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 
 		addToTESRMap(
 				MetalMultiblocks0.PRINTING_PRESS, MetalMultiblocks0.RADIO_STATION,
-				MetalMultiblocks0.AMMUNITION_FACTORY, MetalMultiblocks0.ELECTROLYZER,
+				MetalMultiblocks0.AMMUNITION_FACTORY,
 				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER,
 				MetalMultiblocks0.PACKER
 		);
@@ -101,6 +101,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 			case ARTILLERY_HOWITZER:
 			case RAILWAY_PACKER:
 			case PACKER:
+			case ELECTROLYZER:
 				return EnumBlockRenderType.MODEL;
 			default:
 				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;

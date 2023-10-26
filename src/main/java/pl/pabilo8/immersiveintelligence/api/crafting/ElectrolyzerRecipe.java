@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.api.crafting;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 	public final FluidStack[] fluidOutputs;
 
 	public static ArrayList<ElectrolyzerRecipe> recipeList = new ArrayList<>();
-	int totalProcessTime;
-	int totalProcessEnergy;
+	int totalProcessTime, totalProcessEnergy;
+	public int energyPerTick;
 
 	public ElectrolyzerRecipe(FluidStack fluidInput, FluidStack fluidOutput1, @Nullable FluidStack fluidOutput2, int energy, int time)
 	{
@@ -31,15 +32,24 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 		this.fluidOutputs[1] = fluidOutput2;
 		this.fluidInput = fluidInput;
 
-		this.totalProcessEnergy = (int)Math.floor((float)energy);
-		this.totalProcessTime = (int)Math.floor((float)time);
+		this.totalProcessEnergy = energy;
+		this.totalProcessTime = time;
 
 		this.fluidInputList = Collections.singletonList(this.fluidInput);
 		this.fluidOutputList = Arrays.asList(fluidOutputs);
+		this.energyPerTick = (int)Math.floor((float)energy/time);
 	}
 
 	public static ElectrolyzerRecipe addRecipe(FluidStack fluidInput, FluidStack fluidOutput1, FluidStack fluidOutput2, int energy, int time)
 	{
+		//nwd(f1,f2)
+		int gcd = IIUtils.gcd(fluidInput.amount, fluidOutput1.amount, fluidOutput2.amount, energy, time);
+		fluidInput.amount /= gcd;
+		fluidOutput1.amount /= gcd;
+		fluidOutput2.amount /= gcd;
+		energy /= gcd;
+		time /= gcd;
+
 		ElectrolyzerRecipe r = new ElectrolyzerRecipe(fluidInput, fluidOutput1, fluidOutput2, energy, time);
 		recipeList.add(r);
 		return r;
@@ -61,14 +71,6 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 	{
 		for(ElectrolyzerRecipe recipe : recipeList)
 			if(recipe.fluidInput.getFluid()==fluidInput.getFluid()&&fluidInput.amount >= recipe.fluidInput.amount)
-				return recipe;
-		return null;
-	}
-
-	public static ElectrolyzerRecipe findIncompleteRecipe(FluidStack fluidInput)
-	{
-		for(ElectrolyzerRecipe recipe : recipeList)
-			if(recipe.fluidInput.getFluid()==fluidInput.getFluid())
 				return recipe;
 		return null;
 	}

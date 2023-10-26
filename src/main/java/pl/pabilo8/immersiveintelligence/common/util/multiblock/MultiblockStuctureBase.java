@@ -73,7 +73,6 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * The .nbt file
 	 */
 	private Template template;
-
 	/**
 	 * Stacks for manual list
 	 */
@@ -108,8 +107,14 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	 * Bounding boxes for collision and interaction detection at [pos] [facing (ordinal)]
 	 */
 	private ArrayList<ArrayList<AxisAlignedFacingBB>> AABBs = new ArrayList<>();
-
+	/**
+	 * Map of named Points of Interest and their local positions in this multiblock
+	 */
 	private HashMap<String, int[]> POIs = new HashMap<>();
+	/**
+	 * Whether this structure requires an infinite bounding box in rendering due to its size
+	 */
+	private boolean massiveStructure;
 
 	public MultiblockStuctureBase(ResourceLocation loc)
 	{
@@ -154,6 +159,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 			}
 		}
 		materials = matsSet.toArray(new IngredientStack[0]);
+		//Whether this multiblock has an infinite render bounding box
+		massiveStructure = size.getX() > 5||size.getY() > 5||size.getZ() > 5;
 
 		//Update AABB and POIs info from json
 		updateMultiblockInfo();
@@ -639,5 +646,10 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 	public int[] getPointsOfInterest(String name)
 	{
 		return POIs.getOrDefault(name, new int[0]);
+	}
+
+	public boolean isMassiveStructure()
+	{
+		return massiveStructure;
 	}
 }

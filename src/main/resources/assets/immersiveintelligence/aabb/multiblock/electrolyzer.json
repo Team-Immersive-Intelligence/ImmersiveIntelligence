@@ -1,0 +1,74 @@
+{
+  "bounds": {
+    "slab": [
+      0, 0, 0, 16, 8, 16
+    ],
+    "front_port": [
+      0, 8, 14, 16, 16, 16
+    ],
+    "gauge_box": [
+      0, 0, -1, 16, 16, 15
+    ],
+    "tank_lower1": [
+      2, 8, -10, 14, 22, 14
+    ],
+    "tank_upper1": [
+      2, -8, -10, 14, 6, 14
+    ],
+    "tank_lower2": [
+      2, 8, 6, 14, 22, 30
+    ],
+    "tank_upper2": [
+      2, -8, 6, 14, 6, 30
+    ],
+    "tank_middle_lower1": [
+      2, 8, 2, 14, 26, 32
+    ],
+    "tank_middle_upper1": [
+      2, -8, 2, 14, 10, 32
+    ],
+    "tank_middle_lower2": [
+      2, 8, -14, 14, 26, 16
+    ],
+    "tank_middle_upper2": [
+      2, -8, -14, 14, 10, 16
+    ],
+    "pipe_left": [
+      -6, 11, 9.5, 6.5, 14, 12.5
+    ],
+    "pipe_right": [
+      9.5, 11, 9.5, 22, 14, 12.5
+    ],
+    "pipes_base": [
+      3, 10, 9, 13, 11, 13
+    ],
+    "pipe_bottom": [
+      6.5, 7, 9.5, 9.5, 14, 12.5
+    ],
+    "pipe_bottom_base": [
+      6, 6, 9, 10, 7, 13
+    ]
+  },
+  "positions": {
+    "3,0,2,5,1,7,4": "slab",
+    "1,10": "gauge_box",
+    "0,2": ["front_port", "tank_lower1"],
+    "9,11": "tank_upper1",
+    "3,5": "tank_lower2",
+    "12,14": ["tank_upper2", "pipe_bottom", "pipe_bottom_base"],
+    "7": "tank_middle_lower1",
+    "16": "tank_middle_upper1",
+    "4": "tank_middle_lower2",
+    "13": ["tank_middle_upper2", "pipe_left", "pipe_right", "pipes_base"],
+    "12": "pipe_right",
+    "14": "pipe_left"
+  },
+  "poi": {
+    "fluid_output": [0,2],
+    "output1": 0,
+    "output2": 2,
+    "redstone_input": 10,
+    "energy_input": 8,
+    "fluid_input": 6
+  }
+}

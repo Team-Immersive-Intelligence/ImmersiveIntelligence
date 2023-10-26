@@ -168,7 +168,7 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 
 	@Nonnull
 	@Override
-	public int[] getEnergyPos()
+	public int[] getEnergyPos(EnergyType type)
 	{
 		return multiblock.getPointsOfInterest("energy");
 	}

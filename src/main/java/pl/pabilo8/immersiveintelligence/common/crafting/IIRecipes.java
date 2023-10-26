@@ -126,22 +126,7 @@ public class IIRecipes
 
 		addPackerHandling();
 
-		//Immersive Engineering can into space???
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 750),
-				FluidRegistry.getFluidStack("oxygen", 250),
-				FluidRegistry.getFluidStack("hydrogen", 500),
-				160, 80);
-		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 750),
-				FluidRegistry.getFluidStack("chlorine", 375),
-				FluidRegistry.getFluidStack("hydrogen", 375),
-				160, 80);
-
-		//Why Realism when you have Immersiveness ^^
-		ElectrolyzerRecipe.addRecipe(new FluidStack(IIContent.gasCO2, 750), new FluidStack(IIContent.gasCO, 500),
-				new FluidStack(IIContent.gasOxygen, 250), 160, 160);
-		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidFormicAcid, 16), new FluidStack(IIContent.fluidMethanol, 8),
-				new FluidStack(IIContent.gasCO, 8), 65);
-
+		addElectrolyzerRecipes();
 		addInkRecipes();
 
 		addSmeltingRecipes();
@@ -166,6 +151,26 @@ public class IIRecipes
 		MixerRecipe.addRecipe(new FluidStack(IIContent.fluidBrine, 750),
 				new FluidStack(FluidRegistry.WATER, 750), new Object[]{"dustSalt"}, 3200);
 
+
+	}
+
+	private static void addElectrolyzerRecipes()
+	{
+		//Immersive Engineering can into space???
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("water", 750),
+				FluidRegistry.getFluidStack("oxygen", 250),
+				FluidRegistry.getFluidStack("hydrogen", 500),
+				160, 80);
+		ElectrolyzerRecipe.addRecipe(FluidRegistry.getFluidStack("brine", 750),
+				FluidRegistry.getFluidStack("chlorine", 375),
+				FluidRegistry.getFluidStack("hydrogen", 375),
+				160, 80);
+
+		//Why Realism when you have Immersiveness ^^
+		ElectrolyzerRecipe.addRecipe(new FluidStack(IIContent.gasCO2, 750), new FluidStack(IIContent.gasCO, 500),
+				new FluidStack(IIContent.gasOxygen, 250), 160, 160);
+		RefineryRecipe.addRecipe(new FluidStack(IIContent.fluidFormicAcid, 16), new FluidStack(IIContent.fluidMethanol, 8),
+				new FluidStack(IIContent.gasCO, 8), 65);
 
 	}
 

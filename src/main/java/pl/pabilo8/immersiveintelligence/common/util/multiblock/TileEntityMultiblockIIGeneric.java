@@ -20,9 +20,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
@@ -130,6 +133,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	//--- Redstone ---//
 
+	//REFACTOR: 23.10.2023 use POI instead of getRedstonePos, getEnergyPos, etc.
 	public abstract int[] getRedstonePos(boolean input);
 
 	public final boolean isRedstonePos(boolean input)
@@ -243,13 +247,12 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		return new IEInventoryHandler(1, this, slotID, canInput, canOutput);
 	}
 
-	//REFACTOR: 18.07.2023 different types of energy (ELECTRIC,ROTARY,HEAT) using an enum
 	@Nonnull
-	public abstract int[] getEnergyPos();
+	public abstract int[] getEnergyPos(EnergyType type);
 
 	public boolean isEnergyPos()
 	{
-		return Arrays.binarySearch(getEnergyPos(), pos) >= 0;
+		return Arrays.binarySearch(getEnergyPos(EnergyType.ELECTRIC), pos) >= 0;
 	}
 
 	@Nonnull
@@ -287,6 +290,65 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 				master.sendNBTMessageClient(master.energyStorage.writeToNBT(new NBTTagCompound()));
 		}
 	}
+
+	//--- Fluids ---//
+
+
+	@Nonnull
+	@Override
+	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
+	{
+		T master = master();
+		if(master!=null&&(isFluidPos(true)||isFluidPos(false)))
+			return master.getFluidTanks(pos, side);
+
+		return super.getAccessibleFluidTanks(side);
+	}
+
+	/**
+	 * Returns master tanks
+	 *
+	 * @param pos  position inside the multiblock
+	 * @param side side accessed
+	 * @return array of tanks available
+	 */
+	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
+	{
+		return new IFluidTank[0];
+	}
+
+	@Override
+	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
+	{
+		if(isFluidPos(true))
+			return master().isTankAvailable(pos, iTank);
+		return false;
+	}
+
+	@Override
+	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
+	{
+		if(isFluidPos(false))
+			return master().isTankAvailable(pos, iTank);
+		return false;
+	}
+
+	@Nonnull
+	public int[] getFluidPos(boolean input)
+	{
+		return new int[0];
+	}
+
+	public boolean isFluidPos(boolean input)
+	{
+		return Arrays.binarySearch(getFluidPos(input), pos) >= 0;
+	}
+
+	protected boolean isTankAvailable(int pos, int tank)
+	{
+		return false;
+	}
+
 
 	//--- IAdvancedBounds ---//
 
@@ -334,4 +396,15 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		}
 	}
 
+	public BlockPos getPosForPOI(String name)
+	{
+		return getBlockPosForPos(multiblock.getPointOfInterest(name));
+	}
+
+	public enum EnergyType
+	{
+		ELECTRIC,
+		ROTARY,
+		HEAT
+	}
 }

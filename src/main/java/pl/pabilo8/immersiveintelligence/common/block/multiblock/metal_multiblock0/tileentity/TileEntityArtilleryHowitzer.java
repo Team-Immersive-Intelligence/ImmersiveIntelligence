@@ -14,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -692,7 +691,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	@Nonnull
 	@Override
-	public int[] getEnergyPos()
+	public int[] getEnergyPos(EnergyType type)
 	{
 		return new int[]{449};
 	}
@@ -915,22 +914,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	{
 		BlockPos shoot_pos = getBlockPosForPos(multiblock.getPointOfInterest("gun")).offset(EnumFacing.UP, 1);
 		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+1.5, shoot_pos.getZ()+.5);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	@Nonnull
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		if(!isDummy())
-		{
-			BlockPos nullPos = this.getBlockPosForPos(0);
-			return new AxisAlignedBB(nullPos, nullPos.offset(facing, structureDimensions[1])
-					.offset(mirrored?facing.rotateYCCW(): facing.rotateY(), structureDimensions[2]).up(structureDimensions[0]))
-					.grow(5);
-		}
-		return new AxisAlignedBB(0, 0, 0, 1, 1, 1)
-				.offset(getPos());
 	}
 
 	@Override

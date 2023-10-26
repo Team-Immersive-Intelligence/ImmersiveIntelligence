@@ -179,8 +179,17 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	{
 		if(!isDummy())
 		{
+			if(multiblock.isMassiveStructure())
+				return INFINITE_EXTENT_AABB;
+
 			BlockPos nullPos = this.getBlockPosForPos(0);
-			return new AxisAlignedBB(nullPos, nullPos.offset(facing, structureDimensions[1]).offset(mirrored?facing.rotateYCCW(): facing.rotateY(), structureDimensions[2]).up(structureDimensions[0]));
+			return new AxisAlignedBB(
+					nullPos,
+					nullPos.offset(facing,
+									structureDimensions[1]).offset(mirrored?facing.rotateYCCW(): facing.rotateY(),
+									structureDimensions[2])
+							.up(structureDimensions[0])
+			);
 		}
 		return super.getRenderBoundingBox();
 	}
@@ -262,7 +271,8 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	 */
 	public void sendNBTMessageClient(NBTTagCompound message)
 	{
-		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, message));
+		if(!message.hasNoTags())
+			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, message));
 	}
 
 	/**
@@ -272,6 +282,7 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	 */
 	public void sendNBTMessageServer(NBTTagCompound message)
 	{
-		IIPacketHandler.sendToServer(new MessageIITileSync(this, message));
+		if(!message.hasNoTags())
+			IIPacketHandler.sendToServer(new MessageIITileSync(this, message));
 	}
 }

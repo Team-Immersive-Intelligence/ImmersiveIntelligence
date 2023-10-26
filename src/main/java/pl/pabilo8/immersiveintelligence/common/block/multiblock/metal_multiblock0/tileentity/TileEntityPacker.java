@@ -427,7 +427,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 
 	@Nonnull
 	@Override
-	public int[] getEnergyPos()
+	public int[] getEnergyPos(EnergyType type)
 	{
 		return new int[]{25};
 	}
