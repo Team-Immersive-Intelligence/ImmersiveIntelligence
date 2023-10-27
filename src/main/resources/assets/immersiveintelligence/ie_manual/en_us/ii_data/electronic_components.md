@@ -29,7 +29,8 @@ the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_
 
 # basic_board
 |[crafting]{source:"basic_circuit_blueprints"}|
-To crate the Raw basic board, [insulate glass] and copper plates
+To crate the Raw basic board, [insulate glass] and copper plates. To define the wanted connection in the board, it requires etching.
+This is done in a [chemical bath](chemical_bath.md) with [etching acid].
 
 # advanced_general  
 |[item_display]{source:"%SECTION%"}|
@@ -38,9 +39,6 @@ They have a broad use in [Wireless Data Transfer](radio_station) and **Advanced 
 
 # advanced_components1
 Advanced Components
-
-# advanced_components2
-Advanced Components 2
 
 # advanced_board
 Advanced Board
