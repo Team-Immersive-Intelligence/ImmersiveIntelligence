@@ -24,15 +24,14 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,7 +57,7 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"wrench")));
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"wrench")));
 	}
 
 	@Override
@@ -252,7 +251,7 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 	public Set<String> getToolClasses(ItemStack stack)
 	{
 		int meta = stack.getMetadata();
-		return ImmutableSet.of(IILib.TOOL_WRENCH);
+		return ImmutableSet.of(IIReference.TOOL_WRENCH);
 	}
 
 	@Override
@@ -274,7 +273,7 @@ public class ItemIIWrench extends ItemIIBase implements ITool, IItemDamageableIE
 	public boolean canHarvestBlock(@Nonnull IBlockState state, ItemStack stack)
 	{
 
-		if(state.getBlock().isToolEffective(IILib.TOOL_WRENCH, state))
+		if(state.getBlock().isToolEffective(IIReference.TOOL_WRENCH, state))
 			return true;
 
 		return super.canHarvestBlock(state, stack);

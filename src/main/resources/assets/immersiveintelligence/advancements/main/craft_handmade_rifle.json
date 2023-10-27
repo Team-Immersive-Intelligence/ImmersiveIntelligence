@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:rifle",
+      "nbt": "{handmade:1b}"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_diy"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_diy.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_gun_barrel_iron",
+  "criteria": {
+    "craft": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:rifle",
+            "nbt": "{handmade:1b}"
+          }
+        ]
+      }
+    }
+  }
+}

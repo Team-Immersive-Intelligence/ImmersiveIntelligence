@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.Tile
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerDataMerger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class GuiDataMerger extends GuiIEContainerBase implements ITabbedGui
 	public void drawScreen(int mx, int my, float partial)
 	{
 		super.drawScreen(mx, my, partial);
-		this.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"data_merger."+tile.mode), guiLeft+14, guiTop+19, IILib.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"data_merger."+tile.mode), guiLeft+14, guiTop+19, IIReference.COLOR_H1);
 
 		ArrayList<String> tooltip = new ArrayList<>();
 

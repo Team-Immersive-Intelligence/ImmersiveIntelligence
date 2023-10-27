@@ -94,6 +94,22 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		RUBBER_COMPOUND,
 
 		@IIItemProperties(oreDict = "templateCircuit", hidden = true)
-		CIRCUIT_TEMPLATE
+		CIRCUIT_TEMPLATE,
+
+		@IIItemProperties(oreDict = "circuitCryptographic")
+		CRYPTOGRAPHIC_CIRCUIT_BOARD,
+
+		@IIItemProperties(oreDict = "gunbarrelIron")
+		IRON_GUN_BARREL,
+		@IIItemProperties(oreDict = "gunbarrelTungsten")
+		TUNGSTEN_GUN_BARREL,
+		@IIItemProperties(oreDict = "gunstockWood")
+		GUN_STOCK,
+		@IIItemProperties(oreDict = "gunbodyWood")
+		GUN_CASING,
+		@IIItemProperties(oreDict = "gunpartBasic")
+		FIRING_MECHANISM,
+		@IIItemProperties(oreDict = "gunpartAdvanced")
+		ADVANCED_FIRING_MECHANISM,
 	}
 }

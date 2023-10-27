@@ -3,6 +3,8 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -103,6 +105,7 @@ public class IIModelHeader
 	 * Applies parent/child hierarchy to AMTs<br>
 	 * Children will be rendered as having offset from parents
 	 */
+	@SideOnly(Side.CLIENT)
 	public void applyHierarchy(Collection<AMT> amts)
 	{
 		for(AMT amt : amts)

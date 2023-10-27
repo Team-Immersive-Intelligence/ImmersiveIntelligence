@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.TargetingInfo;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
@@ -14,7 +13,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlayerIn
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConveyorBelt;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -34,20 +32,19 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SkyCrateStation;
-import pl.pabilo8.immersiveintelligence.api.ISkyCrateConnector;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SkyCrateStation;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
-import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
-import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
+import pl.pabilo8.immersiveintelligence.api.utils.ISkyCrateConnector;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 import pl.pabilo8.immersiveintelligence.common.entity.EntitySkyCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -197,7 +194,7 @@ public class TileEntitySkyCrateStation extends TileEntityMultiblockConnectable<T
 			if(animation > 1)
 			{
 				if(progress < getAnimationLength())
-					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(),3);
+					progress += getEffectiveEnergy()*RotaryUtils.getGearEffectiveness(getInventory(), getEfficiencyMultiplier(), 3);
 				else
 				{
 					switch(animation)

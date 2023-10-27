@@ -25,8 +25,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
+import pl.pabilo8.immersiveintelligence.api.data.DataHandlingUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
@@ -34,18 +34,21 @@ import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.ConditionCompoundSound;
 import pl.pabilo8.immersiveintelligence.client.util.carversound.TimedCompoundSound;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockArtilleryHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.TactileHandler.ITactileListener;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoArtillery;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.AdvancedSounds.MultiSound;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.NBTTagCollector;
+import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
@@ -63,35 +66,8 @@ import java.util.function.Predicate;
  * @since 28-06-2019
  */
 public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<TileEntityArtilleryHowitzer>
-		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IExplosionResistantMultiblock
+		implements IBooleanAnimatedPartsBlock, IConveyorAttachable, ILadderMultiblock, IExplosionResistantMultiblock, ITactileListener
 {
-	//--- AABB ---//
-	private static final AxisAlignedBB AABB_FULL = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
-	private static final AxisAlignedBB AABB_EMPTY = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
-	private static final AxisAlignedBB AABB_DOOR = new AxisAlignedBB(0, 0, 0, 1, 0.125, 1);
-	private static final AxisAlignedBB AABB_TALLER_FLOOR = new AxisAlignedBB(0, 0, 0, 1, 0.4375, 1);
-	private static final AxisAlignedBB AABB_LOWER_FLOOR = new AxisAlignedBB(0, 0, 0, 1, 0.1875, 1);
-	private static final AxisAlignedBB AABB_TABLE_TOP = new AxisAlignedBB(0, 0, 0, 1, 0.25, 1);
-
-	private static final AxisAlignedBB[] AABB_LADDER = new AxisAlignedBB[]{
-			new AxisAlignedBB(0, 0, 0, 1, 1, 0.9375),
-			new AxisAlignedBB(0, 0, 0.0625, 1, 1, 1),
-			new AxisAlignedBB(0, 0, 0, 0.9375, 1, 1),
-			new AxisAlignedBB(0.0625, 0, 0, 1, 1, 1)
-	};
-	private static final AxisAlignedBB[] AABB_DOOR_HOLDERS_RIGHT = new AxisAlignedBB[]{
-			new AxisAlignedBB(0, 0, 0, 0.5, 0.625, 1),
-			new AxisAlignedBB(0.5, 0, 0, 1, 0.625, 1),
-			new AxisAlignedBB(0, 0, 0.5, 1, 0.625, 1),
-			new AxisAlignedBB(0, 0, 0, 1, 0.625, 0.5)
-	};
-	private static final AxisAlignedBB[] AABB_DOOR_HOLDERS_LEFT = new AxisAlignedBB[]{
-			new AxisAlignedBB(0.5, 0, 0, 1, 0.625, 1),
-			new AxisAlignedBB(0, 0, 0, 0.5, 0.625, 1),
-			new AxisAlignedBB(0, 0, 0, 1, 0.625, 0.5),
-			new AxisAlignedBB(0, 0, 0.5, 1, 0.625, 1)
-	};
-
 	private static final IISoundAnimation loadingSoundAnimation;
 	private static final IISoundAnimation unloadingSoundAnimation;
 	private static final IISoundAnimation firingSoundAnimation;
@@ -219,7 +195,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	public IItemHandler inventoryHandler, insertionHandler;
 
 	@SideOnly(Side.CLIENT)
-	private final List<TimedCompoundSound> soundsList = new ArrayList<>();
+	private List<TimedCompoundSound> soundsList;
+	private TactileHandler tactileHandler = null;
 
 
 	public TileEntityArtilleryHowitzer()
@@ -241,6 +218,13 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		//handles looped sounds
 		if(world.isRemote)
 			handleSounds();
+		else
+		{
+			//Handle Tactile AMT on server side
+			/*if(tactileHandler==null)
+				tactileHandler = new TactileHandler(multiblock, this);
+			tactileHandler.defaultize();*/
+		}
 
 		boolean rs = world.isBlockPowered(getBlockPosForPos(getRedstonePos(true)[0]))^redstoneControlInverted;
 		if(isDoorOpened^rs)
@@ -283,7 +267,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			//output shell into TileEntity or drop as item
 			if(!world.isRemote&&!inventoryHandler.getStackInSlot(11).isEmpty())
 			{
-				BlockPos outPos = getBlockPosForPos(327)
+				BlockPos outPos = getBlockPosForPos(multiblock.getPointOfInterest("item_output"))
 						.offset(facing.getOpposite())
 						.offset(EnumFacing.UP);
 				ItemStack casing = inventoryHandler.extractItem(11, 1, false);
@@ -412,8 +396,8 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private void fireGun(int i)
 	{
-		double yawFireAngle = Math.toRadians(180-turretYaw);
-		double yawPitchAngle = Math.toRadians(-(-90-turretPitch));
+		double yawFireAngle = Math.toRadians(-turretYaw > 180?180f+turretYaw: 180f-turretYaw);
+		double yawPitchAngle = Math.toRadians(turretPitch+90);
 
 		Vec3d gunEnd = IIUtils.offsetPosDirection(3, yawFireAngle, yawPitchAngle);
 		Vec3d gunVec = gunEnd.normalize();
@@ -436,7 +420,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			a.world.spawnEntity(a);
 		}
 
-		//loadedShells.set(i, IIContent.itemAmmoArtillery.getCasingStack(1));
+		loadedShells.set(i, IIContent.itemAmmoArtillery.getCasingStack(1));
 	}
 
 	private boolean isAimed()
@@ -649,12 +633,12 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		if(current!=null)
 		{
 			BlockPos soundPos = getBlockPosForPos(202);
+			if(soundsList==null)
+				soundsList = new ArrayList<>();
 			current.handleSounds(soundsList, soundPos, animationTime, .75f);
 		}
 	}
 
-	//TODO: 15.05.2023 rework
-	//for handling repeated sounds
 	@SideOnly(Side.CLIENT)
 	private void handleSounds()
 	{
@@ -688,6 +672,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	}
 
+	@SideOnly(Side.CLIENT)
 	private ConditionCompoundSound playRepeatedSound(ConditionCompoundSound current, MultiSound sound, Vec3d pos, float volume, float pitch, boolean condition)
 	{
 		if(!condition)
@@ -742,353 +727,129 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public void receiveData(DataPacket packet, int pos)
 	{
-		IDataConnector conn = IIUtils.findConnectorFacing(getBlockPosForPos(441), world, EnumFacing.UP);
+		DataHandlingUtils.expectingNumericParam('y', packet, f -> plannedYaw = f);
+		DataHandlingUtils.expectingNumericParam('p', packet,
+				f -> plannedPitch = Math.abs(Math.min(Math.max(-Math.abs(f%360), -105), 0)));
 
-		if(packet.getPacketVariable('y') instanceof IDataTypeNumeric)
+		//Control
+		if(animationTime==0)
 		{
-			plannedYaw = ((IDataTypeNumeric)packet.getPacketVariable('y')).floatValue();
-		}
-
-		if(packet.getPacketVariable('p') instanceof IDataTypeNumeric)
-			plannedPitch = Math.abs(Math.min(Math.max(-Math.abs((((IDataTypeNumeric)packet.getPacketVariable('p')).floatValue())%360), -105), 0));
-
-		//Command
-		if(animationTime==0&&packet.getPacketVariable('c') instanceof DataTypeString) //cannot interrupt a performed task
-		{
-			String command = packet.getPacketVariable('c').valueToString();
-
-			ArtilleryHowitzerAnimation anim = ArtilleryHowitzerAnimation.v(command, this);
-			if(anim!=null)
-			{
-				if(anim==ArtilleryHowitzerAnimation.STOP)
-					orderList.clear();
-
-				if(anim.matchesRequirements(this))
-				{
-					animation = anim;
-					animationTime = 0;
-					animationTimeMax = anim.animationTime;
-					forceTileUpdate();
-				}
-			}
-			else
-			{
-				if(animation==ArtilleryHowitzerAnimation.STOP&&orderList.isEmpty()) //is not doing any task
-					switch(command)
-					{
-						case "fire_all":
-						{
-							float vOffset = 0, hOffset = 0;
-							if(packet.hasVariable('v')) //v - vertical
-								vOffset = packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('v')).floatValue();
-							if(packet.hasVariable('h')) //h - horizontal
-								hOffset = packet.getVarInType(IDataTypeNumeric.class, packet.getPacketVariable('v')).floatValue();
-
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE1, plannedPitch-vOffset, plannedYaw-hOffset));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE2, plannedPitch+vOffset, plannedYaw+hOffset));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE3, plannedPitch-vOffset, plannedYaw-hOffset));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE4, plannedPitch+vOffset, plannedYaw+hOffset));
-						}
-						break;
-						case "load_all":
-						{
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD1));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD2));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD3));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD4));
-						}
-						break;
-						case "unload_all":
-						{
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD1));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD2));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD3));
-							orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD4));
-						}
-						break;
-					}
-
-				if(conn==null)
-					return;
-
-				DataPacket pp = null;
+			DataHandlingUtils.expectingStringParam('c', packet, command -> {
 				switch(command)
 				{
-					case "get_energy":
-						pp = IIUtils.getSimpleCallbackMessage(packet, "energy", new DataTypeInteger(energyStorage.getEnergyStored()));
-						break;
-					case "get_state_progress":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "state_progress", new DataTypeInteger((int)(animationTime/(float)animationTimeMax*100)));
-						break;
-					case "get_yaw":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "yaw", new DataTypeInteger((int)turretYaw));
-						break;
-					case "get_pitch":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "pitch", new DataTypeInteger((int)turretPitch));
-						break;
-					case "get_planned_yaw":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "planned_yaw", new DataTypeInteger((int)plannedYaw));
-						break;
-					case "get_planned_pitch":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "planned_pitch", new DataTypeInteger((int)plannedPitch));
-						break;
-					case "get_platform_height":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "platform_height", new DataTypeInteger(platformTime));
-						break;
-					case "get_door_opened":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "door_opened", new DataTypeBoolean(isDoorOpened&&doorTime==ArtilleryHowitzer.doorTime));
-						break;
-					case "get_door_closed":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "door_closed", new DataTypeBoolean(!isDoorOpened&&doorTime==0));
-						break;
-					case "get_door_opening":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "door_opening", new DataTypeBoolean(doorTime!=0&&doorTime!=ArtilleryHowitzer.doorTime));
-						break;
-					case "get_loaded_shell":
+					//Batched Commands
+					case "fire_all":
 					{
-						int i = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('i')).value;
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "loaded_shell", new DataTypeItemStack(loadedShells.get(i)));
-					}
-					break;
-					case "get_stored_shell":
-					{
-						int i = packet.getVarInType(DataTypeInteger.class, packet.getPacketVariable('i')).value;
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "stored_shell", new DataTypeItemStack(inventory.get(MathHelper.clamp(i, 0, 5))));
+						float vOffset = DataHandlingUtils.asFloat('v', packet);
+						float hOffset = DataHandlingUtils.asFloat('h', packet);
 
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE1, plannedPitch-vOffset, plannedYaw-hOffset));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE2, plannedPitch+vOffset, plannedYaw+hOffset));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE3, plannedPitch-vOffset, plannedYaw-hOffset));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.FIRE4, plannedPitch+vOffset, plannedYaw+hOffset));
 					}
 					break;
-					case "get_state":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "state", new DataTypeString(animation.getName()));
-						break;
-					case "get_state_num":
-						pp = IIUtils.getSimpleCallbackMessage
-								(packet, "state", new DataTypeInteger(animation.ordinal()));
-						break;
+					case "load_all":
+					{
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD1));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD2));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD3));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.LOAD4));
+					}
+					break;
+					case "unload_all":
+					{
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD1));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD2));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD3));
+						orderList.add(new HowitzerOrder(ArtilleryHowitzerAnimation.UNLOAD4));
+					}
+					break;
+					case "callback":
+					{
+						IDataConnector conn = IIUtils.findConnectorFacing(getBlockPosForPos(441), world, EnumFacing.UP);
+						if(conn==null)
+							break;
+
+						DataPacket callback = DataHandlingUtils.handleCallback(packet, var -> {
+							switch(var)
+							{
+								case "get_energy":
+									return new DataTypeInteger(energyStorage.getEnergyStored());
+								case "get_state_progress":
+									return new DataTypeFloat(animationTime/(float)animationTimeMax);
+								case "get_yaw":
+									return new DataTypeFloat(turretYaw);
+								case "get_pitch":
+									return new DataTypeFloat(turretPitch);
+								case "get_planned_yaw":
+									return new DataTypeFloat(plannedYaw);
+								case "get_planned_pitch":
+									return new DataTypeFloat(plannedPitch);
+								case "get_platform_height":
+									return new DataTypeInteger(platformTime);
+
+								case "get_door_opened":
+									return new DataTypeBoolean(isDoorOpened&&doorTime==ArtilleryHowitzer.doorTime);
+								case "get_door_closed":
+									return new DataTypeBoolean(!isDoorOpened&&doorTime==0);
+								case "get_door_opening":
+									return new DataTypeBoolean(doorTime!=0&&doorTime!=ArtilleryHowitzer.doorTime);
+
+								case "get_loaded_shell":
+								{
+									return new DataTypeItemStack(loadedShells.get(
+											DataHandlingUtils.asInt('i', packet)
+									));
+								}
+								case "get_stored_shell":
+								{
+									return new DataTypeItemStack(inventory.get(
+											MathHelper.clamp(DataHandlingUtils.asInt('i', packet), 0, 5)
+									));
+								}
+								case "get_state":
+									return new DataTypeString(animation.getName());
+								case "get_state_num":
+									return new DataTypeInteger(animation.ordinal());
+							}
+							return null;
+						});
+						if(callback!=null)
+							conn.sendPacket(callback);
+					}
+					break;
+					//Single Commands
+					default:
+					{
+						ArtilleryHowitzerAnimation anim = ArtilleryHowitzerAnimation.v(command, this);
+						if(anim!=null)
+						{
+							if(anim==ArtilleryHowitzerAnimation.STOP)
+								orderList.clear();
+
+							if(anim.matchesRequirements(this))
+							{
+								animation = anim;
+								animationTime = 0;
+								animationTimeMax = anim.animationTime;
+								forceTileUpdate();
+							}
+						}
+					}
+					break;
 				}
-				if(pp!=null)
-					conn.sendPacket(pp);
-			}
+			});
 		}
 
 		forceTileUpdate();
 	}
 
 	@Override
-	public List<AxisAlignedBB> getBounds(boolean collision)
-	{
-		TileEntityArtilleryHowitzer master = master();
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		switch(pos) //sorry, I wish I could use expressions there, but it's java8 :<
-		{
-			case 445:
-			case 364:
-			case 283:
-				//ladder side empty blocks
-			case 345:
-			case 346:
-			case 347:
-				//ladder side empty blocks
-			case 264:
-			case 265:
-			case 266:
-				//ladder side empty blocks
-			case 183:
-			case 184:
-			case 185:
-				//ladder side empty blocks
-			case 102:
-			case 103:
-			case 104:
-				//loader chamber metal box
-			case 419:
-			case 418:
-			case 417:
-				//cannon
-			case 293:
-			case 284:
-			case 275:
-			case 291:
-			case 282:
-			case 273:
-			case 111:
-			case 112:
-			case 113:
-			case 120:
-			case 122:
-			case 129:
-			case 130:
-			case 131:
-				list.add(AABB_EMPTY.offset(getPos()));
-				break;
-			//base | cable part
-			case 30:
-			case 31:
-			case 32:
-			case 41:
-			case 39:
-			case 48:
-			case 49:
-			case 50:
-				list.add(AABB_LOWER_FLOOR.offset(getPos()));
-				break;
-			//base | yellow-black stripes/concrete part
-			case 21:
-			case 22:
-			case 23:
-			case 29:
-			case 33:
-			case 38:
-			case 42:
-			case 47:
-			case 51:
-			case 57:
-			case 58:
-			case 59:
-				list.add(AABB_TALLER_FLOOR.offset(getPos()));
-				break;
-			//door
-			case 524:
-			case 525:
-			case 526:
-			case 527:
-			case 528:
-			case 533:
-			case 534:
-			case 535:
-			case 536:
-			case 537:
-			case 542:
-			case 543:
-			case 544:
-			case 545:
-			case 546:
-			case 515:
-			case 516:
-			case 517:
-			case 518:
-			case 519:
-			case 506:
-			case 507:
-			case 508:
-			case 509:
-			case 510:
-				list.add((master!=null&&master.doorTime > 1?AABB_EMPTY: AABB_DOOR)
-						.offset(getPos()));
-				break;
-			//door holders | right
-			case 520:
-			case 529:
-			case 538:
-				list.add(AABB_DOOR_HOLDERS_RIGHT[(mirrored?facing: facing.getOpposite()).getIndex()-2].offset(getPos()));
-				break;
-			//door holders | left
-			case 514:
-			case 523:
-			case 532:
-				list.add(AABB_DOOR_HOLDERS_LEFT[(mirrored?facing: facing.getOpposite()).getIndex()-2].offset(getPos()));
-				break;
-			//table_top1
-			case 560:
-			case 551:
-			case 541:
-			case 540:
-				//table_top2
-			case 488:
-			case 497:
-			case 505:
-			case 504:
-				//table_top3
-			case 492:
-			case 501:
-			case 511:
-			case 512:
-				//table_top4
-			case 548:
-			case 547:
-			case 555:
-			case 564:
-				list.add(AABB_TABLE_TOP.offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				break;
-			//s
-			case 465:
-			case 425:
-			case 384:
-			case 303:
-			case 222:
-			case 141:
-			case 344:
-			case 263:
-			case 182:
-			case 101:
-				list.add(new AxisAlignedBB(0.25+0.0625, 0, 0.25+0.0625, 0.75-0.0625, 1, 0.75-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				switch(mirrored?facing: facing.getOpposite())
-				{
-					case NORTH:
-					case WEST:
-						list.add(new AxisAlignedBB(0.6875, 0, 0, 1, 1, 0.3125).offset(getPos()));
-						list.add(new AxisAlignedBB(0, 0, 0.6875, 0.3125, 1, 1).offset(getPos()));
-						break;
-					case SOUTH:
-					case EAST:
-						list.add(new AxisAlignedBB(0, 0, 0, 0.3125, 1, 0.3125).offset(getPos()));
-						list.add(new AxisAlignedBB(1-0.3125, 0, 1-0.3125, 1, 1, 1).offset(getPos()));
-						break;
-					default:
-						list.add(AABB_EMPTY.offset(getPos()));
-						break;
-				}
-				break;
-			//s
-			case 461:
-			case 380:
-			case 299:
-			case 218:
-			case 137:
-			case 429:
-			case 348:
-			case 267:
-			case 186:
-			case 105:
-				list.add(new AxisAlignedBB(0.25+0.0625, 0, 0.25+0.0625, 0.75-0.0625, 1, 0.75-0.0625).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				switch(mirrored?facing: facing.getOpposite())
-				{
-					case NORTH:
-					case WEST:
-						list.add(new AxisAlignedBB(0, 0, 0, 0.3125, 1, 0.3125).offset(getPos()));
-						list.add(new AxisAlignedBB(1-0.3125, 0, 1-0.3125, 1, 1, 1).offset(getPos()));
-						break;
-					case SOUTH:
-					case EAST:
-						list.add(new AxisAlignedBB(0.6875, 0, 0, 1, 1, 0.3125).offset(getPos()));
-						list.add(new AxisAlignedBB(0, 0, 0.6875, 0.3125, 1, 1).offset(getPos()));
-						break;
-					default:
-						list.add(AABB_EMPTY.offset(getPos()));
-						break;
-				}
-				break;
-		}
-
-		return list;
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return pos==410&&master()!=null;
+			return multiblock.isPointOfInterest(this.pos, "item_input");
 		return super.hasCapability(capability, facing);
 	}
 
@@ -1152,7 +913,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 
 	private Vec3d getGunPosition()
 	{
-		BlockPos shoot_pos = getBlockPosForPos(445).offset(EnumFacing.UP, 1);
+		BlockPos shoot_pos = getBlockPosForPos(multiblock.getPointOfInterest("gun")).offset(EnumFacing.UP, 1);
 		return new Vec3d(shoot_pos.getX()+.5, shoot_pos.getY()+1.5, shoot_pos.getZ()+.5);
 	}
 
@@ -1175,57 +936,18 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 	@Override
 	public boolean isLadder()
 	{
-		switch(pos)
-		{
-			case 66:
-			case 147:
-			case 228:
-			case 309:
-			case 390:
-			case 471:
-				return true;
-			default:
-				return false;
-		}
+		return multiblock.isPointOfInterest(pos, "ladder");
 	}
 
 	@Override
 	public float getExplosionResistance()
 	{
-		switch(pos)
+		if(multiblock.isPointOfInterest(pos, "bunker_door"))
 		{
-			case 524:
-			case 525:
-			case 526:
-			case 527:
-			case 528:
-			case 533:
-			case 534:
-			case 535:
-			case 536:
-			case 537:
-			case 542:
-			case 543:
-			case 544:
-			case 545:
-			case 546:
-			case 515:
-			case 516:
-			case 517:
-			case 518:
-			case 519:
-			case 506:
-			case 507:
-			case 508:
-			case 509:
-			case 510:
-			{
-				TileEntityArtilleryHowitzer master = master();
-				return master!=null&&master.doorTime > 1?2000.0F: -1;
-			}
-			default:
-				return -1;
+			TileEntityArtilleryHowitzer master = master();
+			return master!=null&&master.doorTime > 1?2000.0F: -1;
 		}
+		return -1;
 	}
 
 	public enum ArtilleryHowitzerAnimation implements ISerializableEnum

@@ -33,7 +33,7 @@
     ],
     "inventory,type=punchtape_reader": [
       {
-        "model": "immersiveintelligence:metal_device/punchtape_reader.obj",
+        "model": "immersiveintelligence:metal_device/punchtape_reader_flipped.obj",
         "custom": {
           "flip-v": true
         }

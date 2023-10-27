@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +24,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBeginMachineUpgrade;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -67,11 +66,11 @@ public class GuiUpgrade extends GuiIEContainerBase
 		boolean h = buttonUpgrade!=null&&buttonUpgrade.visible;
 		boolean j = buttonQuit!=null&&buttonQuit.visible;
 
-		textUpgradeMachine = I18n.format(IILib.DESCRIPTION_KEY+"upgrade_gui.title");
-		textInfo = I18n.format(IILib.DESCRIPTION_KEY+"upgrade_gui.info");
-		textUpgrade = I18n.format(IILib.DESCRIPTION_KEY+"upgrade_gui.install");
-		textRemove = I18n.format(IILib.DESCRIPTION_KEY+"upgrade_gui.remove");
-		textBack = I18n.format(IILib.DESCRIPTION_KEY+"upgrade_gui.back");
+		textUpgradeMachine = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.title");
+		textInfo = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.info");
+		textUpgrade = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.install");
+		textRemove = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.remove");
+		textBack = I18n.format(IIReference.DESCRIPTION_KEY+"upgrade_gui.back");
 
 		addButton(buttonInfo = new GuiButtonIE(0, guiLeft+106, guiTop+23, 52, 12, textInfo, TEXTURE, 49, 168));
 		addButton(buttonUpgrade = new GuiButtonIE(1, guiLeft+106, guiTop+38, 52, 12, textUpgrade, TEXTURE, 49, 180));
@@ -240,7 +239,7 @@ public class GuiUpgrade extends GuiIEContainerBase
 
 			boolean uni = fontRenderer.getUnicodeFlag();
 			fontRenderer.setUnicodeFlag(true);
-			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed), guiLeft+xSize+2, guiTop+8, 76, IILib.COLOR_H1);
+			fontRenderer.drawSplitString(getUpgradeDescTranslation(previewed), guiLeft+xSize+2, guiTop+8, 76, IIReference.COLOR_H1);
 			fontRenderer.setUnicodeFlag(uni);
 		}
 

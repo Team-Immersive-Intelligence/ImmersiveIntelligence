@@ -22,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class BathingRecipeCategory extends IIRecipeCategory<BathingRecipe, Bathi
 	public BathingRecipeCategory(IGuiHelper helper, boolean washing)
 	{
 		super(washing?"washing": "bathing",
-				washing?IILib.DESCRIPTION_KEY+"jei.washing_recipe": "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"
+				washing?IIReference.DESCRIPTION_KEY+"jei.washing_recipe": "tile."+ImmersiveIntelligence.MODID+".metal_multiblock.chemical_bath.name"
 				, helper.createBlankDrawable(140, 64), BathingRecipe.class, new ItemStack(IIContent.blockMetalMultiblock0, 1, MetalMultiblocks0.CHEMICAL_BATH.getMeta()));
 		tankOverlay = helper.drawableBuilder(texture, 0, 52, 20, 51)
 				.addPadding(-2, 2, -2, 2)

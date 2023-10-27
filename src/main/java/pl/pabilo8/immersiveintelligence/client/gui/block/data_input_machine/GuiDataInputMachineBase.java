@@ -16,7 +16,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -35,7 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -105,7 +105,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		super.initGui();
 		refreshStoredData();
 
-		addLabel(4, 8, IILib.COLOR_H1, title);
+		addLabel(4, 8, IIReference.COLOR_H1, title);
 
 		addTab(IIGuiList.GUI_DATA_INPUT_MACHINE_STORAGE, "storage_module");
 		addTab(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, "variables_module");
@@ -190,9 +190,9 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 		ArrayList<String> tooltip = new ArrayList<>();
 		TABS.keySet().stream().filter(GuiButtonTab::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
 		if(this.sendPacketButton.isMouseOver())
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"variable_send_packet"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"variable_send_packet"));
 		else if(this.manualButton.isMouseOver())
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
 		return tooltip;
 	}
 
@@ -269,7 +269,7 @@ public class GuiDataInputMachineBase extends GuiIEContainerBase implements ITabb
 	{
 		final int vOffset = TABS.size()*24;
 		GuiButtonTab button = new GuiButtonTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
-				TEXTURE_STORAGE, I18n.format(IILib.DESCRIPTION_KEY+name));
+				TEXTURE_STORAGE, I18n.format(IIReference.DESCRIPTION_KEY+name));
 		TABS.put(button, gui);
 		addButton(button);
 	}

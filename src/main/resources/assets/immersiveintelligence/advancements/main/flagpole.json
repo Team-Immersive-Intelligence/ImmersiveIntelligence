@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:metal_multiblock1",
+      "data": 7
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.flagpole"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.flagpole.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/circuit_board",
+  "criteria": {
+    "form_flagpole": {
+      "trigger": "immersiveengineering:multiblock_formed",
+      "conditions": {
+        "multiblock": "II:Flagpole"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "form_flagpole"
+    ]
+  ]
+}

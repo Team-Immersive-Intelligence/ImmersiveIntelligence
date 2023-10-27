@@ -1,17 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
-
-import javax.annotation.Nullable;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRadar;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 @IAdvancedMultiblock
 public class MultiblockRadar extends MultiblockStuctureBase<TileEntityRadar>
@@ -21,22 +18,20 @@ public class MultiblockRadar extends MultiblockStuctureBase<TileEntityRadar>
 	public MultiblockRadar()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/radar"));
-		offset = new Vec3i(4,0, 0);
+		offset = new Vec3i(4, 0, 0);
 		INSTANCE = this;
 	}
 
 	@Override
-	protected void addBlockEvent(World world, BlockPos pos)
+	protected BlockIIMultiblock<MetalMultiblocks1> getBlock()
 	{
-		world.addBlockEvent(pos, IIContent.blockMetalMultiblock1, 255, 0);
+		return IIContent.blockMetalMultiblock1;
 	}
 
 	@Override
-	@Nullable
-	protected TileEntityRadar placeTile(World world, BlockPos pos)
+	protected int getMeta()
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.RADAR.getMeta()));
-		return (TileEntityRadar)world.getTileEntity(pos);
+		return MetalMultiblocks1.RADAR.getMeta();
 	}
 
 	@Override

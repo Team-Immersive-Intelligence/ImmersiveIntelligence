@@ -1,16 +1,13 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.BlockIIMetalMultiblock1.MetalMultiblocks1;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityRedstoneInterface;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -28,23 +25,15 @@ public class MultiblockRedstoneInterface extends MultiblockStuctureBase<TileEnti
 	}
 
 	@Override
-	protected boolean useNewOffset()
+	protected BlockIIMultiblock<MetalMultiblocks1> getBlock()
 	{
-		return false;
+		return IIContent.blockMetalMultiblock1;
 	}
 
 	@Override
-	protected void addBlockEvent(World world, BlockPos pos)
+	protected int getMeta()
 	{
-		world.addBlockEvent(pos, IIContent.blockMetalMultiblock1, 255, 0);
-	}
-
-	@Override
-	@Nullable
-	protected TileEntityRedstoneInterface placeTile(World world, BlockPos pos)
-	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock1.getStateFromMeta(MetalMultiblocks1.REDSTONE_DATA_INTERFACE.getMeta()));
-		return (TileEntityRedstoneInterface)world.getTileEntity(pos);
+		return MetalMultiblocks1.REDSTONE_DATA_INTERFACE.getMeta();
 	}
 
 	@Override

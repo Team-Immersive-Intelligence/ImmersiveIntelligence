@@ -17,6 +17,25 @@
     ]
   },
   {
+    "name": "archangel",
+    "uuid": [
+      "28ad95e0-0c2e-4468-a02b-67ba3820080b"
+    ],
+    "appliesTo": [
+      "machinegun",
+      "submachinegun",
+      "engineer_light",
+      "rifle",
+      "assault_rifle"
+    ],
+    "mods": [
+      "rarity=Masterwork",
+      "skin_mg_text",
+      "text_color=5a0d75",
+      "cape"
+    ]
+  },
+  {
     "name": "royal",
     "uuid": [
       "22153f9b-4950-4028-911a-7d39a2c80101"

@@ -7,8 +7,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -69,7 +67,6 @@ public abstract class AmmoHandler
 	 * @return sound played when unloading ammo from the gun
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract SoundEvent getUnloadSound(ItemStack weapon, EasyNBT nbt);
 
 	/**
@@ -78,7 +75,6 @@ public abstract class AmmoHandler
 	 * @return sound played when loading ammo into the gun
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract SoundEvent getReloadSound(ItemStack weapon, EasyNBT nbt);
 
 	//--- Utility Methods ---//

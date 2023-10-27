@@ -32,13 +32,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Sawmill;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
@@ -46,15 +46,14 @@ import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine.IIBlockTy
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIConcreteDecoration.ConcreteDecorations;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIOre.Ores;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIISmallCrate.IIBlockTypes_SmallCrate;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase.AmmoParts;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMetalPressMold.PressMolds;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIPrecisionTool.PrecisionTools;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIVulcanizerMold.VulcanizerMolds;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialBoule.MaterialsBoule;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
@@ -62,6 +61,7 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMate
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialNugget.MaterialsNugget;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialPlate.MaterialsPlate;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialSpring.MaterialsSpring;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.mechanical.ItemIIMotorGear.MotorGear;
 import pl.pabilo8.immersiveintelligence.common.item.tools.backpack.ItemIIAdvancedPowerPack;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
@@ -80,6 +80,7 @@ import java.util.stream.Collectors;
 public class IIRecipes
 {
 	public static ItemStack BASIC_CIRCUIT, TOOL_HAMMER, TOOL_CUTTERS;
+	public static IngredientStack AMMO_CASINGS;
 
 	public static void doRecipes(IForgeRegistry<IRecipe> recipeRegistry)
 	{
@@ -87,6 +88,13 @@ public class IIRecipes
 		BASIC_CIRCUIT = new ItemStack(IEContent.itemMaterial, 1, 27);
 		TOOL_HAMMER = new ItemStack(IEContent.itemTool, 1, 0);
 		TOOL_CUTTERS = new ItemStack(IEContent.itemTool, 1, 1);
+
+		//Used by ammo pouch
+		AMMO_CASINGS = new IngredientStack(AmmoRegistry.INSTANCE.registeredBulletItems.values()
+				.stream()
+				.map(iAmmo -> iAmmo.getCasingStack(1))
+				.collect(Collectors.toList())
+		);
 
 		//--- Add Recipes ---//
 		addMinecartRecipes(recipeRegistry);
@@ -100,6 +108,7 @@ public class IIRecipes
 
 		addFunctionalCircuits();
 		addSpringRecipes();
+		addHandWeaponRecipes(recipeRegistry);
 		addMiscIERecipes();
 
 		addWoodTableSawRecipes();
@@ -222,6 +231,11 @@ public class IIRecipes
 					"circuitAdvancedEtched",
 					new IngredientStack("chipAdvanced", 2)
 			);
+
+			BlueprintCraftingRecipe.addRecipe("advanced_circuits",
+					IIContent.itemMaterial.getStack(Materials.CRYPTOGRAPHIC_CIRCUIT_BOARD),
+					"circuitAdvanced",
+					new ItemStack(IEContent.itemMaterial, 2, 9));
 
 			BlueprintCraftingRecipe.addRecipe("processors",
 					IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
@@ -493,6 +507,52 @@ public class IIRecipes
 				new IngredientStack("plateBrass", 1), TOOL_HAMMER
 		);
 
+	}
+
+	public static void addHandWeaponRecipes(IForgeRegistry<IRecipe> recipeRegistry)
+	{
+		//IE Revolver Tweaks
+		if(IIConfig.changeRevolverProduction)
+		{
+			//TODO: 15.10.2023 change revolver to use iron instead of steel
+		}
+
+		//Crafting Components
+		PrecissionAssemblerRecipe.addRecipe(
+				IIContent.itemMaterial.getStack(Materials.TUNGSTEN_GUN_BARREL),
+				ItemStack.EMPTY,
+				new IngredientStack[]{
+						new IngredientStack("gunbarrelSteel"),
+						new IngredientStack("dustTungsten"),
+				},
+				new String[]{"drill", "inserter", "welder"},
+				new String[]{
+						"drill work main",
+						"inserter pick first", "inserter drop main",
+						"welder work main", "drill work main"},
+				32000,
+				0.9f
+		);
+
+		//Industrial Rifle
+		PrecissionAssemblerRecipe.addRecipe(
+				new ItemStack(IIContent.itemRifle),
+				ItemStack.EMPTY,
+				new IngredientStack[]{
+						new IngredientStack("gunstockWood"),
+						new IngredientStack("gunbarrelSteel", 2),
+						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
+						new IngredientStack("gunpartBasic"),
+				},
+				new String[]{"welder", "inserter"},
+				new String[]{
+						"welder work first", "inserter pick second", "inserter drop third",
+						"inserter pick second", "inserter drop third", "welder work third",
+						"inserter pick third", "inserter drop main",
+				},
+				32000,
+				1.2f
+		);
 	}
 
 	public static void addMiscIERecipes()
@@ -1042,14 +1102,16 @@ public class IIRecipes
 		FillerRecipe.recipeList.clear();
 		FillerRecipe.addRecipe(IIContent.itemAmmoArtillery, 160, 8000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
+		FillerRecipe.addRecipe(IIContent.itemAmmoMortar, 140, 6000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoAutocannon, 80, 1000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoMachinegun, 60, 800);
 		FillerRecipe.addRecipe(IIContent.itemAmmoAssaultRifle, 55, 700);
 		FillerRecipe.addRecipe(IIContent.itemAmmoSubmachinegun, 50, 600);
 		FillerRecipe.addRecipe(IIContent.itemAmmoRevolver, 40, 400);
 
-
-		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoAutocannon,
+		//Projectiles
+		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar,
+				IIContent.itemAmmoAutocannon,
 				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
 		// TODO: 05.09.2022 , IIContent.itemAmmoRevolver
 		{
@@ -1071,6 +1133,7 @@ public class IIRecipes
 			);
 		}
 
+		//Explosives and Mines
 		for(Item item : new Item[]{IIContent.blockTripmine.itemBlock, IIContent.blockTellermine.itemBlock, IIContent.blockRadioExplosives.itemBlock, IIContent.itemNavalMine})
 		{
 			assert item!=null;
@@ -1089,6 +1152,7 @@ public class IIRecipes
 			);
 		}
 
+		//Grenades
 		AmmunitionWorkshopRecipe.addRecipe(
 				(core, casing) -> {
 
@@ -1347,6 +1411,11 @@ public class IIRecipes
 	{
 		//IE Circuit Board
 		OreDictionary.registerOre("circuitBasic", new ItemStack(IEContent.itemMaterial, 1, 27));
+		//IE Gun Parts
+		OreDictionary.registerOre("gungripWood", new ItemStack(IEContent.itemMaterial, 1, 13));
+		OreDictionary.registerOre("gunbarrelSteel", new ItemStack(IEContent.itemMaterial, 1, 14));
+		OreDictionary.registerOre("gunpartRevolver", new ItemStack(IEContent.itemMaterial, 1, 15));
+		OreDictionary.registerOre("gunpartHammer", new ItemStack(IEContent.itemMaterial, 1, 16));
 
 		//Meat for production
 		OreDictionary.registerOre("listAllMeatRaw", Items.PORKCHOP);
@@ -1355,7 +1424,7 @@ public class IIRecipes
 		OreDictionary.registerOre("listAllMeatRaw", Items.CHICKEN);
 		OreDictionary.registerOre("listAllMeatRaw", Items.RABBIT);
 		OreDictionary.registerOre("listAllMeatRaw", Items.MUTTON);
-		
+
 		OreDictionary.registerOre("logWood", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("woodRubber", new ItemStack(IIContent.blockRubberLog));
 		OreDictionary.registerOre("blockLeaves", new ItemStack(IIContent.blockRubberLeaves));

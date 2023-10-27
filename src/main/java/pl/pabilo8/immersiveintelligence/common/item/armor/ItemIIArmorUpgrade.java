@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
@@ -196,11 +196,11 @@ public class ItemIIArmorUpgrade extends ItemIISubItemsBase<ArmorUpgrades> implem
 		ArmorUpgrades sub = stackToSub(stack);
 		//add valid weapon types
 		for(ArmorTypes type : sub.toolset)
-			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+type.getName())));
+			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
 
 		//add description
 		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
-				I18n.format(IILib.DESC_TOOLUPGRADE+sub.getName()), 200);
+				I18n.format(IIReference.DESC_TOOLUPGRADE+sub.getName()), 200);
 		Arrays.stream(flavour).map(IIUtils::getItalicString).forEach(list::add);
 	}
 

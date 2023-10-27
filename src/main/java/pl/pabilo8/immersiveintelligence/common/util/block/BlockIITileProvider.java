@@ -48,8 +48,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
@@ -479,19 +481,21 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		if(tile instanceof IUpgradableMachine&&IIUtils.isWrench(heldItem))
 		{
 			IUpgradableMachine u = ((IUpgradableMachine)tile);
-			if(u.getInstallProgress()==0)
+			TileEntity master = u.getUpgradeMaster();
+			if(u.getInstallProgress()==0&&master!=null)
 			{
-				pl.pabilo8.immersiveintelligence.common.CommonProxy.openUpgradeGuiForTile(player, (TileEntity & IUpgradableMachine)tile);
+				player.openGui(ImmersiveIntelligence.INSTANCE, IIGuiList.GUI_UPGRADE.ordinal(), master.getWorld(), master.getPos().getX(),
+						master.getPos().getY(), master.getPos().getZ());
 				return true;
 			}
 		}
 		if(tile instanceof IGuiTile&&hand==EnumHand.MAIN_HAND&&!player.isSneaking())
 		{
 			TileEntity master = ((IGuiTile)tile).getGuiMaster();
+
 			if(!world.isRemote&&master!=null&&((IGuiTile)master).canOpenGui(player))
-			{
-				pl.pabilo8.immersiveintelligence.common.CommonProxy.openGuiForTile(player, (TileEntity & IGuiTile)master);
-			}
+				player.openGui(ImmersiveIntelligence.INSTANCE, ((IGuiTile)master).getGuiID(), master.getWorld(), master.getPos().getX(),
+						master.getPos().getY(), master.getPos().getZ());
 			return true;
 		}
 		return false;

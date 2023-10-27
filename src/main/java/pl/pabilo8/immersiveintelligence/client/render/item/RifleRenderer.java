@@ -17,7 +17,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.AssaultRifle;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
@@ -30,6 +30,8 @@ import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRifle;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -39,6 +41,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> implements ISpecificHandRenderer
 {
 	private MTLTextureRemapper handmadeRemapper;
+	private MTLTextureRemapper skinRemapper;
 	private AMTCrossVariantReference<AMTBullet> bullet, casing;
 
 	private IIAnimationCachedMap loadBullet, loadMag, unloadMag, fireBoltAction, fireSemiAutomatic, handAngle, handVisibility, offhandVisibility;
@@ -108,7 +111,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 		AmmoHandler ammoHandler = item.getAmmoHandler(stack);
 
 		//Set model variant
-		model.getVariant(nbt.hasKey("handmade")?"diy": "", stack);
+		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString("contributorSkin"), stack);
 		model.forEach(AMT::defaultize);
 
 		int firing = nbt.getInt(ItemIIRifle.FIRE_DELAY);
@@ -239,6 +242,13 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 				.withTextureProvider(
 						(res, stack) ->
 						{
+							String skin = IIContent.itemRifle.getSkinnableCurrentSkin(stack);
+							if (IISkinHandler.isValidSkin(skin))
+							{
+								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/rifle").withExtension(ResLoc.EXT_MTL));
+								return ClientUtils.getSprite(this.skinRemapper.apply(res));
+							}
+
 							if(ItemNBTHelper.hasKey(stack, ItemIIRifle.HANDMADE))
 								return ClientUtils.getSprite(handmadeRemapper.apply(res));
 							return ClientUtils.getSprite(res);
@@ -268,6 +278,8 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 	{
 		super.registerSprites(map);
 		ApiUtils.getRegisterSprite(map, new ResourceLocation(ImmersiveIntelligence.MODID, "items/weapons/rifle_handmade"));
+		// Register skins
+		IISkinHandler.registerSprites(map, IIContent.itemRifle.getSkinnableName());
 	}
 
 	@Override

@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "pps",
+    "cs "
+  ],
+  "key": {
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plankTreatedWood"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "ingotCopper"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stickTreatedWood"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 36
+  }
+}

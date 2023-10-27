@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerTask;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -143,7 +143,7 @@ public class GuiPackerTaskList extends GuiButton
 		this.drawTexturedModalRect(x, y, 96, 211, 65, 20);
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.fontRenderer.drawString(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+task.actionType.getActionName(task.unpack)), x+2, y+7, IILib.COLOR_H1, false);
+		mc.fontRenderer.drawString(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.packer.task."+task.actionType.getActionName(task.unpack)), x+2, y+7, IIReference.COLOR_H1, false);
 
 		if(Objects.equals(task.stack.oreName, "*"))
 		{

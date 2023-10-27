@@ -1,0 +1,56 @@
+{
+  "bounds": {
+    "plate": [
+      2, 2, 0,
+      14, 12, 1
+    ],
+    "slab": [
+      0, 0, 0,
+      16, 8, 16
+    ],
+    "cable1": [
+      0, 8, 2,
+      14, 13, 6
+    ],
+    "cable2": [
+      0, 8, 10,
+      14, 13, 14
+    ],
+    "shelf": [
+      6, -3, 0,
+      16, 4, 7.5
+    ],
+    "shelf_below": [
+      6, 13, 0,
+      16, 20, 7.5
+    ],
+    "mug": [
+      9, 8.7, 7,
+      13, 13, 11
+    ],
+    "artillery_shell": [
+      1.5, 8.7, 1,
+      5.5, 20, 5
+    ],
+    "wall": [
+      0, 8, 0,
+      1, 24, 16
+    ],
+    "wall_upper": [
+      0, -8, 0,
+      1, 8, 16
+    ]
+  },
+  "positions": {
+    "4": "plate",
+    "1": ["slab", "mug", "artillery_shell", "shelf_below","wall"],
+    "7": ["slab", "cable1", "cable2"],
+    "5": ["shelf","wall_upper"]
+  },
+  "poi": {
+    "energy": 6,
+    "data_input": 2,
+    "data_output": 3,
+    "cocoa": [1, 5]
+  }
+}

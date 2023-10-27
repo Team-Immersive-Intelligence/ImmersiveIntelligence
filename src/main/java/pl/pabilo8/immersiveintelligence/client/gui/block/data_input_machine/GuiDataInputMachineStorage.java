@@ -3,10 +3,9 @@ package pl.pabilo8.immersiveintelligence.client.gui.block.data_input_machine;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class GuiDataInputMachineStorage extends GuiDataInputMachineBase
 	public void initGui()
 	{
 		super.initGui();
-		addLabel(101, 23, IILib.COLOR_H2, I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.label_punchtapes")).setCentered();
+		addLabel(101, 23, IIReference.COLOR_H2, I18n.format("tile.immersiveintelligence.metal_multiblock.data_input_machine.label_punchtapes")).setCentered();
 	}
 
 	@Override

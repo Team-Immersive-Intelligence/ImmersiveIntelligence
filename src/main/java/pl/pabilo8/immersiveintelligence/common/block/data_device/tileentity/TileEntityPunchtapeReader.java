@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -119,8 +119,8 @@ public class TileEntityPunchtapeReader extends TileEntityIEBase implements ITick
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"punchtape_reader_mode",
-					new TextComponentTranslation(IILib.INFO_KEY+"punchtape_reader_mode."+mode));
+			IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"punchtape_reader_mode",
+					new TextComponentTranslation(IIReference.INFO_KEY+"punchtape_reader_mode."+mode));
 			markDirty();
 			markBlockForUpdate(getPos(), null);
 		}

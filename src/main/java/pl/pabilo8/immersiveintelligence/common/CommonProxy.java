@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common;
 import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
-import blusunrize.immersiveengineering.api.MultiblockHandler.MultiblockFormEvent;
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.BulletHandler;
@@ -19,15 +18,10 @@ import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWatermill;
 import blusunrize.immersiveengineering.common.blocks.wooden.TileEntityWindmill;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.IEPotions;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -38,7 +32,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
@@ -50,38 +46,27 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.*;
 import pl.pabilo8.immersiveintelligence.api.ShrapnelHandler.Shrapnel;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.MinecartBlockHelper;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.MechanicalDevices;
 import pl.pabilo8.immersiveintelligence.common.ammo.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.cores.*;
 import pl.pabilo8.immersiveintelligence.common.ammo.explosives.AmmoComponentHMX;
@@ -110,6 +95,7 @@ import pl.pabilo8.immersiveintelligence.common.entity.minecart.capacitor.EntityM
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateReinforced;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateSteel;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.crate.EntityMinecartCrateWooden;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityDrone;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
@@ -118,7 +104,6 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerUpgrade;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.material.ItemIIMaterialDust.MaterialsDust;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.util.IBatchOredictRegister;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIFluid;
@@ -127,7 +112,6 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBl
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
-import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
@@ -158,12 +142,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	}
 
-	private static ResourceLocation createRegistryName(String unlocalized)
-	{
-		unlocalized = unlocalized.substring(unlocalized.indexOf(ImmersiveIntelligence.MODID));
-		unlocalized = unlocalized.replaceFirst("\\.", ":");
-		return new ResourceLocation(unlocalized);
-	}
+	//--- Registry Handling ---//
 
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
@@ -216,60 +195,10 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		event.getRegistry().register(IIContent.biomeWasteland);
 	}
 
-	public static <T extends TileEntity & IGuiTile> void openGuiForTile(@Nonnull EntityPlayer player, @Nonnull T tile)
-	{
-		player.openGui(ImmersiveIntelligence.INSTANCE, tile.getGuiID(), tile.getWorld(), tile.getPos().getX(),
-				tile.getPos().getY(), tile.getPos().getZ());
-	}
-
-	public static <T extends TileEntity & IGuiTile> void openSpecificGuiForEvenMoreSpecificTile(@Nonnull EntityPlayer player, @Nonnull T tile, int gui)
-	{
-		player.openGui(ImmersiveIntelligence.INSTANCE, gui, tile.getWorld(), tile.getPos().getX(),
-				tile.getPos().getY(), tile.getPos().getZ());
-	}
-
-	public static <T extends TileEntity & IUpgradableMachine> void openUpgradeGuiForTile(@Nonnull EntityPlayer player, @Nonnull T tile)
-	{
-		player.openGui(ImmersiveIntelligence.INSTANCE, IIGuiList.GUI_UPGRADE.ordinal(), tile.getWorld(), tile.getPos().getX(),
-				tile.getPos().getY(), tile.getPos().getZ());
-	}
-
-	public static <T extends Entity & IGuiTile> void openGuiForEntity(@Nonnull EntityPlayer player, @Nonnull T entity, int gui)
-	{
-		player.openGui(ImmersiveIntelligence.INSTANCE, gui, entity.world, entity.getPosition().getX(),
-				entity.getPosition().getY(), entity.getPosition().getZ());
-	}
-
-	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EntityEquipmentSlot slot)
-	{
-		ItemStack stack = player.getItemStackFromSlot(slot);
-		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem))
-			return;
-		IGuiItem gui = (IGuiItem)stack.getItem();
-		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
-	}
-
-	public static void addConfiguredWorldgen(IBlockState state, String name, int[] config, EnumOreType type)
-	{
-		if(config!=null&&config.length >= 5&&config[0] > 0)
-			IIWorldGen.addOreGen(name, state, config[0], config[1], config[2], config[3], config[4], type);
-	}
-
-	public static void registerTile(Class<? extends TileEntity> tile)
-	{
-		String s = tile.getSimpleName();
-		s = s.substring(s.indexOf("TileEntity")+"TileEntity".length());
-		GameRegistry.registerTileEntity(tile, new ResourceLocation(ImmersiveIntelligence.MODID+":"+s));
-	}
-
-	public static void registerEntity(int id, Class<? extends Entity> entity, String name, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)
-	{
-		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, name),
-				entity, name, id, ImmersiveIntelligence.INSTANCE, trackingRange, updateFrequency, sendVelocityUpdates);
-	}
-
 	public static void registerOreDict()
 	{
+		IILogger.info("Registering OreDictionary");
+
 		//Add oredict for other mods
 		IIRecipes.addForeignOreDict();
 
@@ -365,18 +294,20 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	@SubscribeEvent
 	public static void onSave(WorldEvent.Save event)
 	{
-		IISaveData.setDirty(0);
+		IISaveData.setDirty(event.getWorld().provider.getDimension());
 	}
 
 	@SubscribeEvent
 	public static void onUnload(WorldEvent.Unload event)
 	{
-		IISaveData.setDirty(0);
+		IISaveData.setDirty(event.getWorld().provider.getDimension());
 	}
 
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
+		IILogger.info("Registering Recipes");
+
 		String sulfur = OreDictionary.doesOreNameExist("oreSulfur")?"oreSulfur": "dustSulfur";
 
 		MineralMix mineralFluorite = ExcavatorHandler.addMineral("Fluorite", 25, .65f, new String[]{"oreFluorite", "oreQuartz"}, new float[]{.5f, .25f});
@@ -417,36 +348,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		);
 	}
 
-	/**
-	 * Works only for annotated CLASSES, not fields
-	 */
-	static String[] getAnnotatedOreDict(Object o)
-	{
-		String[] ores = null;
-		if(o.getClass().isAnnotationPresent(IBatchOredictRegister.class))
-			ores = o.getClass().getAnnotation(IBatchOredictRegister.class).oreDict();
-		return ores;
-	}
-
-	public static Fluid makeFluid(String name, int density, int viscosity)
-	{
-		return makeFluid(name, density, viscosity, "");
-	}
-
-	public static Fluid makeFluid(String name, int density, int viscosity, String prefix)
-	{
-		Fluid fl = new Fluid(
-				name,
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
-				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
-		).setDensity(density).setViscosity(viscosity);
-		FluidRegistry.addBucketForFluid(fl);
-		if(!FluidRegistry.registerFluid(fl))
-			fl = FluidRegistry.getFluid(fl.getName());
-
-		IICreativeTab.fluidBucketMap.add(fl);
-		return fl;
-	}
+	//--- Main Loading Events ---//
 
 	public void preInit()
 	{
@@ -472,9 +374,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		AmmoRegistry.INSTANCE.registerBulletItem(IIContent.itemAmmoAssaultRifle);
 		AmmoRegistry.INSTANCE.registerBulletItem(IIContent.itemAmmoRevolver);
 
-		AmmoRegistry.INSTANCE.registerBulletItem((IAmmo)IIContent.blockTripmine.itemBlock);
-		AmmoRegistry.INSTANCE.registerBulletItem((IAmmo)IIContent.blockTellermine.itemBlock);
-		AmmoRegistry.INSTANCE.registerBulletItem((IAmmo)IIContent.blockRadioExplosives.itemBlock);
+		if(IIContent.blockTripmine.itemBlock!=null)
+			AmmoRegistry.INSTANCE.registerBulletItem((IAmmo)IIContent.blockTripmine.itemBlock);
+		if(IIContent.blockTellermine.itemBlock!=null)
+			AmmoRegistry.INSTANCE.registerBulletItem((IAmmo)IIContent.blockTellermine.itemBlock);
+		if(IIContent.blockRadioExplosives.itemBlock!=null)
+			AmmoRegistry.INSTANCE.registerBulletItem((IAmmo)IIContent.blockRadioExplosives.itemBlock);
 		AmmoRegistry.INSTANCE.registerBulletItem(IIContent.itemNavalMine);
 
 		AmmoRegistry.INSTANCE.registerComponent(new AmmoComponentTNT());
@@ -554,6 +459,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 	{
 		IICompatModule.doModulesInit();
 
+		//Event handler registration
+		EventHandler handler = new EventHandler();
+		MinecraftForge.EVENT_BUS.register(handler);
+
+		//Create ammo components for fluids
 		for(Fluid f : FluidRegistry.getRegisteredFluids().values())
 		{
 			AmmoComponentFluid comp = new AmmoComponentFluid(f);
@@ -578,12 +488,12 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		MinecraftForge.EVENT_BUS.register(iiWorldGen);
 
 		IILogger.info("Adding oregen");
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PLATINUM.getMeta()), "platinum", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.orePlatinum, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
-		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PLATINUM.getMeta()), "platinum", IIConfigHandler.IIConfig.Ores.orePlatinum, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.ZINC.getMeta()), "zinc", IIConfigHandler.IIConfig.Ores.oreZinc, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.TUNGSTEN.getMeta()), "tungsten", IIConfigHandler.IIConfig.Ores.oreTungsten, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.SALT.getMeta()), "salt", IIConfigHandler.IIConfig.Ores.oreSalt, EnumOreType.OVERWORLD);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.FLUORITE.getMeta()), "fluorite", IIConfigHandler.IIConfig.Ores.oreFluorite, EnumOreType.NETHER);
+		addConfiguredWorldgen(IIContent.blockOre.getStateFromMeta(Ores.PHOSPHORUS.getMeta()), "phosphorus", IIConfigHandler.IIConfig.Ores.orePhosphorus, EnumOreType.NETHER);
 
 
 		//Disallow crates in crates
@@ -599,6 +509,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		IIContent.tileEntitiesWeDontLike.add(tileEntity -> tileEntity instanceof TileEntityChargingStation);
 
 		IEApi.forbiddenInCrates.add((stack) -> stack.getItem() instanceof ItemBlockIEBase&&((ItemBlockIEBase)stack.getItem()).getBlock() instanceof BlockIISmallCrate);
+		IEApi.forbiddenInCrates.add(stack -> stack.getItem()==IIContent.itemCasingPouch);
 
 		IILogger.info("Adding TileEntities");
 		IIContent.TILE_ENTITIES.stream().distinct().forEach(CommonProxy::registerTile);
@@ -650,6 +561,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		registerEntity(i++, EntityDrone.class, "drone", 64, 1, true);
 
 		registerEntity(i++, EntityIIChemthrowerShot.class, "chemthrower_shot", 64, 1, true);
+		registerEntity(i, EntityAMTTactile.class, "tactile", 64, 1, true);
 	}
 
 	public void postInit()
@@ -680,11 +592,14 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 				((MultiblockStuctureBase<?>)mb).updateStructure();
 	}
 
+	//--- GUI Handling ---//
+
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		EnumHand hand;
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		ItemStack stack = player.getHeldItem(player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND);
+		ItemStack stack = player.getHeldItem(hand = (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IGuiItem?EnumHand.MAIN_HAND: EnumHand.OFF_HAND));
 
 		if(ID==IIGuiList.GUI_UPGRADE.ordinal()&&te instanceof IUpgradableMachine)
 		{
@@ -697,11 +612,14 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		{
 			IIGuiList gui = IIGuiList.values()[ID];
 
-			if(gui.teClass==null||gui.container==null||gui.guiFromTile==null)
+			if(gui.item)
+				return gui.containerFromStack==null?null: gui.containerFromStack.apply(player, stack, hand);
+
+			if(gui.teClass==null||gui.containerFromTile==null)
 				return null;
 			else if(te instanceof IGuiTile&&gui.teClass.isInstance(te))
 			{
-				Container opened = gui.container.apply(player, te);
+				Container opened = gui.containerFromTile.apply(player, te);
 				if(opened!=null)
 				{
 					((IGuiTile)te).onGuiOpened(player, false);
@@ -727,77 +645,11 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		//I like casting things
 		IGuiTile te = ((IGuiTile)((IGuiTile)tile).getGuiMaster());
 		if(!((TileEntity)te).getWorld().isRemote&&te.canOpenGui(player))
-		{
-			openSpecificGuiForEvenMoreSpecificTile(player, (TileEntity & IGuiTile)te, gui);
-		}
+			player.openGui(ImmersiveIntelligence.INSTANCE, gui, tile.getWorld(), tile.getPos().getX(),
+					tile.getPos().getY(), tile.getPos().getZ());
 	}
 
-	//Cancel when using a machinegun
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onItemUse(PlayerInteractEvent.RightClickBlock event)
-	{
-		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
-		{
-			event.setResult(Result.DENY);
-			event.setCanceled(true);
-		}
-	}
-
-	//Cancel when using a machinegun
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onBlockUse(PlayerInteractEvent.RightClickItem event)
-	{
-		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
-		{
-			event.setResult(Result.DENY);
-			event.setCanceled(true);
-		}
-	}
-
-	//Shooting
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onEmptyRightclick(PlayerInteractEvent.RightClickEmpty event)
-	{
-		if(event.getEntity().isRiding()&&event.getEntity().getRidingEntity() instanceof EntityMachinegun)
-		{
-			event.setResult(Result.DENY);
-		}
-	}
-
-	@SubscribeEvent
-	public void onBreakBlock(BreakEvent event)
-	{
-		DamageBlockPos dpos = null;
-		for(DamageBlockPos g : PenetrationRegistry.blockDamage)
-		{
-			if(g.dimension==event.getWorld().provider.getDimension()&&event.getPos().equals(g)) ;
-			{
-				dpos = g;
-				break;
-			}
-		}
-		if(dpos!=null)
-		{
-			PenetrationRegistry.blockDamage.remove(dpos);
-			dpos.damage = 0;
-			IIPacketHandler.INSTANCE.sendToAllAround(new MessageBlockDamageSync(dpos), IIPacketHandler.targetPointFromPos(dpos, event.getWorld(), 32));
-		}
-	}
-
-	@SubscribeEvent
-	public void onMultiblockForm(MultiblockFormEvent.Post event)
-	{
-		if(event.isCancelable()&&!event.isCanceled()&&event.getMultiblock().getClass().isAnnotationPresent(IAdvancedMultiblock.class))
-		{
-			//Required by Advanced Structures!
-			if(!IIUtils.isAdvancedHammer(event.getHammer()))
-			{
-				if(!event.getEntityPlayer().getEntityWorld().isRemote)
-					IIPacketHandler.sendChatTranslation(event.getEntityPlayer(), "info.immersiveintelligence.requires_advanced_hammer");
-				event.setCanceled(true);
-			}
-		}
-	}
+	//--- Resource Reload Handling ---//
 
 	public void reloadModels()
 	{
@@ -809,10 +661,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 
 	}
 
-	public static MachineUpgrade createMachineUpgrade(String name)
-	{
-		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
-	}
+	//--- Chunkloading Handling ---//
 
 	@Override
 	public void ticketsLoaded(List<Ticket> tickets, World world)
@@ -822,9 +671,7 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 			if(ticket.getType()==Type.NORMAL)
 			{
 				for(ChunkPos chunkPos : ticket.getChunkList())
-				{
 					ForgeChunkManager.forceChunk(ticket, chunkPos);
-				}
 				final MinecraftServer minecraftServer = world.getMinecraftServer();
 				if(minecraftServer!=null)
 					minecraftServer.addScheduledTask(() -> ForgeChunkManager.releaseTicket(ticket));
@@ -832,86 +679,77 @@ public class CommonProxy implements IGuiHandler, LoadingCallback
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onLivingUpdate(LivingUpdateEvent event)
+	//--- Utils ---//
+
+	private static ResourceLocation createRegistryName(String unlocalized)
 	{
-		if(!(event.getEntityLiving() instanceof EntityPlayer&&((EntityPlayer)event.getEntityLiving()).isCreative())&&event.getEntityLiving().world.getTotalWorldTime()%20==0&&event.getEntityLiving().world.getBiome(event.getEntityLiving().getPosition())==IIContent.biomeWasteland)
-			event.getEntityLiving().addPotionEffect(new PotionEffect(IIPotions.radiation, 2000, 0, false, false));
-		if(event.getEntityLiving() instanceof EntityPlayer&&!event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()&&ItemNBTHelper.hasKey(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack))
-		{
-			ItemStack powerpack = ItemNBTHelper.getItemStack(event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST), IIContent.NBT_AdvancedPowerpack);
-			if(!powerpack.isEmpty())
-				powerpack.getItem().onArmorTick(event.getEntityLiving().getEntityWorld(), (EntityPlayer)event.getEntityLiving(), powerpack);
-		}
+		unlocalized = unlocalized.substring(unlocalized.indexOf(ImmersiveIntelligence.MODID));
+		unlocalized = unlocalized.replaceFirst("\\.", ":");
+		return new ResourceLocation(unlocalized);
 	}
 
-	@SubscribeEvent
-	public void spawnEvent(EntityJoinWorldEvent event)
+	public static MachineUpgrade createMachineUpgrade(String name)
 	{
-		if(event.getEntity() instanceof EntityMob)
-		{
-			EntityMob e = (EntityMob)event.getEntity();
-			e.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(e, EntityHans.class, true));
-		}
+		return new MachineUpgrade(name, new ResourceLocation(ImmersiveIntelligence.MODID, "textures/gui/upgrade/"+name+".png"));
 	}
 
-	@SubscribeEvent
-	public void onLivingAttack(LivingAttackEvent event)
+	public static void openGuiForItem(@Nonnull EntityPlayer player, @Nonnull EnumHand hand)
 	{
-		EntityLivingBase entity = event.getEntityLiving();
-		ItemStack head, chest, legs, boots;
-		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
-		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-
-		//plates
-		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
-				event.setCanceled(true);
-		}
-		//heat resist
-		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
-				event.setCanceled(true);
-		}
-		//springs
-		else if(event.getSource()==DamageSource.FALL)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
-				event.setCanceled(true);
-		}
+		ItemStack stack = player.getItemStackFromSlot(hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
+		if(stack.isEmpty()||!(stack.getItem() instanceof IGuiItem))
+			return;
+		IGuiItem gui = (IGuiItem)stack.getItem();
+		player.openGui(ImmersiveIntelligence.INSTANCE, gui.getGuiID(stack), player.world, (int)player.posX, (int)player.posY, (int)player.posZ);
 	}
 
-	@SubscribeEvent
-	public static void hurtEvent(LivingHurtEvent event)
+	public static void addConfiguredWorldgen(IBlockState state, String name, int[] config, EnumOreType type)
 	{
-		EntityLivingBase entity = event.getEntityLiving();
-		ItemStack head, chest, legs, boots;
-		head = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		legs = entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
-		boots = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+		if(config!=null&&config.length >= 5&&config[0] > 0)
+			IIWorldGen.addOreGen(name, state, config[0], config[1], config[2], config[3], config[4], type);
+	}
 
-		//plates
-		if(event.getSource()==DamageSource.CACTUS||(event.getSource() instanceof EntityDamageSourceIndirect&&event.getSource().getImmediateSource() instanceof EntityArrow))
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "toughness_increase"))
-				event.setCanceled(true);
-		}
-		//heat resist
-		else if(event.getSource()==DamageSource.IN_FIRE||event.getSource()==DamageSource.HOT_FLOOR)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(chest, "heat_coating")&&ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "reinforced"))
-				event.setCanceled(true);
-		}
-		//springs
-		else if(event.getSource()==DamageSource.FALL)
-		{
-			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
-				event.setCanceled(true);
-		}
+	public static void registerTile(Class<? extends TileEntity> tile)
+	{
+		String s = tile.getSimpleName();
+		s = s.substring(s.indexOf("TileEntity")+"TileEntity".length());
+		GameRegistry.registerTileEntity(tile, new ResourceLocation(ImmersiveIntelligence.MODID+":"+s));
+	}
+
+	public static void registerEntity(int id, Class<? extends Entity> entity, String name, int trackingRange, int updateFrequency, boolean sendVelocityUpdates)
+	{
+		EntityRegistry.registerModEntity(new ResourceLocation(ImmersiveIntelligence.MODID, name),
+				entity, name, id, ImmersiveIntelligence.INSTANCE, trackingRange, updateFrequency, sendVelocityUpdates);
+	}
+
+
+	/**
+	 * Works only for annotated CLASSES, not fields
+	 */
+	static String[] getAnnotatedOreDict(Object o)
+	{
+		String[] ores = null;
+		if(o.getClass().isAnnotationPresent(IBatchOredictRegister.class))
+			ores = o.getClass().getAnnotation(IBatchOredictRegister.class).oreDict();
+		return ores;
+	}
+
+	public static Fluid makeFluid(String name, int density, int viscosity)
+	{
+		return makeFluid(name, density, viscosity, "");
+	}
+
+	public static Fluid makeFluid(String name, int density, int viscosity, String prefix)
+	{
+		Fluid fl = new Fluid(
+				name,
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_still"),
+				new ResourceLocation(ImmersiveIntelligence.MODID+":blocks/fluid/"+prefix+name+"_flow")
+		).setDensity(density).setViscosity(viscosity);
+		FluidRegistry.addBucketForFluid(fl);
+		if(!FluidRegistry.registerFluid(fl))
+			fl = FluidRegistry.getFluid(fl.getName());
+
+		IICreativeTab.fluidBucketMap.add(fl);
+		return fl;
 	}
 }

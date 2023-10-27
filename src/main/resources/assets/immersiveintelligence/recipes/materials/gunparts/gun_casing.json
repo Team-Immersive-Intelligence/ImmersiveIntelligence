@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "sg",
+    " n"
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "gunstockWood"
+    },
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "gungripWood"
+    },
+    "n": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 37
+  }
+}

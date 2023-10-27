@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Wires;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Wires;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 
 /**

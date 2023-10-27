@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvanced
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IAdvancedSelectionBounds;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,8 +17,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.RadioStation;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;

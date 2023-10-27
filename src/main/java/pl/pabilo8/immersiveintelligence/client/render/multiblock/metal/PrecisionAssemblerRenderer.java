@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.ArrayUtils;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrecisionAssembler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.IPrecisionTool;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IPrecisionTool;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.precision_assembler.*;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
@@ -62,7 +62,7 @@ public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEn
 			currentModel.render();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[0]+(te.isDrawerOpened[0]?0.4f:-0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
+			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[0]+(te.isDrawerOpened[0]?0.4f: -0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
 			for(ModelRendererTurbo mod : currentModel.drawer1Model)
 			{
 				mod.render(0.0625f);
@@ -70,7 +70,7 @@ public class PrecisionAssemblerRenderer extends TileEntitySpecialRenderer<TileEn
 			GlStateManager.popMatrix();
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[1]+(te.isDrawerOpened[1]?0.4f:-0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
+			GlStateManager.translate(-MathHelper.clamp(te.drawerAngle[1]+(te.isDrawerOpened[1]?0.4f: -0.5f)*partialTicks, 0f, 5f)/16f, 0, 0);
 			for(ModelRendererTurbo mod : currentModel.drawer2Model)
 			{
 				mod.render(0.0625f);

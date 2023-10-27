@@ -8,7 +8,6 @@ import blusunrize.lib.manual.ManualPages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -24,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,13 +62,13 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		super.initGui();
 
 		//Properties
-		addLabel(43, 40, 115, 0, false, IILib.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_properties")).setCentered();
+		addLabel(43, 40, 115, 0, false, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_properties")).setCentered();
 		//Type:
-		addLabel(61, 24, IILib.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
+		addLabel(61, 24, IIReference.COLOR_H1, I18n.format("desc.immersiveintelligence.variable_type"));
 		//Variable Type
-		addLabel(152-10-fontRenderer.getStringWidth(I18n.format(IILib.DATA_KEY+"datatype."+dataType.getName())),
+		addLabel(152-10-fontRenderer.getStringWidth(I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())),
 				24, MathHelper.multiplyColor(dataType.getTypeColour(), 0xcacaca),
-				I18n.format(IILib.DATA_KEY+"datatype."+dataType.getName())
+				I18n.format(IIReference.DATA_KEY+"datatype."+dataType.getName())
 		);
 
 		//Apply Button
@@ -144,13 +143,13 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		}
 		else if(button==buttonVariableHelp)
 		{
-			sideManual.selectedCategory = IILib.CAT_DATA;
+			sideManual.selectedCategory = IIReference.CAT_DATA;
 			sideManual.setSelectedEntry("data_variable_types");
 			sideManual.page = 0;
 
 			final String pp = "data_variable_types_"+dataType.getName();
 
-			List<ManualEntry> entries = ManualHelper.getManual().manualContents.get(IILib.CAT_DATA);
+			List<ManualEntry> entries = ManualHelper.getManual().manualContents.get(IIReference.CAT_DATA);
 			Optional<ManualEntry> first = entries.stream().filter(manualEntry -> manualEntry.getName().equals("data_variable_types")).findFirst();
 			if(first.isPresent())
 			{

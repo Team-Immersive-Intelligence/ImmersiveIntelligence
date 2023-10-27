@@ -1,8 +1,10 @@
 package pl.pabilo8.immersiveintelligence.common.compat;
 
 import baubles.api.BaubleType;
+import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import baubles.api.cap.BaublesCapabilities;
+import blusunrize.immersiveengineering.common.Config;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,6 +29,7 @@ import javax.annotation.Nullable;
  */
 public class BaublesHelper extends IICompatModule
 {
+	private ResourceLocation res = new ResourceLocation("baubles", "bauble_cap");
 	private static final IBauble BAUBLE_POWERPACK = new IBauble()
 	{
 		@Override
@@ -49,6 +52,8 @@ public class BaublesHelper extends IICompatModule
 	public void preInit()
 	{
 		MinecraftForge.EVENT_BUS.register(this);
+		Config.manual_bool.put("baublesHere", true);
+		baubles = true;
 	}
 
 	@Override
@@ -67,26 +72,37 @@ public class BaublesHelper extends IICompatModule
 	{
 	}
 
+	public static ItemStack getWornPouch(EntityPlayer player)
+	{
+		return BaublesApi.getBaublesHandler(player).getStackInSlot(BaubleType.AMULET.getValidSlots()[0]);
+	}
+
 	@SubscribeEvent
 	public void onCapabilitiesAttach(AttachCapabilitiesEvent<ItemStack> event)
 	{
 		if(event.getObject().getItem()==IIContent.itemAdvancedPowerPack)
-		{
-			event.addCapability(new ResourceLocation("baubles", "bauble_cap"), new ICapabilityProvider()
-			{
-				@Override
-				public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
-				{
-					return capability==BaublesCapabilities.CAPABILITY_ITEM_BAUBLE;
-				}
+			event.addCapability(res, provideBaubles(BAUBLE_POWERPACK));
 
-				@Nullable
-				@Override
-				public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-				{
-					return capability==BaublesCapabilities.CAPABILITY_ITEM_BAUBLE?BaublesCapabilities.CAPABILITY_ITEM_BAUBLE.cast(BAUBLE_POWERPACK): null;
-				}
-			});
-		}
+		if(event.getObject().getItem()==IIContent.itemCasingPouch)
+			event.addCapability(res, provideBaubles(stack -> BaubleType.AMULET));
+	}
+
+	public ICapabilityProvider provideBaubles(final IBauble bauble)
+	{
+		return new ICapabilityProvider()
+		{
+			@Override
+			public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+			{
+				return capability==BaublesCapabilities.CAPABILITY_ITEM_BAUBLE;
+			}
+
+			@Nullable
+			@Override
+			public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+			{
+				return capability==BaublesCapabilities.CAPABILITY_ITEM_BAUBLE?BaublesCapabilities.CAPABILITY_ITEM_BAUBLE.cast(bauble): null;
+			}
+		};
 	}
 }

@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ public class TextOverlayAdvanced extends TextOverlayBase
 	@ParametersAreNonnullByDefault
 	@Nullable
 	@Override
-	public String [] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
+	public String[] getText(EntityPlayer player, RayTraceResult mouseOver, @Nullable TileEntity te, @Nullable Entity entityHit)
 	{
 		if(mouseOver.entityHit instanceof IAdvancedTextOverlay)
 			return ((IAdvancedTextOverlay)mouseOver.entityHit).getOverlayText(player, mouseOver);

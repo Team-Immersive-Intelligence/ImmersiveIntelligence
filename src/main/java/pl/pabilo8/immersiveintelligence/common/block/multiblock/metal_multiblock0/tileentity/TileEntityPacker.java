@@ -20,7 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -38,8 +37,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerActionType;
 import pl.pabilo8.immersiveintelligence.api.PackerHandler.PackerPutMode;
@@ -51,6 +48,8 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IUpgradableMachine;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -60,7 +59,6 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultibl
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
@@ -83,7 +81,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 
 	public IItemHandler containerHandler = new IEInventoryHandler(1, this, 0, true, true);
 	IItemHandler inventoryInHandler = new IEInventoryHandler(54, this, 1, true, true);
-	IItemHandler inventoryOutHandler = new IEInventoryHandler(54, this, 54+1, true, true);
+	IItemHandler inventoryOutHandler = new IEInventoryHandler(54, this, 55, true, true);
 
 	public FluxStorageAdvanced energyStorageUpgrade;
 	public MultiFluidTank fluidTank;
@@ -93,7 +91,7 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 		super(MultiblockPacker.INSTANCE);
 
 		this.energyStorage = new FluxStorageAdvanced(Packer.energyCapacity);
-		inventory = NonNullList.withSize(54+54+1, ItemStack.EMPTY);
+		inventory = NonNullList.withSize(109, ItemStack.EMPTY);
 
 		energyStorageUpgrade = new FluxStorageAdvanced(Packer.energyCapacityUpgrade);
 		fluidTank = new MultiFluidTank(Packer.fluidCapacityUpgrade);
@@ -566,82 +564,6 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	}
 
 	//--- Colision ---//
-
-	@Nonnull
-	@Override
-	public List<AxisAlignedBB> getBounds(boolean collision)
-	{
-		ArrayList<AxisAlignedBB> list = new ArrayList<>();
-		switch(pos)
-		{
-			case 23:
-			{
-				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.125f, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				switch(facing)
-				{
-					case NORTH:
-						list.add(new AxisAlignedBB(0, 0.125, 1-0.185, 1, 0.8125, 1-0.03125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case SOUTH:
-						list.add(new AxisAlignedBB(0, 0.125, 0.03125, 1, 0.8125, 0.185).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case EAST:
-						list.add(new AxisAlignedBB(0.03125, 0.125, 0, 0.185, 0.8125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case WEST:
-						list.add(new AxisAlignedBB(1-0.185, 0.125, 0, 1-0.03125, 0.8125, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-				}
-			}
-			break;
-			case 0:
-			case 1:
-			case 2:
-			{
-				list.add(new AxisAlignedBB(0, 0, 0, 1, 0.125f, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				switch(facing)
-				{
-					case NORTH:
-						list.add(new AxisAlignedBB(0, 0.125, 1-0.03125, 1, 1, 1-0.03125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case SOUTH:
-						list.add(new AxisAlignedBB(0, 0.125, 0.03125, 1, 1, 0.03125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case EAST:
-						list.add(new AxisAlignedBB(0.03125, 0.125, 0, 0.03125, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-					case WEST:
-						list.add(new AxisAlignedBB(1-0.03125, 0.125, 0, 1-0.03125, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-						break;
-				}
-			}
-			break;
-			case 13:
-				break;
-			default:
-				list.add(new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-				break;
-		}
-
-		if(pos==1||pos==13)
-			switch(facing)
-			{
-				case NORTH:
-					list.add(new AxisAlignedBB(1-0.625f, 0, 0, 1-0.375f, 1, 0.125).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-				case SOUTH:
-					list.add(new AxisAlignedBB(0.375f, 0, 1-0.125, 0.625f, 1, 1).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-				case EAST:
-					list.add(new AxisAlignedBB(1-0.125, 0, 0.375f, 1, 1, 0.625f).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-				case WEST:
-					list.add(new AxisAlignedBB(0, 0, 1-0.625f, 0.125, 1, 1-0.375f).offset(getPos().getX(), getPos().getY(), getPos().getZ()));
-					break;
-			}
-
-		return list;
-	}
 
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing)

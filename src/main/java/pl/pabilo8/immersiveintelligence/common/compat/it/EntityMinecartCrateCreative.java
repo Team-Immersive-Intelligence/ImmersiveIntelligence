@@ -13,8 +13,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.EntityMinecartCrateBase;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 
 /**
  * @author Pabilo8
@@ -115,7 +115,7 @@ public class EntityMinecartCrateCreative extends EntityMinecartCrateBase impleme
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		return new String[]{TranslationKey.OVERLAY_OSD_CREATIVE_CRATE_NORMAL_FIRST_LINE.format(this.getStackInSlot(0).getDisplayName(),0)};
+		return new String[]{TranslationKey.OVERLAY_OSD_CREATIVE_CRATE_NORMAL_FIRST_LINE.format(this.getStackInSlot(0).getDisplayName(), 0)};
 	}
 
 

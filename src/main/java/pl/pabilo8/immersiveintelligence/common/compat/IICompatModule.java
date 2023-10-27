@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.compat.it.ImmersiveTechnologyHelper;
 
@@ -25,8 +25,7 @@ public abstract class IICompatModule
 	public static HashMap<String, String> moduleMinModVersions = new HashMap<>();
 	public static Set<IICompatModule> modules = new HashSet<>();
 
-	public static boolean serene = false;
-	public static boolean ii = false;
+	public static boolean serene = false, baubles = false, petroleum = false;
 
 	static
 	{

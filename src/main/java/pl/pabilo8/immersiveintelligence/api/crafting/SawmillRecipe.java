@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.api.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.IISoundAnimation;
 

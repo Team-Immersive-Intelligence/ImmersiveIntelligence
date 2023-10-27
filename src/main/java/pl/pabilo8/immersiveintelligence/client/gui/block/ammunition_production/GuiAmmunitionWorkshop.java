@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerAmmunitionWorkshop;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 		buttonList.clear();
 		fuseButtons.clear();
 
-		addLabel(guiLeft+1, guiTop+8, 118, 0, IILib.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name")).setCentered();
+		addLabel(guiLeft+1, guiTop+8, 118, 0, IIReference.COLOR_H1, I18n.format("tile.immersiveintelligence.metal_multiblock1.ammunition_workshop.name")).setCentered();
 
 		int i = 0;
 		for(EnumFuseTypes fuse : EnumFuseTypes.values())
@@ -73,8 +73,8 @@ public class GuiAmmunitionWorkshop extends GuiAmmunitionBase<TileEntityAmmunitio
 				break;
 		}
 
-		addLabel(guiLeft+122, guiTop+5+5, IILib.COLOR_H1, "Fuse:");
-		addLabel(guiLeft+122, guiTop+5+5+32, IILib.COLOR_H1, "Parameters:");
+		addLabel(guiLeft+122, guiTop+5+5, IIReference.COLOR_H1, "Fuse:");
+		addLabel(guiLeft+122, guiTop+5+5+32, IIReference.COLOR_H1, "Parameters:");
 	}
 
 	@Override

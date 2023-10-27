@@ -6,9 +6,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Packer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Packer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;
+import pl.pabilo8.immersiveintelligence.client.render.IIMultiblockRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer.RegisteredTileRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIMachineUpgradeModel.UpgradeStage;
@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
  * @since 20.08.2022
  */
 @RegisteredTileRenderer(name = "packer", clazz = TileEntityPacker.class)
-public class PackerRenderer extends IITileRenderer<TileEntityPacker>
+public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 {
 	AMT[] model, upgradeParts;
 
@@ -30,7 +30,25 @@ public class PackerRenderer extends IITileRenderer<TileEntityPacker>
 	private AMTItem itemModel;
 
 	@Override
-	public void draw(TileEntityPacker te, BufferBuilder buf, float partialTicks, Tessellator tes)
+	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
+	{
+		//reset model to default state
+		for(AMT mod : model)
+			mod.defaultize();
+		IIAnimationUtils.setModelVisibility(upgradeParts, false);
+
+		//Render
+		for(AMT mod : model)
+			mod.render(tes, buf);
+
+		//Render container
+		animationDefault.apply(0);
+		for(AMT mod : upgradeParts)
+			mod.render(tes, buf);
+	}
+
+	@Override
+	public void drawAnimated(TileEntityPacker te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
 		//reset model to default state
 		for(AMT mod : model)
@@ -140,12 +158,12 @@ public class PackerRenderer extends IITileRenderer<TileEntityPacker>
 	@Override
 	protected void nullifyModels()
 	{
+		super.nullifyModels();
+		IIAnimationUtils.disposeOf(model);
 
-	}
-
-	@Override
-	protected boolean shouldNotRender(TileEntityPacker te)
-	{
-		return te==null||te.isDummy();
+		IIAnimationUtils.disposeOf(railwayUpgrade);
+		IIAnimationUtils.disposeOf(namingUpgrade);
+		IIAnimationUtils.disposeOf(fluidUpgrade);
+		IIAnimationUtils.disposeOf(energyUpgrade);
 	}
 }

@@ -3,12 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.item.weapons;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
 import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IAdvancedFluidItem;
-import blusunrize.immersiveengineering.common.items.ItemUpgradeableTool;
 import blusunrize.immersiveengineering.common.util.IEItemFluidHandler;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.inventory.IEItemStackHandler;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +24,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IRarity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -38,16 +35,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.input.Keyboard;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradableTool;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -56,7 +55,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFluidItem, ISkinnable
+public class ItemIIMachinegun extends ItemIIUpgradableTool implements IAdvancedFluidItem, ISkinnable
 {
 	public ItemIIMachinegun()
 	{
@@ -96,11 +95,11 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 
 		if(getUpgrades(stack).hasKey("second_magazine"))
 		{
-			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, IILib.DESCRIPTION_KEY+"weapon.magazine1", tooltip))
+			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, IIReference.DESCRIPTION_KEY+"weapon.magazine1", tooltip))
 				IIContent.itemBulletMagazine.addInformation(
 						ItemNBTHelper.getItemStack(stack, "magazine1")
 						, world, tooltip, flag);
-			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, IILib.DESCRIPTION_KEY+"weapon.magazine2", tooltip))
+			if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, IIReference.DESCRIPTION_KEY+"weapon.magazine2", tooltip))
 				IIContent.itemBulletMagazine.addInformation(
 						ItemNBTHelper.getItemStack(stack, "magazine2"),
 						world, tooltip, flag);
@@ -227,10 +226,9 @@ public class ItemIIMachinegun extends ItemUpgradeableTool implements IAdvancedFl
 	@Override
 	public void removeFromWorkbench(EntityPlayer player, ItemStack stack)
 	{
-		NBTTagCompound upgrades = getUpgrades(stack);
-		if(!IIUtils.hasUnlockedIIAdvancement(player, "main/let_me_show_you_its_features")&&upgrades.hasKey("heavy_barrel")&&upgrades.hasKey("second_magazine")&&upgrades.hasKey("infrared_scope"))
+		if(hasIIUpgrades(stack, WeaponUpgrades.HEAVY_BARREL, WeaponUpgrades.SECOND_MAGAZINE, WeaponUpgrades.INFRARED_SCOPE))
 			IIUtils.unlockIIAdvancement(player, "main/let_me_show_you_its_features");
-		if(!IIUtils.hasUnlockedIIAdvancement(player, "main/hans_9000")&&upgrades.hasKey("belt_fed_loader")&&upgrades.hasKey("shield")&&upgrades.hasKey("water_cooling"))
+		if(hasIIUpgrades(stack, WeaponUpgrades.BELT_FED_LOADER, WeaponUpgrades.SHIELD, WeaponUpgrades.WATER_COOLING))
 			IIUtils.unlockIIAdvancement(player, "main/hans_9000");
 	}
 

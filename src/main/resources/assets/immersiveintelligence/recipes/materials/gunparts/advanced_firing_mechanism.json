@@ -1,0 +1,30 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "rcp",
+    " s "
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateSteel"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springIron"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:material",
+    "count": 1,
+    "data": 39
+  }
+}

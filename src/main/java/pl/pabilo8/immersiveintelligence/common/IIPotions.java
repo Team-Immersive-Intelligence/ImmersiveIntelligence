@@ -17,7 +17,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.CorrosionHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.IRadiationProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.utils.armor.IRadiationProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
 
 /**

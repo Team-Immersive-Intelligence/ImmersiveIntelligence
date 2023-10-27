@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:material",
+      "data": 35
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_gun_barrel_tungsten"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_gun_barrel_tungsten.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_gun_barrel_steel",
+  "criteria": {
+    "craft": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:material",
+            "data": 35
+          }
+        ]
+      }
+    }
+  }
+}

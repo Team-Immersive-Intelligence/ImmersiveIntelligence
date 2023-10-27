@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:assault_rifle",
+      "nbt": "{upgrades: {stereoscopic_rangefinder: 1}}"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.special_operations_initiative"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.special_operations_initiative.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_stg",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -3,7 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.in
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.nbt.NBTTagCompound;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.AdvancedInserter;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.AdvancedInserter;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;

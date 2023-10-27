@@ -4,20 +4,19 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIMachinegun;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelMachinegun;
@@ -26,7 +25,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityAmmunitionCrate;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -55,16 +54,18 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 	{
 		GlStateManager.pushMatrix();
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
-		boolean drawText = false;
+		boolean drawText = false, canApply = false;
 		String specialText;
 		int textColor = 0xffffff;
 
 		String skin = IIContent.itemMachinegun.getSkinnableCurrentSkin(stack);
 		if(!skin.isEmpty())
 		{
-			SpecialSkin s = CustomSkinHandler.specialSkins.get(skin);
+			IISpecialSkin s = IISkinHandler.specialSkins.get(skin);
 			if(s!=null)
 			{
+				ItemIIMachinegun gun = (ItemIIMachinegun)stack.getItem();
+				canApply = s.doesApply(gun.getSkinnableName());
 				textColor = s.textColor;
 				if(s.mods.contains("skin_mg_text"))
 					drawText = true;
@@ -76,7 +77,7 @@ public class MachinegunRenderer extends Render<EntityMachinegun> implements IRel
 
 		}
 		specialText = I18n.format("skin.immersiveintelligence."+skin+".name");
-		skin = (skin.isEmpty()?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): IILib.SKIN_LOCATION+skin+"/");
+		skin = ((skin.isEmpty()&&!canApply)?IIContent.itemMachinegun.getSkinnableDefaultTextureLocation(): IIReference.SKIN_LOCATION+skin+"/");
 
 
 		ClientUtils.bindTexture(skin+texture);

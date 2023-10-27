@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:assault_rifle"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_stg"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_stg.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_gun_barrel_tungsten",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:assault_rifle"
+          }
+        ]
+      }
+    }
+  }
+}

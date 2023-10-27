@@ -55,6 +55,13 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	IEForgeEnergyWrapper wrapper = new IEForgeEnergyWrapper(this, null);
 	public FluxStorageAdvanced energyStorage;
 
+	//--- Reference Variables ---//
+
+	public static final String KEY_SYNC_AABB = "_sync_aabb";
+	public static final String KEY_INVENTORY = "inventory";
+	public static final String KEY_ENERGY = "ifluxEnergy";
+	public static final String KEY_REDSTONE_CONTROL = "redstone_control";
+
 	//--- Constructor, Initialization ---//
 
 	public TileEntityMultiblockIIGeneric(MultiblockStuctureBase<T> multiblock)
@@ -77,8 +84,8 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 			if(energyStorage.getMaxEnergyStored()!=0)
 				energyStorage.readFromNBT(nbt);
 			if(inventory.size()!=0)
-				inventory = Utils.readInventory(nbt.getTagList("inventory", NBT.TAG_COMPOUND), inventory.size());
-			redstoneControlInverted = nbt.getBoolean("redstone_control");
+				inventory = Utils.readInventory(nbt.getTagList(KEY_INVENTORY, NBT.TAG_COMPOUND), inventory.size());
+			redstoneControlInverted = nbt.getBoolean(KEY_REDSTONE_CONTROL);
 		}
 
 	}
@@ -96,8 +103,8 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 			if(energyStorage.getMaxEnergyStored()!=0)
 				energyStorage.writeToNBT(nbt);
 			if(inventory.size()!=0)
-				nbt.setTag("inventory", Utils.writeInventory(inventory));
-			nbt.setBoolean("redstone_control", redstoneControlInverted);
+				nbt.setTag(KEY_INVENTORY, Utils.writeInventory(inventory));
+			nbt.setBoolean(KEY_REDSTONE_CONTROL, redstoneControlInverted);
 		}
 	}
 
@@ -109,12 +116,15 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		if(isDummy()||isFullSyncMessage(message))
 			return;
 
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), inventory.size());
-		if(message.hasKey("ifluxEnergy"))
+		if(message.hasKey(KEY_SYNC_AABB))
+			forMultiblockBlocks(TileEntityMultiblockIIGeneric::forceReCacheAABB);
+
+		if(message.hasKey(KEY_INVENTORY))
+			inventory = Utils.readInventory(message.getTagList(KEY_INVENTORY, 10), inventory.size());
+		if(message.hasKey(KEY_ENERGY))
 			energyStorage.readFromNBT(message);
-		if(message.hasKey("redstone_control"))
-			redstoneControlInverted = message.getBoolean("redstone_control");
+		if(message.hasKey(KEY_REDSTONE_CONTROL))
+			redstoneControlInverted = message.getBoolean(KEY_REDSTONE_CONTROL);
 
 	}
 
@@ -124,7 +134,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	public final boolean isRedstonePos(boolean input)
 	{
-		return Arrays.stream(getRedstonePos(input)).anyMatch(i -> pos==i);
+		return Arrays.binarySearch(getRedstonePos(input), pos) >= 0;
 	}
 
 	public boolean getRedstoneAtPos(int id)
@@ -170,7 +180,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	public final boolean isDataPos(boolean input)
 	{
-		return Arrays.stream(getDataPos(input)).anyMatch(i -> pos==i);
+		return Arrays.binarySearch(getDataPos(input), pos) >= 0;
 	}
 
 	@Override
@@ -239,7 +249,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	public boolean isEnergyPos()
 	{
-		return Arrays.stream(getEnergyPos()).anyMatch(i -> pos==i);
+		return Arrays.binarySearch(getEnergyPos(), pos) >= 0;
 	}
 
 	@Nonnull
@@ -279,6 +289,11 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	}
 
 	//--- IAdvancedBounds ---//
+
+	public void forceReCacheAABB()
+	{
+		this.aabb = null;
+	}
 
 	@Override
 	public List<AxisAlignedBB> getBounds(boolean collision)

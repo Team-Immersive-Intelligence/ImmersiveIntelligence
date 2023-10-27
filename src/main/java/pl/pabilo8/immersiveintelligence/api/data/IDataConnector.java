@@ -44,4 +44,9 @@ public interface IDataConnector extends IImmersiveConnectable
 	 * @param packet the data packet.
 	 */
 	void sendPacket(DataPacket packet);
+
+	default boolean isCallbackCapable()
+	{
+		return false;
+	}
 }

@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:rifle"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_rifle"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_rifle.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_handmade_rifle",
+  "criteria": {
+    "craft": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:rifle",
+            "nbt": "{handmade:0b}"
+          }
+        ]
+      }
+    }
+  }
+}

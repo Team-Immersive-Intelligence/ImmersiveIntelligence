@@ -33,15 +33,14 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
-import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
@@ -80,12 +79,12 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"binoculars")));
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"binoculars")));
 		if(isAdvanced(stack))
 		{
 			String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
 			list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
-			list.add(I18n.format(IILib.DESCRIPTION_KEY+(ItemNBTHelper.getBoolean(stack, "enabled")?"infrared_enabled": "infrared_disabled"), stored));
+			list.add(I18n.format(IIReference.DESCRIPTION_KEY+(ItemNBTHelper.getBoolean(stack, "enabled")?"infrared_enabled": "infrared_disabled"), stored));
 		}
 	}
 
@@ -118,7 +117,7 @@ public class ItemIIBinoculars extends ItemIISubItemsBase<Binoculars> implements 
 				if(entityIn instanceof EntityPlayerMP&&worldIn.getTotalWorldTime()%5==0&&(entityIn.isSneaking()||entityIn.getLowestRidingEntity() instanceof EntityFieldHowitzer))
 				{
 					float yaw = (360+((EntityLivingBase)entityIn).rotationYawHead)%360;
-					IIPacketHandler.sendChatTranslation(((EntityPlayerMP)entityIn), IILib.INFO_KEY+"yaw", yaw);
+					IIPacketHandler.sendChatTranslation(((EntityPlayerMP)entityIn), IIReference.INFO_KEY+"yaw", yaw);
 				}
 
 				if(do_tick&&isEnabled(stack)&&isAdvanced(stack))

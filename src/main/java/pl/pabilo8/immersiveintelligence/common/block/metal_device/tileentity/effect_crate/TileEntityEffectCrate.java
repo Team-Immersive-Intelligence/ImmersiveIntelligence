@@ -30,7 +30,7 @@ import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IBooleanAnimatedPartsBlock;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
@@ -48,8 +48,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.energyDrain;
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.maxEnergyStored;
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.energyDrain;
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.maxEnergyStored;
 
 /**
  * @author Pabilo8

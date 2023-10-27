@@ -18,9 +18,8 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ores;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ores;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import java.util.ArrayList;

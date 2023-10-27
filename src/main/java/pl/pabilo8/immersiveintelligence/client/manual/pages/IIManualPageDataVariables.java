@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
 import pl.pabilo8.immersiveintelligence.client.gui.IDataMachineGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -109,7 +109,7 @@ public class IIManualPageDataVariables extends ManualPages
 		if(tooltip!=null)
 		{
 			ArrayList<String> toDraw = new ArrayList<>();
-			toDraw.add(I18n.format(IILib.DATA_KEY+"datatype."+tooltip.dataType.getName()));
+			toDraw.add(I18n.format(IIReference.DATA_KEY+"datatype."+tooltip.dataType.getName()));
 			ClientUtils.drawHoveringText(toDraw, mx, my, manual.fontRenderer, -1, -1);
 		}
 		manual.fontRenderer.setUnicodeFlag(true);

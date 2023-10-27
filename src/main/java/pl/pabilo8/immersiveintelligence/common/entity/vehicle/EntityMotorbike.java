@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
@@ -46,7 +46,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageParticleEffect;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -956,7 +956,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 				getRecursivePassengers().forEach(entity -> {
 					if(entity instanceof EntityPlayer)
 					{
-						((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IILib.INFO_KEY+"towing.untowed"), true);
+						((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IIReference.INFO_KEY+"towing.untowed"), true);
 					}
 				});
 			}
@@ -973,7 +973,7 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 					getRecursivePassengers().forEach(entity -> {
 						if(entity instanceof EntityPlayer)
 						{
-							((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IILib.INFO_KEY+"towing.towed"), true);
+							((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IIReference.INFO_KEY+"towing.towed"), true);
 						}
 					});
 				}
@@ -982,10 +982,10 @@ public class EntityMotorbike extends Entity implements IVehicleMultiPart, IEntit
 						if(entity instanceof EntityPlayer)
 						{
 							if(untowingTries < 50)
-								((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IILib.INFO_KEY+"towing.no"), true);
+								((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IIReference.INFO_KEY+"towing.no"), true);
 							else
 							{
-								((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IILib.INFO_KEY+"towing.no_easter_egg"), true);
+								((EntityPlayer)entity).sendStatusMessage(new TextComponentTranslation(IIReference.INFO_KEY+"towing.no_easter_egg"), true);
 								untowingTries = 0;
 							}
 							untowingTries += 1;

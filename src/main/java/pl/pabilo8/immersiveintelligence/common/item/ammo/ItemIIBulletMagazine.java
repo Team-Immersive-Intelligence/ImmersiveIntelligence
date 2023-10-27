@@ -18,11 +18,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine.Magazines;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -38,16 +40,18 @@ import java.util.Optional;
  * @author Pabilo8
  * @since 01-11-2019
  */
-public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride
+public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implements ITextureOverride, IAdvancedTooltipItem
 {
-	private final ResLoc magazineTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/");
-	private final ResLoc bulletTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/common/bullet");
-	private final ResLoc paintTexture = ResLoc.of(IILib.RES_II, "items/bullets/magazines/common/paint");
+	//--- Textures ---//
+	private final ResLoc magazineTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/");
+	private final ResLoc bulletTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/common/bullet");
+	private final ResLoc paintTexture = ResLoc.of(IIReference.RES_II, "items/bullets/magazines/common/paint");
 
 	public ItemIIBulletMagazine()
 	{
 		super("bullet_magazine", 1, Magazines.values());
 	}
+
 
 	@GeneratedItemModels(itemName = "bullet_magazine", type = ItemModelType.ITEM_SIMPLE_AUTOREPLACED)
 	public enum Magazines implements IIItemEnum
@@ -130,7 +134,7 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		int bullets = getRemainingBulletCount(stack);
 
-		tooltip.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
+		tooltip.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+(bullets==0?"bullet_magazine.empty": "bullet_magazine.remaining"), bullets)));
 		NBTTagList listDict = ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", NBT.TAG_COMPOUND);
 
 		if(ItemNBTHelper.getTag(stack).hasKey("bullet0"))
@@ -141,6 +145,15 @@ public class ItemIIBulletMagazine extends ItemIISubItemsBase<Magazines> implemen
 			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(2)).getDisplayName());
 		if(ItemNBTHelper.getTag(stack).hasKey("bullet3"))
 			tooltip.add("   "+TextFormatting.GOLD+new ItemStack(listDict.getCompoundTagAt(3)).getDisplayName());
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
+	{
+		if(!hasNoBullets(stack))
+			ItemTooltipHandler.drawItemList(offsetX, offsetsY.get(0),
+					ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", 10));
 	}
 
 	//--- ITextureOverride ---//

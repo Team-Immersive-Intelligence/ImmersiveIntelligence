@@ -45,9 +45,11 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeItemStack;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.utils.IWrench;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IWrench;
+import pl.pabilo8.immersiveintelligence.common.compat.BaublesHelper;
+import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 
 import javax.annotation.Nonnull;
@@ -358,6 +360,9 @@ public class IIUtils
 	 */
 	public static Vec3d offsetPosDirection(float offset, double yaw, double pitch)
 	{
+		if(offset==0)
+			return new Vec3d(0, 0, 0);
+
 		double yy = (MathHelper.sin((float)pitch)*offset);
 		double true_offset = (MathHelper.cos((float)pitch)*offset);
 
@@ -509,7 +514,7 @@ public class IIUtils
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_ADVANCED_HAMMER);
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_ADVANCED_HAMMER);
 	}
 
 	public static boolean isAABBContained(@Nonnull AxisAlignedBB compared, @Nonnull AxisAlignedBB comparedTo)
@@ -550,6 +555,10 @@ public class IIUtils
 	{
 		if(player instanceof EntityPlayerMP)
 		{
+			//Can't unlock the same advancement twice
+			if(hasUnlockedIIAdvancement(player, name))
+				return;
+
 			PlayerAdvancements advancements = ((EntityPlayerMP)player).getAdvancements();
 			AdvancementManager manager = ((WorldServer)player.getEntityWorld()).getAdvancementManager();
 			Advancement advancement = manager.getAdvancement(new ResourceLocation(ImmersiveIntelligence.MODID, name));
@@ -575,21 +584,21 @@ public class IIUtils
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_WRENCH)&&stack.getItem() instanceof IWrench;
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_WRENCH)&&stack.getItem() instanceof IWrench;
 	}
 
 	public static boolean isTachometer(ItemStack stack)
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_TACHOMETER);
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_TACHOMETER);
 	}
 
 	public static boolean isCrowbar(ItemStack stack)
 	{
 		if(stack.isEmpty())
 			return false;
-		return stack.getItem().getToolClasses(stack).contains(IILib.TOOL_CROWBAR);
+		return stack.getItem().getToolClasses(stack).contains(IIReference.TOOL_CROWBAR);
 	}
 
 	public static boolean isVoltmeter(ItemStack stack)
@@ -836,6 +845,45 @@ public class IIUtils
 		packet.setVariable('c', new DataTypeString(parameter));
 		packet.setVariable('g', value);
 		return packet;
+	}
+
+	public static void giveOrDropCasingStack(@Nonnull Entity entity, ItemStack stack)
+	{
+		//attempt to give the item
+		if(entity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+		{
+			IItemHandler capability = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if(capability!=null)
+			{
+				for(int i = 0; i < 10; i++)
+				{
+					if(stack.isEmpty())
+						break;
+
+					ItemStack pouchStack;
+					if(i==0)
+						pouchStack = (IICompatModule.baubles&&entity instanceof EntityPlayer)?
+								BaublesHelper.getWornPouch(((EntityPlayer)entity)):
+								ItemStack.EMPTY;
+					else
+						pouchStack = capability.getStackInSlot(i-1);
+
+					if(!pouchStack.getItem().equals(IIContent.itemCasingPouch))
+						continue;
+
+					IItemHandler pouchCap = pouchStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+					if(pouchCap==null)
+						continue;
+
+					stack = ItemHandlerHelper.insertItem(pouchCap, stack, false);
+					if(entity instanceof EntityPlayer)
+						((EntityPlayer)entity).inventoryContainer.detectAndSendChanges();
+				}
+			}
+		}
+
+		if(!stack.isEmpty())
+			giveOrDropStack(entity, stack);
 	}
 
 	public static void giveOrDropStack(@Nonnull Entity entity, ItemStack stack)

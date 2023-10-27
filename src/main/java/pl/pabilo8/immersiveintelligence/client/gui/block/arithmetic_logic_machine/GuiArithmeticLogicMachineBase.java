@@ -19,21 +19,21 @@ import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiLabelNoShadow;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiWidgetManualWrapper;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonItemAdvanced;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonTab;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityArithmeticLogicMachine;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerArithmeticLogicMachine.CircuitSlot;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +69,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 
 	public GuiArithmeticLogicMachineBase(EntityPlayer player, TileEntityArithmeticLogicMachine tile, IIGuiList gui)
 	{
-		super(gui.container.apply(player, tile));
+		super(gui.containerFromTile.apply(player, tile));
 		this.thisTexture = gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE?TEXTURE_STORAGE: gui==IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_EDIT?TEXTURE_EDIT: TEXTURE_VARIABLES;
 		this.ySize = 222;
 		this.playerInv = player.inventory;
@@ -91,7 +91,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		super.initGui();
 		refreshStoredData();
 
-		addLabel(4, 8, IILib.COLOR_H1, title);
+		addLabel(4, 8, IIReference.COLOR_H1, title);
 
 		addTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_STORAGE, "storage_module");
 		addItemTab(IIGuiList.GUI_ARITHMETIC_LOGIC_MACHINE_VARIABLES_0, 0);
@@ -178,7 +178,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 		TABS.keySet().stream().filter(GuiButton::isMouseOver).findFirst().ifPresent(tab -> tooltip.add(tab.displayString));
 
 		if(this.manualButton.isMouseOver())
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+(manualButton.state?"hide_manual_widget": "show_manual_widget")));
 		return tooltip;
 	}
 
@@ -230,7 +230,7 @@ public class GuiArithmeticLogicMachineBase extends GuiIEContainerBase implements
 	{
 		final int vOffset = TABS.size()*24;
 		GuiButtonTab button = new GuiButtonTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?204: 176, vOffset,
-				TEXTURE_STORAGE, I18n.format(IILib.DESCRIPTION_KEY+name));
+				TEXTURE_STORAGE, I18n.format(IIReference.DESCRIPTION_KEY+name));
 		TABS.put(button, gui);
 		addButton(button);
 	}

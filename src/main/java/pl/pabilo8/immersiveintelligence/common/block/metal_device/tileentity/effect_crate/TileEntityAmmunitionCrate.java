@@ -19,18 +19,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.render.metal_device.AmmunitionCrateRenderer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.effect_crate.TileEntityEffectCrate;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoMachinegun;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates.ammoCrateEnergyPerAction;
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates.ammoCrateEnergyPerAction;
 
 /**
  * @author Pabilo8

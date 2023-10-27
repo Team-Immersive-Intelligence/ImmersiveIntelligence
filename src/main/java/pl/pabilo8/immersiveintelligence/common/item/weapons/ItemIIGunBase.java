@@ -3,12 +3,10 @@ package pl.pabilo8.immersiveintelligence.common.item.weapons;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.gui.IESlot;
-import blusunrize.immersiveengineering.common.util.IESounds;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,16 +29,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ISkinnable;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkinnable;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ammohandler.AmmoHandler;
@@ -55,7 +53,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISkinnable, IOBJModelCallback<ItemStack>
+public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISkinnable, IAdvancedTooltipItem, IOBJModelCallback<ItemStack>
 {
 	//--- NBT Values Reference ---//
 	public static final String RELOADING = "reloading";
@@ -152,6 +150,13 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 		//Add II Contributor Skin tooltip
 		addSkinTooltip(stack, tooltip);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addAdvancedInformation(ItemStack stack, int offsetX, List<Integer> offsetsY)
+	{
+		ItemTooltipHandler.drawItemList(offsetX, offsetsY.get(0), getAmmoList(stack));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -279,7 +284,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 			case SINGULAR_CHARGED:
 			{
 				EasyNBT nbt = getNBT(stack);
-				if(!getAmmoHandler(stack).canFire(stack,nbt))
+				if(!getAmmoHandler(stack).canFire(stack, nbt))
 					break;
 
 				if(count==getMaxItemUseDuration(stack))
@@ -396,14 +401,7 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 
 				//Return the casing
 				ItemStack cc = getCasingStack(ammo);
-				if(user.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
-				{
-					IItemHandler capability = user.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-					cc = ItemHandlerHelper.insertItem(capability, cc, false);
-				}
-				if(!cc.isEmpty())
-					Utils.dropStackAtPos(world, user.getPosition(), cc);
-
+				IIUtils.giveOrDropCasingStack(user, cc);
 			}
 
 		}
@@ -569,7 +567,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 * @return sound played when trying to fire with no ammo loaded
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract SoundEvent getDryfireSound(ItemStack weapon, EasyNBT nbt);
 
 	/**
@@ -578,7 +575,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 * @return sound played when firing the gun
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract RangedSound getFireSound(ItemStack weapon, EasyNBT nbt);
 
 	/**
@@ -587,7 +583,6 @@ public abstract class ItemIIGunBase extends ItemIIUpgradableTool implements ISki
 	 * @return sound played when firing the gun
 	 */
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected SoundEvent getChargeFireSound(ItemStack weapon, EasyNBT nbt)
 	{
 		return null;

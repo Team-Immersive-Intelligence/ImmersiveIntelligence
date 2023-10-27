@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.DataInputMachine;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.DataInputMachine;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.gui.ITabbedGui;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -32,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.data"), 4, 2, IILib.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.redstone_interface.data"), 4, 2, IIReference.COLOR_H1);
 	}
 
 	@Override
@@ -119,10 +119,10 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+4&&my < guiTop+28)
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"data_to_redstone_module"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"data_to_redstone_module"));
 
 		if(mx >= guiLeft-28&&mx < guiLeft&&my >= guiTop+28&&my < guiTop+56)
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"redstone_to_data_module"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"redstone_to_data_module"));
 
 		//Draw the punchcard progress bar
 		GlStateManager.pushMatrix();
@@ -165,7 +165,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 
 				if(canDelete)
 				{
-					tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"variable_remove_desc"));
+					tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"variable_remove_desc"));
 					if(Mouse.isButtonDown(0)&&!wasDown)
 					{
 						onVariableRemoveButtonClick(c, true);
@@ -336,7 +336,7 @@ public class GuiDataRedstoneInterfaceData extends GuiIEContainerBase implements 
 		this.fontRenderer.drawString("+", guiLeft+93, guiTop+17+(i*24)-scroll, hovered?Lib.COLOUR_I_ImmersiveOrange: 0xffffff, true);
 
 		if(hovered)
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"variable_add_desc"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"variable_add_desc"));
 
 		//Check for button click
 		if(hovered&&!wasDown&&Mouse.isButtonDown(0))

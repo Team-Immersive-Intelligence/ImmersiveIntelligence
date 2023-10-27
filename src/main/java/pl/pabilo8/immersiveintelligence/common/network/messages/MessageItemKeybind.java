@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerHel
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerLeggings;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -67,7 +67,7 @@ public class MessageItemKeybind extends IIMessage
 					if(!newState)
 						player.removePotionEffect(MobEffects.NIGHT_VISION);
 
-					IIPacketHandler.sendChatTranslation(player, IILib.DESCRIPTION_KEY+(newState?"infrared_enabled": "infrared_disabled"));
+					IIPacketHandler.sendChatTranslation(player, IIReference.DESCRIPTION_KEY+(newState?"infrared_enabled": "infrared_disabled"));
 				}
 			}
 			break;
@@ -77,7 +77,7 @@ public class MessageItemKeybind extends IIMessage
 				{
 					int mode = ItemNBTHelper.getInt(equipped, "exoskeletonMode");
 					ItemNBTHelper.setInt(equipped, "exoskeletonMode", mode = IIUtils.cycleInt(!player.isSneaking(), mode, 0, 2));
-					IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"exoskeleton."+mode);
+					IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"exoskeleton."+mode);
 				}
 			}
 			break;

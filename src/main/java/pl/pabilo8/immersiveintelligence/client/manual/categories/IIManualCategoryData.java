@@ -1,8 +1,6 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
-import blusunrize.immersiveengineering.common.util.compat.crafttweaker.Blueprint;
-import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualEntry;
@@ -10,9 +8,9 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
 import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial.Materials;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -26,7 +24,7 @@ public class IIManualCategoryData extends IIManualCategory
 	@Override
 	public String getCategory()
 	{
-		return IILib.CAT_DATA;
+		return IIReference.CAT_DATA;
 	}
 
 	@Override
@@ -44,7 +42,8 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("circuit_blueprints", getSourceForItems(
 						BlueprintCraftingRecipe.getTypedBlueprint("basic_circuits"),
 						BlueprintCraftingRecipe.getTypedBlueprint("advanced_circuits"),
-						BlueprintCraftingRecipe.getTypedBlueprint("processors")
+						BlueprintCraftingRecipe.getTypedBlueprint("processors"),
+						BlueprintCraftingRecipe.getTypedBlueprint("cryptography_circuits")
 				))
 				.addSource("basic_circuit_blueprints", getSourceForItems(
 						BlueprintCraftingRecipe.getTypedBlueprint("basic_circuits")

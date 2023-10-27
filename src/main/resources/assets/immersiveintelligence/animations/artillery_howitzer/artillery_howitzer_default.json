@@ -1,21 +1,41 @@
 {
-	"comment": "Made by Pabilo8 with Blockbench",
-	"groups": {
-		"lower": {
-			"rotation": [
-				{
-					"time": 0.0,
-					"transform": [-15, 0, 0]
-				}
-			]
-		},
-		"upper": {
-			"rotation": [
-				{
-					"time": 0.0,
-					"transform": [-146, 0, 0]
-				}
-			]
-		}
-	}
+  "comment": "Made by Pabilo8 with Blockbench",
+  "groups": {
+    "lower": {
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [-15, 0, 0]
+        }
+      ]
+    },
+    "upper": {
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [-146, 0, 0]
+        }
+      ]
+    },
+    "muzzle_flash": {
+      "rotation": [
+        {
+          "time": 0.0,
+          "transform": [-90, 0, 0]
+        }
+      ],
+      "property": [
+        {
+          "time": 0.0,
+          "property": 0.0
+        }
+      ],
+      "visibility": [
+        {
+          "time": 0.0,
+          "visibility": false
+        }
+      ]
+    }
+  }
 }

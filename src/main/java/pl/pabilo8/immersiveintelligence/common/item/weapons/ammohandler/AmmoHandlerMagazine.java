@@ -92,7 +92,7 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 				{
 					//Give or drop the magazine
 					IIContent.itemBulletMagazine.defaultize(loaded);
-					IIUtils.giveOrDropStack(user, loaded);
+					IIUtils.giveOrDropCasingStack(user, loaded);
 					nbt.without(tag);
 				}
 				return 0; //Stop

@@ -23,10 +23,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.SkycrateMounts;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.SkycrateMounts;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.ISkyCrateConnector;
-import pl.pabilo8.immersiveintelligence.api.utils.ISkycrateMount;
+import pl.pabilo8.immersiveintelligence.api.utils.ISkyCrateConnector;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISkycrateMount;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -16,10 +16,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.Machinegun;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
@@ -212,6 +212,11 @@ public class EmplacementWeaponMachinegun extends EmplacementWeapon
 	{
 		nextPitch = MathHelper.clamp(pitch, -15, 20);
 		super.aimAt(yaw, MathHelper.clamp(pitch, -15, 20));
+	}
+
+	public void aimAtUnrestricted(float yaw, float pitch)
+	{
+		super.aimAt(yaw, pitch);
 	}
 
 	@Override

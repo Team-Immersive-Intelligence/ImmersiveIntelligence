@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:bullet_magazine",
+      "data": 6
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_cpds"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_cpds.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/emplacement",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

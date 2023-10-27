@@ -1,0 +1,32 @@
+
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveengineering:blueprint",
+    "nbt": {
+      "blueprint": "cryptographic_functional_circuits"
+    }
+  },
+  "pattern": [
+    "CWC",
+    "DDD",
+    "PPP"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "circuitCryptographic"
+    },
+    "W": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  }
+}

@@ -39,13 +39,13 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedMultiblockTileEntity;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,8 +70,8 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
 		String stored = this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack);
-		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"electric_hammer")));
-		list.add(IIUtils.getItalicString(I18n.format(IILib.INFO_KEY+"charge_with_if")));
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"electric_hammer")));
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.INFO_KEY+"charge_with_if")));
 		list.add(I18n.format(Lib.DESC+"info.energyStored", TextFormatting.GOLD+stored+TextFormatting.RESET));
 
 		if(ItemNBTHelper.hasKey(stack, "multiblockPermission"))
@@ -353,9 +353,9 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 	public Set<String> getToolClasses(ItemStack stack)
 	{
 		if(ItemNBTHelper.getBoolean(stack, "forbidHammer"))
-			return ImmutableSet.of(IILib.TOOL_ADVANCED_HAMMER);
+			return ImmutableSet.of(IIReference.TOOL_ADVANCED_HAMMER);
 		else
-			return ImmutableSet.of(IILib.TOOL_ADVANCED_HAMMER, Lib.TOOL_HAMMER);
+			return ImmutableSet.of(IIReference.TOOL_ADVANCED_HAMMER, Lib.TOOL_HAMMER);
 	}
 
 	@Override
@@ -369,7 +369,7 @@ public class ItemIIElectricHammer extends ItemIIBase implements ITool, IIEEnergy
 			}
 			else if(state.getBlock().isToolEffective(TOOL_HAMMER, state))
 				return true;
-			else return state.getBlock().isToolEffective(IILib.TOOL_ADVANCED_HAMMER, state);
+			else return state.getBlock().isToolEffective(IIReference.TOOL_ADVANCED_HAMMER, state);
 		}
 		return false;
 	}

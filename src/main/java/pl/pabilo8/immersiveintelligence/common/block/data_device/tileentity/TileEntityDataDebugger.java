@@ -9,7 +9,10 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Conn
 import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.*;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IActiveState;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IUsesBooleanProperty;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -23,9 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.StringUtils;
@@ -33,19 +34,15 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageChatInfo;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -166,8 +163,8 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 			mode += 1;
 			if(mode > 2)
 				mode = 0;
-			IIPacketHandler.sendChatTranslation(player, IILib.INFO_KEY+"debugger_mode",
-					new TextComponentTranslation(IILib.INFO_KEY+"debugger_mode."+mode)
+			IIPacketHandler.sendChatTranslation(player, IIReference.INFO_KEY+"debugger_mode",
+					new TextComponentTranslation(IIReference.INFO_KEY+"debugger_mode."+mode)
 			);
 			markDirty();
 			markBlockForUpdate(pos, null);
@@ -307,7 +304,7 @@ public class TileEntityDataDebugger extends TileEntityImmersiveConnectable imple
 	@Override
 	public String[] getOverlayText(EntityPlayer player, RayTraceResult mop)
 	{
-		String s_out = I18n.format(IILib.INFO_KEY+"debugger_mode", I18n.format(IILib.INFO_KEY+"debugger_mode."+mode));
+		String s_out = I18n.format(IIReference.INFO_KEY+"debugger_mode", I18n.format(IIReference.INFO_KEY+"debugger_mode."+mode));
 		if(lastPacket!=null)
 		{
 			ArrayList<String> s = new ArrayList<>(Arrays.asList(this.packetString));

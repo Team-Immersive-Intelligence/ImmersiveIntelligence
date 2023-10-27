@@ -24,14 +24,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
-import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelNavalMine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMine;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityNavalMineAnchor;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -221,7 +221,7 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 		if(!ItemNBTHelper.hasKey(stack, "length"))
 			ItemNBTHelper.setInt(stack, "length", 5);
 		ItemNBTHelper.setInt(stack, "length", MathHelper.clamp(ItemNBTHelper.getInt(stack, "length")+(forward?1: -1), 0, 16));
-		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IILib.DESCRIPTION_KEY+"naval_mine_chain_length", ItemNBTHelper.getInt(stack, "length")), 0, 20, 0);
+		SPacketTitle packet = new SPacketTitle(Type.ACTIONBAR, new TextComponentTranslation(IIReference.DESCRIPTION_KEY+"naval_mine_chain_length", ItemNBTHelper.getInt(stack, "length")), 0, 20, 0);
 		player.connection.sendPacket(packet);
 	}
 

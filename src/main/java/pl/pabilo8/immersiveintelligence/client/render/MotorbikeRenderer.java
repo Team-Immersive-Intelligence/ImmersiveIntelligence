@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.Motorbike;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.Motorbike;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.MotorBeltData;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;

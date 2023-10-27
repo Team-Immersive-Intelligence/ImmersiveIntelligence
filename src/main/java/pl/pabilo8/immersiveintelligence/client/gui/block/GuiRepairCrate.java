@@ -7,9 +7,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -18,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerRepairCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 
@@ -80,9 +79,9 @@ public class GuiRepairCrate extends GuiIEContainerBase
 			ArrayList<String> tooltip = new ArrayList<>();
 
 			if(IIUtils.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
-				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"repair_crate.repair_armor"));
+				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"repair_crate.repair_armor"));
 			else if(IIUtils.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
-				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"repair_crate.repair_vehicles"));
+				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"repair_crate.repair_vehicles"));
 
 			if(IIUtils.isPointInRectangle(guiLeft+153, guiTop+24, guiLeft+153+7, guiTop+24+47, mouseX, mouseY))
 				tooltip.add(tile.energyStorage+"/"+EffectCrates.maxEnergyStored+" IF");

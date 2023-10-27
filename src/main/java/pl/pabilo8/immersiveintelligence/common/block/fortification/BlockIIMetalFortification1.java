@@ -8,7 +8,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
@@ -30,7 +30,7 @@ public class BlockIIMetalFortification1 extends BlockIIBase<IIBlockTypes_MetalFo
 		setHardness(3.0F);
 		setResistance(15.0F);
 
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 
 		this.setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 	}

@@ -15,14 +15,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.EmplacementWeapons.InfraredObserver;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.utils.IInfraredProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.utils.armor.IInfraredProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.block.emplacement.GuiEmplacementPageStorage;
 import pl.pabilo8.immersiveintelligence.client.render.multiblock.metal.EmplacementRenderer;
@@ -176,6 +176,8 @@ public class EmplacementWeaponInfraredObserver extends EmplacementWeapon
 			else if(f instanceof DataTypeString)
 			{
 				EnumFacing facing = EnumFacing.byName(f.valueToString());
+				if(facing==EnumFacing.NORTH||facing==EnumFacing.SOUTH)
+					facing = facing.getOpposite();
 				if(facing!=null)
 					nextYaw = facing.getHorizontalAngle();
 			}

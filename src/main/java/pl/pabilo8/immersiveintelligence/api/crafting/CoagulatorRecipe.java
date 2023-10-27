@@ -8,7 +8,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Coagulator;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
 
 import javax.annotation.Nonnull;
 import java.util.*;

@@ -6,7 +6,7 @@ import mctmods.immersivetechnology.common.blocks.metal.types.BlockType_MetalBarr
 import net.minecraft.block.Block;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
+import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.api.utils.minecart.EntityMinecartFluidContainer;
 
 /**

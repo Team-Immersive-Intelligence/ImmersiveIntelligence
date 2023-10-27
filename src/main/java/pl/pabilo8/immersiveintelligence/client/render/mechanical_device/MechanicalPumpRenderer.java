@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.MechanicalPump;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.MechanicalPump;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryUtils;
 import pl.pabilo8.immersiveintelligence.client.render.IITileRenderer;

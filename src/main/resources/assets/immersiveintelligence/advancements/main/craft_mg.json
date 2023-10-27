@@ -10,7 +10,7 @@
       "translate": "advancement.immersiveintelligence.craft_mg.desc"
     }
   },
-  "parent": "immersiveintelligence:main/root",
+  "parent": "immersiveintelligence:main/craft_gun_barrel_steel",
   "criteria": {
     "craft_hammer": {
       "trigger": "minecraft:inventory_changed",

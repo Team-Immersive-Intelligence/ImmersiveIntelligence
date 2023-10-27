@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
@@ -23,7 +22,7 @@ import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerEmplacement.ContainerEmplacementStorage;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		addTab(IIGuiList.GUI_EMPLACEMENT_TASKS, "tasks_module");
 		addTab(IIGuiList.GUI_EMPLACEMENT_STATUS, "status_module");
 
-		addLabel(8, 10, IILib.COLOR_H1, title);
+		addLabel(8, 10, IIReference.COLOR_H1, title);
 
 		barEnergy = GuiElementProgressBar.createEnergyBar(guiLeft+213, guiTop+22, 7, 48);
 		barArmor = GuiElementProgressBar.createArmorBar(guiLeft+222, guiTop+22, 7, 48);
@@ -91,7 +90,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 		if(barEnergy.mouseOver(mouseX, mouseY))
 			tooltip.add(IIUtils.getPowerLevelString(tile));
 		if(tile.currentWeapon!=null&&barArmor.mouseOver(mouseX, mouseY))
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"tooltip.armor",
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"tooltip.armor",
 					(getHealth())*100
 			));
 
@@ -154,7 +153,7 @@ public abstract class GuiEmplacement extends GuiIEContainerBase implements ITabb
 	{
 		final int vOffset = TABS.size()*24;
 		GuiButtonTab button = new GuiButtonTab(buttonList.size(), guiLeft-28, guiTop+4+vOffset, 28, 24, thisGui==gui?28: 0, 101+vOffset,
-				TEXTURE_ICONS, I18n.format(IILib.DESCRIPTION_KEY+name));
+				TEXTURE_ICONS, I18n.format(IIReference.DESCRIPTION_KEY+name));
 		TABS.put(button, gui);
 		addButton(button);
 	}

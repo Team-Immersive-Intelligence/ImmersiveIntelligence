@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:metal_multiblock1",
+      "data": 9
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.emplacement"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.emplacement.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/circuit_board",
+  "criteria": {
+    "form_emplacement": {
+      "trigger": "immersiveengineering:multiblock_formed",
+      "conditions": {
+        "multiblock": "II:Emplacement"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "form_emplacement"
+    ]
+  ]
+}

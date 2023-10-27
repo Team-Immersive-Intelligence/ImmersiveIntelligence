@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "II OBJ/AMT Schema",
+  "description": "Immersive Intelligence OBJ/AMT Model Data",
+  "type": "object",
+  "properties": {
+    "comment": {
+      "description": "A general description of this model",
+      "type": "string",
+      "default": "Made with Blockbench"
+    },
+    "origins": {
+      "description": "Animation Groups of an AMT",
+      "type": "object",
+      "uniqueItems": true,
+      "additionalProperties": {
+        "type": "array",
+        "description": "Array of block bounds in format [X,Y,Z]. A value of 1 means 1/16 of a block.",
+        "items": {
+          "type": "number"
+        },
+        "default": [0, 0, 0],
+        "minItems": 3,
+        "maxItems": 3
+      }
+    },
+    "hierarchy": {
+      "description": "Hierarchy of AMT Groups",
+      "type": "object",
+      "uniqueItems": true,
+      "additionalProperties": {
+        "type": "string",
+        "description": "Name of the parent part."
+      }
+    },
+    "properties": {
+      "description": "Properties for AMT Groups",
+      "type": "object",
+      "properties": {
+        "lighting": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether this object has shadows."
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

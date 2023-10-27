@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.client.gui.tooltip;
 
-import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -13,7 +12,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,22 +52,22 @@ public class TextOverlayMechanical extends TextOverlayBase
 
 		if(intTorque!=extTorque&&intSpeed!=extSpeed)
 			return new String[]{
-					IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0],"\u2296 "+I18n.format(IILib.INFO_KEY+"tachometer.internal_torque", intTorque)),
-					IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0],"\u29c1 "+I18n.format(IILib.INFO_KEY+"tachometer.internal_speed", intSpeed)),
-					"\u2296 "+I18n.format(IILib.INFO_KEY+"tachometer.external_torque", extTorque),
-					"\u29c1 "+I18n.format(IILib.INFO_KEY+"tachometer.external_speed", extSpeed)
+					IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0],"\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_torque", intTorque)),
+					IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0],"\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.internal_speed", intSpeed)),
+					"\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.external_torque", extTorque),
+					"\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.external_speed", extSpeed)
 			};
 		else
 			return new String[]{
-					"\u2296 "+I18n.format(IILib.INFO_KEY+"tachometer.torque", intTorque),
-					"\u29c1 "+I18n.format(IILib.INFO_KEY+"tachometer.speed", intSpeed)
+					"\u2296 "+I18n.format(IIReference.INFO_KEY+"tachometer.torque", intTorque),
+					"\u29c1 "+I18n.format(IIReference.INFO_KEY+"tachometer.speed", intSpeed)
 			};
 	}
 
 	@Override
 	public int getDefaultFontColour()
 	{
-		return IILib.COLORS_HIGHLIGHT_I[1];
+		return IIReference.COLORS_HIGHLIGHT_I[1];
 	}
 
 	@Nonnull

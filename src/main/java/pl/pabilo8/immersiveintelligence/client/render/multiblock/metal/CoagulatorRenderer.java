@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Coagulator;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Coagulator;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.CoagulatorRecipe;
 import pl.pabilo8.immersiveintelligence.client.model.metal_device.ModelCraneElectric;

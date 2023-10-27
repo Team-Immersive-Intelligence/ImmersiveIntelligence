@@ -9,8 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
-import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.ClientEventHandler;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityCamera;
 

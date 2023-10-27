@@ -6,7 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.operations.DataOperation;
 import pl.pabilo8.immersiveintelligence.api.data.pol.instructions.*;
 import pl.pabilo8.immersiveintelligence.api.data.types.*;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.Circuits;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIIFunctionalCircuit.Circuits;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -404,14 +404,12 @@ public class POLScript
 			try
 			{
 				data = countChars(num, '.') > 0?new DataTypeFloat(Float.parseFloat(num)): new DataTypeInteger(Integer.parseInt(num));
-			}
-			catch(Exception i)
+			} catch(Exception i)
 			{
 				try
 				{
 					data = new DataTypeInteger(Integer.parseInt(num));
-				}
-				catch(Exception i2)
+				} catch(Exception i2)
 				{
 					data = new DataTypeInteger(0);
 				}

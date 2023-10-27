@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.common.network.IIMessage;
 
 /**

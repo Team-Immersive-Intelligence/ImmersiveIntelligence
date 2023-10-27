@@ -1,46 +1,26 @@
 package pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity;
 
 import blusunrize.immersiveengineering.api.Lib;
-import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
-import blusunrize.immersiveengineering.api.energy.wires.WireType;
-import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBounds;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.util.Utils;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
-import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.compat.ComputerCraftHelper;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.wire.IIDataWireType;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -76,6 +56,12 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 	public void sendPacket(DataPacket packet)
 	{
 		this.getDataNetwork().sendPacket(packet.setPacketColor(EnumDyeColor.byMetadata(this.colorOut)), this);
+	}
+
+	@Override
+	public boolean isCallbackCapable()
+	{
+		return true;
 	}
 
 	@Override
@@ -189,4 +175,6 @@ public class TileEntityDataCallbackConnector extends TileEntityDataConnector
 		else
 			return new String[0];
 	}
+
+
 }

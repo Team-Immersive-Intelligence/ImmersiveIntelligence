@@ -132,11 +132,9 @@ public abstract class AmmoHandlerList extends AmmoHandler
 	//--- Client ---//
 
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract SoundEvent getFinishLoadingSound(ItemStack weapon, EasyNBT nbt);
 
 	@Nullable
-	@SideOnly(Side.CLIENT)
 	protected abstract SoundEvent getStartLoadingSound(ItemStack weapon, EasyNBT nbt);
 
 	@SideOnly(Side.CLIENT)

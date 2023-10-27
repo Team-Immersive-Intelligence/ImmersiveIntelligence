@@ -21,7 +21,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multibloc
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.multiblock.MultiblockSkyCrateStation;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIMinecart.Minecarts;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIISkycrateMount.SkycrateMounts;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class IIManualCategoryLogistics extends IIManualCategory
 	@Override
 	public String getCategory()
 	{
-		return IILib.CAT_LOGISTICS;
+		return IIReference.CAT_LOGISTICS;
 	}
 
 	@Override

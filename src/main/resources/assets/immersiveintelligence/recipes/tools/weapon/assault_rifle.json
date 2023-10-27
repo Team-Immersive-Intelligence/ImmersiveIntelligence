@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "pbb",
+    "sm "
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "p": {
+      "type": "forge:ore_dict",
+      "ore": "plateTungsten"
+    },
+    "m": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartAdvanced"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "gunbodyWood"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelTungsten"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:assault_rifle",
+    "count": 1
+  }
+}

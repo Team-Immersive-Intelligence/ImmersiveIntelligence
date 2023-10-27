@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Ammunition;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Ammunition;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;

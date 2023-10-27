@@ -6,6 +6,7 @@ import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
+import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 /**
  * @author Pabilo8

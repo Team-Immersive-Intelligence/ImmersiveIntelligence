@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " d ",
+    "fcf",
+    "fff"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:wooden_device0",
+      "data": 5
+    },
+    "f": {
+      "type": "forge:ore_dict",
+      "ore": "fabricHemp"
+    },
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "dyeGreen"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:casing_pouch",
+    "data": 0,
+    "count": 1
+  }
+}

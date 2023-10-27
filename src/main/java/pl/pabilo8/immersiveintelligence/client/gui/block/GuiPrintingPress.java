@@ -5,16 +5,15 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.PrintingPress;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.PrintingPress;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrintingPress;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrintingPress;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 
@@ -40,7 +39,7 @@ public class GuiPrintingPress extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.printing_press.name"), 8, 6, IILib.COLOR_H1);
+		this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.printing_press.name"), 8, 6, IIReference.COLOR_H1);
 	}
 
 	/**

@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:rifle",
+      "nbt": "{upgrades:{melee: 6.0}}"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.for_the_emperor"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.for_the_emperor.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_handmade_rifle",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

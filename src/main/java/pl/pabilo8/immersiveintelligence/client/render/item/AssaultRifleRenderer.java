@@ -11,13 +11,14 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.AssaultRifle;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -27,6 +28,8 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
@@ -37,6 +40,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 {
 	IIAnimationCachedMap load, unload, modeSwitch, fire, handAngle, offHandAngle;
 	IIAnimationCachedMap loadGrenade, fireGrenade, stabilizer;
+	private MTLTextureRemapper skinRemapper;
 	private AMTCrossVariantReference<AMT> magazine, hand;
 	private AMTCrossVariantReference<AMTParticle> muzzleFlash;
 	private AMTCrossVariantReference<AMTText> nixie1, nixie2;
@@ -96,6 +100,13 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 	}
 
 	@Override
+	public void registerSprites(TextureMap map)
+	{
+		super.registerSprites(map);
+		IISkinHandler.registerSprites(map, IIContent.itemAssaultRifle.getSkinnableName());
+	}
+
+	@Override
 	public void draw(ItemStack stack, TransformType transform, BufferBuilder buf, Tessellator tes, float partialTicks)
 	{
 		if(isScopeZooming(transform, stack))
@@ -104,7 +115,8 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
 		//TODO: 12.04.2023 skins and shaders
-//		model.getVariant(nbt.hasKey("handmade")?"diy": "", stack);
+
+		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString("contributorSkin"), stack);
 		model.forEach(AMT::defaultize);
 
 		//Make upgrade AMTs visible
@@ -293,6 +305,18 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 										.setText("0")
 										.setFontSize(0.015625f)
 										.setColor(Lib.colour_nixieTubeText)
+						}
+				).withTextureProvider(
+						(res, stack) ->
+						{
+							String skin = IIContent.itemAssaultRifle.getSkinnableCurrentSkin(stack);
+							if (IISkinHandler.isValidSkin(skin))
+							{
+								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/assault_rifle").withExtension(ResLoc.EXT_MTL));
+								return ClientUtils.getSprite(this.skinRemapper.apply(res));
+							}
+
+							return ClientUtils.getSprite(res);
 						}
 				)
 				.build();

@@ -2,7 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.util.amt;
 
 import net.minecraft.util.ResourceLocation;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIAnimation.IIAnimationGroup;
-import pl.pabilo8.immersiveintelligence.common.util.ArraylistJoinCollector;
+import pl.pabilo8.immersiveintelligence.common.util.lambda.ArraylistJoinCollector;
 
 import java.util.Arrays;
 import java.util.HashMap;

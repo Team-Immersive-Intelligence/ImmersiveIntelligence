@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:submachinegun",
+      "nbt": "{upgrades: {suppressor: 1, folding_stock: 1}}"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.the_silent_unseen"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.the_silent_unseen.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_smg",
+  "criteria": {
+    "code_trigger": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

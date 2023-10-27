@@ -15,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
@@ -37,7 +37,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	@Nullable
 	private IESmartObjModel model;
 	@Nonnull
-	protected final ResLoc headerRes;
+	protected ResLoc headerRes;
 	@Nonnull
 	protected final I item;
 
@@ -47,6 +47,11 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 		IIModelRegistry.instance.registerCustomItemModel(item, modelRes.getResourceDomain(),
 				setTransformations(this.replacementModel = new ImmersiveModelRegistry.ItemModelReplacement_OBJ(modelRes.withExtension(ResLoc.EXT_OBJ).toString(), true)));
 		this.headerRes = modelRes.withExtension(ResLoc.EXT_OBJAMT);
+	}
+
+	public void setHeaderRes(ResLoc modelRes)
+	{
+		headerRes = modelRes;
 	}
 
 	@Override

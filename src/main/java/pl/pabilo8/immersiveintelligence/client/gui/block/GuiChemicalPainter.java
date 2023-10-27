@@ -20,7 +20,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerChemicalPainter;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -142,7 +142,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		IIClientUtils.drawStringCentered(this.fontRenderer, I18n.format("tile.immersiveintelligence.metal_multiblock1.chemical_painter.name"),
-				8, 6, xSize-12, 0, IILib.COLOR_H1);
+				8, 6, xSize-12, 0, IIReference.COLOR_H1);
 
 		float[] rgb = IIUtils.rgbIntToRGB(color);
 		GlStateManager.color(rgb[0], rgb[1], rgb[2]);
@@ -185,15 +185,15 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 		if(mx > guiLeft+159&&mx < guiLeft+166&&my > guiTop+23&&my < guiTop+70)
 			tooltip.add(IIUtils.getPowerLevelString(tile));
 		else if(buttonModeRGB.isMouseOver())
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color.rgb"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color.rgb"));
 		else if(buttonModeCMYK.isMouseOver())
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color.cmyk"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color.cmyk"));
 		else if(buttonModeHSV.isMouseOver())
-			tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color.hsv"));
+			tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color.hsv"));
 		else if(buttonActiveColor.isMouseOver())
 			tooltip.add(
 					colorDelay > 0?
-							TextFormatting.GREEN+TextFormatting.ITALIC.toString()+I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color_copied")+TextFormatting.RESET:
+							TextFormatting.GREEN+TextFormatting.ITALIC.toString()+I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.chemical_painter.color_copied")+TextFormatting.RESET:
 							String.format("<hexcol=%1$s:#%1$s (%2$s)>",
 									String.format("%06x", color),
 									I18n.format("item.fireworksCharge."+IIUtils.getRGBTextFormatting(color).getName()))
@@ -213,7 +213,7 @@ public class GuiChemicalPainter extends GuiIEContainerBase implements ISlider
 
 	public GuiSliderII getSlider(int id, String name, float value)
 	{
-		GuiSliderII slider = addButton(new GuiSliderII(buttonList.size(), guiLeft+25+((id%2)*75), guiTop+80+8+(17*(int)Math.floor(id/2f)), 70, name, value, IILib.COLOR_H1));
+		GuiSliderII slider = addButton(new GuiSliderII(buttonList.size(), guiLeft+25+((id%2)*75), guiTop+80+8+(17*(int)Math.floor(id/2f)), 70, name, value, IIReference.COLOR_H1));
 		slider.parent = this;
 		return slider;
 	}

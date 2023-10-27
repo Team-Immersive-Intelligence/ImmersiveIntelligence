@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.client.gui.tooltip;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxReceiver;
 import blusunrize.immersiveengineering.client.ClientProxy;
-import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
@@ -11,8 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.RayTraceResult;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +49,7 @@ public class TextOverlayVoltmeterEntities extends TextOverlayBase
 	@Override
 	public int getDefaultFontColour()
 	{
-		return IILib.COLORS_HIGHLIGHT_I[2];
+		return IIReference.COLORS_HIGHLIGHT_I[2];
 	}
 
 	@Nonnull

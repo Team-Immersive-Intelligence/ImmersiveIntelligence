@@ -19,7 +19,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeExpression;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 
@@ -188,9 +188,9 @@ public class GuiDataVariableList extends GuiButton
 
 		FontRenderer f = mc.fontRenderer;
 		if(data instanceof DataTypeExpression)
-			f.drawString(I18n.format(IILib.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
+			f.drawString(I18n.format(IIReference.DATA_KEY+"function."+((DataTypeExpression)data).getOperation().name), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
 		else
-			f.drawString(I18n.format(IILib.DATA_KEY+"datatype."+data.getName()), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
+			f.drawString(I18n.format(IIReference.DATA_KEY+"datatype."+data.getName()), x+38, y+7, MathHelper.multiplyColor(data.getTypeColour(), 0xcacaca), false);
 		//Draw variable name (single character)
 		f.drawString(String.valueOf(c), x+11, y+5, Lib.COLOUR_I_ImmersiveOrange, true);
 

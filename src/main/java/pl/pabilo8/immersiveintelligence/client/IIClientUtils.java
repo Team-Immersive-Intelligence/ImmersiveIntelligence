@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsIE;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -40,6 +40,7 @@ import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumFuseTypes;
 import pl.pabilo8.immersiveintelligence.api.bullets.*;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
 import pl.pabilo8.immersiveintelligence.api.utils.MachineUpgrade;
 import pl.pabilo8.immersiveintelligence.client.model.ModelIIBase;
 import pl.pabilo8.immersiveintelligence.client.util.font.IIFontRenderer;
@@ -49,7 +50,7 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.simple.BlockIIMetalBase.Metals;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 
 import javax.annotation.Nonnull;
@@ -153,12 +154,12 @@ public class IIClientUtils
 	//Thanks Blu, these stencil buffers look really capable
 	public static void drawArmorBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IILib.COLOR_ARMORBAR_1, IILib.COLOR_ARMORBAR_2, progress);
+		drawGradientBar(x, y, w, h, IIReference.COLOR_ARMORBAR_1, IIReference.COLOR_ARMORBAR_2, progress);
 	}
 
 	public static void drawPowerBar(int x, int y, int w, int h, float progress)
 	{
-		drawGradientBar(x, y, w, h, IILib.COLOR_POWERBAR_1, IILib.COLOR_POWERBAR_2, progress);
+		drawGradientBar(x, y, w, h, IIReference.COLOR_POWERBAR_1, IIReference.COLOR_POWERBAR_2, progress);
 	}
 
 	public static void drawGradientBar(int x, int y, int w, int h, int color1, int color2, float progress)
@@ -297,54 +298,10 @@ public class IIClientUtils
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static boolean addExpandableTooltip(int key, String message, @Nullable List<String> tooltip)
-	{
-		String keyName;
-		String keyColor;
-		switch(key)
-		{
-			case Keyboard.KEY_LCONTROL:
-				if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
-					return true;
-				keyName = IILib.DESC_HOLD_CTRL;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[0];
-				break;
-			case Keyboard.KEY_LSHIFT:
-				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)||Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-					return true;
-				keyName = IILib.DESC_HOLD_SHIFT;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[1];
-				break;
-			case Keyboard.KEY_LMENU:
-				if(Keyboard.isKeyDown(Keyboard.KEY_LMENU)||Keyboard.isKeyDown(Keyboard.KEY_RMENU))
-					return true;
-				keyName = IILib.DESC_HOLD_ALT;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[2];
-				break;
-			case Keyboard.KEY_TAB:
-				if(Keyboard.isKeyDown(key))
-					return true;
-				keyName = IILib.DESC_HOLD_TAB;
-				keyColor = IILib.COLORS_HIGHLIGHT_S[3];
-				break;
-			default:
-				return true;
-		}
-
-		//format the "button icon"
-		String buttonIcon = I18n.format(keyName)
-				.replace("[", "<hexcol="+keyColor+":[")
-				.replace("]", "]>")+TextFormatting.GRAY;
-		//add the tooltip
-		if(tooltip!=null)
-			tooltip.add(I18n.format(message, buttonIcon));
-		return false;
-	}
-
 	public static void createAmmoTooltip(IAmmo ammo, ItemStack stack, @Nullable World worldIn, List<String> tooltip)
 	{
 		tooltip.add(getFormattedBulletTypeName(ammo, stack));
-		if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
+		if(ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LSHIFT, "%s - Composition", tooltip))
 		{
 			//get parameters
 			EnumFuseTypes fuse = ammo.getFuseType(stack);
@@ -353,47 +310,47 @@ public class IIClientUtils
 			IAmmoComponent[] components = ammo.getComponents(stack);
 
 			//list general information
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1], "Details:"));
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Details:"));
 
 			//core + type
 			if(ammo.isProjectile())
 			{
-				tooltip.add("⦳ "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.core",
-						I18n.format(IILib.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName()),
+				tooltip.add("⦳ "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.core",
+						I18n.format(IIReference.DESCRIPTION_KEY+"bullet_core_type."+coreType.getName()),
 						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
 				));
 
 				//fuse
-				tooltip.add(fuse.symbol+" "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.fuse",
-						I18n.format(IILib.DESCRIPTION_KEY+"bullet_fuse."+fuse.getName())
+				tooltip.add(fuse.symbol+" "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.fuse",
+						I18n.format(IIReference.DESCRIPTION_KEY+"bullet_fuse."+fuse.getName())
 				));
 			}
 			else
 			{
-				tooltip.add("⦳ "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.core", "",
+				tooltip.add("⦳ "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.core", "",
 						IIUtils.getHexCol(core.getColour(), I18n.format("item."+ImmersiveIntelligence.MODID+".bullet.component."+core.getName()+".name"))
 				));
 			}
 
 			//mass
-			tooltip.add("\u2696 "+I18n.format(IILib.DESCRIPTION_KEY+"bullets.mass", Utils.formatDouble(ammo.getMass(stack), "0.##")));
+			tooltip.add("\u2696 "+I18n.format(IIReference.DESCRIPTION_KEY+"bullets.mass", Utils.formatDouble(ammo.getMass(stack), "0.##")));
 
 			//list components
 			if(components.length > 0)
 			{
-				tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[1], "Components:"));
+				tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[1], "Components:"));
 				for(IAmmoComponent comp : components)
 					tooltip.add("   "+comp.getTranslatedName());
 			}
 		}
 
-		if(ammo.isProjectile()&&!ammo.isBulletCore(stack)&&IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
+		if(ammo.isProjectile()&&!ammo.isBulletCore(stack)&&ItemTooltipHandler.addExpandableTooltip(Keyboard.KEY_LCONTROL, "%s - Ballistics", tooltip))
 		{
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], "Performance:"));
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "Performance:"));
 			tooltip.add(String.format("\u2295 "+"Damage Dealt: %s", ammo.getDamage()));
 			tooltip.add(String.format("\u29c1 "+"Standard Velocity: %s B/s", ammo.getDefaultVelocity()));
 
-			tooltip.add(IIUtils.getHexCol(IILib.COLORS_HIGHLIGHT_S[0], "Armor Penetration:"));
+			tooltip.add(IIUtils.getHexCol(IIReference.COLORS_HIGHLIGHT_S[0], "Armor Penetration:"));
 
 			float hardness = ammo.getCore(stack).getPenetrationHardness();
 			EnumCoreTypes coreType = ammo.getCoreType(stack);
@@ -460,12 +417,12 @@ public class IIClientUtils
 		{
 			if(enumComponentRole==EnumComponentRole.GENERAL_PURPOSE)
 				continue;
-			builder.append(IIUtils.getHexCol(enumComponentRole.getColor(), I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName())));
+			builder.append(IIUtils.getHexCol(enumComponentRole.getColor(), I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+enumComponentRole.getName())));
 			builder.append(" - ");
 		}
 		if(builder.toString().isEmpty())
 		{
-			builder.append(I18n.format(IILib.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
+			builder.append(I18n.format(IIReference.DESCRIPTION_KEY+"bullet_type."+EnumComponentRole.GENERAL_PURPOSE.getName()));
 			builder.append(" - ");
 		}
 		//trim last " - "

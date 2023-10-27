@@ -1,23 +1,24 @@
 package pl.pabilo8.immersiveintelligence.client;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.Config;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.lib.manual.IManualPage;
+import blusunrize.lib.manual.ManualInstance;
+import blusunrize.lib.manual.ManualInstance.ManualEntry;
+import blusunrize.lib.manual.gui.GuiManual;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.FogMode;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.Entity;
@@ -27,12 +28,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
@@ -50,23 +49,18 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GLContext;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Graphics;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mortar;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmoComponent;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
-import pl.pabilo8.immersiveintelligence.api.data.DataOperations;
-import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
-import pl.pabilo8.immersiveintelligence.api.data.IDataStorageItem;
-import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
-import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
-import pl.pabilo8.immersiveintelligence.api.utils.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IAdvancedTooltipItem;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IItemScrollable;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.fx.ParticleUtils;
 import pl.pabilo8.immersiveintelligence.client.gui.inworld_overlay.InWorldOverlayBase;
@@ -81,13 +75,17 @@ import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayMachine
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlayRifle;
 import pl.pabilo8.immersiveintelligence.client.gui.overlay.gun.GuiOverlaySubmachinegun;
 import pl.pabilo8.immersiveintelligence.client.gui.tooltip.*;
+import pl.pabilo8.immersiveintelligence.client.manual.pages.IIManualPageContributorSkin;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.item.BinocularsRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.PrintedPageRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
-import pl.pabilo8.immersiveintelligence.common.*;
+import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIPotions;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMortar;
@@ -97,23 +95,29 @@ import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityMotorbike;
 import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIIFunctionalCircuit.CircuitTypes;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRailgunOverride;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageEntityNBTSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageItemScrollableSwitch;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.network.messages.MessageManualClose;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.blockDamageClient;
 
 /**
+ * Handles events for client side.
+ *
  * @author Pabilo8
  * @since 27-09-2019
  */
@@ -507,7 +511,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 
 
 		if(ItemNBTHelper.hasKey(stack, "ii_FilledCasing"))
-			event.getToolTip().add(TextFormatting.DARK_GRAY+I18n.format(IILib.DESCRIPTION_KEY+"filled_casing"));
+			event.getToolTip().add(TextFormatting.DARK_GRAY+I18n.format(IIReference.DESCRIPTION_KEY+"filled_casing"));
 
 		/*if(stack.getItem()==IEContent.itemToolUpgrades)
 		{
@@ -579,150 +583,26 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		}
 	}
 
+	/**
+	 * Draws an advanced item tooltip that can include images in text
+	 */
 	@SubscribeEvent()
 	public void onRenderTooltip(RenderTooltipEvent.PostText event)
 	{
-		int currentX = event.getX();
-		ArrayList<Integer> currentYs = findTooltipY(event);
+		//Check whether the item can draw an Advanced Tooltip
 		ItemStack stack = event.getStack();
-
-		if(currentYs.size()==0)
+		if(!(stack.getItem() instanceof IAdvancedTooltipItem))
 			return;
 
-		if(stack.getItem()==IIContent.itemCircuit)
-		{
-			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "", null))
-			{
-				CircuitTypes circuit = IIContent.itemCircuit.stackToSub(stack).tier;
-				List<String> operationsList = IIContent.itemCircuit.getOperationsList(stack);
+		ArrayList<Integer> currentYs = ItemTooltipHandler.findTooltipY(event);
+		if(currentYs.isEmpty())
+			return;
 
-				GlStateManager.pushMatrix();
-				GlStateManager.translate(currentX, currentYs.get(0), 700);
-				GlStateManager.scale(.5f, .5f, 1);
-
-				int i = 0;
-				for(String op : operationsList)
-				{
-					IDataType type = DataPacket.getVarInstance(DataOperations.getOperationInstance(op).expectedResult);
-					GlStateManager.color(1f, 1f, 1f, 1f);
-					ClientUtils.bindTexture(type.textureLocation());
-					Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
-					i++;
-				}
-
-				GlStateManager.popMatrix();
-			}
-		}
-		else if(stack.getItem() instanceof IDataStorageItem)
-		{
-			IDataStorageItem ds = (IDataStorageItem)stack.getItem();
-			DataPacket packet = ds.getStoredData(stack);
-
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(currentX, currentYs.get(0), 700);
-			GlStateManager.scale(.5f, .5f, 1);
-
-			int i = 0;
-			for(IDataType type : packet)
-			{
-				GlStateManager.color(1f, 1f, 1f, 1f);
-				ClientUtils.bindTexture(type.textureLocation());
-				Gui.drawModalRectWithCustomSizedTexture(0, i*20, 0, 0, 16, 16, 16, 16);
-				i++;
-			}
-
-			GlStateManager.popMatrix();
-
-		}
-		else if(stack.getItem()==IIContent.itemAssemblyScheme)
-		{
-			PrecissionAssemblerRecipe recipe = IIContent.itemAssemblyScheme.getRecipeForStack(stack);
-			if(recipe==null)
-				return;
-			boolean upper = IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "", null);
-
-			if(upper)
-				drawItemList(currentX, currentYs.get(0),
-						Arrays.stream(recipe.inputs).map(IngredientStack::getExampleStack).toArray(ItemStack[]::new));
-			if(IIClientUtils.addExpandableTooltip(Keyboard.KEY_LCONTROL, "", null))
-				drawItemList(currentX, currentYs.get(upper?1: 0),
-						Arrays.stream(recipe.tools)
-								.map(PrecissionAssemblerRecipe::getExampleToolStack)
-								.toArray(ItemStack[]::new)
-				);
-		}
-		else if(stack.getItem() instanceof IAmmo)
-		{
-			IAmmoComponent[] components = ((IAmmo)stack.getItem()).getComponents(stack);
-			if(components.length > 0&&IIClientUtils.addExpandableTooltip(Keyboard.KEY_LSHIFT, "", null))
-				drawItemList(currentX, currentYs.get(0),
-						Arrays.stream(components)
-								.map(c -> c.getMaterial().getExampleStack())
-								.toArray(ItemStack[]::new)
-				);
-		}
-		else if(stack.getItem()==IIContent.itemBulletMagazine&&!IIContent.itemBulletMagazine.hasNoBullets(stack))
-			drawItemList(currentX, currentYs.get(0),
-					ItemNBTHelper.getTagCompound(stack, "bullets").getTagList("dictionary", 10));
-		else if(stack.getItem() instanceof ItemIIGunBase)
-			drawItemList(currentX, currentYs.get(0), ((ItemIIGunBase)stack.getItem()).getAmmoList(stack));
-	}
-
-	private ArrayList<Integer> findTooltipY(RenderTooltipEvent.PostText event)
-	{
-		return findTooltipY(event.getLines(), event.getY(), event.getFontRenderer());
-	}
-
-	private ArrayList<Integer> findTooltipY(List<String> lines, int y, FontRenderer font)
-	{
-		ArrayList<Integer> list = new ArrayList<>();
-		final int size = lines.size();
-		boolean lastLine = false;
-
-		for(int i = 0; i < size; i++)
-			if(StringUtils.stripControlCodes(lines.get(i)).startsWith("   "))
-			{
-				if(!lastLine)
-				{
-					list.add(y+i*10+2); //height+spacing
-					lastLine = true;
-				}
-			}
-			else if(lastLine)
-				lastLine = false;
-
-		if(list.size() > 1)
-			IILogger.info("o");
-
-		return list;
-	}
-
-	private void drawItemList(int x, int y, NBTTagList stacks)
-	{
-		ItemStack[] array = new ItemStack[stacks.tagCount()];
-		for(int i = 0; i < stacks.tagCount(); i++)
-			array[i] = new ItemStack(stacks.getCompoundTagAt(i));
-		drawItemList(x, y, array);
-	}
-
-	private void drawItemList(int x, int y, ItemStack[] stacks)
-	{
 		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.enableRescaleNormal();
-		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.enableDepth();
-		GlStateManager.translate(x, y, 700);
-		GlStateManager.scale(.5f, .5f, 1);
-
-		RenderItem renderItem = ClientUtils.mc().getRenderItem();
-		for(int i = 0; i < stacks.length; i++)
-			renderItem.renderItemIntoGUI(stacks[i], 0, i*20);
-
-		GlStateManager.disableDepth();
-		GlStateManager.disableRescaleNormal();
+		((IAdvancedTooltipItem)stack.getItem()).addAdvancedInformation(stack, event.getX(), currentYs);
 		GlStateManager.popMatrix();
 	}
+
 
 	@SubscribeEvent
 	public void cameraSetup(EntityViewRenderEvent.CameraSetup event)
@@ -1402,6 +1282,57 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			event.setCanceled(true);
 		}
 
+	}
+
+	@SubscribeEvent
+	public static void guiOpen(GuiOpenEvent event)
+	{
+		// TODO: 26.08.2021 investigate
+		if(event.getGui() instanceof GuiManual)
+			IISkinHandler.getManualPages();
+		else if(ClientEventHandler.lastGui instanceof GuiManual)
+		{
+			GuiManual gui = (GuiManual)ClientEventHandler.lastGui;
+			String name = null;
+
+			ManualInstance inst = gui.getManual();
+			if(inst!=null)
+			{
+				ManualEntry entry = inst.getEntry(gui.getSelectedEntry());
+				if(entry!=null)
+				{
+					IManualPage page = entry.getPages()[gui.page];
+					if(page instanceof IIManualPageContributorSkin)
+					{
+						name = ((IIManualPageContributorSkin)page).skin.name;
+					}
+				}
+			}
+			EntityPlayer p = ClientUtils.mc().player;
+
+			ItemStack mainItem = p.getHeldItemMainhand();
+			ItemStack offItem = p.getHeldItemOffhand();
+
+			boolean main = !mainItem.isEmpty()&&mainItem.getItem()==IEContent.itemTool&&mainItem.getItemDamage()==3;
+			boolean off = !offItem.isEmpty()&&offItem.getItem()==IEContent.itemTool&&offItem.getItemDamage()==3;
+			ItemStack target = main?mainItem: offItem;
+
+			if(main||off)
+			{
+				IIPacketHandler.sendToServer(new MessageManualClose(name==null?"": name));
+
+				if(name==null&&ItemNBTHelper.hasKey(target, "lastSkin"))
+				{
+					ItemNBTHelper.remove(target, "lastSkin");
+				}
+				else if(name!=null)
+				{
+					ItemNBTHelper.setString(target, "lastSkin", name);
+				}
+			}
+		}
+
+		ClientEventHandler.lastGui = event.getGui();
 	}
 
 	@SubscribeEvent

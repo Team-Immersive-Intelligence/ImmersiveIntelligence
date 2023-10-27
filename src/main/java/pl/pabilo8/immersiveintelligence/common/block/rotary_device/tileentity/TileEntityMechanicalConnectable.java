@@ -22,7 +22,6 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import pl.pabilo8.immersiveintelligence.api.rotary.*;
-import pl.pabilo8.immersiveintelligence.api.utils.IRotationalEnergyBlock;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 

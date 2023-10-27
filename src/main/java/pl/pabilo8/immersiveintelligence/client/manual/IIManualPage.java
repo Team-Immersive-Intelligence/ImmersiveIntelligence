@@ -23,7 +23,7 @@ import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject.ManualObjectInfo;
 import pl.pabilo8.immersiveintelligence.client.manual.objects.*;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
@@ -430,7 +430,7 @@ public class IIManualPage extends ManualPages
 
 		PageTraits()
 		{
-			this.textureLocation = ResLoc.of(IILib.RES_TEXTURES_MANUAL, "traits/", getName()).withExtension(ResLoc.EXT_PNG);
+			this.textureLocation = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "traits/", getName()).withExtension(ResLoc.EXT_PNG);
 		}
 
 		public static PageTraits find(String name)

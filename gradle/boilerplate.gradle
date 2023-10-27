@@ -26,6 +26,12 @@ idea {
     }
 }
 
+tasks.register('additionalIntellijSettings', Copy) {
+    from 'gradle/docs/idea/*.xml'
+    into '.idea'
+}
+tasks.idea.dependsOn additionalIntellijSettings
+
 //--- Project Defaults
 setVersion(modVersion)
 setGroup(modGroup)
@@ -45,6 +51,18 @@ minecraft {
     replace "@VERSION@", modVersion
     mappings = modMappings
     useDepAts = true
+}
+
+//--- Handling custom.gradle
+
+//To use personalized options when working with the mod create a file named custom.gradle
+//The file is not sychronised with GitHub and can be used i.e. to store username and password
+//Thanks to BluSunrize for the idea (taken from IE)
+
+// We have to put it **BEFORE** any other gradle files are parsed.
+def customGradle = rootProject.file('custom.gradle')
+if (customGradle.exists()) {
+    apply from: customGradle
 }
 
 //--- Include the ModWorks Processor
@@ -131,22 +149,10 @@ processResources {
     }
 }
 
-
-//--- Handling custom.gradle
-
-//To use personalized options when working with the mod create a file named custom.gradle
-//The file is not sychronised with GitHub and can be used i.e. to store username and password
-//Thanks to BluSunrize for the idea (taken from IE)
-def customGradle = rootProject.file('custom.gradle')
-if (customGradle.exists()) {
-    apply from: customGradle
-}
-
 tasks.build.doLast(){
     if(ii_printSourceSets.toBoolean())
         logger.log(LogLevel.WARN, 'Build Location: '+file("./build/libs/").getPath())
 }
-
 
 //--- Core Jar Generation
 // Create a core jar, sign it and place it inside the main jar

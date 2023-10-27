@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.ItemIISmallWireCoil.SmallWires;
+import pl.pabilo8.immersiveintelligence.common.item.data.ItemIISmallWireCoil.SmallWires;
 
 /**
  * @author Pabilo8

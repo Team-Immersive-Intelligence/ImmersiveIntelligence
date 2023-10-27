@@ -24,7 +24,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Mines;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mines;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;

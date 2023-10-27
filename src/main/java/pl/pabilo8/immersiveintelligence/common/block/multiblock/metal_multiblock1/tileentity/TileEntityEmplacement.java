@@ -41,8 +41,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Emplacement;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Emplacement;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
@@ -60,6 +60,7 @@ import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.ammo.emplacement_weapons.EmplacementWeaponMachinegun;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockEmplacement;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement.EmplacementWeapon.MachineUpgradeEmplacementWeapon;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityEmplacementWeapon;
@@ -307,7 +308,14 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				{
 					if(progress > 0)
 						progress--;
-					currentWeapon.aimAt(0, -90);
+					if(currentWeapon instanceof EmplacementWeaponMachinegun)
+					{ //machine gun yaw is limited, use special method
+						((EmplacementWeaponMachinegun)currentWeapon).aimAtUnrestricted(facing.getHorizontalAngle(), -90);
+					}
+					else
+					{
+						currentWeapon.aimAt(facing.getHorizontalAngle(), -90);
+					}
 				}
 				else
 					currentWeapon.doSetUp(false);
@@ -1384,6 +1392,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 				health = getMaxHealth();
 				te.sendAttackSignal = false;
 				this.nextPitch = this.pitch = -90;
+				this.nextYaw = this.yaw = te.facing.getHorizontalAngle();
 
 
 				if(!te.world.isRemote)
@@ -1731,7 +1740,7 @@ public class TileEntityEmplacement extends TileEntityMultiblockMetal<TileEntityE
 		@Override
 		public void updateTargets(TileEntityEmplacement emplacement)
 		{
-			spottedEntities = emplacement.world.getEntitiesWithinAABB(Entity.class, emplacement.currentWeapon.getVisionAABB(), input -> emplacement.currentWeapon.canSeeEntity(input)&&predicate.test(input)).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
+			spottedEntities = emplacement.world.getEntitiesWithinAABB(Entity.class, emplacement.currentWeapon.getVisionAABB(), input -> predicate.test(input)&&emplacement.currentWeapon.canSeeEntity(input)).stream().sorted((o1, o2) -> (int)((o1.width*o1.height)-(o2.width*o2.height))*10).toArray(Entity[]::new);
 			if(!emplacement.world.isRemote&&emplacement.sendAttackSignal)
 				emplacement.handleSendingEnemyPos(spottedEntities);
 		}

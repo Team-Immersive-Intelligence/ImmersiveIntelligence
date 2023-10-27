@@ -30,12 +30,12 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.LightEngineerArmor;
-import pl.pabilo8.immersiveintelligence.api.utils.IInfraredProtectionEquipment;
+import pl.pabilo8.immersiveintelligence.api.utils.armor.IInfraredProtectionEquipment;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.LightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
-import pl.pabilo8.immersiveintelligence.common.util.IIArmorItemStackHandler;
+import pl.pabilo8.immersiveintelligence.common.util.item.IIArmorItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -95,7 +95,7 @@ public class ItemIILightEngineerChestplate extends ItemIILightEngineerArmorBase 
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
 	{
 		super.onArmorTick(world, player, stack);
-		if(player.getAir()!=300&&hasUpgrade(stack, "scuba")&&hasUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD),"gasmask"))
+		if(player.getAir()!=300&&hasUpgrade(stack, "scuba")&&hasUpgrade(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), "gasmask"))
 		{
 			IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(stack);
 			if(fluidHandler!=null&&world.getTotalWorldTime()%20==0)

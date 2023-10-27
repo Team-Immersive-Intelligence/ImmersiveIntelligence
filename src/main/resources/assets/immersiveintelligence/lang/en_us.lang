@@ -12,6 +12,8 @@ item.immersiveintelligence.material.advanced_circuit_board_etched.name=Etched Ad
 item.immersiveintelligence.material.advanced_circuit_board.name=Advanced Circuit Board
 item.immersiveintelligence.material.advanced_electronic_element.name=Advanced Electronic Component
 
+item.immersiveintelligence.material.cryptographic_circuit_board.name=Cryptographic Circuit Board
+
 item.immersiveintelligence.material.processor_circuit_board_raw.name=Raw Processor Circuit Board
 item.immersiveintelligence.material.processor_circuit_board_etched.name=Etched Processor Circuit Board
 item.immersiveintelligence.material.processor_circuit_board.name=Processor Circuit Board
@@ -22,6 +24,17 @@ item.immersiveintelligence.material.compact_electric_engine.name=Compact Electri
 item.immersiveintelligence.material.compact_electric_engine_advanced.name=Advanced Compact Electric Engine
 item.immersiveintelligence.material.carbon_brush.name=Carbon Brush
 item.immersiveintelligence.material.glass_fibre_cable.name=Glass Fibre Cable
+
+item.immersiveengineering.material.gunpart_barrel.name=Steel Gun Barrel
+item.immersiveintelligence.material.iron_gun_barrel.name=Iron Gun Barrel
+item.immersiveintelligence.material.tungsten_gun_barrel.name=High-Precision Gun Barrel
+item.immersiveintelligence.material.gun_stock.name=Wooden Stock
+item.immersiveintelligence.material.gun_casing.name=Wooden Gun Casing
+
+item.immersiveengineering.material.gunpart_hammer.name=Revolver Hammer
+item.immersiveengineering.material.gunpart_drum.name=Revolver Drum
+item.immersiveintelligence.material.firing_mechanism.name=Bolt-Action Mechanism
+item.immersiveintelligence.material.advanced_firing_mechanism.name=Automatic Firing Mechanism
 
 item.immersiveintelligence.material.advanced_electron_tube.name=Advanced Vacuum Tube
 
@@ -141,6 +154,8 @@ item.immersiveintelligence.circuit_functional.type_conversion.name=Type Conversi
 item.immersiveintelligence.circuit_functional.fluidstack.name=Fluidstack Operations Circuit
 item.immersiveintelligence.circuit_functional.map.name=Map Operations Circuit
 item.immersiveintelligence.circuit_functional.vector_arithmetic.name=Vector Arithmetic Circuit
+item.immersiveintelligence.circuit_functional.cryptographer.name=Cryptographer Circuit
+
 
 item.immersiveintelligence.minecart.wooden_crate.name=Minecart with Wooden Crate
 item.immersiveintelligence.minecart.reinforced_crate.name=Minecart with Reinforced Crate
@@ -245,6 +260,7 @@ desc.immersiveintelligence.electric_wirecutter=Cuts wires and motor belts, works
 desc.immersiveintelligence.wrench=Installs upgrades on compatible machines.
 desc.immersiveintelligence.tachometer=Measures speed and torque of rotary devices.
 desc.immersiveintelligence.binoculars=Allows to see distant things.
+desc.immersiveintelligence.casing_pouch=Stores spent casings and empty magazines.
 
 desc.immersiveintelligence.toolupgrade.item.revolver=Revolver
 desc.immersiveintelligence.toolupgrade.item.railgun=Railgun
@@ -322,6 +338,10 @@ item.immersiveintelligence.printed_page.blank.name=Blank Page
 item.immersiveintelligence.printed_page.text.name=Printed Text
 item.immersiveintelligence.printed_page.code.name=Printed Code
 item.immersiveintelligence.printed_page.blueprint.name=Printed Construction Scheme
+item.immersiveintelligence.printed_page.bound_pages.name=Bound Pages
+item.immersiveintelligence.printed_page.newspaper.name=Newspaper
+item.immersiveintelligence.printed_page.book.name=Book
+item.immersiveintelligence.printed_page.letter.name=Letter
 
 item.immersiveintelligence.precission_tool.buzzsaw.name=Precision Buzzsaw
 item.immersiveintelligence.precission_tool.drill.name=Precision Drill
@@ -404,6 +424,8 @@ item.immersiveintelligence.bullet_magazine.assault_rifle.name=Assault Rifle Maga
 item.immersiveintelligence.bullet_magazine.autocannon.name=Autocannon Magazine
 item.immersiveintelligence.bullet_magazine.cpds_drum.name=CPDS Drum Magazine
 item.immersiveintelligence.bullet_magazine.rifle.name=Rifle Magazine
+
+item.immersiveintelligence.casing_pouch.name=Spent Casings Pouch
 
 item.immersiveintelligence.motor_gear.copper.name=Copper Gear
 item.immersiveintelligence.motor_gear.brass.name=Brass Gear
@@ -840,6 +862,8 @@ subtitle.immersiveintelligence.distant_artillery_impact=Distant Artillery Impact
 subtitle.immersiveintelligence.distant_gunshot=Distant Gunshots
 subtitle.immersiveintelligence.dryfire=Gun Being Unable to Fire
 
+subtitle.immersiveintelligence.casing_pickup=Casings Drop Into a Pouch
+
 subtitle.immersiveintelligence.machinegun_shot=Machinegun Firing
 subtitle.immersiveintelligence.machinegun_shot_distant=Machinegun Firing in Distance
 subtitle.immersiveintelligence.machinegun_reload=Machinegun Reloading
@@ -943,6 +967,10 @@ entity.hans.name=Hans
 skin.immersiveintelligence.anno_1880.name=Anno 1880
 skin.immersiveintelligence.anno_1880.desc=Refined, precise, ornamental
 skin.immersiveintelligence.anno_1880.text=Rewarded to BluSunrize and Hazard for their great work on Immersive Engineering.
+
+skin.immersiveintelligence.archangel.name=Archangel
+skin.immersiveintelligence.archangel.desc=Our ancestors tried to hide it...
+skin.immersiveintelligence.archangel.text=At first they though that god sent the archangel as a gift for humanity. There is a reason why ancestor were scared of them...
 
 skin.immersiveintelligence.royal.name=Royal
 skin.immersiveintelligence.royal.desc=A relic from an old empire
@@ -1061,8 +1089,10 @@ desc.immersiveintelligence.radio_configurator_max_frequency=Max Frequency: %s
 desc.immersiveintelligence.naval_mine_chain_length=Max Chain Length: %s
 desc.immersiveintelligence.measuring_cup_size=Capacity: %s / %s mB
 desc.immersiveintelligence.measuring_cup_cant_resize=Cannot change size when contains fluid.
-desc.immersiveintelligence.functional_circuit_shift=%s - Performed Operations
+desc.immersiveintelligence.functional_circuit_shift=%s - Available Operations
+desc.immersiveintelligence.functional_circuit_ctrl=%s - Stored Operations
 desc.immersiveintelligence.functional_circuit=Allows the machine to do operations such as:
+desc.immersiveintelligence.functional_circuit_data=Set to perform following operations:
 desc.immersiveintelligence.data_storage_shift=%s - Stored Data
 desc.immersiveintelligence.data_storage=Stored Data:
 desc.immersiveintelligence.upgrade_toolbox=Can be used to upgrade machines
@@ -1070,8 +1100,12 @@ desc.immersiveintelligence.cost=Material Cost:
 
 desc.immersiveintelligence.printed_page.blank=An empty page ready to be printed.
 desc.immersiveintelligence.printed_page.text=A page containing some text.
-desc.immersiveintelligence.printed_page.code=A page containing some code written in a programming language.
+desc.immersiveintelligence.printed_page.code=A page containing some code written in POL programming language.
 desc.immersiveintelligence.printed_page.blueprint=A page containing information on how to build a structure.
+desc.immersiveintelligence.printed_page.bound_pages=Various pages bound together.
+desc.immersiveintelligence.printed_page.newspaper=Multiple pages bound into a newspaper.
+desc.immersiveintelligence.printed_page.book=Multiple pages bound into a book.
+desc.immersiveintelligence.printed_page.letter=A page packed into an envelope to be sent to someone.
 
 desc.immersiveintelligence.punchtape.empty=No variables written
 desc.immersiveintelligence.punchtape.written=Written
@@ -1361,6 +1395,13 @@ datasystem.immersiveintelligence.function.to_string=To String
 datasystem.immersiveintelligence.function.to_boolean=To Boolean
 datasystem.immersiveintelligence.function.to_null=To Null
 
+datasystem.immersiveintelligence.function.encrypt_text=Encrypt Text
+datasystem.immersiveintelligence.function.encrypt_number=Encrypt Number
+datasystem.immersiveintelligence.function.encrypt_array=Encrypt Array
+datasystem.immersiveintelligence.function.decrypt_text=Decrypt Text
+datasystem.immersiveintelligence.function.decrypt_number=Decrypt Number
+datasystem.immersiveintelligence.function.decrypt_array=Decrypt Array
+
 datasystem.immersiveintelligence.datatype.null=Null
 datasystem.immersiveintelligence.datatype.boolean=Boolean
 datasystem.immersiveintelligence.datatype.integer=Integer
@@ -1374,6 +1415,7 @@ datasystem.immersiveintelligence.datatype.fluidstack=FluidStack
 datasystem.immersiveintelligence.datatype.array=Array
 datasystem.immersiveintelligence.datatype.map=Map
 datasystem.immersiveintelligence.datatype.entity=Entity
+datasystem.immersiveintelligence.datatype.encrypted=Encrypted
 
 datasystem.immersiveintelligence.datatype.boolean.true=True
 datasystem.immersiveintelligence.datatype.boolean.false=False
@@ -1383,10 +1425,12 @@ datasystem.immersiveintelligence.datatype.boolean.false=False
 desc.immersiveengineering.info.blueprint.basic_circuits=Basic Circuits
 desc.immersiveengineering.info.blueprint.advanced_circuits=Advanced Circuits
 desc.immersiveengineering.info.blueprint.processors=Processors
+desc.immersiveengineering.info.blueprint.cryptography_circuits=Cryptography Circuits
 
 desc.immersiveengineering.info.blueprint.basic_functional_circuits=Basic Function Circuits
 desc.immersiveengineering.info.blueprint.advanced_functional_circuits=Advanced Function Circuits
 desc.immersiveengineering.info.blueprint.processor_functional_circuits=Programmable Processors
+desc.immersiveengineering.info.blueprint.cryptographic_functional_circuits=Cryptographic Processors
 
 desc.immersiveengineering.info.blueprint.metal_springs=Springs
 desc.immersiveengineering.info.blueprint.ammo_molds=Ammunition Molds
@@ -1408,6 +1452,48 @@ advancement.immersiveintelligence.root.desc=RTFM?
 
 advancement.immersiveintelligence.connect_belt=Powerful Conveying
 advancement.immersiveintelligence.connect_belt.desc=Link two mechanical wheels with a belt coil
+
+advancement.immersiveintelligence.craft_gun_barrel_iron=A Gunsmith?
+advancement.immersiveintelligence.craft_gun_barrel_iron.desc=Craft the Iron Gun Barrel, that allows you to construct basic firearms.
+
+advancement.immersiveintelligence.craft_gun_barrel_steel=Industrial Gunworks
+advancement.immersiveintelligence.craft_gun_barrel_steel.desc=Craft the Steel Barrel, making your first step into an era of Industrial Warfare.
+
+advancement.immersiveintelligence.craft_gun_barrel_tungsten=Why Precision Counts
+advancement.immersiveintelligence.craft_gun_barrel_tungsten.desc=Craft the High-Precision Gun Barrel, introducing new State-Of-The-Art Firearms into your Arsenal.
+
+advancement.immersiveintelligence.craft_diy=DIY
+advancement.immersiveintelligence.craft_diy.desc=Craft the Handmade Rifle
+
+advancement.immersiveintelligence.craft_rifle=The People's Gun
+advancement.immersiveintelligence.craft_rifle.desc=Create the mass production Rifle
+
+advancement.immersiveintelligence.for_the_emperor=For The Emperor!
+advancement.immersiveintelligence.for_the_emperor.desc=Attach a bayonet to the Rifle
+
+advancement.immersiveintelligence.craft_stg=We should all have Sturmgewehr!
+advancement.immersiveintelligence.craft_stg.desc=Craft the Assault Rifle
+
+advancement.immersiveintelligence.weapon_of_war=This... is a weapon of war
+advancement.immersiveintelligence.weapon_of_war.desc=Upgrade the Assault Rifle with a scope and electric firing motor
+
+advancement.immersiveintelligence.the_accelerator=The Accelerator
+advancement.immersiveintelligence.the_accelerator.desc=Upgrade the Assault Rifle with a Grenade Launcher and a Railgun Barrel
+
+advancement.immersiveintelligence.special_operations_initiative=Special Operations Initiative
+advancement.immersiveintelligence.special_operations_initiative.desc=Upgrade the Assault Rifle with a rangefinder
+
+advancement.immersiveintelligence.craft_smg=Tommy's Toy
+advancement.immersiveintelligence.craft_smg.desc=Craft the Submachinegun
+
+advancement.immersiveintelligence.infinite_power=Infinite Power
+advancement.immersiveintelligence.infinite_power.desc=Upgrade the Submachinegun with a Bottom Loader and Sturdy Barrel
+
+advancement.immersiveintelligence.the_silent_unseen=The Silent Unseen
+advancement.immersiveintelligence.the_silent_unseen.desc=Upgrade the Submachinegun with a Folding Stock and Suppressor
+
+advancement.immersiveintelligence.craft_cpds=The cost of firing for 12 seconds
+advancement.immersiveintelligence.craft_cpds.desc=Craft the CPDS magazine
 
 #Reference to Tiger 1 tank memes
 advancement.immersiveintelligence.craft_steel_belt=Hans, ze Transmission Works!
@@ -1533,6 +1619,14 @@ advancement.immersiveintelligence.create_motorbike.desc=Construct the motorbike
 advancement.immersiveintelligence.secret_sorry_for_ceiling=Sorry for your ceiling!
 advancement.immersiveintelligence.secret_sorry_for_ceiling.desc=Experience a howitzer shell breaking a roof to distribute you propaganda.
 
+#Reference to the russian II tutorial video by Ocelot
+advancement.immersiveintelligence.emplacement=The Little Turret is also good...
+advancement.immersiveintelligence.emplacement.desc=Construct the Emplacement, a defensive structure that can be equipped with heavy weaponry.
+
+advancement.immersiveintelligence.flagpole=Stand for Anthem!
+advancement.immersiveintelligence.flagpole.desc=Construct the Flagpole, a decorative landmark and chunkloader.
+
+
 #Manual Categories
 
 ie.manual.category.ii_data.name=Data and Electronics
@@ -1573,6 +1667,11 @@ ie.manual.entry.true=True
 ie.manual.entry.variables_input=Input Variables:
 ie.manual.entry.variables_output=Output Variables:
 ie.manual.entry.variables_callback=Callback Variables:
+
+ie.manual.entry.allowed_values=Allowed Values:
+ie.manual.entry.allowed_value=Allowed Value:
+ie.manual.entry.required_variables=Required Variables:
+ie.manual.entry.callback_returns=Returns:
 
 ie.manual.entry.filler.name=Filler
 ie.manual.entry.filler.subtext=Churning all the dusts

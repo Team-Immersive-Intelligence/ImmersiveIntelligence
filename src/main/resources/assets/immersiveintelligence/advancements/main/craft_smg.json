@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:submachinegun"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_smg"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_smg.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_gun_barrel_steel",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:submachinegun"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -13,7 +13,7 @@ import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrecissionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 
@@ -58,7 +58,7 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name"), 8, 6, IILib.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name"), 8, 6, IIReference.COLOR_H1);
 	}
 
 	/**

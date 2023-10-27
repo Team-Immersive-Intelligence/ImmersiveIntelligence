@@ -9,7 +9,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import pl.pabilo8.immersiveintelligence.api.crafting.SawmillRecipe;
-import pl.pabilo8.immersiveintelligence.api.tools.ISawblade;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.ISawblade;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.wooden_multiblock.tileentity.TileEntitySawmill;
 
 /**

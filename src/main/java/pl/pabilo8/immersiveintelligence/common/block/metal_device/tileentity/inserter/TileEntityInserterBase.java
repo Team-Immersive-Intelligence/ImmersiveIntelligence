@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.Inserter;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Inserter;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;

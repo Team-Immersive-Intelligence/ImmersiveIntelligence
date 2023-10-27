@@ -9,6 +9,10 @@ import pl.pabilo8.immersiveintelligence.api.data.operations.advanced_logic.DataO
 import pl.pabilo8.immersiveintelligence.api.data.operations.arithmetic.*;
 import pl.pabilo8.immersiveintelligence.api.data.operations.array.*;
 import pl.pabilo8.immersiveintelligence.api.data.operations.comparators.*;
+import pl.pabilo8.immersiveintelligence.api.data.operations.cryptographer.DataOperationDecryptNumber;
+import pl.pabilo8.immersiveintelligence.api.data.operations.cryptographer.DataOperationDecryptText;
+import pl.pabilo8.immersiveintelligence.api.data.operations.cryptographer.DataOperationEncryptNumber;
+import pl.pabilo8.immersiveintelligence.api.data.operations.cryptographer.DataOperationEncryptText;
 import pl.pabilo8.immersiveintelligence.api.data.operations.document.*;
 import pl.pabilo8.immersiveintelligence.api.data.operations.entity.*;
 import pl.pabilo8.immersiveintelligence.api.data.operations.itemstack.*;
@@ -130,7 +134,10 @@ public class DataOperations
 		operations.put("to_boolean", DataOperationToBoolean.class);
 		operations.put("to_null", DataOperationToNull.class);
 
-
+		operations.put("encrypt_text", DataOperationEncryptText.class);
+		operations.put("encrypt_number", DataOperationEncryptNumber.class);
+		operations.put("decrypt_text", DataOperationDecryptText.class);
+		operations.put("decrypt_number", DataOperationDecryptNumber.class);
 	}
 
 	@Nonnull

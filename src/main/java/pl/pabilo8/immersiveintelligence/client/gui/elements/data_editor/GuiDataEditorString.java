@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeString;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.GuiMultiLineTextField;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.io.IOException;
 
@@ -31,7 +31,7 @@ public class GuiDataEditorString extends GuiDataEditor<DataTypeString>
 	{
 		super.init();
 
-		this.valueLabel = I18n.format(IILib.DESCRIPTION_KEY+"variable_value");
+		this.valueLabel = I18n.format(IIReference.DESCRIPTION_KEY+"variable_value");
 		this.valueEdit = new GuiMultiLineTextField(0, renderer,
 				x+2, y+12, width-4, height-20);
 		this.valueEdit.setFocused(true);
@@ -57,7 +57,7 @@ public class GuiDataEditorString extends GuiDataEditor<DataTypeString>
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawButton(mc, mouseX, mouseY, partialTicks);
-		renderer.drawString(valueLabel, x+2, y+2, IILib.COLOR_H1, false);
+		renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1, false);
 
 		this.valueEdit.drawTextBox();
 	}

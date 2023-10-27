@@ -1,9 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.gui.block.emplacement;
 
-import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.elements.GuiButtonIE;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -11,7 +9,6 @@ import net.minecraft.entity.INpc;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -29,7 +26,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityEmplacement;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -68,7 +65,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 	public GuiEmplacementPageTasks(EntityPlayer player, TileEntityEmplacement tile)
 	{
 		super(player, tile, IIGuiList.GUI_EMPLACEMENT_TASKS);
-		title = I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.tasks");
+		title = I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.tasks");
 	}
 
 	@Override
@@ -83,21 +80,21 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 				addTaskTabButton(3),
 		};
 
-		buttonEnabled = addSwitch(122+11, 17, 60, IILib.COLOR_H1, 0xb51500, 0x95ed00, currentTab==tile.defaultTargetMode,
-				I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_enabled"), tasksModified);
+		buttonEnabled = addSwitch(122+11, 17, 60, IIReference.COLOR_H1, 0xb51500, 0x95ed00, currentTab==tile.defaultTargetMode,
+				I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_enabled"), tasksModified);
 
-		addLabel(122, 32+16-12, 83, 0, IILib.COLOR_H1, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();
-		buttonInverted = addButton(new GuiButtonCheckboxII(buttonList.size(), guiLeft+122, guiTop+32+33-6+44, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_negation"), !tile.redstoneControl));
+		addLabel(122, 32+16-12, 83, 0, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.selector_preset")).setCentered();
+		buttonInverted = addButton(new GuiButtonCheckboxII(buttonList.size(), guiLeft+122, guiTop+32+33-6+44, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.task_negation"), !tile.redstoneControl));
 		if(selected!=null)
 			buttonInverted.state = selected.negation;
-		addLabel(122, 32+33+16, 83, 0, IILib.COLOR_H1, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.filter")).setCentered();
+		addLabel(122, 32+33+16, 83, 0, IIReference.COLOR_H1, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.filter")).setCentered();
 
-		buttonAdd = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4, guiTop+32+2+96, 48, 12, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.add"), TEXTURE_ICONS.toString(), 0, 89));
-		buttonRemove = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48, guiTop+32+2+96, 48, 12, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.remove"), TEXTURE_ICONS.toString(), 0, 89));
+		buttonAdd = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4, guiTop+32+2+96, 48, 12, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.add"), TEXTURE_ICONS.toString(), 0, 89));
+		buttonRemove = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48, guiTop+32+2+96, 48, 12, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.remove"), TEXTURE_ICONS.toString(), 0, 89));
 		buttonRemove.enabled = selected!=null;
-		buttonDuplicate = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48+48, guiTop+32+2+96, 48, 12, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.duplicate"), TEXTURE_ICONS.toString(), 0, 89));
+		buttonDuplicate = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48+48, guiTop+32+2+96, 48, 12, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.duplicate"), TEXTURE_ICONS.toString(), 0, 89));
 		buttonDuplicate.enabled = selected!=null;
-		buttonClear = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48+48+48, guiTop+32+2+96, 48, 12, I18n.format(IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.clear"), TEXTURE_ICONS.toString(), 0, 89));
+		buttonClear = addButton(new GuiButtonIE(buttonList.size(), guiLeft+4+48+48+48, guiTop+32+2+96, 48, 12, I18n.format(IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.clear"), TEXTURE_ICONS.toString(), 0, 89));
 
 		buttonTypePrev = addButton(new GuiButtonIE(buttonList.size(), guiLeft+120, guiTop+32+8, 12, 12, "", TEXTURE_ICONS.toString(), 96, 89)).setHoverOffset(12, 0);
 		buttonTypeNext = addButton(new GuiButtonIE(buttonList.size(), guiLeft+192, guiTop+32+8, 12, 12, "", TEXTURE_ICONS.toString(), 120, 89)).setHoverOffset(12, 0);
@@ -120,7 +117,7 @@ public class GuiEmplacementPageTasks extends GuiEmplacement
 		}
 
 		if(selected!=null)
-			addLabel(120+12, 32+15, 60, 0, IILib.COLOR_H1, IILib.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+selected.type.getName()).setCentered();
+			addLabel(120+12, 32+15, 60, 0, IIReference.COLOR_H1, IIReference.DESCRIPTION_KEY+"metal_multiblock1.emplacement.target."+selected.type.getName()).setCentered();
 
 		buttonInverted.enabled = (selected!=null);
 		buttonTypePrev.enabled = (selected!=null);

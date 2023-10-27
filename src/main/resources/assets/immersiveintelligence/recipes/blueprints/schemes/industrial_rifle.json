@@ -1,0 +1,39 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "immersiveintelligence:assembly_scheme",
+    "nbt": {
+      "recipeItem": {
+        "id": "immersiveintelligence:rifle",
+        "Count": 1,
+        "Damage": 0
+      }
+    }
+  },
+  "pattern": [
+    "SMB",
+    "DDD",
+    "PPP"
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "gunstockWood"
+    },
+    "M": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartBasic"
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelIron"
+    },
+    "D": {
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  }
+}

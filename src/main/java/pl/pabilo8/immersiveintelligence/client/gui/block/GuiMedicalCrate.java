@@ -7,9 +7,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.EffectCrates;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.EffectCrates;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -18,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.eff
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerMedicalCrate;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 
@@ -80,9 +79,9 @@ public class GuiMedicalCrate extends GuiIEContainerBase
 		if(upgraded)
 		{
 			if(IIUtils.isPointInRectangle(buttonHealing.x,buttonHealing.y,buttonHealing.x+buttonHealing.width,buttonHealing.y+buttonHealing.height,mouseX,mouseY))
-				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"medical_crate.heal"));
+				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.heal"));
 			else if(IIUtils.isPointInRectangle(buttonBoost.x,buttonBoost.y,buttonBoost.x+buttonBoost.width,buttonBoost.y+buttonBoost.height,mouseX,mouseY))
-				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"medical_crate.boost"));
+				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"medical_crate.boost"));
 		}
 
 		ClientUtils.handleGuiTank(tile.tanks[0], guiLeft+ww+10, guiTop+21, 16, 47, 177, 0, 20, 51, mouseX, mouseY, TEXTURE, tooltip);

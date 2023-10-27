@@ -15,15 +15,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedZoomTool;
-import pl.pabilo8.immersiveintelligence.api.utils.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
-import static pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope.tripodZoomSteps;
+import static pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope.tripodZoomSteps;
 
 /**
  * @author Pabilo8
@@ -49,7 +49,7 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 	@Override
 	public void onUpdate()
 	{
-		if(!world.isRemote&&world.getTotalWorldTime()%20==0&&!world.getBlockState(getPosition().down()).isSideSolid(world,getPosition().down(), EnumFacing.UP))
+		if(!world.isRemote&&world.getTotalWorldTime()%20==0&&!world.getBlockState(getPosition().down()).isSideSolid(world, getPosition().down(), EnumFacing.UP))
 		{
 			setDead();
 			entityDropItem(this.getPickedResult(null), 0f);
@@ -185,7 +185,7 @@ public class EntityTripodPeriscope extends Entity implements IEntityZoomProvider
 	@Override
 	public void readSpawnData(ByteBuf additionalData)
 	{
-		this.setupTime=additionalData.readInt();
+		this.setupTime = additionalData.readInt();
 	}
 
 	private static class TripodZoom implements IAdvancedZoomTool

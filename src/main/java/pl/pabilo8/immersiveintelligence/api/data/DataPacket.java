@@ -55,6 +55,9 @@ public class DataPacket implements Iterable<IDataType>
 		varTypes.put("itemstack", DataTypeItemStack.class);
 		varTypes.put("fluidstack", DataTypeFluidStack.class);
 		varTypes.put("entity", DataTypeEntity.class);
+
+		//cryptographic types
+		varTypes.put("encrypted", DataTypeEncrypted.class);
 	}
 
 	@Nonnull
@@ -73,8 +76,7 @@ public class DataPacket implements Iterable<IDataType>
 			IDataType data = type.isAnnotationPresent(IGenericDataType.class)?(type.getAnnotation(IGenericDataType.class).defaultType().newInstance()): type.newInstance();
 			data.setDefaultValue();
 			return data;
-		}
-		catch(InstantiationException|IllegalAccessException ignored)
+		} catch(InstantiationException|IllegalAccessException ignored)
 		{
 		}
 		return new DataTypeNull();
@@ -111,8 +113,7 @@ public class DataPacket implements Iterable<IDataType>
 					IDataType p = preferred.newInstance();
 					p.setDefaultValue();
 					return preferred.cast(p);
-				}
-				catch(InstantiationException|IllegalAccessException ignored)
+				} catch(InstantiationException|IllegalAccessException ignored)
 				{
 				}
 			}
@@ -228,8 +229,7 @@ public class DataPacket implements Iterable<IDataType>
 					try
 					{
 						data = varTypes.get(type).newInstance();
-					}
-					catch(InstantiationException|IllegalAccessException e)
+					} catch(InstantiationException|IllegalAccessException e)
 					{
 						e.printStackTrace();
 					}

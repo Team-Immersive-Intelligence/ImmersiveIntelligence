@@ -10,6 +10,9 @@ jobs:
     continue-on-error: true
     name: Optimize Assets
     runs-on: ubuntu-latest
+    env:
+      GITHUB_USERNAME: 'CarverBot'
+      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -70,8 +73,20 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: './keystore.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
+
       - name: Execute Gradle build
         run: chmod +x gradlew ; ./gradlew build --scan
+        env:
+          SIGNING_KEY_STORE_PATH: './keystore.jks'
+          SIGNING_KEY_ALIAS: 'carverbot'
+          SIGNING_KEY_PASSWORD: ${{ secrets.KEYSTORE_USER_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
       - name: Upload test build
         uses: actions/upload-artifact@v3

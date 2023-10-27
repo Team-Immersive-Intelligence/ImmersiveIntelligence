@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.manual.IIManualObject;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualPage;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
@@ -33,15 +33,15 @@ import java.util.stream.Collectors;
 //TODO: 07.08.2023 clickable links
 public class IIManualDataVariable extends IIManualObject
 {
-	private final static ResLoc TEXTURE_IN = ResLoc.of(IILib.RES_TEXTURES_MANUAL, "data/input").withExtension(ResLoc.EXT_PNG);
-	private final static ResLoc TEXTURE_OUT = ResLoc.of(IILib.RES_TEXTURES_MANUAL, "data/output").withExtension(ResLoc.EXT_PNG);
+	private final static ResLoc TEXTURE_IN = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/input").withExtension(ResLoc.EXT_PNG);
+	private final static ResLoc TEXTURE_OUT = ResLoc.of(IIReference.RES_TEXTURES_MANUAL, "data/output").withExtension(ResLoc.EXT_PNG);
 
 	@Nonnull
 	IDataType type = new DataTypeNull();
 	/**
 	 * Name and basic description of this variable
 	 */
-	String letter, name, description;
+	String letter, name, description, value;
 	/**
 	 * Used for variables that have a list of permitted values.<br>
 	 * Formatted as Name - Description
@@ -77,6 +77,8 @@ public class IIManualDataVariable extends IIManualObject
 		dataSource.checkSetString("description", s -> description = s, "");
 		dataSource.checkSetString("direction", b -> inputVariable = b.equals("out"), "in");
 
+		value = null;
+		values = null;
 		if(dataSource.hasKey("values"))
 		{
 			values = new HashMap<>();
@@ -89,7 +91,7 @@ public class IIManualDataVariable extends IIManualObject
 			);
 		}
 		else
-			values = null;
+			dataSource.checkSetString("value", v -> value = v);
 
 		if(dataSource.hasKey("requirements"))
 		{
@@ -164,7 +166,7 @@ public class IIManualDataVariable extends IIManualObject
 			ArrayList<String> lines = new ArrayList<>();
 			lines.add(String.format(
 					"<%s> %s",
-					IIUtils.getHexCol(type.getTypeColour(), I18n.format(IILib.DATA_KEY+"datatype."+type.getName())),
+					IIUtils.getHexCol(type.getTypeColour(), I18n.format(IIReference.DATA_KEY+"datatype."+type.getName())),
 					name
 			));
 
@@ -173,16 +175,18 @@ public class IIManualDataVariable extends IIManualObject
 			if(values!=null)
 			{
 				lines.add("");
-				lines.add("Allowed Values:");
+				lines.add(I18n.format("ie.manual.entry.allowed_values"));
 				values.forEach((key, value) -> lines.addAll(manual.fontRenderer.listFormattedStringToWidth(
 						TextFormatting.BOLD+" > "+key+TextFormatting.RESET+TextFormatting.GRAY+" - "+value,
 						160)));
 			}
+			else if(value!=null)
+				lines.add(I18n.format("ie.manual.entry.allowed_value")+" "+TextFormatting.GRAY+value);
 
 			if(requirements!=null)
 			{
 				lines.add("");
-				lines.add("Required Variables:");
+				lines.add(I18n.format("ie.manual.entry.required_variables"));
 				requirements.forEach((key, value) -> lines.addAll(manual.fontRenderer.listFormattedStringToWidth(
 						TextFormatting.BOLD+" > "+key+TextFormatting.RESET+" = ["+TextFormatting.GRAY+value+TextFormatting.RESET+"]",
 						160)));

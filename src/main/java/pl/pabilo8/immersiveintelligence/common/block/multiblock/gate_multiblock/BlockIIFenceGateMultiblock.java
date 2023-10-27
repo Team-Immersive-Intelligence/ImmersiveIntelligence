@@ -3,15 +3,14 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock
 import blusunrize.immersiveengineering.api.IEProperties;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.util.BlockRenderLayer;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock.IIBlockTypes_FenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumFenceGate.TileEntityAluminiumFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockSteelChainFenceGate.TileEntitySteelChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockSteelFenceGate.TileEntitySteelFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumMultiblockProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileMultiblockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
@@ -27,7 +26,7 @@ public class BlockIIFenceGateMultiblock extends BlockIIMultiblock<IIBlockTypes_F
 	{
 		@EnumMultiblockProvider(multiblock = MultiblockWoodenFenceGate.class, tile = TileEntityWoodenFenceGate.class)
 		WOODEN,
-		@EnumMultiblockProvider(multiblock = MultiblockWoodenChainFenceGate.class, tile = TileEntityWoodenFenceGate.class)
+		@EnumMultiblockProvider(multiblock = MultiblockWoodenChainFenceGate.class, tile = TileEntityWoodenChainFenceGate.class)
 		WOODEN_CHAIN,
 		@EnumMultiblockProvider(multiblock = MultiblockSteelFenceGate.class, tile = TileEntitySteelFenceGate.class)
 		STEEL,

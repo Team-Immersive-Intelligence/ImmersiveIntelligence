@@ -15,7 +15,7 @@ import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTellermine;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.mines.tileentity.TileEntityRadioExplosives;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ public class BlockIIRadioExplosives extends BlockIIMine
 		{
 			super.addInformation(stack, world, tooltip, tooltipFlag);
 			if(ItemNBTHelper.hasKey(stack, "programmed_data"))
-				tooltip.add(I18n.format(IILib.DESCRIPTION_KEY+"explosives_programmed"));
+				tooltip.add(I18n.format(IIReference.DESCRIPTION_KEY+"explosives_programmed"));
 		}
 
 		@Override

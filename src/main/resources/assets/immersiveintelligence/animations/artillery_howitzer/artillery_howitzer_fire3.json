@@ -37,6 +37,44 @@
 				}
 			]
 		},
+		"muzzle_flash": {
+			"property": [
+				{
+					"time": 0.58396,
+					"property": 0.0
+				},
+				{
+					"time": 0.599,
+					"property": 1.0
+				},
+				{
+					"time": 0.61,
+					"property": 0.0
+				},
+				{
+					"time": 1.0,
+					"property": 0.0
+				}
+			],
+			"visibility": [
+				{
+					"time": 0.0,
+					"visibility": false
+				},
+				{
+					"time": 0.599,
+					"visibility": true
+				},
+				{
+					"time": 0.61,
+					"visibility": false
+				},
+				{
+					"time": 1.0,
+					"visibility": false
+				}
+			]
+		},
 		"gun_loading_lever": {
 			"rotation": [
 				{

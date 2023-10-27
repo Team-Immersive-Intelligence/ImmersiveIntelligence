@@ -19,7 +19,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.LightEngineerArmor;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.LightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
 import pl.pabilo8.immersiveintelligence.client.model.armor.ModelLightEngineerArmor;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;

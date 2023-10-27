@@ -14,7 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
+import pl.pabilo8.immersiveintelligence.api.utils.minecart.IMinecartBlockPickable;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.entity.minecart.barrel.EntityMinecartBarrelSteel;

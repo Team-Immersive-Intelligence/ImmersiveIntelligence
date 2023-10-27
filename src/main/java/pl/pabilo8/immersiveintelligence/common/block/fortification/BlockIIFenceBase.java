@@ -22,7 +22,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntityChainFence;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
@@ -51,7 +51,7 @@ public abstract class BlockIIFenceBase<E extends Enum<E> & IITileProviderEnum> e
 
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 
-		setToolTypes(IILib.TOOL_HAMMER, IILib.TOOL_WIRECUTTER);
+		setToolTypes(IIReference.TOOL_HAMMER, IIReference.TOOL_WIRECUTTER);
 
 		IIContent.TILE_ENTITIES.add(TileEntityChainFence.class);
 	}

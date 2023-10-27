@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "hbb",
+    "smr"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "m": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartAdvanced"
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "gunbodyWood"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelSteel"
+    },
+    "h": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 5
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "stickSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:machinegun",
+    "count": 1
+  }
+}

@@ -7,7 +7,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
  * @author Pabilo8
@@ -31,11 +31,11 @@ public class GuiDataEditorBoolean extends GuiDataEditor<DataTypeBoolean>
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 
-		this.valueLabel = I18n.format(IILib.DESCRIPTION_KEY+"variable_value");
+		this.valueLabel = I18n.format(IIReference.DESCRIPTION_KEY+"variable_value");
 		editedstate = dataType.value;
 
-		buttonTrue = addButton(new GuiButtonState(0, x+16, y+12, 48, 12, I18n.format(IILib.DATA_KEY+"datatype.boolean.true"), editedstate, TEX, 0, 234, 0));
-		buttonFalse = addButton(new GuiButtonState(1, x+48+16, y+12, 48, 12, I18n.format(IILib.DATA_KEY+"datatype.boolean.false"), !editedstate, TEX, 0, 234, 0));
+		buttonTrue = addButton(new GuiButtonState(0, x+16, y+12, 48, 12, I18n.format(IIReference.DATA_KEY+"datatype.boolean.true"), editedstate, TEX, 0, 234, 0));
+		buttonFalse = addButton(new GuiButtonState(1, x+48+16, y+12, 48, 12, I18n.format(IIReference.DATA_KEY+"datatype.boolean.false"), !editedstate, TEX, 0, 234, 0));
 
 		buttonTrue.setHoverOffset(48, 0);
 		buttonFalse.setHoverOffset(48, 0);
@@ -47,7 +47,7 @@ public class GuiDataEditorBoolean extends GuiDataEditor<DataTypeBoolean>
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawButton(mc, mouseX, mouseY, partialTicks);
-		renderer.drawString(valueLabel, x+2, y+2, IILib.COLOR_H1, false);
+		renderer.drawString(valueLabel, x+2, y+2, IIReference.COLOR_H1, false);
 
 	}
 

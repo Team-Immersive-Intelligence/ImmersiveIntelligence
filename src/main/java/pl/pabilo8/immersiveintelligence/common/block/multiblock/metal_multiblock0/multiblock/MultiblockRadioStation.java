@@ -1,17 +1,14 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedMultiblock;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityRadioStation;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Pabilo8
@@ -36,17 +33,15 @@ public class MultiblockRadioStation extends MultiblockStuctureBase<TileEntityRad
 	}
 
 	@Override
-	protected void addBlockEvent(World world, BlockPos pos)
+	protected BlockIIMultiblock<?> getBlock()
 	{
-		world.addBlockEvent(pos, IIContent.blockMetalMultiblock0, 255, 0);
+		return IIContent.blockMetalMultiblock0;
 	}
 
-	@Nullable
 	@Override
-	protected TileEntityRadioStation placeTile(World world, BlockPos pos)
+	protected int getMeta()
 	{
-		world.setBlockState(pos, IIContent.blockMetalMultiblock0.getStateFromMeta(MetalMultiblocks0.RADIO_STATION.getMeta()));
-		return (TileEntityRadioStation)world.getTileEntity(pos);
+		return MetalMultiblocks0.RADIO_STATION.getMeta();
 	}
 
 	@Override

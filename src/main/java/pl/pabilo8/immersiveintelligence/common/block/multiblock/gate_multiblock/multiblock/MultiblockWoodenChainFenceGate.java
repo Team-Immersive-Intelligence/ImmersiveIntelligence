@@ -4,16 +4,15 @@ import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock.IIBlockTypes_FenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWoodenChainFence.WoodenFortifications;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock.IIBlockTypes_FenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nullable;
 
@@ -33,17 +32,15 @@ public class MultiblockWoodenChainFenceGate extends MultiblockStuctureBase<TileE
 	}
 
 	@Override
-	protected void addBlockEvent(World world, BlockPos pos)
+	protected BlockIIMultiblock<?> getBlock()
 	{
-		world.addBlockEvent(pos, IIContent.blockFenceGateMultiblock, 255, 0);
+		return IIContent.blockFenceGateMultiblock;
 	}
 
 	@Override
-	@Nullable
-	protected TileEntityWoodenChainFenceGate placeTile(World world, BlockPos pos)
+	protected int getMeta()
 	{
-		world.setBlockState(pos, IIContent.blockFenceGateMultiblock.getStateFromMeta(IIBlockTypes_FenceGate.WOODEN_CHAIN.getMeta()));
-		return (TileEntityWoodenChainFenceGate)world.getTileEntity(pos);
+		return IIBlockTypes_FenceGate.WOODEN_CHAIN.getMeta();
 	}
 
 	@Override
@@ -63,10 +60,10 @@ public class MultiblockWoodenChainFenceGate extends MultiblockStuctureBase<TileE
 		public IBlockState getFenceState(@Nullable EnumFacing facingConnected)
 		{
 			return IIContent.blockWoodenFortification.getStateFromMeta(WoodenFortifications.WOODEN_STEEL_CHAIN_FENCE.getMeta())
-					.withProperty(BlockFence.EAST,facingConnected==EnumFacing.EAST)
-					.withProperty(BlockFence.WEST,facingConnected==EnumFacing.WEST)
-					.withProperty(BlockFence.NORTH,facingConnected==EnumFacing.NORTH)
-					.withProperty(BlockFence.SOUTH,facingConnected==EnumFacing.SOUTH)
+					.withProperty(BlockFence.EAST, facingConnected==EnumFacing.EAST)
+					.withProperty(BlockFence.WEST, facingConnected==EnumFacing.WEST)
+					.withProperty(BlockFence.NORTH, facingConnected==EnumFacing.NORTH)
+					.withProperty(BlockFence.SOUTH, facingConnected==EnumFacing.SOUTH)
 					;
 		}
 	}

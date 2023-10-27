@@ -9,7 +9,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
 import pl.pabilo8.immersiveintelligence.api.bullets.PenetrationRegistry.IPenetrationHandler;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;

@@ -9,7 +9,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTil
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.MultiFluidTank;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.FuelStation;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.FuelStation;
 import pl.pabilo8.immersiveintelligence.api.VehicleFuelHandler;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IISounds;

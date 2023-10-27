@@ -22,7 +22,6 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.api.utils.IMinecartBlockPickable;
 
 import javax.annotation.Nonnull;
 

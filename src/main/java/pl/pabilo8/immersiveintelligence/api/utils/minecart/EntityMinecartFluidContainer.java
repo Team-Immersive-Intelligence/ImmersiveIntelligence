@@ -25,7 +25,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 
 import javax.annotation.Nullable;
 
@@ -172,7 +172,6 @@ public abstract class EntityMinecartFluidContainer extends EntityMinecartII impl
 		}
 		return null;
 	}
-
 
 
 	static class SidedFluidHandler implements IFluidHandler

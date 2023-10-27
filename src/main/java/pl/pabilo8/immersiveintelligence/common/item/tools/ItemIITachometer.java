@@ -13,13 +13,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +43,7 @@ public class ItemIITachometer extends ItemIIBase implements ITool
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag flag)
 	{
-		list.add(IIUtils.getItalicString(I18n.format(IILib.DESCRIPTION_KEY+"tachometer")));
+		list.add(IIUtils.getItalicString(I18n.format(IIReference.DESCRIPTION_KEY+"tachometer")));
 	}
 
 	@Override
@@ -65,9 +64,9 @@ public class ItemIITachometer extends ItemIIBase implements ITool
 				float int_speed = energy.getRotationSpeed();
 				float ext_speed = energy.getOutputRotationSpeed();
 				if(int_torque!=ext_torque&&int_speed!=ext_speed)
-					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(IILib.INFO_KEY+"tachometer_message.advanced", int_speed, int_torque, ext_speed, ext_torque));
+					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(IIReference.INFO_KEY+"tachometer_message.advanced", int_speed, int_torque, ext_speed, ext_torque));
 				else
-					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(IILib.INFO_KEY+"tachometer_message.basic", int_speed, int_torque));
+					ChatUtils.sendServerNoSpamMessages(player, new TextComponentTranslation(IIReference.INFO_KEY+"tachometer_message.basic", int_speed, int_torque));
 
 				return EnumActionResult.SUCCESS;
 			}
@@ -79,7 +78,7 @@ public class ItemIITachometer extends ItemIIBase implements ITool
 	@Override
 	public Set<String> getToolClasses(ItemStack stack)
 	{
-		return ImmutableSet.of(IILib.TOOL_TACHOMETER);
+		return ImmutableSet.of(IIReference.TOOL_TACHOMETER);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Machinegun;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.IIDrawUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;

@@ -17,7 +17,7 @@ import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRenderer
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.ISerializableEnum;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
@@ -197,11 +197,11 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		WeaponUpgrades sub = stackToSub(stack);
 		//add valid weapon types
 		for(WeaponTypes type : sub.toolset)
-			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IILib.DESC_TOOLUPGRADE+"item."+type.getName())));
+			list.add(IIUtils.getHexCol(type.color, type.symbol+" "+I18n.format(IIReference.DESC_TOOLUPGRADE+"item."+type.getName())));
 
 		//add description
 		String[] flavour = ImmersiveEngineering.proxy.splitStringOnWidth(
-				I18n.format(IILib.DESCRIPTION_KEY+"toolupgrade."+sub.getName()), 200);
+				I18n.format(IIReference.DESCRIPTION_KEY+"toolupgrade."+sub.getName()), 200);
 		Arrays.stream(flavour).map(IIUtils::getItalicString).forEach(list::add);
 	}
 

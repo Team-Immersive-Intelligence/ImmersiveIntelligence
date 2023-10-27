@@ -9,11 +9,9 @@ import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConne
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.IRedstoneConnector;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHammerInteraction;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.network.MessageTileSync;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
@@ -23,14 +21,14 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.ProgrammableSpeaker;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ProgrammableSpeaker;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.DataWireNetwork;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeBoolean;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeInteger;
-import pl.pabilo8.immersiveintelligence.api.utils.IAdvancedTextOverlay;
+import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
@@ -166,7 +164,7 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 	private void sendSoundUpdate()
 	{
 		IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-				.withBoolean("active",active)
+				.withBoolean("active", active)
 				.withFloat("tone", tone)
 				.withFloat("volume", soundVolume)
 				.withString("sound", soundID)
@@ -341,7 +339,6 @@ public class TileEntityProgrammableSpeaker extends TileEntityImmersiveConnectabl
 				I18n.format("item.fireworksCharge."+EnumDyeColor.byMetadata(redstoneChannel).getUnlocalizedName()))};
 	}
 
-	
 
 	@Override
 	public boolean shoudlPlaySound(String sound)

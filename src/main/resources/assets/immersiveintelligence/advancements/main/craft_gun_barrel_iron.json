@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:material",
+      "data": 34
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_gun_barrel_iron"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_gun_barrel_iron.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/root",
+
+  "criteria": {
+    "craft": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:material",
+            "data": 34
+          }
+        ]
+      }
+    }
+  }
+}

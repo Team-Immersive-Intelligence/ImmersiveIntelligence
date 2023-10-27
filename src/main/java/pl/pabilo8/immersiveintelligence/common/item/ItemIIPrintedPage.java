@@ -1,21 +1,20 @@
 package pl.pabilo8.immersiveintelligence.common.item;
 
-import blusunrize.immersiveengineering.common.items.IEItemInterfaces.IGuiItem;
 import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler.IGuiItem;
 import pl.pabilo8.immersiveintelligence.common.CommonProxy;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.item.ItemIIPrintedPage.SubItems;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 import pl.pabilo8.modworks.annotations.item.GeneratedItemModels;
@@ -45,7 +44,16 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		@IIItemProperties(oreDict = {"pageCode", "pageWritten"})
 		CODE(IIGuiList.GUI_PRINTED_PAGE_CODE),
 		@IIItemProperties(oreDict = {"pageBlueprint", "pageWritten"})
-		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT);
+		BLUEPRINT(IIGuiList.GUI_PRINTED_PAGE_BLUEPRINT),
+
+		@IIItemProperties(oreDict = "pageBinded")
+		BOUND_PAGES(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = "pageNewspaper")
+		NEWSPAPER(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = {"pageBook", "book", "bookPrinted"})
+		BOOK(IIGuiList.GUI_PRINTED_PAGE_BLANK),
+		@IIItemProperties(oreDict = {"pageLetter", "letter"})
+		LETTER(IIGuiList.GUI_PRINTED_PAGE_BLANK);
 
 		private final IIGuiList guiPage;
 		private final String tooltip;
@@ -53,7 +61,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 		SubItems(IIGuiList guiPage)
 		{
 			this.guiPage = guiPage;
-			tooltip = IILib.DESCRIPTION_KEY+"printed_page."+getName();
+			tooltip = IIReference.DESCRIPTION_KEY+"printed_page."+getName();
 		}
 	}
 
@@ -70,9 +78,9 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	}
 
 	@Override
-	public int getGuiID(ItemStack stack)
+	public IIGuiList getGUI(ItemStack stack)
 	{
-		return stackToSub(stack).guiPage.ordinal();
+		return stackToSub(stack).guiPage;
 	}
 
 	/**
@@ -83,7 +91,7 @@ public class ItemIIPrintedPage extends ItemIISubItemsBase<SubItems> implements I
 	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand)
 	{
 		ItemStack stack = player.getHeldItem(hand);
-		CommonProxy.openGuiForItem(player, hand==EnumHand.MAIN_HAND?EntityEquipmentSlot.MAINHAND: EntityEquipmentSlot.OFFHAND);
+		CommonProxy.openGuiForItem(player, hand);
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 }

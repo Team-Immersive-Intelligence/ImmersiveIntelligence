@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Vehicles.FieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.vehicle.ModelFieldHowitzer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;

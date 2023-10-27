@@ -14,7 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Machines.SmallDataBuffer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.SmallDataBuffer;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;

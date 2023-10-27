@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Tools.TripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.model.misc.ModelTripodPeriscope;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;

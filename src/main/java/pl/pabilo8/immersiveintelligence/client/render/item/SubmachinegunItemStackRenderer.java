@@ -8,14 +8,15 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.Config.IIConfig.Weapons.Submachinegun;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelSubmachinegun;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.CustomSkinHandler.SpecialSkin;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,13 +69,15 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 
 		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
 		String skin = IIContent.itemSubmachinegun.getSkinnableCurrentSkin(stack);
-		boolean drawText = true;
+		boolean drawText = true, canApply = false;
 
 		if(!skin.isEmpty())
 		{
-			SpecialSkin s = CustomSkinHandler.specialSkins.get(skin);
+			IISpecialSkin s = IISkinHandler.specialSkins.get(skin);
 			if(s!=null)
 			{
+				ItemIIGunBase gun = (ItemIIGunBase)stack.getItem();
+				canApply = s.doesApply(gun.getSkinnableName());
 				if(s.mods.contains("skin_mg_text"))
 				{
 				}
@@ -85,7 +88,7 @@ public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer 
 			}
 		}
 		//specialText = I18n.format("skin.immersiveintelligence."+skin+".name");
-		skin = (skin.isEmpty()?IIContent.itemSubmachinegun.getSkinnableDefaultTextureLocation(): IILib.SKIN_LOCATION+skin+"/");
+		skin = ((skin.isEmpty()&&!canApply)?IIContent.itemSubmachinegun.getSkinnableDefaultTextureLocation(): IIReference.SKIN_LOCATION+skin+"/");
 
 		for(Entry<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> s : upgrades.entrySet())
 		{

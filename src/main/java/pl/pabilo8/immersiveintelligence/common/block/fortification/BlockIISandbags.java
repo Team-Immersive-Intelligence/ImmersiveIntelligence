@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIISandbags.IIBlockTypes_StoneDecoration;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntitySandbags;
-import pl.pabilo8.immersiveintelligence.common.util.IILib;
+import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.EnumTileProvider;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
@@ -45,7 +45,7 @@ public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_StoneDecor
 		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 		setLightOpacity(0);
 
-		setToolTypes(IILib.TOOL_HAMMER);
+		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 
 	public enum IIBlockTypes_StoneDecoration implements IITileProviderEnum
