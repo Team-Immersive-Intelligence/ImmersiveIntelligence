@@ -69,6 +69,10 @@ if (customGradle.exists()) {
 if(ii_useModworksPreprocessor.asBoolean())
     apply from: rootProject.file("gradle/modworks.gradle")
 
+//--- Include Minecraft JUnit
+if(ii_useJUnit.asBoolean())
+    apply from: rootProject.file("gradle/junit.gradle")
+
 compileJava {
     logFile(LogLevel.WARN, "gradlephant")
     logger.log(LogLevel.WARN, ii_gradlephantTitle)
@@ -93,6 +97,11 @@ compileJava {
     }
     else
         println 'This mod will not generate a [core jar] inside its [main jar]. Enable it in [gradle.properties] if needed.'
+
+    if(ii_useModworksPreprocessor)
+        println 'This mod has ModWorks annotation processor enabled, check out https://github.com/Team-Immersive-Intelligence/ModworksProcessor for more information.'
+    if(ii_useJUnit)
+        println 'This mod has JUnit tests enabled, check out https://github.com/Team-Immersive-Intelligence/Libelle for more information.'
 
 }
 
@@ -147,6 +156,8 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
+    setDuplicatesStrategy('exclude')
 }
 
 tasks.build.doLast(){
