@@ -117,5 +117,12 @@
       "vice_base",
       "vice"
     ]
+  },
+  "poi": {
+    "rotary": 6,
+    "item_output": 4,
+    "item_input": 15,
+    "sawdust": [2,6],
+    "all_item_output": [4,2,6]
   }
 }

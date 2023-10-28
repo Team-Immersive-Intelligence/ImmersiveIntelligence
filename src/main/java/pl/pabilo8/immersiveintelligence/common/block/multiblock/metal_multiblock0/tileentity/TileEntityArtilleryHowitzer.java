@@ -51,6 +51,7 @@ import pl.pabilo8.immersiveintelligence.common.util.lambda.NBTTagCollector;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -225,7 +226,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 			tactileHandler.defaultize();*/
 		}
 
-		boolean rs = world.isBlockPowered(getBlockPosForPos(getRedstonePos(true)[0]))^redstoneControlInverted;
+		boolean rs = world.isBlockPowered(getBlockPosForPos(listAllPOI(MultiblockPOI.REDSTONE_INPUT)[0]))^redstoneControlInverted;
 		if(isDoorOpened^rs)
 		{
 			isDoorOpened = rs;
@@ -689,20 +690,6 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		return current;
 	}
 
-	@Nonnull
-	@Override
-	public int[] getEnergyPos(EnergyType type)
-	{
-		return new int[]{449};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getRedstonePos(boolean in)
-	{
-		return in?new int[]{481}: new int[0];
-	}
-
 	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
@@ -715,12 +702,27 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		return 1;
 	}
 
-	@Nonnull
 	@Override
-	public int[] getDataPos(boolean input)
+	protected int[] listAllPOI(MultiblockPOI poi)
 	{
-		//input and output
-		return new int[]{441};
+		switch(poi)
+		{
+			case ENERGY_INPUT:
+				return getPOI("energy");
+			case ITEM_INPUT:
+				return getPOI("item_input");
+			case ITEM_OUTPUT:
+				return getPOI("item_output");
+			case REDSTONE_INPUT:
+				return getPOI("redstone");
+			case DATA:
+				return getPOI("data");
+			case MISC_DOOR:
+				return getPOI("bunker_door");
+			case MISC_WEAPON:
+				return getPOI("gun");
+		}
+		return new int[0];
 	}
 
 	@Override

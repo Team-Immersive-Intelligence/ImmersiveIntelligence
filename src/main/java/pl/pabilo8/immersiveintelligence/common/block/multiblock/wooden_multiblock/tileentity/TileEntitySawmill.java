@@ -34,9 +34,10 @@ import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageRotaryPowerSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIDamageSources;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockProductionSingle;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockInteractablePart;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -48,8 +49,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 {
 	//Inventory Slots
 	public static final int SLOT_INPUT = 0, SLOT_SAWBLADE = 1, SLOT_OUTPUT = 2, SLOT_SAWDUST = 3;
-	//Position IDs
-	public static final int POS_ROTARY_INPUT = 6, POS_OUTPUT = 4, POS_INPUT = 15, POS_SAWDUST = 2, POS_SAWDUST2 = 6;
 
 	//Inventory Handlers
 	IItemHandler insertionHandler = getSingleInventoryHandler(SLOT_INPUT, true, false);
@@ -111,13 +110,28 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			rotation.fromNBT(message.getCompoundTag("rotation"));
 	}
 
+	@Override
+	protected int[] listAllPOI(MultiblockPOI poi)
+	{
+		switch(poi)
+		{
+			case ROTARY_INPUT:
+				return getPOI("rotary");
+			case ITEM_INPUT:
+				return getPOI("all_item_input");
+			case ITEM_OUTPUT:
+				return getPOI("item_output");
+		}
+		return new int[0];
+	}
+
 	//--- Capabilities ---//
 
 	//7 out
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		if((pos==POS_INPUT||pos==POS_SAWDUST||pos==POS_SAWDUST2)&&capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if(isPOI(MultiblockPOI.ITEM_INPUT))
 			return true;
 		return super.hasCapability(capability, facing);
 	}
@@ -128,9 +142,9 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 		{
 			TileEntitySawmill master = master();
-			if(pos==POS_INPUT)
+			if(isPOI("item_input"))
 				return (T)master.insertionHandler;
-			else if(pos==POS_SAWDUST||pos==POS_SAWDUST2)
+			else if(isPOI("sawdust"))
 				return (T)master.dustExtractionHandler;
 		}
 
@@ -157,7 +171,7 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 			}
 
 			//Wheel or mechanical device connected to multiblock
-			TileEntity te = world.getTileEntity(getBlockPosForPos(POS_ROTARY_INPUT).offset(facing));
+			TileEntity te = world.getTileEntity(getPOIPos(MultiblockPOI.ROTARY_INPUT).offset(facing));
 
 			if(te!=null)
 				if(te.hasCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, facing.getOpposite()))
@@ -274,25 +288,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 
 
 	@Override
-	public int[] getRedstonePos(boolean input)
-	{
-		return new int[0];
-	}
-
-	@Nonnull
-	@Override
-	public int[] getDataPos(boolean input)
-	{
-		return new int[0];
-	}
-
-	@Override
-	public int[] getEnergyPos(EnergyType type)
-	{
-		return new int[]{};
-	}
-
-	@Override
 	public boolean isStackValid(int slot, ItemStack stack)
 	{
 		return true;
@@ -355,8 +350,8 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 		ItemStack output = process.recipe.itemOutput.copy();
 		ItemStack sawdust = process.recipe.itemSecondaryOutput.copy();
 
-		outputOrDrop(output, outputHandler, facing, POS_OUTPUT);
-		outputOrDrop(sawdust, sawdustOutputHandler, EnumFacing.DOWN, POS_SAWDUST, POS_SAWDUST2);
+		outputOrDrop(output, outputHandler, facing, getPOI("item_output"));
+		outputOrDrop(sawdust, sawdustOutputHandler, EnumFacing.DOWN, getPOI("sawdust"));
 
 		return true;
 	}

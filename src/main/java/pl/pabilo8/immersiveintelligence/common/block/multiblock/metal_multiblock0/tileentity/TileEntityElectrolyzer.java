@@ -12,9 +12,8 @@ import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Electrolyzer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockProductionSingle;
-
-import javax.annotation.Nonnull;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
@@ -65,33 +64,21 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 				tanks[i].readFromNBT(message.getCompoundTag("tank"+i));
 	}
 
-
-	@Nonnull
 	@Override
-	public int[] getDataPos(boolean input)
+	protected int[] listAllPOI(MultiblockPOI poi)
 	{
+		switch(poi)
+		{
+			case ENERGY_INPUT:
+				return getPOI("energy_input");
+			case REDSTONE_INPUT:
+				return getPOI("redstone_input");
+			case FLUID_INPUT:
+				return getPOI("fluid_input");
+			case FLUID_OUTPUT:
+				return getPOI("fluid_output");
+		}
 		return new int[0];
-	}
-
-	@Override
-	public int[] getEnergyPos(EnergyType type)
-	{
-		return multiblock.getPointsOfInterest("energy_input");
-	}
-
-	@Override
-	public int[] getRedstonePos(boolean input)
-	{
-		return input?multiblock.getPointsOfInterest("redstone_input"): new int[]{};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getFluidPos(boolean input)
-	{
-		return input?
-				multiblock.getPointsOfInterest("fluid_input"):
-				multiblock.getPointsOfInterest("fluid_output");
 	}
 
 	@Override
@@ -124,9 +111,9 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 		if(!world.isRemote&&world.getTotalWorldTime()%10==0)
 		{
 			boolean update = handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false);
-			if(outputFluidToTank(tanks[1], 100, getPosForPOI("output1"), this.world, this.facing.getOpposite()))
+			if(outputFluidToTank(tanks[1], 100, getPOIPos("output1"), this.world, this.facing.getOpposite()))
 				update = true;
-			if(outputFluidToTank(tanks[2], 100, getPosForPOI("output2"), this.world, this.facing.getOpposite()))
+			if(outputFluidToTank(tanks[2], 100, getPOIPos("output2"), this.world, this.facing.getOpposite()))
 				update = true;
 
 			if(handleBucketTankInteraction(tanks, inventory, 2, 4, 1, true))

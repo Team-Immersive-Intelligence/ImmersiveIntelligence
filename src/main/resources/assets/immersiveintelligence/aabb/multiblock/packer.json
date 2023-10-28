@@ -87,8 +87,8 @@
   "poi": {
     "energy": 25,
     "input": 15,
-    "output": 9,
+    "output": 23,
     "redstone": 10,
-    "data": 23
+    "data": 9
   }
 }
