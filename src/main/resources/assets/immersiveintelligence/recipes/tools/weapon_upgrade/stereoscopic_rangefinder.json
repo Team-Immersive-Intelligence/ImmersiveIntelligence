@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "vv ",
+    "ecb"
+  ],
+  "key": {
+    "v": {
+      "type": "forge:ore_dict",
+      "ore": "electronTube"
+    },
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "b": {
+      "item": "immersiveintelligence:binoculars",
+      "data": 0
+    },
+    "e": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 15,
+    "count": 1
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "forge:ore_shaped",
   "pattern": [
     "wow",
     "wow",
@@ -21,6 +21,7 @@
   },
   "result": {
     "item": "immersiveintelligence:mine_sign",
+    "data": 0,
     "count": 1
   }
 }

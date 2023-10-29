@@ -2,6 +2,7 @@
   "type": "forge:ore_shaped",
   "result": {
     "item": "immersiveintelligence:mechanical_connector",
+    "data": 0,
     "count": 2
   },
   "pattern": [

@@ -102,6 +102,7 @@ public class IIRecipes
 
 		addMetalPressRecipes();
 		addBulletPressRecipes();
+		addFillerRecipes();
 
 		addSiliconProcessingRecipes();
 		addCircuitRecipes();
@@ -545,7 +546,7 @@ public class IIRecipes
 				ItemStack.EMPTY,
 				new IngredientStack[]{
 						new IngredientStack("gunstockWood"),
-						new IngredientStack("gunbarrelSteel", 2),
+						new IngredientStack("gunbarrelIron", 2),
 						new IngredientStack(new ItemStack(IEContent.itemMaterial, 1, 8)),
 						new IngredientStack("gunpartBasic"),
 				},
@@ -723,6 +724,25 @@ public class IIRecipes
 				ItemStack.EMPTY, 200, 3600,
 				new ItemStack(IEContent.blockStoneDecoration, 1, BlockTypes_StoneDecoration.CONCRETE_LEADED.getMeta()));
 
+	}
+
+	public static void addFillerRecipes()
+	{
+		//Sandbag
+		FillerRecipe.addRecipe(
+				IIContent.itemMaterial.getStack(Materials.SANDBAG),
+				new IngredientStack("fabricHemp"),
+				new DustStack("sand", 50),
+				100,
+				2000
+		);
+		FillerRecipe.addRecipe(
+				IIContent.itemMaterial.getStack(Materials.SANDBAG),
+				new IngredientStack("fabricHemp"),
+				new DustStack("gravel", 40),
+				80,
+				2500
+		);
 	}
 
 	public static void addChemicalBathCleaningRecipes()
@@ -1118,7 +1138,6 @@ public class IIRecipes
 		for(ItemIIAmmoBase item : new ItemIIAmmoBase[]{IIContent.itemAmmoArtillery, IIContent.itemAmmoLightArtillery, IIContent.itemAmmoMortar,
 				IIContent.itemAmmoAutocannon,
 				IIContent.itemAmmoMachinegun, IIContent.itemAmmoAssaultRifle, IIContent.itemAmmoSubmachinegun})
-		// TODO: 05.09.2022 , IIContent.itemAmmoRevolver
 		{
 			assert item!=null;
 

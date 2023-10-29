@@ -111,5 +111,8 @@ public class ItemIIMaterial extends ItemIISubItemsBase<Materials>
 		FIRING_MECHANISM,
 		@IIItemProperties(oreDict = "gunpartAdvanced")
 		ADVANCED_FIRING_MECHANISM,
+
+		@IIItemProperties(oreDict = "ingotSand")
+		SANDBAG,
 	}
 }

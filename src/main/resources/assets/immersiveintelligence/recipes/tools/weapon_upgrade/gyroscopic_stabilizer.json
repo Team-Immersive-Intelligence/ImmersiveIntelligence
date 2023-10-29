@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " e ",
+    "cbc",
+    " e "
+  ],
+  "key": {
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "engineElectricSmall"
+    },
+    "b": {
+      "item": "immersiveintelligence:metal_decoration",
+      "data": 2
+    },
+    "c": {
+      "item": "minecraft:compass"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 16,
+    "count": 1
+  }
+}

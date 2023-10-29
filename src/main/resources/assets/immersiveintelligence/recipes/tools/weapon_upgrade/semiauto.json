@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "cfs"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:material",
+      "data": 9
+    },
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "springSteel"
+    },
+    "f": {
+      "type": "forge:ore_dict",
+      "ore": "gunpartAdvanced"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 19,
+    "count": 1
+  }
+}
