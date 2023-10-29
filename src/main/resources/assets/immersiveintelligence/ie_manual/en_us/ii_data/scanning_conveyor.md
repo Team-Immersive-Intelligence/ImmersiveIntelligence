@@ -14,5 +14,5 @@ The Scanning Conveyor is not very capable on its own as it is, essentially, a de
 It is most commonly used as a part of an item counter or a trigger, activated by a specific item.
 
 # data_scanner_variables
-ie.manual.entry.conveyor_scanner.vars_out.s.main=Scanned item
-ie.manual.entry.conveyor_scanner.vars_out.s.sub=Scanned item (with its id, durability and NBT), process using the ItemStack circuit
+ie.manual.entry.scanning_conveyor.vars_out.s.main=Scanned item
+ie.manual.entry.scanning_conveyor.vars_out.s.sub=Scanned item (with its id, durability and NBT), process using the ItemStack circuit

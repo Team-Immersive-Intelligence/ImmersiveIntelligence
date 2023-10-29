@@ -21,8 +21,10 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock
 import javax.annotation.Nonnull;
 
 /**
- * @author Pabilo8
- * @since 20-06-2019
+ * @author Jan Kowalski (kowalski@iiteam.net)
+ * @ii-approved 28.10.2023
+ * @updated 8.04.2020
+ * @since 1.05.2019
  */
 public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0>
 {
@@ -41,7 +43,6 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 
 		addToTESRMap(
 				MetalMultiblocks0.PRINTING_PRESS, MetalMultiblocks0.RADIO_STATION,
-				MetalMultiblocks0.AMMUNITION_FACTORY,
 				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER,
 				MetalMultiblocks0.PACKER
 		);
@@ -52,10 +53,13 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		@EnumMultiblockProvider(tile = TileEntityRadioStation.class, multiblock = MultiblockRadioStation.class)
 		RADIO_STATION,
 		@EnumMultiblockProvider(tile = TileEntityPrintingPress.class, multiblock = MultiblockPrintingPress.class)
+		//@IIBlockProperties(needsCustomState = true)
 		PRINTING_PRESS,
 		@EnumMultiblockProvider(tile = TileEntityDataInputMachine.class, multiblock = MultiblockDataInputMachine.class)
+		//@IIBlockProperties(needsCustomState = true)
 		DATA_INPUT_MACHINE,
 		@EnumMultiblockProvider(tile = TileEntityArithmeticLogicMachine.class, multiblock = MultiblockArithmeticLogicMachine.class)
+		//@IIBlockProperties(needsCustomState = true)
 		ARITHMETIC_LOGIC_MACHINE,
 		@EnumMultiblockProvider(tile = TileEntityChemicalBath.class, multiblock = MultiblockChemicalBath.class)
 		@IIBlockProperties(needsCustomState = true)
@@ -76,13 +80,16 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		PERISCOPE, //not implemented
 
-		@EnumMultiblockProvider(tile = TileEntityConveyorScanner.class, multiblock = MultiblockConveyorScanner.class)
-		CONVEYOR_SCANNER,
+		@EnumMultiblockProvider(tile = TileEntityScanningConveyor.class, multiblock = MultiblockScanningConveyor.class)
+		@IIBlockProperties(needsCustomState = true)
+		SCANNING_CONVEYOR,
 
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		AMMUNITION_FACTORY, //deprecated
+		@Deprecated
+		AMMUNITION_FACTORY,
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		PACKER_OLD, //deprecated
+		@Deprecated
+		PACKER_OLD,
 
 		@EnumMultiblockProvider(tile = TileEntityPacker.class, multiblock = MultiblockPacker.class)
 		@IIBlockProperties(needsCustomState = true)
@@ -102,6 +109,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 			case RAILWAY_PACKER:
 			case PACKER:
 			case ELECTROLYZER:
+			case SCANNING_CONVEYOR:
 				return EnumBlockRenderType.MODEL;
 			default:
 				return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;

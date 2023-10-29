@@ -67,7 +67,7 @@ The universal design of the [Circuit Boards](electronic_components) allows them 
 # document
 |[item_display]{source:"%SECTION%"}|
 |[text]{source:"%SECTION%",bold:1b}|
-*Performs operations on [data](data_types#string) acquired from [scanned documents](conveyor_scanner).*
+*Performs operations on [data](data_types#string) acquired from [scanned documents](scanning_conveyor).*
 
 # type_conversion
 |[item_display]{source:"%SECTION%"}|

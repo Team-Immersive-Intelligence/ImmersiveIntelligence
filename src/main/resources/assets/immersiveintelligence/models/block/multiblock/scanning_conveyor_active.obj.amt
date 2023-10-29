@@ -1,0 +1,15 @@
+{
+	"origins": {
+		"conveyor_on": [8, -16, 8],
+		"conveyor_off": [8, -16, 8],
+		"light": [0, -16, 0]
+	},
+	"hierarchy": {
+
+	},
+	"properties": {
+		"light": {
+			"lighting": false
+		}
+	}
+}

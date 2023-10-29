@@ -154,7 +154,7 @@ public class IIManualCategoryData extends IIManualCategory
 
 		addEntry("radio_station");
 		addEntry("printing_press");
-		addEntry("conveyor_scanner");
+		addEntry("scanning_conveyor");
 
 		addEntry("chemical_bath");
 		addEntry("chemical_painter");
@@ -237,10 +237,10 @@ public class IIManualCategoryData extends IIManualCategory
 				new ManualPageMultiblock(ManualHelper.getManual(), "redstone_interface0", MultiblockRedstoneInterface.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "redstone_interface1")
 		);
-		ManualHelper.addEntry("conveyor_scanner", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "conveyor_scanner1"),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "conveyor_scanner", false)
+		ManualHelper.addEntry("scanning_conveyor", getCategory(),
+				new ManualPageMultiblock(ManualHelper.getManual(), "scanning_conveyor0", MultiblockConveyorScanner.INSTANCE),
+				new ManualPages.Text(ManualHelper.getManual(), "scanning_conveyor1"),
+				new IIManualPageDataVariables(ManualHelper.getManual(), "scanning_conveyor", false)
 						.addEntry(new DataTypeItemStack(), 's')
 		);
 

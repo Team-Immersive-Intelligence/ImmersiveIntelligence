@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
@@ -70,6 +71,8 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public TileEntityMultiblockIIGeneric(MultiblockStuctureBase<T> multiblock)
 	{
 		super(multiblock);
+		inventory = NonNullList.create();
+		energyStorage = new FluxStorageAdvanced(ScanningConveyor.energyCapacity);
 	}
 
 	//--- NBT ---//

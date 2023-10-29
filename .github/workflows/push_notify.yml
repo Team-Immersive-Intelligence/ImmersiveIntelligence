@@ -1,0 +1,36 @@
+name: Notify Discord on Push
+
+on:
+  push: #Trigger On Push
+    branches: [ "master" ]
+
+jobs:
+  notify-discord:
+    continue-on-error: true
+    name: Optimize Assets
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_USERNAME: 'CarverBot'
+      GITHUB_TOKEN: ${{ secrets.OPTIMIZATION_TOKEN }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Read Properties File
+        id: rp
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: './gradle.properties'
+          properties: 'mcmod_Name mcmod_Developer mcmod_URL'
+
+      - name: Discord Commits
+        uses: Sniddl/discord-commits@v1.6
+        env:
+          MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
+          MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
+          MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          message: "We hereby report that [**{{ github.context.payload.repository.name}}**](https://github.com/${{ github.repository }}) has received following new commits:"
+          template: 'plain'
+          include-extras: true

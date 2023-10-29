@@ -609,11 +609,9 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProjectileWorkshop.class, new ProjectileWorkshopRenderer().subscribeToList("projectile_workshop"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.PROJECTILE_WORKSHOP.getMeta(), TileEntityProjectileWorkshop.class);
 
-
 		registerTileRenderer(SawmillRenderer.class);
 		registerTileRenderer(PackerRenderer.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorScanner.class, new ConveyorScannerRenderer().subscribeToList("conveyor_scanner"));
-
+		registerTileRenderer(ScanningConveyorRenderer.class);
 		registerTileRenderer(ArtilleryHowitzerRenderer.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));

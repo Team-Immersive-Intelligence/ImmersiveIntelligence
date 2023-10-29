@@ -325,7 +325,7 @@ tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Haubica
 tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Komputer Balistyczny
 tile.immersiveintelligence.metal_multiblock.missile_silo.name=Silos Rakietowy
 tile.immersiveintelligence.metal_multiblock.ammunition_factory.name=Fabryka Amunicji
-tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Skaner Taśmociągowy
+tile.immersiveintelligence.metal_multiblock.scanning_conveyor.name=Skaner Taśmociągowy
 tile.immersiveintelligence.metal_multiblock.packer.name=Maszyna Pakująca
 tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Kolejowa Maszyna Pakująca
 tile.immersiveintelligence.metal_multiblock.unpacker.name=Maszyna Odpakowująca
@@ -790,9 +790,9 @@ ie.manual.entry.redstone_interface0=The Redstone Interface is a bridge between t
 ie.manual.entry.redstone_interface1=The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, but the most important ones are the data input port, on which a connector needs to be placed and a built-in redstone output connector, to which you can attach a wire. In the user interface there are two sections, data to redstone and the opposite. After you add an entry, you have to specify the variable letter and the corresponding redstone colour.
 
 #Reference to a meme
-ie.manual.entry.conveyor_scanner.name=Skaner Taśmociągowy
-ie.manual.entry.conveyor_scanner.subtext=To się kameruje!
-ie.manual.entry.conveyor_scanner0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. Then an item passes trough the Conveyor Scanner, its properties are read and sent in an ItemStack type variable 's' inside a Data Packet. To operate, the machine requires electricity. To form it use a hammer on the conveyor.
+ie.manual.entry.scanning_conveyor.name=Skaner Taśmociągowy
+ie.manual.entry.scanning_conveyor.subtext=To się kameruje!
+ie.manual.entry.scanning_conveyor0=The conveyor scanner is a device consisting of a conveyor, a camera with a special lens and an electronic device which processes information. Then an item passes trough the Conveyor Scanner, its properties are read and sent in an ItemStack type variable 's' inside a Data Packet. To operate, the machine requires electricity. To form it use a hammer on the conveyor.
 
 #Reference to Factorio
 ie.manual.entry.inserters.name=Podajniki
@@ -1047,8 +1047,8 @@ ie.manual.entry.printing_press.vars_in.c.main=Amount of copies
 ie.manual.entry.printing_press.vars_in.c.sub=
 ie.manual.entry.printing_press.vars_in.s.main=Text to print
 ie.manual.entry.printing_press.vars_in.s.sub=Available only when using the "text" mode
-ie.manual.entry.conveyor_scanner.vars_out.s.main=Scanned item
-ie.manual.entry.conveyor_scanner.vars_out.s.sub=Scanned item with its id, durability and NBT
+ie.manual.entry.scanning_conveyor.vars_out.s.main=Scanned item
+ie.manual.entry.scanning_conveyor.vars_out.s.sub=Scanned item with its id, durability and NBT
 ie.manual.entry.inserters_basic.vars_in.m.main=Item take mode
 ie.manual.entry.inserters_basic.vars_in.m.sub=Possible values: "set", "add"
 ie.manual.entry.inserters_basic.vars_in.c.main=Amount of items
