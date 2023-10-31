@@ -715,7 +715,7 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 				return getPOI("item_output");
 			case REDSTONE_INPUT:
 				return getPOI("redstone");
-			case DATA:
+			case DATA_INPUT:
 				return getPOI("data");
 			case MISC_DOOR:
 				return getPOI("bunker_door");

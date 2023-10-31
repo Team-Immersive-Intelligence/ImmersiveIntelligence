@@ -46,6 +46,7 @@ public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntitySca
 	@Override
 	public void drawAnimated(TileEntityScanningConveyor te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
+		applyStandardRotation(te.facing);
 		active.apply(!te.getRedstoneAtPos(te.getPOI(MultiblockPOI.REDSTONE_INPUT)[0]));
 		if(te.lastScanned.isEmpty())
 			photo.apply(0);
