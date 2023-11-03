@@ -1,6 +1,7 @@
 package pl.pabilo8.immersiveintelligence.client.manual.categories;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
@@ -13,9 +14,11 @@ import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIMetalFortification1.IIBlockTypes_MetalFortification1;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice.IIBlockTypes_MetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.mines.BlockIIMine;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.gui_handlers.RedstoneInterfaceGuiHandler;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoBase;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIAmmoCasing.Casings;
 import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIIArmorUpgrade.ArmorUpgrades;
+import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIMaterial;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
@@ -125,6 +128,7 @@ public class IIManualCategoryWarfare extends IIManualCategory
 				.addSource("internal_springs", getSourceForItems(IIContent.itemArmorUpgrade.getStack(ArmorUpgrades.INTERNAL_SPRINGS)));
 		addEntry("machinegun")
 				.addSource("machinegun", getSourceForItem(new ItemStack(IIContent.itemMachinegun)));
+		addEntry("weapon_parts");
 		addEntry("weapon_upgrades")
 				.addSource("heavy_barrle", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrades.HEAVY_BARREL)))
 				.addSource("water_cooling", getSourceForItem(IIContent.itemWeaponUpgrade.getStack(WeaponUpgrades.WATER_COOLING)))

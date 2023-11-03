@@ -21,7 +21,7 @@ All types of circuit boards require a specialized blueprint to create them.
 **Basic Circuits** are the common, primary and cheap circuits. 
 Their universal design allows them to be easily [refitted](functional_circuits) to perform simple data operations, 
 but their main use is construction of various **Data Devices**, such as 
-the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_logic_machine) and the [Data Input Machine](data_input_machine).
+the [Printing Press](printing_press), the [Arithmetic Logic Machine](arithmetic_logic_machine) and the [Data Input Machine](data_input_machine.md).
 
 # basic_components
 |[item_display]{source:"basic_electronic_element"}|
@@ -37,11 +37,14 @@ This is done in a [chemical bath](chemical_bath.md) with [etching acid].
 **Advanced Circuits** are a more refined version of their predecessor, created using a double-layered circuit board, **Advanced Electronic Alloy** and improved vacuum tubes.  
 They have a broad use in [Wireless Data Transfer](radio_station) and **Advanced Data Devices**, such as [Advanced Inserters], [Automated Weapons].
 
-# advanced_components1
-Advanced Components
+# advanced_components
+|[item_display]{source:"advanced_electronic_element"}|
+**Advanced Electric Components** are manufactured with the help of a [**precession assembler**](precision_assembler.md), give it the right scheme and provide a **basic electronic component** together with an advanced vacuum tube.
 
 # advanced_board
-Advanced Board
+|[crafting]{source:"advanced_circuit_blueprints"}|
+The **advanced board** is a more sophisticated version of the basic one, this one has room for mot connections and more advanced parts.
+To make the advanced bord two **basic boards** are required to be welded together with a sheet of [**advanced electronic alloy**](AEL).
 
 # processor_general  
 |[item_display]{source:"%SECTION%"}|
@@ -50,8 +53,10 @@ electronic alloy and various other materials in a complicated assembly process.
 They work as the electronic brains of [Mainframe Computers], [Drones] and many [Advanced Weapon Systems]. 
 
 # processor_components
-|[item_display]{source:"circuit_template"}|
-s
+|[item_display]{source:"processor_electronic_element"}|
+The most state-of-the-art electronic component of our time, the processor is abel to preform operations on an external data source.
+The manufacturing process is advanced and requiters the right scheme, 32 **transistors** and two **advanced vacuum tubes**. In a [**precession assembler**](precision_assembler.md).
 
 # processor_board
-Processor Board
+|[crafting]{source:"processors_blueprints"}|
+The **Raw Processor Board** is the most compact high performance circuit, it consists of an **Advanced Electronic Alloy Sheet** layered between two **Raw Advanced Circuit boards**.
