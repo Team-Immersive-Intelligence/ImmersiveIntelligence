@@ -13,7 +13,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIISandbags.IIBlockTypes_StoneDecoration;
+import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIISandbags.IIBlockTypes_Sandbags;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.tileentity.TileEntitySandbags;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 import pl.pabilo8.immersiveintelligence.common.util.block.BlockIITileProvider;
@@ -29,7 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_StoneDecoration>
+public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_Sandbags>
 {
 	public static final PropertyInteger LEFT = PropertyInteger.create("left", 0, 2);
 	public static final PropertyInteger RIGHT = PropertyInteger.create("right", 0, 2);
@@ -37,7 +37,7 @@ public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_StoneDecor
 
 	public BlockIISandbags()
 	{
-		super("stone_decoration", Material.SAND, PropertyEnum.create("type", IIBlockTypes_StoneDecoration.class), ItemBlockIIBase::new, IEProperties.FACING_HORIZONTAL,
+		super("stone_decoration", Material.SAND, PropertyEnum.create("type", IIBlockTypes_Sandbags.class), ItemBlockIIBase::new, IEProperties.FACING_HORIZONTAL,
 				LEFT, RIGHT, CORNER);
 		setHardness(4.0F);
 		setResistance(55.0F);
@@ -48,7 +48,7 @@ public class BlockIISandbags extends BlockIITileProvider<IIBlockTypes_StoneDecor
 		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 
-	public enum IIBlockTypes_StoneDecoration implements IITileProviderEnum
+	public enum IIBlockTypes_Sandbags implements IITileProviderEnum
 	{
 		@EnumTileProvider(tile = TileEntitySandbags.class)
 		SANDBAGS

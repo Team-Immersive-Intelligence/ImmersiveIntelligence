@@ -20,15 +20,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,6 +71,8 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public TileEntityMultiblockIIGeneric(MultiblockStuctureBase<T> multiblock)
 	{
 		super(multiblock);
+		inventory = NonNullList.create();
+		energyStorage = new FluxStorageAdvanced(ScanningConveyor.energyCapacity);
 	}
 
 	//--- NBT ---//
@@ -130,28 +136,23 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	//--- Redstone ---//
 
-	public abstract int[] getRedstonePos(boolean input);
-
-	public final boolean isRedstonePos(boolean input)
-	{
-		return Arrays.binarySearch(getRedstonePos(input), pos) >= 0;
-	}
-
 	public boolean getRedstoneAtPos(int id)
 	{
-		return (world.isBlockPowered(getBlockPosForPos(getRedstonePos(true)[id])))^redstoneControlInverted;
+		return (world.isBlockPowered(getBlockPosForPos(
+				getPOI(MultiblockPOI.REDSTONE_INPUT)[id]))
+		)^redstoneControlInverted;
 	}
 
 	@Override
 	public final boolean canConnectRedstone(@Nonnull IBlockState state, @Nonnull EnumFacing side)
 	{
-		return this.isRedstonePos(false)||this.isRedstonePos(true);
+		return this.isPOI(MultiblockPOI.REDSTONE);
 	}
 
 	@Override
 	public boolean hammerUseSide(@Nonnull EnumFacing side, @Nonnull EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
-		if(this.isRedstonePos(true))
+		if(this.isPOI(MultiblockPOI.REDSTONE_INPUT))
 		{
 			T master = master();
 			if(master!=null)
@@ -175,19 +176,11 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	//--- Data ---//
 
-	@Nonnull
-	public abstract int[] getDataPos(boolean input);
-
-	public final boolean isDataPos(boolean input)
-	{
-		return Arrays.binarySearch(getDataPos(input), pos) >= 0;
-	}
-
 	@Override
 	public final void onReceive(DataPacket packet, @Nullable EnumFacing side)
 	{
 		T master = master();
-		if(master!=null&&isDataPos(true))
+		if(master!=null&&isPOI(MultiblockPOI.DATA_INPUT))
 			master.receiveData(packet, pos);
 	}
 
@@ -225,7 +218,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	@Override
 	public int getComparatorInputOverride()
 	{
-		if(!this.isRedstonePos(false))
+		if(!this.isPOI(MultiblockPOI.REDSTONE_OUTPUT))
 			return 0;
 		T master = master();
 		if(master==null)
@@ -243,15 +236,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		return new IEInventoryHandler(1, this, slotID, canInput, canOutput);
 	}
 
-	//REFACTOR: 18.07.2023 different types of energy (ELECTRIC,ROTARY,HEAT) using an enum
-	@Nonnull
-	public abstract int[] getEnergyPos();
-
-	public boolean isEnergyPos()
-	{
-		return Arrays.binarySearch(getEnergyPos(), pos) >= 0;
-	}
-
 	@Nonnull
 	@Override
 	public final FluxStorage getFluxStorage()
@@ -266,13 +250,15 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	@Override
 	public SideConfig getEnergySideConfig(EnumFacing facing)
 	{
-		return this.formed&&this.isEnergyPos()?SideConfig.INPUT: SideConfig.NONE;
+		if(this.formed&&this.isPOI(MultiblockPOI.ENERGY))
+			return this.isPOI(MultiblockPOI.ENERGY_OUTPUT)?SideConfig.OUTPUT: SideConfig.INPUT;
+		return SideConfig.NONE;
 	}
 
 	@Override
 	public IEForgeEnergyWrapper getCapabilityWrapper(EnumFacing facing)
 	{
-		if(this.formed&&this.isEnergyPos())
+		if(this.formed&&this.isPOI(MultiblockPOI.ENERGY))
 			return wrapper;
 		return null;
 	}
@@ -288,9 +274,57 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		}
 	}
 
+	//--- Fluids ---//
+
+
+	@Nonnull
+	@Override
+	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
+	{
+		T master = master();
+		if(master!=null&&(isPOI(MultiblockPOI.FLUID)))
+			return master.getFluidTanks(pos, side);
+
+		return super.getAccessibleFluidTanks(side);
+	}
+
+	/**
+	 * Returns master tanks
+	 *
+	 * @param pos  position inside the multiblock
+	 * @param side side accessed
+	 * @return array of tanks available
+	 */
+	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
+	{
+		return new IFluidTank[0];
+	}
+
+	@Override
+	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
+	{
+		if(isPOI(MultiblockPOI.FLUID_INPUT))
+			return master().isTankAvailable(pos, iTank);
+		return false;
+	}
+
+	@Override
+	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
+	{
+		if(isPOI(MultiblockPOI.FLUID_OUTPUT))
+			return master().isTankAvailable(pos, iTank);
+		return false;
+	}
+
+	protected boolean isTankAvailable(int pos, int tank)
+	{
+		return false;
+	}
+
+
 	//--- IAdvancedBounds ---//
 
-	public void forceReCacheAABB()
+	public final void forceReCacheAABB()
 	{
 		this.aabb = null;
 	}
@@ -304,34 +338,48 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 		return aabb;
 	}
 
-	/**
-	 * Represents an animated part of the multiblock, like a drawer
-	 */
-	public static class MultiblockInteractablePart
+	//--- Points of Interest ---//
+
+	protected abstract int[] listAllPOI(MultiblockPOI poi);
+
+	public final int[] getPOI(MultiblockPOI poi)
 	{
-		boolean opened = false;
-		float progress = 0;
-		final float maxProgress;
-
-		public MultiblockInteractablePart(float maxProgress)
-		{
-			this.maxProgress = maxProgress;
-		}
-
-		public float getProgress(float partialTicks)
-		{
-			return MathHelper.clamp(progress+(opened?partialTicks: -partialTicks), 0, maxProgress)/maxProgress;
-		}
-
-		public void update()
-		{
-			this.progress = MathHelper.clamp(progress+(opened?1: -1), 0, maxProgress);
-		}
-
-		public void setState(boolean state)
-		{
-			this.opened = state;
-		}
+		if(poi.hasChildren())
+			return getAllPOI(poi.getChildren());
+		return listAllPOI(poi);
 	}
 
+	private int[] getAllPOI(List<MultiblockPOI> pois)
+	{
+		return pois.stream()
+				.map(this::getPOI)
+				.flatMapToInt(Arrays::stream)
+				.distinct()
+				.toArray();
+	}
+
+	protected final int[] getPOI(String name)
+	{
+		return multiblock.getPointsOfInterest(name);
+	}
+
+	public final boolean isPOI(MultiblockPOI poi)
+	{
+		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
+	}
+
+	public final boolean isPOI(String poi)
+	{
+		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
+	}
+
+	public final BlockPos getPOIPos(String name)
+	{
+		return getBlockPosForPos(multiblock.getPointOfInterest(name));
+	}
+
+	public final BlockPos getPOIPos(MultiblockPOI poi)
+	{
+		return getBlockPosForPos(getPOI(poi)[0]);
+	}
 }

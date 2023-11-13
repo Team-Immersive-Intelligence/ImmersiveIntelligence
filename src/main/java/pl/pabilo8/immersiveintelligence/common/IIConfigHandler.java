@@ -413,7 +413,7 @@ public class IIConfigHandler
 			@SubConfig
 			public static MissileSilo missileSilo;
 			@SubConfig
-			public static ConveyorScanner conveyorScanner;
+			public static ScanningConveyor scanningConveyor;
 			@SubConfig
 			public static Inserter inserter;
 			@SubConfig
@@ -744,7 +744,7 @@ public class IIConfigHandler
 				public static int energyUsage = 16000;
 			}
 
-			public static class ConveyorScanner
+			public static class ScanningConveyor
 			{
 				@Comment({"Energy capacity of the scanning conveyor."})
 				public static int energyCapacity = 8000;

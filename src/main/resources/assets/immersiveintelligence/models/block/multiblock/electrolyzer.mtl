@@ -1,0 +1,18 @@
+# Made in Blockbench 4.8.3
+newmtl m_97b39be0-b8f3-09d0-86ac-a17ea8937e2a
+map_Kd immersiveintelligence:blocks/multiblock/electrolyzer
+newmtl m_1adc258d-9ca0-ef52-6faa-3fdd4308fe31
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl m_a883712b-d56e-8f29-4172-c8fa3cb30f71
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl m_54039168-e4f7-f4e4-f54a-0eb029c7782c
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl m_5f160201-069f-e81b-e083-edb5d285cfae
+map_Kd immersiveintelligence:blocks/common/common_wooden_base_heavy
+newmtl m_367b2171-f86f-caef-9e0e-4d04bcf54074
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl m_1166d909-09e7-5fd3-530e-fba3492daec7
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl m_e72c0f0e-97f9-504e-926c-01749ba46742
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl none

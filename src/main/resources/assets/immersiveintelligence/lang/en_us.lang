@@ -24,6 +24,7 @@ item.immersiveintelligence.material.compact_electric_engine.name=Compact Electri
 item.immersiveintelligence.material.compact_electric_engine_advanced.name=Advanced Compact Electric Engine
 item.immersiveintelligence.material.carbon_brush.name=Carbon Brush
 item.immersiveintelligence.material.glass_fibre_cable.name=Glass Fibre Cable
+item.immersiveintelligence.material.sandbag.name=Sandbag
 
 item.immersiveengineering.material.gunpart_barrel.name=Steel Gun Barrel
 item.immersiveintelligence.material.iron_gun_barrel.name=Iron Gun Barrel
@@ -654,7 +655,7 @@ tile.immersiveintelligence.metal_multiblock.periscope.name=Periscope
 tile.immersiveintelligence.metal_multiblock.artillery_howitzer.name=Artillery Howitzer
 tile.immersiveintelligence.metal_multiblock.ballistic_computer.name=Ballistic Computer
 tile.immersiveintelligence.metal_multiblock.missile_silo.name=Missile Silo
-tile.immersiveintelligence.metal_multiblock.conveyor_scanner.name=Scanning Conveyor
+tile.immersiveintelligence.metal_multiblock.scanning_conveyor.name=Scanning Conveyor
 tile.immersiveintelligence.metal_multiblock.packer.name=Packer
 tile.immersiveintelligence.metal_multiblock.minecart_packer.name=Railway Packer
 

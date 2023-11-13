@@ -295,7 +295,7 @@ public class CommandIIDev extends CommandTreeHelp
 					Vec3d vec3d1 = senderEntity.getLook(0);
 					Vec3d vec3d2 = vec3d.addVector(vec3d1.x*blockReachDistance, vec3d1.y*blockReachDistance, vec3d1.z*blockReachDistance);
 					MultipleRayTracer rayTracer = MultipleRayTracer.volumetricTrace(sender.getEntityWorld(), vec3d, vec3d2, new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5), Collections.emptyList(), true, Collections.singletonList(senderEntity), null);
-					if(rayTracer.getHits().isEmpty())
+					if(!rayTracer.getHits().isEmpty())
 					{
 						Entity entityHit = rayTracer.getHits().get(0).entityHit;
 						if(entityHit!=null&&entityHit.hasCapability(CapabilityEnergy.ENERGY, null))

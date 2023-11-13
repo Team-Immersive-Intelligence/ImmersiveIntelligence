@@ -1,0 +1,42 @@
+{
+  "bounds": {
+    "conveyor": [
+      1, 0, 0,
+      15, 2, 16
+    ],
+    "top_box": [
+      3, 8, 3,
+      13, 16, 13
+    ],
+    "top_box2": [
+      0, 4, 3,
+      16, 8, 13
+    ],
+    "conveyor_side1": [
+      0, 0, 0,
+      1, 4, 16
+    ],
+    "conveyor_side2": [
+      15, 0, 0,
+      16, 4, 16
+    ],
+    "conveyor_side_top1": [
+      0, -12, 6,
+      1, 4, 10
+    ],
+    "conveyor_side_top2": [
+      15, -12, 6,
+      16, 4, 10
+    ]
+  },
+  "positions": {
+    "1": ["conveyor","conveyor_side1","conveyor_side2"],
+    "2": ["top_box","top_box2","conveyor_side_top1","conveyor_side_top2"]
+  },
+  "poi": {
+    "power": 2,
+    "conveyor": 1,
+    "redstone": 0,
+    "data": 0
+  }
+}

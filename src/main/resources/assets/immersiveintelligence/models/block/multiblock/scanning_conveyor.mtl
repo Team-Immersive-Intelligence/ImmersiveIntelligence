@@ -1,0 +1,22 @@
+# Made in Blockbench 4.8.3
+newmtl m_2adc70d9-3b4b-47c2-f003-6191576e8f1d
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl m_38e8d92d-455e-069c-130f-a25c63c2f653
+map_Kd immersiveintelligence:blocks/multiblock/scanning_conveyor
+newmtl m_67d7b4b9-aa58-b944-7498-7b8b3e1b25cf
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl m_c8710617-1a2e-42ad-979d-5386136ffd32
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl m_60b1c8a5-d0fc-132b-989a-783b5f725eb1
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl m_651de46a-d03d-849b-8764-a4e57054f821
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl m_f380551a-f7d3-25ca-e894-f014d6411378
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl m_944d529c-60e2-ea30-0c57-3fcb26052233
+map_Kd immersiveengineering:blocks/conveyor
+newmtl m_aea89511-d30f-cd57-8174-494589ae7607
+map_Kd immersiveengineering:blocks/conveyor_off
+newmtl m_584397cb-7dc0-7bbd-c0c4-d7ebefcb55ac
+map_Kd immersiveintelligence:particle/vision
+newmtl none

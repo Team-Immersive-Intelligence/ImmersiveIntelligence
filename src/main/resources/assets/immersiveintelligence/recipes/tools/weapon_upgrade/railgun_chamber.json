@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "mbb",
+    "ckk"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:metal_device0",
+      "data": 2
+    },
+    "k": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 1
+    },
+    "m": {
+      "type": "forge:ore_dict",
+      "ore": "ingotMagnet"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelSteel"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 18,
+    "count": 1
+  }
+}

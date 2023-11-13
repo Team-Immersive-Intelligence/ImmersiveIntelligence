@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
+import com.google.common.math.IntMath;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -331,11 +333,12 @@ public class IIUtils
 	{
 		if(tank.getFluidAmount() > 0)
 		{
-			FluidStack out = blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(tank.getFluid(), Math.min(tank.getFluidAmount(), amount), false);
-			IFluidHandler output = FluidUtil.getFluidHandler(world, pos.offset(side), side);
+
+			FluidStack out = tank.drain(Math.min(tank.getFluidAmount(), amount), false);
+			IFluidHandler output = FluidUtil.getFluidHandler(world, pos.offset(side), side.getOpposite());
 			if(output!=null)
 			{
-				int accepted = output.fill(out, false);
+				int accepted = output.fill(out, true);
 				if(accepted > 0)
 				{
 					int drained = output.fill(blusunrize.immersiveengineering.common.util.Utils.copyFluidStackWithAmount(out, Math.min(out.amount, accepted), false), true);
@@ -728,9 +731,15 @@ public class IIUtils
 		return vv >= min&&vv <= max;
 	}
 
+	@Deprecated
 	public static String getPowerLevelString(TileEntityMultiblockMetal<?, ?> tile)
 	{
 		return getPowerLevelString(tile.getEnergyStored(null), tile.getMaxEnergyStored(null));
+	}
+
+	public static String getPowerLevelString(EnergyStorage storage)
+	{
+		return getPowerLevelString(storage.getEnergyStored(), storage.getMaxEnergyStored());
 	}
 
 	public static String getPowerLevelString(int min, int max)
@@ -930,5 +939,18 @@ public class IIUtils
 				return field.getAnnotation(annotationClass);
 		} catch(NoSuchFieldException ignored) {}
 		return null;
+	}
+
+	/**
+	 * @param numbers array of numbers, must contain at least two
+	 * @return Greatest Common Divisor of multiple numbers
+	 */
+	public static int gcd(int... numbers)
+	{
+		int gcd = numbers[0];
+		for(int i = 1; i < numbers.length; i++)
+			gcd = IntMath.gcd(gcd, numbers[i]);
+
+		return gcd;
 	}
 }

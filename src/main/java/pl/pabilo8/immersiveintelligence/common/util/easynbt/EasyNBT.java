@@ -184,6 +184,19 @@ public class EasyNBT extends Constants.NBT
 	}
 
 	/**
+	 * Appends a {@link NBTTagCompound} consumer, like {@link net.minecraftforge.fluids.FluidTank#writeToNBT(NBTTagCompound)}
+	 *
+	 * @param key name of this tag
+	 */
+	public EasyNBT withTag(String key, Consumer<NBTTagCompound> accepted)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		accepted.accept(tag);
+		wrapped.setTag(key, tag);
+		return this;
+	}
+
+	/**
 	 * Appends a BlockPos
 	 *
 	 * @param key name of this tag

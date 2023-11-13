@@ -41,6 +41,9 @@ public class FillerRecipe extends MultiblockRecipe
 		this.inputList = Lists.newArrayList(this.itemInput);
 		this.outputList = ListUtils.fromItem(this.itemOutput);
 
+		if(itemOutput.getItem() instanceof IAmmo)
+			bullet = ((IAmmo)itemOutput.getItem());
+
 		this.dust = dust;
 		this.totalProcessTime = time;
 		this.totalProcessEnergy = energy;
@@ -50,8 +53,6 @@ public class FillerRecipe extends MultiblockRecipe
 	{
 		FillerRecipe r = new FillerRecipe(itemOutput, itemInput, dust, time, energy);
 		recipeList.add(r);
-		if(itemOutput.getItem() instanceof IAmmo)
-			r.bullet = ((IAmmo)itemOutput.getItem());
 		return r;
 	}
 

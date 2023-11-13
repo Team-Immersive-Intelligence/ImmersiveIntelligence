@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "forge:ore_shaped",
   "pattern": [
     "t",
     "m",
@@ -21,6 +21,7 @@
   },
   "result": {
     "item": "immersiveintelligence:tripwire_connector",
+    "data": 0,
     "count": 4
   }
 }

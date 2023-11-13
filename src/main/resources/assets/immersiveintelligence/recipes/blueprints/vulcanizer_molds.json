@@ -13,7 +13,8 @@
   ],
   "key": {
     "R": {
-      "item": "immersiveintelligence:rubber_sapling"
+      "item": "immersiveintelligence:rubber_sapling",
+      "data": 0
     },
     "D": {
       "type": "forge:ore_dict",

@@ -173,9 +173,9 @@ public class IIManualCategoryData extends IIManualCategory {
 
                 ));
 
-        addEntry("radio_station");
-        addEntry("printing_press");
-        addEntry("conveyor_scanner");
+		addEntry("radio_station");
+		addEntry("printing_press");
+		addEntry("scanning_conveyor");
 
         addEntry("chemical_bath");
         addEntry("chemical_painter");

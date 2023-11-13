@@ -28,7 +28,7 @@
     },
     "b": {
       "type": "forge:ore_dict",
-      "ore": "gunbarrelSteel"
+      "ore": "gunbarrelIron"
     }
   },
   "result": {

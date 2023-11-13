@@ -25,8 +25,7 @@ import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockBallisticComputer;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
-
-import javax.annotation.Nonnull;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 /**
  * @author Pabilo8
@@ -68,19 +67,6 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 	{
 		super.writeCustomNBT(nbt, descPacket);
 		nbt.setInteger("progress", progress);
-	}
-
-	@Override
-	public int[] getRedstonePos(boolean input)
-	{
-		return multiblock.getPointsOfInterest("redstone");
-	}
-
-	@Nonnull
-	@Override
-	public int[] getDataPos(boolean input)
-	{
-		return multiblock.getPointsOfInterest("data_input");
 	}
 
 	@Override
@@ -166,11 +152,19 @@ public class TileEntityBallisticComputer extends TileEntityMultiblockIIGeneric<T
 		}
 	}
 
-	@Nonnull
 	@Override
-	public int[] getEnergyPos()
+	protected int[] listAllPOI(MultiblockPOI poi)
 	{
-		return multiblock.getPointsOfInterest("energy");
+		switch(poi)
+		{
+			case ENERGY_INPUT:
+				return getPOI("energy");
+			case DATA_INPUT:
+				return getPOI("data_input");
+			case DATA_OUTPUT:
+				return getPOI("data_output");
+		}
+		return new int[0];
 	}
 
 	@Override

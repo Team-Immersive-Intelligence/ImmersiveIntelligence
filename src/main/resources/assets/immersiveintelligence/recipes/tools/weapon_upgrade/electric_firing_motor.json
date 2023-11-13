@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "heb"
+  ],
+  "key": {
+    "h": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 5
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "engineElectricSmallAdvanced"
+    },
+    "b": {
+      "type": "forge:ore_dict",
+      "ore": "gunbarrelTungsten"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 17,
+    "count": 1
+  }
+}

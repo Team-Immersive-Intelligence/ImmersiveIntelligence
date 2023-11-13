@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "cme"
+  ],
+  "key": {
+    "c": {
+      "item": "immersiveengineering:metal_decoration0",
+      "data": 1
+    },
+    "m": {
+      "type": "forge:ore_dict",
+      "ore": "ingotMagnet"
+    },
+    "e": {
+      "type": "forge:ore_dict",
+      "ore": "engineElectricSmallAdvanced"
+    }
+  },
+  "result": {
+    "item": "immersiveintelligence:weapon_upgrade",
+    "data": 18,
+    "count": 1
+  }
+}

@@ -1,25 +1,19 @@
 package pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity;
 
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
-import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.ISoundTile;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import blusunrize.immersiveengineering.common.util.Utils;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Electrolyzer;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Electrolyzer;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockElectrolyzer;
-import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
-import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
-import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionSingle;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.handleBucketTankInteraction;
 import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
@@ -28,196 +22,109 @@ import static pl.pabilo8.immersiveintelligence.common.IIUtils.outputFluidToTank;
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntityElectrolyzer, ElectrolyzerRecipe> implements IGuiTile, ISoundTile
+public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle<TileEntityElectrolyzer, ElectrolyzerRecipe>
 {
-	public FluidTank[] tanks = {new FluidTank(Electrolyzer.fluidCapacity), new FluidTank(Electrolyzer.fluidCapacity), new FluidTank(Electrolyzer.fluidCapacity)};
-	public NonNullList<ItemStack> inventory = NonNullList.withSize(6, ItemStack.EMPTY);
-	public int processTime, processTimeMax;
-	public boolean active = false;
-
+	public FluidTank[] tanks;
 
 	public TileEntityElectrolyzer()
 	{
-		super(MultiblockElectrolyzer.INSTANCE, new int[]{2, 3, 3}, Electrolyzer.energyCapacity, true);
+		super(MultiblockElectrolyzer.INSTANCE);
+
+		tanks = new FluidTank[]{new FluidTank(Electrolyzer.fluidCapacity), new FluidTank(Electrolyzer.fluidCapacity), new FluidTank(Electrolyzer.fluidCapacity)};
+		inventory = NonNullList.withSize(6, ItemStack.EMPTY);
+		this.energyStorage = new FluxStorageAdvanced(Electrolyzer.energyCapacity);
 	}
 
 	@Override
 	public void readCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
-		tanks[0].readFromNBT(nbt.getCompoundTag("tank0"));
-		tanks[1].readFromNBT(nbt.getCompoundTag("tank1"));
-		tanks[2].readFromNBT(nbt.getCompoundTag("tank2"));
-		if(!descPacket)
-			inventory = Utils.readInventory(nbt.getTagList("inventory", 10), 6);
+
+		for(int i = 0; i < tanks.length; i++)
+			tanks[i].readFromNBT(nbt.getCompoundTag("tank"+i));
 	}
 
 	@Override
 	public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket)
 	{
 		super.writeCustomNBT(nbt, descPacket);
-		nbt.setTag("tank0", tanks[0].writeToNBT(new NBTTagCompound()));
-		nbt.setTag("tank1", tanks[1].writeToNBT(new NBTTagCompound()));
-		nbt.setTag("tank2", tanks[2].writeToNBT(new NBTTagCompound()));
 
-		if(!descPacket)
-			nbt.setTag("inventory", Utils.writeInventory(inventory));
+		for(int i = 0; i < tanks.length; i++)
+			nbt.setTag("tank"+i, tanks[i].writeToNBT(new NBTTagCompound()));
+
 	}
 
 	@Override
 	public void receiveMessageFromServer(NBTTagCompound message)
 	{
 		super.receiveMessageFromServer(message);
-		if(message.hasKey("processTime"))
-			this.processTime = message.getInteger("processTime");
-		if(message.hasKey("processTimeMax"))
-			this.processTimeMax = message.getInteger("processTimeMax");
-		if(message.hasKey("active"))
-			this.active = message.getBoolean("active");
-		if(message.hasKey("inventory"))
-			inventory = Utils.readInventory(message.getTagList("inventory", 10), 6);
+
+		for(int i = 0; i < tanks.length; i++)
+			if(message.hasKey("tank"+i))
+				tanks[i].readFromNBT(message.getCompoundTag("tank"+i));
 	}
 
-	/**
-	 * Like the old updateEntity(), except more generic.
-	 */
 	@Override
-	public void update()
+	protected int[] listAllPOI(MultiblockPOI poi)
 	{
-		super.update();
-		if(isDummy())
-			return;
-
-
-		if(world.isRemote)
+		switch(poi)
 		{
-			if(active&&processTime < processTimeMax)
-				processTime += 1;
-			return;
+			case ENERGY_INPUT:
+				return getPOI("energy_input");
+			case REDSTONE_INPUT:
+				return getPOI("redstone_input");
+			case FLUID_INPUT:
+				return getPOI("fluid_input");
+			case FLUID_OUTPUT:
+				return getPOI("fluid_output");
 		}
+		return new int[0];
+	}
 
-		boolean wasActive = active;
-		boolean update = false;
+	@Override
+	protected IFluidTank[] getFluidTanks(int pos, EnumFacing side)
+	{
+		return tanks;
+	}
 
-		active = shouldRenderAsActive();
-
-		if(energyStorage.getEnergyStored() > 0&&processQueue.size() < this.getProcessQueueMaxLength())
-			if(tanks[0].getFluidAmount() > 0)
-			{
-				ElectrolyzerRecipe recipe = ElectrolyzerRecipe.findRecipe(tanks[0].getFluid());
-				if(recipe!=null)
-				{
-					MultiblockProcessInMachine<ElectrolyzerRecipe> process = new MultiblockProcessInMachine<>(recipe);
-					process.setInputTanks(0);
-					processTime = 0;
-					processTimeMax = recipe.getTotalProcessTime();
-					if(this.addProcessToQueue(process, true))
-					{
-						this.addProcessToQueue(process, false);
-						update = true;
-					}
-				}
-			}
-
-		if(outputFluidToTank(tanks[1], 80, getBlockPosForPos(0), this.world, this.facing.getOpposite()))
-			update = true;
-		if(outputFluidToTank(tanks[2], 80, getBlockPosForPos(2), this.world, this.facing.getOpposite()))
-			update = true;
-
-		if(world.getTotalWorldTime()%8==0)
+	@Override
+	protected boolean isTankAvailable(int pos, int tank)
+	{
+		switch(tank)
 		{
-			if(handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false))
+			//Already Checked
+			case 0:
+				return true;
+			case 1:
+				return multiblock.isPointOfInterest(pos, "output1");
+			case 2:
+				return multiblock.isPointOfInterest(pos, "output2");
+		}
+		return false;
+	}
+
+	@Override
+	protected void onUpdate()
+	{
+		super.onUpdate();
+
+		if(!world.isRemote&&world.getTotalWorldTime()%10==0)
+		{
+			boolean update = handleBucketTankInteraction(tanks, inventory, 0, 1, 0, false);
+			if(outputFluidToTank(tanks[1], 100, getPOIPos("output1"), this.world, this.facing.getOpposite()))
 				update = true;
-			//No, it's not a mistake - you can only put the fluid in into the first tank and get the output from the next
+			if(outputFluidToTank(tanks[2], 100, getPOIPos("output2"), this.world, this.facing.getOpposite()))
+				update = true;
+
 			if(handleBucketTankInteraction(tanks, inventory, 2, 4, 1, true))
 				update = true;
 			if(handleBucketTankInteraction(tanks, inventory, 3, 5, 2, true))
 				update = true;
+
+			if(update&&world.getTotalWorldTime()%40==0)
+				forceTileUpdate();
 		}
 
-		if(update||wasActive!=active)
-			IIPacketHandler.sendToClient(this, new MessageIITileSync(this, EasyNBT.newNBT()
-					.withInt("processTime", processTime)
-					.withInt("processTimeMax", processTimeMax)
-					.withBoolean("active", this.active)
-					.withTag("inventory", Utils.writeInventory(inventory))
-			));
-	}
-
-	@Override
-	public float[] getBlockBounds()
-	{
-		return new float[]{0, 0, 0, 1, 1, 1};
-	}
-
-	@Override
-	public int[] getEnergyPos()
-	{
-		return new int[]{8};
-	}
-
-	@Override
-	public int[] getRedstonePos()
-	{
-		return new int[]{8};
-	}
-
-	@Override
-	public boolean isInWorldProcessingMachine()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean additionalCanProcessCheck(MultiblockProcess<ElectrolyzerRecipe> process)
-	{
-		return true;
-	}
-
-	@Override
-	public void doProcessOutput(ItemStack output)
-	{
-		BlockPos pos = getPos().offset(facing, 2);
-		TileEntity inventoryTile = this.world.getTileEntity(pos);
-		if(inventoryTile!=null)
-			output = Utils.insertStackIntoInventory(inventoryTile, output, facing.getOpposite());
-		if(!output.isEmpty())
-			Utils.dropStackAtPos(world, pos, output, facing);
-	}
-
-	@Override
-	public void doProcessFluidOutput(FluidStack output)
-	{
-	}
-
-	@Override
-	public void onProcessFinish(MultiblockProcess<ElectrolyzerRecipe> process)
-	{
-	}
-
-	@Override
-	public int getMaxProcessPerTick()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getProcessQueueMaxLength()
-	{
-		return 1;
-	}
-
-	@Override
-	public float getMinProcessDistance(MultiblockProcess<ElectrolyzerRecipe> process)
-	{
-		return 0;
-	}
-
-
-	@Override
-	public NonNullList<ItemStack> getInventory()
-	{
-		return inventory;
 	}
 
 	@Override
@@ -227,113 +134,58 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockMetal<TileEntity
 	}
 
 	@Override
-	public int getSlotLimit(int slot)
+	public IIGuiList getGUI()
 	{
-		return 64;
+		return IIGuiList.GUI_ELECTROLYZER;
 	}
 
 	@Override
-	public int[] getOutputSlots()
+	public ElectrolyzerRecipe loadRecipeFromNBT(NBTTagCompound nbt)
 	{
-		return new int[]{};
+		return ElectrolyzerRecipe.loadFromNBT(nbt);
 	}
 
 	@Override
-	public int[] getOutputTanks()
+	protected IIMultiblockProcess<ElectrolyzerRecipe> findNewProductionProcess()
 	{
-		return new int[]{1, 2};
-	}
-
-	@Override
-	public IFluidTank[] getInternalTanks()
-	{
-		return tanks;
-	}
-
-	@Override
-	protected IFluidTank[] getAccessibleFluidTanks(EnumFacing side)
-	{
-		TileEntityElectrolyzer master = this.master();
-		if(master!=null)
+		if(tanks[0].getFluidAmount() > 0&&energyStorage.getEnergyStored() > 0)
 		{
-			if((pos==6&&side==facing.getOpposite().rotateY()))
-				return new FluidTank[]{master.tanks[0]};
-			if((pos==0&&side==facing.getOpposite()))
-				return new FluidTank[]{master.tanks[1]};
-			if((pos==2&&side==facing.getOpposite()))
-				return new FluidTank[]{master.tanks[2]};
+			ElectrolyzerRecipe recipe = ElectrolyzerRecipe.findRecipe(tanks[0].getFluid());
+			if(recipe!=null)
+				return new IIMultiblockProcess<>(recipe);
 		}
-		return new FluidTank[0];
-	}
-
-	@Override
-	protected boolean canFillTankFrom(int iTank, EnumFacing side, FluidStack resource)
-	{
-		if(side==null)
-			return true;
-		if((pos==6&&side==facing.getOpposite().rotateY()))
-		{
-			TileEntityElectrolyzer master = this.master();
-			if(master==null||master.tanks[iTank].getFluidAmount() >= master.tanks[iTank].getCapacity())
-				return false;
-			ElectrolyzerRecipe incompleteRecipes;
-			if(master.tanks[0].getFluid()==null)
-				incompleteRecipes = ElectrolyzerRecipe.findIncompleteRecipe(resource);
-			else
-				incompleteRecipes = ElectrolyzerRecipe.findIncompleteRecipe(master.tanks[0].getFluid());
-			return incompleteRecipes!=null;
-		}
-		return false;
-	}
-
-	@Override
-	protected boolean canDrainTankFrom(int iTank, EnumFacing side)
-	{
-		if(pos==0&&side==facing.getOpposite()&&iTank==1)
-			return true;
-		else return pos==2&&side==facing.getOpposite()&&iTank==2;
-	}
-
-	@Override
-	public void doGraphicalUpdates(int slot)
-	{
-		this.markDirty();
-		this.markContainingBlockForUpdate(null);
-	}
-
-	@Override
-	public ElectrolyzerRecipe findRecipeForInsertion(ItemStack inserting)
-	{
 		return null;
 	}
 
 	@Override
-	protected ElectrolyzerRecipe readRecipeFromNBT(NBTTagCompound tag)
+	public float getProductionStep(IIMultiblockProcess<ElectrolyzerRecipe> process, boolean simulate)
 	{
-		return ElectrolyzerRecipe.loadFromNBT(tag);
+		return energyStorage.extractEnergy(process.recipe.energyPerTick, simulate)/(float)process.recipe.energyPerTick;
 	}
 
 	@Override
-	public boolean canOpenGui()
+	protected boolean attemptProductionOutput(IIMultiblockProcess<ElectrolyzerRecipe> process)
 	{
-		return formed;
+		//Cannot fill tanks
+		ElectrolyzerRecipe recipe = process.recipe;
+		for(int i = 1; i < 2; i++)
+		{
+			FluidStack output = recipe.fluidOutputs[i-1];
+			int added = output==null?0: output.amount;
+
+			if(tanks[i].getFluidAmount()+added > tanks[i].getCapacity())
+				return false;
+		}
+
+		return true;
 	}
 
 	@Override
-	public int getGuiID()
+	protected void onProductionFinish(IIMultiblockProcess<ElectrolyzerRecipe> process)
 	{
-		return IIGuiList.GUI_ELECTROLYZER.ordinal();
-	}
-
-	@Override
-	public TileEntity getGuiMaster()
-	{
-		return master();
-	}
-
-	@Override
-	public boolean shoudlPlaySound(String sound)
-	{
-		return false;
+		ElectrolyzerRecipe recipe = process.recipe;
+		tanks[0].drain(recipe.fluidInput, true);
+		tanks[1].fill(recipe.fluidOutputs[0], true);
+		tanks[2].fill(recipe.fluidOutputs[1], true);
 	}
 }

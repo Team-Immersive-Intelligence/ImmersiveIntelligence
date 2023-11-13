@@ -5,7 +5,7 @@ import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
-import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityConveyorScanner;
+import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
@@ -13,13 +13,13 @@ import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctur
  * @author Pabilo8
  * @since 28-06-2019
  */
-public class MultiblockConveyorScanner extends MultiblockStuctureBase<TileEntityConveyorScanner>
+public class MultiblockScanningConveyor extends MultiblockStuctureBase<TileEntityScanningConveyor>
 {
-	public static MultiblockConveyorScanner INSTANCE;
+	public static MultiblockScanningConveyor INSTANCE;
 
-	public MultiblockConveyorScanner()
+	public MultiblockScanningConveyor()
 	{
-		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/conveyor_scanner"));
+		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/scanning_conveyor"));
 		offset = new Vec3i(0, 1, 0);
 		INSTANCE = this;
 	}
@@ -39,12 +39,12 @@ public class MultiblockConveyorScanner extends MultiblockStuctureBase<TileEntity
 	@Override
 	protected int getMeta()
 	{
-		return MetalMultiblocks0.CONVEYOR_SCANNER.getMeta();
+		return MetalMultiblocks0.SCANNING_CONVEYOR.getMeta();
 	}
 
 	@Override
-	protected TileEntityConveyorScanner getMBInstance()
+	protected TileEntityScanningConveyor getMBInstance()
 	{
-		return new TileEntityConveyorScanner();
+		return new TileEntityScanningConveyor();
 	}
 }

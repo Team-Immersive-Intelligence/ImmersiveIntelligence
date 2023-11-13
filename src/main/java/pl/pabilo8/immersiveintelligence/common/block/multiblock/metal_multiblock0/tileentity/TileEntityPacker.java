@@ -55,6 +55,7 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.multiblock.MultiblockPacker;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -425,18 +426,26 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 				tasks.add(new PackerTask(((NBTTagCompound)task)));
 	}
 
-	@Nonnull
 	@Override
-	public int[] getEnergyPos()
+	protected int[] listAllPOI(MultiblockPOI poi)
 	{
-		return new int[]{25};
-	}
-
-	@Nonnull
-	@Override
-	public int[] getRedstonePos(boolean input)
-	{
-		return input?new int[]{10}: new int[0];
+		switch(poi)
+		{
+			case ENERGY_INPUT:
+				return getPOI("energy");
+			case ITEM_INPUT:
+			case FLUID_INPUT:
+				return getPOI("input");
+			case ITEM_OUTPUT:
+			case FLUID_OUTPUT:
+			case ENERGY_OUTPUT:
+				return getPOI("output");
+			case REDSTONE_INPUT:
+				return getPOI("redstone");
+			case DATA_INPUT:
+				return getPOI("data");
+		}
+		return new int[0];
 	}
 
 	@Override
@@ -489,13 +498,6 @@ public class TileEntityPacker extends TileEntityMultiblockIIGeneric<TileEntityPa
 	}
 
 	//--- Data ---//
-
-	@Nonnull
-	@Override
-	public int[] getDataPos(boolean input)
-	{
-		return new int[]{9};
-	}
 
 	@Override
 	public void receiveData(DataPacket packet, int pos)
