@@ -60,11 +60,9 @@ public class ElectrolyzerRecipe extends MultiblockRecipe
 		List<ElectrolyzerRecipe> recipes = recipeList.stream()
 				.filter(r -> r.fluidInput.isFluidEqual(fluidInput))
 				.collect(Collectors.toList());
+		recipeList.removeAll(recipes);
 
-		for(ElectrolyzerRecipe recipe : recipes)
-			recipeList.remove(recipe);
-
-		return recipeList;
+		return recipes;
 	}
 
 	public static ElectrolyzerRecipe findRecipe(FluidStack fluidInput)
