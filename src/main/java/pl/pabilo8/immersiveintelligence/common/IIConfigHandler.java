@@ -10,6 +10,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.RadioStation;
 import pl.pabilo8.immersiveintelligence.common.compat.IICompatModule;
 import pl.pabilo8.immersiveintelligence.common.world.IIWorldGen;
 
@@ -53,7 +54,7 @@ public class IIConfigHandler
 		@LangKey("Vehicles")
 		public static Vehicles vehicles;
 
-		@Comment({"A list of all mods that IEn has integrated compatability for", "Setting any of these to false disables the respective compat"})
+		@Comment({"A list of all mods that II has integrated compatability for", "Setting any of these to false disables the respective compat"})
 		public static Map<String, Boolean> compat = Maps.newHashMap(Maps.toMap(IICompatModule.moduleClasses.keySet(), (s) -> Boolean.TRUE));
 
 		@Comment({"The maximum frequency for basic radios."})
@@ -615,6 +616,7 @@ public class IIConfigHandler
 				public static int energyUsageIdle = 512;
 
 				@Comment({"Range of the radio station (in which the signals can be received) in blocks from center (radius)."})
+				@Mapped(mapClass = IIConfigHandler.class, mapName = "manual_int")
 				public static int radioRange = 128;
 
 				@RangeDouble(min = 0, max = 1)
@@ -1678,6 +1680,10 @@ public class IIConfigHandler
 	{
 		Config.manual_bool.put("petroleumHere", false);
 		Config.manual_bool.put("baublesHere", false);
+		Config.validateAndMapValues(IIConfig.class);
+
+		Config.manual_int.put("radio_station_range", RadioStation.radioRange);
+
 		if(ev.getModID().equals(ImmersiveIntelligence.MODID))
 			ConfigManager.sync(ImmersiveIntelligence.MODID, Type.INSTANCE);
 	}

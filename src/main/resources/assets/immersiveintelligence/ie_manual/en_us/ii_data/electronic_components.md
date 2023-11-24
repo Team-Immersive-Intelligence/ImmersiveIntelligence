@@ -11,7 +11,7 @@ There are three kinds of **Circuits**:
 
 # blueprints
 All types of circuit boards require a specialized blueprint to create them.  
-*This blueprint should be designed to* [*match*] *the electronic components and chips that are going to be used in them.*  
+*The blueprint should be designed to* [*match*] *the electronic components that are going to be used in them.*  
   
 |[crafting]{source:"circuit_blueprints"}|  
 
@@ -35,11 +35,11 @@ This is done in a [chemical bath](chemical_bath.md) with [etching acid].
 # advanced_general  
 |[item_display]{source:"%SECTION%"}|
 **Advanced Circuits** are a more refined version of their predecessor, created using a double-layered circuit board, **Advanced Electronic Alloy** and improved vacuum tubes.  
-They have a broad use in [Wireless Data Transfer](radio_station) and **Advanced Data Devices**, such as [Advanced Inserters], [Automated Weapons].
+They have a broad use in [Wireless Data Transfer](radio_station) and **Advanced Data Devices**, such as [Advanced Inserters](ii_logi) and [Improved Automated Weaponry](emplacement).
 
 # advanced_components
 |[item_display]{source:"advanced_electronic_element"}|
-**Advanced Electric Components** are manufactured with the help of a [**precession assembler**](precision_assembler.md), give it the right scheme and provide a **basic electronic component** together with an advanced vacuum tube.
+**Advanced Electric Components** are manufactured with the help of a [**precision assembler**](precision_assembler.md), give it the right scheme and provide a **basic electronic component** together with an advanced vacuum tube.
 
 # advanced_board
 |[crafting]{source:"advanced_circuit_blueprints"}|
@@ -55,7 +55,7 @@ They work as the electronic brains of [Mainframe Computers], [Drones] and many [
 # processor_components
 |[item_display]{source:"processor_electronic_element"}|
 The most state-of-the-art electronic component of our time, the processor is abel to preform operations on an external data source.
-The manufacturing process is advanced and requiters the right scheme, 32 **transistors** and two **advanced vacuum tubes**. In a [**precession assembler**](precision_assembler.md).
+The manufacturing process is advanced and requiters the right scheme, 32 **transistors** and two **advanced vacuum tubes**. In a [**precision assembler**](precision_assembler.md).
 
 # processor_board
 |[crafting]{source:"processors_blueprints"}|

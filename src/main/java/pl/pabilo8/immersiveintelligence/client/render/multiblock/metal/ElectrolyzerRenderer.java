@@ -24,6 +24,7 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	@Override
 	public void drawAnimated(TileEntityElectrolyzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
+		applyStandardRotation(te.facing);
 		fluid.setFluid(te.tanks[0].getFluid());
 		float tankAmount = te.tanks[0].getFluidAmount();
 		if(te.currentProcess!=null)

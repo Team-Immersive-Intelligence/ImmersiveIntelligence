@@ -2,16 +2,26 @@
 Precision Assembler
 The Godly Artisan
 
-# 0
+# intro
+@hammer;level_advanced_industrial
 |[multiblock]{mb:"II:PrecisionAssembler"}|
-The Precision Assembler is an advanced machine used for crafting items with high precision. It requires an 
-Assembly Scheme and some precise tools for operation. To form it, use a hammer on the wooden scaffolding block.
+The **Precision Assembler** is a high-precision manufacturing device that follows instructions from an Assembly Scheme.
+|[text]{mb:"II:PrecisionAssembler"}|
 
-# 1
-|[crafting]{source:"precision_tools"}|
-Depending on the scheme the manufacturing process requires different tools, these tools ware down over time and will need maintenance.
+# details
+In order to work, the **Precision Assembler** requires an [Assembly Scheme], [Precision Tools], [crafting ingredients] and, of course, [electricity].<br>
+The machine has a single item port on both of its sides.  
+The [input port] *will only accept ingredients marked by the currently installed scheme*.  
+The [output port] will automatically output to an adjacent container.
 
-# 2
-Just like the blueprints an engineer follows to create marvels the assembler needs a scheme to follow in order to create marvels.
-
+# schemes
+Just like an [engineer follows a blueprint during work](blueprints), the **Precision Assembler** is guided by an Assembly Scheme.<br><br>
 |[crafting]{source:"assembly_scheme"}|
+<br>
+The [scheme] can be installed through the user interface by placing it in the middle slot.
+
+# tools
+Depending on the scheme the manufacturing process requires different tools, these tools ware down over time and will need replacement.
+|[crafting]{source:"precision_tools"}|
+<br>
+New tools can be inserted through 3 ports located on the back.

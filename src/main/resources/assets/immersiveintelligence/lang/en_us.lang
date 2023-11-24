@@ -768,7 +768,7 @@ desc.immersiveengineering.info.multiblock.II:Periscope=Periscope
 desc.immersiveengineering.info.multiblock.II:ArtilleryHowitzer=Artillery Howitzer
 desc.immersiveengineering.info.multiblock.II:BallisticComputer=Ballistic Computer
 desc.immersiveengineering.info.multiblock.II:MissileSilo=Missile Silo
-desc.immersiveengineering.info.multiblock.II:ConveyorScanner=Scanning Conveyor
+desc.immersiveengineering.info.multiblock.II:ScanningConveyor=Scanning Conveyor
 desc.immersiveengineering.info.multiblock.II:Packer=Packer
 desc.immersiveengineering.info.multiblock.II:MinecartPacker=Railway Packer
 
@@ -1636,14 +1636,38 @@ ie.manual.category.ii_logi.name=Logistics
 ie.manual.category.ii_intel.name=Intelligence
 ie.manual.category.ii_motorworks.name=Motorworks
 
-#todo: automated way to do it
 ie.manual.folder.functions=Function Reference
 ie.manual.folder.folder=Folder
 ie.manual.folder.device=Device
 ie.manual.folder.sekritdokuments=Sekrit Dokuments
 
-ie.manual.entry.multiblock_forming=The %1$s can be formed by using an %2$s on the %3$s %4$s
-ie.manual.entry.multiblock_forming_short=It can be formed by using an %2$s on the %3$s %4$s
+ie.manual.entry.traits.level_beginner=Complexity: Pre-Industrial
+ie.manual.entry.traits.level_early_industrial=Complexity: Early Industrial
+ie.manual.entry.traits.level_industrial=Complexity: Industrial
+ie.manual.entry.traits.level_advanced_industrial=Complexity: Late Industrial
+ie.manual.entry.traits.level_circuits=Complexity: Electronics Era
+ie.manual.entry.traits.level_computer=Complexity: Computer Era
+ie.manual.entry.traits.hammer=Basic Multiblock - form using Engineer's Hammer
+ie.manual.entry.traits.hammer_electric=Advanced Multiblock - form using an Electric Hammer
+ie.manual.entry.traits.upgradable=Upgradable
+ie.manual.entry.traits.repairable=Repairable
+ie.manual.entry.traits.decorations=Can be Decorated
+ie.manual.entry.traits.paintable=Paintable
+
+#manual multiblock forming block position text
+ie.manual.entry.multiblock_forming=The %1$s can be formed by using %2$s on the %3$s %4$s
+ie.manual.entry.multiblock_forming_short=It can be formed by using %2$s on the %3$s %4$s
+#y axis
+ie.manual.entry.multiblock_forming.up=upper
+ie.manual.entry.multiblock_forming.middle=middle
+ie.manual.entry.multiblock_forming.down=lower
+#z axis
+ie.manual.entry.multiblock_forming.left=left
+ie.manual.entry.multiblock_forming.center=center
+ie.manual.entry.multiblock_forming.right=right
+#x axis
+ie.manual.entry.multiblock_forming.front=front
+ie.manual.entry.multiblock_forming.back=back
 
 ie.manual.entry.immersiveposts.posts_brass=Brass<br><br><br><br><br><br>The Ornamental
 ie.manual.entry.immersiveposts.posts_tungsten=Tungsten<br><br><br><br><br><br>The Tough

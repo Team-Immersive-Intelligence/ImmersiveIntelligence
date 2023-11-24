@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.client.manual;
 
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.MultiblockHandler.IMultiblock;
+import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.lib.manual.ManualInstance;
 import blusunrize.lib.manual.gui.GuiButtonManual;
@@ -113,15 +114,38 @@ public abstract class IIManualObject extends GuiButtonManual
 
 			if(multiblock instanceof MultiblockStuctureBase)
 			{
+				//Get offset and size of master block
 				Vec3i offset = ((MultiblockStuctureBase<?>)multiblock).getOffset();
+				int[] size = ((MultiblockStuctureBase<?>)multiblock).getSize();
+
+				//Get hammer and master block
+				ItemStack hammerStack = multiblock.getClass().isAnnotationPresent(IAdvancedMultiblock.class)?
+						IIContent.itemHammer.getStack(1):
+						new ItemStack(IEContent.itemTool, 1);
+
+				//HLW order
+				ItemStack material = multiblock.getStructureManual()[offset.getY()][offset.getZ()][offset.getX()];
+
+				//Check if there are more than 1 block of this type in the multiblock
+				//If so, marking the direction wouldn't make sense
+				int materialRequired = 2;
+				for(IngredientStack totalMaterial : multiblock.getTotalMaterials())
+					if(totalMaterial.matchesItemStackIgnoringSize(material))
+						materialRequired = totalMaterial.inputSize;
+
+				StringBuilder position = new StringBuilder();
+				//TODO: 21.11.2023 implement back, improve block-in-cluster finding 
+				/*if(materialRequired > 1)
+					position.append(getPositionKeyword((offset.getY())/(float)size[1], "up", "middle", "down", true))
+							.append(getPositionKeyword((offset.getZ())/(float)size[2], "left", "center", "right", true))
+							.append(getPositionKeyword((offset.getX())/(float)size[0], "front", "", "back", false));*/
+
 				return TextFormatting.DARK_GRAY+I18n.format(
 						nbt.hasKey("long")?"ie.manual.entry.multiblock_forming": "ie.manual.entry.multiblock_forming_short",
 						TextFormatting.BOLD+I18n.format("desc.immersiveengineering.info.multiblock."+mbName)+TextFormatting.DARK_GRAY,
-						TextFormatting.GOLD.toString()+(multiblock.getClass().isAnnotationPresent(IAdvancedMultiblock.class)?
-								IIContent.itemHammer.getStack(1):
-								(new ItemStack(IEContent.itemTool, 1)).getDisplayName())+TextFormatting.DARK_GRAY,
-						"",
-						TextFormatting.BOLD+((multiblock.getStructureManual()[offset.getX()][offset.getY()][offset.getZ()]).getDisplayName())+TextFormatting.DARK_GRAY
+						TextFormatting.GOLD+(hammerStack).getDisplayName()+TextFormatting.DARK_GRAY,
+						position.toString(),
+						TextFormatting.BOLD+(material.getDisplayName())+TextFormatting.DARK_GRAY
 				);
 			}
 			else
@@ -131,6 +155,17 @@ public abstract class IIManualObject extends GuiButtonManual
 			return nbt.getFluidStack("fluid").getLocalizedName(); //fluid name
 		else
 			return "missingno"; //translate automatically
+	}
+
+	private String getPositionKeyword(float offset, String left, String middle, String right, boolean allowNone)
+	{
+		if(offset < 0.33)
+			return I18n.format("ie.manual.entry.multiblock_forming."+left);
+		if(offset > 0.66)
+			return I18n.format("ie.manual.entry.multiblock_forming."+right);
+		if(allowNone&&(offset < 0.45||offset > 0.55))
+			return "";
+		return middle.isEmpty()?"": I18n.format("ie.manual.entry.multiblock_forming."+middle);
 	}
 
 	public static class ManualObjectInfo

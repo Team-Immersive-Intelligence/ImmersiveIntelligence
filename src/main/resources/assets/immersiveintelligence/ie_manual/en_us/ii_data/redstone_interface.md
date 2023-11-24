@@ -2,14 +2,17 @@
 Redstone Interface
 The Equivalent Exchange
 
-# 0
+# intro
+@hammer;level_circuits
 |[multiblock]{mb:"II:RedstoneDataInterface"}|
-The Redstone Interface is a bridge between the old but still used redstone, and the new data system. 
-It can convert data from and to a redstone signal. Because it's only a converter, the machine doesn't use any power.
+The **Redstone Interface** is a device bridging the old but still used [redstone](redstoneWires) with the [data system](data_main.md).
+|[text]{mb:"II:RedstoneDataInterface"}|
 
-# 1
-The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, but the most 
-important ones are the data input port, on which a connector needs to be placed and a redstone output connector
-to which you can attach a wire. In the user interface there are two sections, data to redstone and the opposite. 
+# details
+The machine consists of several parts, some wirecoils, a bunch of steel plates and few electron tubes, 
+but key parts are the [data input port], on which a [data connector](data_wiring.md#connector) has to be placed 
+and a [redstone output connector](redstoneWires#1) to which you can attach a [wire](wiring#redstoneWires). 
 
+# interface
+In the user interface there are two sections: data to redstone and the opposite.
 After you add an entry, you have to specify the variable letter and the corresponding redstone colour.

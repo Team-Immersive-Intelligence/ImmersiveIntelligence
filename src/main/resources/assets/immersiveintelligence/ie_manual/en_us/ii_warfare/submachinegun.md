@@ -1,5 +1,5 @@
 # meta
-Submachine gun
+Submachinegun
 Tommy's toy
 
 # 1

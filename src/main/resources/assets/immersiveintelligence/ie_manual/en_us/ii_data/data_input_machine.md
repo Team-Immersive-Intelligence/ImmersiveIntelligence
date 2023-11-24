@@ -3,16 +3,16 @@ Data Input Machine
 The Input Outputter
 
 # intro
-@level_circuits;upgradable
-|[multiblock]{mb:"II:DataInputMachine",h:76}|
+@hammer;level_circuits;upgradable
+|[multiblock]{mb:"II:DataInputMachine",h:76}|  
 The **Data Input Machine**, or **DIM** is a device used for designing **Data Packets**, sending them to a [Data Network](data_wiring) and operating on [Punchtapes](punchtapes).
-It's formed by hitting the **electronic engineering block** with an [hammer].
+|[text]{mb:"II:DataInputMachine"}|
 
 # setup
-The machine's *User Interface* consists of two sections.  
-|[item_display]{source:"punchtape",ornate:true}|  
+The machine's *User Interface* consists of two sections.
+|[item_display]{source:"punchtape",ornate:true}|
 The **Storage** section is used to store **Data Storage Devices**, such as [Punchtapes] and [Memory Circuits].
-|[item_display]{source:"data_coil",ornate:true}|  
+|[item_display]{source:"data_coil",ornate:true}|
 The **Data** section is used for programming the Data Packet stored by the machine.
 
 # editing_packets

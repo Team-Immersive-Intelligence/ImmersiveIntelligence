@@ -287,9 +287,9 @@ public class IIManualMultiblock extends IIManualObject
 				canTick = !canTick;
 				buttonPause.type = buttonPause.type==4?5: 4;
 			}
-			else if(buttonUp.mousePressed(mc, mouseX, mouseY))
+			else if(buttonUp!=null&&buttonUp.mousePressed(mc, mouseX, mouseY))
 				this.renderInfo.setShowLayer(Math.min(renderInfo.showLayer+1, renderInfo.structureHeight-1));
-			else if(buttonDown.mousePressed(mc, mouseX, mouseY))
+			else if(buttonDown!=null&&buttonDown.mousePressed(mc, mouseX, mouseY))
 				this.renderInfo.setShowLayer(Math.max(renderInfo.showLayer-1, -1));
 			else
 				return false;

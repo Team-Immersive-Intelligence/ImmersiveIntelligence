@@ -2,8 +2,27 @@
 Punchtapes
 Rewind, Stop, Fast-Forward!
 
-# strong_typing
-A [Data Packet](data_main.md) can contain multiple **Types** of variables.  
-Each **Type** excels in [storing] and [representing] a different kind of information: f.e. a **Number Type**, like [Integer](#integer) specializes in storing numbers, and thus mathematical expressions can be performed on it much more straight-forward than, i.e. on a [String](#string) - a **Text Type**.  
+# main
+Punchtapes are [portable data storage media] that can be read and written with a variety of compatible devices, such as the [Punchtape Reader](#punchtape_reader), [Punchtape Writer](punchtape_writer), [Data Input Machine](data_input_machine) and [Printing Press](printing_press.md).<br> 
+|[crafting]{source:"punchtape"}|
+They allow easy [exchange of information] and storing [backup] of data device configuration.
 
-This way of storing information is called **Strong Typing** and gives each **Type** a unique purpose.
+# punchtape_reader
+The **Punchtape Reader** is a device used to read [punchtapes] based on a received [data packet](data_main.md#packetsbasics).
+|[crafting]{source:"reader"}|<br>
+
+# punchtape_reader2
+The **Punchtape Reader** has 3 modes of reaction to redstone:
+[No Redstone] - the machine won't react to redstone signals
+[Send on Redstone] - the machine will repeat sending last read punchtape on receiving a redstone signal
+[Redstone on Send] - the machine will emit a redstone signal when it receives a packet
+
+# punchtape_writer
+The **Punchtape Writer** is a device used to write [punchtapes] based on a received [data packet](data_main.md#packetsbasics).
+|[crafting]{source:"writer"}|
+Its [User Interface] allows setting a set [amount] of printed copies or making that [amount] dependent on one of the variables.
+In order to work it requires a supply of [blank] punchtapes.
+
+# example_password_door
+A very common example for using a punchtape is building a "password door", a kind of security system combining a [Punchtape Reader] and a door connected through a [Redstone-Data Interface].
+|[scenario]{}|

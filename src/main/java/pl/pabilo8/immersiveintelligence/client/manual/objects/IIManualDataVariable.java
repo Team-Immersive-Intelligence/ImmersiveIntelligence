@@ -105,6 +105,13 @@ public class IIManualDataVariable extends IIManualObject
 		else
 			requirements = null;
 
+		boolean unicodeFlag = manual.fontRenderer.getUnicodeFlag();
+		manual.fontRenderer.setUnicodeFlag(true);
+		this.height += Math.max(0,
+				manual.fontRenderer.getWordWrappedHeight(description, width)+8-height
+		);
+		manual.fontRenderer.setUnicodeFlag(unicodeFlag);
+
 	}
 
 	@Override
@@ -170,7 +177,7 @@ public class IIManualDataVariable extends IIManualObject
 					name
 			));
 
-			lines.add(TextFormatting.GRAY+IIUtils.getItalicString(description));
+			lines.addAll(manual.fontRenderer.listFormattedStringToWidth(TextFormatting.GRAY+IIUtils.getItalicString(description), 140));
 
 			if(values!=null)
 			{

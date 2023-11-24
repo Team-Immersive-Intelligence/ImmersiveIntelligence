@@ -67,6 +67,9 @@ public class ScanningConveyorRenderer extends IIMultiblockRenderer<TileEntitySca
 	@Override
 	public void drawSimple(BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-
+		active.apply(false);
+		photo.apply(0);
+		for(AMT amt : model)
+			amt.render(tes, buf);
 	}
 }
