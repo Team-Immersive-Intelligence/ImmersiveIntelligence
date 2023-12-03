@@ -5,19 +5,19 @@
 			"position": [
 				{
 					"time": 0.08696,
-					"transform": [0, 0, 0]
+					"transform": [0, 0.25, 0]
 				},
 				{
 					"time": 0.17391,
-					"transform": [0, 0, 6]
+					"transform": [0, 0.25, 6]
 				},
 				{
 					"time": 0.21739,
-					"transform": [0, 0, 6]
+					"transform": [0, 0.25, 6]
 				},
 				{
 					"time": 0.30435,
-					"transform": [0, 0, 0]
+					"transform": [0, 0.25, 0]
 				}
 			],
 			"scale": [
@@ -31,7 +31,7 @@
 			"position": [
 				{
 					"time": 0.08696,
-					"transform": [0, 0, 0]
+					"transform": [0, 0.3, 0]
 				},
 				{
 					"time": 0.17391,

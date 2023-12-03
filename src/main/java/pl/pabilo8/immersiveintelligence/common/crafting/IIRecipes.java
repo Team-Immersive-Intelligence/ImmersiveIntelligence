@@ -1153,7 +1153,7 @@ public class IIRecipes
 					new IngredientStack(item.getBulletCore("coreBrass", item.getAllowedCoreTypes()[0].getName())),
 					new IngredientStack(casingStack).setUseNBT(true),
 					(int)(128*item.getCaliber()),
-					(int)(240+(20*item.getCaliber()))
+					(int)(140+(25*Math.max(0, item.getCaliber()-1)))
 			);
 		}
 
@@ -1360,8 +1360,9 @@ public class IIRecipes
 					@Override
 					public boolean isItemValid(int slot, @Nonnull ItemStack stack)
 					{
-
-						return stack.getItem()==IIContent.itemBulletMagazine.stackToSub(ss).ammo;
+						Item item = stack.getItem();
+						return item==IIContent.itemBulletMagazine.stackToSub(ss).ammo
+								&&!((IAmmo)item).isBulletCore(stack);
 					}
 
 					@Override
