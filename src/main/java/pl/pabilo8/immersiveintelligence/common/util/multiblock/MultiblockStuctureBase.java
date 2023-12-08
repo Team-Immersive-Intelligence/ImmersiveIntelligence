@@ -272,6 +272,8 @@ public abstract class MultiblockStuctureBase<T extends TileEntityMultiblockPart<
 				POIs.put(poi.getKey(), new int[]{poi.getValue().getAsInt()});
 		}
 
+		//Sorting needed for binary search to work
+		POIs.values().forEach(Arrays::sort);
 	}
 
 	/**

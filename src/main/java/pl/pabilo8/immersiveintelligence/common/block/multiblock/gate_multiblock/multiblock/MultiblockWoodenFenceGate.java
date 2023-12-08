@@ -4,15 +4,12 @@ import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWoodenChainFence.WoodenFortifications;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock.IIBlockTypes_FenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenFenceGate.TileEntityWoodenFenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.tileentity.TileEntityGateBase;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.BlockIIMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 
 import javax.annotation.Nullable;
 
@@ -20,21 +17,14 @@ import javax.annotation.Nullable;
  * @author Pabilo8
  * @since 23.12.2021
  */
-public class MultiblockWoodenFenceGate extends MultiblockStuctureBase<TileEntityWoodenFenceGate>
+public class MultiblockWoodenFenceGate extends MultiblockFenceGateBase<TileEntityWoodenFenceGate>
 {
 	public static MultiblockWoodenFenceGate INSTANCE;
 
 	public MultiblockWoodenFenceGate()
 	{
 		super(new ResourceLocation(ImmersiveIntelligence.MODID, "multiblocks/wooden_fence_gate"));
-		offset = new Vec3i(0, 1, 0);
 		INSTANCE = this;
-	}
-
-	@Override
-	protected BlockIIMultiblock<?> getBlock()
-	{
-		return IIContent.blockFenceGateMultiblock;
 	}
 
 	@Override

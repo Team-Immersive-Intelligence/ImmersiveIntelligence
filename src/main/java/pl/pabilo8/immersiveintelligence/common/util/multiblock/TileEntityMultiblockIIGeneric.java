@@ -19,8 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,14 +28,11 @@ import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A standard II "medium-high tier" multiblock.<br>
@@ -50,9 +45,8 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblockIIGeneric<T>> extends TileEntityMultiblockIIBase<T>
-		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride, IAdvancedBounds
+		implements IIIInventory, IIEInternalFluxHandler, IHammerInteraction, IRedstoneOutput, IDataDevice, IComparatorOverride
 {
-	private List<AxisAlignedBB> aabb = null;
 
 	protected boolean redstoneControlInverted = false;
 	public NonNullList<ItemStack> inventory;
@@ -61,7 +55,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 	//--- Reference Variables ---//
 
-	public static final String KEY_SYNC_AABB = "_sync_aabb";
 	public static final String KEY_INVENTORY = "inventory";
 	public static final String KEY_ENERGY = "ifluxEnergy";
 	public static final String KEY_REDSTONE_CONTROL = "redstone_control";
@@ -121,9 +114,6 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 
 		if(isDummy()||isFullSyncMessage(message))
 			return;
-
-		if(message.hasKey(KEY_SYNC_AABB))
-			forMultiblockBlocks(TileEntityMultiblockIIGeneric::forceReCacheAABB);
 
 		if(message.hasKey(KEY_INVENTORY))
 			inventory = Utils.readInventory(message.getTagList(KEY_INVENTORY, 10), inventory.size());
@@ -319,67 +309,5 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	protected boolean isTankAvailable(int pos, int tank)
 	{
 		return false;
-	}
-
-
-	//--- IAdvancedBounds ---//
-
-	public final void forceReCacheAABB()
-	{
-		this.aabb = null;
-	}
-
-	@Override
-	public List<AxisAlignedBB> getBounds(boolean collision)
-	{
-		//Use or create AABB cache
-		if(pos!=-1&&aabb==null)
-			aabb = multiblock.getAABB(pos, getPos(), facing, mirrored);
-		return aabb;
-	}
-
-	//--- Points of Interest ---//
-
-	protected abstract int[] listAllPOI(MultiblockPOI poi);
-
-	public final int[] getPOI(MultiblockPOI poi)
-	{
-		if(poi.hasChildren())
-			return getAllPOI(poi.getChildren());
-		return listAllPOI(poi);
-	}
-
-	private int[] getAllPOI(List<MultiblockPOI> pois)
-	{
-		return pois.stream()
-				.map(this::getPOI)
-				.flatMapToInt(Arrays::stream)
-				.distinct()
-				.toArray();
-	}
-
-	protected final int[] getPOI(String name)
-	{
-		return multiblock.getPointsOfInterest(name);
-	}
-
-	public final boolean isPOI(MultiblockPOI poi)
-	{
-		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
-	}
-
-	public final boolean isPOI(String poi)
-	{
-		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
-	}
-
-	public final BlockPos getPOIPos(String name)
-	{
-		return getBlockPosForPos(multiblock.getPointOfInterest(name));
-	}
-
-	public final BlockPos getPOIPos(MultiblockPOI poi)
-	{
-		return getBlockPosForPos(getPOI(poi)[0]);
 	}
 }

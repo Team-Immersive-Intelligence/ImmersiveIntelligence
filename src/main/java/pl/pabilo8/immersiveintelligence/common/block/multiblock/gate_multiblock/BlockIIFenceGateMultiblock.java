@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock
 import blusunrize.immersiveengineering.api.IEProperties;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraftforge.common.property.Properties;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock.IIBlockTypes_FenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.*;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockAluminiumChainFenceGate.TileEntityAluminiumChainFenceGate;
@@ -41,7 +42,7 @@ public class BlockIIFenceGateMultiblock extends BlockIIMultiblock<IIBlockTypes_F
 	public BlockIIFenceGateMultiblock()
 	{
 		super("gate_multiblock", Material.IRON, PropertyEnum.create("type", IIBlockTypes_FenceGate.class),
-				IEProperties.FACING_HORIZONTAL, IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0]);
+				IEProperties.FACING_HORIZONTAL, IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0], Properties.AnimationProperty);
 		setHardness(3.0F);
 		setResistance(15.0F);
 

@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.IEApi;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration2;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice0;
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDevice1;
 import blusunrize.immersiveengineering.common.blocks.stone.BlockTypes_StoneDecoration;
@@ -973,6 +974,15 @@ public class IIRecipes
 				.addStack(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
 				.setRequiredProgress(250000)
 				.setRequiredSteps(1);
+		
+		//Gates
+		IIContent.UPGRADE_REDSTONE_ACTIVATION
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 4, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 2, BlockTypes_MetalDecoration0.RS_ENGINEERING.getMeta())))
+				.setRequiredProgress(20000);
+		IIContent.UPGRADE_RAZOR_WIRE
+				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration2, 6, BlockTypes_MetalDecoration2.RAZOR_WIRE.getMeta())))
+				.setRequiredProgress(20000);
 
 		//Weapons - Basic Tier
 

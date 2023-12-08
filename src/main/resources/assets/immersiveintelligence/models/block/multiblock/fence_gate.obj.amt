@@ -1,0 +1,19 @@
+{
+	"origins": {
+		"main": [8, -15, 8],
+		"redstone_main": [0, 1, 0],
+		"right": [8, -15, 8],
+		"redstone_right": [6, 43, 3.5],
+		"razor_wire_right": [0, 1, 0],
+		"left": [8, -15, -104],
+		"redstone_left": [6, 43, -99.5],
+		"razor_wire_left": [0, 1, -96]
+	},
+	"hierarchy": {
+		"redstone_main": "main",
+		"redstone_right": "right",
+		"razor_wire_right": "right",
+		"redstone_left": "left",
+		"razor_wire_left": "left"
+	}
+}

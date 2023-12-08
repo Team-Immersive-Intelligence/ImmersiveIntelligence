@@ -22,9 +22,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageIITileSync;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IAdvancedBounds;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -34,15 +39,19 @@ import java.util.function.Consumer;
  * @author Pabilo8
  * @since 04.08.2022
  */
-public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T> implements IMirrorAble, IIEInventory
+public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockIIBase<T>> extends TileEntityMultiblockPart<T> implements IMirrorAble, IIEInventory, IAdvancedBounds
 {
+	public static final String KEY_SYNC_AABB = "_sync_aabb";
 	//The multiblock INSTANCE, for easy access
 	protected final MultiblockStuctureBase<T> multiblock;
+	//Master multiblock cached for faster access
+	private T master = null;
 
 
 	//--- Reference Variables ---//
 
 	public static final String KEY_SYNC_ALL_VALUES = "_sync_all_values";
+	protected List<AxisAlignedBB> aabb = null;
 
 	protected TileEntityMultiblockIIBase(MultiblockStuctureBase<T> multiblock)
 	{
@@ -71,6 +80,20 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	}
 
 	/**
+	 * Cache the master for faster access
+	 *
+	 * @return master multiblock TileEntity
+	 */
+	@Nullable
+	@Override
+	public T master()
+	{
+		if(master!=null)
+			return master;
+		return master = super.master();
+	}
+
+	/**
 	 * Override <b>THIS</b>.<br>
 	 * You <b>CAN NOT</b> override the {@link #update()} method<br>
 	 * Called every tick.
@@ -84,6 +107,9 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	{
 		if(isFullSyncMessage(message))
 			readCustomNBT(message, false);
+
+		if(message.hasKey(KEY_SYNC_AABB))
+			forMultiblockBlocks(TileEntityMultiblockIIBase::forceReCacheAABB);
 	}
 
 	/**
@@ -284,5 +310,66 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 	{
 		if(!message.hasNoTags())
 			IIPacketHandler.sendToServer(new MessageIITileSync(this, message));
+	}
+
+	//--- IAdvancedBounds ---//
+
+	public final void forceReCacheAABB()
+	{
+		this.aabb = null;
+	}
+
+	@Override
+	public List<AxisAlignedBB> getBounds(boolean collision)
+	{
+		//Use or create AABB cache
+		if(pos!=-1&&aabb==null)
+			aabb = multiblock.getAABB(pos, getPos(), facing, mirrored);
+		return aabb;
+	}
+
+	//--- Points of Interest ---//
+
+	protected abstract int[] listAllPOI(MultiblockPOI poi);
+
+	public final int[] getPOI(MultiblockPOI poi)
+	{
+		if(poi.hasChildren())
+			return getAllPOI(poi.getChildren());
+		return listAllPOI(poi);
+	}
+
+	private int[] getAllPOI(List<MultiblockPOI> pois)
+	{
+		return pois.stream()
+				.map(this::getPOI)
+				.flatMapToInt(Arrays::stream)
+				.distinct()
+				.toArray();
+	}
+
+	protected final int[] getPOI(String name)
+	{
+		return multiblock.getPointsOfInterest(name);
+	}
+
+	public final boolean isPOI(MultiblockPOI poi)
+	{
+		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
+	}
+
+	public final boolean isPOI(String poi)
+	{
+		return Arrays.binarySearch(getPOI(poi), pos) >= 0;
+	}
+
+	public final BlockPos getPOIPos(String name)
+	{
+		return getBlockPosForPos(multiblock.getPointOfInterest(name));
+	}
+
+	public final BlockPos getPOIPos(MultiblockPOI poi)
+	{
+		return getBlockPosForPos(getPOI(poi)[0]);
 	}
 }

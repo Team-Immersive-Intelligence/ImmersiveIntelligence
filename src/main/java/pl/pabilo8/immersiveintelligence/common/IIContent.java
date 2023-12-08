@@ -101,6 +101,11 @@ public class IIContent
 	//changes the projectile workshop to *fill* projectiles
 	public static final MachineUpgrade UPGRADE_CORE_FILLER = CommonProxy.createMachineUpgrade("core_filler");
 
+	//adds razor wire on top of a gate
+	public static final MachineUpgrade UPGRADE_RAZOR_WIRE = CommonProxy.createMachineUpgrade("razor_wire");
+	//allows connecting redstone wire to a gate
+	public static final MachineUpgrade UPGRADE_REDSTONE_ACTIVATION = CommonProxy.createMachineUpgrade("rs_activation");
+
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_MACHINEGUN = EmplacementWeapon.register(EmplacementWeaponMachinegun::new);
 	public static final MachineUpgrade UPGRADE_EMPLACEMENT_WEAPON_IROBSERVER = EmplacementWeapon.register(EmplacementWeaponInfraredObserver::new);
 

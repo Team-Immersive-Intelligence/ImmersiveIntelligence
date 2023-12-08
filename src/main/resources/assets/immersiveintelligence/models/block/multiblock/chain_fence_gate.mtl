@@ -1,6 +1,14 @@
-# Made by Pabilo8 in Blockbench 4.0.5
+# Made in Blockbench 4.9.0
+newmtl m_ec76a3c6-ffa7-b12f-094a-90f57375dcea
+map_Kd immersiveintelligence:blocks/common/common_copper_cable
+newmtl m_0cae4205-bbc6-7c37-ca59-e70a3fc7ea91
+map_Kd immersiveintelligence:blocks/multiblock/gate_misc
+newmtl m_cdaa3435-af61-5ad6-f9b6-60c5fee5813c
+map_Kd immersiveengineering:blocks/connector_connector_redstone
 newmtl m_0
 map_Kd immersiveintelligence:blocks/multiblock/wooden_gate
+newmtl m_6517ab6e-7a04-f9ef-259b-e4afdea7921f
+map_Kd immersiveengineering:blocks/metal_decoration2_razor_wire
 newmtl m_1
 map_Kd immersiveintelligence:blocks/fortification/wooden_chain_fence
 newmtl none

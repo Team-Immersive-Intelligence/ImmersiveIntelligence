@@ -125,6 +125,7 @@ public class IIManualCategoryData extends IIManualCategory
 						)
 				)
 				.addSource("wireless_connection", EasyNBT.newNBT());
+		addEntry("data_callback");
 
 		addEntry("data_input_machine")
 				.addSource("punchtape", getSourceForItem(IIContent.itemPunchtape.getStack(1)))
@@ -173,85 +174,10 @@ public class IIManualCategoryData extends IIManualCategory
 		addEntry("functions/arithmetic");
 		addEntry("folder/device/sekritdokuments/data_pol");
 
-		/*ManualHelper.addEntry("data_main", getCategory(),
-				new ManualPages.Text(ManualHelper.getManual(), "data_main0"),
-				new ManualPages.Text(ManualHelper.getManual(), "data_main1")
-		);
-
-		IIManualPageDataType[] dataPages = DataPacket.varTypes.values().stream()
-				.map(DataPacket::getVarInstance)
-				.map(data -> new IIManualPageDataType(ManualHelper.getManual(), data))
-				.toArray(IIManualPageDataType[]::new);
-
-		ManualHelper.addEntry("data_variable_types", getCategory(), dataPages);
-
-		ManualHelper.addEntry("data_wires", getCategory(),
-				new ManualPages.Crafting(ManualHelper.getManual(), "data_wires0", new ItemStack(IIContent.itemDataWireCoil)),
-				new ManualPages.CraftingMulti(ManualHelper.getManual(), "data_wires1",
-						new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_CONNECTOR.getMeta()),
-						new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.DATA_RELAY.getMeta())
-				)
-		);
-
-		ManualHelper.addEntry("circuit_production", getCategory(),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production0",
-						new ItemStack(IEContent.itemMaterial, 1, 27),
-						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD),
-						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD)
-				),
-
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_basic",
-						IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_RAW),
-						IIContent.itemMaterial.getStack(Materials.BASIC_CIRCUIT_BOARD_ETCHED),
-						IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
-						new ItemStack(IEContent.itemMaterial, 1, 27)
-				),
-				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_basic_usages"),
-
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_advanced",
-						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_RAW),
-						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD_ETCHED),
-						IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
-						IIContent.itemMaterial.getStack(Materials.ADVANCED_CIRCUIT_BOARD)
-				),
-				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_advanced_usages"),
-
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "circuit_production_processor",
-						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_RAW),
-						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED),
-						IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
-						IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD)
-				),
-				new ManualPages.Text(ManualHelper.getManual(), "circuit_production_processor_usages")
-		);
-
-		ManualHelper.addEntry("data_input_machine", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "data_input_machine0", MultiblockDataInputMachine.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "data_input_machine1"),
-				new ManualPages.Text(ManualHelper.getManual(), "data_input_machine2")
-		);
-		ManualHelper.addEntry("arithmetic_logic_machine", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "arithmetic_logic_machine0", MultiblockArithmeticLogicMachine.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "arithmetic_logic_machine1"),
-				new ManualPages.Text(ManualHelper.getManual(), "arithmetic_logic_machine2"),
-
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_arithmetic", new ItemStack(IIContent.itemCircuit, 1, 0)),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_advanced_arithmetic", new ItemStack(IIContent.itemCircuit, 1, 1)),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_logic", new ItemStack(IIContent.itemCircuit, 1, 2)),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_comparator", new ItemStack(IIContent.itemCircuit, 1, 3)),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_advanced_logic", new ItemStack(IIContent.itemCircuit, 1, 4)),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_advanced_text", new ItemStack(IIContent.itemCircuit, 1, 5)),
-				new ManualPages.ItemDisplay(ManualHelper.getManual(), "arithmetic_logic_machine_fcircuit_advanced_itemstack", new ItemStack(IIContent.itemCircuit, 1, 6))
-		);
+		/*
 		ManualHelper.addEntry("redstone_interface", getCategory(),
 				new ManualPageMultiblock(ManualHelper.getManual(), "redstone_interface0", MultiblockRedstoneInterface.INSTANCE),
 				new ManualPages.Text(ManualHelper.getManual(), "redstone_interface1")
-		);
-		ManualHelper.addEntry("conveyor_scanner", getCategory(),
-				new ManualPageMultiblock(ManualHelper.getManual(), "conveyor_scanner0", MultiblockConveyorScanner.INSTANCE),
-				new ManualPages.Text(ManualHelper.getManual(), "conveyor_scanner1"),
-				new IIManualPageDataVariables(ManualHelper.getManual(), "conveyor_scanner", false)
-						.addEntry(new DataTypeItemStack(), 's')
 		);
 
 		ManualHelper.addEntry("printing_press", getCategory(),
