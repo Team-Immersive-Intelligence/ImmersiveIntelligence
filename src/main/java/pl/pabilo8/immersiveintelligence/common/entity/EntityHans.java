@@ -146,12 +146,7 @@ public class EntityHans extends EntityCreature implements INpc
 		super.onUpdate();
 
 		tasks.taskEntries.removeIf(entry -> entry.action instanceof AIHansBase&&((AIHansBase)entry.action).shouldBeRemoved());
-		for(EntityAITaskEntry entry : tasks.taskEntries)
-		{
-			if(entry.action instanceof AIHansBase)
-				((AIHansBase)entry.action).setRequiredAnimation();
-		}
-		
+
 		if(world.isRemote)
 		{
 			if(dataManager.isDirty())
@@ -214,6 +209,12 @@ public class EntityHans extends EntityCreature implements INpc
 			HansArmAnimation currentArm = armAnimation;
 			legAnimation = isInWater()?HansLegAnimation.SWIMMING: HansLegAnimation.STANDING;
 			armAnimation = HansArmAnimation.NORMAL;
+
+			for(EntityAITaskEntry entry : tasks.taskEntries)
+			{
+				if(entry.action instanceof AIHansBase)
+					((AIHansBase)entry.action).setRequiredAnimation();
+			}
 
 			if(currentLeg!=legAnimation)
 			{
@@ -531,7 +532,7 @@ public class EntityHans extends EntityCreature implements INpc
 				else
 					sendPlayerMessage(player, "Danke für diese neue Patronen, aber habe ich sie genug.");
 
-				tasks.addTask(2, new AIHansTimedLookAtEntity(this, player, 60, 1f));
+				tasks.addTask(2, new AIHansSalute(this, player));
 			}
 			player.setHeldItem(EnumHand.MAIN_HAND, heldItem);
 			player.swingArm(hand);

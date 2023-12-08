@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
-import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 import pl.pabilo8.immersiveintelligence.common.entity.bullet.EntityBullet;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityFieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.entity.vehicle.EntityVehicleSeat;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +78,7 @@ public class AIHansHowitzer extends EntityAIBase
 	 */
 	public void updateTask()
 	{
+		Vec3d positionVector = howitzer.getPositionVector().addVector(0, 1, 0);
 		if(seat==0)
 		{
 			if(!(howitzer.turnLeft||howitzer.turnRight||howitzer.forward||howitzer.backward)&&target.isPresent())
@@ -86,10 +87,10 @@ public class AIHansHowitzer extends EntityAIBase
 				this.hans.faceEntity(t, 10, 10);
 				float pp;
 
-				if(howitzer.getPositionVector().distanceTo(t.getPositionVector()) > 40)
-					pp = getAnglePrediction(howitzer.getPositionVector(), IIUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
+				if(positionVector.distanceTo(t.getPositionVector()) > 40)
+					pp = getAnglePrediction(positionVector, IIUtils.getEntityCenter(t), new Vec3d(t.motionX, t.motionY, t.motionZ))[1];
 				else
-					pp = IIUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getDefaultVelocity(), 3.4f, howitzer.getPositionVector().subtract(t.getPositionVector()));
+					pp = IIUtils.getDirectFireAngle(IIContent.itemAmmoLightArtillery.getDefaultVelocity(), 3.4f, positionVector.subtract(t.getPositionVector()));
 
 				howitzer.gunPitchUp = howitzer.gunPitch-pp < 0;
 				howitzer.gunPitchDown = howitzer.gunPitch-pp > 0;
@@ -130,7 +131,7 @@ public class AIHansHowitzer extends EntityAIBase
 				Entity entity = target.get();
 				this.hans.faceEntity(entity, 10, 10);
 
-				float[] yp = getAnglePrediction(howitzer.getPositionVector().addVector(0, 1, 0), IIUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
+				float[] yp = getAnglePrediction(positionVector.addVector(0, 1, 0), IIUtils.getEntityCenter(entity), new Vec3d(entity.motionX, entity.motionY, entity.motionZ));
 				if(!isAimedAt(yp[0], yp[1]))
 				{
 					float y = MathHelper.wrapDegrees(360+yp[0]-this.howitzer.rotationYaw);
