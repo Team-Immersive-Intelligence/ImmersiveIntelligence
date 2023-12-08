@@ -32,7 +32,13 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 	{
 		@EnumTileProvider(tile = TileEntityCO2Filter.class)
 		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT)
-		CO2_FILTER
+		CO2_FILTER,
+		NEWSPAPER_STAND,
+		VENDING_MACHINE,
+		TYPEWRITER_TABLE,
+		CASHIER_TABLE,
+		PLANNING_TABLE,
+		REMOTE_CONTROL_TABLE,
 	}
 
 	public BlockIIMetalDevice1()
