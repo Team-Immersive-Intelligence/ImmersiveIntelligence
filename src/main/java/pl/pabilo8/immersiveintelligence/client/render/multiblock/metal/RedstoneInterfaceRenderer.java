@@ -41,6 +41,7 @@ public class RedstoneInterfaceRenderer extends TileEntitySpecialRenderer<TileEnt
 			GlStateManager.enableBlend();
 			ModelRedstoneInterface modelCurrent = te.mirrored?modelFlipped: model;
 			modelCurrent.getBlockRotation(te.facing, te.mirrored);
+
 			modelCurrent.render();
 			GlStateManager.disableBlend();
 
