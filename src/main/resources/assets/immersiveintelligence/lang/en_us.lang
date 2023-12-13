@@ -914,6 +914,11 @@ subtitle.immersiveintelligence.metal_hatch_close=Metal Hatch Shuts
 subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
 subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
 
+subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
+subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
+subtitle.immersiveintelligence.vise_open=Vise Tightens its Clamps
+subtitle.immersiveintelligence.vise_close=Vise Loosens its Clamps
+
 subtitle.immersiveintelligence.autocannon_shot=Autocannon Firing
 subtitle.immersiveintelligence.autocannon_shot_distant=Autocannon Firing in Distance
 subtitle.immersiveintelligence.autocannon_reload=Autocannon Reloading
@@ -1081,6 +1086,12 @@ machineupgrade.immersiveintelligence.packer_naming.desc=Allows the Packer to nam
 
 machineupgrade.immersiveintelligence.radio_locators=Radio Locators
 machineupgrade.immersiveintelligence.radio_locators.desc=Allows the Radar to detect radio signals and compute points of their origin. Increases the amount of energy required to operate.
+
+machineupgrade.immersiveintelligence.rs_activation=Redstone Activation
+machineupgrade.immersiveintelligence.rs_activation.desc=Attaching a redstone wire connector and a pair of actuators allows opening the gate with a redstone signal.
+
+machineupgrade.immersiveintelligence.razor_wire=Razor Wire
+machineupgrade.immersiveintelligence.razor_wire.desc=Attaches a razor wire on top of the gate, damaging any enemies that dare to try to climb over it.
 
 #Descriptions
 desc.immersiveintelligence.radio_configurator_basic=Allows changing the frequency of basic radio devices.

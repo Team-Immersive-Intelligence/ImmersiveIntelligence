@@ -5,7 +5,6 @@ import blusunrize.immersiveengineering.api.DimensionBlockPos;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
-import blusunrize.immersiveengineering.api.energy.wires.TileEntityImmersiveConnectable;
 import blusunrize.immersiveengineering.api.shader.CapabilityShader;
 import blusunrize.immersiveengineering.client.models.IOBJModelCallback;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
@@ -55,7 +54,6 @@ import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITileProviderEnum;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
-import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockConnectable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -396,10 +394,9 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 					extended = extended.withProperty(CapabilityShader.BLOCKSTATE_PROPERTY, te.getCapability(CapabilityShader.SHADER_CAPABILITY, null));
 				if(te instanceof IPropertyPassthrough&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.TILEENTITY_PASSTHROUGH))
 					extended = extended.withProperty(IEProperties.TILEENTITY_PASSTHROUGH, te);
-				if(te instanceof TileEntityImmersiveConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
-					extended = extended.withProperty(IEProperties.CONNECTIONS, ((TileEntityImmersiveConnectable)te).genConnBlockstate());
-				if(te instanceof TileEntityMultiblockConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
-					extended = extended.withProperty(IEProperties.CONNECTIONS, ((TileEntityMultiblockConnectable<?, ?>)te).genConnBlockstate());
+
+				if(te instanceof IImmersiveConnectable&&((IExtendedBlockState)state).getUnlistedNames().contains(IEProperties.CONNECTIONS))
+					extended = extended.withProperty(IEProperties.CONNECTIONS, IIUtils.genConnectableBlockstate(((TileEntity & IImmersiveConnectable)te)));
 			}
 			state = extended;
 		}

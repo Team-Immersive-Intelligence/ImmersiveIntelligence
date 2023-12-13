@@ -1,12 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common;
 
+import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler.RailgunProjectileProperties;
 import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IDirectionalTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.math.IntMath;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
@@ -58,9 +63,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -77,6 +80,40 @@ public class IIUtils
 		double deltaZ = (pos1.getZ()+(center?0d: 0.5d))-(pos2.getZ()+(center?0d: 0.5d));
 
 		return Math.sqrt((deltaX*deltaX)+(deltaY*deltaY)+(deltaZ*deltaZ));
+	}
+
+	public static <T extends TileEntity & IImmersiveConnectable> Set<Connection> genConnectableBlockstate(T te)
+	{
+		Set<Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(te.getWorld(), te.getPos());
+		if(conns==null)
+			return ImmutableSet.of();
+		Set<Connection> ret = new HashSet<Connection>()
+		{
+			@Override
+			public boolean equals(Object o)
+			{
+				if(o==this)
+					return true;
+				if(!(o instanceof HashSet))
+					return false;
+				HashSet<Connection> other = (HashSet<Connection>)o;
+				if(other.size()!=this.size())
+					return false;
+				for(Connection c : this)
+					if(!other.contains(c))
+						return false;
+				return true;
+			}
+		};
+		for(Connection c : conns)
+		{
+			IImmersiveConnectable end = ApiUtils.toIIC(c.end, te.getWorld(), false);
+			if(end==null)
+				continue;
+			c.getSubVertices(te.getWorld());
+			ret.add(c);
+		}
+		return ret;
 	}
 
 	@Nullable

@@ -4,8 +4,10 @@ import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.block.fortification.BlockIIWoodenChainFence.WoodenFortifications;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.BlockIIFenceGateMultiblock.IIBlockTypes_FenceGate;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.gate_multiblock.multiblock.MultiblockWoodenChainFenceGate.TileEntityWoodenChainFenceGate;
@@ -44,6 +46,18 @@ public class MultiblockWoodenChainFenceGate extends MultiblockFenceGateBase<Tile
 		public TileEntityWoodenChainFenceGate()
 		{
 			super(INSTANCE);
+		}
+
+		@Override
+		protected SoundEvent getOpeningSound()
+		{
+			return IISounds.gateWoodenOpen;
+		}
+
+		@Override
+		protected SoundEvent getClosingSound()
+		{
+			return IISounds.gateWoodenClose;
 		}
 
 		@Override

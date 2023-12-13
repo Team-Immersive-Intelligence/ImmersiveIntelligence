@@ -153,6 +153,16 @@ public class IISounds
 	public static MultiSound slidingDoorOpenM = new MultiSound(slidingDoorStart, slidingDoorOpen, slidingDoorEnd);
 	public static MultiSound slidingDoorCloseM = new MultiSound(slidingDoorStart, slidingDoorClose, slidingDoorClose);
 
+	//TODO: 13.12.2023 gate sounds
+	@ModSound(sounds = {"device/hatch/gate_wooden/open"}, subtitle = "gate_open")
+	public static SoundEvent gateWoodenOpen = registerSound("wooden_gate_open");
+	@ModSound(sounds = {"device/hatch/gate_wooden/close"}, subtitle = "gate_close")
+	public static SoundEvent gateWoodenClose = registerSound("wooden_gate_close");
+	@ModSound(sounds = {"device/hatch/gate_metal/open"}, subtitle = "gate_open")
+	public static SoundEvent gateMetalOpen = registerSound("wooden_gate_open");
+	@ModSound(sounds = {"device/hatch/gate_metal/close"}, subtitle = "gate_close")
+	public static SoundEvent gateMetalClose = registerSound("wooden_gate_close");
+
 	//--- Machines ---//
 	@ModSound(sounds = {"device/*"}, subtitle = "device_*")
 	public static SoundEvent rolling = registerSound("rolling");
@@ -172,8 +182,8 @@ public class IISounds
 	@ModSound(sounds = {"device/welding/end"}, subtitle = "welding")
 	public static SoundEvent weldingEnd = registerSound("welding_end");
 
-	@ModSound(sounds = {"device/sawmill/start"}, subtitle = "sawmill_idle")
-	public static SoundEvent sawmillIdle = registerSound("sawmill_start");
+	@ModSound(sounds = {"device/sawmill/idle"}, subtitle = "sawmill_idle")
+	public static SoundEvent sawmillIdle = registerSound("sawmill_idle");
 	@ModSound(sounds = {"device/sawmill/start"}, subtitle = "sawmill")
 	public static SoundEvent sawmillStart = registerSound("sawmill_start");
 	@ModSound(sounds = {"device/sawmill/mid"}, subtitle = "sawmill")

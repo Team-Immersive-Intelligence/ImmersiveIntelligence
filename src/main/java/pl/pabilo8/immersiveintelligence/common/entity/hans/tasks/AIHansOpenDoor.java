@@ -139,7 +139,7 @@ public class AIHansOpenDoor extends AIHansBase
 				{
 					TileEntityGateBase<?> master = ((TileEntityGateBase<?>)te).master();
 					if(master!=null)
-						return master.open;
+						return master.gate.getState();
 				}
 				return false;
 			}

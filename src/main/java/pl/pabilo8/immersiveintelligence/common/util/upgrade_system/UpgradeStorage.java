@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class UpgradeStorage<T extends TileEntity>
 {
+	//REFACTOR: 12.12.2023 move to capabilities
 	private T tile;
 	private ArrayList<MachineUpgrade> upgrades = new ArrayList<>();
 	private MachineUpgrade currentlyInstalled = null;
@@ -32,10 +33,12 @@ public class UpgradeStorage<T extends TileEntity>
 			clientUpgradeProgress = (int)Math.min(clientUpgradeProgress+(Tools.wrenchUpgradeProgress/2f), getMaxClientProgress());
 	}
 
-	public void saveUpgradesToNBT(NBTTagCompound tag)
+	public NBTTagCompound saveUpgradesToNBT()
 	{
+		NBTTagCompound tag = new NBTTagCompound();
 		for(MachineUpgrade upgrade : upgrades)
 			tag.setBoolean(upgrade.getName(), true);
+		return tag;
 	}
 
 	public void getUpgradesFromNBT(NBTTagCompound tag)
@@ -100,5 +103,20 @@ public class UpgradeStorage<T extends TileEntity>
 	public void removeUpgrade(MachineUpgrade upgrade)
 	{
 		upgrades.remove(upgrade);
+	}
+
+	public boolean hasUpgrade(MachineUpgrade upgrade)
+	{
+		return upgrades.contains(upgrade);
+	}
+
+	public boolean addUpgrade(MachineUpgrade upgrade, boolean test)
+	{
+		if(!test&&!hasUpgrade(upgrade))
+		{
+			upgrades.add(upgrade);
+			return true;
+		}
+		return false;
 	}
 }

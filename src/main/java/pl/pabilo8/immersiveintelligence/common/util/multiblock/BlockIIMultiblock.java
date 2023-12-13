@@ -28,6 +28,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITi
 import pl.pabilo8.immersiveintelligence.common.util.block.ItemBlockIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IExplosionResistantMultiblock;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,6 +69,11 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		state = super.getActualState(state, world, pos);
+		TileEntity tile = world.getTileEntity(pos);
+
+		if(tile instanceof TileEntityMultiblockIIConnectable)
+			state = applyProperty(state, IEProperties.BOOLEANS[1], ((TileEntityMultiblockIIConnectable<?>)tile).isPOI(MultiblockPOI.WIRE_MOUNT));
+
 		return state;
 	}
 

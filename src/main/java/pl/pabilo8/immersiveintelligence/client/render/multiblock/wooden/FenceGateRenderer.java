@@ -29,8 +29,8 @@ import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultiblockRenderer<T>
 {
 	private AMT[] model;
-	IIMachineUpgradeModel fluidUpgrade, energyUpgrade;
-	private IIAnimationCompiledMap open;
+	IIMachineUpgradeModel redstoneUpgrade, razorUpgrade;
+	private IIAnimationCompiledMap open, redstone, razor;
 
 	public FenceGateRenderer(String name)
 	{
@@ -46,22 +46,11 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 			mirrorRender();
 
 		//Apply door animation
-		open.apply(IIAnimationUtils.getAnimationProgress(
-				te.openProgress, TileEntityGateBase.MAX_OPEN_PROGRESS,
-				true, !te.open,
-				1, 2, partialTicks)
-		);
+		open.apply(te.gate.getProgress(partialTicks));
 
-		if(fluidUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
-		{
-			fluidUpgrade.defaultize();
-			fluidUpgrade.render(tes, buf);
-		}
-		else if(energyUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)
-		{
-			energyUpgrade.defaultize();
-			energyUpgrade.render(tes, buf);
-		}
+		//Apply upgrade or their construction animations
+		redstone.apply((redstoneUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
+		razor.apply((razorUpgrade.renderConstruction(te, tes, buf, partialTicks)==UpgradeStage.INSTALLED)?1: 0);
 
 		for(AMT amt : model)
 			amt.render(tes, buf);
@@ -127,13 +116,17 @@ public class FenceGateRenderer<T extends TileEntityGateBase<T>> extends IIMultib
 		open = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/open"));
 
 		AMT[] modelUpgrades = IIAnimationUtils.getAMTFromRes(
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/packer_construction.obj.ie"),
-				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/packer_construction.obj.amt")
+				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/gate_construction.obj.ie"),
+				new ResourceLocation(ImmersiveIntelligence.MODID, "models/block/multiblock/gate_construction.obj.amt")
 		);
-		fluidUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_REDSTONE_ACTIVATION, modelUpgrades,
-				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_fluid"));
-		energyUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
-				new ResourceLocation(ImmersiveIntelligence.MODID, "packer/upgrade_energy"));
+
+		redstone = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/redstone"));
+		razor = IIAnimationCompiledMap.create(model, ResLoc.of(IIReference.RES_II, "gate/razor"));
+
+		redstoneUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_REDSTONE_ACTIVATION, modelUpgrades,
+				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_redstone"));
+		razorUpgrade = new IIMachineUpgradeModel(IIContent.UPGRADE_RAZOR_WIRE, modelUpgrades,
+				new ResourceLocation(ImmersiveIntelligence.MODID, "gate/upgrade_razor"));
 	}
 
 	@Override

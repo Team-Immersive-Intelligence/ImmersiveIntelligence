@@ -5,7 +5,7 @@
 		"right": [8, -15, 8],
 		"redstone_right": [6, 43, 3.5],
 		"razor_wire_right": [0, 1, 0],
-		"left": [8, -15, -104],
+		"left": [120, -15, 8],
 		"redstone_left": [6, 43, -99.5],
 		"razor_wire_left": [0, 1, -96]
 	},

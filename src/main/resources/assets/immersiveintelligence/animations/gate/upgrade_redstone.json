@@ -1,0 +1,141 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"redstone_right": {
+			"rotation": [
+				{
+					"time": 0.66667,
+					"transform": [0, 55, 0]
+				},
+				{
+					"time": 0.77777,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.80557,
+					"transform": [0, 2.5, 0]
+				},
+				{
+					"time": 0.83333,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.66667,
+					"transform": [6, 0, 0]
+				},
+				{
+					"time": 0.77777,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"redstone_left": {
+			"rotation": [
+				{
+					"time": 0.83333,
+					"transform": [0, -25, 0]
+				},
+				{
+					"time": 0.94443,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.97223,
+					"transform": [0, 5, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.83333,
+					"transform": [-9, 0, 0]
+				},
+				{
+					"time": 0.94443,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.97223,
+					"transform": [1, 0, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"redstone1": {
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 32, 0]
+				},
+				{
+					"time": 0.16667,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"redstone2": {
+			"position": [
+				{
+					"time": 0.5,
+					"transform": [0, -8, 0]
+				},
+				{
+					"time": 0.66667,
+					"transform": [0, 0, 0]
+				}
+			],
+			"scale": [
+				{
+					"time": 0.5,
+					"transform": [1, 0.1, 1]
+				},
+				{
+					"time": 0.66667,
+					"transform": [1, 1, 1]
+				}
+			]
+		},
+		"redstone3": {
+			"position": [
+				{
+					"time": 0.16667,
+					"transform": [0, 0, -16]
+				},
+				{
+					"time": 0.33333,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"redstone4": {
+			"rotation": [
+				{
+					"time": 0.33333,
+					"transform": [0, 0, -720]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			],
+			"position": [
+				{
+					"time": 0.33333,
+					"transform": [0, 0, -9]
+				},
+				{
+					"time": 0.5,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}
