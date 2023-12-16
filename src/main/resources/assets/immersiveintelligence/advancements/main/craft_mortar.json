@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "immersiveintelligence:mortar"
+    },
+    "title": {
+      "translate": "advancement.immersiveintelligence.craft_mortar"
+    },
+    "description": {
+      "translate": "advancement.immersiveintelligence.craft_mortar.desc"
+    }
+  },
+  "parent": "immersiveintelligence:main/craft_gun_barrel_steel",
+  "criteria": {
+    "craft_hammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "immersiveintelligence:mortar"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1552,6 +1552,9 @@ advancement.immersiveintelligence.craft_lighter.desc=Craft a Lighter
 advancement.immersiveintelligence.craft_mg=Property of Hans
 advancement.immersiveintelligence.craft_mg.desc=Craft the infamous Machinegun
 
+advancement.immersiveintelligence.craft_mortar=Death from Above
+advancement.immersiveintelligence.craft_mortar.desc=Craft the Mortar
+
 #Reference to Industrialcraft2's alarm siren addon
 advancement.immersiveintelligence.craft_siren=Is the reactor OK?
 advancement.immersiveintelligence.craft_siren.desc=Craft an Alarm Siren
