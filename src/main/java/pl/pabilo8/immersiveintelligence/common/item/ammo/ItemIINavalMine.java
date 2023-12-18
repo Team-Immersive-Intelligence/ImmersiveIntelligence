@@ -182,8 +182,8 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 			else
 			{
 				Block block = worldIn.getBlockState(raytraceresult.getBlockPos()).getBlock();
-				boolean flag1 = block==Blocks.WATER||block==Blocks.FLOWING_WATER;
-				EntityNavalMine mine = new EntityNavalMine(worldIn, itemstack, raytraceresult.hitVec.x, flag1?raytraceresult.hitVec.y-0.12D: raytraceresult.hitVec.y, raytraceresult.hitVec.z);
+				boolean underWater = block==Blocks.WATER||block==Blocks.FLOWING_WATER;
+				EntityNavalMine mine = new EntityNavalMine(worldIn, itemstack, raytraceresult.hitVec.x, underWater?raytraceresult.hitVec.y-0.12D: raytraceresult.hitVec.y, raytraceresult.hitVec.z);
 
 				if(!worldIn.getCollisionBoxes(mine, mine.getEntityBoundingBox().grow(-0.1D)).isEmpty())
 				{
@@ -194,13 +194,14 @@ public class ItemIINavalMine extends ItemIIAmmoBase implements IItemScrollable
 					if(!worldIn.isRemote)
 					{
 						EntityNavalMineAnchor anchor = new EntityNavalMineAnchor(worldIn);
-						anchor.setPosition(raytraceresult.hitVec.x, flag1?raytraceresult.hitVec.y-0.12D: raytraceresult.hitVec.y-1.5, raytraceresult.hitVec.z);
+						anchor.setPosition(raytraceresult.hitVec.x, underWater?raytraceresult.hitVec.y-0.12D: raytraceresult.hitVec.y, raytraceresult.hitVec.z);
 						mine.setMaxLength(ItemNBTHelper.hasKey(itemstack, "length")?ItemNBTHelper.getInt(itemstack, "length"): 5);
 						worldIn.spawnEntity(anchor);
-						mine.setPosition(anchor.posX, anchor.posY-0.5, anchor.posZ);
+						mine.setPosition(anchor.posX, underWater?anchor.posY-0.5: anchor.posY+0.5, anchor.posZ);
 						worldIn.spawnEntity(mine);
 						mine.startRiding(anchor);
-						worldIn.playSound(null, mine.posX, mine.posY, mine.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.75F, 0.8F);
+						if(underWater)
+							worldIn.playSound(null, mine.posX, mine.posY, mine.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.75F, 0.8F);
 					}
 
 					if(!playerIn.capabilities.isCreativeMode)
