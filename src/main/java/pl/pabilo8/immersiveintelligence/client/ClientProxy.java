@@ -308,30 +308,31 @@ public class ClientProxy extends CommonProxy
 		//long live .obj models! ^^
 
 		//Register entity renderers
-		RenderingRegistry.registerEntityRenderingHandler(EntitySkyCrate.class, SkyCrateRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, BulletRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMine.class, NavalMineRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityNavalMineAnchor.class, NavalMineAnchorRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityShrapnel.class, ShrapnelRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityWhitePhosphorus.class, EntityRenderNone::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityMachinegun.class, MachinegunRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityMotorbike.class, MotorbikeRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityDrone.class, DroneRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityMortar.class, MortarRenderer::new);
+		registerEntityRenderer(EntitySkyCrate.class, SkyCrateRenderer::new);
+		registerEntityRenderer(EntityBullet.class, BulletRenderer::new);
+		registerEntityRenderer(EntityNavalMine.class, NavalMineRenderer::new);
+		registerEntityRenderer(EntityNavalMineAnchor.class, NavalMineAnchorRenderer::new);
+		registerEntityRenderer(EntityShrapnel.class, ShrapnelRenderer::new);
+		registerEntityRenderer(EntityWhitePhosphorus.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityMachinegun.class, MachinegunRenderer::new);
+		registerEntityRenderer(EntityMotorbike.class, MotorbikeRenderer::new);
+		registerEntityRenderer(EntityDrone.class, DroneRenderer::new);
+		registerEntityRenderer(EntityFieldHowitzer.class, FieldHowitzerRenderer::new);
+		registerEntityRenderer(EntityTripodPeriscope.class, TripodPeriscopeRenderer::new);
+		registerEntityRenderer(EntityMortar.class, MortarRenderer::new);
 		//Thanks Blu!
-		RenderingRegistry.registerEntityRenderingHandler(EntityCamera.class, EntityRenderNone::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntitySkycrateInternal.class, EntityRenderNone::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityVehicleSeat.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityCamera.class, EntityRenderNone::new);
+		registerEntityRenderer(EntitySkycrateInternal.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityVehicleSeat.class, EntityRenderNone::new);
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityAtomicBoom.class, AtomicBoomRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityGasCloud.class, EntityRenderNone::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFlare.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityAtomicBoom.class, AtomicBoomRenderer::new);
+		registerEntityRenderer(EntityGasCloud.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityFlare.class, EntityRenderNone::new);
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityHans.class, HansRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityParachute.class, ParachuteRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityEmplacementWeapon.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityHans.class, HansRenderer::new);
+		registerEntityRenderer(EntityParachute.class, ParachuteRenderer::new);
+		registerEntityRenderer(EntityEmplacementWeapon.class, EntityRenderNone::new);
+		registerEntityRenderer(EntityAMTTactile.class, EntityRenderNone::new);
 
 
 		IIContent.itemAssaultRifle.setTileEntityItemStackRenderer(new AssaultRifleRenderer().subscribeToList("assault_rifle"));
@@ -353,8 +354,22 @@ public class ClientProxy extends CommonProxy
 
 		IIContent.itemMotorBelt.setRenderModels();
 
+		//TODO: 22.12.2023 move rest of models here 
+		registerTileRenderer(SawmillRenderer.class);
+		registerTileRenderer(PackerRenderer.class);
+		registerTileRenderer(ScanningConveyorRenderer.class);
+		registerTileRenderer(ArtilleryHowitzerRenderer.class);
+
 		//Compat
 		IICompatModule.doModulesClientPreInit();
+	}
+
+	private <T extends Entity> void registerEntityRenderer(Class<T> entityClass, IRenderFactory<? super T> renderFactory)
+	{
+		RenderingRegistry.registerEntityRenderingHandler(entityClass, renderFactory);
+		Render<? super T> temp = renderFactory.createRenderFor(null);
+		if(temp instanceof IReloadableModelContainer)
+			IIModelRegistry.instance.addTemporaryModel(((IReloadableModelContainer<?>)temp));
 	}
 
 	@SubscribeEvent
@@ -608,11 +623,6 @@ public class ClientProxy extends CommonProxy
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.AMMUNITION_WORKSHOP.getMeta(), TileEntityAmmunitionWorkshop.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityProjectileWorkshop.class, new ProjectileWorkshopRenderer().subscribeToList("projectile_workshop"));
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(IIContent.blockMetalMultiblock1), MetalMultiblocks1.PROJECTILE_WORKSHOP.getMeta(), TileEntityProjectileWorkshop.class);
-
-		registerTileRenderer(SawmillRenderer.class);
-		registerTileRenderer(PackerRenderer.class);
-		registerTileRenderer(ScanningConveyorRenderer.class);
-		registerTileRenderer(ArtilleryHowitzerRenderer.class);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBallisticComputer.class, new BallisticComputerRenderer().subscribeToList("ballistic_computer"));
 

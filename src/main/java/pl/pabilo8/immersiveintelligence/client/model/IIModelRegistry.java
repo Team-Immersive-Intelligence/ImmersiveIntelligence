@@ -18,9 +18,7 @@ import pl.pabilo8.immersiveintelligence.common.util.item.IIItemEnum;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIBase;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIISubItemsBase;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Pabilo8 on 14-09-2019.
@@ -34,6 +32,7 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 	//Yes
 	public final HashMap<ModelResourceLocation, ItemModelReplacement> itemModelReplacements = new HashMap<>();
 	private final Map<ResourceLocation, IReloadableModelContainer<?>> reloadableModels = new HashMap<>();
+	private final List<IReloadableModelContainer<?>> temporaryReloadableModels = new ArrayList<>();
 
 	@Override
 	@SubscribeEvent
@@ -131,6 +130,16 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 		reloadableModels.put(modelName, model);
 	}
 
+	/**
+	 * Adds a temporary model to the registry, which will be removed after registering sprites
+	 *
+	 * @param temp the model to be added
+	 */
+	public void addTemporaryModel(IReloadableModelContainer<?> temp)
+	{
+		temporaryReloadableModels.add(temp);
+	}
+
 	public void removeReloadableModel(IReloadableModelContainer<?> model)
 	{
 		reloadableModels.remove(model);
@@ -158,6 +167,10 @@ public class IIModelRegistry extends ImmersiveModelRegistry
 
 	public void registerSprites(TextureMap map)
 	{
+		//Removable temporary models
+		temporaryReloadableModels.forEach(mod -> mod.registerSprites(map));
+		temporaryReloadableModels.clear();
+		//Actual models
 		reloadableModels.values().forEach(mod -> mod.registerSprites(map));
 	}
 }
