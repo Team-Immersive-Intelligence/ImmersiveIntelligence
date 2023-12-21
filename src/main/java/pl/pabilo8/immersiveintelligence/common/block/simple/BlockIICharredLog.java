@@ -34,6 +34,7 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 	{
 		super("charred_log", PropertyEnum.create("type", CharredLogs.class), Material.WOOD, ItemBlockIIBase::new, BlockLog.LOG_AXIS);
 		this.setHardness(2.0F);
+		this.setResistance(1F);
 	}
 
 	public enum CharredLogs implements IIBlockEnum
@@ -93,7 +94,7 @@ public class BlockIICharredLog extends BlockIIBase<CharredLogs>
 	@ParametersAreNonnullByDefault
 	public boolean canSustainLeaves(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return true;
+		return false;
 	}
 
 	@Override

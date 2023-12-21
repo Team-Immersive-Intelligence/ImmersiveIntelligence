@@ -3,7 +3,6 @@ package pl.pabilo8.immersiveintelligence.common.block.simple;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
@@ -39,6 +38,7 @@ public class BlockIIRubberLog extends BlockIIBase<RubberLogs>
 	{
 		super("rubber_log", PropertyEnum.create("type", RubberLogs.class), Material.WOOD, ItemBlockIIBase::new, BlockLog.LOG_AXIS);
 		this.setHardness(2.0F);
+		this.setResistance(1F);
 
 		setBlockLayer(BlockRenderLayer.SOLID);
 		setSubBlockLayer(RubberLogs.STRIPPED, BlockRenderLayer.CUTOUT);

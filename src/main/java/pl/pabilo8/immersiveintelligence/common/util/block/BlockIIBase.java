@@ -30,7 +30,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.IILogger;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockEnum;
 import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IIBlockProperties;
 
@@ -140,9 +139,9 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		Arrays.fill(this.opaqueness, material.isOpaque()?0: 255);
 
 		this.blastResistance = new float[sub];
-		Arrays.fill(this.blastResistance, blockResistance);
+		Arrays.fill(this.blastResistance, blockResistance = 2);
 		this.hardness = new float[sub];
-		Arrays.fill(this.hardness, blockHardness);
+		Arrays.fill(this.hardness, blockHardness = 1);
 
 		this.description = new String[sub];
 		Arrays.fill(this.description, "");
@@ -213,7 +212,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	public SoundType getSoundType(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Entity entity)
 	{
 		int meta = state.getValue(property).getMeta();
-		return soundTypes[meta];
+		return soundTypes[meta%enumValues.length];
 	}
 
 	private static Material setTempProperties(Material material, PropertyEnum<?> property, Object... additionalProperties)
@@ -287,8 +286,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 		if(meta > enumValues.length-1)
 			return null;
 
-		IIBlockProperties properties = enumValues[meta].getProperties();
-		if(properties!=null&&properties.needsCustomState()) return enumValues[meta].getName();
+		IIBlockProperties properties = enumValues[meta%enumValues.length].getProperties();
+		if(properties!=null&&properties.needsCustomState()) return enumValues[meta%enumValues.length].getName();
 		return null;
 	}
 
@@ -410,7 +409,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	@Nonnull
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(this.property, enumValues[meta]);
+		return this.getDefaultState().withProperty(this.property, enumValues[meta%enumValues.length]);
 	}
 
 	/**
@@ -481,7 +480,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 			return 0;
 
 		int meta = state.getValue(property).getMeta();
-		return opaqueness[meta];
+		return opaqueness[meta%enumValues.length];
 	}
 
 	@Override
@@ -499,7 +498,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 			return 0;
 
 		int meta = state.getValue(property).getMeta();
-		return hardness[meta];
+		return hardness[meta%enumValues.length];
 	}
 
 	@Override
@@ -514,7 +513,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
 		int meta = getMetaFromState(world.getBlockState(pos));
-		return blastResistance[meta];
+		return blastResistance[meta%enumValues.length];
 	}
 
 	//--- Mobility Flags (Piston Pushing) ---//
@@ -529,8 +528,8 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	public EnumPushReaction getMobilityFlag(IBlockState state)
 	{
 		int meta = state.getValue(property).getMeta();
-		if(mobilityFlags[meta]==null) return EnumPushReaction.NORMAL;
-		return mobilityFlags[meta];
+		if(mobilityFlags[meta%enumValues.length]==null) return EnumPushReaction.NORMAL;
+		return mobilityFlags[meta%enumValues.length];
 	}
 
 	//--- Opaqueness ---//
@@ -549,7 +548,7 @@ public class BlockIIBase<E extends Enum<E> & IIBlockEnum> extends Block implemen
 	{
 		if(enumValues==null||!this.equals(state.getBlock())) return true;
 		int meta = state.getValue(property).getMeta();
-		return fullCubes[meta];
+		return fullCubes[meta%enumValues.length];
 	}
 
 

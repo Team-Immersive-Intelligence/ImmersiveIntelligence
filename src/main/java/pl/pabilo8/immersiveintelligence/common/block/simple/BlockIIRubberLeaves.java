@@ -66,6 +66,12 @@ public class BlockIIRubberLeaves extends BlockIIBase<RubberStuff> implements ISh
 	}
 
 	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return 0;
+	}
+
+	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		if(state==null||enumValues==null||!this.equals(state.getBlock())) return 0;
