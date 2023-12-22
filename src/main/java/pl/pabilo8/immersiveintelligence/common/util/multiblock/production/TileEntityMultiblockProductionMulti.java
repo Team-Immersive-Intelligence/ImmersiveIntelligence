@@ -1,11 +1,12 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -17,7 +18,7 @@ import java.util.List;
  * @since 13.04.2023
  */
 
-public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMultiblockProductionMulti<T, R>, R extends IMultiblockRecipe>
+public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMultiblockProductionMulti<T, R>, R extends IIIMultiblockRecipe>
 		extends TileEntityMultiblockProductionBase<T, R>
 		implements IGuiTile
 {
@@ -36,16 +37,23 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 	@Override
 	protected void onUpdate()
 	{
-		int processes = processQueue.size();
-		if(processes > 0)
+		//Iterate existing processes and try to progress them
+		if(!processQueue.isEmpty())
 		{
-			for(IIMultiblockProcess<R> process : processQueue)
+			Iterator<IIMultiblockProcess<R>> iterator = processQueue.iterator();
+			while(iterator.hasNext())
 			{
+				IIMultiblockProcess<R> process = iterator.next();
+
 				//Do process output
 				if(process.ticks >= process.maxTicks)
 				{
 					if(attemptProductionOutput(process))
+					{
+						//Remove the process from the queue
 						onProductionFinish(process);
+						iterator.remove();
+					}
 					break;
 				}
 
@@ -57,6 +65,7 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 		}
 
 		//Add new process to the queue
+		int processes = processQueue.size();
 		int maxProcesses = getMaxProductionQueue();
 		if(processes <= maxProcesses)
 		{
@@ -67,9 +76,12 @@ public abstract class TileEntityMultiblockProductionMulti<T extends TileEntityMu
 				canAdd = lastProcess.ticks/lastProcess.maxTicks >= getMinProductionOffset();
 			}
 
-			//Whether it's actually added, depends on the implementation
 			if(canAdd)
-				findNewProductionProcess();
+			{
+				IIMultiblockProcess<R> process = findNewProductionProcess();
+				if(process!=null)
+					processQueue.add(process);
+			}
 		}
 	}
 

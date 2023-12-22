@@ -1,6 +1,5 @@
 package pl.pabilo8.immersiveintelligence.common.util.multiblock.production;
 
-import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IGuiTile;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
@@ -16,6 +15,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.MultiblockStuctureBase;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.TileEntityMultiblockIIGeneric;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @since 13.04.2023
  */
 
-public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMultiblockProductionBase<T, R>, R extends IMultiblockRecipe>
+public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMultiblockProductionBase<T, R>, R extends IIIMultiblockRecipe>
 		extends TileEntityMultiblockIIGeneric<T>
 		implements IGuiTile
 {
@@ -56,7 +56,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 			output = ItemHandlerHelper.insertItemStacked(itemHandler, output, world.isRemote);
 
 		if(outputPos.length > 0&&!world.isRemote)
-			Utils.dropStackAtPos(world, getBlockPosForPos(outputPos[0]), output, facing.getOpposite());
+			Utils.dropStackAtPos(world, getBlockPosForPos(outputPos[0]).offset(facing.getOpposite()), output, facing.getOpposite());
 
 	}
 
@@ -74,15 +74,9 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 	//--- Production Abstracts ---//
 
 	/**
-	 * @param nbt recipe tag compound
-	 * @return a recipe instance from nbt
-	 */
-	public abstract R loadRecipeFromNBT(NBTTagCompound nbt);
-
-	/**
 	 * @return minimal offset between production processes
 	 */
-	public abstract int getMinProductionOffset();
+	public abstract float getMinProductionOffset();
 
 	/**
 	 * @return max parallel processes in machine
@@ -157,7 +151,7 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 
 	public abstract float getProductionProgress(IIMultiblockProcess<R> process, float partialTicks);
 
-	public static class IIMultiblockProcess<R extends IMultiblockRecipe>
+	public static class IIMultiblockProcess<R extends IIIMultiblockRecipe>
 	{
 		public R recipe;
 		/**
@@ -175,5 +169,16 @@ public abstract class TileEntityMultiblockProductionBase<T extends TileEntityMul
 			this.ticks = 0;
 			this.maxTicks = recipe.getTotalProcessTime();
 		}
+	}
+
+	public interface IIIMultiblockRecipe
+	{
+		int getTotalProcessTime();
+
+		int getTotalProcessEnergy();
+
+		int getMultipleProcessTicks();
+
+		NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound);
 	}
 }

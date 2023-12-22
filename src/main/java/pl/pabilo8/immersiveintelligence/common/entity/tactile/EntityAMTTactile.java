@@ -1,15 +1,17 @@
 package pl.pabilo8.immersiveintelligence.common.entity.tactile;
 
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 
 import javax.annotation.Nullable;
 
@@ -21,6 +23,7 @@ import javax.annotation.Nullable;
  */
 public class EntityAMTTactile extends Entity
 {
+	private static final AxisAlignedBB EMPTY = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 	/**
 	 * Handler object this one adheres to
 	 */
@@ -41,11 +44,19 @@ public class EntityAMTTactile extends Entity
 	/**
 	 * Animation properties
 	 */
-	public Vec3d translation, rotation, scale;
+	public Vec3d translation = Vec3d.ZERO, rotation = Vec3d.ZERO, scale = Vec3d.ZERO;
+	/**
+	 * Whether this tactile cannot be seen and collided with
+	 */
+	public boolean visibility = true;
 	/**
 	 * Bounding box of this part, moved dynamically
 	 */
 	public AxisAlignedBB aabb;
+	/**
+	 * Rotation in Z axis
+	 */
+	private float rotationRoll = 0;
 
 	public EntityAMTTactile(World worldIn)
 	{
@@ -59,6 +70,8 @@ public class EntityAMTTactile extends Entity
 		this.handler = handler;
 		this.offset = offset;
 		this.aabb = aabb;
+		this.height = (float)(aabb.maxY-aabb.minY);
+		this.width = (float)Math.max(aabb.maxX-aabb.minX, aabb.maxZ-aabb.minZ);
 	}
 
 	public EntityAMTTactile(TactileHandler handler, String name, Vec3d offset, double radius, double height)
@@ -82,37 +95,60 @@ public class EntityAMTTactile extends Entity
 
 	}
 
-
-	//TODO: 12.10.2023 caching?
 	@Override
 	public void onEntityUpdate()
 	{
-		super.onEntityUpdate();
+		if(handler==null||!handler.getEntities().contains(this))
+		{
+			setDead();
+			return;
+		}
+
+		//To calculate motion from previous position
+		this.prevPosX = posX;
+		this.prevPosY = posY;
+		this.prevPosZ = posZ;
+
 		//Is one of root elements
 		if(parent==null)
 		{
-			this.posX = offset.x+translation.x;
-			this.posY = offset.y+translation.y;
-			this.posZ = offset.z+translation.z;
-			setRotation((float)rotation.y, (float)rotation.x);
+			BlockPos handlerPos = handler.getPos();
+			this.posX = handlerPos.getX()+offset.x+translation.x;
+			this.posY = handlerPos.getY()+offset.y+translation.y;
+			this.posZ = handlerPos.getZ()-0.5+offset.z+translation.z;
+//			setRotation((float)rotation.y, (float)rotation.x);
+			rotationPitch = (float)rotation.x;
+			rotationYaw = (float)rotation.y;
+			rotationRoll = (float)rotation.z;
 		}
 		//Belongs to another element
 		else
 		{
-			//Roll is unused in Tactile rotation
-			Vec3d vecX = IIUtils.offsetPosDirection((float)offset.x,
-					Math.toRadians(MathHelper.wrapDegrees(-parent.rotationYaw)),
-					Math.toRadians(MathHelper.wrapDegrees(parent.rotationPitch))
-			);
-			Vec3d vecZ = IIUtils.offsetPosDirection((float)offset.z,
-					Math.toRadians(MathHelper.wrapDegrees(-parent.rotationYaw-90)),
-					Math.toRadians(MathHelper.wrapDegrees(parent.rotationPitch))
-			);
+			//TODO: 20.12.2023 previous position caching
+			Vec3d relativeOffset = offset.subtract(parent.offset);
+			this.rotationYaw = (float)(parent.rotationYaw+rotation.y);
+			this.rotationPitch = (float)(parent.rotationPitch+rotation.x);
+			this.rotationRoll = (float)(parent.rotationRoll+rotation.z);
 
-			this.posX = vecX.x+vecZ.x;
-			this.posY = vecX.y+vecZ.y;
-			this.posZ = vecX.z+vecZ.z;
-			setRotation((float)(parent.rotationYaw+rotation.y), (float)(parent.rotationPitch+rotation.x));
+			Vec3d angle = new Matrix4().setIdentity()
+					.rotate(Math.toRadians(rotationYaw), 0, 1, 0)
+					.rotate(Math.toRadians(-rotationRoll), 0, 0, 1)
+					.rotate(Math.toRadians(-rotationPitch), 1, 0, 0)
+					.apply(relativeOffset.add(translation));
+
+			this.posX = parent.posX+angle.x;
+			this.posY = parent.posY+angle.y;
+			this.posZ = parent.posZ+angle.z;
+		}
+
+		this.motionX = posX-prevPosX;
+		this.motionY = posY-prevPosY;
+		this.motionZ = posZ-prevPosZ;
+
+		if(!visibility)
+		{
+			setEntityBoundingBox(EMPTY);
+			return;
 		}
 
 		AxisAlignedBB newAABB = aabb.offset(posX, posY, posZ);
@@ -120,10 +156,17 @@ public class EntityAMTTactile extends Entity
 		{
 			double xLength = newAABB.minX+newAABB.maxX;
 			double yLength = newAABB.minY+newAABB.maxY;
-			//Z is unused in Tactile scaling
-			newAABB.grow(xLength*(scale.x-1), yLength*(scale.y-1), xLength*(scale.x-1));
+			double xzScale = (this.scale.x+this.scale.z-2)/2;
+			newAABB.grow(xLength*xzScale, yLength*xzScale, xLength*xzScale);
 		}
 		setEntityBoundingBox(newAABB);
+		world.getEntitiesWithinAABB(EntityLivingBase.class, newAABB).forEach(this::applyEntityCollision);
+	}
+
+	@Override
+	public boolean canBeCollidedWith()
+	{
+		return visibility;
 	}
 
 	@Override
@@ -131,14 +174,16 @@ public class EntityAMTTactile extends Entity
 	{
 		//Tactiles shouldn't collide with each other for simplicity's sake
 		if(!(entity instanceof EntityAMTTactile))
-			super.applyEntityCollision(entity);
+		{
+			entity.move(MoverType.PISTON, motionX, motionY, motionZ);
+			handler.onCollide(this, entity);
+		}
 	}
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		handler.onAttacked(source, amount);
-		return false;
+		return handler.onAttacked(this, source, amount);
 	}
 
 	@Override
@@ -176,7 +221,8 @@ public class EntityAMTTactile extends Entity
 	{
 		super.setLocationAndAngles(x, y, z, yaw, pitch);
 		//move the bounding box with the entity
-		setEntityBoundingBox(aabb.offset(x, y, z));
+		if(aabb!=null)
+			setEntityBoundingBox(aabb.offset(x, y, z));
 	}
 
 	@Override
@@ -185,8 +231,14 @@ public class EntityAMTTactile extends Entity
 		return false;
 	}
 
+	public float getRotationYawHead()
+	{
+		return rotationYaw;
+	}
+
 	public void defaultizeAnimation()
 	{
 		this.translation = this.rotation = this.scale = Vec3d.ZERO;
+		this.visibility = true;
 	}
 }

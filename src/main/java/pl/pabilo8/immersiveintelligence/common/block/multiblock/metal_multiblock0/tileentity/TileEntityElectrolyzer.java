@@ -140,12 +140,6 @@ public class TileEntityElectrolyzer extends TileEntityMultiblockProductionSingle
 	}
 
 	@Override
-	public ElectrolyzerRecipe loadRecipeFromNBT(NBTTagCompound nbt)
-	{
-		return ElectrolyzerRecipe.loadFromNBT(nbt);
-	}
-
-	@Override
 	protected IIMultiblockProcess<ElectrolyzerRecipe> findNewProductionProcess()
 	{
 		if(tanks[0].getFluidAmount() > 0&&energyStorage.getEnergyStored() > 0)

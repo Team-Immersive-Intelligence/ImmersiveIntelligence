@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.types.DataTypeNull;
 import pl.pabilo8.immersiveintelligence.api.data.types.IDataType;
@@ -20,6 +19,7 @@ import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonDat
 import pl.pabilo8.immersiveintelligence.client.gui.elements.buttons.GuiButtonII;
 import pl.pabilo8.immersiveintelligence.client.gui.elements.data_editor.GuiDataEditor;
 import pl.pabilo8.immersiveintelligence.common.IIGuiList;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityDataInputMachine;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageGuiNBT;
@@ -116,7 +116,10 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 		if(editor!=null&&editor.isFocused())
 			editor.keyTyped(typedChar, keyCode);
 		else
-			super.keyTyped(typedChar, keyCode);
+		{
+			if(!buttonLetter.keyTyped(typedChar, keyCode))
+				super.keyTyped(typedChar, keyCode);
+		}
 	}
 
 	@Override
@@ -138,7 +141,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 				this.dataType = this.editor.outputType();
 			saveBasicData();
 			syncDataToServer();
-			preparedForChange=true;
+			preparedForChange = true;
 			IIPacketHandler.sendToServer(new MessageGuiNBT(IIGuiList.GUI_DATA_INPUT_MACHINE_VARIABLES, tile));
 		}
 		else if(button==buttonVariableHelp)
@@ -182,7 +185,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 	{
 		ArrayList<String> tooltip = super.getTooltip(mx, my);
 		if(editor!=null)
-			editor.getTooltip(tooltip,mx,my);
+			editor.getTooltip(tooltip, mx, my);
 		return tooltip;
 	}
 
@@ -208,8 +211,7 @@ public class GuiDataInputMachineEdit extends GuiDataInputMachineBase
 			list.setVariable(variableToEdit, new DataPacket().getVarInType(types.get(i), new DataTypeNull()));
 			this.dataType = list.getPacketVariable(variableToEdit);
 			this.dataType.setDefaultValue();
-		}
-		catch(Exception ignored)
+		} catch(Exception ignored)
 		{
 
 		}

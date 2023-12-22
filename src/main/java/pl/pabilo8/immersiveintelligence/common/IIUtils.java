@@ -2,6 +2,7 @@ package pl.pabilo8.immersiveintelligence.common;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorage;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler.Connection;
@@ -33,7 +34,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -319,6 +319,46 @@ public class IIUtils
 
 		if((xxx-x)*as_y-(yyy-y)*as_x > 0==s_ab) return false;
 		return (xxx-xx)*(py-yy)-(yyy-yy)*(px-xx) > 0==s_ab;
+	}
+
+	public static <T extends IFluidTank & IFluidHandler> boolean handleBucketTankInteraction(T tank, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, boolean fillBucket, Predicate<FluidStack> filter)
+	{
+		if(inventory.get(bucketInputSlot).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+		{
+			IFluidHandlerItem capability = inventory.get(bucketInputSlot).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+			if(!filter.test(capability.getTankProperties()[0].getContents()))
+				return false;
+
+			int amount_prev = tank.getFluidAmount();
+			ItemStack emptyContainer;
+
+			if(fillBucket)
+			{
+				if(tank.getTankProperties()[0].getContents()==null)
+					return false;
+				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.fillFluidContainer(tank, inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+			}
+			else
+			{
+				if(capability.getTankProperties()[0].getContents()==null)
+					return false;
+				emptyContainer = blusunrize.immersiveengineering.common.util.Utils.drainFluidContainer(tank, inventory.get(bucketInputSlot), inventory.get(bucketOutputSlot), null);
+			}
+
+			if(amount_prev!=tank.getFluidAmount())
+			{
+				if(!inventory.get(bucketOutputSlot).isEmpty()&&OreDictionary.itemMatches(inventory.get(bucketOutputSlot), emptyContainer, true))
+					inventory.get(bucketOutputSlot).grow(emptyContainer.getCount());
+				else if(inventory.get(bucketOutputSlot).isEmpty())
+					inventory.set(bucketOutputSlot, emptyContainer.copy());
+				inventory.get(bucketInputSlot).shrink(1);
+				if(inventory.get(bucketInputSlot).getCount() <= 0)
+					inventory.set(bucketInputSlot, ItemStack.EMPTY);
+
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static <T extends IFluidTank & IFluidHandler> boolean handleBucketTankInteraction(T[] tanks, NonNullList<ItemStack> inventory, int bucketInputSlot, int bucketOutputSlot, int tank, boolean fillBucket)
@@ -774,7 +814,7 @@ public class IIUtils
 		return getPowerLevelString(tile.getEnergyStored(null), tile.getMaxEnergyStored(null));
 	}
 
-	public static String getPowerLevelString(EnergyStorage storage)
+	public static String getPowerLevelString(FluxStorage storage)
 	{
 		return getPowerLevelString(storage.getEnergyStored(), storage.getMaxEnergyStored());
 	}

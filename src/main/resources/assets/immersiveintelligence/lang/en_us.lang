@@ -2376,6 +2376,7 @@ death.attack.iiBulletHeadShotNoShooter=%1$s took a bullet to their head
 death.attack.iiShrapnel=%1$s was torn apart by %2$s's shrapnel
 death.attack.iiShrapnelNoShooter=%1$s was torn apart by shrapnel
 death.attack.iiSawmill=%1$s was sliced by the sawmill
+death.attack.iiPrintingPress=%1$s was squashed by rotating rollers
 death.attack.iiRadiation=%1$s experienced intensive radiation
 death.attack.iiNuclearHeat=%1$s was decimated by a nuclear explosion
 death.attack.iiMotorbike=%1$s was driven over by %2$s

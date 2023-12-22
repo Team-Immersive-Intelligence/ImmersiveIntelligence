@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL11;
 public class AMTItem extends AMT
 {
 	private ItemStack stack;
+	private boolean drawStacked = false;
 
 	public AMTItem(String name, Vec3d originPos)
 	{
@@ -28,6 +29,12 @@ public class AMTItem extends AMT
 	public AMTItem(String name, IIModelHeader header)
 	{
 		super(name, header);
+	}
+
+	public AMTItem setStacking(boolean drawStacked)
+	{
+		this.drawStacked = drawStacked;
+		return this;
 	}
 
 	@Override
@@ -66,7 +73,14 @@ public class AMTItem extends AMT
 			CullFace cf = (GL11.glGetInteger(GL11.GL_CULL_FACE_MODE)==GL11.GL_FRONT)?CullFace.FRONT: CullFace.BACK;
 //			GlStateManager.scale(-1, -1, -1);
 
-			ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
+			if(drawStacked)
+				for(int i = 0; i < stack.getCount(); i++)
+				{
+					ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
+					GlStateManager.translate(0, 0.0625f, 0.0625f);
+				}
+			else
+				ClientUtils.mc().getRenderItem().renderItem(stack, TransformType.NONE);
 
 			GlStateManager.cullFace(cf);
 			GlStateManager.popMatrix();

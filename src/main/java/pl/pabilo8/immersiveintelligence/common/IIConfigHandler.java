@@ -86,6 +86,9 @@ public class IIConfigHandler
 
 		public static class Graphics
 		{
+			@Comment({"Enable Tactile AMT - dynamic collision boxes for multiblocks that use animations for positioning them."})
+			public static boolean tactileAMT = true;
+
 			@Comment({"Whether gun recoil is visible in first-person view."})
 			public static boolean cameraRecoil = true;
 
@@ -654,7 +657,7 @@ public class IIConfigHandler
 				public static int energyCapacity = 24000;
 
 				@Comment({"Energy usage of the printing press per page printed."})
-				public static int energyUsage = 512;
+				public static int energyUsage = 2048;
 
 				@Comment({"Page printing duration (in ticks)."})
 				public static int printTime = 90;

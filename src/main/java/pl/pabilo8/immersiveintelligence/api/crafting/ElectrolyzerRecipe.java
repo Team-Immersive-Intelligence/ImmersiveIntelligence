@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Pabilo8
  * @since 08-08-2019
  */
-public class ElectrolyzerRecipe extends MultiblockRecipe
+public class ElectrolyzerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
 	public final FluidStack fluidInput;
 	public final FluidStack[] fluidOutputs;

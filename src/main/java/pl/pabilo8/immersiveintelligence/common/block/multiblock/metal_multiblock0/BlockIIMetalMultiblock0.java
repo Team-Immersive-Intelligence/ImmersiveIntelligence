@@ -42,9 +42,8 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		setToolTypes(IIReference.TOOL_HAMMER);
 
 		addToTESRMap(
-				MetalMultiblocks0.PRINTING_PRESS, MetalMultiblocks0.RADIO_STATION,
-				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER,
-				MetalMultiblocks0.PACKER
+				MetalMultiblocks0.RADIO_STATION,
+				MetalMultiblocks0.CHEMICAL_BATH, MetalMultiblocks0.PRECISION_ASSEMBLER
 		);
 	}
 
@@ -53,7 +52,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		@EnumMultiblockProvider(tile = TileEntityRadioStation.class, multiblock = MultiblockRadioStation.class)
 		RADIO_STATION,
 		@EnumMultiblockProvider(tile = TileEntityPrintingPress.class, multiblock = MultiblockPrintingPress.class)
-		//@IIBlockProperties(needsCustomState = true)
+		@IIBlockProperties(needsCustomState = true)
 		PRINTING_PRESS,
 		@EnumMultiblockProvider(tile = TileEntityDataInputMachine.class, multiblock = MultiblockDataInputMachine.class)
 		//@IIBlockProperties(needsCustomState = true)
@@ -95,6 +94,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		@IIBlockProperties(needsCustomState = true)
 		PACKER,
 
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		RAILWAY_PACKER //not implemented
 	}
 
@@ -104,6 +104,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 	{
 		switch(state.getValue(property))
 		{
+			case PRINTING_PRESS:
 			case BALLISTIC_COMPUTER:
 			case ARTILLERY_HOWITZER:
 			case RAILWAY_PACKER:

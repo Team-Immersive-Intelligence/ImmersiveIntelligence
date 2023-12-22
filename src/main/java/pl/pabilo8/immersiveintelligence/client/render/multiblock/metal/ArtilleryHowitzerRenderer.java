@@ -164,6 +164,7 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		}
 
 		//set gun pitch and yaw
+
 		IIAnimationUtils.setModelRotation(gunYaw, 0, (te.mirrored?-1: 1)*(te.facing.getHorizontalAngle()-turretYaw), 0);
 		IIAnimationUtils.setModelRotation(gunPitch, -turretPitch, 0, 0);
 

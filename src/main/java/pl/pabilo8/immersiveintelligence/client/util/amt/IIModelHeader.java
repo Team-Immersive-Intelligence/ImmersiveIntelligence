@@ -5,10 +5,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pl.pabilo8.immersiveintelligence.common.entity.tactile.EntityAMTTactile;
 import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -129,5 +131,15 @@ public class IIModelHeader
 			}
 		}
 
+	}
+
+	public void applyHierarchy(ArrayList<EntityAMTTactile> amts)
+	{
+		for(EntityAMTTactile amt : amts)
+		{
+			String parentName = hierarchy.get(amt.name);
+			if(parentName!=null&&!parentName.isEmpty())
+				amts.stream().filter(a -> a.name.equals(parentName)).findAny().ifPresent(amt::setParent);
+		}
 	}
 }

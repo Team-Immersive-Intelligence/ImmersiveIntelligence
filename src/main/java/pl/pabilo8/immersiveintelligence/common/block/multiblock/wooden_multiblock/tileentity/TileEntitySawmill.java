@@ -126,16 +126,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	}
 
 	//--- Capabilities ---//
-
-	//7 out
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-	{
-		if(isPOI(MultiblockPOI.ITEM_INPUT))
-			return true;
-		return super.hasCapability(capability, facing);
-	}
-
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
@@ -302,12 +292,6 @@ public class TileEntitySawmill extends TileEntityMultiblockProductionSingle<Tile
 	}
 
 	//--- TileEntityMultiblockProduction ---//
-
-	@Override
-	public SawmillRecipe loadRecipeFromNBT(NBTTagCompound nbt)
-	{
-		return SawmillRecipe.loadFromNBT(nbt);
-	}
 
 	@Override
 	protected IIMultiblockProcess<SawmillRecipe> findNewProductionProcess()

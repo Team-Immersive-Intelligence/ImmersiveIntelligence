@@ -20,13 +20,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.items.CapabilityItemHandler;
 import pl.pabilo8.immersiveintelligence.api.data.DataPacket;
 import pl.pabilo8.immersiveintelligence.api.data.IDataConnector;
 import pl.pabilo8.immersiveintelligence.api.data.IDataDevice;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.ScanningConveyor;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.IIIInventory;
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.util.MultiblockPOI;
@@ -65,7 +66,7 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	{
 		super(multiblock);
 		inventory = NonNullList.create();
-		energyStorage = new FluxStorageAdvanced(ScanningConveyor.energyCapacity);
+		energyStorage = new FluxStorageAdvanced(1);
 	}
 
 	//--- NBT ---//
@@ -203,6 +204,14 @@ public abstract class TileEntityMultiblockIIGeneric<T extends TileEntityMultiblo
 	public NonNullList<ItemStack> getInventory()
 	{
 		return inventory;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+	{
+		if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY&&isPOI(MultiblockPOI.ITEM_INPUT))
+			return true;
+		return super.hasCapability(capability, facing);
 	}
 
 	@Override

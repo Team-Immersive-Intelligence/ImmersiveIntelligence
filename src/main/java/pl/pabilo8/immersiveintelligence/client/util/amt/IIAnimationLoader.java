@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,8 +18,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.common.IILogger;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 /**
@@ -58,10 +61,11 @@ public class IIAnimationLoader
 	 */
 	public static JsonObject readServerFileToJson(@Nonnull ResourceLocation res)
 	{
-		File file = new File("./assets/"+res.getResourceDomain()+res.getResourcePath());
 		try
 		{
-			return new JsonStreamParser(new InputStreamReader(Files.newInputStream(file.toPath()))).next().getAsJsonObject();
+			InputStream stream = MinecraftServer.class.getResourceAsStream("/assets/"+res.getResourceDomain()+"/"+res.getResourcePath());
+			assert stream!=null;
+			return ((JsonObject)new JsonStreamParser(new InputStreamReader(stream)).next());
 		} catch(Exception exception)
 		{
 			IILogger.error("[AMT/Server] Couldn't load "+

@@ -92,7 +92,10 @@ public class GuiArithmeticLogicMachineEdit extends GuiArithmeticLogicMachineBase
 		if(editor!=null&&editor.isFocused())
 			editor.keyTyped(typedChar, keyCode);
 		else
-			super.keyTyped(typedChar, keyCode);
+		{
+			if(!buttonLetter.keyTyped(typedChar, keyCode))
+				super.keyTyped(typedChar, keyCode);
+		}
 	}
 
 	@Override

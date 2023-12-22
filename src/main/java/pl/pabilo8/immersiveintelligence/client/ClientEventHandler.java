@@ -50,11 +50,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.lwjgl.opengl.GLContext;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.api.bullets.DamageBlockPos;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.utils.ItemTooltipHandler;
@@ -82,6 +77,11 @@ import pl.pabilo8.immersiveintelligence.client.render.item.ISpecificHandRenderer
 import pl.pabilo8.immersiveintelligence.client.render.item.MineDetectorRenderer;
 import pl.pabilo8.immersiveintelligence.client.render.item.PrintedPageRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Tools.TripodPeriscope;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Mortar;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -612,7 +612,7 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView==0)
 		{
 			ItemStack stack = ClientUtils.mc().player.getHeldItemMainhand();
-			if(stack.getItem() instanceof ItemIIGunBase)
+			if(stack.getItem() instanceof ItemIIGunBase&&Graphics.cameraRecoil)
 			{
 				//Prepare variables
 				ItemIIGunBase item = ((ItemIIGunBase)stack.getItem());
