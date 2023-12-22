@@ -15,10 +15,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 import pl.pabilo8.immersiveintelligence.client.model.IIModelRegistry;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Graphics;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,14 +44,21 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	public IIItemRendererAMT(@Nonnull I item, ResLoc modelRes)
 	{
 		this.item = item;
-		IIModelRegistry.instance.registerCustomItemModel(item, modelRes.getResourceDomain(),
-				setTransformations(this.replacementModel = new ImmersiveModelRegistry.ItemModelReplacement_OBJ(modelRes.withExtension(ResLoc.EXT_OBJ).toString(), true)));
 		this.headerRes = modelRes.withExtension(ResLoc.EXT_OBJAMT);
+		IIModelRegistry.instance.registerCustomItemModel(item, modelRes.getResourceDomain(),
+				setTransforms(this.replacementModel = new ImmersiveModelRegistry.ItemModelReplacement_OBJ(modelRes.withExtension(ResLoc.EXT_OBJ).toString(), true)));
 	}
 
 	public void setHeaderRes(ResLoc modelRes)
 	{
 		headerRes = modelRes;
+	}
+
+	protected final ItemModelReplacement parseTransforms(ItemModelReplacement_OBJ model, @Nullable IIModelHeader header)
+	{
+		if(header!=null)
+			header.applyTransforms(model);
+		return model;
 	}
 
 	@Override
@@ -101,8 +108,8 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 	public final void reloadModels()
 	{
 		unCompiled = true;
-		//reset transformations | allows easy debugging
-		setTransformations(this.replacementModel);
+		//reset transforms | allows easy debugging
+		setTransforms(this.replacementModel);
 	}
 
 	@Override
@@ -113,7 +120,7 @@ public abstract class IIItemRendererAMT<I extends Item> extends TileEntityItemSt
 
 	//--- Abstract Methods ---//
 
-	protected abstract ItemModelReplacement setTransformations(ItemModelReplacement_OBJ model);
+	protected abstract ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model);
 
 
 	/**

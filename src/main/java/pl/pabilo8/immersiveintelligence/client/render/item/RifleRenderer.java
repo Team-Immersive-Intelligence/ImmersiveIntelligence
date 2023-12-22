@@ -17,7 +17,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry.EnumCoreTypes;
@@ -25,6 +24,7 @@ import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIRifle;
@@ -53,7 +53,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 	}
 
 	@Override
-	protected ItemModelReplacement setTransformations(ItemModelReplacement_OBJ model)
+	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
 	{
 		Matrix4 tpp = new Matrix4()
 				.scale(0.385, 0.385, 0.385)
@@ -243,7 +243,7 @@ public class RifleRenderer extends IIUpgradableItemRendererAMT<ItemIIRifle> impl
 						(res, stack) ->
 						{
 							String skin = IIContent.itemRifle.getSkinnableCurrentSkin(stack);
-							if (IISkinHandler.isValidSkin(skin))
+							if(IISkinHandler.isValidSkin(skin))
 							{
 								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/rifle").withExtension(ResLoc.EXT_MTL));
 								return ClientUtils.getSprite(this.skinRemapper.apply(res));

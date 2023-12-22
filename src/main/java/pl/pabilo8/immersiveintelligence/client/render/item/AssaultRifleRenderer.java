@@ -18,12 +18,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.obj.OBJModel;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
 import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIAssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
@@ -52,8 +52,9 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 	}
 
 	@Override
-	protected ItemModelReplacement setTransformations(ItemModelReplacement_OBJ model)
+	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
 	{
+		//TODO: 22.12.2023 transforms from .amt
 		Matrix4 tpp = new Matrix4()
 				.scale(0.385, 0.385, 0.385)
 				.rotate(Math.toRadians(-20.5f), 0, 1, 0)
@@ -310,7 +311,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 						(res, stack) ->
 						{
 							String skin = IIContent.itemAssaultRifle.getSkinnableCurrentSkin(stack);
-							if (IISkinHandler.isValidSkin(skin))
+							if(IISkinHandler.isValidSkin(skin))
 							{
 								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/assault_rifle").withExtension(ResLoc.EXT_MTL));
 								return ClientUtils.getSprite(this.skinRemapper.apply(res));

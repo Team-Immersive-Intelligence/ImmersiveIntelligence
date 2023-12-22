@@ -1,7 +1,10 @@
 package pl.pabilo8.immersiveintelligence.client.util.amt;
 
+import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,12 +30,14 @@ public class IIModelHeader
 	private final HashMap<String, String> hierarchy;
 	private final HashMap<String, Vec3d> offsets;
 	private final HashMap<String, EasyNBT> properties;
+	private final HashMap<TransformType, Matrix4> transforms;
 
 	public IIModelHeader(JsonObject json)
 	{
 		offsets = new HashMap<>();
 		hierarchy = new HashMap<>();
 		properties = new HashMap<>();
+		transforms = new HashMap<>();
 
 		//get origins, if not contained Vec3D.ZERO will be used
 		if(json.has("origins"))
@@ -55,6 +60,7 @@ public class IIModelHeader
 			}
 		}
 
+		//Additional display properties
 		if(json.has("properties"))
 		{
 			JsonObject prop = json.getAsJsonObject("properties");
@@ -63,6 +69,53 @@ public class IIModelHeader
 				//put into property map
 				if(entry.getValue().isJsonObject())
 					properties.put(entry.getKey(), EasyNBT.parseEasyNBT(entry.getValue().toString()));
+			}
+		}
+
+		//Handle transforms for item models
+		if(json.has("transforms"))
+		{
+			JsonObject prop = json.getAsJsonObject("transforms");
+			for(Entry<String, JsonElement> entry : prop.entrySet())
+			{
+				//put into property map
+				if(entry.getValue().isJsonObject())
+				{
+					JsonObject transform = entry.getValue().getAsJsonObject();
+					Matrix4 matrix = new Matrix4();
+					if(transform.has("scale"))
+					{
+						JsonElement scale = transform.get("scale");
+						if(scale.isJsonArray())
+						{
+							Vec3d vec = IIAnimationUtils.jsonToVec3d(scale.getAsJsonArray());
+							matrix.scale(vec.x, vec.y, vec.z);
+						}
+					}
+					if(transform.has("rotate"))
+					{
+						JsonElement rotate = transform.get("rotate");
+						if(rotate.isJsonArray())
+						{
+							Vec3d vec = IIAnimationUtils.jsonToVec3d(rotate.getAsJsonArray());
+							matrix.rotate(Math.toRadians(vec.x), 1, 0, 0);
+							matrix.rotate(Math.toRadians(vec.y), 0, 1, 0);
+							matrix.rotate(Math.toRadians(vec.z), 0, 0, 1);
+						}
+					}
+					if(transform.has("translate"))
+					{
+						JsonElement translate = transform.get("translate");
+						if(translate.isJsonArray())
+						{
+							Vec3d vec = IIAnimationUtils.jsonToVec3d(translate.getAsJsonArray());
+							matrix.translate(vec.x, vec.y, vec.z);
+						}
+					}
+
+
+					transforms.put(TransformType.valueOf(entry.getKey().toUpperCase()), matrix);
+				}
 			}
 		}
 	}
@@ -77,6 +130,7 @@ public class IIModelHeader
 		hierarchy = new HashMap<>();
 		offsets = new HashMap<>();
 		properties = new HashMap<>();
+		transforms = new HashMap<>();
 
 		if(headers!=null)
 			for(IIModelHeader h : headers)
@@ -84,6 +138,7 @@ public class IIModelHeader
 				hierarchy.putAll(h.hierarchy);
 				offsets.putAll(h.offsets);
 				properties.putAll(h.properties);
+				transforms.putAll(h.transforms);
 			}
 
 	}
@@ -141,5 +196,11 @@ public class IIModelHeader
 			if(parentName!=null&&!parentName.isEmpty())
 				amts.stream().filter(a -> a.name.equals(parentName)).findAny().ifPresent(amt::setParent);
 		}
+	}
+
+	public void applyTransforms(ItemModelReplacement_OBJ model)
+	{
+		for(Entry<TransformType, Matrix4> entry : transforms.entrySet())
+			model.setTransformations(entry.getKey(), entry.getValue());
 	}
 }

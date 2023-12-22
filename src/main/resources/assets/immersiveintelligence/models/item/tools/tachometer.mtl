@@ -1,0 +1,6 @@
+# Made by Pabilo8 with Blockbench
+
+newmtl tachometer
+map_Kd immersiveintelligence:items/tools/tachometer
+newmtl tachometer2
+map_Kd immersiveintelligence:items/tools/tachometer2

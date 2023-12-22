@@ -342,6 +342,11 @@ public class ClientProxy extends CommonProxy
 		IIContent.itemAssaultRifle.setTileEntityItemStackRenderer(new AssaultRifleRenderer().subscribeToList("assault_rifle"));
 		IIContent.itemRifle.setTileEntityItemStackRenderer(new RifleRenderer().subscribeToList("rifle"));
 
+		//IIContent.itemBinoculars.setTileEntityItemStackRenderer(new BinocularsRenderer().subscribeToList("binoculars"));
+		IIContent.itemRadioTuner.setTileEntityItemStackRenderer(new RadioTunerRenderer().subscribeToList("radio_tuner"));
+		IIContent.itemTachometer.setTileEntityItemStackRenderer(new TachometerRenderer().subscribeToList("tachometer"));
+		//IIContent.itemMineDetector.setTileEntityItemStackRenderer(new MineDetectorRenderer().subscribeToList("mine_detector"));
+
 		for(IAmmo bullet : AmmoRegistry.INSTANCE.registeredBulletItems.values())
 		{
 			if(bullet instanceof ItemIINavalMine)
@@ -358,7 +363,7 @@ public class ClientProxy extends CommonProxy
 
 		IIContent.itemMotorBelt.setRenderModels();
 
-		//TODO: 22.12.2023 move rest of models here 
+		//TODO: 22.12.2023 move rest of models here
 		registerTileRenderer(SawmillRenderer.class);
 		registerTileRenderer(PackerRenderer.class);
 		registerTileRenderer(ScanningConveyorRenderer.class);
@@ -586,8 +591,6 @@ public class ClientProxy extends CommonProxy
 		//ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_data_connector), IIBlockTypes_Connector.INSERTER.getMeta(), TileEntityInserter.class);
 
 		//Tools
-		IIContent.itemTachometer.setTileEntityItemStackRenderer(TachometerItemStackRenderer.instance);
-		IIContent.itemRadioTuner.setTileEntityItemStackRenderer(RadioTunerItemStackRenderer.instance);
 		IIContent.itemTripodPeriscope.setTileEntityItemStackRenderer(TripodPeriscopeRenderer.instance);
 		IIContent.itemMortar.setTileEntityItemStackRenderer(MortarRenderer.instance);
 		IIContent.itemMineDetector.setTileEntityItemStackRenderer(MineDetectorRenderer.instance);
