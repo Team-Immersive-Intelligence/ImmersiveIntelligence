@@ -34,12 +34,7 @@ To issue a [fire] or [aim] command, the [packet passed](data_main#packetsbasics)
 <br>Instead of passing the angle directly, a [Ballistic Computer](ballistic_computer) can be used to interpret a [3D position] and a [scan](scanning_conveyor) of the [ammunition]. 
 
 # firing in batch
-
-
-# fuse
-Shell fuse time (f) detriments the time (in ticks) for the shell to explode; default -1.
-|[data_variable]{type:"integer", direction:"in", letter:"f", name:"Fuse time", description:"The amount of time before the shell detonates", values:[["-1:200","Expressed in ticks (20t = 1sec)"],]}|
-
+Hello
 
 # callback0
 Data Callback

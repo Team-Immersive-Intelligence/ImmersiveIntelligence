@@ -5,10 +5,13 @@ import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.lib.manual.ManualPages;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.client.manual.IIManualCategory;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.data_device.BlockIIDataDevice.IIBlockTypes_Connector;
+import pl.pabilo8.immersiveintelligence.common.block.data_device.tileentity.TileEntityAlarmSiren;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.multiblock.MultiblockRadar;
 import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIIBinoculars.Binoculars;
+import pl.pabilo8.immersiveintelligence.common.item.tools.ItemIITripodPeriscope;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
 
 /**
@@ -35,18 +38,10 @@ public class IIManualCategoryIntelligence extends IIManualCategory {
                 .addSource("crafting_infbinoculars", getSourceForItems(
                         IIContent.itemBinoculars.getStack(Binoculars.INFRARED_BINOCULARS)
                 ));
-        ManualHelper.addEntry("alarm_siren", getCategory(),
-                new ManualPages.Crafting(ManualHelper.getManual(), "alarm_siren0", new ItemStack(IIContent.blockDataConnector, 1, IIBlockTypes_Connector.ALARM_SIREN.getMeta()))
-        );
-
-        ManualHelper.addEntry("tripod_periscope", getCategory(),
-                new ManualPages.Crafting(ManualHelper.getManual(), "tripod_periscope0", new ItemStack(IIContent.itemTripodPeriscope)),
-                new ManualPages.Text(ManualHelper.getManual(), "tripod_periscope1")
-        );
-
-        ManualHelper.addEntry("radar", getCategory(),
-                new ManualPageMultiblock(ManualHelper.getManual(), "radar0", MultiblockRadar.INSTANCE),
-                new ManualPages.Text(ManualHelper.getManual(), "radar1")
-        );
+        addEntry("tripod_periscope")
+                .addSource("crafting_tripod_periscope", getSourceForItem(IIContent.itemTripodPeriscope.getStack(1)));
+        addEntry("radar");
+        addEntry("alarm_siren")
+                .addSource("crafting_alarm_siren", getSourceForItem(IIContent.blockDataConnector.getStack(IIBlockTypes_Connector.ALARM_SIREN)));
     }
 }
