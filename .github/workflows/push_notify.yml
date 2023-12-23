@@ -23,14 +23,12 @@ jobs:
           path: './gradle.properties'
           properties: 'mcmod_Name mcmod_Developer mcmod_URL'
 
-      - name: Discord Commits
-        uses: Sniddl/discord-commits@v1.6
+      - name: Notify Discord
         env:
+          WEBHOOK: ${{ secrets.DISCORD_COMMITS_WEBHOOK }}
           MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
           MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
           MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          message: "We hereby report that [**{{ github.context.payload.repository.name}}**](https://github.com/${{ github.repository }}) has received following new commits:"
-          template: 'plain'
-          include-extras: true
+          COMMIT_FROM: ${{ steps.rp.outputs.mcmod_URL }}
+          COMMIT_TO: ${{ steps.rp.outputs.mcmod_URL }}
+        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/discord_commit.sh -i

@@ -8,7 +8,7 @@
 
 ### Description
 
-**Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. Mod is still in work-in-progress state, so **most of the planned features are not added**. There are four main categories of the mod's content: 
+**Immersive Intelligence** is a Minecraft mod, an addon for Immersive Engineering for 1.12.2. There are four main categories of the mod's content: 
 
  - **Data and Electronics** - alows the player to transmit signals on the data network via packets of variables, there are many multiblock machines which allow reading, writing, transmitting and receiving data, allowing it to be an upgraded version of redstone
   
@@ -18,7 +18,7 @@
  
  - **Intelligence** - espionage - stealth - sabotage - this category contains surveillance devices, such as the Infrared Observer and Tripod Periscope which allow you to spy on other players and monitor the world
  
- The mod also features the new rotary power system.
+ The mod also features a new early game rotary power system.
 
 ### Credits
 
@@ -34,7 +34,7 @@
 - [@Schäferd](https://github.com/Schaeferd-CZ) - UV Mapper, Texturer, Modeller, Animator, Artist, a fellow retro-futurist and also *The Czech™*
   - [Curseforge](https://www.curseforge.com/members/schaeferd_cz/)  
 - [@Bastian](https://github.com/RexBas07) - Editor of the Engineer's Manual, a fellow logistics enjoyer and *The Other Swede™*
-- [@VDeltaGabriel](https://github.com/VDeltaGabriel) - Programmer, Assistant in Logical Design and a fellow Pole™
+- [@VDeltaGabriel](https://github.com/VDeltaGabriel) - Programmer, Assistant in Logical Design, same kind of a madman as Carver
 
 #### Special thanks to:
 - [@Flaxbeard](https://github.com/Flaxbeard) - for code snippets, approval of this mod and friendliness, during its release in 2020
@@ -73,7 +73,7 @@ Java models use a fork of **Turbo Model Thingy** (**TMT**):
 - Licensed from: [Flan's Mod Team](https://github.com/FlansMods/FlansMod)
 
 OBJ based models use our proprietary **AMT** library, included in `client.util.amt` in this mod's source code.  
-Some code and assets are automatically generated through .  
+Some code and assets are automatically generated through [ModWorks](https://github.com/Team-Immersive-Intelligence/ModworksProcessor), our annotation processor.  
 If you wish to use these libraries in your project, message [@Pabilo8](https://github.com/Pabilo8/).
 
 #### Please report any bugs you find in the ['Issues' tab](https://github.com/Team-Immersive-Intelligence/ImmersiveIntelligence/issues). Please don't do that on Curseforge / DM ^^.  

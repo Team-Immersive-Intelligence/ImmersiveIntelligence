@@ -110,6 +110,14 @@ jobs:
           properties: 'mcmod_Name mcmod_Developer mcmod_URL'
 
       - name: Notify Discord
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_COMMITS_WEBHOOK }}
+          MOD_NAME: ${{ steps.rp.outputs.mcmod_Name }}
+          MOD_DEVOLOPER: ${{ steps.rp.outputs.mcmod_Developer }}
+          MOD_URL: ${{ steps.rp.outputs.mcmod_URL }}
+        run: chmod -R a+rX ./gradle/tools/* ; bash ./gradle/tools/discord_build.sh -i
+
+      - name: Notify Discord
         uses: rguillaume/discord-action-embed@v1.0.4
         continue-on-error: true
         env:
@@ -120,4 +128,10 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           message: ""
           embed: '{"title": "Dev Build assembly completed!","color": 3617648,"description": "You are granted access to a new, automatically compiled Dev Build of ${{ env.MOD_NAME }}:tm:. \n\nThis build can be downloaded by clicking on the link above, then on `current-build` in `Artifacts` section.\n\nHappy testing and please report any bugs you encounter. ^^","url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}","author": {"name": " ${{ env.MOD_NAME }}","url": "https://github.com/${{ github.repository }}","icon_url": "${{ vars.PROJECT_LOGO }}"}}'
+
+      - name: Increment Version Variable
+        uses: action-pack/increment@v2
+        with:
+          name: 'MY_VARIABLE'
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
