@@ -131,25 +131,25 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 	@Override
 	public float getHorizontalRecoil(ItemStack weapon, EasyNBT nbt, boolean isAimed)
 	{
-		return Submachinegun.recoilHorizontal;
+		return Submachinegun.newRecoilHorizontal;
 	}
 
 	@Override
 	public float getVerticalRecoil(ItemStack weapon, EasyNBT nbt, boolean isAimed)
 	{
-		return Submachinegun.recoilVertical;
+		return Submachinegun.newRecoilVertical;
 	}
 
 	@Override
 	public float getMaxHorizontalRecoil(ItemStack weapon, EasyNBT nbt)
 	{
-		return Submachinegun.maxRecoilHorizontal;
+		return Submachinegun.newMaxRecoilHorizontal;
 	}
 
 	@Override
 	public float getMaxVerticalRecoil(ItemStack weapon, EasyNBT nbt)
 	{
-		return Submachinegun.maxRecoilVertical;
+		return Submachinegun.newMaxRecoilVertical;
 	}
 
 	@Override

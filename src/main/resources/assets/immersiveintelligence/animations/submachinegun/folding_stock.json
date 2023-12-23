@@ -1,0 +1,59 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"folding_stock_moving": {
+			"rotation": [
+				{
+					"time": 0.15,
+					"transform": [0, 182.5, 0]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		},
+		"hand_off": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [35, 0, 77.5]
+				},
+				{
+					"time": 0.2,
+					"transform": [35, 0, 77.5]
+				},
+				{
+					"time": 0.85,
+					"transform": [12.5, 0, 77.5]
+				},
+				{
+					"time": 1,
+					"transform": [35, 0, 77.5]
+				}
+			],
+			"position": [
+				{
+					"time": 0,
+					"transform": [0, 0, 0]
+				},
+				{
+					"time": 0.2,
+					"transform": [-8, 3, -11]
+				},
+				{
+					"time": 0.6,
+					"transform": [-14.39, 3, 5.75]
+				},
+				{
+					"time": 0.85,
+					"transform": [-4, 3, 10]
+				},
+				{
+					"time": 1,
+					"transform": [0, 0, 0]
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,19 @@
+{
+  "origins": {
+    "main": [2, 30.5, -1],
+    "magazine_port": [2, 30.5, -1],
+    "stock": [0, 0, 0],
+    "barrel": [0, 0, 0],
+    "magazine": [-4, 28, 7.5],
+    "trigger": [3, 29, -1.5],
+    "lever": [2.24184, 30.16446, 7.5],
+    "front_grip": [0, 21.08337, -11.31331],
+    "casing_ejector": [2, 29.5, -11.5],
+    "casing_fired": [1.25, 28.5, -11.25],
+    "hand_main": [0, 19.5, -11],
+    "hand_off": [1.25, 19.5, -1.5],
+    "muzzle_flash": [0, 30.5, -29]
+  },
+  "hierarchy": {
+  }
+}

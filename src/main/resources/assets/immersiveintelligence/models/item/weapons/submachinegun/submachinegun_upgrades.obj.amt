@@ -1,0 +1,15 @@
+{
+	"origins": {
+		"magazine_bottom": [0, 18.30084, -13.4403],
+		"magazine_bottom_drum": [0, 19.8646, -13.12192],
+		"folding_stock": [0, 26, 46],
+		"folding_stock_moving": [2.75, 24.5, 0.5],
+		"bottom_loader": [-2, 29.5, 10],
+		"bayonet": [1.5, 27.5, 27.5],
+		"sturdy_barrel": [0, 27.6, -20],
+		"suppressor": [0, 28.5, -33]
+	},
+	"hierarchy": {
+		"folding_stock_moving": "folding_stock"
+	}
+}

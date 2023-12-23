@@ -1,0 +1,29 @@
+{
+	"comment": "Made by Pabilo8 with Blockbench",
+	"groups": {
+		"hand_main": {
+			"rotation": [
+				{
+					"time": 0,
+					"transform": [35, 0, -90]
+				},
+				{
+					"time": 0.99984,
+					"transform": [65, 0, -90]
+				}
+			]
+		},
+		"hand_off": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": false
+				},
+				{
+					"time": 1,
+					"visibility": false
+				}
+			]
+		}
+	}
+}

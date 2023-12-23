@@ -1,283 +1,271 @@
 package pl.pabilo8.immersiveintelligence.client.render.item;
 
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
+import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
+import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Submachinegun;
-import pl.pabilo8.immersiveintelligence.client.model.weapon.ModelSubmachinegun;
-import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
-import pl.pabilo8.immersiveintelligence.client.util.tmt.TmtNamedBoxGroup;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.model.obj.OBJModel;
+import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
+import pl.pabilo8.immersiveintelligence.client.fx.particles.ParticleGunfire;
+import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
+import pl.pabilo8.immersiveintelligence.client.util.amt.*;
+import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
-import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
-import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
-import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler.IISpecialSkin;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
+import pl.pabilo8.immersiveintelligence.common.util.IISkinHandler;
+import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
 
 /**
  * @author Pabilo8
+ * @updated 23.12.2023
  * @since 13-10-2019
  */
-public class SubmachinegunItemStackRenderer extends TileEntityItemStackRenderer implements IReloadableModelContainer<SubmachinegunItemStackRenderer>, ISpecificHandRenderer
+public class SubmachinegunItemStackRenderer extends IIUpgradableItemRendererAMT<ItemIISubmachinegun>
 {
-	public static SubmachinegunItemStackRenderer instance = new SubmachinegunItemStackRenderer().subscribeToList("submachinegun");
-	public static final String texture = "submachinegun.png";
-	public static ModelSubmachinegun model = new ModelSubmachinegun();
+	//Animations
+	IIAnimationCachedMap fire, load, unload, handAngle, offHandAngle, foldingStock;
+	IIAnimationCachedMap loadBottom, loadBottomDrum, unloadBottom, unloadBottomDrum;
 
-	public static HashMap<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> upgrades = new HashMap<>();
-	public static List<TmtNamedBoxGroup> defaultGunParts = new ArrayList<>();
-	public static List<TmtNamedBoxGroup> skinParts = new ArrayList<>();
+	//Model Utils
+	private MTLTextureRemapper skinRemapper;
 
-	static
+	//Parts
+	private AMTCrossVariantReference<AMT> hand, offHand;
+	private AMTCrossVariantReference<AMTParticle> muzzleFlash;
+	private AMTCrossVariantReference<AMTBullet> casingFired;
+
+	public SubmachinegunItemStackRenderer()
 	{
-		addDefaultModelParts();
-
-		//skinParts.add(model.baubleBox);
+		super(IIContent.itemSubmachinegun, ResLoc.of(RES_MODEL_WEAPON, "submachinegun"));
 	}
-
-	private static void addDefaultModelParts()
-	{
-		defaultGunParts.clear();
-		defaultGunParts.add(model.baseBox);
-		defaultGunParts.add(model.loaderBox);
-		defaultGunParts.add(model.barrelBox);
-		defaultGunParts.add(model.sightsBox);
-		defaultGunParts.add(model.triggerBox);
-		defaultGunParts.add(model.ammoBox);
-		defaultGunParts.add(model.slideBox);
-		defaultGunParts.add(model.gripBox);
-		defaultGunParts.add(model.stockBox);
-		defaultGunParts.add(model.casingEjectionBox);
-	}
-
 
 	@Override
-	public void renderByItem(ItemStack stack, float partialTicks)
+	protected ItemModelReplacement setTransforms(ItemModelReplacement_OBJ model)
 	{
-		GlStateManager.pushMatrix();
+		Matrix4 tpp = new Matrix4()
+				.scale(0.425, 0.425, 0.425)
+				.rotate(Math.toRadians(-20.5f), 0, 1, 0)
+				.translate(0.625f, -1.125, 0.65f);
+		Matrix4 tppOffhand = new Matrix4()
+				.scale(0.385, 0.385, 0.385)
+				.rotate(Math.toRadians(75f), 1, 0, 0)
+				.rotate(Math.toRadians(20.5f), 0, 0, 1)
+				.rotate(Math.toRadians(90f), 0, 1, 0)
+				.translate(-0.5f, -.25, .125);
 
-		List<TmtNamedBoxGroup> renderParts = new ArrayList<>(defaultGunParts);
-		String skin = IIContent.itemSubmachinegun.getSkinnableCurrentSkin(stack);
-		boolean drawText = true, canApply = false;
+		Matrix4 fpp = new Matrix4()
+				.scale(0.75, 0.75, 0.75)
+				.translate(1f-0.25f, -1f, 0)
+				.rotate(Math.toRadians(7.5f), 0, 1, 0)
+				.rotate(Math.toRadians(5), 1, 0, 0)
+				.translate(-0.125f, 0, 0.125f);
+		Matrix4 fppOffhand = new Matrix4()
+				.scale(0.55, 0.55, 0.55)
+				.translate(1f-0.25f, -1f, 0)
+				.rotate(Math.toRadians(82.5), 0, 1, 0)
+				.rotate(Math.toRadians(2.5), 1, 0, 0)
+				.translate(0, 0, -0.5f);
 
-		if(!skin.isEmpty())
+		return model
+				.setTransformations(TransformType.GROUND, new Matrix4()
+						.scale(0.325, 0.325, 0.325)
+						.translate(0.5, -0.75, 0.5))
+				.setTransformations(TransformType.THIRD_PERSON_RIGHT_HAND, tpp)
+				.setTransformations(TransformType.THIRD_PERSON_LEFT_HAND, tppOffhand)
+				.setTransformations(TransformType.FIXED, new Matrix4()
+						.rotate(Math.toRadians(-3.5), 1, 0, 0)
+						.rotate(Math.toRadians(-75), 0, 1, 0)
+						.translate(0.125, -0.25, -0.125)
+						.scale(0.425, 0.425, 0.425))
+				.setTransformations(TransformType.GUI, new Matrix4()
+						.translate(0, -0.25, 0)
+						.scale(0.5, 0.5, 0.5)
+						.rotate(Math.toRadians(35), 1, 0, 0)
+						.rotate(Math.toRadians(135), 0, 1, 0)
+						.translate(0, 0, 0.325)
+				)
+				.setTransformations(TransformType.FIRST_PERSON_RIGHT_HAND, fpp)
+				.setTransformations(TransformType.FIRST_PERSON_LEFT_HAND, fppOffhand);
+	}
+
+	@Override
+	public void registerSprites(TextureMap map)
+	{
+		super.registerSprites(map);
+		IISkinHandler.registerSprites(map, IIContent.itemSubmachinegun.getSkinnableName());
+	}
+
+	@Override
+	public void draw(ItemStack stack, TransformType transform, BufferBuilder buf, Tessellator tes, float partialTicks)
+	{
+		EasyNBT nbt = EasyNBT.wrapNBT(stack);
+
+		model.getVariant(nbt.getString("contributorSkin"), stack);
+		model.forEach(AMT::defaultize);
+
+		//Make upgrade AMTs visible
+		showUpgrades(stack, nbt);
+
+		//magazine stack
+		ItemStack magazine = nbt.getItemStack(ItemIISubmachinegun.MAGAZINE);
+
+		int firing = nbt.getInt(ItemIISubmachinegun.FIRE_DELAY);
+		int firingDelay = item.getFireDelay(stack, nbt);
+		int reloading = nbt.getInt(ItemIISubmachinegun.RELOADING);
+		fire.apply((1f-(Math.max(0, firing-partialTicks)/firingDelay)));
+
+		//Whether hand should be rendered
+		boolean handRender = is1stPerson(transform);
+
+		//hand should be visible only in 1st person mode
+		IIAnimationUtils.setModelVisibility(hand.get(), handRender);
+		IIAnimationUtils.setModelVisibility(offHand.get(), handRender);
+
+
+		if(handRender)
 		{
-			IISpecialSkin s = IISkinHandler.specialSkins.get(skin);
-			if(s!=null)
+			int aiming = nbt.getInt(ItemIISubmachinegun.AIMING);
+			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
+					true, !Minecraft.getMinecraft().player.isSneaking(),
+					1, 3,
+					partialTicks);
+
+			if(preciseAim > 0)
 			{
-				ItemIIGunBase gun = (ItemIIGunBase)stack.getItem();
-				canApply = s.doesApply(gun.getSkinnableName());
-				if(s.mods.contains("skin_mg_text"))
-				{
-				}
-				skinParts.forEach(tmtNamedBoxGroup -> {
-					if(s.mods.contains(tmtNamedBoxGroup.getName()))
-						renderParts.add(tmtNamedBoxGroup);
-				});
+				//gun "push" towards player
+				float recoil = Math.min((nbt.getFloat(ItemIISubmachinegun.RECOIL_V)+nbt.getFloat(ItemIISubmachinegun.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
+
+				GlStateManager.translate(-preciseAim*(1-0.125-0.0625/3), 0.15*preciseAim, 0);
+				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
+				GlStateManager.rotate(preciseAim*-5f, 1, 0, 0);
+
+				GlStateManager.translate(0, 0, preciseAim*0.25);
+
+				if(recoil > 0)
+					GlStateManager.translate(0, -recoil*(0.155-0.1*preciseAim), recoil*0.25);
+
+				if(item.hasIIUpgrade(stack, WeaponUpgrades.FOLDING_STOCK))
+					foldingStock.apply(preciseAim);
 			}
+			(transform==TransformType.FIRST_PERSON_RIGHT_HAND?handAngle: offHandAngle).apply(preciseAim);
 		}
-		//specialText = I18n.format("skin.immersiveintelligence."+skin+".name");
-		skin = ((skin.isEmpty()&&!canApply)?IIContent.itemSubmachinegun.getSkinnableDefaultTextureLocation(): IIReference.SKIN_LOCATION+skin+"/");
 
-		for(Entry<Predicate<ItemStack>, BiConsumer<ItemStack, List<TmtNamedBoxGroup>>> s : upgrades.entrySet())
+		//Don't show muzzle flash GUI
+		if(transform==TransformType.GUI)
 		{
-			if(s.getKey()!=null&&s.getValue()!=null&&s.getKey().test(stack))
-				s.getValue().accept(stack, renderParts);
+			IIAnimationUtils.setModelVisibility(muzzleFlash.get(), false);
+			IIAnimationUtils.setModelVisibility(casingFired.get(), false);
 		}
 
-		for(TmtNamedBoxGroup nmod : renderParts)
+		float v = IIAnimationUtils.getAnimationProgress(
+				reloading,
+				(float)item.getReloadTime(stack, ItemStack.EMPTY, EasyNBT.wrapNBT(item.getUpgrades(stack))),
+				false,
+				reloading > 0?partialTicks: 0
+		);
+
+		if(item.hasIIUpgrade(stack, WeaponUpgrades.BOTTOM_LOADING))
 		{
-			switch(nmod.getName())
-			{
-				case "ammo":
-				case "bottomLoader":
-				{
-					GlStateManager.pushMatrix();
-					int reloading = ItemNBTHelper.getInt(stack, "reloading");
-					ItemStack magazine = ItemNBTHelper.getItemStack(stack, "magazine");
-
-					int maxReload = (ItemNBTHelper.getBoolean(stack, "isDrum")?Submachinegun.drumReloadTime: Submachinegun.clipReloadTime);
-					float reload = MathHelper.clamp(
-							reloading+(reloading > 0?partialTicks: 0),
-							0,
-							maxReload
-					);
-					reload /= maxReload;
-					float clipReload;
-
-					if(reloading==0)
-					{
-						if(IIContent.itemSubmachinegun.getUpgrades(stack).hasKey("bottom_loading"))
-						{
-							ClientUtils.bindTexture(skin+nmod.getTexturePath());
-							nmod.render(0.0625f);
-							if(!magazine.isEmpty())
-								(magazine.getMetadata()==1?model.magBottomBox: model.magDrumBox).render(0.0625f);
-						}
-						else if(!magazine.isEmpty())
-						{
-							ClientUtils.bindTexture(skin+nmod.getTexturePath());
-							nmod.render(0.0625f);
-						}
-					}
-					else
-					{
-						GlStateManager.enableBlend();
-						if(magazine.isEmpty())
-						{
-							if(reload <= 0.33)
-								clipReload = 1f;
-							else if(reload <= 0.66)
-								clipReload = 1f-((reload-0.33f)/0.33f);
-							else
-								clipReload = 0f;
-						}
-						else
-						{
-							if(reload <= 0.33)
-								clipReload = 0f;
-							else if(reload <= 0.66)
-								clipReload = (reload-0.33f)/0.33f;
-							else
-								clipReload = 1f;
-
-						}
-						ClientUtils.bindTexture(skin+nmod.getTexturePath());
-						if(IIContent.itemSubmachinegun.getUpgrades(stack).hasKey("bottom_loading"))
-						{
-							nmod.render(0.0625f);
-							GlStateManager.translate(0, -clipReload, 0);
-							GlStateManager.color(1f, 1f, 1f, 1f-Math.min(clipReload/0.5f, 1f));
-							(ItemNBTHelper.getBoolean(stack, "isDrum")?model.magDrumBox: model.magBottomBox).render(0.0625f);
-						}
-						else
-						{
-							GlStateManager.translate(0.65f*clipReload, 0, 0);
-							GlStateManager.color(1f, 1f, 1f, 1f-Math.min(clipReload/0.5f, 1f));
-							nmod.render(0.0625f);
-						}
-
-						GlStateManager.disableBlend();
-						GlStateManager.color(1f, 1f, 1f, 1f);
-
-					}
-					GlStateManager.popMatrix();
-				}
-				break;
-				case "foldingStock":
-				{
-					int aiming = ItemNBTHelper.getInt(stack, "aiming");
-					double preciseAim = MathHelper.clamp(
-							aiming+(aiming > 0?(Minecraft.getMinecraft().player.isSneaking()?partialTicks: -3*partialTicks): 0),
-							0,
-							Submachinegun.aimTimeFoldedStock
-					);
-
-					GlStateManager.pushMatrix();
-
-					GlStateManager.translate(2.5/16f, 0, 0.0625f);
-					GlStateManager.rotate(175*(float)(1d-(preciseAim/Submachinegun.aimTimeFoldedStock)), 0, 1, 0);
-					GlStateManager.translate(-2.5/16f, 0, -0.0625f);
-
-					ClientUtils.bindTexture(skin+nmod.getTexturePath());
-					nmod.render(0.0625f);
-					GlStateManager.popMatrix();
-				}
-				break;
-				case "slide":
-				{
-					float delay = Math.max(ItemNBTHelper.getInt(stack, "fireDelay")-partialTicks, 0);
-					float movement = 1f-(Math.abs(delay/(float)Submachinegun.bulletFireTime-0.5f)/0.5f);
-					GlStateManager.pushMatrix();
-					GlStateManager.translate(0, 0, 0.5f*movement);
-					ClientUtils.bindTexture(skin+nmod.getTexturePath());
-					nmod.render(0.0625f);
-					GlStateManager.popMatrix();
-				}
-				break;
-				default:
-				{
-					ClientUtils.bindTexture(skin+nmod.getTexturePath());
-					nmod.render(0.0625f);
-
-				}
-				break;
-			}
+			if(nbt.hasKey("isDrum"))
+				(magazine.isEmpty()?loadBottomDrum: unloadBottomDrum).apply(v);
+			else
+				(magazine.isEmpty()?loadBottom: unloadBottom).apply(v);
 		}
+		else
+			(magazine.isEmpty()?load: unload).apply(v);
 
-		GlStateManager.popMatrix();
-	}
-
-	@Override
-	public void reloadModels()
-	{
-		model = new ModelSubmachinegun();
-		addDefaultModelParts();
-	}
-
-	@Override
-	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)
-	{
-		int aiming = ItemNBTHelper.getInt(stack, "aiming");
-		int reloading = ItemNBTHelper.getInt(stack, "reloading");
-		int maxReload = ItemNBTHelper.getBoolean(stack, "isDrum")?Submachinegun.drumReloadTime: Submachinegun.clipReloadTime;
-		float reload = MathHelper.clamp(
-				reloading+(reloading > 0?partialTicks: 0),
-				0,
-				maxReload
-		);
-		reload /= maxReload;
-
-		boolean foldingStock = IIContent.itemSubmachinegun.getUpgrades(stack).hasKey("folding_stock");
-		float preciseAim = MathHelper.clamp(
-				aiming+(aiming > 0?Minecraft.getMinecraft().player.isSneaking()?partialTicks: -3*partialTicks: 0),
-				0,
-				foldingStock?Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime
-		);
-		preciseAim /= foldingStock?Submachinegun.aimTimeFoldedStock: Submachinegun.aimTime;
-
-		GlStateManager.pushMatrix();
-		GlStateManager.color(1f, 1f, 1f, 1f);
-		GlStateManager.translate(11.5/16f, -11/16f, -1.25+2/16f);
-		GlStateManager.rotate(2f, 1, 0, 0);
-		GlStateManager.rotate(8.5f, 0, 1, 0);
-
-		if(swingProgress > 0)
-			GlStateManager.translate(0, 0, -0.5f*(1f-Math.abs((swingProgress-0.5f)/0.5f)));
-
+		//Reloading animation
 		if(reloading > 0)
 		{
-			float rpart = reload <= 0.33?reload/0.33f: reload <= 0.66?1f: 1f-(reload-0.66f)/0.33f;
-			GlStateManager.rotate(rpart*90f, 0, 1, 0);
-			GlStateManager.rotate(rpart*85f, 0, 0, 1);
+			float rpart = v <= 0.33?v/0.33f: v <= 0.66?1f: 1f-(v-0.66f)/0.33f;
+			//Rotate the gun held 80 degrees during reload
+			if(handRender)
+			{
+				GlStateManager.rotate(rpart*80f, 0, 1, 0);
+				GlStateManager.rotate(rpart*40f, 0, 0, 1);
+				GlStateManager.translate(rpart, -rpart*0.75, -rpart*0.25);
+			}
 		}
-		if(preciseAim > 0)
-		{
-			GlStateManager.translate(-preciseAim*0.725, 0.2*preciseAim, 0);
-			GlStateManager.rotate(preciseAim*-8.5f, 0, 1, 0);
-			GlStateManager.rotate(preciseAim*-2.25f, 1, 0, 0);
 
-		}
-		SubmachinegunItemStackRenderer.instance.renderByItem(stack, partialTicks);
-		GlStateManager.popMatrix();
 
-		return true;
+		//Finally, render
+		for(AMT amt : model)
+			amt.render(tes, buf);
 	}
 
 	@Override
-	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
+	public void compileModels(OBJModel model, IIModelHeader header)
 	{
-		return ItemNBTHelper.getInt(stack, "aiming") > Submachinegun.aimTime*0.75;
+		this.model = AMTModelCacheBuilder.startItemModel()
+				.withModel(model)
+				.withModels(listUpgradeModels())
+				.withHeader(header)
+				.withHeader(ResLoc.of(this.directoryRes, "submachinegun_upgrades.obj.amt"))
+				.withModelProvider(
+						(stack, combinedHeader) -> new AMT[]{
+								//Main Model
+								new AMTParticle("muzzle_flash", combinedHeader)
+										.setParticle(new ParticleGunfire(
+												null,
+												Vec3d.ZERO,
+												new Vec3d(1, 0, 0),
+												16f
+										)
+								),
+								new AMTHand("hand_main", combinedHeader, EnumHand.OFF_HAND),
+								new AMTHand("hand_off", combinedHeader, EnumHand.OFF_HAND),
+
+								new AMTBullet("casing_fired", combinedHeader, AmmoRegistry.INSTANCE.getModel(IIContent.itemAmmoSubmachinegun))
+										.withState(BulletState.CASING),
+						}
+				).withTextureProvider(
+						(res, stack) ->
+						{
+							String skin = IIContent.itemAssaultRifle.getSkinnableCurrentSkin(stack);
+							if(IISkinHandler.isValidSkin(skin))
+							{
+								this.skinRemapper = new MTLTextureRemapper(model, ResLoc.of(IIReference.RES_TEXTURES_SKIN, skin, "/assault_rifle").withExtension(ResLoc.EXT_MTL));
+								return ClientUtils.getSprite(this.skinRemapper.apply(res));
+							}
+
+							return ClientUtils.getSprite(res);
+						}
+				)
+				.build();
+
+		this.muzzleFlash = new AMTCrossVariantReference<>("muzzle_flash", this.model);
+		this.hand = new AMTCrossVariantReference<>("hand_main", this.model);
+		this.offHand = new AMTCrossVariantReference<>("hand_off", this.model);
+		this.casingFired = new AMTCrossVariantReference<>("casing_fired", this.model);
+
+
+		//Add upgrade visibility animations
+		loadUpgrades(model, ResLoc.of(animationRes, "upgrades/"));
+
+		load = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load"));
+		unload = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload"));
+		fire = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "fire"));
+
+		loadBottom = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_bottom"));
+		unloadBottom = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_bottom"));
+		loadBottomDrum = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "load_bottom_drum"));
+		unloadBottomDrum = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "unload_bottom_drum"));
+
+		handAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "hand"));
+		offHandAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
+
+		foldingStock = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "folding_stock"));
 	}
 }

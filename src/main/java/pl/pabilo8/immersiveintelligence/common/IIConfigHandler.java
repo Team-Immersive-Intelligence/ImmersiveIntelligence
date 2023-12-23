@@ -1376,17 +1376,18 @@ public class IIConfigHandler
 				@Comment({"Maximum amount of horizontal recoil."})
 				public static float sturdyBarrelVelocityMod = 1.25f;
 
+				//some people are able to report "bugs", yet unable to reset a config file when updating versions
 				@Comment({"Amount of horizontal recoil after taking a shot."})
-				public static float recoilHorizontal = 0.345f;
+				public static float newRecoilHorizontal = 0.345f;
 
 				@Comment({"Amount of vertical recoil after taking a shot."})
-				public static float recoilVertical = 0.625f;
+				public static float newRecoilVertical = 0.625f;
 
 				@Comment({"Maximum amount of horizontal recoil."})
-				public static float maxRecoilHorizontal = 14.5f;
+				public static float newMaxRecoilHorizontal = 14.5f;
 
 				@Comment({"Maximum amount of vertical recoil."})
-				public static float maxRecoilVertical = 9f;
+				public static float newMaxRecoilVertical = 9f;
 
 				@Comment({"Range in which enemies will be attracted to the gunshot."})
 				public static int enemyAttractRange = 36;

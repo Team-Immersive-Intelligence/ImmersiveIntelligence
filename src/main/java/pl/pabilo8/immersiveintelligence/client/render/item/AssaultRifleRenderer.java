@@ -116,8 +116,7 @@ public class AssaultRifleRenderer extends IIUpgradableItemRendererAMT<ItemIIAssa
 		EasyNBT nbt = EasyNBT.wrapNBT(stack);
 
 		//TODO: 12.04.2023 skins and shaders
-
-		model.getVariant(nbt.hasKey("handmade")?"diy": nbt.getString("contributorSkin"), stack);
+		model.getVariant(nbt.getString("contributorSkin"), stack);
 		model.forEach(AMT::defaultize);
 
 		//Make upgrade AMTs visible

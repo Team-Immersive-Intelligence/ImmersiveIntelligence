@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.pabilo8.immersiveintelligence.client.render.MachinegunRenderer;
-import pl.pabilo8.immersiveintelligence.client.render.item.SubmachinegunItemStackRenderer;
 import pl.pabilo8.immersiveintelligence.client.util.amt.IIUpgradableItemRendererAMT;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -320,50 +319,12 @@ public class ItemIIWeaponUpgrade extends ItemIISubItemsBase<WeaponUpgrades> impl
 		);
 
 		//--- Submachinegun ---//
-
-		SubmachinegunItemStackRenderer.upgrades.put(
-				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("sturdy_barrel")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.barrelBox);
-					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.sturdyBarrelBox);
-				}
-		);
-
-		SubmachinegunItemStackRenderer.upgrades.put(
-				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("suppressor")),
-				(stack, tmtNamedBoxGroups) ->
-						tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.silencerBox)
-		);
-
-		SubmachinegunItemStackRenderer.upgrades.put(
-				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("bottom_loading")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.ammoBox);
-					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.gripBox);
-					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.loaderBox);
-
-					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.bottomLoaderBox);
-				}
-		);
-
-		SubmachinegunItemStackRenderer.upgrades.put(
-				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getBoolean("folding_stock")),
-				(stack, tmtNamedBoxGroups) ->
-				{
-					tmtNamedBoxGroups.remove(SubmachinegunItemStackRenderer.model.stockBox);
-
-					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.foldingStockHolderBox);
-					tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.foldingStockBox);
-				}
-		);
-
-		SubmachinegunItemStackRenderer.upgrades.put(
-				stack -> (IIContent.itemSubmachinegun.getUpgrades(stack).getInteger("melee") > 0),
-				(stack, tmtNamedBoxGroups) ->
-						tmtNamedBoxGroups.add(SubmachinegunItemStackRenderer.model.bayonetBox)
-		);
+		IIUpgradableItemRendererAMT<?> smg = IIContent.itemSubmachinegun.getItemRenderer();
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.STURDY_BARREL), "sturdy_barrel");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.SUPPRESSOR), "suppressor");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.BOTTOM_LOADING), "bottom_loading");
+		smg.addUpgradePart(hasUpgrade(WeaponUpgrades.FOLDING_STOCK), "folding_stock");
+		smg.addUpgradePart(easyNBT -> easyNBT.hasKey("melee"), "bayonet");
 
 		//--- Assault Rifle ---//
 		IIUpgradableItemRendererAMT<?> stg = IIContent.itemAssaultRifle.getItemRenderer();

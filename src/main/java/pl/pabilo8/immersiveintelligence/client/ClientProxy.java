@@ -341,6 +341,7 @@ public class ClientProxy extends CommonProxy
 
 		IIContent.itemAssaultRifle.setTileEntityItemStackRenderer(new AssaultRifleRenderer().subscribeToList("assault_rifle"));
 		IIContent.itemRifle.setTileEntityItemStackRenderer(new RifleRenderer().subscribeToList("rifle"));
+		IIContent.itemSubmachinegun.setTileEntityItemStackRenderer(new SubmachinegunItemStackRenderer().subscribeToList("submachinegun"));
 
 		//IIContent.itemBinoculars.setTileEntityItemStackRenderer(new BinocularsRenderer().subscribeToList("binoculars"));
 		IIContent.itemRadioTuner.setTileEntityItemStackRenderer(new RadioTunerRenderer().subscribeToList("radio_tuner"));
@@ -533,7 +534,6 @@ public class ClientProxy extends CommonProxy
 
 		//Weapons (Items)
 		IIContent.itemMachinegun.setTileEntityItemStackRenderer(MachinegunItemStackRenderer.instance);
-		IIContent.itemSubmachinegun.setTileEntityItemStackRenderer(SubmachinegunItemStackRenderer.instance);
 		ItemIIWeaponUpgrade.addUpgradesToRender();
 
 		IIContent.itemLightEngineerHelmet.setTileEntityItemStackRenderer(LightEngineerArmorItemStackRenderer.instance);
