@@ -412,15 +412,16 @@ public class ClientEventHandler implements ISelectiveResourceReloadListener
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setBoolean("clientMessage", true);
-				tag.setBoolean("aiming", mgAiming);
+				tag.setBoolean("aiming", pressed);
 				IIPacketHandler.sendToServer(new MessageEntityNBTSync(ridden, tag));
+				((EntityMachinegun)ridden).aiming = pressed;
 			}
 			mgAiming = pressed;
 		}
 		else mgAiming = false;
 
 		//--- Camera Handling ---//
-		if(CameraHandler.zoom!=null)
+		if(mgAiming)
 		{
 			ClientUtils.mc().gameSettings.thirdPersonView = 0;
 

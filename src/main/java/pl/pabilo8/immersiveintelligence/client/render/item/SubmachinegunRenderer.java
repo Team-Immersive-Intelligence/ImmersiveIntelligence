@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.render.item;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement;
 import blusunrize.immersiveengineering.client.ImmersiveModelRegistry.ItemModelReplacement_OBJ;
+import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
 import blusunrize.immersiveengineering.common.util.chickenbones.Matrix4;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -20,7 +21,9 @@ import pl.pabilo8.immersiveintelligence.client.util.ResLoc;
 import pl.pabilo8.immersiveintelligence.client.util.amt.*;
 import pl.pabilo8.immersiveintelligence.client.util.amt.AMTBullet.BulletState;
 import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.AssaultRifle;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Submachinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
+import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIGunBase;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIISubmachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.weapons.ItemIIWeaponUpgrade.WeaponUpgrades;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -32,7 +35,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  * @updated 23.12.2023
  * @since 13-10-2019
  */
-public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISubmachinegun>
+public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISubmachinegun> implements ISpecificHandRenderer
 {
 	//Animations
 	IIAnimationCachedMap fire, load, unload, handAngle, offHandAngle, foldingStock;
@@ -147,7 +150,7 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 			{
 				//gun "push" towards player
 				float recoil = Math.min((nbt.getFloat(ItemIISubmachinegun.RECOIL_V)+nbt.getFloat(ItemIISubmachinegun.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
-				
+
 				GlStateManager.translate(-preciseAim*(1-0.125-0.0625/3), 0.15*preciseAim, 0);
 				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
 				GlStateManager.rotate(preciseAim*-5f, 1, 0, 0);
@@ -268,5 +271,24 @@ public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISub
 		offHandAngle = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "offhand"));
 
 		foldingStock = IIAnimationCachedMap.create(this.model, ResLoc.of(animationRes, "folding_stock"));
+	}
+
+
+	@Override
+	protected void nullifyModels()
+	{
+		IIAnimationUtils.disposeOf(model);
+	}
+
+	@Override
+	public boolean doHandRender(ItemStack stack, EnumHand hand, ItemStack otherHand, float swingProgress, float partialTicks)
+	{
+		return hand==EnumHand.OFF_HAND&&otherHand.getItem() instanceof ItemIIGunBase;
+	}
+
+	@Override
+	public boolean renderCrosshair(ItemStack stack, EnumHand hand)
+	{
+		return ItemNBTHelper.getInt(stack, ItemIISubmachinegun.AIMING) > Submachinegun.aimTime*0.85;
 	}
 }

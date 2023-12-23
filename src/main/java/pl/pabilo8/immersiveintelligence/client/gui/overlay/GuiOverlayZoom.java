@@ -3,6 +3,7 @@ package pl.pabilo8.immersiveintelligence.client.gui.overlay;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
@@ -44,7 +45,7 @@ public class GuiOverlayZoom extends GuiOverlayBase
 		//Start drawing
 		IIClientUtils.bindTexture(TEXTURE_IE_HUD);
 		IIDrawUtils draw = IIDrawUtils.startTextured()
-				.setOffset(100/256f*resMin,0)
+				.setOffset(100/256f*resMin, 0)
 				.drawTexRect(218/256f*resMin, 64/256f*resMin, 24/256f*resMin, 128/256f*resMin, 64/256f, 88/256f, 96/256f, 224/256f);
 
 		int curStep = -1;
@@ -79,7 +80,11 @@ public class GuiOverlayZoom extends GuiOverlayBase
 
 	private void drawReticle(int width, int height, int resMin, EntityPlayer player)
 	{
-		IIClientUtils.bindTexture(CameraHandler.zoom.getZoomOverlayTexture(CameraHandler.stack, player));
+		ResourceLocation overlay = CameraHandler.zoom.getZoomOverlayTexture(CameraHandler.stack, player);
+		if(overlay==null)
+			return;
+
+		IIClientUtils.bindTexture(overlay);
 		float progress = CameraHandler.zoom.getZoomProgress(CameraHandler.stack, player);
 		float centerX = (width-resMin)/2f, centerY = (height-resMin)/2f;
 

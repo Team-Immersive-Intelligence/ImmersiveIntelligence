@@ -34,6 +34,7 @@ public class BlockIIMetalDevice1 extends BlockIITileProvider<IIBlockTypes_MetalD
 		@EnumTileProvider(tile = TileEntityCO2Filter.class)
 		@IIBlockProperties(needsCustomState = true, renderLayer = BlockRenderLayer.CUTOUT)
 		CO2_FILTER,
+		@IIBlockProperties(hidden = TernaryValue.TRUE)
 		NEWSPAPER_STAND,
 		//Scheduled for 0.4.0
 		@IIBlockProperties(hidden = TernaryValue.TRUE)

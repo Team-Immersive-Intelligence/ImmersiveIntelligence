@@ -33,7 +33,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.MachinegunCoolantHandler;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
@@ -43,6 +42,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedTextOverlay;
 import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.client.util.CameraHandler;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Weapons.Machinegun;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
@@ -1093,7 +1093,7 @@ public class EntityMachinegun extends Entity implements IEntityAdditionalSpawnDa
 		public boolean shouldZoom(ItemStack stack, EntityPlayer player)
 		{
 			NBTTagCompound nbt = IIContent.itemMachinegun.getUpgrades(stack);
-			return EntityMachinegun.this.aiming&&(nbt.hasKey("scope")||nbt.hasKey("infrared_scope"));
+			return (nbt.hasKey("scope")||nbt.hasKey("infrared_scope"));
 		}
 
 		@Override

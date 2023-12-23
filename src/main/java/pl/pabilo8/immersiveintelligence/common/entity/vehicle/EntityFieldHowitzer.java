@@ -23,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoUtils;
 import pl.pabilo8.immersiveintelligence.api.utils.IEntitySpecialRepairable;
 import pl.pabilo8.immersiveintelligence.api.utils.camera.IEntityZoomProvider;
@@ -31,6 +30,7 @@ import pl.pabilo8.immersiveintelligence.api.utils.tools.IAdvancedZoomTool;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.ITowable;
 import pl.pabilo8.immersiveintelligence.api.utils.vehicles.IVehicleMultiPart;
 import pl.pabilo8.immersiveintelligence.client.ClientProxy;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Vehicles.FieldHowitzer;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IISounds;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
@@ -227,7 +227,7 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 			//gunner
 			EntityVehicleSeat.getOrCreateSeat(this, 1);
 		}
-		//super.onUpdate();
+		super.onUpdate();
 		// TODO: 06.08.2021 death animation
 		if(!world.isRemote&&mainDurability <= 0)
 			setDead();
@@ -427,19 +427,22 @@ public class EntityFieldHowitzer extends Entity implements IVehicleMultiPart, IE
 	{
 		float r = MathHelper.wrapDegrees(rotationYaw);
 
-		//TODO: 24.04.2023 Add proper wheel handling
-		if(acceleration==0)
-			return;
+		partWheelLeft.travel(0, 0, 0, -0.25f, 0.015);
+		partWheelRight.travel(0, 0, 0, -0.25f, 0.015);
 
 		double true_angle2 = Math.toRadians((-rotationYaw-90) > 180?360f-(-rotationYaw-90): (-rotationYaw-90));
 		Vec3d pos1_z = IIUtils.offsetPosDirection(-0.75f, true_angle2, 0);
-		//Vec3d pos2_z = Utils.offsetPosDirection(0.75f, true_angle2, 0);
 
-		partWheelLeft.rotationYaw = this.rotationYaw;
-		partWheelLeft.travel(0, 0, 1f, -0.0125f, acceleration*0.015);
+		if(acceleration > 0)
+		{
+			//Vec3d pos2_z = Utils.offsetPosDirection(0.75f, true_angle2, 0);
 
-		partWheelRight.rotationYaw = this.rotationYaw;
-		partWheelRight.travel(0, 0, 1f, -0.0125f, acceleration*0.015);
+			partWheelLeft.rotationYaw = this.rotationYaw;
+			partWheelLeft.travel(0, 0, -acceleration, -0.0125f, 0.015);
+
+			partWheelRight.rotationYaw = this.rotationYaw;
+			partWheelRight.travel(0, 0, -acceleration, -0.0125f, 0.015);
+		}
 
 		if(!partWheelLeft.isEntityInsideOpaqueBlock()&&!partWheelLeft.isEntityInsideOpaqueBlock()&&!partWheelRight.isEntityInsideOpaqueBlock()&&!partWheelRight.isEntityInsideOpaqueBlock())
 		{
