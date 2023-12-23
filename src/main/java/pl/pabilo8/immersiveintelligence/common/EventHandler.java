@@ -16,6 +16,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -35,6 +36,7 @@ import pl.pabilo8.immersiveintelligence.common.crafting.IIRecipes;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityHans;
 import pl.pabilo8.immersiveintelligence.common.entity.EntityMachinegun;
 import pl.pabilo8.immersiveintelligence.common.item.ammo.ItemIIBulletMagazine;
+import pl.pabilo8.immersiveintelligence.common.item.armor.ItemIILightEngineerBoots;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBlockDamageSync;
 import pl.pabilo8.immersiveintelligence.common.util.item.ItemIIUpgradeableArmor;
@@ -195,6 +197,30 @@ public class EventHandler
 		{
 			if(ItemIIUpgradeableArmor.isArmorWithUpgrade(boots, "springs"))
 				event.setCanceled(true);
+		}
+	}
+
+	/**
+	 * @author GabrielV (gabriel@iiteam.net)
+	 * @created 27/10/2023 - 6:05 PM
+	 */
+	@SubscribeEvent
+	public void onLivingFallEvent(LivingFallEvent event)
+	{
+		if(event.getEntityLiving() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+			Iterable<ItemStack> armor = player.getArmorInventoryList();
+
+			for(ItemStack piece : armor)
+			{
+				if(!(piece.getItem() instanceof ItemIILightEngineerBoots)) continue;
+				ItemIILightEngineerBoots boots = (ItemIILightEngineerBoots)piece.getItem();
+				if(boots.hasUpgrade(piece, "internal_springs"))
+				{
+					event.setDistance(0);
+				}
+			}
 		}
 	}
 

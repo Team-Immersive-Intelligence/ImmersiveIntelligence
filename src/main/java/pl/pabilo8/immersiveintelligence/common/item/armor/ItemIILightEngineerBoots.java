@@ -71,14 +71,10 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 		if(equipmentSlot==this.armorType)
 		{
-			if(ItemNBTHelper.hasKey(stack, "flippin"))
-			{
+			if(ItemNBTHelper.hasKey(stack, "flippers"))
 				multimap.put(EntityLivingBase.SWIM_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Flippers", 4, 2));
-			}
 			if(ItemNBTHelper.hasKey(stack, "rackets"))
-			{
 				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Rackets", 0.5, 1));
-			}
 			//if(getUpgrades(stack).hasKey(""))
 			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
 			//multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Power Armor Movement Speed Debuff", -.03, 1));
@@ -100,9 +96,7 @@ public class ItemIILightEngineerBoots extends ItemIILightEngineerArmorBase imple
 
 		boolean rackets = getUpgrades(stack).hasKey("snow_rackets");
 		if(rackets&&(mat==Material.SNOW||mat==Material.CRAFTED_SNOW))
-		{
 			ItemNBTHelper.setBoolean(stack, "rackets", true);
-		}
 		else if(rackets&&(matDown==Material.ICE||matDown==Material.PACKED_ICE))
 		{
 			player.move(MoverType.SELF, player.motionX*5, player.motionY, player.motionZ*5);
