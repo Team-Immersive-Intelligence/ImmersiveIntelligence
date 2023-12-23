@@ -103,6 +103,7 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 		//Return 0 if there is no ammunition to be loaded
 		if((found = item.findAmmo(user, weapon)).isEmpty())
 			return 0;
+		markLoadedAmmo(nbt, found);
 
 		if(reloading==reloadTime/1.5) //Play loading sound
 			playSound(user, getReloadSound(weapon, upgrades), SoundCategory.PLAYERS, 1f, 1f);
@@ -122,6 +123,11 @@ public abstract class AmmoHandlerMagazine extends AmmoHandler
 		}
 
 		return reloading;
+	}
+
+	public void markLoadedAmmo(EasyNBT nbt, ItemStack ammo)
+	{
+
 	}
 
 	@Override

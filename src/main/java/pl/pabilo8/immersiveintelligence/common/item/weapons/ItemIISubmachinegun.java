@@ -36,6 +36,15 @@ public class ItemIISubmachinegun extends ItemIIGunBase
 				return magazine!=Magazines.SUBMACHINEGUN_DRUM||hasIIUpgrade(weapon, WeaponUpgrades.BOTTOM_LOADING);
 			}
 
+			@Override
+			public void markLoadedAmmo(EasyNBT nbt, ItemStack ammo)
+			{
+				if(IIContent.itemBulletMagazine.stackToSub(ammo)==Magazines.SUBMACHINEGUN_DRUM)
+					nbt.withBoolean("isDrum", true);
+				else
+					nbt.without("isDrum");
+			}
+
 			@Nullable
 			@Override
 			protected SoundEvent getUnloadSound(ItemStack weapon, EasyNBT nbt)

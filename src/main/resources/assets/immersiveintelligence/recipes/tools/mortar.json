@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " pp",
-    "ppr",
-    "hhc"
+    "pph",
+    "ssr"
   ],
   "key": {
     "p": {
       "item": "immersiveengineering:metal_device1",
       "data": 6
     },
-    "c": {
-      "item": "immersiveengineering:material",
-      "data": 9
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "slabSheetmetalSteel"
     },
     "h": {
       "item": "immersiveengineering:metal_decoration0",
@@ -20,7 +20,7 @@
     },
     "r": {
       "type": "forge:ore_dict",
-      "ore": "stickTungsten"
+      "ore": "stickSteel"
     }
   },
   "result": {

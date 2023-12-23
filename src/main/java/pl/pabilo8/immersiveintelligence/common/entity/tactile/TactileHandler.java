@@ -207,11 +207,11 @@ public class TactileHandler
 				.add(offset)
 				.add(globalOffset)
 				.addVector(-1, 0, -1.5);
-		boolean mirrored = listener.getIsMirrored();
+		boolean mirrored = listener.getIsTactileMirrored();
 		total = new Vec3d(mirrored?(total.x-1): -total.x, total.y, -total.z);
 		//.add(new Vec3d(0.5, 0.5, 1));
 		//rotate the vector depending on facing
-		EnumFacing facing = listener.getFacing();
+		EnumFacing facing = listener.getTactileFacing();
 
 		Vec3d apply = new Matrix4(facing)
 				.apply(total);
@@ -297,14 +297,14 @@ public class TactileHandler
 				array.get(4).getAsDouble()*0.0625,
 				array.get(5).getAsDouble()*0.0625
 		);
-		if(listener.getIsMirrored())
+		if(listener.getIsTactileMirrored())
 		{
 			double xLength = Math.abs(aabb.maxX-aabb.minX);
 			aabb = new AxisAlignedBB(-aabb.minX+2, aabb.minY, aabb.minZ, -aabb.maxX+2, aabb.maxY, aabb.maxZ);
 		}
 
 		//aabb = new AxisAlignedBB(-0.25, -0.25, -0.25, 0.25, 0.25, 0.25);
-		Matrix4 mat = new Matrix4(listener.getFacing());
+		Matrix4 mat = new Matrix4(listener.getTactileFacing());
 		Vec3d vMin = mat.apply(new Vec3d(aabb.minX, aabb.minY, aabb.minZ));
 		Vec3d vMax = mat.apply(new Vec3d(aabb.maxX, aabb.maxY, aabb.maxZ));
 		return new AxisAlignedBB(vMin.x, vMin.y, vMin.z, vMax.x, vMax.y, vMax.z);
@@ -372,7 +372,7 @@ public class TactileHandler
 		IIAnimationCollisionMap mapped = null;
 		if(anim!=null)
 		{
-			mapped = IIAnimationCollisionMap.create(entities, anim, listener.getFacing(), listener.getIsMirrored());
+			mapped = IIAnimationCollisionMap.create(entities, anim, listener.getTactileFacing(), listener.getIsTactileMirrored());
 			animations.put(res, mapped);
 		}
 
@@ -399,7 +399,7 @@ public class TactileHandler
 	 */
 	public World getWorld()
 	{
-		return listener.getWorld();
+		return listener.getTactileWorld();
 	}
 
 	/**
@@ -409,7 +409,7 @@ public class TactileHandler
 	 */
 	public BlockPos getPos()
 	{
-		return listener.getPos();
+		return listener.getTactilePos();
 	}
 
 	/**
@@ -464,16 +464,16 @@ public class TactileHandler
 		/**
 		 * @return world this tactile listener is in
 		 */
-		World getWorld();
+		World getTactileWorld();
 
 		/**
 		 * @return position in the world
 		 */
-		BlockPos getPos();
+		BlockPos getTactilePos();
 
-		EnumFacing getFacing();
+		EnumFacing getTactileFacing();
 
-		boolean getIsMirrored();
+		boolean getIsTactileMirrored();
 
 		/**
 		 * @return true if interaction happened

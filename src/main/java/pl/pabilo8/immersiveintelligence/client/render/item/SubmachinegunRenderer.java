@@ -32,7 +32,7 @@ import pl.pabilo8.immersiveintelligence.common.util.easynbt.EasyNBT;
  * @updated 23.12.2023
  * @since 13-10-2019
  */
-public class SubmachinegunItemStackRenderer extends IIUpgradableItemRendererAMT<ItemIISubmachinegun>
+public class SubmachinegunRenderer extends IIUpgradableItemRendererAMT<ItemIISubmachinegun>
 {
 	//Animations
 	IIAnimationCachedMap fire, load, unload, handAngle, offHandAngle, foldingStock;
@@ -46,7 +46,7 @@ public class SubmachinegunItemStackRenderer extends IIUpgradableItemRendererAMT<
 	private AMTCrossVariantReference<AMTParticle> muzzleFlash;
 	private AMTCrossVariantReference<AMTBullet> casingFired;
 
-	public SubmachinegunItemStackRenderer()
+	public SubmachinegunRenderer()
 	{
 		super(IIContent.itemSubmachinegun, ResLoc.of(RES_MODEL_WEAPON, "submachinegun"));
 	}
@@ -137,7 +137,8 @@ public class SubmachinegunItemStackRenderer extends IIUpgradableItemRendererAMT<
 		if(handRender)
 		{
 			int aiming = nbt.getInt(ItemIISubmachinegun.AIMING);
-			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, nbt),
+			EasyNBT upgradeNBT = EasyNBT.wrapNBT(item.getUpgrades(stack));
+			float preciseAim = IIAnimationUtils.getAnimationProgress(aiming, item.getAimingTime(stack, upgradeNBT),
 					true, !Minecraft.getMinecraft().player.isSneaking(),
 					1, 3,
 					partialTicks);
@@ -146,7 +147,7 @@ public class SubmachinegunItemStackRenderer extends IIUpgradableItemRendererAMT<
 			{
 				//gun "push" towards player
 				float recoil = Math.min((nbt.getFloat(ItemIISubmachinegun.RECOIL_V)+nbt.getFloat(ItemIISubmachinegun.RECOIL_H))/(AssaultRifle.maxRecoilHorizontal+AssaultRifle.maxRecoilVertical), 1f);
-
+				
 				GlStateManager.translate(-preciseAim*(1-0.125-0.0625/3), 0.15*preciseAim, 0);
 				GlStateManager.rotate(preciseAim*-7.75f, 0, 1, 0);
 				GlStateManager.rotate(preciseAim*-5f, 1, 0, 0);

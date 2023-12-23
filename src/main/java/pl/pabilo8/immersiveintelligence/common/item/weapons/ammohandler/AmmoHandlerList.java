@@ -75,7 +75,6 @@ public abstract class AmmoHandlerList extends AmmoHandler
 			return 0;
 
 		final int reloadTime = item.getReloadTime(weapon, found, upgrades);
-		// TODO: 21.02.2023
 		nbt.withItemStack("found", found);
 
 		//Play loading sound

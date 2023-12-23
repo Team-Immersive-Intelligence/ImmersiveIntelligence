@@ -998,6 +998,30 @@ public class TileEntityArtilleryHowitzer extends TileEntityMultiblockIIGeneric<T
 		return tactileHandler;
 	}
 
+	@Override
+	public World getTactileWorld()
+	{
+		return world;
+	}
+
+	@Override
+	public BlockPos getTactilePos()
+	{
+		return this.getPos();
+	}
+
+	@Override
+	public EnumFacing getTactileFacing()
+	{
+		return facing;
+	}
+
+	@Override
+	public boolean getIsTactileMirrored()
+	{
+		return mirrored;
+	}
+
 	public enum ArtilleryHowitzerAnimation implements ISerializableEnum
 	{
 		STOP(false, false, GunPosition.NEUTRAL, t -> true, t -> false, 0, null, 1f), //stops current action

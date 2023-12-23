@@ -1,6 +1,14 @@
 {
 	"comment": "Made by Pabilo8 with Blockbench",
 	"groups": {
+		"magazine_bottom": {
+			"visibility": [
+				{
+					"time": 0,
+					"visibility": false
+				}
+			]
+		},
 		"hand_main": {
 			"rotation": [
 				{
@@ -138,6 +146,20 @@
 				{
 					"time": 1,
 					"visibility": true
+				}
+			],
+			"alpha": [
+				{
+					"time": 0.15093,
+					"alpha": 0
+				},
+				{
+					"time": 0.35851,
+					"alpha": 1
+				},
+				{
+					"time": 0.41511,
+					"alpha": 1
 				}
 			]
 		}
