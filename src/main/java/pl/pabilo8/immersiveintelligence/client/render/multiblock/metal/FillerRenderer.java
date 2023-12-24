@@ -2,21 +2,12 @@ package pl.pabilo8.immersiveintelligence.client.render.multiblock.metal;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal.MultiblockProcess;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal.MultiblockProcessInWorld;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
-import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
-import pl.pabilo8.immersiveintelligence.api.crafting.FillerRecipe;
-import pl.pabilo8.immersiveintelligence.client.model.IBulletModel;
 import pl.pabilo8.immersiveintelligence.client.model.multiblock.metal.ModelFiller;
 import pl.pabilo8.immersiveintelligence.client.render.IReloadableModelContainer;
 import pl.pabilo8.immersiveintelligence.client.util.tmt.ModelRendererTurbo;
@@ -65,7 +56,7 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 				Vec3i offset = (te.facing.rotateYCCW()).getDirectionVec();
 				if(te.mirrored)
 				{
-					GlStateManager.scale(-1f,1f,1f);
+					GlStateManager.scale(-1f, 1f, 1f);
 					GlStateManager.cullFace(CullFace.FRONT);
 				}
 				else
@@ -90,7 +81,7 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 				mod.render();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(26F/16f, 38F/16f, -43F/16f);
-			GlStateManager.rotate(360*ff,0,0,1);
+			GlStateManager.rotate(360*ff, 0, 0, 1);
 			for(ModelRendererTurbo mod : model.fanModel)
 				mod.render();
 			GlStateManager.popMatrix();
@@ -105,7 +96,7 @@ public class FillerRenderer extends TileEntitySpecialRenderer<TileEntityFiller> 
 			ImmersiveEngineering.proxy.drawConveyorInGui("immersiveengineering:conveyor", EnumFacing.SOUTH);
 
 			GlStateManager.popMatrix();
-			GlStateManager.scale(-1,1,1);
+			GlStateManager.scale(-1, 1, 1);
 			GlStateManager.cullFace(CullFace.FRONT);
 			for(int i = 0; i < shift.length; i++)
 			{
