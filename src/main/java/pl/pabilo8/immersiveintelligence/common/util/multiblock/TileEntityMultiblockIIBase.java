@@ -69,11 +69,19 @@ public abstract class TileEntityMultiblockIIBase<T extends TileEntityMultiblockI
 		//Optimize
 		ApiUtils.checkForNeedlessTicking(this);
 		if(isDummy())
+		{
+			dummyCleanup();
 			return;
+		}
 
 		//Tick
 		onUpdate();
 	}
+
+	/**
+	 * Cleans up dummy fields, so garbage collector can do its job
+	 */
+	protected abstract void dummyCleanup();
 
 	@Override
 	public void onLoad()

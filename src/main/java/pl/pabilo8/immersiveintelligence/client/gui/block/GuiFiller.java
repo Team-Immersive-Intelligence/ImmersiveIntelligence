@@ -5,12 +5,12 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
-import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.DustUtils;
+import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler.IIConfig.Machines.Filler;
+import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock1.tileentity.TileEntityFiller;
 import pl.pabilo8.immersiveintelligence.common.gui.ContainerFiller;
 
@@ -44,12 +44,12 @@ public class GuiFiller extends GuiIEContainerBase
 
 		if(!tile.dustStorage.isEmpty())
 		{
-			int stored = (int)(60*(tile.dustStorage.amount/(float)tile.dustCapacity));
+			int stored = (int)(60*(tile.dustStorage.amount/(float)Filler.dustCapacity));
 			float[] rgb = IIUtils.rgbIntToRGB(DustUtils.getColor(tile.dustStorage));
 
-			GlStateManager.color(rgb[0],rgb[1],rgb[2]);
+			GlStateManager.color(rgb[0], rgb[1], rgb[2]);
 			this.drawTexturedModalRect(guiLeft+56, guiTop+2+(60-stored), 176, 60-stored, 64, stored);
-			GlStateManager.color(1f,1f,1f);
+			GlStateManager.color(1f, 1f, 1f);
 		}
 
 		IIClientUtils.drawPowerBar(guiLeft+161-4, guiTop+24, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
@@ -64,10 +64,10 @@ public class GuiFiller extends GuiIEContainerBase
 		ArrayList<String> tooltip = new ArrayList<>();
 
 		if(mx > guiLeft+161-4&&mx < guiLeft+168-4&&my > guiTop+24&&my < guiTop+71)
-			tooltip.add(IIUtils.getPowerLevelString(tile));
+			tooltip.add(IIUtils.getPowerLevelString(tile.energyStorage));
 
-		int stored = (int)(60*(tile.dustStorage.amount/(float)tile.dustCapacity));
-		if(mx > guiLeft+56&&mx < guiLeft+56+60&&my >guiTop+2+(60-stored)&&my < guiTop+2+(60-stored)+stored)
+		int stored = (int)(60*(tile.dustStorage.amount/(float)Filler.dustCapacity));
+		if(mx > guiLeft+56&&mx < guiLeft+56+60&&my > guiTop+2+(60-stored)&&my < guiTop+2+(60-stored)+stored)
 		{
 			tooltip.add(DustUtils.getDustName(tile.dustStorage));
 			tooltip.add(tile.dustStorage.amount+" mB");

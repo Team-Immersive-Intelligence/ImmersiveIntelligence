@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
+import pl.pabilo8.immersiveintelligence.common.util.multiblock.production.TileEntityMultiblockProductionBase.IIIMultiblockRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
  * @author Pabilo8
  * @since 14-04-2020
  */
-public class FillerRecipe extends MultiblockRecipe
+public class FillerRecipe extends MultiblockRecipe implements IIIMultiblockRecipe
 {
 	public final IngredientStack itemInput;
 	public final ItemStack itemOutput;
@@ -84,24 +85,16 @@ public class FillerRecipe extends MultiblockRecipe
 	public static FillerRecipe findRecipe(IngredientStack item_input, DustStack stack)
 	{
 		for(FillerRecipe recipe : recipeList)
-		{
 			if(recipe.itemInput.matches(item_input)&&recipe.dust.canMergeWith(stack)&&recipe.dust.amount <= stack.amount)
-			{
 				return recipe;
-			}
-		}
 		return null;
 	}
 
 	public static FillerRecipe findRecipe(ItemStack item_input, DustStack stack)
 	{
 		for(FillerRecipe recipe : recipeList)
-		{
 			if(recipe.itemInput.matches(item_input)&&recipe.dust.canMergeWith(stack)&&recipe.dust.amount <= stack.amount)
-			{
 				return recipe;
-			}
-		}
 		return null;
 	}
 

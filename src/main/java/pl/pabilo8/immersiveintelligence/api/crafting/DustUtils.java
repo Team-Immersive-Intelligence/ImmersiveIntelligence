@@ -8,12 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 /**
  * @author Pabilo8
@@ -86,6 +84,14 @@ public class DustUtils
 	public static int getColor(DustStack stack)
 	{
 		return dustColors.get(stack.name);
+	}
+
+	public static List<ItemStack> getDustStacks(String dustName)
+	{
+		return dustIngredients.entries().stream()
+				.filter(e -> e.getKey().equals(dustName))
+				.map(e -> e.getValue().getExampleStack())
+				.collect(Collectors.toList());
 	}
 
 	/**

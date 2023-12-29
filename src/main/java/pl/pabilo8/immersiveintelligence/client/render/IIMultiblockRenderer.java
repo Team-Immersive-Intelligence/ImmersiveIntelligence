@@ -61,6 +61,18 @@ public abstract class IIMultiblockRenderer<T extends TileEntityMultiblockIIBase<
 		return te==null||te.isDummy();
 	}
 
+	protected void applyStandardMirroring(T te, boolean start)
+	{
+		if(start)
+		{
+			applyStandardRotation(te.facing);
+			if(te.getIsMirrored())
+				mirrorRender();
+		}
+		else if(te.getIsMirrored())
+			unMirrorRender();
+	}
+
 	@Override
 	protected Tuple<IBlockState, IBakedModel> getModelFromBlockState(T te)
 	{

@@ -729,6 +729,8 @@ public class IIRecipes
 
 	public static void addFillerRecipes()
 	{
+		FillerRecipe.recipeList.clear();
+
 		//Sandbag
 		FillerRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.SANDBAG),
@@ -974,7 +976,7 @@ public class IIRecipes
 				.addStack(new IngredientStack(new ItemStack(IIContent.itemDataWireCoil, 10, 0)))
 				.setRequiredProgress(250000)
 				.setRequiredSteps(1);
-		
+
 		//Gates
 		IIContent.UPGRADE_REDSTONE_ACTIVATION
 				.addStack(new IngredientStack(new ItemStack(IEContent.blockMetalDecoration0, 4, BlockTypes_MetalDecoration0.LIGHT_ENGINEERING.getMeta())))
@@ -1134,7 +1136,6 @@ public class IIRecipes
 
 	public static void addAmmunitionCasingRecipes()
 	{
-		FillerRecipe.recipeList.clear();
 		FillerRecipe.addRecipe(IIContent.itemAmmoArtillery, 160, 8000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoLightArtillery, 140, 6000);
 		FillerRecipe.addRecipe(IIContent.itemAmmoMortar, 140, 6000);

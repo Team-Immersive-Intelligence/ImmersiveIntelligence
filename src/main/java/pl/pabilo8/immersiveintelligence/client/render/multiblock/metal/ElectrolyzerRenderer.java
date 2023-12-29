@@ -24,9 +24,7 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 	@Override
 	public void drawAnimated(TileEntityElectrolyzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		applyStandardRotation(te.facing);
-		if(te.mirrored)
-			mirrorRender();
+		applyStandardMirroring(te, true);
 
 		fluid.setFluid(te.tanks[0].getFluid());
 		float tankAmount = te.tanks[0].getFluidAmount();
@@ -37,8 +35,7 @@ public class ElectrolyzerRenderer extends IIMultiblockRenderer<TileEntityElectro
 		fluid.setFlowing(false);
 		fluid.render(tes, buf);
 
-		if(te.mirrored)
-			unMirrorRender();
+		applyStandardMirroring(te, false);
 	}
 
 	@Override

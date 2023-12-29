@@ -33,7 +33,8 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		super("metal_multiblock", Material.IRON, PropertyEnum.create("type", MetalMultiblocks0.class),
 				IEProperties.FACING_HORIZONTAL,
 				IEProperties.BOOLEANS[0], IEProperties.BOOLEANS[1], IEProperties.MULTIBLOCKSLAVE, IEProperties.DYNAMICRENDER,
-				IOBJModelCallback.PROPERTY, Properties.AnimationProperty);
+				IOBJModelCallback.PROPERTY, Properties.AnimationProperty
+		);
 		setHardness(3.0F);
 		setResistance(15.0F);
 		setLightOpacity(0);

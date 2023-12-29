@@ -45,17 +45,13 @@ public class PrintingPressRenderer extends IIMultiblockRenderer<TileEntityPrinti
 				animationWork.apply(te.getProductionProgress(te.processQueue.get(0), partialTicks));
 		}
 
-		applyStandardRotation(te.facing);
-
-		//Flip
-		if(te.mirrored) mirrorRender();
+		applyStandardMirroring(te, true);
 
 		//Render
 		for(AMT mod : model)
 			mod.render(tes, buf);
 
-		//Revert
-		if(te.mirrored) unMirrorRender();
+		applyStandardMirroring(te, false);
 	}
 
 	@Override

@@ -47,9 +47,6 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 	@Override
 	public void drawAnimated(TileEntityArtilleryHowitzer te, BufferBuilder buf, float partialTicks, Tessellator tes)
 	{
-		applyStandardRotation(te.facing);
-		GlStateManager.translate(0, 0, -0.5);
-
 		//defaultize
 		for(AMT mod : allParts)
 			mod.defaultize();
@@ -169,6 +166,8 @@ public class ArtilleryHowitzerRenderer extends IIMultiblockRenderer<TileEntityAr
 		IIAnimationUtils.setModelRotation(gunPitch, -turretPitch, 0, 0);
 
 		//flipping
+		applyStandardRotation(te.facing);
+		GlStateManager.translate(0, 0, -0.5);
 		if(te.mirrored)
 			mirrorRender();
 

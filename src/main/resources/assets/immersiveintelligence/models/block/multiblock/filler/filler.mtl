@@ -1,0 +1,22 @@
+# Made in Blockbench 4.9.2
+newmtl m_44b8b7f6-e596-056f-2894-d13a57394fcb
+map_Kd immersiveintelligence:blocks/common/common_steel_norivets
+newmtl m_8b8e7616-41e9-41d3-2136-ede67376d48a
+map_Kd immersiveintelligence:blocks/common/common_cable_and_pipe
+newmtl m_79a8cc90-fcd2-1216-e7f0-266769be4d03
+map_Kd immersiveintelligence:blocks/common/common_rough_steel
+newmtl m_dfc76770-fe9a-30af-ae96-6b4ab6859c97
+map_Kd immersiveintelligence:blocks/common/common_steel
+newmtl m_ca1ae3fd-8bcc-8332-78e2-956e147eeb56
+map_Kd immersiveintelligence:blocks/common/common_machinebase
+newmtl m_712115a6-c558-92ff-b7e0-cce1ca8b1773
+map_Kd immersiveintelligence:blocks/common/common_bottom
+newmtl m_87d22495-0001-8365-10f2-a8aea01e778b
+map_Kd immersiveintelligence:blocks/multiblock/filler
+newmtl m_d49f4de3-6fb3-816e-4b43-46df8c3d2429
+map_Kd immersiveintelligence:blocks/common/common_thingies
+newmtl m_94f6115c-a820-b52b-6d9b-d2e2a93458e3
+map_Kd immersiveengineering:blocks/conveyor
+newmtl m_059850f0-969f-79ad-2265-7ac56a3a2a84
+map_Kd immersiveengineering:blocks/conveyor_off
+newmtl none

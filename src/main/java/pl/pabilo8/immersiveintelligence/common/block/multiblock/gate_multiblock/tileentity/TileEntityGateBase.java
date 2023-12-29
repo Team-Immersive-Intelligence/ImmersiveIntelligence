@@ -59,6 +59,14 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	}
 
 	@Override
+	protected void dummyCleanup()
+	{
+		gate = null;
+		redstoneNetwork = null;
+		upgradeStorage = null;
+	}
+
+	@Override
 	public void readCustomNBT(@Nonnull NBTTagCompound nbt, boolean descPacket)
 	{
 		super.readCustomNBT(nbt, descPacket);
@@ -291,19 +299,19 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 	@Override
 	public RedstoneWireNetwork getNetwork()
 	{
-		return redstoneNetwork.getNetwork();
+		return master().redstoneNetwork.getNetwork();
 	}
 
 	@Override
 	public void setNetwork(RedstoneWireNetwork net)
 	{
-		redstoneNetwork.setNetwork(net);
+		master().redstoneNetwork.setNetwork(net);
 	}
 
 	@Override
 	public void onChange()
 	{
-		master().onAnimationChangeServer(redstoneNetwork.getNetwork().channelValues[0] > 0, 0);
+		master().onAnimationChangeServer(master().redstoneNetwork.getNetwork().channelValues[0] > 0, 0);
 	}
 
 	@Override

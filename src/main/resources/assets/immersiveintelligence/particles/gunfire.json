@@ -1,0 +1,18 @@
+{
+  "draw_stage": "custom_additive",
+  "shader": "alpha",
+  "shader_params": {
+    "alpha": 0.5
+  },
+  "components": [
+    {
+      "type": "model",
+      "mesh": "assets/models/quad.obj"
+    }
+  ],
+  "textures": {
+    "#a": {
+      "path": "assets/textures/white"
+    }
+  }
+}

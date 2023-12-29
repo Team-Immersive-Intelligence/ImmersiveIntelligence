@@ -16,7 +16,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.api.bullets.AmmoRegistry;
 import pl.pabilo8.immersiveintelligence.api.bullets.IAmmo;
 import pl.pabilo8.immersiveintelligence.api.crafting.*;
@@ -72,6 +71,7 @@ public class JEIHelper implements IModPlugin
 		categories.put(PrecissionAssemblerRecipe.class, new PrecissionAssemblerRecipeCategory(guiHelper));
 		categories.put(SawmillRecipe.class, new SawmillRecipeCategory(guiHelper));
 		categories.put(VulcanizerRecipe.class, new VulcanizerRecipeCategory(guiHelper));
+		categories.put(FillerRecipe.class, new FillerRecipeCategory(guiHelper));
 
 		registry.addRecipeCategories(categories.values().toArray(new IRecipeCategory[0]));
 	}
@@ -136,6 +136,9 @@ public class JEIHelper implements IModPlugin
 		modRegistry.addRecipes(VulcanizerRecipe.recipeList.values(), "ii.vulcanizer");
 		modRegistry.addRecipeClickArea(GuiVulcanizer.class, 71, 24, 30, 30, "ii.vulcanizer");
 		modRegistry.addAdvancedGuiHandlers(new VulcanizerGuiHandler());
+
+		modRegistry.addRecipes(FillerRecipe.recipeList, "ii.filler");
+		modRegistry.addRecipeClickArea(GuiFiller.class, 41, 2, 60, 60, "ii.filler");
 
 		modRegistry.addAdvancedGuiHandlers(new UpgradeGuiHandler());
 		modRegistry.addAdvancedGuiHandlers(new AmmoCrateGuiHandler(),

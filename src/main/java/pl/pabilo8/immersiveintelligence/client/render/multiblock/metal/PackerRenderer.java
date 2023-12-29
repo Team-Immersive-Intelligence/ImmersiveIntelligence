@@ -66,11 +66,8 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 		//apply loading progress
 		animationWork.apply(animationProgress);
 
-		applyStandardRotation(te.facing);
-
-		//flipping
-		if(te.mirrored)
-			mirrorRender();
+		//apply rotation and mirroring
+		applyStandardMirroring(te, true);
 
 		//conveyor
 		conveyor.apply(active);
@@ -109,8 +106,7 @@ public class PackerRenderer extends IIMultiblockRenderer<TileEntityPacker>
 		for(AMT mod : model)
 			mod.render(tes, buf);
 
-		if(te.mirrored)
-			unMirrorRender();
+		applyStandardMirroring(te, false);
 	}
 
 	@Override
