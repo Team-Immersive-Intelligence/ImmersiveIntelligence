@@ -143,7 +143,7 @@ public class ModelPrecisionSolderer extends ModelIIBase
 	{
 		GlStateManager.pushMatrix();
 
-		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/solderer.png");
+		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precision_assembler/solderer.png");
 
 		render();
 

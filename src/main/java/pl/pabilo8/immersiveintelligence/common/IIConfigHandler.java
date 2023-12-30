@@ -282,27 +282,27 @@ public class IIConfigHandler
 
 			@Comment({"The durability (max number of uses) of the Precision Buzzsaw."})
 			@RequiresMcRestart
-			public static int precissionToolBuzzsawDurability = 150;
+			public static int precisionToolBuzzsawDurability = 150;
 
 			@Comment({"The durability (max number of uses) of the Precision Drill."})
 			@RequiresMcRestart
-			public static int precissionToolDrillDurability = 250;
+			public static int precisionToolDrillDurability = 250;
 
 			@Comment({"The durability (max number of uses) of the Precision Inserter."})
 			@RequiresMcRestart
-			public static int precissionToolInserterDurability = 200;
+			public static int precisionToolInserterDurability = 200;
 
 			@Comment({"The durability (max number of uses) of the Precision Solderer."})
 			@RequiresMcRestart
-			public static int precissionToolSoldererDurability = 150;
+			public static int precisionToolSoldererDurability = 150;
 
 			@Comment({"The durability (max number of uses) of the Precision Welder."})
 			@RequiresMcRestart
-			public static int precissionToolWelderDurability = 250;
+			public static int precisionToolWelderDurability = 250;
 
 			@Comment({"The durability (max number of uses) of the Precision Hammer."})
 			@RequiresMcRestart
-			public static int precissionToolHammerDurability = 200;
+			public static int precisionToolHammerDurability = 200;
 
 			@Comment({"The durability (max number of uses) of the Iron Sawblade."})
 			@RequiresMcRestart
@@ -320,27 +320,27 @@ public class IIConfigHandler
 
 			@Comment({"The usage time of the Precision Buzzsaw."})
 			@RequiresMcRestart
-			public static int precissionToolBuzzsawUsageTime = 140;
+			public static int precisionToolBuzzsawUsageTime = 140;
 
 			@Comment({"The usage time of the Precision Drill."})
 			@RequiresMcRestart
-			public static int precissionToolDrillUsageTime = 140;
+			public static int precisionToolDrillUsageTime = 140;
 
 			@Comment({"The usage time of the Precision Inserter."})
 			@RequiresMcRestart
-			public static int precissionToolInserterUsageTime = 60;
+			public static int precisionToolInserterUsageTime = 60;
 
 			@Comment({"The usage time of the Precision Solderer."})
 			@RequiresMcRestart
-			public static int precissionToolSoldererUsageTime = 80;
+			public static int precisionToolSoldererUsageTime = 80;
 
 			@Comment({"The usage time of the Precision Welder."})
 			@RequiresMcRestart
-			public static int precissionToolWelderUsageTime = 160;
+			public static int precisionToolWelderUsageTime = 160;
 
 			@Comment({"The usage time of the Precision Hammer."})
 			@RequiresMcRestart
-			public static int precissionToolHammerUsageTime = 40;
+			public static int precisionToolHammerUsageTime = 40;
 
 			public static class SkycrateMounts
 			{
@@ -405,7 +405,7 @@ public class IIConfigHandler
 			@SubConfig
 			public static Electrolyzer electrolyzer;
 			@SubConfig
-			public static PrecisionAssembler precissionAssembler;
+			public static PrecisionAssembler precisionAssembler;
 			@SubConfig
 			public static Coagulator coagulator;
 			@SubConfig

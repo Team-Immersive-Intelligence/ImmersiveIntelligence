@@ -10,7 +10,7 @@ import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
 import pl.pabilo8.immersiveintelligence.client.IIClientUtils;
 import pl.pabilo8.immersiveintelligence.common.IIUtils;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.tileentity.TileEntityPrecisionAssembler;
-import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrecissionAssembler;
+import pl.pabilo8.immersiveintelligence.common.gui.ContainerPrecisionAssembler;
 import pl.pabilo8.immersiveintelligence.common.network.IIPacketHandler;
 import pl.pabilo8.immersiveintelligence.common.network.messages.MessageBooleanAnimatedPartsSync;
 import pl.pabilo8.immersiveintelligence.common.util.IIReference;
@@ -21,15 +21,15 @@ import java.util.ArrayList;
  * @author Pabilo8
  * @since 10-07-2019
  */
-public class GuiPrecissionAssembler extends GuiIEContainerBase
+public class GuiPrecisionAssembler extends GuiIEContainerBase
 {
-	public static final String texture_precission_assembler = ImmersiveIntelligence.MODID+":textures/gui/precission_assembler.png";
+	public static final String texture_precision_assembler = ImmersiveIntelligence.MODID+":textures/gui/precision_assembler.png";
 	TileEntityPrecisionAssembler tile;
 	boolean first_opened;
 
-	public GuiPrecissionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
+	public GuiPrecisionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
 	{
-		super(new ContainerPrecissionAssembler(player, tile));
+		super(new ContainerPrecisionAssembler(player, tile));
 		this.ySize = 168;
 		this.tile = tile;
 
@@ -58,7 +58,7 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name"), 8, 6, IIReference.COLOR_H1);
+		this.fontRenderer.drawString(I18n.format("tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precision_assembler.name"), 8, 6, IIReference.COLOR_H1);
 	}
 
 	/**
@@ -68,11 +68,11 @@ public class GuiPrecissionAssembler extends GuiIEContainerBase
 	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		ClientUtils.bindTexture(texture_precission_assembler);
+		ClientUtils.bindTexture(texture_precision_assembler);
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		int stored = (int)(47*(tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null)));
-		IIClientUtils.drawPowerBar(guiLeft+159, guiTop+22, 7,47,tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
+		IIClientUtils.drawPowerBar(guiLeft+159, guiTop+22, 7, 47, tile.getEnergyStored(null)/(float)tile.getMaxEnergyStored(null));
 
 		if(tile.active&&tile.processTimeMax!=0)
 		{

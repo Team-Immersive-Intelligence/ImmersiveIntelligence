@@ -59,7 +59,7 @@ public abstract class BlockIIMultiblock<E extends Enum<E> & IITileMultiblockEnum
 
 		setLightOpacity(0);
 		setFullCube(false);
-		setBlockLayer(BlockRenderLayer.CUTOUT);
+		setBlockLayer(BlockRenderLayer.CUTOUT_MIPPED);
 		setToolTypes(IIReference.TOOL_HAMMER);
 	}
 

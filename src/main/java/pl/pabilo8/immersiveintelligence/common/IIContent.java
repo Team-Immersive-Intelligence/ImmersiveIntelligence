@@ -182,7 +182,7 @@ public class IIContent
 	public static ItemIIMinecart itemMinecart = new ItemIIMinecart();
 	public static ItemIIRadioTuner itemRadioTuner = new ItemIIRadioTuner();
 	public static ItemIIMeasuringCup itemMeasuringCup = new ItemIIMeasuringCup();
-	public static ItemIIPrecisionTool itemPrecissionTool = new ItemIIPrecisionTool();
+	public static ItemIIPrecisionTool itemPrecisionTool = new ItemIIPrecisionTool();
 	public static ItemIIAssemblyScheme itemAssemblyScheme = new ItemIIAssemblyScheme();
 	public static ItemIISawBlade itemSawblade = new ItemIISawBlade();
 	public static ItemIIBinoculars itemBinoculars = new ItemIIBinoculars();

@@ -273,7 +273,7 @@ public abstract class TileEntityGateBase<T extends TileEntityGateBase<T>> extend
 		if(!IIUtils.isWrench(player.getHeldItem(hand))&&master!=null&&!master.hasUpgrade(IIContent.UPGRADE_REDSTONE_ACTIVATION))
 		{
 			if(!world.isRemote)
-				master().onAnimationChangeServer(!gate.getState(), 0);
+				master.onAnimationChangeServer(!master.gate.getState(), 0);
 			return true;
 		}
 		return false;

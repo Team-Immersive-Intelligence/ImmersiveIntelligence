@@ -263,7 +263,7 @@ public class IIRecipes
 		BathingRecipe.addRecipe(IIContent.itemMaterial.getStack(Materials.PROCESSOR_CIRCUIT_BOARD_ETCHED), new IngredientStack("circuitProcessorRaw"), FluidRegistry.getFluidStack("etching_acid", 2000), 1500000, 720);
 
 //4x Vacuum tube + 1 x copper nugget = 2 x copper wire, 1 x iron plate, 1 x glass block
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				new ItemStack(IEContent.itemMaterial, 4, 26),
 				new ItemStack(IEContent.itemMetal, 1, 20),
 
@@ -277,7 +277,7 @@ public class IIRecipes
 		);
 
 		//1x Basic Electronic Component =  2x vacuum tube + nickel plate + 4 x redstone dust
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.BASIC_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
@@ -290,7 +290,7 @@ public class IIRecipes
 				1.0f
 		);
 
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRON_TUBE),
 				ItemStack.EMPTY,
 
@@ -303,7 +303,7 @@ public class IIRecipes
 				1.25f
 		);
 
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.ADVANCED_ELECTRONIC_ELEMENT),
 				ItemStack.EMPTY,
 
@@ -316,7 +316,7 @@ public class IIRecipes
 				1.25f
 		);
 
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.TRANSISTOR, 4),
 				ItemStack.EMPTY,
 
@@ -329,7 +329,7 @@ public class IIRecipes
 				0.9f
 		);
 
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.PROCESSOR_ELECTRONIC_ELEMENT),
 				IIContent.itemMaterialNugget.getStack(MaterialsNugget.SILICON),
 
@@ -345,7 +345,7 @@ public class IIRecipes
 
 	public static void addSiliconProcessingRecipes()
 	{
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterialPlate.getStack(MaterialsPlate.SILICON),
 				ItemStack.EMPTY,
 
@@ -358,7 +358,7 @@ public class IIRecipes
 				3f
 		);
 
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterialIngot.getStack(MaterialsIngot.SILICON),
 				ItemStack.EMPTY,
 
@@ -525,7 +525,7 @@ public class IIRecipes
 		}
 
 		//Crafting Components
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				IIContent.itemMaterial.getStack(Materials.TUNGSTEN_GUN_BARREL),
 				ItemStack.EMPTY,
 				new IngredientStack[]{
@@ -542,7 +542,7 @@ public class IIRecipes
 		);
 
 		//Industrial Rifle
-		PrecissionAssemblerRecipe.addRecipe(
+		PrecisionAssemblerRecipe.addRecipe(
 				new ItemStack(IIContent.itemRifle),
 				ItemStack.EMPTY,
 				new IngredientStack[]{
@@ -923,7 +923,7 @@ public class IIRecipes
 		//Effect Crates
 
 		IIContent.UPGRADE_INSERTER
-				.addStack(new IngredientStack(IIContent.itemPrecissionTool.getStack(PrecisionTools.INSERTER)))
+				.addStack(new IngredientStack(IIContent.itemPrecisionTool.getStack(PrecisionTools.INSERTER)))
 				.addStack(new IngredientStack("scaffoldingSteel"))
 				.setRequiredProgress(20000)
 				.setRequiredSteps(12);

@@ -13,9 +13,9 @@ import pl.pabilo8.immersiveintelligence.common.item.crafting.ItemIIAssemblySchem
  * @author Pabilo8
  * @since 2019-05-17
  */
-public class ContainerPrecissionAssembler extends ContainerIEBase<TileEntityPrecisionAssembler>
+public class ContainerPrecisionAssembler extends ContainerIEBase<TileEntityPrecisionAssembler>
 {
-	public ContainerPrecissionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
+	public ContainerPrecisionAssembler(EntityPlayer player, TileEntityPrecisionAssembler tile)
 	{
 		super(player.inventory, tile);
 

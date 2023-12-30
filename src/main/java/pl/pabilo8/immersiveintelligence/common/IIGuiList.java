@@ -127,8 +127,8 @@ public enum IIGuiList
 			ContainerElectrolyzer::new
 	),
 
-	GUI_PRECISSION_ASSEMBLER(TileEntityPrecisionAssembler.class,
-			ContainerPrecissionAssembler::new
+	GUI_PRECISION_ASSEMBLER(TileEntityPrecisionAssembler.class,
+			ContainerPrecisionAssembler::new
 	),
 
 	GUI_FUEL_STATION(TileEntityFuelStation.class,
@@ -248,7 +248,7 @@ public enum IIGuiList
 		IIGuiList.GUI_PRINTING_PRESS.setClientGui(GuiPrintingPress::new);
 		IIGuiList.GUI_CHEMICAL_BATH.setClientGui(GuiChemicalBath::new);
 		IIGuiList.GUI_ELECTROLYZER.setClientGui(GuiElectrolyzer::new);
-		IIGuiList.GUI_PRECISSION_ASSEMBLER.setClientGui(GuiPrecissionAssembler::new);
+		IIGuiList.GUI_PRECISION_ASSEMBLER.setClientGui(GuiPrecisionAssembler::new);
 		IIGuiList.GUI_FUEL_STATION.setClientGui(GuiFuelStation::new);
 		IIGuiList.GUI_DATA_MERGER.setClientGui(GuiDataMerger::new);
 

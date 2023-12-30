@@ -96,7 +96,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 		PACKER,
 
 		@IIBlockProperties(hidden = TernaryValue.TRUE)
-		RAILWAY_PACKER //not implemented
+		MISSILE_SILO //not implemented
 	}
 
 	@Nonnull
@@ -108,7 +108,7 @@ public class BlockIIMetalMultiblock0 extends BlockIIMultiblock<MetalMultiblocks0
 			case PRINTING_PRESS:
 			case BALLISTIC_COMPUTER:
 			case ARTILLERY_HOWITZER:
-			case RAILWAY_PACKER:
+			case MISSILE_SILO:
 			case PACKER:
 			case ELECTROLYZER:
 			case SCANNING_CONVEYOR:

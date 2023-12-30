@@ -21,6 +21,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,7 +42,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJModel.OBJState;
+import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -56,10 +59,7 @@ import pl.pabilo8.immersiveintelligence.common.util.block.IIBlockInterfaces.IITi
 import pl.pabilo8.immersiveintelligence.common.util.multiblock.IIMultiblockInterfaces.ILadderMultiblock;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -70,6 +70,7 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 {
 	private static final Map<DimensionBlockPos, TileEntity> tempTile = new HashMap<>();
 	private final Class<? extends TileEntity>[] tiles;
+	private boolean hasConnections = false;
 
 	public BlockIITileProvider(String name, Material material, PropertyEnum<E> mainProperty,
 							   Function<BlockIIBase<E>, ItemBlockIIBase> itemBlock,
@@ -78,6 +79,12 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		super(name, mainProperty, material, itemBlock, additionalProperties);
 
 		this.tiles = new Class[enumValues.length];
+		for(Object prop : additionalProperties)
+			if(prop==IEProperties.CONNECTIONS)
+			{
+				hasConnections = true;
+				break;
+			}
 
 		for(int i = 0, enumValuesLength = enumValues.length; i < enumValuesLength; i++)
 		{
@@ -151,6 +158,20 @@ public abstract class BlockIITileProvider<E extends Enum<E> & IITileProviderEnum
 		}
 
 		return basic;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState()
+	{
+		if(hasConnections)
+		{
+			BlockStateContainer base = super.createBlockState();
+			IUnlistedProperty[] unlisted = (base instanceof ExtendedBlockState)?((ExtendedBlockState)base).getUnlistedProperties().toArray(new IUnlistedProperty[0]): new IUnlistedProperty[0];
+			unlisted = Arrays.copyOf(unlisted, unlisted.length+1);
+			unlisted[unlisted.length-1] = IEProperties.CONNECTIONS;
+			return new ExtendedBlockState(this, base.getProperties().toArray(new IProperty[0]), unlisted);
+		}
+		return super.createBlockState();
 	}
 
 	@Override

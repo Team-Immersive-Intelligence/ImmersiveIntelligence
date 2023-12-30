@@ -20,7 +20,7 @@ import java.util.*;
  * @author Pabilo8
  * @since 08-08-2019
  */
-public class PrecissionAssemblerRecipe extends MultiblockRecipe
+public class PrecisionAssemblerRecipe extends MultiblockRecipe
 {
 	public float timeModifier;
 
@@ -31,12 +31,12 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 	public String[] animations;
 
 	public static HashMap<String, IPrecisionTool> toolMap = new HashMap<>();
-	public static ArrayList<PrecissionAssemblerRecipe> recipeList = new ArrayList<>();
+	public static ArrayList<PrecisionAssemblerRecipe> recipeList = new ArrayList<>();
 
 	int totalProcessTime;
 	int totalProcessEnergy;
 
-	public PrecissionAssemblerRecipe(ItemStack itemOutput, ItemStack trash, Object[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
+	public PrecisionAssemblerRecipe(ItemStack itemOutput, ItemStack trash, Object[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
 	{
 		this.output = itemOutput;
 		this.trashOutput = trash;
@@ -72,20 +72,20 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 
 	}
 
-	public static PrecissionAssemblerRecipe addRecipe(ItemStack itemOutput, ItemStack trash, Object[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
+	public static PrecisionAssemblerRecipe addRecipe(ItemStack itemOutput, ItemStack trash, Object[] itemInputs, String[] tools, String[] animations, int energy, float timeMultiplier)
 	{
-		PrecissionAssemblerRecipe r = new PrecissionAssemblerRecipe(itemOutput, trash, itemInputs, tools, animations, energy, timeMultiplier);
+		PrecisionAssemblerRecipe r = new PrecisionAssemblerRecipe(itemOutput, trash, itemInputs, tools, animations, energy, timeMultiplier);
 		recipeList.add(r);
 		return r;
 	}
 
-	public static List<PrecissionAssemblerRecipe> removeRecipesForOutput(ItemStack stack)
+	public static List<PrecisionAssemblerRecipe> removeRecipesForOutput(ItemStack stack)
 	{
-		List<PrecissionAssemblerRecipe> list = new ArrayList<>();
-		Iterator<PrecissionAssemblerRecipe> it = recipeList.iterator();
+		List<PrecisionAssemblerRecipe> list = new ArrayList<>();
+		Iterator<PrecisionAssemblerRecipe> it = recipeList.iterator();
 		while(it.hasNext())
 		{
-			PrecissionAssemblerRecipe ir = it.next();
+			PrecisionAssemblerRecipe ir = it.next();
 			if(OreDictionary.itemMatches(ir.output, stack, true))
 			{
 				list.add(ir);
@@ -95,12 +95,12 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 		return list;
 	}
 
-	public static PrecissionAssemblerRecipe findRecipe(ItemStack[] item_input, ItemStack scheme, ItemStack[] tools)
+	public static PrecisionAssemblerRecipe findRecipe(ItemStack[] item_input, ItemStack scheme, ItemStack[] tools)
 	{
 		if(!(scheme.getItem() instanceof ItemIIAssemblyScheme))
 			return null;
 
-		for(PrecissionAssemblerRecipe recipe : recipeList)
+		for(PrecisionAssemblerRecipe recipe : recipeList)
 		{
 			if(!Objects.equals(IIContent.itemAssemblyScheme.getRecipeForStack(scheme), recipe))
 				continue;
@@ -134,7 +134,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 				for(ItemStack toolstack : tools)
 				{
 					if(!toolstack.isEmpty()&&toolstack.getItem() instanceof IPrecisionTool)
-						availableTools.add(((IPrecisionTool)toolstack.getItem()).getPrecissionToolType(toolstack));
+						availableTools.add(((IPrecisionTool)toolstack.getItem()).getPrecisionToolType(toolstack));
 				}
 
 				for(String tool : neededTools)
@@ -160,13 +160,13 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 		return null;
 	}
 
-	public static List<PrecissionAssemblerRecipe> findIncompleteBathingRecipe(ItemStack[] item_input, ItemStack scheme)
+	public static List<PrecisionAssemblerRecipe> findIncompleteBathingRecipe(ItemStack[] item_input, ItemStack scheme)
 	{
 		if(item_input==null||item_input.length==0||scheme==null)
 			return null;
-		List<PrecissionAssemblerRecipe> list = Lists.newArrayList();
+		List<PrecisionAssemblerRecipe> list = Lists.newArrayList();
 
-		for(PrecissionAssemblerRecipe recipe : recipeList)
+		for(PrecisionAssemblerRecipe recipe : recipeList)
 		{
 			if(scheme.getItem() instanceof ItemIIAssemblyScheme&&IIContent.itemAssemblyScheme.getRecipeForStack(scheme)!=null&&IIContent.itemAssemblyScheme.getRecipeForStack(scheme).equals(recipe))
 			{
@@ -203,7 +203,7 @@ public class PrecissionAssemblerRecipe extends MultiblockRecipe
 		return nbt;
 	}
 
-	public static PrecissionAssemblerRecipe loadFromNBT(NBTTagCompound nbt)
+	public static PrecisionAssemblerRecipe loadFromNBT(NBTTagCompound nbt)
 	{
 		//Not needed?
 		return null;

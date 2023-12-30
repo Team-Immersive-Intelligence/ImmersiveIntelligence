@@ -12,11 +12,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import pl.pabilo8.immersiveintelligence.ImmersiveIntelligence;
-import pl.pabilo8.immersiveintelligence.api.crafting.PrecissionAssemblerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.PrecisionAssemblerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.multiblock.metal_multiblock0.BlockIIMetalMultiblock0.MetalMultiblocks0;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIMultiblockRecipeWrapper;
 import pl.pabilo8.immersiveintelligence.common.compat.jei.IIRecipeCategory;
+import pl.pabilo8.immersiveintelligence.common.compat.jei.recipe_handlers.PrecisionAssemblerRecipeCategory.PrecisionAssemblerRecipeWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,23 +25,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<PrecissionAssemblerRecipe, PrecissionAssemblerRecipeCategory.PrecissionAssemblerRecipeWrapper>
+public class PrecisionAssemblerRecipeCategory extends IIRecipeCategory<PrecisionAssemblerRecipe, PrecisionAssemblerRecipeWrapper>
 {
 	static ItemStack machineStack;
 
-	public PrecissionAssemblerRecipeCategory(IGuiHelper helper)
+	public PrecisionAssemblerRecipeCategory(IGuiHelper helper)
 	{
-		super("precissionassembler",
-				"tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precission_assembler.name",
+		super("precision_assembler",
+				"tile."+ImmersiveIntelligence.MODID+".metal_multiblock.precision_assembler.name",
 				helper.createBlankDrawable(156, 74),
-				PrecissionAssemblerRecipe.class,
+				PrecisionAssemblerRecipe.class,
 				new ItemStack(IIContent.blockMetalMultiblock0, 1, MetalMultiblocks0.PRECISION_ASSEMBLER.getMeta())
 		);
 		machineStack = new ItemStack(IIContent.blockMetalMultiblock0, 1, MetalMultiblocks0.PRECISION_ASSEMBLER.getMeta());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, PrecissionAssemblerRecipeWrapper recipeWrapper, IIngredients ingredients)
+	public void setRecipe(IRecipeLayout recipeLayout, PrecisionAssemblerRecipeWrapper recipeWrapper, IIngredients ingredients)
 	{
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
@@ -83,26 +84,26 @@ public class PrecissionAssemblerRecipeCategory extends IIRecipeCategory<Precissi
 	}
 
 	@Override
-	public IRecipeWrapper getRecipeWrapper(PrecissionAssemblerRecipe recipe)
+	public IRecipeWrapper getRecipeWrapper(PrecisionAssemblerRecipe recipe)
 	{
-		return new PrecissionAssemblerRecipeWrapper(recipe);
+		return new PrecisionAssemblerRecipeWrapper(recipe);
 	}
 
-	public static class PrecissionAssemblerRecipeWrapper extends IIMultiblockRecipeWrapper
+	public static class PrecisionAssemblerRecipeWrapper extends IIMultiblockRecipeWrapper
 	{
 		final int inputCount, toolCount;
 		protected final List<ItemStack> tools = new ArrayList<>();
 		protected final ItemStack scheme;
 
-		public PrecissionAssemblerRecipeWrapper(PrecissionAssemblerRecipe recipe)
+		public PrecisionAssemblerRecipeWrapper(PrecisionAssemblerRecipe recipe)
 		{
 			super(recipe);
 			for(String tool : recipe.tools)
-				if(PrecissionAssemblerRecipe.toolMap.containsKey(tool))
-					tools.add(PrecissionAssemblerRecipe.toolMap.get(tool).getToolPresentationStack(tool));
+				if(PrecisionAssemblerRecipe.toolMap.containsKey(tool))
+					tools.add(PrecisionAssemblerRecipe.toolMap.get(tool).getToolPresentationStack(tool));
 			scheme = IIContent.itemAssemblyScheme.getStackForRecipe(recipe);
-			inputCount=recipe.inputs.length;
-			toolCount=tools.size();
+			inputCount = recipe.inputs.length;
+			toolCount = tools.size();
 		}
 
 		@Override

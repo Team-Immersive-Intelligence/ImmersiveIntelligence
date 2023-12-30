@@ -175,7 +175,7 @@ public class ModelPrecisionInserter extends ModelIIBase
 	{
 		GlStateManager.pushMatrix();
 
-		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precission_assembler/inserter.png");
+		ClientUtils.bindTexture(ImmersiveIntelligence.MODID+":textures/blocks/multiblock/precision_assembler/inserter.png");
 
 		render();
 

@@ -167,7 +167,7 @@ public class IIManualCategoryData extends IIManualCategory
 				.addSource("assembly_scheme", getSourceForItem(IIContent.itemAssemblyScheme.getStack(1)))
 				.addSource("precision_tools", getSourceForItems(
 						Arrays.stream(PrecisionTools.values())
-								.map(IIContent.itemPrecissionTool::getStack)
+								.map(IIContent.itemPrecisionTool::getStack)
 								.toArray(ItemStack[]::new)
 				));
 
